@@ -29,35 +29,42 @@
        point="org.eclipse.ui.newWizards">
 		<category
             id="org.kalypso.risk.wizard.CreateProject"
-            name="Risk Model"
+            name="%org.kalypso.risk.wizard.CreateProject"
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
 		<wizard
+            canFinishEarly="false"
 	        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
 	        class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
-	        descriptionImage="icons/risk_project.gif"
+	        descriptionImage="etc/RiskProjectLogo.gif"
 	        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            hasPages="true"
 	        icon="icons/risk_project.gif"
 	        id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
 	        name="%org.kalypso.risk.project.KalypsoRiskProjectWizard.name"
-	        project="true">
-			<description>Creates a new risk project</description>
+            project="true">
+         <description>
+            %org.kalypso.risk.project.KalypsoRiskProjectWizard.description
+         </description>
 		</wizard>
         <wizard
-              canFinishEarly="false"
-              category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
-              class="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
-              descriptionImage="icons/risk_project.gif"
-              finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-              hasPages="true"
-              icon="icons/risk_project.gif"
-              id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
-              name="%org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.name"
-              project="true"/>
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
+            class="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+	        descriptionImage="etc/RiskProjectLogo.gif"
+            finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            hasPages="true"
+            icon="icons/risk_project.gif"
+            id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+            name="%org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.name"
+            project="true">
+         <description>
+            %org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.description
+         </description>
+		</wizard>
         <!-- TODO remove both wizard from plugin.xml
         	They cannot be used from the File-New menu, so this makes no sense.
         	However, the wizards are invoked thorugh the eclipses-extension mechanism (from the handler)
         	so the handlers have to be rewritten first (they should dirdctly instantiate those wozards).
-        -->
 		<wizard
             class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             icon="icons/risk_project.gif"
@@ -71,6 +78,7 @@
 	        name="ImportWaterlevelRaster"
 	        project="false">
         </wizard>
+        -->
 	</extension>
  <extension
        point="org.kalypso.contribs.java.urlCatalog">
