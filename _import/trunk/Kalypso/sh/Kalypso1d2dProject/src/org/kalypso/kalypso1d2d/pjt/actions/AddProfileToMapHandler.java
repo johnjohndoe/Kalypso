@@ -55,6 +55,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -75,7 +76,6 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
-import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
 /**
  * @author Gernot Belger
