@@ -52,50 +52,6 @@ classdef Gaja3D < handle
                 this.modelTin = kalypso.TriangulatedSurface();
             end
         end
-        
-        function set.boundaries(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'kalypso.Polygon'))
-                this.boundaries = varargin{1};
-            elseif(nargin == 3)
-                this.boundaries = griddedBoundaries(varargin{:}); 
-            else
-                this.boundaries = kalypso.Polygon(varargin{:});
-            end
-        end
-        
-        function set.demTin(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'kalypso.TriangulatedSurface2'))
-                this.demTin = varargin{1};
-            else
-                this.demTin = kalypso.TriangulatedSurface2(varargin{:});
-            end
-        end
-
-        function set.demGrid(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'kalypso.RectifiedGridCoverage'))
-                this.demGrid = varargin{1};
-            else
-                this.demGrid = kalypso.RectifiedGridCoverage(varargin{:});
-            end
-        end
-
-        function set.breaklines(this, varargin)
-            if(nargin == 2 && iscell(varargin{1}))
-                l_breaklines = varargin{1};
-                for i=1:numel(l_breaklines)
-                    if(isa(l_breaklines{i},'kalypso.Curve'))
-                        this.breaklines{i} = l_breaklines{i};
-                    else
-                        args = l_breaklines{i};
-                        if(isempty(args))
-                            this.breaklines{i} = kalypso.Curve.empty();
-                        else
-                            this.breaklines(i) = kalypso.Curve(args{:});
-                        end
-                    end
-                end
-            end
-        end
     end
    
     methods (Access = public)
@@ -140,9 +96,8 @@ classdef Gaja3D < handle
                     if(isempty(redPoints))
                         error('No elevation points in boundary %i.', i);
                     else
-                        tin = kalypso.TriangulatedSurface2(redPoints);
+                        this.demTin(i) = kalypso.TriangulatedSurface2(redPoints);
                     end
-                    this.demTin(i) = tin;
                 end
             end 
         end
@@ -152,7 +107,11 @@ classdef Gaja3D < handle
                 grid = {grid};
             end
             for i=this.tiles
-                this.demGrid(i) = grid{i};
+                if(isa(grid{i},'kalypso.RectifiedGridCoverage'))
+                    this.demGrid(i) = grid{i};
+                else
+                    this.demGrid(i) = kalypso.RectifiedGridCoverage(grid{i});
+                end
             end
         end
         
@@ -165,14 +124,26 @@ classdef Gaja3D < handle
                 error('Number of breaklines sets does not match number of grids');
             else
                 for i=this.tiles
-                    this.breaklines(i) = breaklines(i);
+                    for j=1:numel(breaklines)
+                        if(isa(breaklines{i}, 'kalypso.Curve'))
+                            this.breaklines(i) = breaklines(i);
+                        elseif(isempty(breaklines{i}))
+                            this.breaklines{i} = kalypso.Curve.empty();
+                        else
+                            this.breaklines{i} = kalypso.Curve(breaklines{i});
+                        end
+                    end
                 end
                 this.breaklinesMerged = [this.breaklines{this.tiles}];
             end
         end
         
         function setBoundaries(this, boundaries)
-            this.boundaries = boundaries;
+            if(isa(boundaries, 'kalypso.Polygon'))
+                this.boundaries = boundaries;
+            else
+                this.boundaries = kalypso.Polygon(boundaries);
+            end
         end
         
         % creates a grid from a tin with given resolution

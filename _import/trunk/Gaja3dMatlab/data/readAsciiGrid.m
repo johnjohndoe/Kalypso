@@ -13,24 +13,22 @@ fid = fopen(filename,'r');
 % Read the 6-line header.
 [ncols, nrows, xllcorner, yllcorner, cellsize, nodata] = readHeader(fid);
 
-% Read the matrix of data values, putting the k-th row in the data
-% file into the k-th column of matrix Z.  Close file -- nothing left to
-% read after this.
-Z = fscanf(fid,'%g',[ncols,nrows]);
+% Read the matrix of data rows backwards
+Z = zeros(nrows,ncols);
+for i=nrows:-1:1
+    % read row i
+    Zrow = fscanf(fid,'%g',ncols);
+    % make nodata NaN
+    Zrow(Zrow == nodata) = NaN;
+    % integrate in Z backwards
+    Z(nrows-i+1,:) = Zrow;
+end
 fclose(fid);
-
-% Replace each no-data value with NaN.
-Z(Z == nodata) = NaN;
-  
-% Orient the data so that rows are parallel to the x-axis and columns
-% are parallel to the y-axis (for compatibility with MATLAT functions
-% like SURF and MESH).
-Z = Z';
 
 %% Construct the referencing matrix.
 R = constructRefMat(xllcorner + cellsize/2,...
                yllcorner + (nrows - 1/2) * cellsize,...
-               cellsize, -cellsize);
+               cellsize, cellsize);
 end % READASCIIGRID
 
 function [ncols, nrows, xllcorner, yllcorner,...

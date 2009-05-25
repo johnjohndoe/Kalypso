@@ -278,7 +278,7 @@ classdef RectifiedGridCoverage < handle
             this.smoothFilter = [];
             this.featureDetector = [];
         end
-    end
+   end
    
     methods (Static = true, Access = public)       
         % load a grid from file (asc, tif, tiff)
