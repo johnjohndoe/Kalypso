@@ -42,11 +42,11 @@ package org.kalypso.risk.extension;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
-import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;

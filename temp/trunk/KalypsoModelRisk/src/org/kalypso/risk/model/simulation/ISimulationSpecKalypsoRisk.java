@@ -41,7 +41,6 @@
 package org.kalypso.risk.model.simulation;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.risk.i18n.Messages;
 
 /**
  * @author Dejan Antanaskovic
