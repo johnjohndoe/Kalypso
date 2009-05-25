@@ -2,7 +2,6 @@ package org.kalypso.model.flood;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
-import org.kalypso.model.flood.i18n.Messages;
 import org.osgi.framework.BundleContext;
 
 /**
