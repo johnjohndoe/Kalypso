@@ -32,6 +32,9 @@ public class Connector_lzNA_kzNA_Job extends AbstractInternalStatusJob implement
 	try {
 	    final File resultsFolderLZ = new File(inputProvider.getInputForID(MODELSPEC_CONNECTOR_LZNA_KZNA.LZNA_ERGEBNISSE_AKTUEL_ANFANGWERTE.name()).toString());
 	    final GMLWorkspace workspaceControlModelKZ = GmlSerializer.createGMLWorkspace(urlControlModelKZ, null);
+	    
+	    // TODO @dejan - unknown property exception - startsimulation should be {http://www.tuhh.de/initialValues}iniDate
+      // ?!?
 	    final XMLGregorianCalendar calendar = (XMLGregorianCalendar) workspaceControlModelKZ.getRootFeature().getProperty(NaModelConstants.CONTROL_STARTSIMULATION);
 	    final String fileName = String.format("%1$tY%1$tm%1$td(%1$tH).gml", calendar.toGregorianCalendar().getTime());
 	    final File lzSim = new File(resultsFolderLZ, fileName);
