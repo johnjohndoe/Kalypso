@@ -99,4 +99,13 @@ public class KalypsoWspmRemoteDatabaseSettings implements IKalypsoModuleDatabase
     return new WspmOpenAction();
   }
 
+  /**
+   * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#modifyOnLockRelease()
+   */
+  @Override
+  public boolean modifyOnLockRelease( )
+  {
+    return true;
+  }
+
 }
