@@ -299,6 +299,14 @@ classdef TriangulatedSurface < handle
             s = struct('Geometry', 'Polygon', 'BoundingBox', B, 'X', X, 'Y', Y, 'ID', ID);
         end
         
+        function plot2d(this)
+            trimesh(this.elements, this.points(:,1), this.points(:,2), 'Color', 'black');
+        end
+        
+        function plot3d(this)
+            trisurf(this.elements, this.points(:,1), this.points(:,2), this.points(:,3), 'FaceColor', 'interp', 'EdgeColor', 'black');
+        end
+        
     end % public methods
     
     methods (Access = private)
