@@ -49,11 +49,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 /**
  * @author Dejan Antanaskovic
  * 
