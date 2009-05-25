@@ -45,8 +45,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
@@ -57,10 +55,7 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.database.IProjectHandler;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
 
 /**
