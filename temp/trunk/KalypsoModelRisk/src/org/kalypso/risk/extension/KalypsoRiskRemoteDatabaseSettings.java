@@ -116,4 +116,14 @@ public class KalypsoRiskRemoteDatabaseSettings implements IKalypsoModuleDatabase
   {
     return new SzenarioProjectOpenAction();
   }
+
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#modifyOnLockRelease()
+   */
+  @Override
+  public boolean modifyOnLockRelease( )
+  {
+    return true;
+  }
 }
