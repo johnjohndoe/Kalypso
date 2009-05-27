@@ -52,6 +52,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor;
 import org.kalypso.convert.namodel.i18n.Messages;
+import org.kalypso.convert.namodel.schema.binding.suds.AbstractSud;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException;
@@ -214,5 +215,15 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  /**
+   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getSuds(int)
+   */
+  @Override
+  public AbstractSud[] getSuds( final int index )
+  {
+    // nothing to do
+    return new AbstractSud[] {};
   }
 }

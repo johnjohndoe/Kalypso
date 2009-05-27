@@ -160,4 +160,20 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie">
         </feature>
      </extension>
+     
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}SwaleInfiltrationDitch">
+        </feature>
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.suds.Swale"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}Swale">
+        </feature>
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.suds.Greenroof"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}GreenRoof">
+        </feature>
+     </extension>
 </plugin>
