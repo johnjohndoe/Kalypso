@@ -65,6 +65,20 @@ C
       IRWEPT=0
 
       CALL SECOND(SEC)
+      
+!ENe Was missing in compared to front.for
+      
+      IF(ITEQV(MAXN) .EQ. 2  .OR.  ITEQV(MAXN) .EQ. 8
+     +                       .OR.  ITEQV(MAXN) .EQ. 9) THEN
+        IF(IDIFSW .EQ. 0) THEN
+          ISLP=0
+        ELSE
+          ISLP=1
+        ENDIF
+      ELSE
+        ISLP=0
+      ENDIF
+!ENe  
 
      	IF(IREALLCT .GT. 0) THEN 
      	  IF(IREALLCT .EQ. 2) THEN
