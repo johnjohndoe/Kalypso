@@ -69,7 +69,6 @@ public class KalypsoRiskRemoteDatabaseSettings implements IKalypsoModuleDatabase
     return KalypsoRiskModule.ID;
   }
 
-  
   @Override
   public IProjectDatabaseFilter getFilter( )
   {
@@ -104,13 +103,12 @@ public class KalypsoRiskRemoteDatabaseSettings implements IKalypsoModuleDatabase
           if( getModuleCommitType().equals( projectType ) )
             return true;
         }
-          
 
         return false;
       }
     };
   }
-  
+
   @Override
   public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
   {
@@ -119,11 +117,11 @@ public class KalypsoRiskRemoteDatabaseSettings implements IKalypsoModuleDatabase
 
 
   /**
-   * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#modifyOnLockRelease()
+   * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#hasManagedDirtyState()
    */
   @Override
-  public boolean modifyOnLockRelease( )
+  public boolean hasManagedDirtyState( )
   {
-    return true;
+    return false;
   }
 }
