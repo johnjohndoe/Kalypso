@@ -829,3 +829,12 @@ new features introduced/ started to be introduced:
           But here (and now), valid for all turbulence approaches!!
                                                                                
 --- Monika Donner, 20.05.2009
+
+
+037.) Changes in front_mkl:
+       - missing query (IF(ITEQV(MAXN) .EQ. 2 etc.) at the beginning was added 
+       - this causes that in case of sediment transport (a IDIFSW ne 0) ISLP is set to 1
+         and later the right coef subroutine is chosen
+       - before this chage it was not possible to use the pardiso solver to calculate sediment transport
+       
+--- Edgar Nehlsen, 27.05.2009
