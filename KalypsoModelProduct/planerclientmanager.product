@@ -6,7 +6,36 @@
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
       <text>
-         %aboutText
+         Kalypso Planer Client Manager
+
+Version: 0.2.x Prototyp
+Build: 2009-05-28
+
+entwickelt von:
+- Björnsen Beratende Ingenieure GmbH, Koblenz - http://www.bjoernsen.de
+- Technische Universität Hamburg-Harburg, Fachbereich Wasserbau - http://www.tu-harburg.de/wb/
+
+Projektbetreuung und Qualitätssicherung:
+- Golder Associates GmbH, http://www.golder.com
+
+Auftraggeber:
+Freie und Hansestadt Hamburg
+- Landesbetrieb Straßen, Brücken und Gewässer -
+http://www.hamburg.de/bsu/
+
+Weiterführende Links:
+- INTERREG IIIB, http://www.interregnorthsea.org
+- FLOWS, http://www.flows.nu
+
+Dieses Produkt basiert auf:
+- Eclipse Platform, http://www.eclipse.org/platform
+- KalypsoBASE, http://sourceforge.net/projects/kalypsobase/
+- Kalypso, http://sourceforge.net/projects/kalypso/
+
+Dieses Produkt beinhaltet Software entwickelt durch:
+- Apache Software Foundation, http://www.apache.org
+- Deegree, http://deegree.sourceforge.net
+- OpenOffice.org, http://www.openoffice.org
       </text>
    </aboutInfo>
 
