@@ -97,12 +97,13 @@ public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseS
   {
     return new KalypsoRRMOpenAction();
   }
+  
   /**
-   * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#modifyOnLockRelease()
+   * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#hasManagedDirtyState()
    */
   @Override
-  public boolean modifyOnLockRelease( )
+  public boolean hasManagedDirtyState( )
   {
-    return true;
+    return false;
   }
 }
