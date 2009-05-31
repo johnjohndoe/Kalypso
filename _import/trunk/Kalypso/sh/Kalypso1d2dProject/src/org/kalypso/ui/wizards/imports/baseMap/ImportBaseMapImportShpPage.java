@@ -49,9 +49,9 @@ public class ImportBaseMapImportShpPage extends WizardPage
 
   public ImportBaseMapImportShpPage( )
   {
-    super( "", "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    setTitle( "" ); //$NON-NLS-1$
-    setDescription( "" ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.description" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -192,7 +192,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
     if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.6" ) ); //$NON-NLS-1$
       return;
     }
     else if( sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile() //$NON-NLS-1$ //$NON-NLS-2$

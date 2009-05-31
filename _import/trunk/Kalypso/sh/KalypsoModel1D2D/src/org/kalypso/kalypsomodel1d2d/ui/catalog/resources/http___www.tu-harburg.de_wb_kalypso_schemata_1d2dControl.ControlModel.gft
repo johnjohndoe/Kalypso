@@ -33,7 +33,7 @@
 					</gft:text>
 				</gft:group>
 
-				<gft:group text="Available Calculation Unit" style="SWT.NONE">
+				<gft:group text="Calculation Core" style="SWT.NONE">
 					<!--
 						zu verwendender Rechenkern
 					-->
@@ -470,7 +470,7 @@
 				<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 				<gft:gridLayout numColumns="2" horizontalSpacing="10" makeColumnsEqualWidth="true" />
 
-				<gft:group text="Konvergenz" style="0">
+				<gft:group text="Convergence Parameters" style="0">
 					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 					<gft:gridLayout numColumns="3" horizontalSpacing="10" />
 
@@ -551,7 +551,7 @@
 					</gft:validatorlabel>
 				</gft:group>
 				<!-- Rechenkernparameter -->
-				<gft:group style="SWT.NONE" text="Calculation Unit Parameter">
+				<gft:group style="SWT.NONE" text="Calculation Unit Parameters">
 					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
 					<gft:gridLayout numColumns="3" horizontalSpacing="10" />
 					<gft:checkbox editable="true" property="c1d2d:VEGETA" style="SWT.NONE">
@@ -573,7 +573,7 @@
 					</gft:validatorlabel>
 				</gft:group>
 
-				<gft:group text="Turbulenzmodell" style="0">
+				<gft:group text="Turbulence Model Parameters" style="0">
 					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 					<gft:gridLayout numColumns="3" horizontalSpacing="10" />
 
@@ -781,7 +781,7 @@
 				</gft:group>
 
 
-				<gft:group text="Marsh Parameter" style="0">
+				<gft:group text="Marsh Parameters" style="0">
 					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 					<gft:gridLayout numColumns="3" horizontalSpacing="10" makeColumnsEqualWidth="false" />
 

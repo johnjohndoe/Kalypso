@@ -61,12 +61,12 @@
 		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
 			<xs:documentation >
-				Netzparameter (King)
-				Netzparameter (King)
+				Netzparameter (Profilgeometrie)
+				Netzparameter (Profilgeometrie)
 			</xs:documentation>
 			<xs:documentation >
-				Flowrelations (King)
-				Flowrelations (King)
+				Flowrelations (Profile Geometry)
+				Flowrelations (Profile Geometry)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -84,7 +84,7 @@
 							</xs:documentation>
 							<xs:documentation >
 								Width [m]
-								Width of the riverbed [m]
+								Width of Riverbed [m]
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -121,8 +121,8 @@
 								
 							</xs:documentation>
 							<xs:documentation >
-								TODO
-								TODO
+								Storage Width
+								Width of profile storage if water reaches flood plain
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -172,12 +172,12 @@
 		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
 			<xs:documentation >
-				Netzparameter (Teschke)
-				Netzparameter (Teschke)
+				Netzparameter (Polynome)
+				Netzparameter (Polynomiale Repräsentation von Profilen)
 			</xs:documentation>
 			<xs:documentation >
-				Flowrelations (Teschke)
-				Flowrelations (Teschke)
+				Flowrelations (Polynomials)
+				Flowrelations (polynomial representation of profiles)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -218,8 +218,8 @@
 							<xs:documentation >
 								Station [km]
 								
-									TODO: I18N: Optional Angabe der Station. Falls gesetzt wird die Länge des
-									FE-Elements als Differenz der anliegenden Stationierung ermittelt.
+									Optional definition of station. If set length of Finite Element between nodes will be 
+								    set as distance between kilometers 
 								
 							</xs:documentation>
 						</xs:annotation>
@@ -284,11 +284,11 @@
 		<xs:annotation>
 			<xs:documentation >
 				Bauwerk (1D)
-				Bauwerk (1D)
+				Bauwerk (1D), d.h. Wehr, Brücke etc.
 			</xs:documentation>
 			<xs:documentation >
-				Building (1D)
-				Building (1D)
+				Control Structure (1D)
+				Control Structure (1D), i.e. weir, bridge etc.
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -404,8 +404,8 @@
 				Brücke (1D)
 			</xs:documentation>
 			<xs:documentation >
-				Brücke (1D)
-				Brücke (1D)
+				Bridge (1D)
+				Bridge (1D)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
