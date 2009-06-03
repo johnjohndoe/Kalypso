@@ -253,7 +253,9 @@ de_DE</programArgs>
       <plugin id="org.kalypso.model.wspm.ui"/>
       <plugin id="org.kalypso.model1d2d"/>
       <plugin id="org.kalypso.optimize"/>
+      <plugin id="org.kalypso.planer.client.base"/>
       <plugin id="org.kalypso.planer.client.manager"/>
+      <plugin id="org.kalypso.planer.client.resources"/>
       <plugin id="org.kalypso.project.database"/>
       <plugin id="org.kalypso.project.database.client"/>
       <plugin id="org.kalypso.repository"/>
@@ -270,6 +272,7 @@ de_DE</programArgs>
       <plugin id="org.kalypso.ui.rrm"/>
       <plugin id="org.kalypso.wizard.CreateNAProject"/>
       <plugin id="org.kalypso.wspwin.core"/>
+      <plugin id="org.kalypso.xplan"/>
       <plugin id="org.mortbay.jetty"/>
    </plugins>
 
