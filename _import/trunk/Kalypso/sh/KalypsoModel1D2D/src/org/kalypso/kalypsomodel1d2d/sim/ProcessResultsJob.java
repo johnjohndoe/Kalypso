@@ -207,6 +207,7 @@ public class ProcessResultsJob extends Job
       // ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
       ZipOutputStream zos = null;
       final PipedOutputStream out = new PipedOutputStream();
+      final PipedInputStream in = new PipedInputStream( out );
       final Thread thread = new Thread( new Runnable()
       {
         public void run( )
@@ -214,7 +215,6 @@ public class ProcessResultsJob extends Job
           try
           {
             /* Read into NodeResults */
-            final PipedInputStream in = new PipedInputStream( out );
             read2DIntoGmlResults( in );
           }
           catch( final Exception e )
@@ -395,6 +395,7 @@ public class ProcessResultsJob extends Job
             break;
 
           case DEPTH:
+            //TODO: Handle minimum at infinity 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.71" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.1" ), IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.zip!/tin_DEPTH.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
