@@ -1,4 +1,3 @@
-C     Last change:  WP   11 Apr 2008    2:33 pm
 cipk  last update dec 2003   add iedsw dependence
 CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
 cipk  last update Jan 12 2001 add test for IMAT
