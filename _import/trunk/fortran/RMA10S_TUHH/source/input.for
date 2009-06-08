@@ -1,4 +1,4 @@
-C     Last change:  MD   15 May 2009   10:42 am
+C     Last change:  MD    8 Jun 2009    3:09 pm
 CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
 CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
@@ -634,7 +634,7 @@ C      FACTMORPH=1.
 cipk SEP02 add sand data
    20 CONTINUE
       IF(ID(1:3) .EQ. 'CRS') THEN
-      
+
         READ(DLIN,'(I8,F8.0)') NN, CRSLOP(NN)
         call ginpt(lin,id,dlin)
 	  GO TO 20
@@ -643,12 +643,80 @@ cipk SEP02 add sand data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk may03 add cutout opton for settling/erosion for element types
-
-      IF(ID(1:3) .EQ. 'DRP') THEN
-
-        READ(DLIN,'(9I8)') (IEDROP(N),N=1,9)
+   22 CONTINUE
+      IF(ID(1:4) .EQ. 'DRP1') THEN
+        READ(DLIN,5010) (IEDROP(N),N=1,9)
         call ginpt(lin,id,dlin)
 
+        !MD: weniger als 9 Eintrage
+        DO N = 1, 9
+          IF (IEDROP(N).gt.0) THEN
+            N1=N
+            DROPMAX = N1
+          END IF
+        Enddo
+
+    	GO TO 22
+      ElSEIF(ID(1:4) .EQ. 'DRP2') THEN
+        READ(DLIN,5010) (IEDROP(N),N2=(1+N1),(9+N1))
+
+        !MD: weniger als 9 Eintrage
+        DO N = (1+N1), (9+N1)
+          IF (IEDROP(N).gt.0) THEN
+            N2=N1+N
+            DROPMAX = N2
+          END IF
+        Enddo
+
+        N1 = N2
+        DROPMAX = N1
+
+        IF (DROPMAX .ge. 90) THEN
+          WRITE(*,*) ' CAUTION: '
+          WRITE(*,*) ' Maximal Counter for DropOut DRP is reached!!'
+          WRITE(75,*) ' CAUTION: '
+          WRITE(75,*) ' Maximal Counter for DropOut DRP is reached!!'
+        END IF
+
+        call ginpt(lin,id,dlin)
+    	GO TO 22
+      ENDIF
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!MD Jun09 add sediment data
+
+      IF(ID(1:6) .EQ. 'MAXSED') THEN
+        READ(DLIN,'(F8.0)') SedHighPerm
+        IF (SedHighPerm .le. 0.0) THEN
+          WRITE(*,*) ' ERROR in INPUT: '
+          WRITE(*,*) ' Maximal Sediment-Concentration MAXSED <= ZERO!!'
+          WRITE(75,*) ' ERROR in INPUT: '
+          WRITE(75,*) ' Maximal Sediment-Concentration <= ZERO!!'
+          STOP
+        ElseIF (SedHighPerm .lt. 1000.0) THEN
+          WRITE(*,*) ' CAUTION: '
+          WRITE(*,*) ' Maximal Sediment-Concentration MAXSED < 1000.0 '
+          WRITE(75,*) ' CAUTION: '
+          WRITE(75,*) ' Maximal Sediment-Concentration MAXSED < 1000.0 '
+        END IF
+        call ginpt(lin,id,dlin)
+      ENDIF
+
+      IF(ID(1:6) .EQ. 'MINSED') THEN
+        READ(DLIN,'(F8.0)') SedLowPerm
+         IF (SedLowPerm .lt. 0.0) THEN
+          WRITE(*,*) ' CAUTION: '
+          WRITE(*,*) ' Minimal Sediment-Concentration < ZERO!!'
+          WRITE(75,*) ' CAUTION: '
+          WRITE(75,*) ' Minimal Sediment-Concentration < ZERO!!'
+        ElseIF (SedLowPerm .ge. SedHighPerm) THEN
+          WRITE(*,*) ' ERROR in INPUT: '
+          WRITE(*,*) ' Concentration MAXSED <= MINSED --> STOP'
+          WRITE(75,*) ' ERROR in INPUT: '
+          WRITE(75,*) ' Concentration MAXSED <= MINSED --> STOP'
+          STOP
+        END IF
+        call ginpt(lin,id,dlin)
       ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
