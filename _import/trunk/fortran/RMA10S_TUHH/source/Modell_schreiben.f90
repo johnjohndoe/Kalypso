@@ -1,4 +1,4 @@
-!     Last change:  MD    8 May 2009    9:54 am
+!     Last change:  MD    8 Jun 2009    4:00 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -593,8 +593,13 @@ if (istat /= 0) then
 end if
 
 
-WRITE(LINE256,'(A)') '  Node Bed Shear Bed-elev   SedMass  SumLayer SusLayer-Thickness '
-IDX = MAX(65,47+NLAYT*10) + 3
+!MD: WRITE(LINE256,'(A)') '  Node Bed Shear Bed-elev   SedMass  SumLayer SusLayer-Thickness '
+!MD: IDX = MAX(65,47+NLAYT*10) + 3
+
+WRITE(LINE256,'(A)')       '  Node Bed-Shear U-STAR  DEPRAT  V-SINK   EDOT(Sus)  SERAT(Bed)  &
+                                     & Bed-elev   SedMass  SumLayer SusLayer-Thickness '
+IDX = MAX(114,47+NLAYT*10) + 3
+
 
 IF (NLAYO(1) .GT. 0) THEN
   WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
@@ -602,23 +607,10 @@ ENDIF
 WRITE(IKALYPSOFM,'(/A)') LINE256(1:IDX+26)
 
 
-WRITE(LINE256,'(A,12I10)') '          (N/m2)    (m)       (Kg/m2)   (mm) ',&
+WRITE(LINE256,'(A,12I10)') '          (N/m2) (m/s)  (g/m2/s) (mm/s)    (g/m2/s)    (g/m2/s)  &
+                                     & (m)        (Kg/m2)   (mm) ',&
 &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
 WRITE(IKALYPSOFM,'(A)') LINE256
-
-
-!MD: weitere Ausgaben:
-!MD:    IMMT=IMAT(NN)
-!MD:    NR = MOD(IMMT,100)
-
-!MD:    UST(NN)
-!MD:    DIS_XX(NN) = UST(NN)*H*ABS(ORT(NR,8))
-!MD:    DIS_YY(NN) = UST(NN)*H*ABS(ORT(NR,9))
-!MD:    DEPRAT(NN)
-!MD:    DEPRAT0(NN)  = old
-!MD     VS(NN)      = sinken
-!MD     EDOT(NN)  = (MEROSN) Sus.Layer in [mg/l x m/s]
-!MD     SERAT(NN) = (SEROSN) Sus.Layer in [mg/l x m/s]
 
 
 
@@ -639,11 +631,18 @@ DO NN=1,NPM
   !MD: Ausgabe der Layerdicken
   IF (NLAYT.GT.0 .OR. NLAYO(NN).GT.0) THEN
     MLAYRS = NLAY(NN)
-    WRITE(IKALYPSOFM,'(I5,F10.4,F10.6, F10.2, 20F10.3)')  &
-       &          NN, BSHEAR(NN), AO(NN), TMSED(NN), SUMTHICK*1000.,&
+    WRITE(IKALYPSOFM,'(I5,F10.4,F8.5,F8.5,F8.5,F12.6,F12.6, F10.6, F10.2, 20F10.3)')  &
+       &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*1000.0), (VS(NN)*1000.0), &
+       &          (EDOT(NN)*1000.0), (SERAT(NN)*1000.0),&
+       &          AO(NN), TMSED(NN), SUMTHICK*1000.,&
        &             (1000. * THICK(NN,L),L=1,NLAYT),&
        &             (1000. * THICKO(NN,L),L=1,NLAYO(NN))
   ENDIF
+!MD: Neue Ausgaben:
+!MD:    UST(NN),   DEPRAT(NN),  VS(NN)   = sinken
+!MD     EDOT(NN)  = (MEROSN) Sus.Layer in [mg/l x m/s]
+!MD     SERAT(NN) = (SEROSN) Bed.Layer in [mg/l x m/s]
+
 Enddo
 
 
