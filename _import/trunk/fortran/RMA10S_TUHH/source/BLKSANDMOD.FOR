@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008   11:28 am
+C     Last change:  MD    8 Jun 2009    2:25 pm
 CIPK  LAST UPDATE MAR 05 2005 ADD OPTION TO ALLOW NODAL DEFINITION OF PROPS
 CIPK  LAST UPDATE DEC 22 2005 ADD RHOBS
       MODULE BLKSANMOD
@@ -12,7 +12,7 @@ C-
      +             ,RHOF,ACGR,AMANN
      +             ,D35,D50,D90,GPMAX,VSAND,FACTMORPH,RWMIN,RWFACT
       INTEGER LSAND,LBED,IGS,LGS,MTC,IFALL,ISMODE
-     +              ,IEDROP(9)
+     +              ,DROPMAX, IEDROP(1:90)
 
       ALLOCATABLE
      +               CRSLOP(:),TRSLOP(:),srate(:),gpbsav(:)        
