@@ -826,15 +826,34 @@ new features introduced/ started to be introduced:
         >> ELSEIF (IDIFSW.EQ.2) THEN
           The approach was implemented according to COEF2dNT by combining
           turbulent diffusion with sediment dispersion.
-          But here (and now), valid for all turbulence approaches!!
-                                                                               
+          But here (and now), valid for all turbulence approaches!!                                                                              
 --- Monika Donner, 20.05.2009
 
-
+--- Edgar Nehlsen, 27.05.2009
 037.) Changes in front_mkl:
        - missing query (IF(ITEQV(MAXN) .EQ. 2 etc.) at the beginning was added 
        - this causes that in case of sediment transport (a IDIFSW ne 0) ISLP is set to 1
          and later the right coef subroutine is chosen
-       - before this chage it was not possible to use the pardiso solver to calculate sediment transport
-       
+       - before this chage it was not possible to use the pardiso solver to calculate sediment transport       
 --- Edgar Nehlsen, 27.05.2009
+
+--- Monika Donner, 08.06.2009
+038.) Change for 'DRP' = Dropout Elements for Erosion & Deposition for cohesive
+      AND sand sediments, but only if DRP1 or DRP2 are defined in CONTROL
+      Old Version: DRP(Mat-Number) was restricted from 1 up to 9 classes
+      Now its available for 90 classes.
+      User has to define first row with 9 classes by 'DRP1'
+      Second and all following rows with 9 classes by 'DRP2'
+      Maximal number of classes are selected by DROPMAX
+      >> SUBR INPUT, INITL, COEF2d, COEF2dNT,COEF25NT, COEF25, BEDSUR,
+              BLKSANDMOD
+039.) Change for Maximal and Minimal Concentration 
+      'MAXSED' and 'MINSED' in CONTROL can be used for defining 
+      restriction to C(min) and C(max)in.
+      Default values are defined in INITL with SedHighPerm = 100000 and SedLowPerm = 0.0      
+      >> SUBR INPUT, INITL, UPDATE, PARAKALYS
+
+040.) New additional Outputs for Bed-File 
+      Deposition rate, Erosion rates, Settling-Velocity, Shear Velocity were added 
+      >> SUBR WRITE_KALYP_BED
+--- Monika Donner, 08.06.2009
