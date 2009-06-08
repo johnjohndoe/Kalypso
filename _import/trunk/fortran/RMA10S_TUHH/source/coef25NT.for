@@ -1,4 +1,4 @@
-C     Last change:  MD   20 May 2009    7:48 pm
+C     Last change:  MD    8 Jun 2009    2:25 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -933,7 +933,8 @@ cipk aug02  make wind stress zero over dry areas
 
 cipk may03  reduce grate and srcsnk to zero when IEDROP active
 c
-      do ned=1,9
+!MD:  do ned=1,9 : New: more than 9 Mat-Types (limited to 90)
+      do ned=1,DROPMAX
         IF(IMMT .EQ. iedrop(ned)) THEN
           grate=0.
           srcsnk=0.
