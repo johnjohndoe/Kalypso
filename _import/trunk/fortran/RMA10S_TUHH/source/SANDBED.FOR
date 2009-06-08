@@ -1,4 +1,4 @@
-C     Last change:  MD   11 Aug 2008    6:23 pm
+C     Last change:  MD    8 Jun 2009    1:14 pm
 CIPK LAST UPDATE June 06 2006 add mass output and refine compuatation of mass laid down
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  last update MAY 02 2003 turn off bed activity for selected element types
@@ -62,7 +62,8 @@ CIPK MAY03 turn off bed activity for selected element types
         NCN=NCORN(NN)
         DO M=1,NCN
           MR=NOP(NN,M)
-          do ned=1,9
+          !MD:  do ned=1,9 : New: more than 9 Mat-Types
+          do ned=1,DROPMAX
 cipk may03  reduce nodal rates to zero when IEDROP active
 
             IF(IMAT(NN) .EQ. iedrop(ned)) THEN
