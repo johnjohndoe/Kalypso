@@ -1,4 +1,4 @@
-C     Last change:  WP   22 Jul 2008   10:05 am
+C     Last change:  MD    8 Jun 2009    3:09 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -914,7 +914,9 @@ CIPK MAR01
       irk = 0
       !-
       !nis,jun07: iedrop is used as a source/sink for sediment or something. It needs to be initialized; there might be up to 9 scrs/snks
-      do i = 1, 9
+      !MD:  do i = 1, 9 : New: more than 9 Mat-Types >> now limited to 90
+      DROPMAX = 0
+      do i = 1, 90
         iedrop (i) = 0
       end do
       do i = 1, 50
@@ -922,6 +924,12 @@ CIPK MAR01
         q2D(i) = 0.0
         dq2ddh(i) = 0.0
       end do
+
+!MD: Maximal and Minimal Sediment-Concentration
+!MD: can be changed by user by Maxsed and MinSed in CONTROL
+      SedHighPerm = 100000.0
+      SedLowPerm = 0.0
+
       !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
       MAXFIL = 0
       !-
