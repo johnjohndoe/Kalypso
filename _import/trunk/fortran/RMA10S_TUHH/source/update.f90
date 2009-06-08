@@ -1,4 +1,4 @@
-!     Last change:  MD   18 May 2009    3:43 pm
+!     Last change:  MD    8 Jun 2009    3:11 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -617,12 +617,12 @@ IF (NCONV /= 1) THEN
     ENDIF
 
     !MD neu:  Abfangen von Konzentration kleiner Null
-    IF (Vel (6,J) < SalLowPerm) THEN
-      Vel (6,J) = SalLowPerm
+    IF (Vel (6,J) < SedLowPerm) THEN
+      Vel (6,J) = SedLowPerm
     ENDIF
-    !MD neu:  Abfangen von Konzentration groesser 1500.0 mg/l
-    IF (Vel (6,J) > (SalHighPerm*6.0)) THEN
-      Vel (6,J) = (SalHighPerm*6.0)
+    !MD neu:  Abfangen von Konzentration groesser MAXSED [mg/l]
+    IF (Vel (6,J) > SedHighPerm) THEN
+      Vel (6,J) = SedHighPerm
     ENDIF
 
   ENDDO
