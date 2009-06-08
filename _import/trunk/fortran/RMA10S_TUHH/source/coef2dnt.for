@@ -28,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  MD   20 May 2009    7:51 pm
+C     Last change:  MD    8 Jun 2009    1:12 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2DNT(NN,NTX)
@@ -827,7 +827,8 @@ cipk aug02  make wind stress zero over dry areas
 
 cipk may03  reduce grate and srcsnk to zero when IEDROP active
 c
-      do ned=1,9
+!MD:  do ned=1,9 : New: more than 9 Mat-Types
+      do ned=1,DROPMAX
         IF(IMMT .EQ. iedrop(ned)) THEN
           grate=0.
           srcsnk=0.
