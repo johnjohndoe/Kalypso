@@ -1,3 +1,4 @@
+!     Last change:  MD    8 Jun 2009    3:41 pm
 SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt, psConn, maxSE, KSWIT)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
 !
@@ -644,7 +645,8 @@ reading: do
     !PIPE SURFACE CONNECTION LOSS COEFFICIENTS
     elseif (linie(1:4) == 'PP_L') then
       if (kswit /= 1) then
-        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.zetaInflowUpper, PipeSurfConn(i).manholeDef.zetaOutflowUpper, PipeSurfConn(i).manholeDef.zetaInflowLower, PipeSurfConn(i).manholeDef.zetaOutflowLower
+        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.zetaInflowUpper, PipeSurfConn(i).manholeDef.zetaOutflowUpper,&
+        & PipeSurfConn(i).manholeDef.zetaInflowLower, PipeSurfConn(i).manholeDef.zetaOutflowLower
       endif
     elseif (linie(1:4) == 'PP_M') then
       if (kswit /= 1) then
