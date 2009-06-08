@@ -1,3 +1,4 @@
+!     Last change:  MD    8 Jun 2009    3:08 pm
 module parakalyps
 
 !model dimension parameters
@@ -173,5 +174,10 @@ INTEGER :: WriteNodeBlock     ! (==1: Writes the nodal values into output.out fi
 REAL (KIND = 8), ALLOCATABLE :: cstrcRange (:,:,:), cstrcCoefs (:,:,:,:), cstrcdisch (:, :)
 
 INTEGER :: testoutput
+
+!MD: Maximal and Minimal Sediment-Concentration
+!MD: can be changed by user by Maxsed and MinSed in CONTROL
+REAL(KIND = 8)     :: SedHighPerm, SedLowPerm
+
 
 end module parakalyps
