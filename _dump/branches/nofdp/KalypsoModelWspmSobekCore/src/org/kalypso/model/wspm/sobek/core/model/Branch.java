@@ -336,14 +336,14 @@ public class Branch implements IBranch
 
           Double distance1 = DISTANCE_CACHE.get( n1 );
           Double distance2 = DISTANCE_CACHE.get( n2 );
-
+          
           try
           {
             if( distance1 == null )
             {
               GM_Point loc1 = n1.getLocation();
               final Point jtsLoc1 = (Point) JTSAdapter.export( loc1 );
-
+              
               distance1 = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLoc1 );
               DISTANCE_CACHE.put( n1, distance1 );
             }
