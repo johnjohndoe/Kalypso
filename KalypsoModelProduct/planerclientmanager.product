@@ -59,7 +59,7 @@ de_DE</programArgs>
       startupProgressRect="0,215,400,15"
       startupMessageRect="4,200,390,15"
       startupForegroundColor="000000" />
-   <launcher name="kalypso">
+   <launcher name="KalypsoPlanerClientManager">
       <solaris/>
       <win useIco="false">
          <bmp
