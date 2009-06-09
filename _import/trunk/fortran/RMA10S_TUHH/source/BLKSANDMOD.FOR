@@ -1,4 +1,4 @@
-C     Last change:  MD    8 Jun 2009    2:25 pm
+C     Last change:  MD    9 Jun 2009   12:03 pm
 CIPK  LAST UPDATE MAR 05 2005 ADD OPTION TO ALLOW NODAL DEFINITION OF PROPS
 CIPK  LAST UPDATE DEC 22 2005 ADD RHOBS
       MODULE BLKSANMOD
@@ -8,45 +8,46 @@ c
       CHARACTER*8 CLABL,CUNIT 
 
 C-
-      real ALP1,ALP2,POSA,UWSA,SGSA,GSF,PPMMAX,CLDE,CLER,RHOBS
-     +             ,RHOF,ACGR,AMANN
-     +             ,D35,D50,D90,GPMAX,VSAND,FACTMORPH,RWMIN,RWFACT
+      REAL(KIND = 8):: ALP1,ALP2,POSA,UWSA,SGSA,GSF,PPMMAX,CLDE,CLER,
+     +                 RHOBS,RHOF,ACGR,AMANN,D35,D50,D90,GPMAX,VSAND,
+     +                 FACTMORPH,RWMIN,RWFACT
       INTEGER LSAND,LBED,IGS,LGS,MTC,IFALL,ISMODE
-     +              ,DROPMAX, IEDROP(1:90)
+      INTEGER DROPMAX, IEDROP(1:85)
 
-      ALLOCATABLE
-     +               CRSLOP(:),TRSLOP(:),srate(:),gpbsav(:)        
-     +              ,RCAE(:),RWAE(:),RCAN(:),RWAN(:),TRRAT(:)
-     +              ,CAI(:)
+      REAL(KIND = 8):: CRSLOP,TRSLOP,srate,gpbsav
+                 !MD: Add definitions for Variables ....
+      ALLOCATABLE CRSLOP(:),TRSLOP(:),srate(:),gpbsav(:)
+     +            ,RCAE(:),RWAE(:),RCAN(:),RWAN(:),TRRAT(:)
+     +            ,CAI(:)
 
 CIPK MAR05
-
-      ALLOCATABLE
-     +            SGSAND(:),CLDEND(:),CLERND(:),AMANNND(:),D35ND(:)
+      INTEGER ISMODEND
+      REAL(KIND = 8):: SGSAND,CLDEND,CLERND,AMANNND,D35ND
+     +           ,D50ND,D90ND,GPMAXND,VSANDND,SDND
+      ALLOCATABLE SGSAND(:),CLDEND(:),CLERND(:),AMANNND(:),D35ND(:)
      +           ,D50ND(:),D90ND(:),GPMAXND(:),VSANDND(:),ISMODEND(:)
      +           ,SDND(:,:)
-      REAL*8 ELEVB
-      ALLOCATABLE ELEVB(:)
+
 CIPK JUN06
-      REAL*8 TMSAND,TMSSAND
-      ALLOCATABLE TMSAND(:),TMSSAND(:)
+      REAL(KIND = 8):: TMSAND,TMSSAND,ELEVB
+      ALLOCATABLE TMSAND(:),TMSSAND(:), ELEVB(:)
 
-      ALLOCATABLE 
-     +              SD(:),GPB(:,:)
-     +             ,TTHICK(:),ALPHA1(:),ALPHA2(:),IDONE(:)
-     +             ,DELBED(:),GP(:)
+      INTEGER IDONE
+      REAL(KIND = 8):: SD,GPB,TTHICK,ALPHA1,ALPHA2,DELBED,GP
+      ALLOCATABLE SD(:),GPB(:,:),TTHICK(:),ALPHA1(:),ALPHA2(:),
+     +            DELBED(:),GP(:),IDONE(:)
 
 
-      ALLOCATABLE      WAVEHT(:),PEAKPRD(:),WAVEDR(:)
-     +                ,WAVEHT0(:),PEAKPRD0(:),WAVEDR0(:)
-     +                ,WAVEHT1(:),PEAKPRD1(:),WAVEDR1(:)
-     +                ,WVH0(:),WVA0(:),WVT0(:)
-     +                ,WVH1(:),WVA1(:),WVT1(:)
+      ALLOCATABLE  WAVEHT(:),PEAKPRD(:),WAVEDR(:)
+     +            ,WAVEHT0(:),PEAKPRD0(:),WAVEDR0(:)
+     +            ,WAVEHT1(:),PEAKPRD1(:),WAVEDR1(:)
+     +            ,WVH0(:),WVA0(:),WVT0(:)
+     +            ,WVH1(:),WVA1(:),WVT1(:)
 
-      INTEGER ELTON
-      ALLOCATABLE    TRIBAREA(:),ELTON(:,:),deltab(:),nsrc(:)
-     +              ,IEDONE(:),NKEY1(:),EXTLD(:),trslp(:),EXTLDEL(:)   
-
+      INTEGER ELTON, IEDONE
+      REAL(KIND = 8):: TRIBAREA,EXTLD,EXTLDEL
+      ALLOCATABLE TRIBAREA(:),ELTON(:,:),deltab(:),nsrc(:)
+     +           ,IEDONE(:),NKEY1(:),EXTLD(:),trslp(:),EXTLDEL(:)
 
 	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_EL    !Friction Factor for each element
 	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_KN    !Friction Factor for each node
