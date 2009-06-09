@@ -1,4 +1,4 @@
-C     Last change:  MD    8 Jun 2009    3:09 pm
+C     Last change:  MD    9 Jun 2009   11:26 am
 CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
 CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
@@ -671,11 +671,12 @@ cipk may03 add cutout opton for settling/erosion for element types
         N1 = N2
         DROPMAX = N1
 
-        IF (DROPMAX .ge. 90) THEN
-          WRITE(*,*) ' CAUTION: '
-          WRITE(*,*) ' Maximal Counter for DropOut DRP is reached!!'
-          WRITE(75,*) ' CAUTION: '
-          WRITE(75,*) ' Maximal Counter for DropOut DRP is reached!!'
+        IF (DROPMAX .gt. 85) THEN
+          WRITE(*,*) ' ERROR in INPUT: '
+          WRITE(*,*) ' Maximal Counter for DropOut DRP=85 is reached!!'
+          WRITE(75,*) ' ERROR in INPUT: '
+          WRITE(75,*) ' Maximal Counter for DropOut DRP=85 is reached!!'
+          STOP
         END IF
 
         call ginpt(lin,id,dlin)
