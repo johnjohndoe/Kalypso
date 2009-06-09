@@ -60,7 +60,7 @@ import org.kalypso.risk.project.KalypsoRiskProjectWizard;
  * @author kuch
  */
 public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
-{
+{ 
   public KalypsoRiskModulePage( final IKalypsoModule module )
   {
     super( module );

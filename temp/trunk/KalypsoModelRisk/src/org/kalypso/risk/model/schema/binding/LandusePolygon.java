@@ -14,7 +14,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class LandusePolygon extends AbstractFeatureBinder implements ILandusePolygon
-{
+{ 
   private long m_statisticsNumberOfRasterCells = 0;
 
   private double m_statisticsAverageAnnualDamage = 0.0;
