@@ -1,4 +1,4 @@
-C     Last change:  MD   13 Jan 2009   12:24 pm
+C     Last change:  MD    9 Jun 2009    2:18 pm
 cipk last update JUNE 5 2006  add test marshing
 cipk last update MAY 30 2006  add test for zero thickness and correct NL
 cipk last update dec 21 2004 fix bug getting node at bed for averaging
