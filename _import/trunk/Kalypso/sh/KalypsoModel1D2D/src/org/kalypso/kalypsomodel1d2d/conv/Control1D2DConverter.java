@@ -200,7 +200,7 @@ public class Control1D2DConverter
 
     // default value: 1500
     if( m_controlModel.getMFW() != 1500 )
-      formatter.format( "MFW     %8d%n", m_controlModel.getMFW() ); //$NON-NLS-1$
+      formatter.format( "MAXFRONT %8d%n", m_controlModel.getMFW() ); //$NON-NLS-1$
 
     // default value: 10.000.000
     if( m_controlModel.getBUFFSIZ() != 20000000 )
