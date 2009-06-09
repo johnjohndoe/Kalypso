@@ -141,7 +141,7 @@
 								<label>Drainage pipe diameter [mm]</label>
 							</documentation>
 							<documentation xml:lang="de">
-								<label>Drainage pipe diameter [mm]</label>
+								<label>Dränrohr Durchmesser [mm]</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -172,7 +172,7 @@
 								<label>Layer profile thickness</label>
 							</documentation>
 							<documentation xml:lang="de">
-								<label>Layer profile thickness</label>
+								<label>Muldentiefe</label>
 							</documentation>
 						</annotation>
 					</element>
