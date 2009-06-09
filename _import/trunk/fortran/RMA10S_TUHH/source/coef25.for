@@ -1,4 +1,4 @@
-C     Last change:  MD    8 Jun 2009    1:12 pm
+C     Last change:  MD    9 Jun 2009    2:04 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -923,7 +923,8 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       ENDIF
       IF(WSELL .LT. ABED) THEN
 CIPK AUG06
-        IF(LSS .EQ. 0) THEN
+        !MD: changed 09-06-2009
+        IF(LSS.gt.0 .or. LSAND.GT.0) THEN
           grate=0.
           srcsnk=0.
         ENDIF
@@ -936,7 +937,7 @@ cipk may03  reduce grate and srcsnk to zero when IEDROP active
 c
 !MD:  do ned=1,9 : New: more than 9 Mat-Types
       do ned=1,DROPMAX
-        IF(IMMT .EQ. iedrop(ned)) THEN
+        IF(ABS(IMMT) .EQ. iedrop(ned)) THEN
           grate=0.
           srcsnk=0.
         ENDIF
@@ -948,7 +949,8 @@ c
           sigmax=0.
           sigmaz=0.
 CIPK AUG06
-          IF(LSS .EQ. 0) THEN
+          !MD: changed 09-06-2009
+          IF(LSS.gt.0 .or. LSAND.GT.0) THEN
             grate=0.
             srcsnk=0.
           ENDIF
@@ -956,15 +958,6 @@ cipk may03  reduce nodal rates to zero
           alpha1(mr)=0.
           alpha2(mr)=0.
         endif
-
-        do ned=1,9
-cipk may03  reduce nodal rates to zero when IEDROP active
-
-          IF(IMMT .EQ. iedrop(ned)) THEN
-            alpha1(mr)=0.
-            alpha2(mr)=0.
-          ENDIF
-        enddo
       enddo
 
       DRODX=DRDS*DSALDX
