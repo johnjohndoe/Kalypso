@@ -30,7 +30,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  MD    8 Jun 2009    1:12 pm
+C     Last change:  MD    9 Jun 2009    2:05 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
@@ -796,7 +796,8 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       ENDIF
       IF(WSELL .LT. ABED) THEN
 CIPK AUG06
-        IF(LSS .EQ. 0) THEN
+        !MD: changed 09-06-2009
+        IF(LSS.gt.0 .or. LSAND.GT.0) THEN
           grate=0.
           srcsnk=0.
         ENDIF
@@ -809,7 +810,7 @@ cipk may03  reduce grate and srcsnk to zero when IEDROP active
 c
 !MD:  do ned=1,9 : New: more than 9 Mat-Types
       do ned=1,DROPMAX
-        IF(IMMT .EQ. iedrop(ned)) THEN
+        IF(ABS(IMMT) .EQ. iedrop(ned)) THEN
           grate=0.
           srcsnk=0.
         ENDIF
@@ -821,7 +822,8 @@ c
           sigmax=0.
           sigmaz=0.
 CIPK AUG06
-          IF(LSS .EQ. 0) THEN
+          !MD: changed 09-06-2009
+          IF(LSS.gt.0 .or. LSAND.GT.0) THEN
             grate=0.
             srcsnk=0.
           ENDIF
@@ -829,15 +831,6 @@ cipk may03  reduce nodal rates to zero
           alpha1(mr)=0.
           alpha2(mr)=0.
         endif
-
-        do ned=1,9
-cipk may03  reduce nodal rates to zero when IEDROP active
-
-          IF(IMMT .EQ. iedrop(ned)) THEN
-            alpha1(mr)=0.
-            alpha2(mr)=0.
-          ENDIF
-        enddo
       enddo
 
       DRODX=DRDS*DSALDX
