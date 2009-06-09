@@ -1,4 +1,4 @@
-C     Last change:  K    20 Jun 2007    4:38 pm
+C     Last change:  MD    9 Jun 2009   11:27 am
 CIPK  LAST UPDATE SEP 05 2006 ADD TMSADD, TMASSLEFT AND TMSDEP
 CIPK  LAST UPDATE MAY 30 2006 ADD TOTAL MASS DEFINTIONS
       SUBROUTINE INITSED(IBIN)
@@ -18,9 +18,31 @@ C-
      &        WAVPER(MAXP))
 
 
+
+      ALLOCATE (CRCON1(MAXP),CRCON2(MAXP),VSS1(MAXP),VSS2(MAXP),
+     +          VSK(MAXP),EXP2(MAXP))
+      ALLOCATE (CRC_1(85),CRC_2(85),VS_1(85),VS_2(85),
+     +          VS_K(85),EX_2(85))
+      VSST=0.
+      UN=0.
+      CRCON1=0.
+      VSS1=0.
+      CRCON2=0.
+      EXP2=0.
+      VSK=0.
+      VSS2=0.
+      TAUCD=0.
+      CRC_1=0.
+      VS_1=0.
+      CRC_2=0.
+      EX_2=0.
+      VS_K=0.
+      VS_2=0.
+
+
+
       ALLOCATE (GBM(MXSEDLAY),SSM(MXSEDLAY),GADM(MXSEDLAY)
      +         ,TLAYM(MXSEDLAY),EROSTM(MXSEDLAY))
-     
 
       NLAYTM=0
       GAWM=0
