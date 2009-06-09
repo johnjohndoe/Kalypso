@@ -1,3 +1,4 @@
+C     Last change:  MD    8 Jun 2009    7:50 pm
 CIPK  LAST UPDATE APR 4 1997 USE OLD VALUES OF CONCENTRATION FOR SETTLING
       SUBROUTINE SETVEL
 C           THIS SUBROUTINE SETS THE SETTLING VELOCITIES FOR EACH
@@ -17,24 +18,22 @@ C-
         DO I=1,NP
           VS(I)=VSST
         ENDDO
-      ELSE
+
+      ELSEIF(ISVL.EQ.2 .or. ISVL.EQ.3) THEN
 C
 C....    THIS IS THE PLACE TO PUT IN SOME GRAND SET. VEL. MODEL
-C
         K=LSS
         DO  I=1,NP
-CIPK APR97           IF(TCON(K,I) .LT. CRCON1) THEN
-          IF(VEL(6,I) .LT. CRCON1) THEN
-            VS(I)=VSS1
-CIPK APR97          ELSEIF(TCON(K,I) .GT. CRCON2) THEN
-          ELSEIF(VEL(6,I) .GT. CRCON2) THEN
-            VS(I)=VSS2
+          IF(VEL(6,I) .LT. CRCON1(I)) THEN
+            VS(I)=VSS1(I)
+          ELSEIF(VEL(6,I) .GT. CRCON2(I)) THEN
+            VS(I)=VSS2(I)
           ELSE
-CIPK APR97            VS(I)=VSK*TCON(K,I)**EXP2
-            VS(I)=VSK*VEL(6,I)**EXP2
+            VS(I)=VSK(I)* (VEL(6,I)**EXP2(I))
           ENDIF
         ENDDO
 
       ENDIF
+
       RETURN
       END
