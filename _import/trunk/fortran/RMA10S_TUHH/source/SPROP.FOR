@@ -1,3 +1,4 @@
+C     Last change:  MD    9 Jun 2009    1:17 pm
 CIPK  LAST UPDATE APR 20 2006 ADD INPUT OPTION FOR TLAYM
 CIPK  LAST UPDATE NOV 19 1997
 crrr  last update Aug 30 1997 test for max number of layers
@@ -13,17 +14,17 @@ C-
       USE BLKFTMOD
 c      USE PARAMMOD
       Implicit none
-      
+
+      !MD: Zaehler fuer Materialklassen
+      INTEGER :: VSETMAX
+      INTEGER :: NI_MAT(85), NIMAT
+
       Integer :: NN, N1, N9, I, J, K, L, N, JJ, NSEDTYP, NTYPS
       REAL (KIND = 8) :: TTLAYM, WEGTM
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05	INCLUDE 'BLKSED.COM'
-CIPK AUG05	INCLUDE 'BLKSAND.COM'
-CIPK JUN97
+
 cipk nov97 add alternate reading logic
       CHARACTER (LEN = 8) ::  IDA
       CHARACTER (LEN = 72) :: DLINA
-!      DATA NLMTP/100/
       Integer :: NLMTP = 100
 C-
 C******************************************************************
@@ -44,30 +45,103 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
       IF (GRAV.LT.32.) ROAVG=516.*1.935
 !MD: Basis-Variable: Wasserdichte
 
-      CALL GINPT(LIN,ID,DLIN)
+      N1 = 0
+      VSETMAX = 0
 
+  200 CONTINUE
+      CALL GINPT(LIN,ID,DLIN)
       IF(ID(1:4) .EQ. 'CSS1') THEN
-        READ(DLIN,'(I8,5F8.5)') ISVL,VSST,CRCON1,VSS1,CRCON2,EXP2
-      ELSE
+        N1 = N1 + 1
+        !MD: READ(DLIN,'(I8,5F8.5,I8)') ISVL,VSST,CRCON1,VSS1,CRCON2,EXP2,NM
+        READ(DLIN,'(I8)') ISVL
+
+
+        IF(ISVL.EQ.2  .and. N1.eq.1) THEN
+          READ(DLIN,'(I8,5F8.3)') ISVL,VSST,CRCON1(1),VSS1(1),
+     +                   CRCON2(1),EXP2(1)
+          VSK(1)=VSS1(1)/CRCON1(1)**EXP2(1)
+          VSS2(1)=VSK(1)*CRCON2(1)**EXP2(1)
+          WRITE(LOUT,6033)
+          WRITE(LOUT,6034) CRCON1(1),VSS1(1)
+          WRITE(LOUT,6035) CRCON1(1),CRCON2(1),VSK(1),EXP2(1)
+          WRITE(LOUT,6036) CRCON2(1),VSS2(1)
+        
+        !MD: constant Velocity
+        ELSEIF(ISVL .EQ. 1 .and. N1.eq.1) THEN
+          READ(DLIN,'(I8,F8.3)') ISVL,VSST
+          WRITE(LOUT,6037) VSST*1000.
+
+        !MD: NEW for Roughness-Classes (IMAT)
+        ElseIF(ISVL .EQ. 3 .or. N1.ge.1) THEN
+          READ(DLIN,'(I8,I8,4F8.3)') ISVL,NIMAT,
+     &           CRC_1(NIMAT),VS_1(NIMAT),CRC_2(NIMAT),EX_2(NIMAT)
+
+          WRITE(75,*) 'EXPECTED EX_2: ', EX_2(NIMAT)
+          VS_K(NIMAT)=VS_1(NIMAT)/CRC_1(NIMAT)**EX_2(NIMAT)
+          VS_2(NIMAT)=VS_K(NIMAT)*CRC_2(NIMAT)**EX_2(NIMAT)
+
+          NI_MAT(N1)=NIMAT
+          IF (N1 == 1) THEN
+            WRITE(LOUT,6033)
+          END IF
+          VSETMAX = N1
+          WRITE(LOUT,6041) NIMAT
+          WRITE(LOUT,6034) CRC_1(NIMAT),VS_1(NIMAT)
+          WRITE(LOUT,6035) CRC_1(NIMAT),CRC_2(NIMAT),
+     +                     VS_K(NIMAT),EX_2(NIMAT)
+          WRITE(LOUT,6036) CRC_2(NIMAT),VS_2(NIMAT)
+          GO TO 200
+        ENDIF
+
+      ELSEIF (N1==0) Then
         WRITE(75,*) 'EXPECTED CSS1 DATA - NONE FOUND'
         WRITE(*,*) 'EXPECTED CSS1 DATA - NONE FOUND'
         STOP
       ENDIF
-      
-C     WRITE(LOUT,6032)
-      IF(ISVL .EQ. 2) THEN
-        VSK=VSS1/CRCON1**EXP2
-        VSS2=VSK*CRCON2**EXP2
-        WRITE(LOUT,6033)
-        WRITE(LOUT,6034) CRCON1,VSS1
-        WRITE(LOUT,6035) CRCON1,CRCON2,VSK,EXP2
-        WRITE(LOUT,6036) CRCON2,VSS2
-      ELSE
-        WRITE(LOUT,6037) VSST*1000.
+
+      IF (VSETMAX.gt.85) Then
+        WRITE(75,*) 'Number of available Mat-Classes is exceeded'
+        WRITE(75,*) 'Mat-Classes must be < 85 --> STOP'
+        WRITE(*,*) 'Number of available Mat-Classes is exceeded'
+        WRITE(*,*) 'Mat-Classes must be < 85 --> STOP'
+        STOP
       ENDIF
 
-      CALL GINPT(LIN,ID,DLIN)
 
+      DO N=1,NE
+        !MD: Parameter auch fuer momentan trockene Elemente und Knoten!!
+        IF(IMAT(N).NE.0 .and. ISVL.EQ.3) THEN
+          DO I=1,VSETMAX
+            IF(NI_MAT(I).EQ.ABS(IMAT(N)) .OR. NI_MAT(I).EQ.0) THEN
+              NIMAT = NI_MAT(I)
+              DO JJ=1,NCORN(N)
+                J=NOP(N,JJ)
+                CRCON1(J)=CRC_1(NIMAT)
+                CRCON2(J)=CRC_2(NIMAT)
+                VSS2(J)  =VS_2(NIMAT)
+                VSS1(J)  =VS_1(NIMAT)
+                VSK(J)   =VS_K(NIMAT)
+                EXP2(J)  =EX_2(NIMAT)
+              EndDo
+            Endif
+          EndDo
+        ElseIF(IMAT(N).NE.0 .and. ISVL.EQ.2) THEN
+          DO JJ=1,NCORN(N)
+             J=NOP(N,JJ)
+             CRCON1(J)=CRCON1(1)
+             CRCON2(J)=CRCON2(1)
+             VSS2(J)  =VSS2(1)
+             VSS1(J)  =VSS1(1)
+             VSK(J)   =VSK(1)
+             EXP2(J)  =EXP2(1)
+          EndDo
+        Endif
+      Enddo
+
+
+      IF (N1 .eq.1 ) THEN
+        CALL GINPT(LIN,ID,DLIN)
+      END IF
       IF(ID(1:4) .EQ. 'CSS2') THEN
         READ (DLIN,'(3F8.5)') VK,RKS,D90
       ELSE
@@ -84,11 +158,25 @@ C...      NEW BED PROPERTIES. SAME DRY MASS IN EACH LAYER.
 C.................................................................
       CALL GINPT(LIN,ID,DLIN)
       NN=0
+
+      !MD: Einlese-Schleife 250 fuer alle CSMT bis CSS4 Bloecke je Materialklassen
+      !MD: Blockweise untereinander müssen:
+      !MD:    CSMT  .... Anfang erste Materialklassen
+      !MD:    CSS3  ....
+      !MD:    CSS4  .... Ende erste Materialklassen
+      !MD:    CSMT  .... Anfang zweite Materialklassen
+      !MD;    ....  ....
+      !MD:    CSS3  .... Ende xxx
+      !MD: Einlese-Schleife 250 fuer alle CSMT bis CSS4 Bloecke je Materialklassen
+      !MD: ------------------------------------------------------------------
   250 CONTINUE
-!MD      CALL GINPT(LIN,ID,DLIN)
+      !MD  CALL GINPT(LIN,ID,DLIN)
 CIPK SEP05
       NN=NN+1	      
       N1=1
+
+      !MD: Einlese-Schleife 275 fuer jeden CSMT bis CSS4 Block
+      !MD: -----------------------------------------------
   275 CONTINUE
         
       IF(ID(1:4) .EQ. 'CSMT') THEN
@@ -186,8 +274,8 @@ CIPK MAY06   ADD EROSTM
         !MD:  Layer auch fuer momentan trockene Elemente und Knoten!!
         IF(IMAT(N) .NE. 0) THEN
           DO I=1,NLMTP
-            IF(IMTREF(I) .EQ. 0  .AND.  I .GT. 1) GO TO 350
-            !MD: IF(IMTREF(I) .EQ. IMAT(N)  .OR.  IMTREF(I) .EQ. 0) THEN
+            IF(IMTREF(I).EQ.0  .AND.  I.GT.1) GO TO 350
+            IF(IMTREF(I).EQ.ABS(IMAT(N)) .OR. IMTREF(I).EQ.0) THEN
               DO JJ=1,NCORN(N)
                 J=NOP(N,JJ)
                 NLAYTND(J)=NLAYTM
@@ -215,7 +303,7 @@ CIPK MAY06   ADD EROSTM
                   EROST(J,K)=EROSTM(K)
                 ENDDO
               ENDDO
-            !MD: ENDIF
+            ENDIF
           ENDDO
   350     CONTINUE          
         ENDIF
@@ -269,12 +357,15 @@ cipk aug97 change format 6025 FORMAT(I13,F19.2,F24.2,F20.3,F20.2)
      +          'BANK EROSION RATE CONSTANT',1PE15.4/
      +          'BANK ROUGHNESS HEIGHT     ',1PE15.4)
 C 6032 FORMAT(1H1,30X,'SEDIMENT PROPERTIES'/)
+
  6033 FORMAT(//10X,'SETTLING VELOCITIES...'///20X,
 CIPK APR 97 FIX LABEL AND FORMAT
      * 'CONC. RANGE(GM/CU.M)',15X,'SET. VEL(M/SEC)')
- 6034 FORMAT(20X,' 0.',4X,'TO',F10.2,16X,1PE12.3)
- 6035 FORMAT(13X,F10.3,4X,'TO',F10.2,13X,'VS=',1PE12.5,'*CONC**',F6.4)
- 6036 FORMAT(23X,'ABOVE',F10.2,21X,1PE12.3)
+ 6041 FORMAT(10X,'.... for Roughness-Class: ',I8, '. ')
+ 6034 FORMAT(20X,' 0.',4X,'TO',F10.3,16X,1PE12.3)
+ 6035 FORMAT(13X,F10.3,4X,'TO',F10.3,13X,'VS=',
+     + 1PE12.5,'*CONC^',1PE12.5,'.')
+ 6036 FORMAT(23X,'ABOVE',F10.3,21X,1PE12.3)
  6037 FORMAT(10X,'SETTLING VELOCITY',T50,F8.4,'  (MM/SEC)')
  6038 FORMAT(//,
      *14X,'VON KARMANNS CONSTANT          =',F7.2,' CONSTANT'/
