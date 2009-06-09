@@ -857,3 +857,41 @@ new features introduced/ started to be introduced:
       Deposition rate, Erosion rates, Settling-Velocity, Shear Velocity were added 
       >> SUBR WRITE_KALYP_BED
 --- Monika Donner, 08.06.2009
+
+
+--- Monika Donner, 09.06.2009
+041.a) Change for 'DRP' = Dropout Elements for Erosion & Deposition      
+      .... (look at position 038.))is available for 85 classes.      
+      >> SUBR INPUT, INITL, COEF25NT,BLKSANDMOD
+      
+041.b) Change for 'DRP' = Dropout Elements for Erosion & Deposition      
+      Dropout should happen for Material-Classes equal wheather they are wet or dry.
+        >> IF(ABS(IMMT) .EQ. iedrop(ned)) THEN 
+      If-Question for second time is deleted.     
+      >> SUBR COEF25, COEF25NT, COEF2d, COEF2dNT    
+      
+042.) Settling-Velocities for cohesive Sediment can now also be defined by Material-Class
+      Please use therefore TYPE 3:
+      >> CSS1.....3.....MAT-Class.....CRCON1.....VSS1.....CRCON2.....EXP2
+             (new TYPE)            
+      All parameters for Settling are now saved for each node, also if TYPE=2 
+      is used. Maximal number of classes is fixed to 85   
+      >> SUBR SPROP, SETVEL, INITLSED, BLKSEDMOD 
+       
+043.) Parameters for sand and cohesive Sediment are defined by type (integer, real a.s.o)     
+      >> SUBR BLKSANDMOD, BLKSEDMOD 
+        
+044.) All Layer and settling Parameters MUST BE defined for each node, especially if elements
+      are dry at the moment. 
+      >>  IF(IMTREF(I).EQ.ABS(IMAT(N)) .OR.  IMTREF(I).EQ.0) THEN
+      Otherwise problems for wetting elements, because layers are not existing. Erosion and 
+      Sedimentation is excluded for dry and marsh-nodes in COEF2xx, DEPSN, MEROSN, SEROSN   
+      >> SUBR BED, SPROP 
+      
+045.) ERROR in all COEF2-SubR's
+      Erosion & Deposition-Rates are set to zero, if water is flowing below terrain elevation
+      (in marsh). Rates to zero is needed for sand and also for cohesive sediment:      
+        >> IF(LSS.gt.0 .or. LSAND.GT.0) THEN
+      Only set to zero IF(WSELL .LT. ABED)               
+      >> SUBR COEF25, COEF25NT, COEF2d, COEF2dNT             
+--- Monika Donner, 09.06.2009                 
