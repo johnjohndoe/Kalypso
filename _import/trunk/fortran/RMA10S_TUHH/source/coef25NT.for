@@ -1,4 +1,4 @@
-C     Last change:  MD    8 Jun 2009    2:25 pm
+C     Last change:  MD    9 Jun 2009    2:02 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -920,9 +920,11 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
         SIGMAX=0.
         SIGMAZ=0.
       ENDIF
+
       IF(WSELL .LT. ABED) THEN
 CIPK AUG06
-        IF(LSS .EQ. 0) THEN
+        !MD: Change 09-06-2009
+        IF(LSS.gt.0 .or. LSAND.GT.0) THEN
           grate=0.
           srcsnk=0.
         ENDIF
@@ -932,12 +934,14 @@ cipk aug02  make wind stress zero over dry areas
       ENDIF
 
 cipk may03  reduce grate and srcsnk to zero when IEDROP active
-c
-!MD:  do ned=1,9 : New: more than 9 Mat-Types (limited to 90)
+!MD:  do ned=1,9 : New: more than 9 Mat-Types (limited to 85)
       do ned=1,DROPMAX
-        IF(IMMT .EQ. iedrop(ned)) THEN
+        !MD: Dropout for source and sink for all classes
+        IF(ABS(IMMT) .EQ. iedrop(ned)) THEN
           grate=0.
           srcsnk=0.
+          alpha1(mr)=0.
+          alpha2(mr)=0.
         ENDIF
       enddo
 
@@ -947,7 +951,9 @@ c
           sigmax=0.
           sigmaz=0.
 CIPK AUG06
-          IF(LSS .EQ. 0) THEN
+          !MD: Change 09-06-2009
+          !MD: Especially if Lss is used!
+          IF(LSS.gt.0 .or. LSAND.GT.0) THEN
             grate=0.
             srcsnk=0.
           ENDIF
@@ -955,15 +961,6 @@ cipk may03  reduce nodal rates to zero
           alpha1(mr)=0.
           alpha2(mr)=0.
         endif
-
-        do ned=1,9
-cipk may03  reduce nodal rates to zero when IEDROP active
-
-          IF(IMMT .EQ. iedrop(ned)) THEN
-            alpha1(mr)=0.
-            alpha2(mr)=0.
-          ENDIF
-        enddo
       enddo
 
       DRODX=DRDS*DSALDX
@@ -1573,7 +1570,7 @@ C-
 
 
 cipk jun05
-      IF(NR .GT. 90  .and.  nr  .lt. 100) GO TO 380
+      IF(NR.GT.90  .and.  nr .lt.100) GO TO 380
 !--------------------------------------------------------------------------------------
 !.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt VELOCITY.....
 !--------------------------------------------------------------------------------------
@@ -2147,7 +2144,7 @@ C       COMPUTE BOUNDARY FORCES
             !Marsh option operative
             IF(IDNOPT .LT. 0) THEN
               AZER = AME((L+1)/2)+ADO(N1)  +
-     +		           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
+     +		  AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
             !without Marsh option
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
