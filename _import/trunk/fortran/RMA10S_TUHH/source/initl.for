@@ -1,4 +1,4 @@
-C     Last change:  MD    8 Jun 2009    3:09 pm
+C     Last change:  MD    9 Jun 2009   10:57 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -914,9 +914,9 @@ CIPK MAR01
       irk = 0
       !-
       !nis,jun07: iedrop is used as a source/sink for sediment or something. It needs to be initialized; there might be up to 9 scrs/snks
-      !MD:  do i = 1, 9 : New: more than 9 Mat-Types >> now limited to 90
+      !MD:  do i = 1, 9 : New: more than 9 Mat-Types >> now limited to 85
       DROPMAX = 0
-      do i = 1, 90
+      do i = 1, 85
         iedrop (i) = 0
       end do
       do i = 1, 50
