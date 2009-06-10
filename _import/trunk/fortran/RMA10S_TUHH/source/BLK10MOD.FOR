@@ -1,3 +1,4 @@
+C     Last change:  MD    9 Jun 2009    3:55 pm
       module BLK10MOD
       
       use ManholeDefinitions
@@ -22,7 +23,7 @@
       integer (kind = 4) :: icfl
       integer (kind = 4) :: lin, lout, litr, imesout
       integer (kind = 4) :: ikalypsofm, ifile, nb, ibup
-      integer (kind = 4) :: incstr, insfl
+      integer (kind = 4) :: incstr, insfl, IREBED
       integer (kind = 4) :: iwvfc, instr, iowgt, icordin, iocon, iwvin
       integer (kind = 4) :: intims, inwgt, imassout, itimfl
       integer (kind = 4) :: nscr, nd1
@@ -38,6 +39,7 @@
       !IKALYPSOFM unit number of the results ouput files
       !IFILE      model geometry (in *.2d-format)
       !NB         restart input file (binary or ASCII)
+      !IREBED     Bed-restart input file (in *.bed-format)
       !ibup       external boundary condition file
       !INCSTR     control structure data
       !insfl      input control stage flow relationship file
