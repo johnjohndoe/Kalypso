@@ -1,4 +1,4 @@
-!     Last change:  MD    8 Jun 2009    4:00 pm
+!     Last change:  MD   10 Jun 2009    3:35 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -593,23 +593,22 @@ if (istat /= 0) then
 end if
 
 
-!MD: WRITE(LINE256,'(A)') '  Node Bed Shear Bed-elev   SedMass  SumLayer SusLayer-Thickness '
-!MD: IDX = MAX(65,47+NLAYT*10) + 3
+WRITE(IKALYPSOFM,'(A,F10.4)') ' Zeitschrittweite [s]: ', DELT
 
-WRITE(LINE256,'(A)')       '  Node Bed-Shear U-STAR  DEPRAT  V-SINK   EDOT(Sus)  SERAT(Bed)  &
-                                     & Bed-elev   SedMass  SumLayer SusLayer-Thickness '
+WRITE(LINE256,'(A)')       '  Node  Bed-Shear   U-STAR   DEPRAT   V-SINK    EDOT(Sus)   SERAT(Bed) &
+                           &  Bed-elev    SedMass SL  BL    SumLayer  SusLayer-Thickness '
 IDX = MAX(114,47+NLAYT*10) + 3
 
 
 IF (NLAYO(1) .GT. 0) THEN
   WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
 ENDIF
-WRITE(IKALYPSOFM,'(/A)') LINE256(1:IDX+26)
+WRITE(IKALYPSOFM,'(A)') LINE256(1:IDX+26)
 
 
-WRITE(LINE256,'(A,12I10)') '          (N/m2) (m/s)  (g/m2/s) (mm/s)    (g/m2/s)    (g/m2/s)  &
-                                     & (m)        (Kg/m2)   (mm) ',&
-&                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
+WRITE(LINE256,'(A,20I11)') '           (N/m2)    (m/s)  (g/m2/s)  (mm/s)     (g/m2/s)     (g/m2/s) &
+                           &       (m)    (Kg/m2) NR  NR        (mm)',&
+                           &  (L,L=1,NLAYT),(L,L=1,NLAYO(1))
 WRITE(IKALYPSOFM,'(A)') LINE256
 
 
@@ -618,7 +617,7 @@ DO NN=1,NPM
   NLAYT=NLAYTND(NN)
   !MD: Berechnung Gesamt-Layerdicke
   SUMTHICK = 0.
-  DO L=1,NLAY(NN)
+  DO L=1,NLAYTND(NN)
     SUMTHICK = SUMTHICK + THICK(NN,L)
   ENDDO
 
@@ -629,17 +628,22 @@ DO NN=1,NPM
   ENDIF
 
   !MD: Ausgabe der Layerdicken
-  IF (NLAYT.GT.0 .OR. NLAYO(NN).GT.0) THEN
-    MLAYRS = NLAY(NN)
-    WRITE(IKALYPSOFM,'(I5,F10.4,F8.5,F8.5,F8.5,F12.6,F12.6, F10.6, F10.2, 20F10.3)')  &
+  IF (NLAY(NN).GT.0 .OR. NLAYO(NN).GT.0) THEN
+    WRITE(IKALYPSOFM,'(I6,1x,F10.4,1x,F8.5,1x,F8.5,1x,F8.5,1x,        &
+       &          F12.6,1x,F12.6,1x,F10.6,1x,F10.2,1x,I2,2x,I2,2x,F10.3,1x, 20(F10.3,1x))')  &
        &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*1000.0), (VS(NN)*1000.0), &
-       &          (EDOT(NN)*1000.0), (SERAT(NN)*1000.0),&
-       &          AO(NN), TMSED(NN), SUMTHICK*1000.,&
-       &             (1000. * THICK(NN,L),L=1,NLAYT),&
-       &             (1000. * THICKO(NN,L),L=1,NLAYO(NN))
+       &          (EDOT(NN)*1000.0), (SERAT(NN)*1000.0), AO(NN), TMSED(NN), NLAYTND(NN), NLAYO(NN),SUMTHICK*1000.,&
+       &          (1000. * THICK(NN,L),L=1,NLAYT),(1000. * THICKO(NN,L),L=1,NLAYO(NN))
+
+  ElseIF (NLAY(NN).eq.0 .and. NLAYO(NN).eq.0) THEN
+    WRITE(IKALYPSOFM,'(I6,1x,F10.4,1x,F8.5,1x,F8.5,1x,F8.5,1x,        &
+       &          F12.6,1x,F12.6,1x,F10.6,1x,F10.2,1x,I2,2x,I2,2x,F10.3,1x)')  &
+       &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*1000.0), (VS(NN)*1000.0), &
+       &          (EDOT(NN)*1000.0), (SERAT(NN)*1000.0), AO(NN), TMSED(NN), NLAYTND(NN), NLAYO(NN),SUMTHICK*1000.
   ENDIF
 !MD: Neue Ausgaben:
 !MD:    UST(NN),   DEPRAT(NN),  VS(NN)   = sinken
+!MD:    SL & BL = Anzhal der Suspended und Bed Layer
 !MD     EDOT(NN)  = (MEROSN) Sus.Layer in [mg/l x m/s]
 !MD     SERAT(NN) = (SEROSN) Bed.Layer in [mg/l x m/s]
 
