@@ -1,4 +1,4 @@
-C     Last change:  MD    9 Jun 2009   12:11 pm
+C     Last change:  MD   10 Jun 2009    3:10 pm
       MODULE BLKSEDMOD
 
 
@@ -86,10 +86,11 @@ c-    NLAYO  = Number of Layers for Bed-Layer
 c-    SSTO   = Critical Erosion-Stress for Bed-Layer
 c-    SMVAL  = Erosion-Rate Factor for Bed-Layer
 c-    GBO    = wet bulkdensity for Bed-Layer
-c-    THICKO = Thickness of Layers for Bed-Layer
+c-    THICKOND = maximal Thickness of Layers for Bed-Layer
+c-    THICKO = actual Thickness of Layers for Bed-Layer
 c-    NLAY   = Number of Layers
 c-    BEDEL  =
-c-    THICK  = Thickness of Layers
+c-    THICK  = actual Thickness of suspended Layers
 c-    SST    = Critical Erosion-Stress
 c-    TM     = Mass in suspended Layers
 c-    TMD    = Sediment Mass
@@ -97,12 +98,12 @@ C     BEDORIG=  original bed thickness
 C     DEPINCR=  increment of depth over simulation
 
       INTEGER NLAYO, NLAY
-      REAL (KIND = 8):: SSTO,SMVAL,GBO,THICKO,BEDEL,THICK,
+      REAL (KIND = 8):: SSTO,SMVAL,GBO,THICKO,THICKOND,BEDEL,THICK,
      +            SST,TM,TMD,BEDORIG,DEPINCR,BEDELO
       ALLOCATABLE NLAYO(:),SSTO(:,:),SMVAL(:,:),
-     +            GBO(:,:),THICKO(:,:),NLAY(:),BEDEL(:),
-     +            THICK(:,:),SST(:,:),TM(:),TMD(:) 
-     +           ,BEDORIG(:),DEPINCR(:),BEDELO(:)
+     +            GBO(:,:),THICKO(:,:),THICKOND(:,:),NLAY(:),BEDEL(:),
+     +            THICK(:,:),SST(:,:),TM(:),TMD(:),
+     +            BEDORIG(:),DEPINCR(:),BEDELO(:)
 
 CIPK MAY06 and sep06
       REAL (KIND = 8):: TMSED,TMSSED,TMSADD,TMASSLEFT,TMSDEP
