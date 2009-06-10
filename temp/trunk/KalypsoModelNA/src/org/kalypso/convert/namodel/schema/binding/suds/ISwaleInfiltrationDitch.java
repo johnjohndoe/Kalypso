@@ -55,9 +55,13 @@ public interface ISwaleInfiltrationDitch extends IAbstractSwale
 
   public static QName QN_PROPERTY_MAX_PERC_RATE = new QName( NaModelConstants.NS_NASUDS, "maxPercRate" ); // double
 
-  public Object getElementType( );
+  public static QName QN_PROPERTY_PERCENT_TO_GROUNDWATER = new QName( NaModelConstants.NS_NASUDS, "percentToGroundwater" ); // double
+
+  public String getElementType( );
 
   public String getLanduseFileName( );
 
-  public Double getMaxPercRate( );
+  public double getMaxPercRate( );
+
+  public double getPercentToGroundwater( );
 }

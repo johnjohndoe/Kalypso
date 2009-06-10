@@ -88,6 +88,10 @@ public interface NaModelConstants
 
   public static final String IN_PARAMETER_ID = "Parameter"; //$NON-NLS-1$
 
+  public static final String IN_LANDUSE_ID = "Landuse"; //$NON-NLS-1$
+
+  public static final String IN_SUDS_ID = "Suds"; //$NON-NLS-1$
+
   public static final String IN_CONTROL_ID = "Control"; //$NON-NLS-1$
 
   public static final String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$

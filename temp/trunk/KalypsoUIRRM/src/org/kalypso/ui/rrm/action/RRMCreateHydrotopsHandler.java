@@ -150,6 +150,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       protected IStatus run( final IProgressMonitor monitor )
       {
         final HydrotopeCreationOperation op = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, workspace, typeHydrotop );
+        op.setDissolveMode( true );
         try
         {
           final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.7"), 1000 ); //$NON-NLS-1$

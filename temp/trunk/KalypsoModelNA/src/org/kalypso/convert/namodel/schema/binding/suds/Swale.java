@@ -57,9 +57,12 @@ public class Swale extends AbstractSwale implements ISwale
    * @see org.kalypso.convert.namodel.schema.binding.suds.ISwale#getElementType()
    */
   @Override
-  public Object getElementType( )
+  public String getElementType( )
   {
-    return getProperty( QN_PROPERTY_ELEMENT_TYPE );
+    final Object property = getProperty( QN_PROPERTY_ELEMENT_TYPE );
+    if( property instanceof String )
+      return (String) property;
+    return "20";
   }
 
   /**
@@ -68,11 +71,11 @@ public class Swale extends AbstractSwale implements ISwale
   @Override
   public String getLanduseFilename( )
   {
-   final Object property = getProperty( QN_PROPERTY_LANDUSE_FILENAME );
-   if( property instanceof String )
+    final Object property = getProperty( QN_PROPERTY_LANDUSE_FILENAME );
+    if( property instanceof String )
       return (String) property;
-   
-    return null;
+
+    return "swale.nutz";
   }
 
 }

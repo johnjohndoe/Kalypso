@@ -40,13 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.schema.binding;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  */
 public class PolygonIntersectionHelper
 {
@@ -66,7 +75,7 @@ public class PolygonIntersectionHelper
      */
     INTERSECT
   }
-  
+
   /**
    * Creates the difference for the {@link ImportType#INTERSECT} import type. Anything not resulting in a surface is
    * ignored.
@@ -88,4 +97,27 @@ public class PolygonIntersectionHelper
     return null;
   }
 
+  public static List<Feature> mergeByPropertySetValues( final List<Feature> features, final List<QName> propertyList, final QName geometryProperty )
+  {
+    final List<Feature> result = new ArrayList<Feature>();
+    final Map<QName, Map<Object, List<Feature>>> map = new HashMap<QName, Map<Object, List<Feature>>>();
+    for( final QName qname : propertyList )
+      map.put( qname, new HashMap<Object, List<Feature>>() );
+    for( final Feature feature : features )
+    {
+      for( final QName qname : propertyList )
+      {
+        final Object property = feature.getProperty( qname );
+        List<Feature> list = map.get( qname ).get( property );
+        if( list == null )
+        {
+          list = new ArrayList<Feature>();
+          map.get( qname ).put( property, list );
+        }
+        list.add( feature );
+      }
+    }
+
+    return result;
+  }
 }

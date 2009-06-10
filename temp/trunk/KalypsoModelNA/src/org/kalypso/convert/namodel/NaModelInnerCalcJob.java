@@ -179,6 +179,10 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private static final String WE_PARAMETER_GML = "resources/WE/parameter.gml"; //$NON-NLS-1$
 
+  private static final String WE_LANDUSE_GML = "resources/WE/landuse.gml"; //$NON-NLS-1$
+
+  private static final String WE_SUDS_GML = "resources/WE/suds.gml"; //$NON-NLS-1$
+
   public NaModelInnerCalcJob( )
   {
     m_urlUtilities = new UrlUtilities();
@@ -277,7 +281,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
       // calualtion model
 
-      final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURL(), tmpdir );
+      final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURI().toURL(), tmpdir );
       conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
@@ -286,7 +290,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final File lzsimFile = new File( iniValuesFolderURL.getFile(), "lzsim.gml" ); //$NON-NLS-1$
       if( lzsimFile.exists() )
       {
-        final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimFile.toURL(), null );
+        final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimFile.toURI().toURL(), null );
         LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
       }
       else
@@ -543,11 +547,26 @@ public class NaModelInnerCalcJob implements ISimulation
     else
       parameterWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_PARAMETER_GML ), null );
 
+    GMLWorkspace landuseWorkspace = null, sudsWorkspace = null;
+    if( dataProvider.hasID( NaModelConstants.IN_LANDUSE_ID ) )
+    {
+      final URL url = (URL) dataProvider.getInputForID( NaModelConstants.IN_LANDUSE_ID );
+      final File f = new File( url.toURI().getPath() );
+      if( f.exists() )
+        landuseWorkspace = GmlSerializer.createGMLWorkspace( url, null );
+    }
+    if( dataProvider.hasID( NaModelConstants.IN_SUDS_ID ) )
+    {
+      final URL url = (URL) dataProvider.getInputForID( NaModelConstants.IN_SUDS_ID );
+      final File f = new File( url.toURI().getPath() );
+      if( f.exists() )
+        sudsWorkspace = GmlSerializer.createGMLWorkspace( url, null );
+    }
+
     // initialize model with values of control file
     initializeModell( controlWorkspace.getRootFeature(), (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL(), null );
-    ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
     // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
 
@@ -644,7 +663,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // generate modell files
     final NAModellConverter main = new NAModellConverter( conf );
-    main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
+    main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, landuseWorkspace, sudsWorkspace, nodeResultProvider );
 
     // dump idmapping to file
     final IDManager idManager = conf.getIdManager();
@@ -1517,7 +1536,7 @@ public class NaModelInnerCalcJob implements ISimulation
   private void loadLogs( final File tmpDir, final Logger logger, final GMLWorkspace modellWorkspace, final NAConfiguration conf, final File resultDir )
   {
     final File logFile = new File( tmpDir, "start/error.gml" ); //$NON-NLS-1$
-    
+
     try
     {
       final GMLWorkspace naFortranLogWorkspace = GmlSerializer.createGMLWorkspace( logFile.toURL(), null );

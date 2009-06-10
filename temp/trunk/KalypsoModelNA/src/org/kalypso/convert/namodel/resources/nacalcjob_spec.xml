@@ -6,6 +6,8 @@
 	
 	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="false"/>
 	<input id="Parameter" description="Modelldaten - Parameter" optional="false"/>
+	<input id="Landuse" optional="true"/>
+	<input id="Suds" optional="true"/>
 	<input id="Control" description="Steuerdaten - Ausgabe" />
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
 	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>

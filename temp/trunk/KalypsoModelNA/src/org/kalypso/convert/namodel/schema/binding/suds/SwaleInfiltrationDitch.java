@@ -57,9 +57,12 @@ public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfil
    * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getElementType()
    */
   @Override
-  public Object getElementType( )
+  public String getElementType( )
   {
-   return getProperty( QN_PROPERTY_ELEMENT_TYPE );
+    final Object property = getProperty( QN_PROPERTY_ELEMENT_TYPE );
+    if( property instanceof String )
+      return (String) property;
+    return "30";
   }
 
   /**
@@ -72,20 +75,33 @@ public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfil
    if( property instanceof String )
       return (String) property;
    
-    return null;
+    return "mrs_N.nutz";
   }
 
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getMaxPercRate()
    */
   @Override
-  public Double getMaxPercRate( )
+  public double getMaxPercRate( )
   {
     final Object property = getProperty( QN_PROPERTY_MAX_PERC_RATE );
     if( property instanceof Double )
       return (Double) property;
 
-    return null;
+    return 2.8E-15;
+  }
+
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getPercentToGroundwater()
+   */
+  @Override
+  public double getPercentToGroundwater( )
+  {
+    final Object property = getProperty( QN_PROPERTY_PERCENT_TO_GROUNDWATER );
+    if( property instanceof Double )
+      return (Double) property;
+
+    return 1.0;
   }
 
 }

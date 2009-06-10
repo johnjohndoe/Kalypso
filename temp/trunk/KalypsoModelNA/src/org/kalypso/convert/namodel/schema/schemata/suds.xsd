@@ -135,7 +135,7 @@
 							<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
 						</complexType>
 					</element>
-					<element minOccurs="0" name="drainagePipeDiameter" type="suds:EnumPipeDiameter" default="200">
+					<element name="drainagePipeDiameter" type="suds:EnumPipeDiameter" default="200">
 						<annotation>
 							<documentation xml:lang="en">
 								<label>Drainage pipe diameter [mm]</label>
@@ -145,21 +145,21 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element minOccurs="0" name="drainagePipeKFvalue" type="integer" default="8000">
+					<element name="drainagePipeKFvalue" type="integer" default="8000">
 						<annotation>
 							<documentation xml:lang="en">
 								<label>Drainage pipe kf-value [mm/day]</label>
 							</documentation>
 						</annotation>
 					</element>
-					<element minOccurs="0" name="drainagePipeSlope" type="integer" default="3">
+					<element name="drainagePipeSlope" type="integer" default="3">
 						<annotation>
 							<documentation xml:lang="en">
 								<label>Drainage pipe slope [‰]</label>
 							</documentation>
 						</annotation>
 					</element>
-					<element minOccurs="0" name="drainagePipeRoughness" type="double" default="2.0">
+					<element name="drainagePipeRoughness" type="double" default="2.0">
 						<annotation>
 							<documentation xml:lang="en">
 								<label>Drainage pipe roughness [mm]</label>
@@ -176,7 +176,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element minOccurs="0" name="maxCapacityOfEmergencySpill" type="double" default="0.0">
+					<element name="maxCapacityOfEmergencySpill" type="double" default="0.0">
 						<annotation>
 							<documentation xml:lang="en">
 								<label>Drainage pipe roughness [m3/s]</label>

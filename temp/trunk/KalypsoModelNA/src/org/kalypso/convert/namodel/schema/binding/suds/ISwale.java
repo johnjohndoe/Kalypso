@@ -53,7 +53,7 @@ public interface ISwale extends IAbstractSwale
 
   public QName QN_PROPERTY_LANDUSE_FILENAME = new QName( NaModelConstants.NS_NASUDS, "landuseFileName" ); // string
 
-  public Object getElementType( );
+  public String getElementType( );
 
   public String getLanduseFilename( );
 }

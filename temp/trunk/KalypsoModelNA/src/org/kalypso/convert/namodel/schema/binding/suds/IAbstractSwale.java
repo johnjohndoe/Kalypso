@@ -68,21 +68,21 @@ public interface IAbstractSwale extends Feature
 
   public static QName QN_PROPERTY_MAX_CAP_EMERGENCY_SPILL = new QName( NaModelConstants.NS_NASUDS, "maxCapacityOfEmergencySpill" ); // double
 
-  public Double getWidth( );
+  public double getWidth( );
 
-  public Double getAreaPercentage( );
+  public double getAreaPercentage( );
 
   public Feature getDrainageNode( );
 
-  public Object getPipeDiameter( );
+  public int getPipeDiameter( );
 
-  public Integer getPipeKfValue( );
+  public int getPipeKfValue( );
 
-  public Integer getPipeSlope( );
+  public int getPipeSlope( );
 
-  public Double getPipeRoughness( );
+  public double getPipeRoughness( );
 
-  public Object getProfileThickness( );
+  public Double getProfileThickness( );
 
-  public Double getMaxCapacityEmergencySpill( );
+  public double getMaxCapacityEmergencySpill( );
 }

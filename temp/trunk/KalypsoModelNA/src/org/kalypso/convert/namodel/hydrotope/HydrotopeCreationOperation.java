@@ -41,7 +41,10 @@
 package org.kalypso.convert.namodel.hydrotope;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,7 +69,9 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Creates and writes hydrotops into a 'hydrotop.gml' file from 'modell.gml' (catchments), 'pedologie.gml',
@@ -90,6 +95,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   private final IFeatureType m_outputFeatureType;
 
+  private boolean m_dissolveFeatures = true;
+
   public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final FeatureList outputList, final GMLWorkspace outputWorkspace, final IFeatureType outputFeatureType )
   {
     m_landuseList = landuseList;
@@ -99,6 +106,11 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     m_outputList = outputList;
     m_outputWorkspace = outputWorkspace;
     m_outputFeatureType = outputFeatureType;
+  }
+
+  public final void setDissolveMode( final boolean dissolveFeatures )
+  {
+    m_dissolveFeatures = dissolveFeatures;
   }
 
   /**
@@ -116,7 +128,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     geometryIntersector.addFeatureList( m_pedologyList );
     geometryIntersector.addFeatureList( m_geologyList );
     geometryIntersector.addFeatureList( m_landuseList );
-    List<MultiPolygon> intersectionList;
+    final List<MultiPolygon> intersectionList;
     try
     {
       progress.setTaskName( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
@@ -127,7 +139,14 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
       m_outputList.clear();
       int count = 0;
-// int ordinalNr = 0;
+
+      final List<QName> equalityPropertyList = new ArrayList<QName>();
+      equalityPropertyList.add( NaModelConstants.HYDRO_PROP_LANDUSE_NAME );
+      equalityPropertyList.add( NaModelConstants.HYDRO_PROP_DAINAGETYPE );
+      equalityPropertyList.add( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR );
+      equalityPropertyList.add( NaModelConstants.HYDRO_PROP_SOILTYPE );
+      equalityPropertyList.add( NaModelConstants.HYDRO_PROP_MAXPERCOLATIONSRATE );
+      equalityPropertyList.add( NaModelConstants.HYDRO_PROP_INFLOWRATEGW );
 
       for( final Geometry geometry : intersectionList )
       {
@@ -139,13 +158,13 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         // Better: put into sub-method and 'return' instead of 'continue'
         ProgressUtilities.worked( monitor, 1 );
 
-        final Feature feature = m_outputWorkspace.createFeature( null, null, m_outputFeatureType );
-        final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal() );
-        final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
+        if( geometry.getArea() == 0.0 )
+          continue;
 
-// final String prop_featureName = Integer.toString( ++ordinalNr );
-// String prop_soiltypeName = "";
-// String prop_landuseName = "";
+        final Feature feature = m_outputWorkspace.createFeature( null, null, m_outputFeatureType );
+        final Point interiorPoint = geometry.getInteriorPoint();
+        final GM_Envelope envelope = JTSAdapter.wrap( interiorPoint.getEnvelopeInternal() );
+        final GM_Point point = (GM_Point) JTSAdapter.wrap( interiorPoint );
 
         final List<Object> catchmentList = m_catchmentsList.query( envelope, null );
         if( catchmentList.size() == 0 )
@@ -164,6 +183,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         }
 
         final List<Landuse> landuseList = m_landuseList.query( envelope, null );
+
         if( landuseList.size() > 0 )
         {
           Landuse landuse = null;
@@ -178,7 +198,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
           final Object landuseClassLink = landuse.getLanduse();
           final Feature featureLanduse = FeatureHelper.resolveLinkedFeature( m_outputWorkspace, landuseClassLink );
-// prop_landuseName = featureLanduse.getName();
 
           feature.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, featureLanduse.getName() );
           feature.setProperty( NaModelConstants.HYDRO_PROP_DAINAGETYPE, landuse.getDrainageType() );
@@ -205,7 +224,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
           else
             value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
-// prop_soiltypeName = value;
           feature.setProperty( NaModelConstants.HYDRO_PROP_SOILTYPE, value );
         }
         else
@@ -229,15 +247,46 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         else
           continue;
 
-        feature.setProperty( NaModelConstants.HYDRO_PROP_GEOM, JTSAdapter.wrap( geometry ) );
-        feature.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
-
-// feature.setName( prop_featureName );
-
-        // TODO: check for the full description format
-        // name/soiltype/landuse /???/???/???/???
-// final String descriptionFormat = "%1$s/%2$s/%3$s";
-// feature.setDescription( String.format( descriptionFormat, prop_featureName, prop_soiltypeName, prop_landuseName ) );
+        if( m_dissolveFeatures )
+        {
+          final GM_Envelope featureGeometryEnvelope = JTSAdapter.wrap( geometry.getEnvelopeInternal() );
+          final List<Feature> list = m_outputList.query( featureGeometryEnvelope, null );
+          final List<Feature> featuresToMergeWith = new ArrayList<Feature>();
+          final List<Geometry> geometriesToMergeWith = new ArrayList<Geometry>();
+          for( final Feature f : list )
+          {
+            final Geometry g = JTSAdapter.export( f.getDefaultGeometryPropertyValue() );
+            if( geometry.intersects( g ) )
+            {
+              boolean equal = true;
+              for( final QName prop : equalityPropertyList )
+                equal &= feature.getProperty( prop ).equals( f.getProperty( prop ) );
+              if( equal )
+              {
+                featuresToMergeWith.add( f );
+                geometriesToMergeWith.add( g );
+              }
+            }
+          }
+          if( !featuresToMergeWith.isEmpty() )
+          {
+            m_outputList.removeAll( featuresToMergeWith );
+            geometriesToMergeWith.add( geometry );
+            final Geometry union = new GeometryFactory().createGeometryCollection( geometriesToMergeWith.toArray( new Geometry[] {} ) ).buffer( 0.0 );
+            feature.setProperty( NaModelConstants.HYDRO_PROP_GEOM, JTSAdapter.wrap( union ) );
+            feature.setProperty( NaModelConstants.HYDRO_PROP_AREA, union.getArea() );
+          }
+          else
+          {
+            feature.setProperty( NaModelConstants.HYDRO_PROP_GEOM, JTSAdapter.wrap( geometry ) );
+            feature.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
+          }
+        }
+        else
+        {
+          feature.setProperty( NaModelConstants.HYDRO_PROP_GEOM, JTSAdapter.wrap( geometry ) );
+          feature.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
+        }
 
         m_outputList.add( feature );
       }

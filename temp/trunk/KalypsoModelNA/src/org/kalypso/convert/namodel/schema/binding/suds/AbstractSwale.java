@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractSwale extends AbstractSud implements IAbstractSwale
 {
-  
+
   public AbstractSwale( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -59,13 +59,9 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getAreaPercentage()
    */
   @Override
-  public Double getAreaPercentage( )
+  public double getAreaPercentage( )
   {
-    final Object property = getProperty( QN_PROPERTY_AREA_PERCENTAGE );
-    if( property instanceof Double )
-      return (Double) property;
-    
-    return null;
+    return (Double) getProperty( QN_PROPERTY_AREA_PERCENTAGE );
   }
 
   /**
@@ -77,7 +73,7 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
     final Object property = getProperty( QN_PROPERTY_DRAINAGE_NODE );
     if( property instanceof Feature )
       return (Feature) property;
-    
+
     return null;
   }
 
@@ -85,84 +81,86 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getMaxCapacityEmergencySpill()
    */
   @Override
-  public Double getMaxCapacityEmergencySpill( )
+  public double getMaxCapacityEmergencySpill( )
   {
     final Object property = getProperty( QN_PROPERTY_MAX_CAP_EMERGENCY_SPILL );
     if( property instanceof Double )
       return (Double) property;
-    
-    return null;
+
+    // default value is 0.0 (check schema)
+    return 0.0;
   }
 
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getPipeDiameter()
    */
   @Override
-  public Object getPipeDiameter( )
+  public int getPipeDiameter( )
   {
-    return getProperty( QN_PROPERTY_PIPE_DIAMETER );
+    final Object property = getProperty( QN_PROPERTY_PIPE_DIAMETER );
+    if( property instanceof Integer )
+      return (Integer) property;
+    return 200;
   }
 
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getPipeKfValue()
    */
   @Override
-  public Integer getPipeKfValue( )
+  public int getPipeKfValue( )
   {
     final Object property = getProperty( QN_PROPERTY_PIPE_KF_VALUE );
     if( property instanceof Integer )
       return (Integer) property;
-    
-    return null;
+
+    return 8000;
   }
 
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getPipeRoughness()
    */
   @Override
-  public Double getPipeRoughness( )
+  public double getPipeRoughness( )
   {
     final Object property = getProperty( QN_PROPERTY_PIPE_ROUGHNESS );
     if( property instanceof Double )
       return (Double) property;
-    
-    return null;
+
+    return 2.0;
   }
 
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getPipeSlope()
    */
   @Override
-  public Integer getPipeSlope( )
+  public int getPipeSlope( )
   {
     final Object property = getProperty( QN_PROPERTY_PIPE_SLOPE );
     if( property instanceof Integer )
       return (Integer) property;
-    
-    return null;
+
+    return 3;
   }
 
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getProfileThickness()
    */
   @Override
-  public Object getProfileThickness( )
+  public Double getProfileThickness( )
   {
-    return getProperty( QN_PROPERTY_PROFILE_THICKNESS );
+    final Object property = getProperty( QN_PROPERTY_PROFILE_THICKNESS );
+    if( property instanceof Double )
+      return (Double) property;
+    return null;
   }
 
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getWidth()
    */
   @Override
-  public Double getWidth( )
+  public double getWidth( )
   {
-    final Object property = getProperty( QN_PROPERTY_WIDTH );
-    if( property instanceof Double )
-      return (Double) property;
-    
-    return null;
+    return (Double) getProperty( QN_PROPERTY_WIDTH );
   }
-
 
 }
