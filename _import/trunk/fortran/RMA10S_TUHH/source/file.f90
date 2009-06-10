@@ -1,3 +1,4 @@
+!     Last change:  MD   10 Jun 2009    1:54 pm
 !******************************************************************************************
 !  subroutine file.sub opens the proper input files and assigns constant unit numbers to 
 !    the files. In advance it reads the control file. The subroutine is called twice.
@@ -27,7 +28,7 @@ USE BLK10MOD, only:   &
 !unit definitions
 &  fileControl, &
 &                     lout, lin, litr, imesout, ifile, ikalypsofm, nb, ibup, &
-&                     incstr, iocon, insfl, &
+&                     incstr, iocon, insfl, IREBED, &
 &                     iwvin, iwvfc, instr, iowgt, inwgt, icordin, intims, imassout, itimfl, &
 &                     modellaus, modellein, modellrst, fnam, &
 !runtime parameters
@@ -107,7 +108,7 @@ CHARACTER (len = 96) :: FNAME, FNAMIN
 !for output purposes every filename gets its own variable
 !--------------------------------------------------------
 character (len = 96) :: FNAMMES
-character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM6
+character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM4,  FNAM6
 character (len = 96) :: FNAM10, FNAM11, FNAM12, FNAM13, FNAM14, FNAM15, FNAM16, FNAM17, FNAM19
 character (len = 96) :: FNAM20, FNAM21, FNAM22, FNAM26, FNAM27
 character (len = 96) :: FNAM30, FNAM32, FNAM33, FNAM34, FNAM36, FNAM38, FNAM39
@@ -119,7 +120,7 @@ character (len = 96) :: FNAM40, FNAM41
 !FNAM1  = Iteration results output         (Output.itr)
 !FNAM2  = geometry                         (model.2d)
 !FNAM3  = restart result with geometry     (z.B. model.2d)
-!FNAM4  = obsolete
+!FNAM4  = Bed restart with Layer-Thickness (z.B. model.bed)
 !FNAM5  = obsolete
 !FNAM6  = Echo file                        (Output.ech)
 !FNAM7  = obsolete
@@ -232,6 +233,7 @@ LOUT = 3       !after 1st call unit of output file (.ech)          (FNAM6)/
 !numbered and present, if the unit number becomes unequal zero during runtime!
 IFILE = 0      !model geometry (in *.2d-format)                    (FNAM2)
 NB = 0         !restart input file (ASCII)                         (FNAM3)
+IREBED = 0     !Bed-restart input file (ASCII)                     (FNAM4)
 ibup = 0       !external boundary condition file                   (FNAM11)
 IIQ = 0        !input meteorological data file                     (FNAM12)
 IQEUNIT = 0    !Q-graph for element inflow                         (FNAM13)
@@ -349,6 +351,18 @@ FileRead: DO
     endif
     !backspace file, if 'RESTART'-entry was not present, not to jump over any line
     if (.not. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
+
+
+  !Input 'BEDREST' = Bed-RESTART (INPUT-Data)
+  !-----------------------------------------
+  ELSEIF(ID(1:7) == 'BEDREST') THEN
+    !unit of the Bed-Restart file
+    IREBED = 50
+    !name of bed restart file = FNAM4
+    call fileOpen (IREBED, trim(FNAME), 'OLD', 'FORMATTED', FNAM4, IERMSG)
+    ! Restart bed need not be combined with Restart-Hydrodynamic File.
+    ! Restart bed can also be loaded for starting from Lake-Solution as well
+    !       as starting from a real Restart-Case
 
 
   !meteorological data time series (INPUT)
