@@ -1,4 +1,4 @@
-C     Last change:  MD    9 Jun 2009   12:01 pm
+C     Last change:  MD   10 Jun 2009    3:10 pm
 cipk  last update apr 05 2006   make a first call to get sed initial conditions
 crrr  Last update Aug 23 1997
       SUBROUTINE BED
@@ -120,14 +120,15 @@ crrr aug97 update test to 3 characters
               WRITE(LOUT,*) ' ERROR -- EXPECTING LINE TYPE CBL'
               STOP
             ENDIF
-            READ(DLIN,5003) L,SSTO(1,L),SMVAL(1,L),GBO(1,L),THICKO(1,L)
+            READ(DLIN,5003) L,SSTO(1,L),SMVAL(1,L),GBO(1,L),
+     +                      THICKOND(1,L)
             WRITE(75,*) 'MD: CBL mit IBED=1 ist gelesen'
             CALL GINPT(LIN,ID,DLIN)
             IF(I .LE. 2) THEN
-              WRITE(LOUT,6016) N,L,THICKO(1,L),GBO(1,L),SSTO(1,L)
+              WRITE(LOUT,6016) N,L,THICKOND(1,L),GBO(1,L),SSTO(1,L)
      +                         ,SMVAL(1,L)
             ELSE
-              WRITE(LOUT,6017) L,THICKO(1,L),GBO(1,L),SSTO(1,L)
+              WRITE(LOUT,6017) L,THICKOND(1,L),GBO(1,L),SSTO(1,L)
      +                         ,SMVAL(1,L)
             ENDIF
           ENDDO
@@ -140,7 +141,8 @@ crrr aug97 update test to 3 characters
               SSTO(N,L)=SSTO(1,L)
               SMVAL(N,L)=SMVAL(1,L)
               GBO(N,L)=GBO(1,L)
-              THICKO(N,L)=THICKO(1,L)
+              THICKOND(N,L)=THICKOND(1,L)
+              THICKO(N,L)=THICKOND(1,L)
             ENDDO
           ENDIF
           IF(TEMP1 .GE. 0.) TM(N)=TEMP1
@@ -178,12 +180,14 @@ C-
            WRITE(LOUT,*) ' ERROR -- EXPECTING LINE TYPE CBL'
            STOP
           ENDIF
-          READ(DLIN,5003) L,SSTO(N,L),SMVAL(N,L),GBO(N,L),THICKO(N,L)
+          READ(DLIN,5003) L,SSTO(N,L),SMVAL(N,L),GBO(N,L),THICKOND(N,L)
           WRITE(75,*) 'MD: CBL mit IBED=2 ist gelesen'
           IF(I .LE. 2) THEN
-          WRITE(LOUT,6016) N,I,THICKO(N,I),GBO(N,I),SSTO(N,I),SMVAL(N,I)
+            WRITE(LOUT,6016) N,I,THICKOND(N,I),GBO(N,I),SSTO(N,I),
+     +                       SMVAL(N,I)
           ELSE
-          WRITE(LOUT,6017) I,THICKO(N,I),GBO(N,I),SSTO(N,I),SMVAL(N,I)
+            WRITE(LOUT,6017) I,THICKOND(N,I),GBO(N,I),SSTO(N,I),
+     +                       SMVAL(N,I)
           ENDIF
         ENDDO
         IF (TEMP1 .GE. 0.0) TM(N)=TEMP1
@@ -276,6 +280,7 @@ C..... READ NEXT RECORD
                   NLAYO(J)=NLA
                   TM(J)=TEMP1
                   DO K=1,NLA
+                    THICKOND(J,K)=THICKOM(K)
                     THICKO(J,K)=THICKOM(K)
                     GBO(J,K)=GBOM(K)
                     SSTO(J,K)=SSTOM(K)
