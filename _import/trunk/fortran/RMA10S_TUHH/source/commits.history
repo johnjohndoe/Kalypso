@@ -894,4 +894,34 @@ new features introduced/ started to be introduced:
         >> IF(LSS.gt.0 .or. LSAND.GT.0) THEN
       Only set to zero IF(WSELL .LT. ABED)               
       >> SUBR COEF25, COEF25NT, COEF2d, COEF2dNT             
---- Monika Donner, 09.06.2009                 
+--- Monika Donner, 09.06.2009
+
+--- Monika Donner, 10.06.2009
+046) NEW: Restart for cohesive Bed-data now available.
+     Please define in CONTROL below "RESTART": 
+       >>  BEDREST ****.bed 
+     Bed-Restart can also be used without Restart Data for hydrodynamic or sediment transport.
+     Only the actual Bed-Layer thickness is used in order to fill or empty predefined 
+     Layer structure in CONTROL. All other parameters like settling velocities, critical 
+     erosion-shear-stress, critical deposition a.s.o are collected from definitions done
+     in CONTROL. The user has to take care about definitions of Layer structure for each 
+     roughness class in CONTROL and its consistency to combined Bed-Restart-Data. 
+     Only some Errors are fixed like:
+       - inconsistency of number of Layers (>> no Transfer of restart values for Node) 
+       - inconsistency of Maximal Nodes (>> STOP)
+       - inconsistency of Layer-Thickness (>> is accepted and Restart bed is transferred)
+     
+     If a given Layer-Thickness in Bed-Restart-Data is greater than Thickness defined in CONTROL, 
+     predefined Thickness is increased. Therefore FORMBED is called again in order to 
+     reconstruct bed-levels and Sum of Layer-Thickness.              
+     >> NEW SUBR READ_KALYP_BED
+     >> SUBR FILE, SPROP, RDKALYPSO, BLK10MOD
+      
+047.) Definition of Initial BED-Layer-Thickness is saved as THICKOND(KN,Layer) for preparing
+      deposition processes also in BED-LAYERS:
+      - actual Bed-Layer-Thickness THICKO(NN,L) 
+      - initial, maximal and predefined Bed-Layer-Thickness THICKOND(NN,L)       
+      Change in deposition processes (>> NEWBED) will be implemented soon... :-))   
+      >> SUBR BED, BLKSEDMOD, INITLSED  
+--- Monika Donner, 10.06.2009
+                     
