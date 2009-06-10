@@ -1,4 +1,4 @@
-!     Last change:  MD    8 Jun 2009    3:41 pm
+!     Last change:  MD   10 Jun 2009    5:16 pm
 SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt, psConn, maxSE, KSWIT)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
 !
@@ -1617,6 +1617,202 @@ end if
 LogIntPolProf = .true.
 IsPolynomNode = .true.
 END subroutine
+
+
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+SUBROUTINE Read_KALYP_Bed
+
+USE BLK10mod
+USE BLKSEDMOD
+USE BLKSANMOD
+
+! local variables
+INTEGER:: NO_GOK
+INTEGER:: ISUSLAY, IACTIV_SL
+INTEGER:: IBEDLAY, IACTIV_BL
+INTEGER:: istat          !Variable for I/O errors
+
+INTEGER:: NLAY_OLD, NLAYO_OLD
+REAL(KIND=8):: BSHEAR_OLD, UST_OLD, DEPRAT_OLD, VS_OLD, EDOT_OLD, SERAT_OLD
+REAL(KIND=8):: AO_BED_OLD, TMSED_OLD, SUMTHICK_OLD
+REAL(KIND=8):: THICK_OLD(1:10), THICKO_OLD(1:10)
+REAL(KIND=8):: SUMTHICK
+! ----------------------
+
+! erste Zeile "Zeitschrittweite" und zwei Zeilen Text
+READ(IREBED,*)
+READ(IREBED,*)
+READ(IREBED,*)
+NO_GOK = 0
+
+! Reading Bed results in file
+! endless reading loop until end of file condition is reached
+!-----------------------------------------------------------
+ Bed_reading: do
+   !read next line from bed-restart file
+   read (IREBED, * , iostat = istat)  &
+                  NN, BSHEAR_OLD, UST_OLD, DEPRAT_OLD, VS_OLD, &
+       &          EDOT_OLD, SERAT_OLD, AO_BED_OLD, TMSED_OLD, NLAY_OLD, NLAYO_OLD,SUMTHICK_OLD,&
+       &          (THICK_OLD(L),L=1,NLAY_OLD),(THICKO_OLD(L),L=1,NLAYO_OLD)
+
+   !exit loop, if reaching end of file condition
+   if (istat /= 0) exit bed_reading
+
+   IF (NN.gt.MaxP) THEN
+     WRITE(*,*) ' Bed-Restart ist nicht kompatibel mit der Modell-Restart Datei.'
+     WRITE(*,*) ' >> Programmabbruch da Knotenanzahl nicht uebereinstimmt!'
+     WRITE(75,*) ' Bed-Restart ist nicht kompatibel mit der Modell-Restart Datei.'
+     WRITE(75,*) ' >> Programmabbruch da Knotenanzahl nicht uebereinstimmt!'
+     STOP
+   END IF
+
+   IF (AO_BED_OLD.ne.AO(NN) .and. NO_GOK==0) THEN
+     WRITE(*,*) ' Achtung: Sohlhoehe aus Restart-Bed nicht identisch mit Modell: ',NN,' .'
+     WRITE(75,*) ' Achtung: Sohlhoehe aus Restart-Bed nicht identisch mit Modell: ',NN,' .'
+     NO_GOK = 1
+     ! Vorbereitung fuer einlesen neuer Sohlgeometrie (jetzt aber noch nicht verfuegbar)
+   END IF
+
+   ! Check Suspended Layer formation
+   ! ---------------------------------
+   IF (NLAY_OLD.ne.NLAYTND(NN)) THEN
+     ISUSLAY = 1
+     WRITE(*,*) ' Achtung: Anzahl Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist falsch.'
+     WRITE(75,*) ' Achtung: Anzahl Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist falsch.'
+
+   ElseIF (NLAY_OLD.eq.NLAYTND(NN)) THEN
+     ISUSLAY = 0
+     IACTIV_SL = 0
+     DO L = 1, NLAY_OLD
+       ! Change unit
+       THICK_OLD(L) = THICK_OLD(L)/1000.0
+
+       IF (THICK_OLD(L).eq.0.0 .and. IACTIV_SL.eq.0) THEN
+         THICK(NN,L) = THICK_OLD(L)
+         ! Layer sind leer
+
+       ElseIF (THICK_OLD(L).gt.0.0 .and. IACTIV_SL.eq.0) THEN
+         IACTIV_SL = 1
+         ! Suspended Layer ab hier voll
+         IF (THICK_OLD(L).gt.TLAYND(NN,L)) THEN
+           TLAYND(NN,L) = THICK_OLD(L)
+           ! Ersetzen mit dickerem Layer
+           THICK(NN,L) = THICK_OLD(L)
+           ! Auffuellen des Susp. Layers
+           WRITE(75,*) ' Achtung: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
+         ElseIF (THICK_OLD(L).lt.TLAYND(NN,L)) THEN
+           THICK(NN,L) = THICK_OLD(L)
+           ! Neubelegung des Susp. Layers halbvoll
+         ElseIF (THICK_OLD(L).eq.TLAYND(NN,L)) THEN
+           THICK(NN,L) = THICK_OLD(L)
+           ! Neubelegung des Susp. Layers ganzvoll
+         Endif
+       ElseIF (THICK_OLD(L).gt.0.0 .and. IACTIV_SL.eq.1) THEN
+         IACTIV_SL = 1
+         ! Suspended Layer ab hier voll
+         IF (THICK_OLD(L).gt.TLAYND(NN,L)) THEN
+           TLAYND(NN,L) = THICK_OLD(L)
+           ! Ersetzen mit dickerem Layer
+           THICK(NN,L) = THICK_OLD(L)
+           ! Auffuellen des Susp. Layers
+           WRITE(75,*) ' Achtung: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
+         ElseIF (THICK_OLD(L).lt.TLAYND(NN,L)) THEN
+           THICK(NN,L) = THICK_OLD(L)
+           ! Neubelegung des Susp. Layers halbvoll
+         ElseIF (THICK_OLD(L).eq.TLAYND(NN,L)) THEN
+           THICK(NN,L) = THICK_OLD(L)
+           ! Neubelegung des Susp. Layers ganzvoll
+         Endif
+       ElseIF (THICK_OLD(L).eq.0.0 .and. IACTIV_SL.gt.1) THEN
+         IACTIV_SL = 2
+         ! Layer ab hier leer sind leer
+       Else
+         WRITE(*,*) ' Error: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed fehlerhaft.'
+         WRITE(*,*) ' >> Programmabbruch'
+         WRITE(75,*) ' Error: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed fehlerhaft.'
+         WRITE(75,*) ' >> Programmabbruch'
+         STOP
+       END IF
+     END DO
+   Endif
+
+
+
+   ! Check Bed Layer formation
+   ! ---------------------------------
+   IF (NLAYO_OLD.ne.NLAYO(NN)) THEN
+     IBEDLAY = 1
+   ElseIF (NLAYO_OLD.eq.NLAYO(NN)) THEN
+     IBEDLAY = 0
+     IACTIV_BL = 0
+     DO L = 1, NLAYO_OLD
+       ! Change unit
+       THICKO_OLD(L) = THICKO_OLD(L)/1000.0
+
+       IF (THICKO_OLD(L).eq.0.0 .and. IACTIV_BL.eq.0) THEN
+         THICKO(NN,L) = THICKO_OLD(L)
+         ! Bed Layer sind leer
+
+       ElseIF (THICKO_OLD(L).gt.0.0 .and. IACTIV_BL.eq.0) THEN
+         IACTIV_BL = 1
+         ! Suspended Layer ab hier voll
+         IF (THICKO_OLD(L).gt.THICKOND(NN,L)) THEN
+           THICKOND(NN,L) = THICKO_OLD(L)
+           ! Ersetzen mit dickerem Layer
+           THICKO(NN,L) = THICKO_OLD(L)
+           ! Auffuellen des Susp. Layers
+           WRITE(75,*) ' Achtung: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
+         ElseIF (THICKO_OLD(L).lt.THICKOND(NN,L)) THEN
+           THICKO(NN,L) = THICKO_OLD(L)
+           ! Neubelegung des Susp. Layers halbvoll
+         ElseIF (THICKO_OLD(L).eq.THICKOND(NN,L)) THEN
+           THICKO(NN,L) = THICKO_OLD(L)
+           ! Neubelegung des Susp. Layers ganzvoll
+         Endif
+       ElseIF (THICKO_OLD(L).gt.0.0 .and. IACTIV_BL.eq.1) THEN
+         IACTIV_BL = 1
+         ! Suspended Layer ab hier voll
+         IF (THICKO_OLD(L).gt.THICKOND(NN,L)) THEN
+           THICKOND(NN,L) = THICKO_OLD(L)
+           ! Ersetzen mit dickerem Layer
+           THICKO(NN,L) = THICKO_OLD(L)
+           ! Auffuellen des Susp. Layers
+           WRITE(75,*) ' Achtung: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
+         ElseIF (THICKO_OLD(L).lt.THICKOND(NN,L)) THEN
+           THICKO(NN,L) = THICKO_OLD(L)
+           ! Neubelegung des Susp. Layers halbvoll
+         ElseIF (THICKO_OLD(L).eq.THICKOND(NN,L)) THEN
+           THICKO(NN,L) = THICKO_OLD(L)
+           ! Neubelegung des Susp. Layers ganzvoll
+         Endif
+
+  !MD: Dieser Fall noch nicht möglich, aber bald:
+  !MD:     ElseIF (THICKO_OLD(L).eq.0.0 .and. IACTIV_BL.gt.1) THEN
+  !MD:       IACTIV_BL = 2
+  !MD:       ! Layer ab hier leer sind leer
+       Else
+         WRITE(*,*) ' Error: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed fehlerhaft.'
+         WRITE(*,*) ' >> Programmabbruch'
+         WRITE(75,*) ' Error: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed fehlerhaft.'
+         WRITE(75,*) ' >> Programmabbruch'
+         STOP
+       END IF
+     END DO
+   Endif
+
+ END DO Bed_reading
+ WRITE(*,*) ' Ende des Einlesens der Bed-Datei'
+
+
+CLOSE (IREBED, STATUS='keep')
+
+!--------------- Formatdefinition: -----------------------------
+!MD:   3000 format (1X, 'Opening output file failed. (IOSTAT =',I2,')',/ &
+!MD:     &        1X, 'Stopping Program...')
+
+
+END SUBROUTINE Read_KALYP_Bed
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
