@@ -1,4 +1,4 @@
-C     Last change:  MD    9 Jun 2009    1:17 pm
+C     Last change:  MD   10 Jun 2009    5:32 pm
 CIPK  LAST UPDATE APR 20 2006 ADD INPUT OPTION FOR TLAYM
 CIPK  LAST UPDATE NOV 19 1997
 crrr  last update Aug 30 1997 test for max number of layers
@@ -329,6 +329,22 @@ cipk June 1996      ENDIF
 	WRITE(*,*) 'NO ENDSED DATA LINE FOUND'
 	STOP
       ENDIF
+
+
+!MD: READ BED RESTART-File if available (from SUbR Filehandling)
+      IF(IREBED == 50) THEN
+        WRITE(75,*) 'RestartBed is readed.'
+        WRITE(*,*) 'RestartBed is readed.'
+        CALL Read_KALYP_BED
+        !MD: neue Formation von DELBED, BEDORIG(NN) usw. erforderlich
+        CALL FORMBED(1)
+      ELSEIF(IREBED == 0) THEN
+        WRITE(75,*) 'No RestartBed available: Start with full B.Layers.'
+        WRITE(*,*) 'No RestartBed available: Start with full B.Layers.'
+      ENDIF
+!MD: READ BED RESTART-File if available (from SUbR Filehandling)
+
+
 C
       RETURN
 
