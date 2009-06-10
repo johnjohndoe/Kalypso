@@ -65,6 +65,7 @@
         	They cannot be used from the File-New menu, so this makes no sense.
         	However, the wizards are invoked thorugh the eclipses-extension mechanism (from the handler)
         	so the handlers have to be rewritten first (they should dirdctly instantiate those wozards).
+        -->
 		<wizard
             class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             icon="icons/risk_project.gif"
@@ -78,7 +79,6 @@
 	        name="ImportWaterlevelRaster"
 	        project="false">
         </wizard>
-        -->
 	</extension>
  <extension
        point="org.kalypso.contribs.java.urlCatalog">
