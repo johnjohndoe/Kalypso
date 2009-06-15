@@ -79,7 +79,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This class is used to edit 1D2D Elements
- *
+ * 
  * @author Thomas Jung
  */
 public class ElementGeometryEditor
@@ -120,7 +120,7 @@ public class ElementGeometryEditor
 
   /**
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
-   *
+   * 
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
   public void finish( ) throws Exception
@@ -244,12 +244,17 @@ public class ElementGeometryEditor
       for( final GM_Ring ring : rings )
       {
         final GM_Position[] poses = ring.getPositions();
-        // D.1) New Element self-intersects
+        // D.1) new element self-intersects
         if( GeometryUtilities.isSelfIntersecting( poses ) )
           return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4" ) ); //$NON-NLS-1$
 
-        // D.2) new elements intersect other elements
         final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, null, crs );
+        
+        // D.2) new element is not convex
+        if( newSurface.getConvexHull().difference( newSurface ) != null )
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.7" ) ); //$NON-NLS-1$
+        
+        // D.3) new elements intersect other elements
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
         for( final IFE1D2DElement element : elements )
         {

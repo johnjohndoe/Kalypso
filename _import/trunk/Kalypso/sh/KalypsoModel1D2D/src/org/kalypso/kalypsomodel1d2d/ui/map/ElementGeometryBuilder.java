@@ -308,8 +308,13 @@ public class ElementGeometryBuilder
       if( GeometryUtilities.isSelfIntersecting( ring ) )
         return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
 
-      // New Element intersects other elements
       final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      
+      // new element is not convex
+      if(newSurface.getConvexHull().difference( newSurface) != null)
+        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.7" ) ); //$NON-NLS-1$
+
+      // new element intersects other elements
       final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
       for( final IFE1D2DElement element : elements )
       {
