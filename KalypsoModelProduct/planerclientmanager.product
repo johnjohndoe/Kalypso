@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="Planer Client Manager" id="org.kalypso.planer.client.manager.productpcm" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0_M1" useFeatures="false">
+<product name="Planer Client Manager" id="org.kalypso.planer.client.manager.productpcm" application="org.kalypso.model.product.kalypsomodelapplication" version="0.2" useFeatures="false">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -9,7 +9,7 @@
          Kalypso Planer Client Manager
 
 Version: 0.2.x Prototyp
-Build: 2009-05-28
+Build: 2009-06-10
 
 entwickelt von:
 - Björnsen Beratende Ingenieure GmbH, Koblenz - http://www.bjoernsen.de
