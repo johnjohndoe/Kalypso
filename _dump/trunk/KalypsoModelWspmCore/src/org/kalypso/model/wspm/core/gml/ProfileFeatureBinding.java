@@ -267,7 +267,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
 
     try
     {
-      imageFeature.setUri( imageURL.toURI() );
+      imageFeature.setUri( imageURL == null ? null : imageURL.toURI() );
     }
     catch( final URISyntaxException e )
     {
