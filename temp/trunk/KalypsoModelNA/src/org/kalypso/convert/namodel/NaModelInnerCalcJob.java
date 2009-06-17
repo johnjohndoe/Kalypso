@@ -286,16 +286,25 @@ public class NaModelInnerCalcJob implements ISimulation
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL, null );
+
       final URL iniValuesFolderURL = (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
-      final File lzsimFile = new File( iniValuesFolderURL.getFile(), "lzsim.gml" ); //$NON-NLS-1$
-      if( lzsimFile.exists() )
+
+      if( iniValuesFolderURL != null )
       {
-        final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimFile.toURI().toURL(), null );
-        LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
-      }
-      else
-      {
-        logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26" ), conf.getSimulationStart().toString() ); //$NON-NLS-1$
+        // TODO: crude way to create the new URL, necessary as probably we do not have a '/' at the end of the path
+        final URL lzsimURL = new URL( iniValuesFolderURL.toExternalForm() + "/lzsim.gml" );
+        try
+        {
+          final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimURL, null );
+          LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
+        }
+        // We still assume it is a file.... ignore file not found, we do not have starting conditions then
+        catch( final FileNotFoundException e )
+        {
+// e.printStackTrace();
+
+          logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26" ), conf.getSimulationStart().toString() ); //$NON-NLS-1$
+        }
       }
 
       if( monitor.isCanceled() )
@@ -682,7 +691,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   /**
    * update workspace and do some tricks in order to fix some things the fortran-kernel can not handle for now
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -702,14 +711,14 @@ public class NaModelInnerCalcJob implements ISimulation
    *
    * </code> after: <br>
    * <code>
-   * 
+   *
    * Node1 O <--- newVChannel <-- newNode O <-- newVChannel
    *                                      A
    *                                      |
    *                                      O-- Node2
    *
    * </code>
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -742,7 +751,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * TODO scetch<br>
    * if results exists (from a former simulation) for a node, use this results as input, later the upstream nodes will
    * be ignored for calculation
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -794,7 +803,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
    *                                          A- Q(constant)<br>
    * </code>
-   * 
+   *
    * @param workspace
    * @throws Exception
    */
@@ -837,7 +846,7 @@ public class NaModelInnerCalcJob implements ISimulation
    *     o(existing)
    *
    * </code> after: <code>
-   * 
+   *
    *  |new Channel3|
    *     |
    *     V
@@ -887,7 +896,7 @@ public class NaModelInnerCalcJob implements ISimulation
   /**
    * updates workspace, so that interflow and channelflow dependencies gets optimized <br>
    * groundwater flow can now run in opposite direction to channel flow
-   * 
+   *
    * @param workspace
    */
   private void updateGWNet( final GMLWorkspace workspace )
@@ -1006,7 +1015,7 @@ public class NaModelInnerCalcJob implements ISimulation
   /**
    * some parameter have factors that must be processed before generating asciifiles, as these factors do not occur in
    * ascci-format
-   * 
+   *
    * @param modellWorkspace
    */
   private void updateFactorParameter( final GMLWorkspace modellWorkspace )
