@@ -172,11 +172,9 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
-
   private final static URL SLD_TEMPLATE_LOCATION = EventManagementWidget.class.getResource( "resources/wsp.sld" );//$NON-NLS-1$
 
   private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" )//$NON-NLS-1$//$NON-NLS-2$
-
   {
   };
 
@@ -1296,7 +1294,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
                   }
                   if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.84" ) ) ) //$NON-NLS-1$
                   {
-                    kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.85" ), event.getName() ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+                    kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.85" ), event.getName() ) ) ); //$NON-NLS-1$ 
                     kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
                 }

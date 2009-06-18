@@ -42,6 +42,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public final class AddEventOperation implements ICoreRunnableWithProgress
 {
+  public static final String PROPERTY_EVENT_ID = "eventID";
+
   private final IFloodModel m_model;
 
   private final IFolder m_eventsFolder;
@@ -156,6 +158,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   public static void addEventThemes( final IKalypsoCascadingTheme wspThemes, final IRunoffEvent event ) throws Exception
   {
+    final String eventID = event.getFeature().getId();
+
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();
 
@@ -167,9 +171,14 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       polygoneLayer.setActuate( "onRequest" ); //$NON-NLS-1$
       polygoneLayer.setHref( "../models/flood.gml" ); //$NON-NLS-1$
       polygoneLayer.setVisible( true );
+
       final Property layerPropertyDeletable = new Property();
       layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
       layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
+
+      final Property layerPropertyEventId = new Property();
+      layerPropertyEventId.setName( PROPERTY_EVENT_ID );
+      layerPropertyEventId.setValue( eventID );
 
       final List<Property> layerPropertyList = polygoneLayer.getProperty();
       layerPropertyList.add( layerPropertyDeletable );
@@ -205,8 +214,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     { // Wasserspiegel
       final StyledLayerType wspLayer = new StyledLayerType();
 
-      wspLayer.setName( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.26" ), event.getName() ) ); //$NON-NLS-1$ 
-      wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/tinMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+      wspLayer.setName( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.26" ), event.getName() ) ); //$NON-NLS-1$
+      wspLayer.setFeaturePath( "#fid#" + eventID + "/tinMember" ); //$NON-NLS-1$ //$NON-NLS-2$
       wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
       wspLayer.setType( "simple" ); //$NON-NLS-1$
       wspLayer.setVisible( true );
@@ -221,9 +230,14 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
       layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
+      final Property layerPropertyEventId = new Property();
+      layerPropertyEventId.setName( PROPERTY_EVENT_ID );
+      layerPropertyEventId.setValue( eventID );
+
       final List<Property> layerPropertyList = wspLayer.getProperty();
       layerPropertyList.add( layerPropertyDeletable );
       layerPropertyList.add( layerPropertyThemeInfoId );
+      layerPropertyList.add( layerPropertyEventId );
 
       final List<Style> styleList = wspLayer.getStyle();
       final Style style = new Style();

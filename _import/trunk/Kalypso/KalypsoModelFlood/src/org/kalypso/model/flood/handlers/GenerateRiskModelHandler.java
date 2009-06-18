@@ -1,8 +1,6 @@
 package org.kalypso.model.flood.handlers;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,13 +9,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,24 +25,15 @@ import org.eclipse.ui.internal.wizards.NewWizardRegistry;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.IScenario;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.grid.IGeoGrid;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
-import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
@@ -81,7 +68,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" ); //$NON-NLS-1$
 
       // get the flood model
-      final IFloodModel model = dataProvider.getModel( IFloodModel.class );
+      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
 
       // get all events
       final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
@@ -97,6 +84,20 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       {
         MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.4" ), Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
+      }
+
+      /* Copy event data into non-flood-modell dependend arrays */
+      final String[] eventNames = new String[eventsToProcess.length];
+      final String[] eventDescriptions = new String[eventsToProcess.length];
+      final Integer[] eventPeriods = new Integer[eventsToProcess.length];
+      final ICoverageCollection[] eventGrids = new ICoverageCollection[eventsToProcess.length];
+      for( int i = 0; i < eventsToProcess.length; i++ )
+      {
+        eventNames[i] = eventsToProcess[i].getName();
+        final String importText = String.format( "Imported from '%s'", floodModelScenarioFolder.getProject().getName() );
+        eventDescriptions[i] = String.format( "%s (%s)", eventsToProcess[i].getDescription(), importText ); //$NON-NLS-1$
+        eventPeriods[i] = eventsToProcess[i].getReturnPeriod();
+        eventGrids[i] = eventsToProcess[i].getResultCoverages();
       }
 
       /* Create Risk Projekt: show project new dialog */
@@ -115,14 +116,15 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* Now we can import the flodd-depth grids */
       final ICoreRunnableWithProgress importOperation = new ICoreRunnableWithProgress()
       {
-
         @Override
-        public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
-
+        public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
         {
           try
           {
-            importEvents( floodModelScenarioFolder, eventsToProcess );
+            Assert.isNotNull( floodModelScenarioFolder );
+
+            // Delegate importing the grids to Raster-Code; it knows best what to do with it
+            RiskModelHelper.importEvents( eventNames, eventDescriptions, eventPeriods, eventGrids, monitor );
           }
           catch( final CoreException e )
           {
@@ -151,56 +153,6 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
     }
     return null;
 
-  }
-
-  protected void importEvents( final IFolder floodModelScenarioFolder, final IRunoffEvent[] eventsToProcess ) throws CoreException, Exception, InvocationTargetException
-  {
-    /* The active scenario must have changed to the risk project. We can now access risk project data. */
-    final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
-    final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class );
-    final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
-
-    /* --- demo code for accessing the depth grid coverage collections --- */
-    final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
-    final String rasterFolderPath = "raster/input/"; //$NON-NLS-1$
-    final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" ); //$NON-NLS-1$
-
-    Assert.isNotNull( floodModelScenarioFolder );
-    Assert.isNotNull( rasterFolder );
-
-    // get the result coverage collections (depth grids) from the events
-    final List<Feature> createdFeatures = new ArrayList<Feature>();
-    for( final IRunoffEvent runoffEvent : eventsToProcess )
-    {
-      final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-      annualCoverageCollection.setName( runoffEvent.getName() );
-      createdFeatures.add( annualCoverageCollection.getFeature() );
-
-      final ICoverageCollection coverages = runoffEvent.getResultCoverages();
-      int coverageCount = 0;
-      for( final ICoverage coverage : coverages )
-      {
-        final String targetFileName = String.format( "grid_%d_%d.ascbin", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
-        final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
-
-        final String targetGridPath = rasterFolderPath + targetFileName;
-        final File targetFile = new File( rasterFolder.getLocation().toFile(), targetFileName );
-
-        final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
-        newCoverage.setName( "" + coverageCount ); //$NON-NLS-1$
-        newCoverage.setDescription( String.format( Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.6") ) ); //$NON-NLS-1$
-        grid.dispose();
-
-        coverageCount++;
-      }
-    }
-
-    /* ------ */
-    // TODO: maybe save other models?
-    final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.7"), false ) ); //$NON-NLS-1$
-    riskDataProvider.saveModel( IRasterDataModel.class, new NullProgressMonitor() );
   }
 
   /**
