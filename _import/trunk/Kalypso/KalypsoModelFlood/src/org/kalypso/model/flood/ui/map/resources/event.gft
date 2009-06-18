@@ -8,7 +8,7 @@
 	<gft:gridLayout numColumns="2" />
 
 	<gft:label property="gml:name" visible="true" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
 	<gft:text editable="true" property="gml:name"  style="SWT.BORDER"
@@ -16,7 +16,7 @@
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
 
-	<gft:label property="gml:description" visible="true"  style="SWT.NONE">
+	<gft:label property="gml:description" visible="true" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
@@ -24,6 +24,16 @@
 		xmlns:gml="http://www.opengis.net/gml">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
 			heightHint="30" grabExcessHorizontalSpace="true" />
+	</gft:text>
+
+	<gft:label property="flood:returnPeriod" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="flood:returnPeriod" style="SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
 	</gft:text>
 
 </gft:featureview>
