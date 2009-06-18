@@ -77,15 +77,15 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
     return weirRelation;
   }
 
-  /**
-   * Return one 1D-Element.
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
-   *      org.kalypsodeegree.model.geometry.GM_Point, double)
-   */
-  @Override
-  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
-  {
-    return discModel.find1DElement( currentPos, grabDistance );
-  }
+//  /**
+//   * Return one 1D-Element.
+//   * 
+//   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
+//   *      org.kalypsodeegree.model.geometry.GM_Point, double)
+//   */
+//  @Override
+//  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+//  {
+//    return discModel.find1DElement( currentPos, grabDistance );
+//  }
 }
