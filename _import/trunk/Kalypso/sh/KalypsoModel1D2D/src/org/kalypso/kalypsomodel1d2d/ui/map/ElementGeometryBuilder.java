@@ -51,7 +51,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
@@ -59,7 +58,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -68,6 +66,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -122,13 +121,15 @@ public class ElementGeometryBuilder
    * Adds a node or a would-be node (i.e. a GM_Point) to this builder.<br>
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
    */
-  public ICommand addNode( final GM_Point node ) throws Exception
+//  public ICommand addNode( final GM_Point node ) throws Exception
+  public final IFeatureWrapper2 addNode( final GM_Point node, final CompositeCommand command  ) throws Exception
   {
     m_nodes.add( node );
     removeDuplicates( m_nodes );
 
-    if( m_nodes.size() == m_cnt_points )
-      return finish();
+    if( m_nodes.size() == m_cnt_points && m_cnt_points != 0 ){
+      return finish( command );
+    }
 
     return null;
   }
@@ -138,19 +139,23 @@ public class ElementGeometryBuilder
    * 
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
-  public ICommand finish( ) throws Exception
+  public final IFeatureWrapper2 finish( final CompositeCommand command ) throws Exception
   {
-    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+//    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
 
+    IFeatureWrapper2 lNewFeature = null;
+    
     final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
-    ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, m_nodes );
-
-    return command;
+    {
+      lNewFeature = ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, m_nodes );
+    }
+      
+    return lNewFeature;
   }
 
   /**
@@ -183,6 +188,11 @@ public class ElementGeometryBuilder
 
     g.setColor( color );
 
+  }
+
+  public final List<GM_Point> getNodes( )
+  {
+    return m_nodes;
   }
 
   public int getNumberOfNodes( )
@@ -311,7 +321,7 @@ public class ElementGeometryBuilder
       final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       
       // new element is not convex
-      if(newSurface.getConvexHull().difference( newSurface) != null)
+      if( allNodes.length < 3 && newSurface.getConvexHull().difference( newSurface ) != null )
         return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.7" ) ); //$NON-NLS-1$
 
       // new element intersects other elements
