@@ -7,7 +7,7 @@
 
 	<TaskGroup URI="org.kalypso.model.flood.DataLoad" context="FloodMap">
 		<Help>%KalypsoFlood_DataLoad_help</Help>
-		<Name>%KalypsoFlood_DataLoad_name</Name>
+		<Name>%KalypsoFlood_DataLoad</Name>
 		<Task context="ImportBaseMap" URI="org.kalypso.model.flood.ImportBackgroundData">
 			<Help>%KalypsoFlood_DataLoad_ImportBackgroundData_help</Help>
 			<Name>%KalypsoFlood_DataLoad_ImportBackgroundData</Name>
@@ -40,8 +40,8 @@
 			<Name>%KalypsoFlood_Postprocessing_VisualizeDepthData</Name>
 		</Task>
 		<Task URI="org.kalypso.model.flood.GenerateRiskModel" context="FloodMap">
-			<Help>%KalypsoFlood_PostprocessingGenerateRiskModel_help</Help>
-			<Name>%KalypsoFlood_PostprocessingGenerateRiskModel</Name>
+			<Help>%KalypsoFlood_Postprocessing_GenerateRiskModel_help</Help>
+			<Name>%KalypsoFlood_Postprocessing_GenerateRiskModel</Name>
 		</Task>
 	</TaskGroup>
 
