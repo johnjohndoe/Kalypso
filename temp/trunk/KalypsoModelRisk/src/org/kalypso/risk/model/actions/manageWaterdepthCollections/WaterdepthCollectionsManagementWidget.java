@@ -100,6 +100,7 @@ import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
@@ -268,7 +269,8 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
               m_buttonsMap.get( "REMOVE" ).setEnabled( true ); //$NON-NLS-1$
 
               /* Check/Add event-themes to map */
-              final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
+              final IMapModell mapModell = getMapPanel().getMapModell();
+              final IKalypsoCascadingTheme wspThemes = RiskModelHelper.getHQiTheme( mapModell );
               Assert.isNotNull( wspThemes, Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.35" ) ); //$NON-NLS-1$
               try
               {
