@@ -36,6 +36,10 @@
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:_FlowRelation1D:sld:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d__FlowRelation1D.sld" />
 	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:_FlowRelation2D:sld:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d__FlowRelation2D.sld" />
+
+	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel:BoundaryCondition:sld:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel.BoundaryCondition.sld" />
 	<catalog:system
@@ -76,6 +80,9 @@
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:WeirFlowRelation:featureview:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.WeirFlowRelation.gft" />
 	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:WeirFlowRelation2D:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.WeirFlowRelation2D.gft" />
+	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BridgeFlowRelation:featureview:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.BridgeFlowRelation.gft" />
 	<catalog:system
@@ -101,6 +108,9 @@
 	<catalog:system
 		systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BuildingFlowRelation:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.BuildingFlowRelation.kod" />
+	<catalog:system
+		systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BuildingFlowRelation2D:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.BuildingFlowRelation2D.kod" />
 
 	<!--  Lengthsection - Results -->
 	<catalog:system

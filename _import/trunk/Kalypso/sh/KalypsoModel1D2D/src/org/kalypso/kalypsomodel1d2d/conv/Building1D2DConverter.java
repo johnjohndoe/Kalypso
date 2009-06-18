@@ -51,6 +51,8 @@ import java.util.Map;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BuildingParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
@@ -96,11 +98,17 @@ public class Building1D2DConverter
   {
     formatter.format( "TI      %s%n", "Bauwerksdaten" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    for( final Map.Entry<Integer, IBuildingFlowRelation> buildingEntry : m_buildingProvider.getBuildingData().entrySet() )
+    for( final Map.Entry<Integer, IFlowRelationship> buildingEntry : m_buildingProvider.getBuildingData().entrySet() )
     {
-      final IBuildingFlowRelation building = buildingEntry.getValue();
+      final IFlowRelationship building = buildingEntry.getValue();
       final Integer buildingID = buildingEntry.getKey();
-      final BuildingParameters buildingParameters = building.getBuildingParameters();
+      BuildingParameters buildingParameters = null;
+      if( building instanceof IBuildingFlowRelation ){
+        buildingParameters = ( ( IBuildingFlowRelation )building ).getBuildingParameters();
+      }
+      else if( building instanceof IBuildingFlowRelation2D ){
+        buildingParameters = ( ( IBuildingFlowRelation2D )building ).getBuildingParameters();
+      }
 
       // writeBuildingBlock( formatter, buildingID, buildingParameters );
       writeNewBuildingBlock( formatter, buildingID, buildingParameters );

@@ -69,7 +69,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation.KIND;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D.KIND2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
@@ -295,7 +297,7 @@ public class Control1D2DConverter
       writeEDBlock( formatter, roughnessAsciiID, eddy, ks, axayCorrected, dpCorrected );
     }
 
-    final Map<Integer, IBuildingFlowRelation> buildingMap = m_buildingProvider.getBuildingData();
+    final Map<Integer, IFlowRelationship> buildingMap = m_buildingProvider.getBuildingData();
     for( final Integer buildingID : buildingMap.keySet() )
       writeEDBlock( formatter, buildingID, 0.0, 0.0, 0.0, 0.0 );
   }
@@ -520,24 +522,40 @@ public class Control1D2DConverter
 
     FormatterUtils.checkIoException( formatter );
 
-    for( final Map.Entry<Integer, IBuildingFlowRelation> buildingData : m_buildingProvider.getBuildingData().entrySet() )
+    for( final Map.Entry<Integer, IFlowRelationship> buildingData : m_buildingProvider.getBuildingData().entrySet() )
     {
       final Integer buildingID = buildingData.getKey();
-      final IBuildingFlowRelation building = buildingData.getValue();
-      final KIND kind = building.getKind();
-      final int buildingKind;
-      switch( kind )
-      {
-        case TABULAR:
-          buildingKind = 10;
-          break;
-
-        default:
-          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), kind );//$NON-NLS-1$
+      final IFlowRelationship building = buildingData.getValue();
+//      KIND kind = null;
+      int buildingKind = 10;
+      int lIntDirection = 0;
+      if( building instanceof IBuildingFlowRelation ){
+        if( ( ( IBuildingFlowRelation )building ).getKind() != KIND.TABULAR ){
+          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), ( ( IBuildingFlowRelation )building ).getKind() );//$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        }
+        lIntDirection = ( ( IBuildingFlowRelation )building ).getDirection();
       }
+      else if( building instanceof IBuildingFlowRelation2D ){
+        if( ( ( IBuildingFlowRelation2D )building ).getKind() != KIND2D.TABULAR ){
+          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), ( ( IBuildingFlowRelation )building ).getKind() );//$NON-NLS-1$
+          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        }
+        lIntDirection = ( ( IBuildingFlowRelation2D )building ).getDirection();
+      }
+//      building.getKind();
+//      switch( kind )
+//      {
+//        case TABULAR:
+//          buildingKind = 10;
+//          break;
+//
+//        default:
+//          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), kind );//$NON-NLS-1$
+//          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+//      }
 
-      final double direction = Math.toRadians( building.getDirection() );
+      final double direction = Math.toRadians( lIntDirection );//building.getDirection() );
       formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( formatter );

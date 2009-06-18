@@ -30,6 +30,9 @@
 		<gft:recordsFixed>true</gft:recordsFixed>
 		<gft:toolbar>
 			<gft:menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly"/>
+			<!--<gft:command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="SWT.PUSH" />-->
+			<gft:command commandId="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" style="SWT.PUSH" />
+			<gft:command commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand" style="SWT.PUSH" />
 		</gft:toolbar>
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"
 			alignment="SWT.LEFT" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM" parseFormat="dd.MM.yyyy HH:mm" optional="true" />

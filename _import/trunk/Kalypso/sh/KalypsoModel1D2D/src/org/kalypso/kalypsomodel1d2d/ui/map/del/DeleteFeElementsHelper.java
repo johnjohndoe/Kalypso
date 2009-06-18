@@ -66,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
@@ -73,6 +74,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -84,6 +86,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
@@ -174,10 +177,14 @@ public class DeleteFeElementsHelper
           final CommandableWorkspace workspace = featureTheme.getWorkspace();
           workspace.postCommand( deleteCmd );
 
-          if( deleteCmd instanceof DeletePolyElementCmd )
+          if( deleteCmd instanceof DeletePolyElementCmd ){
             changedFeatureList.addAll( ((DeletePolyElementCmd) deleteCmd).getChangedFeatureList() );
-          else if( deleteCmd instanceof DeleteElement1DCmd )
+            deleteParameter( mapPanel, easyFeatureWrapper );
+          }
+          else if( deleteCmd instanceof DeleteElement1DCmd ){
             changedFeatureList.addAll( ((DeleteElement1DCmd) deleteCmd).getChangedFeatureList() );
+            deleteParameter( mapPanel, easyFeatureWrapper );
+          }
         }
       }
 
@@ -195,6 +202,41 @@ public class DeleteFeElementsHelper
     }
     return Status.OK_STATUS;
   }
+
+  private static void deleteParameter( final IMapPanel pMapPanel, final EasyFeatureWrapper pParentToRemoveFrom ) throws Exception
+  {
+    final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( pMapPanel, IFlowRelationship.QNAME );
+    final FeatureList lFeatureList = lFlowTheme.getFeatureList();
+    final Feature lParentFeature = lFeatureList.getParentFeature();
+    IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
+    
+    final IFE1D2DElement lElement = (IFE1D2DElement) pParentToRemoveFrom.getFeature().getAdapter( IFE1D2DElement.class );
+    IFeatureWrapper2 lBuildingElement = null;
+    if( lElement instanceof IPolyElement )
+      lBuildingElement = FlowRelationUtilitites.findBuildingElement2D( ( IPolyElement ) lElement, lFlowRelCollection );
+    else if( lElement instanceof IElement1D )
+      lBuildingElement = FlowRelationUtilitites.findBuildingElement1D( ( IElement1D )lElement, lFlowRelCollection );
+    
+    Feature lBuildingFeature = null;
+    if( lBuildingElement != null ){
+        final IFeatureSelectionManager selectionManager = pMapPanel.getSelectionManager();
+        selectionManager.clear();
+        
+        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.2") ); //$NON-NLS-1$
+        {
+          lBuildingFeature = lBuildingElement.getFeature();
+          selectionManager.changeSelection( new Feature[] { lBuildingFeature }, new EasyFeatureWrapper[] {} );
+    
+          final DeleteFeatureCommand command = new DeleteFeatureCommand( lBuildingFeature );
+          compositeCommand.addCommand( command );
+        }
+        lFlowTheme.getWorkspace().postCommand( compositeCommand );
+        final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( lFlowTheme.getWorkspace(), lBuildingFeature.getParent(), lBuildingFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+        lFlowTheme.getWorkspace().fireModellEvent( event );
+    }
+    
+  }
+
 
   @SuppressWarnings("unchecked")
   public static IStatus deleteSelectedFeContiLines( final IMapPanel mapPanel )

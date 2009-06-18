@@ -251,7 +251,7 @@ public class ElementGeometryEditor
         final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, null, crs );
         
         // D.2) new element is not convex
-        if( newSurface.getConvexHull().difference( newSurface ) != null )
+        if( newSurface.getConvexHull().difference( newSurface ) != null && poses.length < 4 )
           return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.7" ) ); //$NON-NLS-1$
         
         // D.3) new elements intersect other elements

@@ -42,9 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -86,24 +83,6 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
   protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return findModelElementFromPosition( discModel, currentPos, grabDistance );
-  }
-
-  /** Made static in order to be reused by teschke-widget. */
-  @SuppressWarnings("unchecked")
-  public static IFeatureWrapper2 findModelElementFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
-  {
-    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
-    if( node != null )
-    {
-      final IFE1D2DElement[] elements = node.getElements();
-      for( final IFE1D2DElement element : elements )
-      {
-        if( element instanceof IElement1D )
-          return node;
-      }
-    }
-
-    return null;
   }
 
 }

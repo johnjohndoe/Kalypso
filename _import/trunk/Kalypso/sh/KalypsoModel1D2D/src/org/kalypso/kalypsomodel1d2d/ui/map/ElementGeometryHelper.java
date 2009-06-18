@@ -51,8 +51,8 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -60,7 +60,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
@@ -71,6 +70,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
@@ -93,6 +93,14 @@ public class ElementGeometryHelper
    */
   private static final double SEARCH_DISTANCE = 0.1;
 
+//  /**
+//   * wrapper for {@link createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points, final int pIntPointsCount ) } 
+//   * with additional points counter, 0 means not bounded.
+//   */
+//  public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+//  {
+//    return createAdd2dElement( command, workspace, parentFeature, discModel, points, points.size() );
+//  }
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
@@ -112,41 +120,44 @@ public class ElementGeometryHelper
    *          the {@link GM_Point} list
    */
   @SuppressWarnings("unchecked")
-  public static void createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+  public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
   {
     final IGMLSchema schema = workspace.getGMLSchema();
-
+    
     final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    
     final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-
+    
     final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
     final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
-
+    
     final IFeatureType parentType = parentFeature.getFeatureType();
-
+    
     final IRelationType parentNodeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
     final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
     final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-
+    
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
-
+    
     /* Build new nodes */
     final IFE1D2DNode[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
-
+    
     /* Build new edges */
     final IFE1D2DEdge[] edges = buildNewEdges( points.size(), command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
-
+    
     /* Build new element */
-    final IPolyElement newElement = PolyElement.createPolyElement( discModel );
-
-    newElement.setEdges( edges );
-
+    IFE1D2DElement newElement = null;
+    newElement = PolyElement.createPolyElement( discModel );
+    ( ( PolyElement )newElement ).setEdges( edges );
+    
     final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
     command.addCommand( addElementCommand );
-
+    
     addEdgeContainerCommand( edges, edgeContainerPT, newElement, changes );
-
+    
     command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
+    
+    return newElement;
   }
 
   /**
@@ -186,7 +197,14 @@ public class ElementGeometryHelper
     final IFE1D2DEdge[] edges = buildNewEdges( 1, command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
 
     /* Build new element */
-    final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
+    final IFeatureType parentFT = parentFeature.getFeatureType();
+    final IFeatureType lElement1DType = parentFT.getGMLSchema().getFeatureType( IElement1D.QNAME );
+
+    final Feature eleFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentElementProperty, lElement1DType );
+
+    final IElement1D newElement = new Element1D( eleFeature );
+    newElement.setEdge( edges[ 0 ] );
+//    final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
 
     final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
     command.addCommand( addElementCommand );

@@ -60,6 +60,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
@@ -98,20 +99,21 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 {
   private final int m_grabRadius = 10;
 
-  private IFlowRelationshipModel m_flowRelCollection = null;
+  protected IFlowRelationshipModel m_flowRelCollection = null;
 
-  private IKalypsoFeatureTheme m_flowTheme = null;
+  protected IKalypsoFeatureTheme m_flowTheme = null;
 
-  private IFEDiscretisationModel1d2d m_discModel = null;
+  protected IFEDiscretisationModel1d2d m_discModel = null;
 
   /* The current element (node, contiline, 1delement, ...) of the disc-model under the cursor. */
-  private IFeatureWrapper2 m_modelElement = null;
+  protected IFeatureWrapper2 m_modelElement = null;
 
-  private IFlowRelationship m_existingFlowRelation;
+  protected IFlowRelationship m_existingFlowRelation;
 
   private final QName m_qnameToCreate;
 
@@ -131,6 +133,16 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   {
     super.activate( commandPoster, mapPanel );
     reinit();
+  }
+
+  public final IFeatureWrapper2 getModelElement( )
+  {
+    return m_modelElement;
+  }
+
+  public final void setModelElement( IFeatureWrapper2 modelElement )
+  {
+    m_modelElement = modelElement;
   }
 
   private void reinit( )
@@ -308,6 +320,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     /* Create flow relation at position */
     display.asyncExec( new Runnable()
     {
+      
       public void run( )
       {
         final Feature parentFeature = m_flowRelCollection.getFeature();
@@ -325,6 +338,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
         /* Post it as an command */
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+        selectionManager.clear();
         final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getFeature(), selectionManager, true, true );
         try
         {
@@ -380,5 +394,42 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
    * @param grabDistance
    *            The grab distance in world (=geo) coordinates.
    */
-  protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
+  @SuppressWarnings("unchecked")
+//  protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance ){
+    IFeatureWrapper2 lFoundElement = discModel.find1DElement( currentPos, grabDistance );
+    if( lFoundElement == null )
+    {
+      return null;
+    }
+    IFeatureWrapper2 lBuildingExisting = FlowRelationUtilitites.findBuildingElement1D( (IElement1D) lFoundElement, m_flowRelCollection );
+    if( lBuildingExisting == null )
+    {
+      return lFoundElement;
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public IFeatureWrapper2 findModelElementFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  {
+    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
+    if( node != null )
+    {
+      if( FlowRelationUtilitites.findBuildingElementFromPosition( node.getPoint(), m_flowRelCollection ) != null ) 
+        return null;
+      final IFE1D2DElement[] elements = node.getElements();
+      for( final IFE1D2DElement element : elements )
+      {
+        if( element instanceof IElement1D )
+          return node;
+      }
+    }
+
+    return null;
+  }
+
 }

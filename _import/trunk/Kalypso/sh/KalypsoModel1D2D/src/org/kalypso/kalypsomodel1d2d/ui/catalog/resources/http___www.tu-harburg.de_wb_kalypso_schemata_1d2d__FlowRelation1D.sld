@@ -7,7 +7,6 @@
 	<Name>_FlowRelationship</Name>
 	<Title>_FlowRelationship</Title>
 	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D</FeatureTypeName>
-
 <!-- 
 	<Rule>
 		<Name>otherFlowRelationShips</Name>
@@ -42,7 +41,6 @@
 		</PointSymbolizer>
 	</Rule>
 -->
-
 	<Rule>
 		<Name>polynome</Name>
 		<Title>Polynomfunktion</Title>
@@ -79,7 +77,6 @@
 			</Graphic>
 		</PointSymbolizer>
 	</Rule>
-
 	<Rule>
 		<Name>weir</Name>
 		<Title>Wehre</Title>
@@ -134,7 +131,6 @@
 			</Graphic>
 		</PointSymbolizer>
 	</Rule>
-
 	<Rule>
 		<Name>bridge</Name>
 		<Title>Brücken</Title>
@@ -149,7 +145,7 @@
 		<MaxScaleDenominator>10000000.00</MaxScaleDenominator>
 		<PointSymbolizer>
 			<Geometry>
-				<ogc:PropertyName>position</ogc:PropertyName>
+				<ogc:PropertyName>simBase:position</ogc:PropertyName>
 			</Geometry>
 			<Graphic>
 				<ExternalGraphic>
@@ -179,7 +175,7 @@
 				</Mark>
 				<Opacity>1.0</Opacity>
 				<Size>60.0</Size>
-				<!-- Multiply by -1 in order to increase anti-clockwise. This is the 1d2d convention for interpreting the direction. -->
+     			<!-- Multiply by -1 in order to increase anti-clockwise. This is the 1d2d convention for interpreting the direction. -->
 				<Rotation>
 					<ogc:Mul>
 						<ogc:Literal>-1</ogc:Literal>

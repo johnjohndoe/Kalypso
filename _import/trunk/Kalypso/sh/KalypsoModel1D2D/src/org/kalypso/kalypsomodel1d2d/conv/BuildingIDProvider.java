@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 
 /**
  * Saves informations about buildings and creates there IDs.
@@ -57,13 +58,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
  */
 public class BuildingIDProvider
 {
-  private final Map<Integer, IBuildingFlowRelation> m_ids = new HashMap<Integer, IBuildingFlowRelation>();
+  private final Map<Integer, IFlowRelationship> m_ids = new HashMap<Integer, IFlowRelationship>();
 
-  private final Map<Integer, IBuildingFlowRelation> m_unmodifiableIds = Collections.unmodifiableMap( m_ids );
+  private final Map<Integer, IFlowRelationship> m_unmodifiableIds = Collections.unmodifiableMap( m_ids );
 
   private int m_currentID = 904;
 
-  public int addBuilding( final IBuildingFlowRelation building ) throws CoreException
+  public int addBuilding( final IFlowRelationship building ) throws CoreException
   {
     if( m_currentID > 999 )
     {
@@ -79,7 +80,7 @@ public class BuildingIDProvider
     return newID;
   }
 
-  public Map<Integer, IBuildingFlowRelation> getBuildingData( )
+  public Map<Integer, IFlowRelationship> getBuildingData( )
   {
     return m_unmodifiableIds;
   }

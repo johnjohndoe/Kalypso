@@ -48,6 +48,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -65,6 +66,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Gernot Belger
  * 
  */
+@SuppressWarnings("unchecked")
 public class FlowRelationUtilitites
 {
   /**
@@ -79,7 +81,6 @@ public class FlowRelationUtilitites
    * An 1D-Element is an Teschke Element, if at least one associated flow-relation is teschke. * TODO move this into the
    * TypeInfo class
    */
-  @SuppressWarnings("unchecked")
   public static boolean isTeschkeElement1D( final IElement1D element1D, final IFlowRelationshipModel model )
   {
     final List<IFE1D2DNode> nodes = element1D.getNodes();
@@ -227,6 +228,36 @@ public class FlowRelationUtilitites
 
     return null;
   }
+  
+  /**
+   * Checks if a 2D-Element has an associated Building-Flow-Relation.
+   */
+  public static IBuildingFlowRelation2D findBuildingElement2D( final IPolyElement element, final IFlowRelationshipModel model )
+  {
+    final GM_Position flowPosition = getFlowPositionFromElement( element );
+    
+    final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IBuildingFlowRelation2D.class };
+    
+    final IFlowRelationship lFlowRel = model.findFlowrelationship( flowPosition, 0.02, flowRelationTypes );
+    if( lFlowRel instanceof IBuildingFlowRelation2D )
+      return (IBuildingFlowRelation2D) lFlowRel;
+    
+    return null;
+  }
+  
+  /**
+   * Checks if on given position is an associated Building-Flow-Relation.
+   */
+  public static IFeatureWrapper2 findBuildingElementFromPosition( final GM_Point pPoint, final IFlowRelationshipModel model )
+  {
+    final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelation2D.class, IFlowRelation1D.class };
+    
+    final IFlowRelationship lFlowRel = model.findFlowrelationship( pPoint.getPosition(), 0.02, flowRelationTypes );
+    if( lFlowRel != null )
+      return lFlowRel;
+    
+    return null;
+  }
 
   public static IFE1D2DNode findUpstreamNode( final IBuildingFlowRelation buildingRelation, final IFEDiscretisationModel1d2d discModel )
   {
@@ -274,6 +305,49 @@ public class FlowRelationUtilitites
   public static IElement1D findBuildingElement1D( final IBuildingFlowRelation building, final IFEDiscretisationModel1d2d discModel )
   {
     return discModel.find1DElement( building.getPosition(), 0.01 );
+  }
+
+  /**
+   * this function decides what node is the upstream node from given nodes:
+   *    
+   *    0Node ----- 1Node
+   *      |     ^     |
+   *      |     |    -+--> v1
+   *      |     |     |
+   *    3Node --|-- 2Node
+   *           v2
+   * in this case is the "3Node" the upstream node and the result will be 2(position in the given list).
+   * Important is that the 0-3 and 1-2 edges are the side edges 
+   *
+   */
+  public static int findUpstreamNodePolyWeirPositionInNodesRing( final IFlowRelationship pBuilding, final List< IFE1D2DNode > pListNodes, int pIntDirectionOfEdges )
+  {
+    if( !( pBuilding instanceof IBuildingFlowRelation2D ) )
+      return -1; 
+      
+    int lIntSizeListElementNodes = pListNodes.size();
+    int lIntDirectionGrad = ( ( IBuildingFlowRelation2D )pBuilding ).getDirection() % 360;
+    
+    double lDoubleXVectorRight = ( pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getX() ) / 2;
+    double lDoubleYVectorRight = ( pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getY() ) / 2;
+    double lDoubleXVectorLeft = ( pListNodes.get( 0 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getX() ) / 2;
+    double lDoubleYVectorLeft = ( pListNodes.get( 0 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getY() ) / 2;
+ 
+    double lDoubleXWeirDirectionVector = lDoubleXVectorRight - lDoubleXVectorLeft;
+    double lDoubleYWeirDirectionVector = lDoubleYVectorRight - lDoubleYVectorLeft;
+    
+//    double lDoubleAngleInBetweenACOS = Math.acos( lDoubleXWeir / Math.sqrt( lDoubleXWeir * lDoubleXWeir + lDoubleYWeir * lDoubleYWeir ) ) * 180 / Math.PI;
+    double lDoubleAngleInBetweenATAN = ( Math.atan2( lDoubleYWeirDirectionVector, lDoubleXWeirDirectionVector ) - Math.atan2( 0, 1 ) ) * 180 / Math.PI;
+    
+    int lIntDiff = Math.abs( ( lIntDirectionGrad - ( ( int )lDoubleAngleInBetweenATAN ) ) % 360 );
+
+    if( lIntDiff < 180 ){
+      return pIntDirectionOfEdges == 1? 3: 1;
+    }
+    else if( lIntDiff > 180 ){
+      return pIntDirectionOfEdges == 1? 1: 3;
+    }
+    return -1;
   }
 
 }

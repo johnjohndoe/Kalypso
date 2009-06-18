@@ -113,6 +113,12 @@
 					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditNet2D_help</Help>
 					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditNet2D</Name>
 				</Task>
+				<Task type="ASYNCHRONOUS"
+					context="FlowRelationshipTheme2D"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__EditNet2D">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditParams2D_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditParams2D</Name>
+				</Task>
 				<Task type="ASYNCHRONOUS" context="FenetMap"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
 					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_Chan2DGen_help</Help>
@@ -409,7 +415,14 @@
 							<con:Parameter name="input"
 								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
 						</con:ExtensionContext>
-
+						<con:ExtensionContext id="FlowRelationshipTheme2D"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation2D" />
+						</con:ExtensionContext>
 						<con:ExtensionContext id="TransitionElementContextTheme"
 							parent="FenetMap"
 							handlerFactoryId="kalypsoContextHandlerFactory">

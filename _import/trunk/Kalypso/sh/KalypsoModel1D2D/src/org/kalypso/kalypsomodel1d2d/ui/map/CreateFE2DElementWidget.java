@@ -19,10 +19,12 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -47,7 +49,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
   public CreateFE2DElementWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -114,7 +116,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     super.paint( g );
 
     final Rectangle bounds = mapPanel.getScreenBounds();
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.3") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.3" ) ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
@@ -129,7 +131,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
       final double z = snapNode.getPoint().getZ();
       if( !Double.isNaN( z ) )
       {
-        final String format = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.4"), z ); //$NON-NLS-1$
+        final String format = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.4" ), z ); //$NON-NLS-1$
         getMapPanel().setMessage( format );
       }
     }
@@ -210,14 +212,18 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
     try
     {
-      ICommand command;
-
+      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+      IFeatureWrapper2 lNewParentFeature = null;
       if( newNode instanceof GM_Point )
-        command = m_builder.addNode( (GM_Point) newNode );
+      {
+        lNewParentFeature = m_builder.addNode( (GM_Point) newNode, command );
+      }
       else
-        command = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint() );
+      {
+        lNewParentFeature = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint(), command );
+      }
 
-      if( command != null )
+      if( command != null && lNewParentFeature != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
         reinit();
@@ -237,7 +243,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
   /**
    * TODO: change to right-clicked: BUT!: at the moment the context menu is opened, so the framework must know whether
    * this widget is editing something at the moment or not
-   *
+   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
@@ -251,8 +257,9 @@ public class CreateFE2DElementWidget extends AbstractWidget
       return;
     try
     {
-      final ICommand command = m_builder.finish();
-      if( command != null )
+      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+      IFeatureWrapper2 lNewParentFeature = m_builder.finish( command );
+      if( command != null && lNewParentFeature != null )
         m_nodeTheme.getWorkspace().postCommand( command );
     }
     catch( final Exception e )
@@ -288,7 +295,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
       m_warning = false;
     else
     {
-      if( status.getMessage().equals( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.5") ) ) //$NON-NLS-1$
+      if( status.getMessage().equals( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.5" ) ) ) //$NON-NLS-1$
       {
         // TODO: delete element!
 

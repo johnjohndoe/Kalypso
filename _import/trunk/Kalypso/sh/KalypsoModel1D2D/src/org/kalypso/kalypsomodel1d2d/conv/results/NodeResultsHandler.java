@@ -80,6 +80,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
@@ -472,7 +473,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private IFlowRelation1D getFlowRelation( final INodeResult nodeResult )
+  private IFlowRelationship getFlowRelation( final INodeResult nodeResult )
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
 
@@ -485,6 +486,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       if( element instanceof IFlowRelation1D )
       {
         return (IFlowRelation1D) element;
+      }
+      else if( element instanceof IFlowRelation2D )
+      {
+        return (IFlowRelation2D) element;
       }
     }
     return null;
@@ -556,7 +561,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     for( int i = 0; i < nodes.length; i++ )
     {
-      final IFlowRelation1D flowRelation1d = getFlowRelation( nodes[i] );
+      IFlowRelationship lFlowRel = getFlowRelation( nodes[i] );
+      if( !( lFlowRel instanceof IFlowRelation1D ) ){
+        break;
+      }
+      final IFlowRelation1D flowRelation1d = ( IFlowRelation1D ) lFlowRel;
 
       if( flowRelation1d == null )
         break;
@@ -1773,7 +1782,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     try
     {
-      final IFlowRelation1D teschkeRelation = getFlowRelation( nodeResult1d );
+      IFlowRelationship lFlowRel = getFlowRelation( nodeResult1d );
+      if( !( lFlowRel instanceof IFlowRelation1D ) ){
+        return;
+      }
+      final IFlowRelation1D teschkeRelation = ( IFlowRelation1D ) lFlowRel;
+//      final IFlowRelation1D teschkeRelation = getFlowRelation( nodeResult1d );
       final GM_Curve nodeCurve1d = NodeResultHelper.getProfileCurveFor1dNode( teschkeRelation.getProfile() );
 
       // TODO: this cannot work: we need the IdProvider for the lines in order to find the right line by its number
@@ -1879,8 +1893,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
           continue;
 
         final INodeResult nodeResult = m_nodeIndex.get( nodeID );
-
-        final IFlowRelation1D teschkeRelation = getFlowRelation( nodeResult );
+        
+        IFlowRelationship lFlowRel = getFlowRelation( nodeResult );
+        if( !( lFlowRel instanceof IFlowRelation1D ) ){
+          break;
+        }
+        final IFlowRelation1D teschkeRelation = ( IFlowRelation1D ) lFlowRel;
+//        final IFlowRelation1D teschkeRelation = getFlowRelation( nodeResult );
 
         if( teschkeRelation == null )
           break;

@@ -41,21 +41,26 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+//import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElementWithWeir;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
+//import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElementWithWeir;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.TransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.KingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.WeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.WeirFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModelGroup;
@@ -263,6 +268,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // does not fit (this is according to the adapter-contract)
     cMap.put( IFE1D2DElement.class, cTor );
     cMap.put( IPolyElement.class, cTor );
+//    cMap.put( IPolyElementWithWeir.class, cTor );
     cMap.put( IElement1D.class, cTor );
 
     cTor = new AdapterConstructor()
@@ -479,6 +485,10 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         {
           return new WeirFlowRelation( feature );
         }
+        else if( featureQName.equals( IWeirFlowRelation2D.QNAME ) )
+        {
+          return new WeirFlowRelation2D( feature );
+        }
         else if( featureQName.equals( IBridgeFlowRelation.QNAME ) )
         {
           return new BridgeFlowRelation( feature );
@@ -518,6 +528,27 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IBuildingFlowRelation.class, cTor );
+    
+    // IBuildingFlowRelation2D
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        // If a generel flow relation is to be adapted, return the konkrete type instead
+        final QName featureQName = feature.getFeatureType().getQName();
+        
+        
+        if( featureQName.equals( IWeirFlowRelation2D.QNAME ) )
+        {
+          return new WeirFlowRelation2D( feature );
+        }
+        else
+        {
+          return null;
+        }
+      }
+    };
+    cMap.put( IBuildingFlowRelation2D.class, cTor );
 
     // KingFlowRelation
     cTor = new AdapterConstructor()
@@ -575,6 +606,25 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IWeirFlowRelation.class, cTor );
+    
+    // WeirFlowRelation2D
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        
+        if( featureQName.equals( IWeirFlowRelation2D.QNAME ) )
+        {
+          return new WeirFlowRelation2D( feature );
+        }
+        else
+        {
+          return null;
+        }
+      }
+    };
+    cMap.put( IWeirFlowRelation2D.class, cTor );
 
     // BridgeFlowRelation
     cTor = new AdapterConstructor()

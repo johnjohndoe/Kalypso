@@ -47,10 +47,12 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -96,6 +98,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Converts discretisation model to RMA·Kalypso model
@@ -111,6 +114,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
     VO,
     GO
   }
+
+  private static String WEIR2D_CONST_ID = "_2D_WEIR2RMA10_ID_";
 
   private final IdMap m_roughnessIDProvider;
 
@@ -145,10 +150,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final IGeoLog m_log;
 
+  private List<PseudoEdge> m_listNonExistingPseudoEdges = new ArrayList<PseudoEdge>();
+
+  private Map<Integer, List<PseudoEdge>> m_mapPolyWeir2DSubElement = new HashMap<Integer, List<PseudoEdge>>();
+
+  private Map<Integer, String> m_mapTmpElementToPolyWeir = new HashMap<Integer, String>();
+
   // TODO: check: calculation?
   public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
   {
-    m_discretisationModel1d2d = discretisationModel1d2d;
+    m_discretisationModel1d2d = (discretisationModel1d2d);
     m_flowrelationModel = flowrelationModel;
 
     m_exportRequest = exportRequested;
@@ -170,18 +181,28 @@ public class Gml2RMA10SConv implements INativeIDProvider
       for( final IRoughnessCls o : roughnessModel )
         m_roughnessIDProvider.getOrAdd( o.getGmlID() );
     }
+    // m_intBuildingsIdCounter = 1;
+  }
+
+
+
+  public int getConversionID( final IFeatureWrapper2 feature )
+  {
+    return getConversionID( feature, null );
   }
 
   /**
    * @return <code>0</code>, if feature is <code>null</code> or of unknown type.
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
-  public int getConversionID( final IFeatureWrapper2 feature )
+  public int getConversionID( final IFeatureWrapper2 feature, String pGMLId )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
 
-    final String id = feature.getGmlID();
+    String id = feature.getGmlID();
+    if( pGMLId != null )
+      id = pGMLId;
     if( feature instanceof IFE1D2DNode )
       return m_nodesIDProvider.getOrAdd( id );
 
@@ -393,15 +414,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
       {
         if( edge.getMiddleNode() == null )
         {
-          /* create virtual node id */
-          final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context //$NON-NLS-1$
-          middleNodeID = m_nodesIDProvider.getOrAdd( gmlID );
-
-          /* Write it: Station is not needed, because the element length is taken from real nodes. */
-          formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null, true );
+          middleNodeID = writeMiddleNode( edge.getGmlID(), edge.getMiddleNodePoint(), formatter );
         }
         else
+        {
           middleNodeID = getConversionID( edge.getMiddleNode() );
+        }
       }
 
       /* Directly format into the string, this is quickest! */
@@ -436,19 +454,27 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           final IFeatureWrapperCollection<IFE1D2DEdge> elementEdges = element.getEdges();
           // find node adjacent to node0 other than node1
+          IFE1D2DNode node2 = null;
+          if( m_mapTmpElementToPolyWeir.containsValue( element.getGmlID() ) )
+          {
+            node2 = getAdjacentPseudoNode( element, edge );
+          }
+
           for( final IFE1D2DEdge elementEdge : elementEdges )
           {
             final IFeatureWrapperCollection<IFE1D2DNode> nodes = elementEdge.getNodes();
-            final IFE1D2DNode node2;
-            if( !elementEdge.equals( edge ) && nodes.contains( node0 ) )
+            if( !elementEdge.equals( edge ) && nodes.contains( node0 ) || node2 != null )
             {
-              if( nodes.get( 0 ).equals( node0 ) )
+              if( node2 == null )
               {
-                node2 = nodes.get( 1 );
-              }
-              else
-              {
-                node2 = nodes.get( 0 );
+                if( nodes.get( 0 ).equals( node0 ) )
+                {
+                  node2 = nodes.get( 1 );
+                }
+                else
+                {
+                  node2 = nodes.get( 0 );
+                }
               }
               final GM_Point point2 = node2.getPoint();
               final double vx1 = point2.getX() - x0;
@@ -458,9 +484,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
               {
                 // positive cross product
                 if( leftElement == null )
+                {
                   leftElement = element;
+                }
                 else
+                {
                   System.out.println();
+                }
               }
               else
               {
@@ -474,13 +504,17 @@ public class Gml2RMA10SConv implements INativeIDProvider
         final int rightParent;
         if( m_exportRequest )
         {
-          leftParent = getConversionID( leftElement );
-          rightParent = getConversionID( rightElement );
+          leftParent = getConversionIDIntern( leftElement, edge );
+          rightParent = getConversionIDIntern( rightElement, edge );
+          // leftParent = getConversionID( leftElement );
+          // rightParent = getConversionID( rightElement );
         }
         else
         {
-          leftParent = m_calculationUnit.contains( leftElement ) ? getConversionID( leftElement ) : 0;
-          rightParent = m_calculationUnit.contains( rightElement ) ? getConversionID( rightElement ) : 0;
+          leftParent = m_calculationUnit.contains( leftElement ) ? getConversionIDIntern( leftElement, edge ) : 0;
+          rightParent = m_calculationUnit.contains( rightElement ) ? getConversionIDIntern( rightElement, edge ) : 0;
+          // leftParent = m_calculationUnit.contains( leftElement ) ? getConversionID( leftElement ) : 0;
+          // rightParent = m_calculationUnit.contains( rightElement ) ? getConversionID( rightElement ) : 0;
         }
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID ); //$NON-NLS-1$
       }
@@ -490,8 +524,128 @@ public class Gml2RMA10SConv implements INativeIDProvider
         System.out.println( "non 1d/2d edge: " + edge.getGmlID() ); //$NON-NLS-1$
       }
     }
+    writeNonExistingPseudoEdges( cnt, formatter );
 
     FormatterUtils.checkIoException( formatter );
+  }
+
+  /**
+   * formats the middle node and returns the id of written node
+   */
+  private int writeMiddleNode( final String pStrEdgeGmlId, final GM_Point pMiddlePoint, final Formatter pFormater ) throws IOException
+  {
+    int lMiddleNodeID;
+
+    /* create virtual node id */
+    final String gmlID = "VirtualMiddleNode" + pStrEdgeGmlId; // Pseudo id, but unique within this context //$NON-NLS-1$
+    lMiddleNodeID = m_nodesIDProvider.getOrAdd( gmlID );
+
+    /* Write it: Station is not needed, because the element length is taken from real nodes. */
+    formatNode( pFormater, lMiddleNodeID, pMiddlePoint, null, true );
+
+    return lMiddleNodeID;
+  }
+
+  private void writeNonExistingPseudoEdges( int pIntCount, final Formatter pFormater ) throws IOException
+  {
+    for( final PseudoEdge lIterEdge : m_listNonExistingPseudoEdges )
+    {
+      final int node0ID = getConversionID( lIterEdge.getFirstNode() );
+      final int node1ID = getConversionID( lIterEdge.getSecondNode() );
+      int lIntMiddleNodeId = writeMiddleNode( lIterEdge.getFirstNode().getGmlID() + lIterEdge.getSecondNode().getGmlID(), lIterEdge.getMiddleNodePoint(), pFormater );
+      pFormater.format( "AR%10d%10d%10d%10d%10d%10d%n", pIntCount++, node1ID, node0ID, lIterEdge.getIntLeftParent(), lIterEdge.getIntRightParent(), lIntMiddleNodeId ); //$NON-NLS-1$
+    }
+  }
+
+  /**
+   * for pseudo edges determine the according id of pseudo element or in others cases returns the conversion id of given
+   * element
+   */
+  @SuppressWarnings("unchecked")
+  private int getConversionIDIntern( IFE1D2DElement pElement, IFE1D2DEdge pEdge )
+  {
+    if( m_mapTmpElementToPolyWeir.containsValue( pElement.getGmlID() ) )
+    {
+      final IFeatureWrapperCollection<IFE1D2DNode> lNodesListFromGivenEdge = pEdge.getNodes();
+      for( final Map.Entry<Integer, List<PseudoEdge>> lIterPseudoEntry : m_mapPolyWeir2DSubElement.entrySet() )
+      {
+        List<PseudoEdge> lListEdges = lIterPseudoEntry.getValue();
+        for( final PseudoEdge lPseudoEdge : lListEdges )
+        {
+          if( lNodesListFromGivenEdge.contains( lPseudoEdge.getFirstNode() ) && lNodesListFromGivenEdge.contains( lPseudoEdge.getSecondNode() )
+              && pElement.getGmlID().equals( lPseudoEdge.getStrGMLParentId() ) )
+          {
+            return lPseudoEdge.getIntParentId();
+          }
+        }
+      }
+    }
+    else
+    {
+      return getConversionID( pElement );
+    }
+
+    return 0;
+  }
+
+  @SuppressWarnings("unchecked")
+  private IFE1D2DNode getAdjacentPseudoNode( IFE1D2DElement pElement, IFE1D2DEdge pEdge )
+  {
+    if( m_mapTmpElementToPolyWeir.containsValue( pElement.getGmlID() ) )
+    {
+      for( final PseudoEdge lIterEdge : m_listNonExistingPseudoEdges )
+      {
+        if( lIterEdge.getStrGMLParentId().equals( pElement.getGmlID() ) )
+        {
+          if( lIterEdge.getSecondNode().equals( pEdge.getNode( 0 ) ) )
+          {
+            return lIterEdge.getFirstNode();
+          }
+          if( lIterEdge.getFirstNode().equals( pEdge.getNode( 0 ) ) )
+          {
+            return lIterEdge.getSecondNode();
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private int getDirectionOfPseudoEdges( final List<IFE1D2DNode> pListNodes )
+  {
+    int lIntResDirection = -1;
+    double lDoubleResAngle = 0;
+
+    GM_Point lPointStart = null;
+    GM_Point lPointPrev = null;
+    GM_Point lPointAct = null;
+    for( int lIntCounter = 0; lIntCounter < pListNodes.size(); ++lIntCounter )
+    {
+      IFE1D2DNode lActNode = pListNodes.get( lIntCounter );// ( IFE1D2DNode )lIterNode;
+      if( lIntCounter == 0 )
+      {
+        lPointStart = lActNode.getPoint();
+      }
+      else if( lIntCounter > 1 && !lPointStart.equals( lPointAct ) )
+      {
+        lPointAct = lActNode.getPoint();
+        double lDoubleAngleInBetween = Math.atan2( lActNode.getPoint().getY() - lPointStart.getY(), lActNode.getPoint().getX() - lPointStart.getX() )
+            - Math.atan2( lPointPrev.getY() - lPointStart.getY(), lPointPrev.getX() - lPointStart.getX() );
+
+        lDoubleResAngle += lDoubleAngleInBetween;
+      }
+      lPointPrev = lActNode.getPoint();
+    }
+    if( lDoubleResAngle > 0 )
+    {
+      lIntResDirection = 1;
+    }
+    else
+    {
+      lIntResDirection = 0;
+    }
+    return lIntResDirection;
   }
 
   @SuppressWarnings("unchecked")
@@ -724,7 +878,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( m_exportRequest && element instanceof IElement1D )
         continue;
 
-      final int id = getConversionID( element );
+      int id = getConversionID( element );
 
       if( element instanceof IElement1D )
       {
@@ -767,26 +921,93 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( element instanceof IPolyElement )
       {
-        for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+        final IFlowRelationship building = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowrelationModel );
+
+        if( building != null )
         {
-          edgeSet.add( edge );
+          final int buildingID = m_buildingIDProvider.addBuilding( building );
+
+          if( element.getNodes().size() > 4 )
+          {
+            List<IFE1D2DNode> lListNodes = getOrderedListOfNodes( element );
+
+            int lIntDirectionOfEdges = getDirectionOfPseudoEdges( lListNodes );
+            int lListElementNodesSize = lListNodes.size();
+            final int upstreamNodePositionInEachElement = FlowRelationUtilitites.findUpstreamNodePolyWeirPositionInNodesRing( building, lListNodes, lIntDirectionOfEdges );
+
+            int lIntLastId = 0;
+            for( int lIntIter = 0; lIntIter < lListElementNodesSize / 2 - 1; ++lIntIter )
+            {
+              List<PseudoEdge> lListEdges = new ArrayList<PseudoEdge>();
+              boolean lBoolLastEdgeExists = false;
+              if( lIntIter > 0 )
+              {
+                id = getConversionID( element, element.getGmlID() + WEIR2D_CONST_ID + buildingID + "_" + lIntIter );
+              }
+              else
+              {
+                lBoolLastEdgeExists = true;
+              }
+              PseudoEdge lPseudoEdge0 = new PseudoEdge( (lListNodes.get( lIntIter )), (lListNodes.get( lIntIter + 1 )), id, element.getGmlID(), true );
+              PseudoEdge lPseudoEdge1 = new PseudoEdge( (lListNodes.get( lIntIter + 1 )), (lListNodes.get( lListElementNodesSize - (lIntIter + 3) )), id, element.getGmlID(), true );
+              
+              PseudoEdge lPseudoEdge2 = new PseudoEdge( (lListNodes.get( lListElementNodesSize - (lIntIter + 3) )), (lListNodes.get( lListElementNodesSize - (lIntIter + 2) )), id, element.getGmlID(), true );
+              PseudoEdge lPseudoEdge3 = new PseudoEdge( (lListNodes.get( lListElementNodesSize - (lIntIter + 2) )), (lListNodes.get( lIntIter )), id, element.getGmlID(), lBoolLastEdgeExists );
+
+              if( lIntIter > 0 )
+              {
+                lPseudoEdge3.setIntLeftParent( id );
+                lPseudoEdge3.setIntRightParent( lIntLastId );
+                m_listNonExistingPseudoEdges.add( lPseudoEdge3 );
+              }
+
+              lListEdges.add( lPseudoEdge0 );
+              lListEdges.add( lPseudoEdge1 );
+              lListEdges.add( lPseudoEdge2 );
+              lListEdges.add( lPseudoEdge3 );
+              lIntLastId = id;
+              m_mapTmpElementToPolyWeir.put( id, element.getGmlID() );
+              m_mapPolyWeir2DSubElement.put( id, lListEdges );
+              final int upstreamNodeID = getConversionID( lListEdges.get( upstreamNodePositionInEachElement ).getFirstNode() );
+              formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID );
+
+            }
+            for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+            {
+              edgeSet.add( edge );
+            }
+          }
+          /* A Building? Create dynamic building number and use it as building ID. */
+          // final IFE1D2DNode upstreamNode = FlowRelationUtilitites.findUpstreamNode( building,
+          // m_discretisationModel1d2d );
+          // final int upstreamNodeID = getConversionID( upstreamNode );
+          // final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
+          //          formatter.format( "FE%10d%10d%n", id, roughnessID ); //$NON-NLS-1$
         }
 
-        final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
-        formatter.format( "FE%10d%10d%n", id, roughnessID ); //$NON-NLS-1$
+        else
+        {
+          for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+          {
+            edgeSet.add( edge );
+          }
 
-        // print roughness correction parameters only if there is any correction
-        Double correctionKS = element.getRoughnessCorrectionKS();
-        Double correctionAxAy = element.getRoughnessCorrectionAxAy();
-        Double correctionDP = element.getRoughnessCorrectionDP();
-        if( correctionKS == null || correctionKS.isNaN() )
-          correctionKS = 1.0;
-        if( correctionAxAy == null || correctionAxAy.isNaN() )
-          correctionAxAy = 1.0;
-        if( correctionDP == null || correctionDP.isNaN() )
-          correctionDP = 1.0;
-        if( correctionKS != 1.0 || correctionAxAy != 1.0 || correctionDP != 1.0 )
-          formatter.format( "RC%10d%10.6f%10.6f%10.6f%n", id, correctionKS.doubleValue(), correctionAxAy.doubleValue(), correctionDP.doubleValue() ); //$NON-NLS-1$
+          final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
+          formatter.format( "FE%10d%10d%n", id, roughnessID ); //$NON-NLS-1$
+
+          // print roughness correction parameters only if there is any correction
+          Double correctionKS = element.getRoughnessCorrectionKS();
+          Double correctionAxAy = element.getRoughnessCorrectionAxAy();
+          Double correctionDP = element.getRoughnessCorrectionDP();
+          if( correctionKS == null || correctionKS.isNaN() )
+            correctionKS = 1.0;
+          if( correctionAxAy == null || correctionAxAy.isNaN() )
+            correctionAxAy = 1.0;
+          if( correctionDP == null || correctionDP.isNaN() )
+            correctionDP = 1.0;
+          if( correctionKS != 1.0 || correctionAxAy != 1.0 || correctionDP != 1.0 )
+            formatter.format( "RC%10d%10.6f%10.6f%10.6f%n", id, correctionKS.doubleValue(), correctionAxAy.doubleValue(), correctionDP.doubleValue() ); //$NON-NLS-1$
+        }
       }
     }
     FormatterUtils.checkIoException( formatter );
@@ -809,6 +1030,38 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     // write edges
     writeEdgeSet( formatter, edgeSet );
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<IFE1D2DNode> getOrderedListOfNodes( final IFE1D2DElement element )
+  {
+    List<IFE1D2DNode> lOrderedListRes = new ArrayList<IFE1D2DNode>();
+
+    int lIntEdgesSize = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().size();
+    for( int lIntCounter = 0; lIntCounter < lIntEdgesSize - 1; ++lIntCounter )
+    { // final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() ){
+      IFE1D2DEdge lEdgeAct = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter );
+      IFE1D2DEdge lEdgeNext = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter + 1 );
+      if( lEdgeNext.getNodes().contains( lEdgeAct.getNode( 1 ) ) )
+      {
+        if( !lOrderedListRes.contains( lEdgeAct.getNode( 0 ) ) )
+        {
+          lOrderedListRes.add( lEdgeAct.getNode( 0 ) );
+        }
+        lOrderedListRes.add( lEdgeAct.getNode( 1 ) );
+      }
+      else
+      {
+        if( !lOrderedListRes.contains( lEdgeAct.getNode( 1 ) ) )
+        {
+          lOrderedListRes.add( lEdgeAct.getNode( 1 ) );
+        }
+        lOrderedListRes.add( lEdgeAct.getNode( 0 ) );
+      }
+    }
+    lOrderedListRes.add( lOrderedListRes.get( 0 ) );
+
+    return lOrderedListRes;
   }
 
   /**
@@ -994,4 +1247,141 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return m_buildingIDProvider;
   }
 
+  @SuppressWarnings("unchecked")
+  class PseudoEdge
+  {
+    private IFE1D2DNode m_node1;
+
+    private IFE1D2DNode m_node2;
+
+    private int m_intParentId;
+
+    private String m_strGMLParentId;
+
+    private boolean m_boolRealExistingEdge;
+
+    private int m_intLeftParent;
+
+    private int m_intRightParent;
+
+    public PseudoEdge( final IFE1D2DNode pNode1, final IFE1D2DNode pNode2, final int pIntParentID, final String pStrGMLParentId, final boolean pBoolRealExisting )
+    {
+      m_node1 = pNode1;
+      m_node2 = pNode2;
+      m_intParentId = pIntParentID;
+      m_strGMLParentId = pStrGMLParentId;
+      m_boolRealExistingEdge = pBoolRealExisting;
+    }
+
+    public final IFE1D2DNode getFirstNode( )
+    {
+      return m_node1;
+    }
+
+    public final void setFirstNode( IFE1D2DNode pFirstNode )
+    {
+      m_node1 = pFirstNode;
+    }
+
+    public final IFE1D2DNode getSecondNode( )
+    {
+      return m_node2;
+    }
+
+    public final void setSecondNode( IFE1D2DNode pSecondNode )
+    {
+      m_node2 = pSecondNode;
+    }
+
+    public final int getIntParentId( )
+    {
+      return m_intParentId;
+    }
+
+    public final void setIntParentId( int intParentId )
+    {
+      m_intParentId = intParentId;
+    }
+
+    public final String getStrGMLParentId( )
+    {
+      return m_strGMLParentId;
+    }
+
+    public final void setStrGMLParentId( String strGMLParentId )
+    {
+      m_strGMLParentId = strGMLParentId;
+    }
+
+    public final boolean isBoolRealExistingEdge( )
+    {
+      return m_boolRealExistingEdge;
+    }
+
+    public final void setBoolRealExistingEdge( boolean boolRealExistingEdge )
+    {
+      m_boolRealExistingEdge = boolRealExistingEdge;
+    }
+
+    public final int getIntLeftParent( )
+    {
+      return m_intLeftParent;
+    }
+
+    public final void setIntLeftParent( int intLeftParent )
+    {
+      m_intLeftParent = intLeftParent;
+    }
+
+    public final int getIntRightParent( )
+    {
+      return m_intRightParent;
+    }
+
+    public final void setIntRightParent( int intRightParent )
+    {
+      m_intRightParent = intRightParent;
+    }
+
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getMiddleNodePoint()
+     */
+    public GM_Point getMiddleNodePoint( )
+    {
+      final GM_Point point1 = getFirstNode().getPoint();
+      final GM_Point point2 = getSecondNode().getPoint();
+      final double x = (point1.getX() + point2.getX()) / 2;
+      final double y = (point1.getY() + point2.getY()) / 2;
+      if( point1.getCoordinateDimension() > 2 && point2.getCoordinateDimension() > 2 )
+      {
+        final double z = (point1.getZ() + point2.getZ()) / 2;
+        return GeometryFactory.createGM_Point( x, y, z, point1.getCoordinateSystem() );
+      }
+      else
+        return GeometryFactory.createGM_Point( x, y, point1.getCoordinateSystem() );
+    }
+
+    @Override
+    public boolean equals( final Object pPseudoEdge )
+    {
+      if( pPseudoEdge instanceof PseudoEdge )
+      {
+        PseudoEdge lPseudoEdge = (PseudoEdge) pPseudoEdge;
+        if( (this.m_node1.getGmlID().equals( lPseudoEdge.getFirstNode().getGmlID() ) && this.m_node2.getGmlID().equals( lPseudoEdge.getSecondNode().getGmlID() ))
+            || (this.m_node2.getGmlID().equals( lPseudoEdge.getFirstNode().getGmlID() ) && this.m_node1.getGmlID().equals( lPseudoEdge.getSecondNode().getGmlID() )) )
+        {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return "First node: " + getFirstNode() + ", second node: " + getSecondNode() + ", gml parent id: " + getStrGMLParentId() + ", created parent id: " + getIntParentId() + ", is real edge: "
+          + isBoolRealExistingEdge() + "\n";
+    }
+  }
 }

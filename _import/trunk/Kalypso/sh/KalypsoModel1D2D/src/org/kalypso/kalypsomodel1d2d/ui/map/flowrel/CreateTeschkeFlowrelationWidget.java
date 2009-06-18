@@ -80,6 +80,6 @@ public class CreateTeschkeFlowrelationWidget extends AbstractCreateFlowrelationW
   @Override
   protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
-    return CreateKingFlowrelationWidget.findModelElementFromPosition( discModel, currentPos, grabDistance );
+    return findModelElementFromPosition( discModel, currentPos, grabDistance );
   }
 }
