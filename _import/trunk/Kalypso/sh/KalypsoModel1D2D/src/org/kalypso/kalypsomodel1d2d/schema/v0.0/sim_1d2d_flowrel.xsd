@@ -45,7 +45,25 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:element name="_FlowRelation2D" type="wb1d2d:AbstractFlowRelation2DType" abstract="true" substitutionGroup="simBase:_FlowRelationship">
+		<xs:annotation>
+			<xs:documentation>Abstract substitution-head of all flow relations-parameter</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 
+	<xs:complexType name="AbstractFlowRelation2DType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractFlowRelationshipType">
+				<xs:sequence>
+					<xs:element name="wspmTuhhCalculationMember" minOccurs="0" maxOccurs="1" type="wb1d2d:WspmTuhhCalculationPropertyType">
+					
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<xs:complexType name="WspmTuhhCalculationPropertyType">
 		<xs:sequence>
 			<!--  TODO: restrict to profiles of certain type -->
@@ -292,6 +310,20 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	
+	<xs:element name="BuildingFlowRelation2D" type="wb1d2d:AbstractBuildingFlowRelation2DType" abstract="true"
+		substitutionGroup="wb1d2d:_FlowRelation2D">
+		<xs:annotation>
+			<xs:documentation >
+				Bauwerk (2D)
+				Bauwerk (2D)
+			</xs:documentation>
+			<xs:documentation >
+				Building (2D)
+				Building (2D)
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 
 	<xs:complexType name="AbstractBuildingFlowRelationType" abstract="true">
 		<xs:complexContent>
@@ -351,6 +383,67 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:complexType name="AbstractBuildingFlowRelation2DType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:AbstractFlowRelation2DType">
+				<xs:sequence>
+					<xs:element name="kind" type="wb1d2d:buildingKind" fixed="10">
+						<xs:annotation>
+							<xs:documentation >
+								Fließformel
+								Fließformel
+							</xs:documentation>
+							<xs:documentation >
+								Kind
+								Kind
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="direction" type="gml:DegreeValueType" nillable="false" default="0">
+						<xs:annotation>
+							<xs:documentation >
+								Richtung
+								Fließrichtung des Bauwerks
+							</xs:documentation>
+							<xs:documentation>
+								Direction
+								Direction of flow for this building
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="observation" type="obs1d2d:ObservationWithSourcePropertyType">
+						<xs:annotation>
+							<xs:documentation >
+								Parameter
+								Parameter
+							</xs:documentation>
+							<xs:documentation>
+								Parameters
+								Parameters
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<!-- 
+					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								Profil
+								Referenz auf Profil
+								<xs:description>Referenz auf Profil</xs:description>
+							</xs:documentation>
+							<xs:documentation >
+								Profile
+								Profile Reference
+								<xs:description>Reference to profile</xs:description>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					-->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<xs:simpleType name="buildingKind">
 		<xs:restriction base="xs:int">
@@ -395,6 +488,26 @@
 			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType" />
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:element name="WeirFlowRelation2D" type="wb1d2d:WeirFlowRelationType2D"
+		substitutionGroup="wb1d2d:BuildingFlowRelation2D">
+		<xs:annotation>
+			<xs:documentation >
+				Wehr (2D)
+				Wehr (2D)
+			</xs:documentation>
+			<xs:documentation >
+				Weir (2D)
+				Weir (2D)
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="WeirFlowRelationType2D">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:AbstractBuildingFlowRelation2DType" />
+		</xs:complexContent>
+	</xs:complexType>
 
 	<xs:element name="BridgeFlowRelation" type="wb1d2d:BridgeFlowRelationType"
 		substitutionGroup="wb1d2d:BuildingFlowRelation">
@@ -415,5 +528,6 @@
 			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType" />
 		</xs:complexContent>
 	</xs:complexType>
+
 
 </xs:schema>
