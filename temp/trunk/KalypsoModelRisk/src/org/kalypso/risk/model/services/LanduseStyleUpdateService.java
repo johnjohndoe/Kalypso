@@ -111,17 +111,10 @@ public class LanduseStyleUpdateService extends Job
       final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl ); //$NON-NLS-1$
 
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-      GMLWorkspace workspace;
+      final GMLWorkspace workspace = (GMLWorkspace) pool.getObject( poolKey );
+      if( workspace == null )
+        return Status.OK_STATUS;
 
-      synchronized( this )
-      {
-        do
-        {
-          Thread.sleep( 100 );
-          workspace = (GMLWorkspace) pool.getObject( poolKey );
-        }
-        while( workspace == null );
-      }
       final IRasterizationControlModel model = (IRasterizationControlModel) workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
       final List<ILanduseClass> landuseClassesList = model.getLanduseClassesList();
       if( landuseClassesList != null && landuseClassesList.size() > 0 )
