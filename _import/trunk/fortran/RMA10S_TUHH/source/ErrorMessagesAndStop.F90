@@ -185,9 +185,19 @@ elseif (ErrorID == 1403) then
 elseif (ErrorID == 1404) then
   WRITE (ErrorUnit, 1404) ObjectID
   WRITE (        *, 1404) ObjectID
+
 elseif (ErrorID == 1405) then
   WRITE (ErrorUnit, 1405) ObjectID
   WRITE (        *, 1405) ObjectID
+
+elseif (ErrorID == 1406) then
+  WRITE (ErrorUnit, 1406)
+  WRITE (        *, 1406)
+
+elseif (ErrorID == 1407) then
+  WRITE (ErrorUnit, 1407) ObjectID
+  WRITE (        *, 1407) ObjectID
+  
 
 
 elseif (ErrorID == 1501) then
@@ -249,6 +259,22 @@ elseif (ErrorID == 4005) then
 elseif (ErrorID == 4101) then
   WRITE (ErrorUnit, 4101)
   WRITE (        *, 4101)
+
+elseif (ErrorID == 4201) then
+  WRITE (ErrorUnit, 4201) ObjectID
+  WRITE (        *, 4201) ObjectID
+
+elseif (ErrorID == 4202) then
+  WRITE (ErrorUnit, 4202) ObjectID
+  WRITE (        *, 4202) ObjectID
+
+elseif (ErrorID == 4203) then
+  WRITE (ErrorUnit, 4203) ObjectID
+  WRITE (        *, 4203) ObjectID
+  
+elseif (ErrorID == 4204) then
+  write (ErrorUnit, 4204)
+  write (        *, 4204)
 
 else
   WRITE (ErrorUnit, *) 'Error No.', ErrorID, ' not documented. Please contact programmer!'
@@ -390,6 +416,10 @@ end if
  1404 format (1x, 'ERROR - No CC1 block found for line, ', i5, '. Please check control file.')
  1405 format (1x, 'ERROR - First node of continuity line definition (No. ', i5, ') is 0. Please' / &
             & 1x, 'check control file!')
+ 1406 format (1x, 'ERROR - TOO MANY ELEVATION SPECS!')
+ 1407 format (1x, 'ERROR - Transition Line', i5, ' has specified value! There can be no ' / &
+            &     'specified WATERSTAGES. Leave Transition line without conditions!')
+
  
 
 !1500  Errors with connectivity
@@ -454,9 +484,19 @@ end if
 
 !4100   Autoconverge Errors
  4101 format (1x, 'ERROR - Autoconverge not successful')
+ 
+!4200 Errors during execution of Pardiso
 
-
-
+ 4201 format (1x, 'ERROR - PARDISO could not release memory; Error-code: ', I5, /&
+            & 1x, 'EXECUTION TERMINATED')
+ 4202 format (1x, 'ERROR - PARDISO could not Analyse equation system (Phase 1); Error-code: ', I5, /&
+            & 1x, 'EXECUTION TERMINATED')
+ 4203 format (1x, 'ERROR - PARDISO could not factorize or solve equation system (Phase 2 or 3); ',/&
+            & 1x, 'Error-code: ', I5, /&
+            & 1x, 'EXECUTION TERMINATED')
+ 4204 format (1x, 'ERROR - Sorting of matrix to prepare for PARDISO did not succeed; This is ', /&
+            & 1x, 'a serious problem. Please save model and contact developers!', /&
+            & 1x, 'EXECUTION TERMINATED')
 
 CLOSE (75)
 !stop program
