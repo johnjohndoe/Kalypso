@@ -157,6 +157,8 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
       ALLOCATE (LHS(NBS),QS(NBS))
 
+      !allocate global array of finite element nodes
+      allocate (feNodes (1:maxp))
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
       

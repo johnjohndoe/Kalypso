@@ -5,6 +5,7 @@ module mod_ContiLines
 
   type contiLine
     integer (kind = 4) :: ID = 0
+    logical :: isInnerBoundary = .false.
     type (linkedNode), pointer :: firstNode => null()
     type (linkedNode), pointer :: lastNode => null()
     type (arc), pointer :: firstSegment => null()

@@ -44,18 +44,20 @@
 
 PROGRAM RMAKalypso
 
-
-  !program needs the memory knowledge at the beginning
-  !TODO: This shouldn't be here
-  USE Blk10, only: NBS
+  use mod_Model
 
   implicit none
 
+  type (SimulationModel), pointer :: m_SimModel
+  
   integer :: i
   character (len = 11) :: fnam0
   character (len = 12) :: version
   character (len = 10) :: builddate
       
+  !generate my simulation model
+  m_SimModel => newSimulationModel()
+  
   version = '1.1.2 beta'
   builddate = '2009/02/13'
 
@@ -95,19 +97,13 @@ PROGRAM RMAKalypso
     write(*,*)
   enddo
   WRITE (*,'(A)') 'The name of the control file is: ', FNAM0
-  
-
-  !nis,jun07: Moving file.sub to a point before calling initl.sub leads to an error because zvrs.sub, called from file.sub, uses some values that will be set there
-  !setting those necessary values at first directly here
-  nbs = 5000000
-  !-
 
   !open the input files
   call filehandling (1, fnam0)
   !read size of the model geometry
   call getgeo1
   !start main execution of the simulation model
-  call rma_kalypso
+  call rma_kalypso (m_SimModel)
 
 !end execution of RMA·Kalypso
 END

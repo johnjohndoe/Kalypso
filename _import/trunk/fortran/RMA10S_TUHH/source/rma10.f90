@@ -1,14 +1,16 @@
 !     Last change:  MD   20 May 2009    1:54 pm
   !update degrees of freedom and check for convergence
   !---------------------------------------------------
-subroutine RMA_Kalypso
+subroutine RMA_Kalypso (m_SimModel)
+
+use mod_Model
 
 USE BLK10MOD, only: &
 &  niti, nita, maxn, nitn, itpas, iaccyc, icyc, ncyc, it, &
 &  ioutrwd, nprtf, nprti, nprtmetai, irsav, irMiniMaxiSav, &
-&  maxp, maxe, maxlt, maxps, maxse, ne, np, npm, nem, nmat, &
+&  maxp, maxe, maxlt, maxps, maxse, ne, np, npm, nem, nmat, ncl, &
 &  ncrn, nops, imat, &
-&  ao, &
+&  ao, cord, ccls, &
 &  vel, vdot, vold, vdoto, v2ol, vvel, &
 &  hel, hol, hdet, hdot, h2ol, wsll, &
 &  icpu, idrpt, idnopt, ioptzd, iproj, iespc, &
@@ -171,6 +173,10 @@ use mod_storageElt
 
 implicit none
 
+!arguments
+type (SimulationModel), pointer :: m_SimModel
+
+!local variables
 integer (kind = 4) :: idryc, iprtf, iprti, iprtMetai
 integer (kind = 4) :: i, j, k, l, m, n, kk, ll
 integer (kind = 4) :: n1, n2
@@ -346,96 +352,111 @@ nita = niti
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!start calculation with zero iteration entry
-MAXN = 0
 
-!get prinout frequency for results; if not specified (iprtf = 0), then print after last iteration
-!---------------------------------
-iprti = abs (nprti)
-if (iprti == 0) iprti = nita
-!get prinout frequency for results to output file (not model result file)
-!---------------------------------
-iprtMetai = abs (nprtMetai)
-if (iprtMetai == 0) iprtMetai = nita
-
-!Iterate steady state
-!--------------------
-steadyCycle: Do
-  maxn = maxn + 1
-
-!----------------------------------------------------------------
-!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
-!----------------------------------------------------------------
-!      !EFa jun07, autoconverge
-!!      if (beiauto /= 0.) call autoconverge (2.)
-!----------------------------------------------------------------
-!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
-!----------------------------------------------------------------
+!SchwarzIterationSteady: do
+    !TODO:
+    ! - Rausschreiben der abzugebenen Schwarz-Randbedingungen
+    ! - Holen der initialen Schätzung (Original-RESTART; muss nicht unbedingt im stationären Fall so sein)
+    ! - alte Schwarz-Randbedingungen merken
+    ! - Einlesen der neuen Schwarz-Randbedingungen
+    ! - Prüfen auf Konvergenz der Randbedingungen
+    !   - Bei Konvergenz
 
 
-  !drying/ wetting, if desired
-  !---------------
-  if (idswt /= 0) then
-    if (idryc == 0) then
-      !get potentially rewetted nodes
-      write(*,*) 'entering rewet'
-      call rewet
-      !dry wet and potentially rewetted nodes
-      write(*,*) 'entering dry'
-      call del
-      !after processing drying wetting, reset countdown for drying/wetting to the original frequency
-      idryc = idswt
-    endif
-  endif
 
-  !equation dropout
-  !----------------
-  if (idrpt /= 0) then
-    call drpout
-  !if inoperative, set all DOFs to be active
-  else
-    do j = 1, np
-      do k = 1, ndf
-        iactv (j, k) = 10
+    !start calculation with zero iteration entry
+    MAXN = 0
+
+    !get prinout frequency for results; if not specified (iprtf = 0), then print after last iteration
+    !---------------------------------
+    iprti = abs (nprti)
+    if (iprti == 0) iprti = nita
+    !get prinout frequency for results to output file (not model result file)
+    !---------------------------------
+    iprtMetai = abs (nprtMetai)
+    if (iprtMetai == 0) iprtMetai = nita
+
+    !Iterate steady state
+    !--------------------
+    steadyCycle: Do
+      maxn = maxn + 1
+
+    !----------------------------------------------------------------
+    !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+    !----------------------------------------------------------------
+    !      !EFa jun07, autoconverge
+    !!      if (beiauto /= 0.) call autoconverge (2.)
+    !----------------------------------------------------------------
+    !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+    !----------------------------------------------------------------
+
+      !drying/ wetting, if desired
+      !---------------
+      if (idswt /= 0) then
+        if (idryc == 0) then
+          !get potentially rewetted nodes
+          write(*,*) 'entering rewet'
+          call rewet
+          !dry wet and potentially rewetted nodes
+          write(*,*) 'entering dry'
+          call del
+          !after processing drying wetting, reset countdown for drying/wetting to the original frequency
+          idryc = idswt
+        endif
+      endif
+
+      !equation dropout
+      !----------------
+      if (idrpt /= 0) then
+        call drpout
+      !if inoperative, set all DOFs to be active
+      else
+        do j = 1, np
+          do k = 1, ndf
+            iactv (j, k) = 10
+          enddo
+        enddo
+      endif
+
+      !set up boundary line, based on active mesh parts
+      !--------------------
+      call bline (maxn)
+
+      !Calculate 1D/2D line-2-element transition distribution
+      !------------------------------------------------------
+      if (MaxLT /= 0) call TransVelDistribution
+      if (maxps /= 0) call PipeSurfaceConnectionQs
+
+      !???
+      !---
+      ick = iteqs (maxn) + 4
+
+      !set side inflows zero (sink/source)
+      !-----------------------------------
+      do n = 1, ne
+        sidff (n) = 0.
       enddo
-    enddo
-  endif
-
-  !set up boundary line, based on active mesh parts
-  !--------------------
-  call bline (maxn)
-
-  !Calculate 1D/2D line-2-element transition distribution
-  !------------------------------------------------------
-  if (MaxLT /= 0) call TransVelDistribution
-  if (maxps /= 0) call PipeSurfaceConnectionQs
-
-  !???
-  !---
-  ick = iteqs (maxn) + 4
-
-  !set side inflows zero (sink/source)
-  !-----------------------------------
-  do n = 1, ne
-    sidff (n) = 0.
-  enddo
-
-  !3D to 2D collapse; experimental
-  !-------------------------------
-  if (itransit == 1 .and. maxn < 4) call twodsw
+  !-------------------------------------------------------------------------------------------
+  !only operative in 3D applications; i.e. at the moment not in RMA·Kalypso, but only in RMA10
+  !-------------------------------------------------------------------------------------------
+  !!3D to 2D collapse; experimental
+  !!-------------------------------
+  !if (itransit == 1 .and. maxn < 4) call twodsw
+  !-------------------------------------------------------------------------------------------
+  !only operative in 3D applications; i.e. at the moment not in RMA·Kalypso, but only in RMA10
+  !-------------------------------------------------------------------------------------------
 
   !load the DOFs, i.e. set up the equations system
   !-----------------------------------------------
   call load
 
-  !Compute areas of continuity lines for stage flow input
-  !------------------------------------------------------
+  !Compute cross sectional areas of continuity lines for stage flow input based on present water depths
+  !----------------------------------------------------------------------------------------------------
   call agen
 
   !Initialise Mellor Yamada turbulence formulation
   !-----------------------------------------------
   if (iteqv (maxn) /= 5 .and. ioptzd > 0 .and. ioptzd < 3) call mellii
-      
 !-----------------------------------------------------------
 !reserve for testoutput of matrices
 !-----------------------------------------------------------
@@ -449,8 +470,8 @@ steadyCycle: Do
 !reserve for testoutput of matrices
 !-----------------------------------------------------------
 
-  !get some time informations
-  !--------------------------
+  !get some time informations for time monitoring
+  !----------------------------------------------
   call second (atim (2))
   
   !call the solver
@@ -564,6 +585,9 @@ steadyCycle: Do
       END IF
     endif
   endif
+  !write boundary condition exchange output (here it's steady)
+!  call write_innerBCs (m_SimModel, ccls(1:ncl), ncl, vel (1:3,:), cord(:,1:2), 0, maxn)
+
 
   !get vegetation parameter, if calculation with vegetation is desired
   !-------------------------------------------------------------------
@@ -1248,6 +1272,9 @@ DynamicTimestepCycle: do n = 1, ncyc
          END IF
       endif
     endif
+    !write boundary condition exchange output (here it's steady)
+    !call write_innerBCs (m_SimModel, ccls(1:ncl), ncl, vel(1:3,:), cord (:,1:2), icyc, maxn)
+
 
     !get vegetation parameter, if calculation with vegetation is desired
     !-------------------------------------------------------------------

@@ -1178,6 +1178,11 @@ C-
                 read (filecontrol.lin.unit, '(a)') inputLine
               endif
               
+              if (inputLine(1:3) == 'TCL') then
+                tmp_singleCCL.isInnerBoundary = .true.
+                !read next line
+                read (filecontrol.lin.unit, '(a)') inputLine
+              endif
               lmt_loop: do j = min (nl + 9, 500), 1, -1
                 if (line (i, j) /= 0) then
                   lmt (i) = j

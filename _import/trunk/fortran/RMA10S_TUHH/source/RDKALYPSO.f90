@@ -34,6 +34,8 @@ SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, Po
 ! frueher vorab ausgefuehrt werden.
 !                                             Nov 1995 Wyrwa
 !-----------------------------------------------------------------------
+!data type modules
+use mod_Nodes
 
 use blk10mod , only: &
 &   maxe, maxa, maxp, maxt, maxlt, maxps, ncl, &
@@ -46,7 +48,8 @@ use blk10mod , only: &
 &   translines, PipeSurfConn, ConnectedElt, &
 &   StorageElts, &
 &   vel, vold, vdot, vdoto, &
-&   iyrr, tett
+&   iyrr, tett, &
+&   feNodes, ccls
 !meaning of the variables
 !------------------------
 !maxp       maximum number of points (surface points; includes midsides)
@@ -231,8 +234,11 @@ integer (kind = 4)                              :: connnumber
 integer (kind = 4), allocatable, dimension (:,:):: elem
 real (kind = 8)                                 :: sumx, sumy
 logical                                         :: ReorderingNotDone
-integer (kind = 4), dimension (2, 160)          :: qlist
+integer (kind = 4), dimension (2, 500)          :: qlist
 integer (kind = 4), allocatable, dimension (:)  :: elfix
+integer (kind = 8)                              :: noDerivs
+type (node), pointer                            :: tmpNode
+integer (kind = 4)                              :: CCLID
 !meaning of the variables
 !------------------------
                         !TODO: geometry and restart file become one
@@ -321,7 +327,7 @@ arcs_without_midside = 0
 midsidenode_max = 0
 
 !TODO: 
-do i = 1, 160
+do i = 1, 500
   qlist (1, i) = 0
   qlist (2, i) = 0
 end do
@@ -421,6 +427,9 @@ reading: do
         istat=0
         !TODO: Format differentiation
         READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
+        !define FE node object
+        feNodes(i).thisNode => newNode (i, cord(i,1), cord (i,2), ao(i))
+        !check for kilometer
         if (istat == 0) WRITE (lout, *) 'Die Kilometrierung von Knoten', i, 'wurde eingelesen:', kmx (i)
         nodecnt = max (i, nodecnt)
         IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0d0, 0.0d0)
@@ -654,15 +663,15 @@ reading: do
       endif
     
     !STORAGE ELEMENT
-    ELSEIF (linie(1:2) == 'SE') then
+    elseif (linie(1:2) == 'SE') then
       if (kswit == 1) then
         read (linie, *) id_local, i
         if (i > maxSE) maxSE= i
       else
-        read (linie, *) id_local, i, StorageElts(i).CCLID, StorageElts(i).storageContent
+        read (linie, *) id_local, i, CCLID, StorageElts(i).storageContent
         StorageElts(i).ID = i
+        ccls(CCLID).storageElt => StorageElts(i)
       endif
-    
     endif
     
     
@@ -1031,7 +1040,7 @@ all_elem: DO i = 1, maxe
         !generate cross product
         kreuz = vekkant (1) * vekpu1 (2) - vekkant (2) * vekpu1 (1)
         if (kreuz <= 0.0) call errormessageandstop (1205, i, 0.5 * (cord (nop (i, 1), 1) + cord (nop (i, 3), 1)), &
-                                                                 & (cord (nop (i, 1), 2) + cord (nop (i, 3), 2)))
+                                                           & 0.5 * (cord (nop (i, 1), 2) + cord (nop (i, 3), 2)))
       end do crossing_inner
     end do crossing_outer
   endif dimensionif
@@ -1302,10 +1311,10 @@ do i = 1, MaxP
   !neighb(i, j) : ID-number of j-th neighbour of node i
   !nconnect (i) : number of neighbourhood connections
   !It's assumed that a node has maximum 30 neighbours
-  do j = 1, 30
+  do j = 1, 500
     neighb (i, j) = 0
   end do
-  nconnect(i) = 0       
+  nconnect(i) = 0
 end do
 
 !run through all elements
@@ -1396,6 +1405,11 @@ do i = 1, nodecnt
     j = j + 1
   end do
 end do
+
+noDerivs = 0
+do i = 1, maxp
+  noDerivs = noDerivs + nconnect (i) + 1
+enddo
 
 !generate upward knowledge, store elements connected to nodes
 BelongingElement: do i = 1, MaxE
@@ -1617,9 +1631,6 @@ end if
 LogIntPolProf = .true.
 IsPolynomNode = .true.
 END subroutine
-
-
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE Read_KALYP_Bed
 

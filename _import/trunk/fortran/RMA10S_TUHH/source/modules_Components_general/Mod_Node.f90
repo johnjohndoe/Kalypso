@@ -1,4 +1,7 @@
 module mod_Nodes
+  !linked types
+  use mod_BCs
+
   type node
     integer (kind = 4) :: ID = 0
     real (kind = 8) :: cord (1:2) = (/0.0d0, 0.0d0/)
@@ -10,6 +13,17 @@ module mod_Nodes
     type (linkedNode), pointer :: prev => null()
     type (linkedNode), pointer :: next => null()
   end type
+  
+  !not used type yet
+  type feNode
+    type (node), pointer :: thisNode => null()
+    type (bcVolWLRelation), pointer :: vWlRelation => null()
+    !components of an fe-node
+    !Marsh parameters
+    !elements, in which it is contained
+    !boundary conditions that are assigned
+  end type
+
 contains
 
   function newNode (ID, xcord, ycord, zcord)

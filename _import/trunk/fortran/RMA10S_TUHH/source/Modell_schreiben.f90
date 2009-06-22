@@ -1,4 +1,3 @@
-!     Last change:  MD   10 Jun 2009    3:35 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -608,8 +607,9 @@ WRITE(IKALYPSOFM,'(A)') LINE256(1:IDX+26)
 
 WRITE(LINE256,'(A,20I11)') '           (N/m2)    (m/s)  (g/m2/s)  (mm/s)     (g/m2/s)     (g/m2/s) &
                            &       (m)    (Kg/m2) NR  NR        (mm)',&
-                           &  (L,L=1,NLAYT),(L,L=1,NLAYO(1))
+&                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
 WRITE(IKALYPSOFM,'(A)') LINE256
+
 
 
 
@@ -724,3 +724,57 @@ ENDIF
 !-
 
 end subroutine
+
+
+!subroutine write_innerBCs (ccls, ncl, vel, coordinates, icyc, SchwarzIt)
+subroutine write_innerBCs (SimModel, ccls, ncl, vel, coordinates, icyc, SchwarzIt)
+
+use mod_Model
+use mod_ContiLines
+use mod_Nodes
+
+implicit none
+
+!arguments
+type (SimulationModel), pointer :: SimModel
+type (contiLine), intent (in) :: ccls(*)
+real (kind = 8), intent (in) :: vel(:,:), coordinates (:,:)
+integer, intent (in) :: ncl
+integer, intent (in) :: icyc, SchwarzIt
+
+!local variables
+!---------------
+character (len = 96) :: outName
+integer (kind = 4) :: i, j, k, l
+real (kind = 8) :: vresu, dir
+integer (kind = 4) :: ID
+type (linkedNode), pointer :: tmpNode
+
+!generate file name and open file
+write (outName, '(a9, i5.5, a1, i3.3)')'innerBCS_', icyc, '_', SchwarzIt
+open (unit = 4343, name = outName)
+
+!write header
+write (4343,*) 'vx, vy, h, vresu, alpha, qx, qy, qresu, cordx, cordy'
+!write boundary conditions
+findInnerLines: do i = 1, ncl
+  if (.not. (ccls(i).isInnerBoundary)) cycle findInnerLines
+  write (4343,*) 'line', ccls(i).ID
+  write (4343,*) SimModel.ID, SimModel.NewtonConv, SimModel.SchwarzConv
+  tmpNode => ccls(i).firstNode
+  writeNodeResults: do 
+    ID = tmpNode.thisNode.ID
+    vresu = sqrt (vel(1, ID)**2 + vel (2, ID)**2)
+    dir = atan (vel (2,ID)/ vel (1, ID))
+    
+    write (4343, *) 'resu', (coordinates (ID, l), l=1, 2), (vel(j, ID), j=1, 3), vresu, dir, (vel(k,ID)*vel(3,ID), k=1, 2), vresu* vel(3,ID)
+    
+    if (.not. associated (tmpNode.next)) exit writeNodeResults
+    tmpNode => tmpNode.next
+
+  enddo writeNodeResults
+enddo findInnerLines
+
+close (4343)
+
+end subroutine write_innerBCs
