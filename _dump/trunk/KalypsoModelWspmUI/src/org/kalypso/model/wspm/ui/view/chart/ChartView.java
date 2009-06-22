@@ -273,6 +273,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     if( m_chart == null )
     {
       m_chart = new ProfilChartView();
+      setLayerProvider( m_chart );
       m_chart.createControl( m_form.getBody() );
     }
     if( getProfil() == null )
@@ -289,6 +290,17 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     }
     return getChartComposite();
 
+  }
+
+  /**
+   * Can be overridden if one wants to set the layer provider.
+   * 
+   * @param chart
+   *          The profile chart view.
+   */
+  @SuppressWarnings("unused")
+  protected void setLayerProvider( ProfilChartView chart )
+  {
   }
 
   /**
