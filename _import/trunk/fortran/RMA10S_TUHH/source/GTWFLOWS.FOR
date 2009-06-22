@@ -44,8 +44,7 @@ c
 CIPK OCT03  ADD WIDEM
 	    WIDEM=SQRT((CORD(NOP(N,1),1)-CORD(NOP(N,7),1))**2+
      +          (CORD(NOP(N,1),2)-CORD(NOP(N,7),2))**2)
-          CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,IWTYP
-     +          ,WIDEM)
+          CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,WIDEM)
           wflolw(nop(n,1))=wflow(nop(n,1))
           wflolw(nop(n,7))=wflow(nop(n,7))
           wflow(nop(n,1))=(q1T+wflolw(nop(n,1)))/2.
@@ -61,8 +60,7 @@ CIPK OCT03  ADD WIDEM
 CIPK OCT03  ADD WIDEM
 	    WIDEM=SQRT((CORD(NOP(N,1),2)-CORD(NOP(N,6),1))**2+
      +          (CORD(NOP(N,2),2)-CORD(NOP(N,6),2))**2)
-          CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,IWTYP
-     +          ,WIDEM)
+          CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,WIDEM)
           wflolw(nop(n,2))=wflow(nop(n,2))
           wflolw(nop(n,6))=wflow(nop(n,6))
           wflow(nop(n,2))=(q1T+wflolw(nop(n,2)))/2.
@@ -78,8 +76,7 @@ CIPK OCT03  ADD WIDEM
 CIPK OCT03  ADD WIDEM
 	    WIDEM=SQRT((CORD(NOP(N,3),1)-CORD(NOP(N,5),1))**2+
      +          (CORD(NOP(N,3),2)-CORD(NOP(N,5),2))**2)
-          CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,IWTYP
-     +          ,WIDEM)
+          CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,WIDEM)
           wflolw(nop(n,3))=wflow(nop(n,3))
           wflolw(nop(n,5))=wflow(nop(n,5))
           wflow(nop(n,3))=(q1T+wflolw(nop(n,3)))/2.
