@@ -74,7 +74,7 @@ C-
       !nis,sep06,com: Run through every CCL to overgive the real number of nodes
       DO 125 J = 1, NCL
         !assign continuity line
-        tmpContiLine => contiLines(j)
+        tmpContiLine => ccls(j)
 
         M = LMT(J)
 cipk feb01  skip out for zero lines
@@ -275,7 +275,7 @@ CIPK JUL01
       ND = NB
       DO 180 J = 1, NCL
         !get current continuity line
-        tmpContiLine => contiLines (j)
+        tmpContiLine => ccls (j)
 CIPK OCT98        NTL=1
         SUMX = 0.0
         SUMY = 0.0
@@ -675,7 +675,23 @@ C-
         ENDIF
 CIPK JUL01
         TOTAL(J) = SUMX - SUMY
-        
+        !Save the water that's going through the line within the current step
+        if (associated (ccls(j).storageElt)) then
+          if (ncall == 0) then
+            ccls(j).storageElt.currQ = Total (j)
+          else
+            if (maxn == 1) then
+              ccls(j).storageElt.prevQ = ccls(j).storageElt.currQ 
+            endif
+            ccls(j).storageElt.currQ = Total (j)
+            ccls(j).storageElt.storageAddition = 
+     +        QAverage(ccls(j).storageElt) * delt
+     
+            SElt => ccls(j).storageElt
+            WL = waterlevel (SElt, .true.)
+          endif
+        endif
+
 cipk apr01
 CIPK JUL01
         IF(TOTAL(J) .NE. 0.) THEN
@@ -709,24 +725,6 @@ CIPK JUL01
           ENDIF
         ENDDO
       ENDIF
-      
-      !Save the water that's going through the line within the current step
-      write (*,*) maxn
-      do jj = 1, maxSE
-        if (ncall == 0) then
-          StorageElts (jj).currQ = Total (StorageElts(jj).CCLID)
-        else
-          if (maxn == 1) StorageElts(jj).prevQ = StorageElts(jj).currQ
-          StorageElts(jj).currQ = Total (StorageElts(jj).CCLID)
-          StorageElts(jj).storageAddition = 
-     +      QAverage(StorageElts(jj)) * delt
-     
-          SElt => StorageElts(jj)
-          WL = waterlevel (SElt, .true.)
-          continue
-        endif
-      enddo
-      
       
       !remember that first call is over
       ncall = 1
