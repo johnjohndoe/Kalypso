@@ -1,4 +1,3 @@
-C     Last change:  MD    9 Jun 2009   11:26 am
 CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
 CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
@@ -190,14 +189,6 @@ C        edd2(k)=0.0
 C        edd3(k)=0.0
 C      enddo
 
-cWP Feb 2006, following variables are not used anymore
-c      MMM1=MNP
-c      MMM2=MEL
-c      MMM3=MEQ
-c      MMM6=MFW
-c      MMM8=NBS
-c-
-C      WRITE(LOUT,6140)MMM1,MMM2,MMM3,MMM6,MMM8
 C
 C                                       READ AND PRINT TITLE AND CONTROL
 C
@@ -216,7 +207,6 @@ cipk aug02 expand to 80 char
       READ(DLIN,5005) TITLE(1:72)
       WRITE(LOUT,6005) TITLE
       write(*,*) 'read title'
-      NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
@@ -328,7 +318,6 @@ C
 !nopt is obsolete
 !-
 
-      NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
@@ -397,7 +386,6 @@ C      IF(HMNN .NE. 0.) HMIN=HMNN
       WRITE(LOUT,6020) 
      + OMEGA,ELEV,XSCALE,YSCALE,ZSCALE,CMIN,CPR,UNOM,UDIR,HMNN,IDEBUG
 c
-      NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
@@ -433,7 +421,6 @@ cipk sep96 add to 3 lines below for ocean exchange percentantage and mixing
      +                             8X,'  X-VEL      ',F8.2/
      +                             8X,'  Y-VEL      ',F8.2)
 c
-      NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
@@ -483,19 +470,12 @@ C
 !nprt       frequency to print results to model output file at the end of iteration
 !irsav      time step to start with writing of results
 
-
-
-
 CIPK AUG02 ADD NBSFRQ ABOVE AND BELOW
-      IF(NBSFRQ .EQ. 0) NBSFRQ=1
-      
-      IF(NPRTF .EQ. 0) NPRTF=1
+      if (nbsfrq == 0) nbsfrq = 1
+      if (nprtf == 0) nprtf = 1
 
-
-      NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
-
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
@@ -634,7 +614,7 @@ C      FACTMORPH=1.
 cipk SEP02 add sand data
    20 CONTINUE
       IF(ID(1:3) .EQ. 'CRS') THEN
-
+      
         READ(DLIN,'(I8,F8.0)') NN, CRSLOP(NN)
         call ginpt(lin,id,dlin)
 	  GO TO 20
@@ -724,7 +704,6 @@ cipk may03 add cutout opton for settling/erosion for element types
       IF(ID(1:2) .EQ. 'CV') THEN
 cipk apr97 add to data read for equation dropout
         READ(DLIN,'(6F8.0,i8,f8.0)') (CONV(J),J=1,6),idrpt,drfact
-        NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
       ELSE
@@ -747,15 +726,22 @@ cipk apr97
       endif
 cipk apr97
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!EFa jun07, autoconverge option
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!EFa jun07, autoconverge option
+!
+!      IF(ID(1:2) .EQ. 'AC') THEN
+!        READ(dlin,'(4i8)') beiauto, linlog, nnnst, nnnunst
+!        CALL GINPT(LIN,ID,DLIN)
+!      ENDIF
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
 
-      IF(ID(1:2) .EQ. 'AC') THEN
-        READ(dlin,'(4i8)') beiauto, linlog, nnnst, nnnunst
-        CALL GINPT(LIN,ID,DLIN)
-      ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK  FEB04 add IOV option
 
       IF(ID(1:3) .EQ. 'IOV') THEN
@@ -888,14 +874,12 @@ C-
       ELSE
         IVEGETATION = 0
       END IF
+
       !use of energy elevation for application at weirs
       if (ID(1:6) == 'ENERGY') then
-        UseEnergyCstrc = 1
         call ginpt(lin,id,dlin)
-      else
-        UseEnergyCstrc = 0
-      end if
-!-
+      endif
+        
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,sep06: Add switch for approach of boundary-condition-transformation
       IF (ID(1:6) == 'KAL_BC') THEN
@@ -914,7 +898,6 @@ C-
           write(*,*) 'read ed1'
 
           IF(NMAT .LT. J) NMAT=J
-          NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
 
@@ -926,7 +909,6 @@ CIPK NOV98 ADD SURFACE FICTION
             write(*,*) 'read ed2'
 cipk mar98 
             if(ort(j,12) .eq. 0.) ort(j,12)=1.
-            NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
             call ginpt(lin,id,dlin)
 
@@ -1128,7 +1110,7 @@ C-
 
       !nis,jun07: line array was never initialized, so it is done here now
       do i = 1, 50
-        do j = 1, 350
+        do j = 1, 500
           line (i,j) = 0
         end do
       end do
@@ -1140,9 +1122,7 @@ C-
           !read number of continuity lines
           read (dlin, *) ncl
           !allocate continuity line objects
-          allocate (contiLines (1:ncl))
-          !assign local pointer on continuity lines
-          !tmp_contiLines => contiLines
+          allocate (ccls(1:ncl))
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
@@ -1176,7 +1156,7 @@ C-
               read (inputline (4:8), *) i
               read (inputline (9:), '(9i8)') (line (i, j), j = 1, 9)
               !add continuity line ID
-              tmp_singleCCL => contiLines (i)
+              tmp_singleCCL => ccls (i)
               call addID (tmp_singleCCL, i)
 
               !check for zero entry in first definition position
@@ -1197,8 +1177,8 @@ C-
                 !read next line
                 read (filecontrol.lin.unit, '(a)') inputLine
               endif
-
-              lmt_loop: do j = min (nl + 9, 350), 1, -1
+              
+              lmt_loop: do j = min (nl + 9, 500), 1, -1
                 if (line (i, j) /= 0) then
                   lmt (i) = j
                   exit lmt_loop
@@ -1326,7 +1306,7 @@ C-
       !get coordinates of the continuity line nodes
       getCoords: do i = 1, ncl
         !get contiLine
-        tmp_singleCCL => contiLines(i)
+        tmp_singleCCL => ccls(i)
         if (associated (tmp_singleCCL.firstNode)) then
           tmpNode => tmp_singleCCL.firstNode
           if (associated (tmpNode.next)) then
@@ -1349,15 +1329,15 @@ C-
             arc1D => newArc (node1D_first, node1D_last)
             arcVec = arcVector (arc1D)
             !get direction pointer
-            if (contiLines(i).posNormal(1) == 0.0d0 .and.
-     +          contiLines(i).posNormal(2) == 0.0d0) then
+            if (ccls(i).posNormal(1) == 0.0d0 .and.
+     +          ccls(i).posNormal(2) == 0.0d0) then
               dirPointer = 1.0d0
             else
               dirPointer = projectionDirPointer
-     +                     (arcVec, contiLines(i).posNormal)
+     +                     (arcVec, ccls(i).posNormal)
             endif 
-            contiLines(i).posNormal = arcVec
-            call scaleToUnitVector (contiLines(i).posNormal, dirPointer)
+            ccls(i).posNormal = arcVec
+            call scaleToUnitVector (ccls(i).posNormal, dirPointer)
           endif
         endif
         
@@ -1415,7 +1395,6 @@ CIPK JAN99 END ADDITION
    70   N1=N1+9
         N2=N1+8
         IF(N2 .GT. NE) N2=NE
-        NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
 
@@ -1431,7 +1410,6 @@ cipk sep04
           WRITE(*,*) 'ERROR -- READING REORDERING DATA RO1'
           STOP
         ENDIF
-        NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
       call ginpt(lin,id,dlin)
       ENDIF
@@ -1472,7 +1450,6 @@ C-
         READ(DLIN,5029) N,ALFAK(N)
         ALFA(N)=ALFAK(N)
         WRITE(LOUT,6035) N,ALFAK(N)
-        NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
         GO TO 81
@@ -1487,14 +1464,12 @@ C
    82 CONTINUE
       IF (ID(1:2) .EQ. 'SA')  THEN
         READ(DLIN,'(3F8.0)') SALBC
-        NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
         IF(ID(1:3) .EQ. 'SA1') THEN
           WRITE(LOUT,6036) SALBC
           READ(DLIN,5010) (IFXSAL(K),K=1,9)
           WRITE(LOUT,5010) (IFXSAL(K),K=1,9)
-          NDATLN=NDATLN+1
 CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN
           call ginpt(lin,id,dlin)
           DO K = 1, 9
@@ -1523,7 +1498,6 @@ cipk sep04
         IF(ID(1:3) .EQ. 'SA1') THEN
           READ(DLIN,5010) (IFXSAL(K),K=N1,N9)
           WRITE(LOUT,5010) (IFXSAL(K),K=N1,N9)
-          NDATLN=NDATLN+1
 CIPK NOV97          READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
@@ -1548,7 +1522,6 @@ C
       IF(ID(1:3) .EQ. 'ST1') THEN                               !NiS,mar06,comment:
         READ(DLIN,5010) (IMIDD(K),K=1,9)                        !
         WRITE(LOUT,6037) (IMIDD(K),K=1,9)                       !This part of the code does not do what the handbook says. Therefore see pages
-        NDATLN=NDATLN+1                                         !41/42 in the handbook release of September 2005
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
 C
@@ -1564,7 +1537,6 @@ C
         IF(ID(1:3) .EQ. 'ST1') THEN
           READ(DLIN,5010) (IMIDD(K),K=N1,N9)
           WRITE(LOUT,5010) (IMIDD(K),K=N1,N9)
-          NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
@@ -1590,7 +1562,6 @@ C
       IF (ID(1:2) .EQ. 'CP')  THEN
         READ(DLIN,'(I8,2F8.0)') J,CINT(J),CPOW(J)
         WRITE(LOUT,6038) CINT(J),CPOW(J)
-        NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
 
@@ -1601,7 +1572,6 @@ C
         IF(ID(1:3) .EQ. 'CP1') THEN
           READ(DLIN,5010) (IMIDD(K),K=1,9)
           WRITE(LOUT,5010) (IMIDD(K),K=1,9)                                     !NiS,mar06,comment:
-          NDATLN=NDATLN+1                                                       !
 CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN                                !This part of the code does not do, what the handbook says. See
       call ginpt(lin,id,dlin)                                                   !therefore page 42 in the handbook release of September 2005
           DO K = 1, 9
@@ -1622,7 +1592,6 @@ cipk sep04
         IF(ID(1:3) .EQ. 'CP1') THEN
           READ(DLIN,5010) (IMIDD(K),K=N1,N9)
           WRITE(LOUT,5010) (IMIDD(K),K=N1,N9)
-          NDATLN=NDATLN+1
 CIPK NOV97          READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
@@ -1662,6 +1631,11 @@ C
 C...... Initialize CHECK
 C-
       CALL CHECK
+      
+      !TODO: This call is only for getting the water levels at Q-boundaries and transitions;
+      !      The way of programming is not efficient!
+      call getinit(ibin,1)      
+      
 C-
 C-.....INPUT BOUNDARY AND WIND DATA.....
 C-
@@ -1890,14 +1864,7 @@ C     IF(NCORN(J) .EQ. 3  .AND.  IMAT(J) .LT. 1000) NCORN(J)=NCRN(J)
 !nis,may07
 !Add midside node for polynom approach
 !The interpolation of missing data is also done in RDKalypso.subroutine. So this is skipped here for polynom approach data
-!        !EFa Nov06, keine Berechnung fü 1D-Teschke-Elemente
-!        !nis,feb07: Allow for numbered FFF midsides
-!        !if (nop(j,2).NE.-9999) then
-!        if (nop(j,2) > -1000) then
         if (imat(j) == 89) then
-!        !-
-!Add midside node for polynom approach
-!-
         DO 101 K=1,NCN
           KL=IL(K,ILK)
 CIPK SEP05
@@ -1954,15 +1921,6 @@ CIPK OCT98 CONVERT TO F90
 
 CIPK SEP04  ENSURE VALUES AT ALL NODES
       DO N=1,NPM
-!nis,may07
-!Add midside nodes for polynom
-!        !EFa Nov06, keine Sicherung der Werte für 1D-Teschke-Elemente
-!        !nis,feb07: Allow for numbered FFF midsides
-!        !if (nop(n,2).NE.-9999) then
-!        if (nop(n,2) > -1000) then
-!        !-
-!add midside node for polynom approach
-!-
           IF(NDEP(N) .GT. 1) THEN
             N1=NREF(N)+1
             NV=NDEP(N)+N1-2
@@ -2319,7 +2277,9 @@ CIPK AUG95 ADD CALL TO GET MET DATA
       CALL INMET(LOUT,NMETF,TET)
 
 CIPK APR06
+!testing, original place
       call getinit(ibin,1)
+!testing, original place-
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
@@ -2335,7 +2295,6 @@ C-
  3070   N1=N1+9
         N2=N1+8
         IF(N2 .GT. NE) N2=NE
-        NDATLN=NDATLN+1
         call ginpt(lin,id,dlin)
         IF(ID(1:3) .EQ. 'RT ') THEN
           READ(DLIN,5010) (NFIXH(J),J=N1,N2)
@@ -2348,7 +2307,6 @@ cipk sep04
           WRITE(75,*) 'ERROR -- READING REORDERING DATA LINE RT'
           STOP
         ENDIF
-        NDATLN=NDATLN+1
       call ginpt(lin,id,dlin)
       ENDIF
  3071 CONTINUE
