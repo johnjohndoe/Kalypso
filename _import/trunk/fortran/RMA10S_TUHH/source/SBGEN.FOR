@@ -205,8 +205,6 @@ cipk APR96 save data to a scratch file
           if(isvs .eq. 1) then
             write(nscrin,7000) id,dlin
           endif
-          !nis,sep06,com: increase counter for
-          NDATLN=NDATLN+1
           !nis,sep06,com: Control output
           WRITE(LOUT,6034) J,LN,QF,QDIR,QQAL,LABL
 
@@ -275,6 +273,7 @@ C-
       IHGNN=0
 CIPK DEC97 MODIFY LIMITS     DO  N=1,NQBS
       DO N=1,NHDS
+        !water level boundary condition with hydrograph file
         IF(NHYDH(N) .NE. 0) THEN
           IHGNN=IHGNN+1
           IF(IHGNN .EQ. 1) WRITE(LOUT,6035)
@@ -357,50 +356,55 @@ CIPK APR01
  208  CONTINUE
 CIPK AUG00
 CIPK JUN03
-      IF(ID(1:2) .EQ. 'HC'.OR.  ID(1:2) .EQ. 'HI'
-     +                    .OR.  ID(1:2) .EQ. 'HJ'      ) THEN
+      IF (ID (1:2) == 'HC' .or. ID (1:2) == 'HI' .or. 
+     +    ID (1:2) == 'HJ' .or. ID (1:2) == 'HS') THEN
+        !HC - normal water level boundary condition with constant water level
+        !HI - water level boundary condition, where the water level is linearily distributed between two values
+        !     from the outer nodes of the continuity line
+        !HJ - same as the HI
+        !HS - volume - water level boundary condition; practically it is a water level boundary condition, only that
+        !     the water level is calcualed on the fly depending on the volume inside the polder
 
-        !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
-        !find out the ID-number
-        READ(DLIN,'(i8)') J
+        !Get line number
+        READ (DLIN,'(i8)') J
+
         !test for every 1D-2D-line-transitions
         do i = 1, MaxLT
           !test,whether it is present in one coupling
-          if (TransLines(i,2).eq.J) then
-            WRITE(*,*) 'ERROR!!!'
-            WRITE(*,*) 'Transition Line has specified value!'
-            WRITE(*,*) 'There can be no specified WATERSTAGES.'
-            WRITE(*,*) 'Leave Transition line without conditions!'
-            stop
-          end if
+          if (TransLines (i, 2) == J)
+     +      call ErrorMessageAndStop (1407, J, 0.0d0, 0.0d0)
         enddo
-        !-
+        !Count occurances of H-Boundaries
+        IHGNN = IHGNN + 1
 
-        IHGNN=IHGNN+1
-CIPK AUG00
-        IF(ID(1:2) .EQ. 'HC') THEN
-          IINTERP(IHGNN)=0
-CIPK JUN03
-        ELSEIF(ID(1:2) .EQ. 'HJ') THEN
-	    IINTERP(IHGNN)=2
-	  ELSE
-          IINTERP(IHGNN)=1
+        !HC stands for 'normal' H-BCs, i.e. there will be no interpolation between two values
+        IF (ID (1:2) == 'HC') THEN
+          IINTERP (IHGNN) = 0
+        elseif (id (1:2) == 'HS') then
+          iinterp (ihgnn) = 3
+
+        !HJ or HI are standing for H-BCs, where value is interpolated linearily between two values
+        !IINTERP (IHGNN) == 1 and IINTERP (IHGNN) == 2 has the same meaning!
+        ELSEIF (ID (1:2) == 'HJ') THEN
+	    IINTERP (IHGNN) = 2
+	  ELSE !HI
+          IINTERP (IHGNN) = 1
         ENDIF
-CIPK DEC97 REFINE TEST FOR TOO MANY ELVATION SPECS
-        IF(IHGNN .GT. NHDS) THEN
-cipk sep04
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,*) 'ERROR STOP TOO MANY ELEVATION SPECS'
-          WRITE(*,*) 'ERROR STOP TOO MANY ELEVATION SPECS'
-          STOP 'TOO MANY ELEVATION SPECS'
-        ENDIF
-CIPK DEC97 END ADDITION
-        IF(IHGNN .EQ. 1) WRITE(LOUT,6035)
-CIPK AUG00
-CIPK APR01
-        READ(DLIN,5031) J,LN,HF,QQAL,LABL,HF2
- 5031   FORMAT(2I8,4F8.0,I8,F8.0)
+
+        !TEST FOR TOO MANY ELVATION SPECS
+        IF (IHGNN > NHDS)
+     +    call ErrorMessageAndStop (1406, 0, 0.0d0, 0.0d0)
+
+        !write header for output
+        IF (IHGNN == 1) WRITE (LOUT, 6035)
+
+        if (id (1:2) == 'HS') then
+          read (dlin, *, iostat = ioError) j, ln, qqal
+        else
+          !evaluate read in line of input file
+          read (dlin, 5031, iostat=ioError) j, ln, hf, qqal, labl, hf2
+ 5031     format (i8, i8, f8.0, 3f8.0, i8, f8.0)
+        endif
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -421,20 +425,24 @@ CIPK APR01
 
 cipk nov97        READ(IBIN,7000) ID,DLIN
         call ginpt(ibin,id,dlin)
-cipk APR96 save data to a scratch file
+
+        !TODEL: save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
+
 CIPK AUG00
         IF(IINTERP(IHGNN) .EQ. 0) THEN
-CIPK APR01
+          !write out read data line
           WRITE(LOUT,5032) J,LN,HF,QQAL
- 5032     FORMAT(2I10,5F15.3)
         ELSE
 CIPK APR01
           WRITE(LOUT,5032) J,LN,HF,HF2,QQAL
         ENDIF
+ 5032   FORMAT(2I10,5F15.3)
+
+
+        !switch for boundary condition to interpolate values from tidal graph or harmonic graph
         IF(LABL .EQ. 1) THEN
           NHYDH(IHGNN)=ABS(J)
           NLAYH(IHGNN)=LN
@@ -448,29 +456,23 @@ CIPK APR01
  6032     FORMAT ( 'DYNAMIC TIDES WILL BE GENERATED FROM HARMONICS',
      +    ' FOR LINE',I4)
         ENDIF
-        IF (LN .EQ. 0)  THEN
-CIPK DEC97 CALLING SEQUENCE CHANGED
-CIPK AUG00
-          CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL)
 
-CIPK DEC97  ALLOW FOR "HCN" INPUT
-          IF(J .LT. 0) THEN
-            JLIN(IHGNN)=-J
-          ELSE
-            JLIN(IHGNN)=0
-          ENDIF
-CIPK DEC97 END CHANGES
-        ELSE
-C
-C  Apply elev bc to single 3d layer
-C
-           CALL HGENSPCL(0,LN,J,HF,QQAL)
-        ENDIF
+        !Application of boundary conditions to all layers
+        if (ln == 0)  then
+          !determine the boundary condition settings
+          call hgen (ibin, j, hf, hf2, iinterp (ihgnn), qqal)
+        !application of water level boundary conditions to specific layers
+        else
+          !Apply elev bc to single 3d layer
+          call hgenspcl(0,ln,j,hf,qqal)
+        endif
+        !TODO: What does JLIN make?
         IF(J .LT. 0) THEN
           JLIN(IHGNN)=-J
         ELSE
           JLIN(IHGNN)=0
         ENDIF
+
         GO TO 208
       ENDIF
 
@@ -521,7 +523,6 @@ cipk APR96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
         CALL STGEN(J,AC1,AC2,AC3,AC4,AC5,QQAL)
         GO  TO 212
       ENDIF
@@ -542,7 +543,6 @@ cipk APR96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
 
         CALL SGEN(J,QQAL)
 
@@ -575,7 +575,6 @@ cipk APR96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
 CIPK DEC00 CHANGE FORMAT NUMBER
         WRITE(LOUT,6046) TW,TA
         WRITE(*,6046) TW,TA
@@ -594,7 +593,6 @@ cipk APR96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
         SIGMA(N,1)=CHI*COS(TA/57.3)*TW**2
         SIGMA(N,2)=CHI*SIN(TA/57.3)*TW**2
         GO TO 215
@@ -615,7 +613,6 @@ cipk jan96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
         NJT(NJN-900)=NJT1
         AJ(NJN-900)=AJ1
         BJ(NJN-900)=BJ1
@@ -638,7 +635,6 @@ cipk jan96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
         NDUPJ(NJN-900)=NDUP
         NDDNJ(NJN-900)=NDDN
 CIPK FEB01 STORE NEW BVALUE
