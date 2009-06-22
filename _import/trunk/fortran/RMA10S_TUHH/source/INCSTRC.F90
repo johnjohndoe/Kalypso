@@ -3,75 +3,127 @@
 SUBROUTINE INCSTRC
 
 
-USE CSVAR
-USE BLK10MOD
-USE parakalyps
+USE CSVAR, only: nsets, nrowm, ncolm, nrowcs, ncolcs, hrw, hcl, flwcs
+USE BLK10MOD, only: maxweir, incstr, contrStructures, nctref
+use mod_ControlStructure
 
-!implicit none
-!definition block
+implicit none
 
-!cipk aug05	INCLUDE 'BLK10.COM'
-CHARACTER*8  IDC
-CHARACTER*72 DLINC
-INTEGER :: nlo, nhi, id1
-INTEGER :: NMAXM, nrow, ncol
+!loop counter
+integer (kind = 4) :: j, l
 
+!i/o variables
+character (len = 8) ::idc
+character (len = 72) :: dlinc
+character (len = 250) :: linetoeval
+character (len = 3)   :: lineid
+integer (kind = 4) :: iostatvar
 
-!local definitions for Energy usage with linear functions
-INTEGER               :: iostatvar, iostateval
-INTEGER               :: i, j, k, l
-CHARACTER (LEN = 250) :: lineToEval
-CHARACTER (LEN = 3)   :: lineID
-INTEGER               :: MaxWeir, MaxQ, TempWeir, TempQs
-INTEGER               :: countOuter, countInner
-REAL (KIND = 8)       :: EUW, EUW_old, EOW, EOW_old
-REAL (KIND = 8)       :: Qinner, Q_loop
-!------
+!data sets for QCurve definition
+type (controlStructure), pointer :: tmpCstrc
+integer (kind = 4) :: weirCounter
+integer (kind = 4) :: weirTypeID
+real (kind = 8) :: Qinner, euw, eow
 
+!data sets for tabular data definition
+integer (kind = 4) :: nsetsCounter
+integer (kind = 4) :: nlo, nhi, id1
+integer (kind = 4) :: nrow, ncol
 
+!Examine size of control structure data (both types: QCurves and tabular data)
+!--------------------------------------
+iostatvar = 0
+!QCurve control structures
+MaxWeir = 0
+!tabular control structures
+nsets=0
+nrowm=0
+ncolm=0
 
-!original tabular data approach
-!******************************
-if (UseEnergyCstrc == 0) then
+readWeirSize: do
+  !read new line
+  call ginpt (incstr,idc,dlinc)
+  !check for type of control structure and count
+  if (idc(1:2) == 'TI') then
+    cycle readWeirSize
+  elseif (idc(1:7) == 'ENDDATA') then
+    exit readweirsize
+  elseif (idc(1:3) == 'DLI') then
+    maxWeir = maxWeir + 1
+  elseif (idc(1:3) == 'IDC') then
+    read (dlinc, '(3i8)') id1, nrow, ncol
+    if (nrow > nrowm) nrowm = nrow
+    if (ncol > ncolm) ncolm = ncol
+    nsets = nsets + 1
+  end if
+end do readWeirSize
 
-  NROWM=0
-  NCOLM=0
-  NMAXM=0
-  NSETS=0
-  CALL GINPT(INCSTR,IDC,DLINC)
-  IF(IDC(1:2) .EQ. 'TI') THEN
-    WRITE(*,*) 'Reading title on control structure',DLINC
-  ENDIF
+!rewind input file to really evaluate data
+rewind incstr
 
-  examineDataSize: do
-    CALL GINPT (INCSTR, IDC, DLINC)
-    IF (IDC (1: 3) == 'IDC') THEN
-      READ (DLINC, '(3I8)') ID1, NROW, NCOL
-      IF (NROW > NROWM) NROWM = NROW
-      IF (NCOL > NCOLM) NCOLM = NCOL
-      NSETS = NSETS + 1
-    ELSEIF (IDC (1:7) == 'ENDDATA') THEN
-      EXIT examineDataSize
-    ENDIF
-  ENDDO examineDataSize
+!prepare control structure array for QCurves
+if (maxweir > 0) allocate (ContrStructures (1: MaxWeir))
 
-  REWIND INCSTR
-
-  !weir file shall also be present if no data is available
-  if (nrowm == 0) return
-
-  !now read data
-  CALL GINPT(INCSTR,IDC,DLINC)
+!prepare control structure arrays using tabular data
+if (nrowm /= 0) then
   !NROWCS :: number data lines (number of downstream water levels)
   !NCOLCS :: number of data columns (number of upstream water levels)
   !HRW    :: interpolated water stage in line (downstream)
   !HCL    :: interpolated water stage in column (upstream)
   !FLWCS  :: 3D-discharge table array (weir number, line number, column number)
-  ALLOCATE (NROWCS (NROWM), NCOLCS (NCOLM), HRW (NSETS, NROWM), HCL (NSETS, NCOLM), FLWCS (NSETS, NROWM, NCOLM))
-  CALL GINPT(INCSTR,IDC,DLINC)
-  DO K=1,NSETS
-    READ (DLINC, '(3I8)') ID1, NROWCS(K), NCOLCS(K)
-    NCTREF(ID1)=K
+  allocate (nrowcs (nrowm), ncolcs (ncolm), hrw (nsets, nrowm), hcl (nsets, ncolm), flwcs (nsets, nrowm, ncolm))
+endif
+
+!read cstrc data
+weirCounter = 0
+nsetsCounter = 0
+
+!Read data and store to proper arrays
+readCstrcData: do
+  read (INCSTR, '(a)', iostat = iostatvar) lineToEval
+
+  !end of file reached
+  if (iostatvar /= 0) EXIT readCstrcData
+
+  if (lineToEval(1:7) == 'ENDDATA') then
+    EXIT readCstrcData
+
+  !file headline; nothing happens
+  elseif (lineToEval (1:2) == 'TI') then
+    cycle readCstrcData
+
+  !new cstrc with QCurve definition data block
+  elseif (lineToEval(1:3) == 'DLI') then
+    read (lineToEval, *) lineID, weirTypeID
+    !create new weir
+    weirCounter = weirCounter + 1
+    ContrStructures (weirCounter) = newCstrc (ID = weirCounter, TypeID = weirTypeID)
+    tmpCstrc => ContrStructures (weirCounter)
+    if (weirTypeID < 903 .or. weirTypeID > 990) call ErrorMessageAndStop(1208, weirTypeID, 0.0d0, 0.0d0)
+    nctref(weirTypeID) = weirCounter
+
+    readCstrc_QCurve: do 
+      read (INCSTR, '(a)', iostat = iostatvar) lineToEval
+      !end of data block
+      if (lineToEval (1:7) == 'ENDBLOC') exit readCstrc_QCurve
+      !Read data line
+      read (lineToEval, *) lineID, Qinner, EUW, EOW
+      !Add Q-Curves data set to cstrc
+      if (.not. (associated (tmpCstrc.QCurves))) call addQCurveGroup (tmpCstrc)
+      !Add Q-Curve to Q-Curves data set of cstrc
+      call addQCurve (tmpCstrc, Qinner)
+      !Add Triple of Q-Eow-Euw
+      call addValueTriple (tmpCstrc, Qinner, EOW, EUW)
+    enddo readCstrc_QCurve
+  
+  !new cstrc tabular data block
+  elseif (lineToEval (1:2) == 'IDC') then
+    backspace (incstr)
+    call ginpt(incstr,idc,dlinc)
+    nsetsCounter = nsetsCounter + 1
+
+    READ (DLINC, '(3I8)') ID1, NROWCS(nsetsCounter), NCOLCS(nsetsCounter)
+    nctref(id1)=nsetscounter
 
     CALL GINPT(INCSTR,IDC,DLINC)
     NLO=1
@@ -79,14 +131,14 @@ if (UseEnergyCstrc == 0) then
     rows: DO
       IF(IDC(1:3) .EQ. 'HRW') THEN
         NHI=NLO+8
-        IF (NROWCS(K) .LT. NHI) THEN
-          NHI = NROWCS(K)
+        IF (NROWCS(nsetsCounter) .LT. NHI) THEN
+          NHI = NROWCS(nsetsCounter)
         ENDIF
-        READ(DLINC,5010) (HRW(K,J), J=NLO,NHI)
+        READ(DLINC,5010) (HRW(nsetsCounter,J), J=NLO,NHI)
         CALL GINPT(INCSTR,IDC,DLINC)
         NLO=NHI+1
       ENDIF
-      IF(NHI >= NROWCS(K)) EXIT rows
+      IF(NHI >= NROWCS(nsetsCounter)) EXIT rows
     ENDDO rows
 
     NLO=1
@@ -94,154 +146,34 @@ if (UseEnergyCstrc == 0) then
     cols: do
       IF(IDC(1:3) .EQ. 'HCL') THEN
         NHI=NLO+8
-        IF(NCOLCS(K) .LT. NHI) THEN
-          NHI=NCOLCS(K)
+        IF(NCOLCS(nsetsCounter) .LT. NHI) THEN
+          NHI=NCOLCS(nsetsCounter)
         ENDIF
-        READ(DLINC,5010) (HCL(K,J), J=NLO,NHI)
+        READ(DLINC,5010) (HCL(nsetsCounter,J), J=NLO,NHI)
         CALL GINPT(INCSTR,IDC,DLINC)
         NLO=NHI+1
       ENDIF
-      IF(NHI >= NCOLCS(K)) EXIT cols
+      IF(NHI >= NCOLCS(nsetsCounter)) EXIT cols
     ENDDO cols
 
-    DO J=1,NROWCS(K)
+    DO J=1,NROWCS(nsetsCounter)
       NLO=1
       flows: do
         IF(IDC(1:3) .EQ. 'FLW') THEN
           NHI=NLO+8
-          IF(NCOLCS(K) .LT. NHI) THEN
-            NHI=NCOLCS(K)
+          IF(NCOLCS(nsetsCounter) .LT. NHI) THEN
+            NHI=NCOLCS(nsetsCounter)
           ENDIF
-          READ(DLINC,5010) (FLWCS(K,J,L), L=NLO,NHI)
+          READ(DLINC,5010) (FLWCS(nsetsCounter,J,L), L=NLO,NHI)
           CALL GINPT(INCSTR,IDC,DLINC)
           NLO=NHI+1
         ENDIF
-        IF(NHI >= NCOLCS(K)) EXIT flows
+        IF(NHI >= NCOLCS(nsetsCounter)) EXIT flows
       ENDDO flows
     ENDDO
-  ENDDO
-
-!functional data approach with usage of energy levels
-!****************************************************
-ELSEIF (UseEnergyCstrc == 1) then
-
-  iostatvar = 0
-  MaxWeir = 0
-  MaxQ = 0
-  readWeirSize: do
-    read (INCSTR, '(a)', iostat = iostatvar) lineToEval
-    if (iostatvar /= 0) EXIT readWeirSize
-
-    if (lineToEval(1:7) == 'ENDBLOC' .or. lineToEval (1: 2) == 'TI') then
-      !to header lines per weir
-      read (incstr, '(a)', iostat = iostatvar) lineToEval
-
-      if (lineToEval (1: 7) == 'ENDDATA') EXIT readweirsize
-      if (lineToEval (1: 3) == 'DLI') then
-        read (lineToEval, *) lineID, TempWeir, TempQs
-        MaxWeir = MAX (MaxWeir, TempWeir - 903)
-        MaxQ = MAX (MaxQ, TempQs)
-      end if
-    end if
-  end do readWeirSize
-  REWIND INCSTR
-
-
-  !allocation of the weir arrays
-  ALLOCATE (cstrcCoefs (1: MaxWeir, 1: MaxQ, 1: MaxQ, 0:1))
-  ALLOCATE (cstrcRange (1: MaxWeir, 1: MaxQ, 1: MaxQ))
-  ALLOCATE (cstrcdisch (1: MaxWeir, 1: MaxQ))
-  do i = 1, MaxWeir
-    do j = 1, MaxQ
-      do k = 1, MaxQ
-        cstrcRange (i, j, k) = 0.0d0
-        do l = 0, 1
-          cstrcCoefs (i, j, k, l) = 0.0d0
-        end do
-      end do
-    end do
-  end do
-
-  iostatvar  = 0
-  iostateval = 0
-  countOuter = 0
-  countInner = 0
-  Qinner     = 0.0d0
-  Q_loop     = 0.0d0
-  EUW        = 0.0d0
-  EUW_old    = 0.0d0
-  EOW        = 0.0d0
-  EOW_old    = 0.0d0
-
-
-  readWeirData: do
-    read (INCSTR, '(a)', iostat = iostatvar) lineToEval
-    if (iostatvar /= 0) EXIT readWeirData
-
-    if (lineToEval(1:7) == 'ENDBLOC' .or. lineToEval(1:2) == 'TI') then
-      countOuter = 0
-      countInner = 0
-      Qinner     = 0.0d0
-      Q_loop     = 0.0d0
-      EUW        = 0.0d0
-      EUW_old    = 0.0d0
-      EOW        = 0.0d0
-      EOW_old    = 0.0d0
-
-      read (INCSTR, '(a)', iostat = iostatvar) lineToEval
-      if (lineToEval(1:7) == 'ENDDATA') EXIT readWeirData
-
-      if (lineToEval(1:3) == 'DLI') then
-        read (lineToEval, *) lineID, TempWeir, TempQs
-
-        if (TempWeir < 903 .or. TempWeir > 990) call ErrorMessageAndStop(1208, TempWeir, 0.0d0, 0.0d0)
-        NCTREF(TempWeir) = TempWeir - 903
-        TempWeir = TempWeir - 903
-      endif
-    else
-
-      read (lineToEval, *) lineID, Qinner, EUW, EOW
-
-      if (Qinner > Q_loop) then
-        Q_loop = Qinner
-        countOuter = countOuter + 1
-        cstrcdisch (TempWeir, countOuter) = Q_loop
-        countInner = 1
-      ELSEIF (Qinner < Q_loop) then
-        !ERROR - data is not sorted
-        call ErrorMessageAndStop (1207, TempWeir, 0.0d0, 0.0d0)
-      end if
-
-      !set minimum, for range
-      cstrcRange (TempWeir, CountOuter, CountInner) = EUW
-      !generate function to connect data points
-      if (countInner == 1) then
-        !generate horizontal line on left side
-        call CoefsOfLinFunct (EUW, EUW - 1.0d0, EOW, EOW, cstrcCoefs (TempWeir, CountOuter, CountInner, 0:1))
-      else
-        !generate linear connection between data points
-        call CoefsOfLinFunct (EUW, EUW_old, EOW, EOW_old, cstrcCoefs (TempWeir, CountOuter, CountInner, 0:1))
-      end if
-
-      countInner = countInner + 1
-      EUW_old = EUW
-      EOW_old = EOW
-
-    end if
-  end do readWeirData
-end if
-
+  end if
+enddo readCstrcData
 
  5010 FORMAT(9F8.0)
-RETURN
+
 END
-
-!subroutine for the weir parameters, which gives back the coefficients of a line
-subroutine CoefsOfLinFunct (X1, X2, Y1, Y2, A)
-  REAL (KIND = 8), INTENT (IN) :: X1, X2
-  REAL (KIND = 8), INTENT (IN) :: Y1, Y2
-  REAL (KIND = 8), INTENT (OUT) :: A (0:1)
-
-  A(1) = (Y2 - Y1)/ (X2 - X1)
-  A(0) = Y2 - A(1) * X2
-end subroutine

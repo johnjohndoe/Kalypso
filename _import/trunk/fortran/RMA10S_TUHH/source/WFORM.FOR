@@ -3,7 +3,7 @@ cipk last update Oct 2 2003 revise frIction equivalence
 CIPK LAST UPDATE JUL30 2000 REVISE VERSION
 cipk  new routine Mar 1 2000
 
-       SUBROUTINE WFORM(Q,H1,W1,V1,H2,W2,V2,EC,L,ITP,ITYP,WIDEM)
+       SUBROUTINE WFORM(Q,H1,W1,V1,H2,W2,V2,EC,L,ITP,WIDEM)
        REAL L
 c
 c      Q   is flow per unit width
@@ -23,7 +23,6 @@ C      WIDEM is total embankment width
 c
 c      test direction of flow
 c
-       inode=ityp
        IPRT=0
        todepth=2.0
        toldoh=1.000
@@ -82,10 +81,6 @@ c      DOH = ratio of downstream depth over weir to upstream head over weir
          HOL=HEAD/L
          DOH=DH/HEAD
 
-c         IF(ITYP .EQ. 1407) THEN
-c	     WRITE(166,'(i6,9F14.6)') ityp,H1,H2,H,DH,HEAD,HEAD2,L,HOL,DOH
-c           IPRT=1
-c	   ENDIF
          IF(HOL .LT. 0.16) THEN
 c
 c      look in table A for conveyance factor CF
@@ -158,13 +153,11 @@ c            QTEMP=UH**0.6667*SQRT(SLOP)/0.60*UH
              Q=QTEMP
            ENDIF
            IF(ICONV .EQ. 2) Q=-Q
-           ITYP=1
          ELSE
 c
 c      test if weir totally submerged
 c
            IF(HEAD .GT. TODEPTH  .AND.  DOH .GT. TOLDOH) THEN
-             ITYP=3
              Q=0.
              RETURN
            ENDIF
@@ -202,16 +195,14 @@ cipk oct03 change to reduce to .10 and use full width
            ENDIF
 
            IF(ICONV .EQ. 2) Q=-Q
-           ITYP=2
          ENDIF
        ELSE
          Q=0.
-         ITYP=0
        ENDIF
        IF(Q .NE. 0.) THEN
 ccc         WRITE(69,*) 'Q,Q1,qtemp,H1,H2,H,EC,HEAD,DOH,DH,HOL,CF,CSCF'
 ccc     +   ,Q,Q1,qtemp,H1,H2,H,EC,HEAD,DOH,DH,HOL,CF,CSCF
-c         WRITE(69,'(6F11.5,2I5)') H1,H2,H,W1,W2,EC,ITYP,ICONV
+c         WRITE(69,'(6F11.5,2I5)') H1,H2,H,W1,W2,EC,ICONV
 CIPK FEB04  REDUCE VELS FOR VERY SHALLOW       IF(IPRT .EQ. 1) THEN
 CC         WRITE(166,'(5F15.6)') Q,CSCF,CF,QTEMP,Q1
 	   IF(H .LT. 0.1) THEN
@@ -219,7 +210,7 @@ CC         WRITE(166,'(5F15.6)') Q,CSCF,CF,QTEMP,Q1
          ENDIF
 CC	   ENDIF
        ENDIF
-cc	   if(inode .eq. 1770 ) then
+cc	   if(3 .eq. 1770 ) then
 cc         write(69,*) 'W1,W2,W1-W2,ICONV',w1,w2,w1-w2,iconv
 cc         WRITE(69,*) 'Q,Q1,qtemp',Q,Q1,qtemp
 cc	   write(69,*) 'H1,H2,H,EC,HEAD',H1,H2,H,EC,HEAD

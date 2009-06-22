@@ -35,13 +35,17 @@ else
 
  do i = 1, 8
 !EFa Mar07
-   renum = MOD(i-refnode+1,8)
+   if (refnode > i) then
+     renum = 8 + MOD(i-refnode+1,8)
+   else
+     renum = MOD(i-refnode+1,8)
+   endif
 !   renum = MOD(i+refnode-1,8)
 !-
    if (renum .eq. 0) renum = 8
 !   write (*,*) renum
 !   if (nop(reweir(2), i) .eq. 0) cycle
-   nop_temp(i) = nop(reweir(2), renum)
+   nop_temp(renum) = nop(reweir(2), i)
 !   write (*,*) nop(reweir(2), i)
  end do
 

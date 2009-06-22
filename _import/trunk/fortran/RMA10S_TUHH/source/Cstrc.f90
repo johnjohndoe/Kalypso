@@ -24,8 +24,9 @@ REAL (KIND = 8) :: calcPolynomial, calcPolynomial1stDerivative
 REAL (KIND = 8) :: Q1t
 INTEGER :: PolyPos(1:2), findpolynom
 INTEGER :: NodA, NodB
+real (kind = 8) :: qDh (1:2)
 
-integer (kind = 4) :: n1
+integer (kind = 4) :: cornerNode, n1
 !nis,feb08
 REAL (KIND = 8) :: DX, DY, CosinusAlpha
 
@@ -55,6 +56,14 @@ if (width(nop(nn,1)) == 0.0) then
   !dA(h)/dh
   dahdh (nop (nn, 1)) = calcPolynomial1stDerivative (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)), ubound (apoly, 3))
   dahdh (nop (nn, 3)) = calcPolynomial1stDerivative (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)), ubound (apoly, 3))
+else
+  
+  !A(h)
+  ah (nop (nn,1)) = (width (nop (nn,1)) + (ss1 (nop (nn,1)) + ss2 (nop (nn,1))) / 2. * vel (3, nop (nn,1))) * vel (3, nop (nn,1))
+  ah (nop (nn,3)) = (width (nop (nn,3)) + (ss1 (nop (nn,3)) + ss2 (nop (nn,3))) / 2. * vel (3, nop (nn,3))) * vel (3, nop (nn,3))
+  !dA(h)/dh
+  dahdh(nop (nn,1)) = (width (nop (nn,1)) + (ss1 (nop (nn,1)) + ss2 (nop (nn,1))) * vel (3, nop (nn,1)))
+  dahdh(nop (nn,3)) = (width (nop (nn,3)) + (ss1 (nop (nn,3)) + ss2 (nop (nn,3))) * vel (3, nop (nn,3)))
 endif
 
 !form 1D-velocity at cstrc's corner nodes
@@ -63,97 +72,293 @@ DO N = 1, NCN
   IF (NodA > 0) U(N) = VEL (1, NodA) * COS (ALFA (NodA)) + VEL (2, NodA) * SIN (ALFA (NodA))
 ENDDO
 
-!-
-!...... Determine type of control structure
-!-
-NM = IMAT (NN) - 900
+!----------------------------------------------------------------------
+!FLOW BALANCE: Discharge upstream must be equal to discharge downstream
+!----------------------------------------------------------------------
+!flow balance will be inserted into the first line of the local matrix estifm
 
-!-
-!...... One of the conditions is flow balance
-!-
-IF(NJT(NM) .GT. 1) THEN
-  F(1)=0.
-ELSE
-  F(1)=AJ(NM)
-ENDIF
+!Don't consider midside nodes
+FlowBalance: do cornerNode_index = 1, ncn, 2
 
-!skip mid-side in loop
-DO  KK = 1, NCN, 2
-  !NN = Element ID
-  !KK = No of node in element (here only 1st and 3rd necessary)
+  !get current node in element
+  cornerNode = NOP (NN, cornerNode_index)
+  
+  !Residual vector
+  !---------------
+  !
+  ! F = dir   * v   * A(h)    - dir   * v   * A(h)
+  !        OW    OW    OW          UW    UW    UW
+  !
+  F (1) = F (1) + dir(cornerNode) * u (cornerNode_index) * ah (cornerNode)
 
-  !get current node
-  n1 = NOP (NN, KK)
+  !Derivative with respect to velocities
+  !-------------------------------------
+  !  dF      |-            -|
+  ! ---- = - |  dir  * A(h) |
+  !  dv      |_    i    i  _|
+  !    i
+  !Find the column to place derivative with respect to velocity in local Jacobian (estifm)
+  column = (cornerNode_index - 1) * NDF + 1
+  !Set derivative dF/dv
+  estifm (1, column) = - dir (cornerNode) * ah (cornerNode)
 
-  !we need a local direction
-  if (kK == 1) then
-    dirfact = 1.0d0
-  else
-    dirfact = -1.0d0
-  end if
+  !Derivative with respect to velocities
+  !-------------------------------------
+  !          |-         dA (h)     -|
+  !  dF      |            i         |  
+  ! ---- = - |  dir  * ------- * v  |
+  !  dh      |     i     dh       i |
+  !    i     |_            i       _|
+  !
+  !Find the column to place derivative with respect to velocity in local Jacobian (estifm)
+  column = column + 2
+  !Set derivative dF/dh
+  estifm (1, column) = - dir(cornerNode) * dahdh (cornerNode) * u (cornerNode_index)
 
-  IF (N1 /= 0) THEN
-    EqA = (KK - 1) * NDF + 1
+enddo FlowBalance
+!Depending on the type of flow controller, an additional source might be present within the flow controller:
+nm = imat (nn) - 900
+if (njt (nm) <= 1) f (1) = f(1) + aj (nm)
 
-    !-
-    !derivative with respect to v
-    !-
 
-    !for polynomial approach
-    if (width(n1) == 0.0) then
-      !estifm (1, EqA) = dir (n1) * ah (n1)
-      estifm (1, EqA) = - dir (n1) * ah (n1)! * u (kk) / ABS (u (kk))
+!--------------------------------------------------------------------------------------
+!Artificial consideration of the midside node; this equation is actually not necessary!
+!--------------------------------------------------------------------------------------
+f(5) = u(2) - (u(3) + u(1)) / 2.
+estifm (5, 1) = 0.5
+estifm (5, 9) = 0.5
+estifm (5, 5) = -1.0
 
-    !geometric approach, using absolute discharge
-    else
-      !ESTIFM (1, EqA) = DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
-      ESTIFM (1, EqA) = DIRfact * (WIDTH (N1) + (SS1 (N1) + SS2 (N1)) / 2. * VEL (3, N1)) * VEL (3, N1)
-    end if
 
-    CX=COS(ALFA(N1))
-    SA=SIN(ALFA(N1))
-    R=VEL(1,N1)*CX+VEL(2,N1)*SA
+!--------------------------------------------
+!FLOW CONDITION DUE TO CONTROL STRUCTURE TYPE
+!--------------------------------------------
+!By original there are several types of control structure definitions. The type is defined by njt:
+!  * - no specification of njt leads to the usage of an energy balance
+!  1 - 
+!  2 -
+!  3 -
+!...
+! 10 - Control structure (like bridge or weir) that is defined by data sets describing the Q-behaviour
+!      due to upstream energy elevation and downstream energy elevation. The original implementation used
+!      simple data tables, organized like a grid. It was found, that the definition of Q-functions in a group
+!      leads to more reliable results. Both types can be still used by setting the switch UseEnergyCstrc
+!      0 - original implementation (TO BE DELETED)
+!      1 - approach using Q-curves (Kalypso approach!)
 
-    !-
-    !derivative with respect to h
-    !-
 
-    !polynomial approach
-    if (width(n1) == 0.0) then
-      estifm (1, EqA + 2) = - dir(n1) * dahdh (n1) * u (kk)
+  if (njt(nm) == 10 .or. njt(nm) == 11 .or. njt(nm) == 12) then
 
-    !geometric approach
-    else
-      !ESTIFM(1,EqA+2)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))
-      ESTIFM (1, EqA + 2) = DIRfact * (WIDTH (N1) + (SS1 (N1) + SS2 (N1)) * VEL (3, N1)) * u (kk)
-    end if
+    !njt defines type of flow controller
+    ! 10 - Q-curve group
+    ! 11 - tabular data
+    ! 12 - weir formula
 
-    !F(1) = F (1) - ESTIFM (1, EqA) * u (kk)
-    F (1) = F (1) + dir(n1) * u (kk) * ah (n1)
+    !Residual function works like this
+    !---------------------------------
+    ! F = (u1*h1+u2*h2) - f(u1,h1,h2) = 0
 
-  ENDIF
-ENDDO
+    !ITP displays weir crest structure
+    !1 - paved
+    !0 - gravel
+    ITP=1
 
- !testing
- !pause
- !testing-
+    !get nodal locations
+    N1 = NOP (NN, 1)
+    N2 = NOP (NN, 3)
 
-!      allow for mid-side node
-!
-!      now do the middle of the element
-!
-        !testing
-        !WRITE(*,*) u(1), u(2), u(3)
-        !pause
-        !testing-
-        F(5)=U(2)-(U(3)+U(1))/2.
-        ESTIFM(5,1)=0.5
-        ESTIFM(5,9)=0.5
-        ESTIFM(5,5)=-1.0
+    !ipk oct03  calculate overall embankment width
+    widem = sqrt ((cord (n2, 2) - cord (n1, 2))**2 + (cord (n2, 1) - cord (n1, 1))**2)
+    NodA = 1
+    NodB = 9
+
+    !if weir is submerged, then leave subroutine: Can only be used with njt(nm) == 12
+    !if(isubm(n1) .eq. 2) return
+
+    !set increments for numerical derivatives
+    DH = 0.002
+    DV = 0.01
+
+    !Check, if node is submerged
+    !IF(WSLL(N1) .LT. TRANSEL(N1)) return
+
+    !Calculate the discharge based on the present values of both nodes
+    Q = (U(1) * ah(n1) + U(3) * ah(N2)) / 2.
+     
+    !Direction fix of flow over/ through control structure
+    QFACT1 = 1.0
+    DX = cord (nop (nn, 3), 1) - cord (nop (nn, 1), 1)
+    DY = cord (nop (nn, 3), 2) - cord (nop (nn, 1), 1)
+    CosinusAlpha = (DX * 1.0d0 + DY * 0.0d0) / (SQRT (DX**2 + DY**2) * SQRT (1.0d0**2 + 2.0d0**2))
+    if (CosinusAlpha < 0.0d0) QFACT1 = -1.0
+
+    
+    !Check if control structure is controlled time dependently; means cstrc might be inoperative
+    IF(NTMREF(IMAT(NN)) .NE. 0) THEN
+      CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET,QFACT1)
+      IF(ISWTOF .EQ. 1) THEN
+        Q1T=0.0
+        F(NodB)=Q-Q1T
+        VEL(1,NOP(NN,1))=0.
+        VEL(2,NOP(NN,1))=0.
+        VEL(1,NOP(NN,2))=0.
+        VEL(2,NOP(NN,2))=0.
+        VEL(1,NOP(NN,3))=0.
+        VEL(2,NOP(NN,3))=0.
+        ESTIFM(1,1)=1.E6
+        ESTIFM(9,9)=1.E6
+        !leave routine, if control structure is not operative in this time step
+        return
+      ENDIF
+    ENDIF
+
+    !Factorization for using metric or SI units
+    unitFac1 = 1.0d0
+    unitFac2 = 1.0d0
+    if (grav > 30.0 .and. nctref (nn) == 0) then
+      unitFac1 = 1.0/ 3.2808
+      unitFac2 = 10.7636
+    endif
+
+    !Prepare for call to get function
+    WH1 = unitFac1 * VEL(3,N1)
+    WH2 = unitFac1 * VEL(3,N2)
+    !This might be problematic for polynom approach
+    WS1 = unitFac1 * WSLL(N1)
+    WS2 = unitFac1 * WSLL(N2)
+    WV1 = unitFac1 * SQRT(VEL(1,N1)**2+VEL(2,N1)**2)
+    WV2 = unitFac1 * SQRT(VEL(1,N2)**2+VEL(2,N2)**2)
+    WEC = unitFac1 * WHGT(N1)
+    WLN = unitFac1 * WLEN(N1)
+
+
+!RESIDUAL equation of flow condition
+!-----------------------------------
+    !weir formula
+    if (njt (nm) == 12) then
+      CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,widem)
+      Q1T = Q1T * unitFac2
+	!QFunction relationship
+    elseif (njt (nm) == 10) then
+      q1t = cstrcQ_fromQCurves (imat (nn), ws1 + wv1**2/(2.0*grav), ws2 + wv2**2/(2.0*grav))
+    !Q tabular relationship
+    elseif (njt (nm) == 11) then
+      call wtform(q1t,nctref(imat(nn)),ws1,ws2, mcord(nn,1),mcord(nn,2))
+	endif
+	!Factorize discharge by direction fix
+	Q1T = Q1T * QFACT1
+    !Form residual
+    F (nodB) = Q - Q1T
+
+!Derivative with respect to h
+!----------------------------
+    ESTIFM (NodB, NodB + 2) = - 0.5 * U(3) * dahdh (n2)
+    
+    upstream_or_downstream: do j = 1, 2
+      plus_minus_Dh: do i = 1, 2
+        if (j == 1) then
+  	      if (i == 1) then
+            wh1 = wh1 + 0.5 * dh
+            ws1 = ws1 + 0.5 * dh
+          else
+            wh1 = wh1 - dh
+            ws1 = ws1 - dh
+          endif
+        else
+          if (i == 1) then
+            wh1 = wh1 + 0.5 * dh
+            ws1 = ws1 + 0.5 * dh
+            wh2 = wh2 + 0.5 * dh
+            ws2 = ws2 + 0.5 * dh
+          else
+            wh2 = wh2 - dh
+            ws2 = ws2 - dh
+          endif
+        endif
+
+	    if (njt (nm) == 12) then
+          call wform (qDh (i), wh1, ws1, wv1, wh2, ws2, wv2, wec, wln, itp, widem)
+          qDh(i) = qDh(i) * unitfac2
+	    elseif (njt (nm) == 11) then
+	      call wtform (qdh (i), imat (nn), ws1, ws2, mcord(nn,1), mcord(nn,2))
+        elseif (njt (nm) == 10) then
+          qdh(i) = cstrcQ_fromQCurves (imat (nn), ws1 + wv1**2/(2.0*grav), ws2 + wv2**2/(2.0*grav))
+	    endif
+        qDh(i) = qDh(i) * QFACT1
+
+        !after looping up and down
+        if (i == 2) then
+          !total
+          dqdh = (qdh(1) - qdh(2)) / dh
+          !upstream
+          if (j == 1) then
+            estifm (NodB, NodA + 2) = - 0.5 * U(1) * dahdh (n1) + dqdh
+          !downstream
+          else
+            !reset water levels and water depths
+            wh2 = wh2 + 0.5 * dh
+            ws2 = ws2 + 0.5 * dh
+            estifm (NodB, NodB + 2) = - 0.5 * u(3) * dahdh (n2) + dqdh
+          endif
+        endif
+      enddo plus_minus_Dh
+    enddo upstream_or_downstream
+
+!-----------------------------------------
+!Derivative with respect to u (first part)
+!-----------------------------------------
+    estifm (NodB, NodA) = -ah(n1) / 2.
+    estifm (NodB, NodB) = -ah(n2) / 2.
+
+    upstream_or_downstream_2: do j = 1, 2
+      plus_minus_Dv: do i = 1, 2
+        if (j == 1) then
+  	      if (i == 1) then
+            wv1 = wv1 + 0.5 * dv
+          else
+            wv1 = wv1 - dv
+          endif
+        else
+          if (i == 1) then
+            wv1 = wv1 + 0.5 * dv
+            wv2 = wv2 + 0.5 * dv
+          else
+            wv2 = wv2 - dv
+          endif
+        endif
+                
+        if (njt (nm) == 12) then
+          call wform (qDh (i), wh1, ws1, wv1, wh2, ws2, wv2, wec, wln, itp, widem)
+          qDh(i) = qDh(i) * unitfac2
+        elseif (njt (nm) == 11) then
+	      call wtform (qdh(i), imat (nn), ws1, ws2, mcord(nn,1),mcord(nn,2))
+        elseif (njt (nm) == 10) then
+          qdh(i) = cstrcQ_fromQCurves (imat (nn), ws1 + wv1**2/(2.0*grav), ws2 + wv2**2/(2.0*grav))
+        endif
+
+        qDh(i) = qDh(i) * QFACT1
+
+        !after looping up and down
+        if (i == 2) then
+          !total
+          dqdh = (qdh(1) - qdh(2)) / dh
+          !upstream
+          if (j == 1) then
+            estifm (NodB, NodA) = estifm (NodB, NodA) + dqdh
+          !downstream
+          else
+            !reset water levels and water depths
+            wv2 = wv2 + 0.5 * dv
+            estifm (NodB, NodB) = estifm (NodB, NodB)+dqdh
+          endif
+        endif
+      enddo plus_minus_Dv
+    enddo upstream_or_downstream_2
+
 !-
 !...... The other is some kind elevation relationship
 !-
-      IF(NJT(NM) .EQ. 1) THEN
+  elseIF(NJT(NM) .EQ. 1) THEN
 !-
 !...... Balance total head
 !-
@@ -464,446 +669,6 @@ ENDDO
           ENDIF
         ENDIF
 !C-
-  ELSEIF (NJT (NM) .EQ. 10) THEN
-!C-
-!C...... Reversible Q = weir flow
-!C......                =0   if h < c
-!C-
-!c
-!   F = (u1*h1+u2*h2) - f(u1,h1,h2) = 0
-
-    ITP=1
-
-!
-!      get nodal locations
-!
-    N1 = NOP (NN, 1)
-    N2 = NOP (NN, 3)
-!ipk oct03  calculate overall embankment width
-    widem = sqrt ((cord (n2, 2) - cord (n1, 2))**2 + (cord (n2, 1) - cord (n1, 1))**2)
-    NodA = 1
-    NodB = 9
-
-!IPK JUN04          if(WSLL(n1) .gt. transel(n1)) go to 500
-!ipk oct00
-    if(isubm(n1) .eq. 2) go to 500
-
-!   set sign for DH
-!set increments for numerical derivatives
-    DH = 0.002
-    DV = 0.01
- 
-!
-!      This is a corner node
-!
-    IF(WSLL(N1) .LT. TRANSEL(N1)) THEN
-
-    !Calculate the discharge based on the present values of both nodes
-    if (width (n1) == 0) then
-      !if it is polynomial approach: absolute discharge
-      Q = (U(1) * ah(n1) + U(3) * ah(N2)) / 2.
-    else
-      !if it is geometry approach: specific discharge
-      Q = (U(1) * VEL(3, N1) + U(3) * VEL(3, N2)) / 2.
-    end if
-     
-    !Calculate derivative with respect to velocities at corner nodes u1 and u3
-    if (width (n1) == 0.0) then
-      ESTIFM (NodB, NodA) = -ah(n1) / 2.! * u(1) / ABS (u (1))
-      ESTIFM (NodB, NodB) = -ah(n2) / 2.! * u(3) / ABS (u (3))
-    else
-      ESTIFM (NodB, NodA) = -VEL(3, N1) / 2.
-      ESTIFM (NodB, NodB) = -VEL(3, N2) / 2.
-    end if
-
-!IPK JAN06 ADD QFACT1
-
-    !initialize QFACT1
-    QFACT1 = 1.0
-
-    DX = cord (nop (nn, 3), 1) - cord (nop (nn, 1), 1)
-    DY = cord (nop (nn, 3), 2) - cord (nop (nn, 1), 1)
-    !Calculate the angle between the element direction and the global x-axis to get the sign of Q
-    CosinusAlpha = (DX * 1.0d0 + DY * 0.0d0) / (SQRT (DX**2 + DY**2) * SQRT (1.0d0**2 + 2.0d0**2))
-    !testing
-    !WRITE(*,*) CosinusAlpha
-    !pause
-    !testing-
-    if (CosinusAlpha < 0.0d0) QFACT1 = -1.0
-
-    IF(NTMREF(IMAT(NN)) .NE. 0) THEN
-      CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET,QFACT1)
-      IF(ISWTOF .EQ. 1) THEN
-        Q1T=0.0
-        F(NodB)=Q-Q1T
-!        ESTIFM(NodB,NodA+2)=ESTIFM(NodB,NodA+2)+1.E6
-!        ESTIFM(NodB,NodB+2)=ESTIFM(NodB,NodB+2)+1.E6
-        VEL(1,NOP(NN,1))=0.
-        VEL(2,NOP(NN,1))=0.
-        VEL(1,NOP(NN,2))=0.
-        VEL(2,NOP(NN,2))=0.
-        VEL(1,NOP(NN,3))=0.
-        VEL(2,NOP(NN,3))=0.
-        ESTIFM(1,1)=1.E6
-        ESTIFM(9,9)=1.E6
-        GO TO 500
-      ENDIF
-    ENDIF
-
-
-!
-!      Derivative with respect to h1 and h2  (first term)
-!
-    !polynomial approach
-    if (width (n1) == 0.0d0) then
-      ESTIFM (NodB, NodA + 2) = -U (1) * dahdh (n1)/ 2.
-      ESTIFM (NodB, NodB + 2) = -U (3) * dahdh (n2)/ 2.
-    !geometric approach
-    else
-      ESTIFM (NodB, NodA + 2) = -U (1) / 2.
-      ESTIFM (NodB, NodB + 2) = -U (3) / 2.
-    end if
-
-!
-!      Prepare for call to get function
-!
-    WH1=VEL(3,N1)
-    WH2=VEL(3,N2)
-
-    !HACK
-    !WS1=WSLL(N1)
-    !WS2=WSLL(N2)
-    WS1 = AO (n1) + vel(3, n1)
-    ws2 = ao (n2) + vel(3, n2)
-    !testing
-    !WRITE(*,*) 'Hoehen'
-    !WRITE(*,*) n1, n2
-    !WRITE(*,*) WH1, ao(n1), ws1
-    !WRITE(*,*) wh2, ao(n2), ws2
-    !pause
-    !testing-
-
-    WV1=SQRT(VEL(1,N1)**2+VEL(2,N1)**2)
-    WV2=SQRT(VEL(1,N2)**2+VEL(2,N2)**2)
-    WEC=WHGT(N1)
-    WLN=WLEN(N1)
-
-    IF(WEC .LT. -9999.) THEN
-!IPK SEP04
-          !ERROR - UNDEFINED LEVEE DATA FOR NODE
-      call ErrorMessageAndStop (1107, N1, cord (N1, 1), cord(N1, 2))
-    ENDIF
-!cc
-!ipk oct03 add widem
-!ipk jul04
-    IF(GRAV .GT. 30.) THEN
-!IPK JUN05
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q1T, WH1/ 3.2808, WS1/ 3.2808, WV1/ 3.2808, WH2/ 3.2808,     &
-        &      WS2/ 3.2808, WV2/ 3.2808, WEC/ 3.2808, WLN/ 3.2808, ITP, IWTYP, widem/ 3.2808)
-        Q1T = Q1T * 10.7636
-!IPK JUN05
-      ELSE
-        CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-
-!*********************
-!SI-units: Q(huw, how)
-    ELSE
-
-      !for weir formula
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q1T, WH1, WS1, WV1, WH2, WS2, WV2, WEC, WLN, ITP, IWTYP, widem)
-
-      !***********************************
-      !for table- or function defined weir
-      !***********************************
-      ELSE
-        !calculate the energy at upper and lower part of weir
-        if (UseEnergyCstrc == 1) then
-          WS1 = WS1 + WV1**2 / (2 * grav)
-          WS2 = WS2 + WV2**2 / (2 * grav)
-        end if
-
-        !WRITE(*,*) 'Calculate Q at cstrc'
-        CALL WTFORM (Q1T, NCTREF (IMAT (NN)), WS1, WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-
-      ENDIF
-!end SI-units: Q(huw, how)
-!*********************
-
-    ENDIF
-
-    !Scale this part of the numerical derivative by the direction
-    Q1T = Q1T * QFACT1
-
-    !WRITE(*,*) Q, Q1T
-    F (NodB) = Q - Q1T
-
-    !testing
-    !WRITE(*,*) 'how: ', ws1
-    !WRITE(*,*) 'huw: ', ws2
-    !WRITE(*,*) 'Ist-Abfluss und Soll-Abfluss'
-    !WRITE(*,*) Q, Q1T
-    !WRITE(*,*) 'Residuum der 9. Gleichung'
-    !WRITE(*,*) F(NodB)
-    !pause
-    !testing-
-
-!ipk oct03 add widem
-!ipk jul04
-    IF(GRAV .GT. 30.) THEN
-!IPK JUN05
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q1DH1, (WH1 + DH/ 2.)/ 3.2808, (WS1 + DH/ 2.)/ 3.2808, WV1/ 3.2808,       &
-        &      WH2/ 3.2808, WS2/ 3.2808, WV2/ 3.2808, WEC/ 3.2808, WLN/ 3.2808, ITP, IWTYP, widem/ 3.2808)
-        Q1DH1=Q1DH1*10.7636
-!IPKJUN05
-      ELSE
-        CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-
-!*********************
-!SI-units: dQ/+dhow
-    ELSE
-
-      !for weir formula
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q1DH1, WH1 + DH/ 2., WS1 + DH/ 2., WV1, WH2, WS2, WV2, WEC, WLN, ITP, IWTYP, widem)
-
-      !***********************************
-      !for table- or function defined weir
-      !***********************************
-      ELSE
-        !WRITE(*,*) 'Calculate dQ/+dhow at cstrc', ws1, ws1+dh/2.
-        CALL WTFORM (Q1DH1, NCTREF (IMAT (NN)), WS1 + DH/ 2., WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-    ENDIF
-
-    !Scale this part of the numerical derivative by the direction
-    Q1DH1 = Q1DH1 * QFACT1
-!end SI-units: dQ/+dhow
-!*********************
-
-    IWTYP=N1
-    IF(GRAV .GT. 30.) THEN
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q2DH1, (WH1 - DH/ 2.)/ 3.2808, (WS1 - DH/ 2.)/ 3.2808, WV1/ 3.2808,  &
-        &      WH2/ 3.2808, WS2/ 3.2808, WV2/ 3.2808, WEC/ 3.2808, WLN/ 3.2808, ITP, IWTYP, widem/ 3.2808)
-              Q2DH1=Q2DH1*10.7636
-      ELSE
-        CALL WTFORM (Q2DH1, NCTREF (IMAT (NN)), WS1 - DH/ 2., WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-
-!*********************
-!SI- units: dQ/-dhow
-    ELSE
-      !for weir formula
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q2DH1, WH1 - DH/ 2., WS1 - DH/ 2., WV1, WH2, WS2, WV2, WEC, WLN, ITP, IWTYP, widem)
-
-      !***********************************
-      !for table- or function defined weir
-      !***********************************
-      ELSE
-        !WRITE(*,*) 'Calculate dQ/-dhow at cstrc', ws1, ws1-dh/2.
-        CALL WTFORM (Q2DH1, NCTREF (IMAT (NN)), WS1 - DH/ 2., WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-    ENDIF
-
-    !Scale this part of the numerical derivative by the direction
-    Q2DH1 = Q2DH1 * QFACT1
-
-
-!end SI-units: dQ/-dhow
-!*********************
-
-    !calculate dQ/dh
-    DQDH1 = (Q1DH1 - Q2DH1) / DH
-
-    ESTIFM (NodB, NodA + 2) = ESTIFM (NodB, NodA + 2) + DQDH1
-
-    !testing
-    !WRITE(*,*) '---'
-    !WRITE(*,*) 'dQdh1, Oberwasser'
-    !WRITE(*,*) '-----------------'
-    !WRITE(*,*) 'part1: ', Q1DH1
-    !WRITE(*,*) 'part2: ', Q2DH1
-    !WRITE(*,*) 'total: ', DQDH1
-    !WRITE(*,*) 'estifm ', estifm (nodb, NodA + 2)
-    !WRITE(*,*) '---'
-    !testing-
-
-!ipk oct03 add widem
-!ipk jul04
-    IF(GRAV .GT. 30.) THEN
-!IPK JUN05
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q1DH2, WH1/ 3.2808, WS1/ 3.2808, WV1/ 3.2808, (WH2 + DH/ 2.)/ 3.2808,                &
-        &      (WS2 + DH/ 2.)/ 3.2808, WV2/ 3.2808, WEC/ 3.2808, WLN/ 3.2808, ITP, IWTYP, widem/ 3.2808)
-        Q1DH2=Q1DH2*10.7636
-
-      !***********************************
-      !for table- or function defined weir
-      !***********************************
-      ELSE
-        CALL WTFORM (Q1DH2, NCTREF (IMAT (NN)), WS1, WS2 + DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-
-!*********************
-!SI- units: dQ/-dhow
-    ELSE
-!IPK JUN05
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q1DH2, WH1, WS1, WV1, WH2 + DH/ 2., WS2 + DH/ 2., WV2, WEC, WLN, ITP, IWTYP, widem)
-
-      !***********************************
-      !for table- or function defined weir
-      !***********************************
-      ELSE
-        !WRITE(*,*) 'Calculate dQ/+dhuw at cstrc', ws2, ws2+dh/2.
-        CALL WTFORM (Q1DH2, NCTREF (IMAT (NN)), WS1, WS2 + DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1),  2))
-      ENDIF
-    ENDIF
-
-    !Scale this part of the numerical derivative by the direction
-    Q1DH2 = Q1DH2 * QFACT1
-
-!end SI- units: dQ/-dhow
-!*********************
-
-    IWTYP=N1
-!ipk jul04
-    IF(GRAV .GT. 30.) THEN
-!IPK JUN05
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q2DH2, WH1/ 3.2808, WS1/ 3.2808, WV1/ 3.2808, (WH2 - DH/ 2.)/ 3.2808,                 &
-        &      (WS2 - DH/ 2.)/ 3.2808, WV2/ 3.2808, WEC/ 3.2808, WLN/ 3.2808, ITP, IWTYP, widem/ 3.2808)
-        Q2DH2=Q2DH2*10.7636
-!IPK JAN05
-      ELSE
-!IPK NOV06   FIX BUG IN SIGN
-        CALL WTFORM (Q2DH2, NCTREF (IMAT (NN)), WS1, WS2 - DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-
-!*********************
-!end SI- units: dQ/-dhow
-    ELSE
-!IPK JUN05
-      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-        CALL WFORM (Q2DH2, WH1, WS1, WV1, WH2 - DH/ 2., WS2 - DH/ 2., WV2, WEC, WLN, ITP, IWTYP, widem)
-
-      !***********************************
-      !for table- or function defined weir
-      !***********************************
-      ELSE
-!IPK NOV06   FIX BUG IN SIGN
-        !WRITE(*,*) 'Calculate dQ/-dhuw at cstrc', ws2, ws2-dh/2.
-        CALL WTFORM (Q2DH2, NCTREF (IMAT (NN)), WS1, WS2 - DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      ENDIF
-    ENDIF
-
-    !Scale this part of the numerical derivative by the direction
-    Q2DH2 = Q2DH2 * QFACT1
-!end SI- units: dQ/-dhow
-!*********************
-
-!IPK JUN04            DQDH2=(Q1DH2-Q1T)/DH
-    DQDH2 = (Q1DH2 - Q2DH2)/ DH
-    ESTIFM (NodB, NodB + 2) = ESTIFM (NodB, NodB + 2) + DQDH2
-
-    !testing
-    !WRITE(*,*) '---'
-    !WRITE(*,*) 'dQdh2, Unterwasser'
-    !WRITE(*,*) '------------------'
-    !WRITE(*,*) 'part1: ', Q1DH2
-    !WRITE(*,*) 'part2: ', Q2DH2
-    !WRITE(*,*) 'total: ', DQDH2
-    !WRITE(*,*) 'estifm ', estifm (nodb, Nodb + 2)
-    !WRITE(*,*) '---'
-    !testing-
-
-!**********************************
-!end SI- units: dQ/dvow and dQ/dvuw
-    IF(GRAV < 30. .and. UseEnergyCstrc == 1) THEN
-      !***********************************
-      !for table- or function defined weir
-      !***********************************
-      !dQ/+dvow
-      WS1PlusDv = vel (3, nop (nn, 1)) + ao (nop (nn, 1)) + (u (1) + DV)**2. / (2. * grav)
-
-      !testing
-      !WRITE(*,*) 'WS1:    ', WS1
-      !WRITE(*,*) 'WS1+dV: ', WS1PlusDV
-      !testing-
-
-      CALL WTFORM (Q1DV1, NCTREF (IMAT (NN)), WS1PlusDV, WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      Q1DV1 = QFACT1 * Q1DV1
-
-      !dQ/-dvow
-      WS1MinusDv = vel(3, nop (nn,1)) + ao (nop (nn, 1)) + (u (1) - DV)**2. / (2. * grav)
-      !testing
-      !WRITE(*,*) 'WS1-dV: ', WS1MinusDV
-      !testing-
-
-      CALL WTFORM (Q2DV1, NCTREF (IMAT (NN)), WS1MinusDV, WS2, cord (nop(nn,1), 1), cord(nop(nn,1),2) )
-      Q2DV1 = QFACT1 * Q2DV1
-
-      !Scale this part of the numerical derivative by the direction
-      !DQDV1 = (Q1DV1 - Q2DV1)/ 2.
-      DQDV1 = (Q1DV1 - Q2DV1)/ (2. * DV)
-      estifm (NodB, NodA) = estifm (NodB, NodA) + DQDV1
-
-      !testing
-      !WRITE(*,*) '---'
-      !WRITE(*,*) 'dQdv1, Oberwasser'
-      !WRITE(*,*) '-----------------'
-      !WRITE(*,*) 'part1: ', Q1DV1
-      !WRITE(*,*) 'part2: ', Q2DV1
-      !WRITE(*,*) 'total: ', DQDV1
-      !WRITE(*,*) 'estifm ', estifm (nodb, NodA)
-      !WRITE(*,*) '---'
-      !testing-
-
-      !dQ/+dvuw
-      WS2PlusDv = vel(3, nop (nn, 3)) + ao (nop (nn, 3)) + (u (3) + DV)**2. / (2. * grav)
-      !testing
-      !WRITE(*,*) 'WS2   : ', WS2
-      !WRITE(*,*) 'WS2+dV: ', WS2PlusDV
-      !testing-
-
-      CALL WTFORM (Q1DV2, NCTREF (IMAT (NN)), WS1, WS2PlusDV, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      Q1DV2 = QFACT1 * Q1DV2
-
-      !dQ/-dvuw
-      WS2MinusDv = vel (3, nop (nn, 3)) + ao (nop (nn, 3)) + (u (3) - DV)**2. / (2. * grav)
-
-      !testing
-      !WRITE(*,*) 'WS2-DV: ', WS2MinusDV
-      !testing-
-
-      CALL WTFORM (Q2DV2, NCTREF (IMAT (NN)), WS1, WS2MinusDV, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
-      Q2DV2 = QFACT1 * Q2DV2
-
-      !Scale this part of the numerical derivative by the direction
-      !DQDV2 = (Q1DV2 - Q2DV2)/ 2.
-      DQDV2 = (Q1DV2 - Q2DV2)/ (2. * DV)
-      estifm (NodB, NodB) = estifm (NodB, NodB) + DQDV2
-      !testing
-      !WRITE(*,*) '---'
-      !WRITE(*,*) 'dQdv2, Unterwasser'
-      !WRITE(*,*) '------------------'
-      !WRITE(*,*) 'part1: ', Q1DV2
-      !WRITE(*,*) 'part2: ', Q2DV2
-      !WRITE(*,*) 'total: ', DQDV2
-      !WRITE(*,*) 'estifm ', estifm (nodb, Nodb)
-      !WRITE(*,*) '---'
-      !pause
-      !testing-
-    ENDIF
-
-!end SI- units: dQ/dvow and dQ/dvuw
-!**********************************
 
 !*********************
 !something else
@@ -931,6 +696,5 @@ ENDDO
   ENDIF
   500   CONTINUE
 
-ENDIF
 RETURN
 END
