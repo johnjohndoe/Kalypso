@@ -1,4 +1,3 @@
-C     Last change:  MD    9 Jun 2009   10:57 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -30,7 +29,7 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE PARAKalyps
       !EFa Nov06, neues Modul für Teschke-1D-Elemente
       USE PARA1DPoly
-      use PardisoParams, ipt_Pardiso=>ipt
+      use PardisoParams
 !-
 
 
@@ -43,6 +42,8 @@ CIPK JUN05
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
       DATA VOID/-1.E20/
+      
+      integer (kind = 4) :: mfww
 
 c     Initialisation of values
 
@@ -52,10 +53,11 @@ c     Initialisation of values
       NBSS=NBS
       LBMAX=NBSS
       MFWW=MFW
-      !pardiso solver definitions; why are they seperated from them above, although they're showing the same?
-      MFWSIZ    =2000
-      !this displays the maximum number of equations and shouldn't therefore not too small.
-      MR1SIZ   = 300000
+      !Band width of the system
+      MFWSIZ    =5000
+      !size of the right-hand-side vector, i.e. the number of active equations
+      MR1SIZ   = 500000
+      !number of entries in the Jacobian Matrix, i.e. all non-zero derivatives of the Jacobian
       NBUFFSIZ = 50000000
 
 
@@ -83,7 +85,7 @@ cipk mar06  add call for ENDLIMIT case
       ELSEIF(ID(1:6) .EQ. 'MAXELT') THEN
         READ(DLIN,'(I8)') MAXE
       ELSEIF(ID(1:8) .EQ. 'MAXFRONT') THEN
-        READ(DLIN,'(I8)') MFWW
+        READ(DLIN, *) MFWW
       ELSEIF(ID(1:8) .EQ. 'MAXLAYER') THEN
         READ(DLIN,'(I8)') NLAYMX
       ELSEIF(ID(1:8) .EQ. 'MXSEDLAY') THEN
@@ -146,6 +148,7 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
  6014 FORMAT(' MAXIMUM NUMBER OF LAYERS   SET TO             ',I8)
  6015 FORMAT(' MAXIMUM NUMBER OF SED LAYERS  SET TO          ',I8)
       MFW=MFWW
+      mfwsiz = mfww
       NBS=NBSS
 
       ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)
@@ -156,7 +159,7 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
-
+      
       ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,7),ITAB(MAXP),
      1              ALFA(MAXP),VOLD(7,MAXP),
      2              VDOT(7,MAXP),VDOTO(7,MAXP),
@@ -303,6 +306,8 @@ CIPK MAR06
 
 CIPK MAY06
       ALLOCATE (TMSAND(0:MAXP),TMSSAND(0:MAXP))
+      
+       
       TMSAND=0
       TMSSAND=0
 
@@ -762,7 +767,7 @@ CIPK MAR01
       ENDDO
 !-
 !NiS,apr06: allocating arrays for neighbourhood relations
-      ALLOCATE (nconnect(1:MaxP),neighb(1:MaxP,0:100),mcord(1:MaxE,1:2))
+      ALLOCATE (nconnect(1:MaxP),neighb(1:MaxP,0:500),mcord(1:MaxE,1:2))
 !-
 
 !NiS,jul06: allocating the (for the moment) dummy gl_bedform array to pass variables correctly to the subroutine 
@@ -986,7 +991,7 @@ CIPK MAR01
 
       !initializations for lines
       do i = 1, 50
-        do j = 1, 350
+        do j = 1, 500
           lineimat(i, j) = 0
           lineelement (i, j) = 0
           LineCorrectionKS (i, j)   = 1.0
