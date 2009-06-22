@@ -5,6 +5,7 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       use mod_storageElt
       use mod_fileHandler
       use mod_contiLines
+      use mod_controlStructure
 
       !some general strings
       !--------------------
@@ -136,7 +137,8 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
 
       !model dimension parameters
       !--------------------------
-      integer (kind = 4) :: maxP, maxE, maxA, maxT, maxLT, maxps, ncl
+      integer (kind = 4) :: maxP, maxE, maxA, maxT, maxLT, maxps, ncl,
+     &                      maxweir
       integer (kind = 4) :: maxSE
       integer (kind = 4) :: np, ne, lp, le
       integer (kind = 4) :: npm, nem
@@ -194,6 +196,10 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       !-------------------------------------
       real (kind = 8), allocatable, dimension (:,:)  :: cord
       real (kind = 8), allocatable, dimension (:)    :: ao, aorig
+
+      type (feNode), allocatable, dimension (:) :: feNodes
+
+      
       !general node calculation value data definition
       !----------------------------------------------
       real (kind = 8), allocatable, dimension (:,:) :: vel, vdot
@@ -253,10 +259,10 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       
       !continuity line definition data
       !-------------------------------
-      integer (kind = 4) :: line (50, 350)
+      integer (kind = 4) :: line (50, 500)
       integer (kind = 4) :: lmt (50)
       
-      type (contiLine), allocatable, target :: contiLines (:)
+      type (contiLine), allocatable, target :: ccls (:)
       !meaning of the variables
       !------------------------
       !line    continuity line definition; stores all the nodes 
@@ -289,7 +295,7 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       integer (kind = 4), allocatable, dimension (:) :: ConnectedElt
       
       type (StorageElement), allocatable, target, dimension (:) ::
-     +  StorageElts
+     +  StorageElts     
 
       !input control parameters - elevations
       !-------------------------------------
@@ -460,6 +466,26 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       !itransit   ??? - 3D purposes
       !dfct       ??? - 3D purposes
       
+      !boundary condition purposes
+      !---------------------------
+      integer (kind = 4), allocatable, dimension (:) :: nfix, nfix1
+      real (kind = 8), allocatable, dimension (:,:)  :: spec
+      !meaning of the variables
+      !------------------------
+      !nfix       switch for boundary condition type
+      !nfix1      switch for boundary conditions due to concentration calculations
+      !spec       condition value
+      !           1 - velocity
+      !           2 - direction
+      !           3 - water head
+      !           4 - salinity [?]
+      !           5 - temperature [K]
+      !           6 - concentration [mg/l]; cohesive or non-cohesive sediment
+      !           7 - empirical 'Geschiebeanteil' [mg/l]
+      
+      !for Control structures
+      !----------------------
+      type(ControlStructure), allocatable, target :: contrStructures (:)
  
       
       
@@ -481,10 +507,6 @@ C-
      +          ,IOV,IYKK,IDTM,TTEM,INOTR
      +          ,INEWBED,IDEBUG
      +          ,ICNSV,IAVEL,IREALLCT,MR1
-!EFa, mar07     add MFWW for gloabl use (used in numbopt)
-     +          ,MFWW
-
-!-
 !-
 
 !nis,sep06: Adding switch for chosing approach of boundary condition transformation
@@ -516,8 +538,8 @@ CIPK MAY06 ASS IMASSOUT
       INTEGER   JLIN(50), !ITLVL(90)
 !     +         ,IURVL(90),NCNV(7)
      +          NCNV(7)
-!Nis,sep06: adding lineimat(50,350) for storage of material of line segments
-     +         ,lineimat(50,350), lineelement (50, 350)
+!Nis,sep06: adding lineimat(50,500) for storage of material of line segments
+     +         ,lineimat(50,500), lineelement (50, 500)
 
 !-
       !EFa jun07, changed dimension for autoconverge
@@ -545,10 +567,10 @@ CIPK MAY06 ASS IMASSOUT
 !-
 
 
-      ALLOCATABLE CORDS(:,:),NBC(:,:),SPEC(:,:),ITAB(:),
+      ALLOCATABLE CORDS(:,:),NBC(:,:),ITAB(:),
      1              ALFA(:),
-     3              NFIX(:),NLOC(:)
-     4             ,NSURF(:),NBTN(:),IBN(:),NFIX1(:)
+     3              NLOC(:)
+     4             ,NSURF(:),NBTN(:),IBN(:)
      5             ,FCTV(:),FCTS(:),NTHREE(:)
      6             ,FC(:,:)
      7             ,XSLP(:),YSLP(:),NFIXK(:)
