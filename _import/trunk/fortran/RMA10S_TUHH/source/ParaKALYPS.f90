@@ -110,10 +110,6 @@ integer (kind = 4) :: ivegetation
 !------------------------
 !ivegetation      calculate resistance with Darcy approach according to big vegetation elements
 
-
-!using energy level for cstrc
-INTEGER   :: UseEnergyCSTRC
-
 !NiS,mar06:	The following arrays and variables belonged in Kalypso-2D to the common-block "raus"; now they are part of this module.
 !		At the moment they are allocated in the RDKALYPS-subroutine and deallocated in the main program RMA10, so that they ARE
 !               deallocated and that they can be used in oter subroutines; because their meaning is not totally clear at the moment later
@@ -161,7 +157,7 @@ REAL,allocatable   :: temp_speccc(:)
 
 !nis,aug07: for correction purposes in Kalypso-GUI, there must be a correction based on the elements
 !           correction applies for ks-value, diameter of ... and distance between vegetation elements
-REAL (KIND = 8), DIMENSION (1:50, 1:350) :: LineCorrectionKS, LineCorrectionAxAy, LineCorrectionDp
+REAL (KIND = 8), DIMENSION (1:50, 1:500) :: LineCorrectionKS, LineCorrectionAxAy, LineCorrectionDp
 
 
 
