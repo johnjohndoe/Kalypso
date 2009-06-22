@@ -1,5 +1,19 @@
 module mod_discreteFunction
 
+  type discreteFunctionGroup
+    integer (kind = 4) :: ID
+    type (linkedDiscreteFunction), pointer :: firstFun => null()
+    type (linkedDiscreteFunction), pointer :: lastFun => null()
+  endtype
+  
+  type linkedDiscreteFunction
+    integer (kind = 4) :: ID
+    real (kind = 8) :: CurveValue
+    type (discreteFunction), pointer :: this => null()
+    type (linkedDiscreteFunction), pointer :: prev => null()
+    type (linkedDiscreteFunction), pointer :: next => null()
+  endtype
+  
   type discreteFunction
     type (valuePair), pointer :: first => null()
     type (valuePair), pointer :: last => null()
@@ -13,6 +27,24 @@ module mod_discreteFunction
   endtype
   
   contains
+  
+  function newLinkedFun (ID, CurveValue)
+    !function type
+    type (linkedDiscreteFunction), pointer :: newLinkedFun
+    !arguments
+    integer (kind = 4), optional :: ID
+    real (kind = 8), optional :: CurveValue
+    !local variables
+    type (linkedDiscreteFunction), pointer :: tmpFun => null()
+    
+    allocate (tmpFun)
+    tmpFun.this => newDiscrFun ()
+    if (present (ID)) tmpFun.ID = ID
+    if (present (CurveValue)) tmpFun.CurveValue = CurveValue
+    
+    newLinkedFun => tmpFun
+    return
+  end function
   
   subroutine addPair (relationship, absz, ordin)
     implicit none
@@ -37,13 +69,24 @@ module mod_discreteFunction
     relationship.last => new
   end subroutine
   
+  function newDiscrFun ()
+    !function type
+    type (discreteFunction), pointer :: newDiscrFun
+    !local variables
+    type (discreteFunction), pointer :: tmpDiscrFun => null()
+    
+    allocate (tmpDiscrFun)
+    newDiscrFun => tmpDiscrFun
+    return
+  end function
+
   function functionValue (relationship, xValue)
     implicit none
     !function name
     real (kind = 8) :: functionValue
     !arguments
     type (discreteFunction), pointer :: relationship
-    real (kind = 8), pointer :: xValue
+    real (kind = 8) :: xValue
     !local variables
     type (valuePair), pointer :: lB
     
@@ -57,7 +100,7 @@ module mod_discreteFunction
       !find lower Bound
       lB = lowerBoundPair (relationship, xValue)
       
-      !linear extrapolation beyond upper border
+      !linear extrapolation beyond upper border by given slope or slopeextrapolation f
       if (.not.(associated (lB.nextPair))) then
         functionValue = lB.prevPair.ordinate + difference (lB.prevPair, xValue) * derivative(relationship, xValue)
       
@@ -82,7 +125,7 @@ module mod_discreteFunction
     real (kind = 8) :: derivative
     !arguments
     type (discreteFunction), pointer :: relationship
-    real (kind = 8), pointer :: xValue
+    real (kind = 8) :: xValue
     !local variables
     type (valuePair), pointer :: lB
     
@@ -119,7 +162,7 @@ module mod_discreteFunction
     type (valuePair) :: lowerBoundPair
     !arguments
     type (discreteFunction), pointer :: relationship
-    real (kind = 8), pointer :: xValue
+    real (kind = 8) :: xValue
     
     lowerBoundPair = relationship.first
     
@@ -156,8 +199,8 @@ module mod_discreteFunction
     !function name
     real (kind = 8) :: difference
     !arguments
-    real (kind = 8), pointer :: xValue
     type (valuePair), pointer :: lowerBound
+    real (kind = 8) :: xValue
 
 
     difference = xValue - lowerBound.abszissa
