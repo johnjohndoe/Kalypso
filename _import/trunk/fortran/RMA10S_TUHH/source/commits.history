@@ -924,4 +924,46 @@ new features introduced/ started to be introduced:
       Change in deposition processes (>> NEWBED) will be implemented soon... :-))   
       >> SUBR BED, BLKSEDMOD, INITLSED  
 --- Monika Donner, 10.06.2009
-                     
+
+048.) update from *.for to *.f90, including introduction of 'implicit none' and ',only:' for block-modules:
+      - agen.for to agen.f90
+049.) Remove counter of read data lines (ndatln); affects: bcs.for; elflows.for; getbc.for; input.for, inputd.for, wind.for
+050.) Rename 'contiLines' array to 'ccls'
+051.) Restructure weir implementation (beginning)
+      - QCurves, tabular data or weir formula were originally all controlled by NJT=10. Now they can accessed by njt=10, 11 or 12
+      - auxiliary implementation so far was, that user has to give 'ENERGY' line in the control file to determine, whether the
+        QCurves or the tabular data approach should be used; this decision can be now done for each control structure individually
+        as the input file sets up the weir depending on the input data structure. Both data types can be defined in a mixed way
+        within the control structure definition file.
+      - Control structures with QCurves are completely implemented with data type definitions. The implementation can be adapted for
+        the existing control structure types as well in an easy way (affects incstr.
+      - complete restructuring of cstrc2d.for and cstrc.for; the confusing code with many repititions of code are simplified, numerical
+        derivatives are now calculated within logical loops
+      - sorting algorithm for 2D weirs to define left upstream node at first is repaired; it didn't work (affects reweir2Kalypso.f90)
+      - adapt call of wform.for (affects gtwflows.for, load3.for)
+      - introduce a linked discreteFunction type to mod_discreteFunction to be able to deal with QCurves
+      - introduce a complete new subroutine to calculate flow through weir with QCurve (W_QCurves.f90); will be moved to data type of weirs soon
+052.) Increase number of possible nodes for a continuity line from 350 to 500. This must be done 
+053.) Deactivate some code parts from autoconverge (affects input.for)
+054.) Special handling of system dependent preparations in zvrs.for called from file.for is removed; it is not needed anymore.
+055.) Reorganizing of PARDISO mkl-call
+      - update mkl_solver.for to mkl_solver.f90
+      - Get rid of global arrays, use save attribute in mkl_solver.f90 instead
+      - Find dynamically the necessary size of the arrays that are used to run PARDISO, i.e. BUFFSIZL is not used for PARDISO anymore
+056.) Order of reading restart data an initial data is problematic; qgen calculates distribution of velocity based on the initial water
+      levels, if restarting the boundary conditions are first prepared and then restart values are read, thus the distribution can't be
+      calcualted correctly. Therefore an additional call to get the initial values at first is introduced to input.for and the auxiliary 
+      call of getting the initial values in qgen.for is removed (affects qgen.for and input.for)
+057.) Refactoring of hgen subroutine; much more is necessary.
+058.) Usage of storage elements as part of continuity line to be able to generate boundary conditions with storage element; thus
+      introduction of HS line as Volume-waterstage relationship (IMPLEMENTATION IS NOT FINISHED!)
+59.) Introducing fenodes data type; purpose is in general to get rid of arrays. Special reason in the current context is a better
+     identification for boundary conditions (recent implementation does not disturb the original nop and cord array approach). Together
+     with this implementation a boundary condition type implementation is done.
+     - mod_boundaryCondition: Purpose is the generation of BC objects for an easier code reading
+     - mod_fenode: Shall replace the according arrays in the future
+60.) For model partitioning some stuff is introduced that will be specified in detail later!
+
+--- Nico Schrage, 22.06.2009
+
+      
