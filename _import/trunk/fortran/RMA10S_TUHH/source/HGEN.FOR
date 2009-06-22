@@ -12,75 +12,92 @@ C-
 cipk aug05      INCLUDE 'BLK10.COM'
       DIMENSION QQAL(3)
 CIPK AUG00
+      !function definition to calculate the distance between two nodes N1 and N2
       DISTS(N1,N2)=SQRT((CORD(N2,1)-CORD(N1,1))**2
      +                 +(CORD(N2,2)-CORD(N1,2))**2)
+
       !EFa jun07, changed dimension for autoconverge
       !,WTS(65)
       REAL,ALLOCATABLE :: wts(:)
-
       ALLOCATE (wts(nita))
-      !-
 
 CIPK DEC97 ADD TO DIMENSION
 C-
 C...... Insert values into SPEC  and  NFIX arrays
 C-
 cipk dec97
-      jj=abs(j)
-cipk dec97 change j to jj
-      MAX=LMT(JJ)
-CIPK FEB01
+      !number and length of continuity line
+      jj = abs (j)
+      MAX = LMT (JJ)
+
+      !check for continuity line of zero-length
       IF(MAX .EQ. 0) THEN
         WRITE(75,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',JJ
         WRITE(75,*) 'EXECUTION TERMINATED'
         WRITE(*,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',JJ
         WRITE(*,*) 'EXECUTION TERMINATED'
       ENDIF
-CIPK AUG00
-      IF(MAX .GT. 1) THEN
-        NST=LINE(JJ,1)
-        NFN=LINE(JJ,MAX)
-        CONLEN=DISTS(NST,NFN)
+
+      !2D boundary: Get first and last definition node and calculate direct distance in between
+      IF (MAX > 1) THEN
+        NST = LINE (JJ, 1)
+        NFN = LINE (JJ, MAX)
+        CONLEN = DISTS (NST,NFN)
       ENDIF
-      DO 300 K=1,MAX
-cipk dec97 change j to jj
-        NA=LINE(JJ,K)
-CIPK AUG00
-        IF(ISWTH .EQ. 0  .OR.  MAX .EQ. 1) THEN
-          SPEC(NA,3)=HREQ
-        ELSE
-          FACT=DISTS(NA,NST)/CONLEN
-          SPEC(NA,3)=HREQ+FACT*(HREQ2-HREQ)
+
+      !run through all nodes 
+      DO 300 K = 1, MAX
+        !get current node
+        NA = LINE (JJ, K)
+        
+        !for the application of direct values without involing the interpolation of values between
+        !first node and final node or for 1D applications directly apply the boundary conditions
+        IF (ISWTH == 0 .OR. MAX == 1) THEN
+          SPEC (NA, 3) = HREQ
+        !interpolate water stage boundary conditions for nodes in boundary lines with a varying water
+        !level distribution
+        elseif (iswth == 1 .or. iswth == 2) then
+          FACT = DISTS (NA, NST)/ CONLEN
+          SPEC (NA, 3) = HREQ + FACT * (HREQ2 - HREQ)
+        !do nothing for volume-waterlevel boundary conditions
+        elseif (iswth == 3) then
+          
+!          feNodes (na) => 
+        endif
+
+        !Add boundary condition switch for water level BCs
+        IF (MOD (NFIX (NA), 1000) < 200) THEN
+          NFIX (NA) = NFIX (NA) + 200
         ENDIF
-        IF(MOD(NFIX(NA),1000) .LT. 200) THEN
-          NFIX(NA)=NFIX(NA)+200
+
+        NFIX1 (NA) = 0
+        !constituent boundary conditions
+        !salinity
+        IF(QQAL(1) >= 0.) THEN
+          SPEC (NA, 4) = QQAL (1)
+          IF (MOD (NFIX (NA), 100)/ 10 == 0) NFIX (NA) = NFIX (NA) + 10
+        ELSEIF (QQAL (1) > -9000.) THEN
+          SPEC (NA, 4) = QQAL (1)
+          NFIX (NA) = NFIX (NA) + 20
         ENDIF
-CIPK AUG00  END CHANGES
-        IFIX=NFIX(NA)/100
-        NFIX(NA)=IFIX*100
-        NFIX1(NA)=0
-        IF(QQAL(1) .GE. 0.) THEN
-          SPEC(NA,4)=QQAL(1)
-          IF(MOD(NFIX(NA),100)/10 .EQ. 0) NFIX(NA)=NFIX(NA)+10
-        ELSEIF(QQAL(1) .GT. -9000.) THEN
-          SPEC(NA,4)=QQAL(1)
-          NFIX(NA)=NFIX(NA)+20
+        !temperature
+        IF (QQAL (2) >= 0.) THEN
+          SPEC (NA, 5) = QQAL (2)
+          IF (MOD (NFIX (NA), 10) == 0) NFIX (NA) = NFIX (NA) + 1
+        ELSEIF (QQAL (2) > -9000.) THEN
+          SPEC (NA, 5) = QQAL (2)
+          NFIX (NA) = NFIX (NA) + 2
         ENDIF
-        IF(QQAL(2) .GE. 0.) THEN
-          SPEC(NA,5)=QQAL(2)
-          IF(MOD(NFIX(NA),10) .EQ. 0) NFIX(NA)=NFIX(NA)+1
-        ELSEIF(QQAL(2) .GT. -9000.) THEN
-          SPEC(NA,5)=QQAL(2)
-          NFIX(NA)=NFIX(NA)+2
+        !concentrations
+        IF (QQAL (3) >= 0.) THEN
+          SPEC (NA, 6) = QQAL (3)
+          IF (NFIX1 (NA) == 0) NFIX1 (NA) = 1
+        ELSEIF (QQAL (3) > -9000.) THEN
+          SPEC (NA, 6) = QQAL (3)
+          NFIX1 (NA) = NFIX1 (NA) + 2
         ENDIF
-        IF(QQAL(3) .GE. 0.) THEN
-          SPEC(NA,6)=QQAL(3)
-          IF(NFIX1(NA) .EQ. 0) NFIX1(NA)=1
-        ELSEIF(QQAL(3) .GT. -9000.) THEN
-          SPEC(NA,6)=QQAL(3)
-          NFIX1(NA)=NFIX1(NA)+2
-        ENDIF
-        IF(ICYC .GT. 0) CALL BFORM(NA)
+        !form boundary conditions for node na, means fix the direction slopes
+        IF (ICYC > 0) CALL BFORM(NA)
   300 CONTINUE
 
 c
@@ -90,17 +107,17 @@ c
       N1=1
       N9=9
   305 CONTINUE
-      IF(ID(1:3) .EQ. 'HCN') THEN
-        IF(MAX .LT. N9) N9=MAX
-        READ(DLIN,5010) (WTS(I),I=N1,N9)
- 5010   FORMAT(9F8.0)
+      !This is for the distribution of the velocities at water level boundary conditions
+      IF (ID (1:3) == 'HCN') THEN
+        IF (MAX < N9) N9 = MAX
+        READ (DLIN, 5010) (WTS (I), I = N1, N9)
+ 5010   FORMAT (9F8.0)
         call ginpt(ibin,id,dlin)
 cipk jan96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
  7000   FORMAT(A8,A72)
-        NDATLN=NDATLN+1
         IF (MAX .GT. N9) THEN
           N1=N1+9
           N9=N9+9
