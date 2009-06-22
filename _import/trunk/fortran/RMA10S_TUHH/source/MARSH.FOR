@@ -60,7 +60,6 @@ cipk apr97 fix to read MP correctly
             READ(DLIN,5030) J,AC1,AC2,AC3,AC4
  5030       FORMAT(I8,4F8.0)
             call ginpt(lin,id,dlin)
-            NDATLN=NDATLN+1
             WRITE(LOUT,6172) AC1,AC2,AC3,AC4
  6172     FORMAT(//'  INPUT VALUES FOR MARSH ELEMENTS USED',
      +    /  '      DEPTH SHIFT', F8.2
@@ -122,7 +121,6 @@ CIPK MAR05
      +'      NODE   DEPTH-SHIFT',9X,'RANGE',9X,'KAPPA',8X,'ABS A0'/)
           READ(DLIN,5030) J,AC1,AC2,AC3,AC4
           call ginpt(lin,id,dlin)
-          NDATLN=NDATLN+1
 
           !nis,may08: Ignore nodes from 1D polynomial approach
           if (IsPolynomNode (j)) then
