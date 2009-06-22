@@ -38,7 +38,6 @@ cipk APR96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
 
         WRITE(LOUT,6046) TW,TA
         WRITE(*,6046) TW,TA
@@ -57,7 +56,6 @@ cipk APR96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
         SIGMA(N,1)=CHI*COS(TA/57.3)*TW**2
         SIGMA(N,2)=CHI*SIN(TA/57.3)*TW**2
         GO TO 215
