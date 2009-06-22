@@ -15,11 +15,7 @@ CIPK AUG07
       SAVE
 
       integer (kind = 8) :: mxl, mfrw
-      integer (kind = 4) :: ierr
       PARAMETER (MXL=680)
-      
-      
-      
 
 C-
 cipk feb07 add LLDONE 
@@ -50,7 +46,7 @@ C
       !allocate locals
       allocate (lrowent(mr1siz), lrpoint(mr1siz))
       allocate (r1t(mr1siz), ichgl(mr1siz))
-      !allocate globals
+      !allocate globals, only the first time, this place is reached
       IF(ITIME .EQ. 0) THEN
         ALLOCATE (LCPOINT(MXL,MFWSIZ),eqq(MXL,MFWSIZ))
         ALLOCATE (RR(MR1SIZ),QS1(NBUFFSIZ))
@@ -336,7 +332,6 @@ C      enddo
       IRTC=0
       LQ=0
       NRR=0
-C     LBMAX=NBS
       LCMAX=0
       NMAX = MFW
       ISHRK=0
@@ -880,18 +875,12 @@ CIPK FEB07      NPROCS = ICPU
 
                    
       CALL mkl_solver(NPROCS,NSZF,
-     &          IRWEPT(1),IRWEPT(NSZF+2),qs1, RR, R1T,IERR,
-     &          IRWEPT (NSZF+1))
+     &          IRWEPT(1),IRWEPT(NSZF+2),qs1, RR, R1T)
      
       !nis,aug08
       !NPROCS :: number of processors (user entry)
       !NSZF   :: number of equations
       
-      if(ierr .ne. 0) then
-        write(75,*) 'error stop in mkl',ierr
-        write(*,*) 'error stop in mkl',ierr
-        stop
-      endif        
 
       call second(sutim2)
       
