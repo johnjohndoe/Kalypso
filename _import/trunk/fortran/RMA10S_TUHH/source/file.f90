@@ -1,4 +1,3 @@
-!     Last change:  MD   10 Jun 2009    1:54 pm
 !******************************************************************************************
 !  subroutine file.sub opens the proper input files and assigns constant unit numbers to 
 !    the files. In advance it reads the control file. The subroutine is called twice.
@@ -296,10 +295,6 @@ FileRead: DO
     OPEN (LITR, FILE = FNAM1, STATUS = 'UNKNOWN')
     OPEN (LOUT, FILE = FNAM6, STATUS = 'UNKNOWN')
     OPEN (IMESOUT, FILE = FNAMMES, STATUS = 'UNKNOWN')
-
-    !TODO: What is this doing?
-    CALL ZVRS(0)
-
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,may06: Changed concept for Kalypso-input files. If the user decides to run RMA10S with Kalypso-2D modell format, he has to
