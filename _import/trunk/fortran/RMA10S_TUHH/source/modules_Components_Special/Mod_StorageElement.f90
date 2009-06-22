@@ -6,6 +6,7 @@ module mod_storageElt
     integer (kind = 4) :: CCLID = 0
     real (kind = 8) :: storageContent = 0.0d0
     real (kind = 8) :: storageAddition = 0.0d0
+    real (kind = 8) :: minWaterLevel = 0.0d0
     real (kind = 8) :: currQ = 0.0d0
     real (kind = 8) :: prevQ = 0.0d0
     !optional Volume Waterlevel Relationship
@@ -16,6 +17,25 @@ module mod_storageElt
   
   CONTAINS
   
+  function newStorElt (ID, storageContent)
+    implicit none
+    !function name
+    type (StorageElement), pointer :: newStorElt
+    real (kind = 8), optional :: storageContent
+    !arguments
+    integer (kind = 4) :: ID
+    !local variables
+    type (StorageElement), pointer :: new
+    !allocate new node
+    allocate (new)
+    new.ID = ID
+    if (present(storageContent)) new.storageContent = storageContent
+    !overgive the new storage element
+    newStorElt => new
+    return
+  end function
+
+
   !Add Volume Waterlevel Relationship to StorageElt
   subroutine addVolWaterlevelRel (StorageElt)
     !Storage Element to put the new relationship to
@@ -32,7 +52,6 @@ module mod_storageElt
     StorageElt.volWlRel => new
   end subroutine
   
-
   !add value pair
   subroutine addValuePair (StorageElt, Volume, Waterlevel)
     !intent in parameters 
@@ -53,12 +72,12 @@ module mod_storageElt
     type (StorageElement), pointer :: StorageElt
     logical, optional :: currentWaterlevel
     !local variables
-    real (kind = 8), pointer :: volume => null()
-    real (kind = 8), pointer :: new
-    allocate (new)
-    volume => new
+    real (kind = 8) :: volume
+
     !get water level
     if (associated (StorageElt.volWlRel)) then
+      !get the water level during time step, that means the addition/ subtraction within the current
+      !time step is already considered
       if (present (currentWaterlevel)) then
         if (currentWaterlevel) then
           volume = VolumeContained(StorageElt)
@@ -70,10 +89,25 @@ module mod_storageElt
       endif
       waterlevel = functionValue (StorageElt.volWlRel, volume)
     else
-      waterlevel = 0.0
+      waterlevel = StorageElt.minWaterLevel
     endif
     return
   end function
+  
+!  !get change of water level of storage element wrt to discharge
+!  function waterlevelWRTDischarge (StorageElt) result dWLdQ
+!    !function name
+!    real (kind = 8) :: dWLdQ
+!    !arguments
+!    type (StorageElement), pointer :: StorageElt
+!    !local variables
+!    real (kind = 8) :: waterlevel
+!    
+!    !get contained volume of storage element including the current time step
+!    volume = 
+!  
+!  
+!  end function
    
   !Calculate the Volume that would be contained after the time step
   function VolumeContained (StorageElt)

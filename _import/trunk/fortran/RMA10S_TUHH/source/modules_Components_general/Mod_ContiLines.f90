@@ -1,6 +1,7 @@
 module mod_ContiLines
   use mod_Nodes
   use mod_Arcs
+  use mod_storageElt
 
   type contiLine
     integer (kind = 4) :: ID = 0
@@ -9,6 +10,7 @@ module mod_ContiLines
     type (arc), pointer :: firstSegment => null()
     real (kind = 8) :: posNormal (1:2) = (/0.0d0, 0.0d0/)
     real (kind = 8) :: km
+    type (StorageElement), pointer :: storageElt => null()
   end type
   
 CONTAINS
