@@ -211,7 +211,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     super.paint( g );
 
     final Rectangle bounds = mapPanel.getScreenBounds();
-    m_toolTipRenderer.setTooltip( "TODO: TIP Renderer:: This element needs even number of nodes!" );//Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.3") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.8") ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
@@ -226,7 +226,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       final double z = snapNode.getPoint().getZ();
       if( !Double.isNaN( z ) )
       {
-        final String format = String.format( "some message( TODO ):" + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.4" ), z ); //$NON-NLS-1$
+        final String format = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.9" ), z ); //$NON-NLS-1$
         getMapPanel().setMessage( format );
       }
     }
@@ -279,7 +279,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   @Override
   public void moved( final Point p )
   {
-    final Object newNode = checkNewNode( p );
+    final Object newNode = checkNewNode( p, false );
     if( newNode instanceof IFE1D2DNode )
       m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
     else
@@ -314,7 +314,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   @Override
   public void leftClicked( final Point p )
   {
-    final Object newNode = checkNewNode( p );
+    final Object newNode = checkNewNode( p, false );
 
     if( newNode == null )
       return;
@@ -346,79 +346,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       repaintMap();
     }
   }
-
-//  private void createWeirFeature( )
-//  {
-//    final Display display = PlatformUI.getWorkbench().getDisplay();
-//    display.asyncExec( new Runnable()
-//    {
-//      @SuppressWarnings("deprecation")
-//      public void run( )
-//      {
-//
-//        final Feature parentFlowRelFeature = getFlowRelCollection().getFeature();
-//        final IRelationType parentRelation = getFlowRelCollection().getWrappedList().getParentFeatureTypeProperty();
-//        // final IFeatureWrapper2 lWeirParent = ElementGeometryHelper.createAdd2dElementWithWeir( command, workspace,
-//        // parentFeature, discModel, m_nodes );
-//        // final IFeatureWrapper2 lWeirParent = ElementGeometryHelper.createAdd2dElement( command, workspace,
-//        // parentFeature, discModel, getNodes() );
-//
-//        // *+++++++++++++++++++
-//
-//        if( parentFlowRelFeature == null )
-//          return;
-//        // return null;
-//
-//        final CommandableWorkspace lFlowWorkspace = getFlowTheme().getWorkspace();
-//
-//        final GM_Position flowPositionFromElement;
-//
-//        flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( m_newParentFeature );
-//
-//        /* Create flow relation at position */
-//        final IGMLSchema schema = lFlowWorkspace.getGMLSchema();
-//        final IFeatureType weirFeatureType = schema.getFeatureType( new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "WeirFlowRelation2D" ) );
-//        final Feature newFeature = lFlowWorkspace.createFeature( parentFlowRelFeature, parentRelation, weirFeatureType, -1 );
-//        final IWeirFlowRelation2D weirRelation = (IWeirFlowRelation2D) newFeature.getAdapter( IWeirFlowRelation2D.class );
-//        /* Call getObservation once to initialize it */
-//        weirRelation.getBuildingObservation();
-//
-//        final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-//        weirRelation.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
-//
-//        /* Post it as an command */
-//        IMapPanel mapPanel = getMapPanel();
-//        final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-//        final AddFeatureCommand lWeirCommand = new AddFeatureCommand( lFlowWorkspace, parentFlowRelFeature, parentRelation, -1, weirRelation.getFeature(), selectionManager, true, true );
-//        try
-//        {
-//          lFlowWorkspace.postCommand( lWeirCommand );
-//        }
-//        catch( final Throwable e )
-//        {
-//          final IStatus status = StatusUtilities.statusFromThrowable( e );
-//          display.asyncExec( new Runnable()
-//          {
-//            public void run( )
-//            {
-//              final Shell shell = display.getActiveShell();
-//              ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.1" ), status ); //$NON-NLS-1$
-//            }
-//          } );
-//        }
-//        try
-//        {
-//          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
-//        }
-//        catch( final Throwable pie )
-//        {
-//          final IStatus status = StatusUtilities.statusFromThrowable( pie );
-//          KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-//          pie.printStackTrace();
-//        }
-//      }
-//    } );
-//  }
 
   public final IFeatureWrapper2 getNewParentFeature( )
   {
@@ -467,9 +394,12 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       repaintMap();
     }
   }
+  private Object checkNewNode( final Point p ){
+    return checkNewNode( p, true );
+  }
 
   @SuppressWarnings("unchecked")
-  private Object checkNewNode( final Point p )
+  private Object checkNewNode( final Point p, final boolean pBoolFinalPoint )
   {
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_builder == null )
@@ -481,18 +411,18 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
     IStatus status;
     if( newNode instanceof GM_Point )
-      status = m_builder.checkNewNode( (GM_Point) newNode );
+      status = m_builder.checkNewNode( (GM_Point) newNode, pBoolFinalPoint );
     else
-      status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint() );
+      status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint(), pBoolFinalPoint );
 
     if( status.isOK() )
       m_warning = false;
     else
     {
-      if( status.getMessage().equals( "additional message check new node( TODO ): " + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.5" ) ) ) //$NON-NLS-1$
+      if( status.getMessage().equals( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ) ) //$NON-NLS-1$
       {
-        // TODO: delete element!
-
+        reinit();
+        repaintMap();
       }
       m_warning = true;
       m_warningRenderer.setTooltip( status.getMessage() );

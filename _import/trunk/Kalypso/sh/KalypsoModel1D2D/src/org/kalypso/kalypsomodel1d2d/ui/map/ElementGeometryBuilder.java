@@ -218,15 +218,18 @@ public class ElementGeometryBuilder
     }
   }
 
+  public IStatus checkNewNode( final GM_Point newNode ){
+    return checkNewNode( newNode, true );
+  }
   /**
    * Checks, if the resulting element would be valid, if the given new node would be inserted at the given position.
    */
-  public IStatus checkNewNode( final GM_Point newNode )
+  public IStatus checkNewNode( final GM_Point newNode, final boolean pBoolFinalPoint )
   {
     final List<GM_Point> list = new ArrayList<GM_Point>( m_nodes );
     list.add( newNode );
     removeDuplicates( list );
-    final IStatus status = checkNewElement( list.toArray( new GM_Point[list.size()] ) );
+    final IStatus status = checkNewElement( list.toArray( new GM_Point[list.size()] ), pBoolFinalPoint );
 
     if( status == Status.OK_STATUS )
       m_valid = true;
@@ -235,12 +238,12 @@ public class ElementGeometryBuilder
 
     return status;
   }
-
+  
   // REMARK: some optimization is done here, in order to enhance performance.
   // We assume, that the same checks has been done for every newly added node, so we check only
   // Criteria, which could go wring for the new node (i.e. the last one in the array).
   @SuppressWarnings("unchecked")
-  private IStatus checkNewElement( final GM_Point[] allNodes )
+  private IStatus checkNewElement( final GM_Point[] allNodes, final boolean pBoolFinalPont )
   {
     try
     {
@@ -315,13 +318,13 @@ public class ElementGeometryBuilder
       final GM_Position[] ring = ElementGeometryHelper.ringPositionsFromNodes( allNodes );
 
       // 4) New Element self-intersects
-      if( GeometryUtilities.isSelfIntersecting( ring ) )
+      if( GeometryUtilities.isSelfIntersecting( ring ) && pBoolFinalPont )
         return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
 
       final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       
       // new element is not convex
-      if( allNodes.length < 3 && newSurface.getConvexHull().difference( newSurface ) != null )
+      if( m_cnt_points > 0 && newSurface.getConvexHull().difference( newSurface ) != null )
         return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.7" ) ); //$NON-NLS-1$
 
       // new element intersects other elements
@@ -331,10 +334,10 @@ public class ElementGeometryBuilder
         if( element instanceof IPolyElement )
         {
           final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
-          if( eleGeom.intersects( newSurface ) )
+          if( eleGeom.intersects( newSurface ) && pBoolFinalPont )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );
-            if( intersection instanceof GM_Surface )
+            if( intersection instanceof GM_Surface  )
               return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
           }
         }
