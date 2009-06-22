@@ -1,4 +1,3 @@
-C     Last change:  MD   13 May 2009   11:28 am
 cipk last update jan 11 2007 allow for 5 node transition elements
 CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
 CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
@@ -350,7 +349,7 @@ cipk jan07
            N1=NOP(M,K-1)
 	    N=NOP(M,K)
            IF(K .LT. NCORN(M)) THEN
-	     N2=NOP(M,K+1)
+	      N2=NOP(M,K+1)
 	    ELSE
              N2=NOP(M,1)
 	    ENDIF
