@@ -1,11 +1,14 @@
-C     Last change:  MD    9 Jun 2009    2:16 pm
 CIPK LAST UPDATE SEP 05 2006  ADD DEPRATO
 cipk last update JUNE 5 2006  add test marshing
 CIPK  LAST UPDATE SEP 29 2005 MAKE DEPRAT LINEAR
 C_____________________________________________________________________
       SUBROUTINE DEPSN
-      USE BLK10MOD
-      USE BLKSEDMOD
+      USE BLK10MOD, only: np, npm, imid, ndep, nref, wsll, ao, it
+      USE BLKSEDMOD, only: deprato, deprat, vs, taucd, taucdnd, bshear
+      
+      implicit none
+      
+      integer :: n, i, nn
 C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLKSED.COM'
@@ -36,6 +39,7 @@ C
          
 cipk jun06  test for marshing
          if(wsll(i) .lt. ao(i)) go to 500
+
          IF(TAUCD .GT. BSHEAR(I)) THEN
 C          DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)/WD(I)
            DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)
