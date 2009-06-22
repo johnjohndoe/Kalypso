@@ -30,7 +30,7 @@ CIPK DEC06
 !      implicit none
 
 !nis,feb08: for line transitions
-      LOGICAL :: NodeIsDry (1:350)
+      LOGICAL :: NodeIsDry (1:500)
       integer :: dea_stat
       integer :: nln
 !-
@@ -158,8 +158,9 @@ CIPK DEC00 REVISE TO ALLOW FOR GATE STRUCTURE
 CIPK JUN05
         !NiS,may06: 3D- or special elements; jump over that
         IF(NM .GT. 900  .AND.  NM .LT. 5001  .AND.  IGTP(J) .EQ. 0
-     +    .AND. NFCTP(J) .EQ. 0)
-     +    GO TO 199
+     +    .AND. NFCTP(J) .EQ. 0) then
+          GO TO 199
+        endif
 CIPK OCT98 CONVERT TO F90
         !NiS,may06: every element that is in the range of 1-899 and 1001+
         IF(NM .LT. 900  .OR. NM .GT. 1000) THEN
@@ -643,17 +644,23 @@ CIPK NOV06          IF(NCORN(NN) .EQ. 8) THEN
               WV2=SQRT(VEL(1,N2)**2+VEL(2,N2)**2)
               ITP=1
               IF(N1 .GT. 0) THEN
-                IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-                  IWTYP=N1
+                nm = imat (nn) - 900
+                IF(njt (nm) == 12) THEN
                   widem=sqrt((cord(n2,2)-cord(n1,2))**2+
      +            (cord(n2,1)-cord(n1,1))**2)
 CIPK FEB07
                   HL1=VEL(3,N1)
                   HL2=VEL(3,N2)
                   CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
-     +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
-                ELSE
-                  !CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+     +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,widem)
+                ELSEif (njt (nm) == 11) then
+                  CALL WTFORM (Q1, imat(nn), 
+     +                         WSLL (N1), WSLL (N2),
+     +                         mcord(nn,1),mcord(nn,2))
+                elseif (njt (nm) == 10) then
+                  Q1 = cstrcQ_fromQCurves (imat (nn),
+     +                   WSLL (N1) + wv1**2/(2.0*grav),
+     +                   WSLL (N2) + wv2**2/(2.0*grav))
                 ENDIF
 
                 IF(NTMREF(IMAT(NN)) .NE. 0) THEN
@@ -761,9 +768,10 @@ c       now do middle elements
                 NBC(NOP(NN,8),1)=1
               endif
             ENDIF
-          ELSE
 
-c       now do 1-d structures
+
+          ELSE !if (ncn /= 8)
+!       now do 1-d structures
 
       !NiS,may06,com: initialize equations for 1D-control structure elements
       !NiS,may06,com: get corner nodes
@@ -778,19 +786,23 @@ c       now do 1-d structures
             !-
 
             IF(N1 .GT. 0) THEN
-
-              IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-                IWTYP=N1
+              nm = imat (nn) - 900
+              IF(njt (nm) == 12) THEN
 CIPK FEB07
                   HL1=VEL(3,N1)
                   HL2=VEL(3,N2)
                 CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
-     +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
-              ELSE
-                !nis,aug08: What is this needed for?
-                !CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
-                !-
+     +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,widem)
+              ELSEif (njt (nm) == 11) then
+                CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2),
+     +                      mcord (nn, 1), mcord(nn, 2))
+              elseif (njt (nm) == 10) then
+                Q1 = cstrcQ_fromQCurves (imat (nn),
+     +                 WSLL (N1) + wv1**2/(2.0*grav),
+     +                 WSLL (N2) + wv2**2/(2.0*grav))
               ENDIF
+
+
               IF(NTMREF(IMAT(NN)) .NE. 0) THEN
                 CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET
      +             ,QFACT)
