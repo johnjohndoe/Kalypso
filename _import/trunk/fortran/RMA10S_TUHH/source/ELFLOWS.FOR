@@ -148,7 +148,6 @@ cipk APR96 save data to a scratch file
           if(isvs .eq. 1) then
             write (nscrin, 7000) id, dlin
           endif
-          NDATLN = NDATLN + 1
 C
 
           DO N=1,NE
@@ -242,7 +241,6 @@ cipk APR96 save data to a scratch file
           if (isvs == 1) then
             write (nscrin, 7000) id, dlin
           endif
-          NDATLN = NDATLN + 1
 C          WRITE(LOUT,6038) N,SF,ELINX,ELINY
           IF(LABL .EQ. 1) THEN
             NEQ (IEGEN) = N

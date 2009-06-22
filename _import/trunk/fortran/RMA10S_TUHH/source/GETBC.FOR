@@ -16,11 +16,6 @@ CIPK  LAST UPDATED SEP7 1995
       USE BLKSUBMOD
       SAVE
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-CIPK JUN05
-CIPK AUG05      INCLUDE 'BLKSUB.COM'
 cipk apr96  drop initialization of TET
 c      TET=TSTART
       IF(NITI .GT. 0) THEN
@@ -65,7 +60,6 @@ cipk apr96 keep track of data for end of time step
       IF(ID(1:3) .EQ. 'COM') GO TO 1961
       IF(ID(1:3) .EQ. 'Com') GO TO 1961
       IF(ID(1:8) .EQ. '        ') GO TO 1961
-      NDATLN=NDATLN+1
       IF(ID(1:6) .NE. 'ENDDAT') GO TO 198
 C
 C   Allow for partial B.C. input from unit 5 and unit IBUP
@@ -125,7 +119,6 @@ cipk apr96 save data to a scratch file
       if(isvs .eq. 1) then
         write(nscrin,7000) id,dlin
       endif
-      NDATLN=NDATLN+1
 
 CIPK JUN05 MODIFY BED PROFILE
 c
@@ -168,7 +161,6 @@ cipk apr96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-        NDATLN=NDATLN+1
         IF(ID(1:2) .NE. 'BC') THEN
           WRITE(*,6999) ID(1:8)
 CIPK SEP04 CREATE ERROR FILE
@@ -197,7 +189,6 @@ cipk apr96 save data to a scratch file
       if(isvs .eq. 1) then
         write(nscrin,7000) id,dlin
       endif
-      NDATLN=NDATLN+1
       IF(ID(1:2) .EQ. 'BN') THEN
         READ(DLIN,5050) N,NFIX(N),NFIX1(N),(SPEC(N,M),M=1,NDF)
         WRITE(LOUT,6155)N,NFIX(N),NFIX1(N),(SPEC(N,M),M=1,NDF)

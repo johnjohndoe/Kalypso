@@ -98,7 +98,6 @@ C
           NNEW=NNEW+1
           IF(NNEW .EQ. 1) WRITE(LOUT,6030)
           READ(DLIN,5050) N,NFIX(N),NFIX1(N),(SPEC(N,M),M=1,6)
-          NDATLN=NDATLN+1
 CIPK NOV97          READ(IBIN,'(A8,A72)') ID,DLIN
           call ginpt(ibin,id,dlin)
 
@@ -106,7 +105,6 @@ cipk JAN04 save data to a scratch file
           if(isvs .eq. 1) then
             write(nscrin,7000) id,dlin
           endif
-          NDATLN=NDATLN+1
 
           NSPL(N)=1
         NL=NREF(N)
@@ -117,7 +115,6 @@ cipk JAN04 save data to a scratch file
             M=MM
               IF(ID(1:2) .EQ. 'SD') THEN
                 READ(DLIN,5051)  NFIX(M),NFIX1(M),(SPEC(M,L),L=1,6)
-                NDATLN=NDATLN+1
 cipk nov97                READ(IBIN,'(A8,A72)') ID,DLIN
                 call ginpt(ibin,id,dlin)
 
@@ -125,7 +122,6 @@ cipk JAN04 save data to a scratch file
                 if(isvs .eq. 1) then
                   write(nscrin,7000) id,dlin
                 endif
-                NDATLN=NDATLN+1
               ENDIF
             ENDIF
           ENDDO
