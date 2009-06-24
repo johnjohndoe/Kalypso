@@ -167,8 +167,6 @@ classdef TriangulatedSurface < handle
 %             end 
             
             areaSwitch = '';
-            % initialize to positive infinity
-            this.maxArea = ones(tricount, 1) * Inf;
             maxHeight = ones(tricount, 1) * maxHeightDefault;
             if(~isempty(p.Results.refineFile))
                 refinePolygons = kalypso.Polygon(p.Results.refineFile);
@@ -176,19 +174,16 @@ classdef TriangulatedSurface < handle
                 [dbfData, dbfFields] = loadDbf(fullfile(path, [name '.dbf']));
                 maxAreaField = p.Results.maxAreaField;
                 maxHeightField = p.Results.maxHeightField;
-                if(isfinite(maxAreaDefault))
-                    % assign default value
-                    maxAreas = ones(numel(refinePolygons), 1) * maxAreaDefault;
-                else
-                    maxAreas = zeros(numel(refinePolygons), 1);
-                end
+                
+                % assign default value
+                this.maxArea = ones(tricount, 1) * Inf;
 
                 maxElementHeights = ones(numel(refinePolygons), 1) * maxHeightDefault;
                 
                 for i=1:numel(dbfFields)
                     field = dbfFields{i};
                     if(strcmpi(field, maxAreaField))
-                        maxAreas(:) = str2num(strvcat(dbfData{:,i}));
+                        maxAreas = str2num(strvcat(dbfData{:,i}));
                     elseif(strcmpi(field, maxHeightField))
                         maxElementHeights(:) = str2num(strvcat(dbfData{:,i}));
                     end
@@ -221,6 +216,14 @@ classdef TriangulatedSurface < handle
                         end
                     end
                 end
+                
+                if(isfinite(maxAreaDefault))
+                    % assign default value
+                    this.maxArea(isinf(this.maxArea)) = maxAreaDefault;
+                else
+                    this.maxArea(isinf(this.maxArea)) = 0;
+                end
+
                 areaSwitch = 'a';
             end
 

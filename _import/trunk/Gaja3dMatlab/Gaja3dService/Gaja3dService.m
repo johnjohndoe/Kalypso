@@ -187,7 +187,7 @@ function Gaja3dService(varargin)
                 gridFile = sprintf('DemGrid_%04d',i);
             end
             disp(['Saving grid file ' gridFile]);
-            saveAsciiGrid(grid, [gridFile '.asc']);
+            saveAsciiGrid([gridFile '.asc'], grid);
             zip([gridFile '.zip'], {[gridFile '.asc']});
         end
     end    

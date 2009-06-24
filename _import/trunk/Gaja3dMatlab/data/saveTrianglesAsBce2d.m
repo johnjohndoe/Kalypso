@@ -89,7 +89,7 @@ function [xshift, yshift] = saveTrianglesAsBce2d( filename, elements, Xtri, Ytri
     arcs = sparse(nodeCount, nodeCount); % sparse node adjacency matrix
 
     arcCount = 0;
-    arcIndex = [1 2; 2 3; 3 1]; % index pairs for transversing triangle arcs
+    arcIndex = [1 2; 2 3; 3 1]; % index pairs for traversing triangle arcs
     for t=1:totalTriCount
         tic; % stop watch
         for node=1:3

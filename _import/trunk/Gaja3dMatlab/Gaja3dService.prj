@@ -100,7 +100,6 @@
       <Directory>$(PROJECTDIR)/</Directory>
       <Directory>D:\EigeneDateien\MATLAB\utils</Directory>
       <Directory>D:\EigeneDateien\MATLAB\data</Directory>
-      <Directory>D:\EigeneDateien\MATLAB\Gaja3dService</Directory>
       <Directory>D:\EigeneDateien\MATLAB</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/general</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/ops</Directory>

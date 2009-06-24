@@ -4,7 +4,7 @@ classdef Gaja3D < handle
     properties (SetObservable = true)
         % buffers [meter] around tile boundaries
         bufferTin = 300; % for tin creation from points
-        bufferGrid = 150; % for grid creation from tin 
+        bufferGrid = 150; % for grid creation from tin
         
         % array of indices determining which boundaries to process
         tiles = [];
@@ -59,6 +59,16 @@ classdef Gaja3D < handle
         function this = Gaja3D(varargin)
             this.addlistener({'boundaries','demTin','demGrid','breaklines'},...
                 'PostSet', @(src,event)this.objectChanged(src,event));
+            
+            % parse inputs
+            p = inputParser;
+            p.KeepUnmatched = true;
+            p.addParamValue('bufferTin', this.bufferTin);
+            p.addParamValue('bufferGrid', this.bufferGrid);
+            p.parse(varargin{:});
+            
+            this.bufferTin = p.Results.bufferTin;
+            this.bufferGrid = p.Results.bufferGrid;
         end
         
         function setElevationPoints(this, varargin)
@@ -334,6 +344,17 @@ classdef Gaja3D < handle
             % initialize to 0 elevation
             Ztri = zeros(size(Xtri));
             points = [Xtri Ytri Ztri];
+            
+            % discard points that are not in any triangle
+            keepPoints = sort(unique(elements(:)));
+            discardPoints = setdiff(1:size(points,1), keepPoints);
+            toMove = int32(zeros(size(elements)));
+            for point=discardPoints
+                toMove = toMove + int32(elements > point);
+            end
+            elements = elements - toMove;
+            points = points(keepPoints,:);
+            
             this.modelTin = kalypso.TriangulatedSurface(points, elements);
             this.refineCount = 0;
         end
@@ -341,7 +362,7 @@ classdef Gaja3D < handle
         function assignElevations(this, varargin)
             p = inputParser;
             p.KeepUnmatched = true;
-            p.addParamValue('source', 'tin'); % tin or grid
+            p.addParamValue('source', 'grid'); % tin or grid
             p.parse(varargin{:});
             
             tin = this.modelTin;
@@ -355,16 +376,15 @@ classdef Gaja3D < handle
             Ztri = zeros(size(Xtri)) * NaN;
             for i=this.tiles
                 % use tin as elevation source
-                if(~(strcmpi(p.Results.source, 'grid') || i > numel(this.demTin)))
-                    l_demTin = this.demTin(i);
-                    Zi = l_demTin(Xtri, Ytri);
-                elseif(i <= numel(this.demGrid))
+                if(strcmpi(p.Results.source, 'grid'))
                     % fall back to using grid if that is the only available
                     % elevation source
                     l_demGrid = this.demGrid(i);
                     Zi = l_demGrid.interpolateZ(Xtri, Ytri, varargin{:});
+                elseif(strcmpi(p.Results.source, 'tin'))
+                		l_demTin = this.demTin(i);
+                    Zi = l_demTin(Xtri, Ytri);
                 end
-                
                 Zmatched = ~isnan(Zi);
                 hasZ = ~isnan(Ztri);
                 ZmatchedAndNotHasZ = Zmatched & ~hasZ;
@@ -465,9 +485,10 @@ classdef Gaja3D < handle
                 nodeCount = nodeCount + 1;
             end
 
+            % roundedNodes = round(nodesMatrixFinal(segmentsMatrixFinal(:),:) * 1000);
             [uniqueNodes, m, n] = unique(nodesMatrixFinal(segmentsMatrixFinal(:),:), 'rows');
             index = (1:size(uniqueNodes,1))';
-            nodesMatrixFinal = [index uniqueNodes];    
+            nodesMatrixFinal = [index uniqueNodes];
 
             uniqueSegments = reshape(n, size(segmentsMatrixFinal));
             index = (1:size(uniqueSegments,1))';

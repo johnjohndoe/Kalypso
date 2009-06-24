@@ -25,7 +25,7 @@ function exportNodes(nodes, filename)
     
     % number of attributes to be written
     attCount = colCount - 2; % do not count x and y
-    attFormat = ' %20.7f'; % format 
+    attFormat = ' %20.2f'; % format 
     formatString = ['%d' repmat(attFormat, 1, colCount) '\n'];
     
     % write header
