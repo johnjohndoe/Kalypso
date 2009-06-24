@@ -13,16 +13,10 @@ fid = fopen(filename,'r');
 % Read the 6-line header.
 [ncols, nrows, xllcorner, yllcorner, cellsize, nodata] = readHeader(fid);
 
-% Read the matrix of data rows backwards
-Z = zeros(nrows,ncols);
-for i=nrows:-1:1
-    % read row i
-    Zrow = fscanf(fid,'%g',ncols);
-    % make nodata NaN
-    Zrow(Zrow == nodata) = NaN;
-    % integrate in Z backwards
-    Z(nrows-i+1,:) = Zrow;
-end
+% Read the matrix of data values, putting the k-th row in the data
+% file into the k-th column of matrix Z.  Close file -- nothing left to
+% read after this.
+Z = fscanf(fid,'%g',[ncols,nrows]);
 fclose(fid);
 
 %% Construct the referencing matrix.
