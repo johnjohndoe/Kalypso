@@ -184,6 +184,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     final Double hw = (Double) profilPoint.getValue( compHochwert );
     final Double h = compHoehe == -1 ? null : (Double) profilPoint.getValue( compHoehe );
 
-    return WspmGeometryUtilities.pointFromRwHw( rw, hw, h, crs );
+    return WspmGeometryUtilities.pointFromRwHw( rw, hw, h, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
   }
 }
