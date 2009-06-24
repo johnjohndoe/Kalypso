@@ -83,8 +83,10 @@ public class DA50Importer
    * @param bRefFirst
    *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
    *          to the point with the breite-coordinate zero.
+   * @param srsName
+   *          The coordinate system code.
    */
-  public static FeatureChange[] importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst ) throws CoreException
+  public static FeatureChange[] importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst, String srsName ) throws CoreException
   {
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -93,7 +95,7 @@ public class DA50Importer
     {
       /* Read and parse d50 file */
       da50reader = new LineNumberReader( new FileReader( da50File ) );
-      final DA50Entry[] entries = readDA50( da50reader );
+      final DA50Entry[] entries = readDA50( da50reader, srsName );
 
       /* Index features by station */
       final Map<Double, DA50Entry> entryMap = new TreeMap<Double, DA50Entry>( new DoubleComparator( Math.pow( 10, -IProfileFeature.STATION_SCALE ) ) );
@@ -119,7 +121,7 @@ public class DA50Importer
     }
     catch( final IOException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.core.imports.DA50Importer.0" )); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.0" ) ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -146,7 +148,7 @@ public class DA50Importer
     final double vl = Math.sqrt( vx * vx + vy * vy );
     if( vl == 0.0 )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getFormatString(  "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getFormatString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
     }
 
     // den Vektor normieren
@@ -192,11 +194,15 @@ public class DA50Importer
     lastPP.setValue( iHochwert, hwLast );
   }
 
-  private static DA50Entry[] readDA50( final LineNumberReader lnr ) throws IOException, CoreException
+  /**
+   * @param srsName
+   *          The coordinate system code.
+   */
+  private static DA50Entry[] readDA50( final LineNumberReader lnr, String srsName ) throws IOException, CoreException
   {
     final List<DA50Entry> result = new ArrayList<DA50Entry>();
 
-    final MultiStatus logStatus = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0,Messages.getFormatString(  "org.kalypso.model.wspm.core.imports.DA50Importer.2"), null ); //$NON-NLS-1$
+    final MultiStatus logStatus = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.core.imports.DA50Importer.2" ), null ); //$NON-NLS-1$
 
     while( lnr.ready() )
     {
@@ -243,14 +249,14 @@ public class DA50Importer
         final double rwEnd = Double.parseDouble( rwEndString ) / 1000.0;
         final double hwEnd = Double.parseDouble( hwEndString ) / 1000.0;
 
-        final GM_Point start = WspmGeometryUtilities.pointFromRwHw( rwStart, hwStart, 0.0 );
-        final GM_Point end = WspmGeometryUtilities.pointFromRwHw( rwEnd, hwEnd, 0.0 );
+        final GM_Point start = WspmGeometryUtilities.pointFromRwHw( rwStart, hwStart, 0.0, srsName, null );
+        final GM_Point end = WspmGeometryUtilities.pointFromRwHw( rwEnd, hwEnd, 0.0, srsName, null );
 
         result.add( new DA50Entry( station, start, end ) );
       }
       catch( final Exception e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getFormatString(  "org.kalypso.model.wspm.core.imports.DA50Importer.4",lnr.getLineNumber() )); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getFormatString( "org.kalypso.model.wspm.core.imports.DA50Importer.4", lnr.getLineNumber() ) ); //$NON-NLS-1$
         logStatus.add( status );
       }
     }

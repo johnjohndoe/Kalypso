@@ -79,10 +79,10 @@ public class WspmGeometryUtilities
     // TODO: should not be used?
     final String crsName = null;
 
-    return pointFromRwHw( rw, hw, h, crsName );
+    return pointFromRwHw( rw, hw, h, crsName, GEO_TRANSFORMER );
   }
 
-  public static GM_Point pointFromRwHw( final Double rw, final Double hw, final Double h, String crsName ) throws Exception
+  public static GM_Point pointFromRwHw( final Double rw, final Double hw, final Double h, String crsName, GeoTransformer transformer ) throws Exception
   {
     final GM_Position position;
     if( h == null )
@@ -95,14 +95,16 @@ public class WspmGeometryUtilities
       crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crsName );
-    return (GM_Point) GEO_TRANSFORMER.transform( point );
+    if( transformer != null )
+      return (GM_Point) transformer.transform( point );
+
+    return point;
   }
 
   public static GM_Point pointFromPoint( final GM_Point inPoint, final String crsName ) throws Exception
   {
     final GM_Position position = inPoint.getPosition();
 
-    return pointFromRwHw( position.getX(), position.getY(), position.getZ(), crsName );
+    return pointFromRwHw( position.getX(), position.getY(), position.getZ(), crsName, GEO_TRANSFORMER );
   }
-
 }
