@@ -288,8 +288,8 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
       ChartUtilities.maximize( m_chart.getChart().getChartModel() );
       m_form.getBody().layout();
     }
-    return getChartComposite();
 
+    return getChartComposite();
   }
 
   /**
