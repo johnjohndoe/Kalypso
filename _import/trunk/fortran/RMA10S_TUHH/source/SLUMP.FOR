@@ -58,9 +58,13 @@ C     Now loop through nodes to get elements to then compute changes
 	  DO K=1,12
 	    NN=ELTON(N,K)
 	    IF(NN .GT. 0) THEN
-
+! HN. June 2009, It seems here that the array of critical slope of sand (CRSLOP) should be
+! an array of element types between 1 and 99, and not an array as defined in SubRoutine initl.for
+! for each element, but each element type with max. number of 99 types.
+! 
 	      IF(IEDONE(NN) .EQ. 0) THEN
               NIMAT=MOD(IMAT(NN),100)
+	        NIMAT = abs (NIMAT)                 ! HN. 23June2009. include dry elements.
 	        IF(CRSLOP(NIMAT) .GT. 0.) THEN
                 CALL GETMAXSLP(NN,CRSLOP(NIMAT))
 	          IEDONE(NN)=1
