@@ -1,0 +1,168 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
+	<featuremapping>
+		<csvsource xlink:href="Stammdat/EGMPAR.HWP"  comment="*" delemiter="&#9;">
+			<featureproperty name="PNR" type="java.lang.String" format="">   <column>0</column>  </featureproperty>
+			<featureproperty name="L" type="java.lang.Integer" format="">    <column>1</column>  </featureproperty>
+			<featureproperty name="N" type="java.lang.Integer" format="">    <column>2</column>  </featureproperty>
+			<featureproperty name="M" type="java.lang.Integer" format="">    <column>3</column>  </featureproperty>
+			<featureproperty name="IWE" type="java.lang.Integer" format="">  <column>4</column>  </featureproperty>
+			<featureproperty name="ISOA" type="java.lang.Integer" format=""> <column>5</column>  </featureproperty>
+			<featureproperty name="ISOE" type="java.lang.Integer" format=""> <column>6</column>  </featureproperty>
+			<featureproperty name="IWA" type="java.lang.Integer" format="">  <column>7</column>  </featureproperty>
+			<featureproperty name="NRH" type="java.lang.Integer" format="">  <column>8</column>  </featureproperty>
+			<featureproperty name="IP9" type="java.lang.Integer" format="">  <column>9</column>  </featureproperty>
+			<featureproperty name="IP10" type="java.lang.Integer" format=""> <column>10</column> </featureproperty>
+			
+			<featureproperty name="PAR_1" type="java.lang.Double" format=""> <column>11</column> </featureproperty>
+			<featureproperty name="PAR_2" type="java.lang.Double" format=""> <column>12</column> </featureproperty>
+			<featureproperty name="PAR_3" type="java.lang.Double" format=""> <column>13</column> </featureproperty>
+			<featureproperty name="PAR_4" type="java.lang.Double" format=""> <column>14</column> </featureproperty>
+			<featureproperty name="PAR_5" type="java.lang.Double" format=""> <column>15</column> </featureproperty>
+			<featureproperty name="PAR_6" type="java.lang.Double" format=""> <column>16</column> </featureproperty>
+			<featureproperty name="PAR_7" type="java.lang.Double" format=""> <column>17</column> </featureproperty>
+			<featureproperty name="PAR_8" type="java.lang.Double" format=""> <column>18</column> </featureproperty>
+			<featureproperty name="PAR_9" type="java.lang.Double" format=""> <column>19</column> </featureproperty>
+			<featureproperty name="PAR_10" type="java.lang.Double" format=""> <column>20</column> </featureproperty>
+
+			<featureproperty name="G_1" type="java.lang.Double" format="">  <column>21</column> </featureproperty>
+			<featureproperty name="G_2" type="java.lang.Double" format="">  <column>22</column> </featureproperty>
+			<featureproperty name="G_3" type="java.lang.Double" format="">  <column>23</column> </featureproperty>
+			<featureproperty name="G_4" type="java.lang.Double" format="">  <column>24</column> </featureproperty>
+			<featureproperty name="G_5" type="java.lang.Double" format="">  <column>25</column> </featureproperty>
+			<featureproperty name="G_6" type="java.lang.Double" format="">  <column>26</column> </featureproperty>
+			<featureproperty name="G_7" type="java.lang.Double" format="">  <column>27</column> </featureproperty>
+			<featureproperty name="G_8" type="java.lang.Double" format="">  <column>28</column> </featureproperty>
+			<featureproperty name="G_9" type="java.lang.Double" format="">  <column>29</column> </featureproperty>
+			<featureproperty name="G_10" type="java.lang.Double" format=""> <column>30</column> </featureproperty>
+			<featureproperty name="G_11" type="java.lang.Double" format=""> <column>31</column> </featureproperty>
+			<featureproperty name="G_12" type="java.lang.Double" format=""> <column>32</column> </featureproperty>
+			<featureproperty name="G_13" type="java.lang.Double" format=""> <column>33</column> </featureproperty>
+			<featureproperty name="G_14" type="java.lang.Double" format=""> <column>34</column> </featureproperty>
+			<featureproperty name="G_15" type="java.lang.Double" format=""> <column>35</column> </featureproperty>
+			<featureproperty name="G_16" type="java.lang.Double" format=""> <column>36</column> </featureproperty>
+			<featureproperty name="G_17" type="java.lang.Double" format=""> <column>37</column> </featureproperty>
+			<featureproperty name="G_18" type="java.lang.Double" format=""> <column>38</column> </featureproperty>
+
+			<featureproperty name="H_1" type="java.lang.Double" format=""> <column>39</column> </featureproperty>
+			<featureproperty name="H_2" type="java.lang.Double" format=""> <column>40</column> </featureproperty>
+			<featureproperty name="H_3" type="java.lang.Double" format=""> <column>41</column> </featureproperty>
+			<featureproperty name="H_4" type="java.lang.Double" format=""> <column>42</column> </featureproperty>
+			<featureproperty name="H_5" type="java.lang.Double" format=""> <column>43</column> </featureproperty>
+			<featureproperty name="H_6" type="java.lang.Double" format=""> <column>44</column> </featureproperty>
+			<featureproperty name="H_7" type="java.lang.Double" format=""> <column>45</column> </featureproperty>
+			<featureproperty name="H_8" type="java.lang.Double" format=""> <column>46</column> </featureproperty>
+			<featureproperty name="H_9" type="java.lang.Double" format=""> <column>47</column> </featureproperty>
+			<featureproperty name="H_10" type="java.lang.Double" format=""> <column>48</column> </featureproperty>
+			<featureproperty name="H_11" type="java.lang.Double" format=""> <column>49</column> </featureproperty>
+			<featureproperty name="H_12" type="java.lang.Double" format=""> <column>50</column> </featureproperty>
+			<featureproperty name="H_13" type="java.lang.Double" format=""> <column>51</column> </featureproperty>
+			<featureproperty name="H_14" type="java.lang.Double" format=""> <column>52</column> </featureproperty>
+			<featureproperty name="H_15" type="java.lang.Double" format=""> <column>53</column> </featureproperty>
+			<featureproperty name="H_16" type="java.lang.Double" format=""> <column>54</column> </featureproperty>
+			<featureproperty name="H_17" type="java.lang.Double" format=""> <column>55</column> </featureproperty>
+			<featureproperty name="H_18" type="java.lang.Double" format=""> <column>56</column> </featureproperty>
+			<featureproperty name="H_19" type="java.lang.Double" format=""> <column>57</column> </featureproperty>
+			<featureproperty name="H_20" type="java.lang.Double" format=""> <column>58</column> </featureproperty>
+			<featureproperty name="H_21" type="java.lang.Double" format=""> <column>59</column> </featureproperty>
+			<featureproperty name="H_22" type="java.lang.Double" format=""> <column>60</column> </featureproperty>
+			<featureproperty name="H_23" type="java.lang.Double" format=""> <column>61</column> </featureproperty>
+			<featureproperty name="H_24" type="java.lang.Double" format=""> <column>62</column> </featureproperty>
+			<featureproperty name="H_25" type="java.lang.Double" format=""> <column>63</column> </featureproperty>
+			<featureproperty name="H_26" type="java.lang.Double" format=""> <column>64</column> </featureproperty>
+			<featureproperty name="H_27" type="java.lang.Double" format=""> <column>65</column> </featureproperty>
+			<featureproperty name="H_28" type="java.lang.Double" format=""> <column>66</column> </featureproperty>
+			<featureproperty name="H_29" type="java.lang.Double" format=""> <column>67</column> </featureproperty>
+			<featureproperty name="H_30" type="java.lang.Double" format=""> <column>68</column> </featureproperty>
+			<featureproperty name="H_31" type="java.lang.Double" format=""> <column>69</column> </featureproperty>
+			<featureproperty name="H_32" type="java.lang.Double" format=""> <column>70</column> </featureproperty>
+			<featureproperty name="H_33" type="java.lang.Double" format=""> <column>71</column> </featureproperty>
+			<featureproperty name="H_34" type="java.lang.Double" format=""> <column>72</column> </featureproperty>
+			<featureproperty name="H_35" type="java.lang.Double" format=""> <column>73</column> </featureproperty>
+			<featureproperty name="H_36" type="java.lang.Double" format=""> <column>74</column> </featureproperty>
+		</csvsource>
+		<gmlsource xlink:href=".saalemodell_leer.gml"/>
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR" fid="Pegel-${fromID}" handleExisting="change">
+		<map from="PNR" to="PNR"/>
+			<map from="L" to="L"/>
+			<map from="N" to="N"/>
+			<map from="M" to="M"/>
+			
+		   <map from="IWE"    to="IWE"/>
+		   <map from="ISOA"   to="ISOA"/>
+		   <map from="ISOE"   to="ISOE"/>
+		   <map from="IWA"   to="IWA"/>
+		   <map from="NRH"   to="NRH"/>
+		   <map from="IP9"   to="IP9"/>
+		   <map from="IP10"   to="IP10"/>
+		
+		   <map from="PAR_1"  to="PAR_1"/>
+		   <map from="PAR_2"  to="PAR_2"/>
+		   <map from="PAR_3"  to="PAR_3"/>
+		   <map from="PAR_4"  to="PAR_4"/>
+		   <map from="PAR_5"  to="PAR_5"/>
+		   <map from="PAR_6"  to="PAR_6"/>
+		   <map from="PAR_7"  to="PAR_7"/>
+		   <map from="PAR_8"  to="PAR_8"/>
+		   <map from="PAR_9"  to="PAR_9"/>
+		   <map from="PAR_10" to="PAR_10"/>
+		
+		   <map from="G_1"   to="G_1"/>
+		   <map from="G_2"   to="G_2"/>
+		   <map from="G_3"   to="G_3"/>
+		   <map from="G_4"   to="G_4"/>
+		   <map from="G_5"   to="G_5"/>
+		   <map from="G_6"   to="G_6"/>
+		   <map from="G_7"   to="G_7"/>
+		   <map from="G_8"   to="G_8"/>
+		   <map from="G_9"   to="G_9"/>
+		   <map from="G_10"   to="G_10"/>
+		   <map from="G_11"   to="G_11"/>
+		   <map from="G_12"   to="G_12"/>
+		   <map from="G_13"   to="G_13"/>
+		   <map from="G_14"   to="G_14"/>
+		   <map from="G_15"   to="G_15"/>
+		   <map from="G_16"   to="G_16"/>
+		   <map from="G_17"   to="G_17"/>
+		   <map from="G_18"   to="G_18"/>
+	
+		   <map from="H_1"   to="H_1"/>
+		   <map from="H_2"   to="H_2"/>
+		   <map from="H_3"   to="H_3"/>
+		   <map from="H_4"   to="H_4"/>
+		   <map from="H_5"   to="H_5"/>
+		   <map from="H_6"   to="H_6"/>
+		   <map from="H_7"   to="H_7"/>
+		   <map from="H_8"   to="H_8"/>
+		   <map from="H_9"   to="H_9"/>
+		   <map from="H_10"   to="H_10"/>
+		   <map from="H_11"   to="H_11"/>
+		   <map from="H_12"   to="H_12"/>
+		   <map from="H_13"   to="H_13"/>
+		   <map from="H_14"   to="H_14"/>
+		   <map from="H_15"   to="H_15"/>
+		   <map from="H_16"   to="H_16"/>
+		   <map from="H_17"   to="H_17"/>
+		   <map from="H_18"   to="H_18"/>
+		   <map from="H_19"   to="H_19"/>
+		   <map from="H_20"   to="H_20"/>
+		   <map from="H_21"   to="H_21"/>
+		   <map from="H_22"   to="H_22"/>
+		   <map from="H_23"   to="H_23"/>
+		   <map from="H_24"   to="H_24"/>
+		   <map from="H_25"   to="H_25"/>
+		   <map from="H_26"   to="H_26"/>
+		   <map from="H_27"   to="H_27"/>
+		   <map from="H_28"   to="H_28"/>
+		   <map from="H_29"   to="H_29"/>
+		   <map from="H_30"   to="H_30"/>
+		   <map from="H_31"   to="H_31"/>
+	 	  <map from="H_32"   to="H_32"/>
+	 	  <map from="H_33"   to="H_33"/>
+	 	  <map from="H_34"   to="H_34"/>
+	 	  <map from="H_35"   to="H_35"/>
+	 	  <map from="H_36"   to="H_36"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

@@ -1,0 +1,126 @@
+package de.tuhh.wb.javagis.view;
+import de.tuhh.wb.javagis.data.Version;
+import java.util.Vector;
+import javax.swing.JDesktopPane;
+import javax.swing.JPanel;
+
+import de.tuhh.wb.javagis.view.projectview.ProjectTree;
+
+public class KalypsoInterface
+{
+    JDesktopPane myDesktopPane;
+    ProjectTree myProjectTree;
+  
+    public KalypsoInterface(JDesktopPane desktopPane)
+    {
+	this.myDesktopPane=desktopPane;
+	this.myProjectTree=new ProjectTree();
+    }
+    
+    public JPanel getProjectTreePanel()
+    {
+	return (JPanel)myProjectTree;
+    }
+   
+    public void connectDataBase(String host,String port,String user,String pass)
+    {
+	myProjectTree.connectDataBase(host,port,user,pass);
+    }
+    
+    public void disconnectDataBase()
+    {
+	// todo...
+    }
+    public boolean isConnectedToDataBase()
+    {
+	return myProjectTree.isConnectedToDataBase();
+    }
+    
+    //return true 
+    //if a version is selected in the project-tree
+    public boolean isVersionSelected()
+    {
+	// todo...
+	return true;
+    }
+
+    public void openTableView()
+    {
+	myProjectTree.openTableViewFromSelectedVersion();
+    }
+
+    public void openNetView()
+    {
+	myProjectTree.openNetViewFromSelectedVersion();
+    }
+
+    // close active view (table or netview)
+    public void closeView()
+    {
+	// todo...
+    }
+
+    public void createNewVersion(String project,String model,String state,String name,String description)
+    {
+	myProjectTree.createNewVersion(project,model,state,name,description);
+    }
+
+    // copy selected version
+    public void createExtendedVersion()
+    {
+	// todo
+    }
+  
+    // delete selected version
+    public void deleteVersion()
+    {
+	myProjectTree.removeSelectedVersion();
+    }
+
+    public Version getSelectedVersion()
+    {
+	return myProjectTree.getSelectedVersion();
+    }
+    
+
+    // close all views of selected version
+    public void closeAllVersionView()
+    {
+	//todo...
+    }
+    
+    // close all views of selected project
+    public void closeProjectViews()
+    {
+	//too...
+    }
+
+
+    // close all views
+    public void closeAllViews()
+    {
+	//todo...
+    }
+    
+    // return a Vector of Strings
+    public Vector getOpenedTableViewNames()
+    {
+	// todo...
+	Vector result=new Vector();
+	result.add("not implemented...");
+	return result;
+    }
+    public Vector getOpenedNetViewNames()
+    {
+	// todo...
+	Vector result=new Vector();
+	result.add("not implemented...");
+	return result;
+
+    }   
+ 
+    public void deiconify(String titleOfView)
+    {}
+    public void iconify(String titleOfView)
+    {}
+}

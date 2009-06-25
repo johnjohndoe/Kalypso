@@ -1,0 +1,30 @@
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="Modell">
+  <topology ID="top_river">
+  <topology ID="top_catchment">
+  <network ID="net_river">
+  <objectClass ID="nullStrand">
+  <objectClass ID="channel">
+  <objectClass ID="rhb">
+<!--  <objectClass ID="rht">
+  <objectClass ID="node">
+  <objectClass ID="wc">
+  <objectClass ID="rb">
+  <objectClass ID="rainStation">
+  <objectClass ID="climateStation">
+    <simpleProperty key="m_wadasIDcontainer">
+      <name>container ID ID WADAS</name>
+    <simpleProperty key="m_IDmeasured">
+      <name>Measured Time-Series ChannelID</name>
+    <simpleProperty key="m_IDsynthetic">
+      <name>Synthetic Time-Series ChannelID</name>
+  <relationClass ID="wc2objects">
+  <relationClass ID="wc2nodes">
+  <relationClass ID="rb2strand">
+  <relationClass ID="strand2node">
+  <relationClass ID="node2strand">
+  <relationClass ID="rb2rb"> 
+  <relationClass ID="node2nodeOverflow">
+  <relationClass ID="node2nodeFunctOut">
+  <relationClass ID="node2nodeFunctIn">
+  <relationClass ID="node2nodeConstOut">
+  <relationClass ID="node2nodePercent">

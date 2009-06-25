@@ -1,0 +1,3 @@
+<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+        <ogc:FeatureId fid="WLM_Neugattersleben"/>  
+</ogc:Filter>

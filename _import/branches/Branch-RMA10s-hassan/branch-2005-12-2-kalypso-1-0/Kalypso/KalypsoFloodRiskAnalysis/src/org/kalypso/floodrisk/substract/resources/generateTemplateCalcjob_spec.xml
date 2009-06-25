@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="GenerateTemplateRasterJob">
+
+	<input id="Raster1" description="Raster1"/>
+	<input id="Raster2" description="Raster2"/>
+	
+	<output id="TemplateRaster" description="Ergebnis: Raster1-Raster2, Raster mit Rasterzellwerten 0 und 1"/>
+	
+</modelspec>

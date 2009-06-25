@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="src"/>
+    <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+    <classpathentry kind="lib" path="D:/user/schlienger/flomatis/wadas-kalypso/lib/hb15.zip"/>
+    <classpathentry kind="lib" path="D:/user/schlienger/flomatis/wadas-kalypso/lib/openroad.jar"/>
+    <classpathentry kind="lib" path="D:/user/schlienger/flomatis/wadas-kalypso/lib/edbc.jar"/>
+    <classpathentry kind="output" path="build"/>
+</classpath>

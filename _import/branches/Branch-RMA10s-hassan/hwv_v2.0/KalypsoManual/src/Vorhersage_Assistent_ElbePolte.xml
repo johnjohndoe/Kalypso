@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="elbeP_view_prognose" vendor="sachsen">
+  <title>Vorhersagemodell Elbe</title>
+
+  <indexterm>
+    <primary>Vorhersagemodell Elbe</primary>
+  </indexterm>
+
+  <section id="sec_Assi_elbePolte_01_Steuerparams">
+    <title>Eingabe der Steuerparameter</title>
+
+    <indexterm>
+      <primary>Steuerparameter</primary>
+
+      <secondary>Elbe</secondary>
+    </indexterm>
+
+    <para>Auf der zweiten Seite des Assistenten (siehe <xref
+    linkend="elbe_steuerparameter" />) werden verschiedene Informationen
+    angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
+    generiert. Bei neu geöffneten oder kopierten Rechenvarianten entsprechen
+    die Einträge denen der ursprünglichen Rechenvariante.</para>
+
+    <figure id="elbe_steuerparameter">
+      <title>Eingabe der Steuerparameter</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_01_Steuerparams.png"
+                       scale="33" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <para>Der <guilabel>Start der Vorhersage</guilabel> wird beim Erzeugen
+    einer neuen Rechenvariante automatisch auf den letzten gültigen
+    Startzeitpunkt für die Modellrechnung der Elbe gesetzt (1h, 4h, ..., 22h).
+    Bis zu diesem Zeitpunkt werden ggf. die Messwerte aus der Zeitreihenablage
+    geholt. Der Eintrag kann vom Benutzer angepasst werden. Der Startzeitpunkt
+    der Simulationsrechnung wird durch das Modell bestimmt und liegt 15 Tage
+    vor dem <guilabel>Start der Vorhersage</guilabel>. Der Endzeitpunkt der
+    Vorhersage wird ebenfalls durch das Modell bestimmt und liegt drei Tage
+    nach dem <guilabel>Start der Vorhersage</guilabel>.</para>
+
+    <para>Im Abschnitt <guilabel>Metadaten eingeben</guilabel> werden der
+    <guilabel>Ersteller</guilabel>, eine <guilabel>Beschreibung</guilabel>,
+    ein <guilabel>Kommentar</guilabel> und der
+    <guilabel>Erstellungszeitpunkt</guilabel> eingetragen. Beim Erzeugen einer
+    neuen Rechenvariante werden diese Felder mit Standard-Werten belegt. Ein
+    detailliertes Ausfüllen dieser Metadaten erleichtert das weitere Arbeiten
+    mit der erzeugten Rechenvariante. Jeder dieser Einträge kann vom Benutzer
+    geändert werden. Der Eintrag zum <guilabel>Szenario</guilabel>
+    (<quote>Normalbetrieb</quote> oder <quote>Testbetrieb</quote>) dient zur
+    Information darüber, welchem Szenario die Rechenvariante zugeordnet ist.
+    Dieser Eintrag ist unveränderlich und spiegelt den bei der Erstellung
+    gewählten Betriebsmodus wider.</para>
+
+    <para>Ein aktiviertes Kontrollkästchen <guilabel>Zeitreihen
+    aktualisieren</guilabel> bewirkt, dass beim Übergang auf die nächste Seite
+    des Assistenten die vom Modell benötigten Messwerte für die Zeit vom Start
+    der Simulation bis zum <guilabel>Start der Vorhersage</guilabel> aus der
+    Zeitreihenablage geholt werden (Abfluss und W/Q-Beziehung an den Pegeln).
+    Ist das Kontrollkästchen nicht aktiviert, werden die Zeitreihen nicht
+    geholt bzw. nicht aktualisiert. Nur beim Anlegen einer neuen
+    Rechenvariante ist dieses Kästchen standardmäßig aktiviert.</para>
+
+    <para>Es folgen nun Seiten für die Kontrolle und Eingabe der
+    Eingangsdaten.</para>
+  </section>
+
+  <section id="sec_Assi_elbePolte_02_Eingangsdaten" lang="">
+    <title>Kontrolle der Eingangsdaten</title>
+
+    <indexterm>
+      <primary>Kontrolle Eingangsdaten</primary>
+
+      <secondary>Elbe</secondary>
+    </indexterm>
+
+    <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
+    Eingangsdaten durch den Benutzer. Die Zeitreihen setzen sich aus
+    Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen sind
+    abhängig vom Daten-Status durch Symbole gekennzeichnet (vgl. <xref
+    linkend="TabellenKennzeichnung" />). Der Vorhersage-Assistent ist so
+    aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
+    (<xref linkend="elbePolte_eingangsdaten" />):</para>
+
+    <figure id="elbePolte_eingangsdaten">
+      <title>Kontrolle der Eingangsdaten (hier Abfluss an Elbepegeln)</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_02_KontrolleAbflussElbePegel.png"
+                       scale="33" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <orderedlist>
+      <listitem>
+        <para>Abflüsse an den Startpegeln (Messwerte kombiniert mit
+        tschechischen Vorhersagen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Abflüsse an den Elbepegeln (Messwerte)</para>
+      </listitem>
+
+      <listitem>
+        <para>Abflüsse der Zwischengebiete (Gesamtzeitraum), die Berechnung
+        der Zwischengebietszuflüsse für Usti / Dresden und Dresden / Torgau
+        erfolgt durch den Meldedienst mit Hilfe des Berechnungsmodells <xref
+        linkend="elbeZwg_view_prognose" />.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Die Anzeige der Zeitreihen erfolgt grafisch und tabellarisch. In
+    jeder Eingabemaske wird ein Lageplan mit den Erfassungsstandorten
+    angezeigt. In der Tabelle werden für die Startpegel und die
+    Zwischengebiete alle Pegelzeitreihen gleichzeitig aufgeführt. Bei den
+    Elbepegeln werden pro Pegel Beobachtung und falls vorhanden Rechnung
+    gleichzeitig angezeigt. Durch Markieren eines Pegels wird die dazugehörige
+    Zeitreihe auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte
+    vom Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
+    <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
+  </section>
+
+  <section id="sec_Assi_elbePolte_03_ModellParameter">
+    <title>Eingabe von Modellparametern</title>
+
+    <indexterm>
+      <primary>Eingabe von Modellparametern</primary>
+
+      <secondary>Elbe</secondary>
+    </indexterm>
+
+    <para>Diese Seite dient der Eingabe der allgemeinen Modellparameter
+    (<guilabel>HW-Typ</guilabel> und <guilabel>Nachführung RIDO</guilabel>).
+    Die Zeitreihen an den Start- und Elbepegeln stehen informativ zur
+    Verfügung (siehe <xref linkend="elbePolte_eingabe_modellparameter"
+    remap="" />).</para>
+
+    <figure id="elbePolte_eingabe_modellparameter">
+      <title>Eingabe der Modellparameter</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_03_Kontrolle_Modellparameter.png"
+                       scale="33" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+  </section>
+
+  <section id="sec_Assi_elbePolte_04_Vorhersage_Berechnung">
+    <title>Berechnung einer Vorhersage</title>
+
+    <indexterm>
+      <primary>Vorhersageberechnung</primary>
+
+      <secondary>Elbe</secondary>
+    </indexterm>
+
+    <para>Auf dieser Seite (<xref linkend="elbeP_berechnung" />) des
+    Assistenten werden oben rechts die streckenbezogenen Parameter
+    tabellarisch angezeigt und können vor der Durchführung einer
+    Vorhersageberechnung durch den Benutzer verändert werden. Die Zeitreihen
+    an den Start- und Elbepegeln stehen informativ zur Verfügung. Für den
+    Pegel Usti wird zusätzlich noch die tschechische Vorhersage mit
+    eingeblendet.</para>
+
+    <figure id="elbeP_berechnung">
+      <title>Vorhersagerechnung</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_04_Berechnung.png"
+                       scale="33" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <para>Die Berechnung wird über die Schaltfläche <guibutton>Berechnung
+    durchführen</guibutton> gestartet. Nach erfolgreich durchgeführter
+    Berechnung werden die Ergebnisse zusammen mit den Messwerten (soweit
+    vorhanden) grafisch dargestellt. Berechnungen können beliebig oft
+    durchgeführt werden.</para>
+  </section>
+
+  <section id="sec_Assi_elbePolte_05_Berichtsablage">
+    <title>Ergebnisbearbeitung und Veröffentlichung</title>
+
+    <indexterm>
+      <primary>Ergebnisbearbeitung und Veröffentlichung</primary>
+
+      <secondary>Elbe</secondary>
+    </indexterm>
+
+    <para>Nach Durchführung der Berechnung (siehe <xref
+    linkend="sec_Assi_elbePolte_04_Vorhersage_Berechnung" />) können die
+    ermittelten Ergebnisse an das Berichtswesen übergeben werden. Zudem ist
+    der Export der berechneten Prognose-Zeitreihen nach PSI-Compact möglich.
+    Die dazugehörige Eingabemaske (<xref linkend="elbeP_berichtsablage" />)
+    zeigt einen Lageplan mit allen im Modell vorhandenen
+    Vorhersage-Pegeln.</para>
+
+    <figure id="elbeP_berichtsablage" label="">
+      <title>Bearbeitung und Veröffentlichung der Ergebnisse</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_05_Berichtsablage.png"
+                       scale="33" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <para>Des Weiteren ermöglicht es diese Seite, die Ergebnisse der derzeit
+    aktuellen Rechenvariante mit denen bereits vorhandener Rechenvarianten zu
+    vergleichen. In der Liste <guibutton>Rechenvarianten im
+    Diagramm</guibutton> oben rechts können die gemeinsam im Diagramm
+    darzustellenden Rechenvarianten ausgewählt werden.</para>
+
+    <para>Die Zeitreihendarstellung kann über die Optionsknöpfe unterhalb des
+    Diagramms zwischen Wasserstand und Abfluss umgeschaltet werden.</para>
+
+    <para>Zur Bearbeitung einer Ergebniszeitreihe ist die Schaltfläche
+    <guibutton>Zeitreihe(n) bearbeiten</guibutton> vorgesehen. Durch Klick auf
+    die Schaltfläche wird das im Programm-Umfang enthaltene Grafikprogramm
+    geöffnet. In diesem bestehen zahlreiche Möglichkeiten zur Visualisierung
+    und Editierung der Zeitreihen (siehe Handbuch zum Grafikprogramm).</para>
+
+    <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
+    <guimenu>Vorhersagen Exportieren</guimenu> in das
+    Informations-Management-System (PSI-Compact) gespeichert werden. Es
+    erscheint ein Auswahlfenster, in dem diejenigen Ausgabequerschnitte
+    gewählt werden können, für die Zeitreihen herausgeschrieben werden. Die
+    Ablage der Zeitreihen erfolgt nur für den Vorhersage-Zeitraum.</para>
+
+    <para>Zusätzlich können Ergebnisse als Berichtsdokumente in das
+    Berichtswesen exportiert werden (<guibutton>Bericht(e)
+    ablegen</guibutton>). Beim Ablegen der Berichte wird der Nutzer durch
+    einen mehrstufigen Dialog geführt. Durch Aktivierung des Häkchens vor dem
+    jeweiligen Ausgabe-Format kann eine Kombination der Ergebnisdaten für das
+    Berichtswesen zusammengestellt werden.</para>
+
+    <para>Die Ablage der Ergebnisse auf dem Server (Berichtswesen und
+    PSI-Compact) kann in folgenden Formaten erfolgen:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Berechnete Zeitreihen der Abflüsse (Grafik für das
+        Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnete Zeitreihen der Wasserstände (Grafik für das
+        Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnete Zeitreihen in Tabellen-Form (CSV-Format für das
+        Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Scheitelwerttabelle der berechneten Abflüsse (CSV-Format für das
+        Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Scheitelwerttabelle der berechneten Wasserstände (CSV-Format für
+        das Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Diagramm aller berechneten Abflüsse an den Elbepegeln
+        (Längsschnitt)</para>
+      </listitem>
+
+      <listitem>
+        <para>Diagramm aller berechneten Wasserstände an den Elbepegeln
+        (Längsschnitt)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Damit andere Nutzer Zugang zur aktuellen Rechenvariante bekommen
+    (siehe <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie mit Hilfe
+    des Knopfes <guilabel>Variante archivieren</guilabel> auf dem Server
+    abgelegt werden. Der Name der lokalen Rechenvariante wird dabei
+    übernommen.</para>
+  </section>
+</section>

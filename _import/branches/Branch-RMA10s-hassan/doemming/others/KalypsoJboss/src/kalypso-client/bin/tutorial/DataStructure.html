@@ -1,0 +1,65 @@
+<html>
+
+<title> Kalypso Manual </title>
+
+<head> <h2> Data Structure </h2>
+</head>
+<img src=blueline.gif align="center" >
+<br>
+<br>
+<body>
+Data sets for the Rainfall-Runoff-Model, used in this system concept for forecast simulation, are stored in an Hypersonic database (DB), component of Application Server Jboss.<br>
+Only the time-series are managed by the DataCentre.
+The processor setup differs data for model structure and for setup simulation.
+Objects are used to define strands, node and catchments but also to define simulation setup parameters.<br>
+The characteristic parameters are stored in simple properties for each object (figure 5).t, visible in TableView.
+<br><br> <img src=ScreenShot023.gif align="center" >
+<br><br>
+Relations are used for connection of strands, catchments and nodes. Each strands is defined by an up and downstream node to which the catchments drain. The relations connect these elements to the drainage network like visible in NetView. An edit of relations is still not implemented in program.
+
+A Project Tree, like the Explorer of Microsoft, visualise the data hierarchy. Top level consists of server on which client connects. For structuring all thematic data sets for preprocessing following tree elements are used:
+
+<ul><li> Project
+<li> Theme
+</ul>
+A theme structures in tables data thematically, e.g. for
+catchments, strands
+<ul>
+<li> State
+<li> Version</ul>
+Via events form database changes of user are automatically stored.
+User should remember when opening a version if a copy of existing
+version should be made or if he wants to change actual version.
+Each version can be named by user.
+
+By three theme elements, data to run a forecast simulation is thematically structured:
+<ul>
+<li> ModelData
+<li> ControlData
+<li> SimulationCase
+</ul>
+Theme ModelData
+Spatial distribution of catchment and drainage network, two different ways of visualisation are possible:
+NetView shows drainage network of RRM, functionalities for user specific handling are implemented (zoom, move…).
+TableView structures thematically parameters of relations and objects in tables. Each row reflects an object. Functionalities for editing /calibration are implemented (filter for selection by attributes e.g. average height).
+For user specific work model theme can be subdivided in different states, e. g.:
+<ul>
+<li> Testing
+<li> Calibration
+<li> FloodEvents
+</ul>
+<b>Theme ControlData</b><br><br>
+Temporal dissolving, in control theme data sets to setup simulation (time and result output) are fixed.
+<br><br>
+<b>Theme SimulationCase</b><br><br>
+Theme SimulationCase connects Model and Control data to specify simulation.
+<br><br>
+<b> Versioning</b><br><br>
+Data sets are stored in DB by versions. Via events form DB changes of user are automatically stored in DB (no undo functionality!). User should remember when opening a version if a copy of existing version should be made or if he wants to change actual version. Each version can be named by user.
+
+
+<br><br>
+<hr>
+User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+</HTML>

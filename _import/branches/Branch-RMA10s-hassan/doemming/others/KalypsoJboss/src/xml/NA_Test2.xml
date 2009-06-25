@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="ControlTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>ControlTest</name>
+	<description>NA-Modell</description>
+	<package>de.tuhh.wb.javagis.model.controltest</package>
+	<topology ID="top_river">
+		<name>rivers</name>
+		<description>Topology of rivers</description>
+	</topology>
+	<topology ID="top_catchment">
+		<name>Catchment-areas</name>
+		<description>Topology of Catchmentareas</description>
+	</topology>
+	<network ID="net_river">
+		<name>all rivers</name>
+		<description>String</description>
+	</network>
+	<objectClass ID="nullStrand">
+		<name>Controll1</name>
+		<description>riversection</description>
+		<belongsToTopology ref="top_river"/>
+		<geometry>LineString</geometry>
+		<symbol>symbol</symbol>
+		<simpleProperty key="m_strandNr">
+			<name>Strand-Number</name>
+			<description>String</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+	</objectClass>
+	<objectClass ID="testchannel">
+		<name>ChannelStrand</name>
+		<description>riversection</description>
+		<belongsToTopology ref="top_river"/>
+		<geometry>LineString</geometry>
+		<symbol>symbol</symbol>
+		<simpleProperty key="m_strandNr">
+			<name>Strand-Number</name>
+			<description>String</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+		<simpleProperty key="m_qBoardfull">
+			<name>boardfull Discharchge</name>
+			<description>String</description>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_distribFact">
+			<name>DistributionFactor</name>
+			<description>String</description>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<vectorSet key="m_channelData">
+			<name>ChannelData</name>
+			<simpleProperty key="v_q">
+				<name>Discharge</name>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kRiver">
+				<name>Storage-koeficient (kilinin-Miljukov)</name>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nRiver">
+				<name>Number of storageElement</name>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kLand">
+				<name>Storage-koeficient  Land(kilinin-Miljukov)</name>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nLand">
+				<name>Number of storageElement Land</name>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+		</vectorSet>
+	</objectClass>
+	<objectClass ID="node">
+		<name>Node</name>
+		<description>node</description>
+		<belongsToTopology ref="top_river"/>
+		<geometry>Point</geometry>
+		<symbol>symbol</symbol>
+		<simpleProperty key="m_nodeNr">
+			<name>NodeNumber</name>
+			<description>String</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+	</objectClass>
+	<relationClass ID="strand2node">
+		<name>StrandToNode</name>
+		<description>String</description>
+		<fromObjectClass ref="nullStrand"/>
+		<toObjectClass ref="node"/>
+		<forwardLabel>downstream</forwardLabel>
+		<backwardLabel>upstream</backwardLabel>
+		<fromCardinalityMax>1</fromCardinalityMax>
+		<toCardinalityMax>unbound</toCardinalityMax>
+	</relationClass>
+	<relationClass ID="node2strand">
+		<name>NodeToStrand</name>
+		<description>Test-Relation</description>
+		<fromObjectClass ref="node"/>
+		<toObjectClass ref="nullStrand"/>
+		<forwardLabel>downstream</forwardLabel>
+		<backwardLabel>upstream</backwardLabel>
+		<fromCardinalityMax>unbound</fromCardinalityMax>
+		<toCardinalityMax>1</toCardinalityMax>
+	</relationClass>
+</theme>

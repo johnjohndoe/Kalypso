@@ -1,0 +1,6 @@
+#/bin/bash
+a2ps -2 --toc --left-footer= --header=  --pretty-print=java \
+--highlight-level=heavy --output test.ps --sides=duplex \
+de/tuhh/wb/javagis/*.java \
+de/tuhh/wb/javagis/*/*.java \
+de/tuhh/wb/javagis/*/*/*.java 

@@ -1,0 +1,52 @@
+drop table TS_CHANNEL\g
+drop table TS_DER_COMPUTATION\g
+
+
+create table TS_EXAMPLE_FOR_TIMESERIES_TABLE
+(
+	TSTIME DATE not null,
+	VALUE FLOAT not null,
+	FLAG varchar(10) not null
+)\g
+
+modify TS_EXAMPLE_FOR_TIMESERIES_TABLE to btree unique on tstime\g
+
+
+
+
+
+create table TS_CHANNEL
+(
+	ID integer not null primary key,
+	NAME varchar(64) not null,
+	DESCRIPTION varchar(256),
+	IDENTIFIER varchar(50) not null unique,			/* external identifier */
+	COREF integer references DC_CONTAINEROBJECT(COID),
+	TYPE_REF integer,
+	UNIT_REF integer
+)\g
+
+modify TS_CHANNEL to btree unique on id, name, identifier\g
+
+
+
+
+create table TS_DER_COMPUTATION
+(
+	SID 		integer not null primary key,
+	NAME 		varchar(100) not null,
+	DESCRIPTION 	varchar(300) not null,
+	STATUS 		integer not null,		/* status of the computation: up to date or not */
+	CHANNEL_REF	integer not null,		/* channel id to which this computation belongs to */
+	MY_SOURCE	varchar(100) not null,		/* table name of this computation where the timeseries are stored */
+	SOURCE_REF 	integer not null,		/* identifier of source object: can be a channel or another derivation */
+	SOURCE_NAME	varchar(100) not null,		/* table name from which the timeseries were derivated */
+	SOURCE_TYPE	integer not null,		/* unique type describing what the source is: work, original, aggregation, computation, etc. */
+	UNIT_REF 	integer,			/* unit identifier */
+	TIMEFROM 	date not null,			/* original timefrom used when creating the derivation */
+	TIMETO 		date not null,			/* original timeto used when creating the derivation */
+	
+	FORMULA		varchar(500) not null		/* formula used when computing these derivated timeseries */
+)\g
+
+modify TS_DER_COMPUTATION to btree unique on sid, name\g

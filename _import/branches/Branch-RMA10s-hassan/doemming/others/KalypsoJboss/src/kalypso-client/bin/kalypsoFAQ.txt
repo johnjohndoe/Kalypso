@@ -1,0 +1,148 @@
+
+ 23.01.2003
+
+ Frequently-Asked-Questions about KALYPSO
+
+
+
+
+ 1 What is needed to run KALYPSO
+
+  1. java  (  java.sun.com )
+  2. jboss ( www.jboss.org )
+
+
+
+
+
+ 2 How to install JBOSS
+
+
+  The installation of JBOSS is very simple:
+  you will find JBOSS on http://www.jboss.org
+  1. download newest version on your system. (zip-archive)
+  2. unpack archive into your jboss-installation directory
+  3. set environment-variables to the installation-directory of JAVA and JBOSS
+  example:
+  JBOSS_HOME=c:\files\jboss\jboss3.0.3\
+  JAVA_HOME=C:\j2sdk\bin\
+  4. now jboss is installed on your system
+
+  to start JBOSS-server:
+   execute JBOSS_HOME\bin\run.bat    (run.sh for unix)
+  to shutdown JBOSS-server:
+   execute JBOSS_HOME\bin\shutdown.bat  (shutdown.sh for unix)
+
+  to start/shutdown JBOSS automaticly via NT/W2K service
+   use a service-wrapper (see JBOSS-3.0-Quick-Start-Guide,
+   available also on www.jboss.org)
+
+
+
+
+ 3 How to install KALYPSO
+
+  to deploy KALYPSO in JBOSS:
+
+   copy javaGis1.jar to JBOSS_HOME/server/default/deploy/
+   copy javaGis2.jar to JBOSS_HOME/server/default/deploy/
+   copy javaGis3.jar to JBOSS_HOME/server/default/deploy/
+
+   copy KALYPSO-install-dir to your local filesystem (e.g. c:\flomatis\kalypso )
+
+   edit kalypsoMain.conf for your local settings.
+
+  --8<--example of kalypsoMain--8<---
+
+    # url to access the time series database
+    bce_url=jdbc\:edbc\://172.22.222.227\:LP7/BCE_PC067\:\:dbflomatis2/INGRES
+
+    # template files user by the simulation process
+    template_simulation=c:\flomatis\Kalypso\kalypso_template
+
+  --8<-----------------------8<---
+
+
+
+
+
+
+
+  4. no connection to time series database:
+
+   - is the time series server reachable via lan ?
+    -> try ping to find out.
+
+   - wrong settings in configfile kalypsoMain.conf
+    -> check settings of: bce_url, bce_user and bce_pass
+
+   - physical connection has been interrupted,
+    -> restart kalypsoRRM
+
+   - is time series database running ?
+    -> restart database
+
+
+
+
+  5. no connection to modell-database
+
+   - check, if jboss is running ?
+    start jboss via c:\program files\jboss\jboss3.0.3\bin\run.bat
+
+   - check if network is working (jboss uses also networking for intern processes)
+
+
+
+
+
+  6. programm hangs - is this a crash ?
+
+   - some kalypso processes need some time to proceed. In this time
+     the user interface is not updated.
+     these processes are espacially:
+      * import/export of (xml)-modell-data.
+      * loading the netview
+      * running the simulation
+    -> In this case, please be patient and wait,
+
+   - did you click into the running DOS-BOX ? maybe by mistake ?
+    if there is a selection in a DOS-BOX, Windows halts the dependent applications
+    -> click again in the DOS-BOX to remove the selection or press <Enter> in the DOS-BOX
+
+   - did you run extern programms from kalypso ?
+    -> close these programms (e.g. graphic-tool)
+
+
+
+
+
+  7. My changes are not stored in the database.
+
+    - It is important, that you commit every change in a table by the <Return>-key, cause
+    the application needs to know when to store the data in the database.
+
+    - with timestamps (e.g. start of simulation) you have to use the correct pattern.
+     the tooltip will show you, what pattern exactly is needed.
+
+    - vectorSets are stored when you close the vectorSet-window or choose "save" from the vectorSet`s
+      menue.
+
+
+
+
+  8. the simulation is not successfull
+
+    - check logView and output in the DOS-BOX
+
+    - validate your parameters, missing parameters will make problems
+
+    - check if you are in the correct directory, when using the graphic-tool
+
+
+
+
+  9. you didnt find an answer to you question ?
+
+   -> so, please feel free to contribute your question and answers to this FAQ,
+      ask your colleges or write an email for support.

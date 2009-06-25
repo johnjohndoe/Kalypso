@@ -1,0 +1,146 @@
+<?xml version = '1.0' encoding = 'UTF-8' ?>
+<theme xsi:noNamespaceSchemaLocation="../schemas/MetaDataModell_V8.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="kalypso">
+  <name>Kalypso</name>
+  <package>de.tuhh.wb.javagis.model.na</package>	
+  <description>NA-Modell</description>
+  <objectClass ID="channel">
+    <name>ChannelStrand</name>
+    <description>riversection</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry></geometry>
+    <symbol>symbol1</symbol>
+    <simpleProperty key="m_strandNr">
+      <name>Strand-Number</name>
+      <key>m_strandNr</key>
+      <description>String</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_wcIndex">
+      <name>WaterCourseIndex</name>
+      <description>String</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_TEST">
+      <name>neueSpalte</name>
+      <description>die ist eine neue Spalte</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_testBoolean">
+      <name>wahr</name>
+      <description>String</description>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qBoardfull">
+      <name>boardfull  Discharchge</name>
+      <key>m_qBoardfull</key>
+      <description>String</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_distribFact">
+      <name>DistributionFactor</name>
+      <key>m_distribFact</key>
+      <description>String</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <vectorSet key="m_channelData">
+      <name>ChannelData</name>
+      <key>m_channelData</key>
+      <simpleProperty key="v_q">
+	<name>Discharge</name>
+	<key>v_q</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kRiver">
+	<name>Storage-koeficient (kilinin-Miljukov)</name>
+	<key>v_kRiver</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nRiver">
+	<name>Number of storageElement</name>
+	<key>v_nRiver</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kLand">
+	<name>Storage-koeficient  Land(kilinin-Miljukov)</name>
+	<key>v_kLand</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nLand">
+	<name>Number of storageElement Land</name>
+	<key>v_nLand</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+    </vectorSet>
+  </objectClass>
+  <objectClass ID="strand">
+    <name>Strand</name>
+    <description>riversection</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <symbol>symbol1</symbol>
+    <simpleProperty key="m_strandNr">
+      <name>Strand-Number</name>
+      <key>m_strandNr</key>
+      <description>String</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_wcIndex">
+      <name>WaterCourseIndex</name>
+      <key>m_wcIndex</key>
+      <description>String</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_qBoardfull">
+      <name>boardfull Discharchge</name>
+      <key>m_qBoardfull</key>
+      <description>String</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_distribFact">
+      <name>DistributionFactor</name>
+      <key>m_distribFact</key>
+      <description>String</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <vectorSet key="m_channelData">
+      <name>ChannelData</name>
+      <key>m_channelData</key>
+      <simpleProperty key="v_q">
+	<name>Discharge</name>
+	<key>v_q</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kRiver">
+	<name>Storage-koeficient (kilinin-Miljukov)</name>
+	<key>v_kRiver</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nRiver">
+	<name>Number of storageElement</name>
+	<key>v_nRiver</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kLand">
+	<name>Storage-koeficient  Land(kilinin-Miljukov)</name>
+	<key>v_kLand</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nLand">
+	<name>Number of storageElement Land</name>
+	<key>v_nLand</key>
+	<type>java.lang.Float</type>
+      </simpleProperty>
+    </vectorSet>
+  </objectClass>
+  <relationClass ID="rel_ch2str">
+    <name>Channel2Strand</name>
+    <description>String</description>
+    <fromObjectClass ref="channel"/>
+    <toObjectClass ref="strand"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>1</toCardinalityMax>
+    <belongsToNetwork ref="net_river"/>
+  </relationClass>
+</theme>

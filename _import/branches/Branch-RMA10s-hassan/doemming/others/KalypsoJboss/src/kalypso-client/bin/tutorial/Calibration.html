@@ -1,0 +1,78 @@
+<html>
+
+<title> Kalypso-Tutorial </title>
+<head> <h2> Calibration </h2></head>
+<img src=blueline.gif align="center" >
+<br>
+
+
+<body>
+
+<P>For calibration of simulated flood events, measured discharged hydrographs are required.<br>
+To get discharge time-series user can define DataCenter connection in same way like for hydrological stations. <br>
+If parameters are set measured discharge is available for GRAFICTOOL in files in the directory klima.dat in <b>kalypso_results</b>.
+
+<u>A continuous calibration for the next flood events is necessary.</u>
+</P>
+The object of calibration has to minimise the difference between observed and simulated flows. <br>
+The calibration of the model will be achieved if there is a good match between the simulated and measured values of the following hydrograph characteristics:
+<ul>
+<li> Total runoff volume
+<li> Peak flow
+</ul>
+In practice, the user can choose any of the two functions, depending on the special model being considered on purpose.<br>
+<u>Peak flow agreement is important during storm water, flooding.</u> <br>
+Flood forecasting is mainly interested in the significant peak flow and the temporal way of flow.
+<br><br>
+<h3><b>Calibration Workflow </b></h3>
+
+Copy version of ModelData to new state in ModelData theme.<br>
+Filter catchments within same elevation zone if numerous catchments are part of calibration and change only one of main calibration parameters at time to see the system reaction. <br>
+To save the changes in Modeldata, version must be copied. Main calibration parameters and their usage for calibration are listed below. <br>
+For validation it is useful to handle with subsystems of whole drainage net.
+<h3><b>Main calibration Parameters</b></h3>
+<b>Retention constants</b><br>
+Used to implement storage effects in catchment. Rising retention constants make discharge components slower and flatter flood wave.
+
+Main Retention constants [h] (linear memory element):
+<ul>
+<li>Surface flow (80 to 90 % of total discharge)
+<li> Interflow<br>
+Surface flow rises peak of flood and interflow varies kind of post-carriage of flood wave because of longer flow time in soil.
+</ul>
+<u>Surface flow</u><br>
+<br>
+<u>Interflow</u><br>
+Triple slower than surface flow for mountain and lowland region.<br><br>
+<u>Baseflow, Shallow and deep aquifer</u><br>
+These discharge components are not needed for calibration because of long flow times in contrast to the other discharge components (Factor 100, 10.000, 100.000).<br>
+Only in lowlands groundwater is estimated and modelled by RRM but without groundwater network only within storages in each catchments.
+<br><br>
+<b>Correction Factors</b><br>
+Climate time-series temperature and rain
+Correction factors can reflect spatial diversity in catchment: mountain or lowland. Rain is falling with higher intensity in mountain region.
+Factors for precipitation from 1.2 to 3 (multiply) are possible, expert knowledge of existing/ forecasted climate situation.
+To create special temperature curves use factor for temperature (factor is added on measured values).
+<u>Soil layer</u><br>
+
+<u>Other correction factors</u><br>
+Expert knowledge of vegetation and soil types. Not needed for calibration.<br><br>
+<b>Kalinin-Miljukov-Parameters</b><br><br>
+<u>Distribution factor C</u><br>
+<br>
+<img src=Screenshot026.gif align="center" >
+
+<br><br>
+<u>Flow time, k and Number of memory elements, n</u><br>
+K and n increases, flood wave gets broad and shallow.
+<br><br>
+n * k = flow time in strand element, defined by n memory elements, stady discharge with k as flow time of each memory element.
+Flood routing parameters should be calibrated again for next flood events. If possible a separate KALININ-MILJUKOV-METHODE should check quality of parameters.
+
+<br><br>
+<hr>
+
+ User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+
+</HTML>

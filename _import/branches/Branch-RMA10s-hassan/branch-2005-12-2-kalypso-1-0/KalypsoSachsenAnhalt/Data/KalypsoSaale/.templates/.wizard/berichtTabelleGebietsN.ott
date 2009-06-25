@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <features>Alarmstufen;Vorhersage</features>
+    <observation linktype="zml" ns1:href="Niederschlag/579011.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c1" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="Niederschlag/578430.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c2" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="Niederschlag/576520.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c3" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns4:href="Niederschlag/570210.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c4" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns5:href="Niederschlag/573010.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c5" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns6:href="Niederschlag/572890.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c6" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns7:href="Niederschlag/579205.zml" xmlns:ns7="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c7" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns8:href="Niederschlag/574210.zml" xmlns:ns8="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c8" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns9:href="Niederschlag/579015.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c9" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns10:href="Niederschlag/577570.zml" xmlns:ns10="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c10" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns11:href="Niederschlag/579405.zml" xmlns:ns11="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c11" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns12:href="Niederschlag/579712.zml" xmlns:ns12="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c12" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns13:href="Niederschlag/575500.zml" xmlns:ns13="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c13" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns14:href="Niederschlag/572115.zml" xmlns:ns14="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c14" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns15:href="Niederschlag/579070.zml" xmlns:ns15="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c15" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns16:href="Niederschlag/573090.zml" xmlns:ns16="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c16" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns17:href="Niederschlag/576610.zml" xmlns:ns17="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c17" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns18:href="Niederschlag/570500.zml" xmlns:ns18="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c18" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns19:href="Niederschlag/579610.zml" xmlns:ns19="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c19" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns20:href="Niederschlag/553061.zml" xmlns:ns20="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c20" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns21:href="Niederschlag/575700.zml" xmlns:ns21="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c21" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns22:href="Niederschlag/570930.zml" xmlns:ns22="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c22" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns23:href="Niederschlag/576470.zml" xmlns:ns23="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c23" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns24:href="Niederschlag/573110.zml" xmlns:ns24="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c24" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns25:href="Niederschlag/572010.zml" xmlns:ns25="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c25" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns26:href="Niederschlag/575400.zml" xmlns:ns26="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c26" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns27:href="Niederschlag/570270.zml" xmlns:ns27="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c27" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns28:href="Niederschlag/570330.zml" xmlns:ns28="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c28" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns29:href="Niederschlag/576900.zml" xmlns:ns29="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c29" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns30:href="Niederschlag/578410.zml" xmlns:ns30="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c30" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns31:href="Niederschlag/572920.zml" xmlns:ns31="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c31" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns32:href="Niederschlag/573360.zml" xmlns:ns32="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c32" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns33:href="Niederschlag/578420.zml" xmlns:ns33="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c33" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns34:href="Niederschlag/570810.zml" xmlns:ns34="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c34" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns35:href="Niederschlag/575660.zml" xmlns:ns35="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c35" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns36:href="Niederschlag/570000.zml" xmlns:ns36="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c36" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns37:href="Niederschlag/579045.zml" xmlns:ns37="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c37" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns38:href="Niederschlag/579085.zml" xmlns:ns38="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c38" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns39:href="Niederschlag/575240.zml" xmlns:ns39="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c39" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns40:href="Niederschlag/579620.zml" xmlns:ns40="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c40" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns41:href="Niederschlag/570910.zml" xmlns:ns41="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c41" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns42:href="Niederschlag/575110.zml" xmlns:ns42="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c42" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns43:href="Niederschlag/553050.zml" xmlns:ns43="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c43" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns44:href="Niederschlag/579305.zml" xmlns:ns44="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c44" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns45:href="Niederschlag/575710.zml" xmlns:ns45="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c45" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+</obstableview>
+

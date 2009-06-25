@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project name="EclipsePlatformContributionsBuild" default="deploy">
+
+	<property name="project" value="${workspace}/EclipsePlatformContributions" />
+	
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+
+  	<path id="compile.classpath">
+		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
+		<fileset dir="${workspace}/EclipseRCPContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+	</path>
+
+	<property name="project-name" value="EclipsePlatformContributions" />
+  
+</project>

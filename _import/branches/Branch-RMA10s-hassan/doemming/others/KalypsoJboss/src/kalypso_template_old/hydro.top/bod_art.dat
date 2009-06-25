@@ -1,0 +1,9 @@
+Bodenparameter NAM TISZA
+BOART_ID  Art Kap.    WP       FK      BFMAX     kf       BF0
+                    [mm/dm]  [mm/dm]  [mm/dm]  [mm/d]     [-] 
+su3_3_h4      no     11.0     41.0     57.0     320.     0.70
+su3_3_h3      no      8.0     29.0     39.0     320.     0.70
+st3_3_h3      no     14.0     29.0     38.0     170.     1.00
+st3_3         no     14.0     29.0     38.0     170.     1.00
+
+  

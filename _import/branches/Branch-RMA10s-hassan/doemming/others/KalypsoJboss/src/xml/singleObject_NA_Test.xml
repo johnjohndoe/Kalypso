@@ -1,0 +1,65 @@
+<?xml version = '1.0' encoding = 'UTF-8' ?>
+<theme xsi:noNamespaceSchemaLocation="../schemas/MetaDataModell_V8.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="kalypso">
+		<name>Kalypso</name>
+  <package>de.tuhh.wb.javagis.model.na</package>	
+	<description>NA-Modell</description>
+	<objectClass ID="channel">
+		<name>ChannelStrand</name>
+		<description>riversection</description>
+		<belongsToTopology ref="top_river"/>
+		<geometry>LineString</geometry>
+		<simpleProperty key="m_strandNr">
+			<name>Strand-Number</name>
+			<key>m_strandNr</key>
+			<description>String</description>
+			<type>id</type>
+		</simpleProperty>
+		<simpleProperty key="m_wcIndex">
+			<name>WaterCourseIndex</name>
+			<key>m_wcIndex</key>
+			<description>String</description>
+			<type>string</type>
+		</simpleProperty>
+		<simpleProperty key="m_qBoardfull">
+			<name>boardfull Discharchge</name>
+			<key>m_qBoardfull</key>
+			<description>String</description>
+			<type>float</type>
+		</simpleProperty>
+		<simpleProperty key="m_distribFact">
+			<name>DistributionFactor</name>
+			<key>m_distribFact</key>
+			<description>String</description>
+			<type>float</type>
+		</simpleProperty>
+		<vectorSet key="m_channelData">
+			<name>ChannelData</name>
+			<key>m_channelData</key>
+			<simpleProperty key="v_q">
+				<name>Discharge</name>
+				<key>v_q</key>
+				<type>float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kRiver">
+				<name>Storage-koeficient (kilinin-Miljukov)</name>
+				<key>v_kRiver</key>
+				<type>float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nRiver">
+				<name>Number of storageElement</name>
+				<key>v_nRiver</key>
+				<type>float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kLand">
+				<name>Storage-koeficient  Land(kilinin-Miljukov)</name>
+				<key>v_kLand</key>
+				<type>float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nLand">
+				<name>Number of storageElement Land</name>
+				<key>v_nLand</key>
+				<type>float</type>
+			</simpleProperty>
+		</vectorSet>
+	</objectClass>
+</theme>

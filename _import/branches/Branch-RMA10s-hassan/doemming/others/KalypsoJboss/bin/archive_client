@@ -1,0 +1,7 @@
+#! /bin/bash
+cd ../src/
+ tar -vzchf ~/archive/`date +%Y%b%d_%H`_Client.tgz  kalypso-client jboss_lib deploys/
+ zip -r ~/archive/`date +%Y%b%d_%H`_Client.zip      kalypso-client jboss_lib deploys/
+echo "directory archive :"
+ls -larth ~/archive
+echo "ready."

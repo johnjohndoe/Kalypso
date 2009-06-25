@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="Control">
+  <name>Control</name>
+  <description>Control-Data</description>
+  <package>de.tuhh.wb.javagis.model.control</package>
+  <objectClass ID="controlData">
+    <name>ControlData</name>
+    <description>Here ary all data for controling the simulation</description>
+    <simpleProperty key="m_startDate">
+      <name>StartDate</name>
+      <description>StartDate of Simulation [d.M.y H:m]</description>
+      <format>d.M.y H:m</format>
+      <type>java.util.Date</type>
+    </simpleProperty>
+    <simpleProperty key="m_endDate">
+      <name>EndDate</name>
+      <description>EndDate of Simulation [d.M.y H:m]</description>
+      <format>d.M.y H:m</format>
+      <type>java.util.Date</type>
+    </simpleProperty>
+    <simpleProperty key="m_timeStep">
+      <name>TimeStep</name>
+      <description>give TimeStep in [h]</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_rootNode">
+      <name>RootNode</name>
+      <description>give NodeNumber (not ID)</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_tmp">
+      <name>Temperaturfile</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_pre">
+      <name>Niederschlag</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_sch">
+      <name>Schnee</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_bof">
+      <name>Bodenfeuchte-Number</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_bsp">
+      <name>Bodenspeicher</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_gws">
+      <name>Grundwasserstand</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qgs">
+      <name>GesamtAbfluss</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qgg">
+      <name>Gesamtabfluss-Teilsgebiet</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qna">
+      <name>Overland-Flow</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qif">
+      <name>Interflow</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qvs">
+      <name>versiegelter Abfluss</name>
+      <description>Abfluss versiegelter Flaechen</description>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qbs">
+      <name>Basisabfluss</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qt1">
+      <name>Abfluss KluftGrundwasser</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qtg">
+      <name>Abfluss gesamt-KluftGrundwasser</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_qgw">
+      <name>GrundwasserAbfluss</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_kap">
+      <name>Kapilarer Aufstieg/Perkolation</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_vet">
+      <name>Evapotranspiration</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_hyd">
+      <name>Ausgabe Hydrotope</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_bil">
+      <name>Abflussbilanz ??</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_nmq">
+      <name>statistische Abflusswerte</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_spi">
+      <name>Speicherinhalt</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_sub">
+      <name>Speicherueberlauf</name>
+      <description/>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <vectorSet key="m_teilgebiete">
+      <name>Generate Results for Riverbasins </name>
+      <simpleProperty key="v_tgn">
+        <name>RiverBasinNumber</name>
+        <type>java.lang.Integer</type>
+      </simpleProperty>
+    </vectorSet>
+    <vectorSet key="m_knotenNummern">
+      <name>Generate results for Nodes</name>
+      <simpleProperty key="v_nnr">
+        <name>NodeNumber</name>
+        <type>java.lang.Integer</type>
+      </simpleProperty>
+    </vectorSet>
+    <vectorSet key="m_longTimeSim">
+      <name>shorttime-simulation-startdates</name>
+      <description>Generate results (initial-values) for shorttime-simulation</description>
+      <simpleProperty key="v_langDat">
+        <name>Discharge</name>
+        <type>java.util.Date</type>
+      </simpleProperty>
+    </vectorSet>
+  </objectClass>
+</theme>

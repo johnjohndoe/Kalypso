@@ -1,0 +1,32 @@
+#! /bin/bash
+classDir=../tmp/de/tuhh/wb/javagis/model/na
+export classDir
+
+#clean:
+./clear;
+
+# execute modules
+echo translating...
+./translate # generate java-code and xml-files
+
+# extracting java-sources
+echo generating javaSourceFiles...
+./extractJavaSource.pl ../tmp/source.java ../tmp/versionSource.java
+cp ../template/IdManagerBean.java ../src/java/de/tuhh/wb/javagis/model/
+
+ant -Dxdoclet.force=true -v
+rm ../last -r
+mkdir ../last
+cp -r ../gen-src/java/* ../last
+##cp -r ../src/de ../build/src/
+
+echo compiling
+##./compile   # generate java-classes
+
+# sort files
+##./sort
+
+# archive
+echo archive and deploy..
+##./deploy
+echo 'date' ready.

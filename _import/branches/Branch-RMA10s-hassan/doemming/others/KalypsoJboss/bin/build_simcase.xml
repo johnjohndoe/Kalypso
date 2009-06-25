@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<project name="XDoclet" default="ejb-jar" basedir="..">
+  <!-- Set up java.class.path -->
+  <path id="project.class.path">
+    <!-- LOG4J properties -->
+    <pathelement path="${basedir}\script" />
+    
+    <fileset dir="lib">
+      <include name="**/*.jar" />
+    </fileset>
+    
+    <!-- append the external classpath lastly -->
+    <pathelement path="${java.class.path}" />
+    
+  </path>
+  
+  
+  <!-- Init -->
+  <target name="init">
+    
+    <property name="lib.dir" value="lib" />
+    <property name="xdoclet.jar.path" value="${basedir}/lib/xdoclet.jar" />
+    <property name="log4j.jar.path" value="lib/log4j.jar" />
+    <property name="log4j.path" value="${basedir}/script" />
+    <property name="ant.jar.path" value="lib/ant.jar" />
+    
+    <property name="Name" value="JavaGis3" />
+    <property name="name" value="javaGis3" />    
+
+    <!-- custom binaries ... -->
+    <property name="bin.dir" value="${basedir}/bin" />
+     
+    <!-- src-dirs ... -->
+    <property name="src.dir" value="${basedir}/src" />
+    <property name="xsl.src.dir" value="${src.dir}/xsl" />
+    <property name="xml.src.dir" value="${src.dir}/xml" />
+    <property name="client.src.dir" value="${src.dir}/client" />
+
+    
+    <!-- java-template-files -->
+    <property name="java-template.dir" value="${src.dir}/template" />
+    <property name="kalypso.src.dir" value="${src.dir}/kalypso-src" />
+
+
+
+    <property name="kalypso.classes.dir" value="${basedir}/classes" />
+    <!-- temporary-dirs -->
+    <property name="tmp.dir" value="${basedir}/tmp" />
+
+    <!-- -->
+    <property name="xsl-target.dir" value="${tmp.dir}/xsl-target" />
+
+    <!-- -->    
+    <property name="java.dir" value="${tmp.dir}/src/java" />
+
+    <!-- --> 
+    <property name="generated.src.dir" value="gen-src" />
+
+    <!-- -->
+    <property name="generated.java.dir" value="${generated.src.dir}/java" />
+    
+    
+    <property name="config.dir" value="config" />
+    <property name="build.dir" value="build" />
+    <property name="dist.dir" value="dist" />
+    <property name="client.build.dir" value="${build.dir}/client" />
+
+    <property name="build.compiler" value="modern" />
+    <property name="classpath" value="" />
+
+    <property name="ejb.dir"               value="${build.dir}/ejb"/>
+    <property name="ejb.classes.dir"       value="${ejb.dir}/classes"/>
+    <property name="ejb.dd.dir"            value="${ejb.dir}/META-INF"/>
+    
+    <property name="ejb.generic.dir"       value="${ejb.dir}/generic-ejb"/>
+    <property name="ejb.generic.file"      value="${ejb.generic.dir}/${name}-ejb.jar"/>
+    
+    <!-- These are here to test the use of properties in @tags -->
+    <property name="jboss.create.table" value="true" />
+    <property name="jboss.remove.table" value="true" />
+    <property name="jboss.tuned.updates" value="true" />
+    <property name="jboss.read.only" value="false" />
+  </target>
+
+
+  <!-- Prepare -->
+  <target name="prepare" depends="init">
+
+    <mkdir dir="${build.dir}" />
+
+    <mkdir dir="${build.dir}/ejb" />
+    <mkdir dir="${build.dir}/ejb/META-INF" />
+
+    <mkdir dir="${build.dir}/web" />
+    <mkdir dir="${build.dir}/web/WEB-INF" />
+    <mkdir dir="${build.dir}/web/WEB-INF/tlds" />
+    <mkdir dir="${build.dir}/web/WEB-INF/classes" />
+
+    <mkdir dir="${build.dir}/j2ee" />
+    <mkdir dir="${build.dir}/j2ee/META-INF" />
+
+    <mkdir dir="${build.dir}/jmx" />
+
+    <mkdir dir="${dist.dir}" />
+
+    <mkdir dir="${generated.src.dir}" />
+    <mkdir dir="${generated.java.dir}" />
+    
+    <mkdir dir="${ejb.dd.dir}"/>
+    <mkdir dir="${ejb.classes.dir}"/>
+    <mkdir dir="${ejb.generic.dir}"/>
+
+
+    <mkdir dir="${xsl.src.dir}" />
+    <mkdir dir="${java.dir}" />
+    <mkdir dir="${xml.src.dir}" />
+    <mkdir dir="${xsl-target.dir}" />
+    <mkdir dir="${client.build.dir}" />
+
+  </target>
+
+  <target name="compile-client" depends="prepare">
+    <javac srcdir="${client.src.dir}"
+	   destdir="${client.build.dir}"
+	   includes="**/*.java"
+	   debug="on">
+     <classpath refid="project.class.path" />       
+    </javac>    
+    
+  </target>
+
+  <target name="prepare-java-sources" depends="prepare">
+
+    <exec executable="java"
+	  failonerror="true"
+	  output="${xsl-target.dir}/idManagerSource.java">
+      <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser com.jclark.xsl.sax.Driver"/>
+      <arg line="${xml.src.dir}/NA_SimulationCase.xml"/>
+      <arg line="${xsl.src.dir}/2idManager.xsl"/>
+    </exec>       
+
+    <exec executable="java"
+	  failonerror="true"
+	  output="${xsl-target.dir}/versionSource.java">
+      <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser com.jclark.xsl.sax.Driver"/>
+      <arg line="${xml.src.dir}/NA_SimulationCase.xml"/>
+      <arg line="${xsl.src.dir}/2versionSource.xsl"/>
+    </exec>       
+    <exec executable="java"
+	  failonerror="true"
+	  output="${xsl-target.dir}/source.java">
+      <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser com.jclark.xsl.sax.Driver"/>
+      <arg line="${xml.src.dir}/NA_SimulationCase.xml"/>
+      <arg line="${xsl.src.dir}/2source.xsl"/>
+    </exec>
+
+    <exec executable="java"
+	  failonerror="true"
+	  output="${xsl-target.dir}/vectorSets.java">
+      <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser com.jclark.xsl.sax.Driver"/>
+      <arg line="${xml.src.dir}/NA_SimulationCase.xml"/>
+      <arg line="${xsl.src.dir}/2VectorSets.xsl"/>
+    </exec>
+    
+    <!--
+  <copy todir="${xsl-target.dir}" >
+  <fileset dir="${java-template.dir}"/>
+  </copy>
+    -->
+  </target>
+  
+  <target name="seperate" depends="prepare-java-sources"> 
+    <exec executable="./extractJavaSource.pl"
+	  dir="${bin.dir}"
+	  failonerror="true"
+	  >
+      <arg line="${java.dir}/"/>
+      <arg line="${xsl-target.dir}/idManagerSource.java"/>
+      <arg line="${xsl-target.dir}/versionSource.java"/>
+      <arg line="${xsl-target.dir}/source.java"/>
+      <arg line="${xsl-target.dir}/vectorSets.java"/>
+      <!--
+      <arg line="${xsl-target.dir}/IdManagerBean.java"/>
+	
+      <arg line="${xsl-target.dir}/VersionLocal.java"/>
+
+      <arg line="${xsl-target.dir}/ObjectLocalHome.java"/>
+      <arg line="${xsl-target.dir}/RelationLocalHome.java"/>
+      <arg line="${xsl-target.dir}/ElementLocalHome.java"/>
+
+      <arg line="${xsl-target.dir}/ObjectLocal.java"/>
+      <arg line="${xsl-target.dir}/RelationLocal.java"/>
+      <arg line="${xsl-target.dir}/ElementLocal.java"/>
+
+      <arg line="${xsl-target.dir}/ObjectSession.java"/>
+      <arg line="${xsl-target.dir}/RelationSession.java"/>
+      <arg line="${xsl-target.dir}/ElementSession.java"/>
+
+      <arg line="${xsl-target.dir}/GisTransferObject.java"/>
+      <arg line="${xsl-target.dir}/Tools.java"/>
+-->
+    </exec>
+    <copy todir="${java.dir}" >
+      <fileset dir="${kalypso.src.dir}"/>
+<!--      <fileset dir="${kalypso1.src.dir}"/>
+      <fileset dir="${kalypso2.src.dir}"/>
+      <fileset dir="${kalypso3.src.dir}"/>
+-->
+    </copy>
+  </target>
+  
+  <target name="correctPrimKey" depends="compile-ejbs">
+    <!--    
+  <exec executable="./correctPrimKey.pl"
+    dir="${bin.dir}"
+    failonerror="true"
+    output="${tmp.dir}/ejb-jar.xml"
+    >
+  <arg line="${basedir}/${ejb.dd.dir}/ejb-jar.xml"/>
+  </exec>
+    
+  <exec executable="xmllint"
+    failonerror="true"
+	  output="${basedir}/${ejb.dd.dir}/ejb-jar.xml"
+    >
+  <arg line="format"/>
+  <arg line="${tmp.dir}/ejb-jar.xml"/>
+  </exec>
+    -->  
+  </target>
+  <!-- Run EJBDoclet -->
+  <target name="ejbdoclet" depends="seperate">
+    <taskdef name="ejbdoclet"
+	     classname="xdoclet.ejb.EjbDocletTask" classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path}"
+	     />
+    
+    <ejbdoclet
+	       sourcepath="${java.dir};${log4j.path}"
+	       destdir="${generated.java.dir}" 
+	       classpathref="project.class.path"
+	       excludedtags="@version,@author"
+	       ejbspec="2.0"
+	       force="${xdoclet.force}">
+      <!-- 
+      destdir="${generated.java.dir}" 
+      where to put generated files 
+      -->      
+      <!--
+      It's good practice to put interfaces in a separate "interfaces"
+      package than in EJB bean implementations, but if you don't like it
+      or want to apply another package naming convention, just remove the
+      following like add as many <packageSubstitution/> as you want to
+      configure it.
+      -->
+      <packageSubstitution packages="ejb" substituteWith="interfaces"/>
+      
+      <fileset dir="${java.dir}">
+	<include name="de/**/*Bean.java" />
+	<!--
+      <include name="test/ejb/cmr/*Bean.java" />
+      <include name="test/ejb/jdo/*.java" />
+      <exclude name="test/ejb/Base*" />
+      <exclude name="test/ejb/SecurityOfficerBean.java" />
+	-->
+      </fileset>
+      
+      <localinterface/>
+      <localhomeinterface/>
+      <remoteinterface/> 
+      <homeinterface /> 
+
+<!--      <dataobject/> -->
+
+<!--      <utilobject/>  -->
+      <!-- <entitypk/>   -->
+      <entitycmp>
+	<!--packageSubstitution packages="ejb" substituteWith="ejb.impl"/> -->
+	<!--      <packageSubstitution packages="ejb.cmr" substituteWith="ejb.cmr.impl"/> -->
+      </entitycmp>
+      <!--         <entitybmp/> -->
+      <dao>
+	<packageSubstitution packages="ejb" substituteWith="dao"/>
+      </dao>
+      <session/>
+
+      <deploymentdescriptor destdir="${ejb.dd.dir}" validatexml="true" />
+<!--
+
+      <jboss
+	     version="3.0"
+	     xmlencoding="UTF-8"
+	     destdir="${ejb.dd.dir}"
+	     validatexml="false"
+	     datasource="java:/OracleDS"  
+	     typemapping="Oracle8"
+
+	     />
+-->
+
+      <jboss
+	     version="3.0"
+	     xmlencoding="UTF-8"
+	     destdir="${ejb.dd.dir}"
+	     validatexml="false"
+            typemapping="Hypersonic SQL"
+	     />
+
+<!--
+
+      <weblogic
+		version="6.1"
+		xmlencoding="UTF-8"
+		destdir="${ejb.dd.dir}"
+		validatexml="true"
+		datasource="xdoclet.samples"
+		mergedir="${src.dir}"
+		/>
+      <jrun
+            version="4.0"
+            xmlencoding="UTF-8"
+            destdir="${ejb.dd.dir}"
+            validatexml="true"
+	    />
+    -->  
+         <!--
+         <webSphere destdir="${build.dir}/ejb/META-INF" />
+         <orion/>
+         -->
+
+         <apachesoap destdir="${build.dir}/web" />
+
+         <!--
+         Have struts form objects generated based on entity beans'
+         data objects.  Will require struts.jar to compile. -->
+         <strutsform />
+
+
+         <!--
+         Have a mapping.xml file generated for castor classes.
+         -->
+         <castormapping destdir="${build.dir}/ejb/classes" validatexml="false" />
+         <!-- -->
+
+      </ejbdoclet>
+
+   </target>
+
+
+   <!-- Run WebDoclet -->
+   <target name="webdoclet" depends="prepare">
+
+      <taskdef name="webdoclet"
+               classname="xdoclet.web.WebDocletTask" classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path}"
+      />
+
+      <webdoclet
+         sourcepath="${java.dir}"
+         destdir="${generated.java.dir}"
+         classpathref="project.class.path"
+         force="${xdoclet.force}">
+
+         <fileset dir="${java.dir}">
+            <include name="**/*Servlet.java" />
+            <include name="**/*Filter.java" />
+            <include name="**/*Tag.java" />
+            <include name="**/*Action.java" />
+         </fileset>
+
+         <deploymentdescriptor servletspec="2.3" destdir="${build.dir}/web/WEB-INF" >
+            <taglib uri="http://java.sun.com/jstl/ea/core" location="/WEB-INF/c.tld" />
+         </deploymentdescriptor>
+
+         <jsptaglib jspversion="1.2" destdir="${build.dir}/web/WEB-INF/tlds"
+            shortname="j2ee" validateXml="false"
+         />
+         <!-- -->
+         <jbosswebxml destdir="${build.dir}/web/WEB-INF" />
+
+         <jrunwebxml destdir="${build.dir}/web/WEB-INF"  mergedir="${src.dir}" />
+
+         <!-- -->
+         <!-- generate WebWork stuff, uncomment it if you want to run it.
+         -->
+         <webWorkConfigProperties />
+         <webWorkActionDocs javadocdir="api" mergedir="${src.dir}"/>
+
+      </webdoclet>
+
+   </target>
+
+   <target name="jmxdoclet" depends="prepare">
+
+      <taskdef name="jmxdoclet"
+               classname="xdoclet.jmx.JMXDocletTask" classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path}"
+      />
+
+      <jmxdoclet
+         sourcepath="${java.dir}"
+         destdir="${generated.java.dir}"
+         classpathref="project.class.path"
+         force="${xdoclet.force}">
+
+         <fileset dir="${java.dir}">
+	 <include name="test/jmx/**/*.java" />
+         </fileset>
+
+         <!-- Create the {0}MBean interface for the MBean -->
+         <mbeaninterface mergedir="${src.dir}"/>
+
+         <!-- Create the OpenJMX specific description adaptor class for the MBean -->
+         <openjmxDescription />
+
+         <!--create the jbossmx xml descriptor for the mbean-->
+         <jbossxmbean/>
+
+         <!--create the jboss xml service template for the mbean-->
+         <jbossXmlServiceTemplate/>
+      </jmxdoclet>
+
+   </target>
+
+  <!-- Compile -->
+  <!--   <target name="compile" depends="compile-ejbs,webdoclet,jmxdoclet"> -->
+  <target name="compile" depends="compile-ejbs"> 
+    <!-- Compile web classes -->
+    <javac srcdir="${java.dir};${generated.java.dir}"
+	   destdir="${build.dir}/web/WEB-INF/classes"
+	   includes="test/web/*.java"
+	   debug="on">
+      
+      <classpath refid="project.class.path" />
+      </javac>
+    
+    <javac srcdir="${java.dir};${generated.java.dir}"
+	   destdir="${build.dir}/jmx"
+	   includes="test/jmx/*.java"
+	   debug="on">
+
+      <classpath refid="project.class.path" />
+    </javac>
+  </target>
+  
+  <target name="compile-ejbs" depends="ejbdoclet">
+    <!-- Compile EJBs -->
+    <!--      <javac srcdir="${java.dir};${kalypso.src.dir};${generated.java.dir}" -->
+    <javac srcdir="${java.dir};${generated.java.dir}"
+	   destdir="${ejb.classes.dir}"
+	   debug="on">
+      <!--
+      includes="**/*.java"
+      includes="test/ejb/*.java,test/interfaces/*.java,test/struts/*.java,test/ejb/cmr/*.java,test/dao/*.java"
+      -->
+      <classpath refid="project.class.path" />
+    </javac>
+  </target>
+  
+  <!-- Create EJB-JAR file -->
+  <target name="ejb-jar" depends="compile-ejbs,correctPrimKey">
+    <jar jarfile="${ejb.generic.file}">
+      <fileset dir="${kalypso.classes.dir}" />
+      <fileset dir="${ejb.classes.dir}" />
+      <fileset dir="${ejb.dir}" includes="META-INF/**" />
+    </jar>
+  </target>
+  
+  <!-- Create EJB-JAR file -->
+  <target name="direct-ejb-jar" depends="init">
+    <jar jarfile="${ejb.generic.file}">
+      <fileset dir="${ejb.classes.dir}" />
+      <fileset dir="${ejb.dir}" includes="META-INF/**" />
+    </jar>
+  </target>
+
+   <target name="weblogic-ejb-jar" depends="ejb-jar">
+      <java classname="weblogic.ejbc20" fork="yes">
+         <arg value="${ejb.generic.file}"/>
+         <arg value="${ejb.weblogic.file}"/>
+      </java>
+   </target>
+
+
+   <!-- Create WAR file -->
+   <target name="web-war" depends="compile">
+
+      <!-- Copy JSPs -->
+      <copy todir="${build.dir}/web">
+          <fileset dir="${web.dir}"/>
+      </copy>
+
+      <!-- create WAR file -->
+      <jar jarfile="${build.dir}/j2ee/${name}-web.war" basedir="${build.dir}/web"/>
+
+   </target>
+
+
+   <!-- Create EAR file -->
+   <target name="j2ee-ear" depends="web-war,ejb-jar,appxml">
+
+      <!-- Copy EAR file -->
+      <jar jarfile="${dist.dir}/${name}.ear">
+        <fileset dir="${build.dir}/j2ee" />
+        <fileset dir="${ejb.generic.dir}" />
+      </jar>
+
+   </target>
+
+
+   <!-- Deploy to ... -->
+   <target name="deploy" depends="j2ee-ear">
+
+
+   </target>
+
+
+   <!-- Clean everything -->
+   <target name="clean" depends="init">
+
+      <delete dir="${build.dir}" />
+      <delete dir="${dist.dir}" />
+      <delete dir="${generated.src.dir}" />
+
+   </target>
+
+   <target name="clean-build" depends="clean, main" />
+
+   <!-- Main -->
+   <target name="main" depends="deploy" />
+
+   <!-- ========================================= -->
+   <!-- verify ejb-jar files using jboss verifier -->
+   <!-- ========================================= -->
+   <target name="verify" depends="ejb-jar">
+     <java classname = "org.jboss.verifier.Main" fork="true" failonerror="true">
+        <classpath refid = "project.class.path"/>
+         <arg value = "${build.dir}/j2ee/${name}-ejb.jar"/>
+     </java>
+   </target>
+
+   <!-- ========================================= -->
+   <!-- generate todo-list from on @todo tags -->
+   <!-- ========================================= -->
+   <target name="todo" depends="init">
+
+      <taskdef
+         name="document"
+         classname="xdoclet.doc.DocumentDocletTask"
+         classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path}"
+      />
+
+      <document
+         sourcepath="${src.dir}"
+         destdir="${build.dir}/todo"
+         classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path};${java.class.path}"
+      >
+         <fileset dir="${src.dir}">
+            <include name="**/*.java" />
+         </fileset>
+
+         <info
+            header="Todo list"
+            projectname="${Name}"
+            tag="todo"
+         />
+
+      </document>
+   </target>
+
+
+   <!-- ================================================= -->
+   <!-- Example usage of the AntPropertyTask Creates an   -->
+   <!-- application.xml file from a template and replaces -->
+   <!-- all occurrences of                                -->
+   <!-- <XDtAnt:property name="some.ant.property"/>       -->
+   <!-- with the specified ant property.                  -->
+   <!-- ================================================= -->
+   <target name="appxml" depends="init">
+      <property name="app.display.name" value="Samples"/>
+      <property name="app.description" value="Sample application for XDoclet"/>
+      <property name="app.ejbjar.name" value="samples-ejb.jar"/>
+      <property name="app.war.name" value="samples-web.war"/>
+      <property name="app.contextroot" value="/samples"/>
+
+      <taskdef
+         name="replacecopy"
+         classname="xdoclet.ant.ReplaceCopy"
+         classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path}"
+      />
+      <replacecopy
+         file="config/application/application.xml"
+         todir="${build.dir}/j2ee/META-INF"
+      />
+   </target>
+
+
+</project>

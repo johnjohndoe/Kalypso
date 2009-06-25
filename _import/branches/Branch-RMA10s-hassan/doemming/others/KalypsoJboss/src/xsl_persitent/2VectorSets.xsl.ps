@@ -1,0 +1,1208 @@
+%!PS-Adobe-3.0
+%%Title: 2VectorSets.xsl
+%%For: javagis
+%%Creator: a2ps version 4.13
+%%CreationDate: Thu Nov 14 14:28:10 2002
+%%BoundingBox: 24 24 571 818
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 4
+%%PageOrder: Ascend
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%Requirements: Tumble Duplex 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Define these in case they're not in the FontInfo (also, here
+    % they're easier to get to.
+    /UnderlinePosition 1 def
+    /UnderlineThickness 1 def
+    
+    % Get the underline position and thickness if they're defined.
+    currentdict /FontInfo known {
+      FontInfo
+      
+      dup /UnderlinePosition known {
+	dup /UnderlinePosition get
+	0 exch FontMatrix transform exch pop
+	/UnderlinePosition exch def
+      } if
+      
+      dup /UnderlineThickness known {
+	/UnderlineThickness get
+	0 exch FontMatrix transform exch pop
+	/UnderlineThickness exch def
+      } if
+      
+    } if
+    currentdict 
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 595 def
+/sw 842 def
+/llx 24 def
+/urx 818 def
+/ury 571 def
+/lly 24 def
+/#copies 1 def
+%% Pagedevice definitions:
+countdictstack
+% Push our own mark, since there can be several PS marks pushed depending
+% where the failure really occured.
+/a2ps_mark
+{
+%%BeginFeature: *Tumble False
+  (<<) cvx exec /Tumble (false) cvx exec (>>) cvx exec setpagedevice
+%%EndFeature
+%%BeginFeature: *Duplex True
+  (<<) cvx exec /Duplex (true) cvx exec (>>) cvx exec setpagedevice
+%%EndFeature
+} stopped
+% My cleartomark
+{ /a2ps_mark eq { exit } if } loop
+countdictstack exch sub dup 0 gt
+{
+  { end } repeat
+}{
+  pop
+} ifelse
+/th 15.000000 def
+/fnfs 11 def
+/bfs 8.005733 def
+/cw 4.803440 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   517.970895 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?xml version="1.0" encoding="utf-8"?>) p n
+(<xsl:stylesheet  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">) N
+(  <xsl:output method="text"/>) N
+(  <xsl:variable name="package" select="/theme/package"/>) N
+(  ) N
+(  <xsl:template match="/theme">) N
+(    <xsl:variable name="themeName">) N
+(      <xsl:call-template name="toUpperCase">) N
+(        <xsl:with-param name="word" select="@ID"/>) N
+(      </xsl:call-template>) N
+(    </xsl:variable>) N
+(    <xsl:for-each select="/theme/child::*[self::objectClass or self::relationCla) N
+(ss]">) N
+(      <xsl:variable name="myObjectClass" select="@ID"/>) N
+(      <xsl:variable name="MyObjectClass">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="$myObjectClass"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+(      <xsl:variable name="MyObjectClassName">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="name"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+() N
+(      <xsl:for-each select=".//vectorSet">) N
+(        <xsl:variable name="myVectorSet" select="@key"/>) N
+(        <xsl:variable name="MyVectorSet">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="$myVectorSet"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        ) N
+(        package <xsl:value-of select="$package"/>.vectorsets;) N
+() N
+(        import java.lang.*;) N
+(        import java.io.PrintWriter;) N
+(        import java.util.Vector;) N
+(        import de.tuhh.wb.javagis.model.Tools;    ) N
+(        import de.tuhh.wb.javagis.xml.GisTransferObject;    ) N
+(        import de.tuhh.wb.javagis.xml.VectorSet;    ) N
+(        import java.text.ParseException;) N
+(        import java.text.SimpleDateFormat;) N
+(        import java.text.DateFormat;) N
+(        import java.util.Date;) N
+() N
+(        <xsl:choose>) N
+(          <xsl:when test="local-name\(..\)='vectorSet'">) N
+(            <xsl:variable name="Agregated">) N
+(              <xsl:value-of select="$MyObjectClass"/><xsl:call-template name="to) N
+(UpperCase"><xsl:with-param name="word" select="../@key"/></xsl:call-template><xs) N
+(l:value-of select="$MyVectorSet"/>) N
+(            </xsl:variable>) N
+(            //agregated Class) N
+(            public class <xsl:value-of select="$Agregated"/> ) N
+(          </xsl:when>) N
+(          <xsl:otherwise>) N
+(            public class <xsl:value-of select="$MyObjectClass"/><xsl:value-of se) N
+(lect="$MyVectorSet"/>) N
+(          </xsl:otherwise>) N
+(        </xsl:choose>) N
+(        implements de.tuhh.wb.javagis.model.GisInterfaceTableModel,) N
+(        de.tuhh.wb.javagis.model.GisToXmlConvertable,) N
+(        java.io.Serializable) N
+(2VectorSets.xsl) (Page 1/8) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        {) p n
+(          public final static String[] simplePropertyKeys={) N
+(          <xsl:for-each select="simpleProperty">) N
+(           "<xsl:value-of select="@key"/>"<xsl:if test="position\(\) != last\(\)">,<) N
+(/xsl:if>) N
+(          </xsl:for-each>};) N
+(          public final static String[] simplePropertyNames={) N
+(          <xsl:for-each select="simpleProperty">) N
+(           "<xsl:value-of select="name"/>"<xsl:if test="position\(\) != last\(\)">,<) N
+(/xsl:if>) N
+(          </xsl:for-each>};) N
+(          public final static String[] simplePropertyDescriptions={) N
+(          <xsl:for-each select="simpleProperty">) N
+(           "<xsl:value-of select="description"/>"<xsl:if test="position\(\) != las) N
+(t\(\)">,</xsl:if>) N
+(          </xsl:for-each>};) N
+(          public final static Class[] simplePropertyClasses={) N
+(          <xsl:for-each select="simpleProperty">) N
+(           <xsl:value-of select="type"/>.class<xsl:if test="position\(\) != last\(\)) N
+(">,</xsl:if>) N
+(          </xsl:for-each>};                     ) N
+() N
+(           public final static String[] simplePropertyFormats={) N
+(           <xsl:for-each select="simpleProperty">) N
+(             <xsl:choose>) N
+(               <xsl:when test="format">) N
+(                 "<xsl:value-of select="format"/>"                            ) N
+(               </xsl:when>) N
+(               <xsl:otherwise>) N
+(                 "d.M.y H:m:s") N
+(               </xsl:otherwise>) N
+(             </xsl:choose>) N
+(             <xsl:if test="position\(\) != last\(\)">,</xsl:if>             ) N
+(           </xsl:for-each>};) N
+(          ) N
+(          public Vector myData;) N
+() N
+(          // agregated vectorSets:) N
+(          <xsl:for-each select="vectorSet">) N
+(            public Vector <xsl:value-of select="@key"/>Agregated;) N
+(          </xsl:for-each>) N
+() N
+() N
+(        <xsl:choose>) N
+(          <xsl:when test="local-name\(..\)='vectorSet'">) N
+(            <xsl:variable name="Agregated">) N
+(              <xsl:value-of select="$MyObjectClass"/><xsl:call-template name="to) N
+(UpperCase"><xsl:with-param name="word" select="../@key"/></xsl:call-template><xs) N
+(l:value-of select="$MyVectorSet"/>) N
+(            </xsl:variable>) N
+(            //agregated Class) N
+(            public <xsl:value-of select="$Agregated"/>\(\)) N
+(          </xsl:when>) N
+(          <xsl:otherwise>) N
+(            public <xsl:value-of select="$MyObjectClass"/><xsl:value-of select=") N
+($MyVectorSet"/>\(\)) N
+(          </xsl:otherwise>) N
+(        </xsl:choose>) N
+(        {) N
+(           this.myData=new Vector\(\);) N
+(           <xsl:for-each select="vectorSet">) N
+(             this.<xsl:value-of select="@key"/>Agregated=new Vector\(\);) N
+(           </xsl:for-each>) N
+() N
+(2VectorSets.xsl) (Page 2/8) () title
+border
+grestore
+(2VectorSets.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(          } ) p n
+() N
+(          public int getColumnCount\(\)) N
+(          {) N
+(           return <xsl:value-of select="count\(simpleProperty\)"/>+1;) N
+(          }) N
+() N
+(          public  int getRowCount\(\)) N
+(          {) N
+(           return myData.size\(\);) N
+(          }) N
+() N
+(          public String getColumnName\(int col\)) N
+(          {) N
+(           if\(col==0\)) N
+(            return "No.";) N
+(           else) N
+(            return simplePropertyNames[col-1];) N
+(          }) N
+() N
+(          public String getDescription\(int col\)) N
+(          {) N
+(           if\(col==0\)) N
+(            return "Counter";) N
+(           else) N
+(            return simplePropertyDescriptions[col-1];) N
+(          }) N
+() N
+(          public  Class getColumnClass\(int col\)) N
+(          {) N
+(           if\(col==0\)) N
+(            return Integer.class;) N
+(           else) N
+(           {) N
+(            Class propClass=simplePropertyClasses[col-1];) N
+(            if\(propClass==java.util.Date.class\)) N
+(             return String.class;) N
+(            else) N
+() S 8 T (     return propClass;) N
+(           }) N
+(          }) N
+() N
+(          public  boolean isCellEditable\(int row,int col\)) N
+(          {) N
+(           return \(col>0\);) N
+(          }) N
+() N
+(          public  Object getValueAt\(int row,int col\)) N
+(          {) N
+(           if\(col==0\)) N
+(            return new Integer\(row\);) N
+(           else) N
+(           {) N
+(            Vector rowData=\(Vector\)myData.elementAt\(row\);) N
+(            Object value=rowData.elementAt\(col-1\);) N
+(            if\(value instanceof java.util.Date\)) N
+(            {) N
+(             DateFormat dateFormat=new SimpleDateFormat\(simplePropertyFormats[co) N
+(l-1]\);) N
+(             return dateFormat.format\(\(Date\)value\);) N
+(            }) N
+(            else) N
+(             return value;) N
+(           }) N
+(2VectorSets.xsl) (Page 3/8) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(          }) p n
+() N
+(          public  void setValueAt\(Object value,int row,int col\)) N
+(          {) N
+(           Vector rowData=\(Vector\)myData.elementAt\(row\);) N
+(           if\(simplePropertyClasses[col-1]==java.util.Date.class <![CDATA[ && ]]) N
+(> value instanceof String\)) N
+(           {) N
+(            try) N
+(            {) N
+(             DateFormat dateFormat=new SimpleDateFormat\(simplePropertyFormats[co) N
+(l-1]\);) N
+(             Date date=dateFormat.parse\(\(String\)value\);) N
+(             rowData.set\(col-1,date\);) N
+(            }) N
+(            catch\(ParseException e\)) N
+(            {) N
+(             System.out.println\("wrong DateFormat, couldn't parse"\);) N
+(            }) N
+(           }) N
+(           else) N
+(            rowData.set\(col-1,value\);) N
+(          }) N
+() N
+(          public  String getDescription\(\)) N
+(          {) N
+(           return "This is a VectorSet from a \\"<xsl:value-of select="$MyObjectC) N
+(lassName"/>\\"-object:\\n <xsl:value-of select="description"/>";) N
+(          }) N
+() N
+(          public  String getName\(\)) N
+(          {) N
+(           return "<xsl:value-of select="name"/>";) N
+(          }) N
+(          ) N
+(          // am Anfang der Liste neues Object erzeugen) N
+(          public  void createNewObject\(\)) N
+(          {) N
+(           myData.insertElementAt\(newRow\(\),0\);) N
+(           <xsl:for-each select="vectorSet">) N
+(             <xsl:variable name="Agregated">) N
+(               <xsl:value-of select="$MyObjectClass"/><xsl:value-of select="$MyV) N
+(ectorSet"/><xsl:call-template name="toUpperCase"><xsl:with-param name="word" sel) N
+(ect="@key"/></xsl:call-template>               ) N
+(             </xsl:variable>) N
+(             <xsl:value-of select="@key"/>Agregated.insertElementAt\(new <xsl:val) N
+(ue-of select="$Agregated"/>\(\),0\);) N
+(           </xsl:for-each>) N
+() N
+(          }) N
+(          ) N
+(          // am Ende der Liste neues Object erzeugen) N
+(          public  void appendNewObject\(\)) N
+(          {) N
+(           myData.add\(newRow\(\)\);) N
+(           <xsl:for-each select="vectorSet">) N
+(             <xsl:variable name="Agregated">) N
+(               <xsl:value-of select="$MyObjectClass"/><xsl:value-of select="$MyV) N
+(ectorSet"/><xsl:call-template name="toUpperCase"><xsl:with-param name="word" sel) N
+(ect="@key"/></xsl:call-template>               ) N
+(             </xsl:variable>) N
+(             <xsl:value-of select="@key"/>Agregated.add\(new <xsl:value-of select) N
+(="$Agregated"/>\(\)\);) N
+(           </xsl:for-each>) N
+(2VectorSets.xsl) (Page 4/8) () title
+border
+grestore
+(2VectorSets.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5-6) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(          }) N
+(          ) N
+(          public  void insertNewObjectAt\(int position\)) N
+(          {) N
+(           myData.insertElementAt\(newRow\(\),position\);) N
+(           <xsl:for-each select="vectorSet">) N
+(             <xsl:variable name="Agregated">) N
+(               <xsl:value-of select="$MyObjectClass"/><xsl:value-of select="$MyV) N
+(ectorSet"/><xsl:call-template name="toUpperCase"><xsl:with-param name="word" sel) N
+(ect="@key"/></xsl:call-template>               ) N
+(             </xsl:variable>) N
+(             <xsl:value-of select="@key"/>Agregated.insertElementAt\(new <xsl:val) N
+(ue-of select="$Agregated"/>\(\),position\);) N
+(           </xsl:for-each>) N
+(          }) N
+(        ) N
+(          public  void removeObject\(int position\)) N
+(          {) N
+(           myData.removeElementAt\(position\);) N
+(           <xsl:for-each select="vectorSet">) N
+(             <xsl:value-of select="@key"/>Agregated.removeElementAt\(position\);) N
+(           </xsl:for-each>) N
+(          }) N
+(          ) N
+(          // von "startIndex" an soundsoviele Objecte loeschen) N
+(          public  void removeObjects\(int startIndex, int number\)) N
+(          {) N
+(           for\(int i=0;i<![CDATA[ < ]]>number;i++\)) N
+(           {) N
+(            myData.removeElementAt\(startIndex\);) N
+(            <xsl:for-each select="vectorSet">) N
+(              <xsl:value-of select="@key"/>Agregated.removeElementAt\(startIndex\)) N
+(;) N
+(            </xsl:for-each>) N
+(           }) N
+(          }) N
+() N
+(           private Vector newRow\(\)) N
+(           {) N
+(            Vector newRow=new Vector\(\);) N
+(            <xsl:for-each select="simpleProperty">) N
+(              newRow.add\(null\); ) N
+(            </xsl:for-each>) N
+(            return newRow;) N
+(           }) N
+() N
+(            /*) N
+(            is never called, conversion of date not implemented also) N
+(            public void setSimplePropertyOfLastRow\(String propKey,String value\)) N
+(            {) N
+(             Vector lastRow=\(Vector\)myData.lastElement\(\);) N
+(             <xsl:for-each select="simpleProperty">) N
+(               if\("<xsl:value-of select="@key"/>".equals\(propKey\)\)) N
+(                lastRow.setElementAt\(new <xsl:value-of select="type"/>\(value\),<x) N
+(sl:value-of  select="position\(\)"/>\);) N
+(             </xsl:for-each>) N
+(             }) N
+(             */) N
+(             ) N
+(             private Long date2Millis\(Object date\)) N
+(             {) N
+(              if\(date==null\)) N
+(               return null;) N
+(2VectorSets.xsl) (Page 5/8) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(              else) p n
+(              {) N
+(               java.util.GregorianCalendar calendar=new java.util.GregorianCalen) N
+(dar\(\);) N
+(               calendar.setTime\(\(Date\)date\);) N
+(               return new Long\(calendar.getTimeInMillis\(\)\);) N
+(              }) N
+(             }) N
+() N
+(            public void toXml\(PrintWriter out\)) N
+(            {) N
+(             Tools.genXmlTag\(out,"v","key","<xsl:value-of select="$myVectorSet"/) N
+(>"\);) N
+() N
+(             for\(int row=0;row<![CDATA[ < ]]>myData.size\(\);row++\)) N
+(             {) N
+(              Vector rowData=\(Vector\)myData.elementAt\(row\);) N
+(              Object[] simpleProps=) N
+(              {) N
+(               <xsl:for-each select="simpleProperty">) N
+(                 <xsl:choose>) N
+(                   <xsl:when test="type='java.util.Date'">) N
+(                     date2Millis\(rowData.elementAt\(<xsl:value-of select="positio) N
+(n\(\)-1"/>\)\)) N
+(                   </xsl:when>) N
+(                   <xsl:otherwise>) N
+(                     rowData.elementAt\(<xsl:value-of select="position\(\)-1"/>\)) N
+(                   </xsl:otherwise>) N
+(                 </xsl:choose>) N
+(                 <xsl:if test="position\(\) != last\(\)">,</xsl:if>) N
+(               </xsl:for-each>};) N
+(               Tools.genXmlOpenTag\(out,"v_row",simplePropertyKeys,simpleProps\);) N
+() N
+(               <xsl:for-each select="vectorSet">) N
+(                 <xsl:variable name="Agregated">) N
+(                   <xsl:value-of select="$MyObjectClass"/><xsl:value-of select=") N
+($MyVectorSet"/><xsl:call-template name="toUpperCase"><xsl:with-param name="word") N
+( select="@key"/></xsl:call-template>               ) N
+(                 </xsl:variable>) N
+(                 Tools.genXmlTag\(out,"aggregated"\);) N
+(                 \(\(de.tuhh.wb.javagis.model.GisToXmlConvertable\)<xsl:value-of se) N
+(lect="@key"/>Agregated.elementAt\(row\)\).toXml\(out\);) N
+(                 Tools.genXmlTag\(out,"/aggregated"\);) N
+(               </xsl:for-each>) N
+(              Tools.genXmlTag\(out,"/v_row"\);) N
+(              }) N
+(             Tools.genXmlTag\(out,"/v"\);) N
+(            }) N
+() N
+(               public boolean hasVectorSets\(\)) N
+(               {) N
+(                return \(<xsl:value-of select="count\(vectorSet\)"/><![CDATA[ > ]]>) N
+(0\);) N
+(               }) N
+() N
+(               public Vector getVectorSetTableModels\(int row\)) N
+(               {) N
+(                Vector result=new Vector\(\);) N
+(                <xsl:for-each select="vectorSet">) N
+(                  result.add\(<xsl:value-of select="@key"/>Agregated.elementAt\(ro) N
+(w\)\);) N
+(                </xsl:for-each>) N
+(                return result;) N
+(               }) N
+(2VectorSets.xsl) (Page 6/8) () title
+border
+grestore
+(2VectorSets.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7-8) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(                public void loadFromGisTransferObject\(GisTransferObject gto\)) N
+(                {) N
+(                 VectorSet vectorSet=gto.getVectorSet\("<xsl:value-of select="@ke) N
+(y"/>"\);) N
+(                 if\(vectorSet!=null\) loadFromVectorSetTransferObject\(vectorSet\);) N
+(                }) N
+( ) N
+(                public void loadFromVectorSetTransferObject\(VectorSet vectorSet\)) N
+(                {) N
+(                String value;) N
+(                Vector aggregatedVectorSets;) N
+(                VectorSet aggregatedVectorSet;) N
+(                java.util.GregorianCalendar calendar=new java.util.GregorianCale) N
+(ndar\(\);) N
+(                for\(int row=0;row<![CDATA[ < ]]>vectorSet.size\(\);row++\)) N
+(                 {) N
+(                  // create new Row) N
+(                  appendNewObject\(\);) N
+(                  // getRow) N
+(                  int lastRow=getRowCount\(\)-1;) N
+(                  // simpleProperties:) N
+(                  <xsl:for-each select="simpleProperty">) N
+(                    value=vectorSet.getSimpleProperty\("<xsl:value-of select="@ke) N
+(y"/>",row\);) N
+(                    if\(value!=null\)) N
+(                    {) N
+(                    <xsl:choose>) N
+(                      <xsl:when test="type='java.util.Date'">) N
+(                        try) N
+(                        {) N
+(                        calendar.setTimeInMillis\(java.lang.Long.parseLong\(value\)) N
+(\);) N
+(                        Object valueObject=\(Object\)calendar.getTime\(\);) N
+(                        setValueAt\(valueObject,lastRow,<xsl:value-of select="pos) N
+(ition\(\)"/>\);) N
+(                        }) N
+(                        catch\(Exception e\)) N
+(                        {) N
+(                         System.out.println\("problem parsing date \(not in longfo) N
+(rmat?\)"\);) N
+(                         System.out.println\(e.getMessage\(\)\);) N
+(                        }) N
+(                      </xsl:when>) N
+(                      <xsl:otherwise>) N
+(                         Object valueObject=\(Object\)new <xsl:value-of select="ty) N
+(pe"/>\(value\);) N
+(                         setValueAt\(valueObject,lastRow,<xsl:value-of select="po) N
+(sition\(\)"/>\);) N
+(                      </xsl:otherwise>) N
+(                    </xsl:choose>) N
+() N
+(                    }) N
+(                  </xsl:for-each>) N
+() N
+() N
+(                  <xsl:if test="vectorSet">) N
+(                    aggregatedVectorSets=getVectorSetTableModels\(row\);) N
+(                  </xsl:if>) N
+(                  // vectorSets:) N
+(                  <xsl:for-each select="vectorSet">) N
+(                    <xsl:variable name="Agregated">) N
+(                      <xsl:value-of select="$MyObjectClass"/><xsl:value-of selec) N
+(t="$MyVectorSet"/><xsl:call-template name="toUpperCase"><xsl:with-param name="wo) N
+(2VectorSets.xsl) (Page 7/8) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(rd" select="@key"/></xsl:call-template>               ) p n
+(                    </xsl:variable>) N
+(                    aggregatedVectorSet=vectorSet.getVectorSet\("<xsl:value-of se) N
+(lect="@key"/>",row\);) N
+(                    if\(aggregatedVectorSet!=null\)) N
+(                     \(\(<xsl:value-of select="$Agregated"/>\)aggregatedVectorSets.) N
+(elementAt\(<xsl:value-of select="position\(\)-1"/>\)\).loadFromVectorSetTransferObjec) N
+(t\(aggregatedVectorSet\);) N
+() N
+(                  </xsl:for-each>) N
+(                  }) N
+(             }) N
+(          }) N
+(        </xsl:for-each>) N
+(      </xsl:for-each>) N
+(            ) N
+(       </xsl:template>) N
+(       ) N
+(       <xsl:template name="toUpperCase">) N
+(         <xsl:param name="word"/>) N
+(         <xsl:value-of select="translate\(substring\($word,1,1\),'abcdefghijklmnopq) N
+(rstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'\)" />) N
+(         <xsl:value-of select="substring\($word,2\)"/>) N
+(       </xsl:template>) N
+(       ) N
+(     </xsl:stylesheet>) N
+(     ) S
+(2VectorSets.xsl) (Page 8/8) () title
+border
+grestore
+(2VectorSets.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

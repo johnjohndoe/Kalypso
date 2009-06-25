@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme>
+  <table key="NullStrand">
+    <o ID="1"/>
+    <o ID="2">
+      <sp key="m_strandNr">13</sp>
+    </o>
+    <o ID="4">
+      <sp key="m_strandNr">11</sp>
+    </o>
+    <o ID="5">
+      <sp key="m_strandNr">10</sp>
+    </o>
+    <o ID="3">
+      <sp key="m_strandNr">12</sp>
+    </o>
+  </table>
+  <table key="Channel">
+    <o ID="3">
+      <sp key="m_strandNr">22</sp>
+      <sp key="m_qBoardfull">2.456</sp>
+      <sp key="m_distribFact">9.3777</sp>
+    </o>
+    <o ID="2">
+      <sp key="m_strandNr">23</sp>
+      <sp key="m_qBoardfull">2.34</sp>
+      <sp key="m_distribFact">9.2</sp>
+    </o>
+    <o ID="5">
+      <sp key="m_strandNr">20</sp>
+      <sp key="m_qBoardfull">2.5</sp>
+      <sp key="m_distribFact">9.45</sp>
+    </o>
+    <o ID="1">
+      <sp key="m_strandNr">24</sp>
+      <sp key="m_qBoardfull">2.34</sp>
+      <sp key="m_distribFact">9.4576</sp>
+    </o>
+    <o ID="4">
+      <sp key="m_strandNr">21</sp>
+      <sp key="m_qBoardfull">2.767</sp>
+      <sp key="m_distribFact">9.356</sp>
+    </o>
+  </table>
+  <table key="Rhb"/>
+  <table key="Rht"/>
+  <table key="Node">
+    <o ID="6">
+      <sp key="m_nodeNr">10</sp>
+    </o>
+    <o ID="3">
+      <sp key="m_nodeNr">40</sp>
+    </o>
+    <o ID="1">
+      <sp key="m_nodeNr">60</sp>
+    </o>
+    <o ID="4">
+      <sp key="m_nodeNr">30</sp>
+    </o>
+    <o ID="5">
+      <sp key="m_nodeNr">20</sp>
+    </o>
+    <o ID="2">
+      <sp key="m_nodeNr">50</sp>
+    </o>
+  </table>
+  <table key="Wc"/>
+  <table key="Rb"/>
+  <table key="Wc2objects"/>
+  <table key="Wc2nodes"/>
+  <table key="Rb2strand"/>
+  <table key="Strand2node">
+    <o ID="1">
+      <rel srcKey="nullStrand" srcID="5" destKey="node" destID="5">
+</rel>
+    </o>
+    <o ID="2">
+      <rel srcKey="channel" srcID="2" destKey="node" destID="2">
+</rel>
+    </o>
+    <o ID="3">
+      <rel srcKey="channel" srcID="5" destKey="node" destID="5">
+</rel>
+    </o>
+  </table>
+  <table key="Node2strand">
+    <o ID="1">
+      <rel srcKey="node" srcID="3" destKey="nullStrand" destID="3">
+</rel>
+    </o>
+    <o ID="2">
+      <rel srcKey="node" srcID="4" destKey="channel" destID="4">
+</rel>
+    </o>
+    <o ID="3">
+      <rel srcKey="node" srcID="1" destKey="channel" destID="1">
+</rel>
+    </o>
+  </table>
+  <table key="Node2node"/>
+</theme>

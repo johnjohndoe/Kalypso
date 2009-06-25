@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme xsi:noNamespaceSchemaLocation="../schemas/MetaDataModell_V8.xsd" ID="themeId" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <name>Kalypso</name>
+  <package>de.tuhh.wb.javagis.model.na</package>
+  <description>NA-Modell</description>
+  <topology ID="top_river">
+    <name>rivers</name>
+    <description>Topology of rivers</description>
+  </topology>
+  <topology ID="top_catchment">
+    <name>Catchment-areas</name>
+    <description>Topology of Catchmentareas</description>
+  </topology>
+  <network ID="net_river">
+    <name>all rivers</name>
+    <description>String</description>
+  </network>
+  <objectClass ID="nullStrand">
+    <name>NullStrand</name>
+    <description>riversection</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <simpleProperty key="m_strandNr">
+      <name>Strand-Number</name>
+      <key>m_strandNr</key>
+      <description>String</description>
+      <type>Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_wcIndex">
+      <name>WaterCourseIndex</name>
+      <key>m_wcIndex</key>
+      <description>String</description>
+      <type>String</type>
+    </simpleProperty>
+  </objectClass>
+  <objectClass ID="channel">
+    <name>ChannelStrand</name>
+    <description>riversection</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <simpleProperty key="m_strandNr">
+      <name>Strand-Number</name>
+      <key>m_strandNr</key>
+      <description>String</description>
+      <type>Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_test">
+      <name>TestAttribut</name>
+      <description>Attribut zm Testen</description>
+      <type>Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_wcIndex">
+      <name>WaterCourseIndex</name>
+      <key>m_wcIndex</key>
+      <description>String</description>
+      <type>String</type>
+    </simpleProperty>
+    <simpleProperty key="m_qBoardfull">
+      <name>boardfull Discharchge</name>
+      <key>m_qBoardfull</key>
+      <description>String</description>
+      <type>Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_distribFact">
+      <name>DistributionFactor</name>
+      <key>m_distribFact</key>
+      <description>String</description>
+      <type>Float</type>
+    </simpleProperty>
+    <vectorSet key="m_channelData">
+      <name>ChannelData</name>
+      <key>m_channelData</key>
+      <simpleProperty key="v_q">
+	<name>Discharge</name>
+	<key>v_q</key>
+	<type>Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kRiver">
+	<name>Storage-koeficient (kilinin-Miljukov)</name>
+	<key>v_kRiver</key>
+	<type>Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nRiver">
+	<name>Number of storageElement</name>
+	<key>v_nRiver</key>
+	<type>Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kLand">
+	<name>Storage-koeficient  Land(kilinin-Miljukov)</name>
+	<key>v_kLand</key>
+	<type>Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nLand">
+	<name>Number of storageElement Land</name>
+	<key>v_nLand</key>
+	<type>Float</type>
+      </simpleProperty>
+    </vectorSet>
+  </objectClass>
+  <objectClass ID="rhb">
+    <name>ReservoirStrand</name>
+    <description>riversection</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <simpleProperty key="m_strandNr">
+      <name>Strand-Number</name>
+      <key>m_strandNr</key>
+      <description>String</description>
+      <type>Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_wcIndex">
+      <name>WaterCourseIndex</name>
+      <key>m_wcIndex</key>
+      <description>String</description>
+      <type>String</type>
+    </simpleProperty>
+    <simpleProperty key="m_typeName">
+      <name>TypeName</name>
+      <key>m_typeName</key>
+      <description>String</description>
+      <type>String</type>
+    </simpleProperty>
+    <simpleProperty key="m_C">
+      <name>DistributionFactor</name>
+      <key>m_C</key>
+      <description>String</description>
+      <type>Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_comment">
+      <name>Comment</name>
+      <key>m_comment</key>
+      <description>String</description>
+      <type>String</type>
+    </simpleProperty>
+    <simpleProperty key="m_initVolume">
+      <name>Initial volume of reservoir</name>
+      <key>m_initVolume</key>
+      <description>String</description>
+      <type>Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_maxVolume">
+      <name>Maximum volume of reservoir</name>
+      <key>m_maxVolume</key>
+      <description>String</description>
+      <type>Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_minViolume">
+      <name>Minimum volume of reservoir</name>
+      <key>m_minViolume</key>
+      <description>String</description>
+      <type>Float</type>
+    </simpleProperty>
+    <chartProperty key="m_data">
+      <name>Volume-Discharge-Level-function</name>
+      <key>m_data</key>
+      <axis key="m_WaterLevel">
+	<name>Heigth of Watertable</name>
+	<key/>
+	<type>Float</type>
+      </axis>
+      <axis key="m_Volume">
+	<name>Volume of reservoir at this Watertable</name>
+	<key/>
+	<type>Float</type>
+      </axis>
+      <axis key="m_discharge">
+	<name>Discharge at this Watertable / Volume</name>
+	<key/>
+	<type>Float</type>
+      </axis>
+    </chartProperty>
+  </objectClass>
+  <objectClass ID="rht">
+    <name>DamStrand</name>
+    <description>riversection</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <simpleProperty key="m_strandNr">
+      <name>Strand-Number</name>
+      <key>m_strandNr</key>
+      <description>String</description>
+      <type>Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_wcIndex">
+      <name>WaterCourseIndex</name>
+      <key>m_wcIndex</key>
+      <description>String</description>
+      <type>String</type>
+    </simpleProperty>
+    <simpleProperty key="m_typeName">
+      <name>Typename</name>
+      <key>m_typeName</key>
+      <description>String</description>
+			<type>String</type>
+    </simpleProperty>
+		<simpleProperty key="m_C">
+			<name>DitributionFactor</name>
+			<key>m_C</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_evapFile">
+			<name>FileName for Temperature and Evaporation</name>
+			<key>m_evapFile</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_longTermFileSim">
+			<name>FileName for the longterm-Simulation</name>
+			<key>m_longTermFileSim</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<vectorSet key="m_rhtData">
+			<name>ReservoirData</name>
+			<key>m_rhtData</key>
+			<simpleProperty key="v_NameFunction">
+				<name>Name of the saisonal function</name>
+				<key>v_NameFunction</key>
+				<type>String</type>
+			</simpleProperty>
+			<simpleProperty key="v_date">
+				<name>Date of saisonal function</name>
+				<key>v_date</key>
+				<type>java.util.Date</type>
+			</simpleProperty>
+			<simpleProperty key="v_initVolume">
+				<name>InitialVolume of reservoir</name>
+				<key>v_initVolume</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_maxVolume">
+				<name>Maximum Volume of reservoir</name>
+				<key>v_maxVolume</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_outFlow">
+				<name>Discharge of reservoir (Hochwasserentlastung)</name>
+				<key>v_outFlow</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_case">
+				<name>Type of calculation</name>
+				<key>v_case</key>
+				<description>0 bis 8 oder 9</description>
+				<type>Integer</type>
+			</simpleProperty>
+			<chartProperty key="m_data">
+				<name>Volume-Discharge-Level-function</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+		</vectorSet>
+	</objectClass>
+	<objectClass ID="n">
+		<name>Node</name>
+		<description>node</description>
+		<belongsToTopology ref="top_river"/>
+		<geometry>Point</geometry>
+		<simpleProperty key="m_nodeNr">
+			<name>NodeNumber</name>
+			<key>m_nodeNr</key>
+			<description>String</description>
+			<type>Integer</type>
+		</simpleProperty>
+	</objectClass>
+	<objectClass ID="wc">
+		<name>WaterCourseList</name>
+		<description>indexed rivers</description>
+		<simpleProperty key="m_wcName">
+			<name>Name of WaterCourse</name>
+			<key>m_wcName</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_wcIndex">
+			<name>WaterCourseIndex</name>
+			<key>m_wcIndex</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+	</objectClass>
+	<objectClass ID="rb">
+		<name>River-basin</name>
+		<description>catchment-area</description>
+		<belongsToTopology ref="top_catchment"/>
+		<geometry>Polygon</geometry>
+		<simpleProperty key="string1">
+			<name>String</name>
+			<key>string1</key>
+			<description>String</description>
+			<type>Integer</type>
+		</simpleProperty>
+		<simpleProperty key="string2">
+			<name>String</name>
+			<key>string2</key>
+			<description>String</description>
+			<type>Integer</type>
+		</simpleProperty>
+		<simpleProperty key="string3">
+			<name>String</name>
+			<key>string3</key>
+			<description>String</description>
+			<type>Integer</type>
+		</simpleProperty>
+		<simpleProperty key="string4">
+			<name>String</name>
+			<key>string4</key>
+			<description>String</description>
+			<type>Integer</type>
+		</simpleProperty>
+	</objectClass>
+	<objectClass ID="ct">
+		<name>complexTest</name>
+		<description>Test Object</description>
+		<belongsToTopology ref="top_river"/>
+		<geometry>LineString</geometry>
+		<simpleProperty key="m_strandNr">
+			<name>Strand-Number</name>
+			<key>m_strandNr</key>
+			<description>String</description>
+			<type>Integer</type>
+		</simpleProperty>
+		<simpleProperty key="m_wcIndex">
+			<name>WaterCourseIndex</name>
+			<key>m_wcIndex</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_typeName">
+			<name>TypeName</name>
+			<key>m_typeName</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_C">
+			<name>DistributionFactor</name>
+			<key>m_C</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_comment">
+			<name>Comment</name>
+			<key>m_comment</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_initVolume">
+			<name>Initial volume of reservoir</name>
+			<key>m_initVolume</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_maxVolume">
+			<name>Maximum volume of reservoir</name>
+			<key>m_maxVolume</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_minViolume">
+			<name>Minimum volume of reservoir</name>
+			<key>m_minViolume</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<vectorSet key="m_channelData">
+			<name>ChannelData</name>
+			<key>m_channelData</key>
+			<simpleProperty key="v_q">
+				<name>Discharge</name>
+				<key>v_q</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kRiver">
+				<name>Storage-koeficient (kilinin-Miljukov)</name>
+				<key>v_kRiver</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nRiver">
+				<name>Number of storageElement</name>
+				<key>v_nRiver</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kLand">
+				<name>Storage-koeficient  Land(kilinin-Miljukov)</name>
+				<key>v_kLand</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nLand">
+				<name>Number of storageElement Land</name>
+				<key>v_nLand</key>
+				<type>Float</type>
+			</simpleProperty>
+		</vectorSet>
+		<vectorSet key="m_rhtData">
+			<name>ReservoirData</name>
+			<key>m_rhtData</key>
+			<simpleProperty key="v_NameFunction">
+				<name>Name of the saisonal function</name>
+				<key>v_NameFunction</key>
+				<type>String</type>
+			</simpleProperty>
+			<simpleProperty key="v_date">
+				<name>Date of saisonal function</name>
+				<key>v_date</key>
+				<type>java.util.Date</type>
+			</simpleProperty>
+			<simpleProperty key="v_initVolume">
+				<name>InitialVolume of reservoir</name>
+				<key>v_initVolume</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_maxVolume">
+				<name>Maximum Volume of reservoir</name>
+				<key>v_maxVolume</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_outFlow">
+				<name>Discharge of reservoir (Hochwasserentlastung)</name>
+				<key>v_outFlow</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_case">
+				<name>Type of calculation</name>
+				<key>v_case</key>
+				<description>0 bis 8 oder 9</description>
+				<type>Integer</type>
+			</simpleProperty>
+			<chartProperty key="m_data1">
+				<name>TEstChart1 inVector</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+			<chartProperty key="m_data2">
+				<name>testchart2  inVector</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+			<chartProperty key="m_data3">
+				<name>testchart3  inVector</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+			<chartProperty key="m_data">
+				<name>Volume-Discharge-Level-function</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+		</vectorSet>
+		<chartProperty key="m_data1">
+			<name>TEstChart1</name>
+			<key>m_data1</key>
+			<axis key="m_WaterLevel">
+				<name>Heigth of Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_Volume">
+				<name>Volume of reservoir at this Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_discharge">
+				<name>Discharge at this Watertable / Volume</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+		</chartProperty>
+		<chartProperty key="m_data2">
+			<name>testchart2</name>
+			<key>m_data2</key>
+			<axis key="m_WaterLevel">
+				<name>Heigth of Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_Volume">
+				<name>Volume of reservoir at this Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_discharge">
+				<name>Discharge at this Watertable / Volume</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+		</chartProperty>
+		<chartProperty key="m_data3">
+			<name>testchart3</name>
+			<key>m_data3</key>
+			<axis key="m_WaterLevel">
+				<name>Heigth of Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_Volume">
+				<name>Volume of reservoir at this Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_discharge">
+				<name>Discharge at this Watertable / Volume</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+		</chartProperty>
+	</objectClass>
+	<objectClass ID="st">
+		<name>SimpleTEst</name>
+	</objectClass>
+	<relationClass ID="rel_str2n">
+		<name>StrandToNode</name>
+		<description>String</description>
+		<fromObjectClass ref="nullStrand"/>
+		<fromObjectClass ref="channel"/>
+		<fromObjectClass ref="rhb"/>
+		<fromObjectClass ref="rht"/>
+		<toObjectClass ref="n"/>
+		<forwardLabel>downstream</forwardLabel>
+		<backwardLabel>upstream</backwardLabel>
+		<fromCardinalityMax>unbound</fromCardinalityMax>
+		<toCardinalityMax>1</toCardinalityMax>
+		<belongsToNetwork ref="net_river"/>
+	</relationClass>
+	<relationClass ID="rel_n2str">
+		<name>Node2Strand</name>
+		<description>String</description>
+		<fromObjectClass ref="n"/>
+		<toObjectClass ref="nullStrand"/>
+		<toObjectClass ref="channel"/>
+		<toObjectClass ref="rhb"/>
+		<toObjectClass ref="rht"/>
+		<forwardLabel>downstream</forwardLabel>
+		<backwardLabel>upstream</backwardLabel>
+		<fromCardinalityMax>1</fromCardinalityMax>
+		<toCardinalityMax>unbound</toCardinalityMax>
+	</relationClass>
+	<relationClass ID="rel_basin2str">
+		<name>Basin2Strand</name>
+		<description>String</description>
+		<fromObjectClass ref="rb"/>
+		<toObjectClass ref="channel"/>
+		<forwardLabel>draintsTo</forwardLabel>
+		<backwardLabel>draintsFrom</backwardLabel>
+		<fromCardinalityMax>unbound</fromCardinalityMax>
+		<toCardinalityMax>1</toCardinalityMax>
+	</relationClass>
+	<relationClass ID="rel_test">
+		<name>StrandToNode_Test and Node2Node</name>
+		<fromObjectClass ref="nullStrand"/>
+		<fromObjectClass ref="channel"/>
+		<fromObjectClass ref="rhb"/>
+		<fromObjectClass ref="rht"/>
+		<fromObjectClass ref="n"/>
+ 		<toObjectClass ref="n"/>
+		<forwardLabel>downstream</forwardLabel>
+		<backwardLabel>upstream</backwardLabel>
+		<fromCardinalityMax>unbound</fromCardinalityMax>
+		<toCardinalityMax>1</toCardinalityMax>
+		<simpleProperty key="m_strandNr">
+			<name>Strand-Number</name>
+			<key>m_strandNr</key>
+			<description>String</description>
+			<type>Integer</type>
+		</simpleProperty>
+		<simpleProperty key="m_wcIndex">
+			<name>WaterCourseIndex</name>
+			<key>m_wcIndex</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_typeName">
+			<name>TypeName</name>
+			<key>m_typeName</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_C">
+			<name>DistributionFactor</name>
+			<key>m_C</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_comment">
+			<name>Comment</name>
+			<key>m_comment</key>
+			<description>String</description>
+			<type>String</type>
+		</simpleProperty>
+		<simpleProperty key="m_initVolume">
+			<name>Initial volume of reservoir</name>
+			<key>m_initVolume</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_maxVolume">
+			<name>Maximum volume of reservoir</name>
+			<key>m_maxVolume</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<simpleProperty key="m_minViolume">
+			<name>Minimum volume of reservoir</name>
+			<key>m_minViolume</key>
+			<description>String</description>
+			<type>Float</type>
+		</simpleProperty>
+		<vectorSet key="m_channelData">
+			<name>ChannelData</name>
+			<key>m_channelData</key>
+			<simpleProperty key="v_q">
+				<name>Discharge</name>
+				<key>v_q</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kRiver">
+				<name>Storage-koeficient (kilinin-Miljukov)</name>
+				<key>v_kRiver</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nRiver">
+				<name>Number of storageElement</name>
+				<key>v_nRiver</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_kLand">
+				<name>Storage-koeficient  Land(kilinin-Miljukov)</name>
+				<key>v_kLand</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_nLand">
+				<name>Number of storageElement Land</name>
+				<key>v_nLand</key>
+				<type>Float</type>
+			</simpleProperty>
+		</vectorSet>
+		<vectorSet key="m_rhtData">
+			<name>ReservoirData</name>
+			<key>m_rhtData</key>
+			<simpleProperty key="v_NameFunction">
+				<name>Name of the saisonal function</name>
+				<key>v_NameFunction</key>
+				<type>String</type>
+			</simpleProperty>
+			<simpleProperty key="v_date">
+				<name>Date of saisonal function</name>
+				<key>v_date</key>
+				<type>java.util.Date</type>
+			</simpleProperty>
+			<simpleProperty key="v_initVolume">
+				<name>InitialVolume of reservoir</name>
+				<key>v_initVolume</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_maxVolume">
+				<name>Maximum Volume of reservoir</name>
+				<key>v_maxVolume</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_outFlow">
+				<name>Discharge of reservoir (Hochwasserentlastung)</name>
+				<key>v_outFlow</key>
+				<type>Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_case">
+				<name>Type of calculation</name>
+				<key>v_case</key>
+				<description>0 bis 8 oder 9</description>
+				<type>Integer</type>
+			</simpleProperty>
+			<chartProperty key="m_data1">
+				<name>TEstChart1 inVector</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+			<chartProperty key="m_data2">
+				<name>testchart2  inVector</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+			<chartProperty key="m_data3">
+				<name>testchart3  inVector</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+			<chartProperty key="m_data">
+				<name>Volume-Discharge-Level-function</name>
+				<key>m_data</key>
+				<axis key="m_WaterLevel">
+					<name>Heigth of Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_Volume">
+					<name>Volume of reservoir at this Watertable</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+				<axis key="m_discharge">
+					<name>Discharge at this Watertable / Volume</name>
+					<key/>
+					<type>Float</type>
+				</axis>
+			</chartProperty>
+		</vectorSet>
+		<chartProperty key="m_data1">
+			<name>TEstChart1</name>
+			<key>m_data</key>
+			<axis key="m_WaterLevel">
+				<name>Heigth of Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_Volume">
+				<name>Volume of reservoir at this Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_discharge">
+				<name>Discharge at this Watertable / Volume</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+		</chartProperty>
+		<chartProperty key="m_data2">
+			<name>testchart2</name>
+			<key>m_data</key>
+			<axis key="m_WaterLevel">
+				<name>Heigth of Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_Volume">
+				<name>Volume of reservoir at this Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_discharge">
+				<name>Discharge at this Watertable / Volume</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+		</chartProperty>
+		<chartProperty key="m_data3">
+			<name>testchart3</name>
+			<key>m_data</key>
+			<axis key="m_WaterLevel">
+				<name>Heigth of Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_Volume">
+				<name>Volume of reservoir at this Watertable</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+			<axis key="m_discharge">
+				<name>Discharge at this Watertable / Volume</name>
+				<key/>
+				<type>Float</type>
+			</axis>
+		</chartProperty>
+		<belongsToNetwork ref="net_river"/>
+	</relationClass>
+</theme>

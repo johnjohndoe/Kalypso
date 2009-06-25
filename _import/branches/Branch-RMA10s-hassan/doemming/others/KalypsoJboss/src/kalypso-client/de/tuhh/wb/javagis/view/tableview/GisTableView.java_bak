@@ -1,0 +1,342 @@
+package de.tuhh.wb.javagis.view.tableview;
+
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.JInternalFrame;
+
+import javax.swing.table.TableModel;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+
+import java.util.Vector;
+
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.view.ViewManager;
+import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
+import de.tuhh.wb.javagis.data.GisElement;
+import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
+
+public class GisTableView extends JInternalFrame implements InternalFrameListener,ActionListener,MouseListener
+{
+    // stati:
+    public static final int IS_GISELEMENTLIST=0;
+    public static final int IS_VECTORSET=1;
+    public static final int IS_VECTORSET_IN_VECTORSET=2;
+    
+    private int status;
+    private int parentTab;       // from with parent-table is this called
+    private Object gisElementId; // if this is a subProperty, then this is the GisElement's ID
+
+    private GisTableView parentGisTableView;
+
+
+    private Vector cards;
+    private Vector tableModels;
+
+    public JInternalFrame tableFrame;
+    private JTabbedPane tabbedPane;
+    
+    public GisTableView(String frameName,Vector tableModels,GisTableView parentGisTableView,int parentTab,Object gisElementId,int status)
+    {
+	super(frameName,true,true,true,true);
+
+	System.out.println("New GisTableView: Status is "+status);
+	System.out.println("New GisTableView: Tab is    "+parentTab);
+	System.out.println("New GisTableView: ObjectId  "+gisElementId);
+	this.parentTab=parentTab;
+	this.parentGisTableView=parentGisTableView;
+	this.gisElementId=gisElementId;
+	this.status=status;
+	this.cards=new Vector();
+	this.tableModels=tableModels;
+
+	this.tabbedPane=new JTabbedPane();
+	
+	for (int index=0;index<tableModels.size();index++)
+	    {
+		GisInterfaceTableModel tableModel=(GisInterfaceTableModel)tableModels.elementAt(index);
+		JTable jTable;
+		if(status==IS_GISELEMENTLIST)
+		    jTable=new JTable((TableModel)tableModels.elementAt(index),null);
+		else		
+		    jTable=new JTable(new DummyTableModel((GisInterfaceTableModel)tableModels.elementAt(index)),null);
+
+		cards.add(jTable);
+		JScrollPane scroller=new JScrollPane(jTable);
+		scroller.setBounds(10,10,(getSize().width-30),(getSize().height-120));
+		tabbedPane.addTab(tableModel.getName(),scroller);
+		tabbedPane.setToolTipTextAt(index,tableModel.getDescription());		    
+		jTable.addMouseListener(this);		   
+	    }
+	getContentPane().add(tabbedPane,BorderLayout.CENTER);
+	createFileMenu();
+	this.addInternalFrameListener(this);
+    }
+    
+    public void createFileMenu()
+    {
+	//JMenu create = new JMenu ("Create...");
+	JMenu edit = new JMenu ("Edit");
+
+	JMenuItem mi;
+	
+	mi = new JMenuItem("new");
+	mi.addActionListener(this);
+	edit.add(mi);
+	mi = new JMenuItem("insert");
+	mi.addActionListener(this);
+	edit.add(mi);
+
+	mi = new JMenuItem("remove");
+	mi.addActionListener(this);
+	edit.add(mi);
+
+	mi = new JMenuItem("save");
+	mi.addActionListener(this);
+	edit.add(mi);
+	
+	//create.addSeparator();
+	edit.addSeparator();
+	
+	JMenuBar menubar= new JMenuBar();
+	//menubar.add(create);
+	menubar.add(edit);
+	setJMenuBar(menubar);
+    }
+
+
+    // ActionListener:
+    public void actionPerformed(ActionEvent event)
+    {
+	String action = event.getActionCommand();
+	System.out.println(action);
+		
+	int tab =tabbedPane.getSelectedIndex();
+	GisInterfaceTableModel tableModel = (GisInterfaceTableModel)tableModels.elementAt(tab);
+	System.out.println(tableModel.getName());
+	JTable table = (JTable)cards.elementAt(tab);
+	int a = table.getRowCount();
+	int[] selectedRows = table.getSelectedRows();
+		
+	if (action.equals("remove"))
+	    {
+		System.out.println("Ein Objekt ist zu löschen");
+		
+		if (a<=0)
+		    {
+			JOptionPane jop = new JOptionPane();
+			jop.showMessageDialog(this,(Object)"Es gibt keine Objekte zu löschen!","Warnung",JOptionPane.WARNING_MESSAGE);
+		    }
+		else
+		    {
+			int b = selectedRows.length;
+			System.out.println(b);
+
+			for(int c=0;c<b;c++)
+			    {
+				int d = selectedRows[c];
+				System.out.println(d);
+			    }
+			tableModel.removeObject(selectedRows[0]);
+			refreshTable();
+		    }
+	    }
+
+	if(action.equals("new"))
+	    {
+		tableModel.createNewObject();
+		refreshTable();
+	    }
+	if(action.equals("insert"))
+	    {
+		tableModel.insertNewObjectAt(selectedRows[0]);
+		refreshTable();
+	    }
+	
+	if(action.equals("Add to MapView"))
+	    {
+		JOptionPane jop = new JOptionPane();
+		jop.showMessageDialog(this,(Object)"Diese Funktion steht zur Zeit nicht zur Verfügung!","Information",JOptionPane.INFORMATION_MESSAGE);
+	    }
+	if(action.equals("Show Details"))
+	    {
+		int row=selectedRows[0];
+		GisElement gisElement=((GisTableModel)tableModel).getGisElement(row);
+		Object eId=((GisTableModel)tableModel).getElementId(row);			
+		String frameName=getTitle()+"/"+tableModel.getName()+"#"+eId.toString();
+		GisSingleObjectView gisSingleObjectView=new GisSingleObjectView(frameName,gisElement);
+		gisSingleObjectView.setVisible(true);
+		//		gisSingleObjectView.setSize(300,400);
+		ViewManager.desktop.add(gisSingleObjectView);
+		gisSingleObjectView.moveToFront();
+	    }
+
+	if(action.equals("Show VectorSets"))
+	    {
+		int row=selectedRows[0];
+		Object eId;
+		if(status==IS_GISELEMENTLIST)
+		    {
+			eId=((GisTableModel)tableModel).getElementId(row);			
+
+			Vector vectorSetTableModels = tableModel.getVectorSetTableModels(row);
+			String frameName=getTitle()+"/"+tableModel.getName()+"#"+eId.toString()+"/VectorSet";
+			GisTableView gisTableView = new GisTableView(frameName,vectorSetTableModels,this,tab,eId,IS_VECTORSET);
+			gisTableView.setVisible(true);
+			gisTableView.setSize(670,300);
+			ViewManager.desktop.add(gisTableView);
+			gisTableView.moveToFront();
+		    }
+		if(status==IS_VECTORSET)
+		    {
+			eId=gisElementId;			
+
+			Vector vectorSetTableModels = tableModel.getVectorSetTableModels(row);
+			String frameName=getTitle()+"/"+tableModel.getName()+"#"+eId.toString()+"/VectorSet";
+			GisTableView gisTableView = new GisTableView(frameName,vectorSetTableModels,this,tab,eId,IS_VECTORSET_IN_VECTORSET);
+			gisTableView.setVisible(true);
+			gisTableView.setSize(670,300);
+			ViewManager.desktop.add(gisTableView);
+			gisTableView.moveToFront();
+		    }
+
+	    }
+	if(action.equals("save"))
+	    {
+		switch(status)
+		    {
+		    case IS_GISELEMENTLIST:
+			// values are stored on the fly, nothing to do
+			break;
+		    case IS_VECTORSET:
+			parentGisTableView.storeVectorSets(parentTab,gisElementId,tableModels);
+			break;
+		    default:
+			break;
+		    }
+	    }	
+    }
+    public void storeVectorSets(int tabNumber,Object eId,Vector vectorSets)
+    {
+	if(status==IS_GISELEMENTLIST)
+	    {
+		GisTableModel tableModel=(GisTableModel)tableModels.elementAt(tabNumber);
+		tableModel.storeVectorSets(eId,vectorSets);
+	    }
+	else
+	    parentGisTableView.storeVectorSets(parentTab,gisElementId,tableModels);	    
+    }
+    
+    public void refreshTable()
+    {
+	int tab=tabbedPane.getSelectedIndex();
+	JTable table=(JTable)cards.elementAt(tab);
+	table.tableChanged(new TableModelEvent(table.getModel()));
+    }
+    
+	
+    public void mouseClicked(MouseEvent e)
+    {
+
+    }
+    
+    public void mousePressed(MouseEvent e)
+    {
+
+    }
+    
+    public void mouseReleased(MouseEvent e)
+    {
+	maybeShowPopup(e);
+    }
+    
+    public void mouseEntered(MouseEvent e)
+    {
+    }
+    
+    public void mouseExited(MouseEvent e)
+    {
+    }
+    
+    
+    private void maybeShowPopup(MouseEvent e) 
+    {
+        if (e.isPopupTrigger()) 
+	    {
+		JPopupMenu popup = new JPopupMenu();
+		JMenuItem menuItem = new JMenuItem("Add to MapView");
+		menuItem.addActionListener(this);
+		popup.add(menuItem);
+		if(status==IS_GISELEMENTLIST)
+		    {
+			menuItem = new JMenuItem("Show Details");
+			menuItem.addActionListener(this);
+			popup.add(menuItem);
+		    }
+		int tab = tabbedPane.getSelectedIndex();
+		GisInterfaceTableModel tableModel = (GisInterfaceTableModel)tableModels.elementAt(tab);
+		System.out.println("PopupMenu from GisObjectClass: "+tableModel.getName());
+		if(tableModel.hasVectorSets()==true)
+		    {
+			menuItem = new JMenuItem("Show VectorSets");
+			menuItem.addActionListener(this);
+			popup.add(menuItem);
+		    }
+		popup.show(e.getComponent(),
+			   e.getX(), e.getY());
+	    }
+    }   
+
+    // internalFrameListener:
+
+    //          Invoked when an internal frame is activated.
+    public void internalFrameActivated(InternalFrameEvent e) 
+    {}
+
+    //          Invoked when an internal frame has been closed.
+    public void internalFrameClosed(InternalFrameEvent e) 
+    {
+	if(status==IS_VECTORSET)
+	    parentGisTableView.storeVectorSets(parentTab,gisElementId,tableModels);
+    }
+
+    //          Invoked when an internal frame is in the process of being closed.
+    public void internalFrameClosing(InternalFrameEvent e) 
+    {
+    }
+
+    //          Invoked when an internal frame is de-activated.
+    public void internalFrameDeactivated(InternalFrameEvent e) 
+    {}
+
+    //          Invoked when an internal frame is de-iconified.
+    public void internalFrameDeiconified(InternalFrameEvent e) 
+    {}
+    
+    //          Invoked when an internal frame is iconified.
+    public void internalFrameIconified(InternalFrameEvent e) 
+    {}
+    
+    public void internalFrameOpened(InternalFrameEvent e)  
+    {}
+}
+

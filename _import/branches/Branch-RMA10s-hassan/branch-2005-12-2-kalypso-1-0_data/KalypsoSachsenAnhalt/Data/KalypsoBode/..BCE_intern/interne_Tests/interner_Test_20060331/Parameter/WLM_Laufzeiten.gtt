@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+    <layer featurePath="PegelCollectionAssociation/PegelMember[WasserlaufModell]" id="id" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column editable="true" name="Name" width="100"/>
+        <column editable="true" name="Laufzeit" width="100"/>
+        <column editable="false" name="LaufzeitDefault" width="200"/>
+        <sort inverse="true" propertyName="Name"/>
+    </layer>
+</gistableview>
+

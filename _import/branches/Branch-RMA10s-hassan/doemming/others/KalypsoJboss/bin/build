@@ -1,0 +1,4 @@
+#!/bin/bash
+ant -f $1 -Dxdoclet.force=true ejb-jar -v 2>ant.out 
+echo -e "fertig\a"
+less ant.out

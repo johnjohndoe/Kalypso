@@ -1,0 +1,4 @@
+#!/bin/bash
+CLASSPATH=.:../../classes
+java Test $1
+

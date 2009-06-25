@@ -1,0 +1,50 @@
+<html>
+<title> Kalypso-Tutorial </title>
+<body  >
+<h2>Output Results</h2>
+<img src=blueline.gif align="center" >
+<br><br>
+User defines in preprocessing menu for simulation the directory which processor uses for simulation and the store outputs.<br>
+After successful simulation in the result folder several folders are generated.
+The folders: inp.dat, hydro.top, klima.dat, na-model, start are and xml_temp are generated automatical form processing routine to run simulation.
+The folder <b>results_kalypso</b> stores all simulation results, for the set nodes and catchments in theme ControlData:
+
+
+<br><br>
+OUTPUT DISCHARGE FOR NODES <br><br>
+For catchments following outputs are interesting for shortterm simulation in order to forecasting:<br>
+<ul>
+<li> OUTPUT DISCHARGE FOR CATCHMENTS [m³/s]<br>
+<li> Output Temperature [°C]<br>
+<li> Output Precipitation [mm/h]<br>
+<li> Output Snow Height [mm]<br>
+<li> Output Soil Moisture Regime<br>
+<li> OUTPUT SURFACE FLOW, NATURAL [m³/s]<br>
+<li> OUTPUT SURFACE FLOW, SEALED [m³/s]<br>
+<li> OUTPUT INTERFLOW [m³/s]<br>
+<li> OUTPUT BASEFLOW [m³/s]<br>
+<li> STORAGE VOLUME [hm³]<br>
+<li> OUTPUT STORAGE [m³/s]<br>
+<li> STORAGE HEIGHT OF WATERTABLE [m]<br>
+</ul>
+If numerous simulations run and result directory is not changed, Forecast Model creates for each simulation a new result folder (different suffix-numbers).
+For each simulation a log-files is generated which present main hydrological process values of waterbalance for the catchments or create error messages if simulation fails.
+
+<br><br>
+To evaluate results GraficTool is used which can be opened from Windows 2000 menu.
+When staring GraphicTool user selects directory <b>results_kalypso</b> and chooses from list the interested output file and catchment/ node. <br>
+Processor Kalypso RRM generates hydrological outputs for selected nodes and catchments in one file per kind of hydrological process or input time-series (precipitation and temperature).
+<br><br>
+<img src=ScreenShot006.gif align="center" >
+<br><br>
+GraphicTool offers functionalities to visualize outputs and create templates for calibration or forecasting.<br>
+Templates (filename.tpl) enables to fix the import of hydrographs customised layoutstyle of GraphicTool.
+Diagrams can be stored as *bmp to import them in papers or reports. Furthermore they can be published for flood information.
+<br><br>
+<img src=ScreenShot007.gif align="center" >
+
+
+<br><br>
+<hr>
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+</html>

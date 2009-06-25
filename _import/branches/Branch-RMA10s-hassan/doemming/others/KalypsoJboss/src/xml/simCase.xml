@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="Kalypso" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>Kalypso-SimulationsSteuerung</name>
+	<description>...</description>
+	<package>de.tuhh.wb.javagis.model.na</package>
+	<objectClass ID="simCase">
+		<name>SimulationCase</name>
+		<description>...</description>
+		<simpleProperty key="m_modelVersion">
+			<name>Version of ModelData</name>
+			<description>give ID of Modeldata (Version-ID) you want to use for simulation</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+		<simpleProperty key="m_controlVersion">
+			<name>Version of ControlData</name>
+			<description>give ID of Modeldata (Version-ID) you want to use for simulation</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+	</objectClass>
+</theme>

@@ -1,0 +1,94 @@
+<html>
+
+<title> Kalypso-Tutorial </title>
+<head> <h2> Calibration </h2></head>
+<img src=blueline.gif align="center" >
+<br>
+
+
+<body>
+
+<P>For calibration of simulated flood events, measured discharged hydrographs are required.<br>
+To get discharge time-series user can define DataCenter connection in same way like for hydrological stations. <br>
+If parameters are set measured discharge is available for GRAFICTOOL in files in the directory klima.dat in <b>kalypso_results</b>.
+Data sets of different quality for the flood events 1998 and 2001 are used for model setup. The RRM could only be calibrated and validated for this two events.
+<u>A continuous calibration for the next flood events is necessary.</u>
+</P>
+The object of calibration has to minimise the difference between observed and simulated flows. <br>
+The calibration of the model will be achieved if there is a good match between the simulated and measured values of the following hydrograph characteristics:
+<ul>
+<li> Total runoff volume
+<li> Peak flow
+</ul>
+In practice, the user can choose any of the two functions, depending on the special model being considered on purpose.<br>
+<u>Peak flow agreement is important during storm water, flooding.</u> <br>
+For UTRB no longterm simulation can be practised which is used for defining initial conditions and calibrating to achieve an agreement of total runoff volume.<br>
+Flood forecasting is mainly interested in the significant peak flow and the temporal way of flow.
+<br><br>
+<h3><b>Calibration Workflow </b></h3>
+
+Copy version of ModelData to new state in ModelData theme.<br>
+Filter catchments within same elevation zone if numerous catchments are part of calibration and change only one of main calibration parameters at time to see the system reaction. <br>
+To save the changes in Modeldata, version must be copied. Main calibration parameters and their usage for calibration are listed below. <br>
+For validation it is useful to handle with subsystems of whole drainage net. The calibrated systems can then step by step be coupled to whole river network of UTRB.
+<br><br>
+<h3><b>Main calibration Parameters</b></h3>
+<b>Retention constants</b><br>
+Used to implement storage effects in catchment. Rising retention constants make discharge components slower and flatter flood wave.
+
+Main Retention constants [h] (linear memory element):
+<ul>
+<li>Surface flow (80 to 90 % of total discharge)
+<li> Interflow
+Surface flow rises peak of flood and interflow varies kind of post-carriage of flood wave because of longer flow time in soil.
+</ul>
+<u>Surface flow</u><br>
+Equal retention constants for natural and sealed areas are:
+Alpine and foothill: less than 10 h
+Lowland : app. twice slower than retention constants of alpine and foothill region<br><br>
+
+<u>Interflow</u><br>
+Triple slower than surface flow for mountain and lowland region.<br>
+<u>Baseflow, Shallow and deep aquifer</u><br>
+These discharge components are not needed for calibration because of long flow times in contrast to the other discharge components (Factor 100, 10.000, 100.000).<br>
+Only in lowlands groundwater is estimated and modelled by RRM but without groundwater network only within storages in each catchments.
+<br><br>
+<b>Correction Factors</b><br>
+Climate time-series temperature and rain
+Correction factors can reflect spatial diversity in catchment: mountain or lowland. Rain is falling with higher intensity in mountain region.
+Factors for precipitation from 1.2 to 3 (multiply) are possible, expert knowledge of existing/ forecasted climate situation.
+To create special temperature curves use factor for temperature (factor is added on measured values).
+<u>Soil layer</u><br>
+Main infiltration and percolation rate:<br>
+Proportional factors for infiltration and percolation, depending on characteristic soil properties [1/h]. Used to change volume of surface flow cause of corresponding higher or reduced infiltration/ percolation capacity.
+Alpine and foothills: <ul><li>Infiltration 	3 mm/h
+                        <li>Percolation	2 mm/h
+Lowland:		<li>Infiltration 7 mm/h
+                       <li> Percolation	6 mm/h </ul>
+
+<u>Other correction factors</u><br>
+Expert knowledge of vegetation and soil types. Not needed for calibration.<br><br>
+<b>Kalinin-Miljukov-Parameters</b><br><br>
+<u>Distribution factor C</u><br>
+<br>
+<img src=Screenshot026.gif align="center" >
+<br><br>
+It is used to define flooding:<br>
+Alpine and foothill: app.0.5<br>
+        Half of discharge in channel and the other part over flood plain<br>
+Lowlands: less than 0.5<br>
+        Extreme flooding cause of wide plains (up to 90 % discharge over flood plains)<br>
+<br><br>
+<u>Flow time, k and Number of memory elements, n</u><br>
+K and n increases, flood wave gets broad and shallow.
+<br><br>
+n * k = flow time in strand element, defined by n memory elements, stady discharge with k as flow time of each memory element.
+Flood routing parameters should be calibrated again for next flood events. If possible a separate KALININ-MILJUKOV-METHODE should check quality of parameters.
+
+<br><br>
+<hr>
+
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+
+</HTML>

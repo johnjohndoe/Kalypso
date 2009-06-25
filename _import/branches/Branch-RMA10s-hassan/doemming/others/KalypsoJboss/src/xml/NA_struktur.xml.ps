@@ -1,0 +1,1540 @@
+%!PS-Adobe-3.0
+%%Title: NA_struktur.xml
+%%For: Andreas von Doemming
+%%Creator: a2ps version 4.13
+%%CreationDate: Thu Mar 27 12:53:22 2003
+%%BoundingBox: 24 24 571 818
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 7
+%%PageOrder: Ascend
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Define these in case they're not in the FontInfo (also, here
+    % they're easier to get to.
+    /UnderlinePosition 1 def
+    /UnderlineThickness 1 def
+    
+    % Get the underline position and thickness if they're defined.
+    currentdict /FontInfo known {
+      FontInfo
+      
+      dup /UnderlinePosition known {
+	dup /UnderlinePosition get
+	0 exch FontMatrix transform exch pop
+	/UnderlinePosition exch def
+      } if
+      
+      dup /UnderlineThickness known {
+	/UnderlineThickness get
+	0 exch FontMatrix transform exch pop
+	/UnderlineThickness exch def
+      } if
+      
+    } if
+    currentdict 
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 595 def
+/sw 842 def
+/llx 24 def
+/urx 818 def
+/ury 571 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 8.005733 def
+/cw 4.803440 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   501.959430 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?xml version="1.0" encoding="UTF-8"?>) p n
+(<!-- edited with XMLSPY v5 U \(http://www.xmlspy.com\) by Anoby \(have no company :) N
+(-\(\) -->) N
+(<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSche) N
+(maLocation="MetaDataModel.xsd" ID="Modell">) N
+(  <name>Modell</name>) N
+(  <description>NA-Modell</description>) N
+(  <package>de.tuhh.wb.javagis.model.na</package>) N
+(  <topology ID="top_river">) N
+(    <name>Rivers</name>) N
+(    <description>Topology of Rivers</description>) N
+(  </topology>) N
+(  <topology ID="top_catchment">) N
+(    <name>Catchments</name>) N
+(    <description>Topology of Catchments</description>) N
+(  </topology>) N
+(  <network ID="net_river">) N
+(    <name>Channels</name>) N
+(    <description>Definition of Strands</description>) N
+(  </network>) N
+(  <objectClass ID="nullStrand">) N
+(    <name>Virtual Strand</name>) N
+(    <description>Virtual strand transfers flood wave direct from up- to downstre) N
+(am node</description>) N
+(    <belongsToTopology ref="top_river"/>) N
+(    <geometry>LineString</geometry>) N
+(    <symbol>nullstrand</symbol>) N
+(    <simpleProperty key="m_strandNr">) N
+(      <name>Strand Number</name>) N
+(      <description>Strand number in model network</description>) N
+(      <type>java.lang.Integer</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_qInitial">) N
+(      <name>Initial Discharge</name>) N
+(      <description/>) N
+(      <unit>m<sup>3</sup>/s</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(  </objectClass>) N
+(  <objectClass ID="channel">) N
+(    <name>Channel Strand</name>) N
+(    <description>Translation and retention of the supply wave during the flow be) N
+(tween start and end node of the coagulating network is simulated by a parallel l) N
+(inear memory cascade \(Kalinin-Miljukov-Methode\)</description>) N
+(    <belongsToTopology ref="top_river"/>) N
+(    <geometry>LineString</geometry>) N
+(    <symbol>channelstrand</symbol>) N
+(    <simpleProperty key="m_strandNr">) N
+(      <name>Strand Number</name>) N
+(      <description>Strand number in model network</description>) N
+(      <type>java.lang.Integer</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_qBoardfull">) N
+(      <name>Bankfull Discharge</name>) N
+(      <description>Discharge conveyed in a water course without overtopping the ) N
+(flood plains</description>) N
+(      <unit>m<sup>3</sup>/s</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_qInitial">) N
+(      <name>Initial Discharge</name>) N
+(      <description/>) N
+(NA_struktur.xml) (Page 1/13) (Mar 27, 03 12:53) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(      <unit>m<sup>3</sup>/s</unit>) p n
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_distribFact">) N
+(      <name>Distribution Factor</name>) N
+(      <description>According to higher water levels like bankfull, also channel ) N
+(discharge is increased, compared to bankfull discharge. The coagulating cross se) N
+(ction which is situated above the elevation of bankfull is added proportional to) N
+( channel section.This factor can be given in the model. </description>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <vectorSet key="m_channelData">) N
+(      <name>Channel Data</name>) N
+(      <description>5 discharge levels: 1. and 2. discharge in channel , 3. bankf) N
+(ull, 4. and 5. discharge in channel and over flood plain</description>) N
+(      <simpleProperty key="v_q">) N
+(        <name>Discharge</name>) N
+(        <unit>m<sup>3</sup>/s</unit>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(      <simpleProperty key="v_kRiver">) N
+(        <name>Storage coefficient k, channel </name>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(      <simpleProperty key="v_nRiver">) N
+(        <name>Number of memory elements n, channel </name>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(      <simpleProperty key="v_kLand">) N
+(        <name>&gt;Storage coefficient k, flood plain</name>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(      <simpleProperty key="v_nLand">) N
+(        <name>Number of memory elements n, flood plain </name>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(    </vectorSet>) N
+(  </objectClass>) N
+(  <objectClass ID="rhb">) N
+(    <name>Reservoir Strand</name>) N
+(    <description>Channel which discharge characteristic is given in capacity cur) N
+(ve</description>) N
+(    <belongsToTopology ref="top_river"/>) N
+(    <geometry>LineString</geometry>) N
+(    <symbol>reservoirstrand</symbol>) N
+(    <simpleProperty key="m_strandNr">) N
+(      <name>Strand Number</name>) N
+(      <description>Strand number in model network</description>) N
+(      <type>java.lang.Integer</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_typeName">) N
+(      <name>TypeName</name>) N
+(      <description/>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_targetNode">) N
+(      <name>Overflow Node</name>) N
+(      <description> </description>) N
+(      <type>java.lang.Integer</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_qInitial">) N
+(      <name>Initial Discharge</name>) N
+(NA_struktur.xml) (Page 2/13) (Mar 27, 03 12:53) title
+border
+grestore
+(Printed by Andreas von Doemming) rhead
+(NA_struktur.xml) (1/7) (Thursday March 27, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(      <description/>) p n
+(      <unit>m<sup>3</sup>/s</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_C">) N
+(      <name>Distribution Factor</name>) N
+(      <description>Distribution Factor 0.000</description>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_comment">) N
+(      <name>Comment</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_initVolume">) N
+(      <name>Initial Volume of Reservoir</name>) N
+(      <unit>hm<sup>3</sup></unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_maxVolume">) N
+(      <name>Maximum Volume of Reservoir</name>) N
+(      <unit>hm<sup>3</sup></unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_minVolume">) N
+(      <name>Minimum Volume of Reservoir</name>) N
+(      <unit>hm<sup>3</sup></unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <vectorSet key="m_data">) N
+(      <name>Volume-Discharge-Level-Function</name>) N
+(      <simpleProperty key="m_WaterLevel">) N
+(        <name>Heigth of Watertable</name>) N
+(        <unit>m</unit>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(      <simpleProperty key="m_Volume">) N
+(        <name>Volume of Reservoir</name>) N
+(        <unit>hm<sup>3</sup></unit>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(      <simpleProperty key="m_discharge">) N
+(        <name>Output Discharge</name>) N
+(        <unit>m<sup>3</sup>/s</unit>) N
+(        <type>java.lang.Float</type>) N
+(      </simpleProperty>) N
+(    </vectorSet>) N
+(  </objectClass>) N
+(<!--  <objectClass ID="rht">) N
+(<name>Dam Strand</name>) N
+(<description>riversection</description>) N
+(<belongsToTopology ref="top_river"/>) N
+(<geometry>LineString</geometry>) N
+(<symbol>damstrand</symbol>) N
+(<simpleProperty key="m_strandNr">) N
+(<name>Strand-Number</name>) N
+(<description>String</description>) N
+(<type>java.lang.Integer</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="m_typeName">) N
+(<name>Typename</name>) N
+(<description>String</description>) N
+(<type>java.lang.String</type>) N
+(NA_struktur.xml) (Page 3/13) (Mar 27, 03 12:53) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(</simpleProperty>) p n
+(<simpleProperty key="m_C">) N
+(<name>DitributionFactor</name>) N
+(<description>String</description>) N
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="m_evapFile">) N
+(<name>FileName for Temperature and Evaporation</name>) N
+(<description>String</description>) N
+(<type>java.lang.String</type>) N
+(</simpleProperty>) N
+() N
+() N
+(<simpleProperty key="m_qInitial">) N
+(<name>Initial Discharge</name>) N
+(<description></description>) N
+(<unit>m<sup>3</sup>/s</unit>) N
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+() N
+() N
+(<simpleProperty key="m_comment">) N
+(<name>Comment</name>) N
+(<description>String</description>) N
+(<type>java.lang.String</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="m_longTermFileSim">) N
+(<name>FileName for the longterm-Simulation</name>) N
+(<description>String</description>) N
+(<type>java.lang.String</type>) N
+(</simpleProperty>) N
+(<vectorSet key="m_rhtData">) N
+(<name>ReservoirData</name>) N
+(<simpleProperty key="v_NameFunction">) N
+(<name>Name of the saisonal function</name>) N
+(<type>java.lang.String</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="v_date">) N
+(<name>Date of saisonal function</name>) N
+(<format>MMM</format>) N
+(<type>java.util.Date</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="v_initVolume">) N
+(<name>InitialVolume of reservoir</name>) N
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="v_maxVolume">) N
+(<name>Maximum Volume of reservoir</name>) N
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="v_outFlow">) N
+(<name>Discharge of reservoir \(Hochwasserentlastung\)</name>) N
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="v_case">) N
+(<name>Type of calculation</name>) N
+(<description>0 bis 8 oder 9</description>) N
+(<type>java.lang.Integer</type>) N
+(</simpleProperty>) N
+(<vectorSet key="m_data">) N
+(<name>Volume-Discharge-Level-function</name>) N
+(<simpleProperty key="m_WaterLevel">) N
+(NA_struktur.xml) (Page 4/13) (Mar 27, 03 12:53) title
+border
+grestore
+(Printed by Andreas von Doemming) rhead
+(NA_struktur.xml) (2/7) (Thursday March 27, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5-6) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<name>Heigth of Watertable</name>) p n
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="m_Volume">) N
+(<name>Volume of reservoir at this Watertable</name>) N
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+(<simpleProperty key="m_discharge">) N
+(<name>Discharge at this Watertable / Volume</name>) N
+(<type>java.lang.Float</type>) N
+(</simpleProperty>) N
+(</vectorSet>) N
+(</vectorSet>) N
+(</objectClass>) N
+(  -->) N
+(  <objectClass ID="node">) N
+(    <name>Node</name>) N
+(    <description>Definition of Nodes</description>) N
+(    <belongsToTopology ref="top_river"/>) N
+(    <geometry>Point</geometry>) N
+(    <symbol>node</symbol>) N
+(    <simpleProperty key="m_nodeNr">) N
+(      <name>Node Number</name>) N
+(      <description>Strand number in model network</description>) N
+(      <type>java.lang.Integer</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_stationName">) N
+(      <name>gauging station</name>) N
+(      <description>name of gauging station</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileName">) N
+(      <name>File Name</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_mesTableName">) N
+(      <name>database</name>) N
+(      <format>bce_db</format>) N
+(      <description>database timeseries</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(  </objectClass>) N
+(  <objectClass ID="wc">) N
+(    <name>Water Course </name>) N
+(    <description>Water course name is used to index rivers</description>) N
+(    <simpleProperty key="m_wcIndex">) N
+(      <name>Water Course Index</name>) N
+(      <description>Index to identify rivers</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_wcName">) N
+(      <name>Water Course Name</name>) N
+(      <description>Rivername</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(  </objectClass>) N
+(  <objectClass ID="rb">) N
+(    <name>Catchments</name>) N
+(    <description>Definition of catchments</description>) N
+(    <belongsToTopology ref="top_catchment"/>) N
+(    <geometry>Polygon</geometry>) N
+(    <symbol>riverbasin</symbol>) N
+(NA_struktur.xml) (Page 5/13) (Mar 27, 03 12:53) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    <simpleProperty key="m_rbNumber">) p n
+(      <name>Catchment number</name>) N
+(      <description>Catchment number in model network</description>) N
+(      <type>java.lang.Integer</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_avaEle">) N
+(      <name>avarage elevation</name>) N
+(      <description>avarage elevation \(use to filter elevation zones for editing\)) N
+(</description>) N
+(      <unit>m</unit>) N
+(      <type>java.lang.Integer</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_comment">) N
+(      <name>Comment</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_sealedAreaRb">) N
+(      <name>Sealed Area</name>) N
+(      <description>No infiltration process, only surface flow</description>) N
+(      <unit>m<sup>2</sup></unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_natAreaRb">) N
+(      <name>Natural Area</name>) N
+(      <description>Hydrological processes for diacharge formation inj soil moist) N
+(ure regime take place</description>) N
+(      <unit>m<sup>2</sup></unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_corrRain">) N
+(      <name>Correction Factor Precipitation</name>) N
+(      <description>Factor is applied to change rainfall distribution in order to) N
+( characteristic surface relief</description>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_corrMaxInter">) N
+(      <name>Correction Factor Maximal Interception Storage</name>) N
+(      <description>Maximal interception storage mm, is plant dependent, fixed in) N
+( model for specific landuse</description>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_corrInitInter">) N
+(      <name>Correction Factor Initial Interception Storage</name>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_corrUsage">) N
+(      <name>Correction Vaporization</name>) N
+(      <description>Fixed in Model</description>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_key">) N
+(      <name>Type of Rain</name>) N
+(      <description>Standard Flag n for measured precipitation</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileClimate">) N
+(      <name>Climate Time-Series</name>) N
+(      <description>Filename for climate time-series of temperature and evapotran) N
+(spiration</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileLongTermSim">) N
+(NA_struktur.xml) (Page 6/13) (Mar 27, 03 12:53) title
+border
+grestore
+(Printed by Andreas von Doemming) rhead
+(NA_struktur.xml) (3/7) (Thursday March 27, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7-8) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(      <name>Precipitation Time-Series Longterm</name>) p n
+(      <description>Filename for precipitation time-series used for langterm simu) N
+(lation</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileShortTermSim">) N
+(      <name>Precipitation Time-Series Shortterm</name>) N
+(      <description>Filename for precipitation time-series used for shortterm sim) N
+(ulation</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileTimeAreaFunct">) N
+(      <name>Time-Area-Function</name>) N
+(      <description>Filename for time-area-functions of catchments</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileHydrotop">) N
+(      <name>Hydrotopes</name>) N
+(      <description>Filename for hydrotopes of each catchment</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_flagHydrotop">) N
+(      <name>Hydrotop Flag</name>) N
+(      <description>Default value for calculation with hydrotopes: 7</description) N
+(>) N
+(      <type>java.lang.Boolean</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_aquifMaxHeightChannel">) N
+(      <name>Maximum Height of Groundwater</name>) N
+(      <description>Upper channel base to define upper groundwater reservoir</des) N
+(cription>) N
+(      <unit>m</unit>) N
+(      <type>java.lang.Double</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_aquifMinHeightChannel">) N
+(      <name>Minimum Height of Groundwater</name>) N
+(      <description>Lower channel base to define upper groundwater reservoir</des) N
+(cription>) N
+(      <unit>m</unit>) N
+(      <type>java.lang.Double</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_aquifExtract">) N
+(      <name>Draw-off from Shallow Aquifer</name>) N
+(      <unit>m<sup>3</sup>/s</unit>) N
+(      <type>java.lang.Double</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_aquifPorosity">) N
+(      <name>Porrosity of Shallow Aquifer</name>) N
+(      <unit>0..1</unit>) N
+(      <type>java.lang.Double</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_aquifSplitAquiferDeep">) N
+(      <name>Splitting for Shallow and Deep Aquifer</name>) N
+(      <description>Procent of groundwater discharge flowing in lower catchment o) N
+(r deep aquifer</description>) N
+(      <unit>0..1</unit>) N
+(      <type>java.lang.Double</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fInit">) N
+(      <name>fInit</name>) N
+(      <description>not used in kalypso</description>) N
+(      <type>java.lang.Float</type>) N
+(NA_struktur.xml) (Page 7/13) (Mar 27, 03 12:53) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    </simpleProperty>) p n
+(    <simpleProperty key="m_fTar">) N
+(      <name>fTar</name>) N
+(      <description>not used in kalypso</description>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_initAquif">) N
+(      <name>Initial Groundwater Height</name>) N
+(      <description>Initial height of watertable in groundwater storage</descript) N
+(ion>) N
+(      <unit>m</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_initInterception">) N
+(      <name>Initial Interception Storage</name>) N
+(      <unit>mm</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_retAquif">) N
+(      <name>Retention  Baseflow</name>) N
+(      <unit>h</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_retAquifNeighbour">) N
+(      <name>Retention Shallow Aquifer</name>) N
+(      <unit>h</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_retInterflow">) N
+(      <name>Retention Interflow</name>) N
+(      <unit>h</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_retOutflowAquifDeep">) N
+(      <name>Retention  Deep Aquifer</name>) N
+(      <unit>h</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_retOverlandFlow">) N
+(      <name>Retention  Surface Flow, natural</name>) N
+(      <unit>h</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_retSealedArea">) N
+(      <name>Retention  Surface Flow, sealed </name>) N
+(      <unit>h</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_corrEvap">) N
+(      <name>Correction Factor Evapotranspiration</name>) N
+(      <description>Factor is multipied by time-series values \(fixed in Model 1 m) N
+(m per day\)</description>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_corrTemp">) N
+(      <name>Correction Factor Temperature</name>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_initSnowHeight">) N
+(      <name>Initial Snow Height</name>) N
+(      <unit>mm</unit>) N
+(      <type>java.lang.Float</type>) N
+(NA_struktur.xml) (Page 8/13) (Mar 27, 03 12:53) title
+border
+grestore
+(Printed by Andreas von Doemming) rhead
+(NA_struktur.xml) (4/7) (Thursday March 27, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (9-10) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    </simpleProperty>) p n
+(    <simpleProperty key="m_snowMaxWaterCont">) N
+(      <name>Maximum Water Content Snow</name>) N
+(      <description>Maximal possible water content of snow, standard: 0.45 </desc) N
+(ription>) N
+(      <unit>%</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_snowMeltingRateRad">) N
+(      <name>Radiation Snow Melting</name>) N
+(      <description>Radiation depending snow melting rate \(0.1..1\), standard: 0.3) N
+(5 </description>) N
+(      <unit>mm/h</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_snowMeltingRateTemp">) N
+(      <name>Temperature Snow Melting</name>) N
+(      <description>Temperature depending snow melting rate \(0.1..0.5\), standard:) N
+( 0.25 </description>) N
+(      <unit>mm/h/K</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_snowWaterCont">) N
+(      <name>Initial Water Content Snow</name>) N
+(      <unit>%</unit>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <vectorSet key="m_corrFactSoil"><name>Correction Soil</name><description>Cor) N
+(rection and initial conditions for soil layers in each catchment</description><s) N
+(impleProperty key="v_infiltShortTime"><name>Infiltration Rate Shortterm</name><d) N
+(escription>Proportional Factor for infiltration, depending on characteristic soi) N
+(l properties</description><unit>1/h</unit><type>java.lang.Float</type></simplePr) N
+(operty><simpleProperty key="v_infiltDailyVal"><name>Infiltration Rate Longterm</) N
+(name><description>Proportional Factor for infiltration, depending on characteris) N
+(tic soil properties</description><type>java.lang.Float</type></simpleProperty><s) N
+(impleProperty key="v_perkForLayer"><name>Percolation Rate</name><description>Pro) N
+(portional Factor for percolation, depending on characteristic soil properties</d) N
+(escription><unit>1/h</unit><type>java.lang.Float</type></simpleProperty><simpleP) N
+(roperty key="v_maxPoreVolume"><name>Correction Factor Maximum Pore Volume</name>) N
+(<type>java.lang.Float</type></simpleProperty><simpleProperty key="v_initialMoist) N
+(ure"><name>Initial Moisture</name><unit>mm</unit><type>java.lang.Float</type></s) N
+(impleProperty><simpleProperty key="v_usableFieldCap"><name>Correction Factor Usa) N
+(ble Field Capcity</name><type>java.lang.Float</type></simpleProperty><!--) S 80 T () N
+() S 0 T () S 8 T (<simpleProperty key="v_retLayer">) N
+(      -->) S 16 T () S 24 T () S 32 T () N
+(      <simpleProperty key="v_retLayerInterflow"><name>Correction Factor Interflo) N
+(w</name><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_evap) N
+(Layer"><name>evaporation layer</name><description>Not used in kalypso</descripti) N
+(on><type>java.lang.Float</type></simpleProperty></vectorSet>) N
+(  </objectClass>) N
+(  <objectClass ID="rainStation">) N
+(    <name>Rain Station</name>) N
+(    <description>Definition of rain station for database connection</description) N
+(>) N
+(    <simpleProperty key="m_stationName">) N
+(      <name>Station Name</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileName">) N
+(      <name>File Name</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(NA_struktur.xml) (Page 9/13) (Mar 27, 03 12:53) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    <simpleProperty key="m_mesTableName">) p n
+(      <name>Table Name Measured</name>) N
+(      <format>bce_db</format>) N
+(      <description>Measured values</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_synTableName">) N
+(      <name>Table Name Synthetic</name>) N
+(      <format>bce_db</format>) N
+(      <description>Forecasted values</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(  </objectClass>) N
+(  <objectClass ID="tempStation">) N
+(    <name>Climate Station</name>) N
+(    <description>Definition of climate station for database connection, time-ser) N
+(ies: temperature and evapotranspiration</description>) N
+(    <simpleProperty key="m_stationName">) N
+(      <name>Station Name</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_fileName">) N
+(      <name>File Name</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_mesTableName">) N
+(      <name>Table Name Measured</name>) N
+(      <format>bce_db</format>) N
+(<!-- bce_db : DBTableName,nicetablename-->) N
+(      <description>Measured values</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <simpleProperty key="m_synTableName">) N
+(      <name>Table Name Synthetic</name>) N
+(      <format>bce_db</format>) N
+(      <description>Forecasted values</description>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(  </objectClass>) N
+(  <relationClass ID="wc2objects">) N
+(    <name>RivernameRelation</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="wc"/>) N
+(    <toObjectClass ref="nullStrand"/>) N
+(    <toObjectClass ref="channel"/>) N
+(    <toObjectClass ref="rhb"/>) N
+(<!--    <toObjectClass ref="rht"/> -->) N
+(    <toObjectClass ref="rb"/>) N
+(<!-- node added on 20.11.2002 to go conform with xml-import/export -->) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>belongs to</forwardLabel>) N
+(    <backwardLabel>is member of</backwardLabel>) N
+(    <fromCardinalityMax>1</fromCardinalityMax>) N
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(  </relationClass>) N
+(  <relationClass ID="wc2nodes">) N
+(    <name>RivernameNodeRelation</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="wc"/>) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>belongs to</forwardLabel>) N
+(    <backwardLabel>is member of</backwardLabel>) N
+(NA_struktur.xml) (Page 10/13) (Mar 27, 03 12:53) title
+border
+grestore
+(Printed by Andreas von Doemming) rhead
+(NA_struktur.xml) (5/7) (Thursday March 27, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11-12) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) p n
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(  </relationClass>) N
+(  <relationClass ID="rb2strand">) N
+(    <name>RiverbasinToStrand</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="rb"/>) N
+(    <toObjectClass ref="nullStrand"/>) N
+(    <toObjectClass ref="channel"/>) N
+(    <toObjectClass ref="rhb"/>) N
+(<!--    <toObjectClass ref="rht"/> -->) N
+(    <forwardLabel>discharges to</forwardLabel>) N
+(    <backwardLabel>recieves from</backwardLabel>) N
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(    <toCardinalityMax>1</toCardinalityMax>) N
+(  </relationClass>) N
+(  <relationClass ID="strand2node">) N
+(    <name>StrandToNode</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="nullStrand"/>) N
+(    <fromObjectClass ref="channel"/>) N
+(    <fromObjectClass ref="rhb"/>) N
+(<!--    <fromObjectClass ref="rht"/> -->) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(    <backwardLabel>upstream</backwardLabel>) N
+(    <fromCardinalityMax>1</fromCardinalityMax>) N
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(  </relationClass>) N
+(  <relationClass ID="node2strand">) N
+(    <name>NodeToStrand</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="node"/>) N
+(    <toObjectClass ref="nullStrand"/>) N
+(    <toObjectClass ref="channel"/>) N
+(    <toObjectClass ref="rhb"/>) N
+(<!--    <toObjectClass ref="rht"/> -->) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(    <backwardLabel>upstream</backwardLabel>) N
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(    <toCardinalityMax>1</toCardinalityMax>) N
+(  </relationClass>) N
+(  <relationClass ID="rb2rb"> ) N
+(    <name>Riverbasin2Riverbasin</name>) N
+(    <description>aquifer connecting riverbasins</description>) N
+(    <fromObjectClass ref="rb"/>) N
+(    <toObjectClass ref="rb"/>) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(    <backwardLabel>upstream</backwardLabel>) N
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(    <simpleProperty key="value"><!--) S 40 T () S 48 T (<simpleProperty key="m_value">) N
+(      --><name>percentage of discharge</name><type>java.lang.Float</type></simpl) N
+(eProperty>) N
+(    <belongsToNetwork/>) N
+(  </relationClass>) N
+(  <relationClass ID="node2nodeOverflow">) N
+(    <name>NodeToNode</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="node"/>) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(NA_struktur.xml) (Page 11/13) (Mar 27, 03 12:53) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    <backwardLabel>upstream</backwardLabel>) p n
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(    <simpleProperty key="value">) N
+(      <name>percentage of discharge</name>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <belongsToNetwork/>) N
+(  </relationClass>) N
+(  <relationClass ID="node2nodeFunctOut">) N
+(    <name>NodeToNodeFunctOut</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="node"/>) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(    <backwardLabel>upstream</backwardLabel>) N
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(    <simpleProperty key="path">) N
+(      <name>FunctionFile</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <belongsToNetwork/>) N
+(  </relationClass>) N
+(  <relationClass ID="node2nodeFunctIn">) N
+(    <name>NodeToNodeFunctIn</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="node"/>) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(    <backwardLabel>upstream</backwardLabel>) N
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(    <simpleProperty key="path">) N
+(      <name>FunctionFile</name>) N
+(      <type>java.lang.String</type>) N
+(    </simpleProperty>) N
+(    <belongsToNetwork/>) N
+(  </relationClass>) N
+(  <relationClass ID="node2nodeConstOut">) N
+(    <name>NodeToNodeConstOut</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="node"/>) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(    <backwardLabel>upstream</backwardLabel>) N
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(    <toCardinalityMax>unbound</toCardinalityMax>) N
+(    <simpleProperty key="value">) N
+(      <name>percentage of discharge</name>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <belongsToNetwork/>) N
+(  </relationClass>) N
+(  <relationClass ID="node2nodePercent">) N
+(    <name>NodeToNodePercent</name>) N
+(    <description/>) N
+(    <fromObjectClass ref="node"/>) N
+(    <toObjectClass ref="node"/>) N
+(    <forwardLabel>downstream</forwardLabel>) N
+(    <backwardLabel>upstream</backwardLabel>) N
+(    <fromCardinalityMax>unbound</fromCardinalityMax>) N
+(NA_struktur.xml) (Page 12/13) (Mar 27, 03 12:53) title
+border
+grestore
+(Printed by Andreas von Doemming) rhead
+(NA_struktur.xml) (6/7) (Thursday March 27, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (13) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    <toCardinalityMax>unbound</toCardinalityMax>) p n
+(    <simpleProperty key="value">) N
+(      <name>percentage of discharge</name>) N
+(      <type>java.lang.Float</type>) N
+(    </simpleProperty>) N
+(    <belongsToNetwork/>) N
+(  </relationClass>) N
+(<!-- ToDo: implemention of riverbasin to deepaquifer- relation "rb2deepAquif"-->) N
+(</theme>) N
+(NA_struktur.xml) (Page 13/13) (Mar 27, 03 12:53) title
+border
+grestore
+(Printed by Andreas von Doemming) rhead
+(NA_struktur.xml) (7/7) (Thursday March 27, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

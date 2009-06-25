@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "test1: programm wird ausgefuehrt :-)"
+echo "test2: im arbeitsverzeichnis wird eine Datei angelegt..."
+echo "datei ist schreibbar..." >test2.txt
+echo "test2.txt wurde angelegt"
+echo "fertig"
+
+

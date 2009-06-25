@@ -1,0 +1,3188 @@
+%!PS-Adobe-3.0
+%%Title: 2source.xsl
+%%For: javagis
+%%Creator: a2ps version 4.13
+%%CreationDate: Thu Nov 14 14:15:44 2002
+%%BoundingBox: 24 24 571 818
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 17
+%%PageOrder: Ascend
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%Requirements: Tumble Duplex 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Define these in case they're not in the FontInfo (also, here
+    % they're easier to get to.
+    /UnderlinePosition 1 def
+    /UnderlineThickness 1 def
+    
+    % Get the underline position and thickness if they're defined.
+    currentdict /FontInfo known {
+      FontInfo
+      
+      dup /UnderlinePosition known {
+	dup /UnderlinePosition get
+	0 exch FontMatrix transform exch pop
+	/UnderlinePosition exch def
+      } if
+      
+      dup /UnderlineThickness known {
+	/UnderlineThickness get
+	0 exch FontMatrix transform exch pop
+	/UnderlineThickness exch def
+      } if
+      
+    } if
+    currentdict 
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 595 def
+/sw 842 def
+/llx 24 def
+/urx 818 def
+/ury 571 def
+/lly 24 def
+/#copies 1 def
+%% Pagedevice definitions:
+countdictstack
+% Push our own mark, since there can be several PS marks pushed depending
+% where the failure really occured.
+/a2ps_mark
+{
+%%BeginFeature: *Tumble False
+  (<<) cvx exec /Tumble (false) cvx exec (>>) cvx exec setpagedevice
+%%EndFeature
+%%BeginFeature: *Duplex True
+  (<<) cvx exec /Duplex (true) cvx exec (>>) cvx exec setpagedevice
+%%EndFeature
+} stopped
+% My cleartomark
+{ /a2ps_mark eq { exit } if } loop
+countdictstack exch sub dup 0 gt
+{
+  { end } repeat
+}{
+  pop
+} ifelse
+/th 15.000000 def
+/fnfs 11 def
+/bfs 8.005733 def
+/cw 4.803440 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   517.970895 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?xml version="1.0" encoding="utf-8"?>) p n
+(<xsl:stylesheet  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">) N
+(  <xsl:output method="text"/>) N
+(  <xsl:variable name="package" select="/theme/package"/>) N
+(  <xsl:variable name="themeName">) N
+(    <xsl:call-template name="toUpperCase">) N
+(      <xsl:with-param name="word" select="/theme/@ID"/>) N
+(    </xsl:call-template>) N
+(  </xsl:variable>) N
+() N
+(  <xsl:variable name="blank"> </xsl:variable>) N
+() N
+() N
+() N
+(  <xsl:template match="/">) N
+(    <xsl:apply-templates select="theme"/>) N
+(  </xsl:template>) N
+(  ) N
+(  <xsl:template match="theme">) N
+(    ) N
+(    <xsl:apply-templates mode="bean" select="child::*[self::objectClass or self:) N
+(:relationClass]"/>) N
+(    ) N
+(    <xsl:apply-templates mode="session-bean" select="child::*[self::objectClass ) N
+(or self::relationClass]"/>) N
+(    ) N
+(  </xsl:template>) N
+() N
+(  <xsl:template mode="session-bean" match="theme//child::*[self::objectClass or ) N
+(self::relationClass]">) N
+(    <xsl:variable name="objectClass">) N
+(      <xsl:call-template name="toUpperCase">) N
+(        <xsl:with-param name="word" select="@ID"/>) N
+(      </xsl:call-template>) N
+(    </xsl:variable>) N
+(    <xsl:variable name="relationClass">) N
+(      <xsl:value-of select="$objectClass"/>) N
+(    </xsl:variable>) N
+(    ) N
+(         <!--===================================================================) N
+(============-->) N
+(         <!--                                                                   ) N
+(            -->) N
+(         <!--                             SessionBean                           ) N
+(            -->) N
+(         <!--                                                                   ) N
+(            -->) N
+(         <!--===================================================================) N
+(============-->) N
+() N
+(         package <xsl:value-of select="$package"/>;) N
+(         <xsl:if test="local-name\(\)='objectClass'">) N
+(           // This SessionObject represents a Object) N
+(         </xsl:if>) N
+(         <xsl:if test="local-name\(\)='relationClass'">) N
+(           // This SessionObject represents a Relation) N
+(         </xsl:if>) N
+(         ) N
+(         import javax.ejb.CreateException;) N
+(         import javax.ejb.RemoveException;) N
+(         import javax.ejb.FinderException;) N
+(         import javax.ejb.EJBException;) N
+(         import javax.ejb.SessionBean;) N
+(         import javax.ejb.SessionContext;) N
+(2source.xsl) (Page 1/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         import javax.naming.InitialContext;) p n
+(         import javax.naming.NamingException;) N
+(         import java.util.Vector;) N
+(         import java.util.Hashtable;) N
+(         import java.util.Collection;) N
+(         import java.util.Iterator;) N
+(         import java.io.PrintWriter;         ) N
+(         import de.tuhh.wb.javagis.model.Tools;    ) N
+(         import java.io.FileWriter;) N
+(         import java.io.File;) N
+() N
+(         import de.tuhh.wb.javagis.property.ChartProperty;) N
+(         import de.tuhh.wb.javagis.property.VectorSet;) N
+(         //         import de.tuhh.wb.javagis.model.IdManagerLocal;) N
+(         //         import de.tuhh.wb.javagis.model.IdManagerLocalHome;) N
+(         import de.tuhh.wb.javagis.model.ElementLocal;) N
+(         import de.tuhh.wb.javagis.xml.GisTransferObject;) N
+() N
+(         import <xsl:value-of select="$package"/>.vectorsets.*;         ) N
+() N
+(         //         import de.tuhh.wb.javagis.model.VersionLocal;) N
+() N
+(         /**) N
+(         * ) N
+(         * @ejb:bean   name="<xsl:value-of select="$themeName"/>.<xsl:value-of s) N
+(elect="$objectClass"/>Session") N
+(         *             jndi-name="<xsl:value-of select="$themeName"/>.<xsl:value) N
+(-of select="$objectClass"/>Session") N
+(         *             local-jndi-name="<xsl:value-of select="$themeName"/>.<xsl) N
+(:value-of select="$objectClass"/>Session") N
+(         *             view-type="remote") N
+(         *             type="Stateful") N
+(         *             cmp-version="2.x"<!--) N
+(         --><xsl:if test="local-name\(\)='objectClass'">) N
+(         * @ejb:interface extends="de.tuhh.wb.javagis.model.ObjectSession"<!--) N
+(         --></xsl:if>) N
+(         <xsl:if test="local-name\(\)='relationClass'">) N
+(           * @ejb:interface extends="de.tuhh.wb.javagis.model.RelationSession"<!) N
+(--           ) N
+(           --></xsl:if>) N
+(         * @ejb:ejb-ref ejb-name="<xsl:value-of select="$themeName"/>.Version") N
+(         *              view-type="remote") N
+(         *              ref-name="ejb/Versions") N
+(         * @ejb:ejb-ref ejb-name="<xsl:value-of select="$themeName"/>.IdManager") N
+(         *              view-type="local") N
+(         *              ref-name="ejb/<xsl:value-of select="$themeName"/>.IdMana) N
+(ger") N
+(         * @ejb:ejb-ref ejb-name="<xsl:value-of select="$themeName"/>.<xsl:value) N
+(-of select="$objectClass"/>") N
+(         *              view-type="local") N
+(         *              ref-name="ejb/MyEntityBeans"<!--) N
+(         --><xsl:if test="local-name\(\)='relationClass'">) N
+(         <xsl:for-each select="//objectClass">) N
+(           <xsl:variable name="anyClass">) N
+(             <xsl:call-template name="toUpperCase">) N
+(               <xsl:with-param name="word" select="@ID"/>) N
+(             </xsl:call-template>) N
+(           </xsl:variable>) N
+(           * @ejb:ejb-ref ejb-name="<xsl:value-of select="$themeName"/>.<xsl:val) N
+(ue-of select="$anyClass"/>") N
+(           *              view-type="local") N
+(           *              ref-name="ejb/<xsl:value-of select="$anyClass"/>"<!--) N
+(           --></xsl:for-each>) N
+(         </xsl:if><!--) N
+(2source.xsl) (Page 2/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         ) p n
+(         ) N
+(         --><xsl:if test="local-name\(\)='relationClass'">) N
+(         <xsl:for-each select="fromObjectClass">) N
+(           <xsl:variable name="srcClass">) N
+(             <xsl:call-template name="toUpperCase">) N
+(               <xsl:with-param name="word" select="@ref"/>) N
+(             </xsl:call-template>) N
+(           </xsl:variable>) N
+(           * @xejb:ejb-ref ejb-name="<xsl:value-of select="$themeName"/>.<xsl:va) N
+(lue-of select="$srcClass"/>") N
+(           *              view-type="local") N
+(           *              ref-name="ejb/<xsl:value-of select="$srcClass"/>"<!--) N
+(           --></xsl:for-each>) N
+(           <xsl:for-each select="toObjectClass">) N
+(             <xsl:variable name="destClass">) N
+(               <xsl:call-template name="toUpperCase">) N
+(                 <xsl:with-param name="word" select="@ref"/>) N
+(               </xsl:call-template>) N
+(             </xsl:variable>) N
+(             * @xejb:ejb-ref ejb-name="<xsl:value-of select="$themeName"/>.<xsl:) N
+(value-of select="$destClass"/>") N
+(             *              view-type="local") N
+(             *              ref-name="ejb/<xsl:value-of select="$destClass"/>"<!) N
+(--) N
+(             --></xsl:for-each>) N
+(           </xsl:if>) N
+(           */) N
+(         ) N
+(         public class <xsl:value-of select="$objectClass"/>SessionBean implement) N
+(s SessionBean) N
+(         {) N
+(           private SessionContext beanCtx=null;) N
+(           private IdManagerLocal myIdManager;) N
+(           private VersionLocal myVersion;) N
+(           private <xsl:value-of select="$objectClass"/>LocalHome myObjectLocalH) N
+(ome;) N
+() N
+(           // constants:) N
+(           public final static String[] simplePropertyKeys={) N
+(           <xsl:for-each select="simpleProperty">) N
+(             "<xsl:value-of select="@key"/>"<xsl:if test="position\(\) != last\(\)">) N
+(,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           public final static String[] simplePropertyNames={) N
+(           <xsl:for-each select="simpleProperty">) N
+(             "<xsl:value-of select="name"/>"<xsl:if test="position\(\) != last\(\)">) N
+(,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           public final static String[] simplePropertyDescriptions={) N
+(           <xsl:for-each select="simpleProperty">) N
+(             "<xsl:value-of select="description"/>"<xsl:if test="position\(\) != l) N
+(ast\(\)">,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           public final static Class[] simplePropertyClasses={) N
+(           <xsl:for-each select="simpleProperty">) N
+(             <xsl:value-of select="type"/>.class<xsl:if test="position\(\) != last) N
+(\(\)">,</xsl:if>) N
+(           </xsl:for-each>};) N
+() N
+() N
+(           public final static String[] simplePropertyFormats={) N
+(           <xsl:for-each select="simpleProperty">) N
+(             <xsl:choose>) N
+(2source.xsl) (Page 3/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(               <xsl:when test="format">) p n
+(                 "<xsl:value-of select="format"/>"                            ) N
+(               </xsl:when>) N
+(               <xsl:otherwise>) N
+(                 "d.M.y H:m:s") N
+(               </xsl:otherwise>) N
+(             </xsl:choose>) N
+(             <xsl:if test="position\(\) != last\(\)">,</xsl:if>             ) N
+(           </xsl:for-each>};) N
+( ) N
+(           public final String[] chartPropertyKeys={) N
+(           <xsl:for-each select="chartProperty">) N
+(             "<xsl:value-of select="@key"/>"<xsl:if test="position\(\) != last\(\)">) N
+(,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           public final static String[] chartPropertyNames={) N
+(           <xsl:for-each select="chartProperty">) N
+(             "<xsl:value-of select="name"/>"<xsl:if test="position\(\) != last\(\)">) N
+(,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           public final static String[] chartPropertyDescriptions={) N
+(           <xsl:for-each select="chartProperty">) N
+(             "<xsl:value-of select="description"/>"<xsl:if test="position\(\) != l) N
+(ast\(\)">,</xsl:if>) N
+(           </xsl:for-each>};) N
+() N
+(           public final String[] vectorSetKeys={) N
+(           <xsl:for-each select="vectorSet">) N
+(             "<xsl:value-of select="@key"/>"<xsl:if test="position\(\) != last\(\)">) N
+(,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           public final static String[] vectorSetNames={) N
+(           <xsl:for-each select="vectorSet">) N
+(             "<xsl:value-of select="name"/>"<xsl:if test="position\(\) != last\(\)">) N
+(,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           public final static String[] vectorSetDescriptions={) N
+(           <xsl:for-each select="vectorSet">) N
+(             "<xsl:value-of select="description"/>"<xsl:if test="position\(\) != l) N
+(ast\(\)">,</xsl:if>) N
+(           </xsl:for-each>};) N
+(           ) N
+(           <xsl:if test="local-name\(\)='relationClass'">) N
+(             // Definition for RelationLocalHome-Interfaces \(of all Objects\)) N
+(             <xsl:for-each select="//objectClass">) N
+(               <xsl:variable name="anyObjectClass">) N
+(                 <xsl:call-template name="toUpperCase">) N
+(                   <xsl:with-param name="word" select="@ID"/>) N
+(                 </xsl:call-template>) N
+(               </xsl:variable>) N
+(               private <xsl:value-of select="$anyObjectClass"/>LocalHome my<xsl:) N
+(value-of select="$anyObjectClass"/>LocalHome;) N
+(             </xsl:for-each>) N
+(           </xsl:if>) N
+(           ) N
+(           <xsl:if test="local-name\(\)='relationClass'">) N
+(             //Relations:       ) N
+(             public final static String forwardLabel="<xsl:value-of select="forw) N
+(ardLabel"/>";) N
+(           public final static String backwardLabel="<xsl:value-of select="backw) N
+(ardLabel"/>";) N
+(           ) N
+(           /**) N
+(           * @ejb:interface-method) N
+(2source.xsl) (Page 4/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5-6) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(           */) p n
+(           public String returnForwardLabel\(\)) N
+(           {) N
+(            return forwardLabel;) N
+(           }) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public String returnBackwardLabel\(\)) N
+(           {) N
+(            return backwardLabel;) N
+(           }) N
+(           ) N
+(           public final static String[] relationSourceKeys=) N
+(             {) N
+(             <xsl:for-each select="fromObjectClass">) N
+(               "<xsl:value-of select="@ref"/>"<xsl:if test="position\(\) != last\(\)) N
+(">,</xsl:if>) N
+(           </xsl:for-each>) N
+(           };) N
+(           public final static String[] relationDestinationKeys=) N
+(           {) N
+(           <xsl:for-each select="toObjectClass">) N
+(           "<xsl:value-of select="@ref"/>"<xsl:if test="position\(\) != last\(\)">,<) N
+(/xsl:if>) N
+(         </xsl:for-each>) N
+(         };) N
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] relationSourceKeys\(\)) N
+(         {) N
+(          return relationSourceKeys;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] relationDestinationKeys\(\)) N
+(         {) N
+(          return relationDestinationKeys;) N
+(         }) N
+(       </xsl:if>        ) N
+() N
+() N
+(       <xsl:if test="local-name\(\)='objectClass'">) N
+(           //Relations:) N
+(             <xsl:variable name="objectKey" select="@ID"/>             ) N
+(             public final static String[] forwardRelations=) N
+(             {) N
+(             <xsl:for-each select="//fromObjectClass[@ref=$objectKey]">) N
+(               <xsl:variable name="relationClass"> ) N
+(               <xsl:call-template name="toUpperCase">) N
+(                 <xsl:with-param name="word" select="../@ID"/>) N
+(               </xsl:call-template>) N
+(             </xsl:variable>) N
+(             "<xsl:value-of select="$relationClass"/>"<xsl:if test="position\(\) !) N
+(= last\(\)">,</xsl:if>) N
+(           </xsl:for-each>) N
+(           };) N
+(           public final static String[] backwardRelations=) N
+(           {) N
+(           <xsl:for-each select="//toObjectClass[@ref=$objectKey]">) N
+(             <xsl:variable name="relationClass"> ) N
+(2source.xsl) (Page 5/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(             <xsl:call-template name="toUpperCase">) p n
+(               <xsl:with-param name="word" select="../@ID"/>) N
+(             </xsl:call-template>) N
+(           </xsl:variable>) N
+(           "<xsl:value-of select="$relationClass"/>"<xsl:if test="position\(\) != ) N
+(last\(\)">,</xsl:if>) N
+(         </xsl:for-each>) N
+(         };) N
+(       </xsl:if>        ) N
+(       ) N
+(       ) N
+(       <!--       ) N
+(            <xsl:for-each select="chartProperty">) N
+(              <xsl:variable name="propName">) N
+(                <xsl:call-template name="toUpperCase"><xsl:with-param name="word) N
+(" select="@key"/></xsl:call-template>        ) N
+(              </xsl:variable>) N
+(              /**) N
+(              * @ejb:interface-method) N
+(              */) N
+(              public ChartProperty get<xsl:value-of select="$propName"/>\(int pos) N
+(\) throws FinderException) N
+(              {) N
+(              return getObject\(pos\).get<xsl:value-of select="$propName"/>\(\);) N
+(              }) N
+(              ) N
+(              /**) N
+(              * @ejb:interface-method) N
+(              */) N
+(              public void set<xsl:value-of select="$propName"/>\(int pos,ChartPro) N
+(perty value\) throws FinderException) N
+(              {) N
+(              getObject\(pos\).set<xsl:value-of select="$propName"/>\(value\);) N
+(              }) N
+(            </xsl:for-each>) N
+(            -->) N
+() N
+(              /**) N
+(              * @ejb:interface-method) N
+(              */) N
+(              public Vector getVectorSets\(Object primKey\) throws javax.ejb.Finde) N
+(rException) N
+(              {) N
+(              Vector result=new Vector\(\);) N
+(               for\(int i=0;i <![CDATA[ < ]]> <xsl:value-of select="count\(vectorS) N
+(et\)"/>;i++\)) N
+(                result.add\(getVectorSet\(primKey,i\)\);) N
+(               return result;) N
+(              }) N
+() N
+(              /**) N
+(              * @ejb:interface-method) N
+(              */) N
+(              public void setVectorSets\(Object primKey,Vector vectorSets\) throws) N
+( javax.ejb.FinderException) N
+(              {            ) N
+(               System.out.println\("SessionJavaBean: setVectorSets... size"+vecto) N
+(rSets.size\(\)\);) N
+(               for\(int i=0;i <![CDATA[ < ]]> <xsl:value-of select="count\(vectorS) N
+(et\)"/>;i++\)) N
+(                setVectorSet\(primKey,i,vectorSets.elementAt\(i\)\);) N
+(              }) N
+() N
+(              /**) N
+(2source.xsl) (Page 6/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7-8) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(              * @ejb:interface-method) p n
+(              */) N
+(              public Object getVectorSet\(Object primKey,int pos\) throws javax.ej) N
+(b.FinderException) N
+(              {) N
+(                <xsl:for-each select="vectorSet">) N
+(                  <xsl:variable name="propName">) N
+(                    <xsl:call-template name="toUpperCase">) N
+(                      <xsl:with-param name="word" select="@key"/>) N
+(                    </xsl:call-template>) N
+(                  </xsl:variable>) N
+(                  if\(pos==<xsl:value-of select="position\(\)-1"/>\)) N
+(                   return getMyObject\(primKey\).get<xsl:value-of select="$propNam) N
+(e"/>\(\);) N
+(                </xsl:for-each>) N
+(                return null;) N
+(              }) N
+() N
+(              /**) N
+(              * @ejb:interface-method) N
+(              */) N
+(              public void setVectorSet\(Object primKey,int pos,Object value\) thro) N
+(ws javax.ejb.FinderException) N
+(              {) N
+(                System.out.println\("setVectorSet Nr"+pos\);) N
+(                switch\(pos\)) N
+(                {) N
+(                <xsl:for-each select="vectorSet">) N
+(                  <xsl:variable name="propName">) N
+(                    <xsl:call-template name="toUpperCase">) N
+(                      <xsl:with-param name="word" select="@key"/>) N
+(                    </xsl:call-template>) N
+(                  </xsl:variable>) N
+(                  case <xsl:value-of select="position\(\)-1"/>:) N
+(                  System.out.println\("SessionJavaBean.setVectorSet <xsl:value-of) N
+( select="$propName"/>..."\);) N
+(                  getMyObject\(primKey\).set<xsl:value-of select="$propName"/>\(\(<x) N
+(sl:value-of select="$objectClass"/><xsl:value-of select="$propName"/>\)value\);) N
+(                  break;) N
+(                </xsl:for-each>) N
+(                 default:) N
+(                  break;) N
+(                }) N
+(              }) N
+() N
+(         // Meta-information:) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public boolean isRelation\(\)) N
+(         {) N
+(         <xsl:choose>) N
+(           <xsl:when test="relationClass">) N
+(             return true;) N
+(           </xsl:when>) N
+(           <xsl:otherwise>) N
+(             return false;) N
+(           </xsl:otherwise>) N
+(         </xsl:choose>) N
+(         }) N
+() N
+(         <xsl:if test="local-name\(\)='objectClass'">) N
+(           /**) N
+(           * @ejb:interface-method) N
+(2source.xsl) (Page 7/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(           */) p n
+(           public String[] backwardRelations\(\)) N
+(           {) N
+(           return backwardRelations;) N
+(           }       ) N
+(           ) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public String[] forwardRelations\(\)) N
+(           {) N
+(           return forwardRelations;) N
+(           }               ) N
+() N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public Vector returnForwardRelations\(Object primKey\) throws javax.ejb) N
+(.FinderException) N
+(           {) N
+(            return getMyObject\(primKey\).returnForwardRelations\(\);) N
+(           }) N
+() N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public Vector returnBackwardRelations\(Object primKey\) throws javax.ej) N
+(b.FinderException) N
+(           {) N
+(            return getMyObject\(primKey\).returnBackwardRelations\(\);) N
+(           }) N
+(         </xsl:if>) N
+(         ) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String name\(\)) N
+(         {) N
+(          return "<xsl:value-of select="name"/>";) N
+(         }) N
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */         ) N
+(         public String description\(\)) N
+(         {) N
+(          return "<xsl:value-of select="description"/>";) N
+(         }) N
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String key\(\)) N
+(         {) N
+(          return "<xsl:value-of select="@ID"/>";) N
+(         }) N
+(         ) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] simplePropertyKeys\(\)) N
+(         {) N
+(          return simplePropertyKeys;) N
+(         }) N
+(2source.xsl) (Page 8/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (9-10) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         /**) p n
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] chartPropertyKeys\(\)) N
+(         {) N
+(          return chartPropertyKeys;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] vectorSetKeys\(\)) N
+(         {) N
+(          return vectorSetKeys;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] simplePropertyNames\(\)) N
+(         {) N
+(           return simplePropertyNames;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] chartPropertyNames\(\)) N
+(         {) N
+(           return chartPropertyNames;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] vectorSetNames\(\)) N
+(         {) N
+(           return vectorSetNames;) N
+(         }) N
+(         ) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] simplePropertyDescriptions\(\)) N
+(         {) N
+(          return simplePropertyDescriptions;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] chartPropertyDescriptions\(\)) N
+(         {) N
+(          return chartPropertyDescriptions;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] vectorSetDescriptions\(\)) N
+(         {) N
+(          return vectorSetDescriptions;) N
+(         }) N
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] simplePropertyFormats\(\)) N
+(         {) N
+(          return simplePropertyFormats;) N
+(2source.xsl) (Page 9/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         }) p n
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public Class[] simplePropertyClasses\(\)) N
+(         {) N
+(          return simplePropertyClasses;) N
+(         }) N
+() N
+(         // BasePoints          ) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public boolean hasSymbol\(\)) N
+(         {) N
+(         <xsl:choose>) N
+(           <xsl:when test="symbol">) N
+(             return true;) N
+(           </xsl:when>) N
+(           <xsl:otherwise>) N
+(             return false;) N
+(           </xsl:otherwise>) N
+(         </xsl:choose>) N
+(         }) N
+() N
+(         // getter and setter) N
+(         <xsl:if test="local-name\(\)='objectClass'">) N
+(           // Basepoint-methods, defined in ObjectSession-interface) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public void setBasePointX\(Object primKey,Double x\) throws javax.ejb.F) N
+(inderException) N
+(           {) N
+(           <xsl:choose>) N
+(             <xsl:when test="symbol">) N
+(               getMyObject\(primKey\).setBasePointX\(x\);) N
+(             </xsl:when>) N
+(             <xsl:otherwise>) N
+(               System.out.println\(":-/ setBasePoint, althought Object has no sym) N
+(bol"\);) N
+(             </xsl:otherwise>) N
+(           </xsl:choose>) N
+(           }) N
+(           ) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public Double getBasePointX\(Object primKey\) throws javax.ejb.FinderEx) N
+(ception) N
+(           {) N
+(           <xsl:choose>) N
+(             <xsl:when test="symbol">) N
+(               return getMyObject\(primKey\).getBasePointX\(\);) N
+(             </xsl:when>) N
+(             <xsl:otherwise>) N
+(               return null;) N
+(             </xsl:otherwise>) N
+(           </xsl:choose>) N
+(           }) N
+() N
+(           /**) N
+(           * @ejb:interface-method) N
+(2source.xsl) (Page 10/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11-12) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(           */) p n
+(           public void setBasePointY\(Object primKey,Double y\) throws javax.ejb.F) N
+(inderException) N
+(           {) N
+(           <xsl:choose>) N
+(             <xsl:when test="symbol">) N
+(               getMyObject\(primKey\).setBasePointY\(y\);) N
+(             </xsl:when>) N
+(             <xsl:otherwise>) N
+(               System.out.println\(":-/ setBasePoint, althought Object has no sym) N
+(bol"\);) N
+(             </xsl:otherwise>) N
+(           </xsl:choose>) N
+(           }) N
+(           ) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public Double getBasePointY\(Object primKey\) throws javax.ejb.FinderEx) N
+(ception) N
+(           {) N
+(           <xsl:choose>) N
+(             <xsl:when test="symbol">) N
+(               return getMyObject\(primKey\).getBasePointY\(\);) N
+(             </xsl:when>) N
+(             <xsl:otherwise>) N
+(               return null;) N
+(             </xsl:otherwise>) N
+(           </xsl:choose>) N
+(           }) N
+(         </xsl:if>) N
+() N
+(         <xsl:for-each select="simpleProperty">) N
+(           <xsl:variable name="fieldName">) N
+(             <xsl:call-template name="toUpperCase">) N
+(               <xsl:with-param name="word" select="@key"/>) N
+(             </xsl:call-template>) N
+(           </xsl:variable>) N
+(           // Todo: zusaetzlich nach Version selektieren) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public Vector findBy<xsl:value-of select="$fieldName"/>\(Object value\)) N
+( throws javax.ejb.FinderException) N
+(           {) N
+(            Collection col=myObjectLocalHome.findBy<xsl:value-of select="$fieldN) N
+(ame"/>\(\(<xsl:value-of select="type"/>\)value\);) N
+(            Vector resultVector=new Vector\(\);) N
+(            Iterator it=col.iterator\(\);) N
+(            while\(it.hasNext\(\)\)) N
+(            {) N
+(             resultVector.add\(\(\(ElementLocal\)it.next\(\)\).getId\(\)\);) N
+(            }) N
+(            return resultVector;) N
+(           }) N
+(          </xsl:for-each>) N
+() N
+(          ) N
+(          /**) N
+(          * @ejb:interface-method) N
+(          */) N
+(          public void toXML\(String fileName\) throws java.io.IOException) N
+(          {) N
+(            Collection col=myVersion.get<xsl:value-of select="$objectClass"/>\(\);) N
+(2source.xsl) (Page 11/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(            PrintWriter out=new PrintWriter\(new FileWriter\(fileName,true\)\);) p n
+(            Tools.genXmlTag\(out,"table","key","<xsl:value-of select="@ID"/>"\);) N
+(            Iterator it=col.iterator\(\);) N
+(            while\(it.hasNext\(\)\)) N
+(            {) N
+(             \(\(<xsl:value-of select="$objectClass"/>Local\)it.next\(\)\).toXML\(out\);) N
+(            } ) N
+(           Tools.genXmlTag\(out,"/table"\);) N
+(           out.close\(\);  ) N
+(          }) N
+() N
+(          /**) N
+(          * @ejb:interface-method) N
+(          */) N
+(          public void loadGisTransferObject\(Object primKey,GisTransferObject tra) N
+(nsferObject\) throws javax.ejb.FinderException) N
+(          {) N
+(           getMyObject\(primKey\).loadGisTransferObject\(transferObject\);) N
+(          }) N
+() N
+() N
+(         <xsl:for-each select="simpleProperty">) N
+(           <xsl:variable name="propName">) N
+(             <xsl:call-template name="toUpperCase"><xsl:with-param name="word" s) N
+(elect="@key"/></xsl:call-template>        ) N
+(           </xsl:variable>) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public <xsl:value-of select="type"/> get<xsl:value-of select="$propNa) N
+(me"/>\(Object primKey\) throws javax.ejb.FinderException) N
+(           {) N
+(            return getMyObject\(primKey\).get<xsl:value-of select="$propName"/>\(\);) N
+(           }                      ) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public void set<xsl:value-of select="$propName"/>\(Object primKey,<xsl) N
+(:value-of select="type"/> value\) throws javax.ejb.FinderException) N
+(           {) N
+(             getMyObject\(primKey\).set<xsl:value-of select="$propName"/>\(value\);) N
+(           }  ) N
+() N
+(         </xsl:for-each>) N
+(                  ) N
+(         // PropertySize...) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public int getSimplePropertySize\(\)) N
+(         {) N
+(          return <xsl:value-of select="count\(simpleProperty\)"/>;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public int getChatPropertySize\(\)) N
+(         {) N
+(          return <xsl:value-of select="count\(chatProperty\)"/>;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public int getVectorSetSize\(\)) N
+(2source.xsl) (Page 12/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (13-14) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         {) p n
+(          return <xsl:value-of select="count\(vectorSet\)"/>;) N
+(         }) N
+() N
+(         // PropertyNames) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] getSimplePropertyNames\(\)) N
+(         {) N
+(          return simplePropertyNames;) N
+(         } ) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] getChartPropertyNames\(\)) N
+(         {) N
+(          return chartPropertyNames;) N
+(         }) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public String[] getVectorSetNames\(\)) N
+(         {) N
+(          return vectorSetNames;) N
+(         }) N
+(         // simplePropertyClasses) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public Class[] getSimplePropertyClasses\(\)) N
+(         {) N
+(          return simplePropertyClasses;) N
+(         }) N
+() N
+(         // Property- setter/getter) N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public Object getSimplePropertyValue\(Object primKey,int colIndex\) throw) N
+(s javax.ejb.FinderException) N
+(         {) N
+(          switch\(colIndex\)) N
+(            {) N
+(             <xsl:for-each select="simpleProperty">) N
+(               <xsl:variable name="propClass">) N
+(                 <xsl:call-template name="toUpperCase">) N
+(                   <xsl:with-param name="word" select="@key"/>) N
+(                 </xsl:call-template>) N
+(               </xsl:variable>) N
+(               case <xsl:value-of select="position\(\)-1"/>:) N
+(               return get<xsl:value-of select="$propClass"/>\(primKey\);) N
+(             </xsl:for-each>) N
+(             default:) N
+(             return "#";) N
+(            }) N
+(         }           ) N
+(             /**) N
+(             * @ejb:interface-method) N
+(             */) N
+(             public Hashtable getSimplePropertyRows\(Vector primKeys\) throws java) N
+(x.ejb.FinderException) N
+(             {) N
+(             Hashtable result=new Hashtable\(\);) N
+(2source.xsl) (Page 13/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(             ) p n
+(             for\(int n=0;n <![CDATA[ < ]]> primKeys.size\(\);n++\)) N
+(             {) N
+(              Object primKey=primKeys.elementAt\(n\);) N
+(              result.put\(primKey,getSimplePropertyRow\(primKey\)\);) N
+(             }) N
+(             return result;) N
+(             }) N
+(            ) N
+(             /**) N
+(             * @ejb:interface-method) N
+(             */) N
+(             public Vector getSimplePropertyRow\(Object primKey\) throws javax.ejb) N
+(.FinderException) N
+(             {) N
+(              Vector resultRow=new Vector\(\);) N
+(              for\(int i=0;i <![CDATA[ < ]]> getSimplePropertySize\(\);i++\)) N
+(               resultRow.add\(getSimplePropertyValue\(primKey,i\)\);) N
+(              return resultRow;) N
+(             }) N
+() N
+(             /**) N
+(            * @ejb:interface-method) N
+(            */) N
+(            public void setSimplePropertyValue\(Object primKey,int colIndex,Objec) N
+(t value\) throws javax.ejb.FinderException ) N
+(            {) N
+(            switch\(colIndex\)) N
+(            {) N
+(            <xsl:for-each select="simpleProperty">) N
+(              <xsl:variable name="propClass">) N
+(                <xsl:call-template name="toUpperCase">) N
+(                  <xsl:with-param name="word" select="@key"/>) N
+(                </xsl:call-template>) N
+(              </xsl:variable>) N
+(              case <xsl:value-of select="position\(\)-1"/>:) N
+(              set<xsl:value-of select="$propClass"/>\(primKey,\(<xsl:value-of sele) N
+(ct="type"/>\)value\);) N
+(              break;) N
+(            </xsl:for-each>) N
+(            default:) N
+(            break;) N
+(            }            ) N
+(            return;) N
+(            }) N
+() N
+() N
+() N
+(            // Create-Methods) N
+(           <xsl:if test="local-name\(\)='objectClass'">) N
+(           /**) N
+(           * @ejb:interface-method) N
+(           */) N
+(           public Object createObject\(\) throws CreateException) N
+(           {) N
+(            <xsl:value-of select="$objectClass"/>Local newObject = myObjectLocal) N
+(Home.create\(myIdManager.useId\(\),myVersion\);) N
+(            return newObject.getPrimaryKey\(\);) N
+(           }) N
+(          </xsl:if>) N
+() N
+() N
+(          <xsl:if test="local-name\(\)='relationClass'">) N
+(            /**) N
+(2source.xsl) (Page 14/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (15-16) 8
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(            * @ejb:interface-method) p n
+(            */) N
+(            public Object createRelation\(String srcKey,Object srcId,String destK) N
+(ey,Object destId\) throws CreateException) N
+(            {) N
+(            Object src=null;) N
+(                        ) N
+(            <xsl:for-each select="fromObjectClass">) N
+(              <xsl:variable name="srcClass">) N
+(                <xsl:call-template name="toUpperCase">) N
+(                  <xsl:with-param name="word" select="@ref"/>) N
+(                </xsl:call-template>) N
+(              </xsl:variable>) N
+(              if\("<xsl:value-of select="@ref"/>".equals\(srcKey\)\)) N
+(              try) N
+(              {) N
+(              src=my<xsl:value-of select="$srcClass"/>LocalHome.findByPrimaryKey) N
+(\(\(Integer\)srcId\);) N
+(              }) N
+(              catch\(FinderException e\)) N
+(              {) N
+(               throw new CreateException\(e.getMessage\(\)+"maybe type of sourceObj) N
+(ect is not allowed in this relationship"\);) N
+(              }) N
+(            </xsl:for-each>) N
+(            if\(src==null\)) N
+(              throw new CreateException\("Type of sourceObject is not allowed in ) N
+(this relationship"\);) N
+() N
+(            Object dest=null;) N
+(            <xsl:for-each select="toObjectClass">) N
+(              <xsl:variable name="destClass">) N
+(                <xsl:call-template name="toUpperCase">) N
+(                  <xsl:with-param name="word" select="@ref"/>) N
+(                </xsl:call-template>) N
+(              </xsl:variable>) N
+(              if\("<xsl:value-of select="@ref"/>".equals\(destKey\)\)) N
+(              try) N
+(              {) N
+(                dest=my<xsl:value-of select="$destClass"/>LocalHome.findByPrimar) N
+(yKey\(\(Integer\)destId\);) N
+(              }) N
+(              catch\(FinderException e\)) N
+(              {) N
+(                throw new CreateException\(e.getMessage\(\)+"maybe type of destinat) N
+(ionObject is not allowed in this relationship"\);) N
+(              }) N
+(            </xsl:for-each>) N
+(            if\(dest==null\)) N
+(             throw new CreateException\("Type of destinationObject is not allowed) N
+( in this relationship"\);) N
+(            ) N
+(            <xsl:value-of select="$relationClass"/>Local newRelation = myObjectL) N
+(ocalHome.create\(myIdManager.useId\(\),myVersion,src,dest\);) N
+(            return newRelation.getPrimaryKey\(\);) N
+(            }) N
+(          </xsl:if>) N
+() N
+(          <xsl:if test="local-name\(\)='relationClass'">) N
+(            ) N
+() N
+(          /**) N
+(          * @ejb:interface-method) N
+(          */) N
+(2source.xsl) (Page 15/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(          public Vector getRelationVector\(Object rId\) throws javax.ejb.FinderExc) p n
+(eption) N
+(          {) N
+(            System.out.println\(name\(\)+"Session: getRelationsVector..."\);) N
+(           <xsl:value-of select="$objectClass"/>Local relation=getMyObject\(rId\);) N
+(            System.out.println\(name\(\)+"Session: found Relation #"+relation.getId) N
+(\(\)\);) N
+(           Vector result=new Vector\(\);) N
+(           Object srcId =null;) N
+(           String srcKey=null;) N
+(           Object destId =null;) N
+(           String destKey=null;) N
+() N
+(            <xsl:for-each select="fromObjectClass">) N
+(              <xsl:variable name="srcClass">) N
+(                <xsl:call-template name="toUpperCase">) N
+(                  <xsl:with-param name="word" select="@ref"/>) N
+(                </xsl:call-template>) N
+(              </xsl:variable>) N
+(              if\(relation.getSrc<xsl:value-of select="$srcClass"/>\(\)!=null\)) N
+(              {) N
+(                srcId=relation.getSrc<xsl:value-of select="$srcClass"/>\(\).getId\() N
+(\);) N
+(                srcKey="<xsl:value-of select="@ref"/>";) N
+(              }) N
+(           </xsl:for-each>) N
+(            <xsl:for-each select="toObjectClass">) N
+(              <xsl:variable name="destClass">) N
+(                <xsl:call-template name="toUpperCase">) N
+(                  <xsl:with-param name="word" select="@ref"/>) N
+(                </xsl:call-template>) N
+(              </xsl:variable>) N
+() N
+(              if\(relation.getDest<xsl:value-of select="$destClass"/>\(\)!=null\)) N
+(              {) N
+(                destId=relation.getDest<xsl:value-of select="$destClass"/>\(\).get) N
+(Id\(\);              ) N
+(                destKey="<xsl:value-of select="@ref"/>";) N
+(              }) N
+(           </xsl:for-each>) N
+(            result.add\(srcId\);) N
+(            result.add\(srcKey\);) N
+(            result.add\(destId\);) N
+(            result.add\(destKey\);) N
+(            System.out.println\(name\(\)+"Session: RelationsVector is:"\);) N
+(            System.out.println\(name\(\)+"Session: srcID"+srcId.toString\(\)+"  "+src) N
+(Key\);) N
+(            System.out.println\(name\(\)+"Session: destID"+destId.toString\(\)+"   "+) N
+(destKey\);) N
+(            return result;) N
+(           }) N
+(          </xsl:if>) N
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public void removeObject\(Integer id\) throws RemoveException, FinderExce) N
+(ption) N
+(         {) N
+(           myObjectLocalHome.remove\(id\);) N
+(         }) N
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(2source.xsl) (Page 16/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (17-18) 9
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         */) p n
+(          public Vector getPrimaryKeyList\(\) //throws Exception) N
+(         {) N
+() N
+(            Collection col=myVersion.get<xsl:value-of select="$objectClass"/>\(\);) N
+(            Vector primaryKeyList=new Vector\(\);) N
+(            System.out.println\("ObjectSession:  got myObjects \("+col.size\(\)+" el) N
+(ements\) ... "\);) N
+(            Iterator it=col.iterator\(\);) N
+(            while\(it.hasNext\(\)\)) N
+(            {) N
+(              primaryKeyList.add\(\(\(<xsl:value-of select="$objectClass"/>Local\) i) N
+(t.next\(\)\).getPrimaryKey\(\)\);) N
+(            } ) N
+(            return primaryKeyList;) N
+(         }) N
+() N
+(          <!--) N
+(               /**) N
+(               * @ejb:interface-method) N
+(               */) N
+(               public Vector getPrimaryKeyListOrdered\(int colIndex\) throws javax) N
+(.ejb.FinderException //throws Exception) N
+(               {) N
+(               Collection col=null;) N
+(               switch\(colIndex\)) N
+(               {) N
+(               case 0:) N
+(               break;  //primKey) N
+(               <xsl:for-each select="simpleProperty">) N
+(                 <xsl:variable name="propClass">) N
+(                   <xsl:call-template name="toUpperCase">) N
+(                     <xsl:with-param name="word" select="@key"/>) N
+(                   </xsl:call-template>) N
+(                 </xsl:variable>) N
+(                 case <xsl:value-of select="position\(\)"/>:) N
+(                 col=myObjectLocalHome.findOrderedBy<xsl:value-of select="$propC) N
+(lass"/>\(\);) N
+(                 break;) N
+(               </xsl:for-each>) N
+(               default:) N
+(               throw\(new FinderException\("unable to return ordered List"\)\);     ) N
+(      ) N
+(               }) N
+(               primaryKeyList=new Vector\(\);) N
+(               System.out.println\("ObjectSession:  got sorted Objects \("+col.siz) N
+(e\(\)+" elements\) ... "\);) N
+(               Iterator it=col.iterator\(\);) N
+(               while\(it.hasNext\(\)\)) N
+(               {) N
+(               primaryKeyList.add\(\(\(<xsl:value-of select="$objectClass"/>Local\) ) N
+(it.next\(\)\).getPrimaryKey\(\)\);) N
+(               }           ) N
+(               return primaryKeyList;) N
+(               }) N
+(               -->) N
+() N
+(         /**) N
+(         * @ejb:interface-method) N
+(         */) N
+(         public int getSize\(\)) N
+(         {) N
+(           Collection col=myVersion.get<xsl:value-of select="$objectClass"/>\(\);) N
+(           return col.size\(\);) N
+(2source.xsl) (Page 17/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         }) p n
+() N
+(          /**) N
+(          * @ejb:interface-method) N
+(          */) N
+(          public String getInfo\(Object primKey\) throws FinderException) N
+(          {) N
+(           return getMyObject\(primKey\).getInfo\(\);) N
+(          }) N
+() N
+(          /**) N
+(          * @ejb:interface-method) N
+(          */) N
+(          public String getInfoForAll\(Object primKey\) throws FinderException) N
+(          {) N
+(           return getMyObject\(primKey\).getInfo\(\);) N
+(          }) N
+() N
+() N
+(          /**) N
+(          * Bean-logic) N
+(          */) N
+(          private <xsl:value-of select="$objectClass"/>Local getMyObject\(Object ) N
+(primKey\) throws FinderException) N
+(          {) N
+(            return myObjectLocalHome.findByPrimaryKey\(\(Integer\)primKey\);) N
+(          }) N
+() N
+(         public void setSessionContext\(SessionContext ctx\)) N
+(         {) N
+(           this.beanCtx=ctx;) N
+(         }) N
+(         ) N
+(         public void ejbCreate\(\) throws CreateException) N
+(         {) S 16 T () N
+(         // fake) N
+(         }) N
+(               ) N
+(         /**) N
+(         * @ejb:create-method) N
+(         */) N
+(         public void ejbCreate\(Object versionId\) throws CreateException) N
+(         {) S 16 T () N
+(           Hashtable env=new Hashtable\(\);) N
+(           env.put\("java.naming.factory.initial","org.jnp.interfaces.NamingConte) N
+(xtFactory"\);) N
+(           env.put\("java.naming.factory.url.pkgs","org.jboss.naming:org.jnp.inte) N
+(rfaces"\);) N
+(           env.put\("java.naming.provider.url","localhost"\);) N
+(           System.out.println\("context... "\);) N
+(           try) N
+(           { ) N
+(             InitialContext ctx=new InitialContext\(env\); // env) N
+() N
+(             System.out.println\("ObjectSession: request my VersionLocalHome... ") N
+(\);) N
+(             VersionLocalHome versionLocalHome =\(VersionLocalHome\)ctx.lookup\("ja) N
+(va:comp/env/ejb/Versions"\);) N
+(             System.out.println\("ObjectSession:  got my VersionLocalHome"\);) N
+() N
+(             System.out.println\("ObjectSession: request my VersionEntity... "\);) N
+(             myVersion=versionLocalHome.findByPrimaryKey\(\(Integer\) versionId\);) N
+(             System.out.println\("ObjectSession:  got my VersionEntity"\);) N
+() N
+(2source.xsl) (Page 18/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (19-20) 10
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(             System.out.println\("ObjectSession: request my EntityBeanLocalHome..) p n
+(. "\);) N
+(             myObjectLocalHome=\(<xsl:value-of select="$objectClass"/>LocalHome\) ) N
+(ctx.lookup\("java:comp/env/ejb/MyEntityBeans"\);) N
+(             System.out.println\("ObjectSession:  got my EntityBeanLocalHome"\);) N
+() N
+(         <xsl:if test="local-name\(\)='relationClass'">) N
+(           // get RelationLocalHome-methods \(get LocalHomes of all objects\)) N
+(           <xsl:for-each select="//objectClass">) N
+(             <xsl:variable name="anyObjectClass">) N
+(               <xsl:call-template name="toUpperCase">) N
+(                 <xsl:with-param name="word" select="@ID"/>) N
+(               </xsl:call-template>) N
+(             </xsl:variable>                          ) N
+(             System.out.println\("RelationSession: request my <xsl:value-of selec) N
+(t="$anyObjectClass"/>LocalHome... "\);) N
+(             my<xsl:value-of select="$anyObjectClass"/>LocalHome =\(<xsl:value-of) N
+( select="$anyObjectClass"/>LocalHome\) ctx.lookup\("java:comp/env/ejb/<xsl:value-o) N
+(f select="$anyObjectClass"/>"\);) N
+(             System.out.println\("RelationSession:  got my <xsl:value-of select=") N
+($anyObjectClass"/>LocalHome"\);) N
+(           </xsl:for-each>) N
+(         </xsl:if>) N
+(         ) N
+() N
+(             System.out.println\("ObjectSession: request the idManagerLocalHome"\)) N
+(;) N
+(             IdManagerLocalHome idManagerLocalHome =\(IdManagerLocalHome\)ctx.look) N
+(up\("java:comp/env/ejb/<xsl:value-of select="$themeName"/>.IdManager"\);) N
+(             System.out.println\("ObjectSession:  got myIdManagerLocalHome"\);) N
+() N
+(             try) N
+(             {) N
+(               System.out.println\("ObjectSession: request my IdManagerEntity...") N
+(\);) N
+(               myIdManager=idManagerLocalHome.findByPrimaryKey\("<xsl:value-of se) N
+(lect="$themeName"/>.<xsl:value-of select="$objectClass"/>"\);) N
+(               System.out.println\("ObjectSession:  got myIdManagerEntity"\);) N
+(             }) N
+(             catch\(FinderException e\)) N
+(             {) N
+(               System.out.println\(e.getMessage\(\)\);) N
+(               System.out.println\("  ObjectSession: maybe IdManagerEntity has no) N
+(t been created for this table, try to create ..."\);) N
+(               idManagerLocalHome.create\("<xsl:value-of select="$themeName"/>.<x) N
+(sl:value-of select="$objectClass"/>"\);) N
+(               System.out.println\("  ObjectSession: created IdManagerEntity"\);) N
+( ) N
+(               System.out.println\("  ObjectSession: request my IdManagerEntity a) N
+(gain"\);) N
+(               myIdManager=idManagerLocalHome.findByPrimaryKey\("<xsl:value-of se) N
+(lect="$themeName"/>.<xsl:value-of select="$objectClass"/>"\);) N
+(               System.out.println\("  ObjectSession:  yes, got myIdManagerEntity ) N
+(now"\);) N
+(             }) N
+(           }) N
+(           catch\(FinderException e\)) N
+(           {) N
+(             throw new CreateException\(e.getMessage\(\)\);) N
+(           }         ) N
+(           catch\(NamingException e\)) N
+(           {) N
+(             throw new CreateException\(e.getMessage\(\)\);) N
+(           }           ) N
+(2source.xsl) (Page 19/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(         }) p n
+(    ) N
+(         public void ejbActivate\(\) // prepare for activate) N
+(         {) N
+(           System.out.println\("aktivate..."\);) N
+(         }) N
+(    ) N
+(         public void ejbRemove\(\) // free recources) N
+(         {    ) N
+(           myIdManager=null;) N
+(           myVersion=null;) N
+(           myObjectLocalHome=null;) N
+(           System.out.println\("remove..."\);) N
+(         }) N
+() N
+(         public void ejbPassivate\(\) // prepare for passivate) N
+(         {) N
+(           System.out.println\("passivate..."\);) N
+(         }) N
+(                               ) N
+(         }) N
+(  </xsl:template>) N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+(         <!--===================================================================) N
+(============-->) N
+(         <!--                                                                   ) N
+(            -->) N
+(         <!--                             EntityBean                            ) N
+(2source.xsl) (Page 20/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (21-22) 11
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(            -->) p n
+(         <!--                                                                   ) N
+(            -->) N
+(         <!--===================================================================) N
+(============-->) N
+() N
+(  <xsl:template mode="bean" match="theme//child::*[self::objectClass or self::re) N
+(lationClass]">) N
+(    <xsl:variable name="name">) N
+(      <xsl:call-template name="toUpperCase">) N
+(        <xsl:with-param name="word" select="@ID"/>) N
+(      </xsl:call-template>) N
+(    </xsl:variable>) N
+(    <xsl:variable name="objectClass">) N
+(      <xsl:call-template name="toUpperCase">) N
+(        <xsl:with-param name="word" select="@ID"/>) N
+(      </xsl:call-template>) N
+(    </xsl:variable>) N
+(    <xsl:variable name="relationClass">) N
+(      <xsl:value-of select="$objectClass"/>) N
+(    </xsl:variable>) N
+(    package <xsl:value-of select="$package"/>;) N
+(    ) N
+(    /**) N
+(    * generated java-code for BEAN:) N
+(    * <xsl:value-of select="description"/>) N
+(    */) N
+(    ) N
+(    import javax.ejb.CreateException;) N
+(    import javax.ejb.EntityBean;) N
+(    import javax.ejb.EntityContext;) N
+(    import javax.ejb.FinderException;) N
+() N
+(    import java.io.PrintWriter;) N
+(    ) N
+(    import java.util.Vector;) N
+(    import java.util.ArrayList;) N
+(    import java.util.Collection;) N
+(    import java.util.Iterator;  ) N
+() N
+() N
+(        import java.text.ParseException;) N
+(        import java.text.SimpleDateFormat;) N
+(        import java.text.DateFormat;) N
+(        import java.util.Date;) N
+() N
+(    import de.tuhh.wb.javagis.model.ElementLocal;) N
+(    import de.tuhh.wb.javagis.model.VersionLocal;) N
+(    import de.tuhh.wb.javagis.xml.GisTransferObject;) N
+(    import de.tuhh.wb.javagis.model.Tools;    ) N
+(    import <xsl:value-of select="$package"/>.vectorsets.*;         ) N
+() N
+(    <!--  ) N
+(         * @ejb:finder signature="java.util.Collection findOrdered\(\)") N
+(         * @jboss:finder-query name="findOrdered" query="foo = {1}" order="foo,b) N
+(ar") N
+(         * @ejb:finder signature="Collection findLargeAccounts\(int balance\)" rol) N
+(e-name="Teller,IRS") N
+(         * @jboss:finder-query name="findLargeAccounts" query="$1 = $1" order="b) N
+(alance" read-ahead="true") N
+(         -->) N
+(    /**) N
+(    * @ejb:bean   name="<xsl:value-of select="$themeName"/>.<xsl:value-of select) N
+(="$name"/>") N
+(2source.xsl) (Page 21/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    *             jndi-name="ejb/<xsl:value-of select="$themeName"/>.<xsl:value-) p n
+(of select="$name"/>") N
+(    *             local-jndi-name="<xsl:value-of select="$themeName"/>.<xsl:valu) N
+(e-of select="$name"/>"    ) N
+(    *             view-type="local") N
+(    *             type="CMP") N
+(    *             cmp-version="2.x") N
+(    *             schema="<xsl:value-of select="$themeName"/>_<xsl:value-of sele) N
+(ct="$name"/>") N
+(    *             primkey-field="id") N
+(    * @ejb:pk generate="false" class="java.lang.Integer") N
+(    * @ejb:ejb-ref ejb-name="<xsl:value-of select="$themeName"/>.Version" view-t) N
+(ype="local") N
+(    <xsl:if test="local-name\(\)='objectClass'">) N
+(      * @ejb:interface local-extends="de.tuhh.wb.javagis.model.ObjectLocal") N
+(    </xsl:if>) N
+(    <xsl:if test="local-name\(\)='relationClass'">) N
+(      * @ejb:interface local-extends="de.tuhh.wb.javagis.model.RelationLocal") N
+(    </xsl:if><!--) N
+(    --><xsl:for-each select="simpleProperty">) N
+(    <xsl:variable name="fieldName">) N
+(      <xsl:call-template name="toUpperCase">) N
+(        <xsl:with-param name="word" select="@key"/>) N
+(      </xsl:call-template>) N
+(    </xsl:variable>) N
+(    * @ejb:finder signature="java.util.Collection findBy<xsl:value-of select="$f) N
+(ieldName"/>\(<xsl:value-of select="type"/><xsl:value-of select="' '"/><xsl:value-) N
+(of select="@key"/>\)" ) N
+(    * query="SELECT OBJECT\(o\) FROM <xsl:value-of select="$themeName"/>_<xsl:valu) N
+(e-of select="$name"/> AS o WHERE o.<xsl:value-of select="@key"/> =?1") N
+(    <!--) N
+(         * @ejb:finder signature="java.util.Collection findOrderedBy<xsl:value-o) N
+(f select="$fieldName"/>\(\)") N
+(         * @jboss:finder-query name="findOrderedBy<xsl:value-of select="$fieldNa) N
+(me"/>" query="1-1" order="<xsl:value-of select="@key"/>" read-ahead="true") N
+(         --></xsl:for-each>) N
+(    */) N
+(  ) N
+(    public abstract class <xsl:value-of select="$name"/>Bean implements EntityBe) N
+(an) N
+(    {) N
+(    private transient EntityContext ctx;) N
+(    ) N
+(    // relations...) N
+(    /**) N
+(    * @ejb:interface-method) N
+(    * @ejb:relation name="Versioning-of-<xsl:value-of select="$name"/>") N
+(    *               role-name="<xsl:value-of select="$name"/>-has-Version") N
+(    *               cascade-delete="yes") N
+(    * @jboss:relation fk-constraint="false") N
+(    *                 related-pk-field="id") N
+(    *                 fk-column="version") N
+(    */) N
+(    public abstract VersionLocal getVersion\(\);) N
+(    <xsl:if test="local-name\(\)='relationClass'">) N
+(      <xsl:for-each select="fromObjectClass">) N
+(        <xsl:variable name="srcClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        /**) N
+(        * @ejb:interface-method) N
+(        * @ejb:relation name="<xsl:value-of select="$srcClass"/>_<xsl:value-of s) N
+(2source.xsl) (Page 22/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (23-24) 12
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(elect="$relationClass"/>") p n
+(        *               role-name="<xsl:value-of select="$relationClass"/>_to_<x) N
+(sl:value-of select="$srcClass"/>") N
+(        *               cascade-delete="yes") N
+(        * @jboss:relation fk-constraint="false") N
+(        *                 related-pk-field="id") N
+(        *                 fk-column="relTo<xsl:value-of select="$srcClass"/>") N
+(        */) N
+(        public abstract <xsl:value-of select="$srcClass"/>Local getSrc<xsl:value) N
+(-of select="$srcClass"/>\(\);) N
+() N
+(        /**) N
+(        * @ejb:interface-method) N
+(        */) N
+(        public abstract void setSrc<xsl:value-of select="$srcClass"/>\(<xsl:value) N
+(-of select="$srcClass"/>Local source\);) N
+(      </xsl:for-each>) N
+() N
+(      <xsl:for-each select="toObjectClass">) N
+(        <xsl:variable name="destClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        /**) N
+(        * @ejb:interface-method) N
+(        * @ejb:relation name="<xsl:value-of select="$relationClass"/>_<xsl:value) N
+(-of select="$destClass"/>") N
+(        *               role-name="<xsl:value-of select="$relationClass"/>_to_<x) N
+(sl:value-of select="$destClass"/>") N
+(        * @jboss:relation fk-constraint="false") N
+(        *                 related-pk-field="id") N
+(        *                 fk-column="relFrom<xsl:value-of select="$destClass"/>") N
+(        */) N
+(        public abstract <xsl:value-of select="$destClass"/>Local getDest<xsl:val) N
+(ue-of select="$destClass"/>\(\);) N
+() N
+(        /**) N
+(        * @ejb:interface-method) N
+(        */) N
+(        public abstract void setDest<xsl:value-of select="$destClass"/>\(<xsl:val) N
+(ue-of select="$destClass"/>Local destination\);) N
+(      </xsl:for-each>) N
+(    </xsl:if>) N
+() N
+() N
+() N
+(    <xsl:if test="local-name\(\)='objectClass'">) N
+(      <xsl:variable name="objectKey" select="@ID"/>) N
+(      <xsl:for-each select="//fromObjectClass[@ref=$objectKey]">) N
+(        <xsl:variable name="relationClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="../@ID"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        /**) N
+(        * @ejb:interface-method) N
+(        * @ejb:relation name="<xsl:value-of select="$objectClass"/>_<xsl:value-o) N
+(f select="$relationClass"/>") N
+(        *               role-name="<xsl:value-of select="$objectClass"/>_to_<xsl) N
+(:value-of select="$relationClass"/>") N
+(        */) N
+(        public abstract Collection getRelTo<xsl:value-of select="$relationClass") N
+(/>\(\);        ) N
+(2source.xsl) (Page 23/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(        /**) N
+(        * @ejb:interface-method) N
+(        */) N
+(        public abstract void setRelTo<xsl:value-of select="$relationClass"/>\(Col) N
+(lection col\);        ) N
+(      </xsl:for-each>      ) N
+() N
+(      <xsl:if test="local-name\(\)='objectClass'">) N
+(        <xsl:variable name="objectKey" select="@ID"/>) N
+(        /**) N
+(        * @ejb:interface-method) N
+(        */) N
+(        public Vector returnForwardRelations\(\)) N
+(        {) N
+(         Vector result=new Vector\(\);) N
+(         Collection collection;) N
+() N
+(         <xsl:for-each select="//fromObjectClass[@ref=$objectKey]">) N
+(           <xsl:variable name="relationClass">) N
+(             <xsl:call-template name="toUpperCase">) N
+(               <xsl:with-param name="word" select="../@ID"/>) N
+(             </xsl:call-template>) N
+(           </xsl:variable>) N
+(           collection=getRelTo<xsl:value-of select="$relationClass"/>\(\);) N
+(           if\(collection.size\(\)>0\)) N
+(           {) N
+(           Vector relation=new Vector\(\);) N
+(           Vector idList=new Vector\(\);) N
+(           Iterator it=collection.iterator\(\);) N
+(           while\(it.hasNext\(\)\)) N
+(           {) N
+(           idList.add\(\(\(ElementLocal\)it.next\(\)\).getId\(\)\);) N
+(           }                     ) N
+(           relation.add\("<xsl:value-of select="../@ID"/>"\); // key) N
+(           relation.add\(idList\); // IDs) N
+(           result.add\(relation\);) N
+(           }) N
+(         </xsl:for-each>      ) N
+(         return result;) N
+(        }) N
+() N
+(        /**) N
+(        * @ejb:interface-method) N
+(        */) N
+(        public Vector returnBackwardRelations\(\)) N
+(        {) N
+(         Vector result=new Vector\(\);) N
+(         Collection collection;) N
+() N
+(         <xsl:for-each select="//toObjectClass[@ref=$objectKey]">) N
+(           <xsl:variable name="relationClass">) N
+(             <xsl:call-template name="toUpperCase">) N
+(               <xsl:with-param name="word" select="../@ID"/>) N
+(             </xsl:call-template>) N
+(           </xsl:variable>) N
+(           collection=getRelFrom<xsl:value-of select="$relationClass"/>\(\);) N
+(           if\(collection.size\(\)>0\)) N
+(           {) N
+(            Vector relation=new Vector\(\);) N
+(            Vector idList=new Vector\(\);) N
+(            Iterator it=collection.iterator\(\);) N
+(            while\(it.hasNext\(\)\)) N
+(            {) N
+(2source.xsl) (Page 24/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (25-26) 13
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(             idList.add\(\(\(ElementLocal\)it.next\(\)\).getId\(\)\);) p n
+(            }                     ) N
+(           relation.add\("<xsl:value-of select="../@ID"/>"\); // key) N
+(            relation.add\(idList\); // IDs) N
+(            result.add\(relation\);) N
+(           }) N
+(         </xsl:for-each>      ) N
+(         return result;) N
+(        }) N
+(      </xsl:if>) N
+() N
+() N
+(      <xsl:for-each select="//toObjectClass[@ref=$objectKey]">) N
+(        <xsl:variable name="relationClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="../@ID"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        /**) N
+(        * @ejb:interface-method) N
+(        * @ejb:relation name="<xsl:value-of select="$relationClass"/>_<xsl:value) N
+(-of select="$objectClass"/>") N
+(        *               role-name="<xsl:value-of select="$objectClass"/>_to_<xsl) N
+(:value-of select="$relationClass"/>") N
+(        */) N
+(        public abstract Collection getRelFrom<xsl:value-of select="$relationClas) N
+(s"/>\(\);        ) N
+() N
+(        /**) N
+(        * @ejb:interface-method) N
+(        */) N
+(        public abstract void setRelFrom<xsl:value-of select="$relationClass"/>\(C) N
+(ollection col\);        ) N
+(      </xsl:for-each>      ) N
+(    </xsl:if>) N
+(      ) N
+(    /**) N
+(    * @ejb:interface-method) N
+(    */) N
+(    public abstract void setVersion\(VersionLocal version\);) N
+(    ) N
+(    // PrimaryKey...) N
+(    /**) N
+(    * @ejb:interface-method) N
+(    * @ejb:persistent-field) N
+(    */) N
+(    public abstract void setId\(Integer objectId\);) N
+(    ) N
+(    /**) N
+(    * @ejb:interface-method) N
+(    * @ejb:persistent-field) N
+(    */) N
+(    public abstract Integer getId\(\);) N
+() N
+(    <xsl:if test="symbol">) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void setBasePointX\(Double x\);) N
+(    ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(2source.xsl) (Page 25/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(      */) p n
+(      public abstract Double getBasePointX\(\);) N
+() N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void setBasePointY\(Double y\);) N
+(    ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract Double getBasePointY\(\);) N
+(    </xsl:if>) N
+(    ) N
+(    <xsl:if test="geometry">) N
+(      // Min) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void setGeoBoxMinX\(Double x\);) N
+(    ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract Double getGeoBoxMinX\(\);) N
+() N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void setGeoBoxMinY\(Double y\);) N
+(    ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract Double getGeoBoxMinY\(\);) N
+() N
+(      // Max) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void setGeoBoxMaxX\(Double x\);) N
+(    ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract Double getGeoBoxMaxX\(\);) N
+() N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void setGeoBoxMaxY\(Double y\);) N
+(    ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(2source.xsl) (Page 26/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (27-28) 14
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(      */) p n
+(      public abstract Double getGeoBoxMaxY\(\);) N
+(      <!--) N
+(        /**) N
+(        * @ejb:interface-method) N
+(        * @ejb:persistent-field) N
+(        */) N
+(        public abstract void setGeometry\(BasePoints geometry\);) N
+(        ) N
+(        /**) N
+(        * @ejb:interface-method) N
+(        * @ejb:persistent-field) N
+(        */) N
+(        public abstract BasePoints getGeometry\(\);) N
+(-->      ) N
+(      </xsl:if>) N
+() N
+(    // simpleProperty..) N
+(    <xsl:for-each select="simpleProperty">) N
+(      <xsl:variable name="fieldName">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="@key"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+(      <xsl:variable name="fieldType">) N
+(        <xsl:value-of select="type"/>          ) N
+(      </xsl:variable>) N
+(      ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void set<xsl:value-of select="$fieldName"/>\(<xsl:value-of ) N
+(select="$fieldType"/> value\);) N
+() N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract <xsl:value-of select="$fieldType"/> get<xsl:value-of selec) N
+(t="$fieldName"/>\(\);) N
+(    </xsl:for-each>) N
+() N
+(    ) N
+(    // chartProperties...) N
+(    <xsl:for-each select="chartProperty">) N
+(      <xsl:variable name="chartName">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="@key"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+(      ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void set<xsl:value-of select="$chartName"/>\(ChartProperty ) N
+(value\);) N
+() N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract ChartProperty get<xsl:value-of select="$chartName"/>\(\);) N
+(2source.xsl) (Page 27/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    </xsl:for-each>) p n
+() N
+(    ) N
+(    // vectorSet...) N
+(    <xsl:for-each select="vectorSet">) N
+(      <xsl:variable name="vectorSetName">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="@key"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+(      ) N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract void set<xsl:value-of select="$vectorSetName"/>\(<xsl:value) N
+(-of select="$objectClass"/><xsl:value-of select="$vectorSetName"/> value\);) N
+() N
+(      /**) N
+(      * @ejb:interface-method) N
+(      * @ejb:persistent-field) N
+(      */) N
+(      public abstract <xsl:value-of select="$objectClass"/><xsl:value-of select=) N
+("$vectorSetName"/> get<xsl:value-of select="$vectorSetName"/>\(\);) N
+(    </xsl:for-each>) N
+(  ) N
+(    private Long date2Millis\(Object date\)) N
+(    {) N
+(     if\(date==null\)) N
+(      return null;) N
+(    else    ) N
+(    {) N
+(     java.util.GregorianCalendar calendar=new java.util.GregorianCalendar\(\);) N
+(     calendar.setTime\(\(Date\)date\);) N
+(     return new Long\(calendar.getTimeInMillis\(\)\);) N
+(    }) N
+(    }) N
+() N
+(    /**) N
+(    * @ejb:interface-method) N
+(    */) N
+(    public void toXML\(PrintWriter out\)) N
+(    {) N
+(     Tools.genXmlTag\(out,"o","ID",String.valueOf\(getId\(\)\)\);) N
+() N
+(    Object[] simpleProps=) N
+(    {) N
+(    <xsl:for-each select="simpleProperty">) N
+(      <xsl:variable name="Property">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="@key"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+(      <xsl:choose>) N
+(        <xsl:when test="type='java.util.Date'">) N
+(          date2Millis\(get<xsl:value-of select="$Property"/>\(\)\)) N
+(        </xsl:when>) N
+(        <xsl:otherwise>) N
+(          get<xsl:value-of select="$Property"/>\(\)) N
+(        </xsl:otherwise>) N
+(      </xsl:choose>) N
+(      <xsl:if test="position\(\) != last\(\)">,</xsl:if>) N
+(    </xsl:for-each>};) N
+(    ) N
+(2source.xsl) (Page 28/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (29-30) 15
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    Tools.genXmlOpenTag\(out,"sp",<xsl:value-of select="$objectClass"/>SessionBea) p n
+(n.simplePropertyKeys,simpleProps\);) N
+(    ) N
+(    // vectorSetsToXML:) N
+(    <xsl:for-each select="vectorSet">) N
+(      <xsl:variable name="vectorSetName">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="@key"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+(      get<xsl:value-of select="$vectorSetName"/>\(\).toXml\(out\);) N
+(    </xsl:for-each>) N
+(    Tools.genXmlTag\(out,"/sp"\);) N
+(    <xsl:if test="local-name\(\)='relationClass'">) N
+() N
+(      Object srcId =null;) N
+(      String srcKey=null;) N
+(      Object destId =null;) N
+(      String destKey=null;) N
+() N
+(      <xsl:for-each select="fromObjectClass">) N
+(        <xsl:variable name="srcClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        if\(getSrc<xsl:value-of select="$srcClass"/>\(\)!=null\)) N
+(        {) N
+(         srcId=getSrc<xsl:value-of select="$srcClass"/>\(\).getId\(\);) N
+(         srcKey="<xsl:value-of select="@ref"/>";) N
+(        }) N
+(      </xsl:for-each>) N
+(      <xsl:for-each select="toObjectClass">) N
+(        <xsl:variable name="destClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        ) N
+(        if\(getDest<xsl:value-of select="$destClass"/>\(\)!=null\)) N
+(        {) N
+(         destId=getDest<xsl:value-of select="$destClass"/>\(\).getId\(\);           ) N
+(   ) N
+(         destKey="<xsl:value-of select="@ref"/>";) N
+(        }) N
+(      </xsl:for-each>) N
+() N
+(      String[] attNames={"srcKey","srcID","destKey","destID"};) N
+(      String[] atts={srcKey,srcId.toString\(\),destKey,destId.toString\(\)};) N
+(      Tools.genXml\(out,"rel",attNames,atts,""\);      ) N
+(    </xsl:if>) N
+(    ) N
+(     Tools.genXmlTag\(out,"/o"\);) N
+(    }) N
+() N
+(    /**) N
+(    * @ejb:interface-method) N
+(    */) N
+(    public void loadGisTransferObject\(GisTransferObject transferObject\)) N
+(    {) N
+(    // SimpleProperties:) N
+(    String value;) N
+(    java.util.GregorianCalendar calendar=new java.util.GregorianCalendar\(\);) N
+(    <xsl:for-each select="simpleProperty">) N
+(2source.xsl) (Page 29/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(      <xsl:variable name="Property">) p n
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="@key"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>) N
+(      value=transferObject.getSimpleProperty\("<xsl:value-of select="@key"/>"\);) N
+(      if\(value!=null\)) N
+(      {) N
+(      <xsl:choose>) N
+(        <xsl:when test="type='java.util.Date'">) N
+(          try) N
+(          {) N
+(           calendar.setTimeInMillis\(java.lang.Long.parseLong\(value\)\);) N
+(           set<xsl:value-of select="$Property"/>\(calendar.getTime\(\)\);) N
+(          }) N
+(          catch\(Exception e\)) N
+(          {) N
+(           System.out.println\("problem parsing date \(not in longformat?\)"\);) N
+(           System.out.println\(e.getMessage\(\)\);) N
+(          }) N
+(       </xsl:when>) N
+(       <xsl:otherwise>) N
+(         set<xsl:value-of select="$Property"/>\(new <xsl:value-of select="type"/>) N
+(\(value\)\);) N
+(       </xsl:otherwise>) N
+(      </xsl:choose>) N
+(      }) N
+(    </xsl:for-each>) N
+(    ) N
+(    // VectorSets:) N
+(    <xsl:for-each select="vectorSet">) N
+(      <xsl:variable name="propName">) N
+(        <xsl:call-template name="toUpperCase">) N
+(          <xsl:with-param name="word" select="@key"/>) N
+(        </xsl:call-template>) N
+(      </xsl:variable>          ) N
+(      // get vectorSet) N
+(      <xsl:value-of select="$objectClass"/><xsl:value-of select="$propName"/> my) N
+(<xsl:value-of select="$propName"/> = get<xsl:value-of select="$propName"/>\(\);) N
+(      // set vectorSet) N
+(      my<xsl:value-of select="$propName"/>.loadFromGisTransferObject\(transferObj) N
+(ect\);) N
+(      set<xsl:value-of select="$propName"/>\(my<xsl:value-of select="$propName"/>) N
+(\);) N
+(    </xsl:for-each>) N
+(    }) N
+() N
+(    /**) N
+(    * @ejb:interface-method) N
+(    */) N
+(    public String getInfo\(\)) N
+(    {) N
+(      String info="ID#"+String.valueOf\(getId\(\)\);) N
+() N
+(    <xsl:if test="local-name\(\)='objectClass'">) N
+(      <xsl:variable name="objectKey" select="@ID"/>) N
+(      <xsl:for-each select="//fromObjectClass[@ref=$objectKey]">) N
+(        <xsl:variable name="relationClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="../@ID"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        info+=" has "+String.valueOf\(getRelTo<xsl:value-of select="$relationClas) N
+(s"/>\(\).size\(\)\)+" Relations to <xsl:value-of select="$relationClass"/>";) N
+(2source.xsl) (Page 30/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (31-32) 16
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(      </xsl:for-each>      ) p n
+() N
+(      <xsl:for-each select="//toObjectClass[@ref=$objectKey]">) N
+(        <xsl:variable name="relationClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="../@ID"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        info+=" has "+String.valueOf\(getRelFrom<xsl:value-of select="$relationCl) N
+(ass"/>\(\).size\(\)\)+" Relations from <xsl:value-of select="$relationClass"/>";) N
+(      </xsl:for-each>      ) N
+(    </xsl:if>) N
+() N
+(    <xsl:if test="local-name\(\)='relationClass'">) N
+(      <xsl:for-each select="fromObjectClass">) N
+(        <xsl:variable name="srcClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        if\(getSrc<xsl:value-of select="$srcClass"/>\(\)!=null\)) N
+(         info+="Relation from <xsl:value-of select="$srcClass"/> \("+String.value) N
+(Of\(getSrc<xsl:value-of select="$srcClass"/>\(\).getPrimaryKey\(\)\)+"\)";) N
+(      </xsl:for-each>) N
+() N
+(      <xsl:for-each select="toObjectClass">) N
+(        <xsl:variable name="destClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        if\(getDest<xsl:value-of select="$destClass"/>\(\)!=null\)) N
+(         info+="         to   <xsl:value-of select="$destClass"/> \("+String.valu) N
+(eOf\(getDest<xsl:value-of select="$destClass"/>\(\).getPrimaryKey\(\)\)+"\)";) N
+(      </xsl:for-each>) N
+(    </xsl:if>) N
+(    return info;) N
+(    }) N
+() N
+(    public void setEntityContext\(EntityContext ctx\)) N
+(    {) N
+(      this.ctx=ctx;) N
+(    }) N
+(    ) N
+(    public void unsetEntityContext\(\)) N
+(    {) N
+(      this.ctx=null;) N
+(    }) N
+() N
+(    <xsl:if test="local-name\(\)='objectClass'">) N
+(      /**) N
+(      * @ejb:create-method) N
+(      */) N
+(      public Integer ejbCreate\(Integer objectId, VersionLocal version\) throws Cr) N
+(eateException) N
+(      {) N
+(        if\(objectId == null\)) N
+(        throw new CreateException\("objectId is null :-o"\);) N
+(        this.setId\(objectId\);) N
+(        return null;) N
+(      }) N
+(      ) N
+(      public void ejbPostCreate\(Integer objectId, VersionLocal version\)) N
+(      {) N
+(2source.xsl) (Page 31/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        this.setVersion\(version\);) p n
+(      ) N
+(      // to solve problems with untouched \(null\) boleans in the GUI:) N
+(      // initialize java.lang.Booleans inside SimpleProperties:) N
+(      <xsl:for-each select="simpleProperty">) N
+(        <xsl:variable name="propName">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@key"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>          ) N
+(        <xsl:if test="type='java.lang.Boolean'">) N
+(          set<xsl:value-of select="$propName"/>\(new java.lang.Boolean\(false\)\);) N
+(        </xsl:if>) N
+(      </xsl:for-each>) N
+() N
+(      // initialize VectorSets) N
+(        <xsl:for-each select="vectorSet">) N
+(          <xsl:variable name="propName">) N
+(            <xsl:call-template name="toUpperCase">) N
+(              <xsl:with-param name="word" select="@key"/>) N
+(            </xsl:call-template>) N
+(          </xsl:variable>          ) N
+(          set<xsl:value-of select="$propName"/>\(new <xsl:value-of select="$objec) N
+(tClass"/><xsl:value-of select="$propName"/>\(\)\);) N
+(        </xsl:for-each>) N
+(        }) N
+(    </xsl:if>) N
+(    ) N
+(    <xsl:if test="local-name\(\)='relationClass'">) N
+(      /**) N
+(      * @ejb:create-method) N
+(      */) N
+(      public Integer ejbCreate\(Integer objectId, VersionLocal version,Object src) N
+(,Object dest\) throws CreateException) N
+(      {) N
+(        if\(objectId == null\)) N
+(        throw new CreateException\("objectId is null :-o"\);) N
+(        this.setId\(objectId\);) N
+(        return null;) N
+(      }) N
+(      ) N
+(      public void ejbPostCreate\(Integer objectId, VersionLocal version,Object sr) N
+(c,Object dest\)) N
+(      {) N
+(      // set all relations to null:) N
+(      <xsl:for-each select="fromObjectClass">) N
+(        <xsl:variable name="srcClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        this.setSrc<xsl:value-of select="$srcClass"/>\(null\);) N
+(      </xsl:for-each>) N
+(      <xsl:for-each select="../toObjectClass">) N
+(        <xsl:variable name="destClass">) N
+(          <xsl:call-template name="toUpperCase">) N
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        this.setDest<xsl:value-of select="$destClass"/>\(null\);          ) N
+(      </xsl:for-each>) N
+() N
+(      <xsl:for-each select="fromObjectClass">) N
+(        <xsl:variable name="srcClass">) N
+(2source.xsl) (Page 32/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (33-34) 17
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(          <xsl:call-template name="toUpperCase">) p n
+(            <xsl:with-param name="word" select="@ref"/>) N
+(          </xsl:call-template>) N
+(        </xsl:variable>) N
+(        <xsl:for-each select="../toObjectClass">) N
+(          <xsl:variable name="destClass">) N
+(            <xsl:call-template name="toUpperCase">) N
+(              <xsl:with-param name="word" select="@ref"/>) N
+(            </xsl:call-template>) N
+(          </xsl:variable>) N
+(          if\(\(src instanceof <xsl:value-of select="$srcClass"/>Local\)) N
+(          <![CDATA[ && ]]>) N
+(            \(dest instanceof <xsl:value-of select="$destClass"/>Local\)\)) N
+(          {) N
+(            this.setVersion\(version\);) N
+(            this.setSrc<xsl:value-of select="$srcClass"/>\(\(<xsl:value-of select=) N
+("$srcClass"/>Local\)src\);) N
+(            this.setDest<xsl:value-of select="$destClass"/>\(\(<xsl:value-of selec) N
+(t="$destClass"/>Local\)dest\);          ) N
+(          }                    ) N
+(        </xsl:for-each>) N
+(      </xsl:for-each>) N
+() N
+(      // initialize VectorSets) N
+(        <xsl:for-each select="vectorSet">) N
+(          <xsl:variable name="propName">) N
+(            <xsl:call-template name="toUpperCase">) N
+(              <xsl:with-param name="word" select="@key"/>) N
+(            </xsl:call-template>) N
+(          </xsl:variable>          ) N
+(          set<xsl:value-of select="$propName"/>\(new <xsl:value-of select="$objec) N
+(tClass"/><xsl:value-of select="$propName"/>\(\)\);) N
+(        </xsl:for-each>) N
+() N
+(      }) N
+(    </xsl:if>    ) N
+(    ) N
+(    public void ejbActivate\(\)) N
+(    {}) N
+() N
+(    public void ejbPassivate\(\)) N
+(    {}) N
+(    ) N
+(    public void ejbLoad\(\)) N
+(    {}) N
+() N
+(    public void ejbStore\(\)) N
+(    {}) N
+(    ) N
+(    public void ejbRemove\(\) throws javax.ejb.RemoveException) N
+(    {) N
+(    }) N
+(    }    ) N
+() N
+(  </xsl:template>) N
+(  ) N
+() N
+() N
+() N
+() N
+() N
+(  ) N
+(  <xsl:template name="toUpperCase">) N
+(    <xsl:param name="word"/>) N
+(2source.xsl) (Page 33/34) () title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    <xsl:value-of select="translate\(substring\($word,1,1\),'abcdefghijklmnopqrstuv) p n
+(wxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'\)" />) N
+(    <xsl:value-of select="substring\($word,2\)"/>) N
+(  </xsl:template>) N
+(  ) N
+(  <xsl:template name="getType">) N
+(    <xsl:param name="type"/>) N
+(    <xsl:choose>) N
+(      <xsl:when test="$type='id'">int</xsl:when>) N
+(      <xsl:when test="$type='integer'">int</xsl:when>) N
+(      <xsl:when test="$type='string'">String</xsl:when>) N
+(      <xsl:otherwise>) N
+(        <xsl:value-of select="type"/>          ) N
+(      </xsl:otherwise>) N
+(    </xsl:choose>) N
+(  </xsl:template>  ) N
+(  ) N
+(</xsl:stylesheet>) N
+(2source.xsl) (Page 34/34) () title
+border
+grestore
+(2source.xsl) () () footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

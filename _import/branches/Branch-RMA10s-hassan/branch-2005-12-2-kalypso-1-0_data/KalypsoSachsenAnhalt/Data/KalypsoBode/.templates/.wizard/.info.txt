@@ -1,0 +1,7 @@
+- diese Vorlagen müssen so aufgebaut sei, dass sie relativ zum CalcCase funktionieren
+  (d.h. zum Testen z.B. die modell.gml in dieses Verzeichnis kopieren)
+  
+  - extents gleich von Vorhersagepegel_uh_Wendefurth und Eingabepegel_uh_Wendefurth
+  - extents gleich von Pegel_oh_Speicher, Speicher_mit_ÜL, Speicher_ohne_ÜL
+  - extent von Niederschlagsgebiete, Niederschlagsstationen und Vorhersagepegel 
+    auf Kartenmaximum gesetzt

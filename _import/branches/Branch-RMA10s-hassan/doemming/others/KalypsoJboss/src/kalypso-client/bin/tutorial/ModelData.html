@@ -1,0 +1,265 @@
+<html>
+
+<title> Kalypso Manual </title>
+<head> <h2> Model Data-Visualisation/Parameters </h2>
+</head>
+<img src=blueline.gif align="center" >
+<br>
+
+<br>
+Spatial distribution of catchment and drainage network; two different ways of visualization are possible:<br><br>
+<img src=ScreenShot031.gif align="center" ><br><br>
+<br>
+<b><h3>NetView</h3></b><br>
+NETVIEW points at DB objects and relations in drainage network. A legend explains the displayed symbols. Automatically the numbers to define each catchment, strand and node for RRM are visible. Relations show by arrows direction of flow.
+For case study UTRB is simulated with 106 stands and 122 catchments. Therefore user needs functionalities to handle NETVIEW.
+The Menu bar offers tools to
+<br>
+The Menu bar offers tools to<br>
+<ul>
+<li> Pan,<br>
+<li> Zoom,<br>
+<li> Extend,<br>
+</ul>
+The active function method is still displayed in menu bar.
+<br>
+The user can move all objects and relations in order to best direction for him
+(Pointing mouse courser and shift).
+For pilot system geography of natural drainage network was basis for the raster orientation of the systemplan.
+<br><br>
+<img src=ScreenShot013.gif align="center" ><br><br>
+Via context menu the DETAILEDVIEW  with an overview of parameters concering the selected object, can be opened in NETVIEW.
+
+<br><br>
+<br>
+<b><h3>TableView</h3></b>
+TableView of ModelData version is structured like a register. Clicking on register card specific table appears. To show all hydrological information tables offer for objects vector sets
+(a table in table: e.g. For each catchment two soil layers with a set of parameter are fixed). t two soil layers with a set of parameter are fixed).
+<br><br>
+<img src=ScreenShot021.gif align="center" >
+
+<br><br>
+<img src=ScreenShot022.gif align="center" >
+<br><br>
+In order to both numerous hydrological parameters and the number of objects (e.g. parameters for catchments or strands) an effective tool for selection and edit of properties is implemented.
+These filter module appears automatically at the end of each table and user can select objects by specific attributes: e.g. Each catchment can be selected by an average height with the help of operators (like: smaller or higher than).
+For selected objects parameter can be changed in general. Parameters of vector sets are also able to select or edit by filter. Only one operation at time is possible. Table is still reduced to the filter results and next operation can take place step by step.
+Via context menu SET changed parameter in actual row can be set to filter selection.
+Column of tables can be sorted by context function order ORDER BY COLUMN because data is load to table randomly.
+
+User can save special profile for layout of TABLEVIEW. In context menu function HIDE enables to hide selected column. The customised view can be saved and stored by menu bar PROFILE command. With this functionality user can create a new profile to design a specific table layout. In the table head can be chosen which profile should be used. Only when saving the userspecific table view to a profile the properties are available in this list of profiles after restart of program.
+
+
+<br><p>
+The DETAILEDVIEW is also part of context menu in the TABLEVIEW and shows parameters of selected object in TABLEVIEW. Editing parameters in Detailed View is still not implemented.
+Via buttons at the end of the DETAILEDVIEW a move through the drainage network is managed.
+
+<br><br>
+
+<img src=ScreenShot016.gif align="center" >
+<br><br>
+
+<b><u><h3>Parameters of Model Data</h3></u></b><br>
+Each object is presented in rows of thematic tables:<br><br>
+
+<b><font size="3">Node </font></b><br><br>
+
+NODE NUMBER<br>
+Node number in model drainage network, visualized in NetView<br><br>
+
+GAUGING STATION <br>
+Name of gauging station in drainage network which is reflected by that node.
+The other properties are used to define connect to DataCenter
+<br><br>
+<b>Catchment </b><br><br>
+
+CATCHMENT NUMBER<br>
+Catchment number in model drainage network, visualized in NetView<br>
+Changes in numbering cause model failure, because catchment number is used to identify hydrotops.<br><br>
+
+Average Elevation [m]<br>
+The average elevation is not part of the RRM Kalypso, to edit parameters the filter module can select parameters by attributes. The average elevation (according to elevation zones) is main criteria for parameter editing during calibration.
+<br><br>
+SEALED AREA [m²]<br>
+No infiltration process, only surface flow <br>
+Changes in area size cause model failure, because area is fixed in hydrotops.<br>
+<br><br>
+NATURAL AREA [m²]<br>
+Hydrological processes for diacharge formation in soil moisture regime take place [m²]<br>
+Changes in area size cause model failure, because area is fixed in hydrotops.<br>
+<br><br>
+CLIMATE TIME-SERIES<br>
+Filename for climate time-series of temperature and evapotranspiration. For simulation RRM needs files (station name.tv) generated from time-series of DataCenter.<br>
+<br>
+PRECIPITATION TIME-SERIES LONGTERM<br>
+Filename (can be set by user no restriction, e.g. stationname.lt for longterm) for precipitation time-series used for longterm simulation. For simulation RRM needs files generated from time-series of DataCentre. <br>
+Still no longterm simulation is implemented in system.<br><br>
+<br>
+<b>PRECIPITATION TIME-SERIES SHORTTERM<br>
+Filename (can be set by user with no restriction, e.g. stationname.st for shortterm, for precipitation time-series used for shortterm simulation) For simulation RRM needs files generated from time-series of DataCentre. The filename can be fixed on simulations for flood events till station is changed for catchment. Via connection to DataCentre input time-series for each simulation interval are generated form tables of DataCentre if connection is set and values are existing. Same function of filename for ClimateStation and GaugingStation
+The RRM uses files to input time-series in simulation routine, therefore file name must be same like for catchments and station name.
+Important for correct simuation is the same usage of capital letters: to minimise errors, file names should be written uncapitalised in general.
+</b>
+<br>
+Time-Area-Function<br>
+Filename (tis_eik.zft) for time-area-functions of catchments. Fixed in system because no preprocessing program is available to generate time-area-function.
+<br>Hydrotopes<br>
+Filename (tis_eik.hyd) for hydrotopes of each catchment. Fixed in system because no preprocessing program is available to generate hydrotopes (geographic information system).
+<br><br>
+Initial Groundwater Height [m]<br>
+Initial height of watertable in groundwater storage. Can be fixed in model because of no important influence of groundwater during flood, extreme high retention constants. Groundwater is modelled for lowlands but no discharge in other catchments.
+<br><br>
+Initial Interception Storage [mm]<br>
+Standard 1mm, no main hydrological part of water balance for shortterm simulation.
+<br><br>
+Initial Snow Height [mm]<br>
+Initial snow height dependent on elevation zones.<br><br>
+
+INITIAL WATER CONTENT SNOW [%]<br>
+Can be fixed to 10 %. Snow height of 100 mm stores 10 mm water.<br><br>
+
+CORRECTION FACTOR PRECIPITATION<br>
+Factor (multiply) is applied to change rainfall distribution in order to characteristic surface relief > Carpathian mountain region.
+<br><br>
+CORRECTION FACTOR TEMPERATURE<br>
+Factor is added on measured values. This functionality enables also to verify time-series dependent on surface.
+<br><br>
+CORRECTION FACTOR MAXIMAL INTERCEPTION STORAGE <br>
+Correction factor (multiply) for maximal interception storage [mm]. Interception storage is plant dependent, fixed in model for specific landuse.
+<br><br>
+CORRECTION FACTOR INITIAL INTERCEPTION STORAGE<br>
+Interception storage is set for initial conditions (standard 1 mm). Factor (multiply) can be used to estimate new initial conditions for similar events but not for shortterm simulation.
+<br><br>
+CORRECTION EVAPOTRANSPIRTATION<br>
+Values are fixed (1 mm per day) in model because of flood forecast of extreme events with shortterm simulation in timesteps less than 24 h evapotranspiration is no main component for discharge process. Factor is multiplied with time-series.
+<br><br>
+MAXIMUM WATER CONTENT SNOW [%]<br>
+Maximal possible water content of snow, standard: 0.45 <br><br>
+
+Radiation Snow Melting [mm/h]<br>
+Radiation depending snow melting rate (x btw 0,1), standard: 0.35 <br><br>
+
+TEMPERATURE SNOW MELTING [mm/h/K]<br>
+Temperature depending snow melting rate (x btw 0,1)), standard: 0.25 <br><br>
+
+MAXIMUM HEIGHT OF GROUNDWATER [m]<br>
+Upper channel base to define upper groundwater reservoir, according to concept of groundwater storage. Not implemented in RRM interaction of groundwater and soil moisture regime, overland flow if groundwater reaches surface.
+<br><br>
+
+MINIMUM HEIGHT OF GROUNDWATER [m]<br>
+Lower channel base to define upper groundwater reservoir<br><br>
+
+DRAW-OFF FROM SHALLOW AQUIFER [m³/s]<br>
+No draw-off form shallow aquifer (e.g. wells) is used upper river basin Tisza.
+<br><br>
+POROSITY OF SHALLOW AQUIFER [x btw 0,1] <br>
+Standard in model 0.25, pore volume of 25 %
+<br><br>
+SPLITTING FOR SHALLOW AND DEEP AQUIFER [x btw 0,1]
+<br> Percentage of groundwater discharge flowing in lower catchment or deep aquifer, if value equal 1 no outflow in deep aquifer. No deep aquifer is used.
+<br><br>
+RETENTION BASEFLOW [h]<br>
+Can be fixed to 300 because of no hydrological influence during shortterm simulation.
+<br><br>
+RETENTION SHALLOW AQUIFER [h]<br>
+Can be fixed to 30000 because of no hydrological influence during shortterm simulation.
+<br><br>
+RETENTION INTERFLOW [h]<br>
+Same retention constant for all soil layers in one catchment, to differ of soil layer use correction factor interflow.
+<br><br>
+RETENTION DEEP AQUIFER [h]<br>
+Can be fixed to 300000 because of no hydrological influence during shortterm simulation.
+<br><br>
+RETENTION SURFACE FLOW, NATURAL [h]<br>
+Main retentionconstant for upper river basin Tisza.
+<br><br>
+RETENTION SURFACE FLOW, SEALED [h]<br>
+Sealed area is not characteristic for upper river basin Tisza, therefore in spite of nearly same retentionconstats discharge component is quite less than Overlandflow from natural aera.
+<br><br>
+<u>Soillayer corrections and initial conditions, implemented in datamodel by vector set:</u><br><br>
+
+INFILTRATION RATE SHORTTERM [1/h]<br>
+Proportional factor for infiltration, depending on characteristic soil properties<br><br>
+INFILTRATION RATE LONGTERM [1/d]<br>
+Proportional factor for infiltration, depending on characteristic soil properties, used for longterm simulation which still is not implemented in system.
+<br><br>
+PERCOLATION RATE [1/h]<br>
+Proportional factor for percolation, depending on characteristic soil properties<br><br>
+
+CORRECTION FACTOR MAXIMUM PORE VOLUME<br>
+Factor (multiply) enables to reflect special hydrological, pedological conditions.<br><br>
+
+CORRECTION FACTOR USABLE FIELD CAPCITY<br>
+Factor (multiply) enables to reflect special hydrological, pedological conditions.<br><br>
+
+CORRECTION FACTOR INTERFLOW<br>
+To specify for each soil layer in catchment hydrology<br><br>
+
+INITIAL SOIL MOISTURE [mm]<br>
+Initial soil moisture for soil layer, dependent of soil type and climate<br><br>
+
+<b>Strand: Virtual Strand </b><br><br>
+Virtual strand transfers flood wave direct from up- to downstream node<br><br>
+
+STRAND NUMBER<br>
+Strand number in model network, visualized in NetView<br><br>
+
+<b>Strand: Channel Strand</b><br><br>
+Translation and retention of the supply wave during the flow between start and end node of the drainage network is simulated by a parallel linear memory cascade (Kalinin-Miljukov-Methode)
+<br><br>
+STRAND NUMBER<br>
+Strand number in model network, visualized in NetView<br><br>
+
+BANKFULL DISCHARGE [m³/s]<br>
+Discharge conveyed in a water course without overtopping the flood plains<br><br>
+
+DISTRIBUTION FACTOR<br>
+According to higher water levels like bankfull, also channel discharge is increased, compared to bankfull discharge. The drainage cross section which is situated above the elevation of bankfull is added proportional to channel section. This factor can be given in the model.
+<br><br>
+<u>Channel Data, implemented in datamodel by vector set:</u> <br>
+5 discharge levels:<br> 1. and 2. discharge in channel<br>  3. bankfull<br> 4. and 5. discharge in channel and over flood plain<br>
+<br>
+DISCHARGE [m³/s]<br><br>
+
+STORAGE COEFFICIENT K, CHANNEL <br><br>
+
+NUMBER OF MEMORY ELEMENTS N, CHANNEL <br><br>
+
+STORAGE COEFFICIENT K, FLOOD PLAIN<br><br>
+
+NUMBER OF MEMORY ELEMENTS N, FLOOD PLAIN <br><br>
+<b>Strand: Resservoir Strand</b> <br><br>
+Channel which discharge characteristic is given in capacity curve<br><br>
+
+STRAND NUMBER<br>
+Strand number in model network, visualized in NetView
+<br><br>
+OUTPUT NODE<br>
+Output node number for drainage of reservoir if node number 0 overflow is sumed up with baseflow at downstream node of strand, still no output to other drainage nodes in network is implemented
+<br><br>
+INITIAL VOLUME OF RESERVOIR [hm³]<br><br>
+
+MAXIMUM VOLUME OF RESERVOIR [hm³]<br><br>
+
+MINIMUM VOLUME OF RESERVOIR [hm³]<br><br>
+
+Volume-Discharge-Level-Function, implemented in datamodel by vector set:<br><br>
+
+HEIGTH OF WATERTABLE [m]<br><br>
+VOLUME OF RESERVOIR [hm³]<br><br>
+
+OUTPUT DISCHARGE [m³/s]<br><br>
+
+<b><h3> RainStation (same parameters for Climate and GaugingStation)</h3></b>
+
+To add a station in ModelData version a new row can be inserted by user with command NEW in menu bar of table. To drop use command REMOVE.
+Parameters to define the connection of station to DataCenter are to be set. More detailed information in chapter 4 input time-series.
+<b>The RRM uses files to input time-series in simulation routine, therefore file name must be same like for catchments and station name.
+Important for correct simuation is the same usage of capital letters: to minimise errors, file names should be written uncapitalised in general.</b>
+
+
+<br><br>
+<hr>
+User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+</HTML>

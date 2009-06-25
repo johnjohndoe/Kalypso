@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- BROKEN featurePath nicht möglich -->
+
+<gistableview xmlns="gistableview.template.kalypso.org">
+	<layer id="1" linktype="gml" ns1:actuate="onRequest" 
+	featurePath="ChannelCollectionMember/channelMember[KMChannel]" 
+	ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+		<column editable="false" name="inum" width="100"/>
+		<column editable="true" name="qfmax" width="100"/>
+		<column editable="true" name="c" width="100"/>
+		<sort inverse="true" propertyName="qfmax"/>
+	</layer>
+</gistableview>

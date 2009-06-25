@@ -1,0 +1,99 @@
+      <type>java.lang.Integer</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+      <type>java.lang.Integer</type>
+    <simpleProperty key="m_typeName">
+      <type>java.lang.String</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+        <type>java.lang.Float</type>
+<type>java.lang.Integer</type>
+<simpleProperty key="m_typeName">
+<type>java.lang.String</type>
+<type>java.lang.Float</type>
+<type>java.lang.String</type>
+<type>java.lang.String</type>
+      <type>java.lang.String</type>
+	<type>java.lang.String</type>
+	<type>java.util.Date</type>
+	<type>java.lang.Float</type>
+	<type>java.lang.Float</type>
+	<type>java.lang.Float</type>
+	<type>java.lang.Integer</type>
+	  <type>java.lang.Float</type>
+	  <type>java.lang.Float</type>
+	  <type>java.lang.Float</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Boolean</type>
+      <type>java.lang.Double</type>
+      <type>java.lang.Double</type>
+      <type>java.lang.Double</type>
+      <type>java.lang.Double</type>
+      <type>java.lang.Double</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>
+    <vectorSet key="m_corrFactSoil"><name>Correction Soil</name><description>Correction and initial conditions for soil layers in each catchment</description><simpleProperty key="v_infiltShortTime"><name>Infiltration Rate Shortterm</name><description>Proportional Factor for infiltration, depending on characteristic soil properties</description><unit>1/h</unit><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_infiltDailyVal"><name>Infiltration Rate Longterm</name><description>Proportional Factor for infiltration, depending on characteristic soil properties</description><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_perkForLayer"><name>Percolation Rate</name><description>Proportional Factor for percolation, depending on characteristic soil properties</description><unit>1/h</unit><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_maxPoreVolume"><name>Correction Factor Maximum Pore Volume</name><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_initialMoisture"><name>Initial Moisture</name><unit>mm</unit><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_usableFieldCap"><name>Correction Factor Usable Field Capcity</name><type>java.lang.Float</type></simpleProperty><!--			<simpleProperty key="v_retLayer">
+      <simpleProperty key="v_retLayerInterflow"><name>Correction Factor Interflow</name><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_evapLayer"><name>evaporation layer</name><description>Not used in kalypso</description><type>java.lang.Float</type></simpleProperty></vectorSet>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.Integer</type>
+      <type>java.lang.Integer</type>
+      --><name>percentage of discharge</name><type>java.lang.Float</type></simpleProperty>
+      <type>java.lang.Float</type>
+      <type>java.lang.String</type>
+      <type>java.lang.String</type>
+      <type>java.lang.Float</type>
+      <type>java.lang.Float</type>

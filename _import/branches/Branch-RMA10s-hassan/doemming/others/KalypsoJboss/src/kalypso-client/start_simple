@@ -1,0 +1,8 @@
+#/bin/bash
+#CLASSPATH=`cat jboss_libs_classpath`
+CLASSPATH=$CLASSPATH:../deploys/javaGis1-ejb.jar:../deploys/javaGis2-ejb.jar:../deploys/javaGis3-ejb.jar
+CLASSPATH=$CLASSPATH:../kalypso-filter/Source
+CLASSPATH=$CLASSPATH:.
+echo $CLASSPATH
+java de/tuhh/wb/javagis/simpleclient/Main
+#java Test

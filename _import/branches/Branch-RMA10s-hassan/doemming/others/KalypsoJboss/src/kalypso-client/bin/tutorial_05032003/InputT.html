@@ -1,0 +1,30 @@
+<html>
+<title> Kalypso-Tutorial </title>
+<body  >
+<h2>Input Time Series</h2>
+<img src=blueline.gif align="center" >
+
+<br><br>
+In table RainStation and ClimateStation the parameters to connect with DataCenter are to be set. <br>
+The RRM needs for calculation precipitation rate [mm] per time interval.<br>
+The interval of precipitation rate is not restricted for input in RRM. The RRM calculates by interpolation rate per simulation time step. For output precipitation intensity [mm/h] is generated.
+Temperature RRM models with daily average values. Measured temperature must aggregated in DataCenter, otherwise RRM reads for the day last measured value.
+Like mentioned in DataCenter there are different channels for measured parameters possible. Each channel can also offer different types of tables:
+<ul>
+<li> Measured<br>
+<li> Work (if values are not or wrong measured at station user can correct values)<br>
+<li> Forecast<br>
+<li> Aggregated<br>
+</ul>
+To build up connection to DataCenter user can choose timeseries Browser from menu bar. The defined structure in DataCenter for stations (reflecting river basins) can be visualized.<br>
+Then the user can directly in Kalypso Interface get a station object and by two buttons decide which table of station in DataCenter should be used for measured data and forecast. <br>
+To create new row in table for station user gets commands in context menu. <br>
+For gauging stations an import of measured discharge can be done in same way.
+<br><br>
+<img src=ScreenShot025.gif align="center" >
+
+<br><br>
+<hr>
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+</html>
