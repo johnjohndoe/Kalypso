@@ -598,29 +598,29 @@ C	  vel(7,n)=gpb(n,1)
           IF(MAXN .EQ. 0) THEN
 	    VOLD(7,N)=GPB(N,1)
             VDOTO(7,N)=0.
-	  ENDIF
+	    ENDIF
 
           IF(MAXN .EQ. 1) THEN
             VOLD(7,N)=VEL(7,N)
 	    VDOTO(7,N)=VDOT(7,N)
-	  ENDIF
+	    ENDIF
           VEL(7,N)=GPB(N,1)
           VDOT(7,n)=ALTM*(VEL(7,n)-VOLD(7,n))-VDOTO(7,n)*(ALPHA-1.)
 
           if(delt .gt. 0) then
 	    VDOT(7,N)=(VEL(7,N)-VOLD(7,N))/DELT
-	  else
+	    else
 	    vdot(7,n)=0.
-	  endif
+	    endif
 
           IF (n==1) then
             write(LOUT,*) 'Ausgabe aus SANDX:'
             write(LOUT,*) 'Belegung von vel(7,n), vold(7,n), vdot(7,n)'
           Endif
 
-	ELSE
+	  ELSE
 	  VEL(7,N)=GPB(N,1)
-	endif
+	  endif
       enddo
 C
       RETURN
