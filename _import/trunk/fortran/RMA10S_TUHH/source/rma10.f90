@@ -25,7 +25,8 @@ USE BLK10MOD, only: &
 &  sidff, &
 &  mxsedlay, &
 &  itransit, ndep, nref, dfct, &
-&  storageElts
+&  storageElts !,&
+!&  IPROFIN   !HN. June2009
 !meaning of the variables
 !------------------------
 !niti                   number of steady state iterations
@@ -114,6 +115,7 @@ USE BLK10MOD, only: &
 !INCSTR                 control structure data
 !IWVFC                  input surface stress data file
 !IWVIN                  input wave data file
+!IPROFIN                UNIT NUMBER OF INPUT PROFILE DATA FILR FOR SIMULATION OF RIVERBANK EVOLUTION
 !INTIMS                 on/off controlling of constrol structure time series
 !ITIMFL                 processing time data
 !                       TODO: Make one unit number from nscr and nd1
@@ -170,6 +172,7 @@ USE BLKSEDMOD, only: lss, nlay, thick, sst, nlayo, thicko, gbo, ssto, smval, bed
 USE BLKSANMOD, only: lbed, lsand, delbed, elevb, tthick
 USE PARAKalyps, only: ivegetation, c_wr, mcord
 use mod_storageElt
+USE share_profile, ONLY : BANKEVOLUTION   ! HN. June2009
 
 implicit none
 
@@ -178,12 +181,13 @@ type (SimulationModel), pointer :: m_SimModel
 
 !local variables
 integer (kind = 4) :: idryc, iprtf, iprti, iprtMetai
-integer (kind = 4) :: i, j, k, l, m, n, kk, ll
+integer (kind = 4) :: i, j, k, l, m, n, kk, ll, pp
 integer (kind = 4) :: n1, n2
 integer (kind = 4) :: temp_maxn
 integer (kind = 4) :: ndl
 integer (kind = 4) :: teststat
 integer (kind = 4) :: ibin
+integer (kind = 4) :: CallCounter  
 real (kind = 8) :: vtm, htp, vh, h, hs
 real (kind = 8) :: ta
 real (kind = 8) :: d1, d2, ame1
@@ -214,7 +218,8 @@ character (len = 96) :: outputfilename, inputfilename
 !thetcn           local reciprocal value of alpha to calculate time derivatives of the variables
 !outputfilename   outputfilename character variable for 2D result files
 !inputfilename    inputfilename character variable for 2D result files (informational data) ???
-
+! Callcounter     HN. June2009, counter for counting the number of times the bank evolution subroutine is called.
+! Callcont        HN. June2009, counter for counting the number of times the MakeFenode subroutine is called.
 
 !-----------------------------------------------------------
 !reserve for testoutput of matrices
@@ -285,6 +290,8 @@ idryc = 0
 alpha = 1.8
 !alpha = 2.0
 thetcn = 1./ alpha
+! HN, June 2009, initilizing bank evolution counters.
+CallCounter = 0
 
 !input geometry etc
 !------------------
@@ -717,9 +724,10 @@ maxn = 0
 !???
 !---
 if(lbed > 0) then
-  !kinematic viscosity ???
+  !kinematic viscosity ??? YES
   call kinvis
-  !sand exchange ???
+  !sand exchange ??? NO!!
+  !HN12June2009. It computes equilibrium transport (transport capacity)
   call sandx
 endif
 
@@ -809,7 +817,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     altm = 0.
   endif
 
-  !lowest degree of freedom???
+  !lowest degree of freedom??? Yes!
   NDL = 1
   
   !Initialise Mellor Yamada turbulence formulation
@@ -1050,7 +1058,15 @@ DynamicTimestepCycle: do n = 1, ncyc
     !set up boundary line, based on active mesh parts
     !--------------------
     call bline (maxn)
-
+    !HN. 12June2009
+    !ICK is a flag to define the degree of freedom, for example: 
+    !ICK = 3 is Salinity (iteqs = 0).
+    !ICK = 5 is Temprature(iteqs = 1).
+    !ICK = 6 is concentration(iteqs = 2).
+    !ICK = 7 is the bed change/equilibrium bed load(iteqs = 3).  
+    !iteqs is defined in control file by user for each iteration. iteqs = 3 is bed deformation, which is not included in RMA10s
+    ! User Guide version 3.5E.
+    ! HN end.
     !???
     !---
     ick = iteqs (maxn) + 4
@@ -1065,7 +1081,9 @@ DynamicTimestepCycle: do n = 1, ncyc
       call kinvis
       !call shear
       write(*,*) 'going to sandx'
+      !compute equilibrium transport (transport capacity)
       call sandx
+      ! compute deposition or erosion rate based on transport capacity theory.
       call bedxcg
     endif
 
@@ -1310,6 +1328,25 @@ DynamicTimestepCycle: do n = 1, ncyc
     call bedsur
   endif
 
+!----------------------------------------------------------------------------
+  ! HN JUNE 2009
+  !CCL - contiLines; ccls
+  !Fe_node information (x,y,z = ao(i))
+  !Elements connecting to each nodes
+  !Wasserstand - wsll(Knoten)
+  !-----------------------------
+  !Einbau des Hassan-Algorithmus
+  !-----------------------------
+  !
+  ! if there is a profile data file or no profile data file but
+  ! contlines in the form of profile then run bank_evolution once.
+    
+  !IF ( ( IPROFIN == 73 ).OR.(BANKEVOLUTION) ) THEN
+  IF (BANKEVOLUTION) THEN
+  CallCounter = CallCounter + 1
+  CALL bank_evolution (CallCounter)
+  endif 
+!-------------------------------------------------------------------------------'
 
   !calculating the cwr-values for trees; adding temporary storage of maxn = 0; Updating the cwr-values for trees after convergence
   !------------------------------------
