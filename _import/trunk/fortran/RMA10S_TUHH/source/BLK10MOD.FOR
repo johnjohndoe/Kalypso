@@ -28,6 +28,7 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       integer (kind = 4) :: iwvfc, instr, iowgt, icordin, iocon, iwvin
       integer (kind = 4) :: intims, inwgt, imassout, itimfl
       integer (kind = 4) :: nscr, nd1
+      integer (kind = 4) :: IPROFIN
       !meaning of the variables
       !------------------------
       !           TODO: examine, how ICFL works
@@ -50,6 +51,7 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       !ICORDIN    external grid data
       !IOCON      continuity line hydrograph file
       !IWVIN      input wave data file
+      !IPROFIN    INPUT DATA FILE OF PROFILES, REQUIRED FOR SIMULATION OF BANK EVOLUTION
       !INTIMS     on/off controlling of constrol structure time series
       !INWGT      external inpolation weighting data file
       !IMASSOUT   ???
@@ -57,6 +59,7 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       !           TODO: Make one unit number from nscr and nd1
       !nscr       scratch file unit for solver purposes
       !nd1        copy of scratch file unit nscr
+      !IRPOFIN   INPUT PROFILE DATA FILE FOR SIMULATION OF BANK EVOLUTION 
       !other units
       !-----------
       !unit definitions in other blocks
