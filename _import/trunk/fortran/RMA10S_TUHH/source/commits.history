@@ -965,5 +965,27 @@ new features introduced/ started to be introduced:
 60.) For model partitioning some stuff is introduced that will be specified in detail later!
 
 --- Nico Schrage, 22.06.2009
-
+-------- M. Hassan Nasermoaddeli, at this stage the new package of Bank Evolution is introduced.
+-------- possibly a new release ??????????
+61.)  The package is introduced in a subfolder (modules_bankevolution) and is in a mudular form. It computes the non-cohesive
+      bank evolution of the river bank (left and right bank) in steady as well unsteady cases. The bank evolution(bank_erosion.f90) includes avalnche
+      of bank-toe (avalanche.for) due to bank-toe erosion in submerged area, which results in undercutting zone in this region and overhang formation
+      above water level. Cantilever failure in the form of shear failure (canilever.f90),  as well as tensile failure(tensile.f90) are 
+      simulated in this process including pore pressure distribution in the bank. Bank profiles are defined as continuity lines with extra Id line " PRF"
+      following the profile number which must follow the cc1 or cc2 line of the corresponding contiunity line in control file. The bank profile information
+      can be read either from a seperate data file (UNIT = IPROFIN), or the continuity line can be assigned as the initial bank profile with bank Id = 0
+      i.e. PRF  0.
+62.)  In file.f90 the profile data file (UNIT = IPROFIN, FNAM = 18) is opened if in control file in data file definition part the name of a file follows
+      the ID PROFIL.
+63.)  In input.f90 the corresponding data of profiles are read from profile unit and the variable(derived data type) BANKROFILE with related FENODES (derived data type)
+      are created. Derived data types are defined in a seperate module (types.f90). In the case of initial profiles (PRF 0), profiles are made out of 
+      continuity lines. In both cases the bank profiled if pointed to by a pointer in Contiline data structure.  the following modules has been added
+      in  USE statement : ASSIGNROFILES. make_profile, types, share_profile,only :BANKPROFILES , fenodes, BANKEVOLUTION.
+63.)  BLK10MOD has been modified to include new variables IPROFIN.     
+64.)  RMA10.f90 has been modified to activate bank evolution if required(BANKEVOLUTION=.TRUE., decided in input.f90):
       
+       IF (BANKEVOLUTION) THEN
+        CallCounter = CallCounter + 1
+        CALL bank_evolution (CallCounter)
+       endif 
+65.) the rest comes soon!
