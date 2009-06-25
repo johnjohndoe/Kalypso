@@ -1,7 +1,0 @@
-Buildfile: C:\Eclipse\KalypsoRuntimeSachsen\KalypsoElbeZwischengebiete\.model\launch\build.xml
-Szenario der Rechenvariante ist: 
-INFO[102]: Berechnung des Zwischengebietszuflusses für Dresden - Torgau
-INFO: Lade Modell platform:/resource//KalypsoElbeZwischengebiete/.prognose/TestBelger-2008-03-04_14h31//calcCase.gml
-INFO: Ignoriere: Seerhausen_3
-INFO: Ziel-ZML platform:/resource//KalypsoElbeZwischengebiete/.prognose/TestBelger-2008-03-04_14h31/Zeitreihen/Zwischengebiete/DresdenTorgau.zml
-BUILD SUCCESSFUL

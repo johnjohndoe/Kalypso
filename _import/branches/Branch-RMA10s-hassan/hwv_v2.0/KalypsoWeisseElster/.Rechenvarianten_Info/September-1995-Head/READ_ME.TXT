@@ -1,1 +1,0 @@
-Ein erster Versuch, die Weisse-Elster auf den aktuellen Kalypso-NA Stand zu bringen.

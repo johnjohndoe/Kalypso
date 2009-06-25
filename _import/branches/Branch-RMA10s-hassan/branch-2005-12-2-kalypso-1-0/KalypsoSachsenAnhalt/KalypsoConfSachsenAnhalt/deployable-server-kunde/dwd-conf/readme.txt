@@ -1,1 +1,0 @@
-Konfigurationen des DWDFilecopyServlets, müssen nach DWDFileCopyServlet/WEB-INF/web.xml kopiert werden.

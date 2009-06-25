@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<simBase:SimpleOperationalModel xmlns:gml="http://www.opengis.net/gml" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:wbGml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase simulation_model_operational.xsd http://www.tu-harburg.de/wb/kalypso/schemata/wbgml gml_imitations.xsd http://www.opengis.net/gml platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd ">
-</simBase:SimpleOperationalModel>

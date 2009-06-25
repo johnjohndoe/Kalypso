@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<compare xmlns="compare.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="compare.kalypso.org
-compare.xsd">
-	<resource>
-		<path name="Niederschlag" relativeToCalcCase="true"/>
-		<path name="Niederschlag_soll" relativeToCalcCase="true"/>
-	</resource>
-</compare>

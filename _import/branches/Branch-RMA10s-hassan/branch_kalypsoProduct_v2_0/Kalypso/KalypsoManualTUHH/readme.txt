@@ -1,1 +1,0 @@
-Benutzerhandbuch der TUHH (Abwandlung des Manuals bezüglich des KalypsoManual).
