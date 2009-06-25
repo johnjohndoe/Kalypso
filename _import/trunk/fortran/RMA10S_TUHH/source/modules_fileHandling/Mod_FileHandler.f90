@@ -57,6 +57,8 @@ module mod_fileHandler
       !           TODO: Make one unit number from nscr and nd1
       !nscr       scratch file unit for solver purposes
       !nd1        copy of scratch file unit nscr
+      !IRPOFIN   INPUT PROFILE DATA FILE FOR SIMULATION OF BANK EVOLUTION 
+
   end type
 
   
