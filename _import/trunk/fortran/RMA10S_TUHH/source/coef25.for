@@ -246,8 +246,10 @@ cipkjun05
       FFACT=0.
 cipk nov98 adjust for top friction
       !surface or bottom friction coefficient, if Chezy is used
-      IF(ORT(NR,5) .GT. 1.  .or.  ort(nr,13) .gt. 1.) then
-        FFACT = GRAV/(CHEZ(NN)+ort(nr,13))**2
+      if (ntx == 1) then
+        IF(ORT(NR,5) .GT. 1.  .or.  ort(nr,13) .gt. 1.) then
+          FFACT = GRAV/(CHEZ(NN)+ort(nr,13))**2
+        endif
       endif
 
 CIPK MAR0 setup switch that says salinity is active
