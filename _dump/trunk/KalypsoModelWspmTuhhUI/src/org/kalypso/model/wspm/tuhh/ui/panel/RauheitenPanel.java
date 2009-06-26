@@ -85,7 +85,7 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * TODO: flieﬂzonen eingaben deaktivieren, wenn keine Flieﬂtzonen definiert
- *
+ * 
  * @author kimwerner
  */
 public class RauheitenPanel extends AbstractProfilView
@@ -100,7 +100,7 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected final HashMap<String, IComponent> m_RauheitTypes = new HashMap<String, IComponent>();
 
-  protected String m_rauheitTyp;
+  protected String m_rauheitTyp = null;
 
   protected HashMap<String, Double> m_RauheitMap = new HashMap<String, Double>();
 
@@ -117,9 +117,17 @@ public class RauheitenPanel extends AbstractProfilView
       if( componentID.startsWith( IWspmTuhhConstants.POINT_PROPERTY + "RAUHEIT" ) ) //$NON-NLS-1$
       {
         final IComponent component = provider.getPointProperty( componentID );
+        boolean found = false;
         m_RauheitTypes.put( componentID, component );
-        if( getProfil().hasPointProperty( component ) )
+        if( getProfil().hasPointProperty( component ) && !found )
+        {
           m_rauheitTyp = component.getId();
+          found = true;
+        }
+        else
+        {
+          m_rauheitTyp = null;
+        }
       }
     }
     final int iRauheit = profile.indexOfProperty( m_rauheitTyp );
@@ -361,7 +369,7 @@ public class RauheitenPanel extends AbstractProfilView
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
 
-    final String text = value == null ? "<Not Set>" : String.format( "%.4f", value.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String text = value == null ? "<Not Set>" : String.format( "%.4f", value ); //$NON-NLS-1$ //$NON-NLS-2$
     final Text t = toolkit.createText( panel, text, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     t.setLayoutData( data );
     t.addModifyListener( doubleModifyListener );

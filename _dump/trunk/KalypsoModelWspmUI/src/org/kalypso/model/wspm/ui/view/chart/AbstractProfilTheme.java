@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -151,7 +153,24 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   private final String m_id;
 
-  private final ILayerManager m_layerManager = new LayerManager();
+  private final ILayerManager m_layerManager = new LayerManager()
+  {
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.layer.impl.LayerManager#getLayers()
+     */
+    @Override
+    public IChartLayer[] getLayers( )
+    {
+      final ArrayList<IChartLayer> layers = new ArrayList<IChartLayer>();
+      for( final IChartLayer layer : super.getLayers() )
+      {
+        if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
+          layers.add( layer );
+      }
+      return  layers.toArray(new IChartLayer[0]);
+    }
+  };
 
   private final String m_title;
 
@@ -389,6 +408,8 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     }
     if( min == null || max == null )
       return null;
+    if( min > max * 0.9 )
+      min = 0.9 * max;
     return new DataRange<Number>( min, max );
   }
 

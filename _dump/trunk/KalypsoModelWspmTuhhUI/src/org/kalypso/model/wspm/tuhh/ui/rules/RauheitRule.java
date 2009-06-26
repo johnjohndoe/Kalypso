@@ -64,14 +64,23 @@ public class RauheitRule extends AbstractValidatorRule
   {
     if( profil == null || istDurchlass( profil.getProfileObjects() ) )
       return;
-
-    IComponent pointProp = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
-    if( pointProp == null )
-      pointProp = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
-    if( pointProp == null )
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    final String stationId = String.format( "km %.4f", profil.getStation() );//$NON-NLS-1$
+    IComponent pointPropKS = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+    IComponent pointPropKST = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
+    if( pointPropKS == null && pointPropKST == null )
+    {
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Rauheiten fehlen", stationId, 0, "", pluginId ); //$NON-NLS-2$
       return;
+    }
 
-    // final int index = profil.indexOfProperty( pointProp );
+    if( pointPropKS != null && pointPropKST != null )
+    {
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "nur ein Rauheitstyp zulässig", stationId, 0, "", pluginId ); //$NON-NLS-2$
+      return;
+    }
+
+    final IComponent pointProp = pointPropKST == null ? pointPropKS : pointPropKST;
     final IProfilPointMarker[] durchS = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
 
     if( durchS.length < 2 )
@@ -83,18 +92,18 @@ public class RauheitRule extends AbstractValidatorRule
     if( points.length == 0 )
       return;
 
-    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
     for( final IRecord point : points )
     {
       final Double value = ProfilUtil.getDoubleValueFor( pointProp.getId(), point );
       if( value.isNaN() )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0") + pointProp.getName(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+        Object oVal = point.getValue( profil.indexOfProperty( pointProp ) );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, String.format( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ), oVal ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
       }
       else if( value <= 0.0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.2", value ), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.2", value ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         break;
       }
     }
@@ -102,7 +111,7 @@ public class RauheitRule extends AbstractValidatorRule
 
   private final boolean istDurchlass( final IProfileObject[] objects )
   {
-    if( objects == null || objects.length < 1 || objects[0]==null)
+    if( objects == null || objects.length < 1 || objects[0] == null )
       return false;
     final String building = objects[0].getId();
     if( building.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS )

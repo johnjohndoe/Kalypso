@@ -72,8 +72,8 @@ import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.LayerView;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * This view shows the profile legend. It always shows the legend of the last active part which adapts to
@@ -101,7 +101,7 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
   {
     m_chartlegend = new ChartEditorTreeOutlinePage( chartView );
     m_chartlegend.setContentProvider( new ProfilChartEditorTreeContentProvider( chartView.getChart().getChartModel() ) );
-    m_chartlegend.setSelectionChangeListener( new ISelectionChangedListener()
+     m_chartlegend.setSelectionChangeListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -284,8 +284,13 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
       m_composite.setMessage( null );
       if( m_chartlegend == null )
         createChartLegend( m_composite.getBody(), chartView );
-      final ILayerManager mngr = chartView.getChart().getChartModel().getLayerManager();
-      for( final IChartLayer layer : mngr.getLayers() )
+
+      final IChartModel cm = chartView.getChart().getChartModel();
+      m_chartlegend.getContentProvider().dispose();
+      m_chartlegend.setContentProvider( new ProfilChartEditorTreeContentProvider( cm ) );
+      m_chartlegend.updateControl();
+      
+      for( final IChartLayer layer : cm.getLayerManager().getLayers() )
       {
         if( layer.isActive() )
         {
@@ -295,6 +300,7 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
           break;
         }
       }
+
       m_composite.layout();
     }
 

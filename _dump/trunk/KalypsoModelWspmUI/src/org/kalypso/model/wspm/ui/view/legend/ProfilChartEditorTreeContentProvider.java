@@ -55,15 +55,14 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
 
   private final IExpandableChartLayer m_modelLayer;
 
-  protected final IChartModel m_model;
+  
 
   public ProfilChartEditorTreeContentProvider( IChartModel model )
   {
     super( model );
-    m_model = model;
-    m_modelLayer = new AbstractExpandableLayer()
+     m_modelLayer = new AbstractExpandableLayer()
     {
-
+   private final IChartModel m_model=getModel();
       /**
        * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
        */
@@ -93,7 +92,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
   public Object getParent( Object element )
   {
     final Object parent = super.getParent( element );
-    if( parent == m_model )
+    if( parent == getModel() )
       return m_modelLayer;
     return parent;
   }
@@ -108,7 +107,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
     {
       return new IExpandableChartLayer[] { m_modelLayer };
     }
-   
+
     return super.getChildren( element );
   }
 
