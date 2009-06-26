@@ -988,4 +988,6 @@ new features introduced/ started to be introduced:
         CallCounter = CallCounter + 1
         CALL bank_evolution (CallCounter)
        endif 
-65.) the rest comes soon!
+65.) In module Mod_Contilines, USE types has been added to include data types regarding bank profile, which is pointed to by a pointer named " MorphoProfile",
+     ,if profiles are available, within the data type(Object) "Contiline". A logical switch has been also added to this data type(object) named HasProfile
+     ,which is .true. when a MorphoProfile is available.
