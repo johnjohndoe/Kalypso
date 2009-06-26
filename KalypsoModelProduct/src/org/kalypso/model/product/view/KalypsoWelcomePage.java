@@ -48,6 +48,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -82,11 +84,13 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
   protected static final Image IMG_HOME = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/back.gif" ) ); //$NON-NLS-1$
 
-  private Composite m_contentArea;
+  Composite m_contentArea;
 
   private Composite m_contentClient;
 
   private IKalypsoModule m_selectedModule;
+
+  protected ScrolledForm m_form;
 
   /**
    * @see org.eclipse.ui.part.IntroPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -96,8 +100,8 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
   {
     final FormToolkit toolkit = KalypsoModelProductPlugin.getFormToolkit();
 
-    final ScrolledForm form = toolkit.createScrolledForm( parent );
-    final Composite body = form.getBody();
+    m_form = toolkit.createScrolledForm( parent );
+    final Composite body = m_form.getBody();
     body.setBackgroundImage( IMG_BACKGROUND );
     body.setBackgroundMode( SWT.INHERIT_FORCE );
     body.setLayout( new GridLayout() );
@@ -111,7 +115,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
     update();
 
-    form.reflow( false );
+    m_form.reflow( false );
   }
 
   public void update( )
@@ -138,6 +142,31 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       final FormToolkit toolkit = KalypsoModelProductPlugin.getFormToolkit();
       m_contentClient = new ModulePageComposite( m_selectedModule, toolkit, m_contentArea, SWT.NULL );
     }
+
+    m_contentClient.addPaintListener( new PaintListener()
+    {
+
+      private org.eclipse.swt.graphics.Point m_size;
+
+      @Override
+      public void paintControl( final PaintEvent e )
+      {
+        final org.eclipse.swt.graphics.Point size = m_contentArea.getSize();
+        if( size == null )
+          return;
+        
+        if( m_size == null )
+        {
+          m_size = size;
+          m_form.reflow( false );
+        }
+        else if( !m_size.equals( size ) )
+        {
+          m_size = size;
+          m_form.reflow( false );
+        }
+      }
+    } );
 
     /* footer */
     final ImageCanvas2 footer = new ImageCanvas2( m_contentClient, SWT.NO_REDRAW_RESIZE );
@@ -265,7 +294,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
   public void setSelectedModule( final IKalypsoModule module )
   {
     m_selectedModule = module;
-    
+
     new UIJob( "" ) //$NON-NLS-1$
     {
 
@@ -277,4 +306,5 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       }
     }.schedule();
   }
+
 }
