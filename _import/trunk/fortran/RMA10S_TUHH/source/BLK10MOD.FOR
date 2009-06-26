@@ -200,8 +200,7 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       real (kind = 8), allocatable, dimension (:,:)  :: cord
       real (kind = 8), allocatable, dimension (:)    :: ao, aorig
 
-      type (feNode), allocatable, dimension (:) :: feNodes
-
+      
       
       !general node calculation value data definition
       !----------------------------------------------
@@ -570,7 +569,7 @@ CIPK MAY06 ASS IMASSOUT
 !-
 
 
-      ALLOCATABLE CORDS(:,:),NBC(:,:),ITAB(:),
+      ALLOCATABLE CORDS(:,:),NBC(:,:),SPEC(:,:),ITAB(:),
      1              ALFA(:),
      3              NLOC(:)
      4             ,NSURF(:),NBTN(:),IBN(:)
