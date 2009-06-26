@@ -1,17 +1,20 @@
 module mod_ContiLines
   use mod_Nodes
   use mod_Arcs
+  USE TYPES
   use mod_storageElt
-
+ 
   type contiLine
     integer (kind = 4) :: ID = 0
     logical :: isInnerBoundary = .false.
     type (linkedNode), pointer :: firstNode => null()
     type (linkedNode), pointer :: lastNode => null()
     type (arc), pointer :: firstSegment => null()
+    TYPE (PROFILE), POINTER :: MorphoProfile => NULL()
     real (kind = 8) :: posNormal (1:2) = (/0.0d0, 0.0d0/)
     real (kind = 8) :: km
-    type (StorageElement), pointer :: storageElt => null()
+    type (StorageElement), pointer :: storageElt => null() 
+    logical         :: HasProfile
   end type
   
 CONTAINS
@@ -165,5 +168,11 @@ CONTAINS
   subroutine calcPositiveSegmentNormals (ccl)
     !implicit none
   end subroutine
+  ! SUBROUTINE TO FORM PROFILES OUT OF PROFILE DATA AND CONTINUITY LINES
+ ! FUNCTION ADDPROFILE (BANKPROFILE,CCL)
+  !IMPLICIT NONE
+  
+  !TYPE (PROFILE),
+  
   
 end module
