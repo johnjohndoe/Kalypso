@@ -67,7 +67,7 @@ public class ProfilFactory
     profile.setName( observation.getName() );
     profile.setDescription( observation.getDescription() );
     profile.setPhenomenon( observation.getPhenomenon() );
-
+    
     return profile;
   }
 
