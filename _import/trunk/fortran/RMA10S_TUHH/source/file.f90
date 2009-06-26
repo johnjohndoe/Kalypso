@@ -30,6 +30,8 @@ USE BLK10MOD, only:   &
 &                     incstr, iocon, insfl, IREBED, &
 &                     iwvin, iwvfc, instr, iowgt, inwgt, icordin, intims, imassout, itimfl, &
 &                     modellaus, modellein, modellrst, fnam, &
+! HN052009: PROFILE DATA
+&                     IPROFIN, &    
 !runtime parameters
 &                     iutub, id, ct, iaccyc, krestf, atim, header, nscr
 !meaning of unit definition variables
@@ -108,7 +110,7 @@ CHARACTER (len = 96) :: FNAME, FNAMIN
 !--------------------------------------------------------
 character (len = 96) :: FNAMMES
 character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM4,  FNAM6
-character (len = 96) :: FNAM10, FNAM11, FNAM12, FNAM13, FNAM14, FNAM15, FNAM16, FNAM17, FNAM19
+character (len = 96) :: FNAM10, FNAM11, FNAM12, FNAM13, FNAM14, FNAM15, FNAM16, FNAM17, FNAM18 , FNAM19
 character (len = 96) :: FNAM20, FNAM21, FNAM22, FNAM26, FNAM27
 character (len = 96) :: FNAM30, FNAM32, FNAM33, FNAM34, FNAM36, FNAM38, FNAM39
 character (len = 96) :: FNAM40, FNAM41
@@ -133,7 +135,7 @@ character (len = 96) :: FNAM40, FNAM41
 !FNAM15 = hydrograph data                  (INPUT)
 !FNAM16 = tidal harmonic data              (INPUT)
 !FNAM17 = wind data                        (INPUT)
-!FNAM18 = obsolete
+!FNAM18 = PROFILE DATA FOR BANK EROSION    (INPUT)   !HN052009
 !FNAM19 = temperature data results         (OUTPUT)
 !FNAM20 = CCL hydrograph data              (OUTPUT)
 !FNAM21 = wave data                        (INPUT)
@@ -240,6 +242,7 @@ IHUNIT = 0     !tidalgraph                                         (FNAM14)
 IQUNIT = 0     !Q-graph for continuity line                        (FNAM15)
 KEY = 0        !tidal coefficient graph                            (FNAM16)
 IWINDIN = 0    !wind data graph                                    (FNAM17)
+IPROFIN = 0      ! INPUT UNIT FOR PROFILE DATA                     (FNAM18)
 IOMET = 0      !output meteorological data file                    (FNAM19)
 IOCON = 0      !continuity line hydrograph file                    (FNAM20)
 IWVIN = 0      !input wave data file                               (FNAM21)
@@ -295,7 +298,7 @@ FileRead: DO
     OPEN (LITR, FILE = FNAM1, STATUS = 'UNKNOWN')
     OPEN (LOUT, FILE = FNAM6, STATUS = 'UNKNOWN')
     OPEN (IMESOUT, FILE = FNAMMES, STATUS = 'UNKNOWN')
-
+   
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,may06: Changed concept for Kalypso-input files. If the user decides to run RMA10S with Kalypso-2D modell format, he has to
 !           enter additional informations. These informations are concerning the suffix of result files, the first letter of result files
@@ -348,7 +351,7 @@ FileRead: DO
     if (.not. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
 
 
-  !Input 'BEDREST' = Bed-RESTART (INPUT-Data)
+!Input 'BEDREST' = Bed-RESTART (INPUT-Data)
   !-----------------------------------------
   ELSEIF(ID(1:7) == 'BEDREST') THEN
     !unit of the Bed-Restart file
@@ -409,7 +412,12 @@ FileRead: DO
     IWINDIN=70
     call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM17, IERMSG)
 
-  !
+   !HN052009: PROFILE DATA FILE FOR BANK EVOLUTION MODELLING.
+  !-------------------------------------
+  ELSEIF ( ID(1:7) == 'PROFILE' ) THEN
+    ! UNIT NUMBER
+    IPROFIN = 73
+    call fileOpen (IPROFIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM18, IERMSG)
   !--------------------------------
   ELSEIF(ID == 'OUTMET  ') THEN
     IOMET=72
@@ -488,6 +496,7 @@ FileRead: DO
     INCSTR=20
     call fileOpen (INCSTR, trim(FNAME), 'OLD', 'FORMATTED', FNAM33, IERMSG)
 
+ 
   !on/off controlling of constrol structure time series (INPUT)
   !------------------------------------------------------------
   ELSEIF(ID(1:6) == 'INTIMS') THEN
@@ -628,6 +637,8 @@ IF(KEY > 0) WRITE(LOUT,6027) trim (FNAM16)
  6027 FORMAT (' INPUT TIDAL HARMONIC FILE NAME: ', A)
 IF(IWINDIN == 70) WRITE(LOUT,6029) trim (FNAM17)
  6029 FORMAT (' INPUT ASCII WIND FILE NAME:     ', A)
+IF(IPROFIN == 73) WRITE(LOUT,6030) trim (FNAM18)
+ 6030 FORMAT (' INPUT PROFILE DATA FILE NAME:   ', A)
 IF(IOMET == 72) WRITE(LOUT,6031) trim (FNAM19)
  6031 FORMAT (' OUTPUT MET FILE NAME:           ', A)
 IF(IOCON == 21) WRITE(LOUT,6032) trim (FNAM20)
