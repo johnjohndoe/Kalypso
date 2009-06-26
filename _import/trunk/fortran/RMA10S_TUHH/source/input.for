@@ -79,6 +79,11 @@ CIPK  LAST UPDATED SEP 19 1995
       USE Para1DPoly
       use mod_Nodes
       use mod_ContiLines
+     
+      USE ASSIGNROFILES    ! the BANKPROFILES array is assigned by reading profile data.Including variable SIZ.
+      USE make_profile
+      USE types
+      USE share_profile,only :BANKPROFILES , fenodes, BANKEVOLUTION ! the BANKPROFILES and fenodes array are defined here.
 !-
       SAVE
 
@@ -90,6 +95,7 @@ CIPK  LAST UPDATED SEP 19 1995
       type (contiLine), pointer :: tmp_singleCCL
       integer (kind = 4) :: i
       integer (kind = 4) :: elt
+      
 
 
 C-
@@ -105,6 +111,11 @@ CIPK AUG05      INCLUDE 'BLKSED.COM'
       CHARACTER(LEN=5)::IDString
       character (len = 192) :: inputline
       INTEGER :: istat_temp
+  
+      INTEGER :: ContiLineCounter = 0   !HN,May2009, for computation of the number of profiles to be built from contilines.
+      INTEGER :: ProfileCounter = 0     !HN,May2009, PROFILE COUNTER FOR THE CASE THAT NONE OF THE CONTILENS HAS AN ASSOCIATED PROFILE.
+      INTEGER :: ISTAT , ProfileID = -1
+      LOGICAL :: middsidd =.FALSE.
 !-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: HTP
@@ -192,6 +203,38 @@ C      enddo
 C
 C                                       READ AND PRINT TITLE AND CONTROL
 C
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!     READING THE PROFILE DATA IF IT IS ALREADY PRESENT     !
+!     AND OPENED BY SUBROUTINE IN FILE.F90                  !
+!                  HN MAY2009                               !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            BANKEVOLUTION =.FALSE. 
+      IF ( IPROFIN == 73) THEN
+       ! read profile data from unit 73 and assign BANKPROFILES array
+       CALL READPROFILES (IPROFIN) 
+       CLOSE (IPROFIN)
+         BANKEVOLUTION =.TRUE. 
+       IF ( .NOT. ALLOCATED (FENODES) )THEN   
+        ALLOCATE (FENODES(MAXP),STAT = ISTAT)     
+      
+        IF (ISTAT/=0) THEN
+          WRITE (*,*) 'FAILURE BY ALLOCATION OF FENODES ARRAY IN 
+     +                                    SUBROUTINE INPUT....'
+        END IF
+       END IF 
+        ! initialize the fenodes array
+        CALL MAKEFENODES ( FENODES, MAXP , 1)
+       pause
+      ENDIF 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! IT IS ASSUMED HERE THAT EITHER ALL OF THE MORPHOLOGICAL PROFILES !
+! ARE GIVEN IN A SEPERATE DATA FILE, WHICH IS READ ABOVE, OR IN    !
+! THE CASE THAT THE CONTILINES HAVE NO MORPHOLOGICAL PROFILES      !
+! ASSOCIATED TO THEM, THEN ALL OF THEM SHOULD HAVE THIS SITUATION. !
+!                                                                  !
+! END OF READING PROFILE : HN MAY2009                              !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      
+    
       WRITE(LOUT,6000)
 CIPK NOV97      READ(LIN,7000) ID,DLIN
 CIPK AUG05      call ginpt(lin,id,dlin)
@@ -1146,7 +1189,10 @@ C-
             !read on input file
             read (filecontrol.lin.unit, '(a)') inputline
             !READ(lin,'(A3,A5,A72)') ID, IDString ,DLIN
-             
+   !-------   TEST PROFILE READING; HN May2009----------------------
+       OPEN( UNIT =276 , FILE = 'PROFILE_CONTI.TXT', STATUS ='REPLACE',
+     +   ACTION ='WRITE')
+   !--------- END OF TEST --------------------------------   
             all_CL: do k = 1, ncl
               nl = 1
               !throw error, if there's no continuity line block
@@ -1162,7 +1208,11 @@ C-
               !check for zero entry in first definition position
               if (line (i, 1) == 0)
      +          call ErrorMessageAndStop (1405, i, 0.0d0, 0.0d0)
-
+              ! HN,May2009
+              ! count the number of CC1 line to compute later the number of Profiles
+              ! which should made out of contiLines. 
+              ContiLineCounter = ContiLineCounter + 1
+              ! HN,May2009
               endless: do
                 read(filecontrol.lin.unit,'(a)') inputline
                 if (inputline(1:3) /= 'CC2') exit endless
@@ -1197,9 +1247,108 @@ C-
      +             cord (line (i, j), 2))
                 call addNode (tmp_singleCCL, tmpNode)
               enddo assignNodes
+    !          pause
+    !        write (*,*)'tmp_singleCCL  ',
+    ! +       tmp_singleCCL.FirstNode.next.thisnode.ID, '  ',
+    ! +       tmp_singleCCL.FirstNode.next.thisnode.cord (1),'   ', 
+    ! +       tmp_singleCCL.FirstNode.next.thisnode.cord (2),'   ', 
+    ! +       tmp_singleCCL.FirstNode.next.thisnode.ao
 
+            !HN JUNE2009,------------------------------------------------------------------
+            ! BUILDING PROFILES OUT OF CONTILINES OR JOINING BOTH.             
+            ! LOOKING FOR CORRESPONDING PROFILE ASSOCIATED TO THE CURRENT CONTILINE.
+            !  FE NODE COORDINATES HAVE NOT BEEN YET PROPERLY ASSIGNED TO CONTILINE HERE!!!!!!!!              
+              if (inputLine(1:3) == 'PRF') then
+               ! IF BANKEVOLUTION HAS NOT BEEN ACTIVATED AT THE BEGINNIG, WHILE NO PROFILE DATA
+               ! IS AVAILABLE THEN ACTIVATE IT HERE FOR THE CASE THAT CONTILINES ARE THEMSELVES
+               ! BANK PROFILES.
+               BANKEVOLUTION = .TRUE.
+               tmp_singleCCL.HasProfile = .TRUE.
+               
+                read (inputLine(4:), *)ProfileID
+               ! tmp_singleCCL.ProifileID => ProfileIDD
+               
+                IF ( ProfileID > 0 ) THEN
+               
+                 tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileID)
+                 BANKPROFILES.CL_NUMBER = i
+               
+                ELSEIF ( ProfileID == 0 ) THEN
+                 write (*,*) 'contilinecounter', ContiLineCounter
+                 write (*,*) 'ncl', ncl
+  !               write (*,*) ' Is bankprofile allocated? ',
+  !   +             allocated (bankprofiles)
+  !               pause
+             !HN.22.06.2009 the variable ContiLineCounter has not been correctly assigned?     
+  !               IF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN
+   !                ALLOCATE (BANKPROFILES ( ncl - ContiLineCounter + 1),
+    ! +                                   stat=ISTAT )
+    !               IF (ISTAT/=0) THEN
+    !              WRITE (*,*) 'FAILURE BY ALLOCATION OF PROFILE ARRAY IN 
+    ! +                                    SUBROUTINE INPUT....'
+    !               stop
+    !               END IF
+
+    !            ENDIF         
+                                  
+                 ProfileCounter = ProfileCounter + 1  
+                 write (*,*)' Profilecounter', ProfileCounter
+ !              write (*,*) ' entering into makeprofile subroutine...'
+ !              CALL MAKEPROFILE (tmp_singleCCL,lmt(i),
+ !    +                          BANKPROFILES( ProfileCounter ),.FALSE. )
+ !             tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileCounter)
+ !             pause
+                SIZ = ProfileCounter
+                ENDIF  
+                !read next line
+                read (filecontrol.lin.unit, '(a)') inputLine
+              endif
+            write (*,*) 'ProfileID= ',ProfileId, 'lmt(i) =', lmt(i)
+      !      pause
+            !-------------------------------------------------------------------------
+            ! HN JUNE2009, TEST OF PROFILE READING ------     
+          if (profileId >0) then  
+          WRITE (276,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,
+     +                  tmp_singleCCL.MorphoProfile.cl_number, 
+     +                     tmp_singleCCL.MorphoProfile.max_nodes,
+     +                     tmp_singleCCL.HasProfile
+            WRITE (*,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,
+     +                     tmp_singleCCL.MorphoProfile.cl_number, 
+     +                     tmp_singleCCL.MorphoProfile.max_nodes,
+     +                     tmp_singleCCL.HasProfile
+
+          do j =1,lmt(i)
+         WRITE (276,1013)  
+     +           tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,
+     +           tmp_singleCCL.MorphoProfile.prnode(j).distance,
+     +           tmp_singleCCL.MorphoProfile.prnode(j).elevation,
+     +           tmp_singleCCL.MorphoProfile.prnode(j).attribute
+ 1013    format (1X,I6,3X, 2(F8.4,3X), A9) 
+         WRITE (*,1013)  
+     +           tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,
+     +           tmp_singleCCL.MorphoProfile.prnode(j).distance,
+     +           tmp_singleCCL.MorphoProfile.prnode(j).elevation,
+     +           tmp_singleCCL.MorphoProfile.prnode(j).attribute
+      
+          enddo  
+      end if
+            !-------------------------------------------------------------------------
+            !HN JUNE2009, END OF TEST OF PROFILE READING ------     
+           
             ENDDO all_CL
+          close (276)  !HN, May2009
+          !The bankprofile allocation should come here in the  case of ProfileId= 0 and bankevolution = .TRUE.
+          if (ProifleID ==0 .and. BANKEVOLUTION) then  
+            IF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN
+              ALLOCATE (BANKPROFILES ( ProfileCounter),stat=ISTAT )
+              IF (ISTAT/=0) THEN
+                WRITE (*,*) 'FAILURE BY ALLOCATION OF PROFILE ARRAY IN 
+     +                            SUBROUTINE INPUT....'
+                stop
+              END IF
 
+            ENDIF         
+          endif
             IF(inputLine(1:3)=='ECL') THEN
               write ( *,6901)
               write (75,6901)
@@ -1345,13 +1494,25 @@ C-
             call scaleToUnitVector (ccls(i).posNormal, dirPointer)
           endif
         endif
-        
       enddo getCoords
-      
-      
-
-
-
+ !-------------------------------------------------------------------------------     
+      ! HN JUNE2009. HERE IS THE FIRST PLACE THAT COORDINATES HAVE BEEN ASSIAGNED TO CORNER NODES IN CONTILINES.
+         IF ( ProfileID == 0 ) THEN
+          do n = 1, ncl
+         
+           if (ccls(n).HasProfile ) then
+             tmp_singleCCL => ccls(n)
+               write (*,*) 'CCL ', n, 'lmt(n) ', lmt(n)
+               write (*,*) ' entering into makeprofile subroutine...'
+               CALL MAKEPROFILE (tmp_singleCCL,lmt(n),
+     +                          BANKPROFILES( ProfileCounter ),.FALSE. )
+              tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileCounter)
+           END IF
+            
+          END DO
+         END IF
+ !        pause
+!-----------------------------------------------------------------------------------
 !NiS,apr06: In the case of ORT(J,5)==-1.0, the parameters are given to the arrays:
 !           At this point the IMAT-array is not modified by additions for element
 !           type pointer. These changes are made in threed.subroutine, which is
@@ -1636,7 +1797,65 @@ C
 C...... Initialize CHECK
 C-
       CALL CHECK
-      
+               
+ 
+! HN June 2009
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!   after adding mid side nodes to CCL lines (contilines)
+! now the profile nodes can be assigned to them as follows,
+! for the case that conilines has no extra profiles as a 
+! separate data file, but they construct themselves profiles
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+! IN THE CASE THAT THERE IS NO FILE FOR PROFILE DATA THEN MAKE PROFILES
+! OUT OF CONTILINES DIRECTLY.
+! ProfileID HAS BEEN INITIATED TO -1: IT EITHER GETS AN INTEGER NUMBER
+! FROM CONTROLFILE REFERING TO THE PROFILE ID OR ZERO WHEN NO PROFILE DATA
+! IS AVAILABLE AND CONTILINES SHOULD SERVE DIRECTLY AS PROFILES.  
+
+! MIDSIDE NODES ARE CONSIDERED HERE IN CONSTRUCTING PROFILE NODES.
+! THEY ARE INCLUDED IN CONTILINE AFTER CALLING SUBROUTINE CHECK.      
+        if (middsidd) then
+         if (ProfileID == 0 ) then
+          j = 0
+         
+          do n = 1, ncl
+         
+           if (ccls(n).HasProfile ) then
+         
+               tmp_singleCCL => ccls(n)
+               j = j + 1
+    
+    !          write (*,*) ' n= ', n
+    !          write (*,*) ' line CCL ', (line(n,i),i=1,lmt(n))
+    
+               write (*,*) ' entering into makeprofile subroutine...'
+            write (*,*) 'CCL ',n
+            write (*,*) 'ProfileId ',ProfileId, 'lmt(i) =', lmt(n)
+            pause
+               CALL MAKEPROFILE (tmp_singleCCL,LMT(n),
+     +                           BANKPROFILES( j ), .TRUE. )
+    
+               tmp_singleCCL.MorphoProfile =>BANKPROFILES(j)
+  
+  !       write (*,*) ' Conilines with mideside nodes ..'
+  !       write (*,*) (bankprofiles(j).prnode(i).fe_nodenumber,    
+   !  +                                           i = 1,LMT(n))
+           end if
+          end do
+         end if 
+           
+        stop
+       end if 
+
+
+!-  HN June 2009
+     
+     
+           
+
+
+
+
       !TODO: This call is only for getting the water levels at Q-boundaries and transitions;
       !      The way of programming is not efficient!
       call getinit(ibin,1)      
@@ -2284,8 +2503,37 @@ CIPK AUG95 ADD CALL TO GET MET DATA
 CIPK APR06
 !testing, original place
       call getinit(ibin,1)
-!testing, original place-
+    !testing, original place-  
+ !----------------------------------------------------------
+ ! HN. JUNE 2009: GETINIT INITILIZES THE WSLL VALUES AND NOW FENODES CAN BE BUILT.
+ ! IT IS NEEDED FOR BANK EVOLUTION MODELLING.
+ 
+        IF (( PROFILEID == 0 ).OR. ( IPROFIN == 73) )THEN
+          
+          IF ( .NOT.ALLOCATED (FENODES) ) THEN
+          ALLOCATE ( FENODES (MAXP) )
+          END IF 
+                 
+          CALL MAKEFENODES ( FENODES, MAXP , 2)
+  ! TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST 
 
+ !         write (*,*) 'fenod.typ =', '   fenod.Node_Number',
+  !   +     '  fenod.elevation','  fenod.water_level'
+   !      do i = 1,maxp
+    !              write (*,*) fenodes(i).typ , fenodes(i).Node_Number,
+ !    +       fenodes(i).elevation, fenodes(i).water_level
+
+  !       end do     
+   !      pause
+    !     DO i = 1, maxe
+  !       DO j =  2,ncorn(i),2
+   !      write (*,*) i,j,NOP(i,j),fenodes ( NOP(i,j) ).typ
+    !    end do
+   !     end do   
+! TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST 
+!       stop
+        END IF  
+!-------------------------------------------------------
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C-..... Read reorder array if there is input
