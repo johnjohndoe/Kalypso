@@ -195,8 +195,12 @@ public class ProfilChartView implements IChartPart, IProfilListener
   {
     if( (m_chartComposite != null) && !m_chartComposite.isDisposed() )
       m_chartComposite.dispose();
-    m_axisDragHandler.dispose();
-    m_plotDragHandler.dispose();
+
+    if( m_axisDragHandler != null )
+      m_axisDragHandler.dispose();
+
+    if( m_plotDragHandler != null )
+      m_plotDragHandler.dispose();
 
   }
 
@@ -382,12 +386,16 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_profile == null )
     {
       ((GridData) (m_chartComposite.getLayoutData())).exclude = true;
+
+      final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
+      lm.dispose();
+
       return;
     }
     if( m_chartComposite != null && !m_chartComposite.isDisposed() )
     {
       m_profile.addProfilListener( this );
-      m_chartComposite.getChartModel().setTitle( Messages.getFormatString("org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() )); //$NON-NLS-1$
+      m_chartComposite.getChartModel().setTitle( Messages.getFormatString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
       ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
       updateLayer();
     }

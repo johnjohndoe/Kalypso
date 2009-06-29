@@ -57,7 +57,7 @@ public class ProfilChartTreeLabelProvider extends ChartTreeLabelProvider
    * @see org.kalypso.chart.ui.editor.ChartTreeLabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof ILayerManager )
     {
@@ -68,9 +68,9 @@ public class ProfilChartTreeLabelProvider extends ChartTreeLabelProvider
     return super.getText( element );
   }
 
-  public ProfilChartTreeLabelProvider( IChartPart editor )
+  public ProfilChartTreeLabelProvider( final IChartPart editor )
   {
-    super( editor );
+    super();
     if( editor instanceof ProfilChartView )
       m_profilChartView = (ProfilChartView) editor;
     else

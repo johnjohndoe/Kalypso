@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.view.chart.ChartView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -58,12 +59,11 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
   public void run( final IAction action )
   {
     // welche layer-typen können hinzugefügt werden?
-
-    final ProfilChartView chartView = getView().getProfilChartView();
+    final ChartView chartView = getView().getChartView();
     final IProfil profil = chartView.getProfil();
     if( profil == null )
     {
-      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_0") ); //$NON-NLS-1$
+      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_0" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -73,29 +73,31 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
     if( layerProvider != null )
     {
-      for( final String al : layerProvider.getAddableLayers( chartView ) )
+      final ProfilChartView profilChartView = chartView.getProfilChartView();
+      
+      for( final String al : layerProvider.getAddableLayers( profilChartView ) )
       {
-        final IProfilChartLayer layer = layerProvider.createLayer( al, chartView );
+        final IProfilChartLayer layer = layerProvider.createLayer( al, profilChartView );
         if( layer != null )
           addables.add( layer );
       }
     }
 
-    final ListDialog dialog = new ListDialog( null);//getView().getSite().getShell() );
+    final ListDialog dialog = new ListDialog( null );// getView().getSite().getShell() );
     dialog.setAddCancelButton( true );
     dialog.setBlockOnOpen( true );
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {
       @Override
-      public final String getText( Object element )
+      public final String getText( final Object element )
       {
         return ((IProfilChartLayer) element).getTitle();
       }
     } );
     dialog.setInput( addables );
-    dialog.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_1") ); //$NON-NLS-1$
-    dialog.setTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_2") ); //$NON-NLS-1$
+    dialog.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_1" ) ); //$NON-NLS-1$
+    dialog.setTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_2" ) ); //$NON-NLS-1$
 
     dialog.open();
 
@@ -109,7 +111,9 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     {
       if( layerProvider.providesLayer( layerToAdd ) )
       {
-        layerProvider.addLayerToChart( chartView, layerToAdd );
+        final ProfilChartView profilChartView = chartView.getProfilChartView();
+        
+        layerProvider.addLayerToChart( profilChartView, layerToAdd );
       }
     }
   }

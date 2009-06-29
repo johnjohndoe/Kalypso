@@ -234,7 +234,11 @@ public class ChartTabItem extends Composite implements IChartPart
       if( m_outlinePage == null )
       {
         if( m_chartComposite != null )
-          m_outlinePage = new ChartEditorTreeOutlinePage( this );
+        {
+          final IChartModel model = this.getChartComposite().getChartModel();
+          m_outlinePage = new ChartEditorTreeOutlinePage( model );
+        }
+          
         else
           return null;
       }

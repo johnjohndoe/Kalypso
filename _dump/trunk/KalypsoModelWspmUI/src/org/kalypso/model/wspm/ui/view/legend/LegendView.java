@@ -59,7 +59,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
@@ -70,10 +69,12 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.LayerView;
+import org.kalypso.model.wspm.ui.view.chart.ChartView;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * This view shows the profile legend. It always shows the legend of the last active part which adapts to
@@ -81,26 +82,41 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  * <p>
  * It is also a selection provider of its selected layers.
  * </p>
- *
+ * 
  * @author Gernot Belger
  * @author kimwerner
  */
-public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, IProfilProviderListener
+public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IProfilProviderListener
 {
-  private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<IChartPart>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
+  private final AdapterPartListener<ChartView> m_chartProviderListener = new AdapterPartListener<ChartView>( ChartView.class, this, EditorFirstAdapterFinder.<ChartView> instance(), EditorFirstAdapterFinder.<ChartView> instance() );
 
   private Form m_composite;
 
   private FormToolkit m_toolkit;
 
-  protected ProfilChartView m_chart;
+  protected ChartView m_chart;
 
-  protected ChartEditorTreeOutlinePage m_chartlegend;
+  protected ChartEditorTreeOutlinePage m_chartlegend = null;
+
+  private Composite m_parent;
+
+  private ChartComposite m_chartComposite;
 
   private final void createChartLegend( final Composite parent, final ProfilChartView chartView )
   {
-    m_chartlegend = new ChartEditorTreeOutlinePage( chartView );
-    m_chartlegend.setContentProvider( new ProfilChartEditorTreeContentProvider( chartView.getChart().getChartModel() ) );
+    m_parent = parent;
+    m_chartComposite = chartView.getChartComposite();
+
+    if( m_chartlegend != null )
+      return;
+
+    final IChartModel chartModel = m_chartComposite == null ? null : m_chartComposite.getChartModel();
+    if( chartModel == null )
+      return;
+
+    m_chartlegend = new ChartEditorTreeOutlinePage( chartModel );
+
+    m_chartlegend.setContentProvider( new ProfilChartEditorTreeContentProvider( chartModel ) );
      m_chartlegend.setSelectionChangeListener( new ISelectionChangedListener()
     {
       /**
@@ -119,7 +135,7 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
       }
     } );
 
-    m_chartlegend.createControl( parent );
+    m_chartlegend.createControl( m_parent );
 
     final Control control = m_chartlegend.getControl();
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -131,7 +147,6 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
         showLayerProperties();
       }
     } );
-
   }
 
   protected final void fireSelectionChanged( )
@@ -157,7 +172,6 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
 
     m_composite.getBody().setLayout( bodyLayout );
 
-    updateChartLegend();
   }
 
   /**
@@ -167,7 +181,8 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
   public void dispose( )
   {
     if( m_chart != null )
-      m_chart.removeProfilProviderListener( this );
+      m_chart.getProfilChartView().removeProfilProviderListener( this );
+
     m_chartProviderListener.dispose();
     getSite().setSelectionProvider( null );
     if( m_chartlegend != null )
@@ -191,12 +206,14 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
   public Object getAdapter( final Class adapter )
   {
     if( adapter == ChartEditorTreeOutlinePage.class )
+    {
       return m_chartlegend;
+    }
 
     return super.getAdapter( adapter );
   }
 
-  public ProfilChartView getProfilChartView( )
+  public ChartView getChartView( )
   {
     return m_chart;
   }
@@ -205,22 +222,24 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
-
     m_chartProviderListener.init( site.getPage() );
 
+    updateChartLegend();
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
-  public void setAdapter( final IWorkbenchPart part, final IChartPart adapter )
+  public void setAdapter( final IWorkbenchPart part, final ChartView adapter )
   {
     if( m_chart == adapter )
       return;
-    m_chart = adapter instanceof ProfilChartView ? (ProfilChartView) adapter : null;
 
+    m_chart = adapter;
     if( m_chart != null )
-      m_chart.addProfilProviderListener( this );
+    {
+      m_chart.getProfilChartView().addProfilProviderListener( this );
+    }
 
     updateChartLegend();
   }
@@ -264,12 +283,12 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
     updateChartLegend();
   }
 
-  private void updateChartLegend( )
+  protected void updateChartLegend( )
   {
     if( m_composite == null || m_composite.isDisposed() )
       return;
 
-    final ProfilChartView chartView = getProfilChartView();
+    final ChartView chartView = getChartView();
     if( chartView == null )
     {
       m_composite.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
@@ -281,9 +300,15 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
     }
     else
     {
+      final ProfilChartView profileChartView = chartView.getProfilChartView();
+
       m_composite.setMessage( null );
       if( m_chartlegend == null )
-        createChartLegend( m_composite.getBody(), chartView );
+        createChartLegend( m_composite.getBody(), profileChartView );
+
+      if( m_chartlegend == null )
+        return;
+      
 
       final IChartModel cm = chartView.getChart().getChartModel();
       m_chartlegend.getContentProvider().dispose();
@@ -303,7 +328,6 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
 
       m_composite.layout();
     }
-
   }
 
 }
