@@ -991,7 +991,15 @@ new features introduced/ started to be introduced:
 65.) In module Mod_Contilines, USE types has been added to include data types regarding bank profile, which is pointed to by a pointer named " MorphoProfile",
      ,if profiles are available, within the data type(Object) "Contiline". A logical switch has been also added to this data type(object) named HasProfile
      ,which is .true. when a MorphoProfile is available.
+-------------- M.Hassan Nasermoaddeli, 26.06.2009	      
 66.) I had activated a variable definition for SPEC in BLK10MOD, which later I noticed, it was defined some where else. Therefore, I removed my changes.
 67.) A bug was fixed regarding division by zero in SANDBED [ RATIO=vel(3,n)/(vel(3,n)+diff) ], Now it looks like this:
      if ( abs( vel(3,N) ) <= 0.0009 ) cycle 
 	    RATIO=vel(3,n)/(vel(3,n)+diff)
+68.) In inputd.f90, SLUMP is deactivated in the case BANKEVOLUTION is desireed. Since slump process is already included in avalanche SubR. Include BANKEVOLUTION 
+     in the USE statement USE share_profile, ONLY : BANKEVOLUTION.
+     
+     IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .AND. DELT .GT. 0.) THEN                             
+	     if (.NOT. bankevolution) CALL SLUMPIT 
+69.) A bug was fixed in Module_projection to prevent fenode number to be zero.	     
+-------- M.Hassan Nasermoaddeli, 29.06.2009	                                               
