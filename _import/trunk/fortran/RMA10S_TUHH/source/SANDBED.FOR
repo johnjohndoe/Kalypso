@@ -250,6 +250,7 @@ CIPK MAY02 UPDATE BED ELEVATION
         !TODO: Differ between Marsh and not-Marsh as well as dimensions; it shouldn't be applied for 1D Polynomial
         CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
         VEL(3,N)=HTP
+	if ( abs( vel(3,N) ) <= 0.0009 ) cycle 
 	RATIO=vel(3,n)/(vel(3,n)+diff)
 	VEL(1,N)=VEL(1,N)/RATIO
 	VEL(2,N)=VEL(2,N)/RATIO
