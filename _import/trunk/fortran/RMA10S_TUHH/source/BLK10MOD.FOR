@@ -569,7 +569,7 @@ CIPK MAY06 ASS IMASSOUT
 !-
 
 
-      ALLOCATABLE CORDS(:,:),NBC(:,:),SPEC(:,:),ITAB(:),
+      ALLOCATABLE CORDS(:,:),NBC(:,:),ITAB(:),
      1              ALFA(:),
      3              NLOC(:)
      4             ,NSURF(:),NBTN(:),IBN(:)
