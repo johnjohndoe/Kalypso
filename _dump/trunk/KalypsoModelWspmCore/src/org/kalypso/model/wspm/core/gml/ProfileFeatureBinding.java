@@ -23,14 +23,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature;
 
-//public class ProfileFeatureBinding extends AbstractCachedFeature implements IProfileFeature
-public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeature
+public class ProfileFeatureBinding extends AbstractCachedFeature implements IProfileFeature
 {
-// private GM_Curve m_curve = null;
-//
-// private IProfil m_iProfile = null;
+  private GM_Curve m_curve = null;
+
+  private IProfil m_iProfile = null;
 
   public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -52,18 +51,18 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
   @Override
   public GM_Curve getLine( )
   {
-    return (GM_Curve) getFeature().getProperty( QNAME_LINE );
-// if( m_curve == null || isDirty( QNAME_LINE ) )
-// {
-// m_curve = (GM_Curve) getFeature().getProperty( QNAME_LINE );
-//
-// if( isDirty( QNAME_LINE ) )
-// {
-// setValid( QNAME_LINE );
-// }
-// }
-//
-// return m_curve;
+// return (GM_Curve) getFeature().getProperty( QNAME_LINE );
+    if( m_curve == null || isDirty( QNAME_LINE, QNAME_SRS ) )
+    {
+      m_curve = (GM_Curve) getFeature().getProperty( QNAME_LINE );
+
+      if( isDirty( QNAME_LINE, QNAME_SRS ) )
+      {
+        setValid( QNAME_LINE, QNAME_SRS );
+      }
+    }
+
+    return m_curve;
   }
 
   /**
@@ -72,27 +71,15 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
   @Override
   public IProfil getProfil( )
   {
-// try
-// {
-// if( m_iProfile == null || isDirty( QNAME_OBS_MEMBERS, QNAME_STATION ) )
-// {
-// m_iProfile = toProfile();
-// setValid( QNAME_OBS_MEMBERS, QNAME_STATION );
-// }
-//
-// return m_iProfile;
-// }
-// catch( final Exception e )
-// {
-// final IStatus status = StatusUtilities.statusFromThrowable( e );
-// KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
-//
-// return null;
-// }
-
     try
     {
-      return toProfile();
+      if( m_iProfile == null || isDirty( QNAME_OBS_MEMBERS, QNAME_STATION, QNAME_SRS ) )
+      {
+        m_iProfile = toProfile();
+        setValid( QNAME_OBS_MEMBERS, QNAME_STATION, QNAME_SRS );
+      }
+
+      return m_iProfile;
     }
     catch( final Exception e )
     {
@@ -101,6 +88,18 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
 
       return null;
     }
+
+// try
+// {
+// return toProfile();
+// }
+// catch( final Exception e )
+// {
+// final IStatus status = StatusUtilities.statusFromThrowable( e );
+// KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+//
+// return null;
+// }
   }
 
   /**
@@ -203,7 +202,6 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
 
     /* observation of profile */
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( this );
-
     final IProfil profil = ProfilFactory.createProfil( type, observation );
 
     /* station of profile */
@@ -271,7 +269,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
     }
     catch( final URISyntaxException e )
     {
-      e.printStackTrace();
+      KalypsoModelWspmCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 

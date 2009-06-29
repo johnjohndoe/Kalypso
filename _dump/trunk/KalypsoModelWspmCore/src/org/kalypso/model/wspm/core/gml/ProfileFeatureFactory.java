@@ -106,6 +106,84 @@ public class ProfileFeatureFactory implements IWspmConstants
   }
 
   /**
+   * @return only changed properties
+   */
+  public static FeatureChange[] getFeatureChanges( final IProfil profile, final IProfileFeature binding )
+  {
+    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+
+    try
+    {
+      /* name */
+      final String profileName = profile.getName();
+      final String bindingName = binding.getName();
+      if( !profileName.equals( bindingName ) )
+      {
+        changes.add( getFeatureChangeName( binding, profileName ) );
+      }
+
+      /* description */
+      final String profileDescription = profile.getComment();
+      final String bindingDescription = binding.getDescription();
+      if( !profileDescription.equals( bindingDescription ) )
+        changes.add( new FeatureChange( binding, Feature.QN_DESCRIPTION, profileDescription ) );
+
+      /* station */
+      final double profileStation = profile.getStation();
+      final double bindingStation = binding.getStation();
+      if( profileStation != bindingStation )
+      {
+        changes.add( getFeatureChangeStation( binding, profileStation ) );
+      }
+
+      /* type */
+      final String profileType = profile.getType();
+      final String bindingType = binding.getProfileType();
+      if( !profileType.equals( bindingType ) )
+        changes.add( new FeatureChange( binding, ProfileFeatureFactory.QNAME_TYPE, profileType ) );
+
+      /* Ensure that record-definition is there */
+      final FeatureChange changeRecordDefinition = checkRecordDefinition( binding );
+      if( changeRecordDefinition != null )
+        changes.add( changeRecordDefinition );
+
+      final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, binding );
+      Collections.addAll( changes, obsChanges );
+
+      /* Building */
+      final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+      final IRelationType buildingRT = (IRelationType) binding.getFeatureType().getProperty( memberQName );
+      final FeatureList buildingList = FeatureFactory.createFeatureList( binding, buildingRT, new Feature[] {} );
+
+      final IProfileObject[] buildings = profile.getProfileObjects();
+      for( final IProfileObject profileObject : buildings )
+      {
+        final IFeatureType buildingType = binding.getFeatureType().getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) ); //$NON-NLS-1$
+        final IRelationType buildingParentRelation = buildingList.getParentFeatureTypeProperty();
+        final Feature buildingFeature = binding.getWorkspace().createFeature( binding, buildingParentRelation, buildingType );
+        buildingList.add( buildingFeature );
+        final IObservation<TupleResult> buildingObs = ProfileFeatureFactory.observationFromBuilding( profileObject, buildingFeature );
+        final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( buildingObs, buildingFeature );
+
+        Collections.addAll( changes, featureAsChanges );
+      }
+
+      /* Always to set the building, even if null */
+      final IProfil bindingProfile = binding.getProfil();
+      final IProfileObject[] bindingObjects = bindingProfile.getProfileObjects();
+      if( buildingList.size() > 0 || buildingList.size() != bindingObjects.length )
+        changes.add( new FeatureChange( binding, buildingRT, buildingList ) );
+    }
+    catch( final Exception e )
+    {
+      // TODO: better error handling!
+      e.printStackTrace();
+    }
+
+    return changes.toArray( new FeatureChange[changes.size()] );
+  }
+
+  /**
    * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
    * changes.
    */
@@ -115,7 +193,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     final IFeatureType featureType = targetFeature.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ProfileFeatureFactory.QN_PROF_PROFILE ) )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.gml.ProfileFeatureFactory.0" ,targetFeature )); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.gml.ProfileFeatureFactory.0", targetFeature ) ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
     try
@@ -127,33 +205,21 @@ public class ProfileFeatureFactory implements IWspmConstants
       final List<String> namelist = new ArrayList<String>();
       namelist.add( name );
 
-      changes.add( new FeatureChange( targetFeature, featureType.getProperty( Feature.QN_NAME ), namelist ) );
+      changes.add( getFeatureChangeName( targetFeature, name ) );
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( Feature.QN_DESCRIPTION ), description ) );
 
       /* station */
       final double station = profile.getStation();
-      if( Double.isNaN( station ) || Double.isInfinite( station ) )
-        changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureFactory.QNAME_STATION ), null ) );
-      else
-      {
-        final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
-        changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureFactory.QNAME_STATION ), bigStation ) );
-      }
+      changes.add( getFeatureChangeStation( targetFeature, station ) );
 
       /* type */
       final String profiletype = profile.getType();
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureFactory.QNAME_TYPE ), profiletype ) );
 
       /* Ensure that record-definition is there */
-      final Feature recordDefinition = FeatureHelper.resolveLink( targetFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
-      if( recordDefinition == null )
-      {
-        final GMLWorkspace workspace = targetFeature.getWorkspace();
-        final IRelationType rdParentRelation = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
-        final Feature rd = workspace.createFeature( targetFeature, rdParentRelation, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
-
-        changes.add( new FeatureChange( targetFeature, rdParentRelation, rd ) );
-      }
+      final FeatureChange changeRecordDefinition = checkRecordDefinition( targetFeature );
+      if( changeRecordDefinition != null )
+        changes.add( changeRecordDefinition );
 
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, targetFeature );
       Collections.addAll( changes, obsChanges );
@@ -208,6 +274,40 @@ public class ProfileFeatureFactory implements IWspmConstants
     observation.setPhenomenon( new Phenomenon( observation.getName(), null, null ) );
 
     return observation;
+  }
+
+  private static FeatureChange getFeatureChangeName( final Feature feature, final String profileName )
+  {
+    final List<String> namelist = new ArrayList<String>();
+    namelist.add( profileName );
+  
+    return new FeatureChange( feature, Feature.QN_NAME, namelist );
+  }
+
+  private static FeatureChange getFeatureChangeStation( final Feature feature, final double profileStation )
+  {
+    if( Double.isNaN( profileStation ) || Double.isInfinite( profileStation ) )
+      return new FeatureChange( feature, ProfileFeatureFactory.QNAME_STATION, null );
+    else
+    {
+      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( profileStation );
+      return new FeatureChange( feature, ProfileFeatureFactory.QNAME_STATION, bigStation );
+    }
+  }
+
+  private static FeatureChange checkRecordDefinition( final Feature feature )
+  {
+    final Feature recordDefinition = FeatureHelper.resolveLink( feature, ObservationFeatureFactory.OM_RESULTDEFINITION );
+    if( recordDefinition == null )
+    {
+      final GMLWorkspace workspace = feature.getWorkspace();
+      final IRelationType rdParentRelation = (IRelationType) feature.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
+      final Feature rd = workspace.createFeature( feature, rdParentRelation, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
+  
+      return new FeatureChange( feature, rdParentRelation, rd );
+    }
+  
+    return null;
   }
 
 }

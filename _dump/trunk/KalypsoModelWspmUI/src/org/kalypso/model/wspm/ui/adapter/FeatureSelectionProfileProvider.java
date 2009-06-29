@@ -90,7 +90,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
 
   private IProfil m_profile = null;
 
-  private Feature m_feature;
+  private IProfileFeature m_feature;
 
   private CommandableWorkspace m_workspace;
 
@@ -187,7 +187,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     {
       try
       {
-        final IProfil profil = ((IProfileFeature)m_feature).getProfil();
+        final IProfil profil = (m_feature).getProfil();
         setProfile( profil, m_feature, m_workspace );
       }
       catch( final Exception e )
@@ -214,7 +214,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
         if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
             || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
         {
-          final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( m_profile, m_feature );
+          final FeatureChange[] featureChanges = ProfileFeatureFactory.getFeatureChanges( m_profile, m_feature );
 
           final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_feature.getWorkspace(), featureChanges );
           m_lockNextModelChange = true;
@@ -297,7 +297,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     setProfile( profile, profileMember, workspace );
   }
 
-  private void setProfile( final IProfil profil, final Feature feature, final CommandableWorkspace workspace )
+  private void setProfile( final IProfil profil, final IProfileFeature feature, final CommandableWorkspace workspace )
   {
     final IProfil oldProfile = m_profile;
 

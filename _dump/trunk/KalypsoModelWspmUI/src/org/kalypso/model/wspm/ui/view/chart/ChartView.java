@@ -103,19 +103,23 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   /** The part where the profile provider came from. */
   private IWorkbenchPart m_profilProviderPart = null;
 
-  private ProfilChartView m_chart = null;
+  final private ProfilChartView m_chart = new ProfilChartView();
 
   private FormToolkit m_toolkit = null;
 
   private Form m_form = null;
 
+  public ChartView( )
+  {
+    setLayerProvider( m_chart );
+  }
+  
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
 
     final IWorkbenchPage page = site.getPage();
-
     m_adapterPartListener.init( page );
   }
 
@@ -149,7 +153,6 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
       m_provider.addProfilProviderListener( this );
 
     final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
-
     onProfilProviderChanged( m_provider, oldProfile, newProfile );
   }
 
@@ -270,10 +273,8 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
       m_form.getBody().setLayout( new GridLayout() );
       m_toolkit.decorateFormHeading( m_form );
     }
-    if( m_chart == null )
+    if( m_chart.getChartComposite() == null )
     {
-      m_chart = new ProfilChartView();
-      setLayerProvider( m_chart );
       m_chart.createControl( m_form.getBody() );
     }
     if( getProfil() == null )
@@ -285,12 +286,17 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     {
       m_form.setMessage( null );
       m_chart.setProfil( getProfil() );
-      ChartUtilities.maximize( m_chart.getChart().getChartModel() );
+      
+      final ChartComposite chart = m_chart.getChart();
+      if( chart != null )
+        ChartUtilities.maximize( chart.getChartModel() );
+      
       m_form.getBody().layout();
     }
 
     return getChartComposite();
   }
+
 
   /**
    * Can be overridden if one wants to set the layer provider.
@@ -299,7 +305,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
    *          The profile chart view.
    */
   @SuppressWarnings("unused")
-  protected void setLayerProvider( ProfilChartView chart )
+  protected void setLayerProvider( final ProfilChartView chart )
   {
   }
 
@@ -324,11 +330,9 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     {
       ChartHandlerUtilities.updateElements( m_chart );
       m_chart.dispose();
-      m_chart = null;
     }
-
+    
     m_adapterPartListener.dispose();
-
     m_control.dispose();
 
     m_profilProviderPart = null;
@@ -366,6 +370,9 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   @Override
   public Object getAdapter( final Class adapter )
   {
+    if( ChartView.class.equals( adapter ) )
+      return this;
+
     if( IChartPart.class.equals( adapter ) )
       return m_chart;
 
@@ -400,6 +407,11 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     if( m_chart == null )
       return null;
     return m_chart.getPlotDragHandler();
+  }
+
+  public ProfilChartView getProfilChartView( )
+  {
+    return m_chart;
   }
 
 }
