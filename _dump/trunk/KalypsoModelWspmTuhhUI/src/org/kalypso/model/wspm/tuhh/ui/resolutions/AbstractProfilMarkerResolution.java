@@ -66,6 +66,9 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * @author  kimwerner
+ */
+/**
  * @author kimwerner
  */
 public abstract class AbstractProfilMarkerResolution implements IProfilMarkerResolution
@@ -87,6 +90,10 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   }
 
   /**
+   * @see  org.eclipse.ui.IMarkerResolution2#getDescription()
+   * @uml.property  name="description"
+   */
+  /**
    * @see org.eclipse.ui.IMarkerResolution2#getDescription()
    */
   public String getDescription( )
@@ -96,6 +103,10 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   }
 
   /**
+   * @see  org.eclipse.ui.IMarkerResolution2#getImage()
+   * @uml.property  name="image"
+   */
+  /**
    * @see org.eclipse.ui.IMarkerResolution2#getImage()
    */
   public Image getImage( )
@@ -103,6 +114,9 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
     return m_image;
   }
 
+  /**
+   * @uml.property  name="label"
+   */
   public String getLabel( )
   {
     return m_label;
