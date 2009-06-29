@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -76,7 +77,7 @@ public class RauheitRule extends AbstractValidatorRule
 
     if( pointPropKS != null && pointPropKST != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "nur ein Rauheitstyp zulässig", stationId, 0, "", pluginId ); //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "nur ein Rauheitstyp zulässig", stationId, 0, "", pluginId ,new DelRoughnessResolution(pointPropKST.getId())); //$NON-NLS-2$
       return;
     }
 

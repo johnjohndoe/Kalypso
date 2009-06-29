@@ -242,6 +242,11 @@
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
                name="Marker löschen">
          </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
+               name="Rauheit entfernen">
+         </reparator>
       </extension>
        <extension
          point="org.kalypso.project.database.client.kalypsoModule">

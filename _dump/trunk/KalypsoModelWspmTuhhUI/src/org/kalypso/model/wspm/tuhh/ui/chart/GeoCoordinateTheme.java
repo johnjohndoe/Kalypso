@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -65,7 +66,14 @@ public class GeoCoordinateTheme extends AbstractProfilTheme
 
   }
 
- 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
+   */
+  @Override
+  public IChartLayer[] getLegendNodes( )
+  {
+    return new IChartLayer[]{};
+  }
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
    */

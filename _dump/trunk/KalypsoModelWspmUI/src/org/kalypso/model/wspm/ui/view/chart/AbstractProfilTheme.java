@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import java.util.ArrayList;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -69,68 +67,8 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IExpandableChartLayer
 {
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
-   */
-  @Override
-  public void setProfil( final IProfil profil )
-  {
-    super.setProfil( profil );
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-      if( layer instanceof IProfilChartLayer )
-        ((IProfilChartLayer) layer).setProfil( profil );
-    }
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    if( hint.isActivePointChanged() )
-    {
-      fireLayerContentChanged();
-    }
-    else
-      for( final IChartLayer layer : getLayerManager().getLayers() )
-      {
-        if( layer instanceof IProfilChartLayer )
-          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
-      }
-  }
-
   private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
   {
-    /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
-    @Override
-    public void onLayerContentChanged( final IChartLayer layer )
-    {
-      fireLayerContentChanged();
-    }
-
-    /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
-    @Override
-    public void onLayerVisibilityChanged( final IChartLayer layer )
-    {
-      fireLayerContentChanged();
-    }
-
-    /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
-    @Override
-    public void onLayerMoved( final IChartLayer layer )
-    {
-      fireLayerContentChanged();
-    }
-
     /**
      * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
@@ -149,28 +87,56 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       }
 
     }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerContentChanged( final IChartLayer layer )
+    {
+      fireLayerContentChanged();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerMoved( final IChartLayer layer )
+    {
+      fireLayerContentChanged();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerVisibilityChanged( final IChartLayer layer )
+    {
+      fireLayerContentChanged();
+    }
   };
 
   private final String m_id;
 
-  private final ILayerManager m_layerManager = new LayerManager()
-  {
+  private final ILayerManager m_layerManager = new LayerManager();
 
-    /**
-     * @see de.openali.odysseus.chart.framework.model.layer.impl.LayerManager#getLayers()
-     */
-    @Override
-    public IChartLayer[] getLayers( )
-    {
-      final ArrayList<IChartLayer> layers = new ArrayList<IChartLayer>();
-      for( final IChartLayer layer : super.getLayers() )
-      {
-        if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
-          layers.add( layer );
-      }
-      return  layers.toArray(new IChartLayer[0]);
-    }
-  };
+// {
+//
+// /**
+// * @see de.openali.odysseus.chart.framework.model.layer.impl.LayerManager#getLayers()
+// */
+// @Override
+// public IChartLayer[] getLayers( )
+// {
+// final ArrayList<IChartLayer> layers = new ArrayList<IChartLayer>();
+// for( final IChartLayer layer : super.getLayers() )
+// {
+// if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
+// layers.add( layer );
+// }
+// return layers.toArray(new IChartLayer[0]);
+// }
+// };
 
   private final String m_title;
 
@@ -189,11 +155,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         layer.setCoordinateMapper( cm );
       }
     }
-  }
-
-  protected final void fireLayerContentChanged( )
-  {
-    getEventHandler().fireLayerContentChanged( this );
   }
 
   /**
@@ -215,6 +176,11 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       layer.executeDrop( point, dragStartData );
 
     return null;
+  }
+
+  public IChartLayer[] getLegendNodes( )
+  {
+    return getLayerManager().getLayers();
   }
 
   /**
@@ -257,16 +223,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     return layer.drag( newPos, dragStartData );
   }
 
-  private final IProfilChartLayer getActiveLayer( )
-  {
-    for( final IChartLayer l : getLayerManager().getLayers() )
-    {
-      if( l.isActive() && l instanceof IProfilChartLayer )
-        return (IProfilChartLayer) l;
-    }
-    return null;
-  }
-
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
@@ -290,6 +246,21 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     final IProfilChartLayer layer = getActiveLayer();
     if( layer != null )
       layer.executeDrop( point, dragStartData );
+  }
+
+  protected final void fireLayerContentChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  private final IProfilChartLayer getActiveLayer( )
+  {
+    for( final IChartLayer l : getLayerManager().getLayers() )
+    {
+      if( l.isActive() && l instanceof IProfilChartLayer )
+        return (IProfilChartLayer) l;
+    }
+    return null;
   }
 
   /**
@@ -408,7 +379,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     }
     if( min == null || max == null )
       return null;
-    if( min > max * 0.9 )
+    if( min == max )
       min = 0.9 * max;
     return new DataRange<Number>( min, max );
   }
@@ -438,6 +409,25 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   }
 
   /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  {
+    if( hint.isActivePointChanged() )
+    {
+      fireLayerContentChanged();
+    }
+    else
+      for( final IChartLayer layer : getLayerManager().getLayers() )
+      {
+        if( layer instanceof IProfilChartLayer )
+          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+      }
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
@@ -455,5 +445,19 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public void removeYourself( )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  @Override
+  public void setProfil( final IProfil profil )
+  {
+    super.setProfil( profil );
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      if( layer instanceof IProfilChartLayer )
+        ((IProfilChartLayer) layer).setProfil( profil );
+    }
   }
 }

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.ui.view.legend;
 
 import org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -106,7 +107,10 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
     {
       return new IExpandableChartLayer[] { m_modelLayer };
     }
-
+    if( element instanceof AbstractProfilTheme )
+    {
+      return ((AbstractProfilTheme)element).getLegendNodes();
+    }
     return super.getChildren( element );
   }
 
@@ -119,6 +123,10 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
     if( element instanceof IChartModel )
     {
       return true;
+    }
+    if( element instanceof AbstractProfilTheme )
+    {
+      return ((AbstractProfilTheme)element).getLegendNodes().length > 0;
     }
     return super.hasChildren( element );
   }

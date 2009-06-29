@@ -63,6 +63,7 @@ import org.kalypso.observation.result.IRecord;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -154,7 +155,14 @@ public class VegetationTheme extends AbstractProfilTheme
     }
     return null;
   }
-
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
+   */
+  @Override
+  public IChartLayer[] getLegendNodes( )
+  {
+    return new IChartLayer[]{};
+  }
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
    */

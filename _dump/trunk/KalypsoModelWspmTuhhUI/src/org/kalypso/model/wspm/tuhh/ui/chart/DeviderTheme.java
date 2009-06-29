@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -76,6 +78,26 @@ public class DeviderTheme extends AbstractProfilTheme
   public IProfilView createLayerPanel( )
   {
     return new TrennerPanel( getProfil() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
+   */
+  @Override
+  public IChartLayer[] getLegendNodes( )
+  {
+    final ArrayList<IChartLayer> cl = new ArrayList<IChartLayer>();
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      if( layer instanceof IProfilChartLayer )
+      {
+        if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
+        {
+          cl.add( layer );
+        }
+      }
+    }
+    return cl.toArray( new IChartLayer[]{});
   }
 
   @Override
