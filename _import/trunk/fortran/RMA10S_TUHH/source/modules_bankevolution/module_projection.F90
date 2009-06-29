@@ -394,8 +394,10 @@ ENDif fr
              u= ABS(oldprofile%prnode(i)%fe_nodenumber)
              newprofile%prnode(current_index + j)%fe_nodenumber = abs(u)        ! although those nodes in overhang zone (above extrapolation line) have already in avalanche subroutine -1 x fe_nodenumber as their conjugate fe_node, but to be on safe side, it is done here again.
              newprofile%prnode(current_index + j)%attribute     ='profile'
+             if ( u /= 0 ) then
              fenode(u)%elevation = z
              fenode(u)%statuss = 'deactivate'
+             end if
             end if
 
           end if   sec3
