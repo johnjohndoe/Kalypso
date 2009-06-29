@@ -54,22 +54,20 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
 {
 
   private final IExpandableChartLayer m_modelLayer;
-
   
-
-  public ProfilChartEditorTreeContentProvider( IChartModel model )
+  public ProfilChartEditorTreeContentProvider( final IChartModel model )
   {
     super( model );
      m_modelLayer = new AbstractExpandableLayer()
     {
-   private final IChartModel m_model=getModel();
+  
       /**
        * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
        */
       @Override
       public String getTitle( )
       {
-        return m_model.getTitle();
+        return getModel().getTitle();
       }
 
       /**
@@ -78,9 +76,10 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
       @Override
       public ILayerManager getLayerManager( )
       {
-        return m_model.getLayerManager();
+        return getModel().getLayerManager();
       }
     };
+    
     m_modelLayer.setVisible( true );
 
   }
@@ -89,7 +88,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
    * @see org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider#getParent(java.lang.Object)
    */
   @Override
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
     final Object parent = super.getParent( element );
     if( parent == getModel() )
@@ -101,7 +100,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
    * @see org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
-  public Object[] getChildren( Object element )
+  public Object[] getChildren( final Object element )
   {
     if( element instanceof IChartModel )
     {
@@ -115,7 +114,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
    * @see org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider#hasChildren(java.lang.Object)
    */
   @Override
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
     if( element instanceof IChartModel )
     {
