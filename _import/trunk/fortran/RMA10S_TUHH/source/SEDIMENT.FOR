@@ -507,7 +507,7 @@ CIPK MAR06
 
 !MD: Auswertung aller Ergebnisse aus den einzelnen Geschiebe-Transport-Berechnungen
 ! --------------------------------------------------------------------------------
-C  now multiply concentration (kg/kg = Mg/m3) by 1000000 to get g/m3
+C  now multiply concentration (1kg(sand)/1kg(of water) = Mg/m3) by 1000000 to get g/m3 or mg/l
 C
 c at the end of rma-sandx ust(n) is in metric => assign in subroutines
 c ackwht, brownlie, etc.
