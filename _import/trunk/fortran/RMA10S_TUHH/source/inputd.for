@@ -15,6 +15,8 @@ CIPK  LAST UPDATED SEP 8 1995
       USE BLK11MOD
       USE BLKDRMOD
       USE BLKSANMOD
+      USE share_profile, ONLY : BANKEVOLUTION   ! HN. June2009
+
       SAVE
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -146,7 +148,9 @@ CIPK SEP02
 C     ADD SIDE ERODED MATERIAL
 CIPK FEB03 CATCH THE STEADY STATE CASE
         IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .AND. DELT .GT. 0.) THEN
-          CALL SLUMPIT
+! HN June2009. IN the case that bankevolution is activated, deactivate slumpit subroutine.
+          if (.NOT. bankevolution) CALL SLUMPIT
+CALL SLUMPIT
 CIPK DEC05          
         ELSE 
           EXTLD=0          
