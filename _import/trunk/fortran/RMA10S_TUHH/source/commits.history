@@ -975,6 +975,60 @@ new features introduced/ started to be introduced:
       following the profile number which must follow the cc1 or cc2 line of the corresponding contiunity line in control file. The bank profile information
       can be read either from a seperate data file (UNIT = IPROFIN), or the continuity line can be assigned as the initial bank profile with bank Id = 0
       i.e. PRF  0.
+      The program first computes the tensile failure (unsteady=> rise of water), then avalanche of submerged bank profile and finally computes cantilever
+      failure, if each of the process should take process according to their respective criteia.
+      The list of subroutines/modules in this package, accompanied by a short discription are given as follows:
+      
+      1) Bank_erosion.f90 (SubR bank_evolution (CallCounter)):
+       It is the main profgram which computes morphological evolution of the bank profiles defined as continuity lines in control file.
+       It includes following subroutines:
+          *  function average_water_level(k): It is an internal function , which computes the average water level across the profile.
+          *  SubR output1(profileIN, filename, unitt): It produces the output file for profiles after each stage of morphological evolutions.
+          *  SubR file_error (filename, ierror) : controls the error messages.
+          *  SubR DistributeWastedMass(WastedVolume , CurrentProfile, FirstPoint,LastPoint, Distribution, EffectiveWidth, fenode, nn, ElementSource)
+             It distribute the failed bank volume as source them along the bank-toe by linear or binomial Probability Mass Function.
+          *  SubR HasPrnodeFenode(ThisProfile, ProfileNode , increment): It check if a profile node has a conjugate fe-node and if not searches to find the bank-toe.
+          *  SubR MakeFenodes (fenod, no, callcount): It creates derived data type Fenode out of node eleveations and water level.
+          *  SubR UpdateFenodes (fenod, no)  : It updates Fenodes after bed erosion has taken place.
+      2) Tensile.f90 (MODULE tensile): It computes tebsile failure of an overhang , when it is partly submerged and contains an explicit interface subroutine: 
+          *  SubR tensile_failure(pr,fenode,side,newwater_elev, pot_nose_dist ,new_front,number_newnodes,lost_nodes) : It is the main subroutine , which computes tensile failure,
+             updates bank profile after failure and assigns the wasted mass to the bed as source term for suspended sediment transport. It includes an internal function 
+          *  function q_fenode(conjugate_node), which find the fe node which receives the source term.
+      3) Avalanche.f90 (Module avalanch_modul): It computes the avalnche process of submerged area and form the new bank profile afterwards. It includes an explicit interface subroutine:
+          * SubR avalanche (trans_pr,totalnode, fenode, last_submerged_fenode, index_lowest_fenode,EffectiveWidth_Overhang,delvolume)!,lsubmerge,rsubmerge): which does the main task of simulation
+            of planar slip of the bank surface due to higher slope than crtical angle of repose defined by the user (at the moment hard code).
+          * SubR ResuspensionRate (sourceterm, delz, lowernode, uppernode, mode), which assign the extra mass of high slope area to the lower nodes of elements after adjustment the profile slope
+            to stable shape.
+      4) Module_projection.f90 (Module Projectn) : An explicit interface SubR is embedded in Module Projectn which is called from Avalanche SubR and project vertically the oversteepend nodes on a projection line
+         starting form the lowest node:
+          * SubR projection(fenode,pointA_distance,pointB,angle,start,endd,newprofile,current_index,side,oldprofile,critical_slop,nose,front,oldpr_index , lost): it does the projection process
+            and computes the lost volue and assigns it to the variable lost.
+          * SubR intersect(profil,pivotnode,angle,start,p,r,distance,elevation,indx): it computes the intersection of projection line with the profile.
+          * function slopeofelement(x0,z0,x1,z1) : it computes the current slope of profile element.
+      5) Cantilever.f90 (module cantilever): it computes cantilver failure (shear type) of the overhang if the saftey factor is less than 1.0, and include the following explicit interface subroutine:                  
+          * SubR cantilever_failure( AVAL_PR , WATERELEV , UNSATURATED_SLOPE , EffectVolume , fenode ): it computes if the cantilver failure takes place, if so it makes the new geometry of profile
+            after failure and computes the produced wasted volume.
+          * SubR COINCID (L, N , M , OUTPROFILE ): It is an internal subroutine , which finds out if the new edge of overhang after failure conicides with an available profile node, if not creats
+            a new node for intersection.
+          * SubR  SIMPLE_PROJECTION ( BEGIN  ,UPPERBOUND ,INCREMENT , CURRENT_CANTI_INDEX ) computes the projection of overhang nodes on an extrapolation line with a unsaturated angle of repose
+            in overhang zone.
+          * FUNCTION SUCTIONHEIGHT ( WATER_LEVEL , ELEVATION): it computes the negative pore pressure in the bank as a linear distribution.
+          * SubR EffectiveVolume (start,endd,inc, origin, OverhangVolume) : it computes the effective volume of the failed overhang volume based on EffectiveArea(contributing area) of the elements
+            connected to the desired node.
+          * SubR EffectiveArea (NEWTRIBAREA,N): it is not an explicit interface SubR, which can be invoked from any other subroutine. It computes the contributing effective area of the elements
+            connected to a node, IRRESPECTIVE of dry-/wetness of the elements.
+          * POLYGON_AREA ( START, N , R , PROFIL): It is a (public) subroutine, which computes the area of a closed polygon, used for computation of wasted volume of overhang.   
+      6) Makeprofile.F90 (Module make_profile): it creates profile out of continuity lines, when there is no file given for them using the following explicit interface subroutine
+          * SubR MAKEPROFILE (CCLine, NumberFenodes, bankprofile,WithMideSide): it creates the bank profiles with and without midside nodes, which will be later assigned to the
+           object CCL (continuity line)as a pointer in input.f90.
+      7) ReadBankProfiles.f90 (Module ASSIGNROFILES): it assignes the profile data in a seperate data file to each contnuity line defined by the user in control file 
+        (CC-line followed by PRF ID) using the following Subroutine:
+          * SubR READPROFILES (PROFILEUNIT): read the input data of profile, opened with the unit ID 'IPROFIN'.
+      8) Potentialnose.f90 (mk_potentialnose): it computes the intersection of the current water level with bank profile using :     
+          * mk_potentialnose(temp_prof,pot_nos)
+      9) Init_profile.f90 (Module init_type): it initilize derived data types Profile, Prnode(profile nodes) nd fenodes.
+     10) Shareprofile.f90 (module share_profile): it includes the golbal datas for bank_evolution pachage.
+     11) types.f90 (Module types): it includes the derived data types used in bank_evolution package (profile, Prnode, fenode and potential_nose).
 62.)  In file.f90 the profile data file (UNIT = IPROFIN, FNAM = 18) is opened if in control file in data file definition part the name of a file follows
       the ID PROFIL.
 63.)  In input.f90 the corresponding data of profiles are read from profile unit and the variable(derived data type) BANKROFILE with related FENODES (derived data type)
@@ -1005,5 +1059,5 @@ new features introduced/ started to be introduced:
 -------- M.Hassan Nasermoaddeli, 29.06.2009	
 70.) A few bugs were fixed regarding mass waste computation in SubR ResuspensionRate and DistributeWastedMass. Now the mass waste is computed in g/(m^2.s),formerly in mg/(m^2.s)
      , which is consitent with the rest of the program. More over the global variable SGSAND has been used instead of local variable RHOS to preserve the consistency.    
-     
+71.) Fix the bug regarding mass waste calculation in tensile.for   
 -------- M.Hassan Nasermoaddeli, 30.06.2009                                               
