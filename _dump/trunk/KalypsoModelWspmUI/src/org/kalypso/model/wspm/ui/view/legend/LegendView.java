@@ -171,7 +171,8 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
     bodyLayout.marginWidth = 0;
 
     m_composite.getBody().setLayout( bodyLayout );
-
+    
+    updateChartLegend();
   }
 
   /**
