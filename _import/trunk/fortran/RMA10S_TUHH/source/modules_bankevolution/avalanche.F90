@@ -598,9 +598,9 @@ end function radian
 !-----------------------------------------------------
 subroutine ResuspensionRate (sourceterm, delz, lowernode, uppernode, mode)
 
-USE BLKSANMOD , ONLY : TRIBAREA, EXTLD ! ,ELEVB,TTHICK,DELBED
+USE BLKSANMOD , ONLY : TRIBAREA, EXTLD,SGSAND ! ,ELEVB,TTHICK,DELBED
 USE BLK10MOD  , ONLY : DELT 
-USE param     , ONLY : RHOS , Porosity !, GRAVITY 
+USE param     , ONLY : Porosity !, GRAVITY, RHOS
 
 implicit none 
 
@@ -609,14 +609,16 @@ real (kind = 8), intent (in)    :: delz
 integer        , intent (in)    :: lowernode, uppernode , mode
 real(kind = 8)                  :: RHOBS , AREA1, AREA2
 
-RHOBS=1000.*(1-porosity)* RHOS
-
-! When mode = 1 then the source term is computed as mg/m^2/s, otherwise only the volume of erosion is computed.
+!RHOBS=1000.*(1-porosity)* RHOS
+RHOBS=1000.*(1-porosity)* SGSAND (lowernode)   ! [Kg/m^3]
+ 
+! When mode = 1 then the source term is computed as g/(m^2.s), otherwise only the volume of erosion is computed.
 if (mode == 1) then	 
 	 
 	  if ( (TRIBAREA(lowernode)/= 0.).AND.(TRIBAREA(uppernode)/=0.) ) then
           
           !sourceterm = delz *TRIBAREA(uppernode)*RHOBS /(DELT*3600.*TRIBAREA(lowernode))*1000.
+         ![g/m^2.s]  =  [m] *  [m^2]           *[kg/m^3]/([s]*[m^2])              * [1000 g/kg]
           sourceterm = delz *TRIBAREA(uppernode)*RHOBS /(DELT*TRIBAREA(lowernode))*1000.
           EXTLD(lowernode)=EXTLD(lowernode)+ sourceterm
      
