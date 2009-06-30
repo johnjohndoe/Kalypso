@@ -291,7 +291,7 @@ Ziel-Version 1.1.0 (laufende Änderungen)
 --- Monika Donner, 29.07.2008
 
 
-026.) Correction for all tree Bed-Load-Transports without waves: Reactivate and
+026.) Correction for all three Bed-Load-Transports without waves: Reactivate and
       correct the option for mineral size fraction (Parameter diam) 
       (DE: Korrektur und Reaktivierung des Ansatzes mehrerer Kornfraktionen
            fuer alle Geschiebetransportansätze OHNE Wellen!)   
@@ -514,7 +514,7 @@ Ziel-Version 1.1.0 (laufende Änderungen)
       determine the Change of bed in/at Suspended and Bed Layers.
       >> SubR SEROSN and MEROSN 
 069.) Corrections in NEWBED: Updated bed without an ratio-factor for the next time step, because 
-      of instabilities in the solutions fpr cohesive sediment.
+      of instabilities in the solutions for cohesive sediment.
       >> SubR NEWBED
 070.) new Subr KALYP_SHEAR for Bottom Shear stress      
                                  
@@ -1002,4 +1002,8 @@ new features introduced/ started to be introduced:
      IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .AND. DELT .GT. 0.) THEN                             
 	     if (.NOT. bankevolution) CALL SLUMPIT 
 69.) A bug was fixed in Module_projection to prevent fenode number to be zero.	     
--------- M.Hassan Nasermoaddeli, 29.06.2009	                                               
+-------- M.Hassan Nasermoaddeli, 29.06.2009	
+70.) A few bugs were fixed regarding mass waste computation in SubR ResuspensionRate and DistributeWastedMass. Now the mass waste is computed in g/(m^2.s),formerly in mg/(m^2.s)
+     , which is consitent with the rest of the program. More over the global variable SGSAND has been used instead of local variable RHOS to preserve the consistency.    
+     
+-------- M.Hassan Nasermoaddeli, 30.06.2009                                               
