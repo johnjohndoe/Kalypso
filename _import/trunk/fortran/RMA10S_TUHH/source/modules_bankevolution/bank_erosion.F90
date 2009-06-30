@@ -737,7 +737,7 @@ integer              , intent (in) :: ierror
  USE Param
  USE parakalyps, ONLY : IsNodeOfElement
  USE BLK10MOD  , ONLY : MAXE , AREA , DELT
- USE BLKSANMOD , ONLY : EXTLD, TRIBAREA
+ USE BLKSANMOD , ONLY : EXTLD, TRIBAREA, SGSAND
  implicit none 
  
  Integer          , intent (in) :: nn
@@ -817,10 +817,11 @@ NodDistr: do i = FirstNode, LastNode , Increment(j)
  
            TrapezoidRule    = 0.5 * (DistributingRate + PreviousDistributingRate)* &
            &                        ( RelativeDistance - PreviousDistance )  
-   ! wasted source term in m^3 x g/m^3
-           WastedSourceTerm = TrapezoidRule * WastedVolume(j) *(1- POROSITY)* RHOS * 1000.
- ! check if it is correct to multiply wasted volume by rhos and porosity, since it has been already done in avalanche
+         
            m                = CurrentProfile.Prnode(i).Fe_NodeNumber
+   ! wasted source term in m^3 x kg/m^3
+           WastedSourceTerm = TrapezoidRule * WastedVolume(j) *(1- POROSITY)* SGSAND(m)* 1000.  
+ ! check if it is correct to multiply wasted volume by rhos and porosity, since it has been already done in avalanche
  
 
            PreviousDistributingRate  = DistributingRate
@@ -866,8 +867,8 @@ NodDistr: do i = FirstNode, LastNode , Increment(j)
              ! ???? TO Do. It should be investigated why TRIBAREA = 0 for a node connecting to wet or partly wet elements.
              if (TRIBAREA (m)/= 0 ) then
           !   NodalSource = NodalSource +  WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !* 3600.)
-               NodalSource = WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !* 3600.)
-             ! Nodal Source term is in mg/m^2/s
+               NodalSource = WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !   [kg] * [1000 g/kg] /[m^2.s]
+             ! Nodal Source term is in [g]/[m^2.s]
              fenode(m).Sed_source = fenode(m).Sed_source + NodalSource 
             ! EXTLD (m)            = EXTLD (m) + fenode(m).Sed_source
              EXTLD (m)            = EXTLD (m) + NodalSource        !   The fe_node_sed_source is tottaly identical to the EXTLD.
