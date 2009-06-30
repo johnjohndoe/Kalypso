@@ -301,7 +301,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     if( recordDefinition == null )
     {
       final GMLWorkspace workspace = feature.getWorkspace();
-      final IRelationType rdParentRelation = (IRelationType) feature.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
+      final IRelationType rdParentRelation = (IRelationType) feature.getFeatureType().getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
       final Feature rd = workspace.createFeature( feature, rdParentRelation, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
   
       return new FeatureChange( feature, rdParentRelation, rd );
