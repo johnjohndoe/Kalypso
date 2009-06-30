@@ -54,6 +54,7 @@ import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -120,6 +121,10 @@ public class BreakLinesHelper implements IWspmConstants
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
 
+      // debug
+// final SimpleShapeWriter writer = new SimpleShapeWriter( new File( "c://test.shp" ), GeometryUtilities.QN_POINT,
+      // XmlTypes.XS_DOUBLE, XmlTypes.XS_DOUBLE );
+      
       GM_Curve lastProfile = null;
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
@@ -127,6 +132,8 @@ public class BreakLinesHelper implements IWspmConstants
         final BigDecimal station = reach.getStation();
         if( geometry == null ) // ignore profiles without geometry
           continue;
+        
+        
 
         final Double wsp = wspMap.get( station.doubleValue() );
         final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
@@ -139,21 +146,34 @@ public class BreakLinesHelper implements IWspmConstants
           /* Triangulate two adjacent profiles */
           if( lastProfile != null )
           {
-            final GM_Position[] polygonPoses = GeometryUtilities.getPolygonfromCurves( lastProfile, newProfile );
+            final GM_Position[] polygonPosesClosed = GeometryUtilities.getPolygonfromCurves( lastProfile, newProfile );
 
             // Write the curve as breakline into breakline file
-            final GM_Curve polygoneRing = GeometryFactory.createGM_Curve( polygonPoses, defaultCrs );
+            final GM_Curve polygoneRing = GeometryFactory.createGM_Curve( polygonPosesClosed, defaultCrs );
             final Feature ringFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
             ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), polygoneRing );
             ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
             ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
 
             // Interpolate triangles between two adjacent curves and add them to the triangulated surface
-            final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPoses );
+            final GM_Position[] polygonPosesOpen = (GM_Position[]) ArrayUtils.remove( polygonPosesClosed, polygonPosesClosed.length - 1 );
+            final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPosesOpen );
             for( final GM_Position[] triangle : triangles )
             {
               final GM_Triangle_Impl gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
               surface.add( gmTriangle );
+              
+              try
+              {
+                final GM_TriangulatedSurface mySurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
+                mySurface.add( gmTriangle );
+
+// writer.add( mySurface, station.doubleValue(), wsp );
+              }
+              catch( final Exception e )
+              {
+                e.printStackTrace();
+              }
             }
           }
 
@@ -163,6 +183,8 @@ public class BreakLinesHelper implements IWspmConstants
 
       GmlSerializer.serializeWorkspace( tinFile, triangleWorkspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
       GmlSerializer.serializeWorkspace( breaklineFile, workspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
+
+// writer.close();
     }
   }
 
