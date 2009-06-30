@@ -761,7 +761,7 @@ integer              , intent (in) :: ierror
  Real (Kind= 8)   :: DistributingRate , WastedSourceTerm 
  Real (Kind= 8)   :: PreviousDistributingRate ,TrapezoidRule
  Real (Kind= 8)   :: SumConnectedElementArea
- Real (Kind= 8)   :: NodalSource
+ Real (Kind= 8)   :: NodalSource, DryTRIBAREA   ! DryTRIBAREA: the contributing area to a node with connected dry elements 
  integer          :: Increment(2)
  integer          :: i , m , j, k, ELEMNO , FirstNode, LastNode, LR
  
@@ -864,14 +864,17 @@ NodDistr: do i = FirstNode, LastNode , Increment(j)
        !      end if            
         !    end do ElemDistr
  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             ! ???? TO Do. It should be investigated why TRIBAREA = 0 for a node connecting to wet or partly wet elements.
-             if (TRIBAREA (m)/= 0 ) then
+             ! TRIBAREA = 0 for a node connecting to wet or partly wet elements.
+             if (TRIBAREA (m)/= 0. ) then
           !   NodalSource = NodalSource +  WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !* 3600.)
                NodalSource = WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !   [kg] * [1000 g/kg] /[m^2.s]
              ! Nodal Source term is in [g]/[m^2.s]
-             fenode(m).Sed_source = fenode(m).Sed_source + NodalSource 
-            ! EXTLD (m)            = EXTLD (m) + fenode(m).Sed_source
-             EXTLD (m)            = EXTLD (m) + NodalSource        !   The fe_node_sed_source is tottaly identical to the EXTLD.
+             else 
+               call EffectiveArea (DryTRIBAREA,m)
+               NodalSource = WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !   [kg] * [1000 g/kg] /[m^2.s]
+               fenode(m).Sed_source = fenode(m).Sed_source + NodalSource 
+               EXTLD (m)            = EXTLD (m) + NodalSource        !   The fe_node_sed_source is tottaly identical to the EXTLD.
+             ! EXTLD (m)            = EXTLD (m) + fenode(m).Sed_source
              end if
  end do NodDistr
  end do LeftRightBank
