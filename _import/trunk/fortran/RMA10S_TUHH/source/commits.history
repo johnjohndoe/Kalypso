@@ -1059,5 +1059,6 @@ new features introduced/ started to be introduced:
 -------- M.Hassan Nasermoaddeli, 29.06.2009	
 70.) A few bugs were fixed regarding mass waste computation in SubR ResuspensionRate and DistributeWastedMass. Now the mass waste is computed in g/(m^2.s),formerly in mg/(m^2.s)
      , which is consitent with the rest of the program. More over the global variable SGSAND has been used instead of local variable RHOS to preserve the consistency.    
-71.) Fix the bug regarding mass waste calculation in tensile.for   
+71.) Fix the bug regarding mass waste calculation in tensile.for 
+72.) IN subroutine DistributeWastedMass, contributing area of dry elements were ignored in TRIBAREA, now it is calculated in DryTRIBAREA .
 -------- M.Hassan Nasermoaddeli, 30.06.2009                                               
