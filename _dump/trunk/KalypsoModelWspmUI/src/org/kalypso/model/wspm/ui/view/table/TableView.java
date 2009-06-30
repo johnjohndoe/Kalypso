@@ -53,6 +53,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -96,7 +98,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
- *
+ * 
  * @author Gernot Belger
  * @author kimwerner
  */
@@ -124,7 +126,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private final static int MAX_OUTLINE_HEIGHT = 70;
 
-  protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.0") ) //$NON-NLS-1$
+  protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -137,7 +139,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
   };
 
-  protected final UIJob m_setActivePointJob = new UIJob( Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.1") ) //$NON-NLS-1$
+  protected final UIJob m_setActivePointJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.1" ) ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -284,6 +286,25 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       }
     } );
 
+    m_cursor.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) m_view.getSelection();
+        final Object element = selection.getFirstElement();
+        if( element instanceof IRecord )
+        {
+          final IRecord point = (IRecord) element;
+          if( point != m_profile.getActivePoint() )
+            m_profile.setActivePoint( point );
+        }
+      }
+    } );
+
     updateControl();
   }
 
@@ -308,7 +329,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     if( (m_profile == null) )
     {
-      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.2"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
 
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
