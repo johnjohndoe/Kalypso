@@ -408,9 +408,9 @@ end module cantilever
  NEWTRIBAREA =0.
   ! compute the contributing area of the connected elements to the node n
   DO I=1,12         ! over all neighboured elements I to node N
-    S = ELTON(N,I)
+    S = ELTON(N,I)   !Elton is the element number´connected to node N (I =1,12 elements can be connected to a node)
     IF(S .GT. 0) THEN
-      IF(NCORN(S) .EQ. 8) THEN    ! for quadrangle elements
+      IF(NCORN(S) .EQ. 8) THEN    ! for quadrangle elements (NCORN = number of corner nodes including midside nodes)
         FACT=4.
       ELSE                        ! for triangle elements
         FACT=3.
