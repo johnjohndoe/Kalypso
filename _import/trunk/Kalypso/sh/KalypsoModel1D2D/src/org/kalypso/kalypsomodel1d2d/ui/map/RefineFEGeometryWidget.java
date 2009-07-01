@@ -112,7 +112,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <li>resulting elements with 5 corners are getting split into triangles by simple polygon triangulation
  * <li>arcs cannot be split twice
  * </ul>
- *
+ * 
  * @author Thomas Jung
  */
 public class RefineFEGeometryWidget extends AbstractWidget
@@ -141,7 +141,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
   public RefineFEGeometryWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -165,7 +165,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) ); //$NON-NLS-1$
 
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
@@ -279,7 +279,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     final Rectangle bounds = mapPanel.getScreenBounds();
     final GeoTransform projection = mapPanel.getProjection();
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.3") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.3" ) ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
@@ -361,10 +361,9 @@ public class RefineFEGeometryWidget extends AbstractWidget
     try
     {
       final CommandableWorkspace workspace = m_theme.getWorkspace();
-      final Feature parentFeature = m_featureList.getParentFeature();
 
       /* Initialize elements needed for edges and elements */
-      final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
+      final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( workspace.getRootFeature() );
 
       // add remove element command
       for( final Feature feature : refineList )
@@ -382,7 +381,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
         if( object instanceof GM_Surface )
         {
           final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-          ElementGeometryHelper.createFE1D2DfromSurface( workspace, m_theme, parentFeature, discModel, surface );
+          ElementGeometryHelper.createFE1D2DfromSurface( workspace, discModel, surface );
         }
       }
       reinit();
@@ -465,7 +464,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         final IMapPanel mapPanel = getMapPanel();
-        mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.4") + status.getMessage() ); //$NON-NLS-1$
+        mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.4" ) + status.getMessage() ); //$NON-NLS-1$
         reinit();
       }
     }
@@ -554,7 +553,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     if( refinementList.size() == 0 )
     {
       m_warning = true;
-      m_warningRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.5") ); //$NON-NLS-1$
+      m_warningRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.5" ) ); //$NON-NLS-1$
     }
 
     // create new GM_Objects

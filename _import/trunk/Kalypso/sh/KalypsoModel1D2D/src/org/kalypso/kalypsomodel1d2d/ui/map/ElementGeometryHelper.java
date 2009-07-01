@@ -63,7 +63,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -93,14 +92,17 @@ public class ElementGeometryHelper
    */
   private static final double SEARCH_DISTANCE = 0.1;
 
-//  /**
-//   * wrapper for {@link createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points, final int pIntPointsCount ) } 
-//   * with additional points counter, 0 means not bounded.
-//   */
-//  public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
-//  {
-//    return createAdd2dElement( command, workspace, parentFeature, discModel, points, points.size() );
-//  }
+// /**
+// * wrapper for {@link createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final
+  // Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points, final int
+  // pIntPointsCount ) }
+// * with additional points counter, 0 means not bounded.
+// */
+// public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace
+  // workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+// {
+// return createAdd2dElement( command, workspace, parentFeature, discModel, points, points.size() );
+// }
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
@@ -120,43 +122,45 @@ public class ElementGeometryHelper
    *          the {@link GM_Point} list
    */
   @SuppressWarnings("unchecked")
-  public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+  public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+
   {
     final IGMLSchema schema = workspace.getGMLSchema();
-    
+
     final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    
+
     final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-    
+
     final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
     final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
-    
+
+    final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentType = parentFeature.getFeatureType();
-    
+
     final IRelationType parentNodeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
     final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
     final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-    
+
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
-    
+
     /* Build new nodes */
     final IFE1D2DNode[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
-    
+
     /* Build new edges */
     final IFE1D2DEdge[] edges = buildNewEdges( points.size(), command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
-    
+
     /* Build new element */
     IFE1D2DElement newElement = null;
     newElement = PolyElement.createPolyElement( discModel );
-    ( ( PolyElement )newElement ).setEdges( edges );
-    
+    ((PolyElement) newElement).setEdges( edges );
+
     final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
     command.addCommand( addElementCommand );
-    
+
     addEdgeContainerCommand( edges, edgeContainerPT, newElement, changes );
-    
+
     command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
-    
+
     return newElement;
   }
 
@@ -203,8 +207,8 @@ public class ElementGeometryHelper
     final Feature eleFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentElementProperty, lElement1DType );
 
     final IElement1D newElement = new Element1D( eleFeature );
-    newElement.setEdge( edges[ 0 ] );
-//    final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
+    newElement.setEdge( edges[0] );
+// final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
 
     final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
     command.addCommand( addElementCommand );
@@ -412,24 +416,24 @@ public class ElementGeometryHelper
     return poses;
   }
 
-  public static void createFE1D2DfromSurface( final CommandableWorkspace workspace, final IKalypsoFeatureTheme theme, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final GM_Surface<GM_SurfacePatch> surface ) throws Exception
+  public static void createFE1D2DfromSurface( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Surface<GM_SurfacePatch> surface ) throws Exception
   {
     final String crs = surface.getCoordinateSystem();
     for( final GM_SurfacePatch surfacePatch : surface )
     {
       final GM_Position[] poses = surfacePatch.getExteriorRing();
-      createFE1D2DfromPositions( workspace, theme, parentFeature, discModel, poses, crs );
+      createFE1D2DfromPositions( workspace, discModel, poses, crs );
     }
   }
 
-  public static void createFE1D2DfromRing( final CommandableWorkspace workspace, final IKalypsoFeatureTheme theme, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final GM_Ring ring ) throws Exception
+  public static void createFE1D2DfromRing( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Ring ring ) throws Exception
   {
     final GM_Position[] poses = ring.getPositions();
     final String crs = ring.getCoordinateSystem();
-    createFE1D2DfromPositions( workspace, theme, parentFeature, discModel, poses, crs );
+    createFE1D2DfromPositions( workspace, discModel, poses, crs );
   }
 
-  public static void createFE1D2DfromPositions( final CommandableWorkspace workspace, final IKalypsoFeatureTheme theme, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final GM_Position[] poses, final String crs ) throws Exception
+  public static void createFE1D2DfromPositions( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Position[] poses, final String crs ) throws Exception
   {
     final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
 
@@ -443,10 +447,10 @@ public class ElementGeometryHelper
     // create the new elements
     if( nodes.size() == 3 || nodes.size() == 4 )
     {
-      createAdd2dElement( command, workspace, parentFeature, discModel, nodes );
+      createAdd2dElement( command, workspace, discModel, nodes );
 
       // inside the loop because we want to avoid duplicates
-      theme.getWorkspace().postCommand( command );
+      workspace.postCommand( command );
     }
   }
 }

@@ -150,11 +150,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final IGeoLog m_log;
 
-  private List<PseudoEdge> m_listNonExistingPseudoEdges = new ArrayList<PseudoEdge>();
+  private final List<PseudoEdge> m_listNonExistingPseudoEdges = new ArrayList<PseudoEdge>();
 
-  private Map<Integer, List<PseudoEdge>> m_mapPolyWeir2DSubElement = new HashMap<Integer, List<PseudoEdge>>();
+  private final Map<Integer, List<PseudoEdge>> m_mapPolyWeir2DSubElement = new HashMap<Integer, List<PseudoEdge>>();
 
-  private Map<Integer, String> m_mapTmpElementToPolyWeir = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_mapTmpElementToPolyWeir = new HashMap<Integer, String>();
 
   // TODO: check: calculation?
   public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
@@ -184,8 +184,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     // m_intBuildingsIdCounter = 1;
   }
 
-
-
   public int getConversionID( final IFeatureWrapper2 feature )
   {
     return getConversionID( feature, null );
@@ -195,7 +193,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * @return <code>0</code>, if feature is <code>null</code> or of unknown type.
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
-  public int getConversionID( final IFeatureWrapper2 feature, String pGMLId )
+  public int getConversionID( final IFeatureWrapper2 feature, final String pGMLId )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
@@ -552,7 +550,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       final int node0ID = getConversionID( lIterEdge.getFirstNode() );
       final int node1ID = getConversionID( lIterEdge.getSecondNode() );
-      int lIntMiddleNodeId = writeMiddleNode( lIterEdge.getFirstNode().getGmlID() + lIterEdge.getSecondNode().getGmlID(), lIterEdge.getMiddleNodePoint(), pFormater );
+      final int lIntMiddleNodeId = writeMiddleNode( lIterEdge.getFirstNode().getGmlID() + lIterEdge.getSecondNode().getGmlID(), lIterEdge.getMiddleNodePoint(), pFormater );
       pFormater.format( "AR%10d%10d%10d%10d%10d%10d%n", pIntCount++, node1ID, node0ID, lIterEdge.getIntLeftParent(), lIterEdge.getIntRightParent(), lIntMiddleNodeId ); //$NON-NLS-1$
     }
   }
@@ -562,14 +560,17 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * element
    */
   @SuppressWarnings("unchecked")
-  private int getConversionIDIntern( IFE1D2DElement pElement, IFE1D2DEdge pEdge )
+  private int getConversionIDIntern( final IFE1D2DElement pElement, final IFE1D2DEdge pEdge )
   {
+    if( pElement == null )
+      return 0;
+
     if( m_mapTmpElementToPolyWeir.containsValue( pElement.getGmlID() ) )
     {
       final IFeatureWrapperCollection<IFE1D2DNode> lNodesListFromGivenEdge = pEdge.getNodes();
       for( final Map.Entry<Integer, List<PseudoEdge>> lIterPseudoEntry : m_mapPolyWeir2DSubElement.entrySet() )
       {
-        List<PseudoEdge> lListEdges = lIterPseudoEntry.getValue();
+        final List<PseudoEdge> lListEdges = lIterPseudoEntry.getValue();
         for( final PseudoEdge lPseudoEdge : lListEdges )
         {
           if( lNodesListFromGivenEdge.contains( lPseudoEdge.getFirstNode() ) && lNodesListFromGivenEdge.contains( lPseudoEdge.getSecondNode() )
@@ -589,7 +590,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
   }
 
   @SuppressWarnings("unchecked")
-  private IFE1D2DNode getAdjacentPseudoNode( IFE1D2DElement pElement, IFE1D2DEdge pEdge )
+  private IFE1D2DNode getAdjacentPseudoNode( final IFE1D2DElement pElement, final IFE1D2DEdge pEdge )
   {
     if( m_mapTmpElementToPolyWeir.containsValue( pElement.getGmlID() ) )
     {
@@ -622,7 +623,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     GM_Point lPointAct = null;
     for( int lIntCounter = 0; lIntCounter < pListNodes.size(); ++lIntCounter )
     {
-      IFE1D2DNode lActNode = pListNodes.get( lIntCounter );// ( IFE1D2DNode )lIterNode;
+      final IFE1D2DNode lActNode = pListNodes.get( lIntCounter );// ( IFE1D2DNode )lIterNode;
       if( lIntCounter == 0 )
       {
         lPointStart = lActNode.getPoint();
@@ -630,7 +631,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       else if( lIntCounter > 1 && !lPointStart.equals( lPointAct ) )
       {
         lPointAct = lActNode.getPoint();
-        double lDoubleAngleInBetween = Math.atan2( lActNode.getPoint().getY() - lPointStart.getY(), lActNode.getPoint().getX() - lPointStart.getX() )
+        final double lDoubleAngleInBetween = Math.atan2( lActNode.getPoint().getY() - lPointStart.getY(), lActNode.getPoint().getX() - lPointStart.getX() )
             - Math.atan2( lPointPrev.getY() - lPointStart.getY(), lPointPrev.getX() - lPointStart.getX() );
 
         lDoubleResAngle += lDoubleAngleInBetween;
@@ -929,16 +930,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
           if( element.getNodes().size() > 4 )
           {
-            List<IFE1D2DNode> lListNodes = getOrderedListOfNodes( element );
+            final List<IFE1D2DNode> lListNodes = getOrderedListOfNodes( element );
 
-            int lIntDirectionOfEdges = getDirectionOfPseudoEdges( lListNodes );
-            int lListElementNodesSize = lListNodes.size();
+            final int lIntDirectionOfEdges = getDirectionOfPseudoEdges( lListNodes );
+            final int lListElementNodesSize = lListNodes.size();
             final int upstreamNodePositionInEachElement = FlowRelationUtilitites.findUpstreamNodePolyWeirPositionInNodesRing( building, lListNodes, lIntDirectionOfEdges );
 
             int lIntLastId = 0;
             for( int lIntIter = 0; lIntIter < lListElementNodesSize / 2 - 1; ++lIntIter )
             {
-              List<PseudoEdge> lListEdges = new ArrayList<PseudoEdge>();
+              final List<PseudoEdge> lListEdges = new ArrayList<PseudoEdge>();
               boolean lBoolLastEdgeExists = false;
               if( lIntIter > 0 )
               {
@@ -948,11 +949,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
               {
                 lBoolLastEdgeExists = true;
               }
-              PseudoEdge lPseudoEdge0 = new PseudoEdge( (lListNodes.get( lIntIter )), (lListNodes.get( lIntIter + 1 )), id, element.getGmlID(), true );
-              PseudoEdge lPseudoEdge1 = new PseudoEdge( (lListNodes.get( lIntIter + 1 )), (lListNodes.get( lListElementNodesSize - (lIntIter + 3) )), id, element.getGmlID(), true );
-              
-              PseudoEdge lPseudoEdge2 = new PseudoEdge( (lListNodes.get( lListElementNodesSize - (lIntIter + 3) )), (lListNodes.get( lListElementNodesSize - (lIntIter + 2) )), id, element.getGmlID(), true );
-              PseudoEdge lPseudoEdge3 = new PseudoEdge( (lListNodes.get( lListElementNodesSize - (lIntIter + 2) )), (lListNodes.get( lIntIter )), id, element.getGmlID(), lBoolLastEdgeExists );
+              final PseudoEdge lPseudoEdge0 = new PseudoEdge( (lListNodes.get( lIntIter )), (lListNodes.get( lIntIter + 1 )), id, element.getGmlID(), true );
+              final PseudoEdge lPseudoEdge1 = new PseudoEdge( (lListNodes.get( lIntIter + 1 )), (lListNodes.get( lListElementNodesSize - (lIntIter + 3) )), id, element.getGmlID(), true );
+
+              final PseudoEdge lPseudoEdge2 = new PseudoEdge( (lListNodes.get( lListElementNodesSize - (lIntIter + 3) )), (lListNodes.get( lListElementNodesSize - (lIntIter + 2) )), id, element.getGmlID(), true );
+              final PseudoEdge lPseudoEdge3 = new PseudoEdge( (lListNodes.get( lListElementNodesSize - (lIntIter + 2) )), (lListNodes.get( lIntIter )), id, element.getGmlID(), lBoolLastEdgeExists );
 
               if( lIntIter > 0 )
               {
@@ -1035,13 +1036,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
   @SuppressWarnings("unchecked")
   private List<IFE1D2DNode> getOrderedListOfNodes( final IFE1D2DElement element )
   {
-    List<IFE1D2DNode> lOrderedListRes = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> lOrderedListRes = new ArrayList<IFE1D2DNode>();
 
-    int lIntEdgesSize = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().size();
+    final int lIntEdgesSize = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().size();
     for( int lIntCounter = 0; lIntCounter < lIntEdgesSize - 1; ++lIntCounter )
     { // final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() ){
-      IFE1D2DEdge lEdgeAct = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter );
-      IFE1D2DEdge lEdgeNext = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter + 1 );
+      final IFE1D2DEdge lEdgeAct = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter );
+      final IFE1D2DEdge lEdgeNext = ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges().get( lIntCounter + 1 );
       if( lEdgeNext.getNodes().contains( lEdgeAct.getNode( 1 ) ) )
       {
         if( !lOrderedListRes.contains( lEdgeAct.getNode( 0 ) ) )
@@ -1278,7 +1279,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return m_node1;
     }
 
-    public final void setFirstNode( IFE1D2DNode pFirstNode )
+    public final void setFirstNode( final IFE1D2DNode pFirstNode )
     {
       m_node1 = pFirstNode;
     }
@@ -1288,7 +1289,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return m_node2;
     }
 
-    public final void setSecondNode( IFE1D2DNode pSecondNode )
+    public final void setSecondNode( final IFE1D2DNode pSecondNode )
     {
       m_node2 = pSecondNode;
     }
@@ -1298,7 +1299,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return m_intParentId;
     }
 
-    public final void setIntParentId( int intParentId )
+    public final void setIntParentId( final int intParentId )
     {
       m_intParentId = intParentId;
     }
@@ -1308,7 +1309,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return m_strGMLParentId;
     }
 
-    public final void setStrGMLParentId( String strGMLParentId )
+    public final void setStrGMLParentId( final String strGMLParentId )
     {
       m_strGMLParentId = strGMLParentId;
     }
@@ -1318,7 +1319,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return m_boolRealExistingEdge;
     }
 
-    public final void setBoolRealExistingEdge( boolean boolRealExistingEdge )
+    public final void setBoolRealExistingEdge( final boolean boolRealExistingEdge )
     {
       m_boolRealExistingEdge = boolRealExistingEdge;
     }
@@ -1328,7 +1329,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return m_intLeftParent;
     }
 
-    public final void setIntLeftParent( int intLeftParent )
+    public final void setIntLeftParent( final int intLeftParent )
     {
       m_intLeftParent = intLeftParent;
     }
@@ -1338,7 +1339,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return m_intRightParent;
     }
 
-    public final void setIntRightParent( int intRightParent )
+    public final void setIntRightParent( final int intRightParent )
     {
       m_intRightParent = intRightParent;
     }
@@ -1366,7 +1367,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       if( pPseudoEdge instanceof PseudoEdge )
       {
-        PseudoEdge lPseudoEdge = (PseudoEdge) pPseudoEdge;
+        final PseudoEdge lPseudoEdge = (PseudoEdge) pPseudoEdge;
         if( (this.m_node1.getGmlID().equals( lPseudoEdge.getFirstNode().getGmlID() ) && this.m_node2.getGmlID().equals( lPseudoEdge.getSecondNode().getGmlID() ))
             || (this.m_node2.getGmlID().equals( lPseudoEdge.getFirstNode().getGmlID() ) && this.m_node1.getGmlID().equals( lPseudoEdge.getSecondNode().getGmlID() )) )
         {

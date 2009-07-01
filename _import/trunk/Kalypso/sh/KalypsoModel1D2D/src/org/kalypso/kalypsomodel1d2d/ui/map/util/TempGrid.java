@@ -246,7 +246,7 @@ public class TempGrid
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.0") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.0" ) ); //$NON-NLS-1$
     }
   }
 
@@ -297,7 +297,7 @@ public class TempGrid
     final GM_Point[][] points2D = m_gridPoints;
 
     if( points2D.length == 0 )
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.1") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.1" ) ); //$NON-NLS-1$
 
     // we must have the node theme. First node theme gets it
     final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( panel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
@@ -310,11 +310,11 @@ public class TempGrid
       catch( final Exception e )
       {
         e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2") ); //$NON-NLS-1$
+        return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2" ) ); //$NON-NLS-1$
       }
     }
     else
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.3") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.3" ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -329,14 +329,14 @@ public class TempGrid
     final List<GM_Ring> elements = getRingsFromPoses();
 
     for( final GM_Ring ring : elements )
-      ElementGeometryHelper.createFE1D2DfromRing( workspace, nodeTheme, parentFeature, discModel, ring );
+      ElementGeometryHelper.createFE1D2DfromRing( workspace, discModel, ring );
   }
 
   @SuppressWarnings("unchecked")
   private IStatus checkElements( )
   {
     if( m_nodeTheme == null )
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.4") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.4" ) ); //$NON-NLS-1$
     try
     {
       final IFEDiscretisationModel1d2d discModel = DiscretisationModelUtils.modelForTheme( m_nodeTheme );
@@ -345,7 +345,7 @@ public class TempGrid
       {
         // 4) New Element self-intersects
         if( GeometryUtilities.isSelfIntersecting( ring.getPositions() ) )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5" ) ); //$NON-NLS-1$
 
         // New Element intersects other elements
         final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
@@ -359,7 +359,7 @@ public class TempGrid
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
               if( intersection instanceof GM_Surface )
-                return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.6") ); //$NON-NLS-1$
+                return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.6" ) ); //$NON-NLS-1$
             }
           }
         }
