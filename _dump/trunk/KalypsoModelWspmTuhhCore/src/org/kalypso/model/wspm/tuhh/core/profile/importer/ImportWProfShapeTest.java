@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,13 +51,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.hw.HeightWidthCreator;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
@@ -64,11 +69,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class ImportWProfShapeTest
 {
   @Test
-  public void importW80Shape( ) throws GmlSerializeException, IOException, CoreException
+  public void importW80Shape( ) throws GmlSerializeException, IOException, CoreException, InvocationTargetException
   {
     final NullProgressMonitor monitor = new NullProgressMonitor();
 
     final String fileBase = "P:\\bwg0715223\\gis\\Modell\\Querprofillagen\\vermessung";
+// final String fileBase = "P:\\bwg0715223\\modell\\WSPWin\\Modell_Ohrn\\work\\verl_Profile_Pkt";
+// final String fileBase = "c:\\temp\\work\\verl_Profile_Pkt";
     final String sourceCrs = "EPSG:31467";
     final File tempDir = new File( FileUtilities.TMP_DIR, "WProf2Sobek" );
     tempDir.mkdirs();
@@ -79,17 +86,18 @@ public class ImportWProfShapeTest
     System.out.println( String.format( "Read %d points", w80features.size() ) );
 
     /* Create Empty WSPM-Workspace */
-// final GMLWorkspace targetWorkspace = FeatureFactory.createGMLWorkspace( TuhhWspmProject.QNAME, null, new
-    // GmlSerializerFeatureProviderFactory() );
-// final TuhhWspmProject project = new TuhhWspmProject( targetWorkspace.getRootFeature() );
-// final IWProfContentHandler creatorTUHH = new TuhhProfileWProfContentHandler( project, sourceCrs );
+    final GMLWorkspace targetWorkspace = FeatureFactory.createGMLWorkspace( TuhhWspmProject.QNAME, null, new GmlSerializerFeatureProviderFactory() );
+    final TuhhWspmProject project = new TuhhWspmProject( targetWorkspace.getRootFeature() );
+    final IWProfContentHandler creatorTUHH = new TuhhProfileWProfContentHandler( project, sourceCrs );
     final HeightWidthCreator creatorHW = new HeightWidthCreator( tempDir );
-    final IWProfContentHandler[] creators = new IWProfContentHandler[] {
-// creatorTUHH,
-    creatorHW };
+    final IWProfContentHandler[] creators = new IWProfContentHandler[] { creatorTUHH, creatorHW };
 
     /* Data */
+// final URL photoContext = new URL(
+// "file:///C:\\users\\jung\\projekte\\bwg0715223\\HWGK_471_5_Hydraulik_work\\Vermessung\\" );
     final URL photoContext = new URL( "file:///P:\\bwg0715223\\HWGK_471_5_Hydraulik_work\\Vermessung\\" );
+// final URL photoContext = new URL(
+    // "file:///P:\\bwg0715223\\gis\\Modell\\Querprofillagen\\Nachvermessungen\\Brettach_Mündung\\" );
     importW80Data( w80features, creators, photoContext );
 
     /* Write results */
@@ -97,8 +105,8 @@ public class ImportWProfShapeTest
     final File hwLogFile = new File( tempDir, "heightWidth.log" );
     creatorHW.writeToFile( hwOutFile, hwLogFile );
 
-// final File targetFile = File.createTempFile( "modell_w80", ".gml" );
-// GmlSerializer.serializeWorkspace( targetFile, targetWorkspace, "UTF-8" );
+    final File targetFile = File.createTempFile( "modell_w80", ".gml" );
+    GmlSerializer.serializeWorkspace( targetFile, targetWorkspace, "UTF-8" );
   }
 
   private void importW80Data( final FeatureList w80features, final IWProfContentHandler[] creators, final URL photoContext ) throws CoreException, MalformedURLException
