@@ -67,7 +67,6 @@ import org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation;
 import org.kalypso.convert.namodel.schema.binding.GeologyCollection;
 import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
 import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -131,7 +130,6 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
 
     final GMLWorkspace workspace = flHydrotops.getParentFeature().getWorkspace();
     final IFile outputFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
-    final IFeatureType typeHydrotop = workspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
     final FeatureList fflLanduse = flLanduse;
     final FeatureList fflPedology = flPedology;
     final FeatureList fflGeology = flGeology;
@@ -149,7 +147,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        final HydrotopeCreationOperation op = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, workspace, typeHydrotop );
+        final HydrotopeCreationOperation op = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, workspace );
         op.setDissolveMode( true );
         try
         {
