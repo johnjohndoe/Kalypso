@@ -38,18 +38,6 @@ public class RiskZoneDefinition extends AbstractFeatureBinder implements IRiskZo
     return property == null ? 0 : property.intValue();
   }
 
-  @Override
-  public String getDescription( )
-  {
-    return (String) getFeature().getProperty( IRiskZoneDefinition.PROP_DESCRIPTION );
-  }
-
-  @Override
-  public String getName( )
-  {
-    return (String) getFeature().getProperty( IRiskZoneDefinition.PROP_NAME );
-  }
-
   public Boolean isUrbanLanduseType( )
   {
     return (Boolean) getFeature().getProperty( IRiskZoneDefinition.PROP_ISURBANTYPE );

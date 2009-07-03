@@ -9,16 +9,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.model.actions.dataImport.landuse.Messages;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
+import org.kalypso.risk.model.schema.binding.IAdministrationUnit;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
-import org.kalypso.risk.model.utils.RiskLanduseHelper;
+import org.kalypso.risk.model.utils.RiskImportLanduseHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -26,9 +28,14 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Thomas Jung
+ * 
  */
 public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgress
 {
+  private final static int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
+
+  private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
+
   private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" ); //$NON-NLS-1$
 
   private static final QName PROP_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "value" ); //$NON-NLS-1$
@@ -40,6 +47,9 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final String m_externalProjectName;
 
+  @SuppressWarnings("unused")
+  private boolean m_wrongLanduseSelectedStatus;
+
   private final IRasterizationControlModel m_controlModel;
 
   private final IVectorDataModel m_vectorModel;
@@ -49,7 +59,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
   private final IFolder m_scenarioFolder;
 
   @SuppressWarnings("unchecked")
-  public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection )
+  public RiskImportDBLanduseRunnable( IRasterizationControlModel controlModel, IVectorDataModel vectorDataModel, final List shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection, boolean wrongLanduseSelectedStatus )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -58,28 +68,62 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
     m_shapeFeatureList = shapeFeatureList;
     m_externalProjectName = externalProjectName;
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
+    m_wrongLanduseSelectedStatus = wrongLanduseSelectedStatus;
   }
 
-  public IStatus execute( final IProgressMonitor monitor )
+  @SuppressWarnings("unchecked")
+  public IStatus execute( IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
     {
-      monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.7" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "ImportLanduseWizard.7" ) ); //$NON-NLS-1$
 
       final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection();
 
       /* create entries for landuse database */
-      final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
+      final HashSet<String> landuseTypeSet = new HashSet<String>();
 
-      monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.10" ) ); //$NON-NLS-1$
+      for( int i = 0; i < m_shapeFeatureList.size(); i++ )
+      {
+        final Feature shpFeature = (Feature) m_shapeFeatureList.get( i );
+        final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), m_landuseProperty );
+        final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
+        if( !landuseTypeSet.contains( shpPropertyValue ) )
+          landuseTypeSet.add( shpPropertyValue );
+      }
+
+      m_wrongLanduseSelectedStatus = false;
+      if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
+      {
+        IStatus status = null;
+        status = RiskImportLanduseHelper.isRightParameterUsed( m_landuseProperty );
+        synchronized( this )
+        {
+          // while( status == null )
+          // m_importLanduseWizard.wait( 100 );
+        }
+        if( Status.CANCEL_STATUS.equals( status ) )
+        {
+          m_wrongLanduseSelectedStatus = true;
+          landuseTypeSet.clear();
+          return status;
+        }
+      }
+
+      monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 
       landusePolygonCollection.clear();
 
-      RiskLanduseHelper.handleDBImport( m_externalProjectName, m_controlModel, m_scenarioFolder );
+      /* if there is no administration units defined, define the default one */
+      final List<IAdministrationUnit> administrationUnits = m_controlModel.getAdministrationUnits();
+      if( administrationUnits.size() == 0 )
+        m_controlModel.createNewAdministrationUnit( "Default administration unit", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      RiskImportLanduseHelper.handleDBImport( m_externalProjectName, m_controlModel, m_scenarioFolder );
 
       /* create new landuse classes */
-      RiskLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, m_predefinedLanduseColorsCollection, Feature.QN_NAME, PROP_DATA_MEMBER, PROP_VALUE );
+      RiskImportLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, administrationUnits, m_predefinedLanduseColorsCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_VALUE );
 
       /* if there is no damage functions defined, define the default one */
       if( m_controlModel.getDamageFunctionsList().size() == 0 )
@@ -95,7 +139,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
       // TODO try to guess damage function if no function is linked to the landuse class
 
       /* creating landuse polygons */
-      final List<Feature> createdFeatures = RiskLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
+      final List<Feature> createdFeatures = RiskImportLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_scenarioFolder, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
       final GMLWorkspace workspace = m_vectorModel.getFeature().getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
@@ -104,7 +148,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.risk.model.operation.RiskImportDBLanduseRunnable.4" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, "Fehler beim Rastern der Landnutzung" );
     }
   }
 

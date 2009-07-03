@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -55,9 +55,9 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" ); //$NON-NLS-1$
+  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
 
-  private final static QName PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" ); //$NON-NLS-1$
+  private final static QName PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" );
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -71,14 +71,14 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     try
     {
       final Feature member = (Feature) feature.getProperty( XLINKED_FEATURE );
       if( member == null )
-        return new Integer( -1 );
+        return new Integer(-1);
       else
       {
         final Object object = member.getProperty( PROPERTY );

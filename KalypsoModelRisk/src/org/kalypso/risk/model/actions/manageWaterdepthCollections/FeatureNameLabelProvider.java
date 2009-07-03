@@ -1,8 +1,5 @@
 package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
-import ogc31.www.opengis.net.gml.FileType;
-
-import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
@@ -12,7 +9,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 public class FeatureNameLabelProvider extends GMLLabelProvider
 {
-  private static final String NAME_NOT_DEFINED = Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.FeatureNameLabelProvider.0" ); //$NON-NLS-1$
+  private static final String NAME_NOT_DEFINED = Messages.getString("FeatureNameLabelProvider.0"); //$NON-NLS-1$
 
   @Override
   public String getText( final Object element )
@@ -27,9 +24,9 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
           name = NAME_NOT_DEFINED;
         final Integer returnPeriod = collection.getReturnPeriod();
         if( returnPeriod != null && returnPeriod > 0 )
-          name += " [" + returnPeriod.toString() + Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.FeatureNameLabelProvider.2" ); //$NON-NLS-1$ //$NON-NLS-2$
+          name += " [" + returnPeriod.toString() + Messages.getString("FeatureNameLabelProvider.2"); //$NON-NLS-1$ //$NON-NLS-2$
         else
-          name += Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.FeatureNameLabelProvider.3" ); //$NON-NLS-1$
+          name += Messages.getString("FeatureNameLabelProvider.3"); //$NON-NLS-1$
         return name;
       }
       final ICoverage coverage = (ICoverage) ((Feature) element).getAdapter( ICoverage.class );
@@ -37,11 +34,7 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
       {
         final StringBuffer label = new StringBuffer();
         final String name = coverage.getName();
-        final Object rangeSet = ((RectifiedGridCoverage) coverage).getRangeSet();
-        if( !(rangeSet instanceof FileType) )
-          throw new UnsupportedOperationException( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.manageWaterdepthCollections.FeatureNameLabelProvider.1") ); //$NON-NLS-1$
-
-        final String mimeType = ((FileType) rangeSet).getMimeType();
+        final String mimeType = ((RectifiedGridCoverage) coverage).getRangeSet().getFile().getMimeType();
         if( name == null || name.length() == 0 )
           label.append( NAME_NOT_DEFINED );
         else
@@ -54,13 +47,13 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
         label.append( ", " ); //$NON-NLS-1$
         label.append( Math.abs( gridDomain.getOffsetX().getGeoX() - gridDomain.getOffsetX().getGeoY() ) ).append( "x" ).append( Math.abs( gridDomain.getOffsetY().getGeoX() //$NON-NLS-1$
             - gridDomain.getOffsetY().getGeoY() ) );
-        // try
-        // {
-        // // label.append( ", " ).append( gridDomain.getCoordinateSystem().getName() ); //$NON-NLS-1$
-        // }
-        // catch( RemoteException e )
-        // {
-        // }
+//        try
+//        {
+////          label.append( ", " ).append( gridDomain.getCoordinateSystem().getName() ); //$NON-NLS-1$
+//        }
+//        catch( RemoteException e )
+//        {
+//        }
         label.append( "]" ); //$NON-NLS-1$
         return label.toString();
       }

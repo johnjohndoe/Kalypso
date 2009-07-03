@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -48,21 +48,18 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dejan Antanaskovic
  */
 public class PF_LandusePolygon_DamageFunction extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" ); //$NON-NLS-1$
+  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
 
-  private final static QName XLINKED_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" ); //$NON-NLS-1$
+  private final static QName XLINKED_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" );
 
-  private final static QName DAMAGE_FUNCTION_PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "function" ); //$NON-NLS-1$
+  private final static QName DAMAGE_FUNCTION_PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "function" );
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -76,22 +73,19 @@ public class PF_LandusePolygon_DamageFunction extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     try
     {
       final Feature landuseClass = (Feature) feature.getProperty( XLINKED_LANDUSE_CLS );
       if( landuseClass == null )
-        return ""; //$NON-NLS-1$
+        return "";
       else
       {
-        final XLinkedFeature_Impl landuseXlink = (XLinkedFeature_Impl) landuseClass;
-        final GMLWorkspace controlWorkspace = landuseXlink.getFeature().getWorkspace();
-
-        final Feature damageFunction = FeatureHelper.resolveLinkedFeature( controlWorkspace, landuseClass.getProperty( XLINKED_DAMAGE_FUNCTION ) );
+        final Feature damageFunction = (Feature) landuseClass.getProperty( XLINKED_DAMAGE_FUNCTION );
         if( damageFunction == null )
-          return ""; //$NON-NLS-1$
+          return "";
         else
         {
           final Object object = damageFunction.getProperty( DAMAGE_FUNCTION_PROPERTY );

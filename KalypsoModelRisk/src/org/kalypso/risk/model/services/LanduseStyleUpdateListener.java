@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -76,7 +76,7 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
     if( scenarioFolder == null )
       return;
 
-    final IPath resourcePath = scenarioFolder.getProjectRelativePath().append( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
+    final IPath resourcePath = scenarioFolder.getProjectRelativePath().append( "/models/RasterizationControlModel.gml" );
 
     final IResourceDelta rootDelta = event.getDelta();
     if( rootDelta == null )

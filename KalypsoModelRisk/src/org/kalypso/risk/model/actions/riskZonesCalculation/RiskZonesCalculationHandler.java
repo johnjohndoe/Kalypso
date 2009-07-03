@@ -4,28 +4,33 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.risk.i18n.Messages;
-import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
-import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
-import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable;
+import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.IVectorDataModel;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.views.map.MapView;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class RiskZonesCalculationHandler extends AbstractHandler
 {
+  @Override
   public Object execute( final ExecutionEvent arg0 )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -33,11 +38,11 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.0" ) ); //$NON-NLS-1$
+      StatusUtilities.createWarningStatus( Messages.getString( "RiskZonesCalculationHandler.0" ) ); //$NON-NLS-1$
       return false;
     }
 
-    final Dialog dialog = new MessageDialog( shell, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.1" ), null, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.3" ), Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Dialog dialog = new MessageDialog( shell, Messages.getString( "RiskZonesCalculationHandler.1" ), null, Messages.getString( "RiskZonesCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "RiskZonesCalculationHandler.3" ), Messages.getString( "RiskZonesCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     if( dialog.open() != 0 )
       return null;
 
@@ -45,28 +50,29 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     {
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext context = handlerService.getCurrentState();
+      final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+      final IRasterizationControlModel controlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
+      final IRasterDataModel rasterModel = scenarioDataProvider.getModel( IRasterDataModel.class );
+      final IVectorDataModel vectorModel = scenarioDataProvider.getModel( IVectorDataModel.class );
 
-      final Job job = new Job( Messages.getString("org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.10") )  //$NON-NLS-1$
+      final ICoreRunnableWithProgress riskCalcRiskZonesRunnable = new RiskCalcRiskZonesRunnable( rasterModel, vectorModel, controlModel, scenarioFolder );
+
+      final IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, riskCalcRiskZonesRunnable );
+      ErrorDialog.openError( shell, "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );
+
+      if( !execute.isOK() )
       {
-        @Override
-        protected IStatus run( final IProgressMonitor monitor )
-        {
-          final IStatus status;
-          try
-          {
-            status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
-          }
-          catch( final Exception e )
-          {
-            ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.5" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
-            return Status.CANCEL_STATUS;
-          }
-          return status;
-        }
-      };
-      job.setUser( true );
-      job.schedule( 100 );
+        KalypsoRiskPlugin.getDefault().getLog().log( execute );
+      }
+
+      scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+      scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+
+      // Undoing this operation is not possible because old raster files are deleted...
+      scenarioDataProvider.saveModel( new NullProgressMonitor() );
+
+      mapView.getMapPanel().invalidateMap();
     }
     catch( final Exception e )
     {

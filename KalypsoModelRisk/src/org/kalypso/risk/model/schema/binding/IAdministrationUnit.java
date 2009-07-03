@@ -7,7 +7,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 public interface IAdministrationUnit extends IFeatureWrapper2
 {
-  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "AdministrationUnit" ); //$NON-NLS-1$
+  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "AdministrationUnit" );
 
   public void setName( final String name );
 

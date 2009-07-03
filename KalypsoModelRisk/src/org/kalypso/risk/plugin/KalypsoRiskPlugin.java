@@ -42,7 +42,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   }
 
   @Override
-  public void start( final BundleContext context ) throws Exception
+  public void start( BundleContext context ) throws Exception
   {
     super.start( context );
 
@@ -65,7 +65,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     m_szenarioController = new SzenarioController();
     dataProvider.addScenarioDataListener( m_szenarioController );
-    m_szenarioController.scenarioChanged( dataProvider.getScenario() );
+    m_szenarioController.scenarioChanged( dataProvider.getScenarioFolder() );
   }
 
   /**

@@ -1,7 +1,5 @@
 package org.kalypso.risk.model.tools.functionParser;
 
-import org.kalypso.risk.i18n.Messages;
-
 
 /***********************************************************************************************************************
  * ************************************************************************* * * Class SpecialFunction *
@@ -148,7 +146,7 @@ public final class SpecialFunction extends Object
   static public double log10( double x ) throws ArithmeticException
   {
     if( x <= 0.0 )
-      throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.0") ); //$NON-NLS-1$
+      throw new ArithmeticException( "range exception" );
     return Math.log( x ) / 2.30258509299404568401;
   }
 
@@ -217,7 +215,7 @@ public final class SpecialFunction extends Object
   static public double acosh( double x ) throws ArithmeticException
   {
     if( x < 1.0 )
-      throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.1") ); //$NON-NLS-1$
+      throw new ArithmeticException( "range exception" );
     return Math.log( x + Math.sqrt( x * x - 1 ) );
   }
 
@@ -253,7 +251,7 @@ public final class SpecialFunction extends Object
   static public double atanh( double x ) throws ArithmeticException
   {
     if( x > 1.0 || x < -1.0 )
-      throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.2") ); //$NON-NLS-1$
+      throw new ArithmeticException( "range exception" );
     return 0.5 * Math.log( ( 1.0 + x ) / ( 1.0 - x ) );
   }
 
@@ -569,7 +567,7 @@ public final class SpecialFunction extends Object
       {
         p = Math.floor( q );
         if( p == q )
-          throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.3") ); //$NON-NLS-1$
+          throw new ArithmeticException( "gamma: overflow" );
 //        i = (int)p;
         z = q - p;
         if( z > 0.5 )
@@ -579,7 +577,7 @@ public final class SpecialFunction extends Object
         }
         z = q * Math.sin( Math.PI * z );
         if( z == 0.0 )
-          throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.4") ); //$NON-NLS-1$
+          throw new ArithmeticException( "gamma: overflow" );
         z = Math.abs( z );
         z = Math.PI / ( z * stirf( q ) );
 
@@ -600,7 +598,7 @@ public final class SpecialFunction extends Object
     {
       if( x == 0.0 )
       {
-        throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.5") ); //$NON-NLS-1$
+        throw new ArithmeticException( "gamma: singular" );
       }
       else if( x > -1.E-9 )
       {
@@ -614,7 +612,7 @@ public final class SpecialFunction extends Object
     {
       if( x == 0.0 )
       {
-        throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.6") ); //$NON-NLS-1$
+        throw new ArithmeticException( "gamma: singular" );
       }
       else if( x < 1.e-9 )
       {
@@ -1112,7 +1110,7 @@ public final class SpecialFunction extends Object
       w = lgamma( q );
       p = Math.floor( q );
       if( p == q )
-        throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.7") ); //$NON-NLS-1$
+        throw new ArithmeticException( "lgam: Overflow" );
       z = q - p;
       if( z > 0.5 )
       {
@@ -1121,7 +1119,7 @@ public final class SpecialFunction extends Object
       }
       z = q * Math.sin( Math.PI * z );
       if( z == 0.0 )
-        throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.8") ); //$NON-NLS-1$
+        throw new ArithmeticException( "lgamma: Overflow" );
       z = LOGPI - Math.log( z ) - w;
       return z;
     }
@@ -1137,7 +1135,7 @@ public final class SpecialFunction extends Object
       while( x < 2.0 )
       {
         if( x == 0.0 )
-          throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.9") ); //$NON-NLS-1$
+          throw new ArithmeticException( "lgamma: Overflow" );
         z /= x;
         x += 1.0;
       }
@@ -1151,7 +1149,7 @@ public final class SpecialFunction extends Object
     }
 
     if( x > 2.556348e305 )
-      throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.10") ); //$NON-NLS-1$
+      throw new ArithmeticException( "lgamma: Overflow" );
 
     q = ( x - 0.5 ) * Math.log( x ) - x + 0.91893853320467274178;
     if( x > 1.0e8 )
@@ -1186,7 +1184,7 @@ public final class SpecialFunction extends Object
     boolean flag;
 
     if( aa <= 0.0 || bb <= 0.0 )
-      throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.11") ); //$NON-NLS-1$
+      throw new ArithmeticException( "ibeta: Domain error!" );
 
     if( ( xx <= 0.0 ) || ( xx >= 1.0 ) )
     {
@@ -1194,7 +1192,7 @@ public final class SpecialFunction extends Object
         return 0.0;
       if( xx == 1.0 )
         return 1.0;
-      throw new ArithmeticException( Messages.getString("org.kalypso.risk.model.tools.functionParser.SpecialFunction.12") ); //$NON-NLS-1$
+      throw new ArithmeticException( "ibeta: Domain error!" );
     }
 
     flag = false;

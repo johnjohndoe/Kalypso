@@ -2,9 +2,9 @@ package org.kalypso.risk.model.actions.dataImport.waterdepth;
 
 import java.io.File;
 
-import org.eclipse.core.resources.IFile;
-import org.kalypso.grid.AsciiGridReader;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.grid.AscciiGridReader;
+import org.kalypso.grid.ConvertAscii2Coverage;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -24,38 +24,21 @@ public class AsciiRasterInfo
 
   private int m_rasterSizeY;
 
-  private final File m_rasterFile;
+  private File m_rasterFile;
 
   private RectifiedGridDomain m_gridDomain;
 
-  private final IFile m_iFile;
-
-  /**
-   * generates a data collecting for a ascii raster file. <br>
-   * At first, the coordinate is set to default. The real crs has to be set from outside!
-   */
   public AsciiRasterInfo( final String rasterFileAbsolutePath ) throws Exception
   {
-    m_iFile = null;
     m_rasterFile = new File( rasterFileAbsolutePath );
-    init();
-  }
-
-  public AsciiRasterInfo( final IFile file ) throws Exception
-  {
-    m_iFile = file;
-    m_rasterFile = m_iFile.getLocation().toFile();
+    setCoordinateSystem( IKalypsoCorePreferences.DEFAULT_CRS );
     init();
   }
 
   private void init( ) throws Exception
   {
-    // At first the coordinate system is set to default
-    if( m_coordinateSystem == null )
-      m_coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    final AsciiGridReader reader = new AsciiGridReader( m_rasterFile );
-    m_gridDomain = reader.getGridDomain( m_coordinateSystem );
+    final AscciiGridReader reader = new AscciiGridReader( m_rasterFile );
+    m_gridDomain = ConvertAscii2Coverage.importGridArc( reader, m_coordinateSystem );
     m_rasterSizeX = m_gridDomain.getNumColumns();
     m_rasterSizeY = m_gridDomain.getNumRows();
     final GM_Point origin = m_gridDomain.getOrigin( m_coordinateSystem );
@@ -114,21 +97,26 @@ public class AsciiRasterInfo
    */
   public boolean setCoordinateSystem( final String cs )
   {
+    final String oldCoordinateSystem = m_coordinateSystem;
     m_coordinateSystem = cs;
     try
     {
-      final GM_Point origin = m_gridDomain.getOrigin( null );
-      origin.setCoordinateSystem( cs );
-
-      m_gridDomain = new RectifiedGridDomain( origin, m_gridDomain.getOffsetX(), m_gridDomain.getOffsetY(), m_gridDomain.getGridRange() );
-      // TODO
+      init();
+      return true;
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      m_coordinateSystem = oldCoordinateSystem;
+      try
+      {
+        init();
+      }
+      catch( Exception e1 )
+      {
+        e1.printStackTrace();
+      }
+      return false;
     }
-    return true;
   }
 
   public int getReturnPeriod( )
@@ -144,10 +132,5 @@ public class AsciiRasterInfo
   public File getSourceFile( )
   {
     return m_rasterFile;
-  }
-
-  public IFile getiSourceFile( )
-  {
-    return m_iFile;
   }
 }

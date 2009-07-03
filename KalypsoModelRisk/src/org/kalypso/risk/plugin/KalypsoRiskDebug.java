@@ -52,8 +52,8 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  */
 public class KalypsoRiskDebug
 {
-  public static Debug OPERATION = new Debug( KalypsoRiskPlugin.getDefault(), "/debug/operation" ); //$NON-NLS-1$
+  public static Debug OPERATION = new Debug( KalypsoRiskPlugin.getDefault(), "/debug/operation" );
 
-  public static Debug GML_LOADING = new Debug( KalypsoRiskPlugin.getDefault(), "/debug/gml_loading" ); //$NON-NLS-1$
+  public static Debug GML_LOADING = new Debug( KalypsoRiskPlugin.getDefault(), "/debug/gml_loading" );
 
 }

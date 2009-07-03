@@ -15,33 +15,9 @@ public class DamageFunction extends AbstractFeatureBinder implements IDamageFunc
     return (String) getFeature().getProperty( IDamageFunction.PROP_FUNCTION );
   }
 
-  @Override
-  public String getName( )
-  {
-    return (String) getFeature().getProperty( IDamageFunction.PROP_NAME );
-  }
-
-  @Override
-  public String getDescription( )
-  {
-    return (String) getFeature().getProperty( IDamageFunction.PROP_DESCRIPTION );
-  }
-
   public void setFunction( final String function )
   {
     getFeature().setProperty( IDamageFunction.PROP_FUNCTION, function );
-  }
-
-  @Override
-  public void setName( final String name )
-  {
-    getFeature().setProperty( IDamageFunction.PROP_NAME, name );
-  }
-
-  @Override
-  public void setDescription( final String desc )
-  {
-    getFeature().setProperty( IDamageFunction.PROP_DESCRIPTION, desc );
   }
 
 }

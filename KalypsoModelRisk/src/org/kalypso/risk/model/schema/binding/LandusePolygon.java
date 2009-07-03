@@ -1,25 +1,17 @@
 package org.kalypso.risk.model.schema.binding;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
-import org.kalypso.risk.model.utils.RiskPolygonStatistics;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class LandusePolygon extends AbstractFeatureBinder implements ILandusePolygon
-{ 
+{
   private long m_statisticsNumberOfRasterCells = 0;
 
   private double m_statisticsAverageAnnualDamage = 0.0;
-
-  private final Map<Double, RiskPolygonStatistics> m_statistics = new HashMap<Double, RiskPolygonStatistics>();
 
   //
   // private double m_riskBorderLowMiddle = Double.NaN;
@@ -50,12 +42,12 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     // }
   }
 
-  public void setGeometry( final GM_Surface< ? > surface )
+  public void setGeometry( GM_Surface< ? > surface )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
   }
 
-  public void setStyleType( final String styleType )
+  public void setStyleType( String styleType )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_SLDSTYLE, styleType );
   }
@@ -63,7 +55,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public String getStyleType( )
   {
     final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
-    return (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_"; //$NON-NLS-1$ //$NON-NLS-2$
+    return (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_";
   }
 
   public void setLanduseClass( final Feature landuseClassFeature )
@@ -71,7 +63,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     getFeature().setProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS, landuseClassFeature );
   }
 
-  public Integer getLanduseClassOrdinalNumber( )
+  public int getLanduseClassOrdinalNumber( )
   {
     return (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
   }
@@ -90,7 +82,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     return getFeature().getDefaultGeometryProperty().contains( position );
   }
 
-  public double getDamageValue( final double depth )
+  public double getDamageValue( double depth )
   {
     final ParseFunction damageFunction = getDamageFunction();
     final Double assetValue = getAssetValue();
@@ -101,35 +93,20 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     try
     {
       // the returned calculated damage value must not be greater than the input asset value!
-      // So, the value of the damage function must be less than or equal '1', because there can be no greater damage
-      // than the specified asset value!
-      double damagefunctionValue = damageFunction.getResult( depth ) / 100;
+      // So, the value of the damage function must be less than 1, because there can be no greater damage than the
+      // specified asset value!
+      final double damagefunctionValue = damageFunction.getResult( depth ) / 100;
 
       if( damagefunctionValue > 1 )
-      {
-        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        damagefunctionValue = 1.0;
-      }
+        KalypsoRiskDebug.OPERATION.printf( "%s", "WARNING: damage value > asset value!\n" );
 
       return assetValue * damagefunctionValue;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
       return Double.NaN;
     }
-  }
-
-  public void updateStatistics( final double value, final double returnPeriod )
-  {
-    RiskPolygonStatistics polygonStatistics = m_statistics.get( returnPeriod );
-    if( polygonStatistics == null )
-    {
-      polygonStatistics = new RiskPolygonStatistics( returnPeriod );
-      m_statistics.put( returnPeriod, polygonStatistics );
-    }
-
-    polygonStatistics.update( value );
   }
 
   /**
@@ -169,13 +146,13 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   {
     final Object damageFunctionProp = getDamageFunctionProp();
 
-    if( damageFunctionProp != null && getDamageFunctionProp() != "" ) //$NON-NLS-1$
+    if( damageFunctionProp != null && getDamageFunctionProp() != "" )
     {
       final ParseFunction damageFunction = new ParseFunction( damageFunctionProp.toString() );
 
       // check if function is parsable
       if( !damageFunction.parse() )
-        throw new IllegalArgumentException( Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.5" ) + getDamageFunctionProp().toString() ); //$NON-NLS-1$
+        throw new IllegalArgumentException( "Damage function not parsable: " + getDamageFunctionProp().toString() );
       else
         return damageFunction;
     }
@@ -191,25 +168,6 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
       return ((Double) assetValueProp).doubleValue();
     else
       return null;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getGeometry()
-   */
-  public GM_Surface< ? > getGeometry( )
-  {
-    return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Surface.class );
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getLanduseClass()
-   */
-  public ILanduseClass getLanduseClass( final IRasterizationControlModel model )
-  {
-    final Object property = getFeature().getProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS );
-    final Feature feature = FeatureHelper.resolveLinkedFeature( model.getFeature().getWorkspace(), property );
-
-    return new LanduseClass( feature );
   }
 
 }

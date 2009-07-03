@@ -5,18 +5,19 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.i18n.Messages;
 import org.kalypso.ui.views.map.MapView;
 
 public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -25,6 +26,7 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     /* Get context */
@@ -33,44 +35,41 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
 
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IWorkbenchPage activePage = window.getActivePage();
-    final MapView mapView = (MapView) activePage.findView( MapView.ID );
+    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-    {
-      throw new ExecutionException( Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
-    }
+      throw new ExecutionException( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
 
-    final IMapPanel mapPanel = mapView.getMapPanel();
+    final MapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-    {
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
-    }
 
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
     {
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( final IKalypsoTheme element : themes )
-      {
-        final String themeProperty = element.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-        // check below is because of downgrade purposes
-        if( themeProperty.equals( "riskZonesGridTheme" ) || element.getName().getKey() == "Risikozonen (gerastert)" || element.getName().getKey() == "Risikozonen (raster)" ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        if( element.getName().equals( "Risikozonen (gerastert)" ) ) //$NON-NLS-1$
         {
           mapModell.activateTheme( element );
           break;
         }
-      }
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
+    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
+
+    final ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart ); //$NON-NLS-1$
     job.schedule();
 
-    return Status.OK_STATUS;
+    return null;
   }
+
 }

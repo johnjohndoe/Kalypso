@@ -3,28 +3,34 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.xmlbeans.impl.common.Levenshtein;
-import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 public class RasterizationControlModel extends UnversionedModel implements IRasterizationControlModel
 {
   private final FeatureList m_landuseClassesFeatureList;
 
+  private final FeatureList m_assetValueClassesFeatureList;
+
+  private final FeatureList m_damageFunctionsFeatureList;
+
+  private final FeatureList m_administrationUnitsFeatureList;
+
+  private final FeatureList m_riskZoneDefinitionsFeatureList;
+
   private final List<ILanduseClass> m_landuseClasses;
 
-  private final FeatureWrapperCollection<IAssetValueClass> m_assetValueClasses;
+  private final List<IAssetValueClass> m_assetValueClasses;
 
-  private final FeatureWrapperCollection<IDamageFunction> m_damageFunctions;
+  private final List<IDamageFunction> m_damageFunctions;
 
-  private final FeatureWrapperCollection<IRiskZoneDefinition> m_riskZoneDefinitions;
+  private final List<IAdministrationUnit> m_administrationUnits;
+
+  private final List<IRiskZoneDefinition> m_riskZoneDefinitions;
 
   public RasterizationControlModel( final Feature featureToBind )
   {
@@ -34,10 +40,25 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     for( final Object object : m_landuseClassesFeatureList )
       m_landuseClasses.add( (ILanduseClass) ((Feature) object).getAdapter( ILanduseClass.class ) );
 
-    m_assetValueClasses = new FeatureWrapperCollection<IAssetValueClass>( getFeature(), IAssetValueClass.class, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
-    m_damageFunctions = new FeatureWrapperCollection<IDamageFunction>( getFeature(), IDamageFunction.class, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
-    m_riskZoneDefinitions = new FeatureWrapperCollection<IRiskZoneDefinition>( getFeature(), IRiskZoneDefinition.class, IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
+    m_assetValueClassesFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
+    m_assetValueClasses = new ArrayList<IAssetValueClass>();
+    for( final Object object : m_assetValueClassesFeatureList )
+      m_assetValueClasses.add( (IAssetValueClass) ((Feature) object).getAdapter( IAssetValueClass.class ) );
 
+    m_damageFunctionsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
+    m_damageFunctions = new ArrayList<IDamageFunction>();
+    for( final Object object : m_damageFunctionsFeatureList )
+      m_damageFunctions.add( (IDamageFunction) ((Feature) object).getAdapter( IDamageFunction.class ) );
+
+    m_administrationUnitsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_ADMINISTRATION_UNIT_MEMBER );
+    m_administrationUnits = new ArrayList<IAdministrationUnit>();
+    for( final Object object : m_administrationUnitsFeatureList )
+      m_administrationUnits.add( (IAdministrationUnit) ((Feature) object).getAdapter( IAdministrationUnit.class ) );
+
+    m_riskZoneDefinitionsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
+    m_riskZoneDefinitions = new ArrayList<IRiskZoneDefinition>();
+    for( final Object object : m_riskZoneDefinitionsFeatureList )
+      m_riskZoneDefinitions.add( (IRiskZoneDefinition) ((Feature) object).getAdapter( IRiskZoneDefinition.class ) );
   }
 
   public List<ILanduseClass> getLanduseClassesList( )
@@ -64,30 +85,91 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
 
   public IDamageFunction createNewDamageFunction( )
   {
-    return m_damageFunctions.addNew( IDamageFunction.QNAME );
-  }
-
-  public IAssetValueClass getAssetValueClass( final Double value, final String name, final String description )
-  {
-    for( final IAssetValueClass assetClass : m_assetValueClasses )
+    try
     {
-      if( assetClass.getName().equals( name ) && assetClass.getAssetValue().equals( value ) && assetClass.getDescription().equals( description ) )
-        return assetClass;
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_damageFunctionsFeatureList, IDamageFunction.QNAME, -1 );
+      final IDamageFunction damageFunction = (IDamageFunction) feature.getAdapter( IDamageFunction.class );
+      m_damageFunctions.add( damageFunction );
+      return damageFunction;
     }
-
-    final IAssetValueClass assetValueClass = createNewAssetValueClass();
-
-    assetValueClass.setAssetValue( value );
-    assetValueClass.setName( name );
-    assetValueClass.setDescription( description );
-
-    return assetValueClass;
-
+    catch( final GMLSchemaException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
   }
 
-  public IAssetValueClass createNewAssetValueClass( )
+  public IAdministrationUnit createNewAdministrationUnit( final String name, final String description )
   {
-    return m_assetValueClasses.addNew( IAssetValueClass.QNAME );
+    try
+    {
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_administrationUnitsFeatureList, IAdministrationUnit.QNAME, -1 );
+      final IAdministrationUnit administrationUnit = (IAdministrationUnit) feature.getAdapter( IAdministrationUnit.class );
+      m_administrationUnits.add( administrationUnit );
+      administrationUnit.setName( name );
+      administrationUnit.setDescription( description );
+      return administrationUnit;
+    }
+    catch( final GMLSchemaException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public IAssetValueClass getAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final boolean createIfNotExists )
+  {
+    for( final IAssetValueClass assetValueClass : m_assetValueClasses )
+      if( assetValueClass.getLanduseClassGmlID().equals( landuseClassGmlID ) && assetValueClass.getAdministrationUnitGmlID().equals( administrationUnitGmlID ) )
+        return assetValueClass;
+    if( createIfNotExists )
+      return createNewAssetValueClass( landuseClassGmlID, administrationUnitGmlID, null, "" );
+    return null;
+  }
+
+  public IAssetValueClass createNewAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final Double value, final String description )
+  {
+    try
+    {
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_assetValueClassesFeatureList, IAssetValueClass.QNAME, -1 );
+      final IAssetValueClass assetValueClass = (IAssetValueClass) feature.getAdapter( IAssetValueClass.class );
+      final String landusePath = IRasterizationControlModel.MODEL_NAME + "#" + landuseClassGmlID;
+      final String administrationUnitPath = IRasterizationControlModel.MODEL_NAME + "#" + administrationUnitGmlID;
+      Feature linkedLanduseClass = null;
+      for( final ILanduseClass landuseClass : m_landuseClasses )
+        if( landuseClass.getGmlID().equals( landuseClassGmlID ) )
+        {
+          linkedLanduseClass = landuseClass.getFeature();
+          break;
+        }
+      if( linkedLanduseClass == null )
+        return null;
+      Feature linkedAdministrationUnit = null;
+      for( final IAdministrationUnit administrationUnit : m_administrationUnits )
+        if( administrationUnit.getGmlID().equals( administrationUnitGmlID ) )
+        {
+          linkedAdministrationUnit = administrationUnit.getFeature();
+          break;
+        }
+      if( linkedAdministrationUnit == null )
+        return null;
+      final XLinkedFeature_Impl linkedLanduseClassXFeature = new XLinkedFeature_Impl( feature, linkedLanduseClass.getParentRelation(), linkedLanduseClass.getFeatureType(), landusePath, "", "", "", "", "" );
+      feature.setProperty( IAssetValueClass.PROP_LANDUSE_CLASS_LINK, linkedLanduseClassXFeature );
+      final XLinkedFeature_Impl linkedAdministrationUnitXFeature = new XLinkedFeature_Impl( feature, linkedAdministrationUnit.getParentRelation(), linkedAdministrationUnit.getFeatureType(), administrationUnitPath, "", "", "", "", "" );
+      feature.setProperty( IAssetValueClass.PROP_ADMINISTRATION_UNIT_LINK, linkedAdministrationUnitXFeature );
+      feature.setProperty( IAssetValueClass.PROP_ASSET_VALUE, value );
+      feature.setProperty( IAssetValueClass.PROP_DESCRIPTION, description );
+      m_assetValueClasses.add( assetValueClass );
+      return assetValueClass;
+    }
+    catch( final GMLSchemaException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public List<IAssetValueClass> getAssetValueClassesList( )
@@ -98,6 +180,11 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   public List<IDamageFunction> getDamageFunctionsList( )
   {
     return m_damageFunctions;
+  }
+
+  public List<IAdministrationUnit> getAdministrationUnits( )
+  {
+    return m_administrationUnits;
   }
 
   public List<IRiskZoneDefinition> getRiskZoneDefinitionsList( )
@@ -125,7 +212,6 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     return ++maxOrdinal;
   }
 
-  // TODO: check if needed
   public List<String> getLanduseClassID( final String landuseClassName )
   {
     final List<String> list = new ArrayList<String>();
@@ -139,8 +225,8 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   {
     for( final ILanduseClass landuseClass : m_landuseClasses )
     {
-      landuseClass.setMinAnnualDamage( Double.POSITIVE_INFINITY );
-      landuseClass.setMaxAnnualDamage( Double.NEGATIVE_INFINITY );
+      landuseClass.setMinDamage( Double.POSITIVE_INFINITY );
+      landuseClass.setMaxDamage( Double.NEGATIVE_INFINITY );
       landuseClass.setAverageAnnualDamage( 0.0 );
       landuseClass.setTotalDamage( 0.0 );
     }
@@ -152,100 +238,10 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   {
     for( final ILanduseClass landuseClass : m_landuseClasses )
     {
-      if( landuseClass.getMaxAnnualDamage() < 0.0 )
-        landuseClass.setMaxAnnualDamage( 0.0 );
-      if( landuseClass.getMinAnnualDamage() > landuseClass.getMaxAnnualDamage() )
-        landuseClass.setMinAnnualDamage( 0.0 );
+      if( landuseClass.getMaxDamage() < 0.0 )
+        landuseClass.setMaxDamage( 0.0 );
+      if( landuseClass.getMinDamage() > landuseClass.getMaxDamage() )
+        landuseClass.setMinDamage( 0.0 );
     }
-  }
-
-  /**
-   * checks if a damageFunction with the same name, description and value (function) is already existing and returns the
-   * existing one. Otherwise null is returned
-   */
-  public IDamageFunction getDamageFunction( final String name, final String value, final String description )
-  {
-    for( final IDamageFunction damageFunction : m_damageFunctions )
-    {
-      if( damageFunction.getName().equals( name ) && damageFunction.getDescription().equals( description ) && damageFunction.getFunction().equals( value ) )
-        return damageFunction;
-    }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getStatisticObs()
-   */
-  public IObservation<TupleResult> getStatisticObs( )
-  {
-    // final Feature feature = getStatisticObsFeature();
-    // FIXME
-    throw new NotImplementedException();
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getStatisticObsFeature()
-   */
-  public Feature getStatisticObsFeature( )
-  {
-    return (Feature) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getSuggestedAssetValueClass(java.lang.String)
-   */
-  public IAssetValueClass getSuggestedAssetValueClass( final String name )
-  {
-    int minLevenshteinDistance = Integer.MAX_VALUE;
-    IAssetValueClass mostSimilarByLevenshtein = null;
-    IAssetValueClass mostSimilarBySubstring = null;
-    for( final IAssetValueClass assetValueClass : m_assetValueClasses )
-    {
-      final String className = assetValueClass.getName();
-      if( name.equalsIgnoreCase( className ) )
-        return assetValueClass;
-      final int levenshteinDistance = Levenshtein.distance( name, className );
-      if( levenshteinDistance < minLevenshteinDistance )
-      {
-        minLevenshteinDistance = levenshteinDistance;
-        mostSimilarByLevenshtein = assetValueClass;
-      }
-      if( name.indexOf( className ) > -1 || className.indexOf( name ) > -1 )
-        mostSimilarBySubstring = assetValueClass;
-    }
-    if( mostSimilarBySubstring != null )
-      return mostSimilarBySubstring;
-    if( minLevenshteinDistance < 3 )
-      return mostSimilarByLevenshtein;
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getSuggestedDamageFunction(java.lang.String)
-   */
-  public IDamageFunction getSuggestedDamageFunction( final String name )
-  {
-    int minLevenshteinDistance = Integer.MAX_VALUE;
-    IDamageFunction mostSimilarByLevenshtein = null;
-    IDamageFunction mostSimilarBySubstring = null;
-    for( final IDamageFunction damageFunction : m_damageFunctions )
-    {
-      final String className = damageFunction.getName();
-      if( name.equalsIgnoreCase( className ) )
-        return damageFunction;
-      final int levenshteinDistance = Levenshtein.distance( name, className );
-      if( levenshteinDistance < minLevenshteinDistance )
-      {
-        minLevenshteinDistance = levenshteinDistance;
-        mostSimilarByLevenshtein = damageFunction;
-      }
-      if( name.indexOf( className ) > -1 || className.indexOf( name ) > -1 )
-        mostSimilarBySubstring = damageFunction;
-    }
-    if( mostSimilarBySubstring != null )
-      return mostSimilarBySubstring;
-    if( minLevenshteinDistance < 3 )
-      return mostSimilarByLevenshtein;
-    return null;
   }
 }

@@ -18,6 +18,13 @@
       </requires-nature>
    </extension>
    <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.kalypso.model.product.configId"
+            content="content/ext.xml">
+      </configExtension>
+   </extension>
+   <extension
          point="de.renew.workflow.model.workflowSystem">
       <workflowSystem
             definition="etc/workflow.xml"
@@ -29,56 +36,36 @@
        point="org.eclipse.ui.newWizards">
 		<category
             id="org.kalypso.risk.wizard.CreateProject"
-            name="%org.kalypso.risk.wizard.CreateProject"
+            name="Risk Model"
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
 		<wizard
-            canFinishEarly="false"
-	        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
-	        class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
-	        descriptionImage="etc/RiskProjectLogo.gif"
-	        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            hasPages="true"
-	        icon="icons/risk_project.gif"
-	        id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
-	        name="%org.kalypso.risk.project.KalypsoRiskProjectWizard.name"
-            project="true">
-         <description>
-            %org.kalypso.risk.project.KalypsoRiskProjectWizard.description
-         </description>
+        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
+        class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+        icon="icons/risk_project.gif"
+        id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+        name="Kalypso Risk Model"
+        project="true">
+		<description>Creates a new risk project</description>
 		</wizard>
-        <wizard
-            canFinishEarly="false"
-            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
-            class="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
-	        descriptionImage="etc/RiskProjectLogo.gif"
-            finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            hasPages="true"
-            icon="icons/risk_project.gif"
-            id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
-            name="%org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.name"
-            project="true">
-         <description>
-            %org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.description
-         </description>
-		</wizard>
-        <!-- TODO remove both wizard from plugin.xml
-        	They cannot be used from the File-New menu, so this makes no sense.
-        	However, the wizards are invoked thorugh the eclipses-extension mechanism (from the handler)
-        	so the handlers have to be rewritten first (they should dirdctly instantiate those wozards).
-        -->
 		<wizard
             class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             icon="icons/risk_project.gif"
             id="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             name="ImportLanduseShape"
             project="false"/>
-  		<wizard
-	        class="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
-	        icon="icons/risk_project.gif"
-	        id="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
-	        name="ImportWaterlevelRaster"
-	        project="false">
-        </wizard>
+  <wizard
+        class="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
+        icon="icons/risk_project.gif"
+        id="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
+        name="ImportWaterlevelRaster"
+        project="false">
+  </wizard>
+  <wizard
+        class="org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler"
+        id="org.kalypso.risk.model.actions.rasterizeLanduse.RasterizationWizard"
+        name="RasterizationWizard">
+  </wizard>
 	</extension>
  <extension
        point="org.kalypso.contribs.java.urlCatalog">
@@ -94,11 +81,11 @@
     <factory
           adaptableType="org.kalypsodeegree.model.feature.Feature"
           class="org.kalypso.risk.model.schema.KalypsoRiskFeatureFactory">
+       <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IVectorDataModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IRasterDataModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILanduseClass"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection"/>
@@ -119,24 +106,30 @@
     <dataSet
           id="org.kalypso.risk">
        <scenarioDatum
+             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IVectorDataModel"
-             id="org.kalypso.risk.model.schema.binding.IVectorDataModel"
              modelPath="models/VectorDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
+             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterDataModel"
-             id="org.kalypso.risk.model.schema.binding.IRasterDataModel"
              modelPath="models/RasterDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
+             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
-             id="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
              modelPath="models/RasterizationControlModel.gml">
        </scenarioDatum>
     </dataSet>
  </extension>
  <extension
        point="org.kalypso.deegree.functionProperty">
+	<!-- @Dejan: TODO remove if no more needed?-->
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
+          id="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
+          name="VirtualRasterGeometryProperty">
+    </function>
     <function
           class="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
           id="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
@@ -165,7 +158,6 @@
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
-    <!-- Handlers for workflow.xml, so unknown commandId is ok here. -->
     <handler
           class="org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
@@ -211,60 +203,9 @@
     <project
           category="org.kalypso.risk.projectTemplate"
           data="etc/RiskProjectTemplate.zip"
-          description="%org.kalypso.contribs.eclipseplatform.projectTemplate.description"
-          label="%org.kalypso.contribs.eclipseplatform.projectTemplate.label"
+          description="Leere Projektvorlage für Risiko Projekte"
+          label="Leere Vorlage"
           projectName=" ">
     </project>
  </extension>
-   <extension
-                point="org.kalypso.deegree.functionProperty">
-                <function
-                    class="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription"
-                    id="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription"
-                    name="get name from inscription">
-                </function>
-            </extension>
-            <extension
-                point="org.kalypso.core.catalogContribution">
-                <catalogContribution
-                    class="org.kalypso.risk.model.schema.KalypsoRiskCatalogContribution"
-                    name="KalypsoRaiskCatalogContribution (Dictionaries)">
-                </catalogContribution>
-            </extension>
-            <extension
-                  point="org.eclipse.ui.views">
-               <view
-                     allowMultiple="false"
-                     category="org.kalypso.ui.kalypso"
-                     class="org.kalypso.risk.views.RiskStatisticsResultView"
-                     icon="icons/risk_project.gif"
-                     id="org.kalypso.risk.views.RiskStatisticsResultView"
-                     name="%org.kalypso.risk.views.RiskStatisticsResultView.name"
-                     restorable="false">
-               </view>
-            </extension>
-            <extension
-                  point="org.kalypso.simulation.core.simulation">
-               <simulation
-                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
-                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_LanduseRasterization"
-                     typeID="KalypsoRisk_LanduseRasterization">
-               </simulation>
-               <simulation
-                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
-                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation"
-                     typeID="KalypsoRisk_SpecificDamageCalculation">
-               </simulation>
-               <simulation
-                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
-                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation"
-                     typeID="KalypsoRisk_RiskZonesCalculation">
-               </simulation>
-            </extension>
-            <extension
-                  point="org.kalypso.project.database.client.kalypsoModule">
-               <module
-                     module="org.kalypso.risk.extension.KalypsoRiskModule">
-               </module>
-            </extension>
 </plugin>

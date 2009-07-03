@@ -5,17 +5,17 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget;
 import org.kalypso.ui.views.map.MapView;
 
@@ -25,6 +25,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
 
@@ -34,15 +35,14 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
 
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IWorkbenchPage activePage = window.getActivePage();
-    final MapView mapView = (MapView) activePage.findView( MapView.ID );
+    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler.0" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("WaterdepthCollectionsWidgetHandler.0") ); //$NON-NLS-1$
 
-    final IMapPanel mapPanel = mapView.getMapPanel();
+    final MapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler.1" ), Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("WaterdepthCollectionsWidgetHandler.1"), Messages.getString("WaterdepthCollectionsWidgetHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -56,7 +56,10 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
 
     final WaterdepthCollectionsManagementWidget widget = new WaterdepthCollectionsManagementWidget();
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
+    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
+
+    ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
     job.schedule();
 
     return null;

@@ -3,39 +3,39 @@ package org.kalypso.risk.model.actions.specificDamage;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.risk.i18n.Messages;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
+import org.kalypso.risk.model.operation.RiskCalcSpecificDamageRunnable;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
-import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
-import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
+import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
-import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class SpecificDamageCalculationHandler extends AbstractHandler
 {
+  @Override
   public Object execute( final ExecutionEvent arg0 )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -44,69 +44,63 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
 
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.0" ) ); //$NON-NLS-1$
+      StatusUtilities.createWarningStatus( Messages.getString( "DamagePotentialCalculationHandler.0" ) ); //$NON-NLS-1$
       return false;
     }
 
-    final Dialog dialog = new MessageDialog( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.1" ), null, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.3" ), Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Dialog dialog = new MessageDialog( shell, Messages.getString( "DamagePotentialCalculationHandler.1" ), null, Messages.getString( "DamagePotentialCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "DamagePotentialCalculationHandler.3" ), Messages.getString( "DamagePotentialCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     if( dialog.open() == 0 )
     {
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext context = handlerService.getCurrentState();
-      final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
       try
       {
-        final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.MODEL_ID, IRasterizationControlModel.class );
+        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+        final IEvaluationContext context = handlerService.getCurrentState();
+        final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+        final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+        final IRasterDataModel model = scenarioDataProvider.getModel( IRasterDataModel.class );
 
+        final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
+        final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
+        // TODO: check needed? this model is not used in the following code....
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {
-          MessageDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.7" ), Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.7" ), Messages.getString( "DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
 
-        final Job job = new Job( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.6") //$NON-NLS-1$
+        final MapPanel mapPanel = mapView.getMapPanel();
+
+        /* wait for map to load */
+        if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Berechne Schadenspotential", "Fehler beim Öffnen der Karte" ) )
+          return null;
+
+        final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
+
+        final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( model, vectorDataModel, scenarioFolder );
+
+        IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
+        ErrorDialog.openError( shell, "Fehler", "Fehler bei der Schadensberechnung", execute );
+
+        if( !execute.isOK() )
         {
-          @Override
-          protected IStatus run( final IProgressMonitor monitor )
-          {
-            final IStatus status;
-            try
-            {
-              status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.SPECIFIC_DAMAGE_CALCULATION ) );
-              if( status.isOK() )
-              {
-                final IMapPanel mapPanel = mapView.getMapPanel();
-                /* wait for map to load */
-                while( !mapPanel.getMapModell().isLoaded() )
-                  Thread.sleep( 300 );
-                final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
-                final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.MODEL_ID, IRasterDataModel.class );
-                final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
-                final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterDataModel.getSpecificDamageCoverageCollection();
-                RiskModelHelper.updateDamageStyle( sldFile, specificDamageCoverageCollection );
-                RiskModelHelper.updateDamageLayers( scenarioFolder, specificDamageCoverageCollection, mapModell );
-                if( mapView != null )
-                  mapPanel.invalidateMap();
-              }
-            }
-            catch( final Exception e )
-            {
-              ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
-              return Status.CANCEL_STATUS;
-            }
-            return status;
-          }
-        };
-        job.setUser( true );
-        job.schedule( 100 );
+          KalypsoRiskPlugin.getDefault().getLog().log( execute );
+        }
+
+        scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        /* Undoing this operation is not possible because old raster files are deleted */
+        scenarioDataProvider.saveModel( new NullProgressMonitor() );
+
+        RiskModelHelper.updateDamageLayers( scenarioFolder, model, mapModell );
+
+        if( mapView != null )
+          mapPanel.invalidateMap();
       }
       catch( final Exception e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoRiskPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( shell, "", Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-        return null;
+
+        ErrorDialog.openError( shell, "", "Fehler bei der Schadensberechnung", status );
       }
     }
     return null;

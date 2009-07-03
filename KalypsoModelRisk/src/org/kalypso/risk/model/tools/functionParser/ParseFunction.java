@@ -1,7 +1,5 @@
 package org.kalypso.risk.model.tools.functionParser;
 
-import org.kalypso.risk.i18n.Messages;
-
 /***********************************************************************************************************************
  * ************************************************************************* * * Class ParseFunction *
  * ************************************************************************* * Copyright (C) 1996 Leigh Brookshaw * *
@@ -234,68 +232,68 @@ public class ParseFunction extends ScanString
     m_y = 0.0;
     m_z = 0.0;
 
-    addKeyWord( ",", COMMA ); //$NON-NLS-1$
-    addKeyWord( "(", GROUP ); //$NON-NLS-1$
-    addKeyWord( ")", ENDGROUP ); //$NON-NLS-1$
-    addKeyWord( "+", ADD ); //$NON-NLS-1$
-    addKeyWord( "-", SUBTRACT ); //$NON-NLS-1$
-    addKeyWord( "/", DIVIDE ); //$NON-NLS-1$
-    addKeyWord( "*", MULTIPLY ); //$NON-NLS-1$
-    addKeyWord( "log", LOG ); //$NON-NLS-1$
-    addKeyWord( "^", POWER ); //$NON-NLS-1$
-    addKeyWord( "pi", PI ); //$NON-NLS-1$
-    addKeyWord( "e", E ); //$NON-NLS-1$
-    addKeyWord( "sin", SIN ); //$NON-NLS-1$
-    addKeyWord( "cos", COS ); //$NON-NLS-1$
-    addKeyWord( "tan", TAN ); //$NON-NLS-1$
-    addKeyWord( "x", X ); //$NON-NLS-1$
-    addKeyWord( "y", Y ); //$NON-NLS-1$
-    addKeyWord( "z", Z ); //$NON-NLS-1$
-    addKeyWord( "asin", ASIN ); //$NON-NLS-1$
-    addKeyWord( "acos", ACOS ); //$NON-NLS-1$
-    addKeyWord( "atan", ATAN ); //$NON-NLS-1$
-    addKeyWord( "rad", RAD ); //$NON-NLS-1$
-    addKeyWord( "sqrt", SQRT ); //$NON-NLS-1$
-    addKeyWord( "rand", RANDOM ); //$NON-NLS-1$
-    addKeyWord( "log10", LOG10 ); //$NON-NLS-1$
-    addKeyWord( "exp", EXP ); //$NON-NLS-1$
-    addKeyWord( "rem", REMAINDER ); //$NON-NLS-1$
-    addKeyWord( "atan2", ATAN2 ); //$NON-NLS-1$
-    addKeyWord( "j0", J0 ); //$NON-NLS-1$
-    addKeyWord( "j1", J1 ); //$NON-NLS-1$
-    addKeyWord( "jn", JN ); //$NON-NLS-1$
-    addKeyWord( "sinh", SINH ); //$NON-NLS-1$
-    addKeyWord( "cosh", COSH ); //$NON-NLS-1$
-    addKeyWord( "tanh", TANH ); //$NON-NLS-1$
-    addKeyWord( "asinh", ASINH ); //$NON-NLS-1$
-    addKeyWord( "acosh", ACOSH ); //$NON-NLS-1$
-    addKeyWord( "atanh", ATANH ); //$NON-NLS-1$
-    addKeyWord( "y0", Y0 ); //$NON-NLS-1$
-    addKeyWord( "y1", Y1 ); //$NON-NLS-1$
-    addKeyWord( "yn", YN ); //$NON-NLS-1$
-    addKeyWord( "fac", FAC ); //$NON-NLS-1$
-    addKeyWord( "gamma", GAMMA ); //$NON-NLS-1$
-    addKeyWord( "erf", ERF ); //$NON-NLS-1$
-    addKeyWord( "erfc", ERFC ); //$NON-NLS-1$
-    addKeyWord( "normal", NORMAL ); //$NON-NLS-1$
-    addKeyWord( "poissonc", POISSONC ); //$NON-NLS-1$
-    addKeyWord( "poisson", POISSON ); //$NON-NLS-1$
-    addKeyWord( "chisq", CHISQ ); //$NON-NLS-1$
-    addKeyWord( "chisqc", CHISQC ); //$NON-NLS-1$
-    addKeyWord( "igam", IGAM ); //$NON-NLS-1$
-    addKeyWord( "igamc", IGAMC ); //$NON-NLS-1$
+    addKeyWord( ",", COMMA );
+    addKeyWord( "(", GROUP );
+    addKeyWord( ")", ENDGROUP );
+    addKeyWord( "+", ADD );
+    addKeyWord( "-", SUBTRACT );
+    addKeyWord( "/", DIVIDE );
+    addKeyWord( "*", MULTIPLY );
+    addKeyWord( "log", LOG );
+    addKeyWord( "^", POWER );
+    addKeyWord( "pi", PI );
+    addKeyWord( "e", E );
+    addKeyWord( "sin", SIN );
+    addKeyWord( "cos", COS );
+    addKeyWord( "tan", TAN );
+    addKeyWord( "x", X );
+    addKeyWord( "y", Y );
+    addKeyWord( "z", Z );
+    addKeyWord( "asin", ASIN );
+    addKeyWord( "acos", ACOS );
+    addKeyWord( "atan", ATAN );
+    addKeyWord( "rad", RAD );
+    addKeyWord( "sqrt", SQRT );
+    addKeyWord( "rand", RANDOM );
+    addKeyWord( "log10", LOG10 );
+    addKeyWord( "exp", EXP );
+    addKeyWord( "rem", REMAINDER );
+    addKeyWord( "atan2", ATAN2 );
+    addKeyWord( "j0", J0 );
+    addKeyWord( "j1", J1 );
+    addKeyWord( "jn", JN );
+    addKeyWord( "sinh", SINH );
+    addKeyWord( "cosh", COSH );
+    addKeyWord( "tanh", TANH );
+    addKeyWord( "asinh", ASINH );
+    addKeyWord( "acosh", ACOSH );
+    addKeyWord( "atanh", ATANH );
+    addKeyWord( "y0", Y0 );
+    addKeyWord( "y1", Y1 );
+    addKeyWord( "yn", YN );
+    addKeyWord( "fac", FAC );
+    addKeyWord( "gamma", GAMMA );
+    addKeyWord( "erf", ERF );
+    addKeyWord( "erfc", ERFC );
+    addKeyWord( "normal", NORMAL );
+    addKeyWord( "poissonc", POISSONC );
+    addKeyWord( "poisson", POISSON );
+    addKeyWord( "chisq", CHISQ );
+    addKeyWord( "chisqc", CHISQC );
+    addKeyWord( "igam", IGAM );
+    addKeyWord( "igamc", IGAMC );
 
-    addKeyWord( "k", BOLTZMAN ); //$NON-NLS-1$
-    addKeyWord( "ec", ECHARGE ); //$NON-NLS-1$
-    addKeyWord( "me", EMASS ); //$NON-NLS-1$
-    addKeyWord( "mp", PMASS ); //$NON-NLS-1$
-    addKeyWord( "gc", GRAV ); //$NON-NLS-1$
-    addKeyWord( "h", PLANCK ); //$NON-NLS-1$
-    addKeyWord( "c", LIGHTSPEED ); //$NON-NLS-1$
-    addKeyWord( "sigma", STEFANBOLTZ ); //$NON-NLS-1$
-    addKeyWord( "na", AVOGADRO ); //$NON-NLS-1$
-    addKeyWord( "r", GASCONSTANT ); //$NON-NLS-1$
-    addKeyWord( "g", GRAVACC ); //$NON-NLS-1$
+    addKeyWord( "k", BOLTZMAN );
+    addKeyWord( "ec", ECHARGE );
+    addKeyWord( "me", EMASS );
+    addKeyWord( "mp", PMASS );
+    addKeyWord( "gc", GRAV );
+    addKeyWord( "h", PLANCK );
+    addKeyWord( "c", LIGHTSPEED );
+    addKeyWord( "sigma", STEFANBOLTZ );
+    addKeyWord( "na", AVOGADRO );
+    addKeyWord( "r", GASCONSTANT );
+    addKeyWord( "g", GRAVACC );
 
   }
 
@@ -341,13 +339,13 @@ public class ParseFunction extends ScanString
       return false;
     if( debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.61") ); //$NON-NLS-1$
+      System.out.println( "Before Reordering:" );
       root.print( 5 );
     }
     reOrderNodes( root );
     if( debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.62") ); //$NON-NLS-1$
+      System.out.println( "After Reordering:" );
       root.print( 5 );
     }
     return true;
@@ -432,9 +430,9 @@ public class ParseFunction extends ScanString
   {
 
     if( n <= 0 )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.63") ); //$NON-NLS-1$
+      throw new Exception( "Array index error" );
     if( x == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.64") ); //$NON-NLS-1$
+      throw new Exception( "X Array error" );
 
     double array[] = new double[n];
 
@@ -463,11 +461,11 @@ public class ParseFunction extends ScanString
   {
 
     if( n <= 0 )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.65") ); //$NON-NLS-1$
+      throw new Exception( "Array index error" );
     if( x == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.66") ); //$NON-NLS-1$
+      throw new Exception( "X Array error" );
     if( y == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.67") ); //$NON-NLS-1$
+      throw new Exception( "Y Array error" );
 
     double array[] = new double[n];
 
@@ -497,13 +495,13 @@ public class ParseFunction extends ScanString
   {
 
     if( n <= 0 )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.68") ); //$NON-NLS-1$
+      throw new Exception( "Array index error" );
     if( x == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.69") ); //$NON-NLS-1$
+      throw new Exception( "X Array error" );
     if( y == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.70") ); //$NON-NLS-1$
+      throw new Exception( "Y Array error" );
     if( z == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.71") ); //$NON-NLS-1$
+      throw new Exception( "Z Array error" );
 
     double array[] = new double[n];
 
@@ -583,16 +581,16 @@ public class ParseFunction extends ScanString
     // Do some preliminary branching.
     if( token == ERROR )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.72") + sval + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "Error parsing \"" + sval + "\"" );
       return ERROR;
     }
     else if( token != EOS && debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.74") + sval + Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.75") + token ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "Parse: " + sval + "\t Token: " + token );
     }
     else if( token == EOS && debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.76") ); //$NON-NLS-1$
+      System.out.println( "Parse: EOS" );
     }
 
     // Main token switch
@@ -715,7 +713,7 @@ public class ParseFunction extends ScanString
         }
         else
         {
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.77") ); //$NON-NLS-1$
+          System.out.println( "Parse Failed: missing parentheses" );
           token = ERROR;
         }
         break;
@@ -809,7 +807,7 @@ public class ParseFunction extends ScanString
         token = nextWord();
         if( token != GROUP )
         {
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.78") ); //$NON-NLS-1$
+          System.out.println( "Parse Failed: intrinsic function is missing \"(\"" );
           token = ERROR;
         }
         else
@@ -822,7 +820,7 @@ public class ParseFunction extends ScanString
           }
           else
           {
-            System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.79") ); //$NON-NLS-1$
+            System.out.println( "Parse Failed: intrinsic function is missing \")\"" );
             token = ERROR;
           }
         }
@@ -846,10 +844,10 @@ public class ParseFunction extends ScanString
 
         token = nextWord();
         if( debug )
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.80") + sval ); //$NON-NLS-1$
+          System.out.println( "Parse: " + sval );
         if( token != GROUP )
         {
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.81") ); //$NON-NLS-1$
+          System.out.println( "Parse Failed: intrinsic function is missing \"(\"" );
           token = ERROR;
         }
         else
@@ -866,13 +864,13 @@ public class ParseFunction extends ScanString
             }
             else
             {
-              System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.82") ); //$NON-NLS-1$
+              System.out.println( "Parse Failed: intrinsic function is missing \")\"" );
               token = ERROR;
             }
           }
           else
           {
-            System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.83") ); //$NON-NLS-1$
+            System.out.println( "Parse Failed: intrinsic function is missing \",\"" );
             token = ERROR;
           }
         }
@@ -895,7 +893,7 @@ public class ParseFunction extends ScanString
 
     if( node == null )
     {
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.84") ); //$NON-NLS-1$
+      throw new Exception( "evaluate: Failed because of null node!" );
     }
 
     switch( node.type )
@@ -923,7 +921,7 @@ public class ParseFunction extends ScanString
           value = m_z;
         break;
       default:
-        throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.85") ); //$NON-NLS-1$
+        throw new Exception( "evaluate: Unknown type!" );
 
     }
 
@@ -964,7 +962,7 @@ public class ParseFunction extends ScanString
         value = Math.pow( evaluate( node.left ), evaluate( node.right ) );
         break;
       default:
-        throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.86") ); //$NON-NLS-1$
+        throw new Exception( "evaluate: Failed because of Unknown operator!" );
     }
 
     return value;
@@ -1092,7 +1090,7 @@ public class ParseFunction extends ScanString
         break;
 
       default:
-        throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.87") ); //$NON-NLS-1$
+        throw new Exception( "evaluate: Failed because of an unknown intrinsic!" );
     }
 
     return value;
@@ -1222,26 +1220,26 @@ class Node extends Object
   public void indent( int ind )
   {
     for( int i = 0; i < ind; i++ )
-      System.out.print( " " ); //$NON-NLS-1$
+      System.out.print( " " );
   }
 
   public void print( int indentLevel )
   {
     indent( indentLevel );
-    System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.89" + type );  //$NON-NLS-1$
+    System.out.println( "NODE type=" + type );
     indent( indentLevel );
-    System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.90" + precedence );  //$NON-NLS-1$
+    System.out.println( "     prec=" + precedence );
     indent( indentLevel );
     switch( type )
     {
       case Node.VALUE:
-        System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.91" + value );  //$NON-NLS-1$
+        System.out.println( "     value=" + value );
         break;
       case Node.INDEPENDENT:
-        System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.92" + op );  //$NON-NLS-1$
+        System.out.println( "     variable=" + op );
         break;
       default:
-        System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.93" + op );  //$NON-NLS-1$
+        System.out.println( "     op=" + op );
         if( left != null )
           left.print( indentLevel + 5 );
         if( right != null )

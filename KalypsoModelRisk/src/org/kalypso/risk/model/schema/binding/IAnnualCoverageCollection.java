@@ -12,11 +12,11 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public interface IAnnualCoverageCollection extends ICoverageCollection
 {
-  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "AnnualCoverage" ); //$NON-NLS-1$
+  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "AnnualCoverage" );
 
-  public QName PROP_COVERAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "coverage" ); //$NON-NLS-1$
+  public QName PROP_COVERAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "coverage" );
 
-  public QName PROP_ANNUALITY = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "annuality" ); //$NON-NLS-1$
+  public QName PROP_ANNUALITY = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "annuality" );
 
   public Integer getReturnPeriod( );
 

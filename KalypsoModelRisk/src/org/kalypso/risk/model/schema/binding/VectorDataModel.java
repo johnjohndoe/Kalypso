@@ -1,6 +1,6 @@
 package org.kalypso.risk.model.schema.binding;
 
-import org.kalypso.afgui.model.UnversionedModel;
+import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 
 public class VectorDataModel extends UnversionedModel implements IVectorDataModel

@@ -41,7 +41,6 @@
 package org.kalypso.risk.model.services;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,18 +56,16 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
-import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.plugin.RasterizedLanduseThemeInfo;
 import org.kalypso.risk.plugin.RiskZonesThemeInfo;
-import org.kalypsodeegree.graphics.sld.Layer;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -88,15 +85,15 @@ public class LanduseStyleUpdateService extends Job
 
   public LanduseStyleUpdateService( final IFile file )
   {
-    super( Messages.getString( "org.kalypso.risk.model.services.LanduseStyleUpdateService.0" ) ); //$NON-NLS-1$
+    super( "Aktualisere SLD Dienst" );
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_dbFile = file;
-    m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
-    m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" ); //$NON-NLS-1$
-    m_riskZonesSymbolyzerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
+    m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" );
+    m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" );
+    m_riskZonesSymbolyzerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" );
   }
 
   /**
@@ -108,21 +105,25 @@ public class LanduseStyleUpdateService extends Job
     try
     {
       final URL databaseUrl = ResourceUtilities.createURL( m_dbFile );
-      final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl ); //$NON-NLS-1$
+      final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl );
 
-      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-      final GMLWorkspace workspace = (GMLWorkspace) pool.getObject( poolKey );
-      if( workspace == null )
-        return Status.OK_STATUS;
+      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      GMLWorkspace workspace;
 
+      synchronized( this )
+      {
+        do
+        {
+          Thread.sleep( 100 );
+          workspace = (GMLWorkspace) pool.getObject( poolKey );
+        }
+        while( workspace == null );
+      }
       final IRasterizationControlModel model = (IRasterizationControlModel) workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
       final List<ILanduseClass> landuseClassesList = model.getLanduseClassesList();
       if( landuseClassesList != null && landuseClassesList.size() > 0 )
       {
-        final List<Layer> layers = new ArrayList<Layer>();
-        layers.add( SLDHelper.polygonStyleLayer( null, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor ) );
-
-        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, layers.toArray( new Layer[0] ), monitor );
+        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor );
         SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), null, null, monitor );
         final HashMap<Double, String> values = new HashMap<Double, String>();
         for( final ILanduseClass landuseClass : landuseClassesList )
