@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" xmlns:pedo="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" xmlns:par="http://www.tuhh.de/parameter" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified" >
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+		<documentation>Layer of Pedologie (Soiltype/Bodennutzung) used to build the hydrotopes.</documentation>
+	</annotation>
+
+	<import namespace="http://www.opengis.net/gml" />
+	<import namespace="http://www.tuhh.de/parameter" />
+
+	<element name="SoiltypeCollection" substitutionGroup="gml:_Feature">
+		<complexType>
+			<complexContent>
+				<extension base="gml:AbstractFeatureType">
+					<sequence>
+						<element name="soiltypeMember" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence minOccurs="1">
+									<element ref="pedo:Soiltype" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
+	<!-- Definition of the members of the above collection. Just a simple feature. -->
+	<element name="Soiltype" substitutionGroup="gml:_Feature">
+		<complexType>
+			<complexContent>
+				<extension base="gml:AbstractFeatureType">
+					<sequence>
+						<element name="location" type="gml:MultiPolygonPropertyType" />
+						<element name="soilTypeLink">
+							<complexType>
+								<sequence minOccurs="0" maxOccurs="0">
+									<element ref="par:Soiltype" />
+								</sequence>
+								<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+							</complexType>
+						</element>
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
+
+</schema>
