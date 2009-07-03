@@ -1,0 +1,33 @@
+24
+n       temperatur
+j       Niederschlag
+n	schnee
+n	nbof bodenfeuchte
+n	l3 daten bodensp
+j	grundwasserstand
+j	gesamtabfluss
+n	nqgg
+j	nqa
+j	nqif
+j	qqvs
+j	basisabfluss
+n	kluftgrundw1
+n	kluftgrundw
+j	grundwasser
+n	kapil.aufstieg/perkolation
+n	ninf
+n	evapo nvet
+j	abflussbilanz
+n	
+n	statistische abflusswerte
+n	speicherinhalt
+n	speicherueberlauf
+7300
+99999
+7301
+99999
+19950825
+19960707
+20000316
+20020810
+999999
