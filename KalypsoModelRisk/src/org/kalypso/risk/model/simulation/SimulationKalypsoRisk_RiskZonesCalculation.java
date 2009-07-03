@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation;
 
@@ -55,7 +55,6 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
@@ -71,7 +70,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -94,7 +93,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
@@ -108,7 +107,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "Specification_RiskZonesCalculation.xml" ); //$NON-NLS-1$
+    return getClass().getResource( "Specification_RiskZonesCalculation.xml" );
   }
 
   /**
@@ -129,12 +128,12 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       final GMLWorkspace vectorModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.VECTOR_MODEL.name() ), null );
       final IVectorDataModel vectorModel = (IVectorDataModel) vectorModelWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
 
-      final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
+      final File outputRasterTmpDir = new File( tmpdir, "outputRaster" );
       outputRasterTmpDir.mkdir();
-
-      doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor );
-      final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
-      GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" ); //$NON-NLS-1$
+      // doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 0.5 );
+      doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 1.0 );
+      final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir );
+      GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" );
       resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
       resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.name(), outputRasterTmpDir );
     }
@@ -144,26 +143,20 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     }
   }
 
-  private void doRiskZonesCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor ) throws SimulationException
+  private void doRiskZonesCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor, final double chainProcessWeight ) throws SimulationException
   {
-    monitor.setMessage( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ) ); //$NON-NLS-1$
+    monitor.setMessage( Messages.getString( "RiskZonesCalculationHandler.7" ) ); //$NON-NLS-1$
 
     if( rasterModel.getSpecificDamageCoverageCollection().isEmpty() )
-      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
 
     try
     {
       /* remove existing (invalid) coverages from the model and clean statistic */
-      final ICoverageCollection coverageCollection = rasterModel.getRiskZonesCoverage();
-      for( final ICoverage coverage : coverageCollection )
-        CoverageManagementHelper.deleteGridFile( coverage );
-
-      coverageCollection.clear();
+      rasterModel.getRiskZonesCoverage().clear();
       controlModel.resetStatistics();
 
       final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
-      for( final ICoverage coverage : outputCoverages )
-        CoverageManagementHelper.deleteGridFile( coverage );
 
       final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( rasterModel.getSpecificDamageCoverageCollection() );
       final ICoverageCollection baseCoverages = maxCoveragesCollection;
@@ -176,7 +169,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
         final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(), controlModel.getLanduseClassesList(), controlModel.getRiskZoneDefinitionsList() );
 
         // TODO: change name: better: use input name
-        final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
+        final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
@@ -184,8 +177,8 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
         outputGrid.dispose();
         inputGrid.dispose();
 
-        newCoverage.setName(Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.4" ) + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
-        newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
+        newCoverage.setName( org.kalypso.risk.Messages.getString( "RiskCalcRiskZonesRunnable.4" ) + i + org.kalypso.risk.Messages.getString( "RiskCalcRiskZonesRunnable.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        newCoverage.setDescription( Messages.getString( "RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
         final GMLWorkspace workspace = rasterModel.getFeature().getWorkspace();
@@ -205,7 +198,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.6" ) + org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.4") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new SimulationException( org.kalypso.risk.Messages.getString( "RiskCalcRiskZonesRunnable.6" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$
     }
 
   }
@@ -261,8 +254,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
   {
     /* add the landuse class name component */
     final String landuseHeader = "Landuse"; //$NON-NLS-1$
-    
-    final Component componentLanduse = new Component( "", landuseHeader, landuseHeader, "","", XmlTypes.XS_STRING, "null", new Phenomenon( "", landuseHeader, landuseHeader ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    final Component componentLanduse = new Component( "", landuseHeader, landuseHeader, "", "", XmlTypes.XS_STRING, "null", new Phenomenon( "", landuseHeader, landuseHeader ) );
     result.addComponent( componentLanduse );
 
     final int numOfDataColumns = riskLanduseStatistics.length;
@@ -276,13 +268,13 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       final String headerNameFloodedArea = "FloodedArea_" + eventName;//$NON-NLS-1$
       final String headerNameAveragedDamage = "AverageDamage_" + eventName;//$NON-NLS-1$
 
-      final IComponent valueComponentTotalDamage = new Component( "", headerNameTotalDamage, headerNameTotalDamage, "none", "", XmlTypes.XS_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "TotalDamage", headerNameTotalDamage ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      final IComponent valueComponentTotalDamage = new Component( "", headerNameTotalDamage, headerNameTotalDamage, "none", "", XmlTypes.XS_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "TotalDamage", headerNameTotalDamage ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       result.addComponent( valueComponentTotalDamage );
 
-      final IComponent valueComponentFloodedArea = new Component( "", headerNameFloodedArea, headerNameFloodedArea, "none", "", XmlTypes.XS_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "FloodedArea", headerNameFloodedArea ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      final IComponent valueComponentFloodedArea = new Component( "", headerNameFloodedArea, headerNameFloodedArea, "none", "", XmlTypes.XS_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "FloodedArea", headerNameFloodedArea ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       result.addComponent( valueComponentFloodedArea );
 
-      final IComponent valueComponentAveragedDamage = new Component( "", headerNameAveragedDamage, headerNameAveragedDamage, "none", "", XmlTypes.XS_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "AveragedDamage", headerNameAveragedDamage ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      final IComponent valueComponentAveragedDamage = new Component( "", headerNameAveragedDamage, headerNameAveragedDamage, "none", "", XmlTypes.XS_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "AveragedDamage", headerNameAveragedDamage ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       result.addComponent( valueComponentAveragedDamage );
     }
 
@@ -320,7 +312,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
           final IComponent component = components[i];
           final String compName = component.getName();
 
-          final String[] split = compName.split( "_" ); //$NON-NLS-1$
+          final String[] split = compName.split( "_" );
 
           final String eventType = split[0];
           if( split.length > 1 )
@@ -329,13 +321,13 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
             if( eventName.equals( statistic.getName() ) )
             {
-              if( eventType.equals( "TotalDamage" ) ) //$NON-NLS-1$
+              if( eventType.equals( "TotalDamage" ) )
                 newRecord.setValue( i, statistic.getTotalDamage() );
 
-              if( eventType.equals( "FloodedArea" ) ) //$NON-NLS-1$
+              if( eventType.equals( "FloodedArea" ) )
                 newRecord.setValue( i, statistic.getFloodedArea() );
 
-              if( eventType.equals( "AverageDamage" ) ) //$NON-NLS-1$
+              if( eventType.equals( "AverageDamage" ) )
                 newRecord.setValue( i, statistic.getAverageDamage() );
             }
           }
@@ -380,7 +372,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     final int columnSize = result.getComponents().length;
 
     /* name */
-    lastRecord.setValue( 0, "Total" ); //$NON-NLS-1$
+    lastRecord.setValue( 0, "Total" );
 
     final Map<String, RiskStatisticTableValues> eventMap = new HashMap<String, RiskStatisticTableValues>();
 
@@ -442,7 +434,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
         final RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
         if( statisticTableValues == null )
-          System.out.println( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.18") ); //$NON-NLS-1$
+          System.out.println( "error while comupting risk statistic table" );
 
         if( eventType.equals( "AverageDamage" ) )//$NON-NLS-1$
         {
@@ -525,7 +517,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       final String compName = rowComp.getName();
       final String[] split = compName.split( "_" );//$NON-NLS-1$
       final String eventType = split[0];
-      if( eventType.equals( "AverageDamage" ) && split.length > 1 ) //$NON-NLS-1$
+      if( eventType.equals( "AverageDamage" ) && split.length > 1 )
       {
         final String eventName = split[1];
 

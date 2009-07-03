@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * Project Nature for risk simulation, requires {@link org.kalypso.afgui.ScenarioHandlingProjectNature}
- *
+ * 
  * @author Patrice Congo, Stefan Kurzbach
  */
 public class KalypsoRiskProjectNature implements IProjectNature
@@ -68,7 +68,7 @@ public class KalypsoRiskProjectNature implements IProjectNature
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  public void configure( )
+  public void configure( ) throws CoreException
   {
   }
 

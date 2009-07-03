@@ -52,8 +52,13 @@
 		================================================================== -->
         <xs:element name="landuseClassMember" type="krrcm:LanduseClassPropertyType">
                 <xs:annotation>
-                        <xs:documentation >
-                                      Land-Use Classes
+                        <xs:documentation xml:lang="de">
+                                <xs:label>Landnutzungsklassen</xs:label>
+                                <xs:tooltip>Landnutzungsklassen</xs:tooltip>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="en">
+                                <xs:label>Land-Use Classes</xs:label>
+                                <xs:tooltip>Land-Use Classes</xs:tooltip>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -68,15 +73,15 @@
 		================================================================== -->
         <xs:element name="LanduseClass" type="krrcm:LanduseClassType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="de">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="en">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -96,13 +101,13 @@
                                 <xs:sequence>
                                         <xs:element name="name" type="xs:string">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Landnutzungsklasse
-                                                                Landnutzungsklasse
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Landnutzungsklasse</xs:label>
+                                                                <xs:tooltip>Landnutzungsklasse</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Land-Use Class
-                                                                Land-Use Class
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Land-Use Class</xs:label>
+                                                                <xs:tooltip>Land-Use Class</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -110,95 +115,95 @@
                                         <xs:element name="ordinalNumber" type="xs:int"/>
                                         <xs:element name="damageFunctionLink" type="krrcm:DamageFunctionLinkType" nillable="true">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Schadensfunktionsname
-                                                                Liefert für den jeweiligen Nutzungstyp den Schädigungsgrad (Vulnerabilität) in Prozent in Abhängigkeit der Einstauhöhe.
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Schadensfunktionsname</xs:label>
+                                                                <xs:tooltip>Liefert für den jeweiligen Nutzungstyp den Schädigungsgrad (Vulnerabilität) in Prozent in Abhängigkeit der Einstauhöhe.</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Name of Damage Function
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Name of Damage Function</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="landuseRiskTypeLink" type="krrcm:LanduseRiskTypeLinkType" nillable="true">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Kategorie
-                                                                Für Einteilung in die Risikozonen
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Kategorie</xs:label>
+                                                                <xs:tooltip>Für Einteilung in die Risikozonen</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Category
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Category</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="AssetValueClassLink" type="krrcm:AssetValueClassLinkType" nillable="true">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Vermögenswert-Klasse
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Vermögenswert-Klasse</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Asset Value Class
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Asset Value Class</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="colorStyle" type="common:color">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Farbdarstellung
-                                                                Farbdarstellung der Landnutzungsklasse in der Karte
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Farbdarstellung</xs:label>
+                                                                <xs:tooltip>Farbdarstellung der Landnutzungsklasse in der Karte</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Color Style
-                                                                Color Style of Land-Use Class in the Map
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Color Style</xs:label>
+                                                                <xs:tooltip>Color Style of Land-Use Class in the Map</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element ref="krrcm:statisticClassMember" minOccurs="0" maxOccurs="unbounded">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Statistische Daten
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Statistische Daten</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Statistic Data
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Statistic Data</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="minDamage" type="xs:double" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Min. mittlerer Schaden an einer einzelnen Rasterzelle [€/m²/a]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Min. mittlerer Schaden an einer einzelnen Rasterzelle [€/m²/a]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Min. Avg. Damage at a Single Raster Cell [€/m²/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Min. Avg. Damage at a Single Raster Cell [€/m²/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="maxDamage" type="xs:double" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Max. mittlerer Schaden an einer einzelnen Rasterzelle [€/m²/a]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Max. mittlerer Schaden an einer einzelnen Rasterzelle [€/m²/a]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Max. Avg. Damage at a Single Raster Cell [€/m²/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Max. Avg. Damage at a Single Raster Cell [€/m²/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="averageAnnualDamage" type="xs:double" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Mittlerer jährlicher Schadenserwartungswert [€/m²/a]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Mittlerer jährlicher Schadenserwartungswert [€/m²/a]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Average Annual Damage [€/m²/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Average Annual Damage [€/m²/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="totalDamage" type="xs:double" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Gesamtschaden [€/a]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Gesamtschaden [€/a]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Total Damage [€/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Total Damage [€/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -222,11 +227,11 @@
 		================================================================== -->
         <xs:element name="StatisticClass" type="krrcm:StatisticClassType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
-                        <xs:documentation >
-                                <![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-kein Name-}]]>
+                        <xs:documentation xml:lang="de">
+                                <xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-kein Name-}]]></xs:label>
                         </xs:documentation>
-                        <xs:documentation >
-                                <![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no Name-}]]>
+                        <xs:documentation xml:lang="en">
+                                <xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no Name-}]]></xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -239,81 +244,81 @@
                                 <xs:sequence>
                                         <xs:element name="statReturnPeriod" type="xs:int">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Wiederkehrintervall [a]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Wiederkehrintervall [a]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Return Period [a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Return Period [a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="statMinDamage" type="xs:decimal" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Min. spez. Schaden an einer einzelnen Rasterzelle [€/m²]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Min. spez. Schaden an einer einzelnen Rasterzelle [€/m²]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Min. Spec. Damage at a Single Raster Cell [€/m²]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Min. Spec. Damage at a Single Raster Cell [€/m²]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="statMaxDamage" type="xs:decimal" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Max. spez. Schaden an einer einzelnen Rasterzelle [€/m²]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Max. spez. Schaden an einer einzelnen Rasterzelle [€/m²]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Max. Spec. Damage at a Single Raster Cell [€/m²] [€/m²/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Max. Spec. Damage at a Single Raster Cell [€/m²] [€/m²/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="statAverageDamage" type="xs:decimal" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Mittlerer spez. Schaden für eine einzelne Rasterzelle [€/m²]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Mittlerer spez. Schaden für eine einzelne Rasterzelle [€/m²]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Average Spec. Damage for a Single Raster Cell [€/m²] [€/m²/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Average Spec. Damage for a Single Raster Cell [€/m²] [€/m²/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="statAverageAnnualDamage" type="xs:decimal" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Mittlerer jährlicher Schadenserwartungswert [€/m²/a]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Mittlerer jährlicher Schadenserwartungswert [€/m²/a]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Average Annual Damage [€/m²/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Average Annual Damage [€/m²/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="statSumDamage" type="xs:decimal" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Summe der spezifischen Schäden [€/m²]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Summe der spezifischen Schäden [€/m²]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Summation of the Spec. Damages [€/m²]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Summation of the Spec. Damages [€/m²]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="statTotalDamage" type="xs:decimal" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Gesamtschaden [€]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Gesamtschaden [€]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Total Damage [€]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Total Damage [€]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="statFloodedArea" type="xs:decimal" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                betroffene Fläche [m²]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>betroffene Fläche [m²]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Flooded Area [m²]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Flooded Area [m²]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -327,13 +332,13 @@
 		================================================================== -->
         <xs:element name="assetValueClassMember" type="krrcm:AssetValueClassPropertyType">
                 <xs:annotation>
-                        <xs:documentation >
-                                spez. Vermögenswerte
-                                spez. Vermögenswerte
+                        <xs:documentation xml:lang="de">
+                                <xs:label>spez. Vermögenswerte</xs:label>
+                                <xs:tooltip>spez. Vermögenswerte</xs:tooltip>
                         </xs:documentation>
-                        <xs:documentation >
-                                Asset Values
-                                Asset Values
+                        <xs:documentation xml:lang="en">
+                                <xs:label>Asset Values</xs:label>
+                                <xs:tooltip>Asset Values</xs:tooltip>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -348,17 +353,17 @@
 		================================================================== -->
         <xs:element name="AssetValueClass" type="krrcm:AssetValueClassType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
-                        <xs:documentation >
+                        <xs:documentation xml:lang="de">
                                 <xs:name>spez. Vermögenswert</xs:name>
-                                
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
-                        <xs:documentation >
+                        <xs:documentation xml:lang="en">
                                 <xs:name>Asset Value</xs:name>
-                                
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- no name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -378,35 +383,35 @@
                                 <xs:sequence>
                                         <xs:element name="name" type="xs:string" default="---">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Vermögenswert-Klasse
-                                                                Vermögenswert-Klasse
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Vermögenswert-Klasse</xs:label>
+                                                                <xs:tooltip>Vermögenswert-Klasse</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Asset Value Class
-                                                                Asset Value Class
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Asset Value Class</xs:label>
+                                                                <xs:tooltip>Asset Value Class</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="description" type="xs:string"/>
                                         <xs:element name="administrationUnitLink" type="krrcm:AdministrationUnitLinkType" nillable="true">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Verwaltungseinheit
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Verwaltungseinheit</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Administration unit
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Administration unit</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="value" type="xs:double" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                spezifischer Vermögenswert [€/m²]
-                                                                maximaler Vermögenswert (für jede Landnutzungsklasse)
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>spezifischer Vermögenswert [€/m²]</xs:label>
+                                                                <xs:tooltip>maximaler Vermögenswert (für jede Landnutzungsklasse)</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Asset Value [€/m²]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Asset Value [€/m²]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -421,13 +426,13 @@
 		================================================================== -->
         <xs:element name="damageFunctionMember" type="krrcm:DamageFunctionPropertyType">
                 <xs:annotation>
-                        <xs:documentation >
-                                Schadensfunktionen
-                                Schadensfunktionen
+                        <xs:documentation xml:lang="de">
+                                <xs:label>Schadensfunktionen</xs:label>
+                                <xs:tooltip>Schadensfunktionen</xs:tooltip>
                         </xs:documentation>
-                        <xs:documentation >
-                                Damage Functions
-                                Damage Functions
+                        <xs:documentation xml:lang="en">
+                                <xs:label>Damage Functions</xs:label>
+                                <xs:tooltip>Damage Functions</xs:tooltip>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -442,17 +447,17 @@
 		================================================================== -->
         <xs:element name="DamageFunction" type="krrcm:DamageFunctionType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
-                        <xs:documentation >
+                        <xs:documentation xml:lang="de">
                                 <xs:name>Schadensfunktion</xs:name>
-                                
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
-                        <xs:documentation >
+                        <xs:documentation xml:lang="en">
                                 <xs:name>Damage Function</xs:name>
-                                
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- no name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -472,26 +477,26 @@
                                 <xs:sequence>
                                         <xs:element name="name" type="xs:string" default="---">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Schadenfunktionsname
-                                                                Schadenfunktionsname
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Schadenfunktionsname</xs:label>
+                                                                <xs:tooltip>Schadenfunktionsname</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Name of Damage Function
-                                                                Name of Damage Function
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Name of Damage Function</xs:label>
+                                                                <xs:tooltip>Name of Damage Function</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="description" type="xs:string"/>
                                         <xs:element name="function" type="xs:string">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Funktion
-                                                                Funktion
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Funktion</xs:label>
+                                                                <xs:tooltip>Funktion</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Function
-                                                                Function
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Function</xs:label>
+                                                                <xs:tooltip>Function</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -516,15 +521,15 @@
 		================================================================== -->
         <xs:element name="AdministrationUnit" type="krrcm:AdministrationUnitType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="de">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="en">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -544,13 +549,13 @@
                                 <xs:sequence>
                                         <xs:element name="name" type="xs:string">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Verwaltungseinheit
-                                                                Verwaltungseinheit
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Verwaltungseinheit</xs:label>
+                                                                <xs:tooltip>Verwaltungseinheit</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Administration Unit
-                                                                Administration Unit
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Administration Unit</xs:label>
+                                                                <xs:tooltip>Administration Unit</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -566,13 +571,13 @@
 		================================================================== -->
         <xs:element name="landuseRiskTypeMember" type="krrcm:LanduseRiskTypePropertyType">
                 <xs:annotation>
-                        <xs:documentation >
-                                Kategorien
-                                Kategorien
+                        <xs:documentation xml:lang="de">
+                                <xs:label>Kategorien</xs:label>
+                                <xs:tooltip>Kategorien</xs:tooltip>
                         </xs:documentation>
-                        <xs:documentation >
-                                Categories
-                                Categories
+                        <xs:documentation xml:lang="en">
+                                <xs:label>Categories</xs:label>
+                                <xs:tooltip>Categories</xs:tooltip>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -587,15 +592,15 @@
 		================================================================== -->
         <xs:element name="LanduseRiskType" type="krrcm:LanduseRiskTypeType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="de">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="en">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -615,13 +620,13 @@
                                 <xs:sequence>
                                         <xs:element name="name" type="xs:string">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Kategorie
-                                                                Kategorie
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Kategorie</xs:label>
+                                                                <xs:tooltip>Kategorie</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Category
-                                                                Category
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Category</xs:label>
+                                                                <xs:tooltip>Category</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -638,13 +643,13 @@
 		================================================================== -->
         <xs:element name="riskZoneDefinitionMember" type="krrcm:RiskZoneDefinitionPropertyType">
                 <xs:annotation>
-                        <xs:documentation >
-                                Risikozonen
-                                Risikozonen
+                        <xs:documentation xml:lang="de">
+                                <xs:label>Risikozonen</xs:label>
+                                <xs:tooltip>Risikozonen</xs:tooltip>
                         </xs:documentation>
-                        <xs:documentation >
-                                Risk Zones
-                                Risk Zones
+                        <xs:documentation xml:lang="en">
+                                <xs:label>Risk Zones</xs:label>
+                                <xs:tooltip>Risk Zones</xs:tooltip>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -659,15 +664,15 @@
 		================================================================== -->
         <xs:element name="RiskZoneDefinition" type="krrcm:RiskZoneDefinitionType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="de">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
-                        <xs:documentation >
-                                
+                        <xs:documentation xml:lang="en">
+                                <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
-                                
+                                </xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>
@@ -687,68 +692,68 @@
                                 <xs:sequence>
                                         <xs:element name="name" type="xs:string">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Risikozone
-                                                                Risikozone
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Risikozone</xs:label>
+                                                                <xs:tooltip>Risikozone</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Risk Zone
-                                                                Risk Zone
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Risk Zone</xs:label>
+                                                                <xs:tooltip>Risk Zone</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="description" type="xs:string"/>
                                         <xs:element name="lowerBoundaryValue" type="xs:double" default="0.0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                unterer Grenzwert für Risikozone [€/m²/a]
-                                                                unterer Grenzwert für Risikozone [€/m²/a]
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>unterer Grenzwert für Risikozone [€/m²/a]</xs:label>
+                                                                <xs:label>unterer Grenzwert für Risikozone [€/m²/a]</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Lower Zone Boundary Value [€/m²/a]
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Lower Zone Boundary Value [€/m²/a]</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="colorStyle" type="common:color">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Farbdarstellung
-                                                                Farbdarstellung der Rizikozone in der Karte
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Farbdarstellung</xs:label>
+                                                                <xs:tooltip>Farbdarstellung der Rizikozone in der Karte</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Color Style
-                                                                Color Style of Risk Zone in the Map
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Color Style</xs:label>
+                                                                <xs:tooltip>Color Style of Risk Zone in the Map</xs:tooltip>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="zoneInternalNumber" type="xs:int" default="0">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Ordnungszahl
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Ordnungszahl</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Ordinal Number
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Ordinal Number</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="isUrbanLanduseType" type="xs:boolean" default="false">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Städtischer Bereich
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Städtischer Bereich</xs:label>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Urban area
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Urban area</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="landuseRiskTypeLink" type="krrcm:LanduseRiskTypeLinkType" nillable="true">
                                                 <xs:annotation>
-                                                        <xs:documentation >
-                                                                Kategorie
-                                                                Für Einteilung in die Risikozonen
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>Kategorie</xs:label>
+                                                                <xs:tooltip>Für Einteilung in die Risikozonen</xs:tooltip>
                                                         </xs:documentation>
-                                                        <xs:documentation >
-                                                                Category
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Category</xs:label>
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
@@ -800,11 +805,11 @@
         </xs:complexType>
         <xs:element name="RiskStatisticResult" type="krrcm:RiskStatisticResultType" substitutionGroup="om:Observation">
                 <xs:annotation>
-                        <xs:documentation >
-                                Statistische Auswertung
+                        <xs:documentation xml:lang="de">
+                                <xs:label>Statistische Auswertung</xs:label>
                         </xs:documentation>
-                        <xs:documentation >
-                                Statistical Overview
+                        <xs:documentation xml:lang="en">
+                                <xs:label>Statistical Overview</xs:label>
                         </xs:documentation>
                 </xs:annotation>
         </xs:element>

@@ -60,11 +60,11 @@ public interface ISimulationSpecKalypsoRisk
       switch( kind )
       {
         case LANDUSE_RASTERIZATION:
-          return "KalypsoRisk_LanduseRasterization"; //$NON-NLS-1$
+          return "KalypsoRisk_LanduseRasterization";
         case SPECIFIC_DAMAGE_CALCULATION:
-          return "KalypsoRisk_SpecificDamageCalculation"; //$NON-NLS-1$
+          return "KalypsoRisk_SpecificDamageCalculation";
         case RISK_ZONES_CALCULATION:
-          return "KalypsoRisk_RiskZonesCalculation"; //$NON-NLS-1$
+          return "KalypsoRisk_RiskZonesCalculation";
         default:
           throw new NotImplementedException();
       }
@@ -86,20 +86,20 @@ public interface ISimulationSpecKalypsoRisk
       switch( kind )
       {
         case CONTROL_MODEL:
-          return "models/RasterizationControlModel.gml"; //$NON-NLS-1$
+          return "models/RasterizationControlModel.gml";
         case RASTER_MODEL:
-          return "models/RasterDataModel.gml"; //$NON-NLS-1$
+          return "models/RasterDataModel.gml";
         case VECTOR_MODEL:
-          return "models/VectorDataModel.gml"; //$NON-NLS-1$
+          return "models/VectorDataModel.gml";
         case INPUT_RASTER_FOLDER:
-          return "models/raster/input"; //$NON-NLS-1$
+          return "models/raster/input";
         case OUTPUT_RASTER_FOLDER:
-          return "models/raster/output"; //$NON-NLS-1$
+          return "models/raster/output";
         default:
           throw new NotImplementedException();
       }
     }
   }
 
-  public static String CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX = "raster/output/"; //$NON-NLS-1$
+  public static String CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX = "raster/output/";
 }

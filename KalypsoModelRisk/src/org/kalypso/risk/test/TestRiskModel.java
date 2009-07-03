@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.test;
 
@@ -87,18 +87,18 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * This test extracts demo input data (landuse shape and waterdepth grids) from resources and converts them into risk
  * data format. <br>
  * This test only checks, if the input raster will be converted, but will not save the altered gml files.<br>
- *
+ * 
  * As a next step, the test uses a pre-defined set of risk-gmls in order to create the output raster data for:
  * <li>specific damage
  * <li>risk zones <br>
  * by using the converted input data (see above).
- *
+ * 
  * <br>
  * <br>
  * Run this test as plug-in test.
- *
+ * 
  * @author Thomas Jung
- *
+ * 
  */
 public class TestRiskModel extends TestCase
 {
@@ -108,7 +108,7 @@ public class TestRiskModel extends TestCase
 
   private static final QName PROP_ASSET_VALUES_CLASSES_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "assetValueClassesCollection" ); //$NON-NLS-1$
 
-  @SuppressWarnings( { "unchecked" })
+  @SuppressWarnings( { "unchecked", "restriction" })//$NON-NLS-1$ //$NON-NLS-2$
   public void testRiskModel( ) throws MalformedURLException, Exception
   {
     // unzip test project into workspace
@@ -171,6 +171,8 @@ public class TestRiskModel extends TestCase
     // //$NON-NLS-1$
     final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template //$NON-NLS-1$
     // //$NON-NLS-1$
+
+    final boolean wrongLandUseselectedStatus = false; // status of landuse selection
 
     /* IMPORT PREDEFINED DATA */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Konvertiere Landnutzung in GML...\n" ); //$NON-NLS-1$ //$NON-NLS-2$

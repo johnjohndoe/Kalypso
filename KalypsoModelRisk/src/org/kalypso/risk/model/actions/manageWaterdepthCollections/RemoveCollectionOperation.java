@@ -54,14 +54,14 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
 
         /* Delete coverage from collection */
         final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
-        final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IRasterDataModel.class.getName() );
+        final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IRasterDataModel.class );
         workspace.postCommand( command );
       }
 
       /*
        * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
        */
-      m_provider.saveModel( IRasterDataModel.class.getName(), new SubProgressMonitor( monitor, 1 ) );
+      m_provider.saveModel( IRasterDataModel.class, new SubProgressMonitor( monitor, 1 ) );
     }
     catch( final Exception e )
     {

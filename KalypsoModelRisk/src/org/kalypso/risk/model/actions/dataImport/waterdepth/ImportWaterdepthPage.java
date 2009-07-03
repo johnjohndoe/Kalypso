@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.transformation.ui.CRSSelectionListener;
@@ -63,9 +63,9 @@ public class ImportWaterdepthPage extends WizardPage
 
   public ImportWaterdepthPage( )
   {
-    super( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$ //$NON-NLS-2$
-    setTitle( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.2" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.3" ) ); //$NON-NLS-1$
+    super( Messages.getString( "ImportWaterdepthPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$ //$NON-NLS-2$
+    setTitle( Messages.getString( "ImportWaterdepthPage.2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportWaterdepthPage.3" ) ); //$NON-NLS-1$
     m_rasterInfos = new ArrayList<AsciiRasterInfo>();
   }
 
@@ -116,7 +116,7 @@ public class ImportWaterdepthPage extends WizardPage
     group.setLayout( groupLayout );
     group.setLayoutData( infoCompositeGridData );
     group.layout();
-    group.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.12" ) ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ImportWaterdepthPage.12" ) ); //$NON-NLS-1$
 
     createControlInfoPart( group );
 
@@ -135,15 +135,15 @@ public class ImportWaterdepthPage extends WizardPage
     m_tableViewer.setLayoutData( gridData );
 
     final TableColumn fileColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    fileColumn.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.13" ) ); //$NON-NLS-1$
+    fileColumn.setText( Messages.getString( "ImportWaterdepthPage.13" ) ); //$NON-NLS-1$
     fileColumn.setWidth( 200 );
 
     final TableColumn annualityColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    annualityColumn.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.14" ) ); //$NON-NLS-1$
+    annualityColumn.setText( Messages.getString( "ImportWaterdepthPage.14" ) ); //$NON-NLS-1$
     annualityColumn.setWidth( 50 );
 
     final TableColumn csColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    csColumn.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.15" ) ); //$NON-NLS-1$
+    csColumn.setText( Messages.getString( "ImportWaterdepthPage.15" ) ); //$NON-NLS-1$
     csColumn.setWidth( 80 );
 
     m_tableViewer.setSize( 300, 250 );
@@ -176,7 +176,7 @@ public class ImportWaterdepthPage extends WizardPage
     m_imageList.add( addButtonImage );
 
     m_btnAddNew.setImage( addButtonImage );
-    m_btnAddNew.setToolTipText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.11" ) ); //$NON-NLS-1$
+    m_btnAddNew.setToolTipText( Messages.getString( "ImportWaterdepthPage.11" ) ); //$NON-NLS-1$
     m_btnAddNew.addSelectionListener( new SelectionListener()
     {
       public void widgetDefaultSelected( final SelectionEvent e )
@@ -216,7 +216,7 @@ public class ImportWaterdepthPage extends WizardPage
     m_imageList.add( deleteButtonImage );
 
     m_btnDeleteSelected.setImage( deleteButtonImage );
-    m_btnDeleteSelected.setToolTipText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.16" ) ); //$NON-NLS-1$
+    m_btnDeleteSelected.setToolTipText( Messages.getString( "ImportWaterdepthPage.16" ) ); //$NON-NLS-1$
     m_btnDeleteSelected.setEnabled( false );
     m_btnDeleteSelected.addSelectionListener( new SelectionListener()
     {
@@ -239,28 +239,28 @@ public class ImportWaterdepthPage extends WizardPage
   {
 
     final Label lbl1 = new Label( parent, SWT.NONE );
-    lbl1.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.17" ) ); //$NON-NLS-1$
+    lbl1.setText( Messages.getString( "ImportWaterdepthPage.17" ) ); //$NON-NLS-1$
     m_fldRasterSize = new Text( parent, SWT.BORDER );
     m_fldRasterSize.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     m_fldRasterSize.setEditable( false );
     m_fldRasterSize.setText( "" ); //$NON-NLS-1$
 
     final Label lbl2 = new Label( parent, SWT.NONE );
-    lbl2.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.19" ) ); //$NON-NLS-1$
+    lbl2.setText( Messages.getString( "ImportWaterdepthPage.19" ) ); //$NON-NLS-1$
     m_fldOffset = new Text( parent, SWT.BORDER );
     m_fldOffset.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     m_fldOffset.setEditable( false );
     m_fldOffset.setText( "" ); //$NON-NLS-1$
 
     final Label lbl3 = new Label( parent, SWT.NONE );
-    lbl3.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.21" ) ); //$NON-NLS-1$
+    lbl3.setText( Messages.getString( "ImportWaterdepthPage.21" ) ); //$NON-NLS-1$
     m_fldCellSize = new Text( parent, SWT.BORDER );
     m_fldCellSize.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     m_fldCellSize.setEditable( false );
     m_fldCellSize.setText( "" ); //$NON-NLS-1$
 
     final Label lbl5 = new Label( parent, SWT.NONE );
-    lbl5.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.27" ) ); //$NON-NLS-1$
+    lbl5.setText( Messages.getString( "ImportWaterdepthPage.27" ) ); //$NON-NLS-1$
     m_fldReturnPeriod = new Spinner( parent, SWT.BORDER );
     m_fldReturnPeriod.setLayout( new GridLayout() );
     m_fldReturnPeriod.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
@@ -292,7 +292,7 @@ public class ImportWaterdepthPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.30" ) ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "ImportWaterdepthPage.30" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -314,7 +314,7 @@ public class ImportWaterdepthPage extends WizardPage
         }
         else
         {
-          MessageDialog.openError( parent.getShell(), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.25" ), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.26" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( parent.getShell(), Messages.getString( "ImportWaterdepthPage.25" ), Messages.getString( "ImportWaterdepthPage.26" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );

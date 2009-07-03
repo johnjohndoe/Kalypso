@@ -13,8 +13,8 @@
 			grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="2" numRows="4"
 			makeColumnsEqualWidth="false" horizontalSpacing="10" />
-<!-- text="Risikozonen" -->
-		<gft:group property="krrcm:riskZoneDefinitionMember" style="0">
+
+		<gft:group text="Risikozonen" style="0">
 			<gft:gridData horizontalSpan="2" verticalSpan="2"
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" heightHint="200"
@@ -28,17 +28,17 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="zoneInternalNumber" width="90" /><!--  label="Ordnungszahl" -->
+							format="" label="Ordnungszahl" name="zoneInternalNumber" width="90" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="name" width="250" /><!-- label="Risikozone"  -->
+							format="" label="Risikozone" name="name" width="250" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format=""  name="isUrbanLanduseType" width="120" /><!-- label="Ist bebaute Fläche?" -->
+							format="" label="Ist bebaute Fläche?" name="isUrbanLanduseType" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format=""  name="lowerBoundaryValue" width="200" /><!-- label="unterer Grenzwert für Risikozone [€/m²/a]" -->
+							format="" label="unterer Grenzwert für Risikozone [€/m²/a]" name="lowerBoundaryValue" width="200" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="colorStyle" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format=""  name="description" width="600" /><!-- label="Beschreibung" -->
+							format="" label="Beschreibung" name="description" width="600" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>

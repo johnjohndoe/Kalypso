@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -34,7 +34,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final String m_landuseProperty;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private final List m_shapeFeatureList;
 
   private final IRasterizationControlModel m_controlModel;
@@ -43,7 +43,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public RiskImportNewLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
@@ -53,19 +53,20 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
   }
 
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
     {
-      monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.7" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "ImportLanduseWizard.7" ) ); //$NON-NLS-1$
 
       final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection();
 
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
-      monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.10" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 
       landusePolygonCollection.clear();
 
@@ -95,7 +96,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.risk.model.operation.RiskImportDBLanduseRunnable.4" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "RiskImportDBLanduseRunnable.4" ) ); //$NON-NLS-1$
     }
   }
 

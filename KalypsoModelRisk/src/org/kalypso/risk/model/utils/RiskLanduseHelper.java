@@ -58,7 +58,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class RiskLanduseHelper
 {
@@ -93,7 +93,7 @@ public class RiskLanduseHelper
         landuseClass.setName( landuseType );
         landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
         landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-        landuseClass.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.0" ) ); //$NON-NLS-1$
+        landuseClass.setDescription( Messages.getString( "RiskLanduseHelper.0" ) ); //$NON-NLS-1$
         final IAssetValueClass suggestedAssetValueClass = controlModel.getSuggestedAssetValueClass( landuseClass.getName() );
         if( suggestedAssetValueClass != null )
           landuseClass.setAssetValue( suggestedAssetValueClass );
@@ -109,12 +109,12 @@ public class RiskLanduseHelper
     if( !landuseClass.containsStatisticEntry( returnPeriod ) )
     {
       final IRiskLanduseStatistic entry = landuseClass.createNewStatisticEntry();
-      final String entryName = String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.1" ), returnPeriod ); //$NON-NLS-1$
+      final String entryName = String.format( Messages.getString( "RiskLanduseHelper.1" ), returnPeriod ); //$NON-NLS-1$
 
       entry.setName( entryName );
       entry.setReturnPeriod( returnPeriod );
       entry.setCellSize( new BigDecimal( cellSize ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      entry.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.2" ) + returnPeriod + Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      entry.setDescription( Messages.getString( "RiskLanduseHelper.2" ) + returnPeriod + Messages.getString( "RiskLanduseHelper.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return entry;
     }
 
@@ -165,7 +165,7 @@ public class RiskLanduseHelper
     {
       final Map<String, String> landuseClassesGmlIDsMap = new HashMap<String, String>();
       final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<String, String>();
-      final URL url = new URL( scenarioFolder.getLocation().append( "/models/RasterizationControlModel.gml" ).toPortableString() ); //$NON-NLS-1$
+      final URL url = new URL( scenarioFolder.getLocation().append( "/models/RasterizationControlModel.gml" ).toPortableString() );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
       final List<Feature> landuseClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
       final List<Feature> assetValueClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
@@ -223,6 +223,7 @@ public class RiskLanduseHelper
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
@@ -325,7 +326,7 @@ public class RiskLanduseHelper
   @SuppressWarnings("unchecked")
   public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
-    monitor.subTask( Messages.getString( "org.kalypso.risk.model.utils.ImportLanduseWizard.9" ) ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
     final List<Feature> createdFeatures = new ArrayList<Feature>();
 
     for( int i = 0; i < shapeFeatureList.size(); i++ )
@@ -347,7 +348,7 @@ public class RiskLanduseHelper
           final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
           polygon.setGeometry( surface );
           polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
-          polygon.getFeature().setEnvelopesUpdated();
+          polygon.getFeature().invalidEnvelope();
           createdFeatures.add( polygon.getFeature() );
           // style and landuse class ordinal number will be set automatically (property functions)
         }
@@ -358,11 +359,11 @@ public class RiskLanduseHelper
         polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
         polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
         // polygon.setStyleType( shpPropertyValue );
-        polygon.getFeature().setEnvelopesUpdated();
+        polygon.getFeature().invalidEnvelope();
         createdFeatures.add( polygon.getFeature() );
       }
       else
-        throw new RuntimeException( Messages.getString( "org.kalypso.risk.model.utils.ImportLanduseWizard.4" ) + shpGeometryProperty.getClass().getName() ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "ImportLanduseWizard.4" ) + shpGeometryProperty.getClass().getName() ); //$NON-NLS-1$
     }
     return createdFeatures;
   }
@@ -385,7 +386,7 @@ public class RiskLanduseHelper
     return null;
   }
 
-  public static HashSet<String> getLanduseTypeSet( final List< ? > shapeFeatureList, final String propertyLanduse )
+  public static HashSet<String> getLanduseTypeSet( final List shapeFeatureList, final String propertyLanduse )
   {
     final HashSet<String> set = new HashSet<String>();
 

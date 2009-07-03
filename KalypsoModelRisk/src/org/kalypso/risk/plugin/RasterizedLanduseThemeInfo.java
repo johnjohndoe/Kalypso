@@ -8,12 +8,12 @@ import java.util.Properties;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 public class RasterizedLanduseThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
 {
-  public static final String DEFAULT_FORMAT_STRING = Messages.getString("org.kalypso.risk.plugin.RasterizedLanduseThemeInfo.0"); //$NON-NLS-1$
+  public static final String DEFAULT_FORMAT_STRING = Messages.getString("RasterizedLanduseThemeInfo.0"); //$NON-NLS-1$
 
   private static Map<Double, String> LANDUSE_CLASSES_MAP = new HashMap<Double, String>();
 
@@ -51,7 +51,7 @@ public class RasterizedLanduseThemeInfo extends CoverageThemeInfo implements IKa
     catch( Exception e )
     {
       e.printStackTrace();
-      formatter.format( Messages.getString("org.kalypso.risk.plugin.RasterizedLanduseThemeInfo.1"), e.toString() ); //$NON-NLS-1$
+      formatter.format( Messages.getString("RasterizedLanduseThemeInfo.1"), e.toString() ); //$NON-NLS-1$
     }
   }
 

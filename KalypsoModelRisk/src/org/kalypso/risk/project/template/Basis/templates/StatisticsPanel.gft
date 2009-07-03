@@ -11,25 +11,26 @@
 		<gft:gridData verticalAlignment="GridData.FILL"
 			horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 			grabExcessHorizontalSpace="true" />
-		<gft:gridLayout numColumns="2" 
+		<gft:gridLayout numColumns="2" numRows="4"
 			makeColumnsEqualWidth="false" horizontalSpacing="10" />
-<!-- text="Landnutzungsklassen" -->
-		<gft:group property="krrcm:landuseClassMember" style="0">
+
+		<gft:group text="Landnutzungsklassen" style="0">
 			<gft:gridData horizontalSpan="2" verticalSpan="2"
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" heightHint="200"
 				grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
-			<gft:gridLayout numColumns="2" horizontalSpacing="10" />
+			<gft:gridLayout numColumns="2" horizontalSpacing="10"
+				numRows="2" />
 			<gft:table property="krrcm:landuseClassMember"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.FILL"
 					grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 				<ns1:gistableview>
-					<ns1:layer id="X" linktype="">
+					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="false"
-							format=""  name="colorStyle" width="180" /><!-- label="Farbe der Landnutzungsklasse" -->
+							format="" label="Farbe der Landnutzungsklasse" name="colorStyle" width="180" />
 						<ns1:column alignment="SWT.LEFT" editable="false"
-							format="" name="name" width="180" /><!-- label="Landnutzungsklasse"   -->
+							format="" label="Landnutzungsklasse" name="name" width="180" />
 						<ns1:column alignment="SWT.LEFT" editable="false"
 							format="%.2f" name="minDamage" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="false"

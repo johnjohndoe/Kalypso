@@ -1,6 +1,6 @@
 package org.kalypso.risk.model.tools.functionParser;
 
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 
 /***********************************************************************************************************************
  * ************************************************************************* * * Class ParseFunction *
@@ -341,13 +341,13 @@ public class ParseFunction extends ScanString
       return false;
     if( debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.61") ); //$NON-NLS-1$
+      System.out.println( Messages.getString("ParseFunction.61") ); //$NON-NLS-1$
       root.print( 5 );
     }
     reOrderNodes( root );
     if( debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.62") ); //$NON-NLS-1$
+      System.out.println( Messages.getString("ParseFunction.62") ); //$NON-NLS-1$
       root.print( 5 );
     }
     return true;
@@ -432,9 +432,9 @@ public class ParseFunction extends ScanString
   {
 
     if( n <= 0 )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.63") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.63") ); //$NON-NLS-1$
     if( x == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.64") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.64") ); //$NON-NLS-1$
 
     double array[] = new double[n];
 
@@ -463,11 +463,11 @@ public class ParseFunction extends ScanString
   {
 
     if( n <= 0 )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.65") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.65") ); //$NON-NLS-1$
     if( x == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.66") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.66") ); //$NON-NLS-1$
     if( y == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.67") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.67") ); //$NON-NLS-1$
 
     double array[] = new double[n];
 
@@ -497,13 +497,13 @@ public class ParseFunction extends ScanString
   {
 
     if( n <= 0 )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.68") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.68") ); //$NON-NLS-1$
     if( x == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.69") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.69") ); //$NON-NLS-1$
     if( y == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.70") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.70") ); //$NON-NLS-1$
     if( z == null )
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.71") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.71") ); //$NON-NLS-1$
 
     double array[] = new double[n];
 
@@ -583,16 +583,16 @@ public class ParseFunction extends ScanString
     // Do some preliminary branching.
     if( token == ERROR )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.72") + sval + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString("ParseFunction.72") + sval + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
       return ERROR;
     }
     else if( token != EOS && debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.74") + sval + Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.75") + token ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString("ParseFunction.74") + sval + Messages.getString("ParseFunction.75") + token ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else if( token == EOS && debug )
     {
-      System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.76") ); //$NON-NLS-1$
+      System.out.println( Messages.getString("ParseFunction.76") ); //$NON-NLS-1$
     }
 
     // Main token switch
@@ -715,7 +715,7 @@ public class ParseFunction extends ScanString
         }
         else
         {
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.77") ); //$NON-NLS-1$
+          System.out.println( Messages.getString("ParseFunction.77") ); //$NON-NLS-1$
           token = ERROR;
         }
         break;
@@ -809,7 +809,7 @@ public class ParseFunction extends ScanString
         token = nextWord();
         if( token != GROUP )
         {
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.78") ); //$NON-NLS-1$
+          System.out.println( Messages.getString("ParseFunction.78") ); //$NON-NLS-1$
           token = ERROR;
         }
         else
@@ -822,7 +822,7 @@ public class ParseFunction extends ScanString
           }
           else
           {
-            System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.79") ); //$NON-NLS-1$
+            System.out.println( Messages.getString("ParseFunction.79") ); //$NON-NLS-1$
             token = ERROR;
           }
         }
@@ -846,10 +846,10 @@ public class ParseFunction extends ScanString
 
         token = nextWord();
         if( debug )
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.80") + sval ); //$NON-NLS-1$
+          System.out.println( Messages.getString("ParseFunction.80") + sval ); //$NON-NLS-1$
         if( token != GROUP )
         {
-          System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.81") ); //$NON-NLS-1$
+          System.out.println( Messages.getString("ParseFunction.81") ); //$NON-NLS-1$
           token = ERROR;
         }
         else
@@ -866,13 +866,13 @@ public class ParseFunction extends ScanString
             }
             else
             {
-              System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.82") ); //$NON-NLS-1$
+              System.out.println( Messages.getString("ParseFunction.82") ); //$NON-NLS-1$
               token = ERROR;
             }
           }
           else
           {
-            System.out.println( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.83") ); //$NON-NLS-1$
+            System.out.println( Messages.getString("ParseFunction.83") ); //$NON-NLS-1$
             token = ERROR;
           }
         }
@@ -895,7 +895,7 @@ public class ParseFunction extends ScanString
 
     if( node == null )
     {
-      throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.84") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString("ParseFunction.84") ); //$NON-NLS-1$
     }
 
     switch( node.type )
@@ -923,7 +923,7 @@ public class ParseFunction extends ScanString
           value = m_z;
         break;
       default:
-        throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.85") ); //$NON-NLS-1$
+        throw new Exception( Messages.getString("ParseFunction.85") ); //$NON-NLS-1$
 
     }
 
@@ -964,7 +964,7 @@ public class ParseFunction extends ScanString
         value = Math.pow( evaluate( node.left ), evaluate( node.right ) );
         break;
       default:
-        throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.86") ); //$NON-NLS-1$
+        throw new Exception( Messages.getString("ParseFunction.86") ); //$NON-NLS-1$
     }
 
     return value;
@@ -1092,7 +1092,7 @@ public class ParseFunction extends ScanString
         break;
 
       default:
-        throw new Exception( Messages.getString("org.kalypso.risk.model.tools.functionParser.ParseFunction.87") ); //$NON-NLS-1$
+        throw new Exception( Messages.getString("ParseFunction.87") ); //$NON-NLS-1$
     }
 
     return value;
@@ -1228,20 +1228,20 @@ class Node extends Object
   public void print( int indentLevel )
   {
     indent( indentLevel );
-    System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.89" + type );  //$NON-NLS-1$
+    System.out.println( Messages.getString("ParseFunction.89") + type ); //$NON-NLS-1$
     indent( indentLevel );
-    System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.90" + precedence );  //$NON-NLS-1$
+    System.out.println( Messages.getString("ParseFunction.90") + precedence ); //$NON-NLS-1$
     indent( indentLevel );
     switch( type )
     {
       case Node.VALUE:
-        System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.91" + value );  //$NON-NLS-1$
+        System.out.println( Messages.getString("ParseFunction.91") + value ); //$NON-NLS-1$
         break;
       case Node.INDEPENDENT:
-        System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.92" + op );  //$NON-NLS-1$
+        System.out.println( Messages.getString("ParseFunction.92") + op ); //$NON-NLS-1$
         break;
       default:
-        System.out.println( "org.kalypso.risk.model.tools.functionParser.ParseFunction.93" + op );  //$NON-NLS-1$
+        System.out.println( Messages.getString("ParseFunction.93") + op ); //$NON-NLS-1$
         if( left != null )
           left.print( indentLevel + 5 );
         if( right != null )

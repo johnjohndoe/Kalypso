@@ -4,6 +4,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -16,7 +17,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -33,11 +34,11 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.0" ) ); //$NON-NLS-1$
+      StatusUtilities.createWarningStatus( Messages.getString( "RiskZonesCalculationHandler.0" ) ); //$NON-NLS-1$
       return false;
     }
 
-    final Dialog dialog = new MessageDialog( shell, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.1" ), null, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.3" ), Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Dialog dialog = new MessageDialog( shell, Messages.getString( "RiskZonesCalculationHandler.1" ), null, Messages.getString( "RiskZonesCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "RiskZonesCalculationHandler.3" ), Messages.getString( "RiskZonesCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     if( dialog.open() != 0 )
       return null;
 
@@ -47,7 +48,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
       final IEvaluationContext context = handlerService.getCurrentState();
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final Job job = new Job( Messages.getString("org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.10") )  //$NON-NLS-1$
+      final Job job = new Job( Messages.getString( "RiskZonesCalculationHandler.8" ) )
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
@@ -59,7 +60,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
           }
           catch( final Exception e )
           {
-            ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.5" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
+            ErrorDialog.openError( shell, Messages.getString( "RiskZonesCalculationHandler.5" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
             return Status.CANCEL_STATUS;
           }
           return status;

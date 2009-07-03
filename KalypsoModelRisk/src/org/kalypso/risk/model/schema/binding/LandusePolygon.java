@@ -3,7 +3,7 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
 import org.kalypso.risk.model.utils.RiskPolygonStatistics;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
@@ -14,7 +14,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class LandusePolygon extends AbstractFeatureBinder implements ILandusePolygon
-{ 
+{
   private long m_statisticsNumberOfRasterCells = 0;
 
   private double m_statisticsAverageAnnualDamage = 0.0;
@@ -107,7 +107,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
       if( damagefunctionValue > 1 )
       {
-        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         damagefunctionValue = 1.0;
       }
 
@@ -175,7 +175,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
       // check if function is parsable
       if( !damageFunction.parse() )
-        throw new IllegalArgumentException( Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.5" ) + getDamageFunctionProp().toString() ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "LandusePolygon.5" ) + getDamageFunctionProp().toString() ); //$NON-NLS-1$
       else
         return damageFunction;
     }

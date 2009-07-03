@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
@@ -87,9 +87,9 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
 
   public ImportLanduseWizardPage( )
   {
-    super( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    setTitle( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.2" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.3" ) ); //$NON-NLS-1$
+    super( Messages.getString( "ImportLanduseWizardPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    setTitle( Messages.getString( "ImportLanduseWizardPage.2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportLanduseWizardPage.3" ) ); //$NON-NLS-1$
 
     m_fileExtensions = new LinkedList<String>();
   }
@@ -109,14 +109,14 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     container.setLayout( gridLayout );
     setControl( container );
 
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.4" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "ImportLanduseWizardPage.4" ) ); //$NON-NLS-1$
     txt_InputFile = new Text( container, SWT.BORDER );
     txt_InputFile.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     btn_inputLanduseFileBrowse = new Button( container, SWT.NONE );
-    btn_inputLanduseFileBrowse.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.11" ) ); //$NON-NLS-1$
+    btn_inputLanduseFileBrowse.setText( Messages.getString( "ImportLanduseWizardPage.11" ) ); //$NON-NLS-1$
 
     // Landuse property combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.12" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "ImportLanduseWizardPage.12" ) ); //$NON-NLS-1$
     cmb_ShapeProperty = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     final GridData gd0 = new GridData();
     gd0.horizontalAlignment = GridData.FILL;
@@ -139,7 +139,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.21" ) ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "ImportLanduseWizardPage.21" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -160,7 +160,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     groupGridData.horizontalSpan = 3;
     dbGroup.setLayout( groupGridLayout );
     dbGroup.setLayoutData( groupGridData );
-    dbGroup.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.14" ) ); //$NON-NLS-1$
+    dbGroup.setText( Messages.getString( "ImportLanduseWizardPage.14" ) ); //$NON-NLS-1$
 
     final GridData radioLayoutData = new GridData( SWT.FILL, SWT.FILL, true, true );
     radioLayoutData.horizontalSpan = 3;
@@ -170,35 +170,35 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     m_radioButtons = new Button[3];
     m_radioButtons[0] = new Button( dbGroup, SWT.RADIO );
     m_radioButtons[0].setSelection( true );
-    m_radioButtons[0].setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.15" ) ); //$NON-NLS-1$
+    m_radioButtons[0].setText( Messages.getString( "ImportLanduseWizardPage.15" ) ); //$NON-NLS-1$
     m_radioButtons[0].setLayoutData( radioLayoutData );
 
     m_radioButtons[1] = new Button( dbGroup, SWT.RADIO );
-    m_radioButtons[1].setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.16" ) ); //$NON-NLS-1$
+    m_radioButtons[1].setText( Messages.getString( "ImportLanduseWizardPage.16" ) ); //$NON-NLS-1$
     m_radioButtons[1].setLayoutData( radioLayoutData );
     m_lblRadioSelection_1 = new Label( dbGroup, SWT.NONE );
-    m_lblRadioSelection_1.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.17" ) ); //$NON-NLS-1$
+    m_lblRadioSelection_1.setText( Messages.getString( "ImportLanduseWizardPage.17" ) ); //$NON-NLS-1$
     m_lblRadioSelection_1.setEnabled( false );
     m_txtExternalProjectPath = new Text( dbGroup, SWT.BORDER );
     m_txtExternalProjectPath.setEnabled( false );
     m_txtExternalProjectPath.setEditable( false );
     m_txtExternalProjectPath.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL ) );
     btn_existingDatabaseBrowse = new Button( dbGroup, SWT.NONE );
-    btn_existingDatabaseBrowse.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.11" ) ); //$NON-NLS-1$
+    btn_existingDatabaseBrowse.setText( Messages.getString( "ImportLanduseWizardPage.11" ) ); //$NON-NLS-1$
     btn_existingDatabaseBrowse.setEnabled( false );
 
     m_radioButtons[2] = new Button( dbGroup, SWT.RADIO );
-    m_radioButtons[2].setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.18" ) ); //$NON-NLS-1$
+    m_radioButtons[2].setText( Messages.getString( "ImportLanduseWizardPage.18" ) ); //$NON-NLS-1$
     m_radioButtons[2].setLayoutData( radioLayoutData );
     m_lblRadioSelection_21 = new Label( dbGroup, SWT.NONE );
-    m_lblRadioSelection_21.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.19" ) ); //$NON-NLS-1$
+    m_lblRadioSelection_21.setText( Messages.getString( "ImportLanduseWizardPage.19" ) ); //$NON-NLS-1$
     m_lblRadioSelection_21.setEnabled( false );
     m_cmbDamageFunctionsSources = new Combo( dbGroup, SWT.BORDER | SWT.READ_ONLY );
     m_cmbDamageFunctionsSources.setEnabled( false );
     m_cmbDamageFunctionsSources.setLayoutData( comboLayoutData );
 
     m_lblRadioSelection_22 = new Label( dbGroup, SWT.NONE );
-    m_lblRadioSelection_22.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.20" ) ); //$NON-NLS-1$
+    m_lblRadioSelection_22.setText( Messages.getString( "ImportLanduseWizardPage.20" ) ); //$NON-NLS-1$
     m_lblRadioSelection_22.setEnabled( false );
     m_cmbAssetValuesSources = new Combo( dbGroup, SWT.BORDER | SWT.READ_ONLY );
     m_cmbAssetValuesSources.setEnabled( false );
@@ -295,14 +295,14 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.6" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "ImportLanduseWizardPage.6" ) ); //$NON-NLS-1$
       return;
     }
     else if( sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile() //$NON-NLS-1$ //$NON-NLS-2$
         && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile() ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizardPage.10" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "ImportLanduseWizardPage.10" ) ); //$NON-NLS-1$
       return;
     }
     setMessage( null );

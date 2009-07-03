@@ -29,38 +29,30 @@
        point="org.eclipse.ui.newWizards">
 		<category
             id="org.kalypso.risk.wizard.CreateProject"
-            name="%org.kalypso.risk.wizard.CreateProject"
+            name="Risk Model"
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
 		<wizard
-            canFinishEarly="false"
 	        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
 	        class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
-	        descriptionImage="etc/RiskProjectLogo.gif"
+	        descriptionImage="icons/risk_project.gif"
 	        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            hasPages="true"
 	        icon="icons/risk_project.gif"
 	        id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
-	        name="%org.kalypso.risk.project.KalypsoRiskProjectWizard.name"
-            project="true">
-         <description>
-            %org.kalypso.risk.project.KalypsoRiskProjectWizard.description
-         </description>
+	        name="Kalypso Risk Model"
+	        project="true">
+			<description>Creates a new risk project</description>
 		</wizard>
         <wizard
-            canFinishEarly="false"
-            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
-            class="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
-	        descriptionImage="etc/RiskProjectLogo.gif"
-            finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            hasPages="true"
-            icon="icons/risk_project.gif"
-            id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
-            name="%org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.name"
-            project="true">
-         <description>
-            %org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.description
-         </description>
-		</wizard>
+              canFinishEarly="false"
+              category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
+              class="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+              descriptionImage="icons/risk_project.gif"
+              finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+              hasPages="true"
+              icon="icons/risk_project.gif"
+              id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+              name="Kalypso RISK Model - Demo Projekt"
+              project="true"/>
         <!-- TODO remove both wizard from plugin.xml
         	They cannot be used from the File-New menu, so this makes no sense.
         	However, the wizards are invoked thorugh the eclipses-extension mechanism (from the handler)
@@ -94,6 +86,7 @@
     <factory
           adaptableType="org.kalypsodeegree.model.feature.Feature"
           class="org.kalypso.risk.model.schema.KalypsoRiskFeatureFactory">
+       <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IVectorDataModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IRasterDataModel"/>
@@ -119,16 +112,19 @@
     <dataSet
           id="org.kalypso.risk">
        <scenarioDatum
+             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IVectorDataModel"
              id="org.kalypso.risk.model.schema.binding.IVectorDataModel"
              modelPath="models/VectorDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
+             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterDataModel"
              id="org.kalypso.risk.model.schema.binding.IRasterDataModel"
              modelPath="models/RasterDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
+             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
              id="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
              modelPath="models/RasterizationControlModel.gml">
@@ -137,6 +133,12 @@
  </extension>
  <extension
        point="org.kalypso.deegree.functionProperty">
+	<!-- @Dejan: TODO remove if no more needed?-->
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
+          id="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
+          name="VirtualRasterGeometryProperty">
+    </function>
     <function
           class="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
           id="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
@@ -211,8 +213,8 @@
     <project
           category="org.kalypso.risk.projectTemplate"
           data="etc/RiskProjectTemplate.zip"
-          description="%org.kalypso.contribs.eclipseplatform.projectTemplate.description"
-          label="%org.kalypso.contribs.eclipseplatform.projectTemplate.label"
+          description="Leere Projektvorlage für Risiko Projekte"
+          label="Leere Vorlage"
           projectName=" ">
     </project>
  </extension>
@@ -239,7 +241,7 @@
                      class="org.kalypso.risk.views.RiskStatisticsResultView"
                      icon="icons/risk_project.gif"
                      id="org.kalypso.risk.views.RiskStatisticsResultView"
-                     name="%org.kalypso.risk.views.RiskStatisticsResultView.name"
+                     name="Risk Statistics View"
                      restorable="false">
                </view>
             </extension>
@@ -262,7 +264,7 @@
                </simulation>
             </extension>
             <extension
-                  point="org.kalypso.project.database.client.kalypsoModule">
+                  point="org.kalypso.afgui.kalypsoModule">
                <module
                      module="org.kalypso.risk.extension.KalypsoRiskModule">
                </module>

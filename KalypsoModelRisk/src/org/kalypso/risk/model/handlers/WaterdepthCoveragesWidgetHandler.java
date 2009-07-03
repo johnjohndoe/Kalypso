@@ -20,7 +20,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.ui.views.map.MapView;
 
 public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -42,13 +42,13 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
     {
-      throw new ExecutionException( Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "WaterdepthCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
     }
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.3", "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.5" ) )  //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "WaterdepthCoveragesWidgetHandler.1" ), Messages.getString( "WaterdepthCoveragesWidgetHandler.2" ) ) )
     {
       return null;
     }
@@ -66,17 +66,16 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
 
     try
     {
-      final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
       final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
       widget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
-      widget.setAllowUserChangeGridFolder( false );
 
       final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
       job.schedule();
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.6"), e ); //$NON-NLS-1$
+      throw new ExecutionException( "Failed", e );
     }
 
     return Status.OK_STATUS;

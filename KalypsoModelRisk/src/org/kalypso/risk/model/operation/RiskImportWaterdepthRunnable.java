@@ -19,7 +19,7 @@ import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.ConvertAscii2Binary;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -48,10 +48,10 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
 
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ImportWaterdepthWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
     {
-      monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
 
       final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
 
@@ -65,7 +65,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IFile dstRasterIFile = m_scenarioFolder.getFile( dstFileName );
         final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
 
-        final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( asciiRasterInfo.getSourceFile().toURI().toURL(), dstRasterFile, 2, asciiRasterInfo.getCoordinateSystem() );
+        final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( asciiRasterInfo.getSourceFile().toURL(), dstRasterFile, 2, asciiRasterInfo.getCoordinateSystem() );
         ascii2Binary.doConvert( monitor );
 
         // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
@@ -82,7 +82,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
           waterdepthCoverageCollection.remove( coverageToRemove );
 
         final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-        annualCoverageCollection.setName( Messages.getString( "org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable.0" ) + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
+        annualCoverageCollection.setName( org.kalypso.risk.Messages.getString( "RiskImportWaterdepthRunnable.0" ) + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
         annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
         final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
         final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
@@ -92,7 +92,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         coverage.setRangeSet( rangeSetFile );
         coverage.setGridDomain( ascii2Binary.getGridDomain() );
         coverage.setName( binFileName );
-        coverage.setDescription( Messages.getString( "org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable.1" ) + asciiRasterInfo.getSourceFile().getName() ); //$NON-NLS-1$
+        coverage.setDescription( org.kalypso.risk.Messages.getString( "RiskImportWaterdepthRunnable.1" ) + asciiRasterInfo.getSourceFile().getName() ); //$NON-NLS-1$
 
         dstRasterIFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
       }
@@ -102,7 +102,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e,Messages.getString( "org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable.2" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString( "RiskImportWaterdepthRunnable.2" ) ); //$NON-NLS-1$
     }
   }
 }

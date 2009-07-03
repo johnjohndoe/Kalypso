@@ -49,7 +49,7 @@ public class KalypsoRiskDemoProjectWizard extends org.kalypso.afgui.wizards.NewP
 
   public KalypsoRiskDemoProjectWizard(  )
   {
-    super( "org.kalypso.model.risk.demoProject", true ); //$NON-NLS-1$
+    super( "org.kalypso.model.risk.demoProject", true );
   }
 
 

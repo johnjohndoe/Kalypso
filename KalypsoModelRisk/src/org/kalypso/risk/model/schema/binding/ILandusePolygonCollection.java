@@ -2,6 +2,7 @@ package org.kalypso.risk.model.schema.binding;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 

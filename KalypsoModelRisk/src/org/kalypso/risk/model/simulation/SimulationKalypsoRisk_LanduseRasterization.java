@@ -51,7 +51,7 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -85,7 +85,7 @@ public class SimulationKalypsoRisk_LanduseRasterization implements ISimulationSp
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "Specification_LanduseRasterization.xml" ); //$NON-NLS-1$
+    return getClass().getResource( "Specification_LanduseRasterization.xml" );
   }
 
   /**
@@ -103,11 +103,11 @@ public class SimulationKalypsoRisk_LanduseRasterization implements ISimulationSp
       final GMLWorkspace vectorModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.VECTOR_MODEL.name() ), null );
       final IVectorDataModel vectorModel = (IVectorDataModel) vectorModelWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
 
-      final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
+      final File outputRasterTmpDir = new File( tmpdir, "outputRaster" );
       outputRasterTmpDir.mkdir();
       doLanduseRasterization( outputRasterTmpDir, rasterModel, vectorModel, monitor, 1.0 );
-      final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
-      GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" ); //$NON-NLS-1$
+      final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir );
+      GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" );
       resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
       resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.name(), outputRasterTmpDir );
     }
@@ -123,14 +123,14 @@ public class SimulationKalypsoRisk_LanduseRasterization implements ISimulationSp
    */
   private void doLanduseRasterization( final File tmpdir, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor, final double chainProcessWeight ) throws SimulationException
   {
-    monitor.setMessage( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_LanduseRasterization.0" ) ); //$NON-NLS-1$
+    monitor.setMessage( Messages.getString( "RiskLanduseRasterizationRunnable.0" ) );
     final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection = rasterModel.getWaterlevelCoverageCollection();
     if( waterDepthCoverageCollection.size() == 0 )
       throw new SimulationException( "Keine Fliesstiefen Rasterdaten vorhanden. Bitte importieren Sie zuerst die Fliesstiefen." ); //$NON-NLS-1$
     final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( waterDepthCoverageCollection );
     final Integer maxReturnPeriod = maxCoveragesCollection.getReturnPeriod();
     if( maxReturnPeriod == Integer.MIN_VALUE )
-      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_LanduseRasterization.1" ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "RiskLanduseRasterizationRunnable.1" ) ); //$NON-NLS-1$
 
     final ICoverageCollection inputCoverages = maxCoveragesCollection;
     final ICoverageCollection outputCoverages = rasterModel.getLanduseCoverage();
@@ -150,7 +150,7 @@ public class SimulationKalypsoRisk_LanduseRasterization implements ISimulationSp
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        monitor.setMessage( Messages.getString( "org.kalypso.risk.model.simulation.RiskModelHelper.14" ) + (i + 1) + "/" + inputCoverages.size() + "]..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        monitor.setMessage( Messages.getString( "RiskModelHelper.14" ) + (i + 1) + "/" + inputCoverages.size() + "]..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -206,11 +206,11 @@ public class SimulationKalypsoRisk_LanduseRasterization implements ISimulationSp
             }
             catch( Exception ex )
             {
-              throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskModelHelper.10" ), ex ); //$NON-NLS-1$
+              throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.10" ), ex ); //$NON-NLS-1$
             }
           }
         };
-        final String outputCoverageFileName = inputCoverage.getGmlID() + "_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
+        final String outputCoverageFileName = inputCoverage.getGmlID() + "_" + i + ".bin"; //$NON-NLS-1$
         final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
         GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$

@@ -5,18 +5,21 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.ui.views.map.MapView;
 
 public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -37,13 +40,13 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
     {
-      throw new ExecutionException( Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
-    }
+      throw new ExecutionException( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.0" ) );
+    } //$NON-NLS-1$
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) )
     {
       return null;
     }
@@ -64,12 +67,21 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
       }
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    coverageManagementWidget.setShowStyle( false );
-    coverageManagementWidget.setShowAddRemoveButtons( false );
+    try
+    {
+      final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      coverageManagementWidget.setShowStyle( false );
+      coverageManagementWidget.setShowAddRemoveButtons( false );
+      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+      coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
-    job.schedule();
+      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
+      job.schedule();
+    }
+    catch( final CoreException e )
+    {
+      throw new ExecutionException( "Failed", e );
+    }
 
     return Status.OK_STATUS;
   }

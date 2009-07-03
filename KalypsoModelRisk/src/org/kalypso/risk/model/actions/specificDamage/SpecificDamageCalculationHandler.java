@@ -20,7 +20,7 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -44,11 +44,11 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
 
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.0" ) ); //$NON-NLS-1$
+      StatusUtilities.createWarningStatus( Messages.getString( "DamagePotentialCalculationHandler.0" ) ); //$NON-NLS-1$
       return false;
     }
 
-    final Dialog dialog = new MessageDialog( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.1" ), null, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.3" ), Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Dialog dialog = new MessageDialog( shell, Messages.getString( "DamagePotentialCalculationHandler.1" ), null, Messages.getString( "DamagePotentialCalculationHandler.2" ), MessageDialog.QUESTION, new String[] { Messages.getString( "DamagePotentialCalculationHandler.3" ), Messages.getString( "DamagePotentialCalculationHandler.4" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     if( dialog.open() == 0 )
     {
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
@@ -61,11 +61,11 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
 
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {
-          MessageDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.7" ), Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.7" ), Messages.getString( "DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
 
-        final Job job = new Job( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.6") //$NON-NLS-1$
+        final Job job = new Job( Messages.getString( "DamagePotentialCalculationHandler.5" ) )
         {
           @Override
           protected IStatus run( final IProgressMonitor monitor )
@@ -92,7 +92,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
             }
             catch( final Exception e )
             {
-              ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
               return Status.CANCEL_STATUS;
             }
             return status;
@@ -105,7 +105,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoRiskPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( shell, "", Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.4" ), org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
     }
