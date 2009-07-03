@@ -164,6 +164,10 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
+              class="org.kalypso.convert.namodel.schema.binding.suds.AbstractSud"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}_Sud">
+        </feature>
+        <feature
               class="org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}SwaleInfiltrationDitch">
         </feature>
@@ -176,4 +180,13 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}GreenRoof">
         </feature>
      </extension>
+     
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.Hydrotop"
+              qname="{http://www.tuhh.de/hydrotop}Hydrotop">
+        </feature>
+     </extension>
+     
 </plugin>

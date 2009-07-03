@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:hyd="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://www.tuhh.de/hydrotop" elementFormDefault="qualified" version="0.9">
+<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.9">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.tuhh.de/kalypsoNA" />
+	<import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" />
 	<element name="NAHydrotop" type="hyd:HydrotopType"/>
 	<complexType name="HydrotopType">
 		<complexContent>
@@ -106,6 +108,10 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element ref="suds:sudLinkMember" minOccurs="0" maxOccurs="unbounded" />
+					
+					<!-- minOccurs="0" for backward compatibility -->
+					<element ref="naModel:catchmentLinkMember" minOccurs="0" />
 				</sequence>
 			</extension>
 		</complexContent>
@@ -127,7 +133,7 @@
 		<simpleType>
 			<restriction base="double">
 				<minInclusive value="0.0"/>
-				<maxInclusive value="10.0"/>
+				<maxInclusive value="100.0"/>
 			</restriction>
 		</simpleType>
 	</element>

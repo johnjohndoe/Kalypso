@@ -45,16 +45,18 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
@@ -157,8 +159,17 @@ public class NAConfiguration
   private Boolean m_iniWrite;
 
   private TreeSet<Date> m_dateWriteSet;
+  
+  private GMLWorkspace m_modelWorkspace = null;
+  private GMLWorkspace m_parameterWorkspace = null;
+  private GMLWorkspace m_hydrotopeWorkspace = null;
+  private GMLWorkspace m_synthNWorkspace = null;
+  private GMLWorkspace m_landuseWorkspace = null;
+  private GMLWorkspace m_sudsWorkspace;
 
-  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
+  private final  NACalculationLogger m_calculationLogger;
+
+  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws InvocationTargetException
   {
     m_asciiBaseDir = asciiBaseDir;
     m_gmlBaseDir = gmlBaseDir;
@@ -202,8 +213,13 @@ public class NAConfiguration
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
     m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
-
+    m_calculationLogger = new NACalculationLogger(asciiBaseDir.getPath());
     m_iniWrite = false;
+  }
+
+  public Logger getLogger( )
+  {
+    return m_calculationLogger.getCalculationLogger();
   }
 
   public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
@@ -539,5 +555,65 @@ public class NAConfiguration
   public TreeSet<Date> getDateWriteSet( )
   {
     return m_dateWriteSet;
+  }
+
+  public void setModelWorkspace( GMLWorkspace modelWorkspace )
+  {
+    m_modelWorkspace = modelWorkspace;
+  }
+
+  public GMLWorkspace getModelWorkspace( )
+  {
+    return m_modelWorkspace;
+  }
+
+  public void setParameterWorkspace( GMLWorkspace parameterWorkspace )
+  {
+    m_parameterWorkspace = parameterWorkspace;
+  }
+
+  public GMLWorkspace getParameterWorkspace( )
+  {
+    return m_parameterWorkspace;
+  }
+
+  public void setHydrotopeWorkspace( GMLWorkspace hydrotopeWorkspace )
+  {
+    m_hydrotopeWorkspace = hydrotopeWorkspace;
+  }
+
+  public GMLWorkspace getHydrotopeWorkspace( )
+  {
+    return m_hydrotopeWorkspace;
+  }
+
+  public void setSynthNWorkspace( GMLWorkspace synthNWorkspace )
+  {
+    m_synthNWorkspace = synthNWorkspace;
+  }
+
+  public GMLWorkspace getSynthNWorkspace( )
+  {
+    return m_synthNWorkspace;
+  }
+
+  public void setLanduseWorkspace( GMLWorkspace landuseWorkspace )
+  {
+    m_landuseWorkspace = landuseWorkspace;
+  }
+
+  public GMLWorkspace getLanduseWorkspace( )
+  {
+    return m_landuseWorkspace;
+  }
+
+  public void setSudsWorkspace( GMLWorkspace sudsWorkspace )
+  {
+    m_sudsWorkspace = sudsWorkspace;
+  }
+
+  public GMLWorkspace getSudsWorkspace( )
+  {
+    return m_sudsWorkspace;
   }
 }

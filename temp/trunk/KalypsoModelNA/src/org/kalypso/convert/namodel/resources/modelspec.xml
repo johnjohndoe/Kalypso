@@ -5,8 +5,8 @@
     <input id="Control" path="expertControl.gml" relativeToCalcCase="true"/>
 	<input id="Hydrotop" path="calcHydrotop.gml" relativeToCalcCase="true"/>
 	<input id="Parameter" path="parameter.gml" relativeToCalcCase="false"/>
-	<input id="Landuse" path="landuse.gml" relativeToCalcCase="false"/>
-	<input id="Suds" path="suds.gml" relativeToCalcCase="false"/>
+	<input id="Landuse" path="landuse.gml" relativeToCalcCase="false" optional="true"/>
+	<input id="Suds" path="suds.gml" relativeToCalcCase="false" optional="true"/>
 
 	<!-- Zeitreihen als Verzeichnisse -->
     <input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true"/>

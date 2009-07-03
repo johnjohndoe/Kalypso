@@ -157,12 +157,15 @@ public interface NaModelConstants
 
   public static final QName HYDRO_PROP_INFLOWRATEGW = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
+  public static final QName HYDRO_PROP_SUDS = new QName( NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
+  
   public static final QName HYDRO_ENUM_HYDTYPE_SWALETRENCH = new QName( NS_NAHYDROTOP, "MuldenRigole" ); //$NON-NLS-1$
 
   public static final QName HYDRO_ENUM_HYDTYPE_GREENROOF = new QName( NS_NAHYDROTOP, "Dachbegruenung" ); //$NON-NLS-1$
 
   public static final QName HYDRO_ENUM_HYDTYPE_REGULAR = new QName( NS_NAHYDROTOP, "Bodenspeicher" ); //$NON-NLS-1$
 
+  
   /** namodell.xsd */
   // channels
   public static final QName CHANNEL_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "ChannelCollectionMember" ); //$NON-NLS-1$

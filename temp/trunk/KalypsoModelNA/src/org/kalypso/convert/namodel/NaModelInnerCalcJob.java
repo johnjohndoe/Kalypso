@@ -65,12 +65,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.StreamHandler;
-import java.util.logging.XMLFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -206,27 +203,25 @@ public class NaModelInnerCalcJob implements ISimulation
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
-    final Logger logger = Logger.getAnonymousLogger();
-    final Formatter f = new XMLFormatter();
-    Handler h = null;
-    try
-    {
-      final File loggerFile = new File( resultDir, "Ergebnisse/Aktuell/Log/infoLog.txt" );
-      loggerFile.getParentFile().mkdirs();
-
-      h = new StreamHandler( new FileOutputStream( loggerFile ), f );
-      logger.addHandler( h );
-      h.flush();
-    }
-    catch( final FileNotFoundException e1 )
-    {
-      e1.printStackTrace();
-      logger.fine( e1.getLocalizedMessage() );
-    }
     final Date startRunDate = new Date( Calendar.getInstance().getTimeInMillis() );
     final DateFormat format = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
     m_dateString = format.format( startRunDate );
+
+    final File newModellFile = new File( tmpdir, "namodellBerechnung.gml" ); //$NON-NLS-1$
+    NAConfiguration conf;
+    try
+    {
+      conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURI().toURL(), tmpdir );
+    }
+    catch( final Exception e1 )
+    {
+      e1.printStackTrace();
+      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.36" ), e1.getCause() ); //$NON-NLS-1$
+    }
+    conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
+    final Logger logger = conf.getLogger();
     logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13" ) + m_dateString + Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
     try
     {
       monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.15" ) ); //$NON-NLS-1$
@@ -277,12 +272,7 @@ public class NaModelInnerCalcJob implements ISimulation
       if( monitor.isCanceled() )
         return;
 
-      final File newModellFile = new File( tmpdir, "namodellBerechnung.gml" ); //$NON-NLS-1$
-
       // calualtion model
-
-      final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURI().toURL(), tmpdir );
-      conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL, null );
@@ -326,14 +316,22 @@ public class NaModelInnerCalcJob implements ISimulation
         monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.30" ) ); //$NON-NLS-1$
         logger.log( Level.FINEST, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.31" ) ); //$NON-NLS-1$
         createStatistics( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, conf );
-        loadLogs( tmpdir, logger, modellWorkspace, conf, resultDir );
       }
       else
       {
         monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.32" ) ); //$NON-NLS-1$
         logger.log( Level.SEVERE, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.33" ) ); //$NON-NLS-1$
-        loadLogs( tmpdir, logger, modellWorkspace, conf, resultDir );
       }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.36" ), e.getCause() ); //$NON-NLS-1$
+    }
+    finally
+    {
+      loadLogs( tmpdir, logger, conf, resultDir );
+
       // Copy results to restore the actual results in the dateDir as well... .
       final File resultDirFrom = new File( resultDir, "Ergebnisse/Aktuell" ); //$NON-NLS-1$
       final File resultDirTo = new File( resultDir, "Ergebnisse/" + m_dateString ); //$NON-NLS-1$
@@ -341,7 +339,14 @@ public class NaModelInnerCalcJob implements ISimulation
       if( resultDirFrom.exists() && resultDirTo.exists() )
       {
         final FileCopyVisitor copyVisitor = new FileCopyVisitor( resultDirFrom, resultDirTo, true );
-        FileUtilities.accept( resultDirFrom, copyVisitor, true );
+        try
+        {
+          FileUtilities.accept( resultDirFrom, copyVisitor, true );
+        }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+        }
       }
       final File[] files = resultDir.listFiles();
       if( files != null )
@@ -355,11 +360,6 @@ public class NaModelInnerCalcJob implements ISimulation
           }
         }
       }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.36" ), e ); //$NON-NLS-1$
     }
 
   }
@@ -575,7 +575,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // initialize model with values of control file
     initializeModell( controlWorkspace.getRootFeature(), (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL(), null );
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURI().toURL(), null );
     // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
 
@@ -587,7 +587,7 @@ public class NaModelInnerCalcJob implements ISimulation
     final GMLWorkspace synthNWorkspace;
     final File synthNGML = new File( ((URL) dataProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID )).getFile(), "calcSynthN.gml" ); //$NON-NLS-1$
     if( synthNGML.exists() )
-      synthNWorkspace = GmlSerializer.createGMLWorkspace( synthNGML.toURL(), null );
+      synthNWorkspace = GmlSerializer.createGMLWorkspace( synthNGML.toURI().toURL(), null );
     else
       synthNWorkspace = null;
 
@@ -671,8 +671,15 @@ public class NaModelInnerCalcJob implements ISimulation
     updateFactorParameter( modellWorkspace );
 
     // generate modell files
+    conf.setModelWorkspace( modellWorkspace );
+    conf.setParameterWorkspace( parameterWorkspace );
+    conf.setHydrotopeWorkspace( hydrotopWorkspace );
+    conf.setSynthNWorkspace( synthNWorkspace );
+    conf.setLanduseWorkspace( landuseWorkspace );
+    conf.setSudsWorkspace( sudsWorkspace );
+
     final NAModellConverter main = new NAModellConverter( conf );
-    main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, landuseWorkspace, sudsWorkspace, nodeResultProvider );
+    main.write();
 
     // dump idmapping to file
     final IDManager idManager = conf.getIdManager();
@@ -691,7 +698,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   /**
    * update workspace and do some tricks in order to fix some things the fortran-kernel can not handle for now
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -711,14 +718,14 @@ public class NaModelInnerCalcJob implements ISimulation
    *
    * </code> after: <br>
    * <code>
-   *
+   * 
    * Node1 O <--- newVChannel <-- newNode O <-- newVChannel
    *                                      A
    *                                      |
    *                                      O-- Node2
    *
    * </code>
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -751,7 +758,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * TODO scetch<br>
    * if results exists (from a former simulation) for a node, use this results as input, later the upstream nodes will
    * be ignored for calculation
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -803,7 +810,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
    *                                          A- Q(constant)<br>
    * </code>
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -846,7 +853,7 @@ public class NaModelInnerCalcJob implements ISimulation
    *     o(existing)
    *
    * </code> after: <code>
-   *
+   * 
    *  |new Channel3|
    *     |
    *     V
@@ -896,7 +903,7 @@ public class NaModelInnerCalcJob implements ISimulation
   /**
    * updates workspace, so that interflow and channelflow dependencies gets optimized <br>
    * groundwater flow can now run in opposite direction to channel flow
-   *
+   * 
    * @param workspace
    */
   private void updateGWNet( final GMLWorkspace workspace )
@@ -1015,7 +1022,7 @@ public class NaModelInnerCalcJob implements ISimulation
   /**
    * some parameter have factors that must be processed before generating asciifiles, as these factors do not occur in
    * ascci-format
-   *
+   * 
    * @param modellWorkspace
    */
   private void updateFactorParameter( final GMLWorkspace modellWorkspace )
@@ -1542,58 +1549,61 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void loadLogs( final File tmpDir, final Logger logger, final GMLWorkspace modellWorkspace, final NAConfiguration conf, final File resultDir )
+  private void loadLogs( final File tmpDir, final Logger logger, final NAConfiguration conf, final File resultDir )
   {
     final File logFile = new File( tmpDir, "start/error.gml" ); //$NON-NLS-1$
 
-    try
+    if( logFile.exists() )
     {
-      final GMLWorkspace naFortranLogWorkspace = GmlSerializer.createGMLWorkspace( logFile.toURL(), null );
-      final GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, modellWorkspace, conf );
-      GmlSerializer.serializeWorkspace( logFile, changedNAFortranLogWorkspace, "UTF-8" ); //$NON-NLS-1$
-    }
-    catch( final Exception e1 )
-    {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
+      try
+      {
+        final GMLWorkspace naFortranLogWorkspace = GmlSerializer.createGMLWorkspace( logFile.toURI().toURL(), null );
+        final GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, conf );
+        GmlSerializer.serializeWorkspace( logFile, changedNAFortranLogWorkspace, "UTF-8" ); //$NON-NLS-1$
+      }
+      catch( final Exception e1 )
+      {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
 
-    final String resultPathRelative = "Ergebnisse/Aktuell/Log/error.gml"; //$NON-NLS-1$
-    final String inputPath = logFile.getPath();
-    final File resultFile = new File( resultDir, resultPathRelative );
-    resultFile.getParentFile().mkdirs();
-    FileInputStream fortranLogFileIS = null;
-    try
-    {
-      fortranLogFileIS = new FileInputStream( logFile );
-    }
-    catch( final FileNotFoundException e1 )
-    {
-      e1.printStackTrace();
-    }
-    try
-    {
-      FileUtilities.makeFileFromStream( false, resultFile, fortranLogFileIS );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.228" ) + inputPath + Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.229" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    finally
-    {
-      IOUtils.closeQuietly( fortranLogFileIS );
-    }
+      final String resultPathRelative = "Ergebnisse/Aktuell/Log/error.gml"; //$NON-NLS-1$
+      final String inputPath = logFile.getPath();
+      final File resultFile = new File( resultDir, resultPathRelative );
+      resultFile.getParentFile().mkdirs();
+      FileInputStream fortranLogFileIS = null;
+      try
+      {
+        fortranLogFileIS = new FileInputStream( logFile );
+      }
+      catch( final FileNotFoundException e1 )
+      {
+        e1.printStackTrace();
+      }
+      try
+      {
+        FileUtilities.makeFileFromStream( false, resultFile, fortranLogFileIS );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+        System.out.println( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.228" ) + inputPath + Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.229" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      }
+      finally
+      {
+        IOUtils.closeQuietly( fortranLogFileIS );
+      }
 
-    final Handler[] handlers = logger.getHandlers();
-    for( final Handler h : handlers )
-    {
-      h.flush();
-      h.close();
+      final Handler[] handlers = logger.getHandlers();
+      for( final Handler h : handlers )
+      {
+        h.flush();
+        h.close();
+      }
     }
   }
 
-  private GMLWorkspace readLog( final GMLWorkspace naFortranLogWorkspace, final GMLWorkspace modellWorkspace, final NAConfiguration conf ) throws ParseException
+  private GMLWorkspace readLog( final GMLWorkspace naFortranLogWorkspace, final NAConfiguration conf ) throws ParseException
   {
     final IDManager idManager = conf.getIdManager();
     final IFeatureType recordFT = naFortranLogWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_NAFORTRANLOG, "record" ) ); //$NON-NLS-1$

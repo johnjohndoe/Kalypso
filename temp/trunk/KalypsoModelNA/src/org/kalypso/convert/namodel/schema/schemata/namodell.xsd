@@ -567,6 +567,17 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+	
+	<!-- Element created to reference catchments -->
+	<element name="catchmentLinkMember" type="na:CatchmentPropertyType" />
+	<complexType name="CatchmentPropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="na:Catchment" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+	</complexType>
+	
+	
 	<element name="Catchment" type="na:CatchmentFeatureType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
