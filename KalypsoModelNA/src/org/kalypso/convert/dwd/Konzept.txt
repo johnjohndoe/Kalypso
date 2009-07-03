@@ -1,0 +1,33 @@
+messung:
+
+Gebietsniederschlagsmodell
+aus Krieging Zuordnungsdatei wird Filter-Konfiguration erstellt.
+Modell+Raster=Filter
+
+
+
+Vorhersage:
+Observer auf Rasterdateiverzeichnis,
+neue Datei einlesen und ZML generieren:
+input Modell+Raster=ZML(csv)-Datei fuer jedes Teilgebiet.
+
+
+Im repository stellt die Vorhersage und die gemessene Zeitreihe je eine Virtuelle Zeitreihe dar.
+
+Im Modell wird ein Link (hier Teilgebiet auf Zeitreihe) verankert, der einen Filter enth?lt:
+
+
+<joinFilter>
+	<PeriodeFilter>
+	 <start>1.1.1998</start>
+	 <end>1.1.1999</end>
+	  <zml href="gemessen..."/>
+	</PeriodeFilter>
+
+	<PeriodeFilter>
+	 <start>1.1.1999</start>
+	 <end>OPEN</end>
+	 <zml href="vorhersage..."/>
+	</PeriodeFilter>
+</joinFilter>
+
