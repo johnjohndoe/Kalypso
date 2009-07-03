@@ -40,10 +40,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -91,15 +88,15 @@ public class IDManager
       m_featureIDMap.put( feature, idMap );
       m_idMapFeature.put( idMap, feature );
     }
-    return m_featureIDMap.get( feature ).getAsciiID();
+    return ((IDMap) m_featureIDMap.get( feature )).getAsciiID();
   }
-
+  
   /**
    * @param feature
    */
   private int getType( Feature feature )
   {
-    String name = feature.getFeatureType().getQName().getLocalPart();
+    String name = feature.getFeatureType().getName();
     if( name.equals( "Catchment" ) )
       return CATCHMENT;
     if( name.endsWith( "Channel" ) )
@@ -114,7 +111,7 @@ public class IDManager
    */
   private IDMap generateAsciiID( Feature feature )
   {
-    final QName idProp = NaModelConstants.GML_FEATURE_NAME_PROP;
+    final String idProp = "name";
     int type = getType( feature );
     // switch( type )
     // {
@@ -167,9 +164,8 @@ public class IDManager
 
   public void dump( final Writer writer ) throws IOException
   {
-    final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator()
+    final TreeSet sort = new TreeSet( new Comparator()
     {
-      @Override
       public boolean equals( Object obj )
       {
         return false;
@@ -186,11 +182,11 @@ public class IDManager
       }
     } );
     sort.addAll( m_idMapFeature.keySet() );
-    for( Iterator<IDMap> iter = sort.iterator(); iter.hasNext(); )
+    for( Iterator iter = sort.iterator(); iter.hasNext(); )
     {
-      IDMap idmap = iter.next();
+      IDMap idmap = (IDMap) iter.next();
       writer.write( idmap.toString() );
-      writer.write( "\t" ); //$NON-NLS-1$
+      writer.write( "\t" );
       final Object value = m_idMapFeature.get( idmap );
       if( value instanceof Feature )
       {
@@ -199,7 +195,7 @@ public class IDManager
       }
       else
         writer.write( "dummy" );
-      writer.write( "\n" ); //$NON-NLS-1$
+      writer.write( "\n" );
     }
   }
 
@@ -220,9 +216,7 @@ public class IDManager
 
     int asciiID;
 
-    public IDMap( @SuppressWarnings("hiding")
-    int asciiID, @SuppressWarnings("hiding")
-    int type )
+    public IDMap( int asciiID, int type )
     {
       this.type = type;
       this.asciiID = asciiID;
@@ -238,16 +232,14 @@ public class IDManager
       return type;
     }
 
-    @Override
     public String toString( )
     {
-      return asciiID + "\t" + type; //$NON-NLS-1$
+      return asciiID + "\t" + type;
     }
 
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    @Override
     public boolean equals( Object other )
     {
       if( !(other instanceof IDMap) )
@@ -259,7 +251,6 @@ public class IDManager
     /**
      * @see java.lang.Object#hashCode()
      */
-    @Override
     public int hashCode( )
     {
       return asciiID + type * 100000;

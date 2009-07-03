@@ -45,9 +45,6 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -68,9 +65,9 @@ public class UpdateModell
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
 
-  private static final String DEFAULT_Q = "0";
+  private static final double DEFAULT_Q = 0;
 
-  private static final String DEFAULT_W = "0";
+  private static final double DEFAULT_W = 0;
 
   public static void main( String[] args )
   {
@@ -99,14 +96,14 @@ public class UpdateModell
 
   public void updateIt( ) throws Exception
   {
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, null );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL );
 
     // Catchments...
-    final IFeatureType catchmentFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
     final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
     updateCatchments( catchmentFEs );
     // Nodes
-    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
     updateNodes( nodeFEs );
 
@@ -238,7 +235,7 @@ public class UpdateModell
         available = false;
 
       final Feature fe = workspace.getFeature( fId );
-      fe.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, name );
+      fe.setProperty( "name", name );
       if( type.indexOf( "Z" ) > -1 )
       {
         // zuflussRep
@@ -325,18 +322,13 @@ public class UpdateModell
       TimeseriesLinkType linkBerechnet = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml" );
       setTSLink( fe, "qberechnetZR", linkBerechnet );
       setTSLink( fe, "pegelBerechnetZRRepository", null );
-      setTSLink( fe, NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
+      setTSLink( fe, "zuflussZR", null );
       setTSLink( fe, "pegelZRRepository", null );
       setTSLink( fe, "zuflussZRRepository", null );
       setTSLink( fe, "zuflussZRRepositoryVorhersage", null );
       // FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name", null );
-      fe.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, null );
+      fe.setProperty( "name", null );
     }
-  }
-
-  private static void setTSLink( final Feature fe, final QName propName, final TimeseriesLinkType tsLink )
-  {
-    fe.setProperty( propName, tsLink );
   }
 
   private static void setTSLink( Feature fe, String propName, TimeseriesLinkType tsLink )

@@ -87,7 +87,7 @@ public abstract class AbstractManager
     String fId = mapID( asciiStringId, ft );
     if( !m_allFeatures.containsKey( fId ) )
     {
-      Feature feature = FeatureFactory.createFeature( null, null, fId, ft, false );
+      Feature feature = FeatureFactory.createFeature( null, fId, ft, false );
       m_allFeatures.put( fId, feature );
     }
     return m_allFeatures.get( fId );
@@ -98,7 +98,7 @@ public abstract class AbstractManager
    */
   private String mapID( String asciiStringId, IFeatureType ft )
   {
-    return ft.getQName().getLocalPart() + "_" + asciiStringId; //$NON-NLS-1$
+    return ft.getName() + "_" + asciiStringId;
   }
 
   public Feature getFeature( int asciiID, IFeatureType ft )
@@ -134,7 +134,7 @@ public abstract class AbstractManager
   public Feature createFeature( IFeatureType ft )
   {
     String stringID = mapID( count++, ft );
-    return FeatureFactory.createFeature( null, null, stringID, ft, false );
+    return FeatureFactory.createFeature( null, stringID, ft, false );
 
   }
 
@@ -145,7 +145,7 @@ public abstract class AbstractManager
     Feature feature = null;
     try
     {
-      feature = FeatureFactory.createFeature( null, null, stringID, intID.getFeatureType(), false );
+      feature = FeatureFactory.createFeature( null, stringID, intID.getFeatureType(), false );
     }
     catch( Exception e )
     {
@@ -250,7 +250,7 @@ public abstract class AbstractManager
       if( ft.getProperty( qname ) != null )
         feature.setProperty( propertyType, value );
       else
-        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" ); //$NON-NLS-2$ //$NON-NLS-3$
+        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" );
     }
   }
 
@@ -284,9 +284,9 @@ public abstract class AbstractManager
       IntID other = (IntID) object;
       if( !(other.getID() == getID()) )
         return false;
-      if( !other.getFeatureType().getQName().equals( getFeatureType().getQName() ) )
+      if( !other.getFeatureType().getNamespace().equals( getFeatureType().getNamespace() ) )
         return false;
-      if( !other.getFeatureType().getQName().getLocalPart().equals( getFeatureType().getQName().getLocalPart() ) )
+      if( !other.getFeatureType().getName().equals( getFeatureType().getName() ) )
         return false;
       return true;
     }
@@ -297,7 +297,7 @@ public abstract class AbstractManager
     @Override
     public int hashCode( )
     {
-      return (Integer.toString( m_intID ) + m_ft.getQName().getLocalPart() + m_ft.getQName()).hashCode();
+      return (Integer.toString( m_intID ) + m_ft.getName() + m_ft.getNamespace()).hashCode();
     }
 
   }

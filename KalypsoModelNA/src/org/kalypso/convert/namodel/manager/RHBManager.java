@@ -49,7 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,21 +66,20 @@ public class RHBManager extends AbstractManager
   {
     super( conf.getRHBFormatURL() );
     m_conf = conf;
-    m_storageChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
+    m_storageChannelFT = schema.getFeatureType( "StorageChannel" );
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
-  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List<Feature> result = new ArrayList<Feature>();
+    List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
     Feature fe = null;
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return result.toArray( new Feature[result.size()] );
+    return (Feature[]) result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
@@ -95,7 +93,7 @@ public class RHBManager extends AbstractManager
       line = reader.readLine();
       if( line == null )
         return null;
-      System.out.println( i + ": " + line ); //$NON-NLS-1$
+      System.out.println( i + ": " + line );
       createProperties( propCollector, line, i );
     }
     int asciiID = Integer.parseInt( propCollector.get( "inum" ) );
@@ -104,9 +102,9 @@ public class RHBManager extends AbstractManager
     if( iknotNr > 0 )
     {
       final Feature knotFE = getFeature( iknotNr, m_conf.getNodeFT() );
-      rhbStrangFE.setProperty( NaModelConstants.IKNOT_MEMBER_PROP, knotFE.getId() );
+      rhbStrangFE.setProperty( "iknotNodeMember", knotFE.getId() );
     }
-//    int jev = Integer.parseInt( propCollector.get( "jev" ) );
+    int jev = Integer.parseInt( propCollector.get( "jev" ) );
     // TODO: old Code - remove diagramm and add handling with new zmlinline typehandler
     // final DiagramProperty diagram = new DiagramProperty();
     // for( int i = 0; i < jev; i++ )
@@ -121,7 +119,7 @@ public class RHBManager extends AbstractManager
     // }
     // rhbStrangFE.setProperty( "hvvsqd", diagram );
     line = reader.readLine();
-    System.out.println( "4: " + line ); //$NON-NLS-1$
+    System.out.println( "4: " + line );
     createProperties( propCollector, line, 4 );
 
     final Feature feature = getFeature( asciiID, m_storageChannelFT );
@@ -130,9 +128,8 @@ public class RHBManager extends AbstractManager
     return feature;
   }
 
-  @Override
   public String mapID( int id, IFeatureType ft )
   {
-    return ft.getQName().getLocalPart() + id;
+    return ft.getName() + id;
   }
 }

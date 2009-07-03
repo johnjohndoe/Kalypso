@@ -64,8 +64,6 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -90,7 +88,7 @@ public class NutzungManager extends AbstractManager
 
   private final IFeatureType m_IdleLanduseFT;
 
-  final Hashtable<String, Integer> m_LTable = new Hashtable<String, Integer>();
+  final Hashtable m_LTable = new Hashtable();
 
   private int m_idCounter = 0;
 
@@ -99,8 +97,8 @@ public class NutzungManager extends AbstractManager
     super( conf.getParameterFormatURL() );
     // m_crs = crs;
     m_conf = conf;
-    m_LanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_LANDUSE );
-    m_IdleLanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_IDEAL_LANDUSE );
+    m_LanduseFT = parameterSchema.getFeatureType( "Landuse" );
+    m_IdleLanduseFT = parameterSchema.getFeatureType( "IdealLandUse" );
 
   }
 
@@ -119,8 +117,8 @@ public class NutzungManager extends AbstractManager
   @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    String nutzDatei = url.getPath().replaceAll( ".+/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    String nutzID = nutzDatei.replaceAll( "\\.nuz", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    String nutzDatei = url.getPath().replaceAll( ".+/", "" );
+    String nutzID = nutzDatei.replaceAll( "\\.nuz", "" );
     List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
@@ -138,7 +136,7 @@ public class NutzungManager extends AbstractManager
     line = reader.readLine();
     if( line == null )
       return null;
-    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
+    System.out.println( reader.getLineNumber() + ": " + line );
 
     if( !m_LTable.containsKey( line ) )
     {
@@ -162,11 +160,11 @@ public class NutzungManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NutzungManager.6") + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "NutzParameter(" + i + "): " + line );
     }
 
     final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
-    final IPropertyType pt = feature.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
+    final IPropertyType pt = feature.getFeatureType().getProperty( "idealLandUsePeriodLink" );
     fePropMap.put( pt, idleLanduseFE.getId() );
     line = reader.readLine();
 
@@ -179,14 +177,14 @@ public class NutzungManager extends AbstractManager
   public void writeFile( GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+    List list = (List) rootFeature.getProperty( "landuseMember" );
     Iterator iter = list.iterator();
 
     while( iter.hasNext() )
     {
 
       final Feature nutzungFE = (Feature) iter.next();
-      final IRelationType rt = (IRelationType) nutzungFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
+      final IRelationType rt = (IRelationType) nutzungFE.getFeatureType().getProperty( "idealLandUsePeriodLink" );
       final Feature linkedIdealLanduseFE = paraWorkspace.resolveLink( nutzungFE, rt );
       writeFeature( nutzungFE, linkedIdealLanduseFE );
     }
@@ -197,21 +195,21 @@ public class NutzungManager extends AbstractManager
   {
 
     String nutzName = FeatureHelper.getAsString( feature, "name" );
-    File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" ); //$NON-NLS-1$ //$NON-NLS-2$
+    File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" );
     FileWriter writer = new FileWriter( nutzungDir );
     String name;
     try
     {
-      name = linkedIdealLanduseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ).toString();
+      name = linkedIdealLanduseFE.getProperty( "name" ).toString();
     }
     catch( Exception e )
     {
-      name = Messages.getString("org.kalypso.convert.namodel.manager.NutzungManager.11"); //$NON-NLS-1$
+      name = "pflanzenabhaengige verdunstung";
     }
     writer.write( name );
     writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung!
     writer.write( "xxdatum     F EVA    We    BIMAX\n" );
-    Object idealLanduseProp = linkedIdealLanduseFE.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML );
+    Object idealLanduseProp = linkedIdealLanduseFE.getProperty( "idealLandUseZML" );
     writeIdealLanduse( (IObservation) idealLanduseProp, writer );
     writer.write( "993456789012345678901234567890" );
     IOUtils.closeQuietly( writer );
@@ -236,20 +234,20 @@ public class NutzungManager extends AbstractManager
       final int year = calendar.get( Calendar.YEAR ) - yearOffset;
       final int month = calendar.get( Calendar.MONTH ) + 1;
       final int day = calendar.get( Calendar.DATE );
-      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-2$ //$NON-NLS-3$
-      zmlWriter.write( "." ); //$NON-NLS-1$
-      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-2$ //$NON-NLS-3$
-      zmlWriter.write( "." ); //$NON-NLS-1$
-      zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) );
+      zmlWriter.write( "." );
+      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) );
+      zmlWriter.write( "." );
+      zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) );
 
       Double kc = (Double) values.getElement( row, kcAxis );
       Double wt = (Double) values.getElement( row, wtAxis );
       Double lai = (Double) values.getElement( row, laiAxis );
 
-      zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) ); //$NON-NLS-1$
-      zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) ); //$NON-NLS-1$
-      zmlWriter.write( FortranFormatHelper.printf( lai, "f8.2" ) ); //$NON-NLS-1$
-      zmlWriter.write( "\n" ); //$NON-NLS-1$
+      zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) );
+      zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) );
+      zmlWriter.write( FortranFormatHelper.printf( lai, "f8.2" ) );
+      zmlWriter.write( "\n" );
     }
   }
 }

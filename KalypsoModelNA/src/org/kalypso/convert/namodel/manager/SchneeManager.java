@@ -50,8 +50,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -68,25 +66,23 @@ public class SchneeManager extends AbstractManager
   public SchneeManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
-    m_snowFT = parameterSchema.getFeatureType( NaModelConstants.PARA_SNOW_NAME );
+    m_snowFT = parameterSchema.getFeatureType( "Snow" );
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
-  @Override
   public String mapID( int id, IFeatureType ft )
   {
-    return ft.getQName().getLocalPart() + id;
+    return ft.getName() + id;
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
-  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List<Feature> result = new ArrayList<Feature>();
+    List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     // FileReader(
     // file
@@ -99,11 +95,11 @@ public class SchneeManager extends AbstractManager
       line = reader.readLine();
       if( line == null )
         return null;
-      System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
+      System.out.println( reader.getLineNumber() + ": " + line );
     }
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return result.toArray( new Feature[result.size()] );
+    return (Feature[]) result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
@@ -114,7 +110,7 @@ public class SchneeManager extends AbstractManager
     line = reader.readLine();
     if( line == null )
       return null;
-    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
+    System.out.println( reader.getLineNumber() + ": " + line );
     createProperties( propCollector, line, 13 );
 
     // generate id:
@@ -132,10 +128,10 @@ public class SchneeManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
-    asciiBuffer.getSnowBuffer().append( Messages.getString("org.kalypso.convert.namodel.manager.SchneeManager.0") ); //$NON-NLS-1$
+    List list = (List) rootFeature.getProperty( "snowMember" );
+    asciiBuffer.getSnowBuffer().append( "/Parameter zur Schneeberechnung nach dem snow compaction verfahren\n" );
     asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" );
-    asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
+    asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
@@ -149,7 +145,7 @@ public class SchneeManager extends AbstractManager
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception
   {
-    asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" ); //$NON-NLS-1$
+    asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" );
   }
 
 }

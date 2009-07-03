@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
-import org.kalypso.convert.namodel.i18n.Messages;
-import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -54,21 +54,23 @@ public class DefaultPathGenerator
   {
     final String extraString;
     if( extra == null )
-      extraString = ""; //$NON-NLS-1$
+      extraString = "";
     else
       extraString = extra;
     final String observationTitle = getObservationTitle( feature, titleProperty );
-
-    final String annotationName = getAnnotationName( feature );
-    final String result = annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-// return result.replaceAll( "Node", "Knoten" );
-    return result;
+    final String annotationLabel = getAnnotationLabel( feature );
+    // final String result = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + extraString + "/" +
+    // getTitleForSuffix( suffix ) + ".zml";
+    final String result = "Berechnet/" + annotationLabel + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
+    // hack: the pathes are generated different, depending on language and runtime (IAdaptable and AdaptableFactory),
+    // this hack will generate same pathes, for test and eclipse-run
+    return result.replaceAll( "Node", "Knoten" );
   }
 
-  private static String getAnnotationName( final Feature feature )
+  private static String getAnnotationLabel( final Feature feature )
   {
-    final IAnnotation annotation = feature.getFeatureType().getAnnotation();
-    return annotation.getValue( IAnnotation.ANNO_NAME );
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
+    return annotation != null ? annotation.getLabel() : feature.getFeatureType().getQName().getLocalPart();
   }
 
   private static String getObservationTitle( final Feature feature, final String titleProperty )
@@ -83,89 +85,89 @@ public class DefaultPathGenerator
   public static String generateTitleForObservation( final Feature feature, final String titleProperty, final String suffix )
   {
     final String observationTitle = getObservationTitle( feature, titleProperty );
-    final String annotationName = getAnnotationName( feature );
-    return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationName; //$NON-NLS-1$ //$NON-NLS-2$
+    final String annotationLabel = getAnnotationLabel( feature );
+    return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationLabel;
   }
 
-  public static String getTitleForSuffix( final String suffix )
+  public static String getTitleForSuffix( String suffix )
   {
     // j Temperatur .tmp
-    if( suffix.equalsIgnoreCase( "tmp" ) ) 
-      return "Temperatur"; 
+    if( suffix.equalsIgnoreCase( "tmp" ) )
+      return "Temperatur";
     // j Niederschlag .pre
-    if( suffix.equalsIgnoreCase( "pre" ) ) 
-      return "Niederschlag"; 
+    if( suffix.equalsIgnoreCase( "pre" ) )
+      return "Niederschlag";
     // n Schnee .sch
-    if( suffix.equalsIgnoreCase( "sch" ) ) 
-      return "Schneehoehe"; 
+    if( suffix.equalsIgnoreCase( "sch" ) )
+      return "Schneehoehe";
     // j Bodenfeuchte .bof
-    if( suffix.equalsIgnoreCase( "bof" ) ) 
-      return "Bodenfeuchte"; 
+    if( suffix.equalsIgnoreCase( "bof" ) )
+      return "Bodenfeuchte";
     // n Bodenspeicher .bsp
-    if( suffix.equalsIgnoreCase( "bsp" ) ) 
-      return "Bodenspeicherbilanz"; 
+    if( suffix.equalsIgnoreCase( "bsp" ) )
+      return "Bodenspeicherbilanz";
     // n Grundwasserstand .gws
-    if( suffix.equalsIgnoreCase( "gws" ) ) 
-      return "Grundwasserstand"; 
+    if( suffix.equalsIgnoreCase( "gws" ) )
+      return "Grundwasserstand";
     // j Gesamtabfluss Knoten .qgs
-    if( suffix.equalsIgnoreCase( "qgs" ) ) 
-      return "Gesamtabfluss"; 
+    if( suffix.equalsIgnoreCase( "qgs" ) )
+      return "Gesamtabfluss";
     // n Gesamtabfluss TG .qgg
-    if( suffix.equalsIgnoreCase( "qgg" ) ) 
-      return "Gesamtabfluss"; 
+    if( suffix.equalsIgnoreCase( "qgg" ) )
+      return "Gesamtabfluss";
     // n Oberflaechenabfluss .qna
-    if( suffix.equalsIgnoreCase( "qna" ) ) 
-      return "Oberflaechenabfluss(natuerlich)"; 
+    if( suffix.equalsIgnoreCase( "qna" ) )
+      return "Oberflaechenabfluss(natuerlich)";
     // n Interflow .qif
-    if( suffix.equalsIgnoreCase( "qif" ) ) 
-      return "Interflow"; 
+    if( suffix.equalsIgnoreCase( "qif" ) )
+      return "Interflow";
     // n Abfluss vers. Flaechen .qvs
-    if( suffix.equalsIgnoreCase( "qvs" ) ) 
-      return "Oberflaechenabfluss(versiegelt)"; 
+    if( suffix.equalsIgnoreCase( "qvs" ) )
+      return "Oberflaechenabfluss(versiegelt)";
     // n Basisabfluss .qbs
-    if( suffix.equalsIgnoreCase( "qbs" ) ) 
-      return "Basisabfluss"; 
+    if( suffix.equalsIgnoreCase( "qbs" ) )
+      return "Basisabfluss";
     // n Kluftgrundw1 .qt1
-    if( suffix.equalsIgnoreCase( "qt1" ) ) 
-      return "Kluftgrundw1abfluss"; 
+    if( suffix.equalsIgnoreCase( "qt1" ) )
+      return "Kluftgrundw1abfluss";
     // n Kluftgrundw .qtg
-    if( suffix.equalsIgnoreCase( "qtg" ) ) 
-      return "KluftGWAbfluss"; 
+    if( suffix.equalsIgnoreCase( "qtg" ) )
+      return "KluftGWAbfluss";
     // n Grundwasser .qgw
-    if( suffix.equalsIgnoreCase( "qgw" ) ) 
-      return "Grundwasserabfluss"; 
+    if( suffix.equalsIgnoreCase( "qgw" ) )
+      return "Grundwasserabfluss";
     // n Evapotranspiration .vet
-    if( suffix.equalsIgnoreCase( "vet" ) ) 
-      return "Evapotranspiration"; 
-    if( suffix.equalsIgnoreCase( "qmr" ) ) 
-      return "MuldenRigolen"; 
+    if( suffix.equalsIgnoreCase( "vet" ) )
+      return "Evapotranspiration";
+    if( suffix.equalsIgnoreCase( "qmr"))
+      return "MuldenRigolen";
     // n Ausgabe hydrotope .hyd
-    if( suffix.equalsIgnoreCase( "hyd" ) ) 
-      return "Hydrotope"; 
+    if( suffix.equalsIgnoreCase( "hyd" ) )
+      return "Hydrotope";
     // n Abflussbilanz .bil
-    if( suffix.equalsIgnoreCase( "bil" ) ) 
-      return "Abflussbilanz"; 
+    if( suffix.equalsIgnoreCase( "bil" ) )
+      return "Abflussbilanz";
     // n Statistische Abflusswerte .nmq
-    if( suffix.equalsIgnoreCase( "nmq" ) ) 
-      return "Abflusswerte(statistisch)"; 
+    if( suffix.equalsIgnoreCase( "nmq" ) )
+      return "Abflusswerte(statistisch)";
     // n Speicherinhalt .spi
-    if( suffix.equalsIgnoreCase( "spi" ) ) 
-      return "Fuellvolumen"; 
+    if( suffix.equalsIgnoreCase( "spi" ) )
+      return "Fuellvolumen";
     // n Wasserspiegelhöhe .sph
-    if( suffix.equalsIgnoreCase( "sph" ) ) 
-      return "Wasserspiegelhoehe"; 
+    if( suffix.equalsIgnoreCase( "sph" ) )
+      return "Wasserspiegelhoehe";
     // n Verdunstung aus Talsperre .spv
-    if( suffix.equalsIgnoreCase( "spv" ) ) 
-      return "Talsperrenverdunstung"; 
+    if( suffix.equalsIgnoreCase( "spv" ) )
+      return "Talsperrenverdunstung";
     // n Niederschlag in Talsperre .spn
-    if( suffix.equalsIgnoreCase( "spn" ) ) 
-      return "Niederschlag"; 
+    if( suffix.equalsIgnoreCase( "spn" ) )
+      return "Niederschlag";
     // n Zehrung .spb
-    if( suffix.equalsIgnoreCase( "spb" ) ) 
-      return "Zehrung"; 
+    if( suffix.equalsIgnoreCase( "spb" ) )
+      return "Zehrung";
     // n Speicherueberlauf .sub
-    if( suffix.equalsIgnoreCase( "sub" ) ) 
-      return "Speicherueberlauf"; 
+    if( suffix.equalsIgnoreCase( "sub" ) )
+      return "Speicherueberlauf";
     // n Kapil.Aufstieg/Perkolation .kap - not available, because not used in the calculation core
     // if( suffix.equalsIgnoreCase( "kap" ) )
     // return "Kapil.Aufstieg/Perkolation";

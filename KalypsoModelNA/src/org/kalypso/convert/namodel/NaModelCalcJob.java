@@ -44,7 +44,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -85,9 +84,9 @@ public class NaModelCalcJob implements ISimulation
       // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
       // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) innerDataProvider.getInputForID(
       // NaModelConstants.IN_CONTROL_ID ) );
-      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
+      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
       final Feature rootFeature = controlWorkspace.getRootFeature();
-      final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, NaModelConstants.NACONTROL_AUTOCALI_PROP, false );
+      final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration", false );
 
       if( dataProvider.hasID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID ) )
         m_calcJob = new NaModelParameterAnalyseSimulation( logger );
@@ -107,7 +106,7 @@ public class NaModelCalcJob implements ISimulation
     }
     catch( Exception e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.convert.namodel.NaModelCalcJob.0"), e ); //$NON-NLS-1$
+      throw new SimulationException( "could not instantiate NAOptimizingJob", e );
     }
   }
 
@@ -337,7 +336,7 @@ public class NaModelCalcJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/nacalcjob_spec.xml" ); //$NON-NLS-1$
+    return getClass().getResource( "resources/nacalcjob_spec.xml" );
   }
 
   public boolean isSucceeded( )

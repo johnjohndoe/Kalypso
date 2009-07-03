@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 
 package org.kalypso.convert.namodel;
@@ -69,8 +69,8 @@ public class NaNodeResultProvider
   {
     m_context = context;
     final Feature controlFE = controlWorkspace.getRootFeature();
-    m_useResults = FeatureHelper.booleanIsTrue( controlFE, NaModelConstants.NACONTROL_USE_RESULTS_PROP, true );
-    final String resultNodeID = (String) controlFE.getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP );
+    m_useResults = FeatureHelper.booleanIsTrue( controlFE, "useResults", true );
+    final String resultNodeID = (String) controlFE.getProperty( "rootNode" );
     // exclude some node from providing results
     if( resultNodeID != null )
     {
@@ -78,12 +78,12 @@ public class NaNodeResultProvider
     }
     else
     {
-      final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+      final IFeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
       final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature nodeFE = nodeFEs[i];
-        if( FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+        if( FeatureHelper.booleanIsTrue( nodeFE, "generateResult", false ) )
           removeResult( nodeFE );
       }
     }
@@ -91,22 +91,22 @@ public class NaNodeResultProvider
 
   private URL getResultURL( final Feature nodeFE ) throws MalformedURLException
   {
-    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( "qberechnetZR" );
     if( link == null )
       return null;
     // optionen loeschen
-    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String href = link.getHref().replaceAll( "\\?.*", "" );
     IUrlResolver res = new UrlUtilities();
     return res.resolveURL( m_context, href );
   }
 
   public URL getMeasuredURL( final Feature nodeFE ) throws MalformedURLException
   {
-    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
+    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( "pegelZR" );
     if( link == null )
       return null;
     // optionen loeschen
-    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String href = link.getHref().replaceAll( "\\?.*", "" );
     IUrlResolver res = new UrlUtilities();
     return res.resolveURL( m_context, href );
   }

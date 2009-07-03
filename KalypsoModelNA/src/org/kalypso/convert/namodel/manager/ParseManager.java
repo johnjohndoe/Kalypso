@@ -42,12 +42,9 @@ package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.net.URL;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -71,7 +68,7 @@ public class ParseManager
 
   private final NetFileManager m_nodeManager;
 
-  // private final RHBManager m_rhbManager;
+  private final RHBManager m_rhbManager;
 
   private final BodenartManager m_bodartManager;
 
@@ -91,7 +88,7 @@ public class ParseManager
     m_nodeManager = nodeManager;
     m_schema = schema;
     m_paraSchema = paraSchema;
-    // m_rhbManager = rhbManager;
+    m_rhbManager = rhbManager;
     m_bodartManager = bodartManager;
     m_bodtypManager = bodtypManager;
     m_nutzManager = nutzManager;
@@ -103,10 +100,10 @@ public class ParseManager
   {
     ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
-    IFeatureType naModellFT = m_schema.getFeatureType( NaModelConstants.NA_MODEL_ROOT_FT );
-    IFeatureType catchmentCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CATCHMENT_COLLECTION_FT );
-    IFeatureType channelCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
-    IFeatureType nodeCollectionFT = m_schema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
+    IFeatureType naModellFT = m_schema.getFeatureType( "NaModell" );
+    IFeatureType catchmentCollectionFT = m_schema.getFeatureType( "CatchmentCollection" );
+    IFeatureType channelCollectionFT = m_schema.getFeatureType( "ChannelCollection" );
+    IFeatureType nodeCollectionFT = m_schema.getFeatureType( "NodeCollection" );
 
     // create all Features (and FeatureCollections)
     Feature naModellFe = modelManager.createFeature( naModellFT );
@@ -116,34 +113,38 @@ public class ParseManager
 
     // complete Feature NaModell
 
-    naModellFe.setProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP, catchmentCollectionFe );
+    // final FeatureProperty prop = FeatureFactory.createFeatureProperty( "CatchmentCollectionMember",
+    // catchmentCollectionFe );
+    naModellFe.setProperty( "CatchmentCollectionMember", catchmentCollectionFe );
 
-    naModellFe.setProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP, channelCollectionFe );
+    // prop = FeatureFactory.createFeatureProperty( "ChannelCollectionMember", channelCollectionFe );
+    naModellFe.setProperty( "ChannelCollectionMember", channelCollectionFe );
 
-    naModellFe.setProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP, nodeCollectionFe );
+    // prop = FeatureFactory.createFeatureProperty( "NodeCollectionMember", nodeCollectionFe );
+    naModellFe.setProperty( "NodeCollectionMember", nodeCollectionFe );
 
     // complete Feature CatchmentCollection
-    final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( "catchmentMember" );
     Feature[] features = m_catchmentManager.parseFile( m_conf.getCatchmentFile().toURL() );
     for( int i = 0; i < features.length; i++ )
       FeatureHelper.addProperty( catchmentCollectionFe, catchmentMemberPT, features[i] );
 
     // complete Features of ChannelCollections
-    final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
+    final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( "channelMember" );
     features = m_channelManager.parseFile( m_conf.getChannelFile().toURL() );
     for( int i = 0; i < features.length; i++ )
       FeatureHelper.addProperty( channelCollectionFe, channelMemberPT, features[i] );
 
     // complete Feature NodeCollection
-    final IPropertyType nodeMemberPT = nodeCollectionFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
+    final IPropertyType nodeMemberPT = nodeCollectionFT.getProperty( "nodeMember" );
     features = m_nodeManager.parseFile( m_conf.getNetFile().toURL() );
     for( int i = 0; i < features.length; i++ )
       FeatureHelper.addProperty( nodeCollectionFe, nodeMemberPT, features[i] );
 
     // complete Features of StorageChannel
-    // features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
+//    features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
 
-    System.out.println( "\n\n-----------------" ); //$NON-NLS-1$
+    System.out.println( "\n\n-----------------" );
     return naModellFe;
   }
 
@@ -151,81 +152,54 @@ public class ParseManager
   {
     ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
-    IFeatureType naParaFT = m_paraSchema.getFeatureType( NaModelConstants.PARA_ROOT_FT );
+    IFeatureType naParaFT = m_paraSchema.getFeatureType( "Parameter" );
 
     // create all Features (and FeatureCollections)
     Feature naParaFe = modelManager.createFeature( naParaFT );
-    Feature[] features;
-    IPropertyType soilLayerMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
-    IPropertyType soiltypeMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
 
     // complete Feature soilLayerMember
-    try
-    {
-      features = m_bodartManager.parseFile( m_conf.getBodenartFile().toURL() );
-      for( int i = 0; i < features.length; i++ )
-        FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
-    }
-    catch( Exception e )
-    {
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.1") ); //$NON-NLS-1$
-    }
+    Feature[] features = m_bodartManager.parseFile( m_conf.getBodenartFile().toURL() );
+    IPropertyType soilLayerMemberPT = naParaFT.getProperty( "soilLayerMember" );
+    for( int i = 0; i < features.length; i++ )
+      FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
 
     // complete Feature soiltypeMember
     features = m_bodtypManager.parseFile( m_conf.getBodentypFile().toURL() );
     for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( naParaFe, soiltypeMemberPT, features[i] );
+      FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
 
     // complete Feature idealLandUseMember
     File nutzungDir = m_conf.getNutzungDir();
-    FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" ); //$NON-NLS-1$
+    FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" );
     File nutzFiles[] = nutzungDir.listFiles( filter );
-    final IPropertyType idealLandUseMemberRT = naParaFT.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_MEMBER );
+    final IPropertyType idealLandUseMemberRT = naParaFT.getProperty( "idealLandUseMember" );
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.3") + nutzFiles[i].toURL().toString() ); //$NON-NLS-1$
+      System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
       features = m_idleLanduseManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
         FeatureHelper.addProperty( naParaFe, idealLandUseMemberRT, features[f] );
     }
-    final IPropertyType landuseMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+    final IPropertyType landuseMemberRT = naParaFT.getProperty( "landuseMember" );
     // complete Feature landuseMember
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.4") + nutzFiles[i].toURL().toString() ); //$NON-NLS-1$
+      System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
       features = m_nutzManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
         FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
     }
-    System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.5") + nutzFiles.length + Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.6") ); //$NON-NLS-1$ //$NON-NLS-2$
+    System.out.println( "---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen" );
 
-    final IPropertyType sealingMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SEALING_MEMBER );
-    URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL();
-    features = m_idleLanduseManager.parseSealingFilecsv( csvsealingURL );
-    for( int f = 0; f < features.length; f++ )
-      FeatureHelper.addProperty( naParaFe, sealingMemberRT, features[f] );
-
-    URL csvURL = new File( nutzungDir, "Klassen_KRUECK2007.csv" ).toURL();
-    features = m_idleLanduseManager.parseFilecsv( csvURL );
-    for( int f = 0; f < features.length; f++ )
-      FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
-
-    final IPropertyType snowMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
+    final IPropertyType snowMemberRT = naParaFT.getProperty( "snowMember" );
     // complete Feature snowMember
-    try
-    {
-      features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
-      for( int i = 0; i < features.length; i++ )
-        FeatureHelper.addProperty( naParaFe, snowMemberRT, features[i] );
-    }
-    catch( Exception e )
-    {
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.9") ); //$NON-NLS-1$
-    }
+    features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
+    for( int i = 0; i < features.length; i++ )
+      FeatureHelper.addProperty( naParaFe, snowMemberRT, features[i] );
 
-    System.out.println( "\n\n-----------------" ); //$NON-NLS-1$
+    System.out.println( "\n\n-----------------" );
     return naParaFe;
   }
 }

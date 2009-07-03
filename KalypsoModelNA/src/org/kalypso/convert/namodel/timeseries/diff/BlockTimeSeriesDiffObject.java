@@ -41,6 +41,7 @@
 package org.kalypso.convert.namodel.timeseries.diff;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -55,7 +56,7 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 public class BlockTimeSeriesDiffObject implements IDiffObject
 {
 
-  private static final String SEPERATOR = "#"; //$NON-NLS-1$
+  private static final String SEPERATOR = "#";
 
   private final BlockTimeSeries m_blockTimeSeries;
 

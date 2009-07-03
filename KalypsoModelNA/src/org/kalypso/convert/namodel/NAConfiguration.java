@@ -45,18 +45,14 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
@@ -142,7 +138,7 @@ public class NAConfiguration
 
   private final IDManager m_idManager = new IDManager();
 
-  private String m_szenarioID = ""; //$NON-NLS-1$
+  private String m_szenarioID = "";
 
   private NaNodeResultProvider m_nodeResultProvider = null;
 
@@ -159,67 +155,52 @@ public class NAConfiguration
   private Boolean m_iniWrite;
 
   private TreeSet<Date> m_dateWriteSet;
-  
-  private GMLWorkspace m_modelWorkspace = null;
-  private GMLWorkspace m_parameterWorkspace = null;
-  private GMLWorkspace m_hydrotopeWorkspace = null;
-  private GMLWorkspace m_synthNWorkspace = null;
-  private GMLWorkspace m_landuseWorkspace = null;
-  private GMLWorkspace m_sudsWorkspace;
 
-  private final  NACalculationLogger m_calculationLogger;
-
-  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws InvocationTargetException
+  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
     m_gmlBaseDir = gmlBaseDir;
     m_gmlModelURL = modelURL;
 
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
-    final GMLSchema paraSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
-    final GMLSchema synthNSchema = schemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String) null );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
+    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
+    final GMLSchema synthNSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String) null );
 
     // featuretypes
-    m_nodeFT = schema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    m_vChannelFT = schema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
-    m_stChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
-    m_kmChannelFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
-    m_catchmentFT = schema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
-    m_bodartFT = paraSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
-    m_statNFT = synthNSchema.getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
-    m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" ); //$NON-NLS-1$
+    m_nodeFT = schema.getFeatureType( "Node" );
+    m_vChannelFT = schema.getFeatureType( "VirtualChannel" );
+    m_stChannelFT = schema.getFeatureType( "StorageChannel" );
+    m_kmChannelFT = schema.getFeatureType( "KMChannel" );
+    m_catchmentFT = schema.getFeatureType( "Catchment" );
+    m_bodartFT = paraSchema.getFeatureType( "SoilLayer" );
+    m_statNFT = synthNSchema.getFeatureType( "StatN" );
+    m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:
-    m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" ); //$NON-NLS-1$
+    m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
     // kalypsoNa-sourcecode
-    m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" ); //$NON-NLS-1$
-    m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" ); //$NON-NLS-1$
-    m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" ); //$NON-NLS-1$
-    m_hydrotopFormatURL = getClass().getResource( "formats/hydrotop.txt" ); //$NON-NLS-1$
-    m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" ); //$NON-NLS-1$
-    m_swaleAndTrenchFormatURL = getClass().getResource( "formats/swaleAndTrench.txt" ); //$NON-NLS-1$
+    m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" );
+    m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
+    m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" );
+    m_hydrotopFormatURL = getClass().getResource( "formats/hydrotop.txt" );
+    m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" );
+    m_swaleAndTrenchFormatURL = getClass().getResource( "formats/swaleAndTrench.txt" );
     // ASCII
-    (new File( asciiBaseDir, "inp.dat" )).mkdirs(); //$NON-NLS-1$
-    (new File( asciiBaseDir, "hydro.top" )).mkdirs(); //$NON-NLS-1$
-    m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" ); //$NON-NLS-1$
-    m_zftFile = new File( asciiBaseDir, "inp.dat/we_nat.zft" ); //$NON-NLS-1$
-    m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" ); //$NON-NLS-1$
-    m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" ); //$NON-NLS-1$
-    m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" ); //$NON-NLS-1$
-    m_nutzungDir = new File( asciiBaseDir, "hydro.top" ); //$NON-NLS-1$
-    m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" ); //$NON-NLS-1$
-    m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" ); //$NON-NLS-1$
-    m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
-    m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
-    m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
-    m_calculationLogger = new NACalculationLogger(asciiBaseDir.getPath());
-    m_iniWrite = false;
-  }
+    (new File( asciiBaseDir, "inp.dat" )).mkdirs();
+    (new File( asciiBaseDir, "hydro.top" )).mkdirs();
+    m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
+    m_zftFile = new File( asciiBaseDir, "inp.dat/we_nat.zft" );
+    m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
+    m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
+    m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" );
+    m_nutzungDir = new File( asciiBaseDir, "hydro.top" );
+    m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" );
+    m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" );
+    m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" );
+    m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" );
+    m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" );
 
-  public Logger getLogger( )
-  {
-    return m_calculationLogger.getCalculationLogger();
+    m_iniWrite = false;
   }
 
   public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
@@ -555,65 +536,5 @@ public class NAConfiguration
   public TreeSet<Date> getDateWriteSet( )
   {
     return m_dateWriteSet;
-  }
-
-  public void setModelWorkspace( GMLWorkspace modelWorkspace )
-  {
-    m_modelWorkspace = modelWorkspace;
-  }
-
-  public GMLWorkspace getModelWorkspace( )
-  {
-    return m_modelWorkspace;
-  }
-
-  public void setParameterWorkspace( GMLWorkspace parameterWorkspace )
-  {
-    m_parameterWorkspace = parameterWorkspace;
-  }
-
-  public GMLWorkspace getParameterWorkspace( )
-  {
-    return m_parameterWorkspace;
-  }
-
-  public void setHydrotopeWorkspace( GMLWorkspace hydrotopeWorkspace )
-  {
-    m_hydrotopeWorkspace = hydrotopeWorkspace;
-  }
-
-  public GMLWorkspace getHydrotopeWorkspace( )
-  {
-    return m_hydrotopeWorkspace;
-  }
-
-  public void setSynthNWorkspace( GMLWorkspace synthNWorkspace )
-  {
-    m_synthNWorkspace = synthNWorkspace;
-  }
-
-  public GMLWorkspace getSynthNWorkspace( )
-  {
-    return m_synthNWorkspace;
-  }
-
-  public void setLanduseWorkspace( GMLWorkspace landuseWorkspace )
-  {
-    m_landuseWorkspace = landuseWorkspace;
-  }
-
-  public GMLWorkspace getLanduseWorkspace( )
-  {
-    return m_landuseWorkspace;
-  }
-
-  public void setSudsWorkspace( GMLWorkspace sudsWorkspace )
-  {
-    m_sudsWorkspace = sudsWorkspace;
-  }
-
-  public GMLWorkspace getSudsWorkspace( )
-  {
-    return m_sudsWorkspace;
   }
 }

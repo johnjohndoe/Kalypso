@@ -66,7 +66,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -124,7 +123,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private OptimizeCalcResultEater m_bestResultEater = null;
 
-  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far"; //$NON-NLS-1$
+  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far";
 
   private int m_counter = 0;
 
@@ -141,20 +140,20 @@ public class NAOptimizingJob implements IOptimizingJob
     m_monitor = monitor;
 
     // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
     // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
-    m_linkMeasuredTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
-    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+    m_linkMeasuredTS = (TimeseriesLinkType) rootFeature.getProperty( "pegelZR" );
+    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( "qberechnetZR" );
 
     // final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ) );
     // final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final Date measuredStartDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION );
-    final Date measuredEndDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_FORECAST );
+    final Date measuredStartDate = (Date) metaFE.getProperty( "startsimulation" );
+    final Date measuredEndDate = (Date) metaFE.getProperty( "startforecast" );
 
     // todo: einmal static erzeugen
     final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
@@ -181,7 +180,7 @@ public class NAOptimizingJob implements IOptimizingJob
   public void calculate( ) throws MalformedURLException
   {
     m_counter++;
-    final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir ); //$NON-NLS-1$
+    final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir );
     optimizeRunDir.mkdirs();
 
     final CalcDataProviderDecorater newDataProvider = new CalcDataProviderDecorater( m_dataProvider );
@@ -275,10 +274,10 @@ public class NAOptimizingJob implements IOptimizingJob
     TransformerFactory factory = TransformerFactory.newInstance();
     final Transformer t = factory.newTransformer();
 
-    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
     t.setOutputProperty( OutputKeys.INDENT, "yes" );
 
-    final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir ); //$NON-NLS-2$
+    final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir );
     Writer writer = new FileWriter( file );
     try
     {
@@ -339,10 +338,10 @@ public class NAOptimizingJob implements IOptimizingJob
     final TreeMap<Date, Object> result = new TreeMap<Date, Object>();
     final File optimizeResultDir = new File( m_lastOptimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
-    String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" );
 
     final File tsFile = new File( optimizeResultDir, calcHref );
-    final IObservation observation = ZmlFactory.parseXML( tsFile.toURL(), "result" ); //$NON-NLS-1$
+    final IObservation observation = ZmlFactory.parseXML( tsFile.toURL(), "result" );
     final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
     final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_RUNOFF );
     final ITuppleModel values = observation.getValues( null );
@@ -369,7 +368,7 @@ public class NAOptimizingJob implements IOptimizingJob
       resultEater.addResult( id, m_bestResultEater.get( id ) );
     }
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
-    System.out.println( Messages.getString("org.kalypso.convert.namodel.optimize.NAOptimizingJob.12") + m_bestNumber ); //$NON-NLS-1$
+    System.out.println( "best was #" + m_bestNumber );
   }
 
   /**

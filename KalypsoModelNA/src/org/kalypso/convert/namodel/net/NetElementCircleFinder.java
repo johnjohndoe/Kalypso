@@ -34,8 +34,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.convert.namodel.i18n.Messages;
-
 /**
  * 
  * 
@@ -56,21 +54,21 @@ public class NetElementCircleFinder
 
   public List[] findCircle()
   {
-    return findCircle( m_testNetElement, new ArrayList<NetElement>() );
+    return findCircle( m_testNetElement, new ArrayList() );
   }
 
-  private List[] findCircle( NetElement netElement, final List<NetElement> listToHere )
+  private List[] findCircle( NetElement netElement, final List listToHere )
   {
-    final List<Object> result = new ArrayList<Object>();
+    final List result = new ArrayList();
     listToHere.add( netElement );
     final List downStreamNetElements = netElement.getDownStreamNetElements();
     final NetElement[] downStreamElements = (NetElement[])downStreamNetElements
         .toArray( new NetElement[downStreamNetElements.size()] );
     for( int i = 0; i < downStreamElements.length; i++ )
     {
-      final List<NetElement> copyOfListToHere = new ArrayList<NetElement>();
+      final List copyOfListToHere = new ArrayList();
       // make copy
-      for( Iterator<NetElement> iter = listToHere.iterator(); iter.hasNext(); )
+      for( Iterator iter = listToHere.iterator(); iter.hasNext(); )
         copyOfListToHere.add( iter.next() );
 
       final NetElement linkNetElement = downStreamElements[i];
@@ -82,7 +80,7 @@ public class NetElementCircleFinder
       else if( listToHere.contains( linkNetElement ) )
       {
         // an other circle
-        System.out.println( Messages.getString("org.kalypso.convert.namodel.net.NetElementCircleFinder.0") + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
+        System.out.println( "found an other circle:\n" + listToHere.toString() + " : " + linkNetElement );
       }
       else
       {
@@ -91,7 +89,7 @@ public class NetElementCircleFinder
           result.addAll( Arrays.asList( lists ) );
       }
     }
-    return result.toArray( new List[result.size()] );
+    return (List[])result.toArray( new List[result.size()] );
   }
 
 }
