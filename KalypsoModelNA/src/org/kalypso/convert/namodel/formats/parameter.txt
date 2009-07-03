@@ -1,0 +1,14 @@
+#Bodentyp:
+(name,a10)(ianz,i4)_(description,a80)
+(name,a8)(xtief,*)_(xret,*)
+#
+#Bodenart:
+(text,*)
+(name,*)_(IGNORE,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
+#
+#Nutzung:
+(name,a80)
+(dat,a8)(xkc,f8.2)(xwt,f8.2)(xlai,f8.2)
+#(IGNORE,i2)(IGNORE,a1)(imon1,i2)(IGNORE,a1)(IGNORE,i2)(xkc,f8.2)(xwt,f8.2)(xlai,f8.2)
+#Schnee:
+(name,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
