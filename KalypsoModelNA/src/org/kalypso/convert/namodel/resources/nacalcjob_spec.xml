@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
+
+	<input id="MetaSteuerdaten" description="Schema der Modelldaten"/>
+	<input id="Modell" description="Schema der Steuerdaten"/>
+	
+	<input id="Hydrotop" description="Modelldaten" optional="true"/>
+	<input id="Parameter" description="Steuerdaten" optional="true"/>
+	<input id="Control" description="Modelldaten" />
+	<input id="Template" description="Steuerdaten"/>
+	<input id="SceConf" description="Modelldaten" optional="true"/>
+
+
+	<!-- Ergebnis-Dateien/Verzeichnisse -->
+	<output id="OUT_ZML" description="Verzeichnis der Berechnungsergebnisse"/>
+	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei"/>
+	<output id="LOG_EXE_STDOUT" description="Pegel Vorhersage Abfluss"/>
+	<output id="LOG_EXE_ERROUT" description="Speicherabgabe (Gesamtzeitraum)"/>
+	<output id="LOG_OUTRES" description="Speicherinhalt Vorhersage"/>
+	<output id="LOG_OUTERR" description="bisher noch nicht identifizierter Output"/>
+	<output id="LOG_INFO" description="bisher noch nicht identifizierter Output"/>
+	
+</modelspec>
