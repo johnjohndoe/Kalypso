@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+     <extension
+           point="org.kalypso.simulation.core.simulation">
+        <simulation
+              catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
+              simulationClass="org.kalypso.convert.namodel.NaModelCalcJob"
+              typeID="KalypsoNA"/>
+     </extension>
+</plugin>

@@ -1,0 +1,4 @@
+(inum,*)
+(iart,*)
+(qfmax,*)_(c,*)_(IGNORE,*)_(IGNORE,*)_(IGNORE,*)
+(qrk,*)_(rkf,*)_(rnf,*)_(rkv,*)_(rnv,*)_(IGNORE,*)_(IGNORE,*)

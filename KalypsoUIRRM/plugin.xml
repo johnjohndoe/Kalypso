@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         id="KalypsoUIRRMPopupManu"
+         name="KalypsoUIRRMPopupManu"
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="KalypsoUIRRM.kmContribution"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <menu
+               id="KalypsoUIRRM.menu1"
+               label="RRM-tools"
+               path="additions">
+         </menu>
+         <action
+               class="org.kalypso.ui.rrm.action.KMUpdateAction"
+               enablesFor="+"
+               icon="icons/kmStrang.gif"
+               id="KalypsoUIRRM.updateKMParameter"
+               label="UpdateKMParameter"
+               menubarPath="KalypsoUIRRM.menu1"
+               style="push"
+               tooltip="tooltip"/>
+      </objectContribution>
+   </extension>
+
+</plugin>

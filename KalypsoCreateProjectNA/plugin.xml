@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="NA-Modell Projekt"
+            id="org.kalypso.wizard"/>
+      <wizard
+            class="org.kalypso.wizard.KalypsoNAProjectWizard"
+            icon="icons/kalypso16.gif"
+            category="org.kalypso"
+            name="%NewWizard.name"
+            id="org.kalypso.wizard.KalypsoNAProjectWizard"/>
+   </extension>
+
+</plugin>
