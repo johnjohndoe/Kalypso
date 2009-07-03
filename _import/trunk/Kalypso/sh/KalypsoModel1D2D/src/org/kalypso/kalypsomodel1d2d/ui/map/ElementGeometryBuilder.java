@@ -152,7 +152,10 @@ public class ElementGeometryBuilder
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
     {
-      lNewFeature = ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, m_nodes );
+      // bugfix - compile error due to changes in ElementGeometryHelper (revision 6435 to 6506)
+      // TODO check if this functionality is OK
+//      lNewFeature = ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, m_nodes );
+      lNewFeature = ElementGeometryHelper.createAdd2dElement( command, workspace, discModel, m_nodes );
     }
       
     return lNewFeature;
