@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="dwdzml.dwd.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="dwdzmlConf">
+		<xs:complexType>
+			<xs:sequence>
+              <xs:element name="inputFolder" type="xs:string"/>
+              <xs:element name="outputFolder" type="xs:string"/>
+              <xs:element name="createZMLFile" type="xs:boolean"/>
+              <xs:element name="defaultStatusValue" type="xs:string"/>
+              <xs:element name="processedRasterDir" type="xs:string">
+              <!-- -->
+              </xs:element>
+                <xs:element name="catchment" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="rasterPos" type="xs:int" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="fid" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+			</xs:sequence>		
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
