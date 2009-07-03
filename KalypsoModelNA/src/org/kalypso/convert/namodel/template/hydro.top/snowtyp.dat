@@ -1,0 +1,15 @@
+/parameter zur schneeroutine nach dem snow compaction verfahren
+/snowtyp              wwo    wwmax   snotem      snorad    h0
+/2345678901234567890   *        *        *        *       *
+snowtyp2              0.20     0.45     0.25     0.35       0.
+snowtyp1              0.20     0.45     0.10     0.10       0.
+snowtyp1              0.20     0.45     0.15     0.25       0.
+snowtyp2              0.20     0.45     0.25     0.35       0.
+snowtyp3              0.20     0.45     0.10     0.10       0.
+snowtyp4              0.20     0.45     0.07     0.08       0.
+snowtyp35             0.20     0.45     0.02     0.01       0.
+snowtyp5              0.20     0.45     0.04     0.05       0.
+snowtyp6              0.20     0.45     0.10     0.10       0.
+snowtyp9              0.20     0.45     0.10     0.10       0.
+snowtyp91             0.90     0.45     0.10     0.01       0.
+snowtyp99             0.20     0.45     0.01     0.01       0.
