@@ -1,0 +1,1 @@
+Konvertierung von DWD-Wetterprognosen (Niederschlag) in Zeitreihen.
