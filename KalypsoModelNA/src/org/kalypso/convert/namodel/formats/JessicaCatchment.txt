@@ -1,0 +1,22 @@
+___________(inum,i5)____(ispk,i3)
+(name,a80)
+(flaech,*)
+(pns,a1)_(langzeit,a)_(kurzzeit,a)_(faktn,f5.2)
+(namft,a)_(namept,a)
+(namfzf,a)
+(namhydro,a)
+(snowtype,a15)(ftem,*)_(fver,*)
+(IGNORE,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,i5)_____(tint,f5.1)_____(rintmx,f5.1)
+(cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
+(f_eva,f4.1)_(aint,f4.1)_(aigw,f6.2)_(fint,f4.2)_(ftra,f4.2)
+(retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
+(igwzu,*)
+(ngwzu,*)
+(gwwi,*)
+(hgru,*)_(hgro,*)_(rtr,*)_(pors,*)_(gwsent,*)_(klupor,*)_(izkn,*)
+# ausgabe:
+(inum,*)_
+(num,i5)
+#Zeitflächenfunktion:
+(ianzf,*)_(dtzf,*)_(iart,*)
+(ptime,*)_(p,*)
