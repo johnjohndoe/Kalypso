@@ -5,7 +5,9 @@
 
 	<xsl:output method="text" encoding="ISO-8859-1" indent="yes"/>
 
-	<xsl:variable name="latex.babel.language">german</xsl:variable>
+	<xsl:variable name="latex.document.font">times</xsl:variable>
+	<xsl:variable name="latex.fontenc">T1</xsl:variable>
+	<xsl:variable name="latex.babel.language">germanb</xsl:variable>
 	<xsl:variable name="latex.use.babel">1</xsl:variable>
 
 	<xsl:variable name="latex.use.isolatin1">0</xsl:variable>
@@ -55,8 +57,9 @@
 		palatcm		funktioniert nicht
 		newcent
 	-->
-	<xsl:variable name="latex.document.font">default</xsl:variable>
-	<xsl:param name="latex.fontenc">T1</xsl:param>
+	<xsl:variable name="ignore.image.scaling">0</xsl:variable>
+	<xsl:variable name="contentwidth">17cm</xsl:variable>
+	<xsl:variable name="scalefit">1</xsl:variable>
 
 	<xsl:variable name="latex.figure.position">[hbt]</xsl:variable>
 

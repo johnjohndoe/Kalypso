@@ -46,6 +46,131 @@
   eindimensional aufgefasst. Die Abflussverformung im Gerinne erfolgt nach dem
   Verfahren von Kalinin-Miljukov.</para>
 
+  <section>
+    <title>Client-Installation (Windows)</title>
+
+    <para>Die Client-Installation wird auf Basis des gelieferten ZIP-Archives
+    durchgeführt. Zur Installation wird das ZIP-Archiv an den gewünschten
+    Installationsort entpackt. Zum Programmstart muss der im Hauptverzeichnis
+    enthaltene Link (Kalypso.lnk) entsprechend des Installationsortes und des
+    gewünschten Arbeitsverzeichnisses (Workspace) angepasst werden. Hierzu ist
+    der Pfad der Zielanwendung durch den aktuellen Installationspfad zu
+    ersetzen. Außerdem wird ein Arbeitsverzeichnis für die Modelldaten
+    angelegt und der Pfad entsprechend im Link angegeben.</para>
+
+    <table>
+      <title><citetitle>Erläuterung der Eigenschaften</citetitle></title>
+
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry align="center">Link</entry>
+
+            <entry align="center">Beispiel</entry>
+
+            <entrytbl cols="1">
+              <tbody>
+                <row>
+                  <entry align="center">Bemerkung</entry>
+                </row>
+              </tbody>
+            </entrytbl>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>...\kalypso.exe</entry>
+
+            <entry>D:\Programme \KalypsoClient\ kalypso.exe</entry>
+
+            <entry>Lokales Installationsverzeichnis</entry>
+          </row>
+
+          <row>
+            <entry>-dev lib</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>-data %Workspace%</entry>
+
+            <entry>-data D:\runtimeworkspace</entry>
+
+            <entry>lokales Arbeitsverzeichnis</entry>
+          </row>
+
+          <row>
+            <entry>-consoleLog</entry>
+
+            <entry></entry>
+
+            <entrytbl cols="1">
+              <tbody>
+                <row>
+                  <entry>Console (optional)</entry>
+                </row>
+              </tbody>
+            </entrytbl>
+          </row>
+
+          <row>
+            <entry>-nl de_DE</entry>
+
+            <entry>-nl en_EN</entry>
+
+            <entrytbl cols="1">
+              <tbody>
+                <row>
+                  <entry>Sprache (optional)</entry>
+                </row>
+              </tbody>
+            </entrytbl>
+          </row>
+
+          <row>
+            <entry>-vmargs -Xmx250m</entry>
+
+            <entry></entry>
+
+            <entry>Speicherfreigabe gem. Arbeitsspeicher</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <screenshot>
+      <screeninfo>Verknüpfung des Programs auf dem Desktop</screeninfo>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/kalypso_na/Installation.PNG" scale="100" />
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+
+    <para>Beispiel:</para>
+
+    <para><emphasis role="bold">Ziel: </emphasis> ... \kalypso.exe -data
+    <emphasis>D:\Kalypso201</emphasis> -nl de_DE -consoleLog -vmargs
+    -Xmx950m</para>
+
+    <para><emphasis role="bold">Ausführung in:</emphasis> Angabe des Pfades
+    zum Workspace</para>
+
+    <para>Die Installation enthält alle zur Kalypso-Anwendung erforderlichen
+    Plugins, sowie ein eigenständiges Java Runtime Environment. Nachdem die
+    Installation durchgeführt wurde, kann das Programm durch Doppelklick des
+    Linkes gestartet werden. Nach dem Programmstart müssen einmalig
+    Voreinstellungen getroffen werden, die im Kapitel "Preprozessing -
+    Modelaufbau" näher erläutert werden. Beim Verlassen des Programmes werden
+    die Einstellung im aktuellen Workspace für die nachfolgenden
+    Arbeitssitzungen gespeichert.</para>
+  </section>
+
   <section id="KalypsoNADatenakquisition">
     <title>Datenakquisition KalypsoNA</title>
 
@@ -163,7 +288,7 @@
       Teileinzugsgebiete. Das Gerinnenetz wird in einzelne Knoten und die
       Knoten verbindenden Gerinnestränge gegliedert. In die Gerinnestränge
       entwässern die angeschlossenen Teileinzugsgebiete, wie in der Abbildung
-      zu sehen.</para>
+      zu sehen ist.</para>
 
       <figure>
         <title>Darstellung eines Netzplans</title>
@@ -182,11 +307,11 @@
       Formen von Gerinnesträngen im Modell, welche sich durch ihre
       Funktionalität unterscheiden. Der reale oder auch Kalinin-Miljukov
       Strang berücksichtigt die Wellenverformung im Gerinne. Der virtuelle
-      Stang ist lediglich als Modellierungswerkzeug zu verstehen und verändert
-      die Zuflusswelle nicht. Der virtuelle Stang ist jeweils am Anfang eines
-      Gewässersystems anzubringen, außerdem kann es sinnvoll sein, vor einem
-      Zufluss eines Nebengewässers den virtuellen Stang als
-      Modellierungswerkzeug zur einfachen aufgliederung der Abflüsse zu
+      Strang ist lediglich als Modellierungswerkzeug zu verstehen und
+      verändert die Zuflusswelle nicht. Der virtuelle Stang ist jeweils am
+      Anfang eines Gewässersystems anzubringen, außerdem kann es sinnvoll
+      sein, vor einem Zufluss eines Nebengewässers den virtuellen Strang als
+      Modellierungswerkzeug zur einfachen Aufgliederung der Abflüsse zu
       verwenden. Als weiteres Strangelement ist der Speicherstrang vorhanden,
       welcher einen Speicher (z.B. Hochwasserrückhaltebecken) abbildet. Die
       räumliche Vernetzung der Teilgebiete erfolgt durch die Anbindung an
@@ -222,10 +347,9 @@
         </listitem>
       </itemizedlist>
 
-      <para>Des weiteren ist die Abbildung zur Abbildung einer
-      Mischkanalisation die Abführung des Teilgebietsabflusses auf
-      versiegelten Flächen zu einem Knoten möglich. Dieser Knoten stellt dann
-      das Klärwerk o.ä. dar.</para>
+      <para>Des weiteren ist die Abbildung einer Mischkanalisation zur
+      Abführung des Teilgebietsabflusses auf versiegelten Flächen zu einem
+      Knoten möglich. Dieser Knoten stellt dann das Klärwerk o.ä. dar.</para>
 
       <figure>
         <title>Komponenten eines Netzplans</title>
@@ -270,6 +394,13 @@
           <para>Speicherstränge haben einen Eingangs- und Ausgangsknoten.
           Optional verfügen sie weiterhin über einen Überlaufknoten.</para>
         </listitem>
+
+        <listitem>
+          <para>Bei der Erstellung eines Modells ist zu beachten, dass
+          <emphasis role="bold">maximal 550 Stränge</emphasis> <emphasis
+          role="bold">und 450 Knoten</emphasis> in Kalypso importiert bzw.
+          erstellt werden können.</para>
+        </listitem>
       </itemizedlist>
     </section>
 
@@ -289,7 +420,9 @@
       stärksten Gefälles orthogonal zu den Wasserscheiden. Als Datengrundlage
       ist daher ein Höhenmodell unabdingbar. Weiterhin können
       Wasserscheidenpläne und weitere den Fließweg beeinflussende Daten (z.B.
-      in städtischen Einzugsgebieten das Kanalnetz) hinzu gezogen werden. Die
+      in städtischen Einzugsgebieten das Kanalnetz) hinzu gezogen werden.
+      Zusätzlich sollte eine Abgrenzung der TEG mit <emphasis
+      role="bold">Betrachtung der Flurstückgrenzen</emphasis> erfolgen. Die
       Teileinzugsgebiete werden in einem GIS als Polygonthema digitalisiert
       und als Shape-Datei abgelegt (siehe <xref
       linkend="KalypsoNADigitalisierungNetzelemente" />).</para>
@@ -309,11 +442,11 @@
       <note>
         <para>Das Einzugsgebiet (A<literal>E</literal>) ist in Deutschland
         nach DIN 4049 definiert und bezeichnet in der Horizontalprojektion das
-        jeniege Gebiet, aus dem das an einem Punkt x im Flussverlauf
-        abfließende Wasser stammt. In der Abbildung bedeuten
-        (A<literal>EO</literal>) das oberirdische oder topografische
-        Einzugsgebiet und (A<literal>EU</literal>) das unterirdische
-        Einzugsgebiet. Eine Unterscheidung zwischen A<literal>EO</literal> und
+        Gebiet, aus dem das an einem Punkt x im Flussverlauf abfließende
+        Wasser stammt. In der Abbildung bedeuten (A<literal>EO</literal>) das
+        oberirdische oder topografische Einzugsgebiet und
+        (A<literal>EU</literal>) das unterirdische Einzugsgebiet. Eine
+        Unterscheidung zwischen A<literal>EO</literal> und
         A<literal>EU</literal> wird in Kalypso nicht vorgenommen.</para>
       </note>
 
@@ -322,7 +455,8 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/kalypso_na/Kapitel_2/Teileinzugsgebiete.png" />
+              <imagedata fileref="img/kalypso_na/Kapitel_2/Teileinzugsgebiete_550.png"
+                         scale="100" />
             </imageobject>
           </mediaobject>
         </figure></para>
@@ -345,7 +479,7 @@
         <listitem>
           <para>Gebiete mit überwiegender Ableitung über die Kanalisation
           (städtische Einzugsgebiete) werden entsprechend der Zuordnung zu den
-          Haltungen abgegrenzt</para>
+          Haltungen abgegrenzt.</para>
         </listitem>
       </itemizedlist>
 
@@ -355,7 +489,7 @@
       <para>Im Modell KalypsoNA entspricht die Untergliederung des
       Unterirdischen Einzugsgebietes denjenigen des Oberirdischen. Die
       Aufteilung des Grundwasserabflusses erfolgt durch Relationen zu den
-      Nachbargebieten</para>
+      Nachbargebieten und wird im Kapitel "Prozessing" erläutert.</para>
     </section>
 
     <section id="KalypsoNADigitalisierungNetzelemente">
@@ -369,11 +503,11 @@
 
       <para>Die Teileinzugsgebiete müssen zum späteren Import in KalypsoNA als
       Polygon Thema digitalisiert werden. Hierbei ist darauf zu achten, dass
-      die Polygone geschlossen sind, keine Lückenaufweisen und sich nicht
-      überlagern (keine Multipolygone!). Die Fläche der Teileinzugsgebiet wird
-      für die spätere Berechnung verwendet. daher ist es sehr wichtig, dass
-      die Teileinzugsgebiete detailliert digitalisiert werden. Als Attribute
-      erhalten die einzelnen Teilgebiete einen Namen zu besseren
+      die Polygone geschlossen sind, keine Lücken aufweisen und sich nicht
+      überlagern (keine Multipolygone!). Die Flächen der Teileinzugsgebiete
+      werden für die spätere Berechnung verwendet. daher ist es sehr wichtig,
+      dass die Teileinzugsgebiete detailliert digitalisiert werden. Als
+      Attribute erhalten die einzelnen Teilgebiete einen Namen zu besseren
       Identifizierung. Der Teilgebietsname ist für gewöhnlich eine 4 stellige
       Ziffer, jedoch kann von diesem allgemeinen Konzept auch abgewichen
       werden und ein beliebiger Name (keine Sonderzeichen!) vergeben werden.
@@ -383,7 +517,7 @@
 
       <para>Die Stränge müssen zum späteren Import in KalypsoNA als Linien
       Thema digitalisiert werden. Hierbei ist darauf zu achten, dass jeder
-      Strang eine geschlossene Linie bildet (keine Mulitline!). Die Geometrien
+      Strang eine geschlossene Linie bildet (keine Multiline!). Die Geometrien
       der Stränge werden zur späteren Berechnung nicht herangezogen, sie
       dienen lediglich der Orientierung im Modell. Aus diesem Grund ist die
       digitalisierung der Strangelemente lediglich so detailliert
@@ -447,17 +581,17 @@
       Landnutzungen zu Klassen gleicher Versiegelung gruppieren (z.B. Wald,
       Industrie, Einzelhausbebauung,...). Jede Versiegelungsklasse verfügt
       über einen Versiegelungsgrad, welcher falls notwendig für jedes Hydrotop
-      mit einem Faktor korregiert werden kann. Durch den versiegelungsgrad,
-      bzw. den evtl. zusätzlich gesetzen Korrekturfaktor der Versiegelung wird
-      jedes Hydrotop in einen natürlichen und versiegelten Flächenanteil
+      mit einem Faktor korregiert werden kann. Durch den Versiegelungsgrad,
+      bzw. den evtl. zusätzlich gesetzten Korrekturfaktor der Versiegelung
+      wird jedes Hydrotop in einen natürlichen und versiegelten Flächenanteil
       untergliedert, welches bei der Modellberechnung unterschiedliche
-      Berechnung der Abflussbildungsprozesse bewirkt (siehe Theorie
-      Handbuch).<figure>
+      Abflussbildungsprozesse bewirkt (siehe Theorie Handbuch).<figure>
           <title>Beispiel der Versiegelungs- und Vegetationsklassen</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/kalypso_na/Kapitel_2/tabels.png" />
+              <imagedata fileref="img/kalypso_na/Kapitel_2/tabels.png"
+                         scale="100" />
             </imageobject>
           </mediaobject>
         </figure>Weiterhin sind die auftretenden Landnutzungen nach
@@ -481,17 +615,6 @@
       stelliger Key</emphasis> zu verwenden, welcher später die Verknüpfung zu
       den Daten im Parameterkatalog darstellt.</para>
 
-      <figure>
-        <title>Übersicht der Verknüpfung zum Parameterkatalog</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/kalypso_na/Kapitel_2/parameterkatalog.png"
-                       scale="100" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
       <para><emphasis role="bold">Zusammenfassung der für die Bodenschichtung
       relevanten Punkte:</emphasis></para>
 
@@ -511,6 +634,21 @@
           Versiegelung</para>
         </listitem>
       </itemizedlist>
+    </section>
+
+    <section>
+      <para />
+
+      <figure>
+        <title>Übersicht der Verknüpfung zum Parameterkatalog</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_2/parameterkatalog.png"
+                       scale="100" scalefit="1" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
 
     <section id="KalypsoNABodenschichtung">
@@ -556,8 +694,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kalypso_na/Kapitel_2/bodenaufbau-na.png"
-                       scale="100" />
+            <imagedata fileref="img/kalypso_na/Kapitel_2/bodenaufbau-na_680.png"
+                       scale="" scalefit="1" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -572,7 +710,7 @@
         </listitem>
 
         <listitem>
-          <para>Bei voliegender Geologie --&gt; verschneiden von Geologie und
+          <para>Bei vorliegender Geologie --&gt; verschneiden von Geologie und
           Bodenart zu einer Shape-Datei Boden.</para>
         </listitem>
 
@@ -591,7 +729,12 @@
       </indexterm>
 
       <para>Es erfolgt die Verschneidung der Daten aus der Landnutzung, des
-      Bodens und den Teilgebieten zu Hydrotopen.</para>
+      Bodens und den Teilgebieten zu Hydrotopen. Die Erstellung von Hydrotopen
+      erfolgt in dem jeweiligen GIS-Program (ArcGIS oder ArcView). Hier werden
+      die Daten aus der Landnutzung mit den Daten der Teilgebiete
+      verschnitten, woraufhin das dadurch erstellte Thema mit den Daten des
+      Bodes verschnitten werden kann. Hinweis: zur Verschneidung verschiedener
+      Themen wird die Extension "geo-processing-wizard" benötigt.</para>
 
       <figure>
         <title>Hydrotopbildung</title>
@@ -604,10 +747,16 @@
       </figure>
 
       <note>
-        <para>Nach der Verschneidung können Hydrotope identischer
-        Eigenschaften in einem Teilgebiet zusammengefast werden. Hierdurch
-        kann die Rechenzeit des späteren Modells erheblich verringert
-        werden.</para>
+        <para>Nach der Verschneidung mit dem Geoprozessing Wizard
+        (Intersection) können Hydrotope identischer Eigenschaften in einem
+        Teilgebiet zusammengefasst werden. Hierdurch kann die Rechenzeit des
+        späteren Modells erheblich verringert werden. Zur Vereinigung gleicher
+        Flächen wählen Sie erneut des Geoprezessing Wizard (Dissolve).</para>
+
+        <para>Es können <emphasis role="bold">maximal 15000 Hydrotope als
+        Ausgabedatei</emphasis> in ein Kalypso-NA-Modell importiert werden und
+        es kann maximal mit <emphasis role="bold">5000 Hydrotopen pro
+        Teilgebiet</emphasis> gerechnet werden.</para>
       </note>
     </section>
 
@@ -647,15 +796,15 @@
       <para>Abschließend sind die diskreten Niederschlagsdaten auf
       flächenhafte Teilgebiete zu verteilen. In Kalypso kann jedem Teilgebiet
       eine eigene Niederschlags-, Temperatur- und Verdunstungskennlinie
-      zugewiesen werden. HIerbei gibt es verscheidene Methoden die
-      Gebietsniederschläge zu ermittel. Auszugsweise seien hier das
+      zugewiesen werden. Hierbei gibt es verschiedene Methoden die
+      Gebietsniederschläge zu ermitteln. Auszugsweise sind hier das
       Kriging-Modell sowie das Thiessen Verfahren erläutert.</para>
 
       <para><emphasis role="bold">Gebietsniederschlag nach Kriging:
       </emphasis></para>
 
       <para>Bei diesem Interpolationsverfahren erfolgt eine Schätzung des
-      Niederschlages der Beobachtungsvariablen an einem nicht gemessenen Ort,
+      Niederschlags der Beobachtungsvariablen an einem nicht gemessenen Ort,
       durch den Wert eines gewichteten Mittels der Einfluss nehmenden
       Niederschlagsstationen. Hierbei werden die Gewichte so optimiert, dass
       im Mittel der wahre Wert geschätzt wird und kein systematischer Fehler
@@ -664,8 +813,8 @@
       <para><emphasis role="bold">Thiessen-Polygon-Methode:</emphasis></para>
 
       <para>Hier erfolgt im Grunde die Referenzierung einer Station zu einem
-      ermittelten Teilgebiet bzw. die Flächenmäßige Gewichtung. Auf Basis der
-      Messstationsstandorte wird ein so genanntes Voronoi diagramme erzeugt
+      ermittelten Teilgebiet bzw. die flächenmäßige Gewichtung. Auf Basis der
+      Messstationsstandorte wird ein so genanntes Voronoi Diagramm erzeugt
       (Thiessen Polygone). Hierdurch kann die Stationszugehörigkeit je
       Teilgebiet ermittelt werden.</para>
 

@@ -23,7 +23,7 @@
 <mapEntry key="manual.project" value="${workspace_loc:/KalypsoManualNA}"/>
 <mapEntry key="eclipse.running" value="true"/>
 <mapEntry key="workspace" value="${workspace_loc}"/>
-<mapEntry key="eclipse.home" value="c:\Programme\eclipse3.0"/>
+<mapEntry key="eclipse.home" value="D:\eclipse-3.4-rcp"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="pdf,"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/KalypsoManualNA/etc/build.xml}"/>
