@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="KalypsoUIRRM-binding" default="generate">
+	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
+
+	<property name="project" value="${workspace}/KalypsoUIRRM" />
+
+	  <patternset id="binding.schemata">
+	    <include name="etc/schemas/**/*.xsd"/>
+	  </patternset>
+  
+	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
+</project>
+

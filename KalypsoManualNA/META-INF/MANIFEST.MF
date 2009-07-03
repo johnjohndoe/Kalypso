@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoManualNA Plug-in
+Bundle-SymbolicName: org.kalypso.KalypsoManualNA;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: kalypso.sourceforge.net
+Require-Bundle: org.eclipse.help
