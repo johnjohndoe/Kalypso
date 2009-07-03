@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoUIRRM Plug-in
+Bundle-SymbolicName: org.kalypso.ui.rrm; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: kalypsoUIRRM.KalypsoUIRRMPlugin
+Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.kalypso.core,
+ org.kalypso.rrm.kalininmiljukov,
+ org.kalypso.ui,
+ org.eclipse.ui.intro,
+ org.kalypso.NACalcJob
+Eclipse-LazyStart: true

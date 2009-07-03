@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.core.resources" default="main" basedir="..">
+
+	<property name="bootclasspath" value="" />
+
+	<target name="main" depends="clean, buildJar">
+	</target>
+
+	<target name="init">
+		<property name="plugin.dir" value="${workspace}/KalypsoModelRCM" />
+		<property name="build.temp.dir" value="${plugin.dir}/build/ant" />
+		<property name="plugin.destination" value="${workspace}" />
+		<property name="build.result.folder" value="${plugin.dir}/lib" />
+		<property name="src.dir" value="${plugin.dir}/srcant/" />
+	</target>
+
+	<target name="buildJar" depends="init">
+		<property name="destdir" value="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<delete dir="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<mkdir dir="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<!-- compile the source code -->
+
+		<echo message="If JAVA_HOME does not point to a SDK, change your environment variables or ensure that eclipse is started with a sdk" />
+		<echo message="JAVA_HOME: ${java.home}" />
+
+		<javac compiler="modern" destdir="${build.temp.dir}/lib/anttasks.jar.bin" failonerror="true" verbose="true" debug="on" srcdir="${src.dir}">
+			<bootclasspath path="${bootclasspath}" />
+			<classpath>
+				<dirset dir="${workspace}">
+					<include name="EclipseRCPContributions/build/bin" />
+					<include name="JavaApiContributions/build/bin" />
+					<include name="KalypsoModelRCM/build/bin" />
+				</dirset>
+				<fileset dir="${eclipse.home}">
+					<include name="plugins/org.eclipse.equinox.common*.jar" />
+					<include name="plugins/org.eclipse.core.runtime*.jar" />
+					<include name="plugins/org.eclipse.core.jobs*.jar" />
+					<include name="plugins/org.eclipse.ant.core*.jar" />
+					<include name="plugins/org.eclipse.core.resources*.jar" />
+					<!--
+					<include name="plugins/org.eclipse.swt*.jar" />
+					<include name="plugins/org.eclipse.jface*.jar" />
+					-->
+					<include name="plugins/org.eclipse.ui.workbench*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<!-- copy necessary resources -->
+		<copy todir="${build.temp.dir}/lib/anttasks.jar.bin">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+		<mkdir dir="${build.result.folder}" />
+		<jar jarfile="${build.result.folder}/anttasks.jar" basedir="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<delete dir="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<delete dir="${build.temp.dir}" />
+	</target>
+
+	<target name="clean" depends="init">
+		<delete file="${build.result.folder}/anttasks.jar" />
+		<delete dir="${build.temp.dir}" />
+	</target>
+</project>
