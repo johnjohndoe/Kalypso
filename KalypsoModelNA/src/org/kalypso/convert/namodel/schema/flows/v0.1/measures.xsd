@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.tuhh.de/kalypsoDSS" version="0.1" xmlns:dss="http://www.tuhh.de/kalypsoDSS" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+
+	<element name="DSSMeasures" type="dss:DSSMeasuresType" substitutionGroup="gml:_Feature"/>
+	<complexType name="DSSMeasuresType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="measuresMember" type="dss:MeasuresAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="MeasuresAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="dss:Measure"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Measure" type="gml:AbstractFeatureType" substitutionGroup="gml:_Feature"/>
+	<element name="MeasureSealing" type="dss:MeasureSealingType" substitutionGroup="dss:Measure"/>
+	<complexType name="MeasureSealingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="areaOfInterest" type="gml:PolygonPropertyType"/>
+					<element name="grz" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="RetensionBasinMeasure" type="dss:RetensionBasinMeasureType" substitutionGroup="dss:_Measure"/>
+	<complexType name="RetensionBasinMeasureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="position" type="gml:PolygonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Rueckhaltebeckengeometrie</label>
+								<tooltip>Aussenlinie des Rueckhaltebeckens</tooltip>
+								<description>Flaeche des Rueckhaltebeckens</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>TODO</label>
+								<tooltip>TODO</tooltip>
+								<description>TODO</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="depth" type="double"/>
+					<element name="bankslope" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
+	<input id="MetaSteuerdaten" description="Steuerdaten - Allgemein"/>
+	<input id="Modell" description="Modelldaten"/>
+	<input id="AnalyseModellXSD" description="Schema der Modelldaten fue Analyse" optional="true"/>
+	
+	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="false"/>
+	<input id="Parameter" description="Modelldaten - Parameter" optional="false"/>
+	<input id="Control" description="Steuerdaten - Ausgabe" />
+	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
+	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>	
+
+	<!-- Ergebnis-Dateien/Verzeichnisse -->
+	<output id="OUT_ZML" description="Verzeichnis aller Berechnungsergebnisse und Logs"/>
+	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei"/>
+</modelspec>
