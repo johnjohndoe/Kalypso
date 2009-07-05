@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/servlet-api.jar,
  .
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Export-Package: org.kalypso.dwd,
  org.kalypso.dwd.dwdzml,
  org.kalypso.dwd.schema,
