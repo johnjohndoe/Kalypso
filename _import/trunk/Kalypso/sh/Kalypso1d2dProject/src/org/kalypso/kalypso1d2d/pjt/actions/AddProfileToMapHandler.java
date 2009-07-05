@@ -2,49 +2,53 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
+
+import java.net.URL;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -55,6 +59,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -106,7 +111,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     final ITerrainModel terrainModel;
     try
     {
-      terrainModel = modelProvider.getModel( ITerrainModel.class );
+      terrainModel = modelProvider.getModel( ITerrainModel.class.getName(), ITerrainModel.class );
     }
     catch( final CoreException e )
     {
@@ -120,6 +125,14 @@ public class AddProfileToMapHandler extends AbstractHandler
     if( result == null )
       return Status.CANCEL_STATUS;
 
+    // REMARK: quite complicated way to get the map-file relative path to the terrain model.
+    final URL mapContext = mapModell.getContext();
+    final IFile mapContextFile = ResourceUtilities.findFileFromURL( mapContext );
+    final URL terrainModelContext = terrainModel.getFeature().getWorkspace().getContext();
+    final IFile terrainModelFile = ResourceUtilities.findFileFromURL( terrainModelContext );
+    final IPath relativeTerrainModelPath = ResourceUtilities.makeRelativ( mapContextFile, terrainModelFile );
+    final String source = relativeTerrainModelPath.toPortableString();
+
     for( final Object object : result )
     {
       final IRiverProfileNetwork network = (IRiverProfileNetwork) object;
@@ -127,7 +140,6 @@ public class AddProfileToMapHandler extends AbstractHandler
       final FeaturePath networkPath = new FeaturePath( network.getFeature() );
       final FeaturePath profilesFeaturePath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
       final String profilesPath = profilesFeaturePath.toString();
-      final String source = terrainModel.getFeature().getWorkspace().getContext().toString();
 
       /* Check if this theme is already present, if true, just activate it */
       final IKalypsoThemePredicate predicate = new SoureAndPathThemePredicate( source, profilesPath );
@@ -155,7 +167,7 @@ public class AddProfileToMapHandler extends AbstractHandler
   {
     if( riverProfileNetworkCollection.size() == 0 )
     {
-      MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.5" ), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.22") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.5" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.22" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
