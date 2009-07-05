@@ -16,7 +16,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Returns the bounding box of the static model as {@link org.kalypsodeegree.model.geometry.GM_Surface}
- * 
+ *
  * @author Patrice Congo
  */
 public class StaticModelBBoxFunc extends FeaturePropertyFunction
@@ -25,7 +25,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
     // nothing to do
   }
@@ -42,12 +42,12 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
     {
       try
       {
-        IFEDiscretisationModel1d2d discrModel = staticModel.getDiscretisationModel();
+        final IFEDiscretisationModel1d2d discrModel = staticModel.getDiscretisationModel();
         final GM_Curve geometry;
         if( discrModel != null )
         {
 
-          IFeatureWrapperCollection<IFE1D2DNode> nodes = discrModel.getNodes();
+          final IFeatureWrapperCollection<IFE1D2DNode> nodes = discrModel.getNodes();
           if( nodes.isEmpty() )
           {
             geometry = null;
@@ -69,7 +69,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
           geometry = null;
         }
 
-        System.out.println( "got feature prop:" + "\n\tfeature=" + feature + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + geometry ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        //        System.out.println( "got feature prop:" + "\n\tfeature=" + feature + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + geometry ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         return geometry;
       }
       catch( final Throwable e )
@@ -79,7 +79,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
     }
     else
     {
-      System.out.println( "Cannot get feature prop:" + "\n\tfeature=" + feature + "\n\tadapter=" + staticModel + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + currentValue ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      //      System.out.println( "Cannot get feature prop:" + "\n\tfeature=" + feature + "\n\tadapter=" + staticModel + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + currentValue ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     }
 
     return null;

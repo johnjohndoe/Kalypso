@@ -17,7 +17,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
     // nothing to do
   }
@@ -45,11 +45,11 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
     }
     else
     {
-      System.out.println(
-          "Cannot get feature prop:"+ //$NON-NLS-1$
-          "\n\tfeature="+feature+ //$NON-NLS-1$
-          "\n\tproperty="+pt.getQName()+ //$NON-NLS-1$
-          "currentValue="+currentValue); //$NON-NLS-1$
+      // System.out.println(
+      //          "Cannot get feature prop:"+ //$NON-NLS-1$
+      //          "\n\tfeature="+feature+ //$NON-NLS-1$
+      //          "\n\tproperty="+pt.getQName()+ //$NON-NLS-1$
+      //          "currentValue="+currentValue); //$NON-NLS-1$
     }
 
     return null;
