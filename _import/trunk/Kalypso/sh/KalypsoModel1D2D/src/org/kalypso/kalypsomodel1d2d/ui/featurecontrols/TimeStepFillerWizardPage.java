@@ -2,49 +2,58 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -52,56 +61,49 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
  * @author Madanagopal
  */
-public class TimeStepFillerWizardPage extends WizardPage implements SelectionListener
+public class TimeStepFillerWizardPage extends WizardPage
 {
-  private Text m_dateTimeFrom;
+  // This was used for showing the 'from' date in the first place. For parsing, date time was used. Is there any reason
+  // for this??
+  //  private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" ); //$NON-NLS-1$
 
-  private Text m_dateTimeTo;
+  //  private static final String DEFAULTSTEP = "60"; //$NON-NLS-1$
 
-  private Text m_dateTimeStep;
+  int m_timeStep_val;
 
-  private int timeStep_val;
+  Date m_dateFrom = new Date();
 
-  private Date m_dateFrom = new Date();
+  Date m_dateTo = new Date();
 
-  private Date m_dateTo = new Date();
-
-  protected Double m_uRelFactor;
-
-  private static final DateFormat DATETIMEFORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
-
-  private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" ); //$NON-NLS-1$
-
-  private static final String DEFAULTSTEP = "60"; //$NON-NLS-1$
-
-  private Combo m_uRelFactorCombo;
+  BigDecimal m_uRelFactor;
 
   public TimeStepFillerWizardPage( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.3") ); //$NON-NLS-1$
-    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.4") ); //$NON-NLS-1$
-    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.5") ); //$NON-NLS-1$
-    // TODO Auto-generated constructor stub
+    this( new Date(), new Date(), new BigDecimal( "1.0" ), 60 );
   }
 
-  public TimeStepFillerWizardPage( final Date startDate, final Date endDate )
+  public TimeStepFillerWizardPage( final Date startDate, final Date endDate, final BigDecimal uRelFactor, final int timeStep )
   {
-    this();
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.3" ) ); //$NON-NLS-1$
+
+    setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.4" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.5" ) ); //$NON-NLS-1$
+
+    m_uRelFactor = uRelFactor.setScale( 1, BigDecimal.ROUND_HALF_UP );
+    m_timeStep_val = timeStep;
     m_dateFrom = startDate;
     m_dateTo = endDate;
   }
@@ -111,9 +113,10 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
    */
   public void createControl( final Composite parent )
   {
+    final DateFormat DATETIMEFORMAT = KalypsoGisPlugin.getDefault().getDisplayDateTimeFormat();
+
     final Composite container = new Composite( parent, SWT.NULL );
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 3;
+    final GridLayout gridLayout = new GridLayout( 3, false );
     container.setLayout( gridLayout );
     setControl( container );
 
@@ -123,21 +126,20 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     final Label vonLbl = new Label( container, SWT.NONE );
     vonLbl.setLayoutData( gridBeginning );
-    vonLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.6") ); //$NON-NLS-1$
+    vonLbl.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.6" ) ); //$NON-NLS-1$
 
-    m_dateTimeFrom = new Text( container, SWT.BORDER );
-    m_dateTimeFrom.addModifyListener( new ModifyListener()
+    final Text dateTimeFrom = new Text( container, SWT.BORDER );
+    dateTimeFrom.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
         try
         {
-          // TODO: check for right time zone
-          m_dateFrom = DATETIMEFORMAT.parse( m_dateTimeFrom.getText() );
+          m_dateFrom = DATETIMEFORMAT.parse( dateTimeFrom.getText() );
           if( getStartDate().after( getFinishDate() ) )
           {
             setMessage( null );
-            setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.7") ); //$NON-NLS-1$
+            setErrorMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.7" ) ); //$NON-NLS-1$
             setPageComplete( false );
           }
           else
@@ -156,13 +158,11 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
         getWizard().getContainer().updateButtons();
       }
     } );
-    // TODO: check for right time zone
-    m_dateTimeFrom.setText( DATEFORMAT.format( m_dateFrom ) );
-    m_dateTimeFrom.setLayoutData( gridFillHorizontal );
+    dateTimeFrom.setText( DATETIMEFORMAT.format( m_dateFrom ) );
+    dateTimeFrom.setLayoutData( gridFillHorizontal );
 
     final Button dateFromBtn = new Button( container, SWT.NONE );
-    dateFromBtn.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.8") ); //$NON-NLS-1$
-    // dateFromBtn.setEnabled( false );
+    dateFromBtn.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.8" ) ); //$NON-NLS-1$
     dateFromBtn.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -175,29 +175,27 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
         if( calendarDialog.open() == Window.OK )
         {
           m_dateFrom = calendarDialog.getDate();
-          // TODO: check for right time zone
-          m_dateTimeFrom.setText( DATETIMEFORMAT.format( m_dateFrom ) );
+          dateTimeFrom.setText( DATETIMEFORMAT.format( m_dateFrom ) );
         }
       }
     } );
 
     final Label bisLbl = new Label( container, SWT.NONE );
     bisLbl.setLayoutData( gridBeginning );
-    bisLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.9") ); //$NON-NLS-1$
+    bisLbl.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.9" ) ); //$NON-NLS-1$
 
-    m_dateTimeTo = new Text( container, SWT.BORDER );
-    m_dateTimeTo.addModifyListener( new ModifyListener()
+    final Text dateTimeTo = new Text( container, SWT.BORDER );
+    dateTimeTo.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
         try
         {
-          // TODO: check for right time zone
-          m_dateTo = DATETIMEFORMAT.parse( m_dateTimeTo.getText() );
+          m_dateTo = DATETIMEFORMAT.parse( dateTimeTo.getText() );
           if( getStartDate().after( getFinishDate() ) )
           {
             setMessage( null );
-            setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.10") ); //$NON-NLS-1$
+            setErrorMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.10" ) ); //$NON-NLS-1$
             setPageComplete( false );
           }
           else
@@ -215,12 +213,11 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       }
     } );
 
-    // TODO: check for right time zone
-    m_dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
-    m_dateTimeTo.setLayoutData( gridFillHorizontal );
+    dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
+    dateTimeTo.setLayoutData( gridFillHorizontal );
 
     final Button dateToBtn = new Button( container, SWT.NONE );
-    dateToBtn.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.11") ); //$NON-NLS-1$
+    dateToBtn.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.11" ) ); //$NON-NLS-1$
     dateToBtn.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -230,35 +227,33 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       public void widgetSelected( final SelectionEvent e )
       {
         final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateTo );
-
         if( calendarDialog.open() == Window.OK )
         {
           m_dateTo = calendarDialog.getDate();
-          // TODO: check for right time zone
-          m_dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
+          dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
         }
       }
     } );
 
     final Label timeStepLbl = new Label( container, SWT.NONE );
     timeStepLbl.setLayoutData( gridBeginning );
-    timeStepLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.12") ); //$NON-NLS-1$
+    timeStepLbl.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.12" ) ); //$NON-NLS-1$
 
-    m_dateTimeStep = new Text( container, SWT.BORDER );
-    m_dateTimeStep.addModifyListener( new ModifyListener()
+    final Text dateTimeStep = new Text( container, SWT.BORDER );
+    dateTimeStep.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
         final String numberPattern = "\\d+"; //$NON-NLS-1$
-        if( !m_dateTimeStep.getText().matches( numberPattern ) )
+        if( !dateTimeStep.getText().matches( numberPattern ) )
         {
           setMessage( null );
-          setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.14") ); //$NON-NLS-1$
+          setErrorMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.14" ) ); //$NON-NLS-1$
           setPageComplete( false );
         }
         else
         {
-          timeStep_val = Integer.parseInt( m_dateTimeStep.getText() );
+          m_timeStep_val = Integer.parseInt( dateTimeStep.getText() );
           setMessage( null );
           setErrorMessage( null );
           setPageComplete( true );
@@ -266,8 +261,8 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       }
     } );
 
-    m_dateTimeStep.setText( DEFAULTSTEP );
-    m_dateTimeStep.setLayoutData( gridFillHorizontal );
+    dateTimeStep.setText( Integer.toString( m_timeStep_val ) );
+    dateTimeStep.setLayoutData( gridFillHorizontal );
 
     final Label emptylabel_1 = new Label( container, SWT.NONE );
     emptylabel_1.setLayoutData( gridEnd );
@@ -275,38 +270,35 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     final Label uRelFactorLabel = new Label( container, SWT.NONE );
     uRelFactorLabel.setLayoutData( gridBeginning );
-    uRelFactorLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.16") ); //$NON-NLS-1$
+    uRelFactorLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.16" ) ); //$NON-NLS-1$
 
-    m_uRelFactorCombo = new Combo( container, SWT.DROP_DOWN | SWT.READ_ONLY );
-    // TODO: do not use Combo; use ComvoViewer instead!
-    final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
-    m_uRelFactorCombo.setItems( possibleURFValues );
-    m_uRelFactorCombo.select( 9 );
-    m_uRelFactor = 1.0;
-    m_uRelFactorCombo.setLayoutData( gridFillHorizontal );
-    m_uRelFactorCombo.addModifyListener( new ModifyListener()
+    final ComboViewer uRelFactorCombo = new ComboViewer( container, SWT.DROP_DOWN | SWT.READ_ONLY );
+    final List<BigDecimal> possibleURFValues = new ArrayList<BigDecimal>();
+    for( int i = 1; i <= 9; i++ )
+      possibleURFValues.add( new BigDecimal( "0." + i ) );
+    possibleURFValues.add( new BigDecimal( "1.0" ) );
+
+    uRelFactorCombo.setContentProvider( new ArrayContentProvider() );
+    uRelFactorCombo.setLabelProvider( new LabelProvider() );
+    uRelFactorCombo.setInput( possibleURFValues );
+
+    uRelFactorCombo.setSelection( new StructuredSelection( m_uRelFactor ) );
+
+    uRelFactorCombo.getControl().setLayoutData( gridFillHorizontal );
+
+    uRelFactorCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      public void modifyText( final ModifyEvent e )
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        final String comboPattern = "0.1|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.0"; //$NON-NLS-1$
-        if( !m_uRelFactorCombo.getText().matches( comboPattern ) )
-        {
-          setMessage( null );
-          setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.28") ); //$NON-NLS-1$
-          setPageComplete( false );
-        }
-        else
-        {
-          m_uRelFactor = Double.parseDouble( m_uRelFactorCombo.getText() );
-          setMessage( null );
-          setErrorMessage( null );
-          setPageComplete( true );
-        }
+        m_uRelFactor = (BigDecimal) ((IStructuredSelection) event.getSelection()).getFirstElement();
       }
     } );
+
     final Label emptylabel_2 = new Label( container, SWT.NONE );
     emptylabel_2.setLayoutData( gridEnd );
     emptylabel_2.setText( "" ); //$NON-NLS-1$
+
     container.layout();
   }
 
@@ -322,33 +314,11 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
   public int getTimeSteps( )
   {
-    return timeStep_val;
+    return m_timeStep_val;
   }
 
-  public double getUnderRelaxationFactorValue( )
+  public BigDecimal getUnderRelaxationFactorValue( )
   {
     return m_uRelFactor;
   }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  public void widgetDefaultSelected( final SelectionEvent e )
-  {
-    //
-  }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  public void widgetSelected( final SelectionEvent e )
-  {
-    final Widget w = e.widget;
-    if( w instanceof Combo )
-    {
-      m_uRelFactor = Double.parseDouble( m_uRelFactorCombo.getText() );
-    }
-
-  }
-
 }

@@ -4,7 +4,7 @@
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="false"
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="1" horizontalSpacing="10" />
-	<!-- Button -->
+	<!-- Button TODO: button should be moved into the toolbar of the observation -->
 	<gft:extensioncontrol property="om:result"
 		extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory" style="SWT.NONE">
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.END" grabExcessHorizontalSpace="true"

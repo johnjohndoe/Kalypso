@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
@@ -52,6 +52,7 @@ import java.util.TimeZone;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -115,7 +116,7 @@ public class TimeStepFillerWizard extends Wizard
       final IRecord record = m_result.createRecord();
       record.setValue( m_result.indexOfComponent( ordinalNumberComponent ), new BigInteger( Integer.toString( ordinalNumber++ ) ) );
       record.setValue( m_result.indexOfComponent( timeComponent ), new XMLGregorianCalendarImpl( calendarFrom ) );
-      record.setValue( m_result.indexOfComponent( relaxFactorComponent ), new BigDecimal( m_timeStepFillerWizardPage.getUnderRelaxationFactorValue() ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
+      record.setValue( m_result.indexOfComponent( relaxFactorComponent ), m_timeStepFillerWizardPage.getUnderRelaxationFactorValue() );
       calendarFrom.add( Calendar.MINUTE, m_timeStepFillerWizardPage.getTimeSteps() );
       records.add( record );
     }
@@ -124,41 +125,39 @@ public class TimeStepFillerWizard extends Wizard
     return true;
   }
 
-  private Boolean hasOldContent( )
-  {
-    if( m_result.size() == 0 )
-      return false;
-    else
-      return true;
-  }
-
   @Override
   public void addPages( )
   {
     setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard.2") ); //$NON-NLS-1$
 
-    if( hasOldContent() )
+    if( m_result.size() == 0 )
+      m_timeStepFillerWizardPage = new TimeStepFillerWizardPage();
+    else
     {
       final IComponent[] components = m_result.getComponents();
       final IComponent timeComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-      IRecord record = m_result.get( 0 );
-      XMLGregorianCalendar DateXMLGreg = (XMLGregorianCalendar) record.getValue( m_result.indexOfComponent( timeComponent ) );
-      GregorianCalendar DateGreg = DateXMLGreg.toGregorianCalendar();
-      // now get the beginning Date in the table
-      final Date startDate = DateGreg.getTime();
+      final int indexOfTimeComponent = m_result.indexOfComponent( timeComponent );
+      final IComponent uRelComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR );
+      final int indexOfURelComponent = m_result.indexOfComponent( uRelComponent );
 
-      record = m_result.get( m_result.size() - 1 );
-      DateXMLGreg = (XMLGregorianCalendar) record.getValue( m_result.indexOfComponent( timeComponent ) );
-      DateGreg = DateXMLGreg.toGregorianCalendar();
-      // now get the endDate
-      final Date endDate = DateGreg.getTime();
+      final IRecord startRecord = m_result.get( 0 );
+      final IRecord endRecord = m_result.get( m_result.size() - 1 );
 
-      m_timeStepFillerWizardPage = new TimeStepFillerWizardPage( startDate, endDate );
-    }
-    else
-    {
-      m_timeStepFillerWizardPage = new TimeStepFillerWizardPage();
+      final Date startDate = DateUtilities.toDate( (XMLGregorianCalendar) startRecord.getValue( indexOfTimeComponent ) );
+      final Date endDate = DateUtilities.toDate( (XMLGregorianCalendar) endRecord.getValue( indexOfTimeComponent ) );
+      final BigDecimal uRelFactor = (BigDecimal) startRecord.getValue( indexOfURelComponent );
+      int timeStep = 60;
+      if( m_result.size() > 1 )
+      {
+        final IRecord secondRecord = m_result.get( 1 );
+        final Date secondDate = DateUtilities.toDate( (XMLGregorianCalendar) secondRecord.getValue( indexOfTimeComponent ) );
 
+        final long distMillis = secondDate.getTime() - startDate.getTime();
+        final double distMinutes = distMillis / 1000.0 / 60.0;
+        timeStep = (int) Math.round( distMinutes );
+      }
+
+      m_timeStepFillerWizardPage = new TimeStepFillerWizardPage( startDate, endDate, uRelFactor, timeStep );
     }
 
     addPage( m_timeStepFillerWizardPage );
