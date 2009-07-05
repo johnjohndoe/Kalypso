@@ -96,7 +96,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public class DeleteFeElementsHelper
 {
-
   @SuppressWarnings("unchecked")
   public static IStatus deleteSelectedFeElements( final IMapPanel mapPanel )
   {
@@ -208,7 +207,7 @@ public class DeleteFeElementsHelper
     final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( pMapPanel, IFlowRelationship.QNAME );
     final FeatureList lFeatureList = lFlowTheme.getFeatureList();
     final Feature lParentFeature = lFeatureList.getParentFeature();
-    IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
+    final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
     
     final IFE1D2DElement lElement = (IFE1D2DElement) pParentToRemoveFrom.getFeature().getAdapter( IFE1D2DElement.class );
     IFeatureWrapper2 lBuildingElement = null;
@@ -238,7 +237,6 @@ public class DeleteFeElementsHelper
   }
 
 
-  @SuppressWarnings("unchecked")
   public static IStatus deleteSelectedFeContiLines( final IMapPanel mapPanel )
   {
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
