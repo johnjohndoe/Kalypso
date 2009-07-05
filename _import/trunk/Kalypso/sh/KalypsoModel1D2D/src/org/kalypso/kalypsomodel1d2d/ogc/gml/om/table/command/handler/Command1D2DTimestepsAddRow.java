@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -97,7 +98,7 @@ public class Command1D2DTimestepsAddRow extends AbstractHandler
       calendar.set( GregorianCalendar.SECOND, 0 );
       calendar.set( GregorianCalendar.MILLISECOND, 0 );
       row.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
-      row.setValue( 2, 1.0 );
+      row.setValue( 2, new BigDecimal( 1.0 ) );
       tupleResult.add( row );
     }
     else
