@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer;
 
 import java.math.BigDecimal;
-import java.util.Formatter;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -50,15 +49,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This importer knows how to interpret the BCE-W80 Shape format.
- * 
+ *
  * @author Gernot Belger
  */
 public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWspmTuhhConstants
 {
-  private final StringBuilder m_stringBuilder = new StringBuilder();
-
-  private final Formatter m_formatter = new Formatter( m_stringBuilder );
-
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.IWProfContentProvider#getRiverId(org.kalypsodeegree.model.feature.Feature)
    */
@@ -95,7 +90,8 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public String getComment( final Feature feature )
   {
-    return ObjectUtils.toString( feature.getProperty( "P_KOMMENTA" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+//    return ObjectUtils.toString( feature.getProperty( "P_KOMMENTA" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return "";
   }
 
   /**
@@ -167,8 +163,9 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
 
   private String[] getImageNames( final Feature feature )
   {
-    final String imagesString = ObjectUtils.toString( feature.getProperty( "P_FOTO" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return imagesString.split( ";" ); //$NON-NLS-1$
+//    final String imagesString = ObjectUtils.toString( feature.getProperty( "P_FOTO" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+//    return imagesString.split( ";" ); //$NON-NLS-1$
+    return null;
   }
 
   /**

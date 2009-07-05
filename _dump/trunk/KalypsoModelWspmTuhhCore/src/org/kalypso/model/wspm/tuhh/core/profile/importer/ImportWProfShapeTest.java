@@ -73,11 +73,11 @@ public class ImportWProfShapeTest
   {
     final NullProgressMonitor monitor = new NullProgressMonitor();
 
-    final String fileBase = "P:\\bwg0715223\\gis\\Modell\\Querprofillagen\\vermessung";
+    final String fileBase = "C:\\work\\wprof\\TG13619_Points_2";
 // final String fileBase = "P:\\bwg0715223\\modell\\WSPWin\\Modell_Ohrn\\work\\verl_Profile_Pkt";
 // final String fileBase = "c:\\temp\\work\\verl_Profile_Pkt";
     final String sourceCrs = "EPSG:31467";
-    final File tempDir = new File( FileUtilities.TMP_DIR, "WProf2Sobek" );
+    final File tempDir = new File( FileUtilities.TMP_DIR, "WProf2Wspm" );
     tempDir.mkdirs();
 
     /* Load Shape */
