@@ -188,7 +188,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   /**
    * To be implemented by subclasses - if needed
-   *
+   * 
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
@@ -353,6 +353,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getTargetComponent() );
     if( (min == null) || (max == null) )
       return null;
+    if( Math.abs( min -max )< 0.001)
+      return new DataRange<Number>( min-1,  min+1 );
     return new DataRange<Number>( min, max );
   }
 

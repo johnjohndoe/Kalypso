@@ -42,9 +42,13 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
@@ -55,27 +59,24 @@ import org.kalypso.observation.result.IComponent;
 public class DelRoughnessResolution extends AbstractProfilMarkerResolution
 {
 
-  private String m_roughnessTyp;
-
   private boolean m_initialized = false;
 
-  /**
-   * deletes this pointmarker
-   * 
-   * @param deviderTyp
-   *          ,deviderIndex devider=IProfil.getDevider(deviderTyp)[deviderIndex]
-   */
-  public DelRoughnessResolution( final String roughnessTyp )
-  {
-    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution.0" ), null, null ); //$NON-NLS-1$
-    m_roughnessTyp = roughnessTyp;
-    m_initialized = true;
-  }
+  private String m_roughness;
+
+  private String[] m_roughnessTyps;
 
   public DelRoughnessResolution( )
   {
-    this( "" ); //$NON-NLS-1$
+    this( new String[] { "" }, null ); //$NON-NLS-1$
     m_initialized = false;
+  }
+
+  public DelRoughnessResolution( final String[] roughnessTyps, final String roughnessToDelete )
+  {
+    super( Messages.getString( "Rauheiten entfernen" ), null, null );
+    m_roughnessTyps = roughnessTyps;
+    m_roughness = roughnessToDelete;
+    m_initialized = true;
   }
 
   /**
@@ -84,7 +85,64 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-    return super.getSerializedParameter() + ";" + m_roughnessTyp; //$NON-NLS-1$ //$NON-NLS-2$
+    final StringBuffer params = new StringBuffer( super.getSerializedParameter() );
+    params.append( ";" + (m_roughness == null ? "-" : m_roughness ));
+    for( final String roughness : m_roughnessTyps )
+    {
+      params.append( ";" + roughness );
+    }
+    return params.toString(); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getUIresult(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  public String getUIresult( final Shell shell, final IProfil profil )
+  {
+    if( m_roughness != null )
+      return m_roughness;
+
+    final ListSelectionDialog lsd = new ListSelectionDialog( shell, m_roughnessTyps, new ArrayContentProvider()
+    {
+    }, new LabelProvider()
+    {
+
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( Object element )
+      {
+        try
+        {
+          return profil.hasPointProperty( element.toString() ).getName();
+        }
+        catch( Exception e )
+        {
+          return element.toString();
+        }
+      }
+    }, "Select the roughness to delete:" );
+
+    if( lsd.open() == 0 )
+    {
+      final Object[] roughness = lsd.getResult();
+      if( roughness.length > 0 && roughness[0] instanceof String )
+      {
+        m_roughness = (String) roughness[0];
+      }
+    }
+    return m_roughness;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#hasUI()
+   */
+  @Override
+  public boolean hasUI( )
+  {
+    return true;
   }
 
   /**
@@ -95,15 +153,42 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
   {
     if( m_initialized )
     {
-      final IComponent comp = profil.hasPointProperty( m_roughnessTyp );
-      final ListSelectionDialog lsd = new ListSelectionDialog( PlatformUI.getWorkbench().getDisplay().getActiveShell(), new String[] { comp.getName() }, new ArrayContentProvider()
+      if( m_roughness == null )
       {
-      }, new LabelProvider(), "Select the resources to save:" );
+        try
+        {
+          m_roughness = getUIresult( PlatformUI.getWorkbench().getDisplay().getActiveShell(), profil );
+        }
+        catch( Exception e )
+        {
+          // handle exception: no shell available here
+          return false;
+        }
+      }
 
-      if( lsd.open() == 1 )
+      final IComponent comp = profil.hasPointProperty( m_roughness );
+      if( comp != null )
+      {
+ //       final ProfilChangeHint hint =new ProfilChangeHint();
+//       profil.fireProfilChanged( hint,new IProfilChange[]{new PointPropertyRemove( profil, comp ).doChange( hint )});
+        
+        profil.removePointProperty( comp );
+//      final ProfilChangeHint hint =new ProfilChangeHint();
+//      hint.setPointPropertiesChanged();
+//      profil.fireProfilChanged( hint,new IProfilChange[]{});
+        
+        return true;
+      }
         return false;
-      profil.removePointProperty( comp );
-      return true;
+
+      
+
+
+      
+//      final ProfilOperation operation = new ProfilOperation( "Rauheit entfernen", profil, true );
+//      operation.addChange( new PointPropertyRemove( profil, comp ) );
+//      new ProfilOperationJob( operation ).schedule();
+
 
     }
     throw new IllegalStateException();
@@ -115,10 +200,17 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
   @Override
   public void setData( String parameterStream )
   {
+
     final String[] params = getParameter( parameterStream );
     try
     {
-      m_roughnessTyp = params[1];
+      m_roughness = "-".equals(  params[1])?null:params[1];
+      final String[] rt = new String[params.length - 2];
+      for( int i = 2; i < params.length; i++ )
+      {
+        rt[i - 2] = params[i];
+      }
+      m_roughnessTyps = rt;
       m_initialized = true;
     }
     catch( Exception e )
@@ -126,6 +218,15 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
       throw new IllegalArgumentException();
     }
 
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setUIresult(java.lang.String)
+   */
+  @Override
+  public void setUIresult( String result )
+  {
+    m_roughness = result;
   }
 
 }

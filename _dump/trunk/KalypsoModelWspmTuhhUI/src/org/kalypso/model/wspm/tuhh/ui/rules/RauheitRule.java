@@ -77,7 +77,7 @@ public class RauheitRule extends AbstractValidatorRule
 
     if( pointPropKS != null && pointPropKST != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "nur ein Rauheitstyp zulässig", stationId, 0, "", pluginId ,new DelRoughnessResolution(pointPropKST.getId())); //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "nur ein Rauheitstyp zulässig", stationId, 0, "", pluginId ,new DelRoughnessResolution(new String[]{IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS,IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST},null)); //$NON-NLS-2$
       return;
     }
 

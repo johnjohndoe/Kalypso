@@ -72,7 +72,12 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    // do nothing
+    /*
+     * we only need a refresh here, so fire a "null-change"
+     */
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setProfilPropertyChanged( true );
+    m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
 
   }
 
@@ -82,15 +87,15 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
    */
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
-    if( type == TYPE.ADDED )
-    {
+//    if( type == TYPE.ADDED )
+//    {
       /*
        * we only need a refresh here, so fire a "null-change"
        */
       final ProfilChangeHint hint = new ProfilChangeHint();
       hint.setProfilPropertyChanged( true );
       m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
-    }
+//    }
 
   }
 

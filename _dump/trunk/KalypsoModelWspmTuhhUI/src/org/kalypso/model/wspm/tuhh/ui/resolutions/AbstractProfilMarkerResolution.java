@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -73,6 +74,8 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractProfilMarkerResolution implements IProfilMarkerResolution
 {
+  
+
   private final String m_label;
 
   private final String m_description;
@@ -90,8 +93,8 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   }
 
   /**
-   * @see  org.eclipse.ui.IMarkerResolution2#getDescription()
-   * @uml.property  name="description"
+   * @see org.eclipse.ui.IMarkerResolution2#getDescription()
+   * @uml.property name="description"
    */
   /**
    * @see org.eclipse.ui.IMarkerResolution2#getDescription()
@@ -103,8 +106,8 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   }
 
   /**
-   * @see  org.eclipse.ui.IMarkerResolution2#getImage()
-   * @uml.property  name="image"
+   * @see org.eclipse.ui.IMarkerResolution2#getImage()
+   * @uml.property name="image"
    */
   /**
    * @see org.eclipse.ui.IMarkerResolution2#getImage()
@@ -115,7 +118,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   }
 
   /**
-   * @uml.property  name="label"
+   * @uml.property name="label"
    */
   public String getLabel( )
   {
@@ -144,25 +147,6 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
       final PoolableObjectType key = new PoolableObjectType( "gml", markerURL.toExternalForm(), markerURL ); //$NON-NLS-1$
       return (CommandableWorkspace) pool.getObject( key );
 
-// final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
-// final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();
-// for( final IWorkbenchWindow wbw : wbws )
-// {
-// final IEditorReference[] editorReferences = wbw == null ? null : wbw.getActivePage().getEditorReferences();
-//
-// if( editorReferences == null )
-// return null;
-// for( final IEditorReference editorRef : editorReferences )
-// {
-// if( editorRef.getId().equals( editorId ) )
-// {
-// final IEditorPart editor = editorRef.getEditor( false );
-// final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
-// final GmlTreeView gmlTreeView = gmlEditor == null ? null : gmlEditor.getTreeView();
-// return gmlTreeView == null ? null : gmlTreeView.getWorkspace();
-// }
-// }
-// }
     }
     catch( final CoreException e )
     {
@@ -191,14 +175,14 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
 
       if( feature != null )
       {
-        final IProfil profil = ((IProfileFeature)feature).getProfil();
+        final IProfil profil = ((IProfileFeature) feature).getProfil();
         if( profil != null )
         {
           if( resolve( profil ) )
           {
             marker.delete();// delete marker because ProblemView is no Listener on GMLWorkspace
-            final ICommand command = new ChangeFeaturesCommand( ws, ProfileFeatureFactory.toFeatureAsChanges( profil, feature ) );
-            ws.postCommand( command );
+          //  final ICommand command = new ChangeFeaturesCommand( ws, ProfileFeatureFactory.toFeatureAsChanges( profil, feature ) );
+          //  ws.postCommand( command );
           }
         }
       }
@@ -231,5 +215,31 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   public void setData( String parameterStream )
   {
     getParameter( parameterStream );
+  }
+  /**
+   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#getUIresult(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  public String getUIresult(final Shell shell ,final IProfil profil)
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#hasUI()
+   */
+  @Override
+  public boolean hasUI( )
+  {
+    return false;
+  }
+  
+  /**
+   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#hasUI()
+   */
+  @Override
+  public void setUIresult(final String result)
+  {
+    // override
   }
 }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.reparator;
 
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.model.wspm.core.profil.IProfil;
 /**
@@ -52,5 +53,11 @@ public interface IProfilMarkerResolution extends IMarkerResolution2
   public String getSerializedParameter( );
 
   public void setData( final String parameterStream );
+  
+  public boolean hasUI();
+  
+  public String getUIresult(final Shell shell,final IProfil profil);
+  
+  public void setUIresult(final String result);
   
 }
