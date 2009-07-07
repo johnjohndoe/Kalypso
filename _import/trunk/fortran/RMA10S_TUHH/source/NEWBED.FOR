@@ -167,26 +167,54 @@ C  Add the mass of top layer to mass to be deposited.
 C     *** However if all layers except the bottom are
 C         full add mass directly into bottom layer  ****
 C
-         DO 100 L=1,NLAYT-1
+         DO 100 L=1,NLAYT
 C  Layer not full            
            IF (THICK(NN,L) .LT. TLAY(L))  THEN
              ATHICK = TLAY(L) - THICK(NN,L)
              THICKNW = TM(NN)/GAD(L)
-              IF (ATHICK .GE. THICKNW)  THEN
-                THICK(NN,L) = THICK(NN,L) + THICKNW
-                TM(NN) = 0.
-                GO TO 200
-              ELSE
-                THICK(NN,L) = TLAY(L)
-                TM(NN) = TM(NN) - ATHICK*GAD(L)
-              ENDIF
+             IF (ATHICK .GE. THICKNW)  THEN
+               THICK(NN,L) = THICK(NN,L) + THICKNW
+               TM(NN) = 0.
+               GO TO 200
+             ELSE
+               THICK(NN,L) = TLAY(L)
+               TM(NN) = TM(NN) - ATHICK*GAD(L)
+             ENDIF
            ENDIF
   100    CONTINUE
 C
-C  Put All remaining mass in bottom layer 
-         THICKNW = TM(NN)/GAD(NLAYT)
-         THICK(NN,NLAYT) = THICK(NN,NLAYT) + THICKNW
-         TM(NN) = 0.
+!MD: OLD  C  Put All remaining mass in bottom layer
+!MD:         THICKNW = TM(NN)/GAD(NLAYT)
+!MD:         THICK(NN,NLAYT) = THICK(NN,NLAYT) + THICKNW
+!MD:         TM(NN) = 0.
+
+         !MD: New New New:
+         !MD: Also fill up Bed-Layer if Suspended Layers are full
+         DO 101 L=1, NLAYO(NN)
+           !MD:  Bed-Layer not full
+           IF (THICKO(NN,L).LT.THICKOND(NN,L) .and. L.ne.NLAYO(NN)) THEN
+             ATHICK = THICKOND(NN,L) - THICKO(NN,L)
+             !MD: NEUE Berechnung der Trocken-Rohdichte BETT[kg/m3]
+             GADLN =(GBO(NN,L)-ROAVG)*GAC/(GAC-ROAVG)
+             THICKNW = TM(NN)/GADLN
+
+             IF (ATHICK .GE. THICKNW)  THEN
+               THICKO(NN,L) = THICKO(NN,L) + THICKNW
+               TM(NN) = 0.
+               GO TO 200
+             ELSE
+               THICKO(NN,L) = THICKOND(NN,L)
+               TM(NN) = TM(NN) - ATHICK*GADLN
+             ENDIF
+           ElseIF (L.eq.NLAYO(NN)) THEN
+             !MD: Put All remaining mass in bottom bed layer!!
+             GADLN =(GBO(NN,L)-ROAVG)*GAC/(GAC-ROAVG)
+             THICKNW = TM(NN)/GADLN
+             THICKO(NN,L) = THICKO(NN,L) + THICKNW
+             TM(NN) = 0.
+           ENDIF
+  101    CONTINUE
+
   200    CONTINUE
 C
          DELBED(NN) = 0.
