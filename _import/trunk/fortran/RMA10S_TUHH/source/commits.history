@@ -1061,4 +1061,7 @@ new features introduced/ started to be introduced:
      , which is consitent with the rest of the program. More over the global variable SGSAND has been used instead of local variable RHOS to preserve the consistency.    
 71.) Fix the bug regarding mass waste calculation in tensile.for 
 72.) IN subroutine DistributeWastedMass, contributing area of dry elements were ignored in TRIBAREA, now it is calculated in DryTRIBAREA .
--------- M.Hassan Nasermoaddeli, 30.06.2009                                               
+-------- M.Hassan Nasermoaddeli, 30.06.2009 
+73.) Assign the sediment initial proprities ALSO to dry elemnets, for numerical stability in unsteady flow. It is done in INSAND.FOR by the following substitution:
+       IF(IMAT(N) .NE. 0) THEN     instead of IF(IMAT(N) .GT. 0) THEN                                         
+74.) Remove a bug in write format in subroutine output1 within bank_erosion.f90.
