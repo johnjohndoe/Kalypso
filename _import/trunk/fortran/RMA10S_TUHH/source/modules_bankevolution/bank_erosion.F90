@@ -1,4 +1,4 @@
-!     Last change:  HN    9 Apr 2009    8:46 pm
+!     Last change:  MD    7 Jul 2009    5:39 pm
 ! Bank_erosion Version 1.03
 ! HN,Dec.2008.
 ! This program is for calculation of bank evolution process in steady and unsteady cases
@@ -57,7 +57,9 @@ USE BLKDRMOD
       TYPE(profile)                      :: Profil , pr                              ! no need to define original profile here(old_pr), it has been already defined as global array
                                                                                      ! in subroutne getgeo. pr is the profile after adoption to Exner calculations and profil the one after adoption to tensile failure calculations.
    !   TYPE(finite_element_node), DIMENSION (:), allocatable :: Fenodes
-      TYPE(finite_element_node), DIMENSION (MAXP) :: Fenode                         ! maxp is a global array saving the number of finite element nodes including midside nodes.
+
+      TYPE(finite_element_node), DIMENSION (MAXP) :: Fenode
+      ! maxp is a global array saving the number of finite element nodes including midside nodes.
  !     integer , parameter :: single=4
   !    integer , parameter :: DOUBLE=8
             
