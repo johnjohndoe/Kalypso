@@ -1107,7 +1107,23 @@ new features introduced/ started to be introduced:
 --- Monika Donner, 07.07.2009
 
 
-077.) comment out the difinition of fenodes in initl.for (made by Nico), since the same variable has been defined in the Bank_evolution package.
-078.) comment out the application of fenodes in RDKALYPSO.for (made by Nico), since the same variable has been defined in the Bank_evolution package.
-079.) comment out the definitaion of data type fenodes in Mod_Fenode module (made by Nico), since the same variable has been defined in the Bank_evolution package.
+077.) comment out the difinition of fenodes in initl.for (made by Nico), since the
+      same variable has been defined in the Bank_evolution package.
+078.) comment out the application of fenodes in RDKALYPSO.for (made by Nico), since the 
+      same variable has been defined in the Bank_evolution package.
+079.) comment out the definitaion of data type fenodes in Mod_Fenode module (made by Nico),
+      since the same variable has been defined in the Bank_evolution package.
 -------- M.Hassan Nasermoaddeli, 07.07.2009 
+
+
+--- Monika Donner, 07.07.2009
+080.) Error while compiling, Correction:
+        open (unit = 4343, file = outName)         
+     >> SUBR Modell-Schreiben          
+081.) Error while compiling, Correction:
+        if (ProfileID ==0 .and. BANKEVOLUTION) then      
+      >> SUBR INPUT
+082.)Error while compiling : no intent(in) defintion possible. Correction
+       type (discreteFunctionGroup), pointer :: QCurves
+     >> SubR mod_ControlStructure
+--- Monika Donner, 07.07.2009
