@@ -631,21 +631,22 @@ DO NN=1,NPM
   IF (NLAY(NN).GT.0 .OR. NLAYO(NN).GT.0) THEN
     WRITE(IKALYPSOFM,'(I6,1x,F10.4,1x,F8.5,1x,F8.5,1x,F8.5,1x,        &
        &          F12.6,1x,F12.6,1x,F10.6,1x,F10.2,1x,I2,2x,I2,2x,F10.3,1x, 20(F10.3,1x))')  &
-       &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*1000.0), (VS(NN)*1000.0), &
-       &          (EDOT(NN)*1000.0), (SERAT(NN)*1000.0), AO(NN), TMSED(NN), NLAYTND(NN), NLAYO(NN),SUMTHICK*1000.,&
+       &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*VEL(6,NN)), (VS(NN)*1000.0), &
+       &          (EDOT(NN)*1000.0/DELT), SERAT(NN), AO(NN), TMSED(NN), NLAYTND(NN), NLAYO(NN),SUMTHICK*1000.,&
        &          (1000. * THICK(NN,L),L=1,NLAYT),(1000. * THICKO(NN,L),L=1,NLAYO(NN))
 
   ElseIF (NLAY(NN).eq.0 .and. NLAYO(NN).eq.0) THEN
     WRITE(IKALYPSOFM,'(I6,1x,F10.4,1x,F8.5,1x,F8.5,1x,F8.5,1x,        &
        &          F12.6,1x,F12.6,1x,F10.6,1x,F10.2,1x,I2,2x,I2,2x,F10.3,1x)')  &
-       &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*1000.0), (VS(NN)*1000.0), &
-       &          (EDOT(NN)*1000.0), (SERAT(NN)*1000.0), AO(NN), TMSED(NN), NLAYTND(NN), NLAYO(NN),SUMTHICK*1000.
+       &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*VEL(6,NN)), (VS(NN)*1000.0), &
+       &          (EDOT(NN)*1000.0/DELT), SERAT(NN), AO(NN), TMSED(NN), NLAYTND(NN), NLAYO(NN),SUMTHICK*1000.
   ENDIF
 !MD: Neue Ausgaben:
 !MD:    UST(NN),   DEPRAT(NN),  VS(NN)   = sinken
 !MD:    SL & BL = Anzhal der Suspended und Bed Layer
-!MD     EDOT(NN)  = (MEROSN) Sus.Layer in [mg/l x m/s]
-!MD     SERAT(NN) = (SEROSN) Bed.Layer in [mg/l x m/s]
+!MD     DEPRAT(NN)  = (Newbed) in [m/s] mit C [g/m³] ohne DELT
+!MD     EDOT(NN)  = (MEROSN) Sus.Layer in [kg/m³ x m/s] mit DELT
+!MD     SERAT(NN) = (SEROSN) Bed.Layer in [g/m³ x m/s] ohne DELT
 
 Enddo
 
