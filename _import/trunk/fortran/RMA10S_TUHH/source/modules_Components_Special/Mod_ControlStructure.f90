@@ -1,4 +1,3 @@
-!     Last change:  MD    7 Jul 2009    3:16 pm
 module mod_ControlStructure
 
   use mod_discreteFunction
@@ -52,8 +51,8 @@ contains
     thisCstrc.QCurves => newQCurvesGroup
     !initialize with 0.0-flow line: Borders -500 mNN; +8900 mNN: Has to be changed when Mt. Everst rises higher :)
     call addQCurve (thisCstrc, 0.0d0)
-    call addValueTriple (thisCstrc, 0.0d0, -500.0, -500.0)
-    call addValueTriple (thisCstrc, 0.0d0, 8900.0, 8900.0)
+    call addValueTriple (thisCstrc, 0.0d0, -500.0d0, -500.0d0)
+    call addValueTriple (thisCstrc, 0.0d0, 8900.0d0, 8900.0d0)
     !tell control structure that it has a type
     thisCstrc.hasType = .true.
   end subroutine
