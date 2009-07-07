@@ -1,3 +1,4 @@
+C     Last change:  MD    7 Jul 2009    5:42 pm
 CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
 CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
@@ -1338,7 +1339,7 @@ C-
             ENDDO all_CL
           close (276)  !HN, May2009
           !The bankprofile allocation should come here in the  case of ProfileId= 0 and bankevolution = .TRUE.
-          if (ProifleID ==0 .and. BANKEVOLUTION) then  
+          if (ProfileID ==0 .and. BANKEVOLUTION) then
             IF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN
               ALLOCATE (BANKPROFILES ( ProfileCounter),stat=ISTAT )
               IF (ISTAT/=0) THEN
