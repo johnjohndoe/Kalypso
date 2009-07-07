@@ -1,3 +1,4 @@
+!     Last change:  MD    7 Jul 2009    3:21 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -753,7 +754,11 @@ type (linkedNode), pointer :: tmpNode
 
 !generate file name and open file
 write (outName, '(a9, i5.5, a1, i3.3)')'innerBCS_', icyc, '_', SchwarzIt
-open (unit = 4343, name = outName)
+
+!MD: Error while compiling 
+!MD: open (unit = 4343, name = outName)
+!MD: Error while compiling
+open (unit = 4343, file = outName)
 
 !write header
 write (4343,*) 'vx, vy, h, vresu, alpha, qx, qy, qresu, cordx, cordy'
@@ -768,7 +773,8 @@ findInnerLines: do i = 1, ncl
     vresu = sqrt (vel(1, ID)**2 + vel (2, ID)**2)
     dir = atan (vel (2,ID)/ vel (1, ID))
     
-    write (4343, *) 'resu', (coordinates (ID, l), l=1, 2), (vel(j, ID), j=1, 3), vresu, dir, (vel(k,ID)*vel(3,ID), k=1, 2), vresu* vel(3,ID)
+    write (4343, *) 'resu', (coordinates (ID, l), l=1, 2), (vel(j, ID), j=1, 3),&
+                       &vresu, dir, (vel(k,ID)*vel(3,ID), k=1, 2), vresu* vel(3,ID)
     
     if (.not. associated (tmpNode.next)) exit writeNodeResults
     tmpNode => tmpNode.next
