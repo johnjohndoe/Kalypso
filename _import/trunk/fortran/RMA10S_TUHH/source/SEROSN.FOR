@@ -1,4 +1,4 @@
-C     Last change:  MD   13 May 2009   11:16 am
+C     Last change:  MD    7 Jul 2009    1:56 pm
 cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -196,7 +196,7 @@ C-            MORE THAN THIS LAYER MAY BE ERODED.
 
     1     CONTINUE
           !MD: Umrechnung [kg/m³ x m/s] * 1000
-          !MD:  --> in [mg/l x m/s]
+          !MD:  --> in [g/m³ x m/s]
           SERAT(NN) = SERATNEWL*1000.
           serat(n)=serat(nn)
         ENDIF
