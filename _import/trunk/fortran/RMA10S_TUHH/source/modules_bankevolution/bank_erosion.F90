@@ -703,14 +703,14 @@ integer                            :: i,istat
 
      write (unitt, 110) profileIN%lnose, profileIN%Rnose, profileIN%lfront, profileIN%Rfront
     110 format (4(2x, I4))
-    write (unitt, '( a6,1x,a1,5x,a1,3x,a9)')'fenode','D','Z','attribute'
+    write (unitt, '( 2x,a6,6x,a1,7x,a1,4x,a9)')'fenode','D','Z','attribute'
     
     do i = 1, profileIN%max_nodes
      write (unitt,120) profileIN%prnode(i)%fe_nodenumber , profileIN%prnode(i)%distance, profileIN%prnode(i)%elevation &
      &                       , profileIN%prnode(i)%attribute   
     end do
     
-    120 format (1x,I4,3x,F4.1,1x,f7.4, 1x,a9)
+    120 format (1x,I7,3x,F7.3,1x,f7.4, 1x,a9)
     close (unit = unitt) 
    return 
 end subroutine output1
