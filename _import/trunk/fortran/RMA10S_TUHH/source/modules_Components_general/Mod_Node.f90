@@ -15,14 +15,14 @@ module mod_Nodes
   end type
   
   !not used type yet
-  type feNode
-    type (node), pointer :: thisNode => null()
-    type (bcVolWLRelation), pointer :: vWlRelation => null()
+ ! type feNode
+  !  type (node), pointer :: thisNode => null()
+   ! type (bcVolWLRelation), pointer :: vWlRelation => null()
     !components of an fe-node
     !Marsh parameters
     !elements, in which it is contained
     !boundary conditions that are assigned
-  end type
+  !end type
 
 contains
 
