@@ -151,7 +151,8 @@ C
 cipk mar06     
 c	write(lout,'(8x,''Maximum allowed sand potential'',e15.4)') gpmaxt
         DO N=1,NE
-         IF(IMAT(N) .GT. 0) THEN
+ !        IF(IMAT(N) .GT. 0) THEN
+          IF(IMAT(N) .NE. 0) THEN       !HN 6.07.2009 use initial values for all elements and not only for active ones.
           DO I=1,NLMTP
             IF(ISMTREF(I) .EQ. 0  .AND.  I .GT. 1) GO TO 350
             IF(ISMTREF(I) .EQ. IMAT(N)  .OR.  ISMTREF(I) .EQ. 0) THEN
