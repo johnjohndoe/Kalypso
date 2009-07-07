@@ -49,7 +49,8 @@ use blk10mod , only: &
 &   StorageElts, &
 &   vel, vold, vdot, vdoto, &
 &   iyrr, tett, &
-&   feNodes, ccls
+!&   feNodes
+&   ccls
 !meaning of the variables
 !------------------------
 !maxp       maximum number of points (surface points; includes midsides)
@@ -428,7 +429,7 @@ reading: do
         !TODO: Format differentiation
         READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
         !define FE node object
-        feNodes(i).thisNode => newNode (i, cord(i,1), cord (i,2), ao(i))
+        !feNodes(i).thisNode => newNode (i, cord(i,1), cord (i,2), ao(i))
         !check for kilometer
         if (istat == 0) WRITE (lout, *) 'Die Kilometrierung von Knoten', i, 'wurde eingelesen:', kmx (i)
         nodecnt = max (i, nodecnt)
