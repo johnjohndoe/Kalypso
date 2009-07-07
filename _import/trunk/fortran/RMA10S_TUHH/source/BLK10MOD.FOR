@@ -1,4 +1,4 @@
-C     Last change:  MD    9 Jun 2009    3:55 pm
+C     Last change:  MD    7 Jul 2009    4:41 pm
       module BLK10MOD
       
       use ManholeDefinitions
@@ -199,7 +199,9 @@ C     Last change:  MD    9 Jun 2009    3:55 pm
       !-------------------------------------
       real (kind = 8), allocatable, dimension (:,:)  :: cord
       real (kind = 8), allocatable, dimension (:)    :: ao, aorig
-
+      !MD: Error while compiling
+      !MD:  real (kind = 8), allocatable, dimension (:)    :: feNodes
+      !MD: Error while compiling
       
       
       !general node calculation value data definition
