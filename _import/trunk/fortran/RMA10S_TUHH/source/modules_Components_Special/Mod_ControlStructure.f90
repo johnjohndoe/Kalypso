@@ -1,3 +1,4 @@
+!     Last change:  MD    7 Jul 2009    3:16 pm
 module mod_ControlStructure
 
   use mod_discreteFunction
@@ -116,7 +117,11 @@ contains
     !function type
     type (linkedDiscreteFunction), pointer :: findQCurveByQ
     !arguments
-    type (discreteFunctionGroup), pointer, intent (in) :: QCurves
+
+    !MD: Error while compiling : no intent(in) defintion possible
+    type (discreteFunctionGroup), pointer :: QCurves
+    !MD: Error while compiling : no intent(in) defintion possible
+
     real (kind = 8), intent (in) :: Q
     !local variables
     type (linkedDiscreteFunction), pointer :: tmpFun => null()
