@@ -101,7 +101,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-     return super.getSerializedParameter()+m_index+";"+m_propertyId+";"+m_value; //$NON-NLS-1$ //$NON-NLS-2$
+     return super.getSerializedParameter()+";"+m_index+";"+m_propertyId+";"+m_value; //$NON-NLS-1$ //$NON-NLS-2$
   }
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)

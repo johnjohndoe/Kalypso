@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.handler.ProfilClickHandler;
+import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
@@ -72,9 +73,11 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -338,7 +341,21 @@ public class ProfilChartView implements IChartPart, IProfilListener
         {
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
             if( layer instanceof IProfilChartLayer )
+            {
+              final ICoordinateMapper cm = layer.getCoordinateMapper();
+              if( cm != null && (cm.getTargetAxis() == getAxis( ID_AXIS_RIGHT )) )
+              {
+                final IComponent cp = ((IProfilChartLayer) layer).getTargetComponent();
+                if( cp != null )
+                  if( !getAxis( ID_AXIS_RIGHT ).getLabel().equals( "[" + cp.getUnit() + "]" ) )
+                  {
+                    getAxis( ID_AXIS_RIGHT ).setLabel( "[" + cp.getUnit() + "]" );
+                    IAxisComponent ac= chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
+                    ((AxisCanvas )ac).layout();
+                  }
+              }
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+            }
           redrawChart();
         }
       }

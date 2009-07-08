@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -59,6 +60,25 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class RoughnessTheme extends AbstractProfilTheme
 {
   
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetComponent()
+   */
+  @Override
+  public IComponent getTargetComponent( )
+  {
+   final IProfil profil = getProfil();
+   for(final IChartLayer layer : getLayerManager().getLayers())
+   {
+     if(layer instanceof IProfilChartLayer)
+     {
+       final IComponent cmp = ((IProfilChartLayer) layer).getTargetComponent();
+       if (profil.hasPointProperty (cmp))
+           return cmp;
+     }
+    }
+   return null;
+  }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()

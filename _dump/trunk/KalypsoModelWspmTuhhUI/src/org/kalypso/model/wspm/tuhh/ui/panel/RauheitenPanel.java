@@ -90,17 +90,15 @@ import org.kalypso.observation.result.IRecord;
  */
 public class RauheitenPanel extends AbstractProfilView
 {
-  protected Double m_li;
-
-  protected Double m_hf;
-
-  protected Double m_re;
+//  protected Double m_li;
+//
+//  protected Double m_hf;
+//
+//  protected Double m_re;
 
   protected ComboViewer m_rauheitCombo;
 
   protected final HashMap<String, IComponent> m_RauheitTypes = new HashMap<String, IComponent>();
-
-  protected String m_rauheitTyp = null;
 
   protected HashMap<String, Double> m_RauheitMap = new HashMap<String, Double>();
 
@@ -112,7 +110,6 @@ public class RauheitenPanel extends AbstractProfilView
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getProfil().getType() );
     final String[] components = provider.getPointProperties();
-    boolean found = false;
     for( final String componentID : components )
     {
       if( componentID.startsWith( IWspmTuhhConstants.POINT_PROPERTY + "RAUHEIT" ) ) //$NON-NLS-1$
@@ -120,25 +117,10 @@ public class RauheitenPanel extends AbstractProfilView
         final IComponent component = provider.getPointProperty( componentID );
 
         m_RauheitTypes.put( componentID, component );
-        if( getProfil().hasPointProperty( component ) && !found )
-        {
-          m_rauheitTyp = component.getId();
-          found = true;
-        }
+
       }
     }
-    final int iRauheit = profile.indexOfProperty( m_rauheitTyp );
-    final IProfilPointMarker[] durchstroemte = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    // TODO: anhand der echten werte ausrechnen: wenn nicht alle gleich: Double.NaN -> dies dann besonders behandeln
-    // ('mehrere Werte')
-    // TODO: aktualisiere, wenn sich das profil ändert!
-    if( durchstroemte.length > 0 )
-      m_li = (Double) durchstroemte[0].getPoint().getValue( iRauheit );
-    if( trennflaechen.length > 0 )
-      m_hf = (Double) trennflaechen[0].getPoint().getValue( iRauheit );
-    if( trennflaechen.length > 1 )
-      m_re = (Double) trennflaechen[trennflaechen.length - 1].getPoint().getValue( iRauheit );
+
   }
 
   /**
@@ -156,7 +138,9 @@ public class RauheitenPanel extends AbstractProfilView
     m_rauheitCombo = new ComboViewer( panel, SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY );
     m_rauheitCombo.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    m_rauheitCombo.setContentProvider( new ArrayContentProvider() );
+    m_rauheitCombo.setContentProvider( new ArrayContentProvider());
+    m_rauheitCombo.setInput( m_RauheitTypes.values() );
+     
     m_rauheitCombo.setLabelProvider( new LabelProvider()
     {
       /**
@@ -174,26 +158,26 @@ public class RauheitenPanel extends AbstractProfilView
         return super.getText( element );
       }
     } );
-    m_rauheitCombo.setInput( m_RauheitTypes.values() );
-    m_rauheitCombo.setSelection( new StructuredSelection( m_RauheitTypes.get( m_rauheitTyp ) ) );
-    m_rauheitCombo.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-
-        final IComponent component = (IComponent) selection.getFirstElement();
-        final IComponent old = m_RauheitTypes.get( m_rauheitTyp );
-
-        if( component != null && old != null && !m_rauheitTyp.equals( component.getId() ) )
-        {
-          final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.1" ), getProfil(), true ); //$NON-NLS-1$
-          operation.addChange( new PointPropertyAdd( getProfil(), component, old ) );
-          operation.addChange( new PointPropertyRemove( getProfil(), old ) );
-          new ProfilOperationJob( operation ).schedule();
-        }
-      }
-    } );
+  
+//    m_rauheitCombo.setSelection( new StructuredSelection( m_RauheitTypes.get( m_rauheitTyp ) ) );
+//    m_rauheitCombo.addSelectionChangedListener( new ISelectionChangedListener()
+//    {
+//      public void selectionChanged( final SelectionChangedEvent event )
+//      {
+//        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+//
+//        final IComponent component = (IComponent) selection.getFirstElement();
+//        final IComponent old = m_RauheitTypes.get( m_rauheitTyp );
+//
+//        if( component != null && old != null && !m_rauheitTyp.equals( component.getId() ) )
+//        {
+//          final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.1" ), getProfil(), true ); //$NON-NLS-1$
+//          operation.addChange( new PointPropertyAdd( getProfil(), component, old ) );
+//          operation.addChange( new PointPropertyRemove( getProfil(), old ) );
+//          new ProfilOperationJob( operation ).schedule();
+//        }
+//      }
+//    } );
     toolkit.adapt( m_rauheitCombo.getCombo() );
 
     final Group auto = new Group( panel, SWT.None );
@@ -213,7 +197,7 @@ public class RauheitenPanel extends AbstractProfilView
     // Rauheitswerte Vorland links
 
     addLabel( toolkit, auto, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.6" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Text t_li = addText( toolkit, auto, m_li );
+    final Text t_li = addText( toolkit, auto,0.0 );
 
     t_li.addFocusListener( new FocusAdapter()
     {
@@ -230,7 +214,7 @@ public class RauheitenPanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
         final Double value = NumberUtils.parseQuietDouble( t_li.getText() );
-        if( value.isNaN() || Double.compare( value, m_li ) == 0 )
+        if( value.isNaN() || Double.compare( value, 0.0 ) == 0 )
           return;
 
         final IProfil profil = getProfil();
@@ -243,7 +227,7 @@ public class RauheitenPanel extends AbstractProfilView
 
         final int i_left = 0;
         final int i_rechts = profil.indexOfPoint( trennflaechen[0].getPoint() );
-        m_li = value;
+     //   m_li = value;
         setValues( i_left, i_rechts, value );
       }
     } );
@@ -251,7 +235,7 @@ public class RauheitenPanel extends AbstractProfilView
     // Rauheitswerte Hauptöffnung
 
     addLabel( toolkit, auto, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.8" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Text t_hf = addText( toolkit, auto, m_hf );
+    final Text t_hf = addText( toolkit, auto, 0.0 );
     t_hf.addFocusListener( new FocusAdapter()
     {
       @Override
@@ -267,7 +251,7 @@ public class RauheitenPanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
         final Double value = NumberUtils.parseQuietDouble( t_hf.getText() );
-        if( value.isNaN() || Double.compare( value, m_hf ) == 0 )
+        if( value.isNaN() || Double.compare( value, 0.0 ) == 0 )
           return;
 
         final IProfil profil = getProfil();
@@ -280,14 +264,14 @@ public class RauheitenPanel extends AbstractProfilView
 
         final int i_left = profil.indexOfPoint( trennflaechen[0].getPoint() );
         final int i_rechts = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
-        m_hf = value;
+    //    m_hf = value;
         setValues( i_left, i_rechts, value );
       }
     } );
     // Rauheitswerte Vorland rechts
 
     addLabel( toolkit, auto, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.10" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Text t_re = addText( toolkit, auto, m_re );
+    final Text t_re = addText( toolkit, auto, 0.0 );
     t_re.addFocusListener( new FocusAdapter()
     {
       @Override
@@ -303,7 +287,7 @@ public class RauheitenPanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
         final Double value = NumberUtils.parseQuietDouble( t_re.getText() );
-        if( value.isNaN() || Double.compare( value, m_re ) == 0 )
+        if( value.isNaN() || Double.compare( value, 0.0 ) == 0 )
           return;
 
         final IProfil profil = getProfil();
@@ -316,7 +300,7 @@ public class RauheitenPanel extends AbstractProfilView
 
         final int i_left = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
         final int i_rechts = profil.getPoints().length - 1;
-        m_re = value;
+ //       m_re = value;
         setValues( i_left, i_rechts, value );
       }
     } );
@@ -325,35 +309,35 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected void setValues( final int l, final int r, final Double value )
   {
-    final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.12" ), profil, true ); //$NON-NLS-1$
-    operation.addChange( new PointPropertyEdit( profil.getPoints( l, r ), profil.hasPointProperty( m_rauheitTyp ), value ) );
-    new ProfilOperationJob( operation ).schedule();
+//    final IProfil profil = getProfil();
+//    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.12" ), profil, true ); //$NON-NLS-1$
+//    operation.addChange( new PointPropertyEdit( profil.getPoints( l, r ), profil.hasPointProperty( m_rauheitTyp ), value ) );
+//    new ProfilOperationJob( operation ).schedule();
   }
 
   protected void setBlockValues( )
   {
-    final IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.13" ), getProfil(), true ); //$NON-NLS-1$
-    try
-    {
-      Double value = m_li;
-      for( final IRecord point : getProfil().getPoints() )
-      {
-        if( point == trennflaechen[0].getPoint() )
-          value = m_hf;
-        else if( point == trennflaechen[trennflaechen.length - 1].getPoint() )
-          value = m_re;
-        operation.addChange( new PointPropertyEdit( point, getProfil().hasPointProperty( m_rauheitTyp ), value ) );
-      }
-    }
-    catch( final Exception e )
-    {
-      throw new IllegalStateException();
-    }
-
-    new ProfilOperationJob( operation ).schedule();
+//    final IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//
+//    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.13" ), getProfil(), true ); //$NON-NLS-1$
+//    try
+//    {
+//      Double value = m_li;
+//      for( final IRecord point : getProfil().getPoints() )
+//      {
+//        if( point == trennflaechen[0].getPoint() )
+//          value = m_hf;
+//        else if( point == trennflaechen[trennflaechen.length - 1].getPoint() )
+//          value = m_re;
+//        operation.addChange( new PointPropertyEdit( point, getProfil().hasPointProperty( m_rauheitTyp ), value ) );
+//      }
+//    }
+//    catch( final Exception e )
+//    {
+//      throw new IllegalStateException();
+//    }
+//
+//    new ProfilOperationJob( operation ).schedule();
   }
 
   private Text addText( final FormToolkit toolkit, final Composite panel, final Double value )
@@ -384,22 +368,34 @@ public class RauheitenPanel extends AbstractProfilView
 
   void updateControls( )
   {
-    final IProfil profil = getProfil();
-    if( profil.hasPointProperty( m_rauheitTyp ) == null )
-    {
-      for( final IComponent component : m_RauheitTypes.values() )
-      {
-        if( profil.hasPointProperty( component ) )
-        {
-          // IMPORTANT: set _rauheitTyp first, so setSelection does not cause another profile change
-          m_rauheitTyp = component.getId();
-          m_rauheitCombo.setSelection( new StructuredSelection( component ) );
-          break;
-        }
-      }
-    }
-    if( !m_updateOnDeviderMove.isDisposed() )
-      m_updateOnDeviderMove.setSelection( checkValues() );
+//    final IProfilPointMarker[] durchstroemte = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+// 
+//    if( durchstroemte.length > 0 )
+//      m_li = ProfilUtil.getDoubleValueFor(lastRoughness, durchstroemte[0].getPoint() );
+//    if( trennflaechen.length > 0 )
+//      m_hf = ProfilUtil.getDoubleValueFor(lastRoughness,  trennflaechen[0].getPoint() );
+//    if( trennflaechen.length > 1 )
+//      m_re = ProfilUtil.getDoubleValueFor(lastRoughness,  trennflaechen[trennflaechen.length - 1].getPoint() );
+//    
+//    
+//    
+//    final IProfil profil = getProfil();
+//    if( profil.hasPointProperty( m_rauheitTyp ) == null )
+//    {
+//      for( final IComponent component : m_RauheitTypes.values() )
+//      {
+//        if( profil.hasPointProperty( component ) )
+//        {
+//          // IMPORTANT: set _rauheitTyp first, so setSelection does not cause another profile change
+//          m_rauheitTyp = component.getId();
+//          m_rauheitCombo.setSelection( new StructuredSelection( component ) );
+//          break;
+//        }
+//      }
+//    }
+//    if( !m_updateOnDeviderMove.isDisposed() )
+//      m_updateOnDeviderMove.setSelection( checkValues() );
   }
 
   protected boolean checkValues( )
@@ -412,19 +408,19 @@ public class RauheitenPanel extends AbstractProfilView
     if( trennflaechen.length < 2 || durchstroemte.length < 2 )
       return false;
 
-    final IComponent rauheit = m_RauheitTypes.get( m_rauheitTyp );
-    final int index = profil.indexOfProperty( rauheit );
-    final double precision = rauheit.getPrecision();
-    Double value = (Double) durchstroemte[0].getPoint().getValue( index );
-    for( final IRecord point : profil.getPoints() )
-    {
-      if( point.equals( trennflaechen[0].getPoint() ) )
-        value = (Double) trennflaechen[0].getPoint().getValue( index );
-      else if( point.equals( trennflaechen[trennflaechen.length - 1].getPoint() ) )
-        value = (Double) trennflaechen[trennflaechen.length - 1].getPoint().getValue( index );
-      else if( value == null || Math.abs( value - ProfilUtil.getDoubleValueFor( m_rauheitTyp, point ) ) > precision )
-        return false;
-    }
+//    final IComponent rauheit = m_RauheitTypes.get( m_rauheitTyp );
+//    final int index = profil.indexOfProperty( rauheit );
+//    final double precision = rauheit.getPrecision();
+//    Double value = (Double) durchstroemte[0].getPoint().getValue( index );
+//    for( final IRecord point : profil.getPoints() )
+//    {
+//      if( point.equals( trennflaechen[0].getPoint() ) )
+//        value = (Double) trennflaechen[0].getPoint().getValue( index );
+//      else if( point.equals( trennflaechen[trennflaechen.length - 1].getPoint() ) )
+//        value = (Double) trennflaechen[trennflaechen.length - 1].getPoint().getValue( index );
+//      else if( value == null || Math.abs( value - ProfilUtil.getDoubleValueFor( m_rauheitTyp, point ) ) > precision )
+//        return false;
+//    }
 
     return true;
   }
