@@ -60,10 +60,12 @@ import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -112,7 +114,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
     if( m_chartTabs.length == 0 )
     {
-      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.featureview.ChartFeatureControl.0"), null ); //$NON-NLS-1$
+      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControl.0" ), null ); //$NON-NLS-1$
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setStatus( warningStatus );
       return statusComposite;
@@ -205,14 +207,18 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       final ChartComposite chart = m_chartTabs[i].getChartComposite();
 
       // if the chart was previously loaded, it will contain layers - these have to be removed
-      ILayerManager lm = chart.getChartModel().getLayerManager();
+      IChartModel chartModel = chart.getChartModel();
+      ILayerManager lm = chartModel.getLayerManager();
       IChartLayer[] layers = lm.getLayers();
       for( IChartLayer chartLayer : layers )
-      {
         lm.removeLayer( chartLayer );
-      }
-      ChartFactory.doConfiguration( chart.getChartModel(), m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
-      ChartUtilities.maximize( chart.getChartModel() );
+
+      ChartFactory.doConfiguration( chartModel, m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
+
+      Feature chartFeature = getChartFeature( getFeature(), getFeatureTypeProperty() );
+      // myLayerProvider.configure( chartModel , getFeature());
+
+      ChartUtilities.maximize( chartModel );
     }
   }
 
@@ -229,5 +235,13 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     }
 
     super.dispose();
+  }
+
+  public static Feature getChartFeature( final Feature feature, final IPropertyType pt )
+  {
+    final Object property = pt == null ? null : feature.getProperty( pt );
+    final Feature childFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
+    final Feature chartFeature = childFeature == null ? feature : childFeature;
+    return chartFeature;
   }
 }

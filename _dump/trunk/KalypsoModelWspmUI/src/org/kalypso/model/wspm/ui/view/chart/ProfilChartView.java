@@ -350,8 +350,8 @@ public class ProfilChartView implements IChartPart, IProfilListener
                   if( !getAxis( ID_AXIS_RIGHT ).getLabel().equals( "[" + cp.getUnit() + "]" ) )
                   {
                     getAxis( ID_AXIS_RIGHT ).setLabel( "[" + cp.getUnit() + "]" );
-                    IAxisComponent ac= chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
-                    ((AxisCanvas )ac).layout();
+                    IAxisComponent ac = chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
+                    ((AxisCanvas) ac).layout();
                   }
               }
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
@@ -424,45 +424,28 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_layerProvider == null )
       m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
 
+    // TODO: display userinformation
     if( m_layerProvider == null )
-      // TODO: display userinformation
       return;
 
     if( m_chartComposite != null && m_chartComposite.getChartModel() != null && m_chartComposite.getChartModel().getLayerManager() != null )
     {
       final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
-      final ArrayList<String> layers = new ArrayList<String>();
-      final ArrayList<IChartLayer> layerToRemove = new ArrayList<IChartLayer>();
       final IChartLayer activeLayer = getActiveLayer( lm );
+      final ArrayList<String> layers = new ArrayList<String>();
       for( final String layerId : m_layerProvider.getRequiredLayer( this ) )
         layers.add( layerId );
 
-      // remove unused layer
+      // remove layer
       for( final IChartLayer layer : lm.getLayers() )
-      {
-        if( !layers.contains( layer.getId() ) )
-          layerToRemove.add( layer );
-      }
-      for( final IChartLayer layer : layerToRemove )
         lm.removeLayer( layer );
 
-      // add missing layer
+      // add layer
       for( final String layerId : layers )
       {
-        final IChartLayer chartLayer = lm.getLayerById( layerId );
-        if( chartLayer == null )
-        {
-          final IProfilChartLayer profilLayer = m_layerProvider.createLayer( layerId, this );
-          if( profilLayer != null )
-          {
-            lm.addLayer( profilLayer );
-          }
-        }
-        else if( chartLayer instanceof IProfilChartLayer )
-        {
-          final IProfilChartLayer profilLayer = (IProfilChartLayer) chartLayer;
-          profilLayer.setProfil( getProfil() );
-        }
+        final IProfilChartLayer profilLayer = m_layerProvider.createLayer( layerId, this );
+        if( profilLayer != null )
+          lm.addLayer( profilLayer );
       }
 
       // activate first layer
@@ -481,14 +464,13 @@ public class ProfilChartView implements IChartPart, IProfilListener
         activeLayerChanged( layer );
         return;
       }
+
       // old active Layer removed
       if( lm.getLayers().length > 0 )
       {
         lm.getLayers()[0].setActive( true );
         activeLayerChanged( lm.getLayers()[0] );
       }
-
     }
   }
-
 }

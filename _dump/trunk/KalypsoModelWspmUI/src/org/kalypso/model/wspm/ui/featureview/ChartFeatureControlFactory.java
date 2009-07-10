@@ -56,7 +56,6 @@ import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -69,7 +68,7 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
  * <ul>
  * <li>configuration: urn to the configuration file for the chart. The urn will be resolved against the catalogue
  * mechanism and after that relative to the current url.context (TODO: the last thing does not work yet).</li>
- * <li>featureKeyName: The key-name under which the current feature will be put into the ChartDataProvider. </li>
+ * <li>featureKeyName: The key-name under which the current feature will be put into the ChartDataProvider.</li>
  * </ul>
  * 
  * @author Gernot Belger
@@ -95,7 +94,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
     if( commandIds.length != commandStyles.length )
     {
-      final String msg = Messages.getFormatString("org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
+      final String msg = Messages.getFormatString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
       StatusUtilities.createStatus( IStatus.WARNING, msg, null );
     }
     else
@@ -137,9 +136,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
         }
       }
 
-      final Object property = pt == null ? null : feature.getProperty( pt );
-      final Feature childFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
-      final Feature chartFeature = childFeature == null ? feature : childFeature;
+      final Feature chartFeature = ChartFeatureControl.getChartFeature( feature, pt );
 
       ChartDataProvider.FEATURE_MAP.put( featureKeyName, chartFeature );
 
@@ -153,5 +150,4 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
     return null;
   }
-
 }

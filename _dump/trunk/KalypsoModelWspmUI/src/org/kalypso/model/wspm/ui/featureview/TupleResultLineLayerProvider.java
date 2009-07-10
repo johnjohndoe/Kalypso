@@ -83,11 +83,8 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
     return icl;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
   @SuppressWarnings( { "unchecked" })
-  public TupleResultDomainValueData getDataContainer( )
+  private TupleResultDomainValueData getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
