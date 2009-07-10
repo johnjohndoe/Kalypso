@@ -569,7 +569,7 @@ USE BLKSEDMOD
 USE BLKSANMOD
 
 ! local variables
-CHARACTER*256 LINE256
+CHARACTER (len=1000) :: LINE256
 CHARACTER (LEN = 96), INTENT (IN) :: bedout
 INTEGER:: IDX
 INTEGER:: istat      !Variable for I/O errors
@@ -609,7 +609,7 @@ WRITE(IKALYPSOFM,'(A)') LINE256(1:IDX+26)
 WRITE(LINE256,'(A,20I11)') '           (N/m2)    (m/s)  (g/m2/s)  (mm/s)     (g/m2/s)     (g/m2/s) &
                            &       (m)    (Kg/m2) NR  NR        (mm)',&
 &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
-WRITE(IKALYPSOFM,'(A)') LINE256
+WRITE(IKALYPSOFM,'(A)') trim (LINE256)
 
 
 
