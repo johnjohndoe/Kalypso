@@ -86,6 +86,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
     final String featureKeyName = arguments.getProperty( "featureKeyName", null ); //$NON-NLS-1$
     final String cmdIds = arguments.getProperty( "commands", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String cmdStyles = arguments.getProperty( "commandStyles", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String chartProviderID = arguments.getProperty( "chartProviderID", null ); //$NON-NLS-1$
 
     final String[] commandIds = cmdIds.split( ";" ); //$NON-NLS-1$
     final String[] commandStyles = cmdStyles.split( ";" ); //$NON-NLS-1$
@@ -95,7 +96,8 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
     if( commandIds.length != commandStyles.length )
     {
       final String msg = Messages.getFormatString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
-      StatusUtilities.createStatus( IStatus.WARNING, msg, null );
+      IStatus status = StatusUtilities.createStatus( IStatus.WARNING, msg, null );
+      KalypsoCorePlugin.getDefault().getLog().log( status );
     }
     else
     {
@@ -140,7 +142,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
       ChartDataProvider.FEATURE_MAP.put( featureKeyName, chartFeature );
 
-      return new ChartFeatureControl( chartFeature, pt, ccl, chartTypes, configUrl, commands );
+      return new ChartFeatureControl( chartFeature, pt, ccl, chartTypes, configUrl, commands, chartProviderID );
     }
     catch( final Throwable e )
     {

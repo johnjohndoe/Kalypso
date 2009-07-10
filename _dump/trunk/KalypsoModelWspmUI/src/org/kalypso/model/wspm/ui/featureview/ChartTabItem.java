@@ -77,7 +77,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 /**
  * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
  * IChartPart can only return one ChartComposite and one ChartDragHandler
- *
+ * 
  * @author burtscher1
  */
 public class ChartTabItem extends Composite implements IChartPart
@@ -214,8 +214,8 @@ public class ChartTabItem extends Composite implements IChartPart
       m_axisDragHandlerDelegate.dispose();
     }
 
-    m_chartComposite.dispose();
-
+    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+      m_chartComposite.dispose();
   }
 
   /**
@@ -238,7 +238,7 @@ public class ChartTabItem extends Composite implements IChartPart
           final IChartModel model = this.getChartComposite().getChartModel();
           m_outlinePage = new ChartEditorTreeOutlinePage( model );
         }
-          
+
         else
           return null;
       }

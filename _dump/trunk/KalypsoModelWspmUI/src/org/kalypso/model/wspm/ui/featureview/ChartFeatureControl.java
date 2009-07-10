@@ -43,7 +43,11 @@ package org.kalypso.model.wspm.ui.featureview;
 import java.net.URL;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
@@ -56,6 +60,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.view.chart.provider.IChartProvider;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.util.swt.StatusComposite;
@@ -94,7 +100,12 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private final Map<String, Integer> m_commands;
 
-  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands )
+  /**
+   * The ID of the chart provider. May be null.
+   */
+  private final String m_chartProviderID;
+
+  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands, final String chartProviderID )
   {
     super( feature, ftp );
     m_ccl = ccl;
@@ -102,6 +113,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
     m_chartTypes = chartTypes;
     m_context = context;
+    m_chartProviderID = chartProviderID;
   }
 
   /**
@@ -186,7 +198,6 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    */
   public void addModifyListener( final ModifyListener l )
   {
-    // TODO Auto-generated method stub
   }
 
   /**
@@ -194,7 +205,6 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    */
   public void removeModifyListener( final ModifyListener l )
   {
-    // TODO Auto-generated method stub
   }
 
   /**
@@ -215,11 +225,64 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
       ChartFactory.doConfiguration( chartModel, m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
 
-      Feature chartFeature = getChartFeature( getFeature(), getFeatureTypeProperty() );
-      // myLayerProvider.configure( chartModel , getFeature());
+      /* Configure via a chart provider. */
+      doConfiguration( chartModel );
 
       ChartUtilities.maximize( chartModel );
     }
+  }
+
+  /**
+   * This function configures the chart via a chart provider.
+   * 
+   * @param chartModel
+   *          The chart model.
+   */
+  private void doConfiguration( IChartModel chartModel )
+  {
+    try
+    {
+      /* Get the chart provider. */
+      IChartProvider chartProvider = getChartProvider( m_chartProviderID );
+      if( chartProvider == null )
+        return;
+
+      /* Get the feature. */
+      Feature feature = getChartFeature( getFeature(), getFeatureTypeProperty() );
+
+      /* Configure. */
+      chartProvider.configure( chartModel, feature );
+    }
+    catch( CoreException ex )
+    {
+      /* Log the error message. */
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
+    }
+  }
+
+  /**
+   * This function looks up a chart provider with the given ID.
+   * 
+   * @param chartProviderID
+   *          The ID of the chart provider.
+   * @return The chart provider or null.
+   */
+  private IChartProvider getChartProvider( String chartProviderID ) throws CoreException
+  {
+    /* Get the extension registry. */
+    IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    /* Get all elements for the extension point. */
+    IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" );
+    for( IConfigurationElement element : elements )
+    {
+      /* Get the id. */
+      String id = element.getAttribute( "id" );
+      if( id != null && id.length() > 0 && id.equals( chartProviderID ) )
+        return (IChartProvider) element.createExecutableExtension( "class" );
+    }
+
+    return null;
   }
 
   /**

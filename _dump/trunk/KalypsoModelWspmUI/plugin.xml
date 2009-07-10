@@ -6,6 +6,7 @@
    <extension-point id="profilChartLayerProvider" name="profilChartLayerProvider" schema="schema/profilChartLayerProvider.exsd"/>
    <extension-point id="pointPropertyCalculator" name="pointPropertyCalculator" schema="schema/pointPropertyCalculator.exsd"/>
    <extension-point id="profilPointPropertyUiHandlerProvider" name="profilPointPropertyUiHandlerProvider" schema="schema/profilPointPropertyUiHandlerProvider.exsd"/>
+   <extension-point id="chartProvider" name="chartProvider" schema="schema/chartProvider.exsd"/>
 
         <extension
            point="org.eclipse.ui.preferencePages">
