@@ -1127,3 +1127,14 @@ new features introduced/ started to be introduced:
        type (discreteFunctionGroup), pointer :: QCurves
      >> SubR mod_ControlStructure
 --- Monika Donner, 07.07.2009
+
+
+--- Edgar Nehlsen, 10.07.09
+083.) Error while compilung, Correction:
+        Enlarge Character Line256
+      >> SUBR Modell_schreiben
+084.) Error while debugging, Correction:
+        Variable PERM is now set as allocatable
+        Actually it is not used when the deafult values are used for the PARDISO solver
+      >> SUBR mkl_solver
+--- Edgar Nehlsen, 10.07.09
