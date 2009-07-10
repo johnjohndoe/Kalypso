@@ -27,7 +27,7 @@ integer (kind = 4) :: ierror = 0
 real (kind = 8), allocatable :: da(:), db(:), dx(:)
 integer (kind = 4) :: iphase
 integer (kind = 4), save :: iparm(64)
-real (kind = 8), allocatable, save :: perm (:)
+real (kind = 8), allocatable, save :: perm(:)
 !parameter to use as dummy argument when calling PARDISO for RELEASING MEMORY (Phase -2) or ANALYSIS (Phase 1)
 real (kind = 8) :: ddum
 !execution and control of the routine
@@ -124,10 +124,13 @@ if (executionSwitch == 0)  then
 
   !Allocate space for permutation matrix
   if (iparm(5) == 1) then
-    allocate (perm (noOfEq))
-    perm = 0
+    if (.not. (allocated (perm))) allocate (perm (noOfEq))
+  else 
+    if (.not. (allocated (perm))) allocate (perm (1))
   endif
-
+  
+    perm = 0
+  
   !execution and equation system shape
   !-----------------------------------
   !indicate that initializations are done; factorization and solv
