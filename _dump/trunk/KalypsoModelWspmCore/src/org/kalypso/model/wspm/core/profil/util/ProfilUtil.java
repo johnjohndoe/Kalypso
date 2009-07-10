@@ -136,6 +136,13 @@ public class ProfilUtil
     return values;
   }
 
+  public static Double getDoubleValueFor( final IComponent component, final IRecord point )
+  {
+    if( component == null )
+      return Double.NaN;
+    return getDoubleValueFor( component.getId(), point );
+  }
+
   public static Double getDoubleValueFor( final String componentID, final IRecord point )
   {
     final TupleResult owner = point == null ? null : point.getOwner();
@@ -171,6 +178,31 @@ public class ProfilUtil
       return Double.NaN;
     }
 
+  }
+
+  public final static boolean RangeIsConstantNumberFor( final IRecord start, IRecord end, IComponent component )
+  {
+    final Double p = component.getPrecision();
+    if( p == null )
+      return false;
+    final TupleResult owner = start.getOwner();
+    if( owner == null || owner != end.getOwner() )
+      return false;
+    final int i1 = owner.indexOf( start );
+    final int i2 = owner.indexOf( end );
+
+    if( i2 < i1 )
+      return false;
+    final int index = owner.indexOf( component );
+
+    for( int i = i1; i < i2-1; i++ )
+    {
+      if( Math.abs( (Double) (owner.get( i ).getValue( index )) - (Double) (owner.get( i + 1 ).getValue( index )) ) > p )
+      {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

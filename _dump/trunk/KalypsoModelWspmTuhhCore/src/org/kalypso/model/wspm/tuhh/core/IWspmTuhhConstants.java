@@ -70,8 +70,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
    * {@link org.kalypso.model.wspm.schema.dict_profile_point} geführt
    */
 
-  public static final String POINTMARKER_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerProperty#"; //$NON-NLS-1$
-
   public static final String MARKER_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#"; //$NON-NLS-1$
 
   public static final String BUILDING_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#"; //$NON-NLS-1$
@@ -139,13 +137,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   
   
-
-  /* POINTMARKER_PROPERTY */
-  public static final String POINTMARKER_PROPERTY_BEIWERT = POINTMARKER_PROPERTY + "BEIWERT"; //$NON-NLS-1$
-
-  public static final String POINTMARKER_PROPERTY_BOESCHUNG = POINTMARKER_PROPERTY + "BOESCHUNG"; //$NON-NLS-1$
-
-  public static final String POINTMARKER_PROPERTY_RAUHEIT = POINTMARKER_PROPERTY + "RAUHEIT"; //$NON-NLS-1$
 
   /* Profil MetaStrings */
   public static final String PROFIL_PROPERTY = "org.kalypso.model.wspm.tuhh.core.profil.PROFIL_PROPERTY_"; //$NON-NLS-1$

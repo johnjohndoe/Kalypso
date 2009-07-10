@@ -82,9 +82,10 @@ public final class PointPropertyEdit implements IProfilChange
   {
     if( hint != null )
       hint.setPointValuesChanged();
-    if( m_points.length < 1 )
-      return new PointPropertyEdit( m_points, m_property, m_newValues );
     final int index = m_points[0].getOwner().indexOfComponent( m_property );
+    if( m_points.length < 1||index < 0 )
+      return new PointPropertyEdit( m_points, m_property, m_newValues );
+
     final Object[] oldValues = new Object[m_points.length];
 
     for( int i = 0; i < m_points.length; i++ )

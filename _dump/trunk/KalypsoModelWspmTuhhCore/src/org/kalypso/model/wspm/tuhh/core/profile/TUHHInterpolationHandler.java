@@ -56,7 +56,7 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
       IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
 
   final String[] m_defaultIDs = new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP,
-      IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS };
+      IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS };
 
   /**
    * @see org.kalypso.observation.result.IInterpolationHandler#doInterpolation(java.lang.String, java.lang.Double,
