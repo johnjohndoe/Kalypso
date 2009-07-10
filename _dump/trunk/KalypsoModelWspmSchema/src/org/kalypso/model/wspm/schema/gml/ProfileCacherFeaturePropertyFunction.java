@@ -137,7 +137,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
             srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         }
 
-        if( rw == null || hw == null )
+        if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
           continue;
 
         final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
