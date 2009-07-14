@@ -1,4 +1,4 @@
-C     Last change:  MD   10 Jun 2009    3:10 pm
+C     Last change:  MD   13 Jul 2009    5:34 pm
 cipk  last update apr 05 2006   make a first call to get sed initial conditions
 crrr  Last update Aug 23 1997
       SUBROUTINE BED
@@ -8,7 +8,7 @@ crrr  Last update Aug 23 1997
       Implicit none
 !      DATA NLMTP/100/
       Integer :: NLMTP = 100
-      Integer :: N, K, I, L, N9, N1, JJ, J, I1, K1
+      Integer :: NN, N, K, I, L, N9, N1, JJ, J, I1, K1
       Integer :: IBED, IELEV, NLA, NTYPS, ETEMP, NL
       Real (KIND = 8) :: TEMP1
 C**********************************************************************
@@ -279,7 +279,8 @@ C..... READ NEXT RECORD
                   J=NOP(N,JJ)
                   NLAYO(J)=NLA
                   TM(J)=TEMP1
-                  DO K=1,NLA
+                  !MD: wrong for variing Layers: DO K=1,NLA
+                  DO K=1, NLAYO(J)
                     THICKOND(J,K)=THICKOM(K)
                     THICKO(J,K)=THICKOM(K)
                     GBO(J,K)=GBOM(K)
@@ -303,6 +304,29 @@ C..... READ NEXT RECORD
         ENDIF
 
   500   CONTINUE
+
+
+!MD: neu fuer alle Mittseiten-Knoten
+!MD--------------------------------------
+!MD      DO N=1,NPM
+!MD        IF(IMID(N,1) .GT. 0) THEN
+!MD          NN = N
+!MD          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+!MD          NLAYO(NN)=MIN(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
+!MD          TM(NN)=(TM(IMID(NN,1))+TM(IMID(NN,2)))/2.
+!MD         DO K=1,NLAYO(NN)
+!MD           THICKOND(NN,K)=(THICKOND(IMID(NN,1),K)+
+!MD     +                     THICKOND(IMID(NN,2),K))/2.
+!MD           THICKO(NN,K)=(THICKO(IMID(NN,1),K)+THICKO(IMID(NN,2),K))/2.
+!MD           GBO(NN,K)=(GBO(IMID(NN,1),K)+GBO(IMID(NN,2),K))/2.
+!MD           SSTO(NN,K)=(SSTO(IMID(NN,1),K)+SSTO(IMID(NN,2),K))/2.
+!MD           SMVAL(NN,K)=(SMVAL(IMID(NN,1),K)+SMVAL(IMID(NN,2),K))/2.
+!MD         ENDDO
+!MD        ENDIF
+!MD      ENDDO
+!MD: neu fuer alle Mittseiten-Knoten
+!MD--------------------------------------
+
 
         CALL FORMBED(1)
 
