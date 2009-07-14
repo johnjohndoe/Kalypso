@@ -6,7 +6,7 @@ cipk  last update Mar 23 1998
 cipk  last update Nov 26 1997
 cipk  last update Oct 29 1996
 CIPK  LAST UPDATE OCT 16 1996
-C     Last change:  WP    2 Jul 2008    6:00 pm
+C     Last change:  MD   14 Jul 2009    1:49 pm
 cipk  last updated April 25 1996
 CIPK  LAST UPDATED SEP7 1995
       SUBROUTINE GETBC(IBIN)
@@ -15,6 +15,19 @@ CIPK  LAST UPDATED SEP7 1995
       USE BLKDRMOD
       USE BLKSUBMOD
       SAVE
+
+!MD: Local Varaible for checking BC-data
+      INTEGER :: Check_BC_Data
+
+!------------------------------------------------------------------------
+! Description of this ROUTINE GETBC(IBIN)
+!------------------------------------------------------------------------
+!MD:  SubR to read unsteady data out of CONTROL for iterations: Main routine
+!MD    to read boundary conditions and equations, that should be solved.
+!MD    Here the lines DT, BC, BN are read. For Boundary conditions seperate
+!MD    SubRs are called like: SBGEN, QGEN a.s.o
+!------------------------------------------------------------------------
+
 C-
 cipk apr96  drop initialization of TET
 c      TET=TSTART
@@ -141,38 +154,48 @@ c
 
 
       IF(ID(1:2) .NE. 'BC') THEN
-        WRITE(*,6999) ID(1:8)
-CIPK SEP04 CREATE ERROR FILE
-        CLOSE(75)
-        OPEN(75,FILE='ERROR.OUT')
-        WRITE(75,6999) ID(1:8)
-        STOP 'LOOKING FOR BC'
-      ENDIF 
+       !MD: check if old Iteration-Data is available
+        DO I = 1, NITN
+          Check_BC_Data = IURVL(I)+ITLVL(I)+ITEQV(I)+ITEQS(I)
+          !MD: Allow to use old Iteration-Data, if no new block is
+          !MD:   defined in CONTROL
+          IF (Check_BC_Data.eq.0) THEN
+            WRITE(*,6999) ID(1:8)
+            CLOSE(75)
+            OPEN(75,FILE='ERROR.OUT')
+            WRITE(75,6999) ID(1:8)
+            STOP 'LOOKING FOR BC'
+          ENDIF
+        ENDDO
+        goto 315
+        !MD: New Jump, because next line was already read by ginpt(..)
+
+      Elseif(ID(1:2) .EQ. 'BC') THEN
 CIPK OCT96 CLEAN UP STEADY CASE
-      READ(DLIN,5011)
-     +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=1,9)
-      IF(NITA .GT. 9) THEN
-        N1=1
-  199   N1=N1+9
-        N2=N1+8
-cipk nov97        READ(IBIN,7000) ID,DLIN
-        call ginpt(ibin,id,dlin)
-cipk apr96 save data to a scratch file
-        if(isvs .eq. 1) then
-          write(nscrin,7000) id,dlin
-        endif
-        IF(ID(1:2) .NE. 'BC') THEN
-          WRITE(*,6999) ID(1:8)
-CIPK SEP04 CREATE ERROR FILE
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,6999) ID(1:8)
-          STOP 'LOOKING FOR BC'
-        ENDIF 
         READ(DLIN,5011)
-     +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
-        IF(NITA .GT. N2) GO TO 199
-      ENDIF    
+     +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=1,9)
+        IF(NITA .GT. 9) THEN
+          N1=1
+  199     N1=N1+9
+          N2=N1+8
+cipk nov97        READ(IBIN,7000) ID,DLIN
+          call ginpt(ibin,id,dlin)
+cipk apr96 save data to a scratch file
+          if(isvs .eq. 1) then
+            write(nscrin,7000) id,dlin
+          endif
+          IF(ID(1:2) .NE. 'BC') THEN
+            WRITE(*,6999) ID(1:8)
+            CLOSE(75)
+            OPEN(75,FILE='ERROR.OUT')
+            WRITE(75,6999) ID(1:8)
+            STOP 'LOOKING FOR BC'
+          ENDIF
+          READ(DLIN,5011)
+     +          (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
+          IF(NITA .GT. N2) GOTO 199
+        ENDIF
+      Endif
 C-
 C-..... READ BOUNDARY VALUES
 C-
@@ -180,10 +203,16 @@ C-
 cipk nov97      READ(IBIN,7000) ID,DLIN
 
 cipk dec99  read data line and see if it is a stray BC line, if so skip
-
+!MD: Does not make sense to have 'BC' lines, which are not used...
   215 continue
       call ginpt(ibin,id,dlin)
-      if(id(1:2) .eq. 'BC') go to 215
+      if(id(1:2) .eq. 'BC') goto 215
+
+!MD: new jump in order to use old Iteration-Data, if no new block is
+!MD:   defined in CONTROL
+  315 continue
+
+
 
 cipk apr96 save data to a scratch file
       if(isvs .eq. 1) then
@@ -205,7 +234,6 @@ C
           call ginpt(ibin, id, dlin)
           if (ID(1:7) == 'ENDSTEP') EXIT findEndStep
         end do findEndStep
-
       end if
 
 cipk jun05 save nfix and test for weir data
