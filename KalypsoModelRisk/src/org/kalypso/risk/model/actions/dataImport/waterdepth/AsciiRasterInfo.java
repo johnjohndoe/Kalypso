@@ -54,7 +54,7 @@ public class AsciiRasterInfo
     if( m_coordinateSystem == null )
       m_coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final AsciiGridReader reader = new AsciiGridReader( m_rasterFile );
+    final AsciiGridReader reader = new AsciiGridReader( m_rasterFile.toURI().toURL() );
     m_gridDomain = reader.getGridDomain( m_coordinateSystem );
     m_rasterSizeX = m_gridDomain.getNumColumns();
     m_rasterSizeY = m_gridDomain.getNumRows();
@@ -107,7 +107,7 @@ public class AsciiRasterInfo
 
   /**
    * Method tries to set a new coordinate system.
-   * 
+   *
    * @param cs
    *            A coordinate system that sjould be set
    * @return true on success; false otherwise
@@ -123,7 +123,7 @@ public class AsciiRasterInfo
       m_gridDomain = new RectifiedGridDomain( origin, m_gridDomain.getOffsetX(), m_gridDomain.getOffsetY(), m_gridDomain.getGridRange() );
       // TODO
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
