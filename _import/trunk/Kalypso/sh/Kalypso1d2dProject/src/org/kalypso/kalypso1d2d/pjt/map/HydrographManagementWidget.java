@@ -153,7 +153,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to create, edit and delete hydrographs for 1d2d result files.<BR>
  * The user can add / remove hydrograph locations for each calculation unit.
- * 
+ *
  * @author Thomas Jung
  */
 public class HydrographManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -1004,6 +1004,8 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       return;
 
     final GeoTransform projection = mapPanel.getProjection();
+    if( projection == null || point == null )
+      return;
 
     final int x = (int) projection.getDestX( point.getX() );
     final int y = (int) projection.getDestY( point.getY() );
