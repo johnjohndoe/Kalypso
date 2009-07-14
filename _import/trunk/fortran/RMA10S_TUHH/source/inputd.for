@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Jul 2008    5:40 pm
+C     Last change:  MD   14 Jul 2009    1:47 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 cipk  last update Aug 06 2002 expand dlin to 80 char
@@ -24,7 +24,20 @@ CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
       DIMENSION QDM(3)
-C-
+
+!MD: Local Varaible for checking BC-data
+      INTEGER :: Check_BC_Data
+!------------------------------------------------------------------------
+! Description of this ROUTINE INPUTD(IBIN)
+!------------------------------------------------------------------------
+!MD:  SubR to read unsteady data out of CONTROL for iterations: Main routine
+!MD    to read boundary conditions and equations, that should be solved.
+!MD    Here the lines DT, BC, BN are read. For Boundary conditions seperate
+!MD    SubRs are called like: SBGEN, QGEN a.s.o
+!MD:   >> compare with ROUTINE GETBC(IBIN)
+!------------------------------------------------------------------------
+
+
 C-
 C-.....ENTRY FOR TIME DEPENDENT INPUT DATA.....
 C-
@@ -95,6 +108,9 @@ cipk sep04
       IBIN=IBUP
       ibinrst=ibin
       GO TO 570
+
+!MD: Read DT-Line for Time
+!----------------------------------
   198 CONTINUE
 cipk apr96 end changes
       IF(ID(1:2) .NE. 'DT') THEN
@@ -110,12 +126,13 @@ cipk apr96 add ending time for time step
       READ(DLIN,5031) DELT,iyend,idye,hrend
 
 CIPK MAR01  TEST FOR ELEVATION AND SCALE TIME STEP
-
+!MD: Only for 'TST' = Time step LENGTHENING
       IF(NODETR .NE. 0) THEN
         IF(WSLL(NODETR) .GT. TRELEV) THEN
           DELT = DELT*TRFACT
         ENDIF
       ENDIF
+
 
       if(ibin .ne. nscrin) then
         write(lout,6156) delt,iyend,idye,hrend
@@ -137,28 +154,24 @@ cpk dec99 add test for zero DELT
       WRITE(LOUT,6145) TTT,ICYC
 
 
-
-
 cipk apr96 end changes
 C      READ(DLIN,5010) DELT
       TET = TET + DELT
 
-CIPK SEP02
 
 C     ADD SIDE ERODED MATERIAL
 CIPK FEB03 CATCH THE STEADY STATE CASE
         IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .AND. DELT .GT. 0.) THEN
-! HN June2009. IN the case that bankevolution is activated, deactivate slumpit subroutine.
+!HN June2009. IN the case that bankevolution is activated, deactivate slumpit subroutine.
           if (.NOT. bankevolution) CALL SLUMPIT
 CALL SLUMPIT
-CIPK DEC05          
         ELSE 
-          EXTLD=0          
+          EXTLD=0.
         ENDIF
 
 C
 C-.... Read iteration controls
-C
+!---------------------------------------------
 CIPK NOV97      READ(IBIN,7000) ID,DLIN
       call ginpt(ibin,id,dlin)
 cipk apr96 save data to a scratch file
@@ -171,9 +184,7 @@ c
 c...... Input slope adjustment factor
 c
       if(id(1:3) .eq. 'SAD') then
-
         read(dlin,'(2f8.0)') sadx,sadel
-
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
@@ -188,44 +199,55 @@ c
 	  ENDIF
       endif
 
-
-
+!MD: Read Iteration-Data for URFC and equations
+!----------------------------------------------
       IF(ID(1:2) .NE. 'BC') THEN
 cipk sep04
-        CLOSE(75)
-        OPEN(75,FILE='ERROR.OUT')
-        WRITE(LOUT,6999) ID(1:2)
-        WRITE(75,6999) ID(1:2)
-        WRITE(*,6999) ID(1:2)
-        STOP 'LOOKING FOR BC'
-      ENDIF 
-      READ(DLIN,5011)
-     +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=1,9)
-      IF(NITN .GT. 9) THEN
-        N1=1
-  199   N1=N1+9
-        N2=N1+8
-CIPK NOV97        READ(IBIN,7000) ID,DLIN
-        call ginpt(ibin,id,dlin)
-cipk apr96 save data to a scratch file
-      if(isvs .eq. 1) then
-        write(nscrin,7000) id,dlin
-      endif
-        IF(ID(1:2) .NE. 'BC') THEN
-cipk sep04
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(*,6999) ID(1:2)
-          WRITE(75,6999) ID(1:2)
-          WRITE(LOUT,6999) ID(1:2)
-          STOP 'LOOKING FOR BC'
-        ENDIF 
+        !MD: check if old Iteration-Data is available
+        DO I = 1, NITN
+          Check_BC_Data = IURVL(I)+ITLVL(I)+ITEQV(I)+ITEQS(I)
+          !MD: Allow to use old Iteration-Data, if no new block is
+          !MD:   defined in CONTROL
+          IF (Check_BC_Data.eq.0) THEN
+            CLOSE(75)
+            OPEN(75,FILE='ERROR.OUT')
+            WRITE(LOUT,6999) ID(1:2)
+            WRITE(75,6999) ID(1:2)
+            WRITE(*,6999) ID(1:2)
+            STOP 'LOOKING FOR BC'
+          END IF
+        END DO
+        goto 315
+        !MD: New Jump, because next line was already read by ginpt(..)
+
+      Elseif(ID(1:2) .EQ. 'BC') THEN
         READ(DLIN,5011)
-     +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
-        IF(NITN .GT. N2) GO TO 199
-      ENDIF    
+     +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=1,9)
+        IF(NITN .GT. 9) THEN
+          N1=1
+  199     N1=N1+9
+          N2=N1+8
+CIPK NOV97        READ(IBIN,7000) ID,DLIN
+          call ginpt(ibin,id,dlin)
+cipk apr96 save data to a scratch file
+        if(isvs .eq. 1) then
+          write(nscrin,7000) id,dlin
+        endif
+          IF(ID(1:2) .NE. 'BC') THEN
+            CLOSE(75)
+            OPEN(75,FILE='ERROR.OUT')
+            WRITE(*,6999) ID(1:2)
+            WRITE(75,6999) ID(1:2)
+            WRITE(LOUT,6999) ID(1:2)
+            STOP 'LOOKING FOR BC'
+          ENDIF
+          READ(DLIN,5011)
+     +           (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
+          IF(NITN .GT. N2) GO TO 199
+        ENDIF
+      Endif
 C
-C...... Set ITEQV based on input
+C.....Set ITEQV based on input
 C-
       SetCalcType: DO I=1,NITN
         IF (ITEQS (I) > 0) THEN
@@ -248,10 +270,15 @@ C-
 CIPK NOV97      READ(IBIN,7000) ID,DLIN
 
 cipk dec99  read data line and see if it is a stray BC line, if so skip
-
+!MD: Does not make sense to have 'BC' lines, which are not used...
   215 continue
       call ginpt(ibin,id,dlin)
-      if(id(1:2) .eq. 'BC') go to 215
+      if(id(1:2) .eq. 'BC') goto 215
+
+!MD: new jump in order to use old Iteration-Data, if no new block is
+!MD:   defined in CONTROL
+  315 continue
+
 
 cipk apr96 save data to a scratch file
       if(isvs .eq. 1) then
