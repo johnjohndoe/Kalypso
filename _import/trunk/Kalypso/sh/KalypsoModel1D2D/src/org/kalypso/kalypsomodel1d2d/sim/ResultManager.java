@@ -56,6 +56,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -91,7 +92,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
  * Every new 2d result file we be processed in order to return it to the kalypso client.
- * 
+ *
  * @author Gernot Belger
  */
 public class ResultManager implements ISimulation1D2DConstants
@@ -125,6 +126,8 @@ public class ResultManager implements ISimulation1D2DConstants
   public ResultManager( final FileObject fileObject, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     m_resultDir = fileObject;
+    Assert.isNotNull( m_resultDir );
+
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
     m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
     m_flowModel = caseDataProvider.getModel( IFlowRelationshipModel.class );

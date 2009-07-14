@@ -161,15 +161,14 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     {
       // TODO: zip Url + stream
       final File paramFile = new File( fileName );
-      if( extension.equals( ".zip" ) ) //$NON-NLS-1$
-      {
-
-        GmlSerializer.serializeWorkspaceToZipFile( paramFile, m_workspace, "tin_" + param + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      else
-      {
-        GmlSerializer.serializeWorkspace( paramFile, m_workspace, "CP1252" ); //$NON-NLS-1$
-      }
+      //      if( extension.equals( ".zip" ) ) //$NON-NLS-1$
+      // {
+      //                GmlSerializer.serializeWorkspaceToZipFile( paramFile, m_workspace, "tin_" + param + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+      // }
+      // else
+      // {
+        GmlSerializer.serializeWorkspace( paramFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
+      // }
     }
     catch( final Exception e )
     {

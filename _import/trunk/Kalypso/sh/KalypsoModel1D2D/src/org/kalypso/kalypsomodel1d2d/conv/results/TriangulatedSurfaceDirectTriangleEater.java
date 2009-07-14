@@ -49,12 +49,14 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -295,14 +297,18 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
       final String tinFilePath = m_tinResultFile.getPath();
       final String tinFileBase = FileUtilities.nameWithoutExtension( tinFilePath ) + "_" + m_parameter.name(); //$NON-NLS-1$
 
+      final String extension = FilenameUtils.getExtension( tinFilePath ).toLowerCase();
+
       // Create zipped or normal file
       final OutputStream os;
-      if( tinFilePath.toLowerCase().endsWith( ".zip" ) ) //$NON-NLS-1$
+      if( "zip".equals( extension ) ) //$NON-NLS-1$
       {
         os = new ZipOutputStream( new FileOutputStream( tinFileBase + ".zip" ) ); //$NON-NLS-1$
         m_zipEntry = new ZipEntry( "tin_" + m_parameter.name() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
         ((ZipOutputStream) os).putNextEntry( m_zipEntry );
       }
+      else if( "gz".equals( extension ) ) //$NON-NLS-1$
+        os = new GZIPOutputStream( new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gz" ) ) ) );
       else
         os = new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gml" ) ) ); //$NON-NLS-1$
 
