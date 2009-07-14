@@ -1,3 +1,4 @@
+C     Last change:  MD   14 Jul 2009    1:34 pm
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF.
 CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
 CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
@@ -169,11 +170,12 @@ C   BEDEL IS NOW LEVEL OF BED
       DO N=1,NPM
         IF(IMID(N,1) .GT. 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1          
-          NLAYTND(NN)=MAX(NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2)))
+          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          !MD: must be MIN not MAX
+          NLAYTND(NN)= MIN (NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2)))
 CIPK MAY06 SET DENSITY
           do l=1,nlaytnd(nn)
-            gadnd(nn,l)=(gadnd(IMID(NN,1),l)+gadnd(IMID(NN,2),l))/2.
+            gadnd(nn,l)= (gadnd(IMID(NN,1),l) + gadnd(IMID(NN,2),l)) /2.
           enddo
           BEDORIG(NN)=(BEDORIG(IMID(NN,1))+BEDORIG(IMID(NN,2)))/2.
           BEDEL(NN)=(BEDEL(IMID(NN,1))+BEDEL(IMID(NN,2)))/2.
@@ -185,7 +187,8 @@ CIPK MAY06 SET DENSITY
 CIPK MAR06
             SST(NN,J)=(SST(IMID(NN,1),J)+SST(IMID(NN,2),J))/2.
           ENDDO
-          NLAYTO=MAX(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
+          !MD: must be MIN not MAX!!
+          NLAYTO=Min(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
           IF(NLAYTO .GT. 0) THEN
             DO L=1,NLAYTO
               THICKO(NN,L)=(THICKO(IMID(NN,1),L)
@@ -295,9 +298,9 @@ CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
 	      VDOT(2,N)=VDOT(2,N)/RATIO
        	      VDOT(6,N)=VDOT(6,N)/RATIO
 	    ENDIF 
-        ENDDO
-        DO K=2,NCORN(M),2
-          N1=NOP(M,K-1)
+          ENDDO
+          DO K=2,NCORN(M),2
+            N1=NOP(M,K-1)
 	    N=NOP(M,K)
             IF(K .LT. NCORN(M)) THEN
 	      N2=NOP(M,K+1)
@@ -327,9 +330,9 @@ CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
 	      VDOT(2,N)=VDOT(2,N)/RATIO
               VDOT(6,N)=VDOT(6,N)/RATIO
 	    ENDIF
-        ENDDO
-	 ENDIF
-	ENDDO
+          ENDDO
+	ENDIF
+      ENDDO
 C
 C... PRINT OUT LAYER PROPERTIES.
 C
