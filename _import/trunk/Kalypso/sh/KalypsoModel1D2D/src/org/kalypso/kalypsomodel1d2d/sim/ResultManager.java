@@ -56,7 +56,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -126,7 +125,6 @@ public class ResultManager implements ISimulation1D2DConstants
   public ResultManager( final FileObject fileObject, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     m_resultDir = fileObject;
-    Assert.isNotNull( m_resultDir );
 
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
     m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();

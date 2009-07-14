@@ -70,7 +70,7 @@ public class ControlModelAdapter implements IModelAdaptor
 
     // set version
     final IPropertyType versionProperty = controlModelGroup.getFeatureType().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
-    controlModelCollection.setProperty( versionProperty, VERSION_1_0 );
+    controlModelGroup.setProperty( versionProperty, VERSION_1_0 );
 
     final IRelationType controlModelPropertyType = (IRelationType) controlModelCollection.getFeatureType().getProperty( qnameProp2 );
     final FeatureList controlModels = (FeatureList) controlModelCollection.getProperty( controlModelPropertyType );
