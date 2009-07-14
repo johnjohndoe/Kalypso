@@ -1,4 +1,4 @@
-C     Last change:  MD    9 Jun 2009    2:18 pm
+C     Last change:  MD   13 Jul 2009    4:49 pm
 cipk last update JUNE 5 2006  add test marshing
 cipk last update MAY 30 2006  add test for zero thickness and correct NL
 cipk last update dec 21 2004 fix bug getting node at bed for averaging
@@ -172,7 +172,7 @@ cipk jun06
           IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
           EDOT(NN)=(EDOT(IMID(NN,1))+EDOT(IMID(NN,2)))/2.
           BEDEL(NN)=(BEDEL(IMID(NN,1))+BEDEL(IMID(NN,2)))/2.
-          NLAY(NN)=MAX(NLAY(IMID(NN,1)),NLAY(IMID(NN,2)))
+          NLAY(NN)=MIN(NLAY(IMID(NN,1)),NLAY(IMID(NN,2)))
           NL = NLAY(NN)
           IF (NL .EQ. NLAYTND(NN)) NL = NLAYTND(NN) - 1
           DO J=1,NL
