@@ -72,6 +72,8 @@ public class GridPointCollector
   public static final int SIDE_LEFT = 1;
 
   public static final int SIDE_RIGHT = 3;
+  
+  private static final double DISTANCE_DEF = 0.01;
 
   private int actualSideKey;
 
@@ -402,7 +404,7 @@ public class GridPointCollector
 
   public IStatus getAddToModelCommand( final IMapPanel mapPanel, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace )
   {
-    return m_tempGrid.getAddToModelCommand( mapPanel, model, commandableWorkspace, 0.1 );
+    return m_tempGrid.getAddToModelCommand( mapPanel, model, commandableWorkspace, DISTANCE_DEF );
   }
 
   public LinePointCollectorConfig[] getSideconfigsAsArray( )
