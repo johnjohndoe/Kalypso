@@ -1138,3 +1138,37 @@ new features introduced/ started to be introduced:
         Actually it is not used when the deafult values are used for the PARDISO solver
       >> SUBR mkl_solver
 --- Edgar Nehlsen, 10.07.09
+
+
+--- Monika Donner, 14.07.2009
+085.) Special Corrections for cohesive Sediment-definition
+      Transfer to node for Layer defined attributes like THICKO(J,K), GBO(J,K) and
+      so on, should be done by real number of Layers at each node, and not by the 
+      running local number of layers
+      Look at inner-loop: DO K=1, NLAYO(J) or DO K=1, NLAYTND(J) 
+      >> SubR SPRPOP, BED
+        
+086.) Middling Sediment and Layer attributes at midside-nodes for suspended and bed layers
+      was prepared. At midside-nodes the minimal (!!) Number of Layers must be used, in order to 
+      avoid averaging with dummys. 
+      Look at:  NLAYTND(NN)= MIN (NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2))) 
+      All MAX(...) arguments were changed to MIN(...)                
+      >> SubR FORMBED, SEROSN, MERSON, SPRPOP, BED
+                 
+087.) NEW OPTIONS for all Boundary-Conditions:
+      Now fast definitions for 'BC'-Blocs in the CONTROL-Data is Possible. For the 
+      First simulation a full 'BC'-Bloc must be defined. For all following time
+      steps all BC-Lines can be skip, if Iterations and simulation types are the same.
+      If some setting should be change, just use a new complete 'BC'-Bloc. These    
+      reduced 'BC'-Bloc options can be used with and without hydrographs.
+      - Example without hydrograph:        
+         DT        0.5000
+         QC             1       0    0.50  -2.355   0.000  20.000  300.00
+         HC             2       0   -1.61   00.00    20.0  -100.0        
+         ENDSTEP   
+      - Example with hydrograph:        
+         DT        0.5000            
+         ENDSTEP            
+      >> SUBR INPUTD, GETBC   
+--- Monika Donner, 14.07.2009
+
