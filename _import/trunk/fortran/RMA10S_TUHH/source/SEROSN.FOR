@@ -1,4 +1,4 @@
-C     Last change:  MD    7 Jul 2009    1:56 pm
+C     Last change:  MD   13 Jul 2009    4:54 pm
 cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -215,7 +215,7 @@ C-            MORE THAN THIS LAYER MAY BE ERODED.
           NLAYT=NLAYTND(NN)
           THICK(NN,NLAYT)=(THICK(IMID(NN,1),NLAYT)
      +                    +THICK(IMID(NN,2),NLAYT))/2.
-          NLAYOT=MAX(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
+          NLAYOT=MIN(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
           IF(NLAYOT .GT. 0) THEN
             DO L=1,NLAYO(NN)
               THICKO(NN,L)=(THICKO(IMID(NN,1),L)
