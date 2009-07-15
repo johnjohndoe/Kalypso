@@ -87,7 +87,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public boolean contains( final GM_Position position )
   {
-    return getFeature().getDefaultGeometryProperty().contains( position );
+    return getFeature().getDefaultGeometryPropertyValue().contains( position );
   }
 
   public double getDamageValue( final double depth )

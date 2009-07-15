@@ -68,7 +68,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
           return null;
         }
 
-        final Job job = new Job( Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.6" ) ) //$NON-NLS-1$
+        final Job job = new Job( Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.6" ) ) //$NON-NLS-1$
         {
           @Override
           protected IStatus run( final IProgressMonitor monitor )
