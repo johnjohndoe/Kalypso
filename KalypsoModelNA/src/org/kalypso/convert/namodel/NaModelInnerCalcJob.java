@@ -1348,7 +1348,7 @@ public class NaModelInnerCalcJob implements ISimulation
       }
       if( dateAxis == null || valueAxis == null )
         continue;
-      double maxValue = Double.MIN_VALUE;
+      double maxValue = -Double.MAX_VALUE;
       Date maxValueDate = null;
       for( int i = 0; i < tuppleModel.getCount(); i++ )
       {
