@@ -32,7 +32,10 @@
                                 <xs:sequence>
                                         <xs:element ref="krrdm:waterlevelCoverageCollection" minOccurs="1" maxOccurs="1"/>
                                         <xs:element ref="krrdm:specificDamageCoverageCollection" minOccurs="1" maxOccurs="1"/>
-                                        <xs:element name="landuseCoverage" type="krrdm:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1"/>
+
+                                        <!-- optional element; not used any more, backward compatibility only -->
+                                        <xs:element name="landuseCoverage" type="krrdm:CoverageCollectionPropertyType" minOccurs="0" maxOccurs="1"/>
+                                        
                                         <xs:element name="riskZonesCoverage" type="krrdm:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1"/>
                                 </xs:sequence>
                         </xs:extension>

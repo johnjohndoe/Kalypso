@@ -20,16 +20,19 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.RasterDataModel;
 import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -65,7 +68,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
           return null;
         }
 
-        final Job job = new Job( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.6") //$NON-NLS-1$
+        final Job job = new Job( Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.6" ) ) //$NON-NLS-1$
         {
           @Override
           protected IStatus run( final IProgressMonitor monitor )
@@ -80,10 +83,12 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
                 /* wait for map to load */
                 while( !mapPanel.getMapModell().isLoaded() )
                   Thread.sleep( 300 );
-                final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
-                final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.MODEL_ID, IRasterDataModel.class );
                 final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
+                final IFile rasterModelFile = scenarioFolder.getFile( "/models/RasterDataModel.gml" ); //$NON-NLS-1$
+                final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( rasterModelFile );
+                final IRasterDataModel rasterDataModel = new RasterDataModel( workspace.getRootFeature() );
                 final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterDataModel.getSpecificDamageCoverageCollection();
+                final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
                 RiskModelHelper.updateDamageStyle( sldFile, specificDamageCoverageCollection );
                 RiskModelHelper.updateDamageLayers( scenarioFolder, specificDamageCoverageCollection, mapModell );
                 if( mapView != null )

@@ -15,9 +15,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -77,8 +77,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.7" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
-
+    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
     if( m_rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
 
@@ -103,12 +102,12 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         // TODO: change name: better: use input name
         final String outputFilePath = "raster/output/RiskZonesCoverage" + i + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
         final IFile iFile = m_scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
-        final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, iFile.getLocation().toFile(), outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
+        final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, iFile.getLocation().toFile(), outputFilePath, "image/bin", subMonitor ); //$NON-NLS-1$
 
         outputGrid.dispose();
         inputGrid.dispose();
 
-        coverage.setName(Messages.getString( "org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.4" ) + i + Messages.getString( "org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        coverage.setName( Messages.getString( "org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.4" ) + i + Messages.getString( "org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         coverage.setDescription( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
@@ -366,7 +365,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
         final RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
         if( statisticTableValues == null )
-          System.out.println( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.21") ); //$NON-NLS-1$
+          System.out.println( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.21" ) ); //$NON-NLS-1$
 
         if( eventType.equals( "AverageDamage" ) )//$NON-NLS-1$
         {

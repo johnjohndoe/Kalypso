@@ -84,7 +84,7 @@ public class RiskModelHelper
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param sldFile
@@ -94,7 +94,7 @@ public class RiskModelHelper
    */
   public static void updateDamageStyle( final IFile sldFile, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection ) throws IOException, SAXException, CoreException
   {
-    BigDecimal maxDamageValue = new BigDecimal( Double.MIN_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxDamageValue = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     BigDecimal minDamageValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     for( final ICoverageCollection specificDamageCoverage : specificDamageCoverageCollection )
@@ -136,7 +136,7 @@ public class RiskModelHelper
   /**
    * Creates the specific damage coverage collection. <br>
    * The damage value for each grid cell is taken from the underlying polygon.
-   *
+   * 
    * @param scenarioFolder
    *          scenario folder
    * @param polygonCollection
@@ -270,7 +270,7 @@ public class RiskModelHelper
 
   /**
    * creates a map layer for the grid collection
-   *
+   * 
    * @param parentKalypsoTheme
    *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
@@ -289,14 +289,14 @@ public class RiskModelHelper
     layer.setType( "simple" ); //$NON-NLS-1$
     layer.setVisible( true );
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    layer.setHref( "../models/RasterDataModel.gml" ); //$NON-NLS-1$
     layer.setVisible( true );
     final Property layerPropertyDeletable = new Property();
     layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
     layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
     final Property layerPropertyThemeInfoId = new Property();
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-    layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f €/m²" ); //$NON-NLS-1$
+    layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f \u20ac/m\u00b2" ); //$NON-NLS-1$
     final List<Property> layerPropertyList = layer.getProperty();
     layerPropertyList.add( layerPropertyDeletable );
     layerPropertyList.add( layerPropertyThemeInfoId );
@@ -322,7 +322,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   *
+   * 
    * @param damages
    *          damage values for all annualities
    * @param probabilities
@@ -347,9 +347,9 @@ public class RiskModelHelper
   }
 
   /**
-   *
+   * 
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   *
+   * 
    * @param scenarioFolder
    *          relative path needed for the output file path to append on
    * @param inputCoverages
@@ -445,7 +445,7 @@ public class RiskModelHelper
 
   /**
    * get the water depth raster with the greatest annuality
-   *
+   * 
    * @param waterDepthCoverageCollection
    *          raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
@@ -467,7 +467,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layer, add the new one and modifies the style according to the max values
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -496,7 +496,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layers and adds the new ones
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -605,7 +605,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for each landuse class<br>
    * The value is calculated by integrating the specific damage values.<br>
-   *
+   * 
    */
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
   {
@@ -721,9 +721,9 @@ public class RiskModelHelper
 
   /**
    * Import new events into the risk model.<br>
-   *
+   * 
    * The parameters 'names', 'returnPeriods', 'grids' must eb of the same size.
-   *
+   * 
    * @param names
    *          The names of the events to import
    * @param descriptions

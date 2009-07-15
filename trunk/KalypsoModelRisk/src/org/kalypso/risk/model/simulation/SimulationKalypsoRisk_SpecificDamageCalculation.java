@@ -46,7 +46,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.deegree.crs.transformations.CRSTransformation;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
@@ -66,6 +67,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -78,7 +80,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
@@ -100,6 +102,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
   {
     try
     {
+      final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
+      simulationMonitorAdaptor.beginTask( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.1" ), 100 ); //$NON-NLS-1$
       final GMLWorkspace controlModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.CONTROL_MODEL.name() ), null );
       final IRasterizationControlModel controlModel = (IRasterizationControlModel) controlModelWorkspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
 
@@ -111,7 +115,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
       final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
       outputRasterTmpDir.mkdir();
-      doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor );
+      doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, simulationMonitorAdaptor );
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" ); //$NON-NLS-1$
       resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
@@ -128,24 +132,22 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
    * Creates the specific damage coverage collection. <br>
    * The damage value for each grid cell is taken from the underlying polygon.
    */
-  private void doDamagePotentialCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor ) throws SimulationException
+  private void doDamagePotentialCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final IProgressMonitor monitor ) throws SimulationException
   {
     final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterModel.getSpecificDamageCoverageCollection();
     final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
-      throw new SimulationException( Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.0"));  //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.0" ) ); //$NON-NLS-1$
 
     /*
      * As the default value is 1, this is cannot happen any more
-     *
+     * 
      * for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() ) { final Integer
      * returnPeriod = collection.getReturnPeriod(); if( returnPeriod == null || returnPeriod <= 0 ) throw new
      * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
      */
-
-    monitor.setMessage( Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.1")  ); //$NON-NLS-1$
     try
     {
       /* clear existing data */
@@ -163,7 +165,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
       {
-        monitor.setMessage( Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10" ) + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
+        final int perCoverageTicks = 100 / srcAnnualCoverages.size();
+        final SubMonitor subMonitor = SubMonitor.convert( monitor, String.format( Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10" ), srcAnnualCoverages.getReturnPeriod() ), 100 );
 
         /* create annual damage coverage collection */
         final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
@@ -230,7 +233,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
                         if( Double.isNaN( damageValue ) )
                           return Double.NaN;
 
-                        if( damageValue < 0.0 )
+                        if( damageValue <= 0.0 )
                           return Double.NaN;
 
                         /* set statistic for landuse class */
@@ -253,14 +256,14 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           final String outputCoverageFileName = "specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
+          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           for( final ILanduseClass landuseClass : landuseClassesList )
           {
             landuseClass.updateStatistic( returnPeriod );
           }
-          newCoverage.setName( String.format(Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2") , srcAnnualCoverages.getReturnPeriod() ,i ));  //$NON-NLS-1$
-          newCoverage.setDescription(String.format( Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3"), new Date().toString() ));  //$NON-NLS-1$
+          newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2" ), srcAnnualCoverages.getReturnPeriod(), i ) ); //$NON-NLS-1$
+          newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3" ), new Date().toString() ) ); //$NON-NLS-1$
           inputGrid.dispose();
         }
         /* set the return period of the specific damage grid */

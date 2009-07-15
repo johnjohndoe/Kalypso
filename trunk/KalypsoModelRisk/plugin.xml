@@ -170,10 +170,12 @@
           class="org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
     </handler>
+    <!--
     <handler
           class="org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__LanduseRasterizationHandler">
     </handler>
+    -->
     <handler
           class="org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">

@@ -1,9 +1,10 @@
 package org.kalypso.risk.plugin;
 
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -13,9 +14,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
 {
-  public static final String DEFAULT_FORMAT_STRING = Messages.getString("org.kalypso.risk.plugin.RiskZonesThemeInfo.0"); //$NON-NLS-1$
+  //  public static final String DEFAULT_FORMAT_STRING = Messages.getString( "org.kalypso.risk.plugin.RiskZonesThemeInfo.0" ); //$NON-NLS-1$
 
-  private static Map<Double, String> RISK_ZONES_MAP = new HashMap<Double, String>();
+  private static SortedMap<Double, String> RISK_ZONES_MAP = new TreeMap<Double, String>();
 
   /**
    * @see org.kalypso.gml.ui.map.CoverageThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
@@ -24,10 +25,10 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     super.init( theme, props );
-    m_formatString = props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
+    m_formatString = props.getProperty( PROP_FORMAT, "%.2f \u20ac/m\u00b2/a - %s" );
   }
 
-  public static void updateZonesDefinition( final HashMap<Double, String> values )
+  public static void updateZonesDefinition( final Map<Double, String> values )
   {
     RISK_ZONES_MAP.clear();
     for( final Double key : values.keySet() )
@@ -46,12 +47,13 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
       final Double value = getValue( pos );
       if( value == null )
         return;
-      formatter.format( getFormatString(), RISK_ZONES_MAP.get( value ) );
+      final Double key = value < 0.0 ? RISK_ZONES_MAP.tailMap( value ).firstKey() : RISK_ZONES_MAP.headMap( value ).lastKey();
+      formatter.format( m_formatString, Math.abs( value ), RISK_ZONES_MAP.get( key ) );
     }
     catch( Exception e )
     {
       e.printStackTrace();
-      formatter.format( Messages.getString("org.kalypso.risk.plugin.RiskZonesThemeInfo.1"), e.toString() ); //$NON-NLS-1$
+      formatter.format( Messages.getString( "org.kalypso.risk.plugin.RiskZonesThemeInfo.1" ), e.toString() ); //$NON-NLS-1$
     }
   }
 

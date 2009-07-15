@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.services;
 
+import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
@@ -52,6 +55,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -68,8 +72,10 @@ import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.plugin.RasterizedLanduseThemeInfo;
 import org.kalypso.risk.plugin.RiskZonesThemeInfo;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -80,11 +86,13 @@ public class LanduseStyleUpdateService extends Job
 {
   private final IFile m_dbFile;
 
-  private final IFile m_landuseVectorSymbolyzerSldFile;
+  private final IFile m_landuseVectorSymbolizerSldFile;
 
-  private final IFile m_landuseRasterSymbolyzerSldFile;
+  private final IFile m_landuseRasterSymbolizerSldFile;
 
-  private final IFile m_riskZonesSymbolyzerSldFile;
+  private final IFile m_riskZonesSymbolizerSldFile;
+
+  // private final IFile m_riskValuesSymbolizerSldFile;
 
   public LanduseStyleUpdateService( final IFile file )
   {
@@ -94,9 +102,10 @@ public class LanduseStyleUpdateService extends Job
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_dbFile = file;
-    m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
-    m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" ); //$NON-NLS-1$
-    m_riskZonesSymbolyzerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
+    m_landuseVectorSymbolizerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
+    m_landuseRasterSymbolizerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" ); //$NON-NLS-1$
+    m_riskZonesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
+    //    m_riskValuesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskValuesCoverage.sld" ); //$NON-NLS-1$
   }
 
   /**
@@ -122,21 +131,59 @@ public class LanduseStyleUpdateService extends Job
         final List<Layer> layers = new ArrayList<Layer>();
         layers.add( SLDHelper.polygonStyleLayer( null, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor ) );
 
-        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, layers.toArray( new Layer[0] ), monitor );
-        SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), null, null, monitor );
+        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolizerSldFile, layers.toArray( new Layer[0] ), monitor );
+        SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolizerSldFile, model.getLanduseClassesList(), null, null, monitor );
         final HashMap<Double, String> values = new HashMap<Double, String>();
         for( final ILanduseClass landuseClass : landuseClassesList )
           values.put( new Double( landuseClass.getOrdinalNumber() ), landuseClass.getName() );
         RasterizedLanduseThemeInfo.updateClassesDefinition( values );
       }
       final List<IRiskZoneDefinition> riskZonesList = model.getRiskZoneDefinitionsList();
+      final List<Double> urbanZonesBoundaryList = new ArrayList<Double>();
+      for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
+        if( riskZoneDefinition.isUrbanLanduseType() )
+          urbanZonesBoundaryList.add( riskZoneDefinition.getLowerBoundary() );
+      urbanZonesBoundaryList.add( Double.MAX_VALUE );
+      Collections.sort( urbanZonesBoundaryList );
+
       if( riskZonesList != null && riskZonesList.size() > 0 )
       {
-        SLDHelper.exportRasterSymbolyzerSLD( m_riskZonesSymbolyzerSldFile, riskZonesList, null, null, monitor );
-        final HashMap<Double, String> values = new HashMap<Double, String>();
+        final List<ColorMapEntry> riskZonesAdaptedList = new ArrayList<ColorMapEntry>();
+        for( final IRiskZoneDefinition zoneDef : riskZonesList )
+        {
+          final double quantity;
+          if( zoneDef.isUrbanLanduseType() )
+            quantity = urbanZonesBoundaryList.get( urbanZonesBoundaryList.indexOf( zoneDef.getLowerBoundary() ) + 1 );
+          else
+            quantity = zoneDef.getLowerBoundary() > 0.0 ? -zoneDef.getLowerBoundary() : 0.0;
+          final RGB rgb = zoneDef.getColorStyle();
+          final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
+          riskZonesAdaptedList.add( new ColorMapEntry_Impl( color, 1.0, quantity, zoneDef.getName() ) );
+        }
+        SLDHelper.exportRasterSymbolyzerSLD( m_riskZonesSymbolizerSldFile, riskZonesAdaptedList, null, null, monitor );
+
+        final Map<Double, String> values = new HashMap<Double, String>();
         for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
-          values.put( new Double( riskZoneDefinition.getOrdinalNumber() ), riskZoneDefinition.getName() );
+        {
+          final Double key = new Double( riskZoneDefinition.getLowerBoundary() );
+          if( riskZoneDefinition.isUrbanLanduseType() )
+            values.put( key, riskZoneDefinition.getName() );
+          else
+            values.put( -key, riskZoneDefinition.getName() );
+        }
         RiskZonesThemeInfo.updateZonesDefinition( values );
+
+        // final List<ColorMapEntry> valueDefinitionList = new ArrayList<ColorMapEntry>();
+        // for( final IRiskZoneDefinition zoneDef : riskZonesList )
+        // {
+        // final double quantity = zoneDef.isUrbanLanduseType() ? zoneDef.getLowerBoundary() :
+        // -zoneDef.getLowerBoundary();
+        // final RGB rgb = zoneDef.getColorStyle();
+        // final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
+        // valueDefinitionList.add( new ColorMapEntry_Impl( color, 1.0, quantity, "" ) );
+        // }
+        // SLDHelper.exportRasterSymbolyzerSLD( m_riskValuesSymbolizerSldFile, valueDefinitionList, null, null, monitor
+        // );
       }
       return Status.OK_STATUS;
     }
@@ -148,11 +195,11 @@ public class LanduseStyleUpdateService extends Job
 
   public IFile getPolygonSymbolzerSldFile( )
   {
-    return m_landuseVectorSymbolyzerSldFile;
+    return m_landuseVectorSymbolizerSldFile;
   }
 
   public IFile getRasterSymbolzerSldFile( )
   {
-    return m_landuseRasterSymbolyzerSldFile;
+    return m_landuseRasterSymbolizerSldFile;
   }
 }

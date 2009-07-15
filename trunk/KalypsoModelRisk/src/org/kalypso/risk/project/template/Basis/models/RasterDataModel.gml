@@ -6,9 +6,6 @@
  <krrdm:specificDamageCoverageCollection>
   <krrdm:AnnualCoverageCollection gml:id="AnnualCoverageCollection11946127768432"/>
  </krrdm:specificDamageCoverageCollection>
- <krrdm:landuseCoverage>
-  <cov:CoverageCollection xmlns:cov="org.kalypso.gml.common.coverage" gml:id="CoverageCollection11946128251872"/>
- </krrdm:landuseCoverage>
  <krrdm:riskZonesCoverage>
   <cov:CoverageCollection xmlns:cov="org.kalypso.gml.common.coverage" gml:id="CoverageCollection11946128304061"/>
  </krrdm:riskZonesCoverage>

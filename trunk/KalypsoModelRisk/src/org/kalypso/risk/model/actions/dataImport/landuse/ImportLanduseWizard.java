@@ -280,7 +280,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
       szenarioDataProvider.postCommand( IRasterizationControlModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       szenarioDataProvider.postCommand( IVectorDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-
+      
       /* creating styles */
       final IFile polygonSldFile = scenarioFolder.getFile( "styles/LanduseVector.sld" ); //$NON-NLS-1$
       if( polygonSldFile.exists() )
@@ -289,13 +289,13 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
       final List <Layer> layers = new ArrayList<Layer>();
-      layers.add( SLDHelper.polygonStyleLayer( null, landuseClassesList, ILandusePolygon.PROPERTY_GEOMETRY,ILandusePolygon.PROPERTY_SLDSTYLE , null, null, null ) );
-      SLDHelper.exportPolygonSymbolyzerSLD( polygonSldFile, layers.toArray((new Layer[0])), null ); //$NON-NLS-1$ //$NON-NLS-2$
+      layers.add( SLDHelper.polygonStyleLayer( null, landuseClassesList, ILandusePolygon.PROPERTY_GEOMETRY,ILandusePolygon.PROPERTY_SLDSTYLE , null, null, new NullProgressMonitor() ) );
+      SLDHelper.exportPolygonSymbolyzerSLD( polygonSldFile, layers.toArray((new Layer[0])), new NullProgressMonitor() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final IFile rasterSldFile = scenarioFolder.getFile( "styles/LanduseCoverage.sld" ); //$NON-NLS-1$
       if( rasterSldFile.exists() )
         rasterSldFile.delete( false, new NullProgressMonitor() );
-      SLDHelper.exportRasterSymbolyzerSLD( rasterSldFile, landuseClassesList, "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
+      SLDHelper.exportRasterSymbolyzerSLD( rasterSldFile, landuseClassesList, "Kalypso style", "Kalypso style", new NullProgressMonitor() ); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
     catch( final Exception e )

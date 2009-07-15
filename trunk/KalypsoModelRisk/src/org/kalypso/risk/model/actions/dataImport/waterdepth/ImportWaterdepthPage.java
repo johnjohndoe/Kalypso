@@ -306,15 +306,17 @@ public class ImportWaterdepthPage extends WizardPage
       protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
-
-        if( m_rasterInfos.get( m_selectedRasterIndex ).setCoordinateSystem( m_crs ) )
+        if( m_selectedRasterIndex >= 0 && m_rasterInfos.size() < m_selectedRasterIndex )
         {
-          m_tableViewer.getItem( m_selectedRasterIndex ).setText( 2, m_crs );
-          m_tableViewer.redraw();
-        }
-        else
-        {
-          MessageDialog.openError( parent.getShell(), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.25" ), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.26" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          if( m_rasterInfos.get( m_selectedRasterIndex ).setCoordinateSystem( m_crs ) )
+          {
+            m_tableViewer.getItem( m_selectedRasterIndex ).setText( 2, m_crs );
+            m_tableViewer.redraw();
+          }
+          else
+          {
+            MessageDialog.openError( parent.getShell(), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.25" ), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.26" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          }
         }
       }
     } );
