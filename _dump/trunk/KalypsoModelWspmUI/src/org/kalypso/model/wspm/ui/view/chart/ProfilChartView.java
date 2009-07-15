@@ -61,7 +61,6 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.handler.ProfilClickHandler;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.ogc.gml.RestoreSelectionHelper;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
@@ -143,6 +142,9 @@ public class ProfilChartView implements IChartPart, IProfilListener
     m_chartComposite.setLayoutData( gD );
 
     final IMapperRegistry mr = m_chartComposite.getChartModel().getMapperRegistry();
+
+     // TODO: what is this??? With theses fixed axes, the profile-chart is nor more reusable!!
+    // Must go into the layer provider!
 
     final IAxis domainAxis = new GenericLinearAxis( ID_AXIS_DOMAIN, POSITION.BOTTOM, null );
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
@@ -228,7 +230,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     }
   }
 
-  private final void saveStatePosition( final ILayerManager mngr, ArrayList<Object> list )
+  private final void saveStatePosition( final ILayerManager mngr, final ArrayList<Object> list )
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
@@ -444,7 +446,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
                   if( !getAxis( ID_AXIS_RIGHT ).getLabel().equals( "[" + cp.getUnit() + "]" ) )
                   {
                     getAxis( ID_AXIS_RIGHT ).setLabel( "[" + cp.getUnit() + "]" );
-                    IAxisComponent ac = chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
+                    final IAxisComponent ac = chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
                     ((AxisCanvas) ac).layout();
                   }
               }
