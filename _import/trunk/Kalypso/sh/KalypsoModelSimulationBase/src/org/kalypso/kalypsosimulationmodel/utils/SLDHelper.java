@@ -265,26 +265,29 @@ public class SLDHelper
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
 
-    colorMap.put( new Double( -9999.0 ), new ColorMapEntry_Impl( Color.WHITE, DEFAULT_RASTER_FILLOPACITY, -9999.0, "" ) ); //$NON-NLS-1$
+//    colorMap.put( -Double.MAX_VALUE, new ColorMapEntry_Impl( Color.WHITE, DEFAULT_RASTER_FILLOPACITY, -Double.MAX_VALUE, Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.1" ) ) ); //$NON-NLS-1$
     for( final Object styledFeatureObject : collection )
     {
-      final IColorStyledFeatureWrapper styledFeature;
-      if( styledFeatureObject instanceof IColorStyledFeatureWrapper )
-        styledFeature = (IColorStyledFeatureWrapper) styledFeatureObject;
-      else
-        continue;
       if( monitor.isCanceled() )
         throw new CoreException( Status.CANCEL_STATUS );
+      if( styledFeatureObject instanceof IColorStyledFeatureWrapper )
+      {
+        final IColorStyledFeatureWrapper styledFeature = (IColorStyledFeatureWrapper) styledFeatureObject;
 
-      final RGB rgb = styledFeature.getColorStyle();
-      Color color = null;
-      if( rgb == null )
-        color = Color.WHITE;
-      else
-        color = new Color( rgb.red, rgb.green, rgb.blue );
-      final double quantity = styledFeature.getOrdinalNumber();
-      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, DEFAULT_RASTER_FILLOPACITY, quantity, "" ); //$NON-NLS-1$
-      colorMap.put( new Double( quantity ), colorMapEntry );
+        final RGB rgb = styledFeature.getColorStyle();
+        final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
+        final double quantity = styledFeature.getOrdinalNumber();
+        final String featureName = styledFeature.getName();
+        final String label = (featureName == null || featureName.length() == 0) ? Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.2" ) : featureName; //$NON-NLS-1$
+        final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, DEFAULT_RASTER_FILLOPACITY, quantity, label );
+        colorMap.put( new Double( quantity ), colorMapEntry );
+      }
+      else if( styledFeatureObject instanceof ColorMapEntry )
+      {
+        final ColorMapEntry entry = (ColorMapEntry) styledFeatureObject;
+        entry.setOpacity( DEFAULT_RASTER_FILLOPACITY );
+        colorMap.put( entry.getQuantity(), entry );
+      }
     }
 
     final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( null, colorMap, null, null );

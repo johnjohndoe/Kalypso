@@ -41,8 +41,8 @@ public interface IRoughnessCls extends IColorStyledFeatureWrapper
   /**
    * To sets the roughness ks value
    * 
-   * @param ks --
-   *            the new ks value
+   * @param ks
+   *          -- the new ks value
    * @throws IllegalArgumentException
    */
   public void setKs( double ks ) throws IllegalArgumentException;
@@ -60,7 +60,7 @@ public interface IRoughnessCls extends IColorStyledFeatureWrapper
    * @param axay
    * @throws IllegalArgumentException
    */
-  public void setAxAy( double axay ) throws IllegalArgumentException;;
+  public void setAxAy( double axay ) throws IllegalArgumentException;
 
   public double getDp( );
 
@@ -87,10 +87,10 @@ public interface IRoughnessCls extends IColorStyledFeatureWrapper
    * Sets a new eddy viscosity for this roughness
    * 
    * @param eddy
-   *            the new eddy viscosity
+   *          the new eddy viscosity
    * 
    * @throws IllegalArgumentException
-   *             if eddy is negative
+   *           if eddy is negative
    * 
    */
   public void setEddyXX( double eddy_xx ) throws IllegalArgumentException;
@@ -106,15 +106,15 @@ public interface IRoughnessCls extends IColorStyledFeatureWrapper
    * valitidy check
    * 
    * @param name
-   *            the name for the roughness
+   *          the name for the roughness
    * @param ks
-   *            the Manning Strickler coefficient
+   *          the Manning Strickler coefficient
    * @param axay
    * @param dp
    * @param eddy
-   *            the eddy viskosity
+   *          the eddy viskosity
    * @param marsh
-   *            marsh parameter
+   *          marsh parameter
    * @return
    */
   public RoughnessConfigConsistency configure( String name, double ks, double axay, double dp, double eddy_xx, double eddy_yx, double eddy_xy, double eddy_yy, double marsh );

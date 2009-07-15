@@ -240,7 +240,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   private IDataRange<Number> rangeForComponent( final int component )
   {
     BigDecimal min = new BigDecimal( Double.MAX_VALUE );
-    BigDecimal max = new BigDecimal( Double.MIN_VALUE );
+    BigDecimal max = new BigDecimal( -Double.MAX_VALUE );
 
     for( final IRecord record : m_result )
     {

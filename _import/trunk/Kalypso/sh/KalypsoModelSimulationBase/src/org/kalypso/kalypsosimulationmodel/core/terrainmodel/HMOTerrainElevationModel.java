@@ -108,7 +108,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
 
     TriangleData triangleData;
     minElevation = Double.MAX_VALUE;
-    maxElevation = Double.MIN_VALUE;
+    maxElevation = -Double.MAX_VALUE;
     double extremum;
 
     union = rings[0].getEnvelopeInternal();
@@ -220,11 +220,11 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
-   * @returns a valid Maximum Elevation value or Double.NaN and not the default Double.MIN_VALUE
+   * @returns a valid Maximum Elevation value or Double.NaN and not the default -Double.MAX_VALUE
    */
   public double getMaxElevation( )
   {
-    return maxElevation == Double.MIN_VALUE ? Double.NaN : maxElevation;
+    return maxElevation == -Double.MAX_VALUE ? Double.NaN : maxElevation;
   }
 
   /**

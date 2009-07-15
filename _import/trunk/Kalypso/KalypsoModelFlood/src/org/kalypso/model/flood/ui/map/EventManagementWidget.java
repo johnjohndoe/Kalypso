@@ -481,7 +481,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     // get min / max of the selected runoff event
     BigDecimal event_min = new BigDecimal( Double.MAX_VALUE );
-    BigDecimal event_max = new BigDecimal( Double.MIN_VALUE );
+    BigDecimal event_max = new BigDecimal( -Double.MAX_VALUE );
 
     for( final ITinReference tin : tins )
     {

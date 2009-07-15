@@ -309,7 +309,7 @@ public class Restart1DImporter
     }
 
     BigDecimal min = BigDecimal.valueOf( Double.MAX_VALUE );
-    BigDecimal max = BigDecimal.valueOf( Double.MIN_VALUE );
+    BigDecimal max = BigDecimal.valueOf( -Double.MAX_VALUE );
 
     final IRecord[] records = recordsByStation.values().toArray( new IRecord[recordsByStation.size()] );
     final int lsSize = records.length;

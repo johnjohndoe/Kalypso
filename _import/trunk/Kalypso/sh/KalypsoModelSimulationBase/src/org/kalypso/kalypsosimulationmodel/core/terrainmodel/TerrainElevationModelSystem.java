@@ -179,7 +179,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
       return Double.NaN;
     }
 
-    double maxEle = Double.MIN_VALUE;
+    double maxEle = -Double.MAX_VALUE;
     double curMaxEle;
     for( final ITerrainElevationModel eleModel : terrainElevationModels )
     {
@@ -190,7 +190,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
       }
     }
 
-    return maxEle == Double.MIN_VALUE ? Double.NaN : maxEle;
+    return maxEle == -Double.MAX_VALUE ? Double.NaN : maxEle;
   }
 
   /**
