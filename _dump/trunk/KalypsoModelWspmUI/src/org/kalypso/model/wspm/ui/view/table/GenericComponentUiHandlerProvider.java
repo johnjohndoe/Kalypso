@@ -134,7 +134,7 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
       return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "##,####", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

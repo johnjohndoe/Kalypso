@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.swt.graphics.RGB;
@@ -60,6 +61,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.handler.ProfilClickHandler;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.ogc.gml.RestoreSelectionHelper;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
@@ -69,6 +71,7 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -213,14 +216,105 @@ public class ProfilChartView implements IChartPart, IProfilListener
       l.onProfilProviderChanged( null, old, m_profile );
   }
 
-  protected final IChartLayer getActiveLayer( final ILayerManager mngr )
+  private final void saveStateVisible( final ILayerManager mngr, final HashMap<String, Boolean> map )
+  {
+    for( final IChartLayer layer : mngr.getLayers() )
+    {
+      map.put( layer.getId(), layer.isVisible() );
+      if( layer instanceof IExpandableChartLayer )
+      {
+        saveStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
+      }
+    }
+  }
+
+  private final void saveStatePosition( final ILayerManager mngr, ArrayList<Object> list )
+  {
+    for( final IChartLayer layer : mngr.getLayers() )
+    {
+      if( layer instanceof IExpandableChartLayer )
+      {
+        final ArrayList<Object> l = new ArrayList<Object>();
+        l.add( layer.getId() );
+        saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
+        list.add( l );
+      }
+      else
+        list.add( layer.getId() );
+    }
+  }
+
+  private final String saveStateActive( final ILayerManager mngr )
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
       if( layer.isActive() )
-        return layer;
+        return layer.getId();
     }
-    return null;
+    return "";
+  }
+
+  private final void restoreStateVisible( final ILayerManager mngr, final HashMap<String, Boolean> map )
+  {
+    for( final IChartLayer layer : mngr.getLayers() )
+    {
+      final Boolean visible = map.get( layer.getId() );
+      if( visible != null )
+        layer.setVisible( visible );
+      if( layer instanceof IExpandableChartLayer )
+      {
+        restoreStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
+      }
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private final void restoreStatePosition( final ILayerManager mngr, final ArrayList<Object> list )
+  {
+    int pos = 0;
+    for( final Object o : list )
+    {
+      if( o instanceof ArrayList )
+      {
+        final ArrayList<Object> l = (ArrayList<Object>) o;
+        final Object id = l.get( 0 );
+        final IChartLayer layer = mngr.getLayerById( id.toString() );
+        if( layer != null )
+        {
+          mngr.moveLayerToPosition( layer, pos++ );
+          if( layer instanceof IExpandableChartLayer )
+          {
+            restoreStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
+          }
+        }
+      }
+      else
+      {
+        final IChartLayer layer = mngr.getLayerById( o.toString() );
+        if( layer != null )
+        {
+          mngr.moveLayerToPosition( layer, pos++ );
+        }
+      }
+    }
+  }
+
+  private final void restoreStateActive( final ILayerManager mngr, final String id )
+  {
+    final IChartLayer layer = mngr.getLayerById( id );
+    if( layer != null )
+    {
+      layer.setActive( true );
+      activeLayerChanged( layer );
+      return;
+    }
+
+// old active Layer removed
+    if( mngr.getLayers().length > 0 )
+    {
+      mngr.getLayers()[0].setActive( true );
+      activeLayerChanged( mngr.getLayers()[0] );
+    }
   }
 
   /**
@@ -431,46 +525,52 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_chartComposite != null && m_chartComposite.getChartModel() != null && m_chartComposite.getChartModel().getLayerManager() != null )
     {
       final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
-      final IChartLayer activeLayer = getActiveLayer( lm );
-      final ArrayList<String> layers = new ArrayList<String>();
-      for( final String layerId : m_layerProvider.getRequiredLayer( this ) )
-        layers.add( layerId );
 
+      // saveState
+      final String activeLayerId = saveStateActive( lm );
+      final HashMap<String, Boolean> visibility = new HashMap<String, Boolean>();
+      saveStateVisible( lm, visibility );
+      final ArrayList<Object> positions = new ArrayList<Object>();
+      saveStatePosition( lm, positions );
       // remove layer
       for( final IChartLayer layer : lm.getLayers() )
         lm.removeLayer( layer );
 
       // add layer
-      for( final String layerId : layers )
+      for( final String layerId : m_layerProvider.getRequiredLayer( this ) )
       {
         final IProfilChartLayer profilLayer = m_layerProvider.createLayer( layerId, this );
         if( profilLayer != null )
           lm.addLayer( profilLayer );
       }
 
+      restoreStatePosition( lm, positions );
+      restoreStateVisible( lm, visibility );
+      restoreStateActive( lm, activeLayerId );
+
       // activate first layer
-      if( activeLayer == null && lm.getLayers().length > 0 )
-      {
-        lm.getLayers()[0].setActive( true );
-        activeLayerChanged( lm.getLayers()[0] );
-        return;
-      }
-
-      // reactivate layer
-      final IChartLayer layer = lm.getLayerById( activeLayer == null ? "" : activeLayer.getId() ); //$NON-NLS-1$
-      if( layer != null )
-      {
-        layer.setActive( true );
-        activeLayerChanged( layer );
-        return;
-      }
-
-      // old active Layer removed
-      if( lm.getLayers().length > 0 )
-      {
-        lm.getLayers()[0].setActive( true );
-        activeLayerChanged( lm.getLayers()[0] );
-      }
+// if( activeLayer == null && lm.getLayers().length > 0 )
+// {
+// lm.getLayers()[0].setActive( true );
+// activeLayerChanged( lm.getLayers()[0] );
+// return;
+// }
+//
+// // reactivate layer
+// final IChartLayer layer = lm.getLayerById( activeLayerId );
+// if( layer != null )
+// {
+// layer.setActive( true );
+// activeLayerChanged( layer );
+// return;
+// }
+//
+// // old active Layer removed
+// if( lm.getLayers().length > 0 )
+// {
+// lm.getLayers()[0].setActive( true );
+// activeLayerChanged( lm.getLayers()[0] );
+// }
     }
   }
 }

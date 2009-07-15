@@ -92,10 +92,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     m_layers.add( IWspmTuhhConstants.LAYER_RAUHEIT );
     m_layers.add( IWspmTuhhConstants.LAYER_BRUECKE );
     m_layers.add( IWspmTuhhConstants.LAYER_WEHR );
-// m_layers.add( IWspmTuhhConstants.LAYER_KREIS );
-// m_layers.add( IWspmTuhhConstants.LAYER_MAUL );
-// m_layers.add( IWspmTuhhConstants.LAYER_TRAPEZ );
-// m_layers.add( IWspmTuhhConstants.LAYER_EI );
     m_layers.add( IWspmTuhhConstants.LAYER_TUBES );
     m_layers.add( IWspmTuhhConstants.LAYER_DEVIDER );
   }

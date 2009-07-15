@@ -82,8 +82,5 @@ public interface IProfilLayerProvider
   public boolean providesLayer( final String layerId );
 
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
-  /**
-   * @deprecated
-   */
-  //public void dispose();
+  
 }

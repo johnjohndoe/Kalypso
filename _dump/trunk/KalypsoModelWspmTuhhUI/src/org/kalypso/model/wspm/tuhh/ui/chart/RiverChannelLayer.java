@@ -91,7 +91,7 @@ public class RiverChannelLayer extends PointMarkerLayer
               final int index = profil.indexOfProperty( roughness );
               final IRecord p1 = durchstroemte[0].getPoint();
               final IRecord p2 = trennflaechen[0].getPoint();
-              final IRecord p3 = durchstroemte[durchstroemte.length - 1].getPoint();
+              final IRecord p3 = trennflaechen[trennflaechen.length - 1].getPoint();
               final Double r1 = (Double) p1.getValue( index );
               final Double r2 = (Double) p2.getValue( index );
               final Double r3 = (Double) p3.getValue( index );
@@ -125,13 +125,28 @@ public class RiverChannelLayer extends PointMarkerLayer
   {
     if( roughness == null )
       return false;
+
     final IProfil profil = getProfil();
-
+    final IProfilPointMarker[] durchstroemte = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     final IProfilPointMarker[] trennflaechen = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-
-    if( trennflaechen.length < 2 )
+    if( trennflaechen.length < 2 || durchstroemte.length < 2 )
       return false;
-    return ProfilUtil.RangeIsConstantNumberFor( trennflaechen[0].getPoint(), trennflaechen[trennflaechen.length - 1].getPoint(), roughness );
+
+    final double precision = roughness.getPrecision();
+    final int start = profil.indexOfPoint( durchstroemte[0].getPoint() );
+    final int end = profil.indexOfPoint( durchstroemte[durchstroemte.length - 1].getPoint() );
+    Double value = ProfilUtil.getDoubleValueFor( roughness, durchstroemte[0].getPoint() );
+    final IRecord[] points = profil.getPoints();
+
+    for( int i = start; i < end; i++ )
+    {
+      if( points[i].equals( trennflaechen[0].getPoint() ) || points[i].equals( trennflaechen[trennflaechen.length - 1].getPoint() ) )
+        value = ProfilUtil.getDoubleValueFor( roughness, points[i] );
+      final Double d = ProfilUtil.getDoubleValueFor( roughness, points[i] );
+      if( value.isNaN() || d.isNaN() || Math.abs( value - d ) > precision )
+        return false;
+    }
+    return true;
   }
 
   private void setRiverChannelRoughness( final Double r1, final Double r2, final Double r3, final int index )
@@ -140,8 +155,7 @@ public class RiverChannelLayer extends PointMarkerLayer
     final IProfil profil = getProfil();
 
     final IProfilPointMarker[] trennflaechen = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker[] durchstroemte = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final int i1 = profil.indexOfPoint( durchstroemte[0].getPoint() );
+
     final int i2 = profil.indexOfPoint( trennflaechen[0].getPoint() );
     final int i3 = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
 
@@ -157,7 +171,7 @@ public class RiverChannelLayer extends PointMarkerLayer
       if( (Double) (points[i].getValue( index )) != r2 )
         points[i].setValue( index, r2 );
     }
-    for( int i = i3; i < points.length-1; i++ )
+    for( int i = i3; i < points.length - 1; i++ )
     {
       if( (Double) (points[i].getValue( index )) != r3 )
         points[i].setValue( index, r3 );

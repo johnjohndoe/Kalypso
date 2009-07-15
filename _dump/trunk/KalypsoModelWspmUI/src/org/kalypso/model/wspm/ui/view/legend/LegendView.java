@@ -312,10 +312,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
       
 
       final IChartModel cm = chartView.getChart().getChartModel();
-      m_chartlegend.getContentProvider().dispose();
-      m_chartlegend.setContentProvider( new ProfilChartEditorTreeContentProvider( cm ) );
-      m_chartlegend.updateControl();
-      
+     
       for( final IChartLayer layer : cm.getLayerManager().getLayers() )
       {
         if( layer.isActive() )

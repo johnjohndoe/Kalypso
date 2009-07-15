@@ -56,7 +56,6 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -170,7 +169,7 @@ public class RauheitenPanel extends AbstractProfilView
 
         final IComponent selected = (IComponent) selection.getFirstElement();
 
-        if( old != selected )
+        if( !old.getId().equals( selected.getId() ) )
         {
           final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.1" ), getProfil(), true ); //$NON-NLS-1$
           operation.addChange( new PointPropertyAdd( getProfil(), selected, old ) );
@@ -293,6 +292,7 @@ public class RauheitenPanel extends AbstractProfilView
         setValues( i_left, i_rechts, value );
       }
     } );
+    updateControls();
     return panel;
   }
 
@@ -337,53 +337,38 @@ public class RauheitenPanel extends AbstractProfilView
     label.setLayoutData( data );
   }
 
+  private final void updateText( final Text t, final Double d )
+  {
+    if( t == null || t.isDisposed() )
+      return;
+    if( d == null || d.isNaN() )
+      t.setText( "" );
+    t.setText( String.format( "%.4f", d ) );
+  }
+
   void updateControls( )
   {
-    final IProfil profile = getProfil();
     final IComponent roughness = getRoughness();
+    if( roughness == null )
+    {
+      m_rauheitCombo.setSelection( null );
+      updateText( m_re, null );
+      updateText( m_li, null );
+      updateText( m_hf, null );
+      return;
+    }
+    m_rauheitCombo.setSelection( new StructuredSelection( m_RauheitTypes.get( roughness.getId() ) ) );
+    final IProfil profile = getProfil();
     final IProfilPointMarker[] durchstroemte = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
 
     if( durchstroemte.length > 0 )
-      m_li.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( roughness, durchstroemte[0].getPoint() ) ) );
+      updateText( m_li, ProfilUtil.getDoubleValueFor( roughness, durchstroemte[0].getPoint() ) );
     if( trennflaechen.length > 0 )
-      m_hf.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( roughness.getId(), trennflaechen[0].getPoint() ) ) );
+      updateText( m_hf, ProfilUtil.getDoubleValueFor( roughness, trennflaechen[0].getPoint() ) );
     if( trennflaechen.length > 1 )
-      m_re.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( roughness, trennflaechen[trennflaechen.length - 1].getPoint() ) ) );
+      updateText( m_re, ProfilUtil.getDoubleValueFor( roughness, trennflaechen[trennflaechen.length - 1].getPoint() ) );
 
-    if( roughness != null )
-      m_rauheitCombo.setSelection( roughness != null ? new StructuredSelection( m_RauheitTypes.get( roughness.getId() ) ) : null );
-    else
-      m_rauheitCombo.setSelection( null );
-
-  }
-
-  protected boolean checkValues( final IComponent roughness )
-  {
-    if( roughness == null )
-      return false;
-    final IProfil profil = getProfil();
-
-    final IProfilPointMarker[] durchstroemte = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final IProfilPointMarker[] trennflaechen = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-
-    if( trennflaechen.length < 2 || durchstroemte.length < 2 )
-      return false;
-
-    final int index = profil.indexOfProperty( roughness );
-    final double precision = roughness.getPrecision();
-    Double value = (Double) durchstroemte[0].getPoint().getValue( index );
-    for( final IRecord point : profil.getPoints() )
-    {
-      if( point.equals( trennflaechen[0].getPoint() ) )
-        value = (Double) trennflaechen[0].getPoint().getValue( index );
-      else if( point.equals( trennflaechen[trennflaechen.length - 1].getPoint() ) )
-        value = (Double) trennflaechen[trennflaechen.length - 1].getPoint().getValue( index );
-      else if( value == null || Math.abs( value - (Double) point.getValue( index ) ) > precision )
-        return false;
-    }
-
-    return true;
   }
 
   protected final IComponent getRoughness( )
