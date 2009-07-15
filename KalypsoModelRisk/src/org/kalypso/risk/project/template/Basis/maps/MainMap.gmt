@@ -11,12 +11,6 @@
             <templ:property name="themeInfoId">org.kalypso.risk.plugin.RiskZonesThemeInfo</templ:property>
             <templ:property name="themeId">riskZonesGridTheme</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="%MainMap.mapv.layer.Landnutzung" id="ID_2" featurePath="#fid#CoverageCollection11946128251872/coverageMember" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/RasterDataModel.gml" xlink:actuate="onRequest">
-            <templ:style style="Kalypso style" linktype="sld" xlink:type="simple" xlink:href="../styles/LanduseCoverage.sld" xlink:actuate="onRequest"/>
-            <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.risk.plugin.RasterizedLanduseThemeInfo</templ:property>
-            <templ:property name="themeId">landuseGridTheme</templ:property>
-        </mapv:layer>
         <mapv:layer visible="false" name="%MainMap.mapv.layer.damagePotential" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="SpecificDamagePotentialMap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
             <templ:property name="themeId">damagePotentialThemes</templ:property>

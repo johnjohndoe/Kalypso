@@ -66,6 +66,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
         }
       };
       job.setUser( true );
+      job.setPriority( Job.LONG );
       job.schedule( 100 );
     }
     catch( final Exception e )
