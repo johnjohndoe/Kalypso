@@ -62,7 +62,7 @@
 	</target>
 
 	<target name="clean" depends="init">
-		<delete file="${build.result.folder}/anttasks.jar" />
+		<delete file="${build.result.folder}/KalypsoDWDTask.jar" />
 		<delete dir="${temp.folder}" />
 	</target>
 </project>
