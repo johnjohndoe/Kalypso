@@ -116,6 +116,10 @@ CIPK AUG05      INCLUDE 'BLKSED.COM'
       INTEGER :: ProfileCounter = 0     !HN,May2009, PROFILE COUNTER FOR THE CASE THAT NONE OF THE CONTILENS HAS AN ASSOCIATED PROFILE.
       INTEGER :: ISTAT , ProfileID = -1
       LOGICAL :: middsidd =.FALSE.
+  ! test
+      type (linkedNode) , pointer     :: nextNode=> null()
+      real(kind = 8)   :: distt         ! distance the to origin of profile.
+  ! test
 !-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: HTP
@@ -209,12 +213,16 @@ C
 !     AND OPENED BY SUBROUTINE IN FILE.F90                  !
 !                  HN MAY2009                               !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            BANKEVOLUTION =.FALSE. 
+      BANKEVOLUTION =.FALSE. 
+      
       IF ( IPROFIN == 73) THEN
        ! read profile data from unit 73 and assign BANKPROFILES array
-       CALL READPROFILES (IPROFIN) 
+       CALL READPROFILES (IPROFIN,ProfileCounter) 
+      
        CLOSE (IPROFIN)
+      
          BANKEVOLUTION =.TRUE. 
+      
        IF ( .NOT. ALLOCATED (FENODES) )THEN   
         ALLOCATE (FENODES(MAXP),STAT = ISTAT)     
       
@@ -222,10 +230,11 @@ C
           WRITE (*,*) 'FAILURE BY ALLOCATION OF FENODES ARRAY IN 
      +                                    SUBROUTINE INPUT....'
         END IF
+       
        END IF 
         ! initialize the fenodes array
         CALL MAKEFENODES ( FENODES, MAXP , 1)
-       pause
+       
       ENDIF 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! IT IS ASSUMED HERE THAT EITHER ALL OF THE MORPHOLOGICAL PROFILES !
@@ -1212,7 +1221,7 @@ C-
               ! HN,May2009
               ! count the number of CC1 line to compute later the number of Profiles
               ! which should made out of contiLines. 
-              ContiLineCounter = ContiLineCounter + 1
+              !ContiLineCounter = ContiLineCounter + 1
               ! HN,May2009
               endless: do
                 read(filecontrol.lin.unit,'(a)') inputline
@@ -1248,12 +1257,6 @@ C-
      +             cord (line (i, j), 2))
                 call addNode (tmp_singleCCL, tmpNode)
               enddo assignNodes
-    !          pause
-    !        write (*,*)'tmp_singleCCL  ',
-    ! +       tmp_singleCCL.FirstNode.next.thisnode.ID, '  ',
-    ! +       tmp_singleCCL.FirstNode.next.thisnode.cord (1),'   ', 
-    ! +       tmp_singleCCL.FirstNode.next.thisnode.cord (2),'   ', 
-    ! +       tmp_singleCCL.FirstNode.next.thisnode.ao
 
             !HN JUNE2009,------------------------------------------------------------------
             ! BUILDING PROFILES OUT OF CONTILINES OR JOINING BOTH.             
@@ -1272,11 +1275,11 @@ C-
                 IF ( ProfileID > 0 ) THEN
                
                  tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileID)
-                 BANKPROFILES.CL_NUMBER = i
+                 BANKPROFILES(ProfileID).CL_NUMBER = i
                
-                ELSEIF ( ProfileID == 0 ) THEN
-                 write (*,*) 'contilinecounter', ContiLineCounter
-                 write (*,*) 'ncl', ncl
+  !              ELSEIF ( ProfileID == 0 ) THEN
+   !              write (*,*) 'contilinecounter', ContiLineCounter
+    !             write (*,*) 'ncl', ncl
   !               write (*,*) ' Is bankprofile allocated? ',
   !   +             allocated (bankprofiles)
   !               pause
@@ -1292,23 +1295,23 @@ C-
 
     !            ENDIF         
                                   
-                 ProfileCounter = ProfileCounter + 1  
-                 write (*,*)' Profilecounter', ProfileCounter
+ !                ProfileCounter = ProfileCounter + 1  
+ !                write (*,*)' Profilecounter', ProfileCounter
  !              write (*,*) ' entering into makeprofile subroutine...'
  !              CALL MAKEPROFILE (tmp_singleCCL,lmt(i),
  !    +                          BANKPROFILES( ProfileCounter ),.FALSE. )
  !             tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileCounter)
  !             pause
-                SIZ = ProfileCounter
-                ENDIF  
+ !               SIZ = ProfileCounter
+  !              ENDIF  
                 !read next line
-                read (filecontrol.lin.unit, '(a)') inputLine
-              endif
+   !             read (filecontrol.lin.unit, '(a)') inputLine   ! MOVE IT TO BETWEEN THE LAST TWO END IF IN THIS BLOCK
+  !            endif
             write (*,*) 'ProfileID= ',ProfileId, 'lmt(i) =', lmt(i)
       !      pause
             !-------------------------------------------------------------------------
             ! HN JUNE2009, TEST OF PROFILE READING ------     
-          if (profileId >0) then  
+  !        if (profileId >0) then  
           WRITE (276,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,
      +                  tmp_singleCCL.MorphoProfile.cl_number, 
      +                     tmp_singleCCL.MorphoProfile.max_nodes,
@@ -1333,23 +1336,25 @@ C-
       
           enddo  
       end if
+      read (filecontrol.lin.unit, '(a)') inputLine
+      end if
             !-------------------------------------------------------------------------
             !HN JUNE2009, END OF TEST OF PROFILE READING ------     
            
             ENDDO all_CL
           close (276)  !HN, May2009
           !The bankprofile allocation should come here in the  case of ProfileId= 0 and bankevolution = .TRUE.
-          if (ProfileID ==0 .and. BANKEVOLUTION) then  
-            IF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN
-              ALLOCATE (BANKPROFILES ( ProfileCounter),stat=ISTAT )
-              IF (ISTAT/=0) THEN
-                WRITE (*,*) 'FAILURE BY ALLOCATION OF PROFILE ARRAY IN 
-     +                            SUBROUTINE INPUT....'
-                stop
-              END IF
+ !         if (ProfileID ==0 .and. BANKEVOLUTION) then  
+  !          IF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN
+   !           ALLOCATE (BANKPROFILES ( ProfileCounter),stat=ISTAT )
+    !          IF (ISTAT/=0) THEN
+!                WRITE (*,*) 'FAILURE BY ALLOCATION OF PROFILE ARRAY IN 
+ !    +                            SUBROUTINE INPUT....'
+  !              stop
+   !           END IF
 
-            ENDIF         
-          endif
+    !        ENDIF         
+    !      endif
             IF(inputLine(1:3)=='ECL') THEN
               write ( *,6901)
               write (75,6901)
@@ -1498,21 +1503,44 @@ C-
       enddo getCoords
  !-------------------------------------------------------------------------------     
       ! HN JUNE2009. HERE IS THE FIRST PLACE THAT COORDINATES HAVE BEEN ASSIAGNED TO CORNER NODES IN CONTILINES.
-         IF ( ProfileID == 0 ) THEN
+ !        IF ( ProfileID == 0 ) THEN
+         IF ( bankevolution ) THEN
+  ! TEST TEST TEST TEST 
+        OPEN( UNIT =276 , FILE = 'PROFILE_CONTI.TXT', STATUS ='OLD',
+     +   ACTION ='WRITE', POSITION = 'APPEND')
+  ! TEST TEST TEST TEST 
           do n = 1, ncl
          
-           if (ccls(n).HasProfile ) then
+  !         if (ccls(n).HasProfile ) then
+           if( (ccls(n).HasProfile).AND.
+     +          (.NOT. associated( ccls(n).MorphoProfile)) ) then
              tmp_singleCCL => ccls(n)
                write (*,*) 'CCL ', n, 'lmt(n) ', lmt(n)
                write (*,*) ' entering into makeprofile subroutine...'
                CALL MAKEPROFILE (tmp_singleCCL,lmt(n),
      +                          BANKPROFILES( ProfileCounter ),.FALSE. )
               tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileCounter)
+              BANKPROFILES(ProfileCounter).CL_number = n
+              ProfileCounter = ProfileCounter + 1
            END IF
-            
+  ! TEST TEST TEST TEST 
+           nextnode => CCLs(n).firstnode
+           do j =1,lmt(n)
+             distt = sqrt( ( NextNode.ThisNode.cord (1) -           
+     +                       CCLs(n).FirstNode.ThisNode.cord (1) ) **2 
+     +                        +  ( NextNode.ThisNode.cord (2) -     
+     +                        CCLs(n).FirstNode.ThisNode.cord (2) )**2 )
+
+         write (276,*) nextnode.thisnode.ID, distt, Nextnode.thisnode.ao
+           nextnode =>nextnode.next
+           end do
+             
+  ! TEST TEST TEST TEST 
           END DO
+         close (276)
          END IF
- !        pause
+         
+  !       pause
 !-----------------------------------------------------------------------------------
 !NiS,apr06: In the case of ORT(J,5)==-1.0, the parameters are given to the arrays:
 !           At this point the IMAT-array is not modified by additions for element
