@@ -51,8 +51,16 @@ CIPK JUN06
 
 	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_EL    !Friction Factor for each element
 	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_KN    !Friction Factor for each node
-
-
+      ! HN Geothechnical properties of sand
+      ! critical_slope    ::   Unsaturated critical slope of consolidated sand
+      ! crepose           ::   Saturated critical slope of consolidated sand 
+      ! repose            ::   Angle of sand after avalanche.
+      ! EFFECTIVE_COHESION::   Effective cohesion due to consolidation and mositure content.
+      ! FRICTION_ANGLE    ::   Friction angle of sand
+      ! MATRIC_ANGLE      ::   Angle of matric suction (negative pore pressure)
+      REAl         :: critical_slope,crepose,repose,EFFECTIVE_COHESION
+     +     ,FRICTION_ANGLE, MATRIC_ANGLE
+      
 C     +              ,CRSLOP(MEL),TRSLOP(MNP),srate(mnp),gpbsav(mnp)        
 C     +              ,RCAE(:),RWAE(:),RCAN(MNP),RWAN(MNP),TRRAT(MNP)
 C     +              ,CAI(MNP)
