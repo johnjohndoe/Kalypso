@@ -250,7 +250,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
         if (old_pr(i)%lnose/=0) then                                                ! and it is submerged then tensile subroutine should compute the tensile failure area in overhang.
             integertemp=old_pr(i)%lnose                                             ! %lnose and %rnose store the prnode number of the nose on the left and right bank. Zero means no nose
             side='left'                                                             ! and no overhang respectively.
-             IF (old_pr(i)%prnode(integertemp)%elevation < pr%water_elev) then   ! if new water stage is over nose, then the old nose is submerged and tensile failure should be run.
+             IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.01 )then   ! if new water stage is over nose, then the old nose is submerged and tensile failure should be run.
                Lsubmerged=.true.
                call tensile_failure(pr,fenode, side, pr%water_elev,potentialnose(1)%dist,Lnew_front,Lnumber_newnodes, &
                 &                   Lnumber_lostnodes)
@@ -270,7 +270,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
         if ((old_pr(i)%rnose/=0)) then
               integertemp=old_pr(i)%rnose
               side='right'
-              IF (old_pr(i)%prnode(integertemp)%elevation < pr%water_elev) then  ! ifnew water stage is over nose, then the old nose is submerged and tensile failure should be run.
+              IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.01 )then  ! ifnew water stage is over nose, then the old nose is submerged and tensile failure should be run.
                  Rsubmerged =.true.
                  call tensile_failure(pr,fenode,side,pr%water_elev,potentialnose(2)%dist,Rnew_front,Rnumber_newnodes, &
                       &              Rnumber_lostnodes)
@@ -538,13 +538,13 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
            
            call cantilever_failure (ava_pr,pr%water_elev,critical_slope,failure_source , fenode)
           
-           call output1 (pr, exner_pr, 11)
+           call output1 (pr, exner_pr, 11, i)
 
-           call output1 (profil,tens_pr, 21)
+           if (Lsubmerged .or. Rsubmerged ) call output1 (profil,tens_pr, 21, i)
  
-           call output1 (ava_pr,Avalanch_pr, 31)
+           call output1 (ava_pr,Avalanch_pr, 31, i)
     
-           call output1 (canti_pr,Cantilever_pr, 41)
+           call output1 (canti_pr,Cantilever_pr, 41, i)
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !   DISTRIBUTATION OF MASS WASTE AT BANK-TOE  !
@@ -581,7 +581,8 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
       
        if (lsubmerged ) then
            deallocate (Ladded_nodes)
-       elseif (Rsubmerged) then
+       endif
+       if (Rsubmerged) then
            deallocate ( Radded_nodes)
        end if
 
@@ -690,7 +691,7 @@ end subroutine bank_evolution
 
 !-----------------------------------------------------------------------------------------------------------------------------------------
 
-subroutine output1(profileIN, filename, unitt)
+subroutine output1(profileIN, filename, unitt, profilenumber)
 
 use types
 
@@ -698,13 +699,30 @@ implicit none
 
 type (profile)       , intent (in) :: profileIN
 character (len = 35) , intent (in) :: filename
-integer              , intent (in) :: unitt
+integer              , intent (in) :: unitt, profilenumber
 integer                            :: i,istat
-     open (UNIT=unitt, file = filename , STATUS='REPLACE', ACTION='write', IOSTAT=istat)
-     call file_error (filename, istat)
+logical                            :: exists
+   
+   inquire (file = filename, EXIST= exists)
 
+! The following control is necessary, when more than one timestep is available.
+! to ensure all of the profiles in each time steps are written to the output file.
+    
+    if (exists) then
+     open (UNIT=unitt, file = filename , STATUS='old', ACTION='write',POSITION = 'append', IOSTAT=istat)
+     call file_error (filename, istat)
+    else
+     open (UNIT=unitt, file = filename , STATUS='new', ACTION='write', IOSTAT=istat)
+     call file_error (filename, istat)
+    endif 
+   
+     write (unitt, *) 'profile number: ' , profilenumber
+   
+     write (unitt, *) 'Contiline number: ', profileIN%cl_number
+   
      write (unitt, 110) profileIN%lnose, profileIN%Rnose, profileIN%lfront, profileIN%Rfront
     110 format (4(2x, I4))
+   
     write (unitt, '( 2x,a6,6x,a1,7x,a1,4x,a9)')'fenode','D','Z','attribute'
     
     do i = 1, profileIN%max_nodes
@@ -795,7 +813,7 @@ end if
   !call HasPrnodeFenode (CurrentProfile, FirstNode , Increment(j))
   !call HasPrnodeFenode (CurrentProfile, LastNode  , Increment(j))
 
-  
+ if( (FirstNode == 0).OR.(LastNode == 0) ) cycle  LeftRightBank     ! in the case that no bank erosion has occured on either of bank side cycle to the next one. 
  StartDistance = ABS (CurrentProfile.Prnode(FirstNode).Distance - origin)
  EndDistance   = ABS (CurrentProfile.Prnode(LastNode).Distance  - origin)
  
