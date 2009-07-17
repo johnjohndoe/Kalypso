@@ -1175,9 +1175,71 @@ new features introduced/ started to be introduced:
 -------- M.Hassan Nasermoaddeli, 07.07.2009 
 088.) SUBR Input : Add the definition of the variable DirPointer as 
         REAL(KIND=8) :: dirPointer
-089.) MODULE Mod_ControlStructure : Add the double precision label 'd' to two last arguments in calling subroutine
+089.) MODULE Mod_ControlStructure : Add the double precision label 'd' to two last 
+      arguments in calling subroutine.
       addValueTriple (because of compilation error):
         call addValueTriple (thisCstrc, 0.0d0, -500.0d0, -500.0d0)
         call addValueTriple (thisCstrc, 0.0d0, 8900.0d0, 8900.0d0)
 -------- M.Hassan Nasermoaddeli, 07.07.2009 
+
+-------- M.Hassan Nasermoaddeli, 17.07.2009
+090.) Defining a fixed tolerance(1 cm) for submergence of bank overhang.
+      IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.01 )then
+        >> SUBR BANK_EVOLUTION
+091.) Fixing bug regarding ouput generation for multiple bank profiles:
+      -Adding profile number i as a new argument in subroutine output1.
+          for example:     call output1 (pr, exner_pr, 11, i)
+      -Appending each profile to the previous one in output.
+          Refer to    inquire (file = filename, EXIST= exists) in SUBR output1
+      -Adding bank profile number and Contiline number to the head of each profile
+       in SUBR output1.
+      -Output after tensile failure is made now only if overhangs are submereged.    
+          IF (Lsubmerged .or. Rsubmerged ) CALL output1 (profil,tens_pr, 21, i)
+        >> SUBR OUTPUT1
+        >> SUBR BANK_EVOLUTION
+092.) Fixing deallocation bug of variables Ladded_nodes and Radded_nose by seperating
+      their cooresponding if statement:
+      refer to : if (Rsubmerged) then
+                 deallocate ( Radded_nodes)	 ENDIF
+093.) Fix the bug regarding distribution of failed / wasted mass from bank failure
+      at bank-toe, in the case no bank erosion has happened in either of bank sides.
+         IF( (FirstNode == 0).OR.(LastNode == 0) ) CYCLE  LeftRightBank                 
+       >> SUBR DistributeWastedMass  
+094.) Include a warning message if the distance coordinate of undercutting front is
+      computed negative. In this case program is 'PAUSED', so that the user saved
+      the already generated results and tries to find the error in the PROFILE data.
+       >> MODULE AVALANCHE  
+       >> MODULE PROJECTION    
+095.) Bug Fix: In the case the deepest profile node(bank-toe) for both sides of bank
+      are identical include this node once in aval_pr (avalanche profile).
+          refer to IF( (ava_pr%prnode(n-1)%distance == temp_pr(j)%prnode(p)%distance) &
+   &       .and.(ava_pr%prnode(n-1)%elevation == temp_pr(j)%prnode(p)%elevation)) THEN
+       >> MODULE AVALANCHE      
+096.) Bug Fix: In the case the projected node of overhang coincides with front of
+               undercutting, make the fe_nodenumber negative.
+              - tens_pr%prnode(i+p)%fe_nodenumber = - ABS(tens_pr%prnode(i+p)%fe_nodenumber)
+       >> MODULE AVALANCHE      
+097.) In the early phase of formation of undercuting, if the projection of the first node
+        over water surface is beyond the space between nose and front, do not project it.
+          -Refer to   if (oldprofile%prnode(start)%fe_nodenumber > 0 ) & 
+&            newprofile%prnode(current_index + j)%attribute = 'profile'
+       >> MODULE PROJECTION
+098.) Now a mixture of profiles with PROFILE ID = 0 (internal profiles) and PRofile ID> 0
+      (external profiles) is possible. This allows coexistance of profiles connected to 
+      contilines( given in a seperate data file followed by command PROFILE in in control.r10)
+      and those are generated directly from contilines (PROFILE ID = 0).
+        >> Module Assignprofile /SUBR READPROFILE
+        >> SUBR Input.for
+099.) Introduce a new line in control file 'GTP' (Geothechical Properties) of sand: 
+         - Please refer to data dictionary (variable discription) block in BLKSANMOD.
       
+         - REAl         :: critical_slope,crepose,repose,EFFECTIVE_COHESION
+     +     ,FRICTION_ANGLE, MATRIC_ANGLE        
+           Therefore excluding these variables from Mudule param.
+        >> SUBR INSAND.FOR
+        >> MODULE BLKSANMOD
+        >> MODULE CANTILEVER
+        >> MODULE PARAM
+        >> MODULE TENSILE
+ -------- M.Hassan Nasermoaddeli, 17.07.2009       
+       
