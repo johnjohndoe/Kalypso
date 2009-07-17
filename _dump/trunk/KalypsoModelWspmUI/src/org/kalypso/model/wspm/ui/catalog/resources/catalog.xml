@@ -17,6 +17,7 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:profileMember:swtimage:default" uri="org.kalypso.model.wspmprofile.Profile.gif" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:uiproperties:default" uri="org.kalypso.model.wspmprofile.Profile.properties" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:sld:default" uri="org.kalypso.model.wspmprofile.Profile.sld" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:sld:selected" uri="org.kalypso.model.wspmprofile.ProfileSelected.sld" />
 
     <!-- org.kalypso.model.wspmrunoff.RunOffEvent -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:featureview:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.gft" />
