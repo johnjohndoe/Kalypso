@@ -59,7 +59,7 @@ USE types
 USE share_profile
 USE param
 USE BLK10MOD  , ONLY : DELT
-USE BLKSANMOD , ONLY : TRIBAREA, EXTLD, SGSAND
+USE BLKSANMOD , ONLY : TRIBAREA, EXTLD, SGSAND, critical_slope 
 
 implicit none
 
