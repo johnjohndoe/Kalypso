@@ -1172,3 +1172,12 @@ new features introduced/ started to be introduced:
       >> SUBR INPUTD, GETBC   
 --- Monika Donner, 14.07.2009
 
+-------- M.Hassan Nasermoaddeli, 07.07.2009 
+088.) SUBR Input : Add the definition of the variable DirPointer as 
+        REAL(KIND=8) :: dirPointer
+089.) MODULE Mod_ControlStructure : Add the double precision label 'd' to two last arguments in calling subroutine
+      addValueTriple (because of compilation error):
+        call addValueTriple (thisCstrc, 0.0d0, -500.0d0, -500.0d0)
+        call addValueTriple (thisCstrc, 0.0d0, 8900.0d0, 8900.0d0)
+-------- M.Hassan Nasermoaddeli, 07.07.2009 
+      
