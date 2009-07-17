@@ -26,6 +26,7 @@ USE types
 USE share_profile
 use projectn
 USE param
+USE BLKSANMOD , ONLY : critical_slope,crepose,repose
 
 implicit none
 
@@ -38,7 +39,7 @@ subroutine avalanche (trans_pr,totalnode, fenode, last_submerged_fenode, index_l
 !USE types
 implicit none
 
-INTEGER ,INTENT (IN) :: totalnode
+INTEGER                                   ,INTENT (IN) :: totalnode
 TYPE(profile),INTENT (IN) :: trans_pr
 TYPE (finite_element_node), dimension (:) , INTENT (INOUT):: fenode   
 Real(kind=8), dimension (2), INTENT (OUT) :: EffectiveWidth_Overhang,delVolume 
@@ -352,6 +353,13 @@ overhang:      if (noz(j) == 0) then                                     ! if th
                  front(j)%elevation     = wsl1                                                               ! current water elevation.
                  front(j)%attribute     = 'front'
                  front(j)%water_elev    = wsl1
+                 
+                 if (front(j)%distance < 0.) then
+                  write (*,*)
+                  write (*,*) ' WARNING '
+                  write (*,*) ' The distance coordinate of undercutting front is negative...'
+                  pause
+                 end if  
 
 nodisnose:        if ( nose(j)%nextnode< 0) then                                        ! if the just created nose coincides with the Profile node (i+p) then:
 
@@ -437,12 +445,12 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
                        fenode(r)%elevation          = z2
                        fenode(r)%statuss            = 'deactivate'
                        tens_pr%prnode(i+p)%attribute = 'overhang'
-                          
+                       tens_pr%prnode(i+p)%fe_nodenumber = - ABS(tens_pr%prnode(i+p)%fe_nodenumber)   
                        delVolume (j) = 0.               !HN. 10June2009. Since delz     = ABS (wsl1 - z2)= 0. No erosion on prnode i + p
                        call  projection (fenode,nose(j)%dist,front(j),radian(critical_slope),i+p,en(j),temp_pr(j),k,j,tens_pr,radian(repose) &
                             & ,point,.true.)                                            
                                                                                                                         ! here true signals the subroutine not to reconsider adding the front
-                     ELSE IF (wsl1 < z2 ) THEN   belowabove
+                     ELSE IF (wsl1 < z2 ) THEN   belowabove               ! the case in which, projected nose is above water level, meaning no projection is required for this node. 
                        
                        delVolume (j) = 0.               !HN. 10June2009. Since delz     = ABS (wsl1 - z2)< 0. No erosion on prnode i + p
 
@@ -450,7 +458,7 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
                        tens_pr%prnode(i+p)%attribute = 'overhang'
 
                        call  projection (fenode,nose(j)%dist,front(j),radian(critical_slope),i+p,en(j),temp_pr(j),s,j,tens_pr,radian(repose),point)
-                                              
+
                        k = s
                      End if belowabove
 
@@ -544,7 +552,22 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
  end if
    
   aval: do p = begin,endd,inc(j)                           ! p= 1 is equal to index_lowest(J)
+        
+
             n = n + 1
+        
+           !test if the deepest point of left and right bank are equal
+           !then include this point once in ava_pr profile
+        
+            if (j == 2) then
+            
+            if( (ava_pr%prnode(n-1)%distance == temp_pr(j)%prnode(p)%distance) &
+   &           .and.(ava_pr%prnode(n-1)%elevation == temp_pr(j)%prnode(p)%elevation)) then
+              n = n - 1
+              cycle aval
+            end if
+            end if 
+            
             ava_pr%prnode(n) = temp_pr(j)%prnode(p)
 
             if (( J == 1).and.( trim(temp_pr(j)%prnode(p)%attribute) == 'front') ) then 
@@ -562,7 +585,7 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
             end if   
 
         end do aval
-
+! include the nodes between the deepest point of left and right bank, before adding the right bank to ava_pr.
            if (j==1) then
               do t = index_lowest(1)+1,index_lowest(2)-1
                n = n + 1
