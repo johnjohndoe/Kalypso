@@ -93,6 +93,14 @@ j = 0
       if (present (oldpr_index)) then
 
         dd = pointB%distance + r / TAN(angle)* abs(oldprofile%prnode(p)%elevation - pointB%elevation)      ! distance coordiante of the new front resulting form undercutting below overhang.
+                if (dd < 0.) then
+                  write (*,*)
+                  write (*,*) ' WARNING , Module Projection...'
+                  write (*,*) ' The distance coordinate of the new undercutting front is negative...'
+                  pause
+                 end if  
+
+        
         rel_dd = ABS(dd- origin)
         rel_dist_oldfront = ABS(oldprofile%prnode(p)%distance - origin)                             ! relativ distance of the old front with respect to the origin.
 
@@ -330,6 +338,9 @@ fr:if (trim(pointB%attribute) == 'front') then                               ! i
 
           j = j + 1
           newprofile%prnode(current_index + j) = oldprofile%prnode(start)            ! the old profile node i+p = start point, which is now in the overhang.
+  
+          if (oldprofile%prnode(start)%fe_nodenumber > 0 ) &                         ! in the case that the START node is beynod projection zone (between nose and front)
+&            newprofile%prnode(current_index + j)%attribute = 'profile'              ! don't include it as an overhang node.
 
     else if ((present (nose)).AND.(trim(oldprofile%prnode(start)%attribute) =='nose')) then    ! if the overhang is just being generated, and the node with the index "start" is the nose then assiagn it as a nose to the new profile.
           j = j + 1
