@@ -5,6 +5,8 @@ module cantilever
 USE types
 USE share_profile
 use param
+USE BLKSANMOD, ONLY :  &
+  &       EFFECTIVE_COHESION ,FRICTION_ANGLE, MATRIC_ANGLE
 
 implicit none
 
@@ -106,7 +108,7 @@ MN: DO i  = 1,LR                                                ! loop over two 
  INTSECT_NODE(I)%ELEVATION     = ELEV
  INTSECT_NODE(I)%FE_NODENUMBER = 0
  INTSECT_NODE(I)%WATER_ELEV    = 0.                                   !SINCE, IT HAS NO CONJUGATED FE NODE TO ASSIGN A COMPUTED WATER ELEVATION TO IT.
- INTSECT_NODE(I)%ATTRIBUTE     = ' profile'
+ INTSECT_NODE(I)%ATTRIBUTE     = 'profile'
 
 
  INTSECT_NO (I) = INDEKS                                              ! the profile node number of intersecting point OR the node before intersection, when it
