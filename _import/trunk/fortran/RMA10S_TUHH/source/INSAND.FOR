@@ -107,7 +107,12 @@ CIPK MAR06 MOVED        CONP=1.-POSA
           WRITE(*,*) 'EXPECTED DIAMETER DATA - NONE FOUND'
           STOP
 	  ENDIF
-
+       
+        IF(ID(1:3) .EQ. 'GTP') THEN                     ! HN 17July 2009 Geothechnical properties.
+          READ(DLIN,1031) critical_slope,crepose,repose,
+     +     EFFECTIVE_COHESION,FRICTION_ANGLE, MATRIC_ANGLE
+          CALL GINPT(LIN,ID,DLIN)
+        ENDIF  
 CIPK MAR06        RHOBS=1000.*CONP*SGSA
         
         IF(SACUL.EQ.SACLL)NSACI=1
@@ -329,7 +334,7 @@ C      END IF
 
  1020 FORMAT(9F8.0)
  1030 FORMAT(3F8.4,i8,F8.0)
-
+ 1031 FORMAT(6F8.4)
 CIPK MAR06 UPDATE HEADER
  2030 FORMAT(//
      +   10x,'SPECIFIC GRAVITY OF SAND',T50,F10.4/
