@@ -122,7 +122,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     lineButton.setSelection( m_lineButtonChecked );
     m_resultLayerCommandData[0].setSelected( m_lineButtonChecked );
 
-    m_lineStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.7"), m_minValue, m_maxValue, m_resultLayerCommandData[0] ); //$NON-NLS-1$
+    m_lineStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "Line", m_minValue, m_maxValue, m_resultLayerCommandData[0] ); //$NON-NLS-1$
     m_lineStyleComp.setEnabled( m_lineButtonChecked );
 
     // selection button
