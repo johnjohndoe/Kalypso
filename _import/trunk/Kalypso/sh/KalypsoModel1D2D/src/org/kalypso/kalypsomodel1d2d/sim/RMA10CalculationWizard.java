@@ -216,11 +216,21 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     {
       return e.getStatus();
     }
+    final IStatus simulationStatus = m_calcPage.getSimulationStatus();
+    
+    /**
+     * needed for fix of the bug #242, 
+     * if the calculation was canceled the container is not shown any more, so the following 
+     * operations shouldn't be done  
+     */
+    if( simulationStatus.matches( IStatus.CANCEL ) ){
+      return simulationStatus;
+    }
+    
     addPage( m_resultPage );
     getContainer().updateButtons();
 
     // get status
-    final IStatus simulationStatus = m_calcPage.getSimulationStatus();
     if( simulationStatus.matches( IStatus.ERROR ) )
     {
       // HACK: disable cancel, after result processing, as canceling will not change anything from now on
