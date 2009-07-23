@@ -56,6 +56,7 @@ import org.kalypso.ui.views.map.MapView;
  * @author Patrice Congo
  *
  */
+@Deprecated
 public class PopupBlocker implements Listener
 {
   /**

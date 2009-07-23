@@ -115,9 +115,14 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   /**
    * Used to prevent the swt popup to show
    */
-  final PopupBlocker popupBlocker = new PopupBlocker();
-
-  private MapActionDisabler mapActionDisabler;
+  //fixed by Dmitrijs
+  //commented for fix of bug #262 @link https://sourceforge.net/apps/trac/kalypso/ticket/262 
+  //the following elements are not needed actually and the use of PopupBlocker rises NullPointerException, 
+  //that was blocking the correct work of this widget.
+  
+//  final PopupBlocker popupBlocker = new PopupBlocker();
+//
+//  private MapActionDisabler mapActionDisabler;
 
   public CalculationUnitWidget( )
   {
@@ -179,9 +184,10 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IFlowRelationshipModel bcModel = (IFlowRelationshipModel) bcHolderModelFeature.getAdapter( IFlowRelationshipModel.class );
     m_calcUnitTheme.setModelBoundaryConditions( bcModel );
 
-    popupBlocker.registerPopupBlockerToActiveMapView();
-    mapActionDisabler = new MapActionDisabler();
-    mapActionDisabler.disableActions();
+    //bug fix #262
+//    popupBlocker.registerPopupBlockerToActiveMapView();
+//    mapActionDisabler = new MapActionDisabler();
+//    mapActionDisabler.disableActions();
   }
 
   /**
@@ -271,10 +277,11 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   {
     try
     {
-      if( mapActionDisabler != null )
-      {
-        mapActionDisabler.enableActions();
-      }
+      //bug fix #262
+//      if( mapActionDisabler != null )
+//      {
+//        mapActionDisabler.enableActions();
+//      }
     }
     catch( final Exception e )
     {
@@ -306,7 +313,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
       e.printStackTrace();
     }
 
-    popupBlocker.unRegisterPopupBlocker();
+//    popupBlocker.unRegisterPopupBlocker();
   }
 
   /**
