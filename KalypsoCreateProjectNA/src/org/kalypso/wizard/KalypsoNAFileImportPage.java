@@ -77,8 +77,6 @@ public class KalypsoNAFileImportPage extends WizardPage
 {
 
   // constants
-// private static final String NULL_KEY = "-NULL-";
-
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
 // private static final String SOURCE_KEY = "source";

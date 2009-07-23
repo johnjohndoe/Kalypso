@@ -108,6 +108,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 {
   // Constants
+  public static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
+  
   static final String CATCHMENT_PAGE = "page_type:catchment"; //$NON-NLS-1$
 
   static final String HYDROTOP_PAGE = "page_type:hydrotop"; //$NON-NLS-1$
@@ -390,7 +392,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String targetkey = (String) it.next();
         final IPropertyType targetPT = hydFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
-        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
+        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
           Object so = sourceFeature.getProperty( sourcekey );
           final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
@@ -530,7 +532,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String targetkey = (String) it.next();
 // final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
-        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
+        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
           final Object so = sourceFeature.getProperty( sourcekey );
           final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
@@ -613,7 +615,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String targetkey = (String) it.next();
         final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
-        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
+        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
           final Object so = sourceFeature.getProperty( sourcekey );
           final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
@@ -741,7 +743,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String sourcekey = (String) mapping.get( targetkey );
         if( "StrangArt".equals( targetkey ) )
           continue;
-        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
+        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
           final Object so = sourceFeature.getProperty( sourcekey );
           final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
