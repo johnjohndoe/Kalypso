@@ -1241,5 +1241,11 @@ new features introduced/ started to be introduced:
         >> MODULE CANTILEVER
         >> MODULE PARAM
         >> MODULE TENSILE
- -------- M.Hassan Nasermoaddeli, 17.07.2009       
+ -------- M.Hassan Nasermoaddeli, 17.07.2009  
+ 100.) Include the new data lines in documentation RMA-Kalypso_ManualControlFile.doc
+        - Complete the definition of PROFILE data line in FILES block.
+        - Add data line PRF in Auxilary Geometry Input block.
+        - Add data line GTP (geotechnical properties) in SAND block.
+        - Add data line POR (pore pressure distribution function over water table)in Sand block.
+ -------- M.Hassan Nasermoaddeli, 23.07.2009          
        
