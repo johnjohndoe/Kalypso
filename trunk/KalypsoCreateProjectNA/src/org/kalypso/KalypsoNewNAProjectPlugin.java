@@ -41,9 +41,6 @@
 
 package org.kalypso;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.framework.BundleContext;
@@ -56,9 +53,6 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
   // The shared instance.
   private static KalypsoNewNAProjectPlugin plugin;
 
-  // Resource bundle.
-  private ResourceBundle resourceBundle;
-
   /**
    * The constructor.
    */
@@ -66,17 +60,6 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
   {
     super();
     plugin = this;
-    try
-    {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.wizard.WizardMessages" ); //$NON-NLS-1$
-      // resourceBundle = ResourceBundle
-      // .getBundle( "org.kalypso.wizard.resources.KalypsoNewProjectPluginResources" ); //$NON-NLS-1$
-    }
-    catch( MissingResourceException x )
-    {
-      resourceBundle = null;
-      x.printStackTrace();
-    }
   }
 
   /**
@@ -109,28 +92,4 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
     return plugin;
   }
 
-  /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not found.
-   */
-  public static String getResourceString( String key )
-  {
-    ResourceBundle bundle = KalypsoNewNAProjectPlugin.getDefault().getResourceBundle();
-    try
-    {
-      return (bundle != null) ? bundle.getString( key ) : key;
-    }
-    catch( MissingResourceException e )
-    {
-      e.printStackTrace();
-      return key;
-    }
-  }
-
-  /**
-   * Returns the plugin's resource bundle,
-   */
-  public ResourceBundle getResourceBundle( )
-  {
-    return resourceBundle;
-  }
 }

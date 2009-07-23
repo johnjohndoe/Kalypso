@@ -78,7 +78,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -88,6 +87,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.wizard.i18n.Messages;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
@@ -97,10 +97,7 @@ import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
  */
 public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionListener, KeyListener
 {
-
   // constants
-  private static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
-
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
   private static final String SOURCE_KEY = "source"; //$NON-NLS-1$
@@ -234,7 +231,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   /*
    * (non-Javadoc)
-   * 
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
    */
   public void createControl( final Composite parent )
@@ -294,7 +290,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     availableCoordinateSystems( m_checkCRS );
 
     // String defaultCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-    defaultCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    defaultCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_checkCRS.select( m_checkCRS.indexOf( defaultCRS ) );
 
     m_checkCRS.setToolTipText( Messages.getString( "KalypsoNAProjectWizardPage.CRSTooltip" ) ); //$NON-NLS-1$
@@ -366,7 +362,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
             storeSelectionData( w );
           }
         } );
-        combo.add( NULL_KEY );
+        combo.add( KalypsoNAProjectWizard.NULL_KEY );
         combo.select( 0 );
       }
     }
@@ -433,11 +429,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final IRelationType ftp = (IRelationType) rootFT.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-    //TODO: Why substitutes? Only valid shape types (exact match) should be possible
-    //SpecialPropertyMapper does not exist for GM_Object -> GM_Surface
-    //final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
-    //final IFeatureType shapeFT = associationFeatureTypes[0];
-    //return shapeFT;
+    // TODO: Why substitutes? Only valid shape types (exact match) should be possible
+    // SpecialPropertyMapper does not exist for GM_Object -> GM_Surface
+    // final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null,
+    // false, true );
+    // final IFeatureType shapeFT = associationFeatureTypes[0];
+    // return shapeFT;
     return associationFeatureType;
   }
 
@@ -447,7 +444,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     for( final Control element : cArray )
     {
       final Combo combo = (Combo) element;
-      combo.setData( SOURCE_KEY, NULL_KEY );
+      combo.setData( SOURCE_KEY, KalypsoNAProjectWizard.NULL_KEY );
       combo.select( 0 );
     }
     sourceGroup.redraw();
@@ -474,7 +471,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       try
       {
 
-        fileURL = (new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() )).toURL();
+        fileURL = (new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() )).toURI().toURL();
         textStr = fileURL.toString();
         m_fileField.setText( textStr );
         readShapeFile( fileURL );
@@ -527,7 +524,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    * @return map HashMap with the custom mapping
    */
 
-  public HashMap getMapping( )
+  public HashMap<Object, Object> getMapping( )
   {
     final HashMap<Object, Object> map = new HashMap<Object, Object>();
     final Control[] cArray = sourceGroup.getChildren();
@@ -593,7 +590,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         for( int j = 0; j < ftp.length; j++ )
         {
           if( j == 0 )
-            combo.add( NULL_KEY );
+            combo.add( KalypsoNAProjectWizard.NULL_KEY );
           // checks if the mapping between types is possible
           if( ftp[j] instanceof IValuePropertyType && targetFTP[i] instanceof IValuePropertyType )
           {
@@ -653,10 +650,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     setMessage( null );
   }
 
-  public List getFeatureList( )
+  public List< ? > getFeatureList( )
   {
     final Feature rootFeature = sourceWorkspace.getRootFeature();
-    final List featureList = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List< ? > featureList = (List< ? >) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     return featureList;
   }
 
@@ -694,7 +691,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     else if( type == DESCRIPTION )
       return annotation.getDescription();
 
-    throw new IllegalArgumentException( Messages.getString("org.kalypso.wizard.KalypsoNAProjectWizardPage.3") + type ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.wizard.KalypsoNAProjectWizardPage.3" ) + type ); //$NON-NLS-1$
   }
 
   /**
