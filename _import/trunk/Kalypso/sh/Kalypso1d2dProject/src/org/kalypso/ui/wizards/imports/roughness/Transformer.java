@@ -152,7 +152,7 @@ public class Transformer implements ICoreRunnableWithProgress
         {
           final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
           m_NumberOfEntriesAdded++;
-          roughnessPolygon.setSurface( (GM_Object) gm_Whatever );
+          roughnessPolygon.setSurface( (GM_Surface< ? >) gm_Whatever );
           m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
         }
         else

@@ -30,7 +30,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    * 
    * @param feature
    * @throws IllegalArgumentException
-   *             if feature is null and not of the appopriate type
+   *           if feature is null and not of the appopriate type
    */
   public RoughnessPolygon( final Feature featureToBind )
   {
@@ -54,11 +54,11 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getLinestring()
    */
-  public GM_Surface getSurface( )
+  public GM_Surface< ? > getSurface( )
   {
-    final GM_Object defaultGeometryProperty = getFeature().getDefaultGeometryProperty();
-    if( defaultGeometryProperty instanceof GM_Surface )
-      return (GM_Surface) defaultGeometryProperty;
+    final GM_Object defaultGeometryProperty = getFeature().getDefaultGeometryPropertyValue();
+    if( defaultGeometryProperty instanceof GM_Surface< ? > )
+      return (GM_Surface< ? >) defaultGeometryProperty;
     return null;
   }
 
@@ -85,17 +85,14 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
   }
 
-  public void setSurface( final GM_Object object ) throws IllegalArgumentException
+  public void setSurface( final GM_Surface< ? > surface ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNull( object, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
-    if( object instanceof GM_Surface )
-    {
-      final Feature feature = getFeature();
-      final IPropertyType geometryProperty = feature.getFeatureType().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
-      feature.setProperty( geometryProperty, object );
-    }
-    else
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.8" ) + object.getClass().getName() ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( surface, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
+
+    final Feature feature = getFeature();
+    final IPropertyType geometryProperty = feature.getFeatureType().getDefaultGeometryProperty();
+    // final IPropertyType geometryProperty = feature.getFeatureType().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
+    feature.setProperty( geometryProperty, surface );
   }
 
   /**
@@ -175,8 +172,8 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
         return false;
       }
 
-      final GM_Surface pol1 = getSurface();
-      final GM_Surface pol2 = ((IRoughnessPolygon) obj).getSurface();
+      final GM_Surface< ? > pol1 = getSurface();
+      final GM_Surface< ? > pol2 = ((IRoughnessPolygon) obj).getSurface();
       if( pol1 == pol2 )
       {
         return true;
