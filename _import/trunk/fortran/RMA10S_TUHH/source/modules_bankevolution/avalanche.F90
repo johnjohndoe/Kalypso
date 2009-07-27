@@ -71,9 +71,10 @@ LOGICAL,DIMENSION (2) :: front_change, base
 Write (*,*) ' Entering to Avalanche subroutine ....'
 
 ! initialization of variables
-last_submerged_node   =0
+last_submerged_node   = 0
 last_submerged_fenode = 0
 index_lowest_fenode   = 0
+index_lowest          = 0
 
 resus_rate = 0.
 EffectiveWidth_Overhang = 0.0
@@ -159,13 +160,13 @@ temp = 1000.                           ! initial deepest point (it shows the hig
 Inn:do i = st(j),en(j),inc(j)
 
   if (trans_pr%prnode(i)%elevation==0.) cycle
-
+   if( (trans_pr%prnode(i)%attribute =='front').OR.(trans_pr%prnode(i)%attribute =='nose') ) cycle
    if (trans_pr%prnode(i)%elevation< temp) then
 
     temp= trans_pr%prnode(i)%elevation
     index_lowest(j)=i                             ! local minima, bank-toe
     index_lowest_fenode(j) = trans_pr%prnode(i)%fe_nodenumber
-   ELSE IF(trans_pr%prnode(i)%elevation> temp) then
+   ELSE IF(trans_pr%prnode(i)%elevation>= temp) then
 
      if (temp > trans_pr%water_elev) then             !HN20April09 if the found local minima is greater than water elevation then it still locates on bank or top of the bank.
        cycle inn                                      ! it is for the case that a deep point is on the top of the bank and create an unwanted local minima.
@@ -241,7 +242,7 @@ inner: do                           ! if inc=-1, it starts from index_lowest nod
         k = k + 1                                        ! index of temporary left/right profile
         temp_pr(j)%max_nodes = k
 
-main: if ((z1<wsl1).AND.(z2<wsl1)) then                   ! In the submerged area, the element is totally submerged
+main: if ((z1-wsl1)<-0.01.AND.(z2-wsl1)<-0.01) then                   ! In the submerged area, the element is totally submerged
 
             last_submerged_node = i + p
             last_submerged_fenode(j) = tens_pr%prnode(i+p)%fe_nodenumber
@@ -280,7 +281,7 @@ slp1:   if (slope>crepose) THEN  ! crepose = critical angle of repose
 ! The FE element is in transition, partly submerged, therefore the upper node (j+p) is dry or just the last wet.    *
 ! in the following it is assumed that if there is already an overhang available on the side of the profile being    *
 ! cosidered the new overhang is computed but assumed to be collapsed, leaving the profile in that zone with the     *
-! angle of unsaturated consolidated angle of repose. The collapsed volue is assigned to the fe_nodes below the zone.*                                               *
+! angle of unsaturated consolidated angle of repose. The collapsed volume is assigned to the fe_nodes below the zone.*                                               *
 !********************************************************************************************************************
 
 slp2:    if (slope>crepose) THEN  ! crepose = critical angle of repose
@@ -408,7 +409,8 @@ nodisnose:        if ( nose(j)%nextnode< 0) then                                
 
                     point%fe_nodenumber   = 0                                     ! the nose type is converted to prnode type as a nose prnode called point.
                     point%distance        = nose(j)%dist
-                    point%elevation       = tens_pr%prnode(i)%water_elev
+                !    point%elevation       = tens_pr%prnode(i)%water_elev  ! to be consistent with front defintion it should be as follows:
+                    point%elevation       = wsl1
                     point%water_elev      = tens_pr%water_elev
                     point%attribute       = 'nose'
 
@@ -632,50 +634,66 @@ real (kind = 8), intent (in)    :: delz
 integer        , intent (in)    :: lowernode, uppernode , mode
 real(kind = 8)                  :: RHOBS , AREA1, AREA2
 
+integer                         :: Tlowernode, Tuppernode
+
 !RHOBS=1000.*(1-porosity)* RHOS
 RHOBS=1000.*(1-porosity)* SGSAND (lowernode)   ! [Kg/m^3]
- 
+
+ ! in the case that either of the upper node or lower node are zero , 
+ ! meaning that they have no conjugated (pair) FE node:
+
+ if (lowernode ==0) then
+  Tlowernode = uppernode
+  Tuppernode = uppernode
+ elseif (uppernode == 0) then
+  Tuppernode = lowernode
+  Tlowernode = lowernode
+ else
+  Tuppernode = uppernode
+  Tlowernode = lowernode
+ end if
+  
 ! When mode = 1 then the source term is computed as g/(m^2.s), otherwise only the volume of erosion is computed.
 if (mode == 1) then	 
 	 
-	  if ( (TRIBAREA(lowernode)/= 0.).AND.(TRIBAREA(uppernode)/=0.) ) then
+	  if ( (TRIBAREA(Tlowernode)/= 0.).AND.(TRIBAREA(Tuppernode)/=0.) ) then
           
-          !sourceterm = delz *TRIBAREA(uppernode)*RHOBS /(DELT*3600.*TRIBAREA(lowernode))*1000.
+          !sourceterm = delz *TRIBAREA(Tuppernode)*RHOBS /(DELT*3600.*TRIBAREA(lowernode))*1000.
          ![g/m^2.s]  =  [m] *  [m^2]           *[kg/m^3]/([s]*[m^2])              * [1000 g/kg]
-          sourceterm = delz *TRIBAREA(uppernode)*RHOBS /(DELT*TRIBAREA(lowernode))*1000.
-          EXTLD(lowernode)=EXTLD(lowernode)+ sourceterm
+          sourceterm = delz *TRIBAREA(Tuppernode)*RHOBS /(DELT*TRIBAREA(Tlowernode))*1000.
+          EXTLD(Tlowernode)=EXTLD(Tlowernode)+ sourceterm
      
       !If the upper node area is in deactive area (dry area) its value is zero
       ! therefore compute its contributing area irrespective of TRIBAREA, which consideres
       ! only active element area.
      
-      elseif ( (TRIBAREA(lowernode)/= 0.).AND.(TRIBAREA(uppernode)==0.) ) then 
+      elseif ( (TRIBAREA(Tlowernode)/= 0.).AND.(TRIBAREA(Tuppernode)==0.) ) then 
      
-          call EffectiveArea(area1,uppernode)
+          call EffectiveArea(area1,Tuppernode)
           
-         ! sourceterm = delz *AREA1*RHOBS /(DELT*3600.*TRIBAREA(lowernode))*1000.
-           sourceterm = delz *AREA1*RHOBS /(DELT*TRIBAREA(lowernode))*1000.
-          EXTLD(lowernode)=EXTLD(lowernode)+ sourceterm
+         ! sourceterm = delz *AREA1*RHOBS /(DELT*3600.*TRIBAREA(Tlowernode))*1000.
+           sourceterm = delz *AREA1*RHOBS /(DELT*TRIBAREA(Tlowernode))*1000.
+          EXTLD(Tlowernode)=EXTLD(Tlowernode)+ sourceterm
 
       ! if both nodes are in dry area, which will not occur in the computations of Avlanche.
-      elseif ( (TRIBAREA(lowernode)== 0.).AND.(TRIBAREA(uppernode)==0.) ) then 
+      elseif ( (TRIBAREA(Tlowernode)== 0.).AND.(TRIBAREA(Tuppernode)==0.) ) then 
      
-          call EffectiveArea(area1,uppernode)
-          call EffectiveArea(area2,lowernode)
+          call EffectiveArea(area1,Tuppernode)
+          call EffectiveArea(area2,Tlowernode)
           
           !sourceterm = delz *AREA1*RHOBS /(DELT*3600.*Area2)*1000.
           sourceterm = delz *AREA1*RHOBS /(DELT*Area2)*1000.
-          EXTLD(lowernode)=EXTLD(lowernode)+ sourceterm
+          EXTLD(Tlowernode)=EXTLD(Tlowernode)+ sourceterm
      
       end if    
           
-!          sourceterm = EXTLD(lowernode)  ! is it correct???? shouldn' it be only the adding part to EXTLD, since source will be added
+!          sourceterm = EXTLD(Tlowernode)  ! is it correct???? shouldn' it be only the adding part to EXTLD, since source will be added
 !	                                     ! in avalanche to fenode_sed_source.
 ! compute only the volume of erosion
 else
-	  if ( (TRIBAREA(lowernode)/= 0.).AND.(TRIBAREA(uppernode)/=0.) ) then
+	  if ( (TRIBAREA(Tlowernode)/= 0.).AND.(TRIBAREA(Tuppernode)/=0.) ) then
           
-          SourceTerm = delz * TRIBAREA(uppernode)
+          SourceTerm = delz * TRIBAREA(Tuppernode)
           
       !If the upper node area is in deactive area (dry area) its value is zero
       ! therefore compute its contributing area irrespective of TRIBAREA, which consideres
@@ -683,7 +701,7 @@ else
       
       else 
       
-          call EffectiveArea(area1,uppernode)
+          call EffectiveArea(area1,Tuppernode)
           
           SourceTerm = delz *AREA1
       
