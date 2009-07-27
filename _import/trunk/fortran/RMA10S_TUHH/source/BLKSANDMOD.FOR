@@ -58,8 +58,14 @@ CIPK JUN06
       ! EFFECTIVE_COHESION::   Effective cohesion due to consolidation and mositure content.
       ! FRICTION_ANGLE    ::   Friction angle of sand
       ! MATRIC_ANGLE      ::   Angle of matric suction (negative pore pressure)
-      REAl         :: critical_slope,crepose,repose,EFFECTIVE_COHESION
-     +     ,FRICTION_ANGLE, MATRIC_ANGLE
+      ! ROOT              ::   Extra cohesion due to roots of vegetation
+      REAl           :: critical_slope,crepose,repose,EFFECTIVE_COHESION
+     +     ,FRICTION_ANGLE, MATRIC_ANGLE, ROOT
+      ! HN Pore Pressure Distribution parameters.
+      ! EXPO3 to 1        :: These three vaiables define the pore pressure distribution function
+      !                      in the river bank as follows: (EXPO3* h**3 + EXPO2 *h**2 + EXPO1 * h)
+      !                      h is elevation over water table.                        
+      REAL (kind = 8):: EXPO3,EXPO2,EXPO1
       
 C     +              ,CRSLOP(MEL),TRSLOP(MNP),srate(mnp),gpbsav(mnp)        
 C     +              ,RCAE(:),RWAE(:),RCAN(MNP),RWAN(MNP),TRRAT(MNP)
