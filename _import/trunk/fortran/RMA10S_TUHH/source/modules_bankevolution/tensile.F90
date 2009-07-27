@@ -255,7 +255,7 @@ CO:         if (s==1) then                                       ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
@@ -277,7 +277,7 @@ CO:         if (s==1) then                                       ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
@@ -314,7 +314,7 @@ CO:         if (s==1) then                                       ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
@@ -337,7 +337,7 @@ CO:         if (s==1) then                                       ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
@@ -370,7 +370,7 @@ L2:        if ((d<x).and.(d>=trans1)) then
     
     ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
     ! in the following it is directly assigned to the nodes below overhang. The source term is in [mg/m^2.s]           
-            RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+            RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
             sourceterm = del_h2 * RHOBS * 1000./DELT
             !sourceterm = del_h2 * RHOBS * 1000./(DELT*3600.)
     
@@ -417,7 +417,7 @@ CO2:         if (s==1) then                                      ! this if state
    
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
@@ -439,7 +439,7 @@ CO2:         if (s==1) then                                      ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
@@ -476,7 +476,7 @@ CO2:         if (s==1) then                                      ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
@@ -499,7 +499,7 @@ CO2:         if (s==1) then                                      ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q1)  ![kg/m^3], i.e. SGSAND = 2.65
+              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
               !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
                sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
               fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
@@ -533,25 +533,31 @@ INTEGER function q_fenode(conjugate_node)
 ! the function q is to compute the nearest FE node under the profile node, which has no conjugate FE-node beneath it..
 INTEGER :: conjugate_node
 INTEGER :: t, start, endd,inc
-REAL (KIND = 8) :: a, b
+REAL (KIND = 8) :: a, b, c
 
  if (side == 'left') then
-    a = d2
-    b= pr%prnode(i)%distance
+  !  a = d2
+    b = pr%prnode(i)%distance
+    c = 0.
     start = front(1)
     endd =  pr%max_nodes
     inc = 1
+
  ELSE IF (side == 'right') then
-    a =pr%prnode(i)%distance
-    b  =d2
-    start = pr%max_nodes
-    endd =  front(2)
-    inc = -1
+  !  a = pr%prnode(i)%distance
+   ! b = d2
+    b = pr%prnode(i)%distance
+    c = pr%prnode(pr%max_nodes)%distance
+!    start = pr%max_nodes
+ !   endd =  front(2)
+    endd  = 1
+    start = front(2) 
+    inc   = -1
  end if
                if (conjugate_node == 0) then
 findnod1:         do j= start,endd,inc
 
-                    if (a < b)  then
+                    if (abs (pr%prnode(j)%distance-c) < abs(b-c) )  then
                        CYCLE findnod1
                     else
                        t=j
