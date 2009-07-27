@@ -37,8 +37,10 @@ use cantilever
 use param
 USE BLK10MOD       ! it contins water level of nodes and their elevation (ao), MAXE,MAXP and ......
 USE ASSIGNROFILES  ! the size of profile SIZ is defined here.
+USE INIT_TYPE
 USE BLKSANMOD      ! the source term variable EXTLD has been defined there.
 USE BLKDRMOD
+
       implicit none
     !  INTEGER , INTENT (IN) :: numberofnodes
    !   TYPE(finite_element_node), DIMENSION (numberofnodes), INTENT (INOUT) :: Fenodes    ! it is better to define Fenodes in a module by reading the input data file of continuity lines.
@@ -54,6 +56,7 @@ USE BLKDRMOD
       TYPE(profile_node) :: Lnew_front, Rnew_front                                   ! newprofile  front node number in case of submerged overhang
 
       TYPE(potential_nose),DIMENSION (2) :: potentialnose
+      TYPE(profile)       ,DIMENSION (1) :: temp_prof
       TYPE(profile)                      :: Profil , pr                              ! no need to define original profile here(old_pr), it has been already defined as global array
                                                                                      ! in subroutne getgeo. pr is the profile after adoption to Exner calculations and profil the one after adoption to tensile failure calculations.
    !   TYPE(finite_element_node), DIMENSION (:), allocatable :: Fenodes
@@ -159,6 +162,8 @@ fenode = FENODES             ! FENODES IS DEFINED IN MODULE SHARE_PROFILE AND AS
 prof: do i= 1, number_of_profiles
 
         pr = old_pr(i)  ! initialize pr with the values of old profile
+        call init_profile(temp_prof,1)
+        profil = temp_prof(1)
         k=0
         h=1             ! index for potential nose, max=2
         t=1
@@ -487,7 +492,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
                      u = Rnumber_lostnodes +1 ! 2
                      profil%prnode(profil%Rnose)%fe_nodenumber = - ABS (pr%prnode(potentialnose(2)%node)%fe_nodenumber)
                    end if
-
+                    g = g + u
 
                 ENDIF                         rightbank
 
@@ -502,6 +507,13 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
           end do                   sort
         end if    submerg
    profil%max_nodes = j - 1
+
+           call output1 (pr, exner_pr, 11, i)
+
+           if (Lsubmerged .or. Rsubmerged ) call output1 (profil,tens_pr, 21, i)
+
+
+
 
 ! I thinkt the right thing for definition of temporary profile data is to define a temporary variable: "pr" (type:profile) for saving
 ! the updated profile according to Exner equation with the same size prnode numbers as old_pr(pr_number). then define another
@@ -529,7 +541,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
              call avalanche (pr,pr%max_nodes, fenode, last_submerged_node, Banktoe_node,EffectiveWidth_Overhang,avalanche_source)
           end if
           
- 
+           call output1 (ava_pr,Avalanch_pr, 31, i)
 
 !--------------------- Computation of Cantilever failure of overhang (not submerged)-------------------
   ! ava_pr is the profile after computation of avalanche, it is defined as a global profile in interface of the module , which includes avalanche subroutine.
@@ -537,13 +549,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
            failure_source = 0.0
            
            call cantilever_failure (ava_pr,pr%water_elev,critical_slope,failure_source , fenode)
-          
-           call output1 (pr, exner_pr, 11, i)
-
-           if (Lsubmerged .or. Rsubmerged ) call output1 (profil,tens_pr, 21, i)
- 
-           call output1 (ava_pr,Avalanch_pr, 31, i)
-    
+         
            call output1 (canti_pr,Cantilever_pr, 41, i)
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
