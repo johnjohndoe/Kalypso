@@ -509,19 +509,24 @@ public class ProfilChartView implements IChartPart, IProfilListener
   public void updateLayer( )
   {
     if( m_layerProvider == null )
-    {
       m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
-      final IMapperRegistry mr = m_chartComposite.getChartModel().getMapperRegistry();
-      final IAxis[] axis = m_layerProvider.registerAxis( mr );
-      if( axis.length == 0 )
-        setDefaultAxis( mr );
-      else
-        m_layerProvider.registerAxisRenderer( mr );
 
-    }
     // TODO: display userinformation
     if( m_layerProvider == null )
       return;
+
+    final IMapperRegistry mr = m_chartComposite.getChartModel().getMapperRegistry();
+    if( mr.getAxes() == null || mr.getAxes().length == 0 )
+    {
+      final IAxis[] axis = m_layerProvider.registerAxis( mr );
+      if( axis.length > 0 )
+        m_layerProvider.registerAxisRenderer( mr );
+      else
+      {
+        /* Register default axis and axis renderer. */
+        setDefaultAxis( mr );
+      }
+    }
 
     if( m_chartComposite != null && m_chartComposite.getChartModel() != null && m_chartComposite.getChartModel().getLayerManager() != null )
     {
