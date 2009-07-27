@@ -108,7 +108,7 @@ j = 0
  ! extrapolation line meets the profile of the bank below the old front. This case, introduces a new profile node on intersection point
  ! which should be correctly sorted into the new profile.
 
-        if (rel_dd > rel_dist_oldfront ) then                     ! it means the extrapolation line from base point intersects with the profile before reaching to the elevation of the old front.
+        if( (rel_dd - rel_dist_oldfront )> 0.01 )then                     ! it means the extrapolation line from base point intersects with the profile before reaching to the elevation of the old front.
            call intersect(oldprofile, pointB,angle/pi*180.,start,p,r,dd,elev,ind)                            ! therefore, the intersection point should be computed and substituted with dd.
            rel_dd = ABS(dd- origin)
            intsec = .TRUE.
