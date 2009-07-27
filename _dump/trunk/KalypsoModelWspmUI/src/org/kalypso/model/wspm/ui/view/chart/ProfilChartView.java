@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.handler.ProfilClickHandler;
-import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
@@ -73,13 +72,10 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -88,13 +84,13 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class ProfilChartView implements IChartPart, IProfilListener
 {
-  public static final int AXIS_GAP = 5; // distance between layers and Axis
+// public static final int AXIS_GAP = 5; // distance between layers and Axis
 
-  public static final String ID_AXIS_DOMAIN = "domain";//$NON-NLS-1$
-
-  public static final String ID_AXIS_LEFT = "left";//$NON-NLS-1$
-
-  public static final String ID_AXIS_RIGHT = "right";//$NON-NLS-1$
+//  public static final String ID_AXIS_DOMAIN = "domain";//$NON-NLS-1$
+//
+//  public static final String ID_AXIS_LEFT = "left";//$NON-NLS-1$
+//
+//  public static final String ID_AXIS_RIGHT = "right";//$NON-NLS-1$
 
   private AxisDragHandlerDelegate m_axisDragHandler;
 
@@ -103,8 +99,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
   private IProfilLayerProvider m_layerProvider;
 
   private final List<IProfilProviderListener> m_listener = new ArrayList<IProfilProviderListener>();
-
-  private ICoordinateMapper m_mapper;
 
   private PlotDragHandlerDelegate m_plotDragHandler;
 
@@ -130,31 +124,17 @@ public class ProfilChartView implements IChartPart, IProfilListener
     m_listener.add( l );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
-  public Control createControl( final Composite parent )
+  private void setDefaultAxis( final IMapperRegistry mr )
   {
-    m_chartComposite = new ChartComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
-    final GridData gD = new GridData( GridData.FILL_BOTH );
-    gD.exclude = true;
-    m_chartComposite.setLayoutData( gD );
-
-    final IMapperRegistry mr = m_chartComposite.getChartModel().getMapperRegistry();
-
-     // TODO: what is this??? With theses fixed axes, the profile-chart is nor more reusable!!
-    // Must go into the layer provider!
-
-    final IAxis domainAxis = new GenericLinearAxis( ID_AXIS_DOMAIN, POSITION.BOTTOM, null );
+    final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null );//$NON-NLS-1$
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
     domainAxis.setPreferredAdjustment( aaDom );
 
-    final IAxis targetAxisLeft = new GenericLinearAxis( ID_AXIS_LEFT, POSITION.LEFT, null );
+    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null );//$NON-NLS-1$
     final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
     targetAxisLeft.setPreferredAdjustment( aaLeft );
 
-    final IAxis targetAxisRight = new GenericLinearAxis( ID_AXIS_RIGHT, POSITION.RIGHT, null );
+    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null );//$NON-NLS-1$
     final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     targetAxisRight.setPreferredAdjustment( aaRight );
 
@@ -171,12 +151,24 @@ public class ProfilChartView implements IChartPart, IProfilListener
     final IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final AxisRendererConfig configLR = new AxisRendererConfig();
-    configLR.gap = AXIS_GAP;
+    configLR.gap = 5;
     final IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    mr.setRenderer( ID_AXIS_DOMAIN, aRendDom );
-    mr.setRenderer( ID_AXIS_LEFT, aRendLR );
-    mr.setRenderer( ID_AXIS_RIGHT, aRendLR );
+    mr.setRenderer( "ID_AXIS_DOMAIN", aRendDom );//$NON-NLS-1$
+    mr.setRenderer( "ID_AXIS_LEFT", aRendLR );//$NON-NLS-1$
+    mr.setRenderer( "ID_AXIS_RIGHT", aRendLR );//$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  public Control createControl( final Composite parent )
+  {
+    m_chartComposite = new ChartComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
+    final GridData gD = new GridData( GridData.FILL_BOTH );
+    gD.exclude = true;
+    m_chartComposite.setLayoutData( gD );
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
     {
@@ -374,11 +366,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     return m_layerProvider;
   }
 
-  public final ICoordinateMapper getMapper( )
-  {
-    return m_mapper;
-  }
-
   /**
    * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
    */
@@ -438,18 +425,19 @@ public class ProfilChartView implements IChartPart, IProfilListener
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
             if( layer instanceof IProfilChartLayer )
             {
-              final ICoordinateMapper cm = layer.getCoordinateMapper();
-              if( cm != null && (cm.getTargetAxis() == getAxis( ID_AXIS_RIGHT )) )
-              {
-                final IComponent cp = ((IProfilChartLayer) layer).getTargetComponent();
-                if( cp != null )
-                  if( !getAxis( ID_AXIS_RIGHT ).getLabel().equals( "[" + cp.getUnit() + "]" ) )
-                  {
-                    getAxis( ID_AXIS_RIGHT ).setLabel( "[" + cp.getUnit() + "]" );
-                    final IAxisComponent ac = chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
-                    ((AxisCanvas) ac).layout();
-                  }
-              }
+              // TODO: Kim, wechsel der Achsentexte ermöglichen
+// final ICoordinateMapper cm = layer.getCoordinateMapper();
+// if( cm != null && (cm.getTargetAxis() == getAxis( ID_AXIS_RIGHT )) )
+// {
+// final IComponent cp = ((IProfilChartLayer) layer).getTargetComponent();
+// if( cp != null )
+// if( !getAxis( ID_AXIS_RIGHT ).getLabel().equals( "[" + cp.getUnit() + "]" ) )
+// {
+// getAxis( ID_AXIS_RIGHT ).setLabel( "[" + cp.getUnit() + "]" );
+// final IAxisComponent ac = chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
+// ((AxisCanvas) ac).layout();
+// }
+// }
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
             }
           redrawChart();
@@ -492,7 +480,10 @@ public class ProfilChartView implements IChartPart, IProfilListener
       return;
 
     if( m_profile != null )
+    {
       m_profile.removeProfilListener( this );
+
+    }
 
     final IProfil old = m_profile;
     m_profile = profil;
@@ -518,8 +509,16 @@ public class ProfilChartView implements IChartPart, IProfilListener
   public void updateLayer( )
   {
     if( m_layerProvider == null )
+    {
       m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
+      final IMapperRegistry mr = m_chartComposite.getChartModel().getMapperRegistry();
+      final IAxis[] axis = m_layerProvider.registerAxis( mr );
+      if( axis.length == 0 )
+        setDefaultAxis( mr );
+      else
+        m_layerProvider.registerAxisRenderer( mr );
 
+    }
     // TODO: display userinformation
     if( m_layerProvider == null )
       return;

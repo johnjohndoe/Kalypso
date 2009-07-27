@@ -43,6 +43,10 @@ package org.kalypso.model.wspm.ui.view.chart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+
 /**
  * A layer provider provides layers for the view, depending on the specific profile type.
  * 
@@ -51,12 +55,8 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 public interface IProfilLayerProvider
 {
   /**
-
-   * if the layer depends on other layers or properties, create all required things here.
-   * </p>
-   * if there is nothing to do see getLayer( final String layerId, final ProfilChartView view )
-   * </p>
-   * return all affected layer
+   * if the layer depends on other layers or properties, create all required things here. </p> if there is nothing to do
+   * see getLayer( final String layerId, final ProfilChartView view ) </p> return all affected layer
    */
   public IProfilChartLayer addLayerToChart( final ProfilChartView view, final String layerId );
 
@@ -71,8 +71,7 @@ public interface IProfilLayerProvider
   public String[] getAddableLayers( final ProfilChartView view );
 
   /**
-   * the layer factory, no additional operations needed
-   * </p>
+   * the layer factory, no additional operations needed </p>
    */
   public IProfilChartLayer createLayer( final String layerId, final ProfilChartView view );
 
@@ -82,5 +81,9 @@ public interface IProfilLayerProvider
   public boolean providesLayer( final String layerId );
 
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
-  
+
+  public IAxis[] registerAxis(IMapperRegistry mapperRegistry );
+
+  public IAxisRenderer[] registerAxisRenderer( IMapperRegistry mapperRegistry );
+
 }
