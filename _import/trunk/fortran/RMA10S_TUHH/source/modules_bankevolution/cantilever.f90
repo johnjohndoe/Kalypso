@@ -6,7 +6,8 @@ USE types
 USE share_profile
 use param
 USE BLKSANMOD, ONLY :  &
-  &       EFFECTIVE_COHESION ,FRICTION_ANGLE, MATRIC_ANGLE
+  &       EFFECTIVE_COHESION ,FRICTION_ANGLE, MATRIC_ANGLE, ROOT  &
+  &       , EXPO1, EXPO2, EXPO3
 
 implicit none
 
@@ -22,14 +23,14 @@ USE INIT_TYPE
 USE PARAM
 implicit none
 
-TYPE (finite_element_node), DIMENSION (:), INTENT (IN):: fenode   
+TYPE (finite_element_node), DIMENSION (:), INTENT (IN)   :: fenode   
 REAL (KIND = 8)           , DIMENSION (2), INTENT (OUT)  :: EffectVolume            ! the effective volume of collapsed overhang
 
 TYPE (profile) , INTENT (IN)      :: aval_pr
 REAL (KIND = 8), INTENT (IN)      :: waterelev
 REAL           , INTENT (IN)      :: unsaturated_slope
 
-REAL (KIND = 8)    ,DIMENSION (2) :: SAFTEYFACTOR=1.1, source                               ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
+REAL (KIND = 8)    ,DIMENSION (2) :: SAFTEYFACTOR=1.0, source                               ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
 INTEGER            ,DIMENSION (2) :: INTSECT_NO 
 TYPE (profile_node),DIMENSION (2) :: INTSECT_NODE
 TYPE (profile)     ,DIMENSION (1) :: INITIATE_PROFILE
@@ -145,26 +146,37 @@ MN: DO i  = 1,LR                                                ! loop over two 
  SLIP_LENGTH     = ( ( DIST - FRONT%DISTANCE ) ** 2 + ( ELEV - FRONT%ELEVATION ) ** 2 ) ** 0.5
 
 ! COMPUTATION OF MATRIC SUCTION:
+!-----------------------------------------------------------------------------
+! IN THE CASE OF LINEAR DISTRIBUTION, ASSUMES A MAXIMUM NEGATIVE PORE PRESSURE
+! OF -EXPO1 AT ELEVATION OF 1m ABOVE WATER TABLE, BEYOND WHICH IT REMAINS CONSTANT. 
+ 
+ IF( ( EXPO3 == 0.).AND. (EXPO2 == 0.) ) THEN
+ 
  BASE_SUCTION    = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
  
  TOP_SUCTION     = SUCTIONHEIGHT ( WATERELEV , ELEV )
 
- IF ( (TOP_SUCTION == - 1.0) .AND. (BASE_SUCTION > - 1.0 ) ) THEN
-  MID_SUCTION    = - 1.0
+ IF ( (TOP_SUCTION == - 1.0 * EXPO1) .AND. (BASE_SUCTION > - 1.0 * EXPO1 ) ) THEN
 
-  MATRICHEAD     = ( BASE_SUCTION + MID_SUCTION ) * ( 1 + WATERELEV - FRONT%ELEVATION ) / 2.
+  MID_SUCTION    = - 1.0 * EXPO1
+  MATRICHEAD     = ( BASE_SUCTION + MID_SUCTION ) * ( 1. + WATERELEV - FRONT%ELEVATION ) / 2.
   MATRICHEAD     = MATRICHEAD + TOP_SUCTION * ( ELEV - ( WATERELEV + 1.0 ) )
-  MATRIC_SUCTION = RHO * GRAVITY * MATRICHEAD
 
  ELSE
 
   MATRICHEAD     = ( BASE_SUCTION + TOP_SUCTION ) * ( ELEV - FRONT%ELEVATION ) / 2.
-  MATRIC_SUCTION = RHO * GRAVITY * MATRICHEAD
 
  END IF
+ 
+ ELSE
 
+  MATRICHEAD     = -1.0 * SUCTIONHEIGHT ( WATERELEV , ELEV )
+ 
+ ENDIF
+
+ MATRIC_SUCTION = RHO * GRAVITY * MATRICHEAD
  MATRIC_FORCE             = - MATRIC_SUCTION * TAN( MATRIC_ANGLE * PI / 180.)
- EFFECTIVE_COHESION_FORCE = EFFECTIVE_COHESION * SLIP_LENGTH
+ EFFECTIVE_COHESION_FORCE = (EFFECTIVE_COHESION + ROOT )* SLIP_LENGTH
  SHEAR_STRENGTH           = EFFECTIVE_COHESION_FORCE + MATRIC_FORCE + TAN ( FRICTION_ANGLE * PI /180. ) * ( WEIGHT * COS ( UNSATURATED_SLOPE * PI /180.) )       ! AIR PRESSURE IS EQUAL TO ZERO.
 
  SAFTEYFACTOR (I) = SHEAR_STRENGTH / ( WEIGHT * SIN ( UNSATURATED_SLOPE * PI /180. ) )
@@ -175,9 +187,15 @@ MN: DO i  = 1,LR                                                ! loop over two 
  !  variable (TYPE : profile).
 
 end do MN
+
 ! SORTING THE PROFILE NODES INTO A NEW PROFILE
 J = 0
 K = 0
+! RETAIN THE NOSE AND FRONT IF IT IS NOT CHANGED LATER IN THE FOLLOWING IF BLOCK.
+CANTI_PR%LFRONT = AVAL_PR%LFRONT 
+CANTI_PR%LNOSE  = AVAL_PR%LNOSE
+CANTI_PR%RFRONT = AVAL_PR%RFRONT
+CANTI_PR%RNOSE  = AVAL_PR%RNOSE
 
 SRT: DO
 
@@ -335,12 +353,29 @@ END SUBROUTINE SIMPLE_PROJECTION
 REAL (KIND = 8)  FUNCTION SUCTIONHEIGHT ( WATER_LEVEL , ELEVATION)
 
 implicit none
+
 REAL (KIND = 8), INTENT (IN) :: WATER_LEVEL , ELEVATION 
+REAL (KIND = 8)              :: AREA_UNDER_CURVE, REL_HEIGHT_START, REL_HEIGHT_END
 
-SUCTIONHEIGHT = WATER_LEVEL - ELEVATION
 
-IF ( SUCTIONHEIGHT < -1.0 ) SUCTIONHEIGHT = -1.0 
+SUCTIONHEIGHT = 0.
 
+IF( (EXPO3==0.).and.(EXPO2==0.) )THEN
+
+SUCTIONHEIGHT = (WATER_LEVEL - ELEVATION) * EXPO1
+
+IF ( SUCTIONHEIGHT < -1.0 * expo1 ) SUCTIONHEIGHT = -1.0 * EXPO1
+
+ELSE
+
+REL_HEIGHT_START = 0.
+REL_HEIGHT_END   = ELEVATION - WATER_LEVEL
+
+CALL INTEGRAL (REL_HEIGHT_START, REL_HEIGHT_END ,EXPO3, EXPO2, EXPO1 , AREA_UNDER_CURVE)
+
+SUCTIONHEIGHT =  AREA_UNDER_CURVE
+
+ENDIF
 
 END FUNCTION SUCTIONHEIGHT
 !-----------------------------------------------
@@ -426,7 +461,7 @@ end module cantilever
  END SUBROUTINE  EffectiveArea
 !--------------------------------- COMPUTATION OF THE AREA OF A POLYGON  ------------------------------------------
 
-REAL FUNCTION POLYGON_AREA ( START, N , R , PROFIL )
+REAL (KIND= 8) FUNCTION POLYGON_AREA ( START, N , R , PROFIL )
 
 USE TYPES
 
@@ -461,5 +496,75 @@ INTEGER                        :: J
 
 END FUNCTION POLYGON_AREA
 !------------------------------------------------------------------------------
+subroutine integral(n1,n2,a,b,c,s)
 
+implicit none
+
+REAL (kind = 8)  , INTENT (IN) ::  n1, n2, a ,b,c
+REAL (kind = 8)  , INTENT (OUT):: s
+REAL( kind = 8)                :: x,olds,tolerance
+INTEGER :: i,j
+
+tolerance = 1.e-5
+j=200
+s=0.
+olds=0.
+
+do I = 1,j
+
+call integral_trapz(n1,n2,I,s, a, b, c)
+
+if (s == 0. .and. olds== 0. ) exit
+if (ABS(s-olds)<= tolerance) exit
+
+olds=s
+
+end do
+
+end subroutine
+
+subroutine integral_trapz(n1,n2,n,s,a,b,c)
+
+IMPLICIT NONE
+
+ INTEGER      , INTENT (IN)    :: n
+ REAL(kind=8) , INTENT (IN)    :: n1,n2,a,b,c
+ REAL(kind=8) , intent (INOUT) :: s
+ 
+ REAL(kind=8)                  :: func, del, summ, tnm, x
+ INTEGER                       :: it, j
+
+
+ if (n== 1)  then
+ 
+   s = 0.5*(n2-n1) * (func(n1,a,b,c) + func(n2,a,b,c))
+ 
+ else
+   
+   it = 2**(n-2)
+   tnm = it *1.0
+   del= (n2-n1)/tnm
+   x= n1+0.5 *del
+   SUMm=0.
+   
+   do j=1,it
+    summ=summ+func(x,a,b,c)
+    x=x+del
+   end do
+
+    s = 0.5*(s+(n2-n1)*summ/tnm)       ! It replces s with its refined value
+ end if
+ 
+ return
+
+end subroutine
+
+function func(x,a,b,c)
+
+REAL(kind=8),INTENT(IN)  :: x, a , b, c
+REAL(kind=8)             :: func
+
+func = a * x**3 + b * x**2 + c * x
+
+end function func
 
