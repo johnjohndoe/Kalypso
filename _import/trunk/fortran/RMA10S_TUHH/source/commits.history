@@ -1261,14 +1261,14 @@ new features introduced/ started to be introduced:
        in the riverbank over water table. Earlier only a linear distribution was possible, which was
        not realistic!this distribution is used in bank stability analysis.The distribution is in the form :
        - suction force per unit weight = INTEGRAL(EXPO3 * h^3 + EXPO2 * h^2 + EXPO1 * h) from 0 to h. 
-        h is the elevation above water table. Two new subroutine and one function were developed to 
+        h is the elevation above water table. Two new subroutines and one function were developed to 
         compute integral using Simpson rule.They are in CANTILEVER.F90.
         >> MODULE  BLKSANMOD
         >> MODULE  CANTILEVER
         >> SUBR    INTEGRAL       : The main program calling INTEGRAL_TRAPZ in a loop.
         >> SUBR    INTEGRAL_TRAPZ : The Sinpson rule for summation of area under pore pressure function FUNC().
         >> FUNCT.  FUNC           : The pore pressure distribution function.
-103.) Reducing critical saftey factor of bank stability from 1.1 to 1.0.
+103.) Reducing critical saftey factor of bank stability from 1.1 to SAFTEYFACTOR = 1.0.
        >> MODULE   CANTILEVER
 104.) Fixing a bug regarding retaining existing overhang shape (front and nose), in the case the cantilever failure
       doesnot occur.
@@ -1279,13 +1279,14 @@ new features introduced/ started to be introduced:
        PROFIL in each cycle over profiles, before sorting them to it.
        >> SUBR.    BANK_EVOLUTION
 107.) Fixing a bug regarding finding the closest profile node under overhang node with non zero 
-       fe_node number. This function (q_fenode) is called , whenever the eroded node in overhang due
-       to tensile failure has no conjugated fe_node to receive its mass as source term.
+       fe_node number. This function (q_fenode) is called , whenever the eroded node in overhang (due
+       to tensile failure) has no conjugated fe_node to receive its mass as source term.
        >> MODULE   TENSILE       
 108.) Fixing a bug in computation of RHOBS, in the case that the profile node has no conjugated fe_node(q=0),
-       SGSAND(q) would trigger. Now the function q_fenode computes the nearest fenode to it. SGSAND(q_fenode(q)).
+       SGSAND(q) would trigger an error. Now the function q_fenode computes the nearest fenode to it. SGSAND(q_fenode(q)).
        >> MODULE   TENSILE
 109.) Chaning an if statment to include a physical fix tolerance of 1 cm in checking development of base point.
+       - base point is propogation of the front point of undercut, when a front is already available.
        -if( (rel_dd - rel_dist_oldfront )> 0.01 )then 
        >> MODULE PROJECTN
 110.) Fixing a few bugs:
