@@ -644,13 +644,7 @@ public class Control1D2DConverter
               boundaryCondition.setHasDirection( true );
 
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            // introduce FF for 'format free reading of line, although it's not completely format free. This would lead
-            // to big changes in Calculation core because, line reading must be much more flexible then. That's right
-            // now not the case.
-            if( stepValue > 9999.9 )
-              formatter.format( "QCFF%12d%8d%16.6e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
-            else
-              formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+            formatter.format( "QCFF%12d%8d%16.3e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
