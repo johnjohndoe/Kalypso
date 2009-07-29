@@ -90,9 +90,9 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
 
   private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif";  //$NON-NLS-1$
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = "Randlinie von Berechnungseinheit entfernen";  //$NON-NLS-1$
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.1");
 
-  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = "Randlinie zur Berechnungseinheit hinzufügen";  //$NON-NLS-1$
+  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.2");
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF } };
 
