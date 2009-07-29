@@ -144,7 +144,7 @@ public class DifferenceResultTinHandler
 
         if( nodeList.size() == 3 )
         {
-          eater.add( nodeList );
+          eater.addPoints( nodeList );
 
         }
 

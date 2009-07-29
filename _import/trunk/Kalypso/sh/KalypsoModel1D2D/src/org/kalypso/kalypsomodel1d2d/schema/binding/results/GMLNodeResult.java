@@ -55,8 +55,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import com.sun.java_cup.internal.runtime.virtual_parse_stack;
-
 /**
  * @author Thomas Jung
  */
@@ -67,8 +65,8 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   public static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" ); //$NON-NLS-1$
 
   /*
-   * the virtual depth is calculated by the calculation core RMA·Kalypso and can differ from the true depth defined by water
-   * level minus node elevation! (Marsh-Algorithm).
+   * the virtual depth is calculated by the calculation core RMA·Kalypso and can differ from the true depth defined by
+   * water level minus node elevation! (Marsh-Algorithm).
    * 
    * for that reason the true depth is computed separately.
    */
@@ -131,7 +129,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   public void setDepth( final double depth )
   {
-    getFeature().setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
+	// depth is a function property, it will not be set anyway
+	// TODO: remove this method
+    //getFeature().setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
   }
 
   public void setWaterlevel( final double waterlevel )
@@ -149,18 +149,14 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   public void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel )
   {
-    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, virtualDepth );
-    getFeature().setProperty( QNAME_PROP_WATERLEVEL, waterlevel );
+    setVirtualDepth( virtualDepth );
+    setWaterlevel( waterlevel );
 
     final List<Double> veloList = new ArrayList<Double>();
     veloList.clear();
     veloList.add( vx );
     veloList.add( vy );
-    getFeature().setProperty( QNAME_PROP_VELOCITY, veloList );
-
-    /* check the real depth by comparing water level with terrain elevation */
-    // double depth = getDepth();
-    // getFeature().setProperty( QNAME_PROP_DEPTH, depth );
+    setVelocity( veloList );
   }
 
   public void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt )
@@ -213,14 +209,11 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     return (GM_Point) getFeature().getProperty( GMLNodeResult.QNAME_PROP_LOCATION );
   }
 
-  @SuppressWarnings("unchecked")
   public List<Double> getVelocity( )
   {
-    final double depth = getDepth();
-
-    /* if node is wet, return the real velocity. If not, return 0 */
-    if( depth > 0 )
-      return (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
+    // return velocity only for wet nodes
+    if( isWet() )
+      return getVirtualVelocity();
     else
     {
       final List<Double> veloList = new ArrayList<Double>();
@@ -243,20 +236,8 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   public double getDepth( )
   {
-    final Object property = getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
-    final double waterlevel;// = (Double) property;
-    if( property != null && property instanceof Double )
-      waterlevel = ((Double) property).doubleValue();
-    else
-      waterlevel = Double.NaN;
-    final GM_Point point = (GM_Point) getFeature().getProperty( GMLNodeResult.QNAME_PROP_LOCATION );
-    final double z = point.getZ();
-
-    final double depth = waterlevel - z;
-    if( depth <= 0 )
-      return 0.0;
-    else
-      return depth;
+    // this is a function property that returns the water level minus the elevation
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DEPTH );
   }
 
   public double getWaterlevel( )
@@ -302,18 +283,12 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    */
   public boolean isWet( )
   {
-    if( getDepth() <= 0 )
-      return false;
-    else
-      return true;
+    return getDepth() > 0;
   }
 
   public boolean isAssigned( )
   {
-    if( m_nodeAssigned == true )
-      return true;
-    else
-      return false;
+    return m_nodeAssigned;
   }
 
   public void setAssigned( final boolean assign )
@@ -404,17 +379,12 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    */
   public List<Double> getVelOverTime( )
   {
-    final double depth = getDepth();
-    List<Double> veloList;
-
     // Try to get the velocity over time derivative
-    veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
+    List<Double> veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
 
-    if( depth < 0 || veloList == null )
+    if( veloList == null )
     {
-      if( veloList == null )
-        veloList = new ArrayList<Double>();
-      veloList.clear();
+      veloList = new ArrayList<Double>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
@@ -427,20 +397,16 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    */
   public List<Double> getVelOverTimePrevStep( )
   {
-    final double depth = getDepth();
-    List<Double> veloList;
-
     // Try to get the velocity over time derivative
-    veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
+    List<Double> veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
 
-    if( depth < 0 || veloList == null )
+    if( veloList == null )
     {
-      if( veloList == null )
-        veloList = new ArrayList<Double>();
-      veloList.clear();
+      veloList = new ArrayList<Double>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
+
     return veloList;
   }
 
@@ -449,20 +415,16 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    */
   public List<Double> getVelPrevStep( )
   {
-    final double depth = getDepth();
-    List<Double> veloList;
-
     // Try to get the velocity over time derivative
-    veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
+    List<Double> veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
 
-    if( depth < 0 || veloList == null )
+    if( veloList == null )
     {
-      if( veloList == null )
-        veloList = new ArrayList<Double>();
-      veloList.clear();
+      veloList = new ArrayList<Double>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
+
     return veloList;
   }
 

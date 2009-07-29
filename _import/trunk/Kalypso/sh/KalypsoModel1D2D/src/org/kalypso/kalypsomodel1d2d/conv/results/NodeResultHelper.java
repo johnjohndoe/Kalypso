@@ -141,28 +141,7 @@ public class NodeResultHelper
     midsideNode.setWaterlevel( waterlevel );
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
-    if( depth < 0 )
-    {
-      midsideNode.setDepth( 0.0 );
-      // setVelocity( midsideNode, 0.0 );
-    }
-    else
-    {
-      midsideNode.setDepth( depth );
-
-      // final List<Double> velocitiesX = new LinkedList<Double>();
-      // final List<Double> velocitiesY = new LinkedList<Double>();
-      //
-      // velocitiesX.add( nodeDown.getVelocity().get( 0 ) );
-      // velocitiesX.add( nodeUp.getVelocity().get( 0 ) );
-      // velocitiesY.add( nodeDown.getVelocity().get( 1 ) );
-      // velocitiesY.add( nodeUp.getVelocity().get( 1 ) );
-      //
-      // final double vx = getMeanValue( velocitiesX );
-      // final double vy = getMeanValue( velocitiesY );
-      //
-      // midsideNode.setVelocity( vx, vy );
-    }
+    midsideNode.setDepth( depth );
   }
 
   private static double getMeanValue( final List<Double> values )
@@ -181,38 +160,22 @@ public class NodeResultHelper
     midsideNode.setWaterlevel( waterlevel );
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
-    if( depth < 0 )
-    {
-      midsideNode.setDepth( 0.0 );
-      // setVelocity( midsideNode, 0.0 );
-    }
-    else
-    {
-      midsideNode.setDepth( depth );
+    midsideNode.setDepth( depth );
 
-      // set the velocity of the midside node to a dummy value derived from the corner node, if the midside node itself
-      // has no velocity value.
-      // REMARK: This is dangerous, because we don't have any vector data anymore!
-      // TODO: check if this is really necessary
+    // set the velocity of the midside node to a dummy value derived from the corner node, if the midside node itself
+    // has no velocity value.
+    // REMARK: This is dangerous, because we don't have any vector data anymore!
+    // TODO: check if this is really necessary
 
-      // final List<Double> velocity = midsideNode.getVelocity();
-      // if( velocity.get( 0 ) == 0.0 && velocity.get( 1 ) == 0.0 )
-      // {
-      // final List<Double> velocities = new LinkedList<Double>();
-      // velocities.add( node.getAbsoluteVelocity() );
-      // velocities.add( 0.0 );
-      //
-      // setVelocity( midsideNode, getMeanValue( velocities ) );
-      // }
-    }
-  }
-
-  private static void setVelocity( final INodeResult nodeResult, final double velo )
-  {
-    final List<Double> velocity = new LinkedList<Double>();
-    velocity.add( velo );
-    velocity.add( velo );
-    nodeResult.setVelocity( velocity );
+    // final List<Double> velocity = midsideNode.getVelocity();
+    // if( velocity.get( 0 ) == 0.0 && velocity.get( 1 ) == 0.0 )
+    // {
+    // final List<Double> velocities = new LinkedList<Double>();
+    // velocities.add( node.getAbsoluteVelocity() );
+    // velocities.add( 0.0 );
+    //
+    // setVelocity( midsideNode, getMeanValue( velocities ) );
+    // }
   }
 
   /**
@@ -307,7 +270,7 @@ public class NodeResultHelper
     final double y3Temp = Math.round( (-(Math.abs( y1 ) + Math.abs( y2 )) / dx12 * x3 + y1) * 100 ) / 100;
 
     if( y3Temp != 0.00 )
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %9.3f", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.1"), y3Temp ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %9.3f", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.1" ), y3Temp ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return x3;
   }

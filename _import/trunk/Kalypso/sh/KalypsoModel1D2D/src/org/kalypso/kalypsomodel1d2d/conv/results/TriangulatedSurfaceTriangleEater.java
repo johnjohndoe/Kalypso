@@ -115,20 +115,20 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   /**
    * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
    * the triangle is marked as wet or dry.
-   *
+   * 
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final List<INodeResult> nodes, final Boolean isWet )
+  public void add( final INodeResult... nodes )
   {
     try
     {
-      final GM_Triangle_Impl gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, isWet, m_parameter );
+      final GM_Triangle_Impl gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, m_parameter );
       if( gmTriangle != null )
         m_surface.add( gmTriangle );
     }
     catch( final GM_Exception e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
   }
@@ -167,12 +167,12 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
       // }
       // else
       // {
-        GmlSerializer.serializeWorkspace( paramFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( paramFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
       // }
     }
     catch( final Exception e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.10") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
   }
@@ -193,17 +193,17 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     }
   }
 
-  public void add( final List<GM_Point> nodeList )
+  public void addPoints( final List<GM_Point> pointList )
   {
-    final String crs = nodeList.get( 0 ).getCoordinateSystem();
+    final String crs = pointList.get( 0 ).getCoordinateSystem();
 
     GM_Triangle_Impl gmTriangle = null;
 
     final GM_Position pos[] = new GM_Position[3];
 
-    for( int i = 0; i < nodeList.size(); i++ )
+    for( int i = 0; i < pointList.size(); i++ )
     {
-      final GM_Point point = nodeList.get( i );
+      final GM_Point point = pointList.get( i );
       pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( point.getX(), point.getY(), point.getZ() );
     }
 
@@ -216,7 +216,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     }
     catch( final GM_Exception e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.13") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
 

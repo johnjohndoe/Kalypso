@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.util.Date;
-import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
@@ -53,7 +52,7 @@ public class NullTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final List<INodeResult> nodes, final Boolean isWet )
+  public void add( final INodeResult... nodes )
   {
   }
 

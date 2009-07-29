@@ -221,7 +221,7 @@ public class SimpleNodeResult implements INodeResult
    */
   public double getDepth( )
   {
-    return m_depth;
+    return getWaterlevel() - getPoint().getZ();
   }
 
   /**
@@ -350,8 +350,7 @@ public class SimpleNodeResult implements INodeResult
    */
   public double getVirtualDepth( )
   {
-    // no virtual depth in simple nodes
-    return 0;
+    return m_depth;
   }
 
   /**
@@ -359,7 +358,7 @@ public class SimpleNodeResult implements INodeResult
    */
   public void setVirtualDepth( final double virtualDepth )
   {
-    // no virtual depth in simple nodes
+    m_depth = virtualDepth;
   }
 
   /**

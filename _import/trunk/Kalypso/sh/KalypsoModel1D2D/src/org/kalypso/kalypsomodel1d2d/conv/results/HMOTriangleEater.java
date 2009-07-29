@@ -76,14 +76,14 @@ public class HMOTriangleEater implements ITriangleEater
     m_parameter = parameter;
   }
 
-  public void add( final List<INodeResult> nodes, final Boolean isWet )
+  public void add( final INodeResult... nodes )
   {
     final Integer[] triangle = new Integer[3];
 
     /* add nodes to node list */
-    for( int i = 0; i < nodes.size(); i++ )
+    for( int i = 0; i < nodes.length; i++ )
     {
-      final INodeResult nodeResult = nodes.get( i );
+      final INodeResult nodeResult = nodes[i];
 
       if( m_nodes.containsKey( nodeResult ) == false )
       {

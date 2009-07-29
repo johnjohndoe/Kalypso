@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Thomas Jung
- * 
+ * @author Stefan Kurzbach include marsh as negative depths
  */
 public class ElementResult
 {
@@ -173,8 +173,11 @@ public class ElementResult
    */
   private void interpolateCenterNode( )
   {
-    if( m_cornerNodes.size() == 0 )
+    final int cornerNum = m_cornerNodes.size();
+
+    if( cornerNum == 0 )
       return;
+
     /* get the center point location by using the corner nodes */
     double sumXCoord = 0;
     double sumYCoord = 0;
@@ -186,9 +189,7 @@ public class ElementResult
     double sumVxMid = 0;
     double sumVyMid = 0;
 
-    int cornerNum = 0;
-
-    for( int i = 0; i < m_cornerNodes.size(); i++ )
+    for( int i = 0; i < cornerNum; i++ )
     {
       /** location */
       final INodeResult node = m_cornerNodes.get( i );
@@ -198,12 +199,9 @@ public class ElementResult
       sumYCoord = sumYCoord + p.getY();
       sumZCoord = sumZCoord + p.getZ();
 
-      if( node.isWet() == true )
-      {
-        cornerNum++;
-        sumWaterlevel = sumWaterlevel + node.getWaterlevel();
-        sumDepth = sumDepth + node.getDepth();
-      }
+      sumWaterlevel = sumWaterlevel + node.getWaterlevel();
+      sumDepth = sumDepth + node.getDepth();
+
       sumVxCorner = sumVxCorner + node.getVelocity().get( 0 );
       sumVyCorner = sumVyCorner + node.getVelocity().get( 1 );
     }
@@ -217,9 +215,6 @@ public class ElementResult
 
     /* interpolate the data */
     // water level
-    // final double waterlevel = sumWaterlevel / m_cornerNodes.size();
-    if( cornerNum == 0 )
-      return;
     final double waterlevel = sumWaterlevel / cornerNum;
     m_centerNode.setWaterlevel( waterlevel );
 
@@ -227,49 +222,40 @@ public class ElementResult
     double depth = waterlevel - z;
     List<Double> velocity = new LinkedList<Double>();
 
-    if( depth > 0 )
+    // velocity -> use all nodes by iso-parametric interpolation
+    for( int i = 0; i < m_midsideNodes.size(); i++ )
     {
-      // velocity -> use all nodes by iso-parametric interpolation
-      for( int i = 0; i < m_midsideNodes.size(); i++ )
-      {
-        final INodeResult node = m_midsideNodes.get( i );
+      final INodeResult node = m_midsideNodes.get( i );
 
-        sumVxMid = sumVxMid + node.getVelocity().get( 0 );
-        sumVyMid = sumVyMid + node.getVelocity().get( 1 );
-      }
-
-      /*
-       * iso-parametric interpolation of the velocity at the center of the element (isoparam.coord.=(0, 0))
-       * (isoparam.coord.=(1./3., 1./3.) for triangle and (0, 0) for quad)
-       */
-
-      // TODO: check this by literature. That was directly taken from the BCE2D-post-processing!!
-      double w1 = 0;
-      double w2 = 0;
-
-      if( m_cornerNodes.size() == 3 )
-      {
-        w1 = -1.0 / 9.0;
-        w2 = 4.0 / 9.0;
-      }
-      else if( m_cornerNodes.size() == 4 )
-      {
-        w1 = -1.0 / 4.0;
-        w2 = 1.0 / 2.0;
-      }
-
-      double vx = sumVxMid * w2 + sumVxCorner * w1;
-      double vy = sumVyMid * w2 + sumVyCorner * w1;
-
-      velocity.add( vx );
-      velocity.add( vy );
+      sumVxMid = sumVxMid + node.getVelocity().get( 0 );
+      sumVyMid = sumVyMid + node.getVelocity().get( 1 );
     }
-    else
+
+    /*
+     * iso-parametric interpolation of the velocity at the center of the element (isoparam.coord.=(0, 0))
+     * (isoparam.coord.=(1./3., 1./3.) for triangle and (0, 0) for quad)
+     */
+
+    // TODO: check this by literature. That was directly taken from the BCE2D-post-processing!!
+    double w1 = 0;
+    double w2 = 0;
+
+    if( m_cornerNodes.size() == 3 )
     {
-      depth = 0;
-      velocity.add( 0.0 );
-      velocity.add( 0.0 );
+      w1 = -1.0 / 9.0;
+      w2 = 4.0 / 9.0;
     }
+    else if( m_cornerNodes.size() == 4 )
+    {
+      w1 = -1.0 / 4.0;
+      w2 = 1.0 / 2.0;
+    }
+
+    double vx = sumVxMid * w2 + sumVxCorner * w1;
+    double vy = sumVyMid * w2 + sumVyCorner * w1;
+
+    velocity.add( vx );
+    velocity.add( vy );
     m_centerNode.setDepth( depth );
     m_centerNode.setVelocity( velocity );
   }
@@ -277,37 +263,10 @@ public class ElementResult
   /**
    * assigns the water level to a dry node from the nearest wetted node connected to the current node by an arc.
    */
-  private boolean assignWaterlevel( INodeResult node, INodeResult minDistNode )
+  private void assignWaterlevel( INodeResult node, INodeResult minDistNode )
   {
     final double waterlevel = minDistNode.getWaterlevel();
-    final double depth = waterlevel - node.getPoint().getZ();
-    if( depth > 0 )
-    {
-      // System.out.println( "Wasserspiegel zugewiesen (" + node.getNodeID() + "): " );
-      // System.out.println( "alt: " + node.getWaterlevel() );
-
-      // final List<Double> velocity = new LinkedList<Double>();
-      // velocity.add( 0.0 );
-      // velocity.add( 0.0 );
-      // node.setVelocity( velocity );
-      node.setDepth( depth );
-      node.setWaterlevel( waterlevel );
-
-      // System.out.println( "neu: " + node.getWaterlevel() );
-      // node.setResultValues( 0, 0, depth, water level );
-      return true;
-    }
-    else
-    {
-      // final List<Double> velocity = new LinkedList<Double>();
-      // velocity.add( 0.0 );
-      // velocity.add( 0.0 );
-      // node.setVelocity( velocity );
-      node.setDepth( 0.0 );
-      node.setWaterlevel( waterlevel );
-      // node.setResultValues( 0, 0, 0, water level );
-      return false;
-    }
+    node.setWaterlevel( waterlevel );
   }
 
   /**
@@ -322,7 +281,7 @@ public class ElementResult
     {
       final INodeResult node = m_cornerNodes.get( i );
 
-      if( node.getDepth() <= 0 /* && node.isAssigned() == false */)
+      if( !node.isWet() )
       {
         /* node is dry */
         // search for wet neighboring nodes and add them to a list
@@ -343,7 +302,7 @@ public class ElementResult
 
           for( INodeResult currentNode : neighborNodeList )
           {
-            if( isPartOfElement( currentNode ) == true )
+            if( isPartOfElement( currentNode ) )
             {
 
               distance = currentNode.getPoint().distance( node.getPoint() );
@@ -361,7 +320,7 @@ public class ElementResult
           {
             assignWaterlevel( node, minDistNode );
 
-            if( node.isWet() == true )
+            if( node.isWet() )
             {
               assigned = true;
               // if a node gets an assigned water level and becomes wet, maybe that has influence to other dry nodes of
@@ -403,7 +362,7 @@ public class ElementResult
    * checks if a given node is part of the corner nodes of the element.
    * 
    * @param currentNode
-   *            the node to be checked
+   *          the node to be checked
    * 
    */
   private boolean isPartOfElement( INodeResult currentNode )

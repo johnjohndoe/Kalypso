@@ -70,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
@@ -83,7 +84,7 @@ import com.sun.org.apache.xml.internal.serializer.ToXMLStream;
 /**
  * This eater writes the triangles into an GML-File as TriangualtedSurface.<br>
  * The triangles directly get written without storing them into an intermediate GML-Workspace.
- *
+ * 
  * @author Thomas Jung
  */
 public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
@@ -114,17 +115,17 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
   /**
    * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
    * the triangle is marked as wet or dry.
-   *
+   * 
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final List<INodeResult> nodes, final Boolean isWet )
+  public void add( final INodeResult... nodes )
   {
     if( m_marshaller == null )
       return;
 
     try
     {
-      final GM_Triangle_Impl triangle = createTriangle( nodes, isWet, m_parameter );
+      final GM_Triangle_Impl triangle = createTriangle( nodes, m_parameter );
       if( triangle != null )
         m_marshaller.marshalTriangle( triangle, m_crs );
     }
@@ -135,64 +136,36 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
   }
 
-  public static GM_Triangle_Impl createTriangle( final List<INodeResult> nodes, final Boolean isWet, final ResultType.TYPE parameter ) throws GM_Exception
+  public static GM_Triangle_Impl createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter ) throws GM_Exception
   {
-    if( nodes.size() < 3 )
+    if( nodes.length < 3 )
       return null;
 
-    final GM_Position pos[] = processNodes( nodes, isWet, parameter );
+    final GM_Position pos[] = processNodes( nodes, parameter );
     if( pos != null )
     {
-      final String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+      final String crs = nodes[0].getPoint().getCoordinateSystem();
       return new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
     }
 
     return null;
   }
 
-  private static GM_Position[] processNodes( final List<INodeResult> nodes, final Boolean isWet, final ResultType.TYPE parameter )
+  private static GM_Position[] processNodes(final INodeResult[] nodes, ResultType.TYPE parameter )
   {
-    // if no parameter is set, add all triangles
+    // if no parameter is set, use terrain
     if( parameter == null )
-      return processNodes( nodes );
+      parameter = ResultType.TYPE.TERRAIN;
 
-    // process the wet triangles in order to get data only inside the inundation area
-    if( isWet == true )
-      return processWetNodes( nodes, parameter );
-
-    // for fem terrain data add the dry triangles as well
-    if( parameter == ResultType.TYPE.TERRAIN )
-      return processNodes( nodes );
-
-    // TODO Case not covered, pos is null!
-    return null;
-  }
-
-  private static GM_Position[] processNodes( final List<INodeResult> nodes )
-  {
     final GM_Position pos[] = new GM_Position[3];
 
-    for( int i = 0; i < nodes.size(); i++ )
+    for( int i = 0; i < nodes.length; i++ )
     {
-      final double x = nodes.get( i ).getPoint().getX();
-      final double y = nodes.get( i ).getPoint().getY();
-      final double z = nodes.get( i ).getPoint().getZ();
-      pos[i] = GeometryFactory.createGM_Position( x, y, z );
-    }
-
-    return pos;
-  }
-
-  private static GM_Position[] processWetNodes( final List<INodeResult> nodes, final ResultType.TYPE paramete )
-  {
-    final GM_Position pos[] = new GM_Position[3];
-
-    for( int i = 0; i < nodes.size(); i++ )
-    {
-      final double x = nodes.get( i ).getPoint().getX();
-      final double y = nodes.get( i ).getPoint().getY();
-      final INodeResult nodeResult = nodes.get( i );
-      final double z = getZValue( nodeResult, paramete );
+      final INodeResult nodeResult = nodes[i];
+      final GM_Point point = nodeResult.getPoint();
+      final double x = point.getX();
+      final double y = point.getY();
+      final double z = getZValue( nodeResult, parameter );
 
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
@@ -267,7 +240,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.0"), e ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.0" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -342,7 +315,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1"), e ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 

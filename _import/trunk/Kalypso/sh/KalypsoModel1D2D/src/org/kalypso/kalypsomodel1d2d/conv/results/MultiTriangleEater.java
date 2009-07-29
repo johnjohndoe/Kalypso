@@ -57,10 +57,10 @@ public class MultiTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final List<INodeResult> nodes, final Boolean isWet )
+  public void add( final INodeResult... nodes )
   {
     for( final ITriangleEater eater : m_eaters )
-      eater.add( nodes, isWet );
+      eater.add( nodes );
   }
 
   /**

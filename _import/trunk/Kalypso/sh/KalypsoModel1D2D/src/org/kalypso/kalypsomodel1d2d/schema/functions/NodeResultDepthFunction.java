@@ -80,10 +80,8 @@ public class NodeResultDepthFunction extends FeaturePropertyFunction
 
     if( waterlevel == null )
       return Double.NaN;
-    if( waterlevel.doubleValue() > point.getZ() )
-      return (waterlevel.doubleValue() - point.getZ());
     else
-      return new Double( "0.0" ); //$NON-NLS-1$
+      return (waterlevel.doubleValue() - point.getZ());
   }
 
   /**
