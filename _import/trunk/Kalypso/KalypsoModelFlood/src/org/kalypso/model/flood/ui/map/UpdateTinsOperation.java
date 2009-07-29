@@ -229,7 +229,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
             pointList.add( (GM_Point) transformer.transform( point ) );
           }
-          eater.add( pointList );
+          eater.addPoints( pointList );
         }
 
         gmSurface = eater.getSurface();
