@@ -21,6 +21,7 @@ import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.ui.views.map.MapView;
 
 public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -48,7 +49,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.3", "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.5" ) )  //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.3", "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.5" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       return null;
     }
@@ -57,7 +58,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     if( mapModell != null )
     {
       // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQi" ); //$NON-NLS-1$
+      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, RiskModelHelper.WSP_THEMES_TITLE_i18 );
       if( hqTheme != null )
       {
         mapModell.activateTheme( hqTheme );
@@ -68,7 +69,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     {
       final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
       final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
-      widget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
+      widget.setGridFolder( scenarioFolder.getFolder( "models/raster/input" ) ); //$NON-NLS-1$
       widget.setAllowUserChangeGridFolder( false );
 
       final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
@@ -76,7 +77,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.6"), e ); //$NON-NLS-1$
+      throw new ExecutionException( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.6" ), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

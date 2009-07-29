@@ -81,6 +81,9 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RiskModelHelper
 {
+  public static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi";
+
+  // public static final String WSP_THEMES_TITLE_i18 = "HQi";
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
@@ -240,8 +243,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName( String.format( Messages.getString( "com.vividsolutions.jts.geom.Coordinate.RiskModelHelper.0" ), sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
-      newCoverage.setDescription( String.format( Messages.getString( "com.vividsolutions.jts.geom.Coordinate.RiskModelHelper.1" ), new Date().toString() ) ); //$NON-NLS-1$
+      newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15" ), sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
+      newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16" ), new Date().toString() ) ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
@@ -278,7 +281,7 @@ public class RiskModelHelper
    * @param scenarioFolder
    * @throws Exception
    */
-  public static void createSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection, final IResource scenarioFolder ) throws Exception
+  public static void createSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection ) throws Exception
   {
     final String layerName = Messages.getString( "org.kalypso.risk.model.utils.DamagePotentialCalculationHandler.13" ) + coverageCollection.getReturnPeriod() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -367,7 +370,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" ) + (i + 1) + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        final SubMonitor progress = SubMonitor.convert( monitor, String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" ), i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -476,7 +479,7 @@ public class RiskModelHelper
    * @throws SAXException
    * @throws CoreException
    */
-  public static void updateDamageLayers( final IFolder scenarioFolder, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final GisTemplateMapModell mapModell ) throws Exception
+  public static void updateDamageLayers( final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
     final String damageThemeProperty = "damagePotentialThemes"; //$NON-NLS-1$
@@ -490,7 +493,7 @@ public class RiskModelHelper
 
     /* add the coverage collections to the map */
     for( final IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
-      createSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection, scenarioFolder );
+      createSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection );
     parentKalypsoTheme.saveFeatures( new NullProgressMonitor() );
   }
 
@@ -692,7 +695,10 @@ public class RiskModelHelper
     layer.setType( "simple" ); //$NON-NLS-1$
     layer.setVisible( true );
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setHref( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.1" ) ); //$NON-NLS-1$
+
+    // please DO NOT externalize the paths (create constants if necessary)!
+    layer.setHref( "../models/RasterDataModel.gml" ); //$NON-NLS-1$
+
     layer.setVisible( true );
 
     final Property layerPropertyDeletable = new Property();
@@ -753,6 +759,13 @@ public class RiskModelHelper
 
     Assert.isNotNull( rasterFolder );
 
+    /* Also add event themes to the map */
+    // TRICKY: we get the map from the global map-context, let's hope it always works here
+    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IEvaluationContext currentState = handlerService.getCurrentState();
+    final IMapModell mapModell = MapHandlerUtils.getMapModell( currentState );
+    final IKalypsoCascadingTheme wspThemes = mapModell != null ? getHQiTheme( mapModell ) : null;
+
     // get the result coverage collections (depth grids) from the events
     final List<Feature> createdFeatures = new ArrayList<Feature>();
     for( int i = 0; i < names.length; i++ )
@@ -766,50 +779,43 @@ public class RiskModelHelper
       int coverageCount = 0;
       for( final ICoverage coverage : grids[i] )
       {
-        final String subtaks = String.format( "Copying grids for '%s' (%d / %d)", names[i], coverageCount, grids[i].size() );
+        final String subtaks = String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" ), names[i], coverageCount + 1, grids[i].size() );
         monitor.subTask( subtaks );
-
-        final String targetFileName = String.format( "grid_%d_%d", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
+        
+        // NO! When imported from Flood, return period is always 1 by default, so files will be overwritten!
+//        final String targetFileName = String.format( "grid_%d_%d", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
+        final String targetFileName = String.format( "grid_%s_%d", annualCoverageCollection.getGmlID(), coverageCount ); //$NON-NLS-1$
 
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
         final File targetFile = FileUtilities.createNewUniqueFile( targetFileName, ".ascbin", rasterFolder.getLocation().toFile() );
         final String targetGridPath = rasterFolderPath + targetFile.getName();
 
-        final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
-        newCoverage.setName( "" + coverageCount ); //$NON-NLS-1$
-        newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.6" ) ) ); //$NON-NLS-1$
+        final SubMonitor subMonitor = SubMonitor.convert( monitor, 10 );
+        final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", subMonitor ); //$NON-NLS-1$
+        newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18" ), coverageCount + 1 ) ); //$NON-NLS-1$
+        newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19" ), new Date() ) ); //$NON-NLS-1$
         grid.dispose();
-
         coverageCount++;
+        if( !subMonitor.isCanceled() && wspThemes != null )
+          addEventThemes( wspThemes, annualCoverageCollection );
       }
 
       ProgressUtilities.worked( monitor, 1 );
     }
-
-    /* Also add event themes to the map */
-    // TRICKY: we get the map from the global map-context, let's hope it always works here
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final IEvaluationContext currentState = handlerService.getCurrentState();
-    final IMapModell mapModell = MapHandlerUtils.getMapModell( currentState );
-    if( mapModell != null )
-    {
-      final IKalypsoCascadingTheme wspThemes = getHQiTheme( mapModell );
-      for( final IAnnualCoverageCollection annualCoverageCollection : waterlevelCoverageCollection )
-        addEventThemes( wspThemes, annualCoverageCollection );
-    }
+    rasterFolder.refreshLocal( IFolder.DEPTH_INFINITE, monitor );
 
     /* ------ */
     // TODO: maybe save other models?
     final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    riskDataProvider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.7" ), false ) ); //$NON-NLS-1$
+    riskDataProvider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.20" ), false ) ); //$NON-NLS-1$
     riskDataProvider.saveModel( IRasterDataModel.class.getName(), new NullProgressMonitor() );
   }
 
   public static IKalypsoCascadingTheme getHQiTheme( final IMapModell mapModell )
   {
-    return CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQi" ); //$NON-NLS-1$
+    return CascadingThemeHelper.getNamedCascadingTheme( mapModell, WSP_THEMES_TITLE_i18 );
   }
 
 }

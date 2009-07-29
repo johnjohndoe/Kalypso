@@ -90,7 +90,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
                 final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterDataModel.getSpecificDamageCoverageCollection();
                 final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
                 RiskModelHelper.updateDamageStyle( sldFile, specificDamageCoverageCollection );
-                RiskModelHelper.updateDamageLayers( scenarioFolder, specificDamageCoverageCollection, mapModell );
+                RiskModelHelper.updateDamageLayers( specificDamageCoverageCollection, mapModell );
                 if( mapView != null )
                   mapPanel.invalidateMap();
               }

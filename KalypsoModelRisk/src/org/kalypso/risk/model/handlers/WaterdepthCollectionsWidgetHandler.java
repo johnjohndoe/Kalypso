@@ -17,6 +17,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.ui.views.map.MapView;
 
 public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implements IHandler
@@ -49,7 +50,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
     if( mapModell != null )
     {
       // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQi" ); //$NON-NLS-1$
+      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, RiskModelHelper.WSP_THEMES_TITLE_i18 );
       if( hqTheme != null )
         mapModell.activateTheme( hqTheme );
     }
