@@ -45,7 +45,10 @@ import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.deegree.model.spatialschema.GeometryException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -125,7 +128,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
  * for each event.
- *
+ * 
  * @author Thomas Jung
  */
 public class WaterdepthCollectionsManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -279,7 +282,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
               catch( final CoreException e )
               {
                 e.printStackTrace();
-                ErrorDialog.openError( parent.getDisplay().getActiveShell(), org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.2"), org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.3"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+                ErrorDialog.openError( parent.getDisplay().getActiveShell(), org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.2" ), org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.3" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
               }
             }
           }
@@ -531,7 +534,9 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( dialog.open() != Window.OK )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), RiskModelHelper.WSP_THEMES_TITLE_i18 );
+
+    // FIXME this Assert is ignored!?
     Assert.isNotNull( wspThemes, Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.47" ) ); //$NON-NLS-1$
 
     final ICoreRunnableWithProgress operation = new ChangeAnnualityOperation( m_treeSelection[0], Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
@@ -539,7 +544,11 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.48" ), Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.49" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    // FIXME silly empty error dialog is shown for few seconds (with cancel enabled), even if resultStatus is OK
+    // temp solution: show this only if status is not OK
+    if( !resultStatus.isOK() )
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.48" ), Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.49" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void handleRemove( final Event event )
@@ -547,7 +556,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( m_treeSelection == null )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), RiskModelHelper.WSP_THEMES_TITLE_i18 );
 
     if( wspThemes != null )
     {
@@ -588,14 +597,31 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         final Object adaptedObject = adaptToKnownObject( selectedObject );
 
         if( adaptedObject instanceof ICoverage )
-          paintEnvelope( g, ((ICoverage) adaptedObject).getFeature().getEnvelope() );
+        {
+          try
+          {
+            final GM_Envelope envelope = ((ICoverage) adaptedObject).getFeature().getBoundedBy();
+            paintEnvelope( g, envelope );
+          }
+          catch( final GeometryException e )
+          {
+            Logger.getLogger( this.getName() ).log( Level.WARNING, e.getLocalizedMessage() );
+          }
+        }
         else if( adaptedObject instanceof IAnnualCoverageCollection )
         {
           paintEnvelope( g, ((IAnnualCoverageCollection) adaptedObject).getWrappedList().getBoundingBox() );
         }
 
-        final GM_Envelope envelope = envelopeForSelected( selectedObject );
-        paintEnvelope( g, envelope );
+        try
+        {
+          final GM_Envelope envelope = envelopeForSelected( selectedObject );
+          paintEnvelope( g, envelope );
+        }
+        catch( final GeometryException e )
+        {
+          Logger.getLogger( this.getName() ).log( Level.WARNING, e.getLocalizedMessage() );
+        }
       }
     }
   }
@@ -654,15 +680,15 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     }
   }
 
-  private GM_Envelope envelopeForSelected( final Object selectedObject )
+  private GM_Envelope envelopeForSelected( final Object selectedObject ) throws GeometryException
   {
     final Object adaptedObject = adaptToKnownObject( selectedObject );
 
     if( adaptedObject instanceof ICoverageCollection )
-      return ((ICoverageCollection) adaptedObject).getFeature().getEnvelope();
+      return ((ICoverageCollection) adaptedObject).getFeature().getBoundedBy();
 
     if( adaptedObject instanceof ICoverage )
-      return ((ICoverage) adaptedObject).getFeature().getEnvelope();
+      return ((ICoverage) adaptedObject).getFeature().getBoundedBy();
 
     return null;
   }
