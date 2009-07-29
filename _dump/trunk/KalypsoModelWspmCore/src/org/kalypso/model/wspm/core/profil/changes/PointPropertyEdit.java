@@ -110,7 +110,7 @@ public final class PointPropertyEdit implements IProfilChange
    */
   public String getInfo( )
   {
-    return m_property.toString();
+    return m_property.getId();
   }
 
   /**

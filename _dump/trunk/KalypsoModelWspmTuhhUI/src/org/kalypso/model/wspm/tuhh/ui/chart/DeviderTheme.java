@@ -46,9 +46,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
@@ -121,16 +119,5 @@ public class DeviderTheme extends AbstractProfilTheme
     return new ILegendEntry[] { le };
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() )
-    {
-      getEventHandler().fireLayerContentChanged( this );
-    }
-  }
+
 }

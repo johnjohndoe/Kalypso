@@ -43,7 +43,9 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -107,7 +109,25 @@ public class RiverChannelLayer extends PointMarkerLayer
       }
     }
   }
-
+  @Override
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  {
+    final IProfil profil = getProfil();
+    if( profil == null )
+      return;
+    if( hint.isMarkerMoved() )
+    {
+      for (final IProfilChange change : changes)
+      {
+        if (change.getInfo().equals(IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE))
+        {
+          //TODO: Kim set river channel roughness values
+          final IRecord[] points = (IRecord[])(change.getObjects());
+        }
+      }
+    }
+    super.onProfilChanged( hint, changes );
+  }
   private final IComponent getRoughness( )
   {
     final IComponent cmpKS = getProfil().hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
