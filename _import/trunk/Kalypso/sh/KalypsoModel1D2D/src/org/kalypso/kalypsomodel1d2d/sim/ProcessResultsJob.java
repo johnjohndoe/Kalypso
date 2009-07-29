@@ -41,12 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -112,7 +109,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * TODO: remove processing of the map This job processed one 2d-result file. *
- *
+ * 
  * @author Gernot Belger
  */
 public class ProcessResultsJob extends Job
@@ -199,51 +196,44 @@ public class ProcessResultsJob extends Job
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.8" ) + timeStepName, 10 ); //$NON-NLS-1$
     monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.9" ) + timeStepName ); //$NON-NLS-1$
 
-    try     
+	//TODO: simultaneous parsing and zipping caused problems
+	// the last few lines of the 2d-file were just ignored
+    try
     {
-      /* Zip .2d file to outputDir */
-      final InputStream contentStream = m_inputFile.getContent().getInputStream();
-      final File outputZip2d = new File( m_outputDir, "original.2d.zip" ); //$NON-NLS-1$
+      InputStream contentStream = null;
+
       ZipOutputStream zos = null;
-      final PipedOutputStream out = new PipedOutputStream();
-      final PipedInputStream in = new PipedInputStream( out );
-      final Thread thread = new Thread( new Runnable()
-      {
-        public void run( )
-        {
-          try
-          {
-            /* Read into NodeResults */
-            read2DIntoGmlResults( in );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
-        }
-      } );
-      thread.start();
       try
       {
+        /* Zip .2d file to outputDir */
+        final File outputZip2d = new File( m_outputDir, "original.2d.zip" ); //$NON-NLS-1$
+        contentStream = new BufferedInputStream( m_inputFile.getContent().getInputStream() );
         zos = new ZipOutputStream( new FileOutputStream( outputZip2d ) );
         final String pathname = m_inputFile.getName().getBaseName();
         final ZipEntry newEntry = new ZipEntry( pathname );
         zos.putNextEntry( newEntry );
-
-        // pipe to both OutputStreams
-        final MultiOutputStream multi = new MultiOutputStream();
-        multi.addStream( zos );
-        multi.addStream( out );
-        IOUtils.copy( new BufferedInputStream( contentStream, 4 * 1024 ), new BufferedOutputStream( multi, 4 * 1024 ) );
+        IOUtils.copy( contentStream, zos );
+        zos.closeEntry();
       }
       finally
       {
         IOUtils.closeQuietly( zos );
-        IOUtils.closeQuietly( out );
+        IOUtils.closeQuietly( contentStream );
+      }
+
+      try
+      {
+        /* Read into NodeResults */
+        contentStream = new BufferedInputStream( m_inputFile.getContent().getInputStream() );
+        read2DIntoGmlResults( contentStream );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( contentStream );
         m_inputFile.close();
       }
+
       // wait until
-      thread.join();
       ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.12" ), IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       ProgressUtilities.worked( monitor, 1 );
@@ -389,7 +379,7 @@ public class ProcessResultsJob extends Job
             break;
 
           case DEPTH:
-            //TODO: Handle minimum at infinity
+            // TODO: Handle minimum at infinity
             min = new BigDecimal( m_resultMinMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.71" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.1" ), IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
