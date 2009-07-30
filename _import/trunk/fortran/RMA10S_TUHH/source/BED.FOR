@@ -1,4 +1,4 @@
-C     Last change:  MD   13 Jul 2009    5:34 pm
+C     Last change:  MD   30 Jul 2009    2:04 pm
 cipk  last update apr 05 2006   make a first call to get sed initial conditions
 crrr  Last update Aug 23 1997
       SUBROUTINE BED
@@ -308,22 +308,22 @@ C..... READ NEXT RECORD
 
 !MD: neu fuer alle Mittseiten-Knoten
 !MD--------------------------------------
-!MD      DO N=1,NPM
-!MD        IF(IMID(N,1) .GT. 0) THEN
-!MD          NN = N
-!MD          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
-!MD          NLAYO(NN)=MIN(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
-!MD          TM(NN)=(TM(IMID(NN,1))+TM(IMID(NN,2)))/2.
-!MD         DO K=1,NLAYO(NN)
-!MD           THICKOND(NN,K)=(THICKOND(IMID(NN,1),K)+
-!MD     +                     THICKOND(IMID(NN,2),K))/2.
-!MD           THICKO(NN,K)=(THICKO(IMID(NN,1),K)+THICKO(IMID(NN,2),K))/2.
-!MD           GBO(NN,K)=(GBO(IMID(NN,1),K)+GBO(IMID(NN,2),K))/2.
-!MD           SSTO(NN,K)=(SSTO(IMID(NN,1),K)+SSTO(IMID(NN,2),K))/2.
-!MD           SMVAL(NN,K)=(SMVAL(IMID(NN,1),K)+SMVAL(IMID(NN,2),K))/2.
-!MD         ENDDO
-!MD        ENDIF
-!MD      ENDDO
+      DO N=1,NPM
+        IF(IMID(N,1) .GT. 0) THEN
+          NN = N
+          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          NLAYO(NN)=MIN(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
+          TM(NN)=(TM(IMID(NN,1))+TM(IMID(NN,2)))/2.
+         DO K=1,NLAYO(NN)
+           THICKOND(NN,K)=(THICKOND(IMID(NN,1),K)+
+     +                     THICKOND(IMID(NN,2),K))/2.
+           THICKO(NN,K)=(THICKO(IMID(NN,1),K)+THICKO(IMID(NN,2),K))/2.
+           GBO(NN,K)=(GBO(IMID(NN,1),K)+GBO(IMID(NN,2),K))/2.
+           SSTO(NN,K)=(SSTO(IMID(NN,1),K)+SSTO(IMID(NN,2),K))/2.
+           SMVAL(NN,K)=(SMVAL(IMID(NN,1),K)+SMVAL(IMID(NN,2),K))/2.
+         ENDDO
+        ENDIF
+      ENDDO
 !MD: neu fuer alle Mittseiten-Knoten
 !MD--------------------------------------
 
