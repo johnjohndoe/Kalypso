@@ -173,7 +173,8 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
       final double x = location.getX();
       final double y = location.getY();
       final Point jtsPoint = (Point) JTSAdapter.export( location );
-      final Envelope searchEnv = new Envelope( x, x, y, y );
+      final Envelope searchEnv = jtsPoint.getEnvelopeInternal();
+        
       final List<TriangleData> list = triangles.query( searchEnv );
 
       if( list.isEmpty() )

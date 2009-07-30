@@ -121,19 +121,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
       return false;
     }
     else
-    {
-      if( polygon.contains( point ) )
-      {
-        return true;
-      }
-      else
-      {
-        // also look on the exterior ring since polygon.contains()
-        // seems not to return true
-        // System.out.println("point:"+point+ " "+ring.contains( point ));
-        return ring.contains( point );
-      }
-    }
+      return polygon.intersects( point );
   }
 
   public double getCenterElevation( )
