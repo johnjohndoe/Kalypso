@@ -1,4 +1,4 @@
-C     Last change:  MD   13 Jul 2009    4:49 pm
+C     Last change:  MD   30 Jul 2009    1:59 pm
 cipk last update JUNE 5 2006  add test marshing
 cipk last update MAY 30 2006  add test for zero thickness and correct NL
 cipk last update dec 21 2004 fix bug getting node at bed for averaging
@@ -63,10 +63,10 @@ CIPKSEP05
           SS(J)=SSND(N,J)
 
           !MD:NEUE Berechnung der Trocken-Rohdichte Sus [kg/m3]
-          GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+          !MD: use bulk densitiy per Layer
+          !MD: GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+          GADND(N,J)=(GBND(N,J)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
           GAD(J)=GADND(N,J)
-          !MD:NEUE Berechnung der Trocken-Rohdichte Sus [kg/m3]
-
           EROSTM(J)=EROST(N,J)
         ENDDO
                 
