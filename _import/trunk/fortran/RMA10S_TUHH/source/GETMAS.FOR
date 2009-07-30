@@ -1,4 +1,4 @@
-C     Last change:  MD   13 Jan 2009   12:24 pm
+C     Last change:  MD   30 Jul 2009    1:59 pm
 CIPK LAST UPDATE SEP 05 2006 REVISE MASS COMPUTATION
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF. AND INITIAL MASS 
       SUBROUTINE GETMAS
@@ -43,13 +43,15 @@ C
          IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
          NLAYT=NLAYTND(N)
          DO J=1,NLAYT
-           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
-           GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+           !MD: NEUE Berechnung der Trocken-Rohdichte JE Sus.[kg/m3]
+           !MD: use bulk densitiy per Layer
+           !MD: GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+           GADND(N,J)=(GBND(N,J)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
            GAD(J)=GADND(N,J)
            !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
          ENDDO
          GAC=GACND(N)
-         GAB=GABND(N)
+         !MD: GAB=GABND(N) use per Layer
          !MD NEU Berechnung der Suspensionsdichte
          IF (VEL(6,N).ge.0.) THEN
            GAWND(N)=(VEL(6,N)/1000.)*(1.-ROAVG/GACND(N)) + ROAVG
