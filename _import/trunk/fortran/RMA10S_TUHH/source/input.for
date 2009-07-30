@@ -92,7 +92,7 @@ CIPK  LAST UPDATED SEP 19 1995
       type (arc), pointer :: arc1D
       real (kind = 8) :: arcVec (1:2)
       type (contiLine), pointer :: tmp_contiLines (:)
-      type (contiLine), pointer :: tmp_singleCCL
+      type (contiLine), pointer :: tmp_singleCCL, tmp_ccl
       integer (kind = 4) :: i
       integer (kind = 4) :: elt
       
@@ -1262,7 +1262,7 @@ C-
             ! BUILDING PROFILES OUT OF CONTILINES OR JOINING BOTH.             
             ! LOOKING FOR CORRESPONDING PROFILE ASSOCIATED TO THE CURRENT CONTILINE.
             !  FE NODE COORDINATES HAVE NOT BEEN YET PROPERLY ASSIGNED TO CONTILINE HERE!!!!!!!!              
-              if (inputLine(1:3) == 'PRF') then
+      PRFID:if (inputLine(1:3) == 'PRF') then
                ! IF BANKEVOLUTION HAS NOT BEEN ACTIVATED AT THE BEGINNIG, WHILE NO PROFILE DATA
                ! IS AVAILABLE THEN ACTIVATE IT HERE FOR THE CASE THAT CONTILINES ARE THEMSELVES
                ! BANK PROFILES.
@@ -1272,7 +1272,7 @@ C-
                 read (inputLine(4:), *)ProfileID
                ! tmp_singleCCL.ProifileID => ProfileIDD
                
-                IF ( ProfileID > 0 ) THEN
+            ID0:IF ( ProfileID > 0 ) THEN
                
                  tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileID)
                  BANKPROFILES(ProfileID).CL_NUMBER = i
@@ -1307,53 +1307,60 @@ C-
                 !read next line
    !             read (filecontrol.lin.unit, '(a)') inputLine   ! MOVE IT TO BETWEEN THE LAST TWO END IF IN THIS BLOCK
   !            endif
-            write (*,*) 'ProfileID= ',ProfileId, 'lmt(i) =', lmt(i)
+                  write (*,*) 'ProfileID= ',ProfileId, 'lmt(i) =',lmt(i)
       !      pause
             !-------------------------------------------------------------------------
             ! HN JUNE2009, TEST OF PROFILE READING ------     
   !        if (profileId >0) then  
-          WRITE (276,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,
+                  WRITE (276,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,
      +                  tmp_singleCCL.MorphoProfile.cl_number, 
-     +                     tmp_singleCCL.MorphoProfile.max_nodes,
-     +                     tmp_singleCCL.HasProfile
-            WRITE (*,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,
-     +                     tmp_singleCCL.MorphoProfile.cl_number, 
-     +                     tmp_singleCCL.MorphoProfile.max_nodes,
-     +                     tmp_singleCCL.HasProfile
+     +                  tmp_singleCCL.MorphoProfile.max_nodes,
+     +                  tmp_singleCCL.HasProfile
+                 WRITE (*,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,
+     +                  tmp_singleCCL.MorphoProfile.cl_number, 
+     +                  tmp_singleCCL.MorphoProfile.max_nodes,
+     +                  tmp_singleCCL.HasProfile
 
-          do j =1,lmt(i)
-         WRITE (276,1013)  
-     +           tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,
-     +           tmp_singleCCL.MorphoProfile.prnode(j).distance,
-     +           tmp_singleCCL.MorphoProfile.prnode(j).elevation,
-     +           tmp_singleCCL.MorphoProfile.prnode(j).attribute
- 1013    format (1X,I6,3X, 2(F8.4,3X), A9) 
-         WRITE (*,1013)  
-     +           tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,
-     +           tmp_singleCCL.MorphoProfile.prnode(j).distance,
-     +           tmp_singleCCL.MorphoProfile.prnode(j).elevation,
-     +           tmp_singleCCL.MorphoProfile.prnode(j).attribute
+                   do j =1,lmt(i)
+                    WRITE (276,1013)  
+     +              tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,
+     +              tmp_singleCCL.MorphoProfile.prnode(j).distance,
+     +              tmp_singleCCL.MorphoProfile.prnode(j).elevation,
+     +              tmp_singleCCL.MorphoProfile.prnode(j).attribute
+ 1013               format (1X,I6,3X, 2(F8.4,3X), A9) 
+                    WRITE (*,1013)  
+     +              tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,
+     +              tmp_singleCCL.MorphoProfile.prnode(j).distance,
+     +              tmp_singleCCL.MorphoProfile.prnode(j).elevation,
+     +              tmp_singleCCL.MorphoProfile.prnode(j).attribute
       
-          enddo  
-      end if
-      read (filecontrol.lin.unit, '(a)') inputLine
-      end if
+                   enddo
+      
+                ELSEIF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN    ID0 
+                  ProfileCounter = ProfileCounter + 1             ! counting profiles when all PRF = 0,and 
+                END IF   ID0                                      ! there is no profile data file.
+      
+               read (filecontrol.lin.unit, '(a)') inputLine
+      
+            END IF PRFID
             !-------------------------------------------------------------------------
             !HN JUNE2009, END OF TEST OF PROFILE READING ------     
            
             ENDDO all_CL
           close (276)  !HN, May2009
-          !The bankprofile allocation should come here in the  case of ProfileId= 0 and bankevolution = .TRUE.
- !         if (ProfileID ==0 .and. BANKEVOLUTION) then  
-  !          IF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN
-   !           ALLOCATE (BANKPROFILES ( ProfileCounter),stat=ISTAT )
-    !          IF (ISTAT/=0) THEN
-!                WRITE (*,*) 'FAILURE BY ALLOCATION OF PROFILE ARRAY IN 
- !    +                            SUBROUTINE INPUT....'
-  !              stop
-   !           END IF
-
-    !        ENDIF         
+          !The bankprofile allocation should come here in the  case of ProfileId= 0 (for all CCL)and bankevolution = .TRUE.
+   !       if (ProfileID ==0 .and. BANKEVOLUTION) then  
+   !         IF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN
+          IF( (BANKEVOLUTION).AND.(.NOT.ALLOCATED(BANKPROFILES) ) )THEN
+              ALLOCATE (BANKPROFILES ( ProfileCounter),stat=ISTAT )
+              ProfileCounter = 1                 ! To be used later(after getcoords loop) as counter for profiles with ID=0
+              IF (ISTAT/=0) THEN
+                WRITE (*,*) 'FAILURE BY ALLOCATION OF PROFILE ARRAY IN 
+     +                            SUBROUTINE INPUT....'
+                stop
+              END IF
+           
+            ENDIF         
     !      endif
             IF(inputLine(1:3)=='ECL') THEN
               write ( *,6901)
@@ -1504,24 +1511,26 @@ C-
  !-------------------------------------------------------------------------------     
       ! HN JUNE2009. HERE IS THE FIRST PLACE THAT COORDINATES HAVE BEEN ASSIAGNED TO CORNER NODES IN CONTILINES.
  !        IF ( ProfileID == 0 ) THEN
-         IF ( bankevolution ) THEN
+        IF ( bankevolution ) THEN
   ! TEST TEST TEST TEST 
-        OPEN( UNIT =276 , FILE = 'PROFILE_CONTI.TXT', STATUS ='OLD',
+         OPEN( UNIT =276 , FILE = 'PROFILE_CONTI.TXT', STATUS ='OLD',
      +   ACTION ='WRITE', POSITION = 'APPEND')
   ! TEST TEST TEST TEST 
-          do n = 1, ncl
+          DO n = 1, ncl
          
   !         if (ccls(n).HasProfile ) then
-           if( (ccls(n).HasProfile).AND.
-     +          (.NOT. associated( ccls(n).MorphoProfile)) ) then
-             tmp_singleCCL => ccls(n)
-               write (*,*) 'CCL ', n, 'lmt(n) ', lmt(n)
-               write (*,*) ' entering into makeprofile subroutine...'
-               CALL MAKEPROFILE (tmp_singleCCL,lmt(n),
+           IF( (ccls(n).HasProfile).AND.
+     +          (.NOT. associated( ccls(n).MorphoProfile)) ) THEN
+    !        tmp_singleCCL => ccls(n)
+             tmp_CCL => ccls(n)
+             write (*,*) 'CCL ', n, 'lmt(n) ', lmt(n)
+             write (*,*) ' entering into makeprofile subroutine...'
+  !           CALL MAKEPROFILE (tmp_singleCCL,lmt(n),
+             CALL MAKEPROFILE (tmp_CCL,lmt(n),
      +                          BANKPROFILES( ProfileCounter ),.FALSE. )
-              tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileCounter)
-              BANKPROFILES(ProfileCounter).CL_number = n
-              ProfileCounter = ProfileCounter + 1
+             tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileCounter)
+             BANKPROFILES(ProfileCounter).CL_number = n
+             ProfileCounter = ProfileCounter + 1
            END IF
   ! TEST TEST TEST TEST 
            nextnode => CCLs(n).firstnode
@@ -1531,14 +1540,17 @@ C-
      +                        +  ( NextNode.ThisNode.cord (2) -     
      +                        CCLs(n).FirstNode.ThisNode.cord (2) )**2 )
 
-         write (276,*) nextnode.thisnode.ID, distt, Nextnode.thisnode.ao
-           nextnode =>nextnode.next
+             write (276,5999) nextnode.thisnode.ID,
+     +        NextNode.ThisNode.cord (1)
+     +       ,NextNode.ThisNode.cord (2), distt, Nextnode.thisnode.ao
+5999         Format (I5,2(2x,F12.4),2(2x,F7.4)) 
+             nextnode =>nextnode.next
            end do
              
   ! TEST TEST TEST TEST 
           END DO
-         close (276)
-         END IF
+         CLOSE (276)
+        END IF
          
   !       pause
 !-----------------------------------------------------------------------------------
