@@ -1,4 +1,4 @@
-C     Last change:  MD   14 Jul 2009    1:34 pm
+C     Last change:  MD   30 Jul 2009    2:11 pm
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF.
 CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
 CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
@@ -59,7 +59,7 @@ CIPKSEP05
           TLAY(J)=TLAYND(N,J)
         ENDDO
         GAC=GACND(N)
-        GAB=GABND(N)
+        !MD: GAB=GABND(N) use per Layer
         !MD: NEU mit berechneter Suspensionsdichte aus SPROP
         GAW=GAWND(N)
         TAUCD=TAUCDND(N)
@@ -235,7 +235,7 @@ C       CONCO(I)=CONC(I)
         BEDEL(N)=BEDELO(N)
   400 CONTINUE
       
-      WRITE(LOUT,77)
+!MD:      WRITE(LOUT,77)
 
 C*********************************************************************
 C     PRINT THE BED SHEAR ,ER/DEP RATES AND ELEVATIONS.
@@ -341,29 +341,29 @@ cipk apr97 add option
       iprtf = nprtf
       if (iprtf == 0) iprtf = 1
 
-      !MD: Abfrage zur Ausgabe:
-      !MD: Geaendert, da anschlieﬂend noch Berechnungen!!
-      !MD:   IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) RETURN
-      IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) THEN
-crrr aug97 revise print format and structure
-        WRITE(LINE256,'(A)')
-     &  '  Node Bed Shear Bed-elev   SedMass  SumLayer
-     + SusLayer-Thickness (mm)'
-        IDX = MAX(65,47+NLAYT*10) + 3
-
-        IF (NLAYO(1) .GT. 0) THEN
-          WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
-        ENDIF
-        WRITE(LOUT,'(/A)') LINE256(1:IDX+26)
-
-        WRITE(LINE256,'(A,12I10)')
-     & '          (N/m2)    (m)       (Kg/m2)   (mm) ',
-     &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
-        WRITE(LOUT,'(A)') LINE256
-
-      ENDIF
-      !MD: Geaendert mit Ausgabe
-
+!MD: Output is deactivated, because results are already written into BED-File
+!MD      !MD: Abfrage zur Ausgabe:
+!MD      !MD: Geaendert, da anschlieﬂend noch Berechnungen!!
+!MD      !MD:   IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) RETURN
+!MD      IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) THEN
+!MD        WRITE(LINE256,'(A)')
+!MD     &  '  Node Bed Shear Bed-elev   SedMass  SumLayer
+!MD     + SusLayer-Thickness (mm)'
+!MD        IDX = MAX(65,47+NLAYT*10) + 3
+!MD
+!MD        IF (NLAYO(1) .GT. 0) THEN
+!MD          WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
+!MD        ENDIF
+!MD        WRITE(LOUT,'(/A)') LINE256(1:IDX+26)
+!MD
+!MD        WRITE(LINE256,'(A,12I10)')
+!MD     & '          (N/m2)    (m)       (Kg/m2)   (mm) ',
+!MD     &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
+!MD        WRITE(LOUT,'(A)') LINE256
+!MD
+!MD      ENDIF
+!MD      !MD: Geaendert mit Ausgabe
+!MD: Output is deactivated, because results are already written into BED-File
 
       INT = (NP+5)/6
       MLAYRS = MIN(NLAYT,5)
@@ -375,14 +375,16 @@ CIPKSEP05
          NLAYT=NLAYTND(N)
          DO J=1,NLAYT
            SS(J)=SSND(N,J)
-           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
-           GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+           !MD: NEUE Berechnung der Trocken-Rohdichte JE Sus.[kg/m3]
+           !MD: use bulk densitiy per Layer
+           !MD: GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+           GADND(N,J)=(GBND(N,J)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
            GAD(J)=GADND(N,J)
            !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
            TLAY(J)=TLAYND(N,J)
          ENDDO
          GAC=GACND(N)
-         GAB=GABND(N)
+         !MD: GAB=GABND(N) use per Layer
 
          !MD NEU Berechnung der Suspensionsdichte
          IF (VEL(6,N).ge.0.) THEN
@@ -427,11 +429,11 @@ cipk jan99         ENDIF
          IF (NLAYT .GT. 0 .OR. NLAYO(NN) .GT. 0) THEN
 c             SUMTHICK = BEDEL(N) - AO(N)
              MLAYRS = NLAY(NN)
-             WRITE(LOUT,'(I5,F10.4,F10.6, F10.2, 20F10.3)')
-     &          NN, BSHEAR(NN), AO(NN),TVN, SUMTHICK*1000.,
-     &             (1000. * THICK(NN,L),L=1,NLAYT),
-     &             (1000. * THICKO(NN,L),L=1,NLAYO(NN))
-         ENDIF
+!MD             WRITE(LOUT,'(I5,F10.4,F10.6, F10.2, 20F10.3)')
+!MD     &          NN, BSHEAR(NN), AO(NN),TVN, SUMTHICK*1000.,
+!MD     &             (1000. * THICK(NN,L),L=1,NLAYT),
+!MD     &             (1000. * THICKO(NN,L),L=1,NLAYO(NN))
+        ENDIF
    75 CONTINUE
 
 C
@@ -465,9 +467,9 @@ c        ENDIF
 c      ENDDO
 crrr aug97 end changes to output
 
-   77 FORMAT(////11X,40HBED SHEARS AND BED PROFILE .............//)
-   80 FORMAT(1X,'NODE',5X,'BED SHEAR',5X,'BOT.ELEV',5X,'BED CHANGE',4X
-     1,'MASS ER. RATE',3X,'SURF. ER. ',3X,'DEP. RATE',4X,'ER/DEP MASS')
+!MD   77 FORMAT(////11X,40HBED SHEARS AND BED PROFILE .............//)
+!MD   80 FORMAT(1X,'NODE',5X,'BED SHEAR',5X,'BOT.ELEV',5X,'BED CHANGE',4X
+!MD     1,'MASS ER. RATE',3X,'SURF. ER. ',3X,'DEP. RATE',4X,'ER/DEP MASS')
 
 !MD:   82 FORMAT(I5,1P7E14.3)
 !MD:   83 FORMAT(1H1,///' BED LAYER PROPERTIES....'//)
