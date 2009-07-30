@@ -1317,4 +1317,12 @@ new features introduced/ started to be introduced:
 113.) Middling all Sediment and Layer attributes at midside-nodes for suspended and bed layers
       was prepared. At midside-nodes the minimal Number of Layers must be used, in order to 
       avoid averaging with dummys.                                             
-      >> SubR SPRPOP, BED                                      
+      >> SubR SPRPOP, BED  
+
+
+-------- M.Hassan Nasermoaddeli, 30.07.2009                                    
+114.) Correcting the reading of bank profiles , when there is no profile data file (meaning that 
+      each CCL line with PRF ID itself is a bank profile). Now all cases (all PRF = 0, all PRF /=0
+      and a mix of these two case) should work.
+      >> SubR INPUT
+ 
