@@ -1,4 +1,4 @@
-C     Last change:  MD   13 Jul 2009    4:54 pm
+C     Last change:  MD   30 Jul 2009    1:50 pm
 cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -64,14 +64,15 @@ CIPKSEP05
           DO J=1,NLAYT
             SS(J)=SSND(N,J)
 
-            !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
-            GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+            !MD: NEUE Berechnung der Trocken-Rohdichte JE Sus.[kg/m3]
+            !MD: use bulk densitiy per Layer
+            !MD: GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+            GADND(N,J)=(GBND(N,J)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
             GAD(J)=GADND(N,J)
-            !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
           ENDDO
-          ERC=ERCND(N)
+          !MD: ERC=ERCND(N) use per Layer
           GAC=GACND(N)
-          GAB=GABND(N)
+          !MD: GAB=GABND(N) use per Layer
 
           !MD NEU Berechnung der Suspensionsdichte
           IF (VEL(6,N).ge.0.) THEN
@@ -115,7 +116,10 @@ cipk jan99 change thick from nn to n
          IF (THICK(N,NLAYT) .GT. 0.) THEN
             IF (BSHEAR(NN) .LT. SS(NLAYT)) GO TO 500
 cipk mar06            
-            seratnewl= ERC*(BSHEAR(NN)/SS(NLAYT)-1.)
+            !MD: seratnewl= ERC*(BSHEAR(NN)/SS(NLAYT)-1.)
+            !MD: erosionrate per Layer
+            Seratnewl= EROST(NN,NLAYT) *(BSHEAR(NN)/SS(NLAYT)-1.)
+
             !MD   INDC = 1  :never used!!
             TMERODE = SERATNEWL*DELT
             DTHK = TMERODE/GAD(NLAYT)
