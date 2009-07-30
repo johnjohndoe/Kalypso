@@ -466,7 +466,7 @@ public class Control1D2DConverter
     formatter.format( "com %s%n", dashes ); //$NON-NLS-1$
 
     final long timeStepInterval;
-    final double timeStepHours;
+    final double timeStepMinutes;
     final int year;
     final int dayOfYear;
     final double ihre;
@@ -494,7 +494,7 @@ public class Control1D2DConverter
         return;
       }
 
-      timeStepHours = (double) timeStepInterval / (60 * 60 * 1000);
+      timeStepMinutes = (double) timeStepInterval / (60 * 1000);
       ihre = getTimeInPercentage( kalypsoCalendarStep );
     }
     // steady don´t need startdate
@@ -503,11 +503,11 @@ public class Control1D2DConverter
       kalypsoCalendarStep = null;
       dayOfYear = 0;
       year = 0;
-      timeStepHours = 0;
+      timeStepMinutes = 0;
       ihre = 0;
     }
 
-    formatter.format( "DT%14.5f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre ); //$NON-NLS-1$
+    formatter.format( "DT MIN%18.8f%8d%8d%8.2f", timeStepMinutes, year, dayOfYear, ihre ); //$NON-NLS-1$
 
     // BC lines
     if( niti == 0 )
@@ -644,7 +644,7 @@ public class Control1D2DConverter
               boundaryCondition.setHasDirection( true );
 
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "QCFF%12d%8d%16.3e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+            formatter.format( "QC *%12d%8d%16.3e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
