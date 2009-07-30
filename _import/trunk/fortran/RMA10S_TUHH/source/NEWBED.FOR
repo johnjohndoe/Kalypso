@@ -1,3 +1,4 @@
+C     Last change:  MD   30 Jul 2009    2:00 pm
 cipk last update jan 11 2007 allow for 5 node transition elements
 CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
 CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
@@ -55,14 +56,14 @@ CIPKSEP05
           SS(J)=SSND(N,J)
 
           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
-          GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+          !MD: use bulk densitiy per Layer
+          !MD: GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+          GADND(N,J)=(GBND(N,J)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
           GAD(J)=GADND(N,J)
-          !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
-
           TLAY(J)=TLAYND(N,J)
         ENDDO
         GAC=GACND(N)
-        GAB=GABND(N)
+        !MD: GAB=GABND(N) use per Layer
 
         !MD NEU Berechnung der Suspensionsdichte
         IF (VEL(6,N).ge.0.) THEN
@@ -460,15 +461,14 @@ CIPKSEP05
          DO J=1,NLAYT
            SS(J)=SSND(N,J)
 
-           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
-           GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+           !MD: use bulk densitiy per Layer
+           !MD: GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+           GADND(N,J)=(GBND(N,J)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
            GAD(J)=GADND(N,J)
-           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
-
            TLAY(J)=TLAYND(N,J)
          ENDDO
          GAC=GACND(N)
-         GAB=GABND(N)
+         !MD: GAB=GABND(N) use per Layer
 
          !MD NEU Berechnung der Suspensionsdichte
          IF (VEL(6,N).ge.0.) THEN
