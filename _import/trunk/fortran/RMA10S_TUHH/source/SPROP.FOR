@@ -1,4 +1,4 @@
-C     Last change:  MD   13 Jul 2009    5:26 pm
+C     Last change:  MD   30 Jul 2009    2:04 pm
 CIPK  LAST UPDATE APR 20 2006 ADD INPUT OPTION FOR TLAYM
 CIPK  LAST UPDATE NOV 19 1997
 crrr  last update Aug 30 1997 test for max number of layers
@@ -318,28 +318,28 @@ CIPK MAY06   ADD EROSTM
 
 !MD: neu fuer alle Mittseiten-Knoten
 !MD--------------------------------------
-!MD      DO N=1,NPM
-!MD        IF(IMID(N,1) .GT. 0) THEN
-!MD          NN = N
-!MD          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
-!MD          NLAYTND(NN)=MIN(NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2)))
-!MD          TAUCDND(NN)=(TAUCDND(IMID(NN,1))+TAUCDND(IMID(NN,2)))/2.
-!MD          UNND(NN)=(UNND(IMID(NN,1))+UNND(IMID(NN,2)))/2.
-!MD          GABND(NN)=(GABND(IMID(NN,1))+GABND(IMID(NN,2)))/2.
-!MD          TTLAYND(NN)=MIN(TTLAYND(IMID(NN,1)),TTLAYND(IMID(NN,2)))
-!MD          GACND(NN)=(GACND(IMID(NN,1))+GACND(IMID(NN,2)))/2.
-!MD          WEGTND(NN)=(WEGTND(IMID(NN,1))+WEGTND(IMID(NN,2)))/2.
-!MD          ERCND(NN)=(ERCND(IMID(NN,1))+ERCND(IMID(NN,2)))/2.
-!MD          GAWND(NN)=(GAWND(IMID(NN,1))+GAWND(IMID(NN,2)))/2.
-!MD          DO K=1,NLAYTND(NN)
-!MD            SSND(NN,K)  =  (SSND(IMID(NN,1),K) + SSND(IMID(NN,2),K))/2.
-!MD            GBND(NN,K)  =  (GBND(IMID(NN,1),K) + GBND(IMID(NN,2),K))/2.
-!MD            TLAYND(NN,K)=(TLAYND(IMID(NN,1),K)+TLAYND(IMID(NN,2),K))/2.
-!MD            GADND(NN,K) = (GADND(IMID(NN,1),K) +GADND(IMID(NN,2),K))/2.
-!MD            EROST(NN,K) = (EROST(IMID(NN,1),K) +EROST(IMID(NN,2),K))/2.
-!MD          ENDDO
-!MD        ENDIF
-!MD      ENDDO
+      DO N=1,NPM
+        IF(IMID(N,1) .GT. 0) THEN
+          NN = N
+          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          NLAYTND(NN)=MIN(NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2)))
+          TAUCDND(NN)=(TAUCDND(IMID(NN,1))+TAUCDND(IMID(NN,2)))/2.
+          UNND(NN)=(UNND(IMID(NN,1))+UNND(IMID(NN,2)))/2.
+          GABND(NN)=(GABND(IMID(NN,1))+GABND(IMID(NN,2)))/2.
+          TTLAYND(NN)=MIN(TTLAYND(IMID(NN,1)),TTLAYND(IMID(NN,2)))
+          GACND(NN)=(GACND(IMID(NN,1))+GACND(IMID(NN,2)))/2.
+          WEGTND(NN)=(WEGTND(IMID(NN,1))+WEGTND(IMID(NN,2)))/2.
+          ERCND(NN)=(ERCND(IMID(NN,1))+ERCND(IMID(NN,2)))/2.
+          GAWND(NN)=(GAWND(IMID(NN,1))+GAWND(IMID(NN,2)))/2.
+          DO K=1,NLAYTND(NN)
+            SSND(NN,K)  =  (SSND(IMID(NN,1),K) + SSND(IMID(NN,2),K))/2.
+            GBND(NN,K)  =  (GBND(IMID(NN,1),K) + GBND(IMID(NN,2),K))/2.
+            TLAYND(NN,K)=(TLAYND(IMID(NN,1),K)+TLAYND(IMID(NN,2),K))/2.
+            GADND(NN,K) = (GADND(IMID(NN,1),K) +GADND(IMID(NN,2),K))/2.
+            EROST(NN,K) = (EROST(IMID(NN,1),K) +EROST(IMID(NN,2),K))/2.
+          ENDDO
+        ENDIF
+      ENDDO
 !MD: neu fuer alle Mittseiten-Knoten
 !MD--------------------------------------
 
