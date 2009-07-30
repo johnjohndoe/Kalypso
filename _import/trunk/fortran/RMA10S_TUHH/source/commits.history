@@ -1150,10 +1150,10 @@ new features introduced/ started to be introduced:
         
 086.) Middling Sediment and Layer attributes at midside-nodes for suspended and bed layers
       was prepared. At midside-nodes the minimal (!!) Number of Layers must be used, in order to 
-      avoid averaging with dummys. 
+      avoid averaging with dummys.                          
       Look at:  NLAYTND(NN)= MIN (NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2))) 
-      All MAX(...) arguments were changed to MIN(...)                
-      >> SubR FORMBED, SEROSN, MERSON, SPRPOP, BED
+      All MAX(...) arguments were changed to MIN(...)                      
+      >> SubR FORMBED, SEROSN, MERSON, SPRPOP, BED                         
                  
 087.) NEW OPTIONS for all Boundary-Conditions:
       Now fast definitions for 'BC'-Blocs in the CONTROL-Data is Possible. For the 
@@ -1301,4 +1301,20 @@ new features introduced/ started to be introduced:
        >> MODULE AVALANCHE_MODUL 
         
                               
-                                
+--- Monika Donner, 30.07.2009 
+111.) Error while using wet Bulk density and Erosion Rate for suspended Layer erosion.
+      User defined Parameters for EACH Layer should be used:
+      Defined wet Bulk density GABND(N) and Erosion Rate ERCND(N) per Node in Control-file 
+      Line "CSS3" is now no more used. But the defined Sus.Layer attributes in in Control-file 
+      Line "CSS4" with wet Bulk density GBND(N,L) and Erosion Rate EROST(N,L) per Node and 
+      Suspended Layer are used.                             
+      >> SubR FORMBED, SEROSN, MERSON, GETMAS, NEWBED
+      
+112.) Output form FORMBED with all Layers at each Node is deactivated, because all
+      informations are written now into each BED-File.                                     
+      >> SubR FORMBED
+      
+113.) Middling all Sediment and Layer attributes at midside-nodes for suspended and bed layers
+      was prepared. At midside-nodes the minimal Number of Layers must be used, in order to 
+      avoid averaging with dummys.                                             
+      >> SubR SPRPOP, BED                                      
