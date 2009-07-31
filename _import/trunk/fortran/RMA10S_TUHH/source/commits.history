@@ -1325,4 +1325,9 @@ new features introduced/ started to be introduced:
       each CCL line with PRF ID itself is a bank profile). Now all cases (all PRF = 0, all PRF /=0
       and a mix of these two case) should work.
       >> SubR INPUT
- 
+
+-------- M.Hassan Nasermoaddeli, 30.07.2009 
+115.) A bug was fixed when producing midside nodes for Conuity lines . After finishing the creation
+      of midside nodes for each Continuity line, the varaible tmpSeg should be nullified. Now it is
+      done by satring reading each continuiy line. (NULLIFY (tmpSeg))
+      >> SubR CHECK
