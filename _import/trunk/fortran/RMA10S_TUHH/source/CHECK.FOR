@@ -75,7 +75,7 @@ C-
       DO 125 J = 1, NCL
         !assign continuity line
         tmpContiLine => ccls(j)
-
+        NULlIFY (tmpSeg)
         M = LMT(J)
 cipk feb01  skip out for zero lines
         !nis,sep06,com: Cycle loop, if CCL has no node
