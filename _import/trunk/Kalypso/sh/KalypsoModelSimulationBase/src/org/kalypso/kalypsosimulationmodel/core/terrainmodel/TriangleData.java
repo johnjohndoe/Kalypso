@@ -69,7 +69,9 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   private final Polygon polygon;
 
-  private final double[] planeEquation;
+//  private final double[] planeEquation;
+  private final double[] relativePlaneEquation;
+  
 
   private final double centerElevation;
 
@@ -85,7 +87,8 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
     this.ring = ring;
     polygon = new Polygon( ring, null, ring.getFactory() );
     final Coordinate[] coords = ring.getCoordinates();
-    planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
+//    planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
+    relativePlaneEquation = JTSUtilities.calculateRelativeTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
 
     final GM_Position pos1 = JTSAdapter.wrap( ring.getCoordinateN( 0 ) );
@@ -208,7 +211,10 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public double computeZOfTrianglePlanePoint( final double x, final double y )
   {
-    return JTSUtilities.calculateTriangleZ( planeEquation, x, y );
+    final Coordinate[] coords = ring.getCoordinates();
+
+    // use relative plane equation and relative coords 
+    return JTSUtilities.calculateTriangleZ( relativePlaneEquation, x - coords[0].x , y - coords[0].y );
   }
 
   public LinearRing getRing( )
