@@ -43,6 +43,8 @@ package org.kalypso.convert.namodel.hydrotope;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -225,7 +227,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
               hydrotopeSudsCollection.add( lnk );
-              
+
               final Feature sudFeature = ((XLinkedFeature_Impl) feature).getFeature();
               if( sudFeature instanceof Swale || sudFeature instanceof SwaleInfiltrationDitch )
                 hydrotop.setHydrotopType( HYDROTOP_TYPE.MULDEN_RIGOLE );
@@ -302,7 +304,20 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           {
             m_outputList.removeAll( featuresToMergeWith );
             geometriesToMergeWith.add( geometry );
-            final Geometry union = new GeometryFactory().createGeometryCollection( geometriesToMergeWith.toArray( new Geometry[] {} ) ).buffer( 0.0 );
+
+            Geometry union = null;
+            try
+            {
+              union = new GeometryFactory().createGeometryCollection( GeometryFactory.toGeometryArray( geometriesToMergeWith ) ).buffer( 0.0 );
+            }
+            catch( final Exception e )
+            {
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, e.getLocalizedMessage() );
+              union = geometry;
+              for( int i = 0; i < geometriesToMergeWith.size() - 1; i++ )
+                union = union.union( geometriesToMergeWith.get( i ) );
+            }
+
             final GM_Object newGeometry = JTSAdapter.wrap( union );
             if( newGeometry instanceof GM_MultiSurface )
               hydrotop.setGeometry( (GM_MultiSurface) newGeometry );
