@@ -118,7 +118,7 @@ public class HydrotopManager extends AbstractManager
       final Feature linkedSealingFE = parameterWorkspace.resolveLink( landuseFE, rt );
       final Double sealingRate = (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
       final String landuseName = landuseFE.getName();
-      if( !m_landuseSealingRateMap.containsKey( landuseName ) )
+      if( m_landuseSealingRateMap.containsKey( landuseName ) )
         m_conf.getLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0" ), landuseName ) ); //$NON-NLS-1$
       else
         m_landuseSealingRateMap.put( landuseName, sealingRate );
