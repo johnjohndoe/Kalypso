@@ -1033,7 +1033,7 @@ public class CreateChannelData
       return null;
 
     if( m_segmentList.size() < selection )
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit..CreateChannelData.0") ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.11") ); //$NON-NLS-1$
 
     return m_segmentList.get( selection );
   }

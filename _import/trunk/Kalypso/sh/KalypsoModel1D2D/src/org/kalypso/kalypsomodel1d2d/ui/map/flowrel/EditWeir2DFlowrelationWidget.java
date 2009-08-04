@@ -122,9 +122,9 @@ public class EditWeir2DFlowrelationWidget extends AbstractWidget
 //  }
   public EditWeir2DFlowrelationWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.0"), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.4" ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.0"), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.1" ) );
     
-    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.4" ) ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter2dWidget.1" ) ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
