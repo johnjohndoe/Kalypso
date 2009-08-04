@@ -194,17 +194,18 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     // REMARK: we save the result DB, even if deletion fails; in doubt, the new results will just overwrite the old ones
 
     /* Save result DB */
-    try
-    {
-      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
-    }
-    catch( final InvocationTargetException e )
-    {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.9"), e.getTargetException() ) ); //$NON-NLS-1$
-    }
-
-    m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 5 ) );
-
+    
+    // REMARL: Saving in between causes sometimes, that results are not moved to the ScenarioResultMeta.gml.
+    // try
+    // {
+    //      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
+    // }
+    // catch( final InvocationTargetException e )
+    // {
+    //      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.9" ), e.getTargetException() ) ); //$NON-NLS-1$
+    // }
+    //
+    // m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 5 ) );
     return result;
   }
 
