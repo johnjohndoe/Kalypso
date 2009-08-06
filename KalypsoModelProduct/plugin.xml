@@ -59,7 +59,7 @@
             id="org.kalypso.model.product.intro">
       </intro>
       <introProductBinding
-            introId="org.kalypso.model.product.intro"
+            introId="org.kalypso.model.product.introID"
             productId="org.kalypso.planer.client.manager.product">
       </introProductBinding>
    </extension>
