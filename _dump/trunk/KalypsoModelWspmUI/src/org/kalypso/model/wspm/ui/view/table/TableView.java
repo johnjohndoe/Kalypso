@@ -74,7 +74,6 @@ import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -87,14 +86,11 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultTableViewer;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
@@ -357,11 +353,15 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     m_view.setLabelProvider( m_tupleResultLabelProvider );
     m_view.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
 
-    final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
-    if( obsFeatures.length > 0 )
-      m_view.setInput( m_profile.getResult() );
-    else
-      m_view.setInput( null );
+    // TODO needed? - if an result is empty -> null will be automatically returned
+    // final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType(
+    // KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
+    // if( obsFeatures.length > 0 )
+    // m_view.setInput( m_profile.getResult() );
+    // else
+    // m_view.setInput( null );
+
+    m_view.setInput( m_profile.getResult() );
     m_form.setMessage( null );
 
     m_view.getControl().getParent().layout();
