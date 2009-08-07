@@ -88,7 +88,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
   private Composite m_contentClient;
 
-  private IKalypsoModule m_selectedModule;
+  private static IKalypsoModule m_selectedModule = null;
 
   protected ScrolledForm m_form;
 
