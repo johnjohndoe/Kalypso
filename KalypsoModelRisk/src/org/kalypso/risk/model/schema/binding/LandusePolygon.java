@@ -3,8 +3,8 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.cheffo.jeplite.JEP;
 import org.kalypso.risk.i18n.Messages;
-import org.kalypso.risk.model.tools.functionParser.ParseFunction;
 import org.kalypso.risk.model.utils.RiskPolygonStatistics;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
@@ -14,7 +14,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class LandusePolygon extends AbstractFeatureBinder implements ILandusePolygon
-{ 
+{
   private long m_statisticsNumberOfRasterCells = 0;
 
   private double m_statisticsAverageAnnualDamage = 0.0;
@@ -29,25 +29,6 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public LandusePolygon( final Feature featureToBind )
   {
     super( featureToBind, QNAME );
-
-    // try
-    // {
-    // if( m_isUrbanLanduseType != null )
-    // if( m_isUrbanLanduseType )
-    // {
-    // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
-    // m_riskBorderMiddleHigh = 0.08 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
-    // }
-    // else
-    // {
-    // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
-    // m_riskBorderMiddleHigh = 0.03 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
-    // }
-    // }
-    // catch( Exception e )
-    // {
-    // e.printStackTrace();
-    // }
   }
 
   public void setGeometry( final GM_Surface< ? > surface )
@@ -92,26 +73,37 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public double getDamageValue( final double depth )
   {
-    final ParseFunction damageFunction = getDamageFunction();
+    final String damageFunctionProp = getDamageFunctionProp();
     final Double assetValue = getAssetValue();
 
-    if( damageFunction == null || assetValue == null )
+    if( assetValue == null || damageFunctionProp == null || getDamageFunctionProp().length() == 0 )
       return Double.NaN;
+
+    final JEP functionParser = new JEP();
+    functionParser.addStandardConstants();
+    functionParser.addStandardFunctions();
+    functionParser.addVariable( "x", depth );
 
     try
     {
       // the returned calculated damage value must not be greater than the input asset value!
       // So, the value of the damage function must be less than or equal '1', because there can be no greater damage
       // than the specified asset value!
-      double damagefunctionValue = damageFunction.getResult( depth ) / 100;
-
-      if( damagefunctionValue > 1 )
+      functionParser.parseExpression( damageFunctionProp );
+      double damagePercentage = functionParser.getValue();
+      if( damagePercentage < 0.0 )
+      {
+        return Double.NaN;
+      }
+      else if( damagePercentage > 100.0 )
       {
         KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        damagefunctionValue = 1.0;
+        return assetValue;
       }
-
-      return assetValue * damagefunctionValue;
+      else
+      {
+        return assetValue * damagePercentage / 100.0;
+      }
     }
     catch( final Exception e )
     {
@@ -155,32 +147,14 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     return m_statisticsAverageAnnualDamage;
   }
 
-  private Object getDamageFunctionProp( )
+  private String getDamageFunctionProp( )
   {
-    return getFeature().getProperty( ILandusePolygon.PROPERTY_DAMAGE_FUNCTION );
+    return (String) getFeature().getProperty( ILandusePolygon.PROPERTY_DAMAGE_FUNCTION );
   }
 
   private Object getAssetValueProp( )
   {
     return getFeature().getProperty( ILandusePolygon.PROPERTY_ASSET_VALUE );
-  }
-
-  private ParseFunction getDamageFunction( )
-  {
-    final Object damageFunctionProp = getDamageFunctionProp();
-
-    if( damageFunctionProp != null && getDamageFunctionProp() != "" ) //$NON-NLS-1$
-    {
-      final ParseFunction damageFunction = new ParseFunction( damageFunctionProp.toString() );
-
-      // check if function is parsable
-      if( !damageFunction.parse() )
-        throw new IllegalArgumentException( Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.5" ) + getDamageFunctionProp().toString() ); //$NON-NLS-1$
-      else
-        return damageFunction;
-    }
-    else
-      return null;
   }
 
   private Double getAssetValue( )
