@@ -116,11 +116,7 @@ contains
     !function type
     type (linkedDiscreteFunction), pointer :: findQCurveByQ
     !arguments
-
-    !MD: Error while compiling : no intent(in) defintion possible
     type (discreteFunctionGroup), pointer :: QCurves
-    !MD: Error while compiling : no intent(in) defintion possible
-
     real (kind = 8), intent (in) :: Q
     !local variables
     type (linkedDiscreteFunction), pointer :: tmpFun => null()
