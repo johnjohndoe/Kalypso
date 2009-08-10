@@ -1,10 +1,17 @@
-!     Last change:  MD   20 May 2009    1:54 pm
-  !update degrees of freedom and check for convergence
-  !---------------------------------------------------
-subroutine RMA_Kalypso (m_SimModel)
+subroutine RMA_Kalypso (modelName)
 
+!global constants
+!----------------
+!use const_modelConvConstants
+!use type modules
+!----------------
 use mod_Model
+use mod_fileType
+use mod_fileType_lists
+use SchwarzIterationControl_Helper
 
+!global definitions (bad and ugly!)
+!----------------------------------
 USE BLK10MOD, only: &
 &  niti, nita, maxn, nitn, itpas, iaccyc, icyc, ncyc, it, &
 &  ioutrwd, nprtf, nprti, nprtmetai, irsav, irMiniMaxiSav, &
@@ -12,6 +19,7 @@ USE BLK10MOD, only: &
 &  ncrn, nops, imat, &
 &  ao, cord, ccls, &
 &  vel, vdot, vold, vdoto, v2ol, vvel, &
+&  nfix, nfixp, spec, alfa, &
 &  hel, hol, hdet, hdot, h2ol, wsll, &
 &  icpu, idrpt, idnopt, ioptzd, iproj, iespc, &
 &  iutub, krestf, &
@@ -173,17 +181,19 @@ USE BLKSANMOD, only: lbed, lsand, delbed, elevb, tthick
 USE PARAKalyps, only: ivegetation, c_wr, mcord
 use mod_storageElt
 USE share_profile, ONLY : BANKEVOLUTION   ! HN. June2009
+use mod_ContiLines
 
 implicit none
 
 !arguments
 type (SimulationModel), pointer :: m_SimModel
+character (len = 1000) :: modelName
 
 !local variables
 integer (kind = 4) :: idryc, iprtf, iprti, iprtMetai
 integer (kind = 4) :: i, j, k, l, m, n, kk, ll, pp
 integer (kind = 4) :: n1, n2
-integer (kind = 4) :: temp_maxn
+integer (kind = 4) :: temp_maxn, SchwarzIt
 integer (kind = 4) :: ndl
 integer (kind = 4) :: teststat
 integer (kind = 4) :: ibin
@@ -195,6 +205,14 @@ real (kind = 8) :: dtfac
 real (kind = 8) :: sallowperm, salhighperm
 real (kind = 8) :: thetcn
 character (len = 96) :: outputfilename, inputfilename
+type (contiLine), pointer :: tmpCCL => null()
+logical :: allAssigned = .false.
+type (file), pointer :: convergenceStatusFile => null()
+character (len = 96) :: convergenceStatusFileName
+integer (kind = 4) :: continueCommand
+type (linked_List), pointer :: bcFiles
+real (kind = 8) :: schwarzConvCheckBorder
+
 !meaning of the variables
 !------------------------
 !idryc            is something like a count down variable to process drying/ wetting
@@ -229,24 +247,9 @@ character (len = 96) :: outputfilename, inputfilename
 !-----------------------------------------------------------
 !reserve for testoutput of matrices
 !-----------------------------------------------------------
-
-!called subroutines (not complete)
-!------------------
-!SECOND       : get the processor time to examine the calculation speed ???
-!INITL        : allocation and initialization of the global variables defined in the modules
-!INCSTRC      : reading and organizing in the control structure data from external file
-!INTIMES      : reading and organizing in time series data from external file
-!input        : reading all input data and managing the storage of that data in the proper arrays
-!autoconverge : using autoconverge to automatically adapt the calculation parameters leading to convergence
-!FileHeaders  : writes headers into different output files; moved, because of reading purposes within this subroutine
-!GENT         : reads in external network parts from another file.
-!cwr_init     : initializes the cwr-values during restart, if there are some values, that are already calculated and written
-!FLDIR        : calculates the flow direction of 1D-elements
-
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
-!EFa jun07, necessary for autoconverge
 !      extranita = 50.
 !      temp_iteqv = 0.
 !      temp_iteqs = 0.
@@ -258,6 +261,7 @@ character (len = 96) :: outputfilename, inputfilename
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
       
+m_SimModel => newSimulationModel (modelName)
 !get informations concerning time consumption
 !--------------------------------------------
 call second (ta)
@@ -268,9 +272,7 @@ call initl
 
 !initialisations of global variables
 !-----------------------------------
-!TOASK: Why is maxn initialized at this point?
-!answer: Because for call of input.sub it becomes necessary, that the value is unequal zero
-!dummy value for maxn
+!dummy value for maxn, for call of input.sub
 maxn = 1
 !number of active degrees of freedom
 ndf  = 6
@@ -313,9 +315,6 @@ IF (INTIMS == 22) CALL INTIMES
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
-!---------------------------------------------------------
-!formally place for writing headers to several ouput files
-!---------------------------------------------------------
 
 !get external network data, if file for that is present
 !-------------------------
@@ -337,55 +336,114 @@ endif
 call fldir
 
 
+!Check, whether model has inner boundaries, so Schwarz iteration has to be done!
+m_SimModel.hasInnerBoundaries = checkForInnerBCs (ccls(:), ncl)
+!In the case of distributed calculations, neighbour-IDs need to be read
+if (m_simModel.hasInnerBoundaries) call readDistributedModelIDs (m_simModel)
+
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                 STEADY STATE CALCULATION                        !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       
 !jump to transient calculation part, if there are no steady iterations on demand
 !----------------------------------
-if (niti == 0) go to 400
-!400 marks the end of the steady calculation
+steadyCalculation: if (niti /= 0) then
 
-!copy current number of steady iterations to be processed
-!--------------------------------------------------------
-nita = niti
+  !copy current number of steady iterations to be processed
+  !--------------------------------------------------------
+  nita = niti
+  !get prinout frequency for results; if not specified (iprtf = 0), then print after last iteration
+  !---------------------------------
+  iprti = abs (nprti)
+  if (iprti == 0) iprti = nita
+  !get prinout frequency for results to output file (not model result file)
+  !---------------------------------
+  iprtMetai = abs (nprtMetai)
+  if (iprtMetai == 0) iprtMetai = nita
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
-!      !EFa jul07, necessary for autoconverge
-!!      if (beiauto /= 0.) call autoconverge (1.)
+!      if (beiauto /= 0.) call autoconverge (1.)
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
+  !PROCESS SCHWARZ ITERATION FOR DISTRIBUTED CALCULATIONS WITH KALYPSO SERVICE
+  !---------------------------------------------------------------------------
+  !Initialize for the case no Schwarz iteration has to be done
+  m_SimModel.isSchwarzConv = .true.
+  m_SimModel.isNewtonConv = .false.
+  
+  SchwarzIt = 0
+  steadySchwarzCycle: Do
+    SchwarzIt = SchwarzIt + 1
+    
+    !if model has inner boundaries, there must be a Schwarz iteration with neighbouring models
+    !-----------------------------------------------------------------------------------------
+    if (m_SimModel.hasInnerBoundaries) then
+      !Get Continue Command
+      !--------------------
+      continueCommand = getSchwarzIterationCommand (schwarzIt, icyc)
+      contCom: select case (continueCommand)
+        case (enum_stop)
+          !FIXME: Stop handling must be done!
+          stop 'Divergence in any part of the entire model!'
+        case (enum_nextStep)
+          !nullify the boundary condition status of the inner boundary nodes
+          call nullifyInnerBCstatus (ccls, nfix, nfixp, alfa, ncl)
+          exit steadySchwarzCycle
+        case (enum_continueStep)
+          continue
+      end select contCom
+      !Write the own inner conditions to an output file, to overgive it to the neighbours
+      !----------------------------------------------------------------------------------
+      call writeInnerBoundaryConditons (m_simModel, schwarzIt, icyc, ccls, ncl, maxp, vel, wsll, cord)
+      !Re-Initialize the model convergency status, i.e. assume it is converged and check assumption consecutively
+      !----------------------------------------------------------------------------------------------------------
+      if (m_SimModel.hasInnerBoundaries) m_SimModel.isSchwarzConv = .true.
+      !Generate BC file filenames list
+      !-------------------------------
+      bcFiles => getNeighbourBCFiles (schwarzIt, icyc, m_SimModel)
+      !store boundary conditions from last Schwarz iteration
+      !-----------------------------------------------------
+      call storeOldInnerBoundaryConditions (ccls, spec, ncl, maxp)
+      !Read the incoming boundary conditions from the neighbours
+      !---------------------------------------------------------
+      call getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
+      !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
+      !-------------------------------------------------------------------------------------
+      schwarzConvCheckBorder = 0.01
+      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder)
+      if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+    endif
 
-!SchwarzIterationSteady: do
-    !TODO:
-    ! - Rausschreiben der abzugebenen Schwarz-Randbedingungen
-    ! - Holen der initialen Schätzung (Original-RESTART; muss nicht unbedingt im stationären Fall so sein)
-    ! - alte Schwarz-Randbedingungen merken
-    ! - Einlesen der neuen Schwarz-Randbedingungen
-    ! - Prüfen auf Konvergenz der Randbedingungen
-    !   - Bei Konvergenz
-
-
-
+    !PROCESS TIME STEP (STEADY IN THIS CASE) CALCULATION
+    !---------------------------------------------------
     !start calculation with zero iteration entry
     MAXN = 0
-
-    !get prinout frequency for results; if not specified (iprtf = 0), then print after last iteration
-    !---------------------------------
-    iprti = abs (nprti)
-    if (iprti == 0) iprti = nita
-    !get prinout frequency for results to output file (not model result file)
-    !---------------------------------
-    iprtMetai = abs (nprtMetai)
-    if (iprtMetai == 0) iprtMetai = nita
-
     !Iterate steady state
     !--------------------
     steadyCycle: Do
+    
+      !If boundary conditions did not change, model is already Newton converged
+      !------------------------------------------------------------------------
+      if (m_SimModel.isNewtonConv) then
+        !Write out some info
+        !-------------------
+        write(*,*) 'Schwarz iteration cycle: ', SchwarzIt
+        write(*,*) "Boundary conditions are temporarily converged: Nothing to do!"
+        write(*,*) 'Waiting for next Schwarz Cycle'
+        !Announce the Schwarz convergence status (Schwarz Converged)
+        !---------------------------------------
+        if (m_simModel.hasInnerBoundaries) call writeConvStatus (case_SchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+        !nothing to iterate, so end steady calculation cycle
+        !---------------------------------------------------
+        exit steadyCycle
+      endif
+
+      !Count iterations
       maxn = maxn + 1
 
     !----------------------------------------------------------------
@@ -398,7 +456,7 @@ nita = niti
     !----------------------------------------------------------------
 
       !drying/ wetting, if desired
-      !---------------
+      !---------------------------
       if (idswt /= 0) then
         if (idryc == 0) then
           !get potentially rewetted nodes
@@ -570,42 +628,69 @@ nita = niti
   !restore tett as hours in year
   tett = (dayofy - 1) * 24. + tet
 
-  !if convergered exit the steady iteration cycle
-  !----------------------------------------------
-  if (nconv == 2) exit steadyCycle
-
-  krestf = 1
-
-  !write result after iteration cycle, if desired
-  !----------------------------------------------
-  if (nprti /= 0) then
-    if (mod (maxn, nprti) == 0 .and. ikalypsofm /= 0) then
-      !generate output file name
-      call generateoutputfilename ('stat', niti, 0, maxn, modellaus, modellein, modellrst, ct, nb, outputfilename, inputfilename)
-      !write the result
-      call write_kalypso (outputfilename, 'resu')
-
-      !MD: only for kohesive Sediment
-      IF (LSS.gt.0) THEN
-        call generateOutputFileName ('stat', niti, 0, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
-        CALL write_KALYP_Bed (outputFileName)
-      END IF
-    endif
+  !if model is Newton Converged, announce this!
+  !--------------------------------------------
+  if (nconv == 2) then
+    !Set model Newton Converged
+    !--------------------------
+    m_SimModel.isNewtonConv = .true.
+    !Announce the Schwarz convergence status (not Schwarz Converged)
+    !---------------------------------------
+    if (m_SimModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+    
+    !nothing to iterate any more, so get out of this steady cycle
+    !------------------------------------------------------------
+    exit steadyCycle
   endif
-  !write boundary condition exchange output (here it's steady)
-!  call write_innerBCs (m_SimModel, ccls(1:ncl), ncl, vel (1:3,:), cord(:,1:2), 0, maxn)
 
+    krestf = 1
 
-  !get vegetation parameter, if calculation with vegetation is desired
-  !-------------------------------------------------------------------
-  if (ivegetation /= 0) call get_element_cwr
+    !write result after iteration cycle, if desired
+    !----------------------------------------------
+    if (nprti /= 0) then
+      if (mod (maxn, nprti) == 0 .and. ikalypsofm /= 0) then
+        !generate output file name
+        call generateoutputfilename ('stat', niti, 0, maxn, modellaus, modellein, modellrst, ct, nb, outputfilename, inputfilename)
+        !write the result
+        call write_kalypso (outputfilename, 'resu')
 
-  !If not converged yet, but number of iteration exceeds, end steady calculation
-  !-----------------------------------------------------------------------------
-  if (maxn >= nita) exit steadycycle
+        !MD: only for kohesive Sediment
+        IF (LSS.gt.0) THEN
+          call generateOutputFileName ('stat', niti, 0, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
+          CALL write_KALYP_Bed (outputFileName)
+        END IF
+      endif
+    endif
+
+    !get vegetation parameter, if calculation with vegetation is desired
+    !-------------------------------------------------------------------
+    if (ivegetation /= 0) call get_element_cwr
+
+    !If not converged yet, but number of iteration exceeds, end steady calculation
+    !-----------------------------------------------------------------------------
+    if (maxn >= nita) then
+      !Announce the Schwarz convergence status (Not Schwarz Converged)
+      !---------------------------------------
+      if (m_SimModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, schwarzIt, icyc)
+      !nothing to do any more, so get out of steady cycle
+      !--------------------------------------------------
+      exit steadycycle
+    end if
       
-!end of loop of steady calculation
-end do steadyCycle
+  !end of loop of steady calculation
+  end do steadyCycle
+
+  !terminate Schwarz iteration, if it doesn't have inner boundaries for Schwarz iteration
+  if (.not. (m_SimModel.hasInnerBoundaries)) exit steadySchwarzCycle
+
+!end of Schwarz iteration
+end do steadySchwarzCycle
+
+
+!--------------------------------------------------------------------
+!CALCULATION IS FINISHED, NOW DO SOME CALCULATION STEP POSTPROCESSING
+!--------------------------------------------------------------------
+
 
 !Checks Salinity Values against maximum and minimum permissible values and resets
 ! to keep within an appropriate range as appropriate
@@ -621,56 +706,48 @@ Do J = 1,NP
   End If
 End Do
 
-!calculating the cwr-values for trees; adding temporary storage of maxn = 0; Updating the cwr-values for trees after convergence
-!------------------------------------
-temp_maxn = maxn
-maxn = 0
-if (ivegetation /= 0) call get_element_cwr
-maxn = temp_maxn
+  !calculating the cwr-values for trees; adding temporary storage of maxn = 0; Updating the cwr-values for trees after convergence
+  !------------------------------------
+  temp_maxn = maxn
+  maxn = 0
+  if (ivegetation /= 0) call get_element_cwr
+  maxn = temp_maxn
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 !        !EFa jun07, autoconverge
 !        if (beiauto/=0.) then
-!
 !          call autoconverge(4.)
-!
 !          if (autoindex==1.) then
-!
 !            autoindex = 0.
-!
 !            GOTO 200
-!
 !          end if
-!
 !        endif
-!        !-
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!write result after finished steady calculation
-!----------------------------------------------
-if (ikalypsofm /= 0) then
-  !generate output file name
-  call generateoutputfilename('stat', niti, 0, 0, modellaus, modellein, modellrst, ct, nb, outputfilename, inputfilename)
-  !write results
-  call write_kalypso (outputfilename, 'resu')
+  !write result after finished steady calculation
+  !----------------------------------------------
+  if (ikalypsofm /= 0) then
+    !generate output file name
+    call generateoutputfilename('stat', niti, 0, 0, modellaus, modellein, modellrst, ct, nb, outputfilename, inputfilename)
+    !write results
+    call write_kalypso (outputfilename, 'resu')
+  
+    !MD: only for kohesive Sediment
+    IF (LSS.gt.0) THEN
+      call generateOutputFileName ('stat', niti, 0, 0, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
+      CALL write_KALYP_Bed (outputFileName)
+    END IF
+  end if
 
-  !MD: only for kohesive Sediment
-  IF (LSS.gt.0) THEN
-    call generateOutputFileName ('stat', niti, 0, 0, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
-    CALL write_KALYP_Bed (outputFileName)
-  END IF
-end if
-
-
+endif steadyCalculation
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                END OF STEADY STATE BLOCK                 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  400 continue
 
 !Check, if transient calculation is desired
 !------------------------------------------
@@ -683,15 +760,10 @@ endif
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 !IT'S TOTALLY WRONG HERE
-!      !EFa jul07, necessary for autoconverge
 !      do i=1,ncl
-!
 !        do k=1,3
-!
 !          specccold(i,k)=specccfut(i,k)
-!
 !        end do
-!
 !      end do
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -704,11 +776,8 @@ endif
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
-!      !EFa jun07, autoconverge
 !      if (beiauto/=0.) then
-!
 !        call autoconverge(5.)
-!
 !      end if
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -721,13 +790,12 @@ idryc = 0
 !iteration counter
 maxn = 0
 
-!???
-!---
+!What is it for, i.e. when is it executed?
+!-----------------------------------------
 if(lbed > 0) then
-  !kinematic viscosity ??? YES
+  !Calculate kinematic viscosity
   call kinvis
-  !sand exchange ??? NO!!
-  !HN12June2009. It computes equilibrium transport (transport capacity)
+  !Compute equilibrium transport (transport capacity)
   call sandx
 endif
 
@@ -779,15 +847,11 @@ DynamicTimestepCycle: do n = 1, ncyc
       hdot (j) = hdet (j)
     enddo
 
-    ICYC=ICYC+1
+    icyc = icyc + 1
 
     !Read boundary conditions for current time step
     call inputd (ibin)
   endif LaterTimestep
-
-!CIPK AUG95 ADD A CALL TO UPDATE MET VALUES
-!cipk oct02 move heatex to use projections for heat budget
-!C        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET)
   
   !get wave data, only required, if desired
   !----------------------------
@@ -817,7 +881,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     altm = 0.
   endif
 
-  !lowest degree of freedom??? Yes!
+  !lowest degree of freedom??? Yes! Thanks a lot 'know-it-all' :), sustainably ensured?
   NDL = 1
   
   !Initialise Mellor Yamada turbulence formulation
@@ -963,11 +1027,6 @@ DynamicTimestepCycle: do n = 1, ncyc
   !copy current number of iterations to be processed within transient time steps
   !-----------------------------------------------------------------------------
   nita = nitn
-
-  !reinitialise global variables
-  !-----------------------------
-  maxn = 0
-  itpas = 0
   
   !output of solution after each desired time step
   !-----------------------------------------------
@@ -995,24 +1054,96 @@ DynamicTimestepCycle: do n = 1, ncyc
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-  !Iterate transient calculation
-  !-----------------------------
-  DynamicIterationCycle: Do
-    maxn = maxn + 1
+
+  !PROCESS SCHWARZ ITERATION FOR DISTRIBUTED CALCULATIONS WITH KALYPSO SERVICE
+  !---------------------------------------------------------------------------
+  !Initialize for the case no Schwarz iteration has to be done
+  m_SimModel.isSchwarzConv = .true.
+  m_SimModel.isNewtonConv = .false.
+
+
+  !Schwarz iteration loop
+  !----------------------
+  SchwarzIt = 0
+  SchwarzCycle: Do
+    SchwarzIt = SchwarzIt + 1
+    
+    !if model has inner boundaries, there must be a Schwarz iteration with neighbouring models
+    !-----------------------------------------------------------------------------------------
+    if (m_SimModel.hasInnerBoundaries) then
+      !Get Continue Command
+      !--------------------
+      continueCommand = getSchwarzIterationCommand (schwarzIt, icyc)
+      contComUnsteady: select case (continueCommand)
+        case (enum_stop)
+          !FIXME: Stop handling must be done!
+          stop 'Divergence in any part of the entire model!'
+        case (enum_nextStep)
+          !nullify the boundary condition status of the inner boundary nodes
+          call nullifyInnerBCstatus (ccls, nfix, nfixp, alfa, ncl)
+          exit SchwarzCycle
+        case (enum_continueStep)
+          continue
+      end select contComUnsteady
+      !Write the own inner conditions to an output file, to overgive it to the neighbours
+      !----------------------------------------------------------------------------------
+      call writeInnerBoundaryConditons (m_simModel, schwarzIt, icyc, ccls, ncl, maxp, vel, wsll, cord)
+      !Re-Initialize the model convergency status, i.e. assume it is converged and check assumption consecutively
+      !----------------------------------------------------------------------------------------------------------
+      if (m_SimModel.hasInnerBoundaries) m_SimModel.isSchwarzConv = .true.
+      !Generate BC file filenames list
+      !-------------------------------
+      bcFiles => getNeighbourBCFiles (schwarzIt, icyc, m_SimModel)
+      !store boundary conditions from last Schwarz iteration
+      !-----------------------------------------------------
+      call storeOldInnerBoundaryConditions (ccls, spec, ncl, maxp)
+      !Read the incoming boundary conditions from the neighbours
+      !---------------------------------------------------------
+      call getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
+      !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
+      !-------------------------------------------------------------------------------------
+      schwarzConvCheckBorder = 0.01
+      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder)
+      if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+    endif
+
+    !reinitialise global variables
+    !-----------------------------
+    maxn = 0
+    itpas = 0
+
+    !Iterate transient calculation
+    !-----------------------------
+    DynamicIterationCycle: Do
+
+      !Check for convergence status
+      if (m_SimModel.isNewtonConv) then
+        !Write some information output
+        !-----------------------------
+        write(*,*) 'Schwarz iteration cycle: ', SchwarzIt
+        write(*,*) "Boundary conditions are temporarily converged: Nothing to do!"
+        write(*,*) 'Waiting for next Schwarz Cycle'
+        !Announce the convergence status (Schwarz converged)
+        !---------------------------------------------------
+        call writeConvStatus (case_SchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+        !nothing to do in this cycle, so get out of here
+        !-----------------------------------------------
+        exit DynamicIterationCycle
+      endif
+
+      !counter for newton iterations
+      maxn = maxn + 1
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
-!       !EFa jun07, autoconverge
-!       if (beiauto/=0.) then
-!         call autoconverge(7.)
-!       end if
+!       if (beiauto/=0.) call autoconverge(7.)
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-    !heat exchange, ???
-    !-------------
+    !heat exchange?
+    !--------------
     if (maxn == 1) then
       write (75, *) 'going to heatex-535',n,maxn,tet,itpas
       call heatex (nmat, delt, lout, iyrr, tet, itpas)
@@ -1028,7 +1159,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     if (maxps /= 0) call PipeSurfaceConnectionQs
 
     !drying/ wetting, if desired
-    !---------------
+    !---------------------------
     if (idswt /= 0) then
       if (idryc == 0) then
         !get potentially rewetted nodes
@@ -1058,6 +1189,9 @@ DynamicTimestepCycle: do n = 1, ncyc
     !set up boundary line, based on active mesh parts
     !--------------------
     call bline (maxn)
+
+    !That's clear: Question is, what is exactly done here; is there any other READABLE way of executing this section?
+    !----------------------------------------------------------------------------------------------------------------
     !HN. 12June2009
     !ICK is a flag to define the degree of freedom, for example: 
     !ICK = 3 is Salinity (iteqs = 0).
@@ -1067,7 +1201,6 @@ DynamicTimestepCycle: do n = 1, ncyc
     !iteqs is defined in control file by user for each iteration. iteqs = 3 is bed deformation, which is not included in RMA10s
     ! User Guide version 3.5E.
     ! HN end.
-    !???
     !---
     ick = iteqs (maxn) + 4
 
@@ -1272,7 +1405,18 @@ DynamicTimestepCycle: do n = 1, ncyc
     write (75, *) 'tet, dayofy', tet, tett, dayofy
 
     !If fully converged time step, get out of iteration cyle
-    IF(NCONV == 2) exit DynamicIterationCycle
+    if(nconv == 2) then
+      !Set Newton convergence status
+      !-----------------------------
+      m_simModel.isNewtonConv = .true.
+      !Announce Schwarz Convergence status
+      !-----------------------------------
+      if (m_simModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+      
+      !noting to do here, so get out of here
+      !-------------------------------------
+      exit DynamicIterationCycle
+    end if
 
     !write result after iteration cycle, if desired
     !----------------------------------------------
@@ -1290,18 +1434,38 @@ DynamicTimestepCycle: do n = 1, ncyc
          END IF
       endif
     endif
-    !write boundary condition exchange output (here it's steady)
-    !call write_innerBCs (m_SimModel, ccls(1:ncl), ncl, vel(1:3,:), cord (:,1:2), icyc, maxn)
 
 
-    !get vegetation parameter, if calculation with vegetation is desired
-    !-------------------------------------------------------------------
-    if (ivegetation /= 0) call get_element_cwr
+      !get vegetation parameter, if calculation with vegetation is desired
+      !-------------------------------------------------------------------
+      if (ivegetation /= 0) call get_element_cwr
 
-    !If not converged yet, but number of iteration exceeds, end steady calculation
-    !-----------------------------------------------------------------------------
-    if (maxn >= nita) exit DynamicIterationCycle
-  enddo DynamicIterationCycle
+      !If not converged yet, but number of iteration exceeds, end dynamic calculation
+      !------------------------------------------------------------------------------
+      if (maxn >= nita) then
+        !Announce Schwarz Convergence status
+        !-----------------------------------
+        if (m_SimModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+        !nothing to do anymore, so get out of here
+        !-----------------------------------------
+        exit DynamicIterationCycle
+      end if
+
+    !end of dynamic newton cycle
+    !---------------------------
+    enddo DynamicIterationCycle
+    
+    !if model is not distributed (DOMAIN PARTITIONING), do not schwarz iterate
+    if (.not. (m_SimModel.hasInnerBoundaries)) exit SchwarzCycle
+  
+    !If not Schwarz converged it can also not be newton converged
+    if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+    
+  enddo SchwarzCycle 
+  
+!-----------------------------------------------------------------------------------------------
+!CALCULATION IS FINISHED - NOW DO SOME ADDITIONAL RESULTS POSTPROCESSING AT THE END OF TIME STEP
+!-----------------------------------------------------------------------------------------------
 
   !update bed information for sand case
   !------------------------------------
@@ -1341,10 +1505,9 @@ DynamicTimestepCycle: do n = 1, ncyc
   ! if there is a profile data file or no profile data file but
   ! contlines in the form of profile then run bank_evolution once.
     
-  !IF ( ( IPROFIN == 73 ).OR.(BANKEVOLUTION) ) THEN
-  IF (BANKEVOLUTION) THEN
-  CallCounter = CallCounter + 1
-  CALL bank_evolution (CallCounter)
+  if (BANKEVOLUTION) then
+    CallCounter = CallCounter + 1
+    call bank_evolution (CallCounter)
   endif 
 !-------------------------------------------------------------------------------'
 
@@ -1376,7 +1539,6 @@ DynamicTimestepCycle: do n = 1, ncyc
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-
 !c       1   time in hours (Julian)
 !c       2   number of nodes
 !c       3   obsolete counter of degrees of freedom (set to 5) NDF=6
@@ -1393,8 +1555,8 @@ DynamicTimestepCycle: do n = 1, ncyc
 !c      13   DFCT                stratification multiplier by element
 !c      14   VSING subscript(7)  water column potential by node
 
-!save results file
-!-----------------
+  !save results file
+  !-----------------
   if (ikalypsofm > 0 .and. mod (icyc, iprtf) == 0) then
     MAXN = 0
     if (icyc >= irsav) then

@@ -299,6 +299,12 @@ enddo elements2
 
 !C-
       DO 701 N=1,NPM
+        !FIXME: This is just for showing, that inner boundary condition nodes shall not be touched;
+        !  If such nodes are not ignored here, the values of the inner boundaries will totally be changed
+        !  by this subroutine. Thus after each successful calculation step, the boundary condition status
+        !  of all nodes is nullified to be resetted during the preperation phase of the Schwarz-Iteration
+        if (nfix(n) == -1) go to 701
+        !-
 
         NFIX(N)=NFIXK(N)
         !nis,jul07 (work around): iteqv(0) is not defined. This happens, when BLINE(NTR==1) ist called, the beginning of a dynamic time step

@@ -1,11 +1,19 @@
 module mod_Nodes
   !linked types
   use mod_BCs
+  
+  integer (kind = 4), parameter :: enum_empty_BCtype = 0
+  integer (kind = 4), parameter :: enum_V_BCtype = 1
+  integer (kind = 4), parameter :: enum_H_BCtype = 2
+  
 
   type node
     integer (kind = 4) :: ID = 0
     real (kind = 8) :: cord (1:2) = (/0.0d0, 0.0d0/)
     real (kind = 8) :: ao = 0.0d0
+
+    type (boundaryCondition), pointer :: currentBC => null()
+    type (boundaryCondition), pointer :: previousBC => null()
   end type
 
   type linkedNode
@@ -14,17 +22,49 @@ module mod_Nodes
     type (linkedNode), pointer :: next => null()
   end type
   
-  !not used type yet
- ! type feNode
-  !  type (node), pointer :: thisNode => null()
-   ! type (bcVolWLRelation), pointer :: vWlRelation => null()
-    !components of an fe-node
-    !Marsh parameters
-    !elements, in which it is contained
-    !boundary conditions that are assigned
-  !end type
-
+  type boundaryCondition
+    integer (kind = 4) :: bctype = enum_empty_BCtype
+    real (kind = 8) :: H = 0.0
+    real (kind = 8) :: V (1:2) = [0.0, 0.0]
+  end type
+  
+  
 contains
+
+  function newBC (bc_type, bc_value)
+    !function name
+    type (boundaryCondition), pointer :: newBC
+    !arguments
+    integer (kind = 4) :: bc_type
+    real (kind = 8), optional :: bc_value (*)
+    !local variables
+    type (boundaryCondition), pointer :: tmp_bc => null()
+    
+    !allocate boundary condition memory
+    allocate (tmp_bc)
+    !generate BC, by type
+    tmp_bc.bctype = bc_type
+    !set value if present
+    if (present (bc_value)) call setBC (tmp_bc, bc_value)
+    !overgive boundary condition and leave function
+    newBC => tmp_bc
+    return
+  end function
+  
+  subroutine setBC (bc, bc_value)
+    !arguments
+    type (boundaryCondition), pointer :: bc
+    real (kind = 8) :: bc_value (*)
+    
+    switch: select case (bc.bctype)
+      case (enum_H_BCtype)
+        bc.h = bc_value (3)
+      case (enum_V_BCtype)
+        bc.v(1) = bc_value (1)
+        bc.v(2) = bc_value (2)
+    end select switch
+  end subroutine
+
 
   function newNode (ID, xcord, ycord, zcord)
     implicit none
@@ -99,13 +139,17 @@ contains
     allocate (new)
     !assign parameters
     new.thisNode => node2link
-    if (present (prev)) then
-      new.prev => prev
-      new.prev.next => new
+    if (present (prev) ) then
+      if (associated (prev)) then
+        new.prev => prev
+        new.prev.next => new
+      endif
     endif
     if (present (next)) then
-      new.next => next
-      new.next.prev => new
+      if (associated (next)) then
+        new.next => next
+        new.next.prev => new
+      endif
     endif
     !overgive new linked node
     makeNodeALinkedNode => new
