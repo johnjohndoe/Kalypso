@@ -508,7 +508,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
   public void updateLayer( )
   {
-    if( m_layerProvider == null )
+    if( m_layerProvider == null && m_profile != null )
       m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
 
     // TODO: display userinformation
