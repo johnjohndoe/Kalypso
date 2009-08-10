@@ -44,19 +44,15 @@
 
 PROGRAM RMAKalypso
 
-  use mod_Model
-
+  
   implicit none
-
-  type (SimulationModel), pointer :: m_SimModel
   
   integer :: i
   character (len = 11) :: fnam0
   character (len = 12) :: version
   character (len = 10) :: builddate
+  character (len = 1000) :: defaultModelName = 'defaultModelID'
       
-  !generate my simulation model
-  m_SimModel => newSimulationModel()
   
   version = '1.1.2 beta'
   builddate = '2009/02/13'
@@ -103,7 +99,7 @@ PROGRAM RMAKalypso
   !read size of the model geometry
   call getgeo1
   !start main execution of the simulation model
-  call rma_kalypso (m_SimModel)
+  call rma_kalypso (defaultModelName)
 
 !end execution of RMA·Kalypso
 END
