@@ -125,7 +125,8 @@ if (executionSwitch == 0)  then
   !Allocate space for permutation matrix
   if (iparm(5) == 1) then
     if (.not. (allocated (perm))) allocate (perm (noOfEq))
-  else 
+  else
+    !dummy allocation for proper compilation; perm will not be used in PARDISO, if iparm(5) /= 1
     if (.not. (allocated (perm))) allocate (perm (1))
   endif
   
