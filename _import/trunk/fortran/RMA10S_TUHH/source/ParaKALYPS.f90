@@ -157,7 +157,7 @@ REAL,allocatable   :: temp_speccc(:)
 
 !nis,aug07: for correction purposes in Kalypso-GUI, there must be a correction based on the elements
 !           correction applies for ks-value, diameter of ... and distance between vegetation elements
-REAL (KIND = 8), DIMENSION (1:50, 1:500) :: LineCorrectionKS, LineCorrectionAxAy, LineCorrectionDp
+REAL (KIND = 8), DIMENSION (1:50, 1:3535) :: LineCorrectionKS, LineCorrectionAxAy, LineCorrectionDp
 
 
 
