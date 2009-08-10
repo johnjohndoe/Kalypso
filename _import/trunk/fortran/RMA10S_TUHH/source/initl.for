@@ -157,9 +157,6 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
       ALLOCATE (LHS(NBS),QS(NBS))
 
-      !allocate global array of finite element nodes
-!      allocate (feNodes (1:maxp))
-
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
       
       ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,7),ITAB(MAXP),
@@ -769,7 +766,7 @@ CIPK MAR01
       ENDDO
 !-
 !NiS,apr06: allocating arrays for neighbourhood relations
-      ALLOCATE (nconnect(1:MaxP),neighb(1:MaxP,0:500),mcord(1:MaxE,1:2))
+      ALLOCATE(nconnect(1:MaxP),neighb(1:MaxP,0:3535),mcord(1:MaxE,1:2))
 !-
 
 !NiS,jul06: allocating the (for the moment) dummy gl_bedform array to pass variables correctly to the subroutine 
@@ -993,7 +990,7 @@ CIPK MAR01
 
       !initializations for lines
       do i = 1, 50
-        do j = 1, 500
+        do j = 1, 3535
           lineimat(i, j) = 0
           lineelement (i, j) = 0
           LineCorrectionKS (i, j)   = 1.0
