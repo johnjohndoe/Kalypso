@@ -342,7 +342,7 @@ C-
       DO N=1,NSZF
         RR(N)=0.
       ENDDO
-      DO N=1,NMAT
+      DO N=1, maxe
         TVOL(N)=0.
       ENDDO
 
