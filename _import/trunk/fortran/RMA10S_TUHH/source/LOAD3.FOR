@@ -30,7 +30,7 @@ CIPK DEC06
 !      implicit none
 
 !nis,feb08: for line transitions
-      LOGICAL :: NodeIsDry (1:500)
+      LOGICAL :: NodeIsDry (1:3535)
       integer :: dea_stat
       integer :: nln
 !-
