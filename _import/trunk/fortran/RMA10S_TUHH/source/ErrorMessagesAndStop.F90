@@ -1,9 +1,10 @@
 !     Last change:  MD   28 Jul 2008    5:29 pm
-subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
+subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory, objectName)
 
 implicit none
 
 integer (kind = 4), intent(in) :: ErrorID, ObjectID
+character (len = *), intent (in), optional  :: objectName
 integer                        :: istat
 real (kind = 8), intent (in)   :: coorx, coory
 integer                        :: errorunit
@@ -197,7 +198,18 @@ elseif (ErrorID == 1406) then
 elseif (ErrorID == 1407) then
   WRITE (ErrorUnit, 1407) ObjectID
   WRITE (        *, 1407) ObjectID
+
+elseif (ErrorID == 1408) then
+  WRITE (ErrorUnit, 1408)
+  WRITE (        *, 1408)
   
+elseif (ErrorID == 1409) then
+  WRITE (ErrorUnit, 1409)
+  WRITE (        *, 1409)
+
+elseif (ErrorID == 1410) then
+  WRITE (ErrorUnit, 1410)
+  WRITE (        *, 1410)
 
 
 elseif (ErrorID == 1501) then
@@ -227,6 +239,12 @@ elseif (ErrorID == 1701) then
 elseif (ErrorID == 1702) then
   WRITE (ErrorUnit, 1702) ObjectID
   WRITE (        *, 1702) ObjectID
+
+elseif (ErrorID == 1801) then
+  WRITE (ErrorUnit, 1801) objectName
+  WRITE (        *, 1801) objectName
+
+
 
 ELSEIF (ErrorID == 3501) then
   WRITE (ErrorUnit, 3501)
@@ -419,6 +437,10 @@ end if
  1406 format (1x, 'ERROR - TOO MANY ELEVATION SPECS!')
  1407 format (1x, 'ERROR - Transition Line', i5, ' has specified value! There can be no ' / &
             &     'specified WATERSTAGES. Leave Transition line without conditions!')
+ 1408 format (1x, 'ERROR - TOO MANY DISCHARGE SPECS!')
+ 1409 format (1x, 'ERROR - Transition Line has specified value! Discharge specification is not allowed there!')
+ 1410 format (1x, 'ERROR - Q-input line not properly defined!')
+
 
  
 
@@ -451,6 +473,12 @@ end if
  
  1702 format (1x, 'ERROR - Storage element ', i5, ' does not have a Volume Waterlevel',/ &
             & 1x, 'relationship. Please check the input files!')
+            
+            
+!1800   Time Step defintiion errors
+!****
+ 1801 format (1x, 'ERROR - Unable to find line: ', a)
+
 
 !2000   Output Errors
 !3000   Mesh Errors
@@ -499,6 +527,7 @@ end if
             & 1x, 'EXECUTION TERMINATED')
 
 CLOSE (75)
+call flush (75)
 !stop program
 STOP 'EXECUTION OF RMA-Kalypso TERMINATED'
 

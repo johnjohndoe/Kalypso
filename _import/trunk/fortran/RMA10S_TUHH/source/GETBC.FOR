@@ -91,18 +91,22 @@ CIPK SEP04 CREATE ERROR FILE
       ibinrst=ibin
       GO TO 570
   198 CONTINUE
+
+
+!Read time step length
+!---------------------
+
 cipk apr96 end changes
-      IF(ID(1:2) .NE. 'DT') THEN
-        WRITE(*,6999) ID(1:8)
-CIPK SEP04 CREATE ERROR FILE
-        CLOSE(75)
-        OPEN(75,FILE='ERROR.OUT')
-        WRITE(75,6999) ID(1:8)
-        STOP 'LOOKING FOR DT'
-      ENDIF
+      
+      !TODO: Why is there any need for time step definitions in a steady step?
+      IF(ID(1:2) .NE. 'DT')
+     +  call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'DT')
+
 cipk apr96 add ending time for time step
 cipk mar98 remove iwind 
-      READ(DLIN,5031) DELT,iyend,idye,hrend
+      !READ(DLIN,5031) DELT,iyend,idye,hrend
+      READ(DLIN,*) DELT,iyend,idye,hrend
+
       if(ibin .ne. nscrin) then
         write(lout,6156) delt,iyend,idye,hrend
       endif
@@ -110,13 +114,33 @@ cipk mar98 remove iwind
         rewind nscrin
         write(nscrin,7000) id,dlin
       endif
+
 cc      TTT=TET+DELT
 cc      TETH=TETH+DELT
       TTT=TET
       WRITE(LOUT,6145) TTT,ICYC
-cipk apr96 end changes
-cc      READ(DLIN,5010) DELT,iyend,idye,hrend
-      DELT=DELT*3600.
+      
+      !Distinguish between unit of time step length:
+      !---------------------------------------------
+      !HOURS
+      if (ID (4:6) == 'HHH') then
+        DELT = DELT * 3600
+
+      !MINUTES
+      elseif (ID (4:6) == 'MIN') then
+        DELT = DELT * 60
+
+      !SECONDS
+      elseif (ID (4:6) == 'SEC') then
+        continue
+      !MILLISECONDS
+      elseif (ID (4:6) == 'MSE') then
+        DELT = DELT / 1000
+      !HOURS (standard assumption)
+      else 
+        DELT = DELT * 3600
+      endif
+
 C
 C-.... Read iteration controls
 C
@@ -159,13 +183,10 @@ c
           Check_BC_Data = IURVL(I)+ITLVL(I)+ITEQV(I)+ITEQS(I)
           !MD: Allow to use old Iteration-Data, if no new block is
           !MD:   defined in CONTROL
-          IF (Check_BC_Data.eq.0) THEN
-            WRITE(*,6999) ID(1:8)
-            CLOSE(75)
-            OPEN(75,FILE='ERROR.OUT')
-            WRITE(75,6999) ID(1:8)
-            STOP 'LOOKING FOR BC'
-          ENDIF
+
+          !ERROR, because BC line is expected
+          IF (Check_BC_Data.eq.0) 
+     +      call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
         ENDDO
         goto 315
         !MD: New Jump, because next line was already read by ginpt(..)
@@ -184,13 +205,11 @@ cipk apr96 save data to a scratch file
           if(isvs .eq. 1) then
             write(nscrin,7000) id,dlin
           endif
-          IF(ID(1:2) .NE. 'BC') THEN
-            WRITE(*,6999) ID(1:8)
-            CLOSE(75)
-            OPEN(75,FILE='ERROR.OUT')
-            WRITE(75,6999) ID(1:8)
-            STOP 'LOOKING FOR BC'
-          ENDIF
+
+          !ERROR, because BC line is expected
+          IF(ID(1:2) .NE. 'BC')
+     +      call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
+
           READ(DLIN,5011)
      +          (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
           IF(NITA .GT. N2) GOTO 199

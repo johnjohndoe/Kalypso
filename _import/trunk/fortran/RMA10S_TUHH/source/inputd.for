@@ -113,17 +113,32 @@ cipk sep04
 !----------------------------------
   198 CONTINUE
 cipk apr96 end changes
-      IF(ID(1:2) .NE. 'DT') THEN
-cipk sep04
-        CLOSE(75)
-        OPEN(75,FILE='ERROR.OUT')
-        WRITE(*,6999) ID(1:8)
-        WRITE(75,6999) ID(1:8)
-        WRITE(LOUT,6999) ID(1:8)
-        STOP 'LOOKING FOR DT'
-      ENDIF
+      IF(ID(1:2) .NE. 'DT')
+     +  call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'DT')
+
 cipk apr96 add ending time for time step
-      READ(DLIN,5031) DELT,iyend,idye,hrend
+      read (dlin, *) delt, iyend, idye, hrend
+      
+      !Distinguish between unit of time step length:
+      !---------------------------------------------
+      !HOURS
+      if (ID (4:6) == 'HHH') then
+        continue
+      !MINUTES
+      elseif (ID (4:6) == 'MIN') then
+        DELT = DELT / 60
+
+      !SECONDS
+      elseif (ID (4:6) == 'SEC') then
+        DELT = DELT / 3600
+      !MILLISECONDS
+      elseif (ID (4:6) == 'MSE') then
+        DELT = DELT / 1000 / 3600
+      !HOURS (standard assumption)
+      else 
+        continue
+      endif
+
 
 CIPK MAR01  TEST FOR ELEVATION AND SCALE TIME STEP
 !MD: Only for 'TST' = Time step LENGTHENING
@@ -208,14 +223,10 @@ cipk sep04
           Check_BC_Data = IURVL(I)+ITLVL(I)+ITEQV(I)+ITEQS(I)
           !MD: Allow to use old Iteration-Data, if no new block is
           !MD:   defined in CONTROL
-          IF (Check_BC_Data.eq.0) THEN
-            CLOSE(75)
-            OPEN(75,FILE='ERROR.OUT')
-            WRITE(LOUT,6999) ID(1:2)
-            WRITE(75,6999) ID(1:2)
-            WRITE(*,6999) ID(1:2)
-            STOP 'LOOKING FOR BC'
-          END IF
+
+          !ERROR - Could not locate required BC line
+          IF (Check_BC_Data.eq.0)
+     +      call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
         END DO
         goto 315
         !MD: New Jump, because next line was already read by ginpt(..)
@@ -233,14 +244,11 @@ cipk apr96 save data to a scratch file
         if(isvs .eq. 1) then
           write(nscrin,7000) id,dlin
         endif
-          IF(ID(1:2) .NE. 'BC') THEN
-            CLOSE(75)
-            OPEN(75,FILE='ERROR.OUT')
-            WRITE(*,6999) ID(1:2)
-            WRITE(75,6999) ID(1:2)
-            WRITE(LOUT,6999) ID(1:2)
-            STOP 'LOOKING FOR BC'
-          ENDIF
+
+        !ERROR - Could not locate required BC line
+        IF(ID(1:2) .NE. 'BC')
+     +    call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
+
           READ(DLIN,5011)
      +           (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
           IF(NITN .GT. N2) GO TO 199
