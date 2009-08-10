@@ -1,4 +1,3 @@
-C     Last change:  WP   17 Apr 2008   10:05 am
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -26,6 +25,9 @@ cipk  last update Jan 21 1998
       type (contiLine), pointer :: tmpContiLine => null()
       type (arc), pointer :: tmpSeg => null()
       type (node), pointer :: tmpNode => null()
+      type (LinkedNode), pointer :: tmpLinkedNode => null()
+      type (LinkedNode), pointer :: prevNode => null()
+      type (LinkedNode), pointer :: nextNode => null()
       real (kind = 8), dimension (1:2) :: tmpVec
       real (kind = 8) :: dirScaling
 C-
@@ -38,7 +40,7 @@ CIPK MAR01
       INCLUDE 'BLKS.COM'
 C-
 cipk jan98 increment to 200
-      DIMENSION ITEMP(200),FLW(2),AREAC(2),FLX1(2,3),FLX2(2,3),
+      DIMENSION ITEMP(3535),FLW(2),AREAC(2),FLX1(2,3),FLX2(2,3),
      +FLX3(2,3),FLX4(2,3),FLX5(2,3),FLX6(2,3),FLX7(2,3),FLX8(2,3)
      +  ,TOTAL(200)
 cipk jul01 add line above
@@ -72,18 +74,19 @@ C-
 C-..... Augment continuity lists.....
 C-
       !nis,sep06,com: Run through every CCL to overgive the real number of nodes
-      DO 125 J = 1, NCL
+      SetupCCLs: DO J = 1, NCL
         !assign continuity line
         tmpContiLine => ccls(j)
-        NULlIFY (tmpSeg)
+
         M = LMT(J)
 cipk feb01  skip out for zero lines
         !nis,sep06,com: Cycle loop, if CCL has no node
-        IF(M .EQ. 0) GO TO 125
+        IF(M .EQ. 0) cycle SetupCCLs
         !nis,sep06,com: ITEMP(K) temporaryly stores the CCL J
-        DO 113 K = 1, M
+        localNodeCopy: DO K = 1, M
           ITEMP(K) = LINE(J,K)
-  113   CONTINUE
+        end do localNodeCopy
+
         !nis,sep06,com: Calculate the real number of nodes of CCL J
         LMT(J) = 2*LMT(J)-1
         !nis,sep06,com: Copy of real number of nodes of CCL J
@@ -91,7 +94,7 @@ cipk feb01  skip out for zero lines
         !nis,sep06,com: Counter for corner nodes
         N = 0
         !nis,sep06,com: Jump over, if the CCL consist only of one node
-        IF(M .EQ. 1) GO TO 125
+        IF(M .EQ. 1) cycle SetupCCLs
 
         !nis,sep06: New, taken from Kalypso-2D-code. Initializing the fields
         !           line(J,L) and lineimat (J,L) for the CCL J. The values of line(J,L) are
@@ -105,22 +108,24 @@ cipk feb01  skip out for zero lines
         !-
 
 
+        tmpSeg => null()
+        tmpLinkedNode => null()
         !nis,sep06,com: Loop for restructuring saved CCL J;
         !               Originally only the corner nodes were saved
         !               Afterwards the midside nodes are stored in between the corneer nodes
         !nis,sep06: the CCL has only to be runned through all segments. The segments always begin
         !           with one of the nodes. The last node starts no segment, so it can be taken out
         !           of the loop.
-        !DO 124 L = 1, LineLength, 2
-        
-        DO 124 L = 1, LineLength-2, 2
-        !-
+        throughLineSegments: DO L = 1, LineLength-2, 2
   
           if (.not. (associated (tmpSeg))) then
             tmpSeg => tmpContiLine.firstSegment
+            tmpLinkedNode => tmpContiLine.firstNode
           else
             tmpSeg => tmpSeg.nextSeg
+            tmpLinkedNode => tmpLinkedNode.next
           endif
+
           !nis,sep06,com: Count the number of segments
           N = N + 1
           !nis,sep06,com: Get the two actual corner nodes in CCL J
@@ -129,12 +134,13 @@ cipk feb01  skip out for zero lines
           !nis,sep06,com: Rearrange the storage of those nodes with a space in between
           LINE(J,L) = NA
           LINE(J,L+2) = NC
+
           !nis,sep06,com: Run through all elements to find the midside node between the two actual nodes
-          DO 123 JJ = 1, NE
+          findElement: DO JJ = 1, NE
 
             !nis,sep06: If the material type of the adjacent element is 0, no flow
             !           can occur there: Jump over that segment
-            if (imat(jj).eq.0) GO TO 123
+            if (imat(jj).eq.0) cycle findElement
             !-
 
             !nis,sep06,com: Get number of corner nodes (element arcs)
@@ -163,6 +169,12 @@ CIPK OCT98 CONVERT TO F90
               tmpNode = newNode (line(j,l+1), 
      +                    cord(line(j,l+1), 1), cord(line(j,l+1), 2))
               call addMidside (tmpSeg, tmpNode)
+              !TODO: check for association
+              prevNode => tmpLinkedNode
+              nextNode => tmpLinkedNode.next
+
+              tmpLinkedNode => makeNodeALinkedNode (tmpNode,
+     +                           prevNode, nextNode)
               nullify (tmpNode)
 
               !nis,sep06: Note the roughness class of the of the adjacent element, if it is a boundary node
@@ -181,9 +193,11 @@ CIPK OCT98 CONVERT TO F90
 
               !nis,sep06,com: end loop, if the correct midside node is found and go back
               !               to cycle loop over CCL segments
-              GO TO 124
+              cycle throughLineSegments
+
   117       CONTINUE
-  123     CONTINUE
+          end do findElement
+
 CIPK JUL02 TEST FOR FAILURE TO FIND CONTINUITY LINE
           !TODO: ErrorMessage
           IF(LINE(J,L+1) .EQ. 0) THEN
@@ -200,7 +214,7 @@ CIPK SEP04
      +      LINE(J,L),LINE(J,L+2)
             IERR=1
           ENDIF
-  124   CONTINUE
+        end do throughLineSegments
 
       !nis,nov06: Here the Continuity lines are complete. Now the midside nodes at 1D-2D-line-transitions can be set with alfak. It is the
       !           continuation of the parts in the GETGEO.subroutine. It will lead to problems, if there was only 1 element, that defines
@@ -235,7 +249,7 @@ CIPK SEP04
           end do Transitiontest
         end if
 
-  125 CONTINUE
+      end do SetupCCLs
 
       !nis,jun07: deactivating line check appeareance
       ! !nis,nov06: Check, whether all 1D-2D-line-Transitions are connected. The Question ist, whether connecting node is part of the transition line:
