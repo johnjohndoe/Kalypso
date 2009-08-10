@@ -121,57 +121,46 @@ cipk dec06
         !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
         !find out the ID-number
         READ(DLIN,'(i8)') J
+
         !Test for every 1D-2D-line transition
         do i = 1, MaxLT
           !test,whether it is present in one coupling
-          if (TransLines(i,2).eq.J) then
-            WRITE(*,*) 'ERROR!!!'
-            WRITE(*,*) 'Transition Line has specified value!'
-            WRITE(*,*) 'There can be no specified DISCHARGES.'
-            WRITE(*,*) 'Leave Transition line without conditions!'
-            stop
-          end if
+          if (TransLines(i,2).eq.J)
+     +      call ErrorMessageAndStop (1409, 0, 0.0d0, 0.0d0)
         enddo
-        !-
+
+        !Count boundary conditions and check for amount
         IQGEN=IQGEN+1
         IF(ID(1:2) .EQ. 'QM') THEN
           IQID(IQGEN)=1
         ELSE
           IQID(IQGEN)=0
         endif
-      !nis,sep06,com: just an number of inflows test
-CIPK DEC97 REFINE TEST FOR TOO MANY FLOWS
-        IF(IQGEN .GT. NQLDS) THEN
-cipk sep04
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,*) 'ERROR STOP TOO MANY INFLOWS'
-          WRITE(*,*) 'ERROR STOP TOO MANY INFLOWS'
-          STOP 'TOO MANY INFLOWS'
-        ENDIF
-        !-
 
-        !nis,sep06,com: Look for CCL-outflows/inflows
-CIPK DEC97 END ADDITION
-        !nis,sep06,com: write header for output-file, that includes a line with a headers for all columns
-        IF(IQGEN .EQ. 1) THEN
-          WRITE(LOUT,6033)
-        ENDIF
-        !nis,sep06,com: If no hydrograph file for that boundary condition, then read values out of control file
+        !Error, because of too many inflows
+        IF(IQGEN .GT. NQLDS) 
+     +    call ErrorMessageAndStop (1408, 0, 0.0d0, 0.0d0)
+
+        !Write header for output-file, that includes a line with a headers for all columns
+        IF(IQGEN .EQ. 1) WRITE(LOUT,6033)
+
+        !If no hydrograph file for that boundary condition, then read values out of control file
         IF(NHYDQ(IQGEN) .EQ. 0) THEN
-          !nis,sep06,com: read value line
-          !FF stands for format free
-          if (ID(3:4) == 'FF') then
+
+        ioError = 0
+        if (ID(3:4) == 'FF' .or. (ID (3:4) == ' *')) then
+          READ (DLIN, *, iostat = ioError) J, LN, QF, QDIR, QQAL, labl
+
+          !labl is not written in Kalypso
+          if (ioError /= 0) then
             ioError = 0
-            READ (DLIN, *, iostat = ioError) J, LN, QF, QDIR, QQAL
-            if (ioError /= 0) then
-              write (*,*) 'QC-line probably does not contain all inputs'
-            endif
             labl = 0
+            READ (DLIN, *, iostat = ioError) J, LN, QF, QDIR, QQAL
+          endif 
             
-          else
-            READ(DLIN,5034) J,LN,QF,QDIR,QQAL,LABL
-          endif
+        else
+          READ(DLIN,5034) J,LN,QF,QDIR,QQAL,LABL
+        endif
           !nis,sep06,com: meaning of the values
           ! J    = number of CCL, where discharge runs through
           ! LN   = layer number for the specified discharge; enter 0 for 1D or 2D depth averaged flow
@@ -179,7 +168,10 @@ CIPK DEC97 END ADDITION
           ! QDIR = direction of total discharge crossing the CCL; measured from the principal x-axis in ANTICLOCKWISE RADIANS)
           ! QQAL = 3 values (array) for the three concentrations of salinity, temperature and sediment
           ! LABL = 1 for using a hydrograph file in dynamic solution; chose 0 for a steady or specified solution
-          !-
+
+        !Check for i/o error
+        if (ioError /= 0) 
+     +    call ErrorMessageAndStop (1410, 0, 0.0d0, 0.0d0)
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
