@@ -62,7 +62,6 @@ cipk dec97
         !do nothing for volume-waterlevel boundary conditions
         elseif (iswth == 3) then
           
-!          feNodes (na) => 
         endif
 
         !Add boundary condition switch for water level BCs
