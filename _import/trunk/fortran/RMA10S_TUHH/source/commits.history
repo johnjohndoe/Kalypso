@@ -966,7 +966,7 @@ new features introduced/ started to be introduced:
 --- Nico Schrage, 22.06.2009
 
 
--------- M. Hassan Nasermoaddeli, at this stage the new package of Bank Evolution is introduced.
+--- M. Hassan Nasermoaddeli, at this stage the new package of Bank Evolution is introduced.
 -------- possibly a new release ??????????
 061.)  The package is introduced in a subfolder (modules_bankevolution) and is in a mudular form. It computes the non-cohesive
       bank evolution of the river bank (left and right bank) in steady as well unsteady cases. The bank evolution(bank_erosion.f90) includes avalnche
@@ -1047,7 +1047,6 @@ new features introduced/ started to be introduced:
 063.)  BLK10MOD has been modified to include new variables IPROFIN.     
 064.)  RMA10.f90 has been modified to activate bank evolution if 
       required(BANKEVOLUTION=.TRUE., decided in input.f90):
-      
        IF (BANKEVOLUTION) THEN
         CallCounter = CallCounter + 1
         CALL bank_evolution (CallCounter)
@@ -1057,8 +1056,6 @@ new features introduced/ started to be introduced:
      ,if profiles are available, within the data type(Object) "Contiline". A logical 
       switch has been also added to this data type(object) named HasProfile
      ,which is .true. when a MorphoProfile is available.
-     
--------------- M.Hassan Nasermoaddeli, 26.06.2009	      
 066.) I had activated a variable definition for SPEC in BLK10MOD, which later I noticed,
       it was defined some where else. Therefore, I removed my changes.
 067.) A bug was fixed regarding division by zero in SANDBED [ RATIO=vel(3,n)/(vel(3,n)+diff) ],
@@ -1072,8 +1069,9 @@ new features introduced/ started to be introduced:
       IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .AND. DELT .GT. 0.) THEN                             
 	     if (.NOT. bankevolution) CALL SLUMPIT 
 069.) A bug was fixed in Module_projection to prevent fenode number to be zero.	
+--- M.Hassan Nasermoaddeli, 26.06.2009	      
      
--------- M.Hassan Nasermoaddeli, 29.06.2009	
+--- M.Hassan Nasermoaddeli, 29.06.2009	
 070.) A few bugs were fixed regarding mass waste computation in SubR ResuspensionRate 
       and DistributeWastedMass. Now the mass waste is computed in g/(m^2.s),formerly in mg/(m^2.s)
       ,which is consitent with the rest of the program. More over the global variable 
@@ -1081,13 +1079,14 @@ new features introduced/ started to be introduced:
 071.) Fix the bug regarding mass waste calculation in tensile.for 
 072.) IN subroutine DistributeWastedMass, contributing area of dry elements were ignored in TRIBAREA, 
       now it is calculated in DryTRIBAREA .
+--- M.Hassan Nasermoaddeli, 29.06.2009	
      
--------- M.Hassan Nasermoaddeli, 30.06.2009 
+--- M.Hassan Nasermoaddeli, 30.06.2009 
 073.) Assign the sediment initial proprities ALSO to dry elemnets, for numerical stability 
       in unsteady flow. It is done in INSAND.FOR by the following substitution:
        IF(IMAT(N) .NE. 0) THEN     instead of IF(IMAT(N) .GT. 0) THEN                                         
 074.) Remove a bug in write format in subroutine output1 within bank_erosion.f90.
--------- M.Hassan Nasermoaddeli, 30.06.2009 
+--- M.Hassan Nasermoaddeli, 30.06.2009 
 
 
 --- Monika Donner, 07.07.2009
@@ -1113,7 +1112,7 @@ new features introduced/ started to be introduced:
       same variable has been defined in the Bank_evolution package.
 079.) comment out the definitaion of data type fenodes in Mod_Fenode module (made by Nico),
       since the same variable has been defined in the Bank_evolution package.
--------- M.Hassan Nasermoaddeli, 07.07.2009 
+--- M.Hassan Nasermoaddeli, 07.07.2009 
 
 
 --- Monika Donner, 07.07.2009
@@ -1147,14 +1146,12 @@ new features introduced/ started to be introduced:
       running local number of layers
       Look at inner-loop: DO K=1, NLAYO(J) or DO K=1, NLAYTND(J) 
       >> SubR SPRPOP, BED
-        
 086.) Middling Sediment and Layer attributes at midside-nodes for suspended and bed layers
       was prepared. At midside-nodes the minimal (!!) Number of Layers must be used, in order to 
       avoid averaging with dummys.                          
       Look at:  NLAYTND(NN)= MIN (NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2))) 
       All MAX(...) arguments were changed to MIN(...)                      
       >> SubR FORMBED, SEROSN, MERSON, SPRPOP, BED                         
-                 
 087.) NEW OPTIONS for all Boundary-Conditions:
       Now fast definitions for 'BC'-Blocs in the CONTROL-Data is Possible. For the 
       First simulation a full 'BC'-Bloc must be defined. For all following time
@@ -1172,7 +1169,7 @@ new features introduced/ started to be introduced:
       >> SUBR INPUTD, GETBC   
 --- Monika Donner, 14.07.2009
 
--------- M.Hassan Nasermoaddeli, 07.07.2009 
+--- M.Hassan Nasermoaddeli, 07.07.2009 
 088.) SUBR Input : Add the definition of the variable DirPointer as 
         REAL(KIND=8) :: dirPointer
 089.) MODULE Mod_ControlStructure : Add the double precision label 'd' to two last 
@@ -1180,9 +1177,9 @@ new features introduced/ started to be introduced:
       addValueTriple (because of compilation error):
         call addValueTriple (thisCstrc, 0.0d0, -500.0d0, -500.0d0)
         call addValueTriple (thisCstrc, 0.0d0, 8900.0d0, 8900.0d0)
--------- M.Hassan Nasermoaddeli, 07.07.2009 
+--- M.Hassan Nasermoaddeli, 07.07.2009 
 
--------- M.Hassan Nasermoaddeli, 17.07.2009
+--- M.Hassan Nasermoaddeli, 17.07.2009
 090.) Defining a fixed tolerance(1 cm) for submergence of bank overhang.
       IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.01 )then
         >> SUBR BANK_EVOLUTION
@@ -1241,16 +1238,17 @@ new features introduced/ started to be introduced:
         >> MODULE CANTILEVER
         >> MODULE PARAM
         >> MODULE TENSILE
- -------- M.Hassan Nasermoaddeli, 17.07.2009  
+--- M.Hassan Nasermoaddeli, 17.07.2009  
  
- -------- M.Hassan Nasermoaddeli, 23.07.2009          
+--- M.Hassan Nasermoaddeli, 23.07.2009          
  100.)Include the new data lines in documentation RMA-Kalypso_ManualControlFile.doc
         - Complete the definition of PROFILE data line in FILES block.
         - Add data line PRF in Auxilary Geometry Input block.
         - Add data line GTP (geotechnical properties) in SAND block.
         - Add data line POR (pore pressure distribution function over water table)in Sand block.
+--- M.Hassan Nasermoaddeli, 23.07.2009          
 
--------- M.Hassan Nasermoaddeli, 27.07.2009           
+--- M.Hassan Nasermoaddeli, 27.07.2009           
 101.) Introduce a variable, which reflects the extra soil cohesion due to
        vegetation roots in bank stability modelling.(Real :: ROOT). It is read in SubR INSAND
        in data line GTP.
@@ -1299,7 +1297,7 @@ new features introduced/ started to be introduced:
         which has a conjugate Fe_node. This special case override the rule that the eroded upper node mass is 
         assigned to the lower node as source term.
        >> MODULE AVALANCHE_MODUL 
-        
+--- M.Hassan Nasermoaddeli, 27.07.2009           
                               
 --- Monika Donner, 30.07.2009 
 111.) Error while using wet Bulk density and Erosion Rate for suspended Layer erosion.
@@ -1309,25 +1307,83 @@ new features introduced/ started to be introduced:
       Line "CSS4" with wet Bulk density GBND(N,L) and Erosion Rate EROST(N,L) per Node and 
       Suspended Layer are used.                             
       >> SubR FORMBED, SEROSN, MERSON, GETMAS, NEWBED
-      
 112.) Output form FORMBED with all Layers at each Node is deactivated, because all
       informations are written now into each BED-File.                                     
       >> SubR FORMBED
-      
 113.) Middling all Sediment and Layer attributes at midside-nodes for suspended and bed layers
       was prepared. At midside-nodes the minimal Number of Layers must be used, in order to 
       avoid averaging with dummys.                                             
       >> SubR SPRPOP, BED  
+--- Monika Donner, 30.07.2009 
 
 
--------- M.Hassan Nasermoaddeli, 30.07.2009                                    
+--- M.Hassan Nasermoaddeli, 30.07.2009 
 114.) Correcting the reading of bank profiles , when there is no profile data file (meaning that 
       each CCL line with PRF ID itself is a bank profile). Now all cases (all PRF = 0, all PRF /=0
       and a mix of these two case) should work.
       >> SubR INPUT
-
--------- M.Hassan Nasermoaddeli, 30.07.2009 
 115.) A bug was fixed when producing midside nodes for Conuity lines . After finishing the creation
       of midside nodes for each Continuity line, the varaible tmpSeg should be nullified. Now it is
       done by satring reading each continuiy line. (NULLIFY (tmpSeg))
       >> SubR CHECK
+--- M.Hassan Nasermoaddeli, 30.07.2009 
+      
+116.) Increasing the number of maximum nodes within a continuity line to 3535; the "strange" number was chosen, because it can be
+      easily searched and replaced by another number.
+      TODO: Make the size of a continuity line variable; use a linked list in future to transfer data instead of a fixed-size-array
+      (affects: BLK10Mod, check, initl, input, load, parakalyps, qgen, qgenTransition, QKalypsoCalc, RDKalypso, Reordering)
+117.) Sorting the order of the read-in-files in the FILES-Block in input according to the manual.
+      (affects: input)
+118.) Add the oportunity to specify the time step in different units (e.g. hours, minutes, seconds, milli seconds); hours remains as standard;
+      The time unit specification can be given as additional information in the DT-line.
+119.) Add new possibility to write out Error-Message by using a message string.
+      TODO: The Error-handling in RMA·Kalypso should be reworked completely
+      (Affects: ErrorMessagesAndStop)
+120.) Add Error messages for some missing input lines during boundary condition
+      TODO: A generalized way of reading in data should be established!
+      (Affects: ErrorMessagesAndStop, getBC, inputD)
+121.) Move generation of the simulation model m_SimModel temporarily from the program unit the to the main subroutine RMA_Kalypso.subroutine,
+      because from time to time there is an unsolved problem with the memory adress of the simulationModel-instance; this does not happen,
+      if the m_SimModel is generated in the subroutine
+      TODO: This needs to be fixed with a further development of the object-based approach
+      (affects: rma_Kalypso.program; rma_Kalypso.subroutine)
+122.) Introduce possibility to have larger discharges as specified by 8 numbers. This is mainly from interest in combination with Kalypso 1D/2D.
+      User can use either the old 'QC'-line or a new modified 'QCFF'-line or 'QC *'-line (see also change No. 52 from release 1.1.0)
+      (affects: sbgen)
+123.) Add some ErrorMessages
+      (affects: sbgen)
+124.) bugfix (tvol is allocated with number of elemens and not with number of roughness classes)
+      (affects: front_mkl3)
+125.) Update some code and move re-initialization in front of loop, where it is used; bugfix the generation of the continuity line objects
+      (affects: check)
+126.) Including the flibs-library in version 0.9 (December 2008) from sourceforge (http://flibs.sourceforge.net/);
+      It includes many modern general programming functionalities, that can be used for free. For documentation purposes to use something from that, 
+      please visit the web-page above!
+      Attention: For usage, don't include the files to your software project (e.g. in Visual Studio); please just give the include-directory in the 
+      compiler settings; If someone will use anything from the library please specify the include-directory in the change and send an information via
+      Email.
+127.) Add some file handling functions/ subroutines
+      subroutines:
+      - openFileObject (open a file unit)
+      - closeFileObject (close a file unit)
+      functions:
+      - newFile (create a new file object)
+      - findFreeUnit (find a unit that can be used to open a file)
+      - isFileUnitOpen (inquire a unit-no.)
+      - fileExists (by name)
+128.) Enable lists of files using the flibs,v0.9; Please add include path \flibs\datastructures to your compiler settings
+129.) Introduce option of distributed calculations: A model may be split into several parts. They must then share a common boundary, where they exchange
+      their values. The formulation must be implicit, i.e. the result must be considered in the calculation, the global calculation is done by the 
+      so called Schwarz-Iteration around the Newton-iteration. Thus a calculation step will be converged by converging the model in the sense of the Schwarz-iteration.
+      In the end each sub-domain model must be completely Schwarz-converged, i.e. the last Schwarz-iteration step of each sub-domain must get in first place new boundary
+      conditions from the neighbours without bigger changes compared to the last Schwarz-iteration (under a set Schwarz-convergence-border) and in second place each sub-domain
+      must be fully Newton-converged in the last Schwarz iteration.
+      For making the Schwarz iteration operable, the model must communicate with the neighbours. Normally the distribution is done by a wrapper/ controlling routine, like
+      Kalypso, that distributes the out-written boundary conditions to the neighbours. Besides it collects the converged/ not converged/ diverged informations to decide how a
+      distributed calcualtion may continue. Therefore the main routines and many modules were adapted. The main Schwarz iteration control is executed from the rma_kalypso.subroutine.
+      It is calling the subroutines/ functions from the SchwarzIterationControl_Helper.module
+      (affected and new routines/ modules: bline1, input, rma10; mod_contiLines, mod_model, mod_node, mod_discreteFunction, mod_SchwarzIterationControl_Helper, const_modelConvConstants)
+--- Nico Schrage, 10.08.2009
+
+
+130.)
