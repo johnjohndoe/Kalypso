@@ -1,4 +1,3 @@
-C     Last change:  MD    7 Jul 2009    4:41 pm
       module BLK10MOD
       
       use ManholeDefinitions
@@ -199,11 +198,7 @@ C     Last change:  MD    7 Jul 2009    4:41 pm
       !-------------------------------------
       real (kind = 8), allocatable, dimension (:,:)  :: cord
       real (kind = 8), allocatable, dimension (:)    :: ao, aorig
-      !MD: Error while compiling
-      !MD:  real (kind = 8), allocatable, dimension (:)    :: feNodes
-      !MD: Error while compiling
-      
-      
+
       !general node calculation value data definition
       !----------------------------------------------
       real (kind = 8), allocatable, dimension (:,:) :: vel, vdot
@@ -263,7 +258,7 @@ C     Last change:  MD    7 Jul 2009    4:41 pm
       
       !continuity line definition data
       !-------------------------------
-      integer (kind = 4) :: line (50, 500)
+      integer (kind = 4) :: line (50, 3535)
       integer (kind = 4) :: lmt (50)
       
       type (contiLine), allocatable, target :: ccls (:)
@@ -542,8 +537,8 @@ CIPK MAY06 ASS IMASSOUT
       INTEGER   JLIN(50), !ITLVL(90)
 !     +         ,IURVL(90),NCNV(7)
      +          NCNV(7)
-!Nis,sep06: adding lineimat(50,500) for storage of material of line segments
-     +         ,lineimat(50,500), lineelement (50, 500)
+!Nis,sep06: adding lineimat(50,3535) for storage of material of line segments
+     +         ,lineimat(50,3535), lineelement (50, 3535)
 
 !-
       !EFa jun07, changed dimension for autoconverge
