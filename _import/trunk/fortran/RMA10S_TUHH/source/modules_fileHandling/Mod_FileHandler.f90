@@ -63,26 +63,6 @@ module mod_fileHandler
 
   
   CONTAINS
-  
-  !open file (new style)
-  !---------
-  subroutine openFileObject (file2Open)
-    !input arguments
-    type (file), pointer :: File2Open
-    !local variables
-    integer (kind = 4) :: ioerror = 0
-    
-    !open the file
-    OPEN (unit = File2Open.unit, file = File2Open.name, IOSTAT = ioerror, status = File2Open.status)
-    !check for errors
-    if (ioerror /= 0) then
-      call ErrorMessageAndStop (1013, 0, 0.0d0, 0.0d0)
-    else
-      file2Open.IsOpen = .true.
-    endif
-  end subroutine
-
-  
 
 !open file (old style)
 !---------
