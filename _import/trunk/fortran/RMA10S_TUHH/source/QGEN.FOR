@@ -23,7 +23,7 @@ C-
       DIMENSION QQAL(3)
 
 !nis,sep06: new variables
-      REAL     :: amec (500), Conveyance (500), dxl (500)
+      REAL     :: amec (3535), Conveyance (3535), dxl (3535)
       !nis,aug07: dummy parameters for passing
       REAL (KIND = 8) :: dummy (1:3), NullVal
       real            :: dum1

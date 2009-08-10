@@ -18,7 +18,7 @@
       SAVE
 
       !real onedimensional arrays
-      REAL          :: amec (500), Conveyance (500), dxl (500), specdischarge(500)
+      REAL          :: amec (3535), Conveyance (3535), dxl (3535), specdischarge(3535)
 
       !real variables 
       REAL          :: cwr_line

@@ -23,7 +23,7 @@ INTEGER               :: k
 REAL (KIND=8)         :: fliesstiefe, d3
 real (KIND=8)         :: d2
 !new variables
-REAL                  :: amec (500)
+REAL                  :: amec (3535)
 
 !nis,jun07: Adding some initializations
 waspi = 0.0
