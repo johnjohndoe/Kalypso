@@ -51,7 +51,7 @@ implicit none
 INTEGER :: maxsize, JunctionSize
 integer :: lastentry
 integer :: maxc, maxcn
-integer :: qlist (2, 500)
+integer :: qlist (2, 3535)
 INTEGER, allocatable :: icon (:, :), kntimel (:, :)
 parameter (maxcn = 60)
 !NiS,mar06: variable names changed; changed mel to MaxE and mnd to MaxP
@@ -98,7 +98,7 @@ WRITE(*,*) 'Start of Reordering sequence with ', Maxlt, ' couplings'
 !-
 
 !NiS,mar06: Allocating the arrays of module blkasteph
-ALLOCATE (mlist(500))
+ALLOCATE (mlist(3535))
 ALLOCATE (msn(MaxP))
 ALLOCATE (icol(100,5000))
 ALLOCATE (nadm(5000))
@@ -304,7 +304,7 @@ orderloop: DO
 
   CALL order (idxx, kntimel, maxsize, qlist, icon)
 
-  DO k = 1, 500
+  DO k = 1, 3535
     qlist (1, k) = qlist (2, k)
   END DO
 
@@ -415,11 +415,11 @@ INTEGER :: ia
 INTEGER :: maxsize
 INTEGER :: counter
 
-INTEGER :: qlist (2, 500)
+INTEGER :: qlist (2, 3535)
 !INTEGER :: icon (:,:), kntimel (:,:)
 INTEGER :: icon (1:MaxP, 1:60), kntimel (1:MaxE, 1:maxsize)
 integer :: maxcn
-DIMENSION nlist (500)
+DIMENSION nlist (3535)
 
 parameter (maxcn = 60)
 
@@ -433,7 +433,7 @@ mpq   = 0
 isum  = 0
 
 !node list to start reordering sequence from
-DO j = 1, 500
+DO j = 1, 3535
   nlist (j) = qlist (1, j)
 END DO
 
@@ -666,7 +666,7 @@ SUBROUTINE start_node (qlist, k, n)
 !INCLUDE "common.cfg"
 USE BLK10MOD
 
-INTEGER :: qlist (2, 500)
+INTEGER :: qlist (2, 3535)
 
 
 IF (lmt (1) .gt.0) then

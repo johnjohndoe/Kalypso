@@ -49,7 +49,6 @@ use blk10mod , only: &
 &   StorageElts, &
 &   vel, vold, vdot, vdoto, &
 &   iyrr, tett, &
-!&   feNodes
 &   ccls
 !meaning of the variables
 !------------------------
@@ -235,7 +234,7 @@ integer (kind = 4)                              :: connnumber
 integer (kind = 4), allocatable, dimension (:,:):: elem
 real (kind = 8)                                 :: sumx, sumy
 logical                                         :: ReorderingNotDone
-integer (kind = 4), dimension (2, 500)          :: qlist
+integer (kind = 4), dimension (2, 3535)         :: qlist
 integer (kind = 4), allocatable, dimension (:)  :: elfix
 integer (kind = 8)                              :: noDerivs
 type (node), pointer                            :: tmpNode
@@ -328,7 +327,7 @@ arcs_without_midside = 0
 midsidenode_max = 0
 
 !TODO: 
-do i = 1, 500
+do i = 1, 3535
   qlist (1, i) = 0
   qlist (2, i) = 0
 end do
@@ -428,8 +427,6 @@ reading: do
         istat=0
         !TODO: Format differentiation
         READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
-        !define FE node object
-        !feNodes(i).thisNode => newNode (i, cord(i,1), cord (i,2), ao(i))
         !check for kilometer
         if (istat == 0) WRITE (lout, *) 'Die Kilometrierung von Knoten', i, 'wurde eingelesen:', kmx (i)
         nodecnt = max (i, nodecnt)
@@ -1312,7 +1309,7 @@ do i = 1, MaxP
   !neighb(i, j) : ID-number of j-th neighbour of node i
   !nconnect (i) : number of neighbourhood connections
   !It's assumed that a node has maximum 30 neighbours
-  do j = 1, 500
+  do j = 1, 3535
     neighb (i, j) = 0
   end do
   nconnect(i) = 0
