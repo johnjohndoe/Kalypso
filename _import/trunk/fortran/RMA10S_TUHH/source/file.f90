@@ -406,23 +406,6 @@ FileRead: DO
     key=13
     call fileOpen (key, trim(FNAME), 'OLD', 'FORMATTED', FNAM16, IERMSG)
 
-  !wind data file (INPUT)
-  !----------------------
-  ELSEIF(ID == 'AWINDIN ') THEN
-    IWINDIN=70
-    call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM17, IERMSG)
-
-   !HN052009: PROFILE DATA FILE FOR BANK EVOLUTION MODELLING.
-  !-------------------------------------
-  ELSEIF ( ID(1:7) == 'PROFILE' ) THEN
-    ! UNIT NUMBER
-    IPROFIN = 73
-    call fileOpen (IPROFIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM18, IERMSG)
-  !--------------------------------
-  ELSEIF(ID == 'OUTMET  ') THEN
-    IOMET=72
-    call fileOpen (IOMET, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM19, IERMSG)
-
   !continuity line hydrograph result data (output)
   !-----------------------------------------------
   ELSEIF(ID == 'OUTCON  ') THEN
@@ -436,13 +419,13 @@ FileRead: DO
     IWVIN=101
     call fileOpen (IWVIN, trim(FNAME), 'OLD', 'UNFORMATTED', FNAM21, IERMSG)
 
-  !surface stress data (INPUT)
-  !---------------------------
+  !surface stress data (INPUT) (unformatted file)
+  !-----------------------------------------------
   ELSEIF(ID == 'INSSTR  ') THEN
     IWVFC=102
     call fileOpen (IWVFC, trim(FNAME), 'OLD', 'UNFORMATTED', FNAM22, IERMSG)
 
-  !
+  !surface stress data (INPUT) (formatted file)
   !-----------------------------------------------
   ELSEIF(ID == 'INDFSSTR') THEN
     IWVFC=104
@@ -466,6 +449,12 @@ FileRead: DO
     fileControl.volWlFil => newFile (41, trim(fname), 'old')
     call openFileObject (fileControl.volWlFil)
 
+  !external grid data (INPUT)
+  !--------------------------
+  ELSEIF(ID == 'INSRCORD') THEN
+    ICORDIN=19
+    call fileOpen (ICORDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM32, IERMSG)
+
   !weighting factors for interpolation from external grid (INPUT)
   !--------------------------------------------------------------
   ELSEIF(ID == 'INWGT   ') THEN
@@ -478,24 +467,17 @@ FileRead: DO
     INSTR=15
     call fileOpen (INSTR, trim(FNAME), 'OLD', 'FORMATTED', FNAM27, IERMSG)
 
-  !Mesh weighting output            (OUTPUT)
-  !-----------------------------------------
-  ELSEIF(ID == 'OUTWGT  ') THEN
-    IOWGT=16
-    call fileOpen (IOWGT, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM30, IERMSG)
-
-  !external grid data (INPUT)
-  !--------------------------
-  ELSEIF(ID == 'INSRCORD') THEN
-    ICORDIN=19
-    call fileOpen (ICORDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM32, IERMSG)
+  !wind data file (INPUT)
+  !----------------------
+  ELSEIF(ID == 'AWINDIN ') THEN
+    IWINDIN=70
+    call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM17, IERMSG)
 
   !control structure data (INPUT)
   !------------------------------
   ELSEIF(ID(1:6) == 'INCSTR') THEN
     INCSTR=20
     call fileOpen (INCSTR, trim(FNAME), 'OLD', 'FORMATTED', FNAM33, IERMSG)
-
  
   !on/off controlling of constrol structure time series (INPUT)
   !------------------------------------------------------------
@@ -503,22 +485,40 @@ FileRead: DO
     INTIMS=22
     call fileOpen (INTIMS, trim(FNAME), 'OLD', 'FORMATTED', FNAM34, IERMSG)
 
+   !HN052009: PROFILE DATA FILE FOR BANK EVOLUTION MODELLING.
+  !-------------------------------------
+  ELSEIF ( ID(1:7) == 'PROFILE' ) THEN
+    ! UNIT NUMBER
+    IPROFIN = 73
+    call fileOpen (IPROFIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM18, IERMSG)
+
+  !--------------------------------
+  ELSEIF(ID == 'OUTMET  ') THEN
+    IOMET=72
+    call fileOpen (IOMET, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM19, IERMSG)
+
+  !Mesh weighting output            (OUTPUT)
+  !-----------------------------------------
+  ELSEIF(ID == 'OUTWGT  ') THEN
+    IOWGT=16
+    call fileOpen (IOWGT, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM30, IERMSG)
+
 !********************************************************
 !
 !     DJW 15/07/04, Adds Hook for reading in the initial conditions for Temp, Salt and Sed concentrations.
 !        
 !********************************************************
-        ELSEIF(ID== 'INITCONS') THEN
-	    wbm_InitCons = .TRUE.
-	    wbm_InitConsFile = FNAME
+  ELSEIF(ID== 'INITCONS') THEN
+    wbm_InitCons = .TRUE.
+    wbm_InitConsFile = FNAME
 !********************************************************        
 !
 !     DJW 15/02/05, Adds Hook for reading in the rock levels 
 !        
 !********************************************************
-        ELSEIF(ID=='SCOURLIM') THEN
-	    wbm_ScourLim = .TRUE.
-	    wbm_ScourLimFile = FNAME
+  ELSEIF(ID=='SCOURLIM') THEN
+    wbm_ScourLim = .TRUE.
+    wbm_ScourLimFile = FNAME
 !********************************************************
 !cipk MAY06
 
@@ -572,8 +572,6 @@ FileRead: DO
   ELSEIF(ID == 'INBNWAVE') THEN
     call notSupportedLine (ID)
   ELSEIF(ID == 'INBNWGT ') THEN
-    call notSupportedLine (ID)
-  ELSEIF(ID == 'BCFIL   ') THEN
     call notSupportedLine (ID)
 
   !end of files input block
