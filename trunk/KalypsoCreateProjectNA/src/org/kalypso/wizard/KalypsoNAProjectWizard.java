@@ -64,7 +64,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -270,15 +272,19 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     try
     {
-      final IProjectDescription description = new ProjectDescription();
+      m_projectHandel.create( new NullProgressMonitor() );
+      m_projectHandel.open( new NullProgressMonitor() );
+      final IProjectDescription description = m_projectHandel.getDescription();
+//      final IProjectDescription description = new ProjectDescription();
       final String[] nanature = { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
       description.setNatureIds( nanature );
-      m_projectHandel.create( description, null );
-      m_projectHandel.open( null );
+      m_projectHandel.setDescription( description, new NullProgressMonitor() );
+//      m_projectHandel.create( description, null );
+//      m_projectHandel.open( null );
       // set charSet for the new project to the UTF-8 standard
       // TODO: do not do such a thing (at least without comment why).
       // The workspace has its own preference settings
-      m_projectHandel.setDefaultCharset( "UTF-8", null ); //$NON-NLS-1$
+//      m_projectHandel.setDefaultCharset( "UTF-8", new NullProgressMonitor()  ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -289,7 +295,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
     try
     {
-      ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
+      ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor()  );
       // open modell.gml and hydrotop.gml file to write imported feature
       m_modelPath = new Path( m_projectHandel.getFullPath().append( "/modell.gml" ).toString() ); //$NON-NLS-1$
       final URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
@@ -504,7 +510,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   public void mapCatchment( final List sourceFeatureList, final HashMap mapping )
   {
-
     final Feature rootFeature = m_modelWS.getRootFeature();
     final IFeatureType modelFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
     final Feature catchmentCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
