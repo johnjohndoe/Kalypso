@@ -61,11 +61,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -89,7 +89,7 @@ public class Command1D2DTimestepsAddRow extends AbstractHandler
     // default date/time is 01.01.2000 00:00:00.000
     if( tupleResult.size() < 2 )
     {
-      final GregorianCalendar calendar = new GregorianCalendar( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+      final GregorianCalendar calendar = new GregorianCalendar( KalypsoCorePlugin.getDefault().getTimeZone() );
       calendar.set( GregorianCalendar.DAY_OF_MONTH, 1 );
       calendar.set( GregorianCalendar.MONTH, GregorianCalendar.JANUARY );
       calendar.set( GregorianCalendar.YEAR, 2000 );
