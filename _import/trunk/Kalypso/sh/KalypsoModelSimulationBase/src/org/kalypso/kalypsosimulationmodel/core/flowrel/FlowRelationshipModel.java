@@ -132,6 +132,9 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
     for( final Feature feature : foundFeatures )
     {
       final IFlowRelationship curNode = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
+      if( curNode == null )
+        continue;
+
       final Class< ? extends IFlowRelationship> clas = curNode.getClass();
       if( !checkRealtionType( flowRelationTypes, clas ) )
         continue;
