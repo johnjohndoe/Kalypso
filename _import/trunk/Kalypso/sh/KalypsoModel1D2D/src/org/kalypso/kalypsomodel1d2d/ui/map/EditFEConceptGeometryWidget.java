@@ -104,11 +104,11 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   private IKalypsoFeatureTheme m_nodeTheme;
 
   private IFEDiscretisationModel1d2d m_discModel;
-  
+
   private IKalypsoFeatureTheme m_flowTheme = null;
-  
+
   private CommandableWorkspace m_flowWorkspace = null;
-  
+
   private IFlowRelationshipModel m_flowRelModel = null;
 
   private Point m_currentMapPoint;
@@ -127,8 +127,8 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
 
   private boolean m_warning;
-  
-  private Map< String, IFlowRelationship > m_mapElementWithFlowRelationship;
+
+  private Map<String, IFlowRelationship> m_mapElementWithFlowRelationship;
 
   public EditFEConceptGeometryWidget( )
   {
@@ -149,7 +149,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     m_nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
-    
+
     m_flowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelation2D.QNAME );
     if( m_flowTheme == null )
       m_flowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
@@ -169,8 +169,8 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   {
     m_editor = null;
 
-    m_mapElementWithFlowRelationship = new HashMap< String, IFlowRelationship >();
-    
+    m_mapElementWithFlowRelationship = new HashMap<String, IFlowRelationship>();
+
     if( m_nodeTheme != null )
       m_editor = new ElementGeometryEditor( getMapPanel(), m_nodeTheme );
 
@@ -236,34 +236,45 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   }
 
   @SuppressWarnings("unchecked")
-  private void collectFlowrelationsInformation(){
-    for( final IFE1D2DElement element :  m_editor.getStartNode().getElements() ){
-      if( element instanceof IPolyElement ){
-        IFlowRelationship lBuilding = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowRelModel );
-        if( lBuilding != null ){
+  private void collectFlowrelationsInformation( )
+  {
+    final IFE1D2DNode startNode = m_editor.getStartNode();
+    if( startNode == null )
+      return;
+
+    for( final IFE1D2DElement element : startNode.getElements() )
+    {
+      if( element instanceof IPolyElement )
+      {
+        final IFlowRelationship lBuilding = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowRelModel );
+        if( lBuilding != null )
+        {
           m_mapElementWithFlowRelationship.put( element.getGmlID(), lBuilding );
         }
       }
     }
   }
-  
-  @SuppressWarnings({ "unchecked" })
-  private void setNewPositionsOfFlowrelations(){
 
-    for( final IFE1D2DElement element :  m_editor.getStartNode().getElements() ){
-      if( element instanceof IPolyElement ){
+  @SuppressWarnings( { "unchecked" })
+  private void setNewPositionsOfFlowrelations( )
+  {
+
+    for( final IFE1D2DElement element : m_editor.getStartNode().getElements() )
+    {
+      if( element instanceof IPolyElement )
+      {
         final IFlowRelationship lBuilding = m_mapElementWithFlowRelationship.get( element.getGmlID() );
-        if( lBuilding != null ){
+        if( lBuilding != null )
+        {
           final GM_Position lFlowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( element );
           final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-          ChangeFeatureCommand lChangeFeatureCommand = 
-              new ChangeFeatureCommand( lBuilding.getFeature(), lBuilding.getFeature().getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
-//          lBuilding.setPosition( GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
+          final ChangeFeatureCommand lChangeFeatureCommand = new ChangeFeatureCommand( lBuilding.getFeature(), lBuilding.getFeature().getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
+// lBuilding.setPosition( GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
           try
           {
             m_flowWorkspace.postCommand( lChangeFeatureCommand );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             // TODO Auto-generated catch block
             e.printStackTrace();
