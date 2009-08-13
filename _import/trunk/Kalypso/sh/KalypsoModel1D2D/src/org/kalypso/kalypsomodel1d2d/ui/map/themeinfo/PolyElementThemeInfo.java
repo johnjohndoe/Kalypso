@@ -9,6 +9,7 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.ogc.gml.FeatureThemeInfo;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 public class PolyElementThemeInfo extends FeatureThemeInfo
 {
@@ -31,10 +32,15 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
 
     try
     {
+      final GM_Surface geometry = polyElement.getGeometry();
+      final double area = geometry.getArea();
+
+      formatter.format( "Fläche: %.2f m²%n%n", area );
+
       final IRoughnessClsCollection roughnessModel = dataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
 
       final String roughnessStyle = polyElement.getRoughnessStyle();
-      formatter.format( "%s%n", roughnessStyle );
+      formatter.format( "Rauheitsklasse: %s%n", roughnessStyle );
 
       final String roughnessClsID = polyElement.getRoughnessClsID();
       final Double roughnessCorrectionKS = polyElement.getRoughnessCorrectionKS();
@@ -49,23 +55,20 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
 
       final double ks = roughnessCls.getKs();
       final double ksCorr = roughnessCorrectionKS == null ? 1.0 : roughnessCorrectionKS;
-      formatter.format( "%nRoughness (ks):   %.3f (%.3f)%n", ks, ksCorr );
+      formatter.format( "%nRoughness (ks):   %.3f m (%.2f%%)%n", ks, ksCorr * 100 );
 
       final double axay = roughnessCls.getAxAy();
       final double axayCorr = roughnessCorrectionAXAY == null ? 1.0 : roughnessCorrectionAXAY;
-      final double dp = roughnessCls.getAxAy();
+      final double dp = roughnessCls.getDp();
       final double dpCorr = roughnessCorrectionDP == null ? 1.0 : roughnessCorrectionDP;
       if( axay > 0 || dp > 0 )
-        formatter.format( "Vegetation (axay, dp): %.3f, %.3f (%.3f, %.3f)%n", axay, dp, axayCorr, dpCorr );
+        formatter.format( "Vegetation (axay, dp): %.3f m (%.2f%%), %.3f m (%.2f%%)%n", axay, axayCorr * 100, dp, dpCorr * 100 );
 
       final double eddyXX = roughnessCls.getEddyXX();
       final double eddyXY = roughnessCls.getEddyXY();
       final double eddyYX = roughnessCls.getEddyYX();
       final double eddyYY = roughnessCls.getEddyYY();
-      formatter.format( "eddy: %.3f / %.3f / %.3f / %.3f%n", eddyXX, eddyXY, eddyYX, eddyYY );
-
-      final double marsh = roughnessCls.getMarsh();
-      formatter.format( "marsh: %.3f%n", marsh );
+      formatter.format( "Eddy: %.3f / %.3f / %.3f / %.3f%n", eddyXX, eddyXY, eddyYX, eddyYY );
     }
     catch( final Exception e )
     {
