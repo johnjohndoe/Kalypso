@@ -11,9 +11,15 @@
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Line:sld:default"
 		uri="FELine.sld" />
+	
+	<!--  PolyElement -->
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:PolyElement:sld:default"
-		uri="FE1D2DPolyElement.sld" />
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.PolyElement.sld" />
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:PolyElement:uiproperties:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.PolyElement.properties" />
+		
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Element1D:sld:default"
 		uri="Element1D.sld" />
