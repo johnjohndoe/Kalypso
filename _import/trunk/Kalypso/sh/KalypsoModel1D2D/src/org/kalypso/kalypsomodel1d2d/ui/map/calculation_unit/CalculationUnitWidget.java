@@ -64,8 +64,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
-import org.kalypso.kalypsomodel1d2d.ui.map.popup.PopupBlocker;
-import org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -106,9 +104,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     public void dataChanged( final String key, final Object newValue )
     {
       if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
-      {
         m_calcUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
-      }
     }
   };
 
@@ -116,10 +112,10 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    * Used to prevent the swt popup to show
    */
   //fixed by Dmitrijs
-  //commented for fix of bug #262 @link https://sourceforge.net/apps/trac/kalypso/ticket/262 
-  //the following elements are not needed actually and the use of PopupBlocker rises NullPointerException, 
+  //commented for fix of bug #262 @link https://sourceforge.net/apps/trac/kalypso/ticket/262
+  //the following elements are not needed actually and the use of PopupBlocker rises NullPointerException,
   //that was blocking the correct work of this widget.
-  
+
 //  final PopupBlocker popupBlocker = new PopupBlocker();
 //
 //  private MapActionDisabler mapActionDisabler;
@@ -227,7 +223,6 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
-
   public void clickPopup( final Point p )
   {
     if( m_strategy != null )

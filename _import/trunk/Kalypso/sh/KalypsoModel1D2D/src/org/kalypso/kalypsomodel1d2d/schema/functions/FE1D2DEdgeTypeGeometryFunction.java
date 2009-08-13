@@ -47,21 +47,18 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     if( !GeometryCalcControl.doCalcEdge )
-    {
       return null;
-    }
 
-    QName featureQName = feature.getFeatureType().getQName();
+    final QName featureQName = feature.getFeatureType().getQName();
 
     if( IFE1D2DEdge.QNAME.equals( featureQName ) )
     {
       final FE1D2DEdge edge = new FE1D2DEdge( feature );
       try
       {
-
         return edge.recalculateEgdeGeometry();
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         e.printStackTrace();
         final IStatus status = StatusUtilities.statusFromThrowable( e );
@@ -80,7 +77,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
 
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     // System.out.println("New Edge geometry="+valueToSet.getClass());
     if( true )
@@ -92,13 +89,13 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
 
       try
       {
-        GM_LineString lineString = ((GM_Curve) valueToSet).getAsLineString();
+        final GM_LineString lineString = ((GM_Curve) valueToSet).getAsLineString();
         if( lineString.getNumberOfPoints() == 2 )
         {
-          IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
+          final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
           if( edge != null )
           {
-            IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
+            final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
             if( nodes.size() == 2 )
             {
               System.out.println( "Node set:" + lineString.getStartPoint().distance( nodes.get( 0 ).getPoint() ) ); //$NON-NLS-1$
@@ -114,7 +111,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
         System.out.println( "Not sets:" + lineString ); //$NON-NLS-1$
         return null;
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         e.printStackTrace();
         return null;
