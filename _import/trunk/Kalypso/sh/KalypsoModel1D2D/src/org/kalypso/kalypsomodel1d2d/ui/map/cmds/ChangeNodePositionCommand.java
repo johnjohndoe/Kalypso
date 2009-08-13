@@ -138,15 +138,21 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 
     if( m_fireEventsForDependendElements )
     {
-      /* Nodes etc. */
+      /* Edges etc. */
       final IFeatureWrapperCollection<IFeatureWrapper2> containers = m_node.getContainers();
       for( final IFeatureWrapper2 featureWrapper2 : containers )
+      {
         changedFeatures.add( featureWrapper2.getFeature() );
+        featureWrapper2.getFeature().setEnvelopesUpdated();
+      }
 
       /* Elements */
       final IFE1D2DElement[] elements = m_node.getElements();
       for( final IFE1D2DElement element : elements )
+      {
         changedFeatures.add( element.getFeature() );
+        element.getFeature().setEnvelopesUpdated();
+      }
     }
 
     final GMLWorkspace workspace = m_discretisationModel.getFeature().getWorkspace();
