@@ -61,6 +61,8 @@ import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -72,26 +74,56 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
-  private CalUnitDisplayElement calUnitDisplayElement;
+  private CalUnitDisplayElement m_calUnitDisplayElement;
 
   private ICalculationUnit m_calcUnit;
 
-  private IFlowRelationshipModel modelBoundaryConditions;
+  private IFlowRelationshipModel m_modelBoundaryConditions;
 
-  private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) ); //$NON-NLS-1$
+  private final ImageIcon m_imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) ); //$NON-NLS-1$
+
+  private final ModellEventListener m_modellListener = new ModellEventListener()
+  {
+    @SuppressWarnings("synthetic-access")
+    @Override
+    public void onModellChange( final ModellEvent modellEvent )
+    {
+      // We request repaint on any modell event, because we can assume, that we only get modell events
+      // from the calc-unit workspace and this can only happen when editing the cal-unit
+      fireRepaintRequested( null );
+    }
+  };
 
   public Model1d2dCalUnitTheme( final I10nString name, final IMapModell mapModel )
   {
     super( name, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme.0" ), mapModel ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( m_calcUnit != null )
+      m_calcUnit.getFeature().getWorkspace().removeModellListener( m_modellListener );
+
+    super.dispose();
+  }
+
   public void setCalculationUnit( final ICalculationUnit calcUnit )
   {
-    m_calcUnit = calcUnit;
     if( m_calcUnit != null )
-      calUnitDisplayElement = new CalUnitDisplayElement( m_calcUnit );
-    else
-      calUnitDisplayElement = null;
+      m_calcUnit.getFeature().getWorkspace().removeModellListener( m_modellListener );
+
+    m_calUnitDisplayElement = null;
+    m_calcUnit = calcUnit;
+
+    if( calcUnit != null )
+    {
+      m_calUnitDisplayElement = new CalUnitDisplayElement( calcUnit );
+      calcUnit.getFeature().getWorkspace().addModellListener( m_modellListener );
+    }
 
     fireRepaintRequested( null );
   }
@@ -116,8 +148,8 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     if( selected != null && selected )
       return Status.OK_STATUS;
 
-    if( calUnitDisplayElement != null )
-      calUnitDisplayElement.paint( g, p, monitor );
+    if( m_calUnitDisplayElement != null )
+      m_calUnitDisplayElement.paint( g, p, monitor );
 
     markAppliedBoundaryConditions( g, p );
     return Status.OK_STATUS;
@@ -125,12 +157,12 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   private void markAppliedBoundaryConditions( final Graphics g, final GeoTransform p )
   {
-    if( modelBoundaryConditions != null && m_calcUnit != null )
+    if( m_modelBoundaryConditions != null && m_calcUnit != null )
     {
-      final Image img = imgIcon.getImage();
-      final int yTrans = (int) (imgIcon.getIconHeight() / -2.0);
-      final int xTrans = (int) (imgIcon.getIconWidth() / -2.0);
-      for( final IFeatureWrapper2 bc : modelBoundaryConditions )
+      final Image img = m_imgIcon.getImage();
+      final int yTrans = (int) (m_imgIcon.getIconHeight() / -2.0);
+      final int xTrans = (int) (m_imgIcon.getIconWidth() / -2.0);
+      for( final IFeatureWrapper2 bc : m_modelBoundaryConditions )
       {
         if( bc instanceof IBoundaryCondition )
         {
@@ -153,7 +185,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   @Override
   public boolean isLoaded( )
   {
-    return super.isLoaded();
+    return true;
   }
 
   /**
@@ -167,7 +199,6 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   public void setModelBoundaryConditions( final IFlowRelationshipModel bcs )
   {
-    this.modelBoundaryConditions = bcs;
+    m_modelBoundaryConditions = bcs;
   }
-
 }
