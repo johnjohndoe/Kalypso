@@ -9,7 +9,9 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.ogc.gml.FeatureThemeInfo;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 public class PolyElementThemeInfo extends FeatureThemeInfo
 {
@@ -32,10 +34,12 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
 
     try
     {
-      final GM_Surface geometry = polyElement.getGeometry();
-      final double area = geometry.getArea();
+      final GM_Surface<GM_SurfacePatch> surface = polyElement.getGeometry();
+      final PolyChecker polyChecker = new PolyChecker( surface );
 
-      formatter.format( "Fläche: %.2f m²%n%n", area );
+      formatter.format( "Area: %.2f m²%n", polyChecker.getArea() );
+      formatter.format( "Max. Edge-Length: %.2f m%n", polyChecker.getMaxLength() );
+      formatter.format( "Max. Edge-Ratio: 1 : %.1f%n%n", polyChecker.getLengthRatio() );
 
       final IRoughnessClsCollection roughnessModel = dataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
 
@@ -54,15 +58,20 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFeature.getAdapter( IRoughnessCls.class );
 
       final double ks = roughnessCls.getKs();
-      final double ksCorr = roughnessCorrectionKS == null ? 1.0 : roughnessCorrectionKS;
-      formatter.format( "%nRoughness (ks):   %.3f m (%.2f%%)%n", ks, ksCorr * 100 );
+      if( roughnessCorrectionKS == null )
+        formatter.format( "%nRoughness (ks):   %.3f m%n", ks );
+      else
+        formatter.format( "%nRoughness (ks):   %.3f m (%.2f%%)%n", ks, roughnessCorrectionKS * 100 );
 
       final double axay = roughnessCls.getAxAy();
-      final double axayCorr = roughnessCorrectionAXAY == null ? 1.0 : roughnessCorrectionAXAY;
       final double dp = roughnessCls.getDp();
-      final double dpCorr = roughnessCorrectionDP == null ? 1.0 : roughnessCorrectionDP;
       if( axay > 0 || dp > 0 )
-        formatter.format( "Vegetation (axay, dp): %.3f m (%.2f%%), %.3f m (%.2f%%)%n", axay, axayCorr * 100, dp, dpCorr * 100 );
+      {
+        if( roughnessCorrectionAXAY == null && roughnessCorrectionDP == null )
+          formatter.format( "Vegetation (axay, dp): %.3f m, %.3f m%n", axay, dp );
+        else
+          formatter.format( "Vegetation (axay, dp): %.3f m (%.2f%%), %.3f m (%.2f%%)%n", axay, roughnessCorrectionAXAY * 100, dp, roughnessCorrectionDP * 100 );
+      }
 
       final double eddyXX = roughnessCls.getEddyXX();
       final double eddyXY = roughnessCls.getEddyXY();
@@ -78,4 +87,59 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
     }
   }
 
+  /**
+   * Helper that calculates stuff for PolyElements
+   */
+  private final class PolyChecker
+  {
+    private final double m_maxLength;
+
+    private final double m_minLength;
+
+    private final double m_lengthRatio;
+
+    private final double m_area;
+
+    public PolyChecker( final GM_Surface<GM_SurfacePatch> surface )
+    {
+      final int surfaceSize = surface.size();
+      double maxLength = 0.0;
+      double minLength = Double.MAX_VALUE;
+      for( int i = 0; i < surfaceSize; i++ )
+      {
+        final GM_SurfacePatch patch = surface.get( i );
+        final GM_Position[] ring = patch.getExteriorRing();
+        final int ringSize = ring.length;
+        for( int j = 0; j < ringSize - 1; j++ )
+        {
+          final GM_Position pos0 = ring[j];
+          final GM_Position pos1 = ring[j + 1];
+
+          final double length = pos0.getDistance( pos1 );
+          maxLength = Math.max( maxLength, length );
+          minLength = Math.min( minLength, length );
+        }
+      }
+
+      m_maxLength = maxLength;
+      m_minLength = minLength;
+      m_lengthRatio = maxLength / minLength;
+      m_area = surface.getArea();
+    }
+
+    public double getArea( )
+    {
+      return m_area;
+    }
+
+    public double getMaxLength( )
+    {
+      return m_maxLength;
+    }
+
+    public double getLengthRatio( )
+    {
+      return m_lengthRatio;
+    }
+  }
 }
