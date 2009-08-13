@@ -798,4 +798,11 @@
            id="org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayerProvider">
      </provider>
   </extension>
+  <extension
+        point="org.kalypso.core.themeInfo">
+     <themeInfo
+           class="org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo"
+           id="org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo">
+     </themeInfo>
+  </extension>
 </plugin>
