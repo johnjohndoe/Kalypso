@@ -294,7 +294,8 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="par:SoilLayer"/>
+					<!--  Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
+					<element ref="par:SoilLayer" maxOccurs="0"/>
 				</sequence>
 			</restriction>
 		</complexContent>
