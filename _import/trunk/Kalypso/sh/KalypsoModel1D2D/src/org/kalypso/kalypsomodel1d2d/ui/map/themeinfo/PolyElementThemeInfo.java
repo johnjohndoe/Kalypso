@@ -44,7 +44,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       final IRoughnessClsCollection roughnessModel = dataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
 
       final String roughnessStyle = polyElement.getRoughnessStyle();
-      formatter.format( "Rauheitsklasse: %s%n", roughnessStyle );
+      formatter.format( "Class: %s%n", roughnessStyle );
 
       final String roughnessClsID = polyElement.getRoughnessClsID();
       final Double roughnessCorrectionKS = polyElement.getRoughnessCorrectionKS();

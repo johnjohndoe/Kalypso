@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -64,6 +65,8 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
 
   public final static QName WB1D2D_PROP_DIRECTEDNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" ); //$NON-NLS-1$
 
+  public final static QName WB1D2D_PROP_MIDDLE_GEOM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
+ 
   /**
    * Adds the a container to this edge. edge container are typically finite elements.
    * 
@@ -92,11 +95,11 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * Add a node to this edge.
    * 
    * @param the
-   *            id of the node
+   *          id of the node
    * @throws IllegalArgumentException
-   *             if nodeID is null
+   *           if nodeID is null
    * @throws ArrayIndexOutOfBoundsException
-   *             if there are allready 2 node in this edge
+   *           if there are already 2 node in this edge
    * 
    */
   public void addNode( String nodeID );
@@ -157,5 +160,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
   public boolean isBorder( );
 
   public IFeatureWrapperCollection<IFE1D2DElement> getAdjacentElements( );
+
+  public GM_Curve getGeometry( );
 
 }

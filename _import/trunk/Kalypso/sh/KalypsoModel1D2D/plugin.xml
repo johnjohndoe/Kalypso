@@ -167,6 +167,14 @@
         <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget" />
       </class>
     </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D">
+      <activeWhen>
+        <reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.MergeTrianglesWidget" />
+      </class>
+    </handler>
     <!-- Continuity Lines -->
     <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine">
       <activeWhen>
@@ -400,6 +408,7 @@
     <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D.description" />
     <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D.description" />
     <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.description" />
 	<!-- Continuity Lines -->
     <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine.description" />
     <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine.description" />
@@ -616,6 +625,8 @@
     <menuContribution locationURI="menu:org.kalypso.ui.view.mapView.refine2DMenu">
       <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D" style="radio" 
         label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.label" tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.tooltip" />
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D" style="radio" 
+        label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.label" tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.tooltip" />
     </menuContribution>
   </extension>
 
@@ -731,6 +742,7 @@
     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D" icon="icons/elcl16/04_cut_2D.gif"/>
     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D" icon="icons/elcl16/07_move_FE_knot.gif"/>
     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D" icon="icons/elcl16/33_refine_2D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D" icon="icons/elcl16/34_merge_triangles.gif"/>
     <!-- Continuity-Lines -->
     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine" icon="icons/elcl16/03_add_conti.gif"/>
     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine" icon="icons/elcl16/06_cut_conti.gif"/>

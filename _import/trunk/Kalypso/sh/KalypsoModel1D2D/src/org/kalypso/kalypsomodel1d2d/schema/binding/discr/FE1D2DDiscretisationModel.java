@@ -247,37 +247,42 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     return nearest;
   }
 
+  public IFE1D2DEdge findEdge( final GM_Point position, final double grabDistance )
+  {
+    final FeatureList modelList = m_edges.getWrappedList();
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
+    final List<Feature> foundEdges = modelList.query( reqEnvelope, null );
+    double min = Double.MAX_VALUE;
+    IFE1D2DEdge nearest = null;
+    for( final Feature feature : foundEdges )
+    {
+      if( feature == null )
+        continue; // This should never happen!
+
+      final IFE1D2DEdge current = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
+      if( current != null )
+      {
+        final GM_Curve curve = current.getGeometry();
+        if( curve != null )
+        {
+          final double curDist = position.distance( curve );
+          if( min > curDist && curDist <= grabDistance )
+          {
+            nearest = current;
+            min = curDist;
+          }
+        }
+      }
+    }
+    return nearest;
+  }
+  
   /**
    * Returns the geometry of the given item of the net.
    */
   private GM_Object geometryFromNetItem( final IFENetItem netItem )
   {
-//    try
-//    {
-      // TODO: add other known classes to switch
-
-      // ATTENTION: order of these ifs is importent, because
-      // IFE1D2DContinuityLine inherits from FE1D2D_2DElement but
-      // has no surface...
-      // FIX: make an own wrapper-class for Polygon-Elements, only those
-      // have a surface
-    
      return netItem.getFeature().getDefaultGeometryPropertyValue();
-     
-//      if( netItem instanceof IElement1D )
-//        return ((IElement1D) netItem).getGeometry();
-//
-//      if( netItem instanceof IPolyElement )
-//        return ((IPolyElement) netItem).getGeometry();
-
-    // return null;
-//    }
-//    catch( final GM_Exception e )
-//    {
-//      e.printStackTrace();
-//      return null;
-//    }
-
   }
 
   /**

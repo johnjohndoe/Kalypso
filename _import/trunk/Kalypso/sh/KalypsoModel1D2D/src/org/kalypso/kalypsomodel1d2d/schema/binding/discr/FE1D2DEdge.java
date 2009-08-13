@@ -263,4 +263,13 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     return containers.size() == 1;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getGeometry()
+   */
+  @Override
+  public GM_Curve getGeometry( )
+  {
+    return getProperty( WB1D2D_PROP_MIDDLE_GEOM, GM_Curve.class );
+  }
+
 }
