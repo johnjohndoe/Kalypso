@@ -186,7 +186,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
   private Object getValue( final Object object )
   {
     if( object == null )
-      return ""; //$NON-NLS-1$
+      return null;
     if( object instanceof List )
       return ((List<Object>) object).get( 0 );
     else
