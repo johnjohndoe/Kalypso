@@ -100,9 +100,9 @@ import org.xml.sax.SAXException;
 
 /**
  * TODO: move this into the deegree plug-in.
- * 
+ *
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class SLDHelper
 {
@@ -257,7 +257,7 @@ public class SLDHelper
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final Style[] styles = new Style[] { StyleFactory.createUserStyle( styleName, styleTitle, null, false, featureTypeStyles ) };
     final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( LAYER_NAME, null, styles ) };
-    return SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
+    return SLDFactory.createStyledLayerDescriptor( layers );
   }
 
   private static StyledLayerDescriptor createRasterSLD( final List< ? > collection, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
@@ -297,7 +297,7 @@ public class SLDHelper
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final Style[] styles = new Style[] { StyleFactory.createUserStyle( styleName, styleTitle, null, false, featureTypeStyles ) };
     final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( LAYER_NAME, null, styles ) };
-    return SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
+    return SLDFactory.createStyledLayerDescriptor( layers );
   }
 
   public static Layer polygonStyleLayer( final String layerName, final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor progressMonitor ) throws CoreException
@@ -359,7 +359,6 @@ public class SLDHelper
 
   public static Layer textlabelStyleLayer( final String layerName, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle )
   {
-
     final String myLayerName = layerName == null ? LAYER_NAME : layerName;
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
     final PropertyName geomPropertyName = geometryProperty == null ? null : new PropertyName( geometryProperty );
@@ -393,6 +392,6 @@ public class SLDHelper
 
   private static StyledLayerDescriptor createPolygonSLD( final Layer[] layers )
   {
-    return SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
+    return SLDFactory.createStyledLayerDescriptor( layers );
   }
 }

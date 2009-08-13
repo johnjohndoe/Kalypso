@@ -70,7 +70,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * In order so that can work, the geometry name of both must be the same, but this should not be the case.<br>
  * Introducing a second virtual property on the 2d-elements is no solution, as then the 2d-element geometry is always
  * calculated twice, such having heavy impact on the overall performance!
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class RoughnessStyleUpdateService extends Job
@@ -79,10 +79,10 @@ public class RoughnessStyleUpdateService extends Job
 
   private static final String POLYGON_LAYER_NAME = "Flow Resistance Class";  //$NON-NLS-1$
   private static final String LABEL_LAYER_NAME = "Labels";  //$NON-NLS-1$
-  
-  
+
+
   // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also
-  
+
   private static final String POLYGON_STYLE_NAME = "Roughness style"; //$NON-NLS-1$
 
   private static final String POLYGON_STYLE_TITLE = "Flow Resistance Class"; //$NON-NLS-1$
@@ -137,7 +137,10 @@ public class RoughnessStyleUpdateService extends Job
 
       final List<Layer> layers = new ArrayList<Layer>();
       layers.add( SLDHelper.polygonStyleLayer( POLYGON_LAYER_NAME, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, POLYGON_STYLE_NAME, POLYGON_STYLE_TITLE, monitor ) );
-      layers.add( SLDHelper.textlabelStyleLayer( LABEL_LAYER_NAME, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, LABEL_STYLE_NAME, LABEL_STYLE_TITLE ) );
+
+      // TODO: make optional via preferences?
+      // layers.add( SLDHelper.textlabelStyleLayer( LABEL_LAYER_NAME, geomPropertyName,
+      // IRoughnessPolygon.PROP_ROUGHNESS_STYLE, LABEL_STYLE_NAME, LABEL_STYLE_TITLE ) );
 
       SLDHelper.exportPolygonSymbolyzerSLD( m_sldFile, layers.toArray(new Layer[0]), monitor );
       return Status.OK_STATUS;
