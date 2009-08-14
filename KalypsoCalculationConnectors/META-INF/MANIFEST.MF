@@ -24,3 +24,4 @@ Export-Package: org.kalypso.calculation.connector,
  org.kalypso.calculation.connector.fm_rm,
  org.kalypso.calculation.connector.na_wspm,
  org.kalypso.calculation.connector.wspm_fm
+Bundle-ClassPath: .
