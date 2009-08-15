@@ -1386,4 +1386,7 @@ new features introduced/ started to be introduced:
 --- Nico Schrage, 10.08.2009
 
 
-130.)
+130.) Bug fix during reading of boundary conditions; Specification of a time step length should be sufficient, i.e. if no dates are
+      given, there should not be a read error. Read error would occur, since there is no fixed format necessary.
+      
+--- Nico Schrage, 15.08.2009
