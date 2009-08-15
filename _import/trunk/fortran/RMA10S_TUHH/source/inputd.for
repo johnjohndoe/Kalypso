@@ -117,7 +117,14 @@ cipk apr96 end changes
      +  call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'DT')
 
 cipk apr96 add ending time for time step
-      read (dlin, *) delt, iyend, idye, hrend
+      istat = 0
+      read (dlin, *, iostat = istat) delt, iyend, idye, hrend
+      if (istat /= 0) then
+        istat = 0
+        read (dlin, *, iostat = istat) dlin
+        if (istat /= 0) stop 'DT line set up wrongly'
+      endif 
+      
       
       !Distinguish between unit of time step length:
       !---------------------------------------------

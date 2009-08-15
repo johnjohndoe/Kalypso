@@ -18,6 +18,7 @@ CIPK  LAST UPDATED SEP7 1995
 
 !MD: Local Varaible for checking BC-data
       INTEGER :: Check_BC_Data
+      integer :: istat 
 
 !------------------------------------------------------------------------
 ! Description of this ROUTINE GETBC(IBIN)
@@ -105,7 +106,14 @@ cipk apr96 end changes
 cipk apr96 add ending time for time step
 cipk mar98 remove iwind 
       !READ(DLIN,5031) DELT,iyend,idye,hrend
-      READ(DLIN,*) DELT,iyend,idye,hrend
+      !FIXME: We need a generatlized input technique!
+      istat = 0
+      READ(DLIN,*, iostat = istat) DELT,iyend,idye,hrend
+      if (istat /= 0) then
+        istat = 0
+        read (dlin, *, iostat = istat) DELT
+        if (istat /= 0) stop 'DT line set up wrongly'
+      endif
 
       if(ibin .ne. nscrin) then
         write(lout,6156) delt,iyend,idye,hrend
