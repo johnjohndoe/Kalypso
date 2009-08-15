@@ -191,8 +191,6 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     String styleLocation = null;
 
     final String resultType = "gml"; //$NON-NLS-1$
-    final String styleLinkType = "sld"; //$NON-NLS-1$
-    final String styleType = "simple"; //$NON-NLS-1$
     final String featurePath = ""; //$NON-NLS-1$
 
     String type = null;
@@ -212,10 +210,10 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
       /* create the commands */
       if( m_resultLayerCommandData[1] != null )
-        m_resultLayerCommandData[1].setValues( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, type );
+        m_resultLayerCommandData[1].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
       else
       {
-        m_resultLayerCommandData[1] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, m_scenarioFolder, type );
+        m_resultLayerCommandData[1] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, m_scenarioFolder, type );
         m_resultLayerCommandData[1].setSelected( true );
       }
 
@@ -236,10 +234,10 @@ public class TinResultThemeCreator extends AbstractThemeCreator
       }
       /* create the commands */
       if( m_resultLayerCommandData[0] != null )
-        m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, type );
+        m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
       else
       {
-        m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, m_scenarioFolder, type );
+        m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, m_scenarioFolder, type );
         m_resultLayerCommandData[0].setSelected( true );
       }
 

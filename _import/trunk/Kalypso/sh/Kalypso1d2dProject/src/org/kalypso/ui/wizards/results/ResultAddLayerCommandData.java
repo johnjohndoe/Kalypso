@@ -72,10 +72,6 @@ public class ResultAddLayerCommandData
 
   private String m_styleLocation;
 
-  private String m_styleLinkType;
-
-  private String m_styleType;
-
   private IFile m_sldFile = null;
 
   private double m_minValue;
@@ -88,7 +84,7 @@ public class ResultAddLayerCommandData
 
   private String m_type;
 
-  public ResultAddLayerCommandData( final String themeName, final String resultType, final String featurePath, final String source, final String style, final String styleLocation, final String styleLinkType, final String styleType, final IFolder scenarioFolder, final String type )
+  public ResultAddLayerCommandData( final String themeName, final String resultType, final String featurePath, final String source, final String style, final String styleLocation, final IFolder scenarioFolder, final String type )
   {
     m_themeName = themeName;
     m_resultType = resultType;
@@ -96,8 +92,6 @@ public class ResultAddLayerCommandData
     m_source = source;
     m_style = style;
     m_styleLocation = styleLocation;
-    m_styleLinkType = styleLinkType;
-    m_styleType = styleType;
     m_scenarioFolder = scenarioFolder;
     m_type = type;
 
@@ -154,22 +148,12 @@ public class ResultAddLayerCommandData
     return m_styleLocation;
   }
 
-  public String getStyleLinkType( )
-  {
-    return m_styleLinkType;
-  }
-
-  public String getStyleType( )
-  {
-    return m_styleType;
-  }
-
   public IFile getSldFile( )
   {
     return m_sldFile;
   }
 
-  public void setValues( final String themeName, final String resultType, final String featurePath, final String source, final String style, final String styleLocation, final String styleLinkType, final String styleType, final String type )
+  public void setValues( final String themeName, final String resultType, final String featurePath, final String source, final String style, final String styleLocation, final String type )
   {
     m_themeName = themeName;
     m_resultType = resultType;
@@ -177,8 +161,6 @@ public class ResultAddLayerCommandData
     m_source = source;
     m_style = style;
     m_styleLocation = styleLocation;
-    m_styleLinkType = styleLinkType;
-    m_styleType = styleType;
     m_type = type;
 
     updateStyleLocation();

@@ -75,7 +75,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
   private final BigDecimal m_maxValue;
 
-  public NodeResultThemeCreator( IDocumentResultMeta documentResult, final IFolder scenarioFolder )
+  public NodeResultThemeCreator( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
     m_documentResult = documentResult;
     m_minValue = m_documentResult.getMinValue();
@@ -86,7 +86,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   }
 
   @Override
-  public Composite createControl( Group parent )
+  public Composite createControl( final Group parent )
   {
     final Composite buttonComp = new Composite( parent, SWT.NONE );
     buttonComp.setLayout( new GridLayout( 4, false ) );
@@ -115,8 +115,6 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     final String themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
     String styleLocation = null;
     final String type = "Node"; //$NON-NLS-1$
-    final String styleLinkType = "sld"; //$NON-NLS-1$
-    final String styleType = "simple"; //$NON-NLS-1$
     final String resultType = "gml"; //$NON-NLS-1$
 
     // check, if there is a style already chosen, if not create one from default template
@@ -126,13 +124,13 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     }
 
     if( m_resultLayerCommandData[0] != null )
-      m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, type );
+      m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
     else
-      m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, m_scenarioFolder, type );
+      m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, m_scenarioFolder, type );
 
   }
 
-  private String getStyle( String resFolder, String type )
+  private String getStyle( final String resFolder, final String type )
   {
 
     final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();

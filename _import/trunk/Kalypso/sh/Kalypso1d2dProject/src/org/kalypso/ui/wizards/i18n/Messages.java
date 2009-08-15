@@ -46,7 +46,7 @@ import java.util.ResourceBundle;
 
 /**
  * @author kimwerner
- *
+ * 
  */
 public class Messages
 {
@@ -58,17 +58,19 @@ public class Messages
   {
   }
 
-  public static String getString( String key )
+  public static String getString( final String key )
   {
     try
     {
       return RESOURCE_BUNDLE.getString( key );
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       return '!' + key + '!';
     }
-  }public static String getFormatString( final String key, Object... args )
+  }
+
+  public static String getFormatString( final String key, final Object... args )
   {
     String formatStr = ""; //$NON-NLS-1$
     try

@@ -147,7 +147,6 @@ public class MapUtils
   /**
    * TODO: maybe move into helper class
    */
-  @SuppressWarnings("deprecation")
   public static IStatus addThemes( final IKalypsoLayerModell modell, final ICommandTarget commandTarget, final IResultMeta[] results, final IThemeConstructionFactory factory, final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.MapUtils.5"), results.length ); //$NON-NLS-1$
@@ -162,7 +161,8 @@ public class MapUtils
         {
           if( modell != null )
           {
-            final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource(), data.getStyleLinkType(), data.getStyle(), data.getStyleLocation(), data.getStyleType() );
+            final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource() );
+            addThemeCommand.addStyle( data.getStyle(), data.getStyleLocation() );
             addThemeCommand.addProperties( data.getProperties() );
             commandTarget.postCommand( addThemeCommand, null );
           }

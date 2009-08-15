@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -67,23 +68,6 @@ import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
  */
 public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 {
-  /**
-   * Just a pair of qname and a string.<br>
-   * Used as additional property values for the root feature of the surface.
-   */
-  public final static class QNameAndString
-  {
-    public final QName m_qname;
-
-    public final String m_value;
-
-    public QNameAndString( final QName qname, final String value )
-    {
-      m_qname = qname;
-      m_value = value;
-    }
-  }
-
   private final GM_TriangulatedSurface m_surface;
 
   private ResultType.TYPE m_parameter = null;

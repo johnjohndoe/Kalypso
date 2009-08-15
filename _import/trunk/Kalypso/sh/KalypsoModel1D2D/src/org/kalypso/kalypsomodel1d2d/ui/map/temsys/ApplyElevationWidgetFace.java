@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -53,11 +52,14 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -70,6 +72,7 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -97,14 +100,14 @@ class ApplyElevationWidgetFace
 
   private final IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
 
-  private final ApplyElevationWidgetDataModel m_dataModel;
+  final ApplyElevationWidgetDataModel m_dataModel;
 
   private Section elevationColorSection;
 
   private final IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
   {
     @SuppressWarnings( { "synthetic-access", "unchecked" })//$NON-NLS-1$
-    public void selectionChanged( IFeatureSelection selection )
+    public void selectionChanged( final IFeatureSelection selection )
     {
       if( m_nodeElevationViewer == null )
         return;
@@ -115,7 +118,7 @@ class ApplyElevationWidgetFace
       final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
       Feature selecFeature = null;
       IFE1D2DNode selecNode = null;
-      for( Object selected : selection.toList() )
+      for( final Object selected : selection.toList() )
       {
         if( selected instanceof Feature )
           selecFeature = (Feature) selected;
@@ -134,13 +137,13 @@ class ApplyElevationWidgetFace
 
       try
       {
-        IWorkbench workbench = PlatformUI.getWorkbench();
+        final IWorkbench workbench = PlatformUI.getWorkbench();
 
         m_nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
         {
           public void run( )
           {
-            IContentProvider cp = m_nodeElevationViewer.getContentProvider();
+            final IContentProvider cp = m_nodeElevationViewer.getContentProvider();
             if( cp instanceof ArrayContentProvider )
               m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
             else
@@ -150,7 +153,7 @@ class ApplyElevationWidgetFace
           }
         } );
 
-        IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
         if( activeWorkbenchWindow == null )
         {
           System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.1" ) ); //$NON-NLS-1$
@@ -158,7 +161,7 @@ class ApplyElevationWidgetFace
         }
 
       }
-      catch( Throwable th )
+      catch( final Throwable th )
       {
         th.printStackTrace();
       }
@@ -209,6 +212,21 @@ class ApplyElevationWidgetFace
     areaSelectSection.setLayoutData( tableWrapData );
     areaSelectSection.setExpanded( true );
     areaSelectSection.setEnabled( true );
+
+    //
+    final Button dtmButton = toolkit.createButton( scrolledForm.getBody(), "Show/Refresh Model-Isolines", SWT.PUSH );
+    dtmButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final IMapPanel mapPanel = m_dataModel.getMapPanel();
+        PreviewModelDtm.showModelDtm( parent.getShell(), mapPanel );
+      }
+    } );
 
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );

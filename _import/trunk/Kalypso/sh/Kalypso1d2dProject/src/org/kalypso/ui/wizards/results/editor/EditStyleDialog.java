@@ -78,6 +78,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;

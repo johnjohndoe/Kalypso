@@ -66,6 +66,7 @@ import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
@@ -204,7 +205,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
       case hmo:
         crs = getCoordinateSytem( properties.getProperty( "srs" ) ); //$NON-NLS-1$
-        eater = new TriangulatedSurfaceTriangleEater( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), new TriangulatedSurfaceTriangleEater.QNameAndString[] {} );
+        eater = new TriangulatedSurfaceTriangleEater( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), new TriangulatedSurfaceWriter.QNameAndString[] {} );
 
         final GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
@@ -255,7 +256,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         // open shape
         crs = getCoordinateSytem( properties.getProperty( "srs" ) ); //$NON-NLS-1$
 
-        eater = new TriangulatedSurfaceTriangleEater( crs, new TriangulatedSurfaceTriangleEater.QNameAndString[] {} );
+        eater = new TriangulatedSurfaceTriangleEater( crs, new TriangulatedSurfaceWriter.QNameAndString[] {} );
 
         final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
         final String file2 = shapeURL.getFile();

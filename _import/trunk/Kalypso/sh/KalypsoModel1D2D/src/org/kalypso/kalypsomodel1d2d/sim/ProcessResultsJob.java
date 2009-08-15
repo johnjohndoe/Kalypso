@@ -79,7 +79,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.QNameAndString;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler1d;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;

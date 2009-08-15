@@ -44,11 +44,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -61,25 +58,17 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.QNameAndString;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.XMLReaderFactory;
-
-import com.sun.org.apache.xml.internal.serializer.ToXMLStream;
 
 /**
  * This eater writes the triangles into an GML-File as TriangualtedSurface.<br>
@@ -93,23 +82,20 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
   private final File m_tinResultFile;
 
-  private TriangulatedSurfaceMarshaller m_marshaller;
-
-  private ToXMLStream m_xmlStream;
+  private final TriangulatedSurfaceWriter m_writer;
 
   private final String m_crs;
 
-  private final List<QNameAndString> m_props = new ArrayList<QNameAndString>();
-
   private ZipEntry m_zipEntry;
+
+  private OutputStream m_os;
 
   public TriangulatedSurfaceDirectTriangleEater( final File tinResultFile, final ResultType.TYPE parameter, final String crs, final QNameAndString[] props ) throws CoreException
   {
     m_parameter = parameter;
     m_tinResultFile = tinResultFile;
     m_crs = crs;
-    m_props.addAll( Arrays.asList( props ) );
-    m_marshaller = initMarshaller();
+    m_writer = initMarshaller( props );
   }
 
   /**
@@ -120,14 +106,17 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
    */
   public void add( final INodeResult... nodes )
   {
-    if( m_marshaller == null )
+    if( m_writer == null )
       return;
 
+    if( nodes.length < 3 )
+      return;
+    
     try
     {
-      final GM_Triangle_Impl triangle = createTriangle( nodes, m_parameter );
+      final GM_Position[] triangle = processNodes( nodes, m_parameter );
       if( triangle != null )
-        m_marshaller.marshalTriangle( triangle, m_crs );
+        m_writer.add( triangle );
     }
     catch( final Exception e )
     {
@@ -151,6 +140,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     return null;
   }
 
+  
   private static GM_Position[] processNodes(final INodeResult[] nodes, ResultType.TYPE parameter )
   {
     // if no parameter is set, use terrain
@@ -216,27 +206,13 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
    */
   public void finished( ) throws CoreException
   {
-    final OutputStream os = m_xmlStream.getOutputStream();
     try
     {
-      m_marshaller.endSurface();
-
-      final AttributesImpl atts = new AttributesImpl();
-      for( final QNameAndString prop : m_props )
-      {
-        final QName qname = prop.m_qname;
-        m_xmlStream.startElement( qname.getNamespaceURI(), qname.getLocalPart(), qname.getLocalPart(), atts );
-        m_xmlStream.characters( prop.m_value.toCharArray(), 0, prop.m_value.length() );
-        m_xmlStream.endElement( qname.getNamespaceURI(), qname.getLocalPart(), qname.getLocalPart() );
-      }
-
-      m_xmlStream.endElement( "", "triangulatedSurfaceMember", "triangulatedSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      m_xmlStream.endElement( "", "TinResult", "TinResult" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      m_xmlStream.endDocument();
-
-      if( os instanceof ZipOutputStream )
-        ((ZipOutputStream) os).closeEntry();
-      os.close();
+      m_writer.finished();
+      
+      if( m_os instanceof ZipOutputStream )
+        ((ZipOutputStream) m_os).closeEntry();
+      m_os.close();
     }
     catch( final Exception e )
     {
@@ -245,7 +221,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
     finally
     {
-      IOUtils.closeQuietly( os );
+      IOUtils.closeQuietly( m_os );
     }
   }
 
@@ -257,13 +233,14 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     final Calendar calendar = Calendar.getInstance();
     calendar.setTime( date );
     final String printedDateTime = DatatypeConverter.printDateTime( calendar );
-    m_props.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), printedDateTime ) );//$NON-NLS-1$
+    
+    m_writer.addProperty( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), printedDateTime ) );//$NON-NLS-1$
   }
 
   /**
    * Returns the marshaller used to write the triangle, initialises it (and hence opens the file), if not yet done
    */
-  private TriangulatedSurfaceMarshaller initMarshaller( ) throws CoreException
+  private TriangulatedSurfaceWriter initMarshaller( final QNameAndString[] props ) throws CoreException
   {
     try
     {
@@ -272,54 +249,24 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
       final String extension = FilenameUtils.getExtension( tinFilePath ).toLowerCase();
 
-      // Create zipped or normal file
-      final OutputStream os;
       if( "zip".equals( extension ) ) //$NON-NLS-1$
       {
-        os = new ZipOutputStream( new FileOutputStream( tinFileBase + ".zip" ) ); //$NON-NLS-1$
+        m_os = new ZipOutputStream( new FileOutputStream( tinFileBase + ".zip" ) ); //$NON-NLS-1$
         m_zipEntry = new ZipEntry( "tin_" + m_parameter.name() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-        ((ZipOutputStream) os).putNextEntry( m_zipEntry );
+        ((ZipOutputStream) m_os).putNextEntry( m_zipEntry );
       }
       else if( "gz".equals( extension ) ) //$NON-NLS-1$
-        os = new GZIPOutputStream( new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gz" ) ) ) );
+        m_os = new GZIPOutputStream( new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gz" ) ) ) );
       else
-        os = new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gml" ) ) ); //$NON-NLS-1$
+        m_os = new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gml" ) ) ); //$NON-NLS-1$
 
-      m_xmlStream = new ToXMLStream();
-      m_xmlStream.setOutputStream( os );
-      // Configure content handler. IMPORTANT: call after setOutputStream!
-      m_xmlStream.setLineSepUse( true );
-      m_xmlStream.setIndent( true );
-      m_xmlStream.setIndentAmount( 1 );
-
-      final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-      xmlReader.setContentHandler( m_xmlStream );
-
-      m_marshaller = new TriangulatedSurfaceMarshaller( xmlReader, null );
-
-      m_xmlStream.startDocument();
-
-      m_xmlStream.startPrefixMapping( "gml", NS.GML3 ); // the attribute does not trigger the prefix mapping //$NON-NLS-1$
-      m_xmlStream.startElement( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult", "TinResult" ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_xmlStream.addAttribute( NS.GML3, "id", "gml:id", "string", "root" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      m_xmlStream.startElement( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember", "triangulatedSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final AttributesImpl atts = new AttributesImpl();
-      if( m_crs != null )
-      {
-        atts.addAttribute( "", "srsName", "srsName", "CDATA", m_crs ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( m_crs ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-      }
-
-      m_marshaller.startSurface( atts );
+      return new TriangulatedSurfaceWriter( m_os, m_crs, props );
     }
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
-
-    return m_marshaller;
   }
 
 }
