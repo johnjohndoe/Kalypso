@@ -276,7 +276,8 @@ public class ModelDtmWizard extends Wizard
 
       m_mapPart.postCommand( addThemeCommand, null );
     }
-    // else: nothing to do: the theme should already have refreshed itself after save of dtm and/or sld
+    else
+      dtmTheme.setVisible( true );
 
     return true;
   }
