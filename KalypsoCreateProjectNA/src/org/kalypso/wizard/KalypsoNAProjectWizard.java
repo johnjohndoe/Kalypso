@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -273,12 +274,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
       m_projectHandel.create( new NullProgressMonitor() );
       m_projectHandel.open( new NullProgressMonitor() );
       final IProjectDescription description = m_projectHandel.getDescription();
-//      final IProjectDescription description = new ProjectDescription();
       final String[] nanature = { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
       description.setNatureIds( nanature );
       m_projectHandel.setDescription( description, new NullProgressMonitor() );
-//      m_projectHandel.create( description, null );
-//      m_projectHandel.open( null );
       // set charSet for the new project to the UTF-8 standard
       // TODO: do not do such a thing (at least without comment why).
       // The workspace has its own preference settings
@@ -286,9 +284,11 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
     catch( final CoreException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+      ErrorDialog.openError( getShell(), "Create Project", "Failed to create project", e.getStatus() );
+      return false;
     }
+    
     // copy all the resources to the workspace into the new created project
     copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
     try
@@ -301,7 +301,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
       m_hydPath = new Path( m_projectHandel.getFullPath().append( "/hydrotop.gml" ).toString() ); //$NON-NLS-1$
       final URL hydURL = new URL( ResourceUtilities.createURLSpec( m_hydPath ) );
       m_hydWS = GmlSerializer.createGMLWorkspace( hydURL, null );
-
     }
     catch( final Exception e1 )
     {
