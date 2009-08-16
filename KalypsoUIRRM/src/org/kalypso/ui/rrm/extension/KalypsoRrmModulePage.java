@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
@@ -54,7 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard;
+import org.kalypso.wizard.KalypsoNAProjectWizard;
 
 /**
  * @author kuch
@@ -129,7 +128,7 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
   @Override
   public INewProjectWizard getProjectWizard( )
   {
-    return new NewNAAsciiProjectWizard();
+    return new KalypsoNAProjectWizard();
   }
 
   /**
