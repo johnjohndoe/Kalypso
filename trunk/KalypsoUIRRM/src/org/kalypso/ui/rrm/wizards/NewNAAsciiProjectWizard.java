@@ -51,14 +51,16 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -66,6 +68,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.gmlschema.GMLSchema;
@@ -99,8 +102,6 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   private IPath m_parameterPath;
 
   private GMLSchema m_parameterSchema;
-
-// private GMLWorkspace m_parameterWS = null;
 
   final File asciiBaseDir = new File( "C:\\TMP\\na" ); // TODO:change by wizard //$NON-NLS-1$
 
@@ -159,16 +160,20 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
 
     try
     {
-      final IProjectDescription description = new ProjectDescription();
+      m_projectHandel.create( new NullProgressMonitor() );
+      m_projectHandel.open( new NullProgressMonitor() );
+      final IProjectDescription description = m_projectHandel.getDescription();
       final String[] nanature = { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
       description.setNatureIds( nanature );
-      m_projectHandel.create( description, null );
-      m_projectHandel.open( null );
+      m_projectHandel.setDescription( description, new NullProgressMonitor() );
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
+      ErrorDialog.openError( getShell(), "Create Project", "Failed to create project", e.getStatus() );
+      return false;
     }
+    
     // copy all the resources to the workspace into the new created project
     copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
     try
@@ -181,7 +186,11 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     catch( final Exception e1 )
     {
       e1.printStackTrace();
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e1.getLocalizedMessage(), e1 );
+      ErrorDialog.openError( getShell(), "Create Project", "Failed to import ASCII-Data", status );
+      return false;
     }
+    
     try
     {
       ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
