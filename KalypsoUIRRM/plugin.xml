@@ -31,12 +31,13 @@
          point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
-            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.rrm"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.ui.newwizards.kalypso.rrm"
             class="org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard"
+            finalPerspective="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
             hasPages="true"
             icon="icons/kmStrang.gif"
             id="org.kalypso.ui.rrm.wizards.NewProjectImportAsciiWizard"
-            name="NA-Model Projekt aus Ascii File Projekt"
+            name="%wizard.name.0"
             project="true"/>
    </extension>
    <extension
@@ -49,10 +50,10 @@
    
   <!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportLanduse" name="Import Landuse"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportPedology" name="Import Pedology data"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportGeology" name="Import Geology data"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" name="Create hydrotops"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportLanduse" name="%command.name.0"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportPedology" name="%command.name.1"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportGeology" name="%command.name.2"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" name="%command.name.3"/>
 	</extension>
 
 	 <extension  point="org.eclipse.ui.commandImages">
