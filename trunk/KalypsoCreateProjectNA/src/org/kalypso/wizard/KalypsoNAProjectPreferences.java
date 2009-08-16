@@ -53,7 +53,6 @@ import org.kalypso.wizard.i18n.Messages;
  */
 public class KalypsoNAProjectPreferences extends WizardPage
 {
-
   private final GMLSchema m_modelSchema;
 
   String m_soilLayerNo = null;
@@ -71,9 +70,9 @@ public class KalypsoNAProjectPreferences extends WizardPage
   public KalypsoNAProjectPreferences( final String pageName, final GMLSchema schema )
   {
     super( pageName );
-    setTitle( Messages.getString( "KalypsoNAProjectPreferences.Title" ) ); //$NON-NLS-1$
+    setTitle( Messages.get( "KalypsoNAProjectPreferences.Title" ) ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    setDescription( Messages.getString( "KalypsoNAProjectPreferences.Description" ) ); //$NON-NLS-1$
+    setDescription( Messages.get( "KalypsoNAProjectPreferences.Description" ) ); //$NON-NLS-1$
     m_modelSchema = schema;
   }
 
@@ -95,11 +94,11 @@ public class KalypsoNAProjectPreferences extends WizardPage
     final Composite topComposite = new Composite( parent, SWT.NONE );
     topComposite.setLayout( new GridLayout() );
     final Group soil = new Group( topComposite, SWT.NONE );
-    soil.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupText" ) ); //$NON-NLS-1$
+    soil.setText( Messages.get( "KalypsoNAProjectPreferences.SoilGroupText" ) ); //$NON-NLS-1$
     soil.setLayout( new GridLayout( 2, true ) );
     soil.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     final Label soilLabel = new Label( soil, SWT.NONE );
-    soilLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
+    soilLabel.setText( Messages.get( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
     final IFeatureType catchmentFT = m_modelSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final int maxOccursSoil = catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ).getMaxOccurs();
@@ -112,7 +111,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
     soilComboGridData.widthHint = 50;
     soilComboGridData.horizontalAlignment = GridData.END;
     m_soilCombo.setLayoutData( soilComboGridData );
-    m_soilCombo.setToolTipText( Messages.getString( "KalypsoNAProjectPreferences.SoilDataToolTipText" ) ); //$NON-NLS-1$
+    m_soilCombo.setToolTipText( Messages.get( "KalypsoNAProjectPreferences.SoilDataToolTipText" ) ); //$NON-NLS-1$
     m_soilCombo.addSelectionListener( new SelectionAdapter()
     {
 
@@ -130,11 +129,11 @@ public class KalypsoNAProjectPreferences extends WizardPage
     m_soilLayerNo = m_soilCombo.getItem( 1 );
 
     final Group channel = new Group( topComposite, SWT.NONE );
-    channel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupText" ) ); //$NON-NLS-1$
+    channel.setText( Messages.get( "KalypsoNAProjectPreferences.KMChannelGroupText" ) ); //$NON-NLS-1$
     channel.setLayout( new GridLayout( 2, true ) );
     channel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     final Label channelLabel = new Label( channel, SWT.NONE );
-    channelLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
+    channelLabel.setText( Messages.get( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
     m_channelCombo.setLayout( new GridLayout() );
     final IFeatureType kmChannelFT = m_modelSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
@@ -147,7 +146,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
     channelComboGridData.widthHint = 50;
     channelComboGridData.horizontalAlignment = GridData.END;
     m_channelCombo.setLayoutData( channelComboGridData );
-    m_channelCombo.setToolTipText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelDataLable" ) ); //$NON-NLS-1$
+    m_channelCombo.setToolTipText( Messages.get( "KalypsoNAProjectPreferences.KMChannelDataLable" ) ); //$NON-NLS-1$
     m_channelCombo.addSelectionListener( new SelectionAdapter()
     {
 
@@ -183,7 +182,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
     // TODO wenn das NA Modell zukünftig ungleich fünf Abflüsse rechnen kann, dies entfernen!!
     if( !m_kmChannelNo.equals( String.valueOf( 5 ) ) )
     {
-      setErrorMessage( Messages.getString( "KalypsoNAProjectPreferences.KMChannelErrorMessage" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.get( "KalypsoNAProjectPreferences.KMChannelErrorMessage" ) ); //$NON-NLS-1$
       return false;
     }
     setErrorMessage( null );
