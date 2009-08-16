@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.NACalcJob,
  org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
  org.kalypso.afgui;bundle-version="0.0.0",
- org.kalypso.project.database.client;bundle-version="1.0.0"
+ org.kalypso.project.database.client;bundle-version="1.0.0",
+ org.kalypso.wizard.CreateNAProject;bundle-version="0.0.1"
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.ui.rrm.extension
