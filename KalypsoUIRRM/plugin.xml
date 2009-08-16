@@ -24,7 +24,7 @@
    <extension
          point="org.kalypso.core.catalogContribution">
       <catalogContribution
-            class="org.kalypso.ui.styles.RRMFeatureTypeStyleCatalogContribution"
+            class="org.kalypso.ui.rrm.catalog.RRMFeatureTypeStyleCatalogContribution"
             name="RRM-Style-Catalog"/>
    </extension>
    <extension
@@ -50,27 +50,15 @@
   <!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportLanduse" name="Import Landuse"/>
-	</extension>
-	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportPedology" name="Import Pedology data"/>
-	</extension>
-	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportGeology" name="Import Geology data"/>
-	</extension>
-	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" name="Create hydrotops"/>
 	</extension>
 
 	 <extension  point="org.eclipse.ui.commandImages">
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" icon="icons/landuseImport.gif"/>
-	 </extension>
-	 <extension  point="org.eclipse.ui.commandImages">
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" icon="icons/pedologyImport.gif"/>
-	 </extension>
-	 <extension  point="org.eclipse.ui.commandImages">
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" icon="icons/geologyImport.gif"/>
-	 </extension>
-	 <extension  point="org.eclipse.ui.commandImages">
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" icon="icons/geologyImport.gif"/>
 	 </extension>
 
@@ -80,22 +68,16 @@
 				<reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
 			</activeWhen>
 		</handler>
-	</extension>
-	<extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" class="org.kalypso.ui.rrm.action.RRMImportPedologyHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.onePedologyThemeSelected"/>
 			</activeWhen>
 		</handler>
-	</extension>
-	<extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" class="org.kalypso.ui.rrm.action.RRMImportGeologyHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected"/>
 			</activeWhen>
 		</handler>
-	</extension>
-	<extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>

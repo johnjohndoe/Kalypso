@@ -53,7 +53,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import kalypsoUIRRM.KalypsoUIRRMPlugin;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.dialogs.Dialog;
@@ -93,6 +92,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 

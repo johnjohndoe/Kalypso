@@ -1,4 +1,4 @@
-package org.kalypso.ui.styles;
+package org.kalypso.ui.rrm.catalog;
 
 import java.net.URL;
 
@@ -8,10 +8,9 @@ import org.kalypso.core.catalog.ICatalogContribution;
 
 public class RRMFeatureTypeStyleCatalogContribution implements ICatalogContribution
 {
-
   public void contributeTo( final CatalogManager catalogManager )
   {
-    final URL catalogURL = getClass().getResource( "resources/urn/catalog.xml" ); //$NON-NLS-1$
+    final URL catalogURL = getClass().getResource( "resources/catalog.xml" ); //$NON-NLS-1$
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     baseCatalog.addNextCatalog( catalogURL );
   }

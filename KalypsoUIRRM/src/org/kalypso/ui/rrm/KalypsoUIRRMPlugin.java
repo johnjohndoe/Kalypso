@@ -1,4 +1,4 @@
-package kalypsoUIRRM;
+package org.kalypso.ui.rrm;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

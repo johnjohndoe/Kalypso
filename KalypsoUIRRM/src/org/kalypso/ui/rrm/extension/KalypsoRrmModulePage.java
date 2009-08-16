@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import kalypsoUIRRM.KalypsoUIRRMPlugin;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
@@ -54,6 +53,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard;
 
 /**
