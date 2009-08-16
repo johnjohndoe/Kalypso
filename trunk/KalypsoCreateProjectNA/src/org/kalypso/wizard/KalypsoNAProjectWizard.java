@@ -67,10 +67,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
+import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -106,7 +106,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author kuepfer
  */
-public class KalypsoNAProjectWizard extends Wizard implements INewWizard
+public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
 {
   // Constants
   public static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
@@ -801,5 +801,23 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       return false;
     }
     return true;
+  }
+
+  /**
+   * @see org.kalypso.afgui.wizards.INewProjectWizard#getNewProject()
+   */
+  @Override
+  public IProject getNewProject( )
+  {
+    return m_projectHandel;
+  }
+
+  /**
+   * @see org.kalypso.afgui.wizards.INewProjectWizard#setActivateScenarioOnPerformFinish(boolean)
+   */
+  @Override
+  public void setActivateScenarioOnPerformFinish( final boolean b )
+  {
+    // ignore, makes no sense here
   }
 }

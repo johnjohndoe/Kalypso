@@ -46,14 +46,13 @@
 package org.kalypso.wizard;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -74,9 +73,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -103,20 +102,16 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private static final String TARGET_KEY = "target"; //$NON-NLS-1$
 
-  private static final int MIN_COLUMN_SIZE = 150;
-
   // widgets
   private Group fileGroup;
 
   private Label fileLabel;
 
-  private Group sourceGroup;
+  private Composite m_sourceGroup;
 
   private final IFeatureType targetFT;
 
   private Combo m_checkCRS;
-
-  private Group targetGroup;
 
   private Text m_fileField;
 
@@ -126,20 +121,15 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private Button browseButton;
 
-  private Button okButton;
-
   // Geodata
   private String customCS = null;
 
   // aus Preferences
   private String defaultCRS = null;
 
-  private GMLWorkspace sourceWorkspace;
+  private GMLWorkspace m_shapeWorkspace;
 
-  private URL fileURL;
-
-  // mapping
-  private HashMap<Object, Object> mapping;
+  private File m_shapeFile;
 
   private int maxSourceComboWidth;
 
@@ -161,7 +151,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     super( pageName );
     setDescription( Messages.get( "KalypsoNAProjectWizardPage.PageDescription" ) ); //$NON-NLS-1$
     targetFT = featureType;
-    setPageComplete( false );
   }
 
   /**
@@ -174,7 +163,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     super( pageName, title, titleImage );
     setDescription( Messages.get( "KalypsoNAProjectWizardPage.PageDescription" ) ); //$NON-NLS-1$
     targetFT = featureType;
-    setPageComplete( false );
 
   }
 
@@ -207,21 +195,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     return CRSHelper.isKnownCRS( customCRS );
   }
 
-  private boolean checkSuffix( final Text path )
-  {
-    boolean test = false;
-    final int dotLoc = path.getText().lastIndexOf( '.' );
-    if( dotLoc != -1 )
-    {
-      final String ext = path.getText().substring( dotLoc + 1 );
-      if( ext.equalsIgnoreCase( "shp" ) == false ) //$NON-NLS-1$
-        test = false;
-      else
-        test = true;
-    }
-    return test;
-  }
-
   /*
    * (non-Javadoc)
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
@@ -242,7 +215,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     skipRadioButton.setText( getTitle() );
     skipRadioButton.setSelection( true );
     skipRadioButton.addSelectionListener( this );
-    
+
     createFileGroup( m_topComposite );
     createMappingGroup( m_topComposite );
     setControl( m_topComposite );
@@ -250,7 +223,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private void createFileGroup( final Composite parent )
   {
-
     fileGroup = new Group( parent, SWT.NULL );
     final GridLayout topGroupLayout = new GridLayout();
     final GridData topGroupData = new GridData();
@@ -314,30 +286,33 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
     final ScrolledComposite topSCLMappingComposite = new ScrolledComposite( m_mappingGroup, SWT.V_SCROLL | SWT.BORDER );
     topSCLMappingComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+    topSCLMappingComposite.setExpandHorizontal( true );
 
     final GridData topSCLData = new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 );
     topSCLData.heightHint = 200;
     topSCLMappingComposite.setLayoutData( topSCLData );
 
-    
-    final Composite topMappingComposite = new Composite( topSCLMappingComposite, SWT.NONE );
-    topMappingComposite.setLayout( new GridLayout( 2, true ) );
+    m_sourceGroup = new Composite( topSCLMappingComposite, SWT.NONE );
+    m_sourceGroup.setLayout( new GridLayout( 2, true ) );
 
-    topSCLMappingComposite.setContent( topMappingComposite );
+    topSCLMappingComposite.setContent( m_sourceGroup );
 
     // Source
-    sourceGroup = new Group( topMappingComposite, SWT.NONE );
-    sourceGroup.setLayout( new GridLayout() );
-    sourceGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, true ) );
-    sourceGroup.setVisible( true );
-    sourceGroup.setText( Messages.get( "KalypsoNAProjectWizardPage.SourceGroupText" ) ); //$NON-NLS-1$
+    m_sourceGroup.setLayout( new GridLayout( 2, false ) );
+    m_sourceGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, true ) );
+    m_sourceGroup.setVisible( true );
+//    m_sourceGroup.setText( Messages.get( "KalypsoNAProjectWizardPage.SourceGroupText" ) ); //$NON-NLS-1$
     final IPropertyType[] targetFtp = targetFT.getProperties();
-    for( int j = 0; j < targetFtp.length; j++ )
+    for( final IPropertyType ftp : targetFtp )
     {
-      if( !targetFtp[j].getQName().getLocalPart().equals( "boundedBy" ) && targetFtp[j] instanceof IValuePropertyType ) //$NON-NLS-1$
+      if( !ftp.getQName().getLocalPart().equals( "boundedBy" ) && ftp instanceof IValuePropertyType ) //$NON-NLS-1$
       {
-        final Combo combo = new Combo( sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
-        combo.setData( TARGET_KEY, targetFtp[j].getQName().getLocalPart() );
+        final Label text = new Label( m_sourceGroup, SWT.NONE );
+        text.setText( getAnnotation( ftp, LABEL ) );
+        text.setToolTipText( getAnnotation( ftp, TOOL_TIP ) );
+
+        final Combo combo = new Combo( m_sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
+        combo.setData( TARGET_KEY, ftp );
         combo.addSelectionListener( new SelectionAdapter()
         {
           @Override
@@ -352,63 +327,37 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       }
     }
 
-    // Target
-    targetGroup = new Group( topMappingComposite, SWT.NONE );
-    targetGroup.setLayout( new GridLayout() );
-    targetGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, true ) );
-    targetGroup.setText( Messages.get( "KalypsoNAProjectWizardPage.TargetGroupText" ) ); //$NON-NLS-1$
-    for( int i = 0; i < targetFtp.length; i++ )
-    {
-      if( !targetFtp[i].getQName().getLocalPart().equals( "boundedBy" ) && targetFtp[i] instanceof IValuePropertyType ) //$NON-NLS-1$
-      {
-        final IPropertyType featureTypeProperty = targetFtp[i];
-        final Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
-        text.setText( getAnnotation( featureTypeProperty, LABEL ) );
-        text.setToolTipText( getAnnotation( featureTypeProperty, TOOL_TIP ) );
-      }
-    }
-
-    // OK and Reset buttons group
-    okButton = new Button( m_mappingGroup, SWT.PUSH );
-    okButton.setText( Messages.get( "KalypsoNAProjectWizardPage.OKButtonText" ) ); //$NON-NLS-1$
-    okButton.addSelectionListener( this );
+    // Reset buttons group
     resetButton = new Button( m_mappingGroup, SWT.PUSH );
     resetButton.setText( Messages.get( "KalypsoNAProjectWizardPage.ResetButtonText" ) ); //$NON-NLS-1$
     resetButton.addSelectionListener( this );
 
-    topMappingComposite.pack();
-    topMappingComposite.layout();
+    m_sourceGroup.setSize( m_sourceGroup.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ) );
   }
 
   private IFeatureType getSourceFT( )
   {
-    final Feature rootFeature = sourceWorkspace.getRootFeature();
+    final Feature rootFeature = m_shapeWorkspace.getRootFeature();
 
     final IFeatureType rootFT = rootFeature.getFeatureType();
     final IRelationType ftp = (IRelationType) rootFT.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-
-    final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-    // TODO: Why substitutes? Only valid shape types (exact match) should be possible
-    // SpecialPropertyMapper does not exist for GM_Object -> GM_Surface
-    // final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null,
-    // false, true );
-    // final IFeatureType shapeFT = associationFeatureTypes[0];
-    // return shapeFT;
-    return associationFeatureType;
+    return ftp.getTargetFeatureType();
   }
 
   private void handelResetSelection( )
   {
-    final Control[] cArray = sourceGroup.getChildren();
+    final Control[] cArray = m_sourceGroup.getChildren();
     for( final Control element : cArray )
     {
-      final Combo combo = (Combo) element;
-      combo.setData( SOURCE_KEY, KalypsoNAProjectWizard.NULL_KEY );
-      combo.select( 0 );
+      if( element instanceof Combo )
+      {
+        final Combo combo = (Combo) element;
+        combo.setData( SOURCE_KEY, KalypsoNAProjectWizard.NULL_KEY );
+        combo.select( 0 );
+      }
     }
-    sourceGroup.redraw();
-    setPageComplete( false );
-  }// handelRestSelection
+    m_sourceGroup.redraw();
+  }
 
   /**
    * Uses the standard container selection dialog to choose the new value for the container field.
@@ -419,33 +368,13 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[] { "shp" } ); //$NON-NLS-1$
     fdialog.setText( Messages.get( "KalypsoNAProjectWizardPage.BrowseText" ) ); //$NON-NLS-1$
-    fdialog.setFilterNames( new String[] { "Shape Files", //$NON-NLS-1$
-        "All Files (*.*)" } ); //$NON-NLS-1$
+    fdialog.setFilterNames( new String[] { "Shape Files (*.shp)", "All Files (*.*)" } );
     fdialog.setFilterExtensions( new String[] { "*.shp", //$NON-NLS-1$
         "*.*" } ); //$NON-NLS-1$
     fdialog.setFileName( "*.shp" ); //$NON-NLS-1$
     if( fdialog.open() != null )
-    {
-      String textStr;
-      try
-      {
-
-        fileURL = (new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() )).toURI().toURL();
-        textStr = fileURL.toString();
-        m_fileField.setText( textStr );
-        readShapeFile( fileURL );
-
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-      }
-
-    }// if fdialog
-    final IFeatureType ft = getSourceFT();
-    setMaxSourceCombo( ft );
-    updateSourceList( ft );
-  }// handleFileBrowse
+      m_fileField.setText( fdialog.getFilterPath() + File.separator + fdialog.getFileName() );
+  }
 
   /**
    * @param ft
@@ -463,42 +392,31 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     maxSourceComboWidth = max;
   }
 
-  private void handleOKSelection( )
-  {
-    final Control[] cArray = sourceGroup.getChildren();
-    mapping = new HashMap<Object, Object>();
-    for( final Control c : cArray )
-    {
-      final Object source = c.getData( SOURCE_KEY );
-      final Object target = c.getData( TARGET_KEY );
-      mapping.put( target, source );
-    }
-    setPageComplete( true );
-  }
-
   /**
    * This method returns a HashMap with the user defined mapping of the source to the target. key = (String) target
    * property value = (String) source property
    * 
    * @return map HashMap with the custom mapping
    */
-
   public HashMap<Object, Object> getMapping( )
   {
     final HashMap<Object, Object> map = new HashMap<Object, Object>();
-    final Control[] cArray = sourceGroup.getChildren();
+    final Control[] cArray = m_sourceGroup.getChildren();
     for( final Control element : cArray )
     {
-      final Combo c = (Combo) element;
-      final Object target = c.getData( TARGET_KEY );
-      final Object source = c.getData( SOURCE_KEY );
-      if( source != null )
-        map.put( target, source );
+      if( element instanceof Combo )
+      {
+        final Combo c = (Combo) element;
+        final IPropertyType target = (IPropertyType) c.getData( TARGET_KEY );
+        final Object source = c.getData( SOURCE_KEY );
+        if( source != null )
+          map.put( target.getQName().getLocalPart(), source );
+      }
     }// for i
     return map;
-  }// getMapping
+  }
 
-  private void readShapeFile( final URL url )
+  private boolean readShapeFile( final File shapeFile )
   {
     String cs = null;
 
@@ -507,26 +425,27 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     else
       cs = customCS;
 
-    final int index = url.getPath().lastIndexOf( "." ); //$NON-NLS-1$
-    final String fileBase = url.getPath().substring( 1, index );
+    final String shapePath = shapeFile.getAbsolutePath();
+    final String fileBase = FilenameUtils.removeExtension( shapePath );
 
+    m_shapeWorkspace = null;
+    setErrorMessage( null );
     try
     {
-      sourceWorkspace = ShapeSerializer.deserialize( fileBase, cs );
+      m_shapeWorkspace = ShapeSerializer.deserialize( fileBase, cs );
+      return true;
     }
     catch( final GmlSerializeException e )
     {
       e.printStackTrace();
-      if( m_topComposite != null && !m_topComposite.isDisposed() )
-      {
-        final MessageBox message = new MessageBox( m_topComposite.getShell(), SWT.OK );
-        message.setText( Messages.get( "KalypsoNAProjectWizardPage.TextMessageReadError" ) ); //$NON-NLS-1$
-        message.setMessage( Messages.get( "KalypsoNAProjectWizardPage.MessageReadError" ) + url.getFile() ); //$NON-NLS-1$
-        message.open();
-      }
-    }
+      setErrorMessage( e.getLocalizedMessage() );
 
-  }// getData
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), e );
+      ErrorDialog.openError( getShell(), Messages.get( "KalypsoNAProjectWizardPage.TextMessageReadError" ), Messages.get( "KalypsoNAProjectWizardPage.MessageReadError", shapePath ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      return false;
+    }
+  }
 
   /**
    * This method clears the mapping
@@ -535,49 +454,37 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   public void updateSourceList( final IFeatureType srcFT )
   {
     final IPropertyType[] ftp = srcFT.getProperties();
-    final IPropertyType[] targetFTP = targetFT.getProperties();
-    final Control[] cArray = sourceGroup.getChildren();
-    int k = 0;
-    for( int i = 0; i < targetFTP.length; i++ )
+    final Control[] cArray = m_sourceGroup.getChildren();
+
+    for( final Control c : cArray )
     {
-      if( targetFTP[i] instanceof IValuePropertyType && !targetFTP[i].getQName().getLocalPart().equals( "boundedBy" ) ) //$NON-NLS-1$
+      if( c instanceof Combo )
       {
-        final Combo combo = (Combo) cArray[k];
+        final Combo combo = (Combo) c;
         combo.setData( SOURCE_KEY, null );
         combo.removeAll();
         combo.setSize( maxSourceComboWidth * 10, SWT.DEFAULT );
-        for( int j = 0; j < ftp.length; j++ )
+
+        combo.add( KalypsoNAProjectWizard.NULL_KEY );
+        for( final IPropertyType element : ftp )
         {
-          if( j == 0 )
-            combo.add( KalypsoNAProjectWizard.NULL_KEY );
           // checks if the mapping between types is possible
-          if( ftp[j] instanceof IValuePropertyType && targetFTP[i] instanceof IValuePropertyType )
+          if( element instanceof IValuePropertyType )
           {
-            final IValuePropertyType fromPT = (IValuePropertyType) ftp[j];
-            final IValuePropertyType toPT = (IValuePropertyType) targetFTP[i];
+            final IValuePropertyType fromPT = (IValuePropertyType) element;
+            final IValuePropertyType toPT = (IValuePropertyType) combo.getData(TARGET_KEY);
             if( SpecialPropertyMapper.isValidMapping( fromPT.getValueClass(), toPT.getValueClass() ) )
-              combo.add( ftp[j].getQName().getLocalPart() );
+              combo.add( element.getQName().getLocalPart() );
           }
         }// for j
         combo.select( 0 );
-        k += 1;
-      }// for i
+      }
     }
   }
 
-  public boolean validateFile( final URL url )
+  public boolean validateFile( final File file )
   {
-    try
-    {
-      final InputStream ios = url.openStream();
-      ios.close();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
+    return file.exists();
   }
 
   protected void validateFileField( )
@@ -588,30 +495,48 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       setMessage( Messages.get( "KalypsoNAProjectWizardPage.SkipMessage" ) ); //$NON-NLS-1$
       return;
     }
+
+    m_shapeFile = null;
+
     // checks catchment field entry and file suffix
-    if( m_fileField.getText().length() == 0 )
+    final String fileFieldStr = m_fileField.getText();
+    if( fileFieldStr.length() == 0 )
     {
       setErrorMessage( Messages.get( "KalypsoNAProjectWizardPage.ErrorMessageChooseFile" ) ); //$NON-NLS-1$
       setPageComplete( false );
+      return;
     }
-    else if( checkSuffix( m_fileField ) == false )
+
+    if( !fileFieldStr.toLowerCase().endsWith( ".shp" ) )
     {
       setErrorMessage( Messages.get( "KalypsoNAProjectWizardPage.ErrorMessageWrongSuffix" ) ); //$NON-NLS-1$
       setPageComplete( false );
+      return;
     }
-    else if( validateFile( fileURL ) == false )
+
+    m_shapeFile = new File( fileFieldStr );
+    if( validateFile( m_shapeFile ) == false )
     {
       setErrorMessage( Messages.get( "KalypsoNAProjectWizardPage.ErrorMessageNotValidFile" ) ); //$NON-NLS-1$
       setPageComplete( false );
+      return;
     }
-    // setPageComplete(true);
+
+    if( !readShapeFile( m_shapeFile ) )
+      return;
+
+    final IFeatureType ft = getSourceFT();
+    setMaxSourceCombo( ft );
+    updateSourceList( ft );
+
+    setPageComplete( true );
     setErrorMessage( null );
     setMessage( null );
   }
 
   public List< ? > getFeatureList( )
   {
-    final Feature rootFeature = sourceWorkspace.getRootFeature();
+    final Feature rootFeature = m_shapeWorkspace.getRootFeature();
     final List< ? > featureList = (List< ? >) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     return featureList;
   }
@@ -619,7 +544,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   @Override
   public void dispose( )
   {
-    okButton.removeSelectionListener( this );
     resetButton.removeSelectionListener( this );
     browseButton.removeSelectionListener( this );
     skipRadioButton.removeSelectionListener( this );
@@ -663,8 +587,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     if( w instanceof Button )
     {
       final Button b = (Button) w;
-      if( b == okButton )
-        handleOKSelection();
       if( b == resetButton )
         handelResetSelection();
       if( b == browseButton )
@@ -678,14 +600,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
         if( !selection )
         {
-          // remove mapping
-          mapping = null;
           // clear filefield
           m_fileField.setText( "" ); //$NON-NLS-1$
         }
       }
     }
-    
+
     if( e.widget instanceof Combo )
     {
       if( e.widget == m_checkCRS )
@@ -694,8 +614,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         if( c == m_checkCRS )
         {
           customCS = c.getText();
-          readShapeFile( fileURL );
-          setPageComplete( true );
+          readShapeFile( m_shapeFile );
         }
       }
     }
