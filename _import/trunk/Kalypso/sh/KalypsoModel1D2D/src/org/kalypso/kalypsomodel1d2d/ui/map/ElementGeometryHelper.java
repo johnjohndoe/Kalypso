@@ -41,9 +41,12 @@
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.awt.Point;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -63,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -92,17 +96,19 @@ public class ElementGeometryHelper
    */
   private static final double SEARCH_DISTANCE = 0.1;
 
-// /**
-// * wrapper for {@link createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final
-  // Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points, final int
+  private static final DateFormat m_DF = new SimpleDateFormat( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0" ) ); //$NON-NLS-1$
+
+  // /**
+  // * wrapper for {@link createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace,
+  // final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points, final int
   // pIntPointsCount ) }
-// * with additional points counter, 0 means not bounded.
-// */
-// public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace
+  // * with additional points counter, 0 means not bounded.
+  // */
+  // public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace
   // workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
-// {
-// return createAdd2dElement( command, workspace, parentFeature, discModel, points, points.size() );
-// }
+  // {
+  // return createAdd2dElement( command, workspace, parentFeature, discModel, points, points.size() );
+  // }
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
@@ -276,7 +282,8 @@ public class ElementGeometryHelper
         final FE1D2DNode newNode = FE1D2DNode.createNode( discModel );
         newNode.setPoint( point );
         newNode.setName( "" ); //$NON-NLS-1$
-        newNode.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
+        //        newNode.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
+        newNode.setDescription( m_DF.format( new Date() ) ); //$NON-NLS-1$
         final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null, false );
         command.addCommand( addNodeCommand );// TODO: why not put into changes?
         nodes[i] = newNode;
