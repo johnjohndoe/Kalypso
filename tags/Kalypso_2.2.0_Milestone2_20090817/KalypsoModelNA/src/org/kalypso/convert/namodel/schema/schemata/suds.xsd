@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+		<documentation>Suds definitions available for a hydrology-modell.</documentation>
+	</annotation>
+
+	<import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd" />
+	<import namespace="http://www.opengis.net/gml" />
+
+	<element name="SudsCollection" substitutionGroup="gml:_Feature">
+		<complexType>
+			<complexContent>
+				<extension base="gml:AbstractFeatureType">
+					<sequence>
+						<element name="sudMember" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element ref="suds:_Sud" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
+	<element name="_Sud" abstract="true" type="suds:AbstractSudType" substitutionGroup="gml:_Feature" />
+
+	<element name="Swale" type="suds:SwaleType" substitutionGroup="suds:_Sud">
+		<annotation>
+			<documentation xml:lang="en">
+				<label>Swale</label>
+			</documentation>
+			<documentation xml:lang="de">
+				<label>Mulden</label>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="SwaleInfiltrationDitch" type="suds:SwaleInfiltrationDitchType" substitutionGroup="suds:_Sud">
+		<annotation>
+			<documentation xml:lang="en">
+				<label>Swale infiltration ditch</label>
+			</documentation>
+			<documentation xml:lang="de">
+				<label>Mulden-Rigolen Elemente</label>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="GreenRoof" type="suds:GreenRoofType" substitutionGroup="suds:_Sud">
+		<annotation>
+			<documentation xml:lang="en">
+				<label>Green roof</label>
+			</documentation>
+			<documentation xml:lang="de">
+				<label>Gründach</label>
+			</documentation>
+		</annotation>
+	</element>
+
+	<!-- Reference to a sud. Used by landuse etc. to reference suds stored in the SudColection -->
+	<complexType name="SudPropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="suds:_Sud" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+	</complexType>
+	<!-- Sud-Property: Can be used to reference suds -->
+	<element name="sudLinkMember" type="suds:SudPropertyType" />
+
+	<!-- Type definitions -->
+
+	<complexType name="AbstractSudType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!-- 
+					<element minOccurs="1" maxOccurs="1" name="SudType" type="suds:EnumSudType" />
+					 -->
+					<element name="soilLayerParametersFileName" type="string" default="boden_art.dat">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Soil layer type file</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Bodentyp Datei</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AbstractSwaleType" abstract="true">
+		<complexContent>
+			<extension base="suds:AbstractSudType">
+				<sequence>
+					<element name="width" type="double">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Width</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Breite</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="areaPercentage" type="double">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Area [%]</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Fläche [%]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="drainageNode">
+						<annotation>
+							<!-- Only downstream nodes are acceptable; node offered by default should be the drainage node of this subcatchment -->
+							<documentation xml:lang="en">
+								<label>Drainage node</label>
+							</documentation>
+						</annotation>
+						<complexType>
+							<sequence minOccurs="0" maxOccurs="0">
+								<element ref="na:Node" />
+							</sequence>
+							<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+						</complexType>
+					</element>
+					<element name="drainagePipeDiameter" type="suds:EnumPipeDiameter" default="200">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe diameter [mm]</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Dränrohr Durchmesser [mm]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="drainagePipeKFvalue" type="integer" default="8000">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe kf-value [mm/day]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="drainagePipeSlope" type="integer" default="3">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe slope [‰]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="drainagePipeRoughness" type="double" default="2.0">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe roughness [mm]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="layerProfileThickness" type="suds:EnumLayerProfileThicknessType">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Layer profile thickness</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Muldentiefe</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maxCapacityOfEmergencySpill" type="double" default="0.0">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe roughness [m3/s]</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SwaleType">
+		<complexContent>
+			<extension base="suds:AbstractSwaleType">
+				<sequence>
+					<element name="elementType" type="suds:EnumSwaleType" default="20">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Swale type</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Wahl des Muldentyps</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="landuseFileName" type="string" default="swale.nutz">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Landuse type file</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Landnutzungstyp Datei</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SwaleInfiltrationDitchType">
+		<complexContent>
+			<extension base="suds:AbstractSwaleType">
+				<sequence>
+					<element name="elementType" type="suds:EnumSwaleInfiltrationDitchType" default="30">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Swale-infiltration-ditch type</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Wahl des MR-Elementtyps</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="landuseFileName" type="string" default="mrs_N.nutz">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Landuse type file</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Landnutzungstyp Datei</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maxPercRate" type="double" default="2.8E-15">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Max. percolation rate</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="percentToGroundwater" type="double" default="1.0">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Percent to groundwater</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GreenRoofType">
+		<complexContent>
+			<extension base="suds:AbstractSudType">
+				<sequence>
+					<element name="elementType" type="suds:EnumGreenRoofType" default="10">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Green roof type</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Wahl des Gründach</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="areaPercentage" type="double">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Area [%]</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Fläche [%]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="slope" default="5">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Green roof slope [%]</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Neigung des Gründach [%]</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0" />
+								<maxInclusive value="40.0" />
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="landuseFileName" type="suds:EnumGreenRoofLanduseType" default="extensive.nutz">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Landuse type</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Landnutzungstyp</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="rainwaterPipeDiameter" type="suds:EnumPipeDiameter" default="200">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Rainwater pipe diameter</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Regenwasser Rohrdurchmesser</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="rainwaterPipeRoughness" type="double" default="2.0" >
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Rainwater pipe roughness</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Regenwasser-Leitung Rauheit</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="drainageLayerPorosity" default="0.2" >
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Porosity of the drainage layer</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Porosität der Drainageschicht</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0" />
+								<maxInclusive value="1.0" />
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="200">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Emergency spill pipe diameter [mm]</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Entwässerung-Leitung Rohrdurchmesser</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="emergencySpillPipeRoughness" type="double" default="2.0" >
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Emergency spill pipe roughness [mm]</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Entwässerung-Leitung Rauheit</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="emergencySpillHeight">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Emergency spill height [mm]</label>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Entwässerung-Leitung Höhe</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="integer">
+								<minInclusive value="0" />
+								<maxInclusive value="50" />
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Enumeration types -->
+
+	<simpleType name="EnumSudType">
+		<restriction base="string">
+			<enumeration value="GREEN_ROOF">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Green roof</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Gründach</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="SWALE">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Mulden</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="SWALE_INFILTRATION_DITCH">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale infiltration ditch element</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Mulden-rigolen Elemente</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="CISTERN">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Cistern</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Zisterne</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="UNSEALING">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Unsealing</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Entsiegelung</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="DETENTION_POND">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Detention pond</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>RHB</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumSwaleType">
+		<restriction base="string">
+			<enumeration value="20">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Emergency spill to sewer subcatchment</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Reine Sickermulde mit Überlauf in Kanalisation</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="21">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Emergency spill to sewer of subcatchment and outlet from swale to sewer</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Sickermulde mit Überlauf in Kanalisation und zusätzlichem Muldenabfluss in Kanalisation</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumSwaleInfiltrationDitchType">
+		<restriction base="string">
+			<enumeration value="30">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Emergency spill to sewer with drainage pipe</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>MR-Element mit Muldenüberlauf und Dränrohr</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="31">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Emergency spill to sewer without drainage pipe</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>MR-Element mit Muldenüberlauf ohne Dränrohr</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumGreenRoofType">
+		<restriction base="string">
+			<enumeration value="10">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Outlet and emergency spill to sewer subcatchment</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Grundablass und Überlauf an Kanalisation TG</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="11">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Outlet and emergency spill to swale-infiltration ditch</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Grundablass und Überlauf in MR</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="12">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Outlet and emergency spill to swale</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Grundablass und Überlauf in Mulde</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="13">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Outlet and emergency spill to cisterne</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Grundablass und Überlauf in Zisterne</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumGreenRoofLanduseType">
+		<restriction base="string">
+			<enumeration value="extensive.nutz">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Extensive green roof</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Extensive Dachbegrünung</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="intensive.nutz">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Intensive green roof</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Intensive Dachbegrünung</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumLayerProfileThicknessType">
+		<restriction base="double">
+			<enumeration value="0.3">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>0.3 m</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>0,3 m</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="0.6">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>0.6 m</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>0,6 m</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="0.8">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>0.8 m</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>0,8 m</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="EnumPipeDiameter">
+		<restriction base="integer">
+			<enumeration value="100">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>100 mm</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>100 mm</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="200">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>200 mm</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>200 mm</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="300">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>300 mm</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>300 mm</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+</schema>
