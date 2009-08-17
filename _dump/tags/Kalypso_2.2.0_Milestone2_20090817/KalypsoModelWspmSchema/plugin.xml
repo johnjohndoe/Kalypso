@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.model.wspm.schema.WspmUrlCatalog"
+            id="org.kalypso.model.wspm.schema.urlcatalog"/>
+   </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.model.wspm.schema.WspmDictionaryCatalogContribution"
+            name="WspmDictionaryCatalogContribution"/>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction"
+            id="org.kalypso.model.wspm.functionProperty.profileGeometry"
+            name="Profile-Location-Cacher"/>
+      <function
+            class="org.kalypso.model.wspm.schema.gml.FixedResultDefinitionFeaturePropertyFunction"
+            id="org.kalypso.model.wspm.functionProperty.fixedResultDefinition"
+            name="Fixed-ResultDefinition"/>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.gmlWorkspaceListener">
+      <listener
+            class="org.kalypso.model.wspm.schema.gml.ProfilLineCacheListener"
+            id="org.kalypso.model.wspm.schema.gml.ProfilLineCacheListener"
+            name="Profile Line Cache">
+         <qname
+               localPart="Profile"
+               namespace="org.kalypso.model.wspmprofile"/>
+      </listener>
+      <listener
+            class="org.kalypso.model.wspm.schema.gml.DictI18nGmlListener"
+            id="org.kalypso.model.wspm.schema.gml.DictI18nGmlListener"
+            name="Dict 18n listener">
+         <qname
+               localPart="Dictionary"
+               namespace="http://www.opengis.net/gml">
+         </qname>
+      </listener>
+   </extension>
+
+</plugin>
