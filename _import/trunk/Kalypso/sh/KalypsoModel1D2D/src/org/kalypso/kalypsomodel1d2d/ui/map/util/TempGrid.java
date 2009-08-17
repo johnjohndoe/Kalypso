@@ -385,10 +385,13 @@ public class TempGrid
 
     for( int i = 0; i < m_gridPoints.length - 1; i++ )
     {
-      for( int j = 0; j < m_gridPoints[0].length - 1; j++ )
+    //the old version of this line was not so meaningful:
+    //for( int j = 0; j < m_gridPoints[0].length - 1; j++ )
+    //                                 ^
+    //TODO: correct this if it was realy needed in this way
+      for( int j = 0; j < m_gridPoints[ i ].length - 1; j++ )
       {
         final GM_Position[] poses = new GM_Position[5];
-
         poses[0] = m_gridPoints[i][j].getPosition();
         poses[1] = m_gridPoints[i + 1][j].getPosition();
         poses[2] = m_gridPoints[i + 1][j + 1].getPosition();
