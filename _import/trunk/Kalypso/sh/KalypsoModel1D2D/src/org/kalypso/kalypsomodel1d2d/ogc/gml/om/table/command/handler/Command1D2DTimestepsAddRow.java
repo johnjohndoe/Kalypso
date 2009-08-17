@@ -98,7 +98,8 @@ public class Command1D2DTimestepsAddRow extends AbstractHandler
       calendar.set( GregorianCalendar.SECOND, 0 );
       calendar.set( GregorianCalendar.MILLISECOND, 0 );
       row.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
-      row.setValue( 2, new BigDecimal( 1.0 ) );
+//    changed to string to allow more flexible expansion of "Relaxation Factor"
+      row.setValue( 2, new String( "1.0" ) );
       tupleResult.add( row );
     }
     else

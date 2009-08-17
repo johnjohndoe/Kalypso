@@ -118,9 +118,10 @@ public class Command1D2DTimestepsInterpolate extends AbstractHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.6" ) ); //$NON-NLS-1$
     }
     final int index = m_tupleResult.indexOf( m_selection.getFirstElement() );
-    final BigDecimal relaxationFactor = (BigDecimal) m_tupleResult.get( index ).getValue( 2 );
+//  changed to string to allow more flexible expansion of "Relaxation Factor"
+    final String relaxationFactor = (String) m_tupleResult.get( index ).getValue( 2 );
 
-    final Command1D2DTimestepsInterpolationWizard wizard = new Command1D2DTimestepsInterpolationWizard( this, relaxationFactor.doubleValue() );
+    final Command1D2DTimestepsInterpolationWizard wizard = new Command1D2DTimestepsInterpolationWizard( this, relaxationFactor );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
       return null;
@@ -174,7 +175,8 @@ public class Command1D2DTimestepsInterpolate extends AbstractHandler
       final IRecord record = m_tupleResult.createRecord();
       record.setValue( 0, new BigInteger( "0" ) ); //$NON-NLS-1$
       record.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
-      record.setValue( 2, new BigDecimal( relaxationFactor ) );
+//    changed to string to allow more flexible expansion of "Relaxation Factor"
+      record.setValue( 2, new String( relaxationFactor ) );
       m_resultRecords.add( record );
     }
 

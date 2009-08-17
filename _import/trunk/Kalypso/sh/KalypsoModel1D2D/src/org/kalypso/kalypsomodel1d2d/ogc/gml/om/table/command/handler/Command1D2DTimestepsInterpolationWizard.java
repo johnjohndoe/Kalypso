@@ -64,6 +64,19 @@ public class Command1D2DTimestepsInterpolationWizard extends Wizard implements I
     else
       m_page = new Command1D2DTimestepsInterpolationWizardPage( initRelaxationFactor.toString() );
   }
+  
+  /**
+   * additional constructor
+   * @param initRelaxationFactor changed to string to allow more flexible expansion of "Relaxation Factor"
+   */
+  public Command1D2DTimestepsInterpolationWizard( final Command1D2DTimestepsInterpolate commandHandler, final String initRelaxationFactor )
+  {
+    m_commandHandler = commandHandler;
+    if( initRelaxationFactor == null || initRelaxationFactor == "" )
+      m_page = new Command1D2DTimestepsInterpolationWizardPage( "1.0" ); //$NON-NLS-1$
+    else
+      m_page = new Command1D2DTimestepsInterpolationWizardPage( initRelaxationFactor );
+  }
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()

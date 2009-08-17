@@ -28,7 +28,7 @@
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"
 			alignment="SWT.LEFT" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM" parseFormat="dd.MM.yyyy HH:mm" width="150" />
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"
-			alignment="SWT.LEFT" displayFormat="%.1f" width="150" />
+			alignment="SWT.LEFT" displayFormat="%s" width="150" />
 	</gft:tupleResult>
 </gft:featureview>
 

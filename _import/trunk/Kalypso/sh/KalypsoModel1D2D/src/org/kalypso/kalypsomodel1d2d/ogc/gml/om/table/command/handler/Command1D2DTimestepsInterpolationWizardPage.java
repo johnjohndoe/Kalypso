@@ -48,6 +48,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
@@ -61,7 +62,8 @@ import org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2D
  */
 public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
 {
-  private Combo m_uRelFactorCombo;
+//changed to string to allow more flexible expansion of "Relaxation Factor"
+  private Text m_uRelFactorCombo;
 
   private Command1D2DTimestepsInterpolate.INTERPOLATION_METHOD m_interpolationMethod = INTERPOLATION_METHOD.TIME_INTERVAL;
 
@@ -218,6 +220,10 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
     uRelFactorLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
     uRelFactorLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.8") ); //$NON-NLS-1$
 
+//  changed to string to allow more flexible expansion of "Relaxation Factor"	
+    m_uRelFactorCombo = new Text( container, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_uRelFactorCombo.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    /*
     m_uRelFactorCombo = new Combo( container, SWT.DROP_DOWN | SWT.READ_ONLY );
     final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
     m_uRelFactorCombo.setItems( possibleURFValues );
@@ -227,6 +233,7 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
         break;
     m_uRelFactorCombo.select( cmbIndex );
     m_uRelFactorCombo.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    */
     final Label endLbl4 = new Label( container, SWT.NONE );
     endLbl4.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 

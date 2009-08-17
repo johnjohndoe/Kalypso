@@ -136,7 +136,8 @@ public interface IControlModel1D2D extends IControlModel
 
   public Double get_P_BOTTOM( );
 
-  public Double get_RelaxationsFactor( );
+//changed to string to allow more flexible expansion of "Relaxation Factor"
+  public String get_RelaxationsFactor( );
 
   public void setCalculationUnit( ICalculationUnit calUnit );
 

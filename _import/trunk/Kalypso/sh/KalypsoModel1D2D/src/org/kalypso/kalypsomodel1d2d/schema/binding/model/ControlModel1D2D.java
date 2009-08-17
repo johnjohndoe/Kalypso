@@ -496,11 +496,20 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor()
+   * changed to string to allow more flexible expansion of "Relaxation Factor"
    */
-  public Double get_RelaxationsFactor( )
+  public String get_RelaxationsFactor( )
   {
-    return (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   }
+  
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor()
+//   */
+//  public Double get_RelaxationsFactor( )
+//  {
+//    return (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
+//  }
 
   public boolean isSteadySelected( )
   {

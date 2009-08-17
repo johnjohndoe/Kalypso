@@ -88,7 +88,8 @@ public class TimeStepFillerWizardPage extends WizardPage
 
   Date m_dateTo = new Date();
 
-  BigDecimal m_uRelFactor;
+//changed to string to allow more flexible expansion of "Relaxation Factor"
+  String m_uRelFactor;
 
   public TimeStepFillerWizardPage( )
   {
@@ -102,7 +103,20 @@ public class TimeStepFillerWizardPage extends WizardPage
     setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.4" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.5" ) ); //$NON-NLS-1$
 
-    m_uRelFactor = uRelFactor.setScale( 1, BigDecimal.ROUND_HALF_UP );
+    m_uRelFactor = "" + uRelFactor;// uRelFactor.setScale( 1, BigDecimal.ROUND_HALF_UP );
+    m_timeStep_val = timeStep;
+    m_dateFrom = startDate;
+    m_dateTo = endDate;
+  }
+
+  public TimeStepFillerWizardPage( final Date startDate, final Date endDate, final String uRelFactor, final int timeStep )
+  {
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.3" ) ); //$NON-NLS-1$
+
+    setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.4" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.5" ) ); //$NON-NLS-1$
+
+    m_uRelFactor = uRelFactor;
     m_timeStep_val = timeStep;
     m_dateFrom = startDate;
     m_dateTo = endDate;
@@ -272,26 +286,17 @@ public class TimeStepFillerWizardPage extends WizardPage
     uRelFactorLabel.setLayoutData( gridBeginning );
     uRelFactorLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.16" ) ); //$NON-NLS-1$
 
-    final ComboViewer uRelFactorCombo = new ComboViewer( container, SWT.DROP_DOWN | SWT.READ_ONLY );
-    final List<BigDecimal> possibleURFValues = new ArrayList<BigDecimal>();
-    for( int i = 1; i <= 9; i++ )
-      possibleURFValues.add( new BigDecimal( "0." + i ) );
-    possibleURFValues.add( new BigDecimal( "1.0" ) );
+//  changed to string to allow more flexible expansion of "Relaxation Factor"
+    final Text uRelFactorCombo = new Text( container, SWT.BORDER );
 
-    uRelFactorCombo.setContentProvider( new ArrayContentProvider() );
-    uRelFactorCombo.setLabelProvider( new LabelProvider() );
-    uRelFactorCombo.setInput( possibleURFValues );
-
-    uRelFactorCombo.setSelection( new StructuredSelection( m_uRelFactor ) );
-
-    uRelFactorCombo.getControl().setLayoutData( gridFillHorizontal );
-
-    uRelFactorCombo.addSelectionChangedListener( new ISelectionChangedListener()
+    uRelFactorCombo.setLayoutData( gridFillHorizontal );
+    uRelFactorCombo.addModifyListener( new ModifyListener()
     {
-      @Override
-      public void selectionChanged( final SelectionChangedEvent event )
+      public void modifyText( final ModifyEvent e )
       {
-        m_uRelFactor = (BigDecimal) ((IStructuredSelection) event.getSelection()).getFirstElement();
+        m_uRelFactor = uRelFactorCombo.getText();
+
+        getWizard().getContainer().updateButtons();
       }
     } );
 
@@ -317,7 +322,8 @@ public class TimeStepFillerWizardPage extends WizardPage
     return m_timeStep_val;
   }
 
-  public BigDecimal getUnderRelaxationFactorValue( )
+//changed to string to allow more flexible expansion of "Relaxation Factor"
+  public String getUnderRelaxationFactorValue( )
   {
     return m_uRelFactor;
   }

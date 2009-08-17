@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -145,7 +144,8 @@ public class TimeStepFillerWizard extends Wizard
 
       final Date startDate = DateUtilities.toDate( (XMLGregorianCalendar) startRecord.getValue( indexOfTimeComponent ) );
       final Date endDate = DateUtilities.toDate( (XMLGregorianCalendar) endRecord.getValue( indexOfTimeComponent ) );
-      final BigDecimal uRelFactor = (BigDecimal) startRecord.getValue( indexOfURelComponent );
+//    changed to string to allow more flexible expansion of "Relaxation Factor"
+      final String uRelFactor = (String) startRecord.getValue( indexOfURelComponent );
       int timeStep = 60;
       if( m_result.size() > 1 )
       {

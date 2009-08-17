@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -55,6 +54,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -100,7 +101,7 @@ public class Control1D2DConverter
 {
   /** Directory name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_DIR_NAME = "./"; //$NON-NLS-1$
- 
+
   /** Base filename name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_FILE_BASE = "Output"; //$NON-NLS-1$
 
@@ -215,7 +216,7 @@ public class Control1D2DConverter
 
     // // C0
     Double tbfact = 0.0;
-    if (m_controlModel.getIEDSW() == 2 || m_controlModel.getIEDSW() == 13 || m_controlModel.getIEDSW() == 14)
+    if( m_controlModel.getIEDSW() == 2 || m_controlModel.getIEDSW() == 13 || m_controlModel.getIEDSW() == 14 )
     {
       tbfact = m_controlModel.getTBFACT();
     }
@@ -388,8 +389,10 @@ public class Control1D2DConverter
 
     final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.33" ); //$NON-NLS-1$
 
-    Double uRValSteady = m_controlModel.get_RelaxationsFactor();
-    if( uRValSteady == null || uRValSteady.isNaN() || uRValSteady < 0.1 || uRValSteady > 1.0 )
+    // Double uRValSteady = m_controlModel.get_RelaxationsFactor();
+    String uRValSteady = m_controlModel.get_RelaxationsFactor();
+    if( uRValSteady == null || uRValSteady == "" )
+    // if( uRValSteady == null || uRValSteady.isNaN() || uRValSteady < 0.1 || uRValSteady > 1.0 )
     {
       if( m_controlModel.isSteadySelected() )
       {
@@ -398,10 +401,10 @@ public class Control1D2DConverter
       }
       else
         // Not used anyway (1.0 should be default value)
-        uRValSteady = 1.0;
+        uRValSteady = "1.0";
     }
 
-    writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti );
+    writeTimeStep( formatter, msg, null, null, uRValSteady, niti );
 
     if( m_controlModel.isUnsteadySelected() )
     {
@@ -437,7 +440,8 @@ public class Control1D2DConverter
         {
           final IRecord record = iterator.next();
 
-          final float uRVal = ((BigDecimal) record.getValue( indexRelaxationsFaktor )).floatValue();
+          // final float uRVal = ((BigDecimal) record.getValue( indexRelaxationsFaktor )).floatValue();
+          final String uRVal = ((String) record.getValue( indexRelaxationsFaktor ));
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( indexTime )).toGregorianCalendar();
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
           final String unsteadyMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
@@ -458,7 +462,9 @@ public class Control1D2DConverter
    * writes out the time steps. <BR>
    * IMPORTANT: we write the dates in the time zone according to the kalypso-preferences!
    */
-  private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final Calendar lastStepCal, final float uRVal, final int niti ) throws CoreException, IOException
+  // private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final
+  // Calendar lastStepCal, final float uRVal, final int niti ) throws CoreException, IOException
+  private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final Calendar lastStepCal, final String uRVal, final int niti ) throws CoreException, IOException
   {
     final String dashes = StringUtils.repeat( "-", message.length() ); //$NON-NLS-1$
     formatter.format( "com %s%n", dashes ); //$NON-NLS-1$
@@ -526,7 +532,6 @@ public class Control1D2DConverter
     {
       final Integer buildingID = buildingData.getKey();
       final IFlowRelationship building = buildingData.getValue();
-//      KIND kind = null;
       int buildingKind = 10;
       int lIntDirection = 0;
       if( building instanceof IBuildingFlowRelation ){
@@ -543,19 +548,7 @@ public class Control1D2DConverter
         }
         lIntDirection = ( ( IBuildingFlowRelation2D )building ).getDirection();
       }
-//      building.getKind();
-//      switch( kind )
-//      {
-//        case TABULAR:
-//          buildingKind = 10;
-//          break;
-//
-//        default:
-//          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), kind );//$NON-NLS-1$
-//          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
-//      }
-
-      final double direction = Math.toRadians( lIntDirection );//building.getDirection() );
+      final double direction = Math.toRadians( lIntDirection );
       formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( formatter );
@@ -712,25 +705,112 @@ public class Control1D2DConverter
     }
   }
 
-  private void formatBC( final Formatter formatter, final float uRVal, final int nitn ) throws CoreException, IOException
+  // private void formatBC( final Formatter formatter, final float uRVal, final int nitn ) throws CoreException,
+  // IOException
+  private void formatBC( final Formatter formatter, final String uRVal, final int nitn ) throws CoreException, IOException
   {
-    if( uRVal < 0.0 || uRVal > 1.0 )
-    {
+    if( uRVal == null || uRVal == "" ){
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
-
-    final int buffVal = 10 - (int) (uRVal * 10);
-    for( int j = 0; j < nitn; j++ )
-    {
-      if( j % 9 == 0 )
+    List<Integer> lListFactors = getListParsedRelaxationFactor( uRVal, nitn );
+    // final int buffVal = 10 - (int) (uRVal * 10);
+    for( int j = 0; j < nitn; j++ ){
+      if( j % 9 == 0 ){
         formatter.format( "%nBC%6s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.31" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      formatter.format( "%5d010", buffVal ); //$NON-NLS-1$
+	  }
+      formatter.format( "%5d010", lListFactors.get( j ) ); //$NON-NLS-1$
     }
     formatter.format( "%n" ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
+  }
+
+  private List<Integer> getListParsedRelaxationFactor( String pStrVal, int pIntNumberIterations ) throws CoreException
+  {
+    List<Integer> lListFactorsRes = new ArrayList<Integer>();
+    List<Float> lListFactors = new ArrayList<Float>();
+    if( !isLoopFomatedFactor( pStrVal.trim(), lListFactors, pIntNumberIterations ) ){
+      if( !isSeparatedValuesFormatedFactor( pStrVal.trim(), lListFactors, pIntNumberIterations ) ){
+        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      }
+    }
+
+    for( int i = 0; i < pIntNumberIterations; ++i ){
+      final int buffVal = 10 - (int) (lListFactors.get( i ) * 10);
+      lListFactorsRes.add( buffVal );
+    }
+
+    return lListFactorsRes;
+  }
+
+  /**
+   * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into according to 
+   * amount of steps values and put them into pListFactors as floats
+   */
+  private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
+  {
+    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*";
+    String lStrToCheck = pStrValue.trim().toLowerCase();
+    if( Pattern.matches( lStrRegex, lStrToCheck ) ){
+      int lIntIndexSep = lStrToCheck.indexOf( "to" );
+      float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
+      float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
+      if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 ){
+        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      }
+//      float lFloatInc = ((lFloatEnd - lFloatStart) / pIntNumberIterations);
+      float lFloatInc = (float) ((lFloatEnd - lFloatStart) / 0.1);
+      int lIntPer = (int) (pIntNumberIterations / ( lFloatInc + 1 ) );
+      int lIntInc = 0;
+      for( int i = 1; i <= pIntNumberIterations; ++i ){
+        pListFactors.add( (float) (lFloatStart + 0.1 * lIntInc) ) ;
+        if( (i) % lIntPer == 0 && pIntNumberIterations - i > Math.abs( lIntPer ) ){
+          lIntInc++; 
+        }
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * checks if the given string value contains semicolon separated list of values and if it is parses it into pListFactors as floats
+   */
+  private boolean isSeparatedValuesFormatedFactor( final String pStrValue, final List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
+  {
+    StringTokenizer lStringTokenizer = new StringTokenizer( pStrValue, ";" );
+    int lIntCounter = 0;
+    float lFloatValAct = (float) 0.1;
+    while( lIntCounter < pIntNumberIterations ){
+      if( lStringTokenizer.hasMoreTokens() ){
+        lFloatValAct = getFloatFromSimpleFloatString( lStringTokenizer.nextToken() );
+      }
+      lIntCounter++;
+      pListFactors.add( lFloatValAct );
+    }
+    return true;
+  }
+
+  private float getFloatFromSimpleFloatString( final String pStrFloat ) throws CoreException
+  {
+    float lFloatValue = (float) 0.1;
+    try{
+      lFloatValue = Float.parseFloat( pStrFloat.trim() );
+    }
+    catch( Exception e ){
+      try{
+        lFloatValue = Float.parseFloat( pStrFloat.trim().replace( ",", "." ) );
+      }
+      catch( Exception e2 ){
+        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      }
+    }
+    return lFloatValue;
   }
 
   private double getTimeInPercentage( final Calendar cal )

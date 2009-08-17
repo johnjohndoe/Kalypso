@@ -48,6 +48,7 @@
 	<!-- =================================================================
 		Under Relaxation Factor
 		================================================================== -->
+	<!--
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
 			<gml:name>Relaxationsfaktor [-]</gml:name>
@@ -58,6 +59,20 @@
 						<st:minInclusive value="0.1" />
 						<st:maxInclusive value="1.0" />
 					</st:restriction>
+					<gml:unitOfMeasure uom=" " />
+				</swe:SimpleType>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+	-->
+	
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
+			<gml:name>Relaxationsfaktor [-]</gml:name>
+			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
+			<swe:representation>
+				<swe:SimpleType>
+					<st:restriction base="string" />
 					<gml:unitOfMeasure uom=" " />
 				</swe:SimpleType>
 			</swe:representation>

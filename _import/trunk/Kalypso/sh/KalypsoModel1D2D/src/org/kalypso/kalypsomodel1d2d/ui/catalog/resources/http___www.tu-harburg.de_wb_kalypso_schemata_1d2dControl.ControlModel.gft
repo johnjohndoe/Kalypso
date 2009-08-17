@@ -153,8 +153,7 @@
 							</gft:enabledOperation>
 							<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 						</gft:label>
-
-						<gft:combo property="c1d2d:_steadyBC" style="SWT.BORDER">
+						<gft:text editable="true" property="c1d2d:_steadyBC" style="SWT.BORDER">
 							<gft:enabledOperation>
 								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
 									<ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
@@ -162,7 +161,7 @@
 								</ogc:PropertyIsLike>
 							</gft:enabledOperation>
 							<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
-						</gft:combo>
+						</gft:text>
 						<gft:validatorlabel property="c1d2d:_steadyBC" visible="true" style="SWT.NONE">
 							<gft:enabledOperation>
 								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
