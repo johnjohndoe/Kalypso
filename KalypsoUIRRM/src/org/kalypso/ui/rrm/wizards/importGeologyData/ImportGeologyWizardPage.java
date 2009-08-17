@@ -56,9 +56,9 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
 
   public ImportGeologyWizardPage( )
   {
-    super( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    setTitle( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.2" ) ); //$NON-NLS-1$
-    setDescription( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.3" ) ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    setTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.3" ) ); //$NON-NLS-1$
 
     m_fileExtensions = new LinkedList<String>();
   }
@@ -78,14 +78,14 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
     container.setLayout( gridLayout );
     setControl( container );
 
-    new Label( container, SWT.NONE ).setText( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.4" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.4" ) ); //$NON-NLS-1$
     txt_InputFile = new Text( container, SWT.BORDER );
     txt_InputFile.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     btn_inputShpFileBrowse = new Button( container, SWT.NONE );
-    btn_inputShpFileBrowse.setText( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.11" ) ); //$NON-NLS-1$
+    btn_inputShpFileBrowse.setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.11" ) ); //$NON-NLS-1$
 
     // Landuse property combo box
-    new Label( container, SWT.NONE ).setText( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.12" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.12" ) ); //$NON-NLS-1$
     cmbMaxPerculationsRateProperty = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     final GridData gd0 = new GridData();
     gd0.horizontalAlignment = GridData.FILL;
@@ -95,7 +95,7 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
     cmbMaxPerculationsRateProperty.setLayoutData( gd0 );
 
     // Sealing factor property combo box
-    new Label( container, SWT.NONE ).setText( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.14" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.14" ) ); //$NON-NLS-1$
     cmbGWFactorProperty = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     final GridData gd1 = new GridData();
     gd1.horizontalAlignment = GridData.FILL;
@@ -196,14 +196,14 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
     if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.6" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.6" ) ); //$NON-NLS-1$
       return;
     }
     else if( sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile() //$NON-NLS-1$ //$NON-NLS-2$
         && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile() ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( Messages.get( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.10" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.10" ) ); //$NON-NLS-1$
       return;
     }
     setMessage( null );

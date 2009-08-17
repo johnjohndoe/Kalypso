@@ -52,6 +52,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
@@ -81,6 +82,8 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.annotation.DefaultAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -124,26 +127,30 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
 
   static final String PREFERENCE_PAGE = "page_type:preferences"; //$NON-NLS-1$
 
-  private final String m_resourceBase = "resources/.projecttemplate.zip"; //$NON-NLS-1$
+  private final String m_resourceBase = "resources/.projecttemplate"; //$NON-NLS-1$
 
   final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
 
   private IFeatureType createGewaesserFT( )
   {
-
+    // TODO: set annotations to CustomPropertyTypes in order to translate this stuff
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final QName featureQName = new QName( "wizard.kalypso.na", "Gewässer" ); //$NON-NLS-1$
+    final QName featureQName = new QName( "wizard.kalypso.na", "Gewässer" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IMarshallingTypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
-    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH, 0, 1, false ); //$NON-NLS-1$
+    final IAnnotation annoOrt = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.1" ) ); //$NON-NLS-1$
+    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH, 0, 1, false, annoOrt ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH, 1, 1, false ); //$NON-NLS-1$
 
-    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH, 1, 1, false ); //$NON-NLS-1$
+    final IAnnotation annoName = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.3" ) ); //$NON-NLS-1$
+    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH, 1, 1, false, annoName ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAnnotation annoDescription = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.5" ) ); //$NON-NLS-1$
+    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH, 1, 1, false, annoDescription ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IMarshallingTypeHandler integerTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
-    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH, 0, 1, false ); //$NON-NLS-1$
+    final IAnnotation annoStrangArt = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.7" ) ); //$NON-NLS-1$
+    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH, 0, 1, false, annoStrangArt ); //$NON-NLS-1$ //$NON-NLS-2$
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
 
     return GMLSchemaFactory.createFeatureType( featureQName, pts );
@@ -193,7 +200,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     m_modelSchema = schema;
 
     setNeedsProgressMonitor( true );
-    setWindowTitle( "New Project" );
+    setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -215,19 +222,19 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE, m_modelSchema );
     addPage( m_createPreferencePage );
 
-    m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.get( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
+    m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
 
     addPage( m_createMappingCatchmentPage );
     final IFeatureType gewaesserFT = createGewaesserFT();
-    m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.get( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
+    m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
     addPage( m_createMappingRiverPage );
 
-    m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.get( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
+    m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
     addPage( m_createMappingNodePage );
-    m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.get( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
+    m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
     addPage( m_createMappingHydrotopPage );
   }
@@ -285,12 +292,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     catch( final CoreException e )
     {
       e.printStackTrace();
-      ErrorDialog.openError( getShell(), "Create Project", "Failed to create project", e.getStatus() );
+      ErrorDialog.openError( getShell(), Messages.getString( "KalypsoNAProjectWizard.10" ), Messages.getString( "KalypsoNAProjectWizard.11" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
 
     // copy all the resources to the workspace into the new created project
     copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
+
+    // TODO: refactor: until here, iti is exactly the same code as in the NewNAAsciiProjectwizard, should be combined
+
     try
     {
       ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor()  );
@@ -308,33 +318,32 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
       e1.printStackTrace();
     }
     // map catchment shape file
-    final HashMap catchmentMapping = m_createMappingCatchmentPage.getMapping();
-
+    final HashMap<Object, Object> catchmentMapping = m_createMappingCatchmentPage.getMapping();
     if( catchmentMapping != null && catchmentMapping.size() != 0 )
     {
-      final List catchmentFeatureList = m_createMappingCatchmentPage.getFeatureList();
+      final List< ? > catchmentFeatureList = m_createMappingCatchmentPage.getFeatureList();
       mapCatchment( catchmentFeatureList, catchmentMapping );
     }
     // map river shape file
-    final HashMap riverMapping = m_createMappingRiverPage.getMapping();
+    final HashMap<Object, Object> riverMapping = m_createMappingRiverPage.getMapping();
     if( riverMapping != null && riverMapping.size() != 0 )
     {
-      final List riverFeatureList = m_createMappingRiverPage.getFeatureList();
+      final List< ? > riverFeatureList = m_createMappingRiverPage.getFeatureList();
       mapRiver( riverFeatureList, riverMapping );
     }
     // map node shape file
-    final HashMap nodeMapping = m_createMappingNodePage.getMapping();
+    final HashMap<Object, Object> nodeMapping = m_createMappingNodePage.getMapping();
     if( nodeMapping != null && nodeMapping.size() != 0 )
     {
-      final List nodeFeatureList = m_createMappingNodePage.getFeatureList();
+      final List< ? > nodeFeatureList = m_createMappingNodePage.getFeatureList();
       mapNode( nodeFeatureList, nodeMapping );
     }
 
     // map hydrotop shape file
-    final HashMap hydMapping = m_createMappingHydrotopPage.getMapping();
+    final HashMap<Object, Object> hydMapping = m_createMappingHydrotopPage.getMapping();
     if( hydMapping != null && hydMapping.size() != 0 )
     {
-      final List hydFeatureList = m_createMappingHydrotopPage.getFeatureList();
+      final List< ? > hydFeatureList = m_createMappingHydrotopPage.getFeatureList();
       mapHyd( hydFeatureList, hydMapping );
     }
 
@@ -375,7 +384,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     return true;
   }
 
-  private void mapHyd( final List sourceFeatureList, final HashMap mapping )
+  private void mapHyd( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
   {
     final Feature rootFeature = m_hydWS.getRootFeature();
     final IFeatureType hydFT = getFeatureType( "Hydrotop" ); //$NON-NLS-1$
@@ -388,8 +397,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
       final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       final Feature targetFeature = FeatureFactory.createFeature( rootFeature, targetRelation, sourceFeature.getId(), hydFT, true );
       final IPropertyType flaechPT = hydFT.getProperty( NaModelConstants.HYDRO_PROP_AREA );
-      final IPropertyType fakVersPT = hydFT.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR );
-      final Iterator it = mapping.keySet().iterator();
+// final IPropertyType fakVersPT = hydFT.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR );
+      final Iterator<Object> it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
         final String targetkey = (String) it.next();
@@ -443,12 +452,21 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
 
   private void copyResourcesToProject( final IPath path )
   {
-    final String resource = m_resourceBase;
-    // System.out.print( "resource: " + resource + "\n" );
-    final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
+    final Locale locale = Locale.getDefault();
+    final String language = locale.getLanguage();
+
+    final String resourceLang = m_resourceBase + "_" + language + ".zip"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String resourceDefault = m_resourceBase + ".zip"; //$NON-NLS-1$
+
+    InputStream is = null;
     try
     {
-      ZipUtilities.unzip( resourceAsStream, path.toFile() );
+      is = getClass().getResourceAsStream( resourceLang );
+      if( is == null )
+        is = getClass().getResourceAsStream( resourceDefault );
+
+      ZipUtilities.unzip( is, path.toFile() );
+      is.close();
     }
     catch( final Exception e )
     {
@@ -456,7 +474,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
     finally
     {
-      IOUtils.closeQuietly( resourceAsStream );
+      IOUtils.closeQuietly( is );
 
     }
   }
@@ -494,10 +512,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
       }
       else
       {
-        System.out.println( Messages.get("org.kalypso.wizard.KalypsoNAProjectWizard.11") + IDText + idKey + Messages.get("org.kalypso.wizard.KalypsoNAProjectWizard.12") ); //$NON-NLS-1$ //$NON-NLS-2$
         fid = sourceFeature.getId();
         m_IDMap.put( fid, sourceFeature );
-        System.out.println( Messages.get("org.kalypso.wizard.KalypsoNAProjectWizard.13") + fid + Messages.get("org.kalypso.wizard.KalypsoNAProjectWizard.14") ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     else
@@ -505,7 +521,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     return fid;
   }
 
-  public void mapCatchment( final List sourceFeatureList, final HashMap mapping )
+  public void mapCatchment( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
   {
     final Feature rootFeature = m_modelWS.getRootFeature();
     final IFeatureType modelFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
@@ -524,11 +540,11 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
-      final String fid = getId( idColKey, sourceFeature, "TG" );
+      final String fid = getId( idColKey, sourceFeature, "TG" ); //$NON-NLS-1$
       final Feature targetFeature = FeatureFactory.createFeature( catchmentCollectionFE, targetRelation, fid, modelFT, true );
       final IPropertyType flaechPT = modelFT.getProperty( NaModelConstants.NA_MODEL_FLAECH_PROP );
       final IRelationType bodenkorrekturMemberRT = (IRelationType) modelFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
-      final Iterator it = mapping.keySet().iterator();
+      final Iterator<Object> it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
         final String targetkey = (String) it.next();
@@ -567,7 +583,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
         }
       }
       // Bodenkorrekturparameter erstellen
-      final List list = FeatureFactory.createFeatureList( targetFeature, bodenkorrekturMemberRT );
+      final List< ? > list = FeatureFactory.createFeatureList( targetFeature, bodenkorrekturMemberRT );
       targetFeature.setProperty( NaModelConstants.BODENKORREKTUR_MEMBER, list );
       final int soilLayerNo = Integer.parseInt( m_createPreferencePage.getSoilLayerNo() );
       for( int j = 0; j < soilLayerNo; j++ )
@@ -588,7 +604,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
   }
 
-  public void mapNode( final List sourceFeatureList, final HashMap mapping )
+  public void mapNode( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
   {
 
     final Feature rootFeature = m_modelWS.getRootFeature();
@@ -609,13 +625,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
-      final String fid = getId( idColKey, sourceFeature, "K" );
+      final String fid = getId( idColKey, sourceFeature, "K" ); //$NON-NLS-1$
       final Feature targetFeature = FeatureFactory.createFeature( nodeCollectionFE, targetRelation, fid, modelFT, true );
-      final Iterator it = mapping.keySet().iterator();
+      final Iterator<Object> it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
         final String targetkey = (String) it.next();
-        final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
         if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
@@ -648,9 +663,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
   }
 
-  public void mapRiver( final List sourceFeatureList, final HashMap mapping )
+  public void mapRiver( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
   {
-
     final Feature rootFeature = m_modelWS.getRootFeature();
 
     final Feature channelCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
@@ -683,28 +697,26 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
       catch( final Exception e )
       {
         e.printStackTrace();
-        throw new NumberFormatException( Messages.get( "KalypsoNAProjectWizard.ExceptionStrangArt" ) ); //$NON-NLS-1$
+        throw new NumberFormatException( Messages.getString( "KalypsoNAProjectWizard.ExceptionStrangArt" ) ); //$NON-NLS-1$
       }
 
       Feature targetFeature = null;
-      final String fid = getId( idColKey, sourceFeature, "S" );
+      final String fid = getId( idColKey, sourceFeature, "S" ); //$NON-NLS-1$
       switch( channelType )
       {
         case 0:
         {
-
           final IFeatureType vFT = getFeatureType( "VirtualChannel" ); //$NON-NLS-1$
           targetFeature = FeatureFactory.createFeature( channelCollectionFE, targetRelation, fid, vFT, true );
           break;
         }
         case 1:
         {
-
           final IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
           targetFeature = FeatureFactory.createFeature( channelCollectionFE, targetRelation, fid, kmFT, true );
 
           final IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
-          final List list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
+          final List< ? > list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
           targetFeature.setProperty( parameterMemberRT, list );
           final int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
           for( int j = 0; j < channelNo; j++ )
@@ -731,19 +743,19 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
         }
         case 3:
         {
-          throw new NotImplementedException( Messages.get( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
+          throw new NotImplementedException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
         }
         default:
         {
           break;
         }
       }// switch
-      final Iterator it = mapping.keySet().iterator();
+      final Iterator<Object> it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
         final String targetkey = (String) it.next();
         final String sourcekey = (String) mapping.get( targetkey );
-        if( "StrangArt".equals( targetkey ) )
+        if( "StrangArt".equals( targetkey ) ) //$NON-NLS-1$
           continue;
         if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
@@ -754,8 +766,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
             final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) so).getCurveAt( 0 ) };
             targetFeature.setProperty( targetkey, curves[0] );
           }
-// if( so instanceof GMLMultiLineString )
-// targetFeature.setProperty( targetkey, so );
           else if( pt instanceof IValuePropertyType )
           {
             final IValuePropertyType vpt = (IValuePropertyType) pt;

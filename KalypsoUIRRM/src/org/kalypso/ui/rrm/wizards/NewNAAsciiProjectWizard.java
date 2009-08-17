@@ -89,7 +89,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   // Constants
   static final String PROJECT_PAGE = "page_type:createNewProject"; //$NON-NLS-1$
 
-  private final String m_resourceBase = "resource/.projecttemplate.zip"; //$NON-NLS-1$
+  private final String m_resourceBase = "resources/.projecttemplate.zip"; //$NON-NLS-1$
 
   final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
 
@@ -125,8 +125,8 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     try
     {
       m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      m_createProjectPage.setDescription( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.2") ); //$NON-NLS-1$
-      m_createProjectPage.setTitle( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.3") ); //$NON-NLS-1$
+      m_createProjectPage.setDescription( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.2") ); //$NON-NLS-1$
+      m_createProjectPage.setTitle( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.3") ); //$NON-NLS-1$
       // m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( m_createProjectPage );
     }
@@ -154,7 +154,6 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   @Override
   public boolean performFinish( )
   {
-
     m_workspacePath = m_createProjectPage.getLocationPath();
     m_projectHandel = m_createProjectPage.getProjectHandle();
 
@@ -176,6 +175,9 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
 
     // copy all the resources to the workspace into the new created project
     copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
+
+    // TODO: refactor: until here, iti is exactly the same code as in the KalypsoNAProjectWizard, should be combined
+
     try
     {
       ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
@@ -206,7 +208,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   private void copyResourcesToProject( final IPath path )
   {
     final String resource = m_resourceBase;
-    System.out.print( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.4") + resource + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    System.out.print( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.4") + resource + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     try
     {
@@ -250,7 +252,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, null, "http://www.tuhh.de/parameter", null ); //$NON-NLS-1$
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
-    System.out.println( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7") + parameterGmlFile.getPath() ); //$NON-NLS-1$
+    System.out.println( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7") + parameterGmlFile.getPath() ); //$NON-NLS-1$
   }
 
   /**

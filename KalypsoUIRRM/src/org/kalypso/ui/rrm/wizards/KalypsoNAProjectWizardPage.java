@@ -149,7 +149,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   public KalypsoNAProjectWizardPage( final String pageName, final IFeatureType featureType )
   {
     super( pageName );
-    setDescription( Messages.get( "KalypsoNAProjectWizardPage.PageDescription" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "KalypsoNAProjectWizardPage.PageDescription" ) ); //$NON-NLS-1$
     targetFT = featureType;
   }
 
@@ -161,7 +161,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   public KalypsoNAProjectWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IFeatureType featureType )
   {
     super( pageName, title, titleImage );
-    setDescription( Messages.get( "KalypsoNAProjectWizardPage.PageDescription" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "KalypsoNAProjectWizardPage.PageDescription" ) ); //$NON-NLS-1$
     targetFT = featureType;
 
   }
@@ -183,7 +183,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     }
     else
     {
-      setErrorMessage( Messages.get( "KalypsoNAProjectWizardPage.ErrorMessageNotSupportedCS" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageNotSupportedCS" ) ); //$NON-NLS-1$
       pageComplete = false;
     }
 
@@ -230,10 +230,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     topGroupData.horizontalAlignment = GridData.FILL;
     fileGroup.setLayout( topGroupLayout );
     fileGroup.setLayoutData( topGroupData );
-    fileGroup.setText( Messages.get( "KalypsoNAProjectWizardPage.FileGroupText" ) ); //$NON-NLS-1$
+    fileGroup.setText( Messages.getString( "KalypsoNAProjectWizardPage.FileGroupText" ) ); //$NON-NLS-1$
 
     fileLabel = new Label( fileGroup, SWT.NONE );
-    fileLabel.setText( Messages.get( "KalypsoNAProjectWizardPage.FileLabelText" ) ); //$NON-NLS-1$
+    fileLabel.setText( Messages.getString( "KalypsoNAProjectWizardPage.FileLabelText" ) ); //$NON-NLS-1$
 
     // Set width of Text fields
     final GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
@@ -250,11 +250,11 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     } );
 
     browseButton = new Button( fileGroup, SWT.PUSH );
-    browseButton.setText( Messages.get( "KalypsoNAProjectWizardPage.BrowseButtonText" ) ); //$NON-NLS-1$
+    browseButton.setText( Messages.getString( "KalypsoNAProjectWizardPage.BrowseButtonText" ) ); //$NON-NLS-1$
     browseButton.setLayoutData( new GridData( GridData.END ) );
     browseButton.addSelectionListener( this );
     final Label crsLabel = new Label( fileGroup, SWT.NONE );
-    crsLabel.setText( Messages.get( "KalypsoNAProjectWizardPage.CRSLabelText" ) ); //$NON-NLS-1$
+    crsLabel.setText( Messages.getString( "KalypsoNAProjectWizardPage.CRSLabelText" ) ); //$NON-NLS-1$
 
     m_checkCRS = new Combo( fileGroup, SWT.NONE );
 
@@ -264,7 +264,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     defaultCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_checkCRS.select( m_checkCRS.indexOf( defaultCRS ) );
 
-    m_checkCRS.setToolTipText( Messages.get( "KalypsoNAProjectWizardPage.CRSTooltip" ) ); //$NON-NLS-1$
+    m_checkCRS.setToolTipText( Messages.getString( "KalypsoNAProjectWizardPage.CRSTooltip" ) ); //$NON-NLS-1$
     final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_checkCRS.setLayoutData( data );
@@ -277,7 +277,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   private void createMappingGroup( final Composite parent )
   {
     m_mappingGroup = new Group( parent, SWT.NONE );
-    m_mappingGroup.setText( Messages.get( "KalypsoNAProjectWizardPage.MappingGroupText" ) ); //$NON-NLS-1$
+    m_mappingGroup.setText( Messages.getString( "KalypsoNAProjectWizardPage.MappingGroupText" ) ); //$NON-NLS-1$
     final GridLayout topGroupLayout = new GridLayout( 2, false );
     m_mappingGroup.setLayout( topGroupLayout );
 
@@ -329,7 +329,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
     // Reset buttons group
     resetButton = new Button( m_mappingGroup, SWT.PUSH );
-    resetButton.setText( Messages.get( "KalypsoNAProjectWizardPage.ResetButtonText" ) ); //$NON-NLS-1$
+    resetButton.setText( Messages.getString( "KalypsoNAProjectWizardPage.ResetButtonText" ) ); //$NON-NLS-1$
     resetButton.addSelectionListener( this );
 
     m_sourceGroup.setSize( m_sourceGroup.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ) );
@@ -367,7 +367,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   {
     final FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[] { "shp" } ); //$NON-NLS-1$
-    fdialog.setText( Messages.get( "KalypsoNAProjectWizardPage.BrowseText" ) ); //$NON-NLS-1$
+    fdialog.setText( Messages.getString( "KalypsoNAProjectWizardPage.BrowseText" ) ); //$NON-NLS-1$
     fdialog.setFilterNames( new String[] { "Shape Files (*.shp)", "All Files (*.*)" } );
     fdialog.setFilterExtensions( new String[] { "*.shp", //$NON-NLS-1$
         "*.*" } ); //$NON-NLS-1$
@@ -441,7 +441,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       setErrorMessage( e.getLocalizedMessage() );
 
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), e );
-      ErrorDialog.openError( getShell(), Messages.get( "KalypsoNAProjectWizardPage.TextMessageReadError" ), Messages.get( "KalypsoNAProjectWizardPage.MessageReadError", shapePath ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getShell(), Messages.getString( "KalypsoNAProjectWizardPage.TextMessageReadError" ), Messages.getString( "KalypsoNAProjectWizardPage.MessageReadError", shapePath ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return false;
     }
@@ -492,7 +492,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     if( !skipRadioButton.getSelection() )
     {
       setPageComplete( true );
-      setMessage( Messages.get( "KalypsoNAProjectWizardPage.SkipMessage" ) ); //$NON-NLS-1$
+      setMessage( Messages.getString( "KalypsoNAProjectWizardPage.SkipMessage" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -502,14 +502,14 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final String fileFieldStr = m_fileField.getText();
     if( fileFieldStr.length() == 0 )
     {
-      setErrorMessage( Messages.get( "KalypsoNAProjectWizardPage.ErrorMessageChooseFile" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageChooseFile" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
 
     if( !fileFieldStr.toLowerCase().endsWith( ".shp" ) )
     {
-      setErrorMessage( Messages.get( "KalypsoNAProjectWizardPage.ErrorMessageWrongSuffix" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageWrongSuffix" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
@@ -517,7 +517,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     m_shapeFile = new File( fileFieldStr );
     if( validateFile( m_shapeFile ) == false )
     {
-      setErrorMessage( Messages.get( "KalypsoNAProjectWizardPage.ErrorMessageNotValidFile" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageNotValidFile" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
@@ -574,7 +574,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     else if( type == DESCRIPTION )
       return annotation.getDescription();
 
-    throw new IllegalArgumentException( Messages.get( "org.kalypso.wizard.KalypsoNAProjectWizardPage.3" ) + type ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.wizard.KalypsoNAProjectWizardPage.3" ) + type ); //$NON-NLS-1$
   }
 
   /**
