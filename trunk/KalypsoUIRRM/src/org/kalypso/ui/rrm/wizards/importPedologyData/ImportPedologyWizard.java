@@ -93,7 +93,7 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
   {
     m_initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -153,7 +153,7 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
         // call importer
         final PedologyImportOperation op = new PedologyImportOperation( inputDescriptor, output, pedologyClasses, ImportType.CLEAR_OUTPUT );
         final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-        ErrorDialog.openError( getShell(), Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
+        ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
 
         final File outputFile = pedologyFile.getLocation().toFile();
         GmlSerializer.serializeWorkspace( outputFile, pedologyWorkspace, "UTF-8" ); //$NON-NLS-1$
@@ -161,7 +161,7 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
       }
       catch( final Exception e )
       {
-        MessageDialog.openError( getShell(), Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+        MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
         return false;
       }
     }

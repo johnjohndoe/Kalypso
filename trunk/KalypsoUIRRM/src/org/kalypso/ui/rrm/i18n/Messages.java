@@ -57,7 +57,7 @@ public class Messages
   {
   }
 
-  public static String get( final String key, final Object... args )
+  public static String getString( final String key, final Object... args )
   {
     String formatStr = ""; //$NON-NLS-1$
     try

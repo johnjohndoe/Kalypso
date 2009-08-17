@@ -94,7 +94,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
 
     final IKalypsoTheme[] themes = MapHandlerUtils.getSelectedThemes( selection );
     if( themes.length != 5 )
-      return error( shell, Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.0") ); //$NON-NLS-1$
+      return error( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.0") ); //$NON-NLS-1$
 
     FeatureList flLanduse = null;
     FeatureList flPedology = null;
@@ -106,7 +106,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       final FeatureList list = ((IKalypsoFeatureTheme) kalypsoTheme).getFeatureList();
       final IRelationType featureTypeProperty = list.getParentFeatureTypeProperty();
       if( featureTypeProperty == null )
-        return error( shell, String.format( Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
+        return error( shell, String.format( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
 
       if( NaModelConstants.HYDRO_MEMBER.equals( featureTypeProperty.getQName() ) )
         flHydrotops = list;
@@ -122,11 +122,11 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
           flCatchment = list;
 
         if( list.size() == 0 )
-          return error( shell, String.format( Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.2"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
+          return error( shell, String.format( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.2"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
       }
     }
     if( flLanduse == null || flPedology == null || flGeology == null || flCatchment == null || flHydrotops == null )
-      return error( shell, Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.3") ); //$NON-NLS-1$
+      return error( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.3") ); //$NON-NLS-1$
 
     final GMLWorkspace workspace = flHydrotops.getParentFeature().getWorkspace();
     final IFile outputFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
@@ -136,10 +136,10 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     final FeatureList fflCatchment = flCatchment;
     final FeatureList fflHydrotops = flHydrotops;
 
-    if( !MessageDialog.openConfirm( shell, Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.4"), Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.5") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.4"), Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.5") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    final Job job = new Job( Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.6") ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.6") ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -151,11 +151,11 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
         op.setDissolveMode( true );
         try
         {
-          final SubMonitor progress = SubMonitor.convert( monitor, Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.7"), 1000 ); //$NON-NLS-1$
+          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.7"), 1000 ); //$NON-NLS-1$
 
           op.run( progress.newChild( 900, SubMonitor.SUPPRESS_BEGINTASK ) );
 
-          monitor.subTask( Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.8") ); //$NON-NLS-1$
+          monitor.subTask( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.8") ); //$NON-NLS-1$
           final File file = outputFile.getLocation().toFile();
           GmlSerializer.serializeWorkspace( file, workspace, "UTF-8" ); //$NON-NLS-1$
           ProgressUtilities.worked( progress, 90 );
@@ -175,11 +175,11 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
         }
         catch( final IOException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.10"), e ); //$NON-NLS-1$
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.10"), e ); //$NON-NLS-1$
         }
         catch( final GmlSerializeException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.11"), e ); //$NON-NLS-1$
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.11"), e ); //$NON-NLS-1$
         }
         return Status.OK_STATUS;
       }
@@ -192,7 +192,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
 
   private Object error( final Shell shell, final String message )
   {
-    MessageDialog.openError( shell, Messages.get("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.12"), message ); //$NON-NLS-1$
+    MessageDialog.openError( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.12"), message ); //$NON-NLS-1$
     return null;
   }
 

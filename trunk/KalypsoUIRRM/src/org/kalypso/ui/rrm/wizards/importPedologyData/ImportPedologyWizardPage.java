@@ -56,9 +56,9 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
 
   public ImportPedologyWizardPage( )
   {
-    super( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    setTitle( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.2" ) ); //$NON-NLS-1$
-    setDescription( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.3" ) ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    setTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.3" ) ); //$NON-NLS-1$
 
     m_fileExtensions = new LinkedList<String>();
   }
@@ -78,14 +78,14 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
     container.setLayout( gridLayout );
     setControl( container );
 
-    new Label( container, SWT.NONE ).setText( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.mportPedologyWizardPage.4" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.mportPedologyWizardPage.4" ) ); //$NON-NLS-1$
     txt_InputFile = new Text( container, SWT.BORDER );
     txt_InputFile.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     btn_inputLanduseFileBrowse = new Button( container, SWT.NONE );
-    btn_inputLanduseFileBrowse.setText( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.11" ) ); //$NON-NLS-1$
+    btn_inputLanduseFileBrowse.setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.11" ) ); //$NON-NLS-1$
 
     // Soil type property combo box
-    new Label( container, SWT.NONE ).setText( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.12" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.12" ) ); //$NON-NLS-1$
     cmbSoilTypeProperty = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     final GridData gd0 = new GridData();
     gd0.horizontalAlignment = GridData.FILL;
@@ -197,14 +197,14 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
     if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.6" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.6" ) ); //$NON-NLS-1$
       return;
     }
     else if( sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile() //$NON-NLS-1$ //$NON-NLS-2$
         && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile() ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( Messages.get( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.10" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.10" ) ); //$NON-NLS-1$
       return;
     }
     setMessage( null );

@@ -98,8 +98,8 @@ public class KMViewer
     m_top = parent;
     parent.setLayout( new GridLayout( 3, false ) );
 
-    final String toolTip = Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.0"); //$NON-NLS-1$
-    m_dirField = new DirectoryFieldWidget( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.1"), toolTip, true, parent, 1, 1, 1 ); //$NON-NLS-1$
+    final String toolTip = Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.0"); //$NON-NLS-1$
+    m_dirField = new DirectoryFieldWidget( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.1"), toolTip, true, parent, 1, 1, 1 ); //$NON-NLS-1$
     m_dirField.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
@@ -135,7 +135,7 @@ public class KMViewer
     // 1/1
     final Label labelKm1 = new Label( parent, SWT.NONE );
     labelKm1.setLayoutData( new GridData() );
-    labelKm1.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.2") ); //$NON-NLS-1$
+    labelKm1.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.2") ); //$NON-NLS-1$
 
     // 1/2
     m_textKm1 = new Text( parent, SWT.NONE );
@@ -147,7 +147,7 @@ public class KMViewer
     // 2/1
     final Label labelKm2 = new Label( parent, SWT.NONE );
     labelKm2.setLayoutData( new GridData() );
-    labelKm2.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.3") ); //$NON-NLS-1$
+    labelKm2.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.3") ); //$NON-NLS-1$
 
     // 2/2
     m_textKm2 = new Text( parent, SWT.NONE );
@@ -171,7 +171,7 @@ public class KMViewer
     data2.grabExcessHorizontalSpace = true;
     data2.grabExcessVerticalSpace = true;
     profileGroup.setLayoutData( data2 );
-    profileGroup.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.4") ); //$NON-NLS-1$
+    profileGroup.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.4") ); //$NON-NLS-1$
     profileGroup.setLayout( new GridLayout() );
 
     // new ChecklistFieldEditor
@@ -186,7 +186,7 @@ public class KMViewer
 
     // row 6 /3
     final Button button = new Button( parent, SWT.PUSH );
-    button.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.5") ); //$NON-NLS-1$
+    button.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.5") ); //$NON-NLS-1$
     final GridData data5 = new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
     button.setLayoutData( data5 );
 
@@ -346,7 +346,7 @@ public class KMViewer
         if( pos != null )
         {
           final double positionKM = pos.doubleValue() / 1000d;
-          result.append( "  " + Double.toString( positionKM ) + Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.9") ); //$NON-NLS-1$ //$NON-NLS-2$
+          result.append( "  " + Double.toString( positionKM ) + Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.9") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       return result.toString();
@@ -415,7 +415,7 @@ public class KMViewer
           final Profile profileData = fac.createKalininMiljukovTypeProfile();
           profileData.setFile( file.toString() );
           profileData.setPositionKM( position );
-          System.out.print(Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.10") + pd.getPosition()); //$NON-NLS-1$
+          System.out.print(Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.10") + pd.getPosition()); //$NON-NLS-1$
           profileData.setEnabled( pd.isValidForKalypso(m_selectionBuffer) );
           profileList.add( profileData );
           // m_profileListViewer.setChecked( profileData, true );
