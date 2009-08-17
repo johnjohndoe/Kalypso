@@ -103,7 +103,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
 
   private GMLSchema m_parameterSchema;
 
-  final File asciiBaseDir = new File( "C:\\TMP\\na" ); // TODO:change by wizard //$NON-NLS-1$
+  final File m_asciiBaseDir = new File( "C:\\TMP\\na" ); // TODO:change by wizard //$NON-NLS-1$
 
   public NewNAAsciiProjectWizard( )
   {
@@ -125,8 +125,8 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     try
     {
       m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      m_createProjectPage.setDescription( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.2") ); //$NON-NLS-1$
-      m_createProjectPage.setTitle( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.3") ); //$NON-NLS-1$
+      m_createProjectPage.setDescription( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.2") ); //$NON-NLS-1$
+      m_createProjectPage.setTitle( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.3") ); //$NON-NLS-1$
       // m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( m_createProjectPage );
     }
@@ -138,7 +138,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
 
   /**
    * We will accept the selection in the workbench to see if we can initialize from it.
-   * 
+   *
    * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
@@ -148,7 +148,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   /**
    * This method creates the new Project and all the necessary , performs the mapping and writes the new modell.gml file
    * .
-   * 
+   *
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
   @Override
@@ -173,7 +173,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
       ErrorDialog.openError( getShell(), "Create Project", "Failed to create project", e.getStatus() );
       return false;
     }
-    
+
     // copy all the resources to the workspace into the new created project
     copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
     try
@@ -181,7 +181,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
       ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
       // open modell.gml and hydrotop.gml file to write imported feature
       m_parameterPath = new Path( m_projectHandel.getFullPath().append( "/parameter.gml" ).toString() ); //$NON-NLS-1$
-      importParameter( m_parameterPath, asciiBaseDir );
+      importParameter( m_parameterPath, m_asciiBaseDir );
     }
     catch( final Exception e1 )
     {
@@ -190,7 +190,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
       ErrorDialog.openError( getShell(), "Create Project", "Failed to import ASCII-Data", status );
       return false;
     }
-    
+
     try
     {
       ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
@@ -206,7 +206,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   private void copyResourcesToProject( final IPath path )
   {
     final String resource = m_resourceBase;
-    System.out.print( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.4") + resource + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    System.out.print( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.4") + resource + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     try
     {
@@ -250,7 +250,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, null, "http://www.tuhh.de/parameter", null ); //$NON-NLS-1$
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
-    System.out.println( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7") + parameterGmlFile.getPath() ); //$NON-NLS-1$
+    System.out.println( Messages.get("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7") + parameterGmlFile.getPath() ); //$NON-NLS-1$
   }
 
   /**

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.kmupdate;
 
@@ -88,22 +88,22 @@ public class KMViewer
   final Text m_textKm2;
   final StringBuffer m_selectionBuffer=new StringBuffer();
 
-  private DirectoryFieldWidget m_dirField;
+  private final DirectoryFieldWidget m_dirField;
 
   private final Composite m_top;
 
-  public KMViewer( Composite parent )
+  public KMViewer( final Composite parent )
   {
 //    m_selectionBuffer=new StringBuffer();
     m_top = parent;
     parent.setLayout( new GridLayout( 3, false ) );
 
-    final String toolTip = Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.0"); //$NON-NLS-1$
-    m_dirField = new DirectoryFieldWidget( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.1"), toolTip, true, parent, 1, 1, 1 ); //$NON-NLS-1$
+    final String toolTip = Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.0"); //$NON-NLS-1$
+    m_dirField = new DirectoryFieldWidget( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.1"), toolTip, true, parent, 1, 1, 1 ); //$NON-NLS-1$
     m_dirField.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         final String value = (String) selection.getFirstElement();
@@ -117,13 +117,13 @@ public class KMViewer
           final Double oldKmStart = km.getKmStart();
           if( oldKmStart == null )
           {
-            double startPosition = set.getStartPosition() / 1000d;
+            final double startPosition = set.getStartPosition() / 1000d;
             km.setKmStart( startPosition );
           }
           final Double oldKmEnd = km.getKmEnd();
           if( oldKmEnd == null )
           {
-            double endPosition = set.getEndPosition() / 1000d;
+            final double endPosition = set.getEndPosition() / 1000d;
             km.setKmEnd( endPosition );
           }
           m_textKm1.setText( km.getKmStart().toString() );
@@ -135,26 +135,26 @@ public class KMViewer
     // 1/1
     final Label labelKm1 = new Label( parent, SWT.NONE );
     labelKm1.setLayoutData( new GridData() );
-    labelKm1.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.2") ); //$NON-NLS-1$
+    labelKm1.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.2") ); //$NON-NLS-1$
 
     // 1/2
     m_textKm1 = new Text( parent, SWT.NONE );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.horizontalSpan = 1;
     m_textKm1.setLayoutData( data );
-    Label composite = new Label( parent, SWT.NONE );
+    final Label composite = new Label( parent, SWT.NONE );
     composite.setLayoutData( new GridData() );
     // 2/1
     final Label labelKm2 = new Label( parent, SWT.NONE );
     labelKm2.setLayoutData( new GridData() );
-    labelKm2.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.3") ); //$NON-NLS-1$
+    labelKm2.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.3") ); //$NON-NLS-1$
 
     // 2/2
     m_textKm2 = new Text( parent, SWT.NONE );
-    GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
     data3.horizontalSpan = 1;
     m_textKm2.setLayoutData( data3 );
-    Label composite2 = new Label( parent, SWT.NONE );
+    final Label composite2 = new Label( parent, SWT.NONE );
     composite2.setLayoutData( new GridData() );
     // row 3
     // row 4
@@ -171,7 +171,7 @@ public class KMViewer
     data2.grabExcessHorizontalSpace = true;
     data2.grabExcessVerticalSpace = true;
     profileGroup.setLayoutData( data2 );
-    profileGroup.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.4") ); //$NON-NLS-1$
+    profileGroup.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.4") ); //$NON-NLS-1$
     profileGroup.setLayout( new GridLayout() );
 
     // new ChecklistFieldEditor
@@ -186,15 +186,15 @@ public class KMViewer
 
     // row 6 /3
     final Button button = new Button( parent, SWT.PUSH );
-    button.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.5") ); //$NON-NLS-1$
-    GridData data5 = new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
+    button.setText( Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.5") ); //$NON-NLS-1$
+    final GridData data5 = new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
     button.setLayoutData( data5 );
 
     button.addSelectionListener( new SelectionAdapter()
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         updateProfileList();
       }
@@ -204,17 +204,17 @@ public class KMViewer
     m_textKm1.addFocusListener( new FocusAdapter()
     {
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         final String text = m_textKm1.getText();
         try
         {
-          double km = Double.parseDouble( text );
+          final double km = Double.parseDouble( text );
           final Object input = m_profileListViewer.getInput();
           if( input instanceof KalininMiljukovType )
             ((KalininMiljukovType) input).setKmStart( km );
         }
-        catch( Exception ex )
+        catch( final Exception ex )
         {
           ex.printStackTrace();
         }
@@ -223,17 +223,17 @@ public class KMViewer
     m_textKm2.addFocusListener( new FocusAdapter()
     {
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         final String text = m_textKm2.getText();
         try
         {
-          double km = Double.parseDouble( text );
+          final double km = Double.parseDouble( text );
           final Object input = m_profileListViewer.getInput();
           if( input instanceof KalininMiljukovType )
             ((KalininMiljukovType) input).setKmEnd( km );
         }
-        catch( Exception ex )
+        catch( final Exception ex )
         {
           ex.printStackTrace();
         }
@@ -241,20 +241,18 @@ public class KMViewer
     } );
   }
 
-  public void inputChanged( KalininMiljukovType oldInput, KalininMiljukovType kmType )
+  public void inputChanged( final KalininMiljukovType oldInput, final KalininMiljukovType kmType )
   {
     if( oldInput != null )
     {
       final List<Profile> profiles = oldInput.getProfile();
-      for( Iterator<Profile> iter = profiles.iterator(); iter.hasNext(); )
-        iter.next().setEnabled( false );
-      Object[] checkedElements = m_profileListViewer.getCheckedElements();
-      for( int i = 0; i < checkedElements.length; i++ )
+      for( final Profile profile2 : profiles )
+        profile2.setEnabled( false );
+      final Object[] checkedElements = m_profileListViewer.getCheckedElements();
+      for( final Object object : checkedElements )
       {
-        final Object object = checkedElements[i];
-        for( Iterator<Profile> iter = profiles.iterator(); iter.hasNext(); )
+        for( final Profile profile : profiles )
         {
-          final Profile profile = iter.next();
           if( object == profile )
             profile.setEnabled( true );
         }
@@ -278,9 +276,8 @@ public class KMViewer
         m_textKm2.setText( "" ); //$NON-NLS-1$
       m_dirField.setSelection( new StructuredSelection( path ) );
       final List<Profile> profiles = kmType.getProfile();
-      for( Iterator<Profile> iter = profiles.iterator(); iter.hasNext(); )
+      for( final Profile profile : profiles )
       {
-        Profile profile = iter.next();
         m_profileListViewer.setChecked( profile, profile.isEnabled() );
       }
       setEnabled( true );
@@ -289,7 +286,7 @@ public class KMViewer
       setEnabled( false );
   }
 
-  public void setEnabled( boolean enabled )
+  public void setEnabled( final boolean enabled )
   {
     // m_textKm1.setVisible( enabled );
     // m_textKm2.setVisible( enabled );
@@ -297,10 +294,10 @@ public class KMViewer
     m_top.setVisible( enabled );
   }
 
-  private class KMViewerContentProvider implements IStructuredContentProvider
+  protected class KMViewerContentProvider implements IStructuredContentProvider
   {
 
-    public Object[] getElements( Object inputElement )
+    public Object[] getElements( final Object inputElement )
     {
       if( inputElement instanceof KalininMiljukovType )
       {
@@ -311,7 +308,7 @@ public class KMViewer
       return new Object[0];
     }
 
-    public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+    public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
     {
     }
 
@@ -321,13 +318,12 @@ public class KMViewer
 
   }
 
-  private class KMViewerLabelProvider implements ILabelProvider
+  protected class KMViewerLabelProvider implements ILabelProvider
   {
-
     /**
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage( Object element )
+    public Image getImage( final Object element )
     {
       // no image
       return null;
@@ -336,7 +332,7 @@ public class KMViewer
     /**
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
-    public String getText( Object element )
+    public String getText( final Object element )
     {
       final StringBuffer result = new StringBuffer();
       if( element instanceof Profile )
@@ -350,7 +346,7 @@ public class KMViewer
         if( pos != null )
         {
           final double positionKM = pos.doubleValue() / 1000d;
-          result.append( "  " + Double.toString( positionKM ) + Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.9") ); //$NON-NLS-1$ //$NON-NLS-2$
+          result.append( "  " + Double.toString( positionKM ) + Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.9") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       return result.toString();
@@ -359,7 +355,7 @@ public class KMViewer
     /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener( ILabelProviderListener listener )
+    public void addListener( final ILabelProviderListener listener )
     {
       // TODO Auto-generated method stub
 
@@ -376,7 +372,7 @@ public class KMViewer
     /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
-    public boolean isLabelProperty( Object element, String property )
+    public boolean isLabelProperty( final Object element, final String property )
     {
       // TODO Auto-generated method stub
       return false;
@@ -385,7 +381,7 @@ public class KMViewer
     /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener( ILabelProviderListener listener )
+    public void removeListener( final ILabelProviderListener listener )
     {
       // TODO Auto-generated method stub
 
@@ -416,10 +412,10 @@ public class KMViewer
           final ProfileData pd = allProfiles.next();
           final File file = pd.getFile();
           final double position = pd.getPosition();
-          Profile profileData = fac.createKalininMiljukovTypeProfile();
+          final Profile profileData = fac.createKalininMiljukovTypeProfile();
           profileData.setFile( file.toString() );
           profileData.setPositionKM( position );
-          System.out.print(Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.10") + pd.getPosition()); //$NON-NLS-1$
+          System.out.print(Messages.get("org.kalypso.ui.rrm.kmupdate.KMViewer.10") + pd.getPosition()); //$NON-NLS-1$
           profileData.setEnabled( pd.isValidForKalypso(m_selectionBuffer) );
           profileList.add( profileData );
           // m_profileListViewer.setChecked( profileData, true );
@@ -431,9 +427,9 @@ public class KMViewer
 
   }
 
-  public void setInput( KalininMiljukovType km )
+  public void setInput( final KalininMiljukovType km )
   {
-    KalininMiljukovType oldInput = getInput();
+    final KalininMiljukovType oldInput = getInput();
     inputChanged( oldInput, km );
   }
 

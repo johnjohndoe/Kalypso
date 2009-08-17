@@ -53,7 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
-import org.kalypso.wizard.KalypsoNAProjectWizard;
+import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
 
 /**
  * @author kuch
