@@ -88,7 +88,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   {
     m_initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.get( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -141,7 +141,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         // call importer
         final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
         final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-        ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
+        ErrorDialog.openError( getShell(), Messages.get( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
 
         final File outputFile = landuseFile.getLocation().toFile();
         GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, "UTF-8" ); //$NON-NLS-1$
@@ -149,7 +149,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       }
       catch( final Exception e )
       {
-        MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+        MessageDialog.openError( getShell(), Messages.get( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
         return false;
       }
     }

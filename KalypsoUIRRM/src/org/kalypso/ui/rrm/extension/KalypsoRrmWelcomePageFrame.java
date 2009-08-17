@@ -69,7 +69,7 @@ public class KalypsoRrmWelcomePageFrame implements IKalypsoModuleWelcomePageFram
   @Override
   public String getTooltip( )
   {
-    return Messages.getString("org.kalypso.ui.rrm.extension.KalypsoRrmWelcomePageFrame.3"); //$NON-NLS-1$
+    return Messages.get("org.kalypso.ui.rrm.extension.KalypsoRrmWelcomePageFrame.3"); //$NON-NLS-1$
   }
 
   @Override
