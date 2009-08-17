@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+	<catalog:system uri="../node.xml"
+		systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:default" />
+
+	<catalog:system uri="../catchments.xml"
+		systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:default" />
+
+	<catalog:system uri="../ombrometer.xml"
+		systemId="urn:ogc:gml:featuretype:http___org.kalypso.ombrometer:Ombrometer:sld:default" />
+
+	<catalog:system uri="../channelRHB.xml"
+		systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:default" />
+
+	<catalog:system uri="../channelV.xml"
+		systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:default" />
+	<catalog:system uri="../channelKM.xml"
+		systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:default" />
+
+	<catalog:system uri="../hydrotop.xml"
+		systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_hydrotop:Hydrotop:sld:default" />
+	<!-- 
+		template:
+		<catalog:system uri="../.xml"
+		systemId="" />
+	-->
+
+</catalog:catalog>
+

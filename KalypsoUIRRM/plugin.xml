@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         id="KalypsoUIRRMPopupManu"
+         name="KalypsoUIRRMPopupManu"
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="KalypsoUIRRM.kmContribution"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <filter
+               name="featureType"
+               value="http://www.tuhh.de/kalypsoNA#KMChannel"/>
+         <action
+               class="org.kalypso.ui.rrm.action.KMUpdateAction"
+               icon="icons/kmStrang.gif"
+               id="KalypsoUIRRM.updateKMParameter"
+               label="%KalypsoUIRRM.updateKMParameter.label"
+               style="push"
+               tooltip="%KalypsoUIRRM.updateKMParameter.tooltip"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.ui.styles.RRMFeatureTypeStyleCatalogContribution"
+            name="RRM-Style-Catalog"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.rrm"
+            class="org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard"
+            hasPages="true"
+            icon="icons/kmStrang.gif"
+            id="org.kalypso.ui.rrm.wizards.NewProjectImportAsciiWizard"
+            name="NA-Model Projekt aus Ascii File Projekt"
+            project="true"/>
+   </extension>
+   <extension
+         point="org.kalypso.project.database.client.kalypsoModule">
+    <module
+            module="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
+      </module>
+   </extension>
+   
+   
+  <!-- Commands for the map outline -->
+	<extension point="org.eclipse.ui.commands">
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportLanduse" name="Import Landuse"/>
+	</extension>
+	<extension point="org.eclipse.ui.commands">
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportPedology" name="Import Pedology data"/>
+	</extension>
+	<extension point="org.eclipse.ui.commands">
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportGeology" name="Import Geology data"/>
+	</extension>
+	<extension point="org.eclipse.ui.commands">
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" name="Create hydrotops"/>
+	</extension>
+
+	 <extension  point="org.eclipse.ui.commandImages">
+	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" icon="icons/landuseImport.gif"/>
+	 </extension>
+	 <extension  point="org.eclipse.ui.commandImages">
+	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" icon="icons/pedologyImport.gif"/>
+	 </extension>
+	 <extension  point="org.eclipse.ui.commandImages">
+	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" icon="icons/geologyImport.gif"/>
+	 </extension>
+	 <extension  point="org.eclipse.ui.commandImages">
+	    <image commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" icon="icons/geologyImport.gif"/>
+	 </extension>
+
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" class="org.kalypso.ui.rrm.action.RRMImportLanduseHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" class="org.kalypso.ui.rrm.action.RRMImportPedologyHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.ui.rrm.definition.onePedologyThemeSelected"/>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" class="org.kalypso.ui.rrm.action.RRMImportGeologyHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected"/>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
+			</activeWhen>
+		</handler>
+	</extension>
+
+	<extension point="org.eclipse.ui.menus">
+   		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor?after=additions">
+			<command commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.ui.rrm.definition.onePedologyThemeSelected"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+						<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>
+					</iterate>
+				</and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.rrm.definition.onePedologyThemeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+						<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
+					</iterate>
+				</and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+						<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+					</iterate>
+				</and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected">
+			<with variable="selection">
+				<and>
+					<count value="+"/>
+					<or>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>					
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>					
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/kalypsoNA}Catchment"/>					
+						</iterate>
+					</or>
+				</and>
+			</with>
+		</definition>
+	</extension>
+ 
+</plugin>
