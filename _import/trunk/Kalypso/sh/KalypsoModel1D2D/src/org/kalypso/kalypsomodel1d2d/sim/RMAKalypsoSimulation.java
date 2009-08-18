@@ -55,7 +55,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileUtil;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -67,6 +66,7 @@ import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.KalypsoCommonsExtensions;
+import org.kalypso.commons.io.FileSystemManagerWrapper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
@@ -154,7 +154,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
 
     OutputStream logOS = null;
     OutputStream errorOS = null;
-    StandardFileSystemManager manager = null;
+    FileSystemManagerWrapper manager = null;
     try
     {
       final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();

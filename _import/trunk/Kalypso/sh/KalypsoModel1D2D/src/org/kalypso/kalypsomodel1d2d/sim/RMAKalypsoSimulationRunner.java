@@ -57,12 +57,12 @@ import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.io.FileSystemManagerWrapper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -97,7 +97,7 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
 
   private FileObject m_resultsDir;
 
-  private StandardFileSystemManager m_manager;
+  private FileSystemManagerWrapper m_manager;
 
   public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider ) throws CoreException
   {

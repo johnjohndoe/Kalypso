@@ -45,11 +45,11 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
+import org.kalypso.commons.io.FileSystemManagerWrapper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -70,7 +70,7 @@ public class NodeResultsHandler2DTest
     final File tempDir = FileUtilities.createNewTempDir( "result2dtest" );
     tempDir.mkdirs();
 
-    final StandardFileSystemManager manager = VFSUtilities.getNewManager();
+    final FileSystemManagerWrapper manager = VFSUtilities.getNewManager();
     try
     {
       final ILog log = KalypsoModel1D2DPlugin.getDefault().getLog();

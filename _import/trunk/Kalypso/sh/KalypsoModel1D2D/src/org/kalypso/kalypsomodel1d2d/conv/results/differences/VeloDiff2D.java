@@ -50,8 +50,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.io.FileSystemManagerWrapper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -123,7 +123,7 @@ public class VeloDiff2D
 
       System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.0") ); //$NON-NLS-1$
       
-      final StandardFileSystemManager manager = VFSUtilities.getNewManager();
+      final FileSystemManagerWrapper manager = VFSUtilities.getNewManager();
       processResults( manager.toFileObject( resultFile1 ), manager.toFileObject( resultFile2 ), parameters, outputDir1, outputDir2 );
       manager.close();
 

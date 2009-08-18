@@ -52,13 +52,13 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.io.FileSystemManagerWrapper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -176,7 +176,7 @@ public class VeloDiff2DTest extends TestCase
     file1 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_plan\\ohne_Hafen\\mhw_hq100\\mhw_hq100_plan_p16.2d" ); //$NON-NLS-1$
     file2 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_ref\\mhw_hq100\\mhw_ref_g18.2d" ); //$NON-NLS-1$
 
-    final StandardFileSystemManager manager = VFSUtilities.getNewManager();
+    final FileSystemManagerWrapper manager = VFSUtilities.getNewManager();
     processResults( manager.toFileObject( file1 ), manager.toFileObject( file2 ), parameters, outputDir1, outputDir2 );
     manager.close();
 
