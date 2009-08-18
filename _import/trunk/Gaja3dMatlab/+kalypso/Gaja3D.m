@@ -342,7 +342,7 @@ classdef Gaja3D < handle
             movefile([outputPrefix '.poly'], [tempfile '.poly']);
             
             % initialize to 0 elevation
-            Ztri = zeros(size(Xtri));
+            Ztri = ones(size(Xtri)) * NaN;
             points = [Xtri Ytri Ztri];
             
             % discard points that are not in any triangle
