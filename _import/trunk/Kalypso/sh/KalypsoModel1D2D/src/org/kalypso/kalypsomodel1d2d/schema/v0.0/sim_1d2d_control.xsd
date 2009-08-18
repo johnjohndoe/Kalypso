@@ -820,17 +820,9 @@
 							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
-							<xs:restriction base="xs:double">
-								<xs:enumeration value="0.1" />
-								<xs:enumeration value="0.2" />
-								<xs:enumeration value="0.3" />
-								<xs:enumeration value="0.4" />
-								<xs:enumeration value="0.5" />
-								<xs:enumeration value="0.6" />
-								<xs:enumeration value="0.7" />
-								<xs:enumeration value="0.8" />
-								<xs:enumeration value="0.9" />
-								<xs:enumeration value="1.0" />
+						<!-- changed to string to allow more flexible expansion of "Relaxation Factor" -->
+							<xs:restriction base="xs:string">
+								<xs:minLength value="3" />
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
