@@ -19,5 +19,9 @@
             simulationClass="org.kalypso.calculation.connector.fm_rm.Connector_FM_RM_Job"
             typeID="KalypsoModelConnector_FM_RM">
       </simulation>
+      <simulation
+            simulationClass="org.kalypso.calculation.plc.postprocessing.na.PLCPostprocessing_NA_Job"
+            typeID="KalypsoPLC_Postprocessing_NA">
+      </simulation>
    </extension>
 </plugin>
