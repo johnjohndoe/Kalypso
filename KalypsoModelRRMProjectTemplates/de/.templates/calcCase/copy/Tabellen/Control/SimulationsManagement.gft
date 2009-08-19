@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="featureview.template.kalypso.org featureview.xsd">
+	<layer id="foo" featurePath="/" linktype="gml" xlink:href="../../.calculation"/>
+	
+	<view typename="NAControl" style="SWT.NONE" tooltip="">
+		<gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+		 grabExcessVerticalSpace="true"/>
+		
+		<gridLayout numColumns="2" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
+
+<!--
+
+ Allgemeines:
+
+-->
+		<group text="Allgemeines" style="0">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2"  horizontalSpacing="10"/>
+			<label property="editor" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="editor" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="description" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="description" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="calctime" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="calctime" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="comment" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="comment" style="2050">
+				<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+			</text>
+		</group>
+
+<!--
+  
+Simulationszeit:
+ 
+
+-->
+		<group text="Simulationsmanagement" style="SWT.NONE">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessHorizontalSpace="true"/>		
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2"/>			
+			
+			<label property="startsimulation" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="startsimulation" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="startforecast" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="startforecast" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="hoursforecast" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="hoursforecast" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="minutesTimestep" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="minutesTimestep" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="versionKalypsoNA" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<combo property="versionKalypsoNA" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+            <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+        </combo>
+        <label property="pns" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<checkbox editable="true" property="pns" style="SWT.NONE">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+        </checkbox>
+        <label property="xjah" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="xjah" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="xwahl2" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<text property="xwahl2" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="ipver" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.BEGINNING"/>
+			</label>
+			<combo property="ipver" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+            <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+        </combo>
+		</group>
+	</view>
+</featuretemplate>

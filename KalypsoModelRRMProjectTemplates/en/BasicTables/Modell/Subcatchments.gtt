@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:gistableview xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns0:layer id="id" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" xlink:type="simple" xlink:href="project:/modell.gml" xlink:actuate="onRequest">
+        <ns0:column width="84" name="description" format="" editable="true" alignment="16384"/>
+        <ns0:column width="50" name="name" format="" editable="false" alignment="16384"/>
+        <ns0:column width="65" name="generateResult" format="" editable="true" alignment="16384"/>
+        <ns0:column width="103" name="flaech" format="" editable="true" alignment="16384"/>
+        <ns0:column width="65" name="snowtype" format="" editable="true" alignment="16384"/>
+        <ns0:column width="107" name="faktn" format="" editable="true" alignment="16384"/>
+        <ns0:column width="133" name="ftem" format="" editable="true" alignment="16384"/>
+        <ns0:column width="113" name="fver" format="" editable="true" alignment="16384"/>
+        <ns0:column width="142" name="bianf" format="" editable="true" alignment="16384"/>
+        <ns0:column width="100" name="tint" format="" editable="true" alignment="16384"/>
+        <ns0:column width="82" name="rintmx" format="" editable="true" alignment="16384"/>
+        <ns0:column width="118" name="bodenkorrekturmember" format="" editable="true" alignment="16384"/>
+        <ns0:column width="187" name="aigw" format="" editable="true" alignment="16384"/>
+        <ns0:column width="115" name="faktorRetvs" editable="true" alignment="16384"/>
+        <ns0:column width="80" name="retvs" format="" editable="true" alignment="16384"/>
+        <ns0:column width="108" name="faktorRetob" editable="true" alignment="16384"/>
+        <ns0:column width="74" name="retob" format="" editable="true" alignment="16384"/>
+        <ns0:column width="85" name="faktorRetint" editable="true" alignment="16384"/>
+        <ns0:column width="54" name="retint" format="" editable="true" alignment="16384"/>
+        <ns0:column width="89" name="faktorRetbas" editable="true" alignment="16384"/>
+        <ns0:column width="58" name="retbas" format="" editable="true" alignment="16384"/>
+        <ns0:column width="78" name="faktorRetgw" editable="true" alignment="16384"/>
+        <ns0:column width="52" name="retgw" format="" editable="true" alignment="16384"/>
+        <ns0:column width="110" name="faktorRetklu" editable="true" alignment="16384"/>
+        <ns0:column width="79" name="retklu" format="" editable="true" alignment="16384"/>
+        <ns0:column width="105" name="grundwasserabflussMember" format="" editable="true" alignment="16384"/>
+        <ns0:column width="61" name="hgru" format="" editable="true" alignment="16384"/>
+        <ns0:column width="67" name="hgro" format="" editable="true" alignment="16384"/>
+        <ns0:column width="117" name="rtr" format="" editable="true" alignment="16384"/>
+        <ns0:column width="82" name="pors" format="" editable="true" alignment="16384"/>
+        <ns0:column width="82" name="gwsent" format="" editable="true" alignment="16384"/>
+        <ns0:column width="121" name="klupor" format="" editable="true" alignment="16384"/>
+        <ns0:column width="145" name="niederschlagZR" format="" editable="true" alignment="16384"/>
+        <ns0:column width="92" name="temperaturZR" format="" editable="true" alignment="16384"/>
+        <ns0:column width="99" name="verdunstungZR" format="" editable="true" alignment="16384"/>
+        <ns0:column width="110" name="zft" format="" editable="true" alignment="16384"/>
+        <ns0:sort propertyName="name" inverse="false"/>
+    </ns0:layer>
+</ns0:gistableview>
+

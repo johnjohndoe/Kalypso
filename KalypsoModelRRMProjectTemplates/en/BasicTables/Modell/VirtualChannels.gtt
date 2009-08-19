@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:gistableview xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns0:layer id="id" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" linktype="gml" xlink:type="simple" xlink:href="project:/modell.gml" xlink:actuate="onRequest">
+        <ns0:column width="289" name="description" format="" editable="true" alignment="16384"/>
+        <ns0:column width="46" name="name" format="" editable="false" alignment="16777216"/>
+        <ns0:column width="141" name="downStreamNodeMember" editable="true" alignment="16384"/>
+        <ns0:sort propertyName="inum" inverse="false"/>
+    </ns0:layer>
+</ns0:gistableview>
+
