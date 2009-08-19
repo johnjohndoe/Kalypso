@@ -129,6 +129,7 @@ public class HydrotopManager extends AbstractManager
     Feature rootFeature = hydWorkspace.getRootFeature();
     FeatureList hydList = (FeatureList) rootFeature.getProperty( NaModelConstants.HYDRO_MEMBER );
 
+    final List soilTypeList = (List) parameterRootFeature.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
     asciiBuffer.getHydBuffer().append( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ) ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     while( catchmentIter.hasNext() )
     {
@@ -164,7 +165,16 @@ public class HydrotopManager extends AbstractManager
             totalSealedArea += hydrotopArea * combinedSealingPercentage;
             totalUnsealedArea += hydrotopUnsealedArea;
             totalArea += hydrotopArea;
-            hydrotopOutputList.add( String.format( Locale.US, "%10.2f%50s%50s%16g%16g%8d%10f%4d", hydrotopUnsealedArea, hydrotop.getLanduse(), hydrotop.getSoilType(), hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingPercentage, hydrotop.getAsciiHydrotopType() ) ); //$NON-NLS-1$
+            String soilType = hydrotop.getSoilType();
+            for( final Object object : soilTypeList )
+            {
+              final Feature f = (Feature) object;
+              if(soilType.equals( f.getId())){
+                soilType = f.getName();
+                break;
+              }
+            }
+            hydrotopOutputList.add( String.format( Locale.US, "%10.2f%50s%50s%16g%16g%8d%10f%4d", hydrotopUnsealedArea, hydrotop.getLanduse(), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingPercentage, hydrotop.getAsciiHydrotopType() ) ); //$NON-NLS-1$
             hydIdList.add( hydrotop.getId() );
           }
         }
