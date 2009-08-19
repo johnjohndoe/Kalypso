@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,51 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package org.kalypso.convert.namodel.schema.binding;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Dirk Kuch
+ * @author antanas
  */
-public class LanduseClassHelper
+public class SimpleShapeCatchment extends Feature_Impl
 {
-  private final static String ID_FORMAT = "PLC_%5d";
+  public static final QName QNAME = new QName( NaModelConstants.NS_NASIMPLESHAPECATCHMENT, "SimpleShapeCatchment" ); //$NON-NLS-1$
 
-  public static Map<String, String> resolve( final GMLWorkspace landuseClassesWorkspace )
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NASIMPLESHAPECATCHMENT, "location" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DRAINAGE_NODE_ID = new QName( NaModelConstants.NS_NASIMPLESHAPECATCHMENT, "drainageNodeID" ); //$NON-NLS-1$
+
+  protected SimpleShapeCatchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) ); //$NON-NLS-1$
-    int cnt = 1;
-
-    final Map<String, String> landuseClasses = new HashMap<String, String>();
-    for( final Object object : landuseClassesFeatures )
-    {
-      final Feature f = (Feature) object;
-      final String name = f.getName();
-      String id = formatID( f.getId(), cnt++ );
-      
-      // TODO check if this check is necessary (possible that some of the existing classes are called PLC_nnnnn)
-      while( landuseClasses.containsValue( id ) )
-        id = formatID( f.getId(), cnt++ );
-      
-      landuseClasses.put( name, id );
-    }
-    return landuseClasses;
+    super( parent, parentRelation, ft, id, propValues );
   }
 
-  private final static String formatID( final String id, final int nextCnt )
+  public GM_MultiSurface getGeometry( )
   {
-    if( id.length() <= 10 )
-      return id;
-    return String.format( ID_FORMAT, nextCnt );
+    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
+  }
+
+  public void setGeometry( final GM_MultiSurface geometry )
+  {
+    setProperty( QNAME_PROP_GEOMETRY, geometry );
+  }
+
+  public void setDrainageNodeID( final String value )
+  {
+    setProperty( QNAME_PROP_DRAINAGE_NODE_ID, value );
+  }
+
+  public String getDrainageNodeID( )
+  {
+    return getProperty( QNAME_PROP_DRAINAGE_NODE_ID, String.class );
   }
 
 }

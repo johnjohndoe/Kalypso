@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.NACalcJob;bundle-version="1.0.2",
  org.kalypso.model.wspm.core;bundle-version="0.0.1",
  org.kalypso.afgui;bundle-version="0.0.0",
- org.junit4;bundle-version="4.3.1"
+ org.junit4;bundle-version="4.3.1",
+ org.kalypso.ui;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.calculation.connector,
