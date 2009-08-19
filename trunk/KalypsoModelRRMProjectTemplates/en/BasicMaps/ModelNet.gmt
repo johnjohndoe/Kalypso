@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org">
+    <extent bottom="5920820.492259566" left="3553142.912520292" right="3562775.268980949" srs="EPSG:31467" top="5929417.641526395"/>
+    <layers active="ID_5">
+        <layer name="Node net" visible="true" featurePath="NodeCollectionMember/nodeMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="NodeNet" ns1:actuate="onRequest" ns1:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:net" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+            <templ:property name="deleteable">false</templ:property>
+        </layer>
+        <layer name="Virtual strands net" visible="true" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="../modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="VChannelNet" ns3:actuate="onRequest" ns3:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:net" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+            <templ:property name="deleteable">false</templ:property>
+        </layer>
+        <layer name="KM strands net" visible="true" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="../modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+            <ns6:style linktype="sld" style="KMChannelNet" ns5:actuate="onRequest" ns5:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:net" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+            <templ:property name="deleteable">false</templ:property>
+        </layer>
+        <layer name="Storage strands net" visible="true" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_4" linktype="gml" ns7:actuate="onRequest" ns7:href="../modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+            <ns8:style linktype="sld" style="RHBChannelNet" ns7:actuate="onRequest" ns7:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:net" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+            <templ:property name="deleteable">false</templ:property>
+        </layer>
+        <layer name="Sub catchments net" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="../modell.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+            <ns10:style linktype="sld" style="SubcatchmentsNet" ns9:actuate="onRequest" ns9:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:net" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
+            <templ:property name="deleteable">false</templ:property>
+        </layer>
+        <layer name="Groundwater net" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_6" linktype="gml" ns11:actuate="onRequest" ns11:href="../modell.gml" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
+            <ns12:style linktype="sld" style="GroundwaterNet" ns11:actuate="onRequest" ns11:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:groundwaterNet" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
+            <templ:property name="deleteable">false</templ:property>
+        </layer>
+    </layers>
+</gismapview>
+

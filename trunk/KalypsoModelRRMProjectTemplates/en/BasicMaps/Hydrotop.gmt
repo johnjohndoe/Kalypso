@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5920820.492259566" left="3553280.940146136" right="3562637.2413551053" srs="EPSG:31467" top="5929417.641526395"/>
+    <layers active="ID_1">
+        <layer name="Nodes" visible="true" featurePath="NodeCollectionMember/nodeMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Node" ns1:actuate="onRequest" ns1:href="../.styles/Node.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Virtual strands" visible="true" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="../modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="VChannel" ns3:actuate="onRequest" ns3:href="../.styles/VChannel.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+        </layer>
+        <layer name="KM strands" visible="true" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="../modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+            <ns6:style linktype="sld" style="KMChannel" ns5:actuate="onRequest" ns5:href="../.styles/KMChannel.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Storage strands" visible="true" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_4" linktype="gml" ns7:actuate="onRequest" ns7:href="../modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+            <ns8:style linktype="sld" style="RHBChannel" ns7:actuate="onRequest" ns7:href="../.styles/RHBChannel.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Sub catchments" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="../modell.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+            <ns10:style linktype="sld" style="Subcatchments" ns9:actuate="onRequest" ns9:href="../.styles/Subcatchments.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Hydrotops" visible="true" featurePath="hydrotopMember" id="ID_6" linktype="gml" ns11:actuate="onRequest" ns11:href="../hydrotop.gml" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
+            <ns12:style linktype="sld" style="hydrotop" ns11:actuate="onRequest" ns11:href="../.styles/hydrotop.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+
