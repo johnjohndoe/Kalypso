@@ -21,7 +21,7 @@
   <catalog:system uri="KMChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:default" />
   <catalog:system uri="KMChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:net" />
 
-  <catalog:system uri="hydrotop.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_hydrotop:Hydrotop:sld:default" />
+  <catalog:system uri="Hydrotope.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_hydrotop:Hydrotop:sld:default" />
 
 </catalog:catalog>
 

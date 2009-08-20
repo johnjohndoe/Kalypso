@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org">
-    <mapv:extent top="5947062.075464395" srs="EPSG:31467" right="3563038.249530063" left="3559991.0845026476" bottom="5944101.281327779">
-    </mapv:extent>
-    <mapv:layers active="ID_2">
-        <mapv:layer visible="true" name="Nodes" id="ID_2" featurePath="NodeCollectionMember/nodeMember" linktype="gml" xlink:type="simple" xlink:href="../modell.gml" xlink:actuate="onRequest">
-            <templ:property name="deleteable">false</templ:property>
-			<templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_node:rule:rule_Ort</templ:legendicon>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org">
+    <mapv:extent srs="EPSG:31467" bottom="5944134.846555632" top="5947028.510236543" right="3563038.249530063" left="3559991.0845026476"/>
+    <mapv:layers active="ID_0">
+        <mapv:layer visible="true" name="Nodes" featurePath="NodeCollectionMember/nodeMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_node:rule:rule_Ort</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Virtual strands" id="ID_3" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" linktype="gml" xlink:type="simple" xlink:href="../modell.gml" xlink:actuate="onRequest">
-            <templ:property name="deleteable">false</templ:property>
-        </mapv:layer>
-        <mapv:layer visible="true" name="KM strands" id="ID_4" featurePath="ChannelCollectionMember/channelMember[KMChannel]" linktype="gml" xlink:type="simple" xlink:href="../modell.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Virtual strands" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Storage strands" id="ID_5" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" linktype="gml" xlink:type="simple" xlink:href="../modell.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Kalinin-Miljukov strands" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Sub catchments" id="ID_6" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" xlink:type="simple" xlink:href="../modell.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Storage strands" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Sub-Catchments" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
     </mapv:layers>
