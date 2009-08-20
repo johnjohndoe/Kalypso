@@ -1,4 +1,4 @@
-!     Last change:  MD    6 Nov 2008    3:55 pm
+!     Last change:  MD    8 Jul 2009    4:37 pm
 !--------------------------------------------------------------------------
 ! This code, pasche.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -330,9 +330,9 @@ IF (iprof.eq.' ') then
   !UT      BERECHNUNG BENETZTER UMFANG DER TRENNFLAECHE FUER NORMALPROFIL
   !UT      1 = links, 2 = rechts
   u_tr (1) = hr - htrli
-  u_tr (1) = MAX (0., u_tr (1) )
+  u_tr (1) = MAX (0., u_tr(1))
   u_tr (2) = hr - htrre
-  u_tr (2) = MAX (0., u_tr (2) )
+  u_tr (2) = MAX (0., u_tr(2))
 
 ELSE
 
@@ -539,6 +539,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
           ianf_hg = max (itrli, ischl)
           !UT  PUNKTNUMMER ENDE FLUSSCHLAUCH
           iend_hg = min (itrre, ischr)
+
 
           CALL sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr,  &
              & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
