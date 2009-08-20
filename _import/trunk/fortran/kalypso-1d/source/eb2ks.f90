@@ -1,4 +1,4 @@
-!     Last change:  MD    6 Nov 2008    4:16 pm
+!     Last change:  MD    8 Jul 2009    7:54 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -331,7 +331,9 @@ ELSEIF (itere1.gt.1) then
 ENDIF
 
 !MD Vermeidung von Unendlichgroﬂem Gefaelle oder negativem Gefaelle
-IF (isenen .gt. 1.0 .or. isenen .le. 0.0) then
+IF (isenen .gt. 3.0) then
+  isenen = 2.999
+ElseIF (isenen .le. 0.1E-4) then
   isenen = 0.001
 ENDIF
 
@@ -406,10 +408,11 @@ DO 15 WHILE(difi .gt. 0.01)
   !JK   SCHLEIFE FUER BERECHNUNG LINKES VORLAND --------------------------
   linkes_vorland: DO ii = ischl, itrli - 1
 
-    hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2.
+    hvor(ii) = hr - (h_ks(ii) + h_ks (ii+1) ) / 2.
+    !MD: passt auch fur negative WSP
 
     IF (b_ks(ii) .gt. 1.e-01) then
-      alpha = atan (abs (h_ks (ii) - h_ks (ii + 1) ) / b_ks (ii) )
+      alpha = atan (abs (h_ks(ii) - h_ks(ii+1)) / b_ks (ii) )
     ELSE
       alpha = 0.
     ENDIF
@@ -431,14 +434,14 @@ DO 15 WHILE(difi .gt. 0.01)
     IF (ii .gt. ischl) then
 
       IF (hr .gt. h_ks(ii-1) ) then
-        h_li = h_ks (ii - 1) - h_ks (ii)
+        h_li = h_ks (ii-1) - h_ks (ii)
       ELSE
         h_li = hr - h_ks (ii)
         !DK 10/05/01          h_ks(ii-1) changed to h_ks(ii)
       ENDIF
 
-      a_li = a_ks (ii - 1)
-      aks_li = k_ks (ii - 1)
+      a_li = a_ks (ii-1)
+      aks_li = k_ks (ii-1)
 
     ELSE
 
@@ -450,14 +453,14 @@ DO 15 WHILE(difi .gt. 0.01)
 
     IF (ii .lt. (ischr-1) ) then
 
-      IF (hr .gt. h_ks (ii + 2) ) then
-        h_re = h_ks (ii + 2) - h_ks (ii + 1)
+      IF (hr .gt. h_ks (ii+2) ) then
+        h_re = h_ks (ii+2) - h_ks (ii+1)
       ELSE
-        h_re = hr - h_ks (ii + 1)
+        h_re = hr - h_ks (ii+1)
       ENDIF
 
-      a_re = a_ks (ii + 1)
-      aks_re = k_ks (ii + 1)
+      a_re = a_ks (ii+1)
+      aks_re = k_ks (ii+1)
       !DK 10/05/01       ! these two lines are moved from the line **
 
     ELSE
@@ -737,10 +740,11 @@ DO 15 WHILE(difi .gt. 0.01)
   !JK   SCHLEIFE FUER BERECHNUNG RECHTES VORLAND -------------------------
   rechtes_vorland: DO ii = itrre, ischr - 1
 
-    hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2.
+    hvor(ii) = hr - (h_ks(ii) + h_ks(ii+1)) / 2.
+    !MD: passt auch fur negative WSP
 
     IF (b_ks(ii) .gt. 1.e-01) then
-      alpha = atan (abs (h_ks (ii + 1) - h_ks (ii) ) / b_ks (ii) )
+      alpha = atan (abs (h_ks (ii+1) - h_ks (ii) ) / b_ks (ii) )
     ELSE
       alpha = 0.
     ENDIF
@@ -762,15 +766,15 @@ DO 15 WHILE(difi .gt. 0.01)
 
 
     IF (ii .gt. 1) then
-      IF (hr .gt. h_ks(ii - 1) ) then
-        h_li = h_ks (ii - 1) - h_ks (ii)
+      IF (hr .gt. h_ks(ii-1) ) then
+        h_li = h_ks (ii-1) - h_ks (ii)
       ELSE
         h_li = hr - h_ks (ii)
         !DK 10/05/01  h_ks(ii-1) changed to h_ks(ii)
       ENDIF
 
-      a_li = a_ks (ii - 1)
-      aks_li = k_ks (ii - 1)
+      a_li = a_ks (ii-1)
+      aks_li = k_ks (ii-1)
 
     ELSE
       h_li = 0.
@@ -779,14 +783,14 @@ DO 15 WHILE(difi .gt. 0.01)
     ENDIF
 
     IF (ii .lt. (nknot- 1) ) then
-      IF (hr .gt. h_ks(ii + 2) ) then
-        h_re = h_ks (ii + 2) - h_ks (ii + 1)
+      IF (hr .gt. h_ks(ii+2) ) then
+        h_re = h_ks (ii+2) - h_ks (ii+1)
       ELSE
-        h_re = hr - h_ks (ii + 1)
+        h_re = hr - h_ks (ii+1)
       ENDIF
 
-      a_re = a_ks (ii + 1)
-      aks_re = k_ks (ii + 1)
+      a_re = a_ks (ii+1)
+      aks_re = k_ks (ii+1)
     !DK 10/05/01       ! these two lines are moved from the line ***
     ELSE
       h_re = 0.
@@ -1403,11 +1407,11 @@ END DO
 !HB   Flusschlauch nach FORMEL 15, BWK1/99, S.19 (psi_o_fl)
 !WP 260 CONTINUE Never Used
 
-r_hg = a_hg /u_hg
+r_hg = ABS(a_hg) /u_hg
 
-phi_o_fl = a_hg * ((r_hg / l_hg) **1.5)
-phi_u_fl = a_hg * ((r_hg / l_hg) **0.5)
-psi_o_fl = a_hg * (r_hg / l_hg)
+phi_o_fl = ABS(a_hg) * ((r_hg / l_hg) **1.5)
+phi_u_fl = ABS(a_hg) * ((r_hg / l_hg) **0.5)
+psi_o_fl = ABS(a_hg) * (r_hg / l_hg)
 ! PRINT*,'Flusschlauch'
 ! PRINT*,'Flaeche a_hg:',a_hg
 ! PRINT*,'r_hg:',r_hg
@@ -1434,7 +1438,7 @@ psion = psi_o_li + psi_o_re + psi_o_fl
 ! PRINT*,'psion:',psion
 
 !HB   Gesamte durchstroemte Flaeche
-gesamt_a(pn_alpha) = a_vor_li + a_vor_re + a_hg
+gesamt_a(pn_alpha) = a_vor_li + a_vor_re + ABS(a_hg)
 ! PRINT*,'Gesamtflaeche',gesamt_a
 
 !HB   -----------------------------------------------------------------
