@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class LanduseClassHelper
 {
-  private final static String ID_FORMAT = "PLC_%5d";
+  private final static String ID_FORMAT = "PLC_%05d";
 
   public static Map<String, String> resolve( final GMLWorkspace landuseClassesWorkspace )
   {
