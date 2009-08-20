@@ -1,4 +1,4 @@
-!     Last change:  WP    9 Nov 2007    5:59 pm
+!     Last change:  MD    8 Jul 2009    4:50 pm
 !--------------------------------------------------------------------------
 ! This code, sohlef.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -261,7 +261,7 @@ DO 3000 WHILE(abs (sumdd) .gt. 0.005)
      ENDIF
                                                                         
      !UT       ABFRAGE OB UEBERHAUPT EIN BENETZTER UMFANG VORLIEGT
-     IF ( (u_hg + u_tr (1) + u_tr (2) ) .le. accuracy) then
+     IF ( (u_hg + u_tr(1) + u_tr(2) ) .le. accuracy) then
         !WP 10.11.2004, Erweiterung der Fehlermeldung um Punkt b)
         write (*,2001)
         2001 format (/1X, 'Es ist ein Fehler aufgetreten: ', /, &
@@ -274,7 +274,7 @@ DO 3000 WHILE(abs (sumdd) .gt. 0.005)
                   & 1X, 'Programm wird beendet!')
         call stop_programm(11)
      ENDIF
-                                                                        
+
      !ST Summe über alle Teilflächen lambda * benetzter Umfang (Superpositionsprinzip)
      !write (*,*) 'In SOHLEF. Zeile 296. L_HG = ', l_hg
      !WP l_hg = l_hg + l_tr (1) * u_tr (1) + l_tr (2) * u_tr (2)
