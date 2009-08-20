@@ -763,10 +763,11 @@ public class Control1D2DConverter
       }
 //      float lFloatInc = ((lFloatEnd - lFloatStart) / pIntNumberIterations);
       float lFloatInc = (float) ((lFloatEnd - lFloatStart) / 0.1);
-      int lIntPer = (int) (pIntNumberIterations / ( lFloatInc + 1 ) );
+      int lIntPer = (int) (pIntNumberIterations / ( Math.abs( lFloatInc ) + 1 ) );
       int lIntInc = 0;
+      float lFloatSignum = Math.signum( lFloatInc );
       for( int i = 1; i <= pIntNumberIterations; ++i ){
-        pListFactors.add( (float) (lFloatStart + 0.1 * lIntInc) ) ;
+        pListFactors.add( (float) (lFloatStart + 0.1 * lIntInc * lFloatSignum ) ) ;
         if( (i) % lIntPer == 0 && pIntNumberIterations - i > Math.abs( lIntPer ) ){
           lIntInc++; 
         }
