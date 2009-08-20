@@ -159,10 +159,6 @@
               class="org.kalypso.convert.namodel.schema.binding.Geology"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie">
         </feature>
-        <feature
-              class="org.kalypso.convert.namodel.schema.binding.SimpleShapeCatchment"
-              qname="{http://sourceforge.kalypso.org/schemata/hydrology/simpleShapeCatchment}SimpleShapeCatchment">
-        </feature>
      </extension>
      
      <extension
