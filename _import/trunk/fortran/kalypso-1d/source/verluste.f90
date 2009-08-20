@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Nov 2008    4:50 pm
+!     Last change:  MD    8 Jul 2009    7:14 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -310,6 +310,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !1000 format(1X, 'In VERLUSTE. Vor eb2ks')
     !write (UNIT_OUT_LOG,1002) iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot
 
+
     CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot, Q_Abfrage)
 
     !write (UNIT_OUT_LOG,1001)
@@ -467,6 +468,8 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         IF (fges.lt. (fges1 - 2. * str / 7.) ) then
           ! Aufweitung > 1:7 --> Borda'scher Stossdruck
           ht = MIN (hr, hmax) - hmin
+          !MD: Keine Korrektur fur negative wsp
+
           vo = sqrt (hv * 2 * g)
           vu = sqrt (hv1 * 2 * g)
           hborda = GET_BORDA (vo, vu, ht)
@@ -504,7 +507,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ifehlg = 0
 
-  IF (fges.le.1.e-02.and.rg.le.1.e-06.and.hborda.gt.1.e+05) then
+  IF (fges.le.1.e-02 .and. rg.le.1.e-06 .and. hborda.gt.1.e+05) then
     ifehlg = 1
     rgm = 10000
 
@@ -541,7 +544,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ELSE   ! REIBUNGSVERLUST=='TRAPEZ'
 
-    IF (rg1 .gt. 1.e-06 .and. rg .gt. 0) then
+    IF (rg1 .gt. 1.e-06 .and. rg .gt. 0.) then
       rgm = 0.5 * ( (q / rg) **2 + (q1 / rg1) **2)
     ELSE IF (rg1.gt.1.e-06) then
       rgm = (q1 / rg1) **2
