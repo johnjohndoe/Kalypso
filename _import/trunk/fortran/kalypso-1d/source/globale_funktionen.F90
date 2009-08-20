@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Nov 2008   11:59 am
+!     Last change:  MD    8 Jul 2009    4:11 pm
 !--------------------------------------------------------------------------
 ! This code, globale_funktionen.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -548,7 +548,7 @@ REAL :: dyn_hoehe
 
 if (Flaeche > 0.0 .and. Breite > 0.0) then
   dyn_hoehe = Flaeche / Breite
-  get_form = 0.9 - 0.38 * (e ** (-5*dyn_hoehe/Breite))
+  get_form = 0.9 - 0.38 * (EXP(-5*dyn_hoehe/Breite))
 else
   get_form = 1.0
 end if
