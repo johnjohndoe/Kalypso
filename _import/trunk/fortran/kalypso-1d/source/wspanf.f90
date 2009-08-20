@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jul 2008   12:15 pm
+!     Last change:  MD    8 Jul 2009    5:43 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -235,7 +235,7 @@ END IF
 100 CONTINUE
                                                                         
 
-IF (wsanf.lt.0.) then
+IF (wsanf.lt.0. .and. ART_RANDBEDINGUNG == 'UNIFORM_BOTTOM_SLOPE') then
 !MD  Ermittlung Anfangs-WSP aus stationaer gleichfoermigen Gefaelle = wsanf
 !MD  bzw. aus dem gegebenen Reibungsgefaelle fuer das gesamte Gewaesser
                                                                         
@@ -312,7 +312,7 @@ IF (wsanf.lt.0.) then
                                                                         
   ENDIF
                                                                         
-ELSE IF (wsanf.eq.0.) then
+ELSE IF (ART_RANDBEDINGUNG == 'CRITICAL_WATER_DEPTH') then
   ! Ermittlung des Wasserspiegels als Grenztiefe
   ikenn = 1
   hr = hgrenz
@@ -330,23 +330,22 @@ ELSE IF (wsanf.eq.0.) then
     1002 format (/1X, 'Als Ausgangswasserspiegel wird Grenztiefe angesetzt!')
 
     str = 100.
-    !                                /* 1tes profil (ideeller abstand)
+    ! /* 1tes profil (ideeller abstand)
     q1 = 0.
-    !                                /* 1tes profil
+    ! /* 1tes profil
     itere1 = 1
 
   ELSE
-
     str = strbr
-
   ENDIF
                                                                         
 
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
      & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
-ELSE 
-  ! (wsanf.gt.0.)
+ELSEIF (ART_RANDBEDINGUNG == 'WATERLEVEL          ') then
+  !MD: fur alle Wasserspiegel die vorgegeben wurden, egal ob positiv oder negativ
+  ! OLD:  wsanf.gt.0.
   ! wsp aus qwert.dat, bzw. vorgegeben (z.b. bei bruecken)
   ! --> wenn wsp aus bruecke, dann rau(i)=raub !!!!!
 
@@ -365,6 +364,7 @@ ELSE
     ENDIF
                                                                         
     WRITE (UNIT_OUT_TAB, 1003) hr
+    WRITE (UNIT_OUT_LOG, 1003) hr
     1003 format (/1X, 'Als Anfangswasserspiegel wird WSP = ', F8.3, ' angesetzt.' )
 
     str = 0. 
@@ -378,8 +378,49 @@ ELSE
      & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
   IF (froud.ge.1.) ikenn = 1
+
+
+Else
+  ! OLD:  wsanf.gt.0.
+  ! wsp aus qwert.dat, bzw. vorgegeben (z.b. bei bruecken)
+  ! --> wenn wsp aus bruecke, dann rau(i)=raub !!!!!
+
+  ikenn = 0
+
+  !UT       WASSERSPIEGELHOEHE = ANFANGSWASSERSPIEGELHOEHE
+  hr = wsanf
                                                                         
+  IF (nprof.eq.1) then
+
+    nz = nz + 2
+                                                                        
+    IF (nz.gt.50) then
+      nblatt = nblatt + 1
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
+    ENDIF
+                                                                        
+    WRITE (UNIT_OUT_TAB, 1005) hr
+    WRITE (UNIT_OUT_LOG, 1005) hr
+    1005 format (/1X, 'Als Anfangswasserspiegel wird WSP = ', F8.3, ' angesetzt.' )
+
+    str = 0. 
+    q1 = 0.
+
+  ENDIF 
+                                                                        
+  itere1 = 1
+                                                                        
+  CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
+
+  IF (froud.ge.1.) ikenn = 1
+
+  !MD: Error in der Anfangsbedingung
+  !MD: WRITE (UNIT_OUT_LOG, *)  ' Gavierender Fehler bei der Vorgabe des Anfangswertes im Unterwasser:&
+  !MD:               & --> Programmabbruch!!'
+  !MD: STOP
 ENDIF
+
                                                                         
 !UT   WENN ERSTES PROFIL, STRECKLE = null                               
 IF (nprof.eq.1) str = 0.
