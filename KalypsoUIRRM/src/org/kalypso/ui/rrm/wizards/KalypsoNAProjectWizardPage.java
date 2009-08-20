@@ -368,7 +368,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[] { "shp" } ); //$NON-NLS-1$
     fdialog.setText( Messages.getString( "KalypsoNAProjectWizardPage.BrowseText" ) ); //$NON-NLS-1$
-    fdialog.setFilterNames( new String[] { "Shape Files (*.shp)", "All Files (*.*)" } );
+    fdialog.setFilterNames( new String[] { "Shape Files (*.shp)", "All Files (*.*)" } ); //$NON-NLS-1$ //$NON-NLS-2$
     fdialog.setFilterExtensions( new String[] { "*.shp", //$NON-NLS-1$
         "*.*" } ); //$NON-NLS-1$
     fdialog.setFileName( "*.shp" ); //$NON-NLS-1$
@@ -507,7 +507,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       return;
     }
 
-    if( !fileFieldStr.toLowerCase().endsWith( ".shp" ) )
+    if( !fileFieldStr.toLowerCase().endsWith( ".shp" ) ) //$NON-NLS-1$
     {
       setErrorMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageWrongSuffix" ) ); //$NON-NLS-1$
       setPageComplete( false );
@@ -574,7 +574,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     else if( type == DESCRIPTION )
       return annotation.getDescription();
 
-    throw new IllegalArgumentException( Messages.getString( "org.kalypso.wizard.KalypsoNAProjectWizardPage.3" ) + type ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizardPage.3" ) + type ); //$NON-NLS-1$
   }
 
   /**
