@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Nov 2008    5:30 pm
+!     Last change:  MD    8 Jul 2009    4:10 pm
 !--------------------------------------------------------------------------
 ! This code, U_WSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -364,8 +364,9 @@ DO i = 1, maxkla
    br (i) = 0.
 END DO
                                                                         
-IF (hr.le.1.e-04) hr = hmax
-                                                                        
+!MD: IF (hr.le.1.e-04) hr = hmax
+!MD: Korrektur fur negative wsp
+IF ( abs(hr-hmin) .le.1.e-04) hr = hmax
 
 
 !**   ABFRAGE WELCHE PROFILART VORLIEGT, ZUNAECHST NORMALPROFIL         
@@ -433,7 +434,7 @@ IF (iprof (1:1) .eq.' ') then
     y11 = hr
     y22 = hr
                                                                         
-    CALL schnpkt (xra, y11, xmitte, y22, x1 (i), h1 (i), x1 (i - 1), h1 (i - 1), sx, sy, inside, ikenn)
+    CALL schnpkt (xra, y11, xmitte, y22, x1 (i), h1 (i), x1 (i-1), h1 (i-1), sx, sy, inside, ikenn)
 
     IF (inside.ne.0) then
       ! schnittpunkt gefunden
@@ -494,19 +495,19 @@ IF (iprof (1:1) .eq.' ') then
     f1 = 0
     s1 = 0
     h2 = 0
-    hn = h1 (n)
+    hn = h1(n)
     hn2 = 0
     k_ks (n) = rau (n)
                                                                         
     !write (*,*) ' In UF. n = ', n, '   s(n) = ', s(n)
 
     IF (n.lt.ischl.or.n.gt. (ischr - 1) ) goto 205
-    IF (h1 (n) .ge.hr.and.h1 (n + 1) .ge.hr) goto 205
-    IF (h1 (n) .lt.hr.and.h1 (n + 1) .lt.hr) goto 201
-    IF (h1 (n) .ge.hr.and.h1 (n + 1) .lt.hr) goto 202
-    IF (h1 (n) .lt.hr.and.h1 (n + 1) .ge.hr) continue
+    IF (h1(n) .ge.hr .and. h1(n+1) .ge.hr) goto 205
+    IF (h1(n) .lt.hr .and. h1(n+1) .lt.hr) goto 201
+    IF (h1(n) .ge.hr .and. h1(n+1) .lt.hr) goto 202
+    IF (h1(n) .lt.hr .and. h1(n+1) .ge.hr) continue
                                                                         
-    h11 = hr - h1 (n)
+    h11 = hr - h1(n)
     hn2 = h11
     !write (*,*) ' In UF. hn2 = ', hn2, '  hr = ', hr, '  h1(n) = ', h1(n), '  h1(n+1) = ', h1(n+1)
 
@@ -514,27 +515,33 @@ IF (iprof (1:1) .eq.' ') then
 
     202 CONTINUE
 
-    h11 = hr - h1 (n + 1)
+    h11 = hr - h1(n+1)
     hn = hr
 
     203 CONTINUE
 
     h2 = 0.
-    fakt = h11 / hi (n)
-    x11 = fakt * xi (n)
-    s1 = fakt * s (n)
-    f1 = h11 * x11 / 2.
+    fakt = h11/ hi(n)
+    !MD: Keine Korrektur fur negative wsp, da hi absolut und h11 >0
+
+    x11 = fakt * xi(n)
+    s1 = fakt * s(n)
+    f1 = h11 * x11/ 2.
+    !MD: Keine Korrektur fur negative wsp
+
     GOTO 205
 
     201 CONTINUE
 
     s1 = s (n) 
     x11 = xi (n)
-    h11 = hr - h1 (n)
-    h2 = hr - h1 (n + 1)
+    h11 = hr - h1(n)
+    h2 = hr - h1(n+1)
     hm = (h11 + h2) / 2.
+
     f1 = xi (n) * hm
-                                                                        
+    !MD: keine Korrektur fur negative wsp
+                                                                       
     205 CONTINUE
 
 
@@ -548,7 +555,7 @@ IF (iprof (1:1) .eq.' ') then
           indfl = indmax
         ELSEIF (n.eq.iend) then
           indmax = indmax + 1
-        ELSEIF (abs (rau (n) - rau (n - 1) ) .gt.1.e-06) then
+        ELSEIF (abs (rau(n) - rau(n-1) ) .gt.1.e-06) then
           indmax = indmax + 1
         ENDIF
 
@@ -559,18 +566,19 @@ IF (iprof (1:1) .eq.' ') then
       rk (indmax) = rau (n)
 
       IF (u (indmax) .gt.1.e-04) then
-        ra (indmax) = f (indmax) / u (indmax)
+        ra (indmax) = f(indmax) / u(indmax)
       ELSE
         ra (indmax) = 0.
       ENDIF
 
-      br (indmax) = br (indmax) + x11
+      br(indmax) = br(indmax) + x11
 
       IF (n.eq.ianf) nfli = indmax
       IF (n.eq.iend) nfre = indmax - 1
 
 
-    !JK           BERECHNUNG NACH DARCY-WEISBACH
+    !JK  BERECHNUNG NACH DARCY-WEISBACH
+    ! ----------------------------------
     ELSE
 
       indmax = 3
@@ -591,13 +599,14 @@ IF (iprof (1:1) .eq.' ') then
       ENDIF
 
       IF (abs (hn2) .gt.1.e-06) then
-        h_ks (n + 1) = hn + hn2
+        h_ks (n+1) = hn + hn2
+        !MD: = hr + hr -h1(n)
       ENDIF
 
       !JK              LINKES VORLAND
       IF (n.lt.itrli) then
-        f (1) = f (1) + a_ks (n)
-        u (1) = u (1) + u_ks (n)
+        f (1)  = f (1) + a_ks (n)
+        u (1)  = u (1) + u_ks (n)
         br (1) = br (1) + b_ks (n)
 
         IF (u (1) .gt.0) then
@@ -626,6 +635,7 @@ IF (iprof (1:1) .eq.' ') then
         a_hg = f (2)
         u_hg = u (2)
         b_hg = br (2)
+
         u_tl1 = hr - htrli
         u_tl1 = MAX (0., u_tl1)
         u_tr1 = hr - htrre
@@ -650,10 +660,10 @@ IF (iprof (1:1) .eq.' ') then
         !write (*,*) ' In UF. hn2 = ', hn2
 
         DO i1 = n + 2, nknot
-          a_ks (i1) = 0
-          b_ks (i1) = 0
-          u_ks (i1) = 0
-          h_ks (i1) = 0
+          a_ks (i1) = 0.
+          b_ks (i1) = 0.
+          u_ks (i1) = 0.
+          h_ks (i1) = 0.
           r_ks (i1) = 0.
           k_ks (i1) = rau (i1)
         END DO
