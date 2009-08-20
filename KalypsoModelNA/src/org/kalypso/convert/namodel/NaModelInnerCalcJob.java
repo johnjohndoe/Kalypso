@@ -291,8 +291,6 @@ public class NaModelInnerCalcJob implements ISimulation
         // We still assume it is a file.... ignore file not found, we do not have starting conditions then
         catch( final FileNotFoundException e )
         {
-// e.printStackTrace();
-
           logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26" ), conf.getSimulationStart().toString() ); //$NON-NLS-1$
         }
       }

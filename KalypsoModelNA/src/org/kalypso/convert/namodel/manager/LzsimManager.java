@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
@@ -91,7 +91,7 @@ public class LzsimManager
 
   private static final int STATUS_READ_QGS = 4;
 
-  public void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir, NAConfiguration conf ) throws Exception
+  public void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception
   {
     final DateFormat formatFileName = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd(HH)" ) ); //$NON-NLS-1$
     // 19960521 00 h 125 bodf
@@ -99,17 +99,17 @@ public class LzsimManager
     final Pattern patternHeaderBODF = Pattern.compile( "([0-9]{8} [0-9]{2}) h ([0-9]+?) bodf" ); //$NON-NLS-1$
 
     final TreeSet<Date> dateWriteSet = conf.getDateWriteSet();
-    Iterator hydIter = dateWriteSet.iterator();
+    final Iterator<Date> hydIter = dateWriteSet.iterator();
     while( hydIter.hasNext() )
     {
-      Date initialDate = (Date) hydIter.next();
+      final Date initialDate = hydIter.next();
       final String iniDate = dateFormat.format( initialDate );
 
       // create new GMLworkspace for lzsim results
-      File lzsimDir = new File( tmpDir, "lzsim" ); //$NON-NLS-1$
+      final File lzsimDir = new File( tmpDir, "lzsim" ); //$NON-NLS-1$
       final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ), null, null ); //$NON-NLS-1$
       final Feature lzRootFE = lzWorkspace.getRootFeature();
-      XMLGregorianCalendar xmlIniDate = DateUtilities.toXMLGregorianCalendar( initialDate );
+      final XMLGregorianCalendar xmlIniDate = DateUtilities.toXMLGregorianCalendar( initialDate );
       lzRootFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ), xmlIniDate ); //$NON-NLS-1$
 
       final IFeatureType lzCatchmentFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "Catchment" ) ); //$NON-NLS-1$
@@ -143,7 +143,8 @@ public class LzsimManager
           String line = null;
           int maxHydros = 0;
           int counterHydros = 0;
-
+// TODO: why compare the datum? IT would be more robust to just read all whta is in the lsz file, and append it to the
+          // features!
           // iterate over lines in file
           while( (line = reader.readLine()) != null )
           {
@@ -207,9 +208,9 @@ public class LzsimManager
                 status = STATUS_SEARCH_HEADER;
                 break;
             }
-          }
+          }// TODO: if we reach this line without any read data, something is wrong!
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.LzsimManager.27") + asciiID + Messages.getString("org.kalypso.convert.namodel.manager.LzsimManager.28") + feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -257,7 +258,7 @@ public class LzsimManager
               break;
           }
         }
-      }
+      }// TODO: check, if we read any data for this date
       final String resultPathRelative = Messages.getString("org.kalypso.convert.namodel.manager.LzsimManager.39") + formatFileName.format( initialDate ) + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
       final File resultFile = new File( outputDir, resultPathRelative );
       resultFile.getParentFile().mkdirs();
@@ -268,7 +269,7 @@ public class LzsimManager
 
   public static void writeLzsimFiles( final NAConfiguration conf, final File tmpDir, final GMLWorkspace iniValuesWorkspace )
   {
-    IDManager idManager = conf.getIdManager();
+    final IDManager idManager = conf.getIdManager();
 
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
     final Hashtable<String, Feature> channelIDToFeatureHash = new Hashtable<String, Feature>();
@@ -280,52 +281,53 @@ public class LzsimManager
     for( final Feature feature : allNACatchmentFeatures )
       catchmentIDToFeatureHash.put( feature.getId(), feature );
 
-    File lzsimDir = new File( tmpDir, "lzsim" ); //$NON-NLS-1$
-    Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
+    final File lzsimDir = new File( tmpDir, "lzsim" ); //$NON-NLS-1$
+    final Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
     // Initial value date
     final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ) ) ); //$NON-NLS-1$
-    DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) ); //$NON-NLS-1$
-    String iniDate = dateFormat.format( initialDate );
+    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) ); //$NON-NLS-1$
+    final String iniDate = dateFormat.format( initialDate );
 
     // write initial conditions for the strands
     // TODO:write only for strands of the actual calculation
-    List channelList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CHANNEL_MEMBER_PROP );
+    final List channelList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CHANNEL_MEMBER_PROP );
     for( int i = 0; i < channelList.size(); i++ )
     {
-      Feature channelFE = (Feature) channelList.get( i );
-      StringBuffer lzgBuffer = new StringBuffer();
-      String naChannelID = (String) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) ); //$NON-NLS-1$
+      final Feature channelFE = (Feature) channelList.get( i );
+      final StringBuffer lzgBuffer = new StringBuffer();
+      final String naChannelID = (String) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) ); //$NON-NLS-1$
 
       final Feature naChannelFE = channelIDToFeatureHash.get( naChannelID );
       // in the channelIDToFeatureHash (HashMap<featureID, feature>) are all channels in the model. if this run is only
       // a subnet of the total model the idManager only knows the featuers in the submodel just skip this one.
       if( naChannelFE == null )
         continue;
-      int asciiChannelID = idManager.getAsciiID( naChannelFE );
+      final int asciiChannelID = idManager.getAsciiID( naChannelFE );
       final String fileName = "we" + asciiChannelID + ".lzg"; //$NON-NLS-2$
 
       try
       {
-        File lzgFile = new File( lzsimDir, fileName );
+        final File lzgFile = new File( lzsimDir, fileName );
         lzgBuffer.append( iniDate + " h   1 qgs" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-        Double h = (Double) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ) );
+        final Double h = (Double) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ) );
         lzgBuffer.append( "   1" + FortranFormatHelper.printf( h, "f9.3" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        Writer lzgWriter = new FileWriter( lzgFile );
+        final Writer lzgWriter = new FileWriter( lzgFile );
         lzgWriter.write( lzgBuffer.toString() );
         lzgWriter.close();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
+        e.printStackTrace();
         System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.LzsimManager.55") + channelFE.getId() ); //$NON-NLS-1$
       }
     }
 
     // for all catchments in the calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
-    List catchmentList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
-    Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
+    final List catchmentList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
+    final Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
     for( final String catchmentID : catchmentIdsFromLzsim )
     {
-      StringBuffer lzsBuffer = new StringBuffer();
+      final StringBuffer lzsBuffer = new StringBuffer();
 
       final Feature naCatchmentFE = catchmentIDToFeatureHash.get( catchmentID );
       // in the catchmentIDToFeatureHash (HashMap<featureID, feature>) are all channels in the model. if this run is
@@ -333,15 +335,15 @@ public class LzsimManager
       // a subnet of the total model the idManager only knows the featuers in the submodel just skip this one.
       if( naCatchmentFE == null )
         continue;
-      int asciiCatchmentID = idManager.getAsciiID( naCatchmentFE );
+      final int asciiCatchmentID = idManager.getAsciiID( naCatchmentFE );
       final String fileName = "we" + asciiCatchmentID + ".lzs"; //$NON-NLS-2$
 
-      File lzsFile = new File( lzsimDir, fileName );
-      List<String> sortedHydrosIDsfromLzsim = idManager.getSortedHydrosIDsfromLzsim( catchmentID );
+      final File lzsFile = new File( lzsimDir, fileName );
+      final List<String> sortedHydrosIDsfromLzsim = idManager.getSortedHydrosIDsfromLzsim( catchmentID );
       // find catchmentID in the iniValues
       for( int i = 0; i < catchmentList.size(); i++ )
       {
-        Feature catchmentFE = (Feature) catchmentList.get( i );
+        final Feature catchmentFE = (Feature) catchmentList.get( i );
         // write lzs for the catchment
         if( catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) ).equals( catchmentID ) ) //$NON-NLS-1$
         {
@@ -349,33 +351,33 @@ public class LzsimManager
           {
             // snow
             lzsBuffer.append( iniDate + " h     1 snow" + "\n" ); //$NON-NLS-2$
-            Double h = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "h" ) );
-            Double ws = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "ws" ) );
+            final Double h = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "h" ) );
+            final Double ws = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "ws" ) );
             lzsBuffer.append( "   1" + FortranFormatHelper.printf( h, "f9.2" ) + FortranFormatHelper.printf( ws, "f9.2" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             // groundwater
             lzsBuffer.append( iniDate + " h     1 gwsp" + "\n" ); //$NON-NLS-2$
-            Double hgws = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hgws" ) );
-            Double qb = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ) );
+            final Double hgws = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hgws" ) );
+            final Double qb = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ) );
             lzsBuffer.append( "   1" + FortranFormatHelper.printf( hgws, "f9.2" ) + FortranFormatHelper.printf( qb, "f9.2" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             // hydrotops (interception storage content& soil moisture)
             int hydroPos = 0;
-            List iniHydsList = (List) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hyd" ) );
+            final List iniHydsList = (List) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hyd" ) );
             lzsBuffer.append( iniDate + " h  " + FortranFormatHelper.printf( Integer.toString( iniHydsList.size() ), "i4" ) + " bodf" + "\n" ); //$NON-NLS-4$
-            for( String hydroID : sortedHydrosIDsfromLzsim )
+            for( final String hydroID : sortedHydrosIDsfromLzsim )
             {
               hydroPos++;
-              Iterator iter = iniHydsList.iterator();
+              final Iterator iter = iniHydsList.iterator();
               while( iter.hasNext() )
               {
-                Feature iniHydFe = (Feature) iter.next();
+                final Feature iniHydFe = (Feature) iter.next();
                 // write initial parameters for the hydrotop
-                String hydFeatureId = (String) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) ); //$NON-NLS-1$
+                final String hydFeatureId = (String) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) ); //$NON-NLS-1$
                 if( hydFeatureId.equals( hydroID ) )
                 {
-                  Double bi = (Double) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ) );
+                  final Double bi = (Double) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ) );
                   lzsBuffer.append( FortranFormatHelper.printf( hydroPos, "i4" ) + FortranFormatHelper.printf( bi, "f7.2" ) ); //$NON-NLS-2$
-                  List<Double> bofs = (List<Double>) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ) );
-                  for( Double bof : bofs )
+                  final List<Double> bofs = (List<Double>) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ) );
+                  for( final Double bof : bofs )
                   {
                     lzsBuffer.append( FortranFormatHelper.printf( bof, "f7.2" ) ); //$NON-NLS-1$
                   }
@@ -383,11 +385,11 @@ public class LzsimManager
                 }
               }
             }
-            Writer lzsWriter = new FileWriter( lzsFile );
+            final Writer lzsWriter = new FileWriter( lzsFile );
             lzsWriter.write( lzsBuffer.toString() );
             lzsWriter.close();
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.LzsimManager.87") + catchmentFE.getId() + ")." ); //$NON-NLS-1$ //$NON-NLS-2$
           }
