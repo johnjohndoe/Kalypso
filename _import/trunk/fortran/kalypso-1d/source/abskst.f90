@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Aug 2005    6:16 pm
+!     Last change:  MD    8 Jul 2009    3:35 pm
 !--------------------------------------------------------------------------
 ! This code, abskst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -107,9 +107,9 @@ INTEGER :: n
 !-----------------------------------------------------------------------
                                                                         
 DO n = 1, nknot - 1
-  a = x1 (n + 1) - x1 (n)
+  a = x1 (n+1) - x1(n)
   xi (n) = abs (a)
-  b = h1 (n + 1) - h1 (n)
+  b = h1(n+1) - h1(n)
   hi (n) = abs (b)
   s (n) = sqrt (a * a + b * b)
 END DO
