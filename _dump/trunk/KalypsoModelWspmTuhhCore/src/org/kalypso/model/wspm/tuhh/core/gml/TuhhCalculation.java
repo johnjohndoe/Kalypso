@@ -79,7 +79,8 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
     _2_1_2_0,
     _2_1_2_1,
     _2_1_4_0,
-    _2_1_4_1
+    _2_1_4_1,
+    _2_1_5_0
   }
 
   public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" ); //$NON-NLS-1$

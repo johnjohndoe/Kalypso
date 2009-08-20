@@ -1214,6 +1214,16 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
+								<enumeration value="_2_1_5_0">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[2.1.5.0 (20.08.2009)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[2.1.5.0 (2009/08/20)]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
 								<enumeration value="_2_1_4_1">
 									<annotation>
 										<documentation xml:lang="de">
