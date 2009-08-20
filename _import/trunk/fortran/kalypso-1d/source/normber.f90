@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jul 2008   12:14 pm
+!     Last change:  MD    8 Jul 2009    8:20 pm
 !--------------------------------------------------------------------------
 ! This code, normb.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -278,6 +278,12 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   !**    ifehl=0 --> Einschlussintervall in stroemendem Bereich gefunden
   ifehl = 0
 
+  !MD: Neu Abfragen von ws1 unter GOK!!
+  if (ws1.le.hmin) then
+   ws1 = hgrenz
+   hr = ws1
+  end if
+  !MD: Neu Abfragen von ws1 unter GOK!!
 
   !JK      WENN BERECHNUNG UEBER EINSCHLUSSINTERVALL
   if (ITERATIONSART=='EXACT ') then
@@ -332,7 +338,10 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     ELSE
 
       IF (abs (hr - hmin) .lt.0.10) then
-        hr = hmax + 0.1
+        hr = hmin + 0.1
+        !MD: Error
+        !MD: hr = hmax + 0.1
+        !MD: Error
         hr = MAX (hr, ws1)
       ENDIF
 
