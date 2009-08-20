@@ -85,7 +85,7 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
     btn_inputShpFileBrowse.setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.11" ) ); //$NON-NLS-1$
 
     // Landuse property combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.12" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.12" ) ); //$NON-NLS-1$
     cmbMaxPerculationsRateProperty = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     final GridData gd0 = new GridData();
     gd0.horizontalAlignment = GridData.FILL;

@@ -169,7 +169,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     catch( final CoreException e )
     {
       e.printStackTrace();
-      ErrorDialog.openError( getShell(), "Create Project", "Failed to create project", e.getStatus() );
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.0"), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.1"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
 
@@ -189,7 +189,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     {
       e1.printStackTrace();
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e1.getLocalizedMessage(), e1 );
-      ErrorDialog.openError( getShell(), "Create Project", "Failed to import ASCII-Data", status );
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.8"), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.9"), status ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
 
