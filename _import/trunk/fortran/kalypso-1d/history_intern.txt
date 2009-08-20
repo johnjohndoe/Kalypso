@@ -1685,8 +1685,27 @@ Kalypso 2.1.4.1      07. November 2008
    zu überdenken!
 
 									Monika Donner, 07.11.2008
-   
 
+
+
+   
+Kalypso 2.1.5.0      20. August 2009
+-------------------------------------    
+1) BUGFIX fuer negative Wasserspiegellagen bzw. negative GOK im Profil
+   (alle Berechnungen: Wasserspiegellage bis Polynomberechnungen)
+
+   Kontrolle und BUGFIX in allen normalen Berechnungsroutinen für negative WSP und/ oder negative
+   Geländekanten im Profil. Nun ist auch ein Start mit einem negativen Wasserstand im Unterwasser
+   Profil möglich. 
+   
+   Betroffene Routinen:
+     - wspanf, eb2ks, newton, normber, uf
+
+
+   Anmerkung: Negativer WSP geht nach wie vor nicht reibungslos in Wehren und Brücken! Eine negative
+              Geometrie bei positivem Wasserspigel funktioniert jedoch. --> TODO
+
+									Monika Donner, 20.08.2009
 
 
 
