@@ -1,4 +1,4 @@
-!     Last change:  MD   22 Jul 2008    1:18 pm
+!     Last change:  MD    8 Jul 2009    8:32 pm
 !--------------------------------------------------------------------------
 ! This code, newton.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -240,6 +240,21 @@ DO 100 jsch = 1, itmax_newton
 
   hrneu = ws1 + hrst + hvst + hborda + heins + horts
 
+  write (UNIT_OUT_LOG, 2001)  q, i, hrneu, ws1, rg, hrst, hvst, hborda, heins, indmax
+  2001 format (/1X, 'In NEWTON nach VERLUST:', /, &
+            & 1X, '----------', /, &
+            & 1X, 'Q =      ', F10.4, /, &
+            & 1X, 'I =      ', I10, /, &
+            & 1X, 'HRNEU =  ', F10.4, /, &
+            & 1X, 'WS1 =    ', F10.4, /, &
+            & 1X, 'RG =     ', F10.4, /, &
+            & 1X, 'HRST =   ', F10.4, /, &
+            & 1X, 'HVST =   ', F10.4, /, &
+            & 1X, 'Hborda = ', F10.4, /, &
+            & 1X, 'Heins =  ', F10.4, /, &
+            & 1X, 'INDMAX = ', I10)
+
+
   ! **************************************************************
   ! konvergenzueberpruefung
   ! **************************************************************
@@ -262,19 +277,19 @@ DO 100 jsch = 1, itmax_newton
     IF (idruck.eq.1) then
 
       IF (jsch.eq.1) then
-        IF (hr.gt.hmax.and.hrneu.lt.hmax) then
+        IF (hr.gt.hmax .and. hrneu.lt.hmax) then
           hra = hmax
           diff = hmax - hmin
           delt = MIN (diff / 2. , 0.15)
           hrb = hmin + delt
 
-        ELSEIF (hr.gt.hmax.and.hrneu.ge.hmax) then
+        ELSEIF (hr.gt.hmax .and. hrneu.ge.hmax) then
           hr = hrneu
           !JK                    WEITER MIT PEGASUS
           GOTO 100
         ENDIF
       ELSE
-        IF (hr.gt.hmax.and.hrneu.gt.hmax) then
+        IF (hr.gt.hmax .and. hrneu.gt.hmax) then
           hr = hrneu
           !JK                    WEITER MIT PEGASUS
           GOTO 100
@@ -389,4 +404,4 @@ ELSE
 
 ENDIF
 
-END SUBROUTINE newton                                                                                               
+END SUBROUTINE newton
