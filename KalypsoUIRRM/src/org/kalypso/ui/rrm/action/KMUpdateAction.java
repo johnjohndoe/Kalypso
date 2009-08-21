@@ -7,7 +7,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -22,11 +22,11 @@ public class KMUpdateAction implements IActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( m_selection != null )
     {
-      final Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+      final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
       final Feature feature = m_selection.getFocusedFeature();
       final CommandableWorkspace workspace = m_selection.getWorkspace( feature );
 
@@ -39,7 +39,7 @@ public class KMUpdateAction implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     action.setEnabled( false );
     m_selection = null;

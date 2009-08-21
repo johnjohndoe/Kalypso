@@ -185,5 +185,75 @@
 			</with>
 		</definition>
 	</extension>
- 
+
+
+ <extension
+       point="org.eclipse.ui.commands">
+    <category
+          description="Kommandos für KalypsoHydrologie"
+          id="org.kalypso.ui.rrm.commandCategory"
+          name="KalypsoHydrologie">
+    </category>
+         <command
+		       categoryId="org.kalypso.ui.rrm.commandCategory"
+               name="%org.kalypso.action.model.runCalcCase.label"
+               description="%org.kalypso.action.model.runCalcCase.tooltip"
+               id="org.kalypso.action.model.runCalcCase">
+         </command>
+         <command
+		       categoryId="org.kalypso.ui.rrm.commandCategory"
+               name="%org.kalypso.action.model.updateCalcCaseTimeseries.label"
+               description="%org.kalypso.action.model.updateCalcCaseTimeseries.tooltip"
+               id="org.kalypso.action.model.updateCalcCaseTimeseries">
+         </command>
+         <command
+		       categoryId="org.kalypso.ui.rrm.commandCategory"
+               name="%org.kalypso.action.model.copyCalcCase.label"
+               description="%org.kalypso.action.model.copyCalcCase.tooltip"
+               id="org.kalypso.action.model.copyCalcCase">
+         </command>
+         <command
+		       categoryId="org.kalypso.ui.rrm.commandCategory"
+               name="%org.kalypso.action.model.newCalcCase.label"
+               description="%org.kalypso.action.model.newCalcCase.tooltip"
+               id="org.kalypso.action.model.newCalcCase">
+         </command>
+         <command
+		       categoryId="org.kalypso.ui.rrm.commandCategory"
+               name="%org.kalypso.action.model.setBasicModel.label"
+               description="%org.kalypso.action.model.setBasicModel.tooltip"
+               id="org.kalypso.action.model.setBasicModel">
+         </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commandImages">
+         <image icon="icons/commands/startCalculation.gif" commandId="org.kalypso.action.model.runCalcCase"/>
+         <image icon="icons/commands/refreshCalcCase.gif" commandId="org.kalypso.action.model.updateCalcCaseTimeseries"/>
+         <image icon="icons/commands/copyCalcCase.gif" commandId="org.kalypso.action.model.copyCalcCase"/>
+         <image icon="icons/commands/createCalcCase.gif" commandId="org.kalypso.action.model.newCalcCase"/>
+         <image icon="icons/commands/export-simple-template.gif" commandId="org.kalypso.action.model.setBasicModel"/>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+         <handler class="org.kalypso.simulation.ui.actions.StartCalculationActionDelegate" commandId="org.kalypso.action.model.runCalcCase"/>
+         <handler class="org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries" commandId="org.kalypso.action.model.updateCalcCaseTimeseries"/>
+         <handler class="org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate" commandId="org.kalypso.action.model.copyCalcCase"/>
+         <handler class="org.kalypso.simulation.ui.actions.NewCalcCaseAction" commandId="org.kalypso.action.model.newCalcCase"/>
+         <handler class="org.kalypso.ui.rrm.action.SetBasicModelDelegate" commandId="org.kalypso.action.model.setBasicModel"/>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+       <menu label="%org.kalypso.simulation.ui.menu.calcCase.label" mnemonic="R">
+          <separator name="calcCaseStart" visible="false"/>
+          <command commandId="org.kalypso.action.model.newCalcCase" style="push"/>
+          <command commandId="org.kalypso.action.model.copyCalcCase" style="push"/>
+          <command commandId="org.kalypso.action.model.updateCalcCaseTimeseries" style="push"/>
+          <command commandId="org.kalypso.action.model.setBasicModel" style="push"/>
+          <command commandId="org.kalypso.action.model.runCalcCase" style="push"/>
+          <separator name="additions" visible="false"/>
+       </menu>
+    </menuContribution>
+ </extension>
 </plugin>
