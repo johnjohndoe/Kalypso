@@ -76,6 +76,40 @@ public class PLCPostprocessing_NA_Job extends AbstractInternalStatusJob implemen
 	File calculatedResultsFolder = FileUtils.toFile((URL) inputProvider.getInputForID("CalculatedResultsFolder"));
 
 	try {
+	    /* read statistics: max discharge / date of max discharge */
+	    final Map<String, DischargeData> izNodesMaxData = new HashMap<String, DischargeData>();
+	    final Map<String, DischargeData> calcNodesMaxData = new HashMap<String, DischargeData>();
+
+	    final IObservation obs1 = ZmlFactory.parseXML(new File(statusQuoResultsFolder, "Reports/nodesMax.zml").toURI().toURL(), "ID1"); //$NON-NLS-1$ //$NON-NLS-2$
+	    final IObservation obs2 = ZmlFactory.parseXML(new File(calculatedResultsFolder, "Reports/nodesMax.zml").toURI().toURL(), "ID2"); //$NON-NLS-1$ //$NON-NLS-2$
+
+	    final IAxis[] axes1 = obs1.getAxisList();
+	    final IAxis[] axes2 = obs2.getAxisList();
+	    final IAxis idAxis1 = ObservationUtilities.findAxisByClass(axes1, Integer.class);
+	    final IAxis idAxis2 = ObservationUtilities.findAxisByClass(axes2, Integer.class);
+	    final IAxis dateAxis1 = ObservationUtilities.findAxisByClass(axes1, Date.class);
+	    final IAxis dateAxis2 = ObservationUtilities.findAxisByClass(axes2, Date.class);
+	    final IAxis valueAxis1 = ObservationUtilities.findAxisByClass(axes1, Double.class);
+	    final IAxis valueAxis2 = ObservationUtilities.findAxisByClass(axes2, Double.class);
+
+	    final ITuppleModel values1 = obs1.getValues(null);
+	    final ITuppleModel values2 = obs2.getValues(null);
+	    final int cnt1 = values1.getCount();
+	    final int cnt2 = values2.getCount();
+	    if (cnt1 != cnt2)
+		throw new SimulationException("Cannot compare NA results");
+
+	    for (int i = 0; i < cnt1; i++) {
+		final String id1 = values1.getElement(i, idAxis1).toString();
+		final String id2 = values2.getElement(i, idAxis2).toString();
+		final double val1 = (Double) values1.getElement(i, valueAxis1);
+		final double val2 = (Double) values2.getElement(i, valueAxis2);
+		final Date date1 = (Date) values1.getElement(i, dateAxis1);
+		final Date date2 = (Date) values2.getElement(i, dateAxis2);
+		izNodesMaxData.put(id1, new DischargeData(val1, date1));
+		calcNodesMaxData.put(id2, new DischargeData(val2, date2));
+	    }
+
 	    final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace((URL) inputProvider.getInputForID("naModel"), null);
 	    final Feature nodeCollection = (Feature) modelWorkspace.getRootFeature().getProperty(NaModelConstants.NODE_COLLECTION_MEMBER_PROP);
 	    final FeatureList nodeList = (FeatureList) nodeCollection.getProperty(NaModelConstants.NODE_MEMBER_PROP);
@@ -117,67 +151,30 @@ public class PLCPostprocessing_NA_Job extends AbstractInternalStatusJob implemen
 		DiagViewUtils.saveDiagramTemplateXML(view, out);
 	    }
 
-	    /* read statistics: max discharge / date of max discharge */
-	    final Map<Integer, DischargeData> izNodesMaxData = new HashMap<Integer, DischargeData>();
-	    final Map<Integer, DischargeData> calcNodesMaxData = new HashMap<Integer, DischargeData>();
-
-	    final IObservation obs1 = ZmlFactory.parseXML(new File(statusQuoResultsFolder, "Reports/nodesMax.zml").toURI().toURL(), "ID1"); //$NON-NLS-1$ //$NON-NLS-2$
-	    final IObservation obs2 = ZmlFactory.parseXML(new File(calculatedResultsFolder, "Reports/nodesMax.zml").toURI().toURL(), "ID2"); //$NON-NLS-1$ //$NON-NLS-2$
-
-	    final IAxis[] axes1 = obs1.getAxisList();
-	    final IAxis[] axes2 = obs2.getAxisList();
-	    final IAxis idAxis1 = ObservationUtilities.findAxisByClass(axes1, Integer.class);
-	    final IAxis idAxis2 = ObservationUtilities.findAxisByClass(axes2, Integer.class);
-	    final IAxis dateAxis1 = ObservationUtilities.findAxisByClass(axes1, Date.class);
-	    final IAxis dateAxis2 = ObservationUtilities.findAxisByClass(axes2, Date.class);
-	    final IAxis valueAxis1 = ObservationUtilities.findAxisByClass(axes1, Double.class);
-	    final IAxis valueAxis2 = ObservationUtilities.findAxisByClass(axes2, Double.class);
-
-	    final ITuppleModel values1 = obs1.getValues(null);
-	    final ITuppleModel values2 = obs2.getValues(null);
-	    final int cnt1 = values1.getCount();
-	    final int cnt2 = values2.getCount();
-	    if (cnt1 != cnt2)
-		throw new SimulationException("Cannot compare NA results");
-
-	    for (int i = 0; i < cnt1; i++) {
-		final int id1 = (Integer) values1.getElement(i, idAxis1);
-		final int id2 = (Integer) values2.getElement(i, idAxis2);
-		final double val1 = (Double) values1.getElement(i, valueAxis1);
-		final double val2 = (Double) values2.getElement(i, valueAxis2);
-		final Date date1 = (Date) values1.getElement(i, dateAxis1);
-		final Date date2 = (Date) values2.getElement(i, dateAxis2);
-		izNodesMaxData.put(id1, new DischargeData(val1, date1));
-		calcNodesMaxData.put(id2, new DischargeData(val2, date2));
-	    }
-
 	    /*
 	     * Create feature type which describes what data the shape file
 	     * contains
 	     */
 	    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-	    final IMarshallingTypeHandler typeHandlerGeometry = typeRegistry.getTypeHandlerForTypeName(GeometryUtilities.QN_GEOMETRY);
+	    final IMarshallingTypeHandler typeHandlerGeometry = typeRegistry.getTypeHandlerForTypeName(GeometryUtilities.QN_POINT);
 	    final IMarshallingTypeHandler typeHandlerString = typeRegistry.getTypeHandlerForTypeName(XmlTypes.XS_STRING);
-	    final IMarshallingTypeHandler typeHandlerInteger = typeRegistry.getTypeHandlerForTypeName(XmlTypes.XS_INTEGER);
+	    final IMarshallingTypeHandler typeHandlerInt = typeRegistry.getTypeHandlerForTypeName(XmlTypes.XS_INT);
 	    final IMarshallingTypeHandler typeHandlerLong = typeRegistry.getTypeHandlerForTypeName(XmlTypes.XS_LONG);
 	    final IMarshallingTypeHandler typeHandlerDouble = typeRegistry.getTypeHandlerForTypeName(XmlTypes.XS_DOUBLE);
-	    final IMarshallingTypeHandler typeHandlerDateTime = typeRegistry.getTypeHandlerForTypeName(XmlTypes.XS_DATETIME);
 
 	    final QName shapeTypeQName = new QName("anyNS", "shapeType"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	    final List<IPropertyType> propertyTypeList = new ArrayList<IPropertyType>();
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "location"), typeHandlerGeometry, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "node"), typeHandlerString, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "izValue"), typeHandlerDouble, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "izDateTime"), typeHandlerDateTime, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "izTimeMillis"), typeHandlerLong, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "awmValue"), typeHandlerDouble, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "awmDateTime"), typeHandlerDateTime, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "awmTimeMillis"), typeHandlerLong, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "valueDifference"), typeHandlerDouble, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "timeMillisDifference"), typeHandlerLong, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "valueInfluence"), typeHandlerInteger, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
-	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "timeInfluence"), typeHandlerInteger, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "LOCATION"), typeHandlerGeometry, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "NODE_ID"), typeHandlerString, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "VALUE_IZ"), typeHandlerDouble, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "TIME_IZ"), typeHandlerLong, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "VALUE_AW"), typeHandlerDouble, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "TIME_AW"), typeHandlerLong, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "VALUE_DIF"), typeHandlerDouble, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "TIME_DIF"), typeHandlerLong, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "VALUE_INF"), typeHandlerInt, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
+	    propertyTypeList.add(GMLSchemaFactory.createValuePropertyType(new QName("anyNS", "TIME_INF"), typeHandlerInt, 1, 1, false)); //$NON-NLS-1$ //$NON-NLS-2$
 
 	    // valueInfluence - "1" if AW- measure had a positive (good)
 	    // influence on discharge, "0" for no influence, "-1" for negative
@@ -198,13 +195,13 @@ public class PLCPostprocessing_NA_Job extends AbstractInternalStatusJob implemen
 		final List<Object> dataList = new ArrayList<Object>();
 		dataList.add(node.getDefaultGeometryPropertyValue());
 		dataList.add(node.getName());
-		final DischargeData max1 = izNodesMaxData.get(Integer.parseInt(node.getName()));
-		final DischargeData max2 = calcNodesMaxData.get(Integer.parseInt(node.getName()));
+		final DischargeData max1 = izNodesMaxData.get(node.getName());
+		final DischargeData max2 = calcNodesMaxData.get(node.getName());
+		if (max1 == null || max2 == null)
+		    continue;
 		dataList.add(max1.getValue());
-		dataList.add(max1.getDate());
 		dataList.add(max1.getDate().getTime());
 		dataList.add(max2.getValue());
-		dataList.add(max2.getDate());
 		dataList.add(max2.getDate().getTime());
 		final double valueDifference = max1.getValue() - max2.getValue();
 		long timeDifference = max1.getDate().getTime() - max2.getDate().getTime();
@@ -221,16 +218,14 @@ public class PLCPostprocessing_NA_Job extends AbstractInternalStatusJob implemen
 
 		final Feature feature = FeatureFactory.createFeature(shapeRootFeature, shapeParentRelation, "FeatureID" + fid++, shapeFT, dataList.toArray()); //$NON-NLS-1$
 		workspace.addFeatureAsComposition(shapeRootFeature, shapeParentRelation, -1, feature);
-		break;
 	    }
 
-	    final File shapeFile = new File(tmpdir, "catchments"); //$NON-NLS-1$
+	    final File shapeFile = new File(tmpdir, "difference"); //$NON-NLS-1$
 	    ShapeSerializer.serialize(workspace, shapeFile.getAbsolutePath(), null);
 
 	} catch (final Exception e) {
-	    setStatus(STATUS.ERROR, e.getLocalizedMessage());
 	    e.printStackTrace();
-
+	    setStatus(STATUS.ERROR, e.getLocalizedMessage());
 	}
 	resultEater.addResult("OutputFolder", tmpdir);
 	setStatus(STATUS.OK, "Success");
