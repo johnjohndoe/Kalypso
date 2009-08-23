@@ -1251,9 +1251,13 @@ public class NaModelInnerCalcJob implements ISimulation
           if( resultLink == null )
           {
             logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.134" ) + feature.getId() + " ." ); //$NON-NLS-1$ //$NON-NLS-2$
+            resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
           }
-          final String href = resultLink.getHref();
-          resultPathRelative = href.substring( 19 );
+          else
+          {
+            final String href = resultLink.getHref();
+            resultPathRelative = href.substring( 19 );
+          }
         }
         catch( final Exception e )
         {
