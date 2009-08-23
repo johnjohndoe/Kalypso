@@ -117,7 +117,7 @@ public class HydrotopManager extends AbstractManager
       final IRelationType rt = (IRelationType) landuseFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
       final Feature linkedSealingFE = parameterWorkspace.resolveLink( landuseFE, rt );
       final Double sealingRate = (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
-      final String landuseName = landuseFE.getName();
+      final String landuseName = m_conf.getLanduseFeatureShortedName( landuseFE.getName() );
       if( m_landuseSealingRateMap.containsKey( landuseName ) )
         m_conf.getLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0" ), landuseName ) ); //$NON-NLS-1$
       else
@@ -153,7 +153,8 @@ public class HydrotopManager extends AbstractManager
           if( catchmentGeometry.contains( hydrotopGeometry.getInteriorPoint() ) )
           {
             final double hydrotopArea = hydrotopGeometry.getArea();
-            final Double landuseSealing = m_landuseSealingRateMap.get( hydrotop.getLanduse() );
+            final String landuseName = hydrotop.getLanduse();
+            final Double landuseSealing = m_landuseSealingRateMap.get( m_conf.getLanduseFeatureShortedName( landuseName ) );
             if( landuseSealing == null )
             {
               final String msg = String.format( "Landuse class '%s' referenced by hydrotop '%s' is not defined. Calculation aborted.", hydrotop.getLanduse(), hydrotop.getId() );
@@ -169,12 +170,13 @@ public class HydrotopManager extends AbstractManager
             for( final Object object : soilTypeList )
             {
               final Feature f = (Feature) object;
-              if(soilType.equals( f.getId())){
+              if( soilType.equals( f.getId() ) )
+              {
                 soilType = f.getName();
                 break;
               }
             }
-            hydrotopOutputList.add( String.format( Locale.US, "%10.2f%50s%50s%16g%16g%8d%10f%4d", hydrotopUnsealedArea, hydrotop.getLanduse(), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingPercentage, hydrotop.getAsciiHydrotopType() ) ); //$NON-NLS-1$
+            hydrotopOutputList.add( String.format( Locale.US, "%10.2f%50s%50s%16g%16g%8d%10f%4d", hydrotopUnsealedArea, m_conf.getLanduseFeatureShortedName( hydrotop.getLanduse()), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingPercentage, hydrotop.getAsciiHydrotopType() ) ); //$NON-NLS-1$
             hydIdList.add( hydrotop.getId() );
           }
         }

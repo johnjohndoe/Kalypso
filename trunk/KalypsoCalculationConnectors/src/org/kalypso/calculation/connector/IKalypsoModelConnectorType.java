@@ -32,7 +32,7 @@ public interface IKalypsoModelConnectorType {
     }
 
     public enum MODELSPEC_CONNECTOR_WSPM_FM {
-	WSPM_Model, WSPM_RunoffEventID, FM_Model, WSPM_TinFile, OPT_DeleteExistingRunoffEvents, WSPM_TinReference;
+	WSPM_Model, WSPM_RunoffEventID, FM_Model, FM_EventsFolder, WSPM_TinFile, OPT_DeleteExistingRunoffEvents, WSPM_TinReference;
     }
 
     public enum MODELSPEC_CONNECTOR_FM_RM {

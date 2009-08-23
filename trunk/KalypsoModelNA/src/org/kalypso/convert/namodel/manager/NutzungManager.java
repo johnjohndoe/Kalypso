@@ -79,7 +79,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class NutzungManager extends AbstractManager
 {
@@ -162,7 +161,7 @@ public class NutzungManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NutzungManager.6") + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.6" ) + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
@@ -195,8 +194,7 @@ public class NutzungManager extends AbstractManager
 
   private void writeFeature( Feature feature, Feature linkedIdealLanduseFE ) throws Exception
   {
-
-    String nutzName = FeatureHelper.getAsString( feature, "name" );
+    final String nutzName = m_conf.getLanduseFeatureShortedName( feature.getName() );
     File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" ); //$NON-NLS-1$ //$NON-NLS-2$
     FileWriter writer = new FileWriter( nutzungDir );
     String name;
@@ -206,7 +204,7 @@ public class NutzungManager extends AbstractManager
     }
     catch( Exception e )
     {
-      name = Messages.getString("org.kalypso.convert.namodel.manager.NutzungManager.11"); //$NON-NLS-1$
+      name = Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.11" ); //$NON-NLS-1$
     }
     writer.write( name );
     writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung!

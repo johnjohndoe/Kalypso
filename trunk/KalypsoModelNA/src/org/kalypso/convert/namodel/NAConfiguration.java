@@ -48,6 +48,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -159,15 +161,26 @@ public class NAConfiguration
   private Boolean m_iniWrite;
 
   private TreeSet<Date> m_dateWriteSet;
-  
+
   private GMLWorkspace m_modelWorkspace = null;
+
   private GMLWorkspace m_parameterWorkspace = null;
+
   private GMLWorkspace m_hydrotopeWorkspace = null;
+
   private GMLWorkspace m_synthNWorkspace = null;
+
   private GMLWorkspace m_landuseWorkspace = null;
+
   private GMLWorkspace m_sudsWorkspace;
 
-  private final  NACalculationLogger m_calculationLogger;
+  private final NACalculationLogger m_calculationLogger;
+
+  private final static String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d";
+
+  private int m_plcLanduseCounter = 1;
+
+  private final Map<String, String> m_landuseLongNamesMap = new HashMap<String, String>();
 
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws InvocationTargetException
   {
@@ -213,7 +226,7 @@ public class NAConfiguration
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
     m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
-    m_calculationLogger = new NACalculationLogger(asciiBaseDir.getPath());
+    m_calculationLogger = new NACalculationLogger( asciiBaseDir.getPath() );
     m_iniWrite = false;
   }
 
@@ -236,6 +249,26 @@ public class NAConfiguration
   // {
   // return m_schemaURL;
   // }
+
+  /**
+   * Returns landuse name that is compatible with the calculation core; mappings are stored so once given ID is used
+   * again if requested; for null gml names, the new ID is given without storing it
+   */
+  public final String getLanduseFeatureShortedName( final String featureName )
+  {
+    if( featureName != null && featureName.length() < 10 )
+      return featureName;
+    final String shortName = String.format( PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
+    if( featureName == null )
+      return shortName;
+    final String string = m_landuseLongNamesMap.get( featureName );
+    if( string == null )
+    {
+      m_landuseLongNamesMap.put( featureName, shortName );
+      return shortName;
+    }
+    return string;
+  }
 
   public URL getChannelFormatURL( )
   {

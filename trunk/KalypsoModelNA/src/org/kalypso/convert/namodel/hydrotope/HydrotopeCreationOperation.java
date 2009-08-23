@@ -210,8 +210,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
           final Object landuseClassLink = landuse.getLanduse();
           final Feature featureLanduse = FeatureHelper.resolveLinkedFeature( m_workspace, landuseClassLink );
-
-          hydrotop.setLanduse( featureLanduse.getName() );
+          if( featureLanduse == null )
+            hydrotop.setLanduse( ((XLinkedFeature_Impl) landuseClassLink).getFeatureId() );
+          else
+            hydrotop.setLanduse( featureLanduse.getName() );
           hydrotop.setDrainageType( landuse.getDrainageType() );
           hydrotop.setCorrSealing( landuse.getCorrSealing() );
 
