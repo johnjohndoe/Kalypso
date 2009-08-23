@@ -55,34 +55,21 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class LanduseClassHelper
 {
-  private final static String ID_FORMAT = "PLC_%05d";
-
   public static Map<String, String> resolve( final GMLWorkspace landuseClassesWorkspace )
   {
     final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) ); //$NON-NLS-1$
-    int cnt = 1;
-
+    
     final Map<String, String> landuseClasses = new HashMap<String, String>();
     for( final Object object : landuseClassesFeatures )
     {
       final Feature f = (Feature) object;
       final String name = f.getName();
-      String id = formatID( f.getId(), cnt++ );
-      
-      // TODO check if this check is necessary (possible that some of the existing classes are called PLC_nnnnn)
-      while( landuseClasses.containsValue( id ) )
-        id = formatID( f.getId(), cnt++ );
-      
+      final String id = f.getId();
+
       landuseClasses.put( name, id );
     }
-    return landuseClasses;
-  }
 
-  private final static String formatID( final String id, final int nextCnt )
-  {
-    if( id.length() <= 10 )
-      return id;
-    return String.format( ID_FORMAT, nextCnt );
+    return landuseClasses;
   }
 
 }
