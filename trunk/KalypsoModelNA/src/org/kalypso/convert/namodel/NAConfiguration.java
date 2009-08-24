@@ -259,6 +259,7 @@ public class NAConfiguration
     if( featureName != null && featureName.length() < 10 )
       return featureName;
     final String shortName = String.format( PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
+    System.out.println( "Created " + shortName + " for " + featureName );
     if( featureName == null )
       return shortName;
     final String string = m_landuseLongNamesMap.get( featureName );

@@ -377,9 +377,9 @@ public class NaModelInnerCalcJob implements ISimulation
     final IAxis[] axisList = resultObservation.getAxisList();
     final String axisType = determineTranpolinAxis( resultObservation );
 
-    final File fileMitte = getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ); //$NON-NLS-1$
-    final File fileUnten = getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" ); //$NON-NLS-1$
-    final File fileOben = getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" ); //$NON-NLS-1$
+    final File fileMitte = getResultFileFor( resultDir, rootFeature, new QName( NaModelConstants.NS_NACONTROL, "qAblageSpurMittlerer" ) ); //$NON-NLS-1$
+    final File fileUnten = getResultFileFor( resultDir, rootFeature, new QName( NaModelConstants.NS_NACONTROL, "qAblageSpurUnterer" ) ); //$NON-NLS-1$
+    final File fileOben = getResultFileFor( resultDir, rootFeature, new QName( NaModelConstants.NS_NACONTROL, "qAblageSpurOberer" ) ); //$NON-NLS-1$
 
     // Initalize some commen variables
     final ITuppleModel resultValues = resultObservation.getValues( null );
@@ -441,7 +441,7 @@ public class NaModelInnerCalcJob implements ISimulation
     TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction, offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte", request ); //$NON-NLS-1$
 
     // read the freshly created file into a new observation, we are going to umhüll it
-    final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURL(), "adaptedVorhersage" ); //$NON-NLS-1$
+    final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURI().toURL(), "adaptedVorhersage" ); //$NON-NLS-1$
 
     //
     // Second, we build the umhüllenden for the adapted result
@@ -482,11 +482,11 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private IObservation loadPredictedResult( final File resultDir, final Feature rootFeature ) throws MalformedURLException, SensorException
   {
-    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NACONTROL_RESULT_TIMESERIESLINK_PROP );
 
     // from predicted timeseries
     final UrlResolver urlResolver = new UrlResolver();
-    final URL resultURL = urlResolver.resolveURL( resultDir.toURL(), resultLink.getHref() );
+    final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
     return ZmlFactory.parseXML( resultURL, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.51" ) ); //$NON-NLS-1$
   }
 
@@ -496,7 +496,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * @param tsLinkPropName
    * @return file for result or null
    */
-  private File getResultFileFor( final File resultDir, final Feature feature, final String tsLinkPropName )
+  private File getResultFileFor( final File resultDir, final Feature feature, final QName tsLinkPropName )
   {
     try
     {
@@ -508,6 +508,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     catch( final Exception e )
     {
+      Logger.getAnonymousLogger().log( Level.WARNING, e.getLocalizedMessage() );
       return null; // no track available
     }
 
@@ -1245,26 +1246,34 @@ public class NaModelInnerCalcJob implements ISimulation
         }
         // lese ergebnis-link um target fuer zml zu finden
         String resultPathRelative;
-        try
+        if( targetTSLink != null )
         {
-          final TimeseriesLinkType resultLink = (TimeseriesLinkType) feature.getProperty( targetTSLink );
-          if( resultLink == null )
+          try
           {
-            logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.134" ) + feature.getId() + " ." ); //$NON-NLS-1$ //$NON-NLS-2$
+            final TimeseriesLinkType resultLink = (TimeseriesLinkType) feature.getProperty( targetTSLink );
+            if( resultLink == null )
+            {
+              logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.134" ) + feature.getId() + " ." ); //$NON-NLS-1$ //$NON-NLS-2$
+              resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
+            }
+            else
+            {
+              final String href = resultLink.getHref();
+              resultPathRelative = href.substring( 19 );
+            }
+          }
+          catch( final Exception e )
+          {
+            // if there is target defined or there are some problems with that
+            // we generate one
             resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
           }
-          else
-          {
-            final String href = resultLink.getHref();
-            resultPathRelative = href.substring( 19 );
-          }
         }
-        catch( final Exception e )
+        else
         {
-          // if there is target defined or there are some problems with that
-          // we generate one
           resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
         }
+        
         if( !m_resultMap.contains( resultPathRelative ) )
         {
           m_resultMap.add( resultPathRelative );

@@ -120,9 +120,8 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final double area = landuseGeometry.getArea() * sud.getAreaPercentage();
                   final Object landuseClassLink = landuse.getLanduse();
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N";
-                  sud.getLanduseFileName();
 
-                  value.add( String.format( "%.4g %s mrs %.4g %.4g", area, landuseClassName, sud.getMaxPercRate(), sud.getPercentToGroundwater() ) );
+                  value.add( String.format( "%.4g %s mrs %.4g %.4g", area, m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) );
                   value.add( String.format( "%d %d %d %.4g %.4g 0", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope(), sud.getPipeRoughness(), sud.getWidth() ) );
                 }
                 else if( f instanceof Swale )

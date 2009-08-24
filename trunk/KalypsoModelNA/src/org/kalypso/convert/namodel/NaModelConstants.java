@@ -73,7 +73,7 @@ public interface NaModelConstants
   public static final String NS_NAPEDOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/pedologie"; //$NON-NLS-1$
 
   public static final String NS_NAGEOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/geologie"; //$NON-NLS-1$
-  
+
   public static final String NS_NASIMPLESHAPECATCHMENT = "http://sourceforge.kalypso.org/schemata/hydrology/simpleShapeCatchment"; //$NON-NLS-1$
 
   public static final String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
@@ -160,14 +160,13 @@ public interface NaModelConstants
   public static final QName HYDRO_PROP_INFLOWRATEGW = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
   public static final QName HYDRO_PROP_SUDS = new QName( NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
-  
+
   public static final QName HYDRO_ENUM_HYDTYPE_SWALETRENCH = new QName( NS_NAHYDROTOP, "MuldenRigole" ); //$NON-NLS-1$
 
   public static final QName HYDRO_ENUM_HYDTYPE_GREENROOF = new QName( NS_NAHYDROTOP, "Dachbegruenung" ); //$NON-NLS-1$
 
   public static final QName HYDRO_ENUM_HYDTYPE_REGULAR = new QName( NS_NAHYDROTOP, "Bodenspeicher" ); //$NON-NLS-1$
 
-  
   /** namodell.xsd */
   // channels
   public static final QName CHANNEL_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "ChannelCollectionMember" ); //$NON-NLS-1$
@@ -524,6 +523,8 @@ public interface NaModelConstants
   public static final QName NACONTROL_SPI_PROP = new QName( NS_NACONTROL, "spi" ); //$NON-NLS-1$
 
   public static final QName NACONTROL_SUP_PROP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
+
+  public static final QName NACONTROL_RESULT_TIMESERIESLINK_PROP = new QName( NS_NACONTROL, "qberechnetZR" ); //$NON-NLS-1$
 
   public static final QName NACONTROL_ROOTNODE_PROP = new QName( NS_NACONTROL, "rootNode" ); //$NON-NLS-1$
 
