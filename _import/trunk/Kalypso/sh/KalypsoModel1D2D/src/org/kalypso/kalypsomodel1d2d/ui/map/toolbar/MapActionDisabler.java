@@ -54,47 +54,45 @@ import org.eclipse.ui.IViewSite;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+
 /**
- * Provides the mechanism to disable map view contribution items.
- * The mechanism consists of decorating the manager overrides with
- * with the behavior of de-activating the items of specified id
+ * Provides the mechanism to disable map view contribution items. The mechanism consists of decorating the manager
+ * overrides with with the behavior of de-activating the items of specified id
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class MapActionDisabler implements IContributionManagerOverrides
 {
-  private static final Logger logger = 
-                  Logger.getLogger( MapActionDisabler.class.getName() );
-  
-  /**holds the ids of the items to disable */
-  private List<String> itemsIDToDisable;    
-  
+  private static final Logger logger = Logger.getLogger( MapActionDisabler.class.getName() );
+
+  /** holds the ids of the items to disable */
+  private List<String> itemsIDToDisable;
+
   /** the original manager overrides */
   private IContributionManagerOverrides decorated;
-  
+
   /**
-   * Creates a new Instance of {@link MapActionDisabler} which disables
-   * the items with the following links:
+   * Creates a new Instance of {@link MapActionDisabler} which disables the items with the following links:
    * <ul>
-   *    <li/>"org.kalypso.ui.editor.mapeditor.action.PanAction"
-   *    <li/>"org.kalypso.ui.editor.mapeditor.action.ZoomInAction"
+   * <li/>"org.kalypso.ui.editor.mapeditor.action.PanAction"
+   * <li/>"org.kalypso.ui.editor.mapeditor.action.ZoomInAction"
    * </ul>
-   *  
+   * 
    */
-  public MapActionDisabler()
+  public MapActionDisabler( )
   {
-    this( new  String[]
-           { "org.kalypso.ui.editor.mapeditor.action.PanAction", //$NON-NLS-1$
-             "org.kalypso.ui.editor.mapeditor.action.ZoomInAction"} ); //$NON-NLS-1$
+    this( new String[] { "org.kalypso.ui.editor.mapeditor.action.PanAction", //$NON-NLS-1$
+        "org.kalypso.ui.editor.mapeditor.action.ZoomInAction" } ); //$NON-NLS-1$
   }
-  
+
   /**
-   * Creates {@link MapActionDisabler} instance which disables
-   * the items of the given ids
-   * @param itemsIds the ids of the items to disable
-   * @throws IllegalArgumentException if itemsIds is null or
-   *    contains a null
+   * Creates {@link MapActionDisabler} instance which disables the items of the given ids
+   * 
+   * @param itemsIds
+   *          the ids of the items to disable
+   * @throws IllegalArgumentException
+   *           if itemsIds is null or contains a null
    * 
    */
   public MapActionDisabler( String[] itemsIds )
@@ -102,11 +100,11 @@ public class MapActionDisabler implements IContributionManagerOverrides
     Assert.throwIAEOnNullParam( itemsIds, "itemsIds" ); //$NON-NLS-1$
     itemsIDToDisable = Arrays.asList( itemsIds );
   }
-  
+
   /**
    * Disables the items
    */
-  public void disableActions()
+  public void disableActions( )
   {
     IViewPart findView = UtilMap.getMapView();
     IActionBars actionBars = findView.getViewSite().getActionBars();
@@ -115,70 +113,68 @@ public class MapActionDisabler implements IContributionManagerOverrides
     this.decorated = overrides;
     if( toolBarManager instanceof ToolBarManager )
     {
-      ((ToolBarManager)toolBarManager).setOverrides( this );
-      
+      ((ToolBarManager) toolBarManager).setOverrides( this );
+
     }
     toolBarManager.update( true );
-    for( String itemId:itemsIDToDisable )
+    for( String itemId : itemsIDToDisable )
     {
       IContributionItem find = toolBarManager.find( itemId );
       if( find != null )
       {
         find.update();
-//        find.setVisible( false );
+        // find.setVisible( false );
       }
       else
       {
-        logger.warning( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.3")+itemId ); //$NON-NLS-1$
+        logger.warning( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.3" ) + itemId ); //$NON-NLS-1$
       }
     }
-    
+
   }
-  
+
   /**
    * Enables the items.
    * 
-   * This method resets the tool bar manager overrides and update
-   * the items to disable.
+   * This method resets the tool bar manager overrides and update the items to disable.
    */
-  public void enableActions()
+  public void enableActions( )
   {
-    
+
     IViewPart findView = UtilMap.getMapView();
     if( findView == null )
     {
-      logger.warning(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.4")); //$NON-NLS-1$
+      logger.warning( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.4" ) ); //$NON-NLS-1$
       return;
     }
-    
+
     IViewSite viewSite = findView.getViewSite();
     if( viewSite == null )
     {
-      logger.warning(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.5")); //$NON-NLS-1$
+      logger.warning( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.5" ) ); //$NON-NLS-1$
       return;
     }
     IActionBars actionBars = viewSite.getActionBars();
     IToolBarManager toolBarManager = actionBars.getToolBarManager();
     if( toolBarManager instanceof ToolBarManager )
     {
-      ((ToolBarManager)toolBarManager).setOverrides( decorated );
+      ((ToolBarManager) toolBarManager).setOverrides( decorated );
     }
-    for( String itemId:itemsIDToDisable )
+    for( String itemId : itemsIDToDisable )
     {
       IContributionItem find = toolBarManager.find( itemId );
       if( find != null )
       {
-//        find.setVisible( true );
+        // find.setVisible( true );
         find.update();
       }
       else
       {
-        logger.warning( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.6")+itemId); //$NON-NLS-1$
+        logger.warning( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.6" ) + itemId ); //$NON-NLS-1$
       }
     }
     toolBarManager.update( true );
   }
-  
 
   /**
    * @see org.eclipse.jface.action.IContributionManagerOverrides#getAccelerator(org.eclipse.jface.action.IContributionItem)
@@ -218,5 +214,14 @@ public class MapActionDisabler implements IContributionManagerOverrides
   public String getText( IContributionItem item )
   {
     return decorated.getText( item );
+  }
+
+  /**
+   * @see org.eclipse.jface.action.IContributionManagerOverrides#getVisible(org.eclipse.jface.action.IContributionItem)
+   */
+  @Override
+  public Boolean getVisible( IContributionItem item )
+  {
+    return Boolean.TRUE;
   }
 }
