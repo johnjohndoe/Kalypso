@@ -48,6 +48,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.internal.ide.application.IDEWorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.intro.impl.IIntroConstants;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
@@ -67,8 +68,8 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
 
   /**
    * @param restrictedAccess
-   *            If true, only the model-product perspective will be available to the user. Toolbar and perspective bar
-   *            will be hidden.
+   *          If true, only the model-product perspective will be available to the user. Toolbar and perspective bar
+   *          will be hidden.
    */
   public KalypsoModelWorkbenchWindowAdvisor( final KalypsoModelWorkbenchAdvisor advisor, final IWorkbenchWindowConfigurer configurer, final boolean restrictedAccess )
   {
@@ -128,7 +129,7 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
     configurer.setShowProgressIndicator( true );
     configurer.setShowStatusLine( true );
 
-    configurer.setTitle( Messages.getString("org.kalypso.model.product.application.KalypsoModelWorkbenchWindowAdvisor.0") ); //$NON-NLS-1$
+    configurer.setTitle( Messages.getString( "org.kalypso.model.product.application.KalypsoModelWorkbenchWindowAdvisor.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -151,7 +152,7 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
       if( part instanceof CustomizableIntroPart )
       {
         final CustomizableIntroPart customIntro = (CustomizableIntroPart) part;
-        customIntro.getControl().setData( CustomizableIntroPart.SHOW_STANDBY_PART, null );
+        customIntro.getControl().setData( IIntroConstants.SHOW_STANDBY_PART, null );
       }
 
       if( part != null )
