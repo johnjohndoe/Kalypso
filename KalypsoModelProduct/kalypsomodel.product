@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.4"?>
+<?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0_M1" useFeatures="false">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0_M2" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -59,7 +59,6 @@ de_DE</programArgs>
       <plugin id="de.openali.odysseus.chart.factory"/>
       <plugin id="de.openali.odysseus.chart.framework"/>
       <plugin id="de.openali.odysseus.chart.ui"/>
-      <plugin id="de.renew.libs"/>
       <plugin id="de.renew.workflow.connector"/>
       <plugin id="de.renew.workflow.model"/>
       <plugin id="javax.servlet"/>
@@ -74,9 +73,12 @@ de_DE</programArgs>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.ant.ui"/>
       <plugin id="org.eclipse.compare"/>
+      <plugin id="org.eclipse.compare.core"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.observable"/>
+      <plugin id="org.eclipse.core.databinding.property"/>
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.filebuffers"/>
       <plugin id="org.eclipse.core.filesystem"/>
@@ -93,17 +95,33 @@ de_DE</programArgs>
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.debug.core"/>
       <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.ecf"/>
+      <plugin id="org.eclipse.ecf.filetransfer"/>
+      <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.ecf.ssl" fragment="true"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.concurrent"/>
+      <plugin id="org.eclipse.equinox.frameworkadmin"/>
+      <plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
       <plugin id="org.eclipse.equinox.http.jetty"/>
       <plugin id="org.eclipse.equinox.http.registry"/>
       <plugin id="org.eclipse.equinox.http.servlet"/>
       <plugin id="org.eclipse.equinox.jsp.jasper"/>
       <plugin id="org.eclipse.equinox.jsp.jasper.registry"/>
+      <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
+      <plugin id="org.eclipse.equinox.p2.core"/>
+      <plugin id="org.eclipse.equinox.p2.engine"/>
+      <plugin id="org.eclipse.equinox.p2.jarprocessor"/>
+      <plugin id="org.eclipse.equinox.p2.metadata"/>
+      <plugin id="org.eclipse.equinox.p2.metadata.repository"/>
+      <plugin id="org.eclipse.equinox.p2.repository"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
       <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.equinox.simpleconfigurator"/>
+      <plugin id="org.eclipse.equinox.simpleconfigurator.manipulator"/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.help.appserver"/>
       <plugin id="org.eclipse.help.base"/>
@@ -115,6 +133,8 @@ de_DE</programArgs>
       <plugin id="org.eclipse.jdt.core.manipulation"/>
       <plugin id="org.eclipse.jdt.debug"/>
       <plugin id="org.eclipse.jdt.debug.ui"/>
+      <plugin id="org.eclipse.jdt.junit"/>
+      <plugin id="org.eclipse.jdt.junit.runtime"/>
       <plugin id="org.eclipse.jdt.launching"/>
       <plugin id="org.eclipse.jdt.ui"/>
       <plugin id="org.eclipse.jface"/>
@@ -126,7 +146,6 @@ de_DE</programArgs>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.search"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86"/>
       <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.team.core"/>
       <plugin id="org.eclipse.team.ui"/>
@@ -142,17 +161,13 @@ de_DE</programArgs>
       <plugin id="org.eclipse.ui.intro"/>
       <plugin id="org.eclipse.ui.navigator"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
-      <plugin id="org.eclipse.ui.net"/>
       <plugin id="org.eclipse.ui.views"/>
       <plugin id="org.eclipse.ui.views.properties.tabbed"/>
       <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
-      <plugin id="org.eclipse.update.configurator"/>
-      <plugin id="org.eclipse.update.core"/>
-      <plugin id="org.eclipse.update.core.win32" fragment="true"/>
-      <plugin id="org.eclipse.update.ui"/>
       <plugin id="org.eclipse.wst.common.uriresolver"/>
+      <plugin id="org.hamcrest.core"/>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
       <plugin id="org.kalypso.KalypsoManual1D2D"/>
@@ -205,7 +220,9 @@ de_DE</programArgs>
       <plugin id="org.kalypso.ui.observationimport"/>
       <plugin id="org.kalypso.ui.rrm"/>
       <plugin id="org.kalypso.wspwin.core"/>
-      <plugin id="org.mortbay.jetty"/>
+      <plugin id="org.mortbay.jetty.server"/>
+      <plugin id="org.mortbay.jetty.util"/>
    </plugins>
+
 
 </product>
