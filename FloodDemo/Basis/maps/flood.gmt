@@ -11,7 +11,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Gel�ndemodelle" id="ID_2" featurePath="#fid#CoverageCollection11933046861910/coverageMember" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/flood.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="Geländemodelle" id="ID_2" featurePath="#fid#CoverageCollection11933046861910/coverageMember" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="dtmGridUserStyle" linktype="sld" xlink:type="simple" xlink:href="grids.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>

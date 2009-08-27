@@ -16,7 +16,7 @@
             <templ:style style="volumePolygonUserStyle" linktype="sld" xlink:type="simple" xlink:href="../events/Ereignis 1/wsp.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Flie�tiefen (Ereignis 1)" id="ID_2" featurePath="#fid#RunoffEvent12120677134540/resultCoveragesMember/coverageMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Fließtiefen (Ereignis 1)" id="ID_2" featurePath="#fid#RunoffEvent12120677134540/resultCoveragesMember/coverageMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="waterdepthUserStyle" linktype="sld" xlink:type="simple" xlink:href="../maps/results.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
@@ -35,7 +35,7 @@
             <templ:style style="volumePolygonUserStyle" linktype="sld" xlink:type="simple" xlink:href="../events/Ereignis 2/wsp.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Flie�tiefen (Ereignis 2)" id="ID_5" featurePath="#fid#RunoffEvent12120677192982/resultCoveragesMember/coverageMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="Fließtiefen (Ereignis 2)" id="ID_5" featurePath="#fid#RunoffEvent12120677192982/resultCoveragesMember/coverageMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="waterdepthUserStyle" linktype="sld" xlink:type="simple" xlink:href="../maps/results.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
