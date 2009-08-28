@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.util.swt.StatusComposite;
 
@@ -96,7 +97,7 @@ public class CreateModelTinWizardPage extends WizardPage
 
   public CreateModelTinWizardPage( final String pageName, final IFile targetFile, final IFEDiscretisationModel1d2d model )
   {
-    super( pageName, "Export FE-Net as TIN", null );
+    super( pageName, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.1"), null ); //$NON-NLS-1$
 
     m_targetFile = targetFile;
     m_model = model;
@@ -108,14 +109,14 @@ public class CreateModelTinWizardPage extends WizardPage
       final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
       df.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
       final String dateString = df.format( date );
-      msg = String.format( "TIN was last updated %s. Press '%s' to update.", dateString, IDialogConstants.NEXT_LABEL );
+      msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.0"), dateString, IDialogConstants.NEXT_LABEL ); //$NON-NLS-1$
     }
     else
-      msg = String.format( "TIN not yet created. Press '%s' to start processing.", IDialogConstants.NEXT_LABEL );
+      msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.2"), IDialogConstants.NEXT_LABEL ); //$NON-NLS-1$
 
     m_execute = StatusUtilities.createStatus( IStatus.INFO, msg, null );
 
-    setDescription( "Create or Update the TIN used to show the current elevation data of the FE-Net." );
+    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.3") ); //$NON-NLS-1$
   }
 
   /**
@@ -135,8 +136,8 @@ public class CreateModelTinWizardPage extends WizardPage
     {
       final Button button = new Button( group, SWT.CHECK );
       button.setSelection( m_doUpdate );
-      button.setText( "Update FE-Net TIN" );
-      button.setToolTipText( "Uncheck to change style information only, skips update of TIN." );
+      button.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.4") ); //$NON-NLS-1$
+      button.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.5") ); //$NON-NLS-1$
       button.addSelectionListener( new SelectionAdapter()
       {
         /**
@@ -175,12 +176,12 @@ public class CreateModelTinWizardPage extends WizardPage
       {
         m_min = tinExporter.getMin();
         m_max = tinExporter.getMax();
-        m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.OK, "FE-Net TIN succesfully created", null ) );
+        m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.OK, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.6"), null ) ); //$NON-NLS-1$
       }
       else
       {
         event.doit = false;
-        setErrorMessage( "Failed to process FE-Net TIN. Try again or <Cancel>" );
+        setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.7") ); //$NON-NLS-1$
         setPageComplete( false );
         m_statusComposite.setStatus( m_execute );
       }

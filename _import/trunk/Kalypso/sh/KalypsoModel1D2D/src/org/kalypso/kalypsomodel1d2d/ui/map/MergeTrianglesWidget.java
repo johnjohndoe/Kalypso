@@ -229,11 +229,11 @@ public class MergeTrianglesWidget extends AbstractWidget
     {
       final IFeatureWrapperCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
       if( adjacentElements.size() != 2 )
-        m_warning = "Edge must have two adjacent 2D-elements";
+        m_warning = "Edge must have two adjacent 2D-elements"; //$NON-NLS-1$
       else
       {
         if( adjacentElements.get( 0 ).getNodes().size() != 4 || adjacentElements.get( 1 ).getNodes().size() != 4 )
-          m_warning = "Both adjacent elements must be triangles";
+          m_warning = "Both adjacent elements must be triangles"; //$NON-NLS-1$
       }
     }
 
@@ -277,7 +277,7 @@ public class MergeTrianglesWidget extends AbstractWidget
   private Symbolizer createGoodSymbolizer( ) throws IOException, SAXException, XMLParsingException
   {
     if( m_goodSld == null )
-      m_goodSld = XMLTools.parse( getClass().getResource( "styles/goodEdge.sld" ) );
+      m_goodSld = XMLTools.parse( getClass().getResource( "styles/goodEdge.sld" ) ); //$NON-NLS-1$
 
     return SLDFactory.createSymbolizer( null, m_goodSld.getDocumentElement(), 0.0, Double.MAX_VALUE );
   }
@@ -285,7 +285,7 @@ public class MergeTrianglesWidget extends AbstractWidget
   private Symbolizer createBadSymbolizer( ) throws IOException, SAXException, XMLParsingException
   {
     if( m_badSld == null )
-      m_badSld = XMLTools.parse( getClass().getResource( "styles/badEdge.sld" ) );
+      m_badSld = XMLTools.parse( getClass().getResource( "styles/badEdge.sld" ) ); //$NON-NLS-1$
 
     return SLDFactory.createSymbolizer( null, m_badSld.getDocumentElement(), 0.0, Double.MAX_VALUE );
   }

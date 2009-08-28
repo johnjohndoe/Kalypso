@@ -46,6 +46,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
@@ -65,11 +66,11 @@ public class SurfaceIsolineWizardPage extends WizardPage
 
   protected SurfaceIsolineWizardPage( final String pageName, final SurfaceLineSymbolizer symbolizer, final CreateModelTinWizardPage exportPage )
   {
-    super( pageName, "Isolinines - Style definition", null );
+    super( pageName, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.SurfaceIsolineWizardPage0"), null ); //$NON-NLS-1$
     m_symbolizer = symbolizer;
     m_exportPage = exportPage;
     
-    setDescription( "Define how the isolines will be displayed" );
+    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.SurfaceIsolineWizardPage1") ); //$NON-NLS-1$
   }
 
   /**

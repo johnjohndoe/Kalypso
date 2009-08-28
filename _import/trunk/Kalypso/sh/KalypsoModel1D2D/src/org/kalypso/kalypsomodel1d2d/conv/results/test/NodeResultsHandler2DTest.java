@@ -67,25 +67,25 @@ public class NodeResultsHandler2DTest
   @Test
   public void testLoadResults( ) throws Exception
   {
-    final File tempDir = FileUtilities.createNewTempDir( "result2dtest" );
+    final File tempDir = FileUtilities.createNewTempDir( "result2dtest" ); //$NON-NLS-1$
     tempDir.mkdirs();
 
     final FileSystemManagerWrapper manager = VFSUtilities.getNewManager();
     try
     {
       final ILog log = KalypsoModel1D2DPlugin.getDefault().getLog();
-      log.log( StatusUtilities.createStatus( IStatus.INFO, "Start Result Processing Test (2D only)", null ) );
+      log.log( StatusUtilities.createStatus( IStatus.INFO, "Start Result Processing Test (2D only)", null ) ); //$NON-NLS-1$
 
-      final URL zipLocation = getClass().getResource( "resources/original.2d.zip" );
+      final URL zipLocation = getClass().getResource( "resources/original.2d.zip" ); //$NON-NLS-1$
       ZipUtilities.unzip( zipLocation, tempDir );
 
       // get 2d-file from resources
-      final File result2dFile = new File( tempDir, "A0001.2d" );
+      final File result2dFile = new File( tempDir, "A0001.2d" ); //$NON-NLS-1$
       final FileObject resultFileObject = manager.toFileObject( result2dFile );
-      final File outputDir = new File( tempDir, "output" );
+      final File outputDir = new File( tempDir, "output" ); //$NON-NLS-1$
       outputDir.mkdir();
 
-      log.log( StatusUtilities.createStatus( IStatus.INFO, "calling ProcessResultsJob", null ) );
+      log.log( StatusUtilities.createStatus( IStatus.INFO, "calling ProcessResultsJob", null ) ); //$NON-NLS-1$
       final ProcessResultsJob job = new ProcessResultsJob( resultFileObject, outputDir, null, null, null, null, ResultManager.STEADY_DATE, null );
       final IStatus result = job.run( new NullProgressMonitor() );
       log.log( result );
@@ -97,7 +97,7 @@ public class NodeResultsHandler2DTest
       System.gc();
       System.gc();
       System.gc();
-      System.out.println( "Total memory" + Runtime.getRuntime().totalMemory() );
+      System.out.println( "Total memory" + Runtime.getRuntime().totalMemory() ); //$NON-NLS-1$
     }
   }
 }

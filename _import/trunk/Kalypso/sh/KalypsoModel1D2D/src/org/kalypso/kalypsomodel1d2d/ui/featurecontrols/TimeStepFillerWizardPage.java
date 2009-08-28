@@ -93,7 +93,7 @@ public class TimeStepFillerWizardPage extends WizardPage
 
   public TimeStepFillerWizardPage( )
   {
-    this( new Date(), new Date(), new BigDecimal( "1.0" ), 60 );
+    this( new Date(), new Date(), new BigDecimal( "1.0" ), 60 ); //$NON-NLS-1$
   }
 
   public TimeStepFillerWizardPage( final Date startDate, final Date endDate, final BigDecimal uRelFactor, final int timeStep )
@@ -103,7 +103,7 @@ public class TimeStepFillerWizardPage extends WizardPage
     setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.4" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.5" ) ); //$NON-NLS-1$
 
-    m_uRelFactor = "" + uRelFactor;// uRelFactor.setScale( 1, BigDecimal.ROUND_HALF_UP );
+    m_uRelFactor = "" + uRelFactor;// uRelFactor.setScale( 1, BigDecimal.ROUND_HALF_UP ); //$NON-NLS-1$
     m_timeStep_val = timeStep;
     m_dateFrom = startDate;
     m_dateTo = endDate;

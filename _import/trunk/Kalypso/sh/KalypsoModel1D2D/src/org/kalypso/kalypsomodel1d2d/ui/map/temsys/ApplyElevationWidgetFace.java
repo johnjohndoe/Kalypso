@@ -214,7 +214,7 @@ class ApplyElevationWidgetFace
     areaSelectSection.setEnabled( true );
 
     //
-    final Button dtmButton = toolkit.createButton( scrolledForm.getBody(), "Show/Refresh Model-Isolines", SWT.PUSH );
+    final Button dtmButton = toolkit.createButton( scrolledForm.getBody(), "Show/Refresh Model-Isolines", SWT.PUSH ); //$NON-NLS-1$
     dtmButton.addSelectionListener( new SelectionAdapter()
     {
       /**

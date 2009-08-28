@@ -139,7 +139,7 @@ public class SHPModelImporter implements IDiscModelImporter
     try
     {
       ShapeSerializer.serialize( m_workspace, m_file.getAbsolutePath(), new SurfacePolygonZShapeDataProvider( m_workspace.getFeatures( m_shapeFT ), ShapeConst.SHAPE_TYPE_POLYGONZ ) );
-      System.out.println( "Wrote shapeFile to:" + m_file.getAbsolutePath() );
+      System.out.println( "Wrote shapeFile to:" + m_file.getAbsolutePath() ); //$NON-NLS-1$
     }
     catch( final GmlSerializeException e )
     {

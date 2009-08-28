@@ -4,6 +4,7 @@ import java.util.Formatter;
 
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
@@ -24,7 +25,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
     final IPolyElement polyElement = feature == null ? null : (IPolyElement) feature.getAdapter( IPolyElement.class );
     if( polyElement == null )
     {
-      formatter.format( "-" );
+      formatter.format( "-" ); //$NON-NLS-1$
       return;
     }
 
@@ -37,14 +38,14 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       final GM_Surface<GM_SurfacePatch> surface = polyElement.getGeometry();
       final PolyChecker polyChecker = new PolyChecker( surface );
 
-      formatter.format( "Area: %.2f m²%n", polyChecker.getArea() );
-      formatter.format( "Max. Edge-Length: %.2f m%n", polyChecker.getMaxLength() );
-      formatter.format( "Max. Edge-Ratio: 1 : %.1f%n%n", polyChecker.getLengthRatio() );
+      formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.0"), polyChecker.getArea() ); //$NON-NLS-1$
+      formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.1"), polyChecker.getMaxLength() ); //$NON-NLS-1$
+      formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.2"), polyChecker.getLengthRatio() ); //$NON-NLS-1$
 
       final IRoughnessClsCollection roughnessModel = dataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
 
       final String roughnessStyle = polyElement.getRoughnessStyle();
-      formatter.format( "Class: %s%n", roughnessStyle );
+      formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.3"), roughnessStyle ); //$NON-NLS-1$
 
       final String roughnessClsID = polyElement.getRoughnessClsID();
       final Double roughnessCorrectionKS = polyElement.getRoughnessCorrectionKS();
@@ -53,37 +54,37 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
 
       final Feature roughnessFeature = roughnessModel.getFeature().getWorkspace().getFeature( roughnessClsID );
       if( roughnessFeature == null )
-        formatter.format( "Unknwon roughness class-id: %s", roughnessClsID );
+        formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.4"), roughnessClsID ); //$NON-NLS-1$
 
       final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFeature.getAdapter( IRoughnessCls.class );
 
       final double ks = roughnessCls.getKs();
       if( roughnessCorrectionKS == null )
-        formatter.format( "%nRoughness (ks):   %.3f m%n", ks );
+        formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.5"), ks ); //$NON-NLS-1$
       else
-        formatter.format( "%nRoughness (ks):   %.3f m (%.2f%%)%n", ks, roughnessCorrectionKS * 100 );
+        formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.6"), ks, roughnessCorrectionKS * 100 ); //$NON-NLS-1$
 
       final double axay = roughnessCls.getAxAy();
       final double dp = roughnessCls.getDp();
       if( axay > 0 || dp > 0 )
       {
         if( roughnessCorrectionAXAY == null && roughnessCorrectionDP == null )
-          formatter.format( "Vegetation (axay, dp): %.3f m, %.3f m%n", axay, dp );
+          formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.7"), axay, dp ); //$NON-NLS-1$
         else
-          formatter.format( "Vegetation (axay, dp): %.3f m (%.2f%%), %.3f m (%.2f%%)%n", axay, roughnessCorrectionAXAY * 100, dp, roughnessCorrectionDP * 100 );
+          formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.8"), axay, roughnessCorrectionAXAY * 100, dp, roughnessCorrectionDP * 100 ); //$NON-NLS-1$
       }
 
       final double eddyXX = roughnessCls.getEddyXX();
       final double eddyXY = roughnessCls.getEddyXY();
       final double eddyYX = roughnessCls.getEddyYX();
       final double eddyYY = roughnessCls.getEddyYY();
-      formatter.format( "Eddy: %.3f / %.3f / %.3f / %.3f%n", eddyXX, eddyXY, eddyYX, eddyYY );
+      formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.9"), eddyXX, eddyXY, eddyYX, eddyYY ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      formatter.format( "%s", e.getLocalizedMessage() );
+      formatter.format( "%s", e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 

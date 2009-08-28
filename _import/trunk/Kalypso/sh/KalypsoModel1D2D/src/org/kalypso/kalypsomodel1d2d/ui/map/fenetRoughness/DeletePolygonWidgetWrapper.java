@@ -111,7 +111,7 @@ public class DeletePolygonWidgetWrapper extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.DeletePolygonWidgetWrapper.1" ) + "\n" + delegateTooltip ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.DeletePolygonWidgetWrapper.1" ) + "\n" + delegateTooltip ); //$NON-NLS-1$ //$NON-NLS-2$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

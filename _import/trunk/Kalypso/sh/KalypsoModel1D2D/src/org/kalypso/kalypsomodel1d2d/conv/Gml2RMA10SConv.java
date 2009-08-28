@@ -115,7 +115,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     GO
   }
 
-  private static String WEIR2D_CONST_ID = "_2D_WEIR2RMA10_ID_";
+  private static String WEIR2D_CONST_ID = "_2D_WEIR2RMA10_ID_"; //$NON-NLS-1$
 
   private final IdMap m_roughnessIDProvider;
 
@@ -943,7 +943,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
               boolean lBoolLastEdgeExists = false;
               if( lIntIter > 0 )
               {
-                id = getConversionID( element, element.getGmlID() + WEIR2D_CONST_ID + buildingID + "_" + lIntIter );
+                id = getConversionID( element, element.getGmlID() + WEIR2D_CONST_ID + buildingID + "_" + lIntIter ); //$NON-NLS-1$
               }
               else
               {
@@ -970,7 +970,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
               m_mapTmpElementToPolyWeir.put( id, element.getGmlID() );
               m_mapPolyWeir2DSubElement.put( id, lListEdges );
               final int upstreamNodeID = getConversionID( lListEdges.get( upstreamNodePositionInEachElement ).getFirstNode() );
-              formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID );
+              formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             }
             for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
@@ -1381,8 +1381,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
     @Override
     public String toString( )
     {
-      return "First node: " + getFirstNode() + ", second node: " + getSecondNode() + ", gml parent id: " + getStrGMLParentId() + ", created parent id: " + getIntParentId() + ", is real edge: "
-          + isBoolRealExistingEdge() + "\n";
+      return "First node: " + getFirstNode() + ", second node: " + getSecondNode() + ", gml parent id: " + getStrGMLParentId() + ", created parent id: " + getIntParentId() + ", is real edge: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          + isBoolRealExistingEdge() + "\n"; //$NON-NLS-1$
     }
   }
 }

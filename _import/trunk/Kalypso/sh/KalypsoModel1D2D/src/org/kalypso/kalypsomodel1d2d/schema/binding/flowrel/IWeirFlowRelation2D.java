@@ -49,5 +49,5 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
  */
 public interface IWeirFlowRelation2D extends IBuildingFlowRelation2D
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "WeirFlowRelation2D" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "WeirFlowRelation2D" ); //$NON-NLS-1$
 }

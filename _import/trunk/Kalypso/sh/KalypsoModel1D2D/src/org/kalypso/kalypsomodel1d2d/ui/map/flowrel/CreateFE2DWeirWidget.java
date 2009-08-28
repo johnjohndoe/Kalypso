@@ -104,7 +104,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   public CreateFE2DWeirWidget( )
   {
     //    super( "CreateFE2DWeirWidget (Constructor): " + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    super( "CreateFE2DWeirWidget (Constructor): " + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ), IWeirFlowRelation2D.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "CreateFE2DWeirWidget (Constructor): " + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ), IWeirFlowRelation2D.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /**

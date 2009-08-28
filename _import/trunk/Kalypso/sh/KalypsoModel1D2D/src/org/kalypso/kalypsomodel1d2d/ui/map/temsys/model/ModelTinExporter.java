@@ -95,7 +95,7 @@ public class ModelTinExporter implements ICoreRunnableWithProgress
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_model.getElements();
     final int size = elements.size();
-    monitor.beginTask( "Exporting triangles", size );
+    monitor.beginTask( "Exporting triangles", size ); //$NON-NLS-1$
 
     OutputStream os = null;
     try
@@ -111,7 +111,7 @@ public class ModelTinExporter implements ICoreRunnableWithProgress
       for( final IFE1D2DElement element : elements )
       {
         if( ++cnt % 100 == 0 )
-          monitor.subTask( String.format( " %d/%d", cnt, size ) );
+          monitor.subTask( String.format( " %d/%d", cnt, size ) ); //$NON-NLS-1$
 
         if( element instanceof IPolyElement )
         {

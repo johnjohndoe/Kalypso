@@ -47,6 +47,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
@@ -68,7 +69,7 @@ public class SurfacePolygonWizardPage extends WizardPage
   
   public SurfacePolygonWizardPage( final String pageName, final SurfacePolygonSymbolizer symbolizer, final CreateModelTinWizardPage exportPage )
   {
-    super( pageName, "Surface - Style definition", null );
+    super( pageName, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.SurfacePolygonWizardPage.0"), null ); //$NON-NLS-1$
     
     m_symbolizer = symbolizer;
     m_exportPage = exportPage;

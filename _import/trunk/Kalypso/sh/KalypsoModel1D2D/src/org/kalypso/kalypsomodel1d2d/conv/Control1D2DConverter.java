@@ -391,7 +391,7 @@ public class Control1D2DConverter
 
     // Double uRValSteady = m_controlModel.get_RelaxationsFactor();
     String uRValSteady = m_controlModel.get_RelaxationsFactor();
-    if( uRValSteady == null || uRValSteady == "" )
+    if( uRValSteady == null || uRValSteady == "" ) //$NON-NLS-1$
     // if( uRValSteady == null || uRValSteady.isNaN() || uRValSteady < 0.1 || uRValSteady > 1.0 )
     {
       if( m_controlModel.isSteadySelected() )
@@ -401,7 +401,7 @@ public class Control1D2DConverter
       }
       else
         // Not used anyway (1.0 should be default value)
-        uRValSteady = "1.0";
+        uRValSteady = "1.0"; //$NON-NLS-1$
     }
 
     writeTimeStep( formatter, msg, null, null, uRValSteady, niti );
@@ -709,7 +709,7 @@ public class Control1D2DConverter
   // IOException
   private void formatBC( final Formatter formatter, final String uRVal, final int nitn ) throws CoreException, IOException
   {
-    if( uRVal == null || uRVal == "" ){
+    if( uRVal == null || uRVal == "" ){ //$NON-NLS-1$
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
@@ -751,10 +751,10 @@ public class Control1D2DConverter
    */
   private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
   {
-    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*";
+    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*"; //$NON-NLS-1$
     String lStrToCheck = pStrValue.trim().toLowerCase();
     if( Pattern.matches( lStrRegex, lStrToCheck ) ){
-      int lIntIndexSep = lStrToCheck.indexOf( "to" );
+      int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
       float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
       float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
       if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 ){
@@ -783,7 +783,7 @@ public class Control1D2DConverter
    */
   private boolean isSeparatedValuesFormatedFactor( final String pStrValue, final List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
   {
-    StringTokenizer lStringTokenizer = new StringTokenizer( pStrValue, ";" );
+    StringTokenizer lStringTokenizer = new StringTokenizer( pStrValue, ";" ); //$NON-NLS-1$
     int lIntCounter = 0;
     float lFloatValAct = (float) 0.1;
     while( lIntCounter < pIntNumberIterations ){
@@ -804,7 +804,7 @@ public class Control1D2DConverter
     }
     catch( Exception e ){
       try{
-        lFloatValue = Float.parseFloat( pStrFloat.trim().replace( ",", "." ) );
+        lFloatValue = Float.parseFloat( pStrFloat.trim().replace( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( Exception e2 ){
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$

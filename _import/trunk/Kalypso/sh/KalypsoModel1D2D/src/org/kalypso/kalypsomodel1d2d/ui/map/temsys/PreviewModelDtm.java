@@ -49,6 +49,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -65,11 +66,11 @@ public class PreviewModelDtm
     final AbstractMapPart mapView = (AbstractMapPart) UtilMap.getMapView();
     final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
     
-    final IFile dtmFile = findFile( shell, "models/model_tin.gz" );
+    final IFile dtmFile = findFile( shell, "models/model_tin.gz" ); //$NON-NLS-1$
     if( dtmFile == null )
       return;
 
-    final IFile styleFile = findFile( shell, "styles/model_tin.sld" );
+    final IFile styleFile = findFile( shell, "styles/model_tin.sld" ); //$NON-NLS-1$
     if( styleFile == null )
       return;
 
@@ -89,7 +90,7 @@ public class PreviewModelDtm
     catch( final CoreException e )
     {
       e.printStackTrace();
-      ErrorDialog.openError( shell, "Show isolines", "Failed to process tin from modell", e.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.PreviewModelDtm.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.PreviewModelDtm.3"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     return null;

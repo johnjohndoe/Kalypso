@@ -104,7 +104,7 @@ public class DiscModelImporter implements IDiscModelImporter
   {
     try
     {
-      GmlSerializer.serializeWorkspace( m_file, m_workspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( m_file, m_workspace, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {

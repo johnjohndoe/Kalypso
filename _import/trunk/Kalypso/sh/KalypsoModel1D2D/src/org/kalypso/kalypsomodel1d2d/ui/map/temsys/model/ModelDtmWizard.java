@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -86,7 +87,7 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 public class ModelDtmWizard extends Wizard
 {
   /** This property is set for the fe-net dtm theme */
-  private static final String THEME_PROP_MODEL_DTM = "fenetDtm";
+  private static final String THEME_PROP_MODEL_DTM = "fenetDtm"; //$NON-NLS-1$
 
   private CreateModelTinWizardPage m_exportPage;
 
@@ -116,7 +117,7 @@ public class ModelDtmWizard extends Wizard
     m_mapPart = mapPart;
 
     setNeedsProgressMonitor( true );
-    setWindowTitle( "Show Model Isolines" );
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -140,8 +141,8 @@ public class ModelDtmWizard extends Wizard
     // read symbolizer file here
     readSymbolizer();
 
-    m_exportPage = new CreateModelTinWizardPage( "exportPage", m_dtmFile, m_discModel );
-    m_isolinePage = new SurfaceIsolineWizardPage( "isolinePage", m_isoSymbolizer, m_exportPage );
+    m_exportPage = new CreateModelTinWizardPage( "exportPage", m_dtmFile, m_discModel ); //$NON-NLS-1$
+    m_isolinePage = new SurfaceIsolineWizardPage( "isolinePage", m_isoSymbolizer, m_exportPage ); //$NON-NLS-1$
     // m_polygonPage = new SurfacePolygonWizardPage( "surfacePage", m_polySmybolizer, m_exportPage );
 
     addPage( m_exportPage );
@@ -168,7 +169,7 @@ public class ModelDtmWizard extends Wizard
       if( m_styleFile.exists() )
         inputStream = new BufferedInputStream( m_styleFile.getContents() );
       else
-        inputStream = getClass().getResourceAsStream( "modelDtm.sld" );
+        inputStream = getClass().getResourceAsStream( "modelDtm.sld" ); //$NON-NLS-1$
 
       final URL sldURL = ResourceUtilities.createURL( m_styleFile );
       final IUrlResolver2 resolver = new IUrlResolver2()
@@ -216,13 +217,13 @@ public class ModelDtmWizard extends Wizard
     catch( final CoreException e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to read style", e.getStatus() );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.1"), e.getStatus() ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), e );
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to read style", status );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.2"), status ); //$NON-NLS-1$
     }
     finally
     {
@@ -243,7 +244,7 @@ public class ModelDtmWizard extends Wizard
     {
       final String sldXML = m_sld.exportAsXML();
       final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML; //$NON-NLS-1$
-      final InputStream is = new ReaderInputStream( new StringReader( sldXMLwithHeader ), "UTF-8" );
+      final InputStream is = new ReaderInputStream( new StringReader( sldXMLwithHeader ), "UTF-8" ); //$NON-NLS-1$
       if( m_styleFile.exists() )
         m_styleFile.setContents( is, false, true, new NullProgressMonitor() ); //$NON-NLS-1$
       else
@@ -252,7 +253,7 @@ public class ModelDtmWizard extends Wizard
     catch( final CoreException e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to write style", e.getStatus() );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.3"), e.getStatus() ); //$NON-NLS-1$
       return true;
     }
 
@@ -268,11 +269,11 @@ public class ModelDtmWizard extends Wizard
       final String gmlSource = ResourceUtilities.makeRelativ( mapFile, m_dtmFile ).toString();
       final String sldSource = ResourceUtilities.makeRelativ( mapFile, m_styleFile ).toString();
 
-      final AddThemeCommand addThemeCommand = new AddThemeCommand( mapModell, "FE-Net DTM", "gml", "", gmlSource );
+      final AddThemeCommand addThemeCommand = new AddThemeCommand( mapModell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.4"), "gml", "", gmlSource ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       // addThemeCommand.addStyle( "tinPolyStyle", sldSource );
-      addThemeCommand.addStyle( "tinLineStyle", sldSource );
-      addThemeCommand.addProperty( THEME_PROP_MODEL_DTM, "true" ); // any value != null
-      addThemeCommand.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, "true" ); // any value != null
+      addThemeCommand.addStyle( "tinLineStyle", sldSource ); //$NON-NLS-1$
+      addThemeCommand.addProperty( THEME_PROP_MODEL_DTM, "true" ); // any value != null //$NON-NLS-1$
+      addThemeCommand.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, "true" ); // any value != null //$NON-NLS-1$
 
       m_mapPart.postCommand( addThemeCommand, null );
     }

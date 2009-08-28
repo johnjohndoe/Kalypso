@@ -72,7 +72,7 @@ public class Command1D2DTimestepsInterpolationWizard extends Wizard implements I
   public Command1D2DTimestepsInterpolationWizard( final Command1D2DTimestepsInterpolate commandHandler, final String initRelaxationFactor )
   {
     m_commandHandler = commandHandler;
-    if( initRelaxationFactor == null || initRelaxationFactor == "" )
+    if( initRelaxationFactor == null || initRelaxationFactor == "" ) //$NON-NLS-1$
       m_page = new Command1D2DTimestepsInterpolationWizardPage( "1.0" ); //$NON-NLS-1$
     else
       m_page = new Command1D2DTimestepsInterpolationWizardPage( initRelaxationFactor );

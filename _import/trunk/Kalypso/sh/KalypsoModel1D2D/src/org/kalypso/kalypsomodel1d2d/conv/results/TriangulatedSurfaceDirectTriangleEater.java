@@ -256,7 +256,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
         ((ZipOutputStream) m_os).putNextEntry( m_zipEntry );
       }
       else if( "gz".equals( extension ) ) //$NON-NLS-1$
-        m_os = new GZIPOutputStream( new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gz" ) ) ) );
+        m_os = new GZIPOutputStream( new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gz" ) ) ) ); //$NON-NLS-1$
       else
         m_os = new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gml" ) ) ); //$NON-NLS-1$
 
