@@ -73,8 +73,6 @@ public class EventStyleDialog extends TitleAreaDialog
     m_colorMap = colorMap;
     m_min = min;
     m_max = max;
-
-    setTitle( Messages.getString("org.kalypso.model.flood.ui.map.EventStyleDialog.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -83,6 +81,7 @@ public class EventStyleDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( Composite parent )
   {
+    setTitle( Messages.getString("org.kalypso.model.flood.ui.map.EventStyleDialog.0") ); //$NON-NLS-1$
     setMessage( Messages.getString("org.kalypso.model.flood.ui.map.EventStyleDialog.1") ); //$NON-NLS-1$
 
     parent.getShell().setText( Messages.getString("org.kalypso.model.flood.ui.map.EventStyleDialog.2") ); //$NON-NLS-1$

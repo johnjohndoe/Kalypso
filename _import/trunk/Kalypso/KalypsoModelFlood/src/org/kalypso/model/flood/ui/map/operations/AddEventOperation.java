@@ -119,7 +119,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       ProgressUtilities.worked( monitor, 1 );
 
       /*
-       * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
+       * Save model and map, as undo is not possible here and the user should not be able to discard the changes
        */
       m_provider.saveModel( IFloodModel.class, new SubProgressMonitor( monitor, 1 ) );
       // TODO: save map. Necessary?
