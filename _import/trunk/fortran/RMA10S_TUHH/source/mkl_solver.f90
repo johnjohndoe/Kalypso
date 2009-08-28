@@ -19,8 +19,8 @@ integer (kind = 4), parameter :: maxfct = 1, mnum = 1, mtype = 11, nrhs = 1, msg
 integer (kind = 8) :: nonZeros
 !Parameters passed to PARDISO
 !- - - - - - - - - - - - - - -
-integer (kind = 4), save :: ipt (64)!32 bit OS
-!integer (kind = 8), save :: ipt (64)!64 bit OS
+!integer (kind = 4), save :: ipt (64)!32 bit OS
+integer (kind = 8), save :: ipt (64)!32 or 64 bit OS
 integer (kind = 4), allocatable :: ia(:), ja(:)
 integer (kind = 4) :: ierror = 0
 !a, b and x are matrix, right-side vector and result vector
