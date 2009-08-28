@@ -1,4 +1,4 @@
-C     Last change:  MD   30 Jul 2009    2:00 pm
+C     Last change:  MD   28 Aug 2009    3:51 pm
 cipk last update jan 11 2007 allow for 5 node transition elements
 CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
 CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
@@ -297,12 +297,12 @@ cipk jan99    EDM=(DMER+SER-DR)*DELT
 
 
 !MD: Test ob sohlevultion richtig: !MD: Test ob sohlevultion richtig:
-          IF (N.eq.1) THEN
-            WRITE(75,*) 'CHECK-Bed:        EDM,             DEPINCR,
-     +           DELBED,           BEDELO,       DELBED(EDM)'
-          END IF
-          WRITE(75,*) EDM, DEPINCR(N), DELBED(N), BEDELO(N),
-     + BEDELO(N)-EDM
+!MD          IF (N.eq.1) THEN
+!MD             WRITE(75,*) 'CHECK-Bed:        EDM,             DEPINCR,
+!MD      +           DELBED,           BEDELO,       DELBED(EDM)'
+!MD           END IF
+!MD           WRITE(75,*) EDM, DEPINCR(N), DELBED(N), BEDELO(N),
+!MD      + BEDELO(N)-EDM
           !MD: Test ob sohlevultion richtig:
           !MD:  DEPINCR(N)= EDM
           !MD:  DELBED(N) = BEDELO(N)+DEPINCR(N)
