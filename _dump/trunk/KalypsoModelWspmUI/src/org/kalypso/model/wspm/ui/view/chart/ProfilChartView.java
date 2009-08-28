@@ -66,6 +66,7 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -515,7 +516,14 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_layerProvider == null )
       return;
 
-    final IMapperRegistry mr = m_chartComposite.getChartModel().getMapperRegistry();
+    if( m_chartComposite == null )
+      return;
+
+    IChartModel chartModel = m_chartComposite.getChartModel();
+    if( chartModel == null )
+      return;
+
+    final IMapperRegistry mr = chartModel.getMapperRegistry();
     if( mr.getAxes() == null || mr.getAxes().length == 0 )
     {
       final IAxis[] axis = m_layerProvider.registerAxis( mr );
