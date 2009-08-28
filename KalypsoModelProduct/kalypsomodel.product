@@ -161,6 +161,7 @@ de_DE</programArgs>
       <plugin id="org.eclipse.ui.intro"/>
       <plugin id="org.eclipse.ui.navigator"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
+      <plugin id="org.eclipse.ui.net"/>
       <plugin id="org.eclipse.ui.views"/>
       <plugin id="org.eclipse.ui.views.properties.tabbed"/>
       <plugin id="org.eclipse.ui.win32" fragment="true"/>
@@ -224,5 +225,8 @@ de_DE</programArgs>
       <plugin id="org.mortbay.jetty.util"/>
    </plugins>
 
+   <configurations>
+      <plugin id="org.kalypso.contribs.ogc31" autoStart="true" startLevel="0" />
+   </configurations>
 
 </product>
