@@ -1390,3 +1390,9 @@ new features introduced/ started to be introduced:
       given, there should not be a read error. Read error would occur, since there is no fixed format necessary.
       
 --- Nico Schrage, 15.08.2009
+
+
+
+131.) Deleting non-sense output in OutpuMESS.OUT for cohesive Sediment
+     >> SUBR NEWBED     
+--- Monika Donner, 28.08.2009
