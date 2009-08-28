@@ -1,6 +1,10 @@
 FC = ifort
 LD = ifort
-MKLPATH = /progsys/intel/mkl/10.1.0.015/lib/em64t
-MKLINCLUDE = /opt/intel/mkl/10.1.0.015/include
-FFLAGS = -I${MKLINCLUDE} -real-size 64
-LDFLAGS = -static -L${MKLPATH} -I${MKLINCLUDE} -lmkl_solver_lp64 -Wl,--start-group ${MKLPATH}/libmkl_intel_lp64.a ${MKLPATH}/libmkl_intel_thread.a ${MKLPATH}/libmkl_core.a -Wl,--end-group -liomp5 -lpthread
+#MKLPATH = /progsys/intel/mkl/10.1.0.015/lib/em64t
+MKLPATH = /progsys/intel/Compiler/11.1/046/mkl/lib/em64t
+#MKLINCLUDE = /opt/intel/mkl/10.1.0.015/include
+MKLINCLUDE = /progsys/intel/Compiler/11.1/046/mkl/include
+FLIBSINCLUDE = ../source
+FLAGS = -O3 -parallel -ipo
+FFLAGS = -I${MKLINCLUDE} -I${FLIBSINCLUDE} -real-size 64  ${FLAGS}
+LDFLAGS = -static -static-intel -openmp-link static -L${MKLPATH} -I${MKLINCLUDE} -lmkl_solver_lp64 -Wl,--start-group ${MKLPATH}/libmkl_intel_lp64.a ${MKLPATH}/libmkl_intel_thread.a ${MKLPATH}/libmkl_core.a -Wl,--end-group -liomp5 -lpthread
