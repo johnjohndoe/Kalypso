@@ -202,7 +202,7 @@ classdef RectifiedGridCoverage < handle
             p = inputParser;
             p.KeepUnmatched = true;
             p.addParamValue('useSmoothed', false);
-            p.addParamValue('interp', 'cubic', @isstr);
+            p.addParamValue('interp', 'nearest', @isstr);
             p.parse(varargin{:});
             if(p.Results.useSmoothed)
                 l_Z = this.smoothed;
