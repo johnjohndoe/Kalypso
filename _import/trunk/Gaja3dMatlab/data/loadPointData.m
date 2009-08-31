@@ -32,6 +32,7 @@ function [ points ] = loadPointData( filespec, hasheader, params )
     SHPEXT = '.shp';
     TXTEXT = '.txt';
     XYZEXT = '.xyz';
+    HMOEXT = '.hmo';
     
     points = cell(numel(files), 1);
     for i=1:numel(files)
@@ -107,6 +108,8 @@ function [ points ] = loadPointData( filespec, hasheader, params )
 
                 %close file
                 fclose(fid);
+            case {HMOEXT}
+                points{i} = loadHmo(file);
             otherwise
                 fprintf(1, 'File extension %s not recognized.\n', ext);
         end    
