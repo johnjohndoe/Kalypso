@@ -8,8 +8,8 @@ Name Kalypso
 !define REGKEY "SOFTWARE\$(^Name)"
 
 # version number, which is used for builind pathes and menu entries.
-!define VERSION 2.1.0
-!define DATE 20090209
+!define VERSION 2.2.0
+!define DATE 20090804
 
 !define COMPANY BCE
 !define URL http://kalypso.bjoernsen.de
@@ -98,7 +98,7 @@ InstallDir $PROGRAMFILES\Kalypso
 CRCCheck on
 XPStyle on
 ShowInstDetails hide
-VIProductVersion 2.1.0.0
+VIProductVersion 2.2.0.0
 
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductName Kalypso
@@ -173,6 +173,7 @@ Section Kalypso SEC0000
 
     # Path to your deploy folder
     File /r /x .svn install_data\kalypso\*
+    File /r /x .svn install_data\extraStuff\*
 SectionEnd
 
 # Diese Sektion ist versteckt (wegen dem -).
