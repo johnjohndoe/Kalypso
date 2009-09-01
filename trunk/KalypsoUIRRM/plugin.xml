@@ -44,7 +44,7 @@
             name="%NewWizard.name"
             project="true">
          <description>
-            Creates a new KalypsoHydrologie Model. The wizards allows to import some of the base data (catchments, hydrotops) from ESRI-Shape files.
+            %org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard.description
          </description>
       </wizard>
       <wizard
@@ -190,9 +190,9 @@
  <extension
        point="org.eclipse.ui.commands">
     <category
-          description="Kommandos für KalypsoHydrologie"
+          description="%org.kalypso.ui.rrm.commandCategory.description"
           id="org.kalypso.ui.rrm.commandCategory"
-          name="KalypsoHydrologie">
+          name="%org.kalypso.ui.rrm.commandCategory.name">
     </category>
          <command
 		       categoryId="org.kalypso.ui.rrm.commandCategory"
@@ -245,7 +245,7 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-       <menu label="%org.kalypso.simulation.ui.menu.calcCase.label" mnemonic="R">
+       <menu label="%org.kalypso.simulation.ui.menu.calcCase.label" mnemonic="%org.kalypso.simulation.ui.menu.calcCase.mnemonic">
           <separator name="calcCaseStart" visible="false"/>
           <command commandId="org.kalypso.action.model.newCalcCase" style="push"/>
           <command commandId="org.kalypso.action.model.copyCalcCase" style="push"/>

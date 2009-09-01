@@ -59,6 +59,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author huebsch
@@ -86,8 +87,8 @@ public class SetBasicModelDelegate extends AbstractHandler
 
     if( resource == null || !( resource instanceof IFolder ) )
     {
-      MessageDialog.openInformation( shell, "Rechenvariante in Basismodell übernehmen",
-          "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
+      MessageDialog.openInformation( shell, Messages.getString("SetBasicModelDelegate.0"), //$NON-NLS-1$
+          Messages.getString("SetBasicModelDelegate.1") ); //$NON-NLS-1$
       return null;
     }
 
@@ -95,11 +96,11 @@ public class SetBasicModelDelegate extends AbstractHandler
     final IFile file = calcCase.getFile( ModelNature.CONTROL_NAME );
     if( !file.exists() )
     {
-      MessageDialog.openInformation( shell, "Rechenvariante in Basismodell übernehmen",
-          "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
+      MessageDialog.openInformation( shell, Messages.getString("SetBasicModelDelegate.2"), //$NON-NLS-1$
+          Messages.getString("SetBasicModelDelegate.3") ); //$NON-NLS-1$
       return null;
     }
-    final Job job = new Job( "Aktualisiere Basismodell durch Rechenvariante: " + calcCase.getName() )
+    final Job job = new Job( Messages.getString("SetBasicModelDelegate.4") + calcCase.getName() ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -124,7 +125,7 @@ public class SetBasicModelDelegate extends AbstractHandler
       }
     };
     // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-    job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, "Zeitreihen aktualisieren", "Siehe Details:", false, false ) );
+    job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString("SetBasicModelDelegate.5"), Messages.getString("SetBasicModelDelegate.6"), false, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
     job.setUser( true );
     job.setRule( calcCase.getProject() );
     job.schedule();
