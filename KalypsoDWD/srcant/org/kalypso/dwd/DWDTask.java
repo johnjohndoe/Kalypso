@@ -42,13 +42,13 @@ package org.kalypso.dwd;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 
@@ -72,15 +72,15 @@ public class DWDTask extends Task
   /** lm raster */
   private URL m_obsRasterURL;
 
-  private long m_from;
+  private String m_from;
 
-  private long m_forecastFrom;
+  private String m_forecastFrom;
 
-  private long m_to;
+  private String m_to;
 
   private String m_filter;
 
-  private Properties m_metadata = new Properties();
+  private final Properties m_metadata = new Properties();
 
   public final void setDwd2zmlConfUrl( final URL dwd2zmlConfUrl )
   {
@@ -101,7 +101,7 @@ public class DWDTask extends Task
    * @param from
    *          beginning of measure periode
    */
-  public final void setFrom( long from )
+  public final void setFrom( final String from )
   {
     m_from = from;
   }
@@ -110,7 +110,7 @@ public class DWDTask extends Task
    * @param forecastFrom
    *          beginning of forecast periode (end of measure periode)
    */
-  public final void setForecastFrom( long forecastFrom )
+  public final void setForecastFrom( final String forecastFrom )
   {
     m_forecastFrom = forecastFrom;
   }
@@ -119,12 +119,12 @@ public class DWDTask extends Task
    * @param to
    *          end of forecast periode
    */
-  public final void setTo( long to )
+  public final void setTo( final String to )
   {
     m_to = to;
   }
 
-  public final void setZMLFilter( String filter )
+  public final void setZMLFilter( final String filter )
   {
     m_filter = filter;
   }
@@ -160,7 +160,7 @@ public class DWDTask extends Task
         logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
 
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
-      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date( m_forecastFrom ), new Date( m_to ), m_filter, m_metadata );
+      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, DateUtilities.toDate( m_from ), DateUtilities.toDate( m_forecastFrom ), DateUtilities.toDate( m_to ), m_filter, m_metadata );
     }
     catch( final Exception e )
     {
@@ -198,7 +198,7 @@ public class DWDTask extends Task
       return m_name;
     }
 
-    public void setName( String name )
+    public void setName( final String name )
     {
       m_name = name;
     }
@@ -208,7 +208,7 @@ public class DWDTask extends Task
       return m_value;
     }
 
-    public void setValue( String value )
+    public void setValue( final String value )
     {
       m_value = value;
     }
