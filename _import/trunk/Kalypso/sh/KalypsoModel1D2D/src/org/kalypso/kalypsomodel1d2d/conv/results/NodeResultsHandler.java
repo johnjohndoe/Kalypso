@@ -869,7 +869,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private void feedTriangleEaterWith1dResults( final INodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final String crs, final GM_Position[] ring )
   {
-    final INodeResult[] nodes = new INodeResult[3];
+    final INodeResult[] nodes = new INodeResult[2];
 
     // remove last position
     for( int i = 0; i < ring.length - 1; i++ )
@@ -894,7 +894,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         {
           wsp = nodeResults[j].getWaterlevel();
           vx = nodeResults[j].getVelocity().get( 0 );
-          vy = nodeResults[j].getVelocity().get( 0 );
+          vy = nodeResults[j].getVelocity().get( 1 );
           z = nodeResults[j].getPoint().getZ();
           intersectFound = true;
         }
@@ -929,8 +929,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private void splitElement( final ElementResult elementResult )
   {
     final int numMidsideNodes = elementResult.getNumMidsideNodes();
-    if( numMidsideNodes == 0 )
-      return;
     for( int i = 0; i < numMidsideNodes; i++ )
     {
       // First triangle
@@ -978,11 +976,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private boolean checkPartiallyFlooded( final INodeResult[] nodes )
   {
     boolean wet = false;
+    boolean dry = false;
     for( final INodeResult node : nodes )
     {
       if( node.isWet() )
         wet = true;
-      else if( wet )
+      else
+        dry = true;
+      if( node.isWet() && dry )
+        return true;
+      else if( !node.isWet() && wet )
         return true;
     }
     return false;
@@ -1009,31 +1012,22 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       // remember the split arc
       final INodeResult addedNode = insertNode( nodes[0], nodes[1] );
-      if( addedNode != null )
-      {
-        splitArcs.add( 0 );
-        nodesInserted.add( addedNode );
-      }
+      splitArcs.add( 0 );
+      nodesInserted.add( addedNode );
     }
     if( NodeResultHelper.checkTriangleArc( nodes[1], nodes[2] ) )
     {
       // remember the split arc
       final INodeResult addedNode = insertNode( nodes[1], nodes[2] );
-      if( addedNode != null )
-      {
-        splitArcs.add( 1 );
-        nodesInserted.add( addedNode );
-      }
+      splitArcs.add( 1 );
+      nodesInserted.add( addedNode );
     }
     if( NodeResultHelper.checkTriangleArc( nodes[2], nodes[0] ) )
     {
       // remember the split arc
       final INodeResult addedNode = insertNode( nodes[2], nodes[0] );
-      if( addedNode != null )
-      {
-        splitArcs.add( 2 );
-        nodesInserted.add( addedNode );
-      }
+      splitArcs.add( 2 );
+      nodesInserted.add( addedNode );
     }
 
     switch( splitArcs.size() )
@@ -1271,13 +1265,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     if( splitArc == 0 )
     {
-      /*
-       * the inserted node lies between node0 and node1.
-       */
-
-      /* triangle1: inserted node0, node1, node2 */
-
-      /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       if( nodes[1].isWet() )
       {
         final INodeResult[] triNodes = new INodeResult[3];
@@ -1294,10 +1281,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         m_triangleEater.add( triNodes );
       }
-
-      /* triangle2: inserted node0, node2, node0 */
-
-      /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       else if( nodes[0].isWet() )
       {
         final INodeResult[] triNodes = new INodeResult[3];
@@ -1314,17 +1297,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         m_triangleEater.add( triNodes );
       }
-
     }
     else if( splitArc == 1 )
     {
-      /*
-       * the inserted node lies between node0 and node1.
-       */
-
-      /* triangle1: node0, node1, inserted node0 */
-
-      /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       if( nodes[1].isWet() )
       {
         final INodeResult[] triNodes = new INodeResult[3];
@@ -1341,10 +1316,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         m_triangleEater.add( triNodes );
       }
-
-      /* triangle2: node0, inserted node0, node2 */
-
-      /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       else if( nodes[2].isWet() )
       {
         final INodeResult[] triNodes = new INodeResult[3];
@@ -1364,13 +1335,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else if( splitArc == 2 )
     {
-      /*
-       * the inserted node lies between node0 and node1.
-       */
-
-      /* triangle1: inserted node0, node0, node1 */
-
-      /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       if( nodes[0].isWet() )
       {
         final INodeResult[] triNodes = new INodeResult[3];
@@ -1388,10 +1352,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         m_triangleEater.add( triNodes );
 
       }
-
-      /* triangle2: inserted node0, node1, node2 */
-
-      /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       else if( nodes[2].isWet() )
       {
         final INodeResult[] triNodes = new INodeResult[3];
@@ -1407,7 +1367,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes[2] = nodes[1];
 
         m_triangleEater.add( triNodes );
-
       }
     }
     else
@@ -1431,6 +1390,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final double z3;
     final double dz1;
     final double dz2;
+
     if( node1.isWet() )
     {
       z3 = node1.getWaterlevel();

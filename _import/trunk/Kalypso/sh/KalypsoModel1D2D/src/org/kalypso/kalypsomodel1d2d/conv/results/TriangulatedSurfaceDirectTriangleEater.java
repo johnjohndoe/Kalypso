@@ -111,7 +111,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
     if( nodes.length < 3 )
       return;
-    
+
     try
     {
       final GM_Position[] triangle = processNodes( nodes, m_parameter );
@@ -140,13 +140,8 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     return null;
   }
 
-  
-  private static GM_Position[] processNodes(final INodeResult[] nodes, ResultType.TYPE parameter )
+  private static GM_Position[] processNodes( final INodeResult[] nodes, ResultType.TYPE parameter )
   {
-    // if no parameter is set, use terrain
-    if( parameter == null )
-      parameter = ResultType.TYPE.TERRAIN;
-
     final GM_Position pos[] = new GM_Position[3];
 
     for( int i = 0; i < nodes.length; i++ )
@@ -157,6 +152,11 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
       final double y = point.getY();
       final double z = getZValue( nodeResult, parameter );
 
+      // TODO: make this configurable
+      // exclude triangles with water levels below terrain surface
+      if( parameter == ResultType.TYPE.WATERLEVEL && z < point.getZ() )
+        return null;
+      
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
     return pos;
@@ -209,7 +209,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     try
     {
       m_writer.finished();
-      
+
       if( m_os instanceof ZipOutputStream )
         ((ZipOutputStream) m_os).closeEntry();
       m_os.close();
@@ -233,7 +233,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     final Calendar calendar = Calendar.getInstance();
     calendar.setTime( date );
     final String printedDateTime = DatatypeConverter.printDateTime( calendar );
-    
+
     m_writer.addProperty( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), printedDateTime ) );//$NON-NLS-1$
   }
 

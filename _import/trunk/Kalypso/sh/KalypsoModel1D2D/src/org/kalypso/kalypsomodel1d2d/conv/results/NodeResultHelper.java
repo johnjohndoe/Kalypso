@@ -265,20 +265,13 @@ public class NodeResultHelper
   public static double getZeroPoint( final double dx12, final double y1, final double y2 )
   {
     final double x3 = y1 / (Math.abs( y1 ) + Math.abs( y2 )) * dx12;
-
-    // check: y3Temp is the y-value of the zero point and should always be zero !!
-    final double y3Temp = Math.round( (-(Math.abs( y1 ) + Math.abs( y2 )) / dx12 * x3 + y1) * 100 ) / 100;
-
-    if( y3Temp != 0.00 )
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %9.3f", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.1" ), y3Temp ); //$NON-NLS-1$ //$NON-NLS-2$
-
     return x3;
   }
 
   public static boolean checkTriangleArc( final INodeResult node1, final INodeResult node2 )
   {
-    /* get the spit point (inundation point) */
-    if( (node1.isWet() == true && node2.isWet() == false) || (node1.isWet() == false && node2.isWet() == true) )
+    /* get the split point (inundation point) */
+    if( (node1.isWet() && !node2.isWet()) || (!node1.isWet() && node2.isWet()) )
       return true;
     else
       return false;

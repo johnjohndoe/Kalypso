@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -129,9 +128,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   public void setDepth( final double depth )
   {
-	// depth is a function property, it will not be set anyway
-	// TODO: remove this method
-    //getFeature().setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
+    // depth is a function property, it will not be set anyway
+    // TODO: remove this method
+    // getFeature().setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
   }
 
   public void setWaterlevel( final double waterlevel )
@@ -242,7 +241,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   public double getWaterlevel( )
   {
-    return FeatureHelper.getAsDouble( getFeature(), GMLNodeResult.QNAME_PROP_WATERLEVEL, Double.NaN );
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
   }
 
   public int getDry( )
