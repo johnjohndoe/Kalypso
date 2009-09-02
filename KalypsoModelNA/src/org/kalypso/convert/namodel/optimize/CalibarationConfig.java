@@ -63,40 +63,40 @@ public class CalibarationConfig
   public void addFromNAControl( Feature rootFeatureControl )
   {
     // Catchments
-    final String queryBaseCatchment = FeatureHelper.getAsString( rootFeatureControl, "Catchments" );
+    final String queryBaseCatchment = FeatureHelper.getAsString( rootFeatureControl, "Catchments" ); //$NON-NLS-1$
     String[] xpathControl = new String[]
     {
-        "CatchmentsBianf",
-        "CatchmentsFaktorRetobTetint",
-        "CatchmentsFaktn",
-        "CatchmentsFaktorAigw" };
+        "CatchmentsBianf", //$NON-NLS-1$
+        "CatchmentsFaktorRetobTetint", //$NON-NLS-1$
+        "CatchmentsFaktn", //$NON-NLS-1$
+        "CatchmentsFaktorAigw" }; //$NON-NLS-1$
 
     String[][] xpathModel = new String[][]
     {
         new String[]
 //        { queryBaseCatchment + "/:bodenkorrekturmember/:bodenschichtkorrektur/:banf" },
-        { queryBaseCatchment + "/:faktorBianf" },
+        { queryBaseCatchment + "/:faktorBianf" }, //$NON-NLS-1$
         new String[]
-        { queryBaseCatchment + "/:faktorRetobRetint" },
+        { queryBaseCatchment + "/:faktorRetobRetint" }, //$NON-NLS-1$
         new String[]
-        { queryBaseCatchment + "/:faktn" },
+        { queryBaseCatchment + "/:faktn" }, //$NON-NLS-1$
         new String[]
-        { queryBaseCatchment + "/:faktorAigw" } };
+        { queryBaseCatchment + "/:faktorAigw" } }; //$NON-NLS-1$
 
     generateAndAddContexts( rootFeatureControl, xpathModel, xpathControl );
     // KMChannels
-    final String queryBaseKMChannel = FeatureHelper.getAsString( rootFeatureControl, "KMChannels" );
+    final String queryBaseKMChannel = FeatureHelper.getAsString( rootFeatureControl, "KMChannels" ); //$NON-NLS-1$
     final String[] propNamesII = new String[]
     {
-        "KMChannelsFaktorRkf",
-        "KMChannelsFaktorRnf" };
+        "KMChannelsFaktorRkf", //$NON-NLS-1$
+        "KMChannelsFaktorRnf" }; //$NON-NLS-1$
 
     final String[][] queryKMChannels = new String[][]
     {
         new String[]
-        { queryBaseKMChannel + "/:faktorRkf" },
+        { queryBaseKMChannel + "/:faktorRkf" }, //$NON-NLS-1$
         new String[]
-        { queryBaseKMChannel + "/:faktorRnf" } };
+        { queryBaseKMChannel + "/:faktorRnf" } }; //$NON-NLS-1$
     generateAndAddContexts( rootFeatureControl, queryKMChannels, propNamesII );
   }
 

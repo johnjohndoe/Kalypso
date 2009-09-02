@@ -98,14 +98,14 @@ public class LanduseCollection extends Feature_Impl
         case DELETE_INTERSECTING:
         {
           m_landuses.remove( existingLanduse );
-          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.1"), existingLanduse.getId() ); //$NON-NLS-1$
+          final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.1", existingLanduse.getId() ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           break;
 
         case IGNORE_INTERSECTING:
         {
-          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.2"), label ); //$NON-NLS-1$
+          final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.2", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           return null;
@@ -117,13 +117,13 @@ public class LanduseCollection extends Feature_Impl
           if( difference != null )
           {// TODO: check if area of difference is > 0!
             existingLanduse.setGeometry( difference );
-            final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.3"), existingLanduse.getId(), label ); //$NON-NLS-1$
+            final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.3", existingLanduse.getId(), label ); //$NON-NLS-1$
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
           else
           {
             m_landuses.remove( existingLanduse );
-            final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.4"), existingLanduse.getId(), label ); //$NON-NLS-1$
+            final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.4", existingLanduse.getId(), label ); //$NON-NLS-1$
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
         }

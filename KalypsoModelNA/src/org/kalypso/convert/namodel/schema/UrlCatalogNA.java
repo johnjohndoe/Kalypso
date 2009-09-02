@@ -86,19 +86,19 @@ public class UrlCatalogNA extends AbstractUrlCatalog
 
     // REMARK: these prefix definition are crucial for the optimisation, as the
     // sce xpathes rely on this special prefix.
-    prefixes.put( NaModelConstants.NS_NAMETA, "rrmMeta" );
-    prefixes.put( NaModelConstants.NS_NAMODELL, "rrm" );
-    prefixes.put( NaModelConstants.NS_NACONTROL, "rrmControl" );
-    prefixes.put( NaModelConstants.NS_NAHYDROTOP, "rrmHydrotop" );
-    prefixes.put( NaModelConstants.NS_NAPARAMETER, "rrmParam" );
-    prefixes.put( NaModelConstants.NS_OMBROMETER, "rrmOmbro" );
-    prefixes.put( NaModelConstants.NS_SYNTHN, "syn" );
-    prefixes.put( NaModelConstants.NS_INIVALUES, "ini" );
-    prefixes.put( NaModelConstants.NS_NAFORTRANLOG, "naLog" );
+    prefixes.put( NaModelConstants.NS_NAMETA, "rrmMeta" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAMODELL, "rrm" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NACONTROL, "rrmControl" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAHYDROTOP, "rrmHydrotop" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAPARAMETER, "rrmParam" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_OMBROMETER, "rrmOmbro" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_SYNTHN, "syn" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_INIVALUES, "ini" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAFORTRANLOG, "naLog" ); //$NON-NLS-1$
 
-    prefixes.put( NaModelConstants.NS_NALANDUSE, "rrmLanduse" );
-    prefixes.put( NaModelConstants.NS_NAPEDOLOGIE, "rrmPedo" );
-    prefixes.put( NaModelConstants.NS_NAGEOLOGIE, "rrmGeo" );
-    prefixes.put( NaModelConstants.NS_NASUDS, "rrmSuds" );
+    prefixes.put( NaModelConstants.NS_NALANDUSE, "rrmLanduse" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAPEDOLOGIE, "rrmPedo" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAGEOLOGIE, "rrmGeo" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NASUDS, "rrmSuds" ); //$NON-NLS-1$
   }
 }

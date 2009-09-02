@@ -50,23 +50,23 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IAbstractSwale extends Feature
 {
-  public static QName QN_PROPERTY_WIDTH = new QName( NaModelConstants.NS_NASUDS, "width" ); // double
+  public static QName QN_PROPERTY_WIDTH = new QName( NaModelConstants.NS_NASUDS, "width" ); // double //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double
+  public static QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_DRAINAGE_NODE = new QName( NaModelConstants.NS_NASUDS, "drainageNode" ); // feature
+  public static QName QN_PROPERTY_DRAINAGE_NODE = new QName( NaModelConstants.NS_NASUDS, "drainageNode" ); // feature //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "drainagePipeDiameter" ); // suds:EnumPipeDiameter
+  public static QName QN_PROPERTY_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "drainagePipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_PIPE_KF_VALUE = new QName( NaModelConstants.NS_NASUDS, "drainagePipeKFvalue" ); // integer
+  public static QName QN_PROPERTY_PIPE_KF_VALUE = new QName( NaModelConstants.NS_NASUDS, "drainagePipeKFvalue" ); // integer //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_PIPE_SLOPE = new QName( NaModelConstants.NS_NASUDS, "drainagePipeSlope" ); // integer
+  public static QName QN_PROPERTY_PIPE_SLOPE = new QName( NaModelConstants.NS_NASUDS, "drainagePipeSlope" ); // integer //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "drainagePipeRoughness" ); // double
+  public static QName QN_PROPERTY_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "drainagePipeRoughness" ); // double //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_PROFILE_THICKNESS = new QName( NaModelConstants.NS_NASUDS, "layerProfileThickness" ); // suds:EnumLayerProfileThicknessType
+  public static QName QN_PROPERTY_PROFILE_THICKNESS = new QName( NaModelConstants.NS_NASUDS, "layerProfileThickness" ); // suds:EnumLayerProfileThicknessType //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_MAX_CAP_EMERGENCY_SPILL = new QName( NaModelConstants.NS_NASUDS, "maxCapacityOfEmergencySpill" ); // double
+  public static QName QN_PROPERTY_MAX_CAP_EMERGENCY_SPILL = new QName( NaModelConstants.NS_NASUDS, "maxCapacityOfEmergencySpill" ); // double //$NON-NLS-1$
 
   public double getWidth( );
 

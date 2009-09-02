@@ -91,7 +91,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   @Override
   public String getDescription( final int index )
   {
-    return String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.1"), m_shapeFile.getName() ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
   /**
@@ -185,7 +185,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
     final Integer column = m_propHash.get( property );
     if( column == null )
     {
-      final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.3"), property ); //$NON-NLS-1$
+      final String message =  Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
     }
 

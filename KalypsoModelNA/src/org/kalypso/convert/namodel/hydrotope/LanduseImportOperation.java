@@ -151,13 +151,13 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         final String landuseRef = m_landuseClasses.getReference( landuseclass );
         if( landuseRef == null )
         {
-          final String message = String.format( Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2" ), landuseclass, i + 1 ); //$NON-NLS-1$
+          final String message =  Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2" , landuseclass, i + 1 ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
         if( geometry == null )
         {
-          final String message = String.format( Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3" ), label ); //$NON-NLS-1$
+          final String message =  Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
@@ -182,7 +182,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
           {
             final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
             final IFeatureType ft = sud.getFeatureType();
-            final String href = String.format( "suds.gml#%s", sud.getId() );
+            final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
 
             final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
             sudCollection.add( lnk );

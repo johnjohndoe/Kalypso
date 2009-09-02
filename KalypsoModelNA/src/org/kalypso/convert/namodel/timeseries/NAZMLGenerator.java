@@ -116,7 +116,7 @@ public class NAZMLGenerator
       catch( Exception e )
       {
         e.printStackTrace();
-        System.out.println( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.1") ); //$NON-NLS-1$
+        System.out.println( "could not create ZML, but operation will continue..." ); //$NON-NLS-1$
       }
     if( relative )
       return generateobsLink( targetRelativePath );
@@ -166,9 +166,9 @@ public class NAZMLGenerator
     buffer.append( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" ); //$NON-NLS-1$
     buffer.append( "    <observation xmlns=\"zml.kalypso.org\" " ); //$NON-NLS-1$
     buffer.append( " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"zml.kalypso.org./observation.xsd\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" ); //$NON-NLS-1$
-    buffer.append( "  <name>Eine Test-Observation</name>" );
-    buffer.append( "      <!-- die Metadaten list ist erweiterbar -->" );
-    buffer.append( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.0") ); //$NON-NLS-1$
+    buffer.append( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.2") ); //$NON-NLS-1$
+    buffer.append( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.3") ); //$NON-NLS-1$
+    buffer.append( "      <metadataList>" ); //$NON-NLS-1$
     // buffer.append( " <metadata name=\"Pegelnullpunkt\" value=\"10\"/>" );
     // buffer.append( " <metadata name=\"Rechtswert\" value=\"445566\"/>" );
     // buffer.append( " <metadata name=\"Hochwert\" value=\"887766\"/>" );

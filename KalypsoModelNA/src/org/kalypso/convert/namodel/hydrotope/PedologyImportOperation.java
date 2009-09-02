@@ -140,13 +140,13 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
         final String soilTypeRef = m_soilTypes.get( soilTypeLink );
         if( soilTypeRef == null )
         {
-          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.2"), soilTypeLink, i + 1 ); //$NON-NLS-1$
+          final String message = Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.2", soilTypeLink, i + 1 ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
         if( geometry == null )
         {
-          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3"), label ); //$NON-NLS-1$
+          final String message = Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 

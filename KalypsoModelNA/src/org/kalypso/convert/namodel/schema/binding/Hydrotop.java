@@ -43,6 +43,7 @@ package org.kalypso.convert.namodel.schema.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -61,9 +62,9 @@ public class Hydrotop extends Feature_Impl
 {
   public static enum HYDROTOP_TYPE
   {
-    BODENSPEICHER("Bodenspeicher", 0),
-    MULDEN_RIGOLE("MuldenRigole", 1),
-    DACHBEGRUENUNG("Dachbegruenung", 2);
+    BODENSPEICHER("Bodenspeicher", 0), //$NON-NLS-1$
+    MULDEN_RIGOLE("MuldenRigole", 1), //$NON-NLS-1$
+    DACHBEGRUENUNG("Dachbegruenung", 2); //$NON-NLS-1$
 
     private final String m_name;
 
@@ -97,29 +98,29 @@ public class Hydrotop extends Feature_Impl
 
   private static final int DEFAULT_ASCII_HYDROTOP_TYPE = 0;
 
-  public static final QName QNAME = new QName( NaModelConstants.NS_NAHYDROTOP, "Hydrotop" );
+  public static final QName QNAME = new QName( NaModelConstants.NS_NAHYDROTOP, "Hydrotop" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAHYDROTOP, "position" );
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAHYDROTOP, "position" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_AREA = new QName( NaModelConstants.NS_NAHYDROTOP, "area" );
+  public static final QName QNAME_PROP_AREA = new QName( NaModelConstants.NS_NAHYDROTOP, "area" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NAHYDROTOP, "landuse" );
+  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NAHYDROTOP, "landuse" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "soiltype" );
+  public static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "soiltype" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CORR_SEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" );
+  public static final QName QNAME_PROP_CORR_SEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DRAINAGE_TYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" );
+  public static final QName QNAME_PROP_DRAINAGE_TYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_M_PERKM = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" );
+  public static final QName QNAME_PROP_M_PERKM = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_M_F1GWS = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" );
+  public static final QName QNAME_PROP_M_F1GWS = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_HYD_TYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "hydType" );
+  public static final QName QNAME_PROP_HYD_TYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "hydType" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" );
+  public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CATCHMENT_MEMBER = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" );
+  public static final QName QNAME_PROP_CATCHMENT_MEMBER = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<Feature> m_suds = new FeatureBindingCollection<Feature>( this, Feature.class, QNAME_PROP_SUD_MEMBERS );
 

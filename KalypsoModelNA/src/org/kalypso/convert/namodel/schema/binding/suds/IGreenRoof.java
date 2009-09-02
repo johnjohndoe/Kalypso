@@ -50,25 +50,25 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IGreenRoof extends Feature
 {
-  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // suds:EnumGreenRoofType
+  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // suds:EnumGreenRoofType //$NON-NLS-1$
 
-  public QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double
+  public QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_SLOPE = new QName( NaModelConstants.NS_NASUDS, "slope" ); // double
+  public QName QN_PROPERTY_SLOPE = new QName( NaModelConstants.NS_NASUDS, "slope" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_LANDUSE_FILE_NAME = new QName( NaModelConstants.NS_NASUDS, "landuseFileName" ); // suds:EnumGreenRoofLanduseType
+  public QName QN_PROPERTY_LANDUSE_FILE_NAME = new QName( NaModelConstants.NS_NASUDS, "landuseFileName" ); // suds:EnumGreenRoofLanduseType //$NON-NLS-1$
 
-  public QName QN_PROPERTY_RAINWATER_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeDiameter" ); // suds:EnumPipeDiameter
+  public QName QN_PROPERTY_RAINWATER_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
 
-  public QName QN_PROPERTY_RAINWATER_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeRoughness" ); // double
+  public QName QN_PROPERTY_RAINWATER_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeRoughness" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_DRAINAGE_LAYER_POROSITY = new QName( NaModelConstants.NS_NASUDS, "drainageLayerPorosity" ); // double
+  public QName QN_PROPERTY_DRAINAGE_LAYER_POROSITY = new QName( NaModelConstants.NS_NASUDS, "drainageLayerPorosity" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeDiameter" ); // suds:EnumPipeDiameter
+  public QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
 
-  public QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeRoughness" ); // double
+  public QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeRoughness" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_EMERGENCY_SPILL_HEIGHT = new QName( NaModelConstants.NS_NASUDS, "emergencySpillHeight" ); // double
+  public QName QN_PROPERTY_EMERGENCY_SPILL_HEIGHT = new QName( NaModelConstants.NS_NASUDS, "emergencySpillHeight" ); // double //$NON-NLS-1$
 
   public Object getElementType( );
 

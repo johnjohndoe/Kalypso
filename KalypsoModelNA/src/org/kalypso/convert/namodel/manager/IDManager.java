@@ -100,11 +100,11 @@ public class IDManager
   private int getType( Feature feature )
   {
     String name = feature.getFeatureType().getQName().getLocalPart();
-    if( name.equals( "Catchment" ) )
+    if( name.equals( "Catchment" ) ) //$NON-NLS-1$
       return CATCHMENT;
-    if( name.endsWith( "Channel" ) )
+    if( name.endsWith( "Channel" ) ) //$NON-NLS-1$
       return CHANNEL;
-    if( name.equals( "Node" ) )
+    if( name.equals( "Node" ) ) //$NON-NLS-1$
       return NODE;
     throw new UnsupportedOperationException();
   }
@@ -198,7 +198,7 @@ public class IDManager
         writer.write( feature.getId() );
       }
       else
-        writer.write( "dummy" );
+        writer.write( "dummy" ); //$NON-NLS-1$
       writer.write( "\n" ); //$NON-NLS-1$
     }
   }

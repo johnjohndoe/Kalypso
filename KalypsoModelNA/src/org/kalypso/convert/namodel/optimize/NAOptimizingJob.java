@@ -276,9 +276,9 @@ public class NAOptimizingJob implements IOptimizingJob
     final Transformer t = factory.newTransformer();
 
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
-    t.setOutputProperty( OutputKeys.INDENT, "yes" );
+    t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
-    final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir ); //$NON-NLS-2$
+    final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir );  //$NON-NLS-1$//$NON-NLS-2$
     Writer writer = new FileWriter( file );
     try
     {
@@ -314,7 +314,7 @@ public class NAOptimizingJob implements IOptimizingJob
         // möglich ist ohne gemessene zeitreihe
         e.printStackTrace();
       }
-      IObservation observation = ZmlFactory.parseXML( measuredURL, "measured" );
+      IObservation observation = ZmlFactory.parseXML( measuredURL, "measured" ); //$NON-NLS-1$
       IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
       IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_RUNOFF );
       ITuppleModel values = observation.getValues( null );
@@ -369,7 +369,7 @@ public class NAOptimizingJob implements IOptimizingJob
       resultEater.addResult( id, m_bestResultEater.get( id ) );
     }
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
-    System.out.println( Messages.getString("org.kalypso.convert.namodel.optimize.NAOptimizingJob.12") + m_bestNumber ); //$NON-NLS-1$
+    System.out.println( "best was #" + m_bestNumber ); //$NON-NLS-1$
   }
 
   /**

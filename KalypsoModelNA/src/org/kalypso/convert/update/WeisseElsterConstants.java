@@ -47,31 +47,31 @@ public class WeisseElsterConstants
   // "kalypso-ocs:WeisseElster://Temperatur/Ombrometer_";
 
   //      kalypso-ocs:GebietsNiederschlaege://Catchment1002
-  public final static String PREFIX_LINK_GebietsNiederschlagModell = "kalypso-ocs:GebietsNiederschlaege://";// ..+
+  public final static String PREFIX_LINK_GebietsNiederschlagModell = "kalypso-ocs:GebietsNiederschlaege://";// ..+ //$NON-NLS-1$
 
   // catchmentFE.ID
 
   //      kalypso-ocs:Vorhersage://Niederschlaege/Catchment1022.zml
-  public final static String PREFIX_LINK_NIEDERSCHLAGVORHERSAGE = "kalypso-ocs:Vorhersage://Niederschlaege/";// ...".zml"
+  public final static String PREFIX_LINK_NIEDERSCHLAGVORHERSAGE = "kalypso-ocs:Vorhersage://Niederschlaege/";// ...".zml" //$NON-NLS-1$
 
-  public final static String PREFIX_LINK_N_LOKAL = "Niederschlag/Niederschlag_";//...+.zml
+  public final static String PREFIX_LINK_N_LOKAL = "Niederschlag/Niederschlag_";//...+.zml //$NON-NLS-1$
 
   //      kalypso-ocs:psicompact://HN.5_WE.02PG...577510
-  public final static String PREFIX_LINK_WQ_Zufluss_Rep = "kalypso-ocs:psicompact://HN.5_WE.02PG...";//...+PSIID
+  public final static String PREFIX_LINK_WQ_Zufluss_Rep = "kalypso-ocs:psicompact://HN.5_WE.02PG...";//...+PSIID //$NON-NLS-1$
 
   //    kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500
 
-  public final static String ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep = "kalypso-ocs:WeisseElster://Zufluss/Zufluss_";//...+FID
+  public final static String ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep = "kalypso-ocs:WeisseElster://Zufluss/Zufluss_";//...+FID //$NON-NLS-1$
 
   // TODO let LFUG define a PSI-timeseries for forecast
   public final static String PREFIX_LINK_WQ_Zufluss_Rep_Vorhersage = PREFIX_LINK_WQ_Zufluss_Rep;
 
   //      kalypso-ocs:psicompact://HN.5_WE.02PG...577510
-  public final static String PREFIX_LINK_WQ_Pegel_Rep = "kalypso-ocs:psicompact://HN.5_WE.02PG...";//...+ID
+  public final static String PREFIX_LINK_WQ_Pegel_Rep = "kalypso-ocs:psicompact://HN.5_WE.02PG...";//...+ID //$NON-NLS-1$
 
   //    kalypso-ocs:FlussPegel://Pegel/q_goessnitz.zml
 
-  public final static String ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep = "kalypso-ocs:FlussPegel://Pegel/";//...ZML-datei
+  public final static String ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep = "kalypso-ocs:FlussPegel://Pegel/";//...ZML-datei //$NON-NLS-1$
 
   public final static String PREFIX_LINK_WQ_PEGEL_LOKAL = "Pegel/Pegel_";//...+.zml //$NON-NLS-1$
 

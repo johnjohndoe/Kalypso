@@ -62,7 +62,7 @@ public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfil
     final Object property = getProperty( QN_PROPERTY_ELEMENT_TYPE );
     if( property instanceof String )
       return (String) property;
-    return "30";
+    return "30"; //$NON-NLS-1$
   }
 
   /**
@@ -75,7 +75,7 @@ public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfil
    if( property instanceof String )
       return (String) property;
    
-    return "mrs_N.nutz";
+    return "mrs_N.nutz"; //$NON-NLS-1$
   }
 
   /**

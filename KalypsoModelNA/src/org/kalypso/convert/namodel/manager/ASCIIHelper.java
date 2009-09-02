@@ -74,15 +74,15 @@ public class ASCIIHelper
     if( "".equals( pairFormat ) ) //$NON-NLS-1$
       return ""; //$NON-NLS-1$
     final String[] s = pairFormat.split( "," ); //$NON-NLS-1$
-    if( "todo".equals( s[0] ) )
-      return "(TODO:" + s[0] + ")";
-    if( "IGNORE".equals( s[0] ) )
+    if( "todo".equals( s[0] ) ) //$NON-NLS-1$
+      return "(TODO:" + s[0] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    if( "IGNORE".equals( s[0] ) ) //$NON-NLS-1$
       return ""; //$NON-NLS-1$
     //        System.out.println(s[0]);
     Object property = feature.getProperty( s[0] );
 
     if( property == null )
-      return "(" + s[0] + "==NULL ?)";
+      return "(" + s[0] + "==NULL ?)"; //$NON-NLS-1$ //$NON-NLS-2$
     String value = property.toString(); // PropertyName
 
     final String format = s[1];

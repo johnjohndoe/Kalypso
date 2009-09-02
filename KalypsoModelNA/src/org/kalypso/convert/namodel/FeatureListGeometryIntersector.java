@@ -160,7 +160,7 @@ public class FeatureListGeometryIntersector
       for( final Feature feature : featureList.toFeatures() )
       {
         if( count % 100 == 0 )
-          progress.subTask( String.format( Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.2"), count, countFeatures ) ); //$NON-NLS-1$
+          progress.subTask( Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countFeatures ) ); //$NON-NLS-1$
         count++;
 
         final List<Geometry> featurePolygons = removeGeometryCollections( JTSAdapter.export( feature.getDefaultGeometryPropertyValue() ) );

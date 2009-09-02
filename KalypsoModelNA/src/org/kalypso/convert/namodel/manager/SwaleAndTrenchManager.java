@@ -141,18 +141,18 @@ public class SwaleAndTrenchManager extends AbstractManager
     final double length = sTGeomProp.getLength();
     final double area = width.doubleValue() * length;
     asciiBuffer.getSwaleTrenchBuffer().append( area );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutzung" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "maxPerk" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "InflowGW" ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-4$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutzung" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "maxPerk" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "InflowGW" ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     // Line 7
     // (diameterPipe,*)_(kfPipe,*)_(drainPipeSlope,*)_(roughnessPipe,*)_(widthTrench,*)_(dischargeNode,*)
-    asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "diameterPipe" ), "*" ) ); //$NON-NLS-2$
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "kfPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "drainPipeSlope" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "roughnessPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "widthTrench" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "diameterPipe" ), "*" ) );  //$NON-NLS-1$//$NON-NLS-2$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "kfPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "drainPipeSlope" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "roughnessPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "widthTrench" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.LINK_MRS_DISCHARGE_NODE_PROP );
     final Feature nodeFeSTDischarge = workSpace.resolveLink( feature, rt );
@@ -162,7 +162,7 @@ public class SwaleAndTrenchManager extends AbstractManager
       asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else
       asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( 0 ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    asciiBuffer.getSwaleTrenchBuffer().append( "# ende MR \n " );
+    asciiBuffer.getSwaleTrenchBuffer().append( "# ende MR \n " ); //$NON-NLS-1$
 
   }
 
