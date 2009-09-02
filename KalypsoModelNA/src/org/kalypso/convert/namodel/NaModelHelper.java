@@ -45,7 +45,6 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.ValueIterator;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
@@ -141,7 +140,7 @@ public class NaModelHelper
   // }
   // }
 
-  public static int addRHBinCatchment( GMLWorkspace modelworkspace, Feature catchment, IFeatureType rhbFT, Feature measureRhbFE )
+  public static int addRHBinCatchment( final GMLWorkspace modelworkspace, final Feature catchment, final IFeatureType rhbFT, final Feature measureRhbFE )
   {
     // throw new UnsupportedOperationException( "still a TODO, not upgraded after java5.0/eclipse3.1" );
     // create new Properties for Storage
@@ -245,7 +244,7 @@ public class NaModelHelper
       // LINK_CHANNEL_DOWNSTREAMNODE, 0, nodes[posNode] );
       // modelworkspace.postCommand( addChannelNodeLink );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return OPERATION_FAILED;
@@ -262,7 +261,7 @@ public class NaModelHelper
    * @param factorHecto
    * @return
    */
-  private static Double getDischarge( double sumHeigth, double mu, double g, double diameter, double factorHecto )
+  private static Double getDischarge( final double sumHeigth, final double mu, final double g, final double diameter, final double factorHecto )
   {
     final double area = Math.pow( diameter, 2d ) * Math.PI / 4;
     final double q = mu * area * Math.pow( 2 * g * sumHeigth, 2d ) * factorHecto;
@@ -274,9 +273,9 @@ public class NaModelHelper
    * @param double1
    * @return
    */
-  private static Double getVolume( double waterlevel, double lenght, double slope, double depth, double factorHecto )
+  private static Double getVolume( final double waterlevel, final double lenght, final double slope, final double depth, final double factorHecto )
   {
-    double value = (4 / 3 * Math.pow( slope, 2d ) * (Math.pow( waterlevel, 2d ) - 3 * depth * Math.pow( waterlevel, 2d ) + 3 * Math.pow( depth, 2d ) * waterlevel) + 2 * slope * lenght
+    final double value = (4 / 3 * Math.pow( slope, 2d ) * (Math.pow( waterlevel, 2d ) - 3 * depth * Math.pow( waterlevel, 2d ) + 3 * Math.pow( depth, 2d ) * waterlevel) + 2 * slope * lenght
         * (Math.pow( waterlevel, 2d ) - 2 * depth * waterlevel) + Math.pow( lenght, 2d ) * waterlevel)
         * factorHecto;
     return new Double( value * factorHecto );

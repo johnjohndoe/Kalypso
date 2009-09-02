@@ -31,63 +31,11 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="Ort" type="gml:PointPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Geometrie</label>
-								<tooltip>geometriescher Ort</tooltip>
-								<description>Geometrie des Objektes</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Geometry</label>
-								<tooltip>geometric position</tooltip>
-								<description>Geometry of the Object</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="DWDID" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>DWDID</label>
-								<tooltip>DWD Kennung</tooltip>
-								<description>Kennung des Deutschen Wetterdienstes</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>DWDID</label>
-								<tooltip>DWD Identification</tooltip>
-								<description>Identification number of German Wether Service</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="NRepository" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Pfad ZR (Original)Ablage</label>
-								<tooltip>Pfad ZR Ablage</tooltip>
-								<description>Pfad der Zeitreihe Niederschlag aus der Datenablage (lokal, Datenbank, Server...)</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>P Repository</label>
-								<tooltip>path P Repository</tooltip>
-								<description>path of time series precipitation in the repository (local, database, server,...)</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element name="Ort" type="gml:PointPropertyType"/>
+					<element name="DWDID" type="string"/>
+					<element name="NRepository" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="NRepository1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="N" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>ZR Zielpfad (Rechenvariante)</label>
-								<tooltip>Pfad N Rechenvariante</tooltip>
-								<description>Pfad der Zeitreihe Niederschlag in der Rechenvariante</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>P target</label>
-								<tooltip>path P target directory</tooltip>
-								<description>path of time series precipitation in the calculation case</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element name="N" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="TRepository" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="T" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
