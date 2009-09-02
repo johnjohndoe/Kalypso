@@ -43,7 +43,6 @@ package org.kalypso.convert.namodel.schema.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;

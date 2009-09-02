@@ -36,64 +36,12 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="level" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Level</label>
-								<tooltip>Einstufung der Log Nachricht</tooltip>
-								<description>Einstufung der Log Nachricht</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Level</label>
-								<tooltip>Level/ Importance of the log message.</tooltip>
-								<description>Level/ Importance of the log message.</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element name="level" type="string"/>
 					<element name="class" type="string"/>
 					<element name="method" type="string"/>
-					<element name="message" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Nachricht</label>
-								<tooltip>Text der Log Nachricht.</tooltip>
-								<description>Text der Log Nachricht.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Message</label>
-								<tooltip>Text of the log message.</tooltip>
-								<description>Text of the log message.</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="element" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Element</label>
-								<tooltip>Element, welches die Nachricht verursacht.</tooltip>
-								<description>Element, welches die Nachricht verursacht.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Element</label>
-								<tooltip>Element, which causes the message.</tooltip>
-								<description>Element, which causes the message.</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="param" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Parameter</label>
-								<tooltip>Parameter des Elementes, welcher die Nachricht verursacht.</tooltip>
-								<description>Parameter des Elementes, welcher die Nachricht verursacht.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Parameter</label>
-								<tooltip>Parameter of the Element, which causes the message.</tooltip>
-								<description>Parameter of the Element, which causes the message.</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element name="message" type="string"/>
+					<element name="element" type="string"/>
+					<element name="param" type="string"/>
 				</sequence>
 			</extension>
 		</complexContent>

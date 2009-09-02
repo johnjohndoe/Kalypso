@@ -9,30 +9,12 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 	<import namespace="inline.zml.kalypso.org" schemaLocation="zmlinline.xsd"/>
-	<element name="SynthN" type="syn:synthNType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>synthetischer Niederschlag</label>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>synthetic precipitation</label>
-			</documentation>
-		</annotation>
-	</element>
+	<element name="SynthN" type="syn:synthNType"/>
 	<complexType name="synthNType">
 		<complexContent>
 			<extension base="syn:NonGeometricAbstractFeatureType">
 				<sequence>
-					<element name="synthNMember" type="syn:SynthNAssociationType" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>in</label>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>in</label>
-							</documentation>
-						</annotation>
-					</element>
+					<element name="synthNMember" type="syn:SynthNAssociationType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -51,44 +33,13 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="StatN" type="syn:StatNType" substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Raum - ${property:http://www.opengis.net/gml#name}</label>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>region - ${property:http://www.opengis.net/gml#name}</label>
-			</documentation>
-		</annotation>
-	</element>
+	<element name="StatN" type="syn:StatNType" substitutionGroup="gml:_Feature"/>
 	<complexType name="StatNType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="Ort" type="gml:PolygonPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Geometrie</label>
-								<tooltip>geometriescher Ort</tooltip>
-								<description>Geometrie des Objektes</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Geometry</label>
-								<tooltip>Geometric position</tooltip>
-								<description>Geometry of the object</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="statNParameterMember" type="syn:StatNParameterAssociationType" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>mit</label>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>with</label>
-							</documentation>
-						</annotation>
-					</element>
+					<element name="Ort" type="gml:PolygonPropertyType"/>
+					<element name="statNParameterMember" type="syn:StatNParameterAssociationType" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -102,46 +53,13 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="StatNParameter" type="syn:StatNParameterType" substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Wiederkehrzeit - ${property:http://www.tuhh.de/synthN#xjah}</label>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>return period - ${property:http://www.tuhh.de/synthN#xjah}</label>
-			</documentation>
-		</annotation>
-	</element>
+	<element name="StatNParameter" type="syn:StatNParameterType" substitutionGroup="gml:_Feature"/>
 	<complexType name="StatNParameterType">
 		<complexContent>
 			<extension base="syn:NonGeometricAbstractFeatureType">
 				<sequence>
-					<element name="statNDiag" type="zmlinline:ZmlInlineTNType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Niederschlagsdiagramm</label>
-								<tooltip>Diagramm statistischer Niederschlag</tooltip>
-								<description>Niederschlagsmenge abhängig von der Niederschlagsdauer</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>precipitation diagram</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="xjah" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Wiederkehrzeit</label>
-								<tooltip>Wiederkehrzeit</tooltip>
-								<description>Wiederkehrzeit des synthetischen Niederschlagereignisses [a]</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>return period</label>
-								<tooltip>return period</tooltip>
-								<description>return period [a]</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element name="statNDiag" type="zmlinline:ZmlInlineTNType"/>
+					<element name="xjah" type="double"/>
 				</sequence>
 			</extension>
 		</complexContent>

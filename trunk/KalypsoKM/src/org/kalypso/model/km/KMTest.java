@@ -2,6 +2,8 @@ package org.kalypso.model.km;
 
 import java.io.File;
 
+import org.kalypso.model.km.i18n.Messages;
+
 import junit.framework.TestCase;
 
 public class KMTest extends TestCase
@@ -10,11 +12,11 @@ public class KMTest extends TestCase
 	{
 		try
 		{
-			final File profileDir = new File("C:/daten/WQ");
+			final File profileDir = new File("C:/daten/WQ"); //$NON-NLS-1$
 			final String args[] = new String[]
-			{ "58.800",// start
-					"58.853",// end
-					"5", // ,count
+			{ "58.800",// start //$NON-NLS-1$
+					"58.853",// end //$NON-NLS-1$
+					"5", // ,count //$NON-NLS-1$
 					profileDir.getAbsolutePath() // path
 			};
 			Main.main(args);
