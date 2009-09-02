@@ -152,7 +152,7 @@ public class NutzungManager extends AbstractManager
     line = reader.readLine();
 
     // FeatureProperty landuseNameProp = FeatureFactory.createFeatureProperty( "name", nutzID );
-    landusePropCollector.put( "name", nutzID );
+    landusePropCollector.put( "name", nutzID ); //$NON-NLS-1$
 
     // generate id:
     // FeatureProperty prop = (FeatureProperty)landusePropCollector.get( "name" );
@@ -161,7 +161,7 @@ public class NutzungManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.6" ) + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.6" , i , line )); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
@@ -207,11 +207,11 @@ public class NutzungManager extends AbstractManager
       name = Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.11" ); //$NON-NLS-1$
     }
     writer.write( name );
-    writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung!
-    writer.write( "xxdatum     F EVA    We    BIMAX\n" );
+    writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung! //$NON-NLS-1$
+    writer.write( "xxdatum     F EVA    We    BIMAX\n" ); //$NON-NLS-1$
     Object idealLanduseProp = linkedIdealLanduseFE.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML );
     writeIdealLanduse( (IObservation) idealLanduseProp, writer );
-    writer.write( "993456789012345678901234567890" );
+    writer.write( "993456789012345678901234567890" ); //$NON-NLS-1$
     IOUtils.closeQuietly( writer );
 
   }
@@ -234,9 +234,9 @@ public class NutzungManager extends AbstractManager
       final int year = calendar.get( Calendar.YEAR ) - yearOffset;
       final int month = calendar.get( Calendar.MONTH ) + 1;
       final int day = calendar.get( Calendar.DATE );
-      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-2$ //$NON-NLS-3$
+      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
       zmlWriter.write( "." ); //$NON-NLS-1$
-      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-2$ //$NON-NLS-3$
+      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
       zmlWriter.write( "." ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 

@@ -184,7 +184,7 @@ public class ParseManager
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.3") + nutzFiles[i].toURL().toString() ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.3", nutzFiles[i].toURL().toString() )); //$NON-NLS-1$
       features = m_idleLanduseManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
         FeatureHelper.addProperty( naParaFe, idealLandUseMemberRT, features[f] );
@@ -194,20 +194,20 @@ public class ParseManager
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.4") + nutzFiles[i].toURL().toString() ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.4",nutzFiles[i].toURL().toString()) ); //$NON-NLS-1$
       features = m_nutzManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
         FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
     }
-    System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.5") + nutzFiles.length + Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.6") ); //$NON-NLS-1$ //$NON-NLS-2$
+    System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.5",nutzFiles.length ) ); //$NON-NLS-1$
 
     final IPropertyType sealingMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SEALING_MEMBER );
-    URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL();
+    URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL(); //$NON-NLS-1$
     features = m_idleLanduseManager.parseSealingFilecsv( csvsealingURL );
     for( int f = 0; f < features.length; f++ )
       FeatureHelper.addProperty( naParaFe, sealingMemberRT, features[f] );
 
-    URL csvURL = new File( nutzungDir, "Klassen_KRUECK2007.csv" ).toURL();
+    URL csvURL = new File( nutzungDir, "Klassen_KRUECK2007.csv" ).toURL(); //$NON-NLS-1$
     features = m_idleLanduseManager.parseFilecsv( csvURL );
     for( int f = 0; f < features.length; f++ )
       FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );

@@ -75,10 +75,10 @@ public class BlockTimeSeries
 
   // simulationszeitraum: von 970101 24 uhr bis 980102 24 uhr 24.000
   // simulationszeitraum: von 970101 24 uhr bis 102 24 uhr 24.000
-  private final static Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
+  private final static Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" ); //$NON-NLS-1$
 
   // synth. n.: haufigkeit: 0.100 jahre,dauer: 13.00 h , zeitschr.: 0.083 h , verteilung: 2
-  private final static Pattern pSynthTime = Pattern.compile( ".+synth. n..+haufigkeit:.+(\\d+\\.\\d+).+jahre,dauer.+(\\d+\\.\\d+).+h , zeitschr.:.+(\\d+\\.\\d+).+" );
+  private final static Pattern pSynthTime = Pattern.compile( ".+synth. n..+haufigkeit:.+(\\d+\\.\\d+).+jahre,dauer.+(\\d+\\.\\d+).+h , zeitschr.:.+(\\d+\\.\\d+).+" ); //$NON-NLS-1$
 
   private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" ); //$NON-NLS-1$
 
@@ -252,7 +252,7 @@ public class BlockTimeSeries
     catch( Exception e )
     {
       e.printStackTrace();
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.timeseries.BlockTimeSeries.13") ); //$NON-NLS-1$
+      System.out.println( "could not read blockfile " );  //$NON-NLS-1$
     }
   }
 

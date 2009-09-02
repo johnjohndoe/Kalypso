@@ -58,17 +58,17 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Landuse extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" );
+  public static final QName QNAME = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" );
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" );
+  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" );
+  public static final QName QNAME_PROP_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DRAINAGETYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" );
+  public static final QName QNAME_PROP_DRAINAGETYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" );
+  public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<Feature> m_suds = new FeatureBindingCollection<Feature>( this, Feature.class, QNAME_PROP_SUD_MEMBERS );
 

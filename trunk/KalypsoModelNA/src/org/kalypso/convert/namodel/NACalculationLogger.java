@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  */
 public class NACalculationLogger
 {
-  private static final String NA_LOG_FILE_PATH[] = { NaModelConstants.OUTPUT_DIR_NAME, "Ergebnisse", "Aktuell", "Log", "calculation.xlog" };
+  private static final String NA_LOG_FILE_PATH[] = { NaModelConstants.OUTPUT_DIR_NAME, "Ergebnisse", "Aktuell", "Log", "calculation.xlog" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
   private boolean m_isLoggerCreated;
 
@@ -82,7 +82,7 @@ public class NACalculationLogger
       m_logger = Logger.getAnonymousLogger();
       m_logger.addHandler( handler );
       m_isLoggerCreated = true;
-      m_logger.info( "Calculation logging started" );
+      m_logger.info( "Calculation logging started" ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {

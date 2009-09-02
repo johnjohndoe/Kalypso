@@ -176,7 +176,7 @@ public class NAConfiguration
 
   private final NACalculationLogger m_calculationLogger;
 
-  private final static String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d";
+  private final static String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d"; //$NON-NLS-1$
 
   private int m_plcLanduseCounter = 1;
 
@@ -259,7 +259,7 @@ public class NAConfiguration
     if( featureName != null && featureName.length() < 10 )
       return featureName;
     final String shortName = String.format( PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
-    System.out.println( "Created " + shortName + " for " + featureName );
+    System.out.println( "Created " + shortName + " for " + featureName ); //$NON-NLS-1$ //$NON-NLS-2$
     if( featureName == null )
       return shortName;
     final String string = m_landuseLongNamesMap.get( featureName );

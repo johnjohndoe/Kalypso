@@ -90,7 +90,7 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     int max2 = timeSeries2.size();
     if( max1 != max2 )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.1") + max1 + " : " + max2 ); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.1", max1, max2) ); //$NON-NLS-1$
       return true;
     }
     double maxValue1 = 0;
@@ -148,9 +148,9 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     }
     if( result )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.5") + diffCount ); //$NON-NLS-1$
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.6") + maxDelta ); //$NON-NLS-1$
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.7") + differenceAll + Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.8") + m_tollerance + Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.9") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.5",diffCount) ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.6", maxDelta) ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.7",differenceAll, m_tollerance) ); //$NON-NLS-1$
     }
     if( minValue1 != minValue2 )
       logger.log( IDiffComparator.DIFF_CONTENT, "min " + minValue1 + " : " + minValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -159,16 +159,16 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     double mean1 = sum1 / max1;
     double mean2 = sum2 / max2;
     if( mean1 != mean2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, "mean1-mean2 = " + (mean1 - mean2) );
+      logger.log( IDiffComparator.DIFF_CONTENT, "mean1-mean2 = " + (mean1 - mean2) ); //$NON-NLS-1$
     else
-      logger.log( IDiffComparator.DIFF_CONTENT, "mean " + mean1 );
+      logger.log( IDiffComparator.DIFF_CONTENT, "mean " + mean1 ); //$NON-NLS-1$
 
     double sigma1 = getSigma( mean1, timeSeries1 );
     double sigma2 = getSigma( mean2, timeSeries2 );
     if( sigma1 != sigma2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, "sigma1-sigma2 = " + (sigma1 - sigma2) );
+      logger.log( IDiffComparator.DIFF_CONTENT, "sigma1-sigma2 = " + (sigma1 - sigma2) ); //$NON-NLS-1$
     else
-      logger.log( IDiffComparator.DIFF_CONTENT, "sigma " + sigma1 );
+      logger.log( IDiffComparator.DIFF_CONTENT, "sigma " + sigma1 ); //$NON-NLS-1$
     return result;
   }
 

@@ -98,9 +98,9 @@ public class RHBManager extends AbstractManager
       System.out.println( i + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, i );
     }
-    int asciiID = Integer.parseInt( propCollector.get( "inum" ) );
+    int asciiID = Integer.parseInt( propCollector.get( "inum" ) ); //$NON-NLS-1$
     final Feature rhbStrangFE = getFeature( asciiID, m_conf.getStChannelFT() );
-    int iknotNr = Integer.parseInt( propCollector.get( "iknot" ) );
+    int iknotNr = Integer.parseInt( propCollector.get( "iknot" ) ); //$NON-NLS-1$
     if( iknotNr > 0 )
     {
       final Feature knotFE = getFeature( iknotNr, m_conf.getNodeFT() );

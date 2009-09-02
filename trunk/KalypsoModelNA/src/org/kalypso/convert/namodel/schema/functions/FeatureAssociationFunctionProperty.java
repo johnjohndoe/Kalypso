@@ -81,7 +81,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
   @Override
   public void init( final Map<String, String> properties )
   {
-    final String linkNameString = properties.get( "relation" );
+    final String linkNameString = properties.get( "relation" ); //$NON-NLS-1$
     m_linkName = QName.valueOf( linkNameString );
   }
 

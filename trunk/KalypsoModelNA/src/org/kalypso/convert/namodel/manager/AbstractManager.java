@@ -152,7 +152,7 @@ public abstract class AbstractManager
       e.printStackTrace();
     }
     if( m_allFeatures.containsKey( stringID ) )
-      throw new UnsupportedOperationException( "IDs are not unique:" + stringID );
+      throw new UnsupportedOperationException( "IDs are not unique:" + stringID ); //$NON-NLS-1$
     m_allFeatures.put( stringID, feature );
   }
 
@@ -250,7 +250,7 @@ public abstract class AbstractManager
       if( ft.getProperty( qname ) != null )
         feature.setProperty( propertyType, value );
       else
-        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" ); //$NON-NLS-2$ //$NON-NLS-3$
+        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 

@@ -128,7 +128,7 @@ public class IdleLanduseManager extends AbstractManager
     line = reader.readLine();
     line = reader.readLine();
 
-    String fileDescription = propCollector.get( "name" );
+    String fileDescription = propCollector.get( "name" ); //$NON-NLS-1$
     final Feature feature;
     if( !m_idleLanduseTable.containsKey( fileDescription ) )
     {
@@ -148,11 +148,11 @@ public class IdleLanduseManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.IdleLanduseManager.2") + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.IdleLanduseManager.2",i ,line )); //$NON-NLS-1$ //$NON-NLS-2$
       createProperties( propCollector, line, 10 );
 
       // day.month.[-1|00]
-      final String dateAsString = propCollector.get( "dat" );
+      final String dateAsString = propCollector.get( "dat" ); //$NON-NLS-1$
       final String[] dateComponents = dateAsString.split( "\\." ); //$NON-NLS-1$
       int day = Integer.parseInt( dateComponents[0] );
       int month = Integer.parseInt( dateComponents[1] );
@@ -165,9 +165,9 @@ public class IdleLanduseManager extends AbstractManager
       calendar.set( Calendar.DATE, day );
       calendar.set( Calendar.MONTH, month - 1 );
       calendar.set( Calendar.YEAR, year + 2001 );
-      Object xkc = propCollector.get( "xkc" );
-      Object xwt = propCollector.get( "xwt" );
-      Object xlai = propCollector.get( "xlai" );
+      Object xkc = propCollector.get( "xkc" ); //$NON-NLS-1$
+      Object xwt = propCollector.get( "xwt" ); //$NON-NLS-1$
+      Object xlai = propCollector.get( "xlai" ); //$NON-NLS-1$
       values[i][0] = calendar.getTime();
       values[i][1] = xkc;
       values[i][2] = xwt;
@@ -208,16 +208,16 @@ public class IdleLanduseManager extends AbstractManager
     System.out.println( line );
     String landuse = strings[0];
     final Feature feature = getFeature( landuse, m_landuseFT );
-    landusePropCollector.put( "name", landuse );
+    landusePropCollector.put( "name", landuse ); //$NON-NLS-1$
     String description = strings[1];
-    landusePropCollector.put( "description", description );
+    landusePropCollector.put( "description", description ); //$NON-NLS-1$
     String sealinglink = strings[2];
     final Feature sealingFE = getFeature( sealinglink, m_sealingFT );
-    landusePropCollector.put( "sealingLink", sealingFE.getId() );
+    landusePropCollector.put( "sealingLink", sealingFE.getId() ); //$NON-NLS-1$
     feature.setProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK, sealingFE.getId() );
     String landuseperiodlink = strings[3];
     final Feature idleLanduseFE = getFeature( landuseperiodlink, m_IdleLanduseFT );
-    landusePropCollector.put( "idealLandUsePeriodLink", idleLanduseFE.getId() );
+    landusePropCollector.put( "idealLandUsePeriodLink", idleLanduseFE.getId() ); //$NON-NLS-1$
     feature.setProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK, idleLanduseFE.getId() );
 
     setParsedProperties( feature, landusePropCollector, null );
@@ -247,11 +247,11 @@ public class IdleLanduseManager extends AbstractManager
     System.out.println( line );
     String sealing = strings[0];
     final Feature feature = getFeature( sealing, m_sealingFT );
-    sealingPropCollector.put( "name", "Klasse_" + sealing );
+    sealingPropCollector.put( "name", "Klasse_" + sealing ); //$NON-NLS-1$ //$NON-NLS-2$
     String description = strings[1];
-    sealingPropCollector.put( "description", description );
+    sealingPropCollector.put( "description", description ); //$NON-NLS-1$
     String vers = strings[2];
-    sealingPropCollector.put( "m_vers", vers );
+    sealingPropCollector.put( "m_vers", vers ); //$NON-NLS-1$
 
     setParsedProperties( feature, sealingPropCollector, null );
     return feature;

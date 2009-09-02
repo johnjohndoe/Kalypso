@@ -156,7 +156,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       for( final Geometry geometry : intersectionList )
       {
         if( count % 100 == 0 )
-          progress.subTask( String.format( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.3" ), count, intersectionList.size() ) ); //$NON-NLS-1$
+          progress.subTask( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.3" , count, intersectionList.size() ) ); //$NON-NLS-1$
         count++;
 
         // TODO: belongs to the end of this loop, but there are just too many else's
@@ -184,7 +184,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             {
               catchmentFound = true;
               final IFeatureType featureType = catchment.getFeatureType();
-              final String href = String.format( "project:/modell.gml#%s", catchment.getId() );
+              final String href = String.format( "project:/modell.gml#%s", catchment.getId() ); //$NON-NLS-1$
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
               hydrotop.setCatchmentMember( lnk );
               break;
@@ -225,7 +225,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             if( feature instanceof XLinkedFeature_Impl )
             {
               final IFeatureType ft = feature.getFeatureType();
-              final String href = String.format( "project:/suds.gml#%s", ((XLinkedFeature_Impl) feature).getFeatureId() );
+              final String href = String.format( "project:/suds.gml#%s", ((XLinkedFeature_Impl) feature).getFeatureId() ); //$NON-NLS-1$
 
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
               hydrotopeSudsCollection.add( lnk );

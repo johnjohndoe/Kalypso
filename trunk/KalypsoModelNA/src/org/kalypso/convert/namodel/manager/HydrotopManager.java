@@ -119,7 +119,7 @@ public class HydrotopManager extends AbstractManager
       final Double sealingRate = (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
       final String landuseName = m_conf.getLanduseFeatureShortedName( landuseFE.getName() );
       if( m_landuseSealingRateMap.containsKey( landuseName ) )
-        m_conf.getLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0" ), landuseName ) ); //$NON-NLS-1$
+        m_conf.getLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0" , landuseName ) ); //$NON-NLS-1$
       else
         m_landuseSealingRateMap.put( landuseName, sealingRate );
     }
@@ -157,7 +157,7 @@ public class HydrotopManager extends AbstractManager
             final Double landuseSealing = m_landuseSealingRateMap.get( m_conf.getLanduseFeatureShortedName( landuseName ) );
             if( landuseSealing == null )
             {
-              final String msg = String.format( "Landuse class '%s' referenced by hydrotop '%s' is not defined. Calculation aborted.", hydrotop.getLanduse(), hydrotop.getId() );
+              final String msg =  Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.1", hydrotop.getLanduse(), hydrotop.getId() ); //$NON-NLS-1$
               m_conf.getLogger().severe( msg );
               throw new SimulationException( msg );
             }
@@ -185,7 +185,7 @@ public class HydrotopManager extends AbstractManager
         final double fehler = Math.abs( catchmentGeometry.getArea() - totalArea );
         final double fehlerinProzent = 100.0 * fehler / totalArea;
         if( fehlerinProzent > 1.0 )
-          m_conf.getLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3" ), totalArea, catchmentFE.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) );
+          m_conf.getLogger().log( Level.WARNING,  Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", totalArea, catchmentFE.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) ); //$NON-NLS-1$
 
         asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %g %g %g\n", idManager.getAsciiID( catchmentFE ), hydrotopOutputList.size(), totalSealedArea, totalUnsealedArea, totalArea ) ); //$NON-NLS-1$
         for( final String line : hydrotopOutputList )

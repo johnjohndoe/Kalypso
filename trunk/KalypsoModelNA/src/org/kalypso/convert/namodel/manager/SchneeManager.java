@@ -119,7 +119,7 @@ public class SchneeManager extends AbstractManager
 
     // generate id:
     // final FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
-    String asciiStringId = propCollector.get( "name" );
+    String asciiStringId = propCollector.get( "name" ); //$NON-NLS-1$
     final Feature feature = getFeature( asciiStringId, m_snowFT );
 
     // continue reading
@@ -134,7 +134,7 @@ public class SchneeManager extends AbstractManager
     Feature rootFeature = paraWorkspace.getRootFeature();
     List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
     asciiBuffer.getSnowBuffer().append( Messages.getString("org.kalypso.convert.namodel.manager.SchneeManager.0") ); //$NON-NLS-1$
-    asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" );
+    asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
     asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
     Iterator iter = list.iterator();
     while( iter.hasNext() )

@@ -119,10 +119,10 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   key = sud.getElementType().toString();
                   final double area = landuseGeometry.getArea() * sud.getAreaPercentage();
                   final Object landuseClassLink = landuse.getLanduse();
-                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N";
+                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N"; //$NON-NLS-1$
 
-                  value.add( String.format( "%.4g %s mrs %.4g %.4g", area, m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) );
-                  value.add( String.format( "%d %d %d %.4g %.4g 0", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope(), sud.getPipeRoughness(), sud.getWidth() ) );
+                  value.add( String.format( "%.4g %s mrs %.4g %.4g", area, m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) ); //$NON-NLS-1$
+                  value.add( String.format( "%d %d %d %.4g %.4g 0", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope(), sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Swale )
                 {
@@ -152,18 +152,18 @@ public class SudsFileWriter extends AbstractCoreFileWriter
       m_contentBuffer.setLength( 0 );
       for( final String catchment : sudsMap.keySet() )
       {
-        m_contentBuffer.append( String.format( "# Catchment_NR %s\n", catchment ) );
+        m_contentBuffer.append( String.format( "# Catchment_NR %s\n", catchment ) ); //$NON-NLS-1$
         final TreeMap<String, List<String>> map = sudsMap.get( catchment );
         for( final String sudsID : map.keySet() )
         {
           final List<String> list = map.get( sudsID );
           if( list == null )
             continue;
-          m_contentBuffer.append( String.format( "%s %s\n", catchment, sudsID ) );
+          m_contentBuffer.append( String.format( "%s %s\n", catchment, sudsID ) ); //$NON-NLS-1$
           for( final String line : list )
-            m_contentBuffer.append( line ).append( "\n" );
+            m_contentBuffer.append( line ).append( "\n" ); //$NON-NLS-1$
         }
-        m_contentBuffer.append( String.format( "# Ende TG %s\n", catchment ) );
+        m_contentBuffer.append( String.format( "# Ende TG %s\n", catchment ) ); //$NON-NLS-1$
       }
     }
   }

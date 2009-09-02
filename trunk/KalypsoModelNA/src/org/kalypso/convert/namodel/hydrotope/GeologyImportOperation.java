@@ -124,7 +124,7 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
 
         if( geometry == null )
         {
-          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.1"), label ); //$NON-NLS-1$
+          final String message =  Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.1", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 

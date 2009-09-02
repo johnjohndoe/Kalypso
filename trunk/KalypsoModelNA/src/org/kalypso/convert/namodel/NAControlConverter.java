@@ -142,7 +142,7 @@ public class NAControlConverter
       final String iniDate = format.format( iniIter.next() );
       b.append( iniDate + "\n" ); //$NON-NLS-1$
     }
-    b.append( "99999\n" );
+    b.append( "99999\n" ); //$NON-NLS-1$
     conf.setInitalValues( dateWriteSet );
   }
 
@@ -151,37 +151,37 @@ public class NAControlConverter
     int minutesOfTimeStep = conf.getMinutesOfTimeStep();
     double hoursOfTimeStep = minutesOfTimeStep / 60d;
     b.append( " " + hoursOfTimeStep + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_TMP_PROP ) ) + "       Temperatur                 .tmp\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_PRE_PROP ) ) + "       Niederschlag               .pre\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SCH_PROP ) ) + "       Schnee                     .sch\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_BOF_PROP ) ) + "       Bodenfeuchte               .bof\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_BSP_PROP ) ) + "       Bodenspeicher              .bsp\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_GWS_PROP ) ) + "       Grundwasserstand           .gws\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGS_PROP ) ) + "       Gesamtabfluss Knoten       .qgs\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGG_PROP ) ) + "       Gesamtabfluss TG           .qgg\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QNA_PROP ) ) + "       nat. Oberflaechenabfluss   .qna\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QIF_PROP ) ) + "       Interflow                  .qif\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QVS_PROP ) ) + "       Abfluss vers. Flaechen     .qvs\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QBS_PROP ) ) + "       Basisabfluss               .qbs\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QT1_PROP ) ) + "       Kluftgrundw1               .qt1\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QTG_PROP ) ) + "       Kluftgrundw                .qtg\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGW_PROP ) ) + "       Grundwasserabfluss         .qgw\n" );
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_TMP_PROP ) ) + "       Temperatur                 .tmp\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_PRE_PROP ) ) + "       Niederschlag               .pre\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SCH_PROP ) ) + "       Schnee                     .sch\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_BOF_PROP ) ) + "       Bodenfeuchte               .bof\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_BSP_PROP ) ) + "       Bodenspeicher              .bsp\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_GWS_PROP ) ) + "       Grundwasserstand           .gws\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGS_PROP ) ) + "       Gesamtabfluss Knoten       .qgs\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGG_PROP ) ) + "       Gesamtabfluss TG           .qgg\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QNA_PROP ) ) + "       nat. Oberflaechenabfluss   .qna\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QIF_PROP ) ) + "       Interflow                  .qif\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QVS_PROP ) ) + "       Abfluss vers. Flaechen     .qvs\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QBS_PROP ) ) + "       Basisabfluss               .qbs\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QT1_PROP ) ) + "       Kluftgrundw1               .qt1\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QTG_PROP ) ) + "       Kluftgrundw                .qtg\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGW_PROP ) ) + "       Grundwasserabfluss         .qgw\n" ); //$NON-NLS-1$
     // sollte nicht bei der Ausgabe erzeugt werden, da Berechnung mit kap. Aufstieg noch nicht implementiert!
-    b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_VET_PROP ) ) + "       Evapotranspiration         .vet\n" );
+    b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_VET_PROP ) ) + "       Evapotranspiration         .vet\n" ); //$NON-NLS-1$
     // FIXME die mulden-rigolen sind abhänging von der version der exe. muss erst noch angepasst werden. rechnet jetzt
     // nur mit der v2.5 (ask Christoph)
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QMR_PROP ) ) + "       Ausgabe MRS                .qmr\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_HYD_PROP ) ) + "       Ausgabe Hydrotope          .hyd\n" );
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QMR_PROP ) ) + "       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_HYD_PROP ) ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
     // if "2": output of *.txt and *.bil
     if( ((Boolean) (controlFE.getProperty( NaModelConstants.NACONTROL_BIL_PROP ))).booleanValue() )
-      b.append( "2" + "       Abflussbilanz              .bil\n" );
+      b.append( "2" + "       Abflussbilanz              .bil\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else
-      b.append( "n" + "       Abflussbilanz              .bil\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_NMQ_PROP ) ) + "       Statistische Abflusswerte  .nmq\n" );
+      b.append( "n" + "       Abflussbilanz              .bil\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_NMQ_PROP ) ) + "       Statistische Abflusswerte  .nmq\n" ); //$NON-NLS-1$
     // Folgende Dateien werden zusätzlich mit Speicherinhalt generiert .sph, .spv, .spn, .spb
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SPI_PROP ) ) + "       Speicherinhalt             .spi\n" );
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SUP_PROP ) ) + "       Speicherueberlauf          .sup\n" );
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SPI_PROP ) ) + "       Speicherinhalt             .spi\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SUP_PROP ) ) + "       Speicherueberlauf          .sup\n" ); //$NON-NLS-1$
   }
 
   private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final StringBuffer b, final IDManager idManager )
@@ -203,7 +203,7 @@ public class NAControlConverter
         b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
-    b.append( "99999\n" );
+    b.append( "99999\n" ); //$NON-NLS-1$
     // teilgebiete
     final IFeatureType catchmentFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final Feature[] catchmentFEs = modellWorkspace.getFeatures( catchmentFT );
@@ -213,63 +213,63 @@ public class NAControlConverter
         b.append( idManager.getAsciiID( catchmentFEs[i] ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
     }
-    b.append( "99999\n" );
+    b.append( "99999\n" ); //$NON-NLS-1$
   }
 
   private static void writeFalstart( NAConfiguration conf, File startFile, StringBuffer b )
   {
 
-    String system = "we";// "sys";
-    String zustand = "nat";
+    String system = "we";// "sys"; //$NON-NLS-1$
+    String zustand = "nat"; //$NON-NLS-1$
     final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) ); //$NON-NLS-1$
 
     String startDate = format.format( conf.getSimulationStart() );
     String endDate = format.format( conf.getSimulationEnd() );
 
-    b.append( "xxx\n" );
-    b.append( "x einzugsgebiet\n" );
+    b.append( "xxx\n" ); //$NON-NLS-1$
+    b.append( "x einzugsgebiet\n" ); //$NON-NLS-1$
     if( conf.isUsePrecipitationForm().equals( true ) )
     {
       String preFormText = conf.getPrecipitationForm();
       int preForm = 0;
-      if( preFormText.equals( "Blockregen" ) )
+      if( preFormText.equals( "Blockregen" ) ) //$NON-NLS-1$
       {
         preForm = 1;
       }
-      else if( preFormText.equals( "linksschiefer Regen" ) )
+      else if( preFormText.equals( "linksschiefer Regen" ) ) //$NON-NLS-1$
       {
         preForm = 2;
       }
-      else if( preFormText.equals( "Zentralregen" ) )
+      else if( preFormText.equals( "Zentralregen" ) ) //$NON-NLS-1$
       {
         preForm = 3;
       }
-      else if( preFormText.equals( "rechtsschiefer Regen" ) )
+      else if( preFormText.equals( "rechtsschiefer Regen" ) ) //$NON-NLS-1$
       {
         preForm = 4;
       }
       else
         System.out.println( Messages.getString("org.kalypso.convert.namodel.NAControlConverter.49") ); //$NON-NLS-1$
 
-      b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" );
-      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( conf.getAnnuality(), "f6.3" ) + " " + FortranFormatHelper.printf( conf.getDuration(), "f9.3" ) //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$ //$NON-NLS-7$
+      b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" ); //$NON-NLS-1$
+      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( conf.getAnnuality(), "f6.3" ) + " " + FortranFormatHelper.printf( conf.getDuration(), "f9.3" )  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
           + " " + Integer.toString( preForm ) + " " + "start" + File.separator + startFile.getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     else
     {
-      b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
-      b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName() + "\n" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+      b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" ); //$NON-NLS-1$
+      b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName() + "\n" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     }
   }
 
   private static String getBoolean( Object object )
   {
     if( object == null || (!(object instanceof Boolean)) )
-      return "n";
+      return "n"; //$NON-NLS-1$
     boolean flag = ((Boolean) object).booleanValue();
     if( flag )
-      return "j";
-    return "n";
+      return "j"; //$NON-NLS-1$
+    return "n"; //$NON-NLS-1$
   }
 
 }
