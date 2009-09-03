@@ -134,6 +134,9 @@ public class WspLegendPopupDialog extends PopupDialog
       String[] activeNames = data.getActiveNames();
 
       /* Set the selection. */
+      /* If it is null, nothing was ever activated. */
+      /* If it is an empty array, the user has deactivated all entries. */
+      /* In this cases, nothing should be selected. */
       if( activeNames != null && activeNames.length > 0 )
         treeViewer.setCheckedElements( activeNames );
 

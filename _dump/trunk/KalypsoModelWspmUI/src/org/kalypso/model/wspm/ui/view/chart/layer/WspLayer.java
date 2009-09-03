@@ -56,9 +56,15 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IRecord;
+
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * Displays constant wsp lines in the cross section.
@@ -116,12 +122,8 @@ public abstract class WspLayer extends AbstractProfilLayer
   {
     try
     {
+      /* No data. */
       if( m_data == null )
-        return;
-
-      /* Get all active names. */
-      String[] names = m_data.getActiveNames();
-      if( names == null || names.length == 0 )
         return;
 
       /* Get the profile. */
@@ -129,17 +131,37 @@ public abstract class WspLayer extends AbstractProfilLayer
       if( profile == null )
         return;
 
+      /* Get all active names. */
+      String[] activeNames = m_data.getActiveNames();
+
+      /* If nothing was ever activated, activate all. */
+      if( activeNames == null )
+      {
+        /* Get all available names. */
+        String[] names = m_data.getNames();
+        if( names == null || names.length == 0 )
+          return;
+
+        /* Activate all available names. */
+        m_data.activateNames( names );
+        activeNames = m_data.getActiveNames();
+      }
+
+      /* Nothing is activated. */
+      if( activeNames.length == 0 )
+        return;
+
       /* Get the station. */
       BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
 
-      /* Paint the values for the names. */
-      for( int i = 0; i < names.length; i++ )
+      /* Paint the values for the active names. */
+      for( int i = 0; i < activeNames.length; i++ )
       {
-        /* Get the name. */
-        String name = names[i];
+        /* Get the active name. */
+        String activeName = activeNames[i];
 
         /* Search the value. */
-        double value = m_data.searchValue( name, station );
+        double value = m_data.searchValue( activeName, station );
         if( Double.isNaN( value ) )
           continue;
 
@@ -151,6 +173,81 @@ public abstract class WspLayer extends AbstractProfilLayer
     {
       /* Log the error message. */
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public EditInfo getHover( Point pos )
+  {
+    try
+    {
+      /* No data. */
+      if( m_data == null )
+        return null;
+
+      /* Get the profile. */
+      IProfil profile = getProfil();
+      if( profile == null )
+        return null;
+
+      /* Get all active names. */
+      String[] activeNames = m_data.getActiveNames();
+
+      /* Nothing was ever activated or nothing is activated. */
+      if( activeNames == null || activeNames.length == 0 )
+        return null;
+
+      /* Get the station. */
+      BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
+
+      /* Get the domain axis. */
+      IAxis domainAxis = getDomainAxis();
+
+      /* Get the range. */
+      IDataRange<Number> domainRange = domainAxis.getNumericRange();
+
+      /* The x positions. */
+      int x_start = domainAxis.numericToScreen( domainRange.getMin() );
+      int x_end = domainAxis.numericToScreen( domainRange.getMax() );
+
+      /* Get the target axis. */
+      IAxis targetAxis = getTargetAxis();
+
+      /* Search the values for the active names. */
+      for( int i = 0; i < activeNames.length; i++ )
+      {
+        /* Get the active name. */
+        String activeName = activeNames[i];
+
+        /* Search the value. */
+        double value = m_data.searchValue( activeName, station );
+        if( Double.isNaN( value ) )
+          continue;
+
+        /* The y position. */
+        int y = targetAxis.numericToScreen( value );
+
+        if( pos.y >= y - 5 && pos.y <= y + 5 )
+        {
+          /* Create a full rectangle figure. */
+          PolylineFigure hoverFigure = new PolylineFigure();
+          hoverFigure.setStyle( getLineStyle_hover() );
+          hoverFigure.setPoints( new Point[] { new Point( x_start, y ), new Point( x_end, y ) } );
+
+          return new EditInfo( this, hoverFigure, null, null, String.format( "%-12s %14s%n%-12s %10.2f [m]", Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.1" ), activeName, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.2" ), value ), pos ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+      }
+
+      return null;
+    }
+    catch( Exception ex )
+    {
+      ex.printStackTrace();
+
+      return null;
     }
   }
 
