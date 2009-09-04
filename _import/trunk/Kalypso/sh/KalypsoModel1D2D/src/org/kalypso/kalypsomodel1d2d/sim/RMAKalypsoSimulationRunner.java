@@ -101,7 +101,7 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
 
   public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider ) throws CoreException
   {
-    super( RMAKalypsoSimulation.ID, WPSRequest.SERVICE_LOCAL, 60 * 60 * 1000 );
+    super( RMAKalypsoSimulation.ID, WPSRequest.SERVICE_LOCAL, -1 );
     m_log = geoLog;
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
     m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
