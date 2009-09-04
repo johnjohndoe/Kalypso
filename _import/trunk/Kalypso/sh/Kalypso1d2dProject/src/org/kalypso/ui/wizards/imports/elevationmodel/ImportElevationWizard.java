@@ -41,31 +41,24 @@
 package org.kalypso.ui.wizards.imports.elevationmodel;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.core.util.pool.IPoolListener;
-import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
@@ -297,41 +290,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
   boolean copy( final File src, final File dst, final IProgressMonitor monitor2 )
   {
-    InputStream in;
-    OutputStream out;
     try
     {
-      in = new FileInputStream( src );
-      if( !dst.exists() )
-      {
-        if( dst.createNewFile() )
-        {
-          // ok
-        }
-        else
-        {
-          throw new IOException( Messages.getString("org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard.11") + dst ); //$NON-NLS-1$
-        }
-      }
-      else
-      {
-        // may be shows some message to the user
-      }
-      out = new FileOutputStream( dst );
-
-      final byte[] buf = new byte[1024];
-      int len;
-      final int lens = ((int) src.length() / 1024 + 1);
-      monitor2.beginTask( Messages.getString("org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard.0"), lens ); //$NON-NLS-1$
-      while( (len = in.read( buf )) > 0 )
-      {
-        monitor2.worked( 1 );
-        // monitor2.wait( 1000 );
-        out.write( buf, 0, len );
-      }
-      monitor2.done();
-      in.close();
-      out.close();
+      FileUtils.copyFile( src, dst );
       return true;
     }
     catch( final Exception e )
@@ -357,38 +318,6 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   public String getFileUserName( )
   {
     return mPage.getNameForFile();
-  }
-
-  private final IPoolListener getPoolListener( )
-  {
-    return new IPoolListener()
-    {
-
-      public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
-      {
-        // TODO Auto-generated method stub
-
-      }
-
-      public boolean isDisposed( )
-      {
-        // TODO Auto-generated method stub
-        return false;
-      }
-
-      public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
-      {
-        // TODO Auto-generated method stub
-
-      }
-
-      public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
-      {
-        // TODO Auto-generated method stub
-
-      }
-
-    };
   }
 
   public File getUTF_DecodedFile( final File file )

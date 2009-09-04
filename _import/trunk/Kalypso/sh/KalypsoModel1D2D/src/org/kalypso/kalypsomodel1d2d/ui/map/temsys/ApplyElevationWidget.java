@@ -258,7 +258,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
         return;
 
       final IMapPanel mapPanel = m_dataModel.getMapPanel();
-      if( mapPanel == null )
+      if( mapPanel == null || mapPanel.getProjection() == null )
         return;
 
       // find node

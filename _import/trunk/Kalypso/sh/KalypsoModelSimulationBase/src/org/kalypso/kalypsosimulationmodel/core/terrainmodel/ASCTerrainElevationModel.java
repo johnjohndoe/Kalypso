@@ -50,6 +50,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -131,10 +132,10 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
       }
       N_COLS = Integer.parseInt( data[0] );
       N_ROWS = Integer.parseInt( data[1] );
-      xllcorner = Double.parseDouble( data[2] );
-      yllcorner = Double.parseDouble( data[3] );
-      cellSize = Double.parseDouble( data[4] );
-      final double noDataValue = Double.parseDouble( data[5] );
+      xllcorner = NumberUtils.parseDouble( data[2] );
+      yllcorner = NumberUtils.parseDouble( data[3] );
+      cellSize = NumberUtils.parseDouble( data[4] );
+      final double noDataValue = NumberUtils.parseDouble( data[5] );
       double currentValue;
 
       elevations = new double[N_ROWS][N_COLS];
@@ -147,7 +148,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
         strRow = br.readLine().trim().split( " " ); //$NON-NLS-1$
         for( int x = 0; x < N_COLS; x++ )
         {
-          currentValue = Double.parseDouble( strRow[x] );
+          currentValue = NumberUtils.parseDouble( strRow[x] );
           if( currentValue != noDataValue )
           {
             elevations[y][x] = currentValue;
