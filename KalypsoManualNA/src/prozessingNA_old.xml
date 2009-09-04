@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="KalypsoNAProzessing">
+  <title>Prozessing</title>
+
+    <indexterm>
+      <primary>Prozessing KalypsoNA</primary>
+    </indexterm>
+
+    <section id="KalypsoNARechanvariante">
+      <title>Rechenvarianten und Szenarien</title>
+
+      <indexterm>
+        <primary>Rechenvarianten und Szenarien KalypsoNA</primary>
+      </indexterm>
+
+      <para>Eine Rechenvariante ist streng genommen eine Kopie des
+      Basismodelles, auf deren Basis eine Modellberechnung durchgeführt werden
+      kann. Eine rechenvariante kann somit sowohl zur Kalibrierung, zur
+      Szenarienberechnung, als auch zur Ereignisberechnung verwendet werden.
+      Weitere informationen zum Umgang mit Rechenvarianten (Anlegen einer
+      rechenvariante, Zeitreihen updaten,...) finden sich in Kapitel <xref
+      linkend="definition_calccase" />.</para>
+
+      <para>Nach dem Anlegen einer neuen Rechenvariante enthält das
+      Verzeichnis der Rechenvariante alle zur Modellberechnung notwendigen
+      Dateien. Diese werden beim Anlegen automatisch vom Programm in das
+      entsprechende Verzeichnis kopiert. Es werden verknüpfte Zeitreihen und
+      Modellparameter des Basismodells in das Verzeichnis der Rechenvariante
+      abgelegt (siehe Zeitreihenverknüfpung im Zeitreihencontrol des
+      Basismodells <xref linkend="KalypsoNAZeitreihenverknüpfung" />).
+      Pegel- und Zuflussganglinien sowie Niederschlags- und Klimazeitreihen
+      werden für den Simulationszeitraum aus dem verknüpften
+      Zeitreihenrepository geladen und im angegebenen Zielverzeichnis der
+      Rechenvariante gespeichert.</para>
+
+      <figure id="PicWeisseElsterRechenlauf">
+        <title>Verzeichnis Rechenvarianten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/modelle/navigator_rechenvariante.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="KalypsoNAErgebnismanagement">
+      <title>Ergebnismanagement/ Ergebnisvisualisierung</title>
+
+      <indexterm>
+        <primary>Ergebnismanagement/ Ergebnisvisualisierung
+        KalypsoNA</primary>
+      </indexterm>
+
+      <para>Um für ein Modellknoten bzw. Pegel, ein Teilgebiet oder ein
+      Rückhaltebeckenstrang Berechnungsergebnisse zu erhalten, muss in der
+      jeweiligen Thementabelle das Attribut <emphasis>berechnen</emphasis>
+      gesetzt werden. Die Anzahl der ausgewählten Elemente ist beliebig.
+      Zusätzlich ist im Ausgabemanagement
+      (<emphasis>Tabellen/Control/Ausgabemanagement.gft</emphasis>) eine
+      allgemeine Auswahl der für jedes Element verfügbaren Ausgabedateien
+      vorhanden. Für jedes gewählte Modellelement werden nach erfolgreicher
+      Berechnung die jeweiligen (in Ausgabemenagement.gft gewählten)
+      Zeitreihen im Unterordner <guimenu>Ergebnisse</guimenu> abgelegt. Es
+      stehen je nach Auswahl folgende Ergebnisse zur Verfügung:</para>
+
+      <para>Knoten:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Gesamtknotenabfluss</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Teilgebiete:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Temperatur</para>
+        </listitem>
+
+        <listitem>
+          <para>Niederschlag</para>
+        </listitem>
+
+        <listitem>
+          <para>Schneehöhe</para>
+        </listitem>
+
+        <listitem>
+          <para>Gesamtteilgebietsabfluss</para>
+        </listitem>
+
+        <listitem>
+          <para>Oberflaechenabfluss(natuerlich)</para>
+        </listitem>
+
+        <listitem>
+          <para>Oberflaechenabfluss(versiegelt)</para>
+        </listitem>
+
+        <listitem>
+          <para>Interflow</para>
+        </listitem>
+
+        <listitem>
+          <para>Basisabfluss</para>
+        </listitem>
+
+        <listitem>
+          <para>Grundwasserabfluss</para>
+        </listitem>
+
+        <listitem>
+          <para>Grundwasserstand</para>
+        </listitem>
+
+        <listitem>
+          <para>Evapotranspiration</para>
+        </listitem>
+
+        <listitem>
+          <para>Abflussbilanz</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Speicher:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Wasserspiegelhoehe</para>
+        </listitem>
+
+        <listitem>
+          <para>Fuellvolumen</para>
+        </listitem>
+
+        <listitem>
+          <para>Speicherueberlauf</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="KalypsoNASimulationsmanagement">
+      <title>Simulationsmanagement</title>
+
+      <indexterm>
+        <primary>Simulationsmanagement KalypsoNA</primary>
+      </indexterm>
+
+      <para>Die beim Anlegen einer Rechenvariante festgelegten Steuerdaten
+      können in der Eingabemaske
+      S<emphasis>imulationsManagement.gft</emphasis> geändert werden. Neben
+      den Zeitpunkten für den Start der Berechnung und das Ende der Simulation
+      kann auch der Berechnungszeitschritt (in Minuten - Langzeitsimulation
+      bei Delta t &gt;1440 min) und die zu verwendende Rechenkernversion
+      vorgegeben werden (Standardmäßig wird mit der neuesten Version
+      gerechnet).</para>
+
+      <table>
+        <title>verfügbare Rechenkernversionen</title>
+
+        <tgroup align="center" cols="2">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" />
+
+          <thead>
+            <row>
+              <entry>Key (Versionsangabe)</entry>
+
+              <entry>Verwendete Rechenkernversion</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>v2.0.5</entry>
+
+              <entry>kalypso_2.0.5.exe</entry>
+            </row>
+
+            <row>
+              <entry>v2.0.5, neueste, latest</entry>
+
+              <entry>kalypso_2.0.6.exe</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+
+    <section id="KalypsoNAModellberechnung">
+      <title>Modellberechnung</title>
+
+      <indexterm>
+        <primary>Modellberechnung KalypsoNA</primary>
+      </indexterm>
+
+      <para>Nachdem alle Modellparameter gesetzt wurden kann die Berechnung
+      gestartet werden. Hierzu muss zunächst eine Rechenvariante markiert
+      werden, welche dann über das <guimenuitem>Menü &gt; Rechenvariante
+      Berechnung(en)</guimenuitem><guimenuitem> durchführen</guimenuitem>
+      gestartet wird. Generell ist auch die Berechnung mehrerer
+      Rechenvarianten in einem Schritt möglich, indem das
+      Rechenvariantenverzeichnis ausgewählt wird und im Auswahldialog die
+      Rechenvarianten markiert werden, welche berechnet werden sollen.</para>
+
+      <para>Die Berechnung selbst wird bei vorhandenem Server auf diesem
+      durchgeführt, so dass die Arbeit am Arbeitsplatzrechner weiter
+      durchgeführt werden kann. Ist kein Server vorhanden, so werden die
+      Berechnungen auf dem lokalen Rechner durchgeführt.</para>
+
+      <para>Evtl. Fehler und Warnungen etc., welche bei der Berechnung
+      aufgetreten sind, werden vornehmlich in der Rechenvariante unter dem
+      Ordner Logs im File <guimenu>error.txt</guimenu> abgelegt. Ist die
+      Ansicht <guimenu>Kalypso Log Ansicht</guimenu> bei der Selektion der
+      Datei error.txt geöffnet, so werden die Fehler in dieser Ansicht
+      angezeigt.</para>
+    </section>
+</chapter>
