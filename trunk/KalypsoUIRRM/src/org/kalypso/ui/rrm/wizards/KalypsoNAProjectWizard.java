@@ -370,7 +370,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
     try
     {
-      ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
+      m_projectHandel.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
     }
     catch( final CoreException e2 )
     {
