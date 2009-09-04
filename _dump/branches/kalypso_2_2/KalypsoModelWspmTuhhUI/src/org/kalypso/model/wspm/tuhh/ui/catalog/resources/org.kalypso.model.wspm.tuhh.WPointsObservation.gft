@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<gft:featureview typename="tuhh:WPointsObservation" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:om="http://www.opengis.net/om" xmlns:gml="http://www.opengis.net/gml">
+    <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+    <gft:gridLayout numColumns="4"/>
+    <gft:label property="gml:name" visible="true"  style="SWT.NONE">
+        <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:text editable="true" property="gml:name"  style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+        <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+    </gft:text>
+    <gft:label visible="false" style="SWT.NONE">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:validatorlabel property="gml:name" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:validatorlabel>
+    <gft:label property="gml:description" visible="true"  style="SWT.NONE">
+        <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:text editable="true" property="gml:description"  style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+        <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true"/>
+    </gft:text>
+    <gft:label visible="false" style="SWT.NONE">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:validatorlabel>
+    <gft:label text="Profile" visible="true" tooltip="Liste der im Strang referenzierten Profile" style="SWT.NONE">
+        <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.tuhh.ui.featureview.ChartFeatureControlFactory" style="SWT.BORDER">
+        <gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true"/>
+    	<gft:param name="configuration" value="WPointsObservation.kod"/>
+    </gft:extensioncontrol>
+</gft:featureview>
+
