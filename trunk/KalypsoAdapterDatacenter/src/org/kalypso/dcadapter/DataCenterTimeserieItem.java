@@ -3,6 +3,8 @@ package org.kalypso.dcadapter;
 import java.sql.SQLException;
 import java.util.Date;
 
+import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -100,7 +102,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     return m_rep;
   }
 
-  public Object getAdapter( Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     if( anotherClass == IObservation.class )
       return this;
@@ -138,11 +140,13 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
           "Daten aus: " + m_ts.getDataTableName() );
       m_metadataList.put( ObservationConstants.MD_ORIGIN, "DataCenter" );
       
-      java.sql.Date begin = m_ts.getRealBegin();
+      final java.sql.Date begin = m_ts.getRealBegin();
       if( begin != null )
       {
-        m_metadataList.put( TimeserieConstants.MD_DATE_BEGIN, TimeserieConstants.DEFAULT_DF.format( begin ) );
-        m_metadataList.put( TimeserieConstants.MD_DATE_END, TimeserieConstants.DEFAULT_DF.format( m_ts.getRealEnd() ) );
+        final String strBegin = DateUtilities.printDateTime( begin, KalypsoCorePlugin.getDefault().getTimeZone() );
+        final String strRealEnd = DateUtilities.printDateTime( begin, KalypsoCorePlugin.getDefault().getTimeZone() );
+        m_metadataList.put( TimeserieConstants.MD_DATE_BEGIN, strBegin );
+        m_metadataList.put( TimeserieConstants.MD_DATE_END, strRealEnd );
       }
     }
     
@@ -168,7 +172,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       {
         type = DataCenterUtils.toKalypsoType( m_parent.getChannel().getType() );
       }
-      catch( SQLException e )
+      catch( final SQLException e )
       {
         e.printStackTrace();
       }
@@ -177,7 +181,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       {
         unit = DataCenterUtils.toKalypsoUnit( m_parent.getChannel().getUnit() );
       }
-      catch( SQLException e )
+      catch( final SQLException e )
       {
         e.printStackTrace();
       }
@@ -207,7 +211,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
 
       return new DataCenterTuppleModel( tupples, getAxisList() );
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       throw new SensorException(e);
     }
@@ -242,7 +246,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
    */
-  public void removeListener( IObservationListener listener )
+  public void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
