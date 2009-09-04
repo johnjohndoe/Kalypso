@@ -256,4 +256,14 @@
        </menu>
     </menuContribution>
  </extension>
+ 
+ <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ui.rrm.logviewer.LogViewer"
+            icon="icons/logview/problems_view.gif"
+            id="org.kalypso.ui.rrm.logviewer.LogViewer"
+            name="%org.kalypso.ui.rrm.logviewer.LogViewer.name"/>
+   </extension> 
 </plugin>
