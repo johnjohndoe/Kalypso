@@ -47,7 +47,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -62,11 +61,13 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
@@ -163,7 +164,8 @@ public class UtilMap
     // PlatformUI.getWorkbench().getDisplay().syncExec( waitForFeaturesLoading( mapModel ) );
 
     // TODO: check if always works
-    final ICoreRunnableWithProgress operation = MapModellHelper.createWaitForMapOperation( panel );
+    final IMapModell mapModell = panel == null ? null : panel.getMapModell();
+    final ICoreRunnableWithProgress operation = MapModellHelper.createWaitForMapOperation( mapModell );
     IStatus waitErrorStatus;
     try
     {
@@ -181,7 +183,7 @@ public class UtilMap
     }
 
     final KalypsoThemeVisitor kalypsoThemeVisitor = new KalypsoThemeVisitor( PREDICATE );
-    panel.getMapModell().accept( kalypsoThemeVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    mapModell.accept( kalypsoThemeVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
     final IKalypsoTheme[] foundThemes = kalypsoThemeVisitor.getFoundThemes();
     for( final IKalypsoTheme kalypsoTheme2 : foundThemes )
       result.add( (IKalypsoFeatureTheme) kalypsoTheme2 );
