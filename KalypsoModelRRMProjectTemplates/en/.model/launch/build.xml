@@ -25,7 +25,9 @@
         <echo message="Rechenvariante anlegen: ${calc.dir}" />
         <!-- copy modell -->
         <copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
+    	<!--
         <copy file="${project.dir}/hydrotop.gml" tofile="${calc.dir}/calcHydrotop.gml" />
+        -->
         <copy file="${project.dir}/parameter.gml" tofile="${calc.dir}/calcParameter.gml" />        	
         <copy file="${project.dir}/.model/observationConf/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
         <copy file="${project.dir}/.model/observationConf/ObsQMapping.gml"
@@ -227,7 +229,9 @@
 		        <echo message="Rechenvariante als Basismodell übernehmen: ${calc.dir}" />
 		        <!-- copy basic modell -->
 	 		<copy file="${calc.dir}/calcCase.gml" tofile="${project.dir}/modell.gml" />
+			<!--
 	        <copy file="${calc.dir}/calcHydrotop.gml" tofile="${project.dir}/hydrotop.gml" />
+	        -->
 	        <copy file="${calc.dir}/calcParameter.gml" tofile="${project.dir}/parameter.gml" />        	
 		    </target>
 
