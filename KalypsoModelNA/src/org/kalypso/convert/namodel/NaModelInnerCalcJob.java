@@ -146,13 +146,13 @@ public class NaModelInnerCalcJob implements ISimulation
 {
 
   // resourcebase for static files used in calculation
-  private final String m_resourceBase = "template/";  //$NON-NLS-1$
+  private final String m_resourceBase = "template/"; //$NON-NLS-1$
 
-  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";  //$NON-NLS-1$
+  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe"; //$NON-NLS-1$
 
-  private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe";  //$NON-NLS-1$
+  private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe"; //$NON-NLS-1$
 
-  private final String EXE_FILE_2_06 = "start/kalypso_2.0.6.exe";  //$NON-NLS-1$
+  private final String EXE_FILE_2_06 = "start/kalypso_2.0.6.exe"; //$NON-NLS-1$
 
   private final String EXE_FILE_2_07 = "start/kalypso_2.0.7.exe"; //$NON-NLS-1$
 
@@ -161,6 +161,8 @@ public class NaModelInnerCalcJob implements ISimulation
   private final String EXE_FILE_2_11 = "start/kalypso_2.1.1.exe"; //$NON-NLS-1$
 
   private final String EXE_FILE_2_13 = "start/kalypso_2.1.3.exe"; //$NON-NLS-1$
+
+  private final String EXE_FILE_2_141 = "start/kalypso_2.1.4.1.exe"; //$NON-NLS-1$
 
   private final String EXE_FILE_TEST = "start/kalypso_test.exe"; //$NON-NLS-1$
 
@@ -220,7 +222,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
     final Logger logger = conf.getLogger();
-    logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13", m_dateString) +"/n"); //$NON-NLS-1$ //$NON-NLS-2$
+    logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13", m_dateString ) + "/n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {
@@ -449,7 +451,7 @@ public class NaModelInnerCalcJob implements ISimulation
     double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
     final Double featureAccuracy = (Double) rootFeature.getProperty( NaModelConstants.NACONTROL_ACCPRED_PROP );
     if( featureAccuracy == null )
-      logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.44" , accuracyPrediction ) ) ; //$NON-NLS-1$ 
+      logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.44", accuracyPrediction ) ); //$NON-NLS-1$ 
     else
       accuracyPrediction = featureAccuracy.doubleValue();
 
@@ -487,7 +489,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // from predicted timeseries
     final UrlResolver urlResolver = new UrlResolver();
     final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
-    return ZmlFactory.parseXML( resultURL, "vorhersage" );  //$NON-NLS-1$
+    return ZmlFactory.parseXML( resultURL, "vorhersage" ); //$NON-NLS-1$
   }
 
   /**
@@ -964,8 +966,10 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_11;
     else if( kalypsoNAVersion.equals( "v2.1.3" ) ) //$NON-NLS-1$
       m_kalypsoKernelPath = EXE_FILE_2_13;
+    else if( kalypsoNAVersion.equals( "v2.1.4.1" ) ) //$NON-NLS-1$
+      m_kalypsoKernelPath = EXE_FILE_2_141;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) ) // latest stable is 2.1.3 //$NON-NLS-1$ //$NON-NLS-2$
-      m_kalypsoKernelPath = EXE_FILE_2_13;
+      m_kalypsoKernelPath = EXE_FILE_2_141;
     else
     {
       System.out.println( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) + Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.70" ) //$NON-NLS-1$ //$NON-NLS-2$
@@ -1081,7 +1085,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     catch( final Exception e )
     {
-      logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83" ,e.getLocalizedMessage()) ); //$NON-NLS-1$
+      logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     loadTextFileResults( tmpdir, logger, resultDir );
     if( conf.getIniWrite() )
@@ -1189,7 +1193,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
-        logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125" , key ,feature.getFeatureType().getQName(),suffix )+"\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, feature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         // transform data to tuppelmodel
         final SortedMap data = ts.getTimeSerie( key );
@@ -1206,7 +1210,7 @@ public class NaModelInnerCalcJob implements ISimulation
           pos++;
         }
 
-        final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.4"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
         final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class, false );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
         final IAxis[] axis = new IAxis[] { dateAxis, qAxis, statusAxis };
@@ -1235,7 +1239,7 @@ public class NaModelInnerCalcJob implements ISimulation
           if( itExists )
           {
             logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.132" ) ); //$NON-NLS-1$
-            final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );  //$NON-NLS-1$
+            final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" ); //$NON-NLS-1$
 
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { TimeserieConstants.MD_ALARM_1, TimeserieConstants.MD_ALARM_2, TimeserieConstants.MD_ALARM_3,
                 TimeserieConstants.MD_ALARM_4, TimeserieConstants.MD_GEWAESSER, TimeserieConstants.MD_FLUSSGEBIET, TimeserieConstants.MD_GKH, TimeserieConstants.MD_GKR,
@@ -1273,17 +1277,17 @@ public class NaModelInnerCalcJob implements ISimulation
         {
           resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
         }
-        
+
         if( !m_resultMap.contains( resultPathRelative ) )
         {
           m_resultMap.add( resultPathRelative );
         }
         else
         {
-          logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136" ,resultPathRelative )); //$NON-NLS-1$
+          logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136", resultPathRelative ) ); //$NON-NLS-1$
           resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$
           m_resultMap.add( resultPathRelative );
-          logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140" , resultPathRelative ) ); //$NON-NLS-1$
+          logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPathRelative ) ); //$NON-NLS-1$
         }
 
         final File resultFile = new File( outputDir, "Ergebnisse/Aktuell/" + resultPathRelative ); //$NON-NLS-1$
@@ -1381,7 +1385,7 @@ public class NaModelInnerCalcJob implements ISimulation
         if( nodeMatcher.matches() )
           resultValuesList.add( new Object[] { nodeMatcher.group( 1 ), " ", maxValueDate, maxValue } ); //$NON-NLS-1$
         else
-          logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.160" ,observation.getName() ,resultFileRelativePath)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.160", observation.getName(), resultFileRelativePath ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       else
       {
@@ -1390,7 +1394,7 @@ public class NaModelInnerCalcJob implements ISimulation
         if( stationNodeMatcher.matches() && stationNameMatcher.matches() )
           resultValuesList.add( new Object[] { stationNodeMatcher.group( 1 ), stationNameMatcher.group( 1 ), maxValueDate, maxValue } );
         else
-          logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.160" , observation.getName() , resultFileRelativePath)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.160", observation.getName(), resultFileRelativePath ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
     }
     final IAxis[] axis = resultAxisList.toArray( new IAxis[0] );
@@ -1447,57 +1451,57 @@ public class NaModelInnerCalcJob implements ISimulation
   {
     // j Temperatur .tmp
     if( suffix.equalsIgnoreCase( "tmp" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.5"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.5" ); //$NON-NLS-1$
     // j Niederschlag .pre
     if( suffix.equalsIgnoreCase( "pre" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.6"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.6" ); //$NON-NLS-1$
     // n Schnee .sch
     if( suffix.equalsIgnoreCase( "sch" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.7"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.7" ); //$NON-NLS-1$
     // j Bodenfeuchte .bof
     if( suffix.equalsIgnoreCase( "bof" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.8"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.8" ); //$NON-NLS-1$
     // n Bodenspeicher .bsp
     if( suffix.equalsIgnoreCase( "bsp" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.9"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.9" ); //$NON-NLS-1$
     // n Grundwasserstand .gws
     if( suffix.equalsIgnoreCase( "gws" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.10"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.10" ); //$NON-NLS-1$
     // Gesamtabfluss Knoten .qgs, Gesamtabfluss TG .qgg, Oberflaechenabfluss .qna, Interflow .qif, Abfluss vers.
     // Flaechen .qvs, Basisabfluss .qbs, Kluftgrundw1 .qt1, Kluftgrundw .qtg, Grundwasser .qgw
     if( suffix.equalsIgnoreCase( "qgs" ) | suffix.equalsIgnoreCase( "qgg" ) | suffix.equalsIgnoreCase( "qna" ) | suffix.equalsIgnoreCase( "qif" ) | suffix.equalsIgnoreCase( "qvs" ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         | suffix.equalsIgnoreCase( "qbs" ) | suffix.equalsIgnoreCase( "qt1" ) | suffix.equalsIgnoreCase( "qtg" ) | suffix.equalsIgnoreCase( "qgw" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.11"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.11" ); //$NON-NLS-1$
     // n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.12"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.12" ); //$NON-NLS-1$
     // n Ausgabe hydrotope .hyd
     if( suffix.equalsIgnoreCase( "hyd" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.16"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.16" ); //$NON-NLS-1$
     // n Abflussbilanz .bil
     if( suffix.equalsIgnoreCase( "bil" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.17"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.17" ); //$NON-NLS-1$
     // n Statistische Abflusswerte .nmq
     if( suffix.equalsIgnoreCase( "nmq" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.18"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.18" ); //$NON-NLS-1$
     // n Speicherinhalt .spi
     if( suffix.equalsIgnoreCase( "spi" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.19"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.19" ); //$NON-NLS-1$
     // n Wasserspiegelhöhe .sph
     if( suffix.equalsIgnoreCase( "sph" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.20"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.20" ); //$NON-NLS-1$
     // n Verdunstung aus Talsperre .spv
     if( suffix.equalsIgnoreCase( "spv" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.21"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.21" ); //$NON-NLS-1$
     // n Niederschlag in Talsperre .spn
     if( suffix.equalsIgnoreCase( "spn" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.22"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.22" ); //$NON-NLS-1$
     // n Zehrung .spb
     if( suffix.equalsIgnoreCase( "spb" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.24"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.24" ); //$NON-NLS-1$
     // n Speicherueberlauf .sub
     if( suffix.equalsIgnoreCase( "sub" ) ) //$NON-NLS-1$
-      return Messages.getString("org.kalypso.convert.namodel.NaModelInnerCalcJob.25"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.25" ); //$NON-NLS-1$
     return suffix;
   }
 
@@ -1630,7 +1634,7 @@ public class NaModelInnerCalcJob implements ISimulation
       int type = 0;
       if( !fortranID.equals( "" ) ) //$NON-NLS-1$
         asciiID = NumberUtils.toInteger( fortranID );
-      if( (elementString.contains( "Teilgebiet" )) )  //$NON-NLS-1$
+      if( (elementString.contains( "Teilgebiet" )) ) //$NON-NLS-1$
       {
         type = IDManager.CATCHMENT;
         asciiType = "Teilgebiet"; //$NON-NLS-1$
@@ -1651,11 +1655,11 @@ public class NaModelInnerCalcJob implements ISimulation
 
         // String FeatureID = idManager.getFeature( asciiID, type ).getId();
         feature.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, asciiType + " " + gmlName.trim() ); //$NON-NLS-1$
-        feature.setProperty( NaModelConstants.GML_FEATURE_DESCRIPTION_PROP, ("FeatureID: " + gmlName.trim()) );  //$NON-NLS-1$
+        feature.setProperty( NaModelConstants.GML_FEATURE_DESCRIPTION_PROP, ("FeatureID: " + gmlName.trim()) ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {
-        System.out.println( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.242" , element ,fortranID )); //$NON-NLS-1$ //$NON-NLS-2$
+        System.out.println( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.242", element, fortranID ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     return naFortranLogWorkspace;
@@ -1671,13 +1675,13 @@ public class NaModelInnerCalcJob implements ISimulation
       {
         final InputStream inputStream = getClass().getResourceAsStream( exeResource );
         FileUtilities.makeFileFromStream( false, destFile, inputStream );
-        System.out.println( " ...copied" );  //$NON-NLS-1$
+        System.out.println( " ...copied" ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {
         e.printStackTrace();
 
-        System.out.println( "ERR: " + exeResource + " may not exist" );   //$NON-NLS-1$ //$NON-NLS-2$
+        System.out.println( "ERR: " + exeResource + " may not exist" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
 

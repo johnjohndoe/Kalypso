@@ -95,6 +95,13 @@
 					</documentation>
 				</annotation>
 			</enumeration>
+			<enumeration value="v2.1.4.1">
+				<annotation>
+					<documentation>
+						<label><![CDATA[Version 2.1.4.1]]></label>
+					</documentation>
+				</annotation>
+			</enumeration>
 			<enumeration value="neueste">
 				<annotation>
 					<documentation xml:lang="de">
