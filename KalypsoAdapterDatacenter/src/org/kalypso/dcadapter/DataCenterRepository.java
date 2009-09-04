@@ -17,10 +17,10 @@ public class DataCenterRepository extends AbstractRepository
 
   private DataCenterLevelItem m_root;
 
-  public DataCenterRepository( String name, String factory, String conf, boolean ro,
-      String url, String userName, String password )
+  public DataCenterRepository( final String name, final String factory, final String conf, final boolean ro,
+      final String url, final String userName, final String password )
   {
-    super( name, factory, conf, ro );
+    super( name, factory, conf, ro, "datacenter://" );
 
     m_database = new IngresDatabase( url, userName, password );
   }
@@ -51,13 +51,6 @@ public class DataCenterRepository extends AbstractRepository
     m_root = null;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
-   */
-  public String getIdentifier( )
-  {
-    return "datacenter://";
-  }
 
   private DataCenterLevelItem getRootItem( )
   {
