@@ -309,6 +309,7 @@ classdef Gaja3D < handle
             p.KeepUnmatched = true;
             p.addParamValue('minAngle', []); % maximum angle in degrees
             p.addParamValue('maxArea', []); % maximum area
+            p.addParamValue('fixBoundary', 0); % if insertion of points on boundary is prohibited
             p.parse(varargin{:});
 
             tempfile = 'ModelTin';
@@ -330,8 +331,13 @@ classdef Gaja3D < handle
             else
                 maxAreaString = '';
             end
+            if(p.Results.fixBoundary)
+                restrictSteinerPointsString = 'Y';
+            else
+                restrictSteinerPointsString = '';
+            end
             
-            cmd = sprintf('! %s -p%s%s %s', tricommand, angleString, maxAreaString, tempfile);
+            cmd = sprintf('! %s -p%s%s%s %s', tricommand, restrictSteinerPointsString, angleString, maxAreaString, tempfile);
             eval(cmd);
             outputPrefix = [tempfile '.1'];
 
