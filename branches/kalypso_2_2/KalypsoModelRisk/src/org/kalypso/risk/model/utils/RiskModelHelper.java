@@ -120,22 +120,11 @@ public class RiskModelHelper
     sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
   }
 
-  public static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final ILandusePolygon polygon, final double damageValue, final Integer landuseClassOrdinalNumber, final double cellSize )
+  public static void fillStatistics( final int returnPeriod, ILanduseClass landuseClass, final double damageValue, final double cellSize )
   {
-    /* add the current damage value to all landuse polygons that covers the current raster cell */
-    polygon.updateStatistics( damageValue, returnPeriod );
-
-    /* find the right landuse class that holds the polygon */
-    for( final ILanduseClass landuseClass : landuseClassesList )
-    {
-      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
-      {
-        final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
-
-        final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-        statistic.updateStatistic( value );
-      }
-    }
+    final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
+    final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    statistic.updateStatistic( value );
   }
 
   /**
@@ -153,6 +142,7 @@ public class RiskModelHelper
    * @return {@link CoverageCollection} with the annual damage values
    * @throws Exception
    */
+  // TODO: nor more used, remove!?
   public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
   {
     final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
@@ -218,7 +208,7 @@ public class RiskModelHelper
                       return Double.NaN;
 
                     /* set statistic for landuse class */
-                    fillStatistics( returnPeriod, landuseClassesList, polygon, damageValue, landuseClassOrdinalNumber, cellSize );
+                    fillStatistics( returnPeriod, landuseClassesList, damageValue, landuseClassOrdinalNumber, cellSize );
                     return damageValue;
                   }
                 }
@@ -255,12 +245,9 @@ public class RiskModelHelper
     return destCoverageCollection;
   }
 
-  protected static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final ILandusePolygon polygon, final double damageValue, final int landuseClassOrdinalNumber, final double cellSize )
+  protected static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final double damageValue, final int landuseClassOrdinalNumber, final double cellSize )
   {
-    /* add the current damage value to all landuse polygons that covers the current raster cell */
-    polygon.updateStatistics( damageValue, returnPeriod );
-
-    /* find the right landuse class that holds the polygon */
+    /* find the right landuse class that holds the polygon */// TODO: potential list search problem!
     for( final ILanduseClass landuseClass : landuseClassesList )
     {
       if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )

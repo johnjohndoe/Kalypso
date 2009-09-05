@@ -1,11 +1,7 @@
 package org.kalypso.risk.model.schema.binding;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.cheffo.jeplite.JEP;
 import org.kalypso.risk.i18n.Messages;
-import org.kalypso.risk.model.utils.RiskPolygonStatistics;
+import org.kalypso.risk.model.utils.FunctionParserCache;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -18,13 +14,6 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   private long m_statisticsNumberOfRasterCells = 0;
 
   private double m_statisticsAverageAnnualDamage = 0.0;
-
-  private final Map<Double, RiskPolygonStatistics> m_statistics = new HashMap<Double, RiskPolygonStatistics>();
-
-  //
-  // private double m_riskBorderLowMiddle = Double.NaN;
-  //
-  // private double m_riskBorderMiddleHigh = Double.NaN;
 
   public LandusePolygon( final Feature featureToBind )
   {
@@ -79,49 +68,31 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     if( assetValue == null || damageFunctionProp == null || getDamageFunctionProp().length() == 0 )
       return Double.NaN;
 
-    final JEP functionParser = new JEP();
-    functionParser.addStandardConstants();
-    functionParser.addStandardFunctions();
-    functionParser.addVariable( "x", depth );
-
     try
     {
+      // Using this cache here, as parsing the function is quite slow; better maybe: cache function in this object.
+      // But this can only be done, if we use the new feature binding stuff instead of adapting to feature.
+      final double damagePercentage = FunctionParserCache.getValue( damageFunctionProp, depth );
+
       // the returned calculated damage value must not be greater than the input asset value!
       // So, the value of the damage function must be less than or equal '1', because there can be no greater damage
       // than the specified asset value!
-      functionParser.parseExpression( damageFunctionProp );
-      double damagePercentage = functionParser.getValue();
       if( damagePercentage < 0.0 )
-      {
         return Double.NaN;
-      }
-      else if( damagePercentage > 100.0 )
+
+      if( damagePercentage > 100.0 )
       {
         KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return assetValue;
       }
-      else
-      {
-        return assetValue * damagePercentage / 100.0;
-      }
+
+      return assetValue * damagePercentage / 100.0;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return Double.NaN;
     }
-  }
-
-  public void updateStatistics( final double value, final double returnPeriod )
-  {
-    RiskPolygonStatistics polygonStatistics = m_statistics.get( returnPeriod );
-    if( polygonStatistics == null )
-    {
-      polygonStatistics = new RiskPolygonStatistics( returnPeriod );
-      m_statistics.put( returnPeriod, polygonStatistics );
-    }
-
-    polygonStatistics.update( value );
   }
 
   /**
