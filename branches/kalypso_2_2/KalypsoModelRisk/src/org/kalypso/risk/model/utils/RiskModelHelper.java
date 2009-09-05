@@ -49,6 +49,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.risk.i18n.Messages;
@@ -81,9 +82,10 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RiskModelHelper
 {
-  public static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi";
+  private static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi";
 
-  // public static final String WSP_THEMES_TITLE_i18 = "HQi";
+  /** themeId of the map-layer containing the events */
+  private static final String THEME_PROPERTY_DEPTH = "depthGridThemes"; //$NON-NLS-1$
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
@@ -511,8 +513,7 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final String depthThemeProperty = "depthGridThemes"; //$NON-NLS-1$
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.13" ), depthThemeProperty ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.13" ), THEME_PROPERTY_DEPTH ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -781,9 +782,9 @@ public class RiskModelHelper
       {
         final String subtaks = String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" ), names[i], coverageCount + 1, grids[i].size() );
         monitor.subTask( subtaks );
-        
+
         // NO! When imported from Flood, return period is always 1 by default, so files will be overwritten!
-//        final String targetFileName = String.format( "grid_%d_%d", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
+        //        final String targetFileName = String.format( "grid_%d_%d", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
         final String targetFileName = String.format( "grid_%s_%d", annualCoverageCollection.getGmlID(), coverageCount ); //$NON-NLS-1$
 
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
@@ -815,7 +816,32 @@ public class RiskModelHelper
 
   public static IKalypsoCascadingTheme getHQiTheme( final IMapModell mapModell )
   {
+    // activate cascading theme that contains the events
+    final AbstractCascadingLayerTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, RiskModelHelper.THEME_PROPERTY_DEPTH );
+    if( byThemeId != null )
+      return byThemeId;
+
     return CascadingThemeHelper.getNamedCascadingTheme( mapModell, WSP_THEMES_TITLE_i18 );
+  }
+
+  /**
+   * Finds and activates the event theme if present.
+   * 
+   * @return <code>true</code>, if the theme was succesfully activated.
+   * */
+  public static boolean activateEventTheme( IMapPanel mapPanel )
+  {
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return false;
+
+    final IKalypsoTheme hqiTheme = getHQiTheme( mapModell );
+    if( hqiTheme == null )
+      return false;
+
+    mapModell.activateTheme( hqiTheme );
+
+    return true;
   }
 
 }
