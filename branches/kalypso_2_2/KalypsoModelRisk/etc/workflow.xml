@@ -70,13 +70,13 @@
 			<Name>%KalypsoRisk_Processing_LanduseRasterizationHandler</Name>
 		</Task>
 		 -->
-		<Task type="ASYNCHRONOUS"
+		<Task type="SYNCHRONOUS"
 			context="ImportWaterdepthRasterContext"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
 			<Help>%KalypsoRisk_Processing_DamagePotentialCalculationHandler_help</Help>
 			<Name>%KalypsoRisk_Processing_DamagePotentialCalculationHandler</Name>
 		</Task>
-		<Task type="ASYNCHRONOUS"
+		<Task type="SYNCHRONOUS"
 			context="ImportWaterdepthRasterContext"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
 			<Help>%KalypsoRisk_Processing_RiskZonesCalculationHandler_help</Help>
