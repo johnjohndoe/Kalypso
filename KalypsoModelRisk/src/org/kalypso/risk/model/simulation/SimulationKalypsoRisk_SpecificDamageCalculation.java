@@ -42,6 +42,7 @@ package org.kalypso.risk.model.simulation;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -159,24 +160,40 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       }
       specificDamageCoverageCollection.clear();
 
-      for( final ILanduseClass landuseClass : landuseClassesList )
+      // Put classes into list by, with index ordinal-number for faster access later
+      final List<ILanduseClass> landuseClasses = new ArrayList<ILanduseClass>();
+      for( ILanduseClass landuseClass : landuseClassesList )
+      {
         landuseClass.clearStatisticEntries();
+
+        int ordinalNumber = landuseClass.getOrdinalNumber();
+        if(  landuseClasses.size() > ordinalNumber && landuseClasses.get( ordinalNumber ) != null )
+          System.out.println( String.format( "WARNING: two landuse classes with same oridnal number: %s", ordinalNumber ) );
+        
+        while( landuseClasses.size() < ordinalNumber + 1 )
+          landuseClasses.add( null );
+        
+        landuseClasses.set( ordinalNumber, landuseClass );
+      }
 
       /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
       {
-        final int perCoverageTicks = 100 / srcAnnualCoverages.size();
-        final SubMonitor subMonitor = SubMonitor.convert( monitor, String.format( Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10" ), srcAnnualCoverages.getReturnPeriod() ), 100 );
+        int srcAnnualCoverageSize = srcAnnualCoverages.size();
+        final int perCoverageTicks = 100 / srcAnnualCoverageSize;
+        String taskName = String.format( Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10" ), srcAnnualCoverages.getReturnPeriod() );
+        final SubMonitor subMonitor = SubMonitor.convert( monitor, taskName, 100 );
 
         /* create annual damage coverage collection */
         final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
 
         final int returnPeriod = srcAnnualCoverages.getReturnPeriod();
 
-        for( int i = 0; i < srcAnnualCoverages.size(); i++ )
+        for( int i = 0; i < srcAnnualCoverageSize; i++ )
         {
           final ICoverage inputCoverage = srcAnnualCoverages.get( i );
-
+          if( srcAnnualCoverageSize > 1 )
+            subMonitor.subTask( String.format( "%s (%s)", taskName, inputCoverage.getName() ) );
           final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
           final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
 
@@ -237,7 +254,11 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
                           return Double.NaN;
 
                         /* set statistic for landuse class */
-                        RiskModelHelper.fillStatistics( returnPeriod, landuseClassesList, polygon, damageValue, landuseClassOrdinalNumber, cellSize );
+                        ILanduseClass landuseClass = landuseClasses.get( landuseClassOrdinalNumber );
+                        if( landuseClass == null )
+                          System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) );
+                        else
+                          RiskModelHelper.fillStatistics( returnPeriod, landuseClass, damageValue, cellSize );
                         return damageValue;
                       }
                     }
@@ -271,7 +292,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       }
     }
     catch( final Exception e )
-    {
+    {   
+      e.printStackTrace();
       throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
