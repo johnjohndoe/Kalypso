@@ -9,11 +9,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget;
@@ -22,13 +19,11 @@ import org.kalypso.ui.views.map.MapView;
 
 public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implements IHandler
 {
-
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-
     /* Get context */
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -46,14 +41,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler.1" ), Messages.getString( "org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    final IMapModell mapModell = mapPanel.getMapModell();
-    if( mapModell != null )
-    {
-      // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, RiskModelHelper.WSP_THEMES_TITLE_i18 );
-      if( hqTheme != null )
-        mapModell.activateTheme( hqTheme );
-    }
+    RiskModelHelper.activateEventTheme( mapPanel );
 
     final WaterdepthCollectionsManagementWidget widget = new WaterdepthCollectionsManagementWidget();
 

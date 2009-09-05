@@ -99,8 +99,6 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -534,9 +532,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( dialog.open() != Window.OK )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), RiskModelHelper.WSP_THEMES_TITLE_i18 );
-
-    // FIXME this Assert is ignored!?
+    final IKalypsoCascadingTheme wspThemes = RiskModelHelper.getHQiTheme( getMapPanel().getMapModell() );
     Assert.isNotNull( wspThemes, Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.47" ) ); //$NON-NLS-1$
 
     final ICoreRunnableWithProgress operation = new ChangeAnnualityOperation( m_treeSelection[0], Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
@@ -545,8 +541,6 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( !resultStatus.isOK() )
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
 
-    // FIXME silly empty error dialog is shown for few seconds (with cancel enabled), even if resultStatus is OK
-    // temp solution: show this only if status is not OK
     if( !resultStatus.isOK() )
       ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.48" ), Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.49" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -556,8 +550,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( m_treeSelection == null )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), RiskModelHelper.WSP_THEMES_TITLE_i18 );
-
+    final IKalypsoCascadingTheme wspThemes = RiskModelHelper.getHQiTheme( getMapPanel().getMapModell() );
     if( wspThemes != null )
     {
       final ICoreRunnableWithProgress operation = new RemoveCollectionOperation( m_treeSelection, m_dataProvider, wspThemes );
