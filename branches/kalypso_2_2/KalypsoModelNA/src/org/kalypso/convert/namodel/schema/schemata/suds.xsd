@@ -22,11 +22,20 @@
 								</sequence>
 							</complexType>
 						</element>
+						<element name="planingAreaMember" minOccurs="0" maxOccurs="1">
+							<complexType>
+								<sequence>
+									<element ref="suds:PlaningArea" />
+								</sequence>
+							</complexType>
+						</element>
 					</sequence>
 				</extension>
 			</complexContent>
 		</complexType>
 	</element>
+
+	<element name="PlaningArea" type="suds:PlaningAreaType" substitutionGroup="gml:_Feature" />
 
 	<element name="_Sud" abstract="true" type="suds:AbstractSudType" substitutionGroup="gml:_Feature" />
 
@@ -47,6 +56,17 @@
 	<element name="sudLinkMember" type="suds:SudPropertyType" />
 
 	<!-- Type definitions -->
+	
+	<complexType name="PlaningAreaType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="boundary" type="gml:GeometryPropertyType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
 	<complexType name="AbstractSudType" abstract="true">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
