@@ -151,6 +151,7 @@
 	</complexType>
 
 	<!-- Enumeration types -->
+    <!--  NO MORE USED
 	<simpleType name="EnumSudType">
 		<restriction base="string">
 			<enumeration value="GREEN_ROOF"/>
@@ -161,6 +162,7 @@
 			<enumeration value="DETENTION_POND"/>
 		</restriction>
 	</simpleType>
+	-->
 
 	<simpleType name="EnumSwaleType">
 		<restriction base="string">
