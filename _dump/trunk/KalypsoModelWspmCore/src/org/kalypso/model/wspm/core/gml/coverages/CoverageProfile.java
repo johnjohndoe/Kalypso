@@ -184,6 +184,7 @@ public class CoverageProfile
     final IComponent cHochwert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final IComponent cBreite = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent cHoehe = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent cRauheit = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
 
     /* add components if necessary */
     if( !profile.hasPointProperty( cRechtswert ) )
@@ -194,12 +195,15 @@ public class CoverageProfile
       profile.addPointProperty( cBreite );
     if( !profile.hasPointProperty( cHoehe ) )
       profile.addPointProperty( cHoehe );
+    if( !profile.hasPointProperty( cRauheit ) )
+      profile.addPointProperty( cRauheit );
 
     /* get index for component */
     final int iRechtswert = profile.indexOfProperty( cRechtswert );
     final int iHochwert = profile.indexOfProperty( cHochwert );
     final int iBreite = profile.indexOfProperty( cBreite );
     final int iHoehe = profile.indexOfProperty( cHoehe );
+    final int iRauheit = profile.indexOfProperty( cRauheit );
 
     /* Iterate over all points in the curve. */
     final Iterator<Entry<Double, Point>> iterator = points.entrySet().iterator();
@@ -226,6 +230,7 @@ public class CoverageProfile
       final double hochwert = coordinate.y;
       final double breite = distance;
       final double hoehe = value;
+      final double rauheit = 0.1f;
 
       /* Create a new profile point. */
       final IRecord profilePoint = profile.createProfilPoint();
@@ -237,6 +242,7 @@ public class CoverageProfile
       /* Add length section values. */
       profilePoint.setValue( iBreite, breite );
       profilePoint.setValue( iHoehe, hoehe );
+      profilePoint.setValue( iRauheit, rauheit );
 
       /* Add the new point to the profile. */
       profile.addPoint( profilePoint );

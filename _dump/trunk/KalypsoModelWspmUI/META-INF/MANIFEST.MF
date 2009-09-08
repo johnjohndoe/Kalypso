@@ -14,7 +14,8 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.model.wspm.core,
  org.eclipse.core.expressions,
  org.eclipse.ui.views,
- de.openali.odysseus.chart.ext.observation;visibility:=reexport
+ de.openali.odysseus.chart.ext.observation;visibility:=reexport,
+ org.kalypso.model.wspm.tuhh.core;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,
@@ -41,3 +42,4 @@ Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.view.table,
  org.kalypso.model.wspm.ui.wizard
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.kalypso.model.wspm.tuhh.core
