@@ -160,7 +160,7 @@ public class DWDTask extends Task
         logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
 
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
-      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, DateUtilities.toDate( m_from ), DateUtilities.toDate( m_forecastFrom ), DateUtilities.toDate( m_to ), m_filter, m_metadata );
+      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, DateUtilities.parseDateTime( m_from ), DateUtilities.parseDateTime( m_forecastFrom ), DateUtilities.parseDateTime( m_to ), m_filter, m_metadata );
     }
     catch( final Exception e )
     {
