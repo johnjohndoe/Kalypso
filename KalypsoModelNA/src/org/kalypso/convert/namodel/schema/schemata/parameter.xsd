@@ -108,8 +108,8 @@
 					<!--
 (texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
    -->
-					<element name="idealLandUsePeriodLink" type="par:IdealLandUseAssociationType"/>
-					<element name="sealingLink" type="par:SealingAssociationType"/>
+					<element name="idealLandUsePeriodLink" type="par:IdealLandUseLinkType"/>
+					<element name="sealingLink" type="par:SealingLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -189,6 +189,15 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+	<complexType name="IdealLandUseLinkType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:IdealLandUse" maxOccurs="0"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
 	<element name="IdealLandUse" type="par:idealLandUseType" substitutionGroup="gml:_Feature"/>
 	<complexType name="idealLandUseType">
 		<complexContent>
@@ -199,6 +208,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	
 	<!--___SealingClassCollection_________________________________________________-->
 	<complexType name="SealingAssociationType">
 		<complexContent>
@@ -209,6 +219,17 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+	<complexType name="SealingLinkType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Sealing" maxOccurs="0"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	
 	<element name="Sealing" type="par:sealingType" substitutionGroup="gml:_Feature"/>
 	<complexType name="sealingType">
 		<complexContent>
