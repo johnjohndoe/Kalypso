@@ -38,9 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.widget;
+package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -79,8 +81,8 @@ public class ProfileFromDEMWizardPage extends WizardPage
     m_name = "";
     m_station = 0.0;
     
-    setTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileFromDem.4") );
-    setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileFromDem.4") );
+    setTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") );
+    setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") );
     
   }
   
@@ -90,14 +92,14 @@ public class ProfileFromDEMWizardPage extends WizardPage
     if (m_name == "")
     {
       setMessage( null );
-      setErrorMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileFromDem.6") );
+      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6") );
 
       setPageComplete( false );
       return;
     }
     if ( m_station == 0.0) {
       setMessage( null );
-      setErrorMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileFromDem.7") );
+      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.7") );
 
       setPageComplete( false );
       return;

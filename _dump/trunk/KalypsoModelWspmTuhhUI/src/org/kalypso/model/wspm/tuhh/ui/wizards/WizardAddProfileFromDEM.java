@@ -38,9 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.widget;
+package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
@@ -94,7 +96,7 @@ public class WizardAddProfileFromDEM extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileFromDem.3") );
+    setWindowTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3") );
 
     m_page = new ProfileFromDEMWizardPage();
     addPage( m_page );
