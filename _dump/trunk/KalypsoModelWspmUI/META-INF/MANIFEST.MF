@@ -41,4 +41,3 @@ Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.view.table,
  org.kalypso.model.wspm.ui.wizard
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.kalypso.model.wspm.tuhh.core
