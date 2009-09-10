@@ -44,7 +44,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,27 +52,35 @@ import java.util.Map;
 import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.wps.ExecuteResponseType;
+import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManagerWrapper;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
+import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.exceptions.WPSException;
+import org.kalypso.service.wps.client.simulation.SimulationDelegate;
+import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
@@ -99,9 +107,9 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
 
   private FileSystemManagerWrapper m_manager;
 
-  public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider ) throws CoreException
+  public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider, final String serviceEndpoint ) throws CoreException
   {
-    super( RMAKalypsoSimulation.ID, WPSRequest.SERVICE_LOCAL, -1 );
+    super( RMAKalypsoSimulation.ID, serviceEndpoint, -1 );
     m_log = geoLog;
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
     m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
@@ -136,27 +144,53 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
     return m_simulationStatus;
   }
 
+  final Modeldata getModeldata( final List<IRestartInfo> restartInfos )
+  {
+    final Map<String, String> inputs = new HashMap<String, String>();
+    inputs.put( "control", "models/control.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    inputs.put( "mesh", "models/discretisation.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    inputs.put( "flowRelationships", "models/flowrelations.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    inputs.put( "roughness", "../.metadata/roughness.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    int restartCount = 0;
+    for( final IRestartInfo restartInfo : restartInfos )
+    {
+      final IPath restartFilePath = restartInfo.getRestartFilePath();
+      if( restartFilePath != null )
+        inputs.put( "restartFile" + restartCount++, restartFilePath.toString() );
+    }
+
+    final Map<String, String> outputs = new HashMap<String, String>();
+    outputs.put( "results", "rma_results" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return SimulationUtilitites.createModelData( RMAKalypsoSimulation.ID, inputs, true, outputs, true );
+  }
+
+  @SuppressWarnings("deprecation")
   private IStatus doRunCalculation( final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "", 1000 ); //$NON-NLS-1$
 
     try
     {
-      // final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
-      // final String calcUnitID = calculationUnit.getGmlID();
-      // result temp dir is "[scenarioFolder]/results/[calcUnitID]/temp"
-      // final IFolder scenarioResultsFolder = m_scenarioFolder.getFolder( ISimulation1D2DConstants.OUTPUT_DIR_NAME );
-      //      final IFolder resultTempFolder = scenarioResultsFolder.getFolder( calcUnitID ).getFolder( "temp" ); //$NON-NLS-1$
-      //
-      // // remember result temp dir for later result processing (absolute path)
-      // m_resultTmpDir = new File( resultTempFolder.getLocationURI() );
+      final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
 
-      final Map<String, Object> inputs = new HashMap<String, Object>();
-      final List<String> outputs = new ArrayList<String>();
-      final String resultsID = "results"; //$NON-NLS-1$
-      outputs.add( resultsID );
+      final IControlModelGroup controlModelGropup = caseDataProvider.getModel( IControlModelGroup.class );
+      final IControlModel1D2D controlModel = controlModelGropup.getModel1D2DCollection().getActiveControlModel();
+      final List<IRestartInfo> restartInfos = controlModel.getRestart() ? controlModel.getRestartInfos() : Collections.EMPTY_LIST;
 
-      return this.run( inputs, outputs, progress.newChild( 1000, SubMonitor.SUPPRESS_NONE ) );
+      final SimulationDelegate delegate = new SimulationDelegate( RMAKalypsoSimulation.ID, scenarioFolder, getModeldata( restartInfos ) );
+      delegate.init();
+
+      final ProcessDescriptionType processDescription = this.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      final Map<String, Object> inputs = delegate.createInputs( processDescription, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      final List<String> outputs = delegate.createOutputs();
+
+      final IStatus status = this.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
+      delegate.finish();
+      return status;
+
       // TODO: read other outputs
       // - error-log
       // - border conditions-log
@@ -203,13 +237,12 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
       return;
     }
 
-    final String statusLocation = complexValueReference.getReference();
-    // final String statusLocation = wpsRequest.getStatusLocation();
+    final String resultsDirReference = complexValueReference.getReference();
     try
     {
       // this manager is closed when the results dir is not needed anymore
       m_manager = VFSUtilities.getNewManager();
-      m_resultsDir = m_manager.resolveFile( statusLocation );
+      m_resultsDir = m_manager.resolveFile( resultsDirReference );
 
       // The iteration job (and its info) monitor the content of the "Output.itr" file
       // and inform the user about the current progress of the process.

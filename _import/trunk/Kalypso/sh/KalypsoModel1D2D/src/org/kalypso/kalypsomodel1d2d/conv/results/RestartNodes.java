@@ -40,18 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.net.UrlUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
@@ -71,10 +69,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class RestartNodes
 {
-  public static RestartNodes createRestartNodes( final IContainer scenarioFolder, final IControlModel1D2D controlModel ) throws CoreException
+  public static RestartNodes createRestartNodes( final File tmpdir, final List<IRestartInfo> restartInfos ) throws CoreException
   {
-    final List<IRestartInfo> restartInfos = controlModel.getRestartInfos();
-
     final RestartNodes restartNodes = new RestartNodes();
 
     for( final IRestartInfo restartInfo : restartInfos )
@@ -85,7 +81,7 @@ public class RestartNodes
         if( restartFilePath == null )
           continue;
 
-        final URL scenarioURL = ResourceUtilities.createURL( scenarioFolder );
+        final URL scenarioURL = tmpdir.toURI().toURL();
         final URL restartURL = UrlUtilities.resolveWithZip( scenarioURL, restartFilePath.toPortableString() );
 
         restartNodes.addResultUrl( restartURL );

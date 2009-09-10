@@ -66,6 +66,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
+import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.util.swt.StatusComposite;
 
 /**
@@ -75,7 +76,6 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 {
   private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing"; //$NON-NLS-1$
 
-  // private final RMA10Calculation m_calculation;
   private final RMAKalypsoSimulationRunner m_calculation;
 
   private IStatus m_simulationStatus;
@@ -92,11 +92,17 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   {
     super( pageName );
 
-    m_calculation = new RMAKalypsoSimulationRunner( geoLog, caseDataProvider );
+    // default to local simulation
+    String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
+    if( serviceEndpoint == null || serviceEndpoint.equals( "" ) ) //$NON-NLS-1$
+    {
+      serviceEndpoint = WPSRequest.SERVICE_LOCAL;
+    }
+    m_calculation = new RMAKalypsoSimulationRunner( geoLog, caseDataProvider, serviceEndpoint );
+
     final ICalculationUnit calculationUnit = m_calculation.getControlModel().getCalculationUnit();
 
     setTitle( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" ), calculationUnit.getName() ) ); //$NON-NLS-1$
-
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.2" ) ); //$NON-NLS-1$
   }
 
@@ -226,11 +232,11 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     else
       m_simulationStatus = RunnableContextHelper.execute( container, true, true, calculationOperation );
 
-    if( m_simulationStatus.matches( IStatus.CANCEL ) ){
+    if( m_simulationStatus.matches( IStatus.CANCEL ) )
+    {
       /**
-       * fixes the bug #242, in actual situation works only with local jobs
-       * and was tested only on windows machine.
-       * WPSRequest class is already signed as deprecated, so complete functionality test will not be done  
+       * fixes the bug #242, in actual situation works only with local jobs and was tested only on windows machine.
+       * WPSRequest class is already signed as deprecated, so complete functionality test will not be done
        */
       if( container instanceof WizardDialog2 )
       {
