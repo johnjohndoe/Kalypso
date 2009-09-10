@@ -802,7 +802,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private void feedTriangleEaterWithJunctionResults( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance, final String crs, final GM_Position[] ring )
   {
     final INodeResult[] nodes = new INodeResult[3];
-    for( int i = 0; i < ring.length - 1; i++ )
+    for( int i = 0; i < ring.length; i++ )
     {
       final GM_Position position = ring[i];
       final double x = position.getX();
@@ -869,10 +869,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private void feedTriangleEaterWith1dResults( final INodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final String crs, final GM_Position[] ring )
   {
-    final INodeResult[] nodes = new INodeResult[2];
+    final INodeResult[] nodes = new INodeResult[3];
 
     // remove last position
-    for( int i = 0; i < ring.length - 1; i++ )
+    for( int i = 0; i < ring.length; i++ )
     {
       final GM_Position position = ring[i];
       final double x = position.getX();
