@@ -7,35 +7,35 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Virtual Strands" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+        <mapv:layer visible="true" name="Virtual Strands" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Kalinin-Miljukov Strands" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+        <mapv:layer visible="true" name="Kalinin-Miljukov Strands" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Storage Strands" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+        <mapv:layer visible="true" name="Storage Strands" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Sub-Catchments" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+        <mapv:layer visible="true" name="Sub-Catchments" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Landuse" featurePath="landuseMember" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/landuse.gml" xlink:type="simple">
+        <mapv:layer visible="false" name="Landuse" featurePath="landuseMember" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="../landuse.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Pedology" featurePath="soiltypeMember" id="ID_6" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/pedologie.gml" xlink:type="simple">
+        <mapv:layer visible="false" name="Pedology" featurePath="soiltypeMember" id="ID_6" linktype="gml" xlink:actuate="onRequest" xlink:href="../pedologie.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Geology" featurePath="geologieMember" id="ID_7" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/geologie.gml" xlink:type="simple">
+        <mapv:layer visible="false" name="Geology" featurePath="geologieMember" id="ID_7" linktype="gml" xlink:actuate="onRequest" xlink:href="../geologie.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Hydrotopes" featurePath="hydrotopMember" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/hydrotop.gml" xlink:type="simple">
+        <mapv:layer visible="true" name="Hydrotopes" featurePath="hydrotopMember" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="../hydrotop.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
