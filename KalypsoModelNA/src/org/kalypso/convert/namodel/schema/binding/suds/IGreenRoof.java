@@ -70,7 +70,7 @@ public interface IGreenRoof extends Feature
 
   public QName QN_PROPERTY_EMERGENCY_SPILL_HEIGHT = new QName( NaModelConstants.NS_NASUDS, "emergencySpillHeight" ); // double //$NON-NLS-1$
 
-  public Object getElementType( );
+  public String getElementType( );
 
   public Double getAreaPercentage( );
 
