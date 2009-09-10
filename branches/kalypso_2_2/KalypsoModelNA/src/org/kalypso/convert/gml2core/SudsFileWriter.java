@@ -97,6 +97,10 @@ public class SudsFileWriter extends AbstractCoreFileWriter
           for( final Feature catchment : list )
             if( catchment.getDefaultGeometryPropertyValue().contains( landuseInteriorPoint ) )
             {
+              final XLinkedFeature_Impl strang = (XLinkedFeature_Impl) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
+              final XLinkedFeature_Impl node = (XLinkedFeature_Impl) strang.getFeature().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+              final String drainageNodeName = node.getFeature().getName();
+
               final String catchmentName = catchment.getName();
               if( !sudsMap.containsKey( catchmentName ) )
                 sudsMap.put( catchmentName, new TreeMap<String, List<String>>() );
@@ -116,13 +120,13 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                    * 4270. 0.003 2. 1.8 0 # ende MR TG 4500
                    */
                   final SwaleInfiltrationDitch sud = (SwaleInfiltrationDitch) f;
-                  key = sud.getElementType().toString();
+                  key = sud.getElementType();
                   final double area = landuseGeometry.getArea() * sud.getAreaPercentage();
                   final Object landuseClassLink = landuse.getLanduse();
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N"; //$NON-NLS-1$
 
-                  value.add( String.format( "%.4g %s mrs %.4g %.4g", area, m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) ); //$NON-NLS-1$
-                  value.add( String.format( "%d %d %d %.4g %.4g 0", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope(), sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
+                  value.add( String.format( "%s mrs %.4g %.4g", m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) ); //$NON-NLS-1$
+                  value.add( String.format( "%d %d %d %.4g %.4g %s", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope(), sud.getPipeRoughness(), sud.getWidth(), drainageNodeName ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Swale )
                 {
@@ -130,15 +134,18 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                    * Not implemented yet in NA Core
                    */
                   final Swale sud = (Swale) f;
-                  key = sud.getElementType().toString();
+                  key = sud.getElementType();
                 }
                 else if( f instanceof Greenroof )
                 {
-                  /**
-                   * Not implemented yet in NA Core
-                   */
                   final Greenroof sud = (Greenroof) f;
-                  key = sud.getElementType().toString();
+                  key = sud.getElementType();
+                  final double area = landuseGeometry.getArea() * sud.getAreaPercentage();
+                  final Object landuseClassLink = landuse.getLanduse();
+                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "GRext_N"; //$NON-NLS-1$
+
+                  value.add( String.format( "%s grs 2.8E-10 0.0", m_config.getLanduseFeatureShortedName( landuseClassName ) ) ); //$NON-NLS-1$
+                  value.add( String.format( "%d %d %.3g 100.0 %d %s", sud.getRainwaterPipeDiameter(), sud.getEmergencySpillPipeDiameter(), sud.getRainwaterPipeRoughness(), sud.getEmergencySpillPipeRoughness(), sud.getEmergencySpillHeight(), drainageNodeName ) ); //$NON-NLS-1$
                 }
                 else
                   continue;

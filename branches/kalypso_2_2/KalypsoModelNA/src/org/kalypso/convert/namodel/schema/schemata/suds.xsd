@@ -155,7 +155,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
+					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="20"/>
 					<element name="emergencySpillPipeRoughness" type="double" default="2.0" />
 					<element name="emergencySpillHeight">
 						<simpleType>
