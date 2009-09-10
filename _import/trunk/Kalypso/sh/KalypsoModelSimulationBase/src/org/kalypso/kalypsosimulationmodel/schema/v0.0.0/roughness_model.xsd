@@ -286,26 +286,6 @@
 	</xs:complexType>
 
 	<xs:complexType name="RoughnessGroundLinkType">
-		<xs:annotation>
-			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>roughness.gml</kapp:documentReference>
-
-			<!--
-			IMPORTANT!!!
-
-				<kapp:documentReference>roughness.gml</kapp:documentReference>
-				should be written in one line, exactly like this!
-
-				Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-						roughness.gml
-					</kapp:documentReference>
-				than fix it manually...
-
-			-->
-
-			</xs:appinfo>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="wbr:Roughness_GroundCls" minOccurs="0"
 				maxOccurs="0" />
@@ -314,26 +294,6 @@
 	</xs:complexType>
 
 	<xs:complexType name="RoughnessVegetationLinkType">
-		<xs:annotation>
-			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>roughness.gml</kapp:documentReference>
-
-			<!--
-			IMPORTANT!!!
-
-				<kapp:documentReference>roughness.gml</kapp:documentReference>
-				should be written in one line, exactly like this!
-
-				Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-						roughness.gml
-					</kapp:documentReference>
-				than fix it manually...
-
-			-->
-
-			</xs:appinfo>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="wbr:Roughness_VegetationCls" minOccurs="0"
 				maxOccurs="0" />
@@ -342,26 +302,6 @@
 	</xs:complexType>
 
 	<xs:complexType name="RoughnessEddyViscosityLinkType">
-		<xs:annotation>
-			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>roughness.gml</kapp:documentReference>
-
-			<!--
-			IMPORTANT!!!
-
-				<kapp:documentReference>roughness.gml</kapp:documentReference>
-				should be written in one line, exactly like this!
-
-				Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-						roughness.gml
-					</kapp:documentReference>
-				than fix it manually...
-
-			-->
-
-			</xs:appinfo>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="wbr:Roughness_EddyViscosityCls"
 				minOccurs="0" maxOccurs="0" />
