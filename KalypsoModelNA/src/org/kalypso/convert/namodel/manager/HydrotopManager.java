@@ -224,7 +224,7 @@ public class HydrotopManager extends AbstractManager
           final Geometry hydrotopGeometry = JTSAdapter.export( hydrotop.getGeometry() );
           if( catchmentGeometry.contains( hydrotopGeometry.getInteriorPoint() ) )
           {
-            final double hydrotopNaturalArea = hydrotopGeometry.getArea();
+            final double hydrotopArea = hydrotopGeometry.getArea();
             final String landuseName = hydrotop.getLanduse();
             final Double landuseSealing = m_landuseSealingRateMap.get( m_conf.getLanduseFeatureShortedName( landuseName ) );
             if( landuseSealing == null )
@@ -234,7 +234,8 @@ public class HydrotopManager extends AbstractManager
               throw new SimulationException( msg );
             }
             final double combinedSealingRate = hydrotop.getCorrSealing() * landuseSealing.doubleValue();
-            final double hydrotopSealedArea = hydrotopNaturalArea / (1.0 - combinedSealingRate);
+            final double hydrotopSealedArea = hydrotopArea * combinedSealingRate;
+            final double hydrotopNaturalArea = hydrotopArea - hydrotopSealedArea;
             totalHydrotopSealedArea += hydrotopSealedArea;
             totalHydrotopNaturalArea += hydrotopNaturalArea;
             String soilType = hydrotop.getSoilType();
@@ -258,29 +259,29 @@ public class HydrotopManager extends AbstractManager
                 {
                   final ISwaleInfiltrationDitch suds = (ISwaleInfiltrationDitch) sudsFeature;
                   final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double naturalAreaPercentage = hydrotopNaturalArea * areaRate;
-                  final double sealedAreaPercentage = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPercentage, sealedAreaPercentage );
-                  totalSudsNaturalArea += naturalAreaPercentage;
-                  totalSudsSealedArea += sealedAreaPercentage;
+                  final double naturalAreaPart = hydrotopNaturalArea * areaRate;
+                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPart, sealedAreaPart );
+                  totalSudsNaturalArea += naturalAreaPart;
+                  totalSudsSealedArea += sealedAreaPart;
                 }
                 else if( sudsFeature instanceof ISwale )
                 {
                   final ISwale suds = (ISwale) sudsFeature;
                   final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double naturalAreaPercentage = hydrotopNaturalArea * areaRate;
-                  final double sealedAreaPercentage = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPercentage, sealedAreaPercentage );
-                  totalSudsNaturalArea += naturalAreaPercentage;
-                  totalSudsSealedArea += sealedAreaPercentage;
+                  final double naturalAreaPart = hydrotopNaturalArea * areaRate;
+                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPart, sealedAreaPart );
+                  totalSudsNaturalArea += naturalAreaPart;
+                  totalSudsSealedArea += sealedAreaPart;
                 }
                 else if( sudsFeature instanceof IGreenRoof )
                 {
                   final IGreenRoof suds = (IGreenRoof) sudsFeature;
                   final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double sealedAreaPercentage = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sealedAreaPercentage );
-                  totalSudsSealedArea += sealedAreaPercentage;
+                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sealedAreaPart );
+                  totalSudsSealedArea += sealedAreaPart;
                 }
               }
               hydrotopOutputList.add( String.format( Locale.US, "%.3f %s %s %.3g %.3g %d %.3f 1 %s", hydrotopNaturalArea, m_conf.getLanduseFeatureShortedName( hydrotop.getLanduse() ), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingRate, hydrotopSudsAsciiDescriptor.getAscii() ) ); //$NON-NLS-1$
