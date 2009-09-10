@@ -1,21 +1,3 @@
 #Thu Apr 27 15:37:10 CEST 2006
 eclipse.preferences.version=1
-encoding/.model=UTF-8
-encoding//.model/Zeitreihen/Klima/E_Fuhlsbuettel.zml=UTF-8
-encoding//.model/launch/build.xml=UTF-8
-encoding//.model/launch/createCalcCase.launch=UTF-8
-encoding//.model/observationConf/ObsEMapping.gml=UTF-8
-encoding//.model/observationConf/ObsQMapping.gml=UTF-8
-encoding//.model/observationConf/ObsTMapping.gml=UTF-8
-encoding//.model/observationConf/ombrometer.gml=UTF-8
-encoding//.styles/NodeNet.sld=UTF-8
-encoding//.styles/Pegel.sld=UTF-8
-encoding//.styles/SubcatchmentsNet.sld=UTF-8
-encoding//.styles/hydrotop.sld=UTF-8
-encoding//.styles/shapes/auslaesse.sld=UTF-8
-encoding//.styles/shapes/haltungen_gesamt.sld=UTF-8
-encoding//.styles/shapes/haltungen_regen.sld=UTF-8
-encoding//BasisTabellen/Hydrotope=UTF-8
 encoding/<project>=UTF-8
-encoding/BasisKarten=UTF-8
-encoding/parameter.gml=UTF-8
