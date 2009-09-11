@@ -13,7 +13,7 @@
 			<Name>%KalypsoFlood_DataLoad_ImportBackgroundData</Name>
 		</Task>
 		<Task context="FloodMap" URI="org.kalypso.model.flood.ManageWaterlevelData">
-			<Help>%KalypsoFlood__DataLoad_ManageWaterlevelData_help</Help>
+			<Help>%KalypsoFlood_DataLoad_ManageWaterlevelData_help</Help>
 			<Name>Wasserspiegeldaten verwalten</Name>
 		</Task>
 		<Task context="CoverageTheme" URI="org.kalypso.model.flood.ManageDTMData">
