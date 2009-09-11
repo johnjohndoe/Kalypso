@@ -424,6 +424,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
             || hint.isActivePointChanged() || hint.isActivePropertyChanged() )
         {
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
+          {
             if( layer instanceof IProfilChartLayer )
             {
               // TODO: Kim, wechsel der Achsentexte ermöglichen
@@ -441,6 +442,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
 // }
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
             }
+          }
           redrawChart();
         }
       }
