@@ -76,7 +76,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 {
   private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing"; //$NON-NLS-1$
 
-  private final RMAKalypsoSimulationRunner m_calculation;
+  protected final RMAKalypsoSimulationRunner m_calculation;
 
   private IStatus m_simulationStatus;
 
@@ -233,27 +233,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       m_simulationStatus = RunnableContextHelper.execute( container, true, true, calculationOperation );
 
     if( m_simulationStatus.matches( IStatus.CANCEL ) )
-    {
-      /**
-       * fixes the bug #242, in actual situation works only with local jobs and was tested only on windows machine.
-       * WPSRequest class is already signed as deprecated, so complete functionality test will not be done
-       */
-      if( container instanceof WizardDialog2 )
-      {
-        if( !m_calculation.cancelActualJob().matches( IStatus.OK ) )
-        {
-          setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.18" ), ERROR ); //$NON-NLS-1$
-        }
-        else
-        {
-          setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.14" ), WARNING ); //$NON-NLS-1$
-        }
-      }
-      else
-      {
-        setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.14" ), WARNING ); //$NON-NLS-1$
-      }
-    }
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.14" ), WARNING ); //$NON-NLS-1$
     else if( m_simulationStatus.matches( IStatus.WARNING ) )
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.15" ), WARNING ); //$NON-NLS-1$
     else if( m_simulationStatus.matches( IStatus.ERROR ) )
@@ -276,5 +256,4 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   {
     return m_calculation.getTempDir();
   }
-
 }

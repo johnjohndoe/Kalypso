@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
  */
 public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulation1D2DConstants
 {
-  public static final String STRING_DLG_TITLE_RMA10S = Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.0"); //$NON-NLS-1$
+  public static final String STRING_DLG_TITLE_RMA10S = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.0" ); //$NON-NLS-1$
 
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
@@ -217,16 +217,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       return e.getStatus();
     }
     final IStatus simulationStatus = m_calcPage.getSimulationStatus();
-    
-    /**
-     * needed for fix of the bug #242, 
-     * if the calculation was canceled the container is not shown any more, so the following 
-     * operations shouldn't be done  
-     */
-    if( simulationStatus.matches( IStatus.CANCEL ) ){
-      return simulationStatus;
-    }
-    
+
     addPage( m_resultPage );
     getContainer().updateButtons();
 
@@ -304,13 +295,6 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     {
       final IStatus simulationStatus = runCalculation();
 
-      /* On cancel, directly close the dialog */
-      if( simulationStatus.matches( IStatus.CANCEL ) )
-      {
-        saveLogAndCleanup();
-        return true;
-      }
-
       /* On error, don't close, show the error message */
       if( simulationStatus.matches( IStatus.ERROR ) )
         return false;
@@ -349,7 +333,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
       return false;
     }
-    
+
     saveLogAndCleanup();
     return true;
   }
@@ -360,13 +344,19 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   @Override
   public boolean performCancel( )
   {
+    if( m_calcPage.getResultDir() != null && m_calcPage.getSimulationStatus() == null )
+    {
+      // do not dispose of dialog if we are currently running a simulation
+      return false;
+    }
+
     /* Only save log on cancel if something happened, else, everything stays as before. */
     // TODO: still a problem: if the user only simulates, the log shows the simulation, but results are still like
     // before.
     if( m_calcPage.getSimulationStatus() != null )
     {
       /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
-      m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.4"), null, null ); //$NON-NLS-1$
+      m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.4" ), null, null ); //$NON-NLS-1$
       saveLogAndCleanup();
     }
     return true;
@@ -394,7 +384,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     }
     catch( final Throwable e )
     {
-      MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.6") + e.toString() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.6" ) + e.toString() ); //$NON-NLS-1$
     }
     finally
     {

@@ -89,7 +89,6 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -161,21 +160,21 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
     {
       try
       {
-        final URL controlUrl = (URL) inputProvider.getInputForID( "control" );
+        final URL controlUrl = (URL) inputProvider.getInputForID( "control" ); //$NON-NLS-1$
         final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlUrl, null );
         final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
         m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
-        final URL meshUrl = (URL) inputProvider.getInputForID( "mesh" );
+        final URL meshUrl = (URL) inputProvider.getInputForID( "mesh" ); //$NON-NLS-1$
         final GMLWorkspace discWorkspace = GmlSerializer.createGMLWorkspace( meshUrl, null );
         m_discretisationModel = (IFEDiscretisationModel1d2d) discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
 
-        final URL flowRelURL = (URL) inputProvider.getInputForID( "flowRelationships" );
+        final URL flowRelURL = (URL) inputProvider.getInputForID( "flowRelationships" ); //$NON-NLS-1$
         final GMLWorkspace flowRelWorkspace = GmlSerializer.createGMLWorkspace( flowRelURL, null );
         m_flowRelationshipModel = (IFlowRelationshipModel) flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
 
-        final URL roughnessURL = (URL) inputProvider.getInputForID( "roughness" );
-        final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, new GmlSerializerFeatureProviderFactory() );
+        final URL roughnessURL = (URL) inputProvider.getInputForID( "roughness" ); //$NON-NLS-1$
+        final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
         m_roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
 
         if( m_controlModel.getRestart() )
@@ -183,7 +182,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
           m_restartNodes = new RestartNodes();
           for( int i = 0; i < 3; i++ )
           {
-            final String restartFileInputName = "restartFile" + i;
+            final String restartFileInputName = "restartFile" + i; //$NON-NLS-1$
             if( inputProvider.hasID( restartFileInputName ) )
             {
               final URL restartURL = (URL) inputProvider.getInputForID( restartFileInputName );
@@ -198,7 +197,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
       }
       catch( final Exception e )
       {
-        throw new SimulationException( "Problem parsing discretisation gml-file", e );
+        throw new SimulationException( "Problem parsing gml file", e );
       }
 
       manager = VFSUtilities.getNewManager();
@@ -221,7 +220,6 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
 
       final String tempDirName = tmpdir.getName();
       final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, tempDirName, executableName );
-      // process.setProgressMonitor( progress );
 
       // add sandbox dir to results for monitoring (empty at this time)
       final String sandboxDirectory = process.getSandboxDirectory();
@@ -234,6 +232,12 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
         e.printStackTrace();
       }
 
+      // check if user cancelled
+      if( progressMonitor.isCanceled() )
+      {
+        throw new OperationCanceledException();
+      }
+
       // copy executable and write input files
       final FileObject workingDir = manager.resolveFile( sandboxDirectory );
       VFSUtilities.copyFileTo( executableFile, workingDir );
@@ -244,6 +248,12 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
 
       logOS = new BufferedOutputStream( new FileOutputStream( stdoutFile ) );
       errorOS = new BufferedOutputStream( new FileOutputStream( stderrFile ) );
+
+      // check if user cancelled
+      if( monitor.isCanceled() )
+      {
+        throw new OperationCanceledException();
+      }
 
       // Run the Calculation
       final SubMonitor progress = SubMonitor.convert( progressMonitor, m_controlModel.getNCYC() );
@@ -274,7 +284,10 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
     }
     catch( final OperationCanceledException e )
     {
-      throw new SimulationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.1" ), new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), e ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      // do not throw an exception if cancelled
+      monitor.setFinishInfo( IStatus.CANCEL, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.1" ) );//$NON-NLS-1$
+      monitor.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.1" ) );//$NON-NLS-1$
+      return;
     }
     catch( final CoreException e )
     {
