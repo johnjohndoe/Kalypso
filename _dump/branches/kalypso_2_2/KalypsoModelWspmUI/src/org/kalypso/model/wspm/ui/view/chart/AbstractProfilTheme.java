@@ -284,18 +284,14 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-
       final IDataRange<Number> dr = layer.getDomainRange();
       if( dr != null )
       {
-        if( max == null )
-          max = dr.getMax().doubleValue();
-        else
-          max = Math.max( max, dr.getMax().doubleValue() );
-        if( min == null )
-          min = dr.getMin().doubleValue();
-        else
-          min = Math.min( min, dr.getMin().doubleValue() );
+        double drMax = dr.getMax().doubleValue();
+        double drMin = dr.getMin().doubleValue();
+
+        max = max == null ? drMax : Math.max( max, drMax );
+        min = min == null ? drMin : Math.min( min, drMin );
       }
     }
     if( min == null || max == null )

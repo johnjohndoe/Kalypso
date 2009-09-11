@@ -522,7 +522,7 @@ public class ProfilUtil
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;
-    Double maxValue = Double.MIN_VALUE;
+    Double maxValue = -Double.MAX_VALUE;
     for( final IRecord point : points )
     {
       final Object o = point.getValue( index );
@@ -530,7 +530,7 @@ public class ProfilUtil
         maxValue = Math.max( maxValue, (Double) o );
 
     }
-    return maxValue > Double.MIN_VALUE ? maxValue : null;
+    return maxValue > -Double.MAX_VALUE ? maxValue : null;
   }
 
   public static IComponent getComponentForID( final IComponent[] components, final String propertyID )
@@ -755,7 +755,7 @@ public class ProfilUtil
   {
     final IRecord[] points = profile.getPoints();
     if( points.length < 1 )
-      return Double.MIN_VALUE;
+      return -Double.MAX_VALUE;
     Double maxZ = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[0] );
     for( int i = 1; i < points.length; i++ )
     {
