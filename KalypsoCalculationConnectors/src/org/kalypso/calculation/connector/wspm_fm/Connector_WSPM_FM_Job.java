@@ -108,7 +108,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
 	    final GMLXPath sourceFeaturePath = new GMLXPath("TriangulatedSurfaceFeature/triangulatedSurfaceMember", wspmTinFile.getNamespaceContext());
 
 	    double min = Double.MAX_VALUE;
-	    double max = Double.MIN_VALUE;
+	    double max = -Double.MAX_VALUE;
 	    for (final GM_Triangle triangle : triangulatedSurface) {
 		for (final GM_Position position : triangle.getExteriorRing()) {
 		    final double[] array = position.getAsArray();
