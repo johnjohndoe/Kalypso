@@ -44,8 +44,10 @@ import java.awt.geom.Point2D;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -60,7 +62,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -266,7 +267,7 @@ public class ProfilUtil
    */
   public static final void flipProfile( final IProfil profile )
   {
-    final HashMap<String, IComponent> properties = getComponentsFromProfile( profile );
+    final Map<String, IComponent> properties = getComponentsFromProfile( profile );
 
     final TupleResult result = profile.getResult();
     final IRecord[] rows = result.toArray( new IRecord[] {} );
@@ -279,9 +280,10 @@ public class ProfilUtil
     {
       final Double breite = (Double) record.getValue( indexBreite );
       record.setValue( indexBreite, Double.valueOf( breite * -1 ) );
-
-      WspmProfileHelper.addRecordByWidth( profile, record );
     }
+    
+    ArrayUtils.reverse( rows );
+    result.addAll( Arrays.asList( rows ) );
 
     final IRecord[] points = profile.getPoints();
     IRecord previousPoint = null;
