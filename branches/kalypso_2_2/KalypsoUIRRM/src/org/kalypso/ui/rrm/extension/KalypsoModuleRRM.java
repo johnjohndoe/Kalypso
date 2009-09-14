@@ -25,6 +25,9 @@ public class KalypsoModuleRRM implements IKalypsoModule
   @Override
   public IKalypsoModulePage getModulePage( )
   {
+    // FIXME: this is called too often! Why all these different interfaces at all?
+    // Most of the information should be put into an extension-point as parameters. No need for this much
+    // (often repeated) code.
     return new KalypsoRrmModulePage( this );
   }
 
