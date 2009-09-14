@@ -209,6 +209,7 @@ de_DE</programArgs>
       <plugin id="org.kalypso.project.database"/>
       <plugin id="org.kalypso.project.database.client"/>
       <plugin id="org.kalypso.repository"/>
+      <plugin id="org.kalypso.rimax"/>
       <plugin id="org.kalypso.risk"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
       <plugin id="org.kalypso.service.ogc"/>
