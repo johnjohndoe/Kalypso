@@ -23,5 +23,13 @@
             simulationClass="org.kalypso.calculation.plc.postprocessing.na.PLCPostprocessing_NA_Job"
             typeID="KalypsoPLC_Postprocessing_NA">
       </simulation>
+      <simulation
+            simulationClass="org.kalypso.calculation.plc.postprocessing.PLCPostprocessing_Job"
+            typeID="KalypsoPLC_Postprocessing">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.calculation.plc.postprocessing.rasterDifference.RasterDifference"
+            typeID="KalypsoPLC_RasterDifference">
+      </simulation>
    </extension>
 </plugin>
