@@ -179,6 +179,10 @@
               class="org.kalypso.convert.namodel.schema.binding.suds.Greenroof"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}GreenRoof">
         </feature>
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.suds.PlaningArea"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}PlaningArea">
+        </feature>
      </extension>
      
      <extension
@@ -188,5 +192,4 @@
               qname="{http://www.tuhh.de/hydrotop}Hydrotop">
         </feature>
      </extension>
-     
 </plugin>
