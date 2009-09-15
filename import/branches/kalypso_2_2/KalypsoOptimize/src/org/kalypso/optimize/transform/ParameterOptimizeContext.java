@@ -50,13 +50,13 @@ import org.kalypso.optimizer.Parameter;
 
 public class ParameterOptimizeContext
 {
-  public final static String MODE_FACTOR = "factor";
+  public final static String MODE_FACTOR = "factor"; //$NON-NLS-1$
 
-  public final static String MODE_OFFSET = "offset";
+  public final static String MODE_OFFSET = "offset"; //$NON-NLS-1$
 
-  public final static String MODE_DIRECT = "direct";
+  public final static String MODE_DIRECT = "direct"; //$NON-NLS-1$
 
-  public final static String MODE_INITIAL = "setInitial";
+  public final static String MODE_INITIAL = "setInitial"; //$NON-NLS-1$
 
   private final double m_upperBound;
 

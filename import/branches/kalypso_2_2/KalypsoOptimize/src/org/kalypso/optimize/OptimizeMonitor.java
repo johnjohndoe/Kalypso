@@ -80,7 +80,7 @@ public class OptimizeMonitor implements ISimulationMonitor
     if( m_message == null )
       return m_monitor.getMessage();
 
-    return m_monitor + " - " + m_message;
+    return m_monitor + " - " + m_message; //$NON-NLS-1$
   }
 
   /**

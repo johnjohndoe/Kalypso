@@ -64,9 +64,9 @@ import org.kalypso.optimizer.Parameter;
  */
 public class SceIOHandler
 {
-  private static Pattern PARAMETER_COUNT = Pattern.compile( "^.+\\&Parameter: n =.*?(\\d+).*?\\r$" );
+  private static Pattern PARAMETER_COUNT = Pattern.compile( "^.+\\&Parameter: n =.*?(\\d+).*?\\r$" ); //$NON-NLS-1$
 
-  private static Pattern PARAMETER = Pattern.compile( "^.*?(\\d+\\.\\d+.(E|)(-|\\+|)\\d*).*?\\r$" );
+  private static Pattern PARAMETER = Pattern.compile( "^.*?(\\d+\\.\\d+.(E|)(-|\\+|)\\d*).*?\\r$" ); //$NON-NLS-1$
 
   private final static int STATUS_READ_PARAMETER_COUNT = 1;
 
@@ -165,8 +165,8 @@ public class SceIOHandler
             m_job.setBestEvaluation( false );
           }
           m_calculationCounter++;
-          answer = Double.toString( evaluation ) + "\n";
-          m_logger.info( "evaluation of " + m_calculationCounter + ". calculation is " + evaluation + " (best is " + m_bestEvaluation + ")" );
+          answer = Double.toString( evaluation ) + "\n"; //$NON-NLS-1$
+          m_logger.info( "evaluation of " + m_calculationCounter + ". calculation is " + evaluation + " (best is " + m_bestEvaluation + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         }
         catch( final Exception e )
         {
@@ -178,7 +178,7 @@ public class SceIOHandler
         inputWriter.write( answer );
         inputWriter.write( '\n' );
         inputWriter.flush();
-        KalypsoOptimizeDebug.DEBUG.printf( "SCE < %s", answer );
+        KalypsoOptimizeDebug.DEBUG.printf( "SCE < %s", answer ); //$NON-NLS-1$
         status = STATUS_READ_PARAMETER_COUNT;
       }
       break;
@@ -195,7 +195,7 @@ public class SceIOHandler
 
   private void recalculate( ) throws Exception
   {
-    KalypsoOptimizeDebug.DEBUG.printf( "%n%nrecalculation step %d...", m_calculationCounter );
+    KalypsoOptimizeDebug.DEBUG.printf( "%n%nrecalculation step %d...", m_calculationCounter ); //$NON-NLS-1$
     final double[] newValues = new double[m_parameter.size()];
     for( int i = 0; i < newValues.length; i++ )
     {
@@ -211,8 +211,8 @@ public class SceIOHandler
     final String[] outLines = getLines( outBuffer );
     final String[] errLines = getLines( errBuffer );
 
-    printlines( "OUT: ", outLines );
-    printlines( "ERR: ", errLines );
+    printlines( "OUT: ", outLines ); //$NON-NLS-1$
+    printlines( "ERR: ", errLines ); //$NON-NLS-1$
 
     for( final String element : outLines )
       readLine( element );
@@ -223,7 +223,7 @@ public class SceIOHandler
   private void printlines( final String prefix, final String[] lines )
   {
     for( final String line : lines )
-      KalypsoOptimizeDebug.DEBUG.printf( "%s%s", prefix, line );
+      KalypsoOptimizeDebug.DEBUG.printf( "%s%s", prefix, line ); //$NON-NLS-1$
   }
 
   public String[] getLines( final StringBuffer buffer )
@@ -237,7 +237,7 @@ public class SceIOHandler
       final String linesComplete = out.substring( 0, lastBR );
       if( linesComplete.length() > 0 )
       {
-        return linesComplete.split( "\n" );
+        return linesComplete.split( "\n" ); //$NON-NLS-1$
       }
     }
     return new String[0];

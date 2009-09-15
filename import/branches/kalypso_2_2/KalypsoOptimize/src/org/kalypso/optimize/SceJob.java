@@ -69,6 +69,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessControlThread;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.io.StreamUtilities;
+import org.kalypso.optimize.i18n.Messages;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -95,7 +96,7 @@ public class SceJob
   {
     m_autoCalibration = autoCalibration;
     m_sceTmpDir = sceTmpDir;
-    XML2SCE_URL = getClass().getResource( "resource/xml2sceInput.xsl" );
+    XML2SCE_URL = getClass().getResource( "resource/xml2sceInput.xsl" ); //$NON-NLS-1$
     m_sceExe = prepareSCE();
   }
 
@@ -108,9 +109,9 @@ public class SceJob
 
   private File prepareSCE( )
   {
-    final InputStream sceStream = getClass().getResourceAsStream( "resource/sce.exe_" );
-    final File tmpDir = FileUtilities.createNewTempDir( "sce", m_sceTmpDir );
-    final File sceExe = new File( tmpDir, "sce.exe" );
+    final InputStream sceStream = getClass().getResourceAsStream( "resource/sce.exe_" ); //$NON-NLS-1$
+    final File tmpDir = FileUtilities.createNewTempDir( "sce", m_sceTmpDir ); //$NON-NLS-1$
+    final File sceExe = new File( tmpDir, "sce.exe" ); //$NON-NLS-1$
     try
     {
       StreamUtilities.streamCopy( sceStream, new FileOutputStream( sceExe ) );
@@ -144,7 +145,7 @@ public class SceJob
     final Document xmlDOM = docuBuilder.newDocument();
     marshaller.marshal( m_autoCalibration, xmlDOM );
 
-    final File outputFile = new File( m_sceExe.getParent(), "scein.dat" );
+    final File outputFile = new File( m_sceExe.getParent(), "scein.dat" ); //$NON-NLS-1$
     final FileWriter writer = new FileWriter( outputFile );
     final Document xslDOM = docuBuilder.parse( XML2SCE_URL.openStream() );
     final TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -184,7 +185,7 @@ public class SceJob
 
       while( true )
       {
-        final String monitorMsg = String.format( "Optimierungsrechnung %d von %d", sceIO.getStep(), stepMax );
+        final String monitorMsg = Messages.getString("org.kalypso.optimize.SceJob.0", sceIO.getStep(), stepMax ); //$NON-NLS-1$
         monitor.setMessage( monitorMsg );
         monitor.setProgress( 100 * sceIO.getStep() / stepMax );
 
@@ -228,12 +229,12 @@ public class SceJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Fehler beim Ausfuehren", e );
+      throw new SimulationException( Messages.getString("org.kalypso.optimize.SceJob.1"), e ); //$NON-NLS-1$
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "beim Ausfuehren unterbrochen", e );
+      throw new SimulationException( Messages.getString("org.kalypso.optimize.SceJob.2"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -241,7 +242,7 @@ public class SceJob
       IOUtils.closeQuietly( errStream );
       if( procCtrlThread != null && procCtrlThread.procDestroyed() )
       {
-        throw new SimulationException( "beim Ausfuehren unterbrochen", new ProcessTimeoutException( "Timeout bei der Abarbeitung der Optimierung" ) );
+        throw new SimulationException( Messages.getString("org.kalypso.optimize.SceJob.3"), new ProcessTimeoutException( Messages.getString("org.kalypso.optimize.SceJob.4") ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }

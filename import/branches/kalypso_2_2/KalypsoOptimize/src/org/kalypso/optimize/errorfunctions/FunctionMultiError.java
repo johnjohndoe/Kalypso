@@ -120,7 +120,7 @@ public class FunctionMultiError extends IErrorFunktion
           c++;
         }
         else
-          System.out.println( "errorfunction " + function.toString() + " is invalid" );
+          System.out.println( "errorfunction " + function.toString() + " is invalid" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final Exception e )
       {

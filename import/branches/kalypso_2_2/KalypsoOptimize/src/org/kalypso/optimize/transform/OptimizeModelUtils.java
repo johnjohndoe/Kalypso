@@ -109,7 +109,7 @@ public class OptimizeModelUtils
     {
       final NodeList nl = getXPath( query, myDom );
       if( nl.getLength() == 0 )
-        System.out.println( "Empty result for xpath: " + query );
+        System.out.println( "Empty result for xpath: " + query ); //$NON-NLS-1$
 
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -159,7 +159,7 @@ public class OptimizeModelUtils
     }
     catch( final TransformerException e )
     {
-      System.out.println( "Failed to resolve xpath: " + newXPathQuery );
+      System.out.println( "Failed to resolve xpath: " + newXPathQuery ); //$NON-NLS-1$
       throw e;
     }
   }

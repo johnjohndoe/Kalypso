@@ -38,17 +38,45 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.optimize;
+package org.kalypso.optimize.i18n;
 
-import org.kalypso.contribs.eclipse.core.runtime.Debug;
+import java.util.IllegalFormatException;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * Holds debug-constants in order to produce trace output. <br>
- * Debug constants correspond to entries in <code>.options</code> file.
- * 
- * @author Gernot Belger
+ * @author kimwerner
  */
-public class KalypsoOptimizeDebug
+public class Messages
 {
-  public static Debug DEBUG = new Debug( null, "org.kalypso.optimize", "/debug", System.out ); //$NON-NLS-1$ //$NON-NLS-2$
+
+  private static final String BUNDLE_NAME = "org.kalypso.optimize.i18n.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
+  {
+  }
+
+  public static String getString( final String key, final Object... args )
+  {
+    String formatStr = ""; //$NON-NLS-1$
+    try
+    {
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
+      return String.format( formatStr, args );
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      e.printStackTrace();
+      return '!' + formatStr + '!';
+    }
+  }
 }
