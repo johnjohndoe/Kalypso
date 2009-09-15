@@ -95,7 +95,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
+        Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -130,7 +130,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
+        Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -471,7 +471,7 @@ public class ProfilUtil
 
     final int i = points.indexOf( point );
     if( i == -1 )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
 
     return points.get( i - 1 );
   }
@@ -511,7 +511,7 @@ public class ProfilUtil
     if( points.isEmpty() || pos == points.size() - 1 )
       return null;
     if( pos == -1 )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
 
     return points.get( pos + 1 );
   }
@@ -552,7 +552,7 @@ public class ProfilUtil
     final Double x = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );
     final Double y = getDoubleValueFor( pointProperty.getId(), p );
     if( x.isNaN() || y.isNaN() )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) ); //$NON-NLS-1$
     return new Point2D.Double( x, y );
   }
 

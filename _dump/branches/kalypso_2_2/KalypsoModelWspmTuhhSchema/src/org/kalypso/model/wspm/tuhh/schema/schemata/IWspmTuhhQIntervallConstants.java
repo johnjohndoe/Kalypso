@@ -49,34 +49,34 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
  */
 public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
 {
-  public static final String DICT_BASE = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#";
+  public static final String DICT_BASE = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#"; //$NON-NLS-1$
 
-  public static final String DICT_PHENOMENON_WATERLEVEL = DICT_BASE + "phenomenonWaterlevel";
+  public static final String DICT_PHENOMENON_WATERLEVEL = DICT_BASE + "phenomenonWaterlevel"; //$NON-NLS-1$
 
-  public static final String DICT_PHENOMENON_RUNOFF = DICT_BASE + "phenomenonRunoff";
+  public static final String DICT_PHENOMENON_RUNOFF = DICT_BASE + "phenomenonRunoff"; //$NON-NLS-1$
 
-  public static final String DICT_PHENOMENON_AREA = DICT_BASE + "phenomenonArea";
+  public static final String DICT_PHENOMENON_AREA = DICT_BASE + "phenomenonArea"; //$NON-NLS-1$
 
-  public static final String DICT_PHENOMENON_ALPHA = DICT_BASE + "phenomenonAlpha";
+  public static final String DICT_PHENOMENON_ALPHA = DICT_BASE + "phenomenonAlpha"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_WATERLEVEL = DICT_BASE + "Waterlevel";
+  public static final String DICT_COMPONENT_WATERLEVEL = DICT_BASE + "Waterlevel"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_WATERLEVEL_UPSTREAM = DICT_BASE + "WaterlevelUpstream";
+  public static final String DICT_COMPONENT_WATERLEVEL_UPSTREAM = DICT_BASE + "WaterlevelUpstream"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_WATERLEVEL_DOWNSTREAM = DICT_BASE + "WaterlevelDownstream";
+  public static final String DICT_COMPONENT_WATERLEVEL_DOWNSTREAM = DICT_BASE + "WaterlevelDownstream"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_DEPTH = DICT_BASE + "Depth";
+  public static final String DICT_COMPONENT_DEPTH = DICT_BASE + "Depth"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_AREA = DICT_BASE + "Area";
+  public static final String DICT_COMPONENT_AREA = DICT_BASE + "Area"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_RUNOFF = DICT_BASE + "Runoff";
+  public static final String DICT_COMPONENT_RUNOFF = DICT_BASE + "Runoff"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_ALPHA = DICT_BASE + "Alpha";
+  public static final String DICT_COMPONENT_ALPHA = DICT_BASE + "Alpha"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_DELTA_AREA = DICT_BASE + "DeltaArea";
+  public static final String DICT_COMPONENT_DELTA_AREA = DICT_BASE + "DeltaArea"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_DELTA_RUNOFF = DICT_BASE + "DeltaRunoff";
+  public static final String DICT_COMPONENT_DELTA_RUNOFF = DICT_BASE + "DeltaRunoff"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_DELTA_ALPHA = DICT_BASE + "DeltaAlpha";
+  public static final String DICT_COMPONENT_DELTA_ALPHA = DICT_BASE + "DeltaAlpha"; //$NON-NLS-1$
 
 }

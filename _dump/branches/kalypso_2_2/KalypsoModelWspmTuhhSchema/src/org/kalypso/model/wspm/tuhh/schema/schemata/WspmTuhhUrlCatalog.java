@@ -54,7 +54,7 @@ public class WspmTuhhUrlCatalog extends AbstractUrlCatalog implements IWspmTuhhC
   @Override
   protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( NS_WSPM_TUHH, myClass.getResource( "wspmTuhhSteadyState.xsd" ) );
-    prefixes.put( NS_WSPM_TUHH, "tuhh" );
+    catalog.put( NS_WSPM_TUHH, myClass.getResource( "wspmTuhhSteadyState.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPM_TUHH, "tuhh" ); //$NON-NLS-1$
   }
 }

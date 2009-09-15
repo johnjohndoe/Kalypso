@@ -80,7 +80,7 @@ public class AddFixValueOperator implements IPointPropertyCalculator
         }
         else
           KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(),
-              Messages.getFormatString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0",property, point ) ) ); //$NON-NLS-1$
+              Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0",property, point ) ) ); //$NON-NLS-1$
       }
     }
     return changes.toArray( new IProfilChange[changes.size()] );

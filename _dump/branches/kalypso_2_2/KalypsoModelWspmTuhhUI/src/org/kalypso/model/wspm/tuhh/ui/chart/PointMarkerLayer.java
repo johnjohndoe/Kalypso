@@ -205,7 +205,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     final Point2D p = getPoint2D( point );
     try
     {
-      return String.format( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer.0" ), new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } ); //$NON-NLS-1$
+      return  Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer.0" , new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } ); //$NON-NLS-1$
     }
     catch( final RuntimeException e )
     {

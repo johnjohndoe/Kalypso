@@ -73,7 +73,7 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
 
   public DelRoughnessResolution( final String[] roughnessTyps, final String roughnessToDelete )
   {
-    super( Messages.getString( "Rauheiten entfernen" ), null, null );
+    super(Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.0") , null, null ); //$NON-NLS-1$
     m_roughnessTyps = roughnessTyps;
     m_roughness = roughnessToDelete;
     m_initialized = true;
@@ -86,10 +86,10 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
   public String getSerializedParameter( )
   {
     final StringBuffer params = new StringBuffer( super.getSerializedParameter() );
-    params.append( ";" + (m_roughness == null ? "-" : m_roughness ));
+    params.append( ";" + (m_roughness == null ? "-" : m_roughness )); //$NON-NLS-1$ //$NON-NLS-2$
     for( final String roughness : m_roughnessTyps )
     {
-      params.append( ";" + roughness );
+      params.append( ";" + roughness ); //$NON-NLS-1$
     }
     return params.toString(); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -123,7 +123,7 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
           return element.toString();
         }
       }
-    }, "Select the roughness to delete:" );
+    }, Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.4") ); //$NON-NLS-1$
 
     if( lsd.open() == 0 )
     {
@@ -204,7 +204,7 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
     final String[] params = getParameter( parameterStream );
     try
     {
-      m_roughness = "-".equals(  params[1])?null:params[1];
+      m_roughness = "-".equals(  params[1])?null:params[1]; //$NON-NLS-1$
       final String[] rt = new String[params.length - 2];
       for( int i = 2; i < params.length; i++ )
       {

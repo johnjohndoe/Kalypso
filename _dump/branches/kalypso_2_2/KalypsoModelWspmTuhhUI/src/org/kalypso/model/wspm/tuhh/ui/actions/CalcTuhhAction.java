@@ -112,7 +112,7 @@ public class CalcTuhhAction implements IActionDelegate
         continue;
       }
 
-      final Job calcJob = new Job( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.0", calculation.getName() )) //$NON-NLS-1$
+      final Job calcJob = new Job( Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.0", calculation.getName() )) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )

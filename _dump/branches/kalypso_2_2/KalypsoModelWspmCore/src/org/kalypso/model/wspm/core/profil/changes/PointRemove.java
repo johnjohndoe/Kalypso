@@ -98,7 +98,7 @@ public class PointRemove implements IProfilChange
    */
   public String getInfo( )
   {
-    return   Messages.getFormatString("org.kalypso.model.wspm.core.profil.changes.PointRemove.0", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) ); //$NON-NLS-1$
+    return   Messages.getString("org.kalypso.model.wspm.core.profil.changes.PointRemove.0", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) ); //$NON-NLS-1$
   }
 
   /**

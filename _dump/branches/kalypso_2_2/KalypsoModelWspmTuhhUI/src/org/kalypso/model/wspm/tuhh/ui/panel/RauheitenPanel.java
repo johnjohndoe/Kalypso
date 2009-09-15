@@ -342,8 +342,8 @@ public class RauheitenPanel extends AbstractProfilView
     if( t == null || t.isDisposed() )
       return;
     if( d == null || d.isNaN() )
-      t.setText( "" );
-    t.setText( String.format( "%.4f", d ) );
+      t.setText( "" ); //$NON-NLS-1$
+    t.setText( String.format( "%.4f", d ) ); //$NON-NLS-1$
   }
 
   void updateControls( )

@@ -161,7 +161,7 @@ public class ImportTrippleHelper
         else
         {
           // inform the user that his profile has not enough values...
-          final String message = Messages.getFormatString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.0" ,(numStations + 1),count ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.0" ,(numStations + 1),count ); //$NON-NLS-1$
           throw new Exception( message );
           // continue;
         }

@@ -186,7 +186,7 @@ public class BewuchsRule extends AbstractValidatorRule
             if( dp == 0.0 )
               stringBuffer.append( "dP" ); //$NON-NLS-1$
             
-            final String text = Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.9",stringBuffer.toString() ); //$NON-NLS-1$
+            final String text = Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.9",stringBuffer.toString() ); //$NON-NLS-1$
 
             collector.createProfilMarker( IMarker.SEVERITY_ERROR, text, "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId ); //$NON-NLS-1$
           }

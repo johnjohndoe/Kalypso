@@ -57,24 +57,15 @@ public class Messages
   {
   }
 
-  public static String getString( String key )
-  {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-  }
-
-  public static String getFormatString( final String key, Object... args )
+  public static String getString( final String key, final Object... args )
   {
     String formatStr = ""; //$NON-NLS-1$
     try
     {
       formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
       return String.format( formatStr, args );
     }
     catch( final MissingResourceException e )
@@ -83,8 +74,8 @@ public class Messages
     }
     catch( final IllegalFormatException e )
     {
+      e.printStackTrace();
       return '!' + formatStr + '!';
     }
-
   }
 }

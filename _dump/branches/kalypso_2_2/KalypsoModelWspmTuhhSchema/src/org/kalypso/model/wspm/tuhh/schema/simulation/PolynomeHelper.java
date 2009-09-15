@@ -82,6 +82,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties.TripleMode;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.ExeVersion;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
+import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
@@ -110,12 +111,12 @@ public class PolynomeHelper
   // TODO: Deciding which approach to take, energy level or water stage
 
 // private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
-  private static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt";
+  private static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt"; //$NON-NLS-1$
 
 // private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
-  private static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt";
+  private static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt"; //$NON-NLS-1$
 
-  private static final String QLANG_FILE_NAME = "Q_LangSchnitt.txt";
+  private static final String QLANG_FILE_NAME = "Q_LangSchnitt.txt"; //$NON-NLS-1$
 
   /**
    * Prepares the input files for the polynome process
@@ -140,7 +141,7 @@ public class PolynomeHelper
     {
       if( !file.exists() )
       {
-        log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", file );
+        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.0"), file ); //$NON-NLS-1$
         return null;
       }
     }
@@ -149,13 +150,13 @@ public class PolynomeHelper
     InputStream zipInputStream = null;
     try
     {
-      zipInputStream = new BufferedInputStream( WspmTuhhCalcJob.class.getResourceAsStream( "resources/polynom1d.zip" ) );
+      zipInputStream = new BufferedInputStream( WspmTuhhCalcJob.class.getResourceAsStream( "resources/polynom1d.zip" ) ); //$NON-NLS-1$
       ZipUtilities.unzip( zipInputStream, tmpDir, false );
       zipInputStream.close();
     }
     catch( final IOException e )
     {
-      log.log( e, "Fehler beim Entpacken der polynom1d.exe. Abbruch." );
+      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.1") ); //$NON-NLS-1$
       return null;
     }
     finally
@@ -166,7 +167,7 @@ public class PolynomeHelper
     /* Copy input data to exe dir */
     try
     {
-      final File eingangDir = new File( tmpDir, "01Eingang" );
+      final File eingangDir = new File( tmpDir, "01Eingang" ); //$NON-NLS-1$
 
       for( final File file : dathFiles )
         FileUtils.copyFileToDirectory( file, eingangDir );
@@ -175,7 +176,7 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      log.log( e, "Eingangsdaten für Polynomberechnung konnten nicht kopiert werden. Abbruch." );
+      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.2") ); //$NON-NLS-1$
       return null;
     }
   }
@@ -184,26 +185,26 @@ public class PolynomeHelper
   {
     final ISimulationMonitor monitor = log.getMonitor();
 
-    log.log( true, "Polynomfunktionen werden ermittelt" );
+    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.3") ); //$NON-NLS-1$
 
-    log.log( true, "- Übertrage Ergebnisse der Q-Intervallberechnung" );
+    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.4") ); //$NON-NLS-1$
 
     final File eingangDir = preparePolynomes( tmpDir, dathDir, log );
-    final File resultDir = new File( tmpDir, "02Ausgang" );
+    final File resultDir = new File( tmpDir, "02Ausgang" ); //$NON-NLS-1$
     if( eingangDir == null )
       return;
 
     if( monitor.isCanceled() )
       return;
 
-    log.log( true, "- Starte Polynome1d.exe" );
+    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.5") ); //$NON-NLS-1$
     prepareSteuerpoly( tmpDir, calculation );
 
     if( monitor.isCanceled() )
       return;
 
-    final File logFile = new File( tmpDir, "Polynome1d.log" );
-    final File errFile = new File( tmpDir, "Polynome1d.err" );
+    final File logFile = new File( tmpDir, "Polynome1d.log" ); //$NON-NLS-1$
+    final File errFile = new File( tmpDir, "Polynome1d.err" ); //$NON-NLS-1$
 
     OutputStream logStream = null;
     OutputStream errStream = null;
@@ -215,14 +216,14 @@ public class PolynomeHelper
       /* Start the polynome1d process */
       final ExeVersion version = calculation.getVersion();
       if( version == null )
-        throw new SimulationException( "Version des Rechenkerns nicht angegeben. Die Version muss in den Steuerparametern gesetzt werden.", null );
+        throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.6"), null ); //$NON-NLS-1$
 
       // start calculation; the out-stream gets copied into the simulation.log and the system.out
-      final File exeFile = new File( tmpDir, "Polynome1d" + version.name() + ".exe" );
+      final File exeFile = new File( tmpDir, "Polynome1d" + version.name() + ".exe" ); //$NON-NLS-1$ //$NON-NLS-2$
       if( !exeFile.exists() )
-        throw new SimulationException( "Polynom-Exe nicht vorhanden. Prüfen Sie die Versionsnummer: " + exeFile.getAbsolutePath() );
+        throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.7") + exeFile.getAbsolutePath() ); //$NON-NLS-1$
 
-      final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\"";
+      final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
       ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, timeout, logStream, errStream, null );
 
       logStream.close();
@@ -234,14 +235,14 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      log.log( e, "Fehler bei der Ausführung der Polynome1D.exe: %s" + e.getLocalizedMessage() );
-      monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der ausführung der Polynome1D.exe" );
-      throw new SimulationException( "Fehler bei der Ausführung der Polynome1D.exe: %s" + e.getLocalizedMessage(), e );
+      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.8") + e.getLocalizedMessage() ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.9") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.10") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
     catch( final ProcessTimeoutException e )
     {
-      log.log( false, "Polynome1D-Prozess wurde abgebrochen. Grund: timeout" );
-      monitor.setFinishInfo( IStatus.ERROR, "Polynome1D Prozess wurde abgebrochen. Grund: timeout" );
+      log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11") ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.12") ); //$NON-NLS-1$
       return;
     }
     finally
@@ -254,28 +255,28 @@ public class PolynomeHelper
       return;
 
     /* Read results */
-    log.log( true, "- Lese Punktwolken und Polynome" );
-    final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" );
+    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.13") ); //$NON-NLS-1$
+    final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" ); //$NON-NLS-1$
     try
     {
       readResults( resultDir, targetGmlFile, calculation, log, resultEater );
-      final File gmvResultFile = new File( tmpDir, "Ergebnisse.gmv" );
+      final File gmvResultFile = new File( tmpDir, "Ergebnisse.gmv" ); //$NON-NLS-1$
       resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT_GMV, gmvResultFile );
     }
     catch( final Throwable e )
     {
-      log.log( e, "Fehler beim Lesen der Polynom1D-Ergebnisse: %s", e.getLocalizedMessage() );
-      monitor.setFinishInfo( IStatus.ERROR, "Fehler beim Lesen der Polynom1D-Ergebnisse: " + e.getLocalizedMessage() );
+      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.14"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.15") + e.getLocalizedMessage() ); //$NON-NLS-1$
     }
 
-    final File polynomeLogFile = new File( tmpDir, "Polynome1d.log" );
+    final File polynomeLogFile = new File( tmpDir, "Polynome1d.log" ); //$NON-NLS-1$
     if( polynomeLogFile.exists() )
-      resultEater.addResult( "polynomeLog", polynomeLogFile );
+      resultEater.addResult( "polynomeLog", polynomeLogFile ); //$NON-NLS-1$
   }
 
   private static void prepareSteuerpoly( final File tmpDir, final TuhhCalculation calculation ) throws SimulationException
   {
-    final File steuerFile = new File( tmpDir, "steuerpoly.ini" );
+    final File steuerFile = new File( tmpDir, "steuerpoly.ini" ); //$NON-NLS-1$
 
     try
     {
@@ -298,26 +299,26 @@ public class PolynomeHelper
       // Programming Language C (PRC) locale in order to format with decimal '.'
       final Formatter formatter = new Formatter( steuerFile, Charset.defaultCharset().name(), Locale.PRC );
 
-      formatter.format( "Steuerdatei fuer die Polynomfunktionen je Profil%n" );
-      formatter.format( "-------------------------------------------------%n" );
-      formatter.format( "02 Längsschnitt(Pfad) 01Eingang\\%s%n", QLANG_FILE_NAME );
-      formatter.format( "03 PolyGrad(2,3,4) %d%n", polynomialDeegree );
-      formatter.format( "04 DreiTeil(J/N) %1s%n", isTripleForAll ? "J" : "N" );
-      formatter.format( "05 PolyReduce(J/N) J%n" );
-      formatter.format( "06 ProfIntervall(J/N) N%n" );
-      formatter.format( "07 StartProf(0000.0000) %.4f%n", startStation );
-      formatter.format( "08 EndProf(0000.0000) %.4f%n", endStation );
-      formatter.format( "09 AusgabeJeFunktion(J/N) J%n" );
-      formatter.format( "10 AusgabeWspWerte(J/N) J%n" );
-      formatter.format( "11 AusgabeKontrolle(J/N) J%n" );
-      formatter.format( "12 AusgabeFile(Pfad) 02Ausgang\\%n" );
-      formatter.format( "13 Ausreisser(J/N) %1s%n", ignoreOutlier ? "J" : "N" );
-      formatter.format( "14 Impulsstrom(00.0000) %.4f%n", alphaLimit );
-      formatter.format( "15 AutoSteigung(J/N) %1s%n", autoSlopeDetection ? "J" : "N" );
-      formatter.format( "16 Q_Steigung(00.0000) %.4f%n", runoffSlope );
-      formatter.format( "17 A_Steigung(00.0000) %.4f%n", areaSlope );
-      formatter.format( "18 Alp_Steigung(00.0000) %.4f%n", alphaSlope );
-      formatter.format( "19 WichtungSplinePkt(0000.00) %.2f%n", weightSplinePoint );
+      formatter.format( "Steuerdatei fuer die Polynomfunktionen je Profil%n" ); //$NON-NLS-1$
+      formatter.format( "-------------------------------------------------%n" ); //$NON-NLS-1$
+      formatter.format( "02 Längsschnitt(Pfad) 01Eingang\\%s%n", QLANG_FILE_NAME ); //$NON-NLS-1$
+      formatter.format( "03 PolyGrad(2,3,4) %d%n", polynomialDeegree ); //$NON-NLS-1$
+      formatter.format( "04 DreiTeil(J/N) %1s%n", isTripleForAll ? "J" : "N" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      formatter.format( "05 PolyReduce(J/N) J%n" ); //$NON-NLS-1$
+      formatter.format( "06 ProfIntervall(J/N) N%n" ); //$NON-NLS-1$
+      formatter.format( "07 StartProf(0000.0000) %.4f%n", startStation ); //$NON-NLS-1$
+      formatter.format( "08 EndProf(0000.0000) %.4f%n", endStation ); //$NON-NLS-1$
+      formatter.format( "09 AusgabeJeFunktion(J/N) J%n" ); //$NON-NLS-1$
+      formatter.format( "10 AusgabeWspWerte(J/N) J%n" ); //$NON-NLS-1$
+      formatter.format( "11 AusgabeKontrolle(J/N) J%n" ); //$NON-NLS-1$
+      formatter.format( "12 AusgabeFile(Pfad) 02Ausgang\\%n" ); //$NON-NLS-1$
+      formatter.format( "13 Ausreisser(J/N) %1s%n", ignoreOutlier ? "J" : "N" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      formatter.format( "14 Impulsstrom(00.0000) %.4f%n", alphaLimit ); //$NON-NLS-1$
+      formatter.format( "15 AutoSteigung(J/N) %1s%n", autoSlopeDetection ? "J" : "N" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      formatter.format( "16 Q_Steigung(00.0000) %.4f%n", runoffSlope ); //$NON-NLS-1$
+      formatter.format( "17 A_Steigung(00.0000) %.4f%n", areaSlope ); //$NON-NLS-1$
+      formatter.format( "18 Alp_Steigung(00.0000) %.4f%n", alphaSlope ); //$NON-NLS-1$
+      formatter.format( "19 WichtungSplinePkt(0000.00) %.2f%n", weightSplinePoint ); //$NON-NLS-1$
 
       formatter.close();
 
@@ -325,7 +326,7 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      throw new SimulationException( "Could not write 'steuerpoly.ini'", e );
+      throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.16"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -350,7 +351,7 @@ public class PolynomeHelper
       return;
 
     /* Write workspace into file */
-    GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "CP1252" );
+    GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "CP1252" ); //$NON-NLS-1$
     resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT, targetGmlFile );
   }
 
@@ -359,11 +360,11 @@ public class PolynomeHelper
     final Map<BigDecimal, QIntervallResult> results = new HashMap<BigDecimal, QIntervallResult>();
 
     /* Read w-points first: PROFxxx.xxxx.txt files */
-    final FilenameFilter filter = new PrefixSuffixFilter( "PROF", ".txt" );
+    final FilenameFilter filter = new PrefixSuffixFilter( "PROF", ".txt" ); //$NON-NLS-1$ //$NON-NLS-2$
     final File[] profFiles = resultDir.listFiles( filter );
     if( profFiles == null || profFiles.length == 0 )
     {
-      log.finish( IStatus.ERROR, "Fehler beim Lesen der Polynom1D-Ergebnisse: keine PROFxxx.xx.txt Dateien vorhanden." );
+      log.finish( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.17") ); //$NON-NLS-1$
       return results;
     }
 
@@ -387,7 +388,7 @@ public class PolynomeHelper
       {
         final QIntervallResult qresult = resultCollection.createQResult();
         qresult.setName( station.toString() );
-        qresult.setDescription( "Gelesen aus: " + name );
+        qresult.setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.18") + name ); //$NON-NLS-1$
         qresult.setStation( station );
         qresult.setSlope( slope );
 
@@ -399,7 +400,7 @@ public class PolynomeHelper
         /* Create the points observation */
         final IObservation<TupleResult> observation = qresult.getPointsObservation();
         final String obsName = stationString;
-        final String description = "Übernommen aus Datei: " + name;
+        final String description = Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.19") + name; //$NON-NLS-1$
         observation.setName( obsName );
         observation.setDescription( description );
         readProfFile( profFile, observation.getResult(), log );
@@ -409,7 +410,7 @@ public class PolynomeHelper
       }
       catch( final Exception e )
       {
-        log.log( e, "Fehler beim Lesen einer PROF-Datei: ", name );
+        log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.20"), name ); //$NON-NLS-1$
       }
     }
 
@@ -484,7 +485,7 @@ public class PolynomeHelper
         if( line == null )
           break;
 
-        final String[] tokens = line.trim().split( " +" );
+        final String[] tokens = line.trim().split( " +" ); //$NON-NLS-1$
         if( tokens == null || tokens.length != 8 )
           continue;
 
@@ -513,7 +514,7 @@ public class PolynomeHelper
           catch( final NumberFormatException nfe )
           {
             /* A good line but bad content. Give user a hint that something might be wrong. */
-            log.log( false, "Lesefehler in Datei: %s - Zeile: %d - Token: %s", profFile.getName(), reader.getLineNumber(), token );
+            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.21"), profFile.getName(), reader.getLineNumber(), token ); //$NON-NLS-1$
           }
         }
 
@@ -533,7 +534,7 @@ public class PolynomeHelper
 
   private static void readPolynomeFile( final File resultDir, final Map<BigDecimal, QIntervallResult> pointResults, final LogHelper log ) throws IOException
   {
-    final File polyFile = new File( resultDir, "Polynome.TXT" );
+    final File polyFile = new File( resultDir, "Polynome.TXT" ); //$NON-NLS-1$
 
     LineNumberReader reader = null;
     try
@@ -546,8 +547,8 @@ public class PolynomeHelper
         if( line == null )
           break;
 
-        final String trimmedLine = line.trim().replaceAll( " \\(h\\)", "\\(h\\)" );
-        final String[] tokens = trimmedLine.split( " +" );
+        final String trimmedLine = line.trim().replaceAll( " \\(h\\)", "\\(h\\)" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String[] tokens = trimmedLine.split( " +" ); //$NON-NLS-1$
         if( tokens.length < 8 )
           continue;
 
@@ -577,7 +578,7 @@ public class PolynomeHelper
           if( tokens.length < 7 + order + 1 )
           {
             /* A good line but bad content. Give user a hint that something might be wrong. */
-            log.log( false, "Anzahl der Koeffizienten falsche in Datei: %s - Zeile: %d", polyFile.getName(), reader.getLineNumber() );
+            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.22"), polyFile.getName(), reader.getLineNumber() ); //$NON-NLS-1$
             continue;
           }
 
@@ -606,14 +607,14 @@ public class PolynomeHelper
               break;
 
             default:
-              log.log( false, "Unbekannter Wert-Typ '%c' in Zeile %s: %s ", station );
+              log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.23"), station ); //$NON-NLS-1$
               continue;
           }
 
           /* find feature for station */
           final QIntervallResult qresult = pointResults.get( station );
           if( qresult == null )
-            log.log( false, "Keine passende Station für Polynom bei km %.4f: %s", station, line );
+            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.24"), station, line ); //$NON-NLS-1$
           else
           {
             /* create new polynome */
@@ -631,12 +632,12 @@ public class PolynomeHelper
         catch( final NumberFormatException nfe )
         {
           /* A good line but bad content. Give user a hint that something might be wrong. */
-          log.log( false, "Lesefehler in Datei: %s - Zeile: %d: %s", polyFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() );
+          log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), polyFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() ); //$NON-NLS-1$
         }
         catch( final Exception e )
         {
           // should never happen
-          log.log( e, "Lesefehler in Datei: %s - Zeile: %d: %s", polyFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() );
+          log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), polyFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() ); //$NON-NLS-1$
         }
 
       }
@@ -675,12 +676,12 @@ public class PolynomeHelper
         catch( final NumberFormatException nfe )
         {
           /* A good line but bad content. Give user a hint that something might be wrong. */
-          log.log( false, "Lesefehler in Datei: %s - Zeile: %d: %s", buildingFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() );
+          log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), buildingFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() ); //$NON-NLS-1$
         }
         catch( final Throwable e )
         {
           // should never happen
-          log.log( e, "Lesefehler in Datei: %s - Zeile: %d: %s", buildingFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() );
+          log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), buildingFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() ); //$NON-NLS-1$
         }
 
       }
@@ -694,7 +695,7 @@ public class PolynomeHelper
 
   private static void readBuildingLine( final String line, final Map<BigDecimal, QIntervallResult> pointResults, final File buildingFile ) throws Exception
   {
-    final String[] tokens = line.split( " +" );
+    final String[] tokens = line.split( " +" ); //$NON-NLS-1$
     if( tokens.length < 6 )
       return;
 
@@ -728,7 +729,7 @@ public class PolynomeHelper
       newqresult.setStation( station );
 
       newqresult.setName( station.toString() );
-      final String descMessage = "Gelesen aus: " + buildingFile.getName();
+      final String descMessage = Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.26") + buildingFile.getName(); //$NON-NLS-1$
       if( !newqresult.getDescription().contains( descMessage ) )
         newqresult.setDescription( descMessage );
 
@@ -738,7 +739,7 @@ public class PolynomeHelper
     final QIntervallResult qresult = pointResults.get( station );
 
     /* Add comment */
-    qresult.setDescription( qresult.getDescription() + "\nGelesen aus: " + buildingFile.getName() );
+    qresult.setDescription( qresult.getDescription() + Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.27") + buildingFile.getName() ); //$NON-NLS-1$
 
     /* Add values to the weir observation */
     final IObservation<TupleResult> weirObs = qresult.getBuildingObservation( true );
@@ -747,7 +748,7 @@ public class PolynomeHelper
     if( buildingId != null )
     {
       /* Set the phenomenon of the building as phenomenon for the observation */
-      final IPhenomenon buildingPhenomenon = new Phenomenon( buildingId, "", "" );
+      final IPhenomenon buildingPhenomenon = new Phenomenon( buildingId, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
       weirObs.setPhenomenon( buildingPhenomenon );
     }
 

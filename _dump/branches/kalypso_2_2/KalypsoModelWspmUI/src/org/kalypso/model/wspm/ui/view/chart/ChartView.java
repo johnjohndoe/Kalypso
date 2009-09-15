@@ -240,7 +240,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     if( m_control == null || m_control.isDisposed() )
       return;
 
-    final String partName = m_profile == null ? Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_4" ) : Messages.getFormatString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String partName = m_profile == null ? Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_4" ) : Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ); //$NON-NLS-1$ //$NON-NLS-2$
     final String tooltip = null;
 
     setPartNames( partName, tooltip );

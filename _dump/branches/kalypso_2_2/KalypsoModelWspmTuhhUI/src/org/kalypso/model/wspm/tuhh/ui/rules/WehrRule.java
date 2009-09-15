@@ -163,7 +163,7 @@ public class WehrRule extends AbstractValidatorRule
 
       if( ((Double) prop).isNaN() || (Double) prop == 0.0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.9", property.getName() ), "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.9", property.getName() ), "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         break;
       }
     }

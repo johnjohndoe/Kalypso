@@ -128,7 +128,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   {
     final IProfil profil = getProfil();
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("remove roughness"), getProfil(), true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation(Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.RoughnessLayer.0"), getProfil(), true );  //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profil, getTargetComponent()  ) );
     new ProfilOperationJob( operation ).schedule();
     

@@ -65,6 +65,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -104,19 +105,19 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURI().toURL(), null );
+      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURI().toURL(), null ); //$NON-NLS-1$
       final String defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
       final Feature triangleFeature = triangleWorkspace.getRootFeature();
-      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "triangulatedSurfaceMember" ), surface );
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$
       // TODO: set tin name
-      NamedFeatureHelper.setDescription( triangleFeature, "Wasserspiegel-Tin: " );
-      NamedFeatureHelper.setName( triangleFeature, "Triangulierter Wasserpiegel der Berechnung ''" );
-      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "unit" ), "NN+m" );
-      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "parameter" ), "h" );
-      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "date" ), DateUtilities.toXMLGregorianCalendar( new Date() ) );
+      NamedFeatureHelper.setDescription( triangleFeature, "Wasserspiegel-Tin: " ); //$NON-NLS-1$
+      NamedFeatureHelper.setName( triangleFeature, "Triangulierter Wasserpiegel der Berechnung ''" ); //$NON-NLS-1$
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "unit" ), "NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "parameter" ), "h" ); //$NON-NLS-1$ //$NON-NLS-2$
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "date" ), DateUtilities.toXMLGregorianCalendar( new Date() ) ); //$NON-NLS-1$
 
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), breaklineFile.toURI().toURL(), null );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), breaklineFile.toURI().toURL(), null ); //$NON-NLS-1$
       final Feature rootFeature = workspace.getRootFeature();
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
@@ -150,10 +151,10 @@ public class BreakLinesHelper implements IWspmConstants
 
             // Write the curve as breakline into breakline file
             final GM_Curve polygoneRing = GeometryFactory.createGM_Curve( polygonPosesClosed, defaultCrs );
-            final Feature ringFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
-            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), polygoneRing );
-            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
-            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
+            final Feature ringFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), polygoneRing ); //$NON-NLS-1$
+            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station ); //$NON-NLS-1$
+            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp ); //$NON-NLS-1$
 
             // Interpolate triangles between two adjacent curves and add them to the triangulated surface
             final GM_Position[] polygonPosesOpen = (GM_Position[]) ArrayUtils.remove( polygonPosesClosed, polygonPosesClosed.length - 1 );
@@ -194,9 +195,9 @@ public class BreakLinesHelper implements IWspmConstants
     final IComponent wspComp = TupleResultUtilities.findComponentById( result, strWsp );
 
     if( statComponent == null )
-      throw new IllegalArgumentException( "Längsschnitt hat keine Spalte mit Namen " + strStationierung );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strStationierung )); //$NON-NLS-1$
     if( wspComp == null )
-      throw new IllegalArgumentException( "Längsschnitt hat keine Spalte mit Namen " + strWsp );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strWsp )); //$NON-NLS-1$
 
     final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
     for( final IRecord record : result )
@@ -243,7 +244,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), file.toURI().toURL(), null );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), file.toURI().toURL(), null ); //$NON-NLS-1$
       final Feature rootFeature = workspace.getRootFeature();
 
       // we assume that all points have the same crs
@@ -282,10 +283,10 @@ public class BreakLinesHelper implements IWspmConstants
 
           for( final GM_Point pos : points )
           {
-            final Feature pointFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BOUNDARY, "wspPointMember" ), new QName( NS_WSPM_BOUNDARY, "WspPoint" ) );
-            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), pos );
-            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "station" ), station );
-            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "wsp" ), wsp );
+            final Feature pointFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BOUNDARY, "wspPointMember" ), new QName( NS_WSPM_BOUNDARY, "WspPoint" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), pos ); //$NON-NLS-1$
+            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "station" ), station ); //$NON-NLS-1$
+            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "wsp" ), wsp ); //$NON-NLS-1$
           }
         }
       }
@@ -306,7 +307,7 @@ public class BreakLinesHelper implements IWspmConstants
         posList.add( firstLeftPoint.getPosition() );
 
         final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, null, crs );
-        rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface );
+        rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface ); //$NON-NLS-1$
       }
 
       GmlSerializer.serializeWorkspace( file, workspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );

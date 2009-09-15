@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.provider.IChartProvider;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -273,13 +274,13 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     /* Get all elements for the extension point. */
-    IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" );
+    IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" ); //$NON-NLS-1$
     for( IConfigurationElement element : elements )
     {
       /* Get the id. */
-      String id = element.getAttribute( "id" );
+      String id = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id != null && id.length() > 0 && id.equals( chartProviderID ) )
-        return (IChartProvider) element.createExecutableExtension( "class" );
+        return (IChartProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
     }
 
     return null;

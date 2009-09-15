@@ -132,19 +132,19 @@ public class HeightWidthData
         if( ukCrds != null )
           results.add( new BridgeResult( m_name, "V01-V03", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) ); //$NON-NLS-1$
       } // Mabye we have a bridge like structure
-      if( key.startsWith( "D01" ) )
+      if( key.startsWith( "D01" ) ) //$NON-NLS-1$
       {
         /* Check if we have a 'Verdolungsstrecke Einlauf', then we can calculate some area as well */
-        final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "D02" );
+        final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "D02" ); //$NON-NLS-1$
         if( ukCrds != null )
-          results.add( new BridgeResult( m_name, "D01-D03", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) );
+          results.add( new BridgeResult( m_name, "D01-D03", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) ); //$NON-NLS-1$
       }
-      if( key.startsWith( "D91" ) )
+      if( key.startsWith( "D91" ) ) //$NON-NLS-1$
       {
         /* Check if we have a 'Verdolungsstrecke Auslauf', then we can calculate some area as well */
-        final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "D92" );
+        final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "D92" ); //$NON-NLS-1$
         if( ukCrds != null )
-          results.add( new BridgeResult( m_name, "D91-D93", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) );
+          results.add( new BridgeResult( m_name, "D91-D93", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) ); //$NON-NLS-1$
       }
     }
 
