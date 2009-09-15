@@ -25,7 +25,7 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     super.init( theme, props );
-    m_formatString = props.getProperty( PROP_FORMAT, "%.2f \u20ac/m\u00b2/a - %s" );
+    m_formatString = props.getProperty( PROP_FORMAT, "%.2f \u20ac/m\u00b2/a - %s" ); //$NON-NLS-1$
   }
 
   public static void updateZonesDefinition( final Map<Double, String> values )

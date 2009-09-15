@@ -58,7 +58,7 @@ public class FunctionParserCache
   public synchronized  static double getValue( final String expression, final double value ) throws ParseException
   {
     final JEP parser = getParser( expression );
-    parser.addVariable( "x", value );
+    parser.addVariable( "x", value ); //$NON-NLS-1$
     return parser.getValue();
   }
 
@@ -71,7 +71,7 @@ public class FunctionParserCache
     final JEP jep = new JEP();
     jep.addStandardConstants();
     jep.addStandardFunctions();
-    jep.addVariable( "x", 0.0 );
+    jep.addVariable( "x", 0.0 ); //$NON-NLS-1$
     jep.parseExpression( expression );
     m_parsers.put( expression, jep );
     return jep;

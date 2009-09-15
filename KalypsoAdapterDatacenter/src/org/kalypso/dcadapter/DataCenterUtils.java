@@ -26,7 +26,7 @@ public class DataCenterUtils
     {
       m_props = new Properties();
       
-      final InputStream stream = DataCenterUtils.class.getResourceAsStream( "resource/datacenter.ini" );
+      final InputStream stream = DataCenterUtils.class.getResourceAsStream( "resource/datacenter.ini" ); //$NON-NLS-1$
       
       try
       {
@@ -52,8 +52,8 @@ public class DataCenterUtils
   
   public static String toKalypsoType( final String datacenterType )
   {
-    final String key = "TYPE_" + datacenterType;
+    final String key = "TYPE_" + datacenterType; //$NON-NLS-1$
     
-    return getProperties().getProperty( key, "W" );
+    return getProperties().getProperty( key, "W" ); //$NON-NLS-1$
   }
 }

@@ -82,7 +82,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RiskModelHelper
 {
-  private static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi";
+  private static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi"; //$NON-NLS-1$
 
   /** themeId of the map-layer containing the events */
   private static final String THEME_PROPERTY_DEPTH = "depthGridThemes"; //$NON-NLS-1$
@@ -235,8 +235,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15" ), sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
-      newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16" ), new Date().toString() ) ); //$NON-NLS-1$
+      newCoverage.setName(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15" , sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
+      newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16" , new Date().toString() ) ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
@@ -359,7 +359,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" ), i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
+        final SubMonitor progress = SubMonitor.convert( monitor,  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" , i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -671,7 +671,7 @@ public class RiskModelHelper
     final IKalypsoFeatureTheme existingTheme = CascadingThemeHelper.findThemeWithFeaturePath( parentKalypsoTheme, featurePath );
     if( existingTheme != null )
     {
-      existingTheme.setName( new I10nString( "HQ " + annualCoverageCollection.getReturnPeriod() ) );
+      existingTheme.setName( new I10nString( "HQ " + annualCoverageCollection.getReturnPeriod() ) ); //$NON-NLS-1$
       return;
     }
 
@@ -733,7 +733,7 @@ public class RiskModelHelper
     Assert.isTrue( names.length == returnPeriods.length );
     Assert.isTrue( names.length == descriptions.length );
 
-    monitor.beginTask( "Importing runoff events", names.length );
+    monitor.beginTask( Messages.getString("org.kalypso.risk.model.utils.RiskModelHelper.1"), names.length ); //$NON-NLS-1$
 
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
@@ -767,7 +767,7 @@ public class RiskModelHelper
       int coverageCount = 0;
       for( final ICoverage coverage : grids[i] )
       {
-        final String subtaks = String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" ), names[i], coverageCount + 1, grids[i].size() );
+        final String subtaks =  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" , names[i], coverageCount + 1, grids[i].size() ); //$NON-NLS-1$
         monitor.subTask( subtaks );
 
         // NO! When imported from Flood, return period is always 1 by default, so files will be overwritten!
@@ -776,13 +776,13 @@ public class RiskModelHelper
 
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
-        final File targetFile = FileUtilities.createNewUniqueFile( targetFileName, ".ascbin", rasterFolder.getLocation().toFile() );
+        final File targetFile = FileUtilities.createNewUniqueFile( targetFileName, ".ascbin", rasterFolder.getLocation().toFile() ); //$NON-NLS-1$
         final String targetGridPath = rasterFolderPath + targetFile.getName();
 
         final SubMonitor subMonitor = SubMonitor.convert( monitor, 10 );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", subMonitor ); //$NON-NLS-1$
-        newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18" ), coverageCount + 1 ) ); //$NON-NLS-1$
-        newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19" ), new Date() ) ); //$NON-NLS-1$
+        newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18" , coverageCount + 1 ) ); //$NON-NLS-1$
+        newCoverage.setDescription(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19" , new Date() ) ); //$NON-NLS-1$
         grid.dispose();
         coverageCount++;
         if( !subMonitor.isCanceled() && wspThemes != null )

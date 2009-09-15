@@ -46,7 +46,7 @@ public class DataCenterLevelItem implements IRepositoryItem
   public String getIdentifier()
   {
     if( m_parent != null )
-      return m_parent.getIdentifier() + "." + String.valueOf( m_level.getID() );
+      return m_parent.getIdentifier() + "." + String.valueOf( m_level.getID() ); //$NON-NLS-1$
 
     return m_rep.getIdentifier() + String.valueOf( m_level.getID() );
   }

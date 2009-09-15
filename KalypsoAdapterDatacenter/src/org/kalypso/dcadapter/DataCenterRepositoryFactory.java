@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.dcadapter.i18n.Messages;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
@@ -35,7 +36,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     final ConfigDialog dlg = new ConfigDialog( shell );
     if( dlg.open() == Window.OK )
     {
-      setConfiguration( dlg.getUrl() + "#" + dlg.getUsername() + "#" + dlg.getPassword() );
+      setConfiguration( dlg.getUrl() + "#" + dlg.getUsername() + "#" + dlg.getPassword() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return true;
     }
@@ -63,10 +64,10 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository() throws RepositoryException
   {
-    final String[] conf = getConfiguration().split( "#" );
+    final String[] conf = getConfiguration().split( "#" ); //$NON-NLS-1$
 
     if( conf.length < 3 )
-      throw new RepositoryException( "Invalid configuration in " + getClass().getName() + ": " + getConfiguration() );
+      throw new RepositoryException( "Invalid configuration in " + getClass().getName() + ": " + getConfiguration() ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final String url = conf[0];
     final String userName = conf[1];
@@ -78,24 +79,24 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
   private static class ConfigDialog extends TitleAreaDialog
   {
-    protected String m_url = "jdbc:edbc://134.28.87.75:II7/vn_datacenter::abwb_v2_flows/INGRES";
+    protected String m_url = "jdbc:edbc://134.28.87.75:II7/vn_datacenter::abwb_v2_flows/INGRES"; //$NON-NLS-1$
 
-    protected String m_username = "";
+    protected String m_username = ""; //$NON-NLS-1$
 
-    protected String m_password = "";
+    protected String m_password = ""; //$NON-NLS-1$
 
     public ConfigDialog( final Shell parentShell )
     {
       super( parentShell );
 
       final IDialogSettings settings = DataCenterPlugin.getDefault().getDialogSettings();
-      IDialogSettings section = settings.getSection( "connection" );
+      IDialogSettings section = settings.getSection( "connection" ); //$NON-NLS-1$
       if( section == null )
-        section = settings.addNewSection( "connection" );
+        section = settings.addNewSection( "connection" ); //$NON-NLS-1$
       else
       {
-        m_url = section.get( "url" ) == null ? "" : section.get( "url" );
-        m_username = section.get( "username" ) == null ? "" : section.get( "username" );
+        m_url = section.get( "url" ) == null ? "" : section.get( "url" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        m_username = section.get( "username" ) == null ? "" : section.get( "username" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
     }
 
@@ -105,9 +106,9 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     @Override
     public boolean close()
     {
-      final IDialogSettings section = DataCenterPlugin.getDefault().getDialogSettings().getSection( "connection" );
-      section.put( "url", m_url );
-      section.put( "username", m_username );
+      final IDialogSettings section = DataCenterPlugin.getDefault().getDialogSettings().getSection( "connection" ); //$NON-NLS-1$
+      section.put( "url", m_url ); //$NON-NLS-1$
+      section.put( "username", m_username ); //$NON-NLS-1$
 
       return super.close();
     }
@@ -124,7 +125,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
       // Ingres URL
       final Label lblUrl = new Label( panel, SWT.LEFT );
-      lblUrl.setText( "Ingres-Url:" );
+      lblUrl.setText( "Ingres-Url:" ); //$NON-NLS-1$
 
       final Text txtUrl = new Text( panel, SWT.BORDER );
       txtUrl.setText( m_url );
@@ -140,7 +141,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
       // Username
       final Label lblName = new Label( panel, SWT.LEFT );
-      lblName.setText( "Benutzername:" );
+      lblName.setText( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.0") ); //$NON-NLS-1$
 
       final Text txtName = new Text( panel, SWT.BORDER );
       txtName.setText( m_username );
@@ -156,7 +157,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
       // Password
       final Label lblPw = new Label( panel, SWT.LEFT );
-      lblPw.setText( "Password:" );
+      lblPw.setText( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.1") ); //$NON-NLS-1$
 
       final Text txtPw = new Text( panel, SWT.BORDER | SWT.PASSWORD );
       txtPw.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -169,8 +170,8 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
       } );
       txtPw.setSize( 100, txtUrl.getSize().y );
 
-      setMessage( "Geben Sie hier die Verbindungsinformation ein" );
-      setTitle( "DataCenter-Verbindung" );
+      setMessage( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.2") ); //$NON-NLS-1$
+      setTitle( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.3") ); //$NON-NLS-1$
 
       return panel;
     }
