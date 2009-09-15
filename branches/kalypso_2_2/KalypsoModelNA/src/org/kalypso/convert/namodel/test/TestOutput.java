@@ -52,6 +52,6 @@ public class TestOutput
 {
   public static void main( String[] args )
   {
-    Logger.getLogger( "aaaaaaaaaa" ).log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3" ), 500.0, 2525, 502.635468, 2.635468, 1.2589 ) );
+    Logger.getLogger( "aaaaaaaaaa" ).log( Level.WARNING,  Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3" , 500.0, 2525, 502.635468, 2.635468, 1.2589 ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

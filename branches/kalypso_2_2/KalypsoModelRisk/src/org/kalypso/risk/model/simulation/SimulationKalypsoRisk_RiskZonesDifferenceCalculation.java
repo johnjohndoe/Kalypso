@@ -70,13 +70,13 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
-  private final static String RASTER_MODEL_1 = "RASTER_MODEL_1";
+  private final static String RASTER_MODEL_1 = "RASTER_MODEL_1"; //$NON-NLS-1$
 
-  private final static String RASTER_MODEL_2 = "RASTER_MODEL_2";
+  private final static String RASTER_MODEL_2 = "RASTER_MODEL_2"; //$NON-NLS-1$
 
-  private final static String OUTPUT_RASTER_MODEL = "OUTPUT_RASTER_MODEL";
+  private final static String OUTPUT_RASTER_MODEL = "OUTPUT_RASTER_MODEL"; //$NON-NLS-1$
 
-  private final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER";
+  private final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
@@ -124,7 +124,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
   private void doRiskZonesCalculation( final File tmpdir, final IRasterDataModel rasterModelOutput, final IRasterDataModel rasterModelInput1, final IRasterDataModel rasterModelInput2, final IProgressMonitor monitor ) throws SimulationException
   {
-    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 );
+    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
 
     try
     {

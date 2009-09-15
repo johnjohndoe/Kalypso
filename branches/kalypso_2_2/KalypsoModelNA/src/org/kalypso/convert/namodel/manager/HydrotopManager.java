@@ -106,8 +106,8 @@ public class HydrotopManager extends AbstractManager
       public String getAscii( )
       {
         if( m_bothSet )
-          return String.format( "%.3f %.3f", m_naturalAreaPercentage, m_sealedAreaPercentage );
-        return String.format( "%.3f", m_sealedAreaPercentage );
+          return String.format( "%.3f %.3f", m_naturalAreaPercentage, m_sealedAreaPercentage ); //$NON-NLS-1$
+        return String.format( "%.3f", m_sealedAreaPercentage ); //$NON-NLS-1$
       }
     }
 
@@ -115,16 +115,16 @@ public class HydrotopManager extends AbstractManager
 
     public HydrotopSudsAsciiDescriptor( )
     {
-      m_map.put( "10", new AreaDescriptor( 0.0 ) );
-      m_map.put( "11", new AreaDescriptor( 0.0 ) );
-      m_map.put( "12", new AreaDescriptor( 0.0 ) );
-      m_map.put( "13", new AreaDescriptor( 0.0 ) );
-      m_map.put( "20", new AreaDescriptor( 0.0, 0.0 ) );
-      m_map.put( "21", new AreaDescriptor( 0.0, 0.0 ) );
-      m_map.put( "30", new AreaDescriptor( 0.0, 0.0 ) );
-      m_map.put( "31", new AreaDescriptor( 0.0, 0.0 ) );
-      m_map.put( "40", new AreaDescriptor( 0.0 ) );
-      m_map.put( "41", new AreaDescriptor( 0.0 ) );
+      m_map.put( "10", new AreaDescriptor( 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "11", new AreaDescriptor( 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "12", new AreaDescriptor( 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "13", new AreaDescriptor( 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "20", new AreaDescriptor( 0.0, 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "21", new AreaDescriptor( 0.0, 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "30", new AreaDescriptor( 0.0, 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "31", new AreaDescriptor( 0.0, 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "40", new AreaDescriptor( 0.0 ) ); //$NON-NLS-1$
+      m_map.put( "41", new AreaDescriptor( 0.0 ) ); //$NON-NLS-1$
     }
 
     public void addSuds( final String type, final double naturalAreaPercentage, final double sealedAreaPercentage )
@@ -139,7 +139,7 @@ public class HydrotopManager extends AbstractManager
 
     public String getAscii( )
     {
-      return String.format( "%s %s %s %s %s %s %s %s %s %s", m_map.get( "10" ).getAscii(), m_map.get( "11" ).getAscii(), m_map.get( "12" ).getAscii(), m_map.get( "13" ).getAscii(), m_map.get( "20" ).getAscii(), m_map.get( "21" ).getAscii(), m_map.get( "30" ).getAscii(), m_map.get( "31" ).getAscii(), m_map.get( "40" ).getAscii(), m_map.get( "41" ).getAscii() );
+      return String.format( "%s %s %s %s %s %s %s %s %s %s", m_map.get( "10" ).getAscii(), m_map.get( "11" ).getAscii(), m_map.get( "12" ).getAscii(), m_map.get( "13" ).getAscii(), m_map.get( "20" ).getAscii(), m_map.get( "21" ).getAscii(), m_map.get( "30" ).getAscii(), m_map.get( "31" ).getAscii(), m_map.get( "40" ).getAscii(), m_map.get( "41" ).getAscii() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
     }
 
   }
@@ -229,7 +229,7 @@ public class HydrotopManager extends AbstractManager
             final Double landuseSealing = m_landuseSealingRateMap.get( m_conf.getLanduseFeatureShortedName( landuseName ) );
             if( landuseSealing == null )
             {
-              final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.1", hydrotop.getLanduse(), hydrotop.getId() ); //$NON-NLS-1$
+              final String msg = ""; //$NON-NLS-1$
               m_conf.getLogger().severe( msg );
               throw new SimulationException( msg );
             }

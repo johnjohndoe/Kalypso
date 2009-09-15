@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,45 +38,72 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.i18n;
+package org.kalypso.timezone.test;
 
-import java.util.IllegalFormatException;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author kimwerner
  *
  */
-public class Messages
+public class Messages extends NLS
 {
-  private static final String BUNDLE_NAME = "org.kalypso.risk.i18n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.timezone.test.messages"; //$NON-NLS-1$
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+  public static String Test_0;
+
+  public static String Test_1;
+
+  public static String Test_10;
+
+  public static String Test_11;
+
+  public static String Test_12;
+
+  public static String Test_13;
+
+  public static String Test_14;
+
+  public static String Test_15;
+
+  public static String Test_16;
+
+  public static String Test_17;
+
+  public static String Test_18;
+
+  public static String Test_19;
+
+  public static String Test_2;
+
+  public static String Test_20;
+
+  public static String Test_21;
+
+  public static String Test_22;
+
+  public static String Test_23;
+
+  public static String Test_3;
+
+  public static String Test_4;
+
+  public static String Test_5;
+
+  public static String Test_6;
+
+  public static String Test_7;
+
+  public static String Test_8;
+
+  public static String Test_9;
+  static
+  {
+    // initialize resource bundle
+    NLS.initializeMessages( BUNDLE_NAME, Messages.class );
+  }
 
   private Messages( )
   {
-  }
-
-  public static String getString( final String key, final Object... args )
-  {
-    String formatStr = ""; //$NON-NLS-1$
-    try
-    {
-      formatStr = RESOURCE_BUNDLE.getString( key );
-      if( args.length == 0 )
-        return formatStr;
-
-      return String.format( formatStr, args );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-    catch( final IllegalFormatException e )
-    {
-      e.printStackTrace();
-      return '!' + formatStr + '!';
-    }
   }
 }

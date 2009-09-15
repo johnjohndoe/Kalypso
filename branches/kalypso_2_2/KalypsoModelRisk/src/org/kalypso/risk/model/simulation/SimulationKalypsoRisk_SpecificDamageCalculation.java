@@ -168,7 +168,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
         int ordinalNumber = landuseClass.getOrdinalNumber();
         if(  landuseClasses.size() > ordinalNumber && landuseClasses.get( ordinalNumber ) != null )
-          System.out.println( String.format( "WARNING: two landuse classes with same oridnal number: %s", ordinalNumber ) );
+          System.out.println( String.format( "WARNING: two landuse classes with same oridnal number: %s", ordinalNumber ) ); //$NON-NLS-1$
         
         while( landuseClasses.size() < ordinalNumber + 1 )
           landuseClasses.add( null );
@@ -181,7 +181,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       {
         int srcAnnualCoverageSize = srcAnnualCoverages.size();
         final int perCoverageTicks = 100 / srcAnnualCoverageSize;
-        String taskName = String.format( Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10" ), srcAnnualCoverages.getReturnPeriod() );
+        String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10" , srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
         final SubMonitor subMonitor = SubMonitor.convert( monitor, taskName, 100 );
 
         /* create annual damage coverage collection */
@@ -193,7 +193,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
         {
           final ICoverage inputCoverage = srcAnnualCoverages.get( i );
           if( srcAnnualCoverageSize > 1 )
-            subMonitor.subTask( String.format( "%s (%s)", taskName, inputCoverage.getName() ) );
+            subMonitor.subTask( String.format( "%s (%s)", taskName, inputCoverage.getName() ) ); //$NON-NLS-1$
           final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
           final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
 
@@ -256,7 +256,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
                         /* set statistic for landuse class */
                         ILanduseClass landuseClass = landuseClasses.get( landuseClassOrdinalNumber );
                         if( landuseClass == null )
-                          System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) );
+                          System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
                         else
                           RiskModelHelper.fillStatistics( returnPeriod, landuseClass, damageValue, cellSize );
                         return damageValue;
@@ -283,8 +283,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           {
             landuseClass.updateStatistic( returnPeriod );
           }
-          newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2" ), srcAnnualCoverages.getReturnPeriod(), i ) ); //$NON-NLS-1$
-          newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3" ), new Date().toString() ) ); //$NON-NLS-1$
+          newCoverage.setName(  Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2" , srcAnnualCoverages.getReturnPeriod(), i ) ); //$NON-NLS-1$
+          newCoverage.setDescription(  Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3" , new Date().toString() ) ); //$NON-NLS-1$
           inputGrid.dispose();
         }
         /* set the return period of the specific damage grid */

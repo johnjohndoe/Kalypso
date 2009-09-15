@@ -106,7 +106,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       final FeatureList list = ((IKalypsoFeatureTheme) kalypsoTheme).getFeatureList();
       final IRelationType featureTypeProperty = list.getParentFeatureTypeProperty();
       if( featureTypeProperty == null )
-        return error( shell, String.format( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
+        return error( shell,  Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
 
       if( NaModelConstants.HYDRO_MEMBER.equals( featureTypeProperty.getQName() ) )
         flHydrotops = list;
@@ -122,7 +122,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
           flCatchment = list;
 
         if( list.size() == 0 )
-          return error( shell, String.format( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.2"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
+          return error( shell,  Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.2", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
       }
     }
     if( flLanduse == null || flPedology == null || flGeology == null || flCatchment == null || flHydrotops == null )

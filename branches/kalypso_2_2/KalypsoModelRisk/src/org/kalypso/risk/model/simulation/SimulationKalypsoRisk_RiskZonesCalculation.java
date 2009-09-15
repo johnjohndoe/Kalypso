@@ -148,7 +148,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
   private void doRiskZonesCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final IProgressMonitor monitor ) throws SimulationException
   {
-    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 );
+    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
 
     if( rasterModel.getSpecificDamageCoverageCollection().isEmpty() )
       throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
