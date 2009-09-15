@@ -109,10 +109,10 @@ public class CreateModelTinWizardPage extends WizardPage
       final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
       df.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
       final String dateString = df.format( date );
-      msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.0"), dateString, IDialogConstants.NEXT_LABEL ); //$NON-NLS-1$
+      msg =  Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.0", dateString, IDialogConstants.NEXT_LABEL ); //$NON-NLS-1$
     }
     else
-      msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.2"), IDialogConstants.NEXT_LABEL ); //$NON-NLS-1$
+      msg =  Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.CreateModelTinWizardPage.2", IDialogConstants.NEXT_LABEL ); //$NON-NLS-1$
 
     m_execute = StatusUtilities.createStatus( IStatus.INFO, msg, null );
 

@@ -66,12 +66,12 @@ public class InvariantCheckBoundaryConditions implements ICalculationValidateInt
     final int size = calculationUnit.getContinuityLines().size();
     if( ((size < 2) && (size > 0)) || (size > 2) )
     {
-      final String message = String.format(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions.0"), calculationUnit.getName()); //$NON-NLS-1$
+      final String message = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions.0", calculationUnit.getName()); //$NON-NLS-1$
       invResults.add( new ProblemDescriptor( null, message, calculationUnit, calculationUnit ) );
     }
     else if( size == 0 )
     {
-      final String message = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions.1"), calculationUnit.getName()); //$NON-NLS-1$
+      final String message =  Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions.1", calculationUnit.getName()); //$NON-NLS-1$
       invResults.add( new ProblemDescriptor( null, message, calculationUnit, calculationUnit ) );
     }
 

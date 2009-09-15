@@ -158,7 +158,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       {
         final Date date = entry.getValue();
         count++;
-        progress.subTask( String.format( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.1" ), count, resultSize ) ); //$NON-NLS-1$
+        progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.1" , count, resultSize ) ); //$NON-NLS-1$
 
         /* get the observation */
 
@@ -196,7 +196,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
             final GM_Point point = (GM_Point) location;
 
             // TODO: check for right time zone
-            progress.subTask( String.format( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2" ), count, resultSize, date.toString(), hyd, m_hydrographs.size() ) ); //$NON-NLS-1$
+            progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2" , count, resultSize, date.toString(), hyd, m_hydrographs.size() ) ); //$NON-NLS-1$
             addResult( obsMap, calendar, nodeList, point );
           }
         }

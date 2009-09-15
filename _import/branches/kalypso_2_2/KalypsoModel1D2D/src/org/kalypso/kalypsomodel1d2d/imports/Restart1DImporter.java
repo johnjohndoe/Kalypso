@@ -208,8 +208,8 @@ public class Restart1DImporter
    */
   private ICalcUnitResultMeta createCalcUnitResult( final IScenarioResultMeta scenarioResultMeta, final String projectName )
   {
-    final String name = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.6"), projectName ); //$NON-NLS-1$
-    final String description = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.7"), name ); //$NON-NLS-1$
+    final String name = Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.6", projectName ); //$NON-NLS-1$
+    final String description =  Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.7", name ); //$NON-NLS-1$
 
     /* Search for calcUnitMeta with same name (Is this strong enough?) */
     for( final IResultMeta resultMeta : scenarioResultMeta.getChildren() )
@@ -249,7 +249,7 @@ public class Restart1DImporter
       }
     }
 
-    final String description = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.9"), name ); //$NON-NLS-1$
+    final String description =  Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.9", name ); //$NON-NLS-1$
 
     final IStepResultMeta stepResultMeta = calcUnitResult.getChildren().addNew( IStepResultMeta.QNAME, IStepResultMeta.class );
     stepResultMeta.setDescription( description );
@@ -264,7 +264,7 @@ public class Restart1DImporter
 
   private IDocumentResultMeta createDocument( final String projectName, final String calcName, final IStepResultMeta stepResultMeta )
   {
-    final String description = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.10"), projectName, calcName ); //$NON-NLS-1$
+    final String description = Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.10", projectName, calcName ); //$NON-NLS-1$
 
     for( final IResultMeta resultMeta : stepResultMeta.getChildren() )
     {

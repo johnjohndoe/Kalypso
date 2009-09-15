@@ -135,11 +135,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final IFE1D2DNode node2 = getNode( node2ID );
     final IFE1D2DNode middleNode = useMiddleNode ? getNode( middleNodeID ) : null;
     if( node1 == null )
-      throw new RuntimeException( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.0"), node1ID,id)); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.0", node1ID,id)); //$NON-NLS-1$
     if( node2 == null )
-      throw new RuntimeException( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.1"), node1ID,id)); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.1", node1ID,id)); //$NON-NLS-1$
     if( useMiddleNode && middleNode == null )
-      throw new RuntimeException( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.2"), node1ID,id)); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.2", node1ID,id)); //$NON-NLS-1$
     if( edgeFeature != null )
       edge = (IFE1D2DEdge) edgeFeature.getAdapter( IFE1D2DEdge.class );
     else

@@ -164,7 +164,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !hasBc )
       {
-        invariantErrorMessages.add( new ProblemDescriptor( null, String.format(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.2"), calcUnit.getName()), calcUnit, line ) ); //$NON-NLS-1$
+        invariantErrorMessages.add( new ProblemDescriptor( null,Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.2", calcUnit.getName()), calcUnit, line ) ); //$NON-NLS-1$
       }
     }
   }

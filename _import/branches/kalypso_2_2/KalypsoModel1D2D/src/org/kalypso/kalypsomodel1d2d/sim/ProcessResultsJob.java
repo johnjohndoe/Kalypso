@@ -191,7 +191,7 @@ public class ProcessResultsJob extends Job
     else if( m_stepDate == ResultManager.MAXI_DATE )
       timeStepName = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.6" ); //$NON-NLS-1$
     else
-      timeStepName = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7" ), m_stepDate ); //$NON-NLS-1$
+      timeStepName =  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7" , m_stepDate ); //$NON-NLS-1$
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.8" ) + timeStepName, 10 ); //$NON-NLS-1$
     monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.9" ) + timeStepName ); //$NON-NLS-1$
@@ -310,7 +310,7 @@ public class ProcessResultsJob extends Job
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54" ), m_inputFile.getName() ) ); //$NON-NLS-1$
+      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54" , m_inputFile.getName() ) ); //$NON-NLS-1$
 
       conv.parse( is );
 
@@ -553,7 +553,7 @@ public class ProcessResultsJob extends Job
     {
       // TODO: check for right time zone
       final String dateString = dateFormatter.format( stepDate );
-      stepResultMeta.setName( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.97" ), dateString ) ); //$NON-NLS-1$
+      stepResultMeta.setName(  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.97" , dateString ) ); //$NON-NLS-1$
       stepResultMeta.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.98" ) + dateString ); //$NON-NLS-1$
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
       stepResultMeta.setStepTime( stepDate );

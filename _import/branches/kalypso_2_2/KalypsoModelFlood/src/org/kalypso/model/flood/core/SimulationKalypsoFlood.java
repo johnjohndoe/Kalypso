@@ -299,7 +299,7 @@ public class SimulationKalypsoFlood implements ISimulation
 
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.21"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-    progress.subTask( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.22"), currentWsp ) ); //$NON-NLS-1$
+    progress.subTask( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.22", currentWsp ) ); //$NON-NLS-1$
 
     if( Double.isNaN( currentWsp ) || Double.isInfinite( currentWsp ) )
       return Double.NaN;
@@ -360,11 +360,11 @@ public class SimulationKalypsoFlood implements ISimulation
     }
     catch( final GeoGridException e )
     {
-      throw new SimulationException( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.23"), e.getLocalizedMessage() ), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.23", e.getLocalizedMessage() ), e ); //$NON-NLS-1$
     }
     catch( final GM_Exception e )
     {
-      throw new SimulationException( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.24"), e.getLocalizedMessage() ), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.24", e.getLocalizedMessage() ), e ); //$NON-NLS-1$
     }
   }
 
@@ -415,9 +415,9 @@ public class SimulationKalypsoFlood implements ISimulation
       final String fileName = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + event.getDataPath() + "/results/" + outputCoverageFile.getName();//$NON-NLS-1$
 
       final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, outputCoverageFile, fileName, "image/bin", progress.newChild( 1 ) );//$NON-NLS-1$
-      coverage.setName( String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.10" ), terrainCoverage.getName() ) ); //$NON-NLS-1$
+      coverage.setName( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.10" , terrainCoverage.getName() ) ); //$NON-NLS-1$
 
-      final String desc = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.11" ), new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
+      final String desc =  Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.11" , new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
       coverage.setDescription( desc );
 
       terrainGrid.dispose();

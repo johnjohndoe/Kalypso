@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim.i18n;
 
+import java.util.IllegalFormatException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -57,15 +58,25 @@ public class Messages
   {
   }
 
-  public static String getString( String key )
+  public static String getString( final String key, final Object... args )
   {
+    String formatStr = ""; //$NON-NLS-1$
     try
     {
-      return RESOURCE_BUNDLE.getString( key );
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
+      return String.format( formatStr, args );
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      e.printStackTrace();
+      return '!' + formatStr + '!';
     }
   }
 }

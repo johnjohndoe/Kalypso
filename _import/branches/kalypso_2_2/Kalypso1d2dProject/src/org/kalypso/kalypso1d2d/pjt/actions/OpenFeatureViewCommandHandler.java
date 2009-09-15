@@ -63,11 +63,11 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
 
       final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_resource );
       if( folder == null )
-        throw new ExecutionException( String.format( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.1"), m_resource )); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.1", m_resource )); //$NON-NLS-1$
 
       final IFile file = folder.getFile( m_resource );
       if( !file.exists() )
-        throw new ExecutionException( String.format(Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.2") , file.getFullPath() )); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.2" , file.getFullPath() )); //$NON-NLS-1$
 
       if( activeWorkbenchWindow != null )
       {
@@ -100,7 +100,7 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException(String.format( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.5" ) , m_resource), e ); //$NON-NLS-1$
+      throw new ExecutionException(Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.5"  , m_resource), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

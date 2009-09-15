@@ -47,7 +47,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 
 /**
@@ -68,7 +67,7 @@ public class BuildingIDProvider
   {
     if( m_currentID > 999 )
     {
-      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider.0"), 1000 - 904 ); //$NON-NLS-1$
+      final String msg =  Messages.getString("org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider.0", 1000 - 904 ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
 

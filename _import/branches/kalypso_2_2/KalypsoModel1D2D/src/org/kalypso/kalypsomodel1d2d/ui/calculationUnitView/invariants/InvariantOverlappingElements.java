@@ -102,7 +102,7 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
           for( final IFeatureWrapper2 element : bufSubUnits )
           {
             if( toCompareCalcUnit.getElements().contains( element ) )
-              invariantErrorMessages.add( new ProblemDescriptor( null, String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements.0"), toCompareCalcUnit.getName()), calcUnit, calcUnit1d2d ) ); //$NON-NLS-1$
+              invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements.0", toCompareCalcUnit.getName()), calcUnit, calcUnit1d2d ) ); //$NON-NLS-1$
           }
           bufferList.add( thisCalcUnit );
         }

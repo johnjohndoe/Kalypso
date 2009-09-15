@@ -523,7 +523,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation) flowRelation1d, depth );
 
     if( area == null )
-      return StatusUtilities.createErrorStatus( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18" ), nodeResult.getGmlID(), station.doubleValue() ) ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18" , nodeResult.getGmlID(), station.doubleValue() ) ); //$NON-NLS-1$
 
     final BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
     nodeResult.setDischarge( discharge.doubleValue() );

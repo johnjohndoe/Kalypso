@@ -186,7 +186,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final Point pos = new Point( x, y );
 
       // Edit info
-      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.5") ); //$NON-NLS-1$
+      final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.5" ); //$NON-NLS-1$
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
       final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, null, msg, pos );
       editInfos.put( shape, info );

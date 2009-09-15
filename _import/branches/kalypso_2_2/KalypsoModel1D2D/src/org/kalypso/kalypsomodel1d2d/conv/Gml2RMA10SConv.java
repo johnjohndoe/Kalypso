@@ -779,7 +779,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         else
         {
-          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.26" ), relationship );//$NON-NLS-1$
+          final String msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.26" , relationship );//$NON-NLS-1$
           final GM_Object location = node.getLocation();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
@@ -906,7 +906,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
         {
           // TODO: give hint what 1D-element is was?
-          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43" ), element1D.getGmlID() );//$NON-NLS-1$
+          final String msg =Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43" , element1D.getGmlID() );//$NON-NLS-1$
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
           throw new CoreException( status );
         }
@@ -1234,7 +1234,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     // TODO: use default zone instead.
     // Right now it is set to '0' which means the element is deactivated for the simulation
-    final String msg = String.format( org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31" ), element.getGmlID() ); //$NON-NLS-1$
+    final String msg =  org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31" , element.getGmlID() ); //$NON-NLS-1$
 
     final IFE1D2DNode node = (IFE1D2DNode) element.getNodes().get( 0 );
     final GM_Point point = node.getPoint();

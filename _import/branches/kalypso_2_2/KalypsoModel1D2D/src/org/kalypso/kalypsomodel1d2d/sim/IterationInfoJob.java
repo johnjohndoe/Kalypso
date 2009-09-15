@@ -112,9 +112,9 @@ public class IterationInfoJob extends Job
     {
       String msg = ""; //$NON-NLS-1$
       if( stepNr == 0 )
-        msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.2" ) ); //$NON-NLS-1$
+        msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.2"  ); //$NON-NLS-1$
       else
-        msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.3" ), stepNr, m_controlModel.getNCYC() ); //$NON-NLS-1$
+        msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.3" , stepNr, m_controlModel.getNCYC() ); //$NON-NLS-1$
 
       m_monitor.subTask( msg );
       m_monitor.worked( stepNr - oldStepNr );

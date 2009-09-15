@@ -42,7 +42,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public final class AddEventOperation implements ICoreRunnableWithProgress
 {
-  public static final String PROPERTY_EVENT_ID = "eventID";
+  public static final String PROPERTY_EVENT_ID = "eventID"; //$NON-NLS-1$
 
   private final IFloodModel m_model;
 
@@ -163,7 +163,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();
 
-      polygoneLayer.setName( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.6" ), event.getName() ) ); //$NON-NLS-1$
+      polygoneLayer.setName(  Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.6" , event.getName() ) ); //$NON-NLS-1$
       polygoneLayer.setFeaturePath( "polygonMember" ); //$NON-NLS-1$
       polygoneLayer.setLinktype( "gml" ); //$NON-NLS-1$
       polygoneLayer.setType( "simple" ); //$NON-NLS-1$
@@ -214,7 +214,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     { // Wasserspiegel
       final StyledLayerType wspLayer = new StyledLayerType();
 
-      wspLayer.setName( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.26" ), event.getName() ) ); //$NON-NLS-1$
+      wspLayer.setName(  Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.26" , event.getName() ) ); //$NON-NLS-1$
       wspLayer.setFeaturePath( "#fid#" + eventID + "/tinMember" ); //$NON-NLS-1$ //$NON-NLS-2$
       wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
       wspLayer.setType( "simple" ); //$NON-NLS-1$
