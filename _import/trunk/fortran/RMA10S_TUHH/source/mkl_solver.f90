@@ -1,4 +1,3 @@
-
 subroutine mkl_solver (NPROCS, noOfEq, icol, irow, a, b, x)
 
 implicit none
@@ -27,7 +26,7 @@ integer (kind = 4) :: ierror = 0
 real (kind = 8), allocatable :: da(:), db(:), dx(:)
 integer (kind = 4) :: iphase
 integer (kind = 4), save :: iparm(64)
-real (kind = 8), allocatable, save :: perm(:)
+integer (kind = 4), allocatable, save :: perm (:)
 !parameter to use as dummy argument when calling PARDISO for RELEASING MEMORY (Phase -2) or ANALYSIS (Phase 1)
 real (kind = 8) :: ddum
 !execution and control of the routine
@@ -101,26 +100,26 @@ if (executionSwitch == 0)  then
   iparm(3) = NPROCS 
   !individual parameters; only for very advanced users of PARDISO
   !--------------------------------------------------------------
-        !iparm(1) = 1 ! no solver default
-        !iparm(2) = 2 ! fill-in reordering from METIS
-        !iparm(3) = 1 ! numbers of processors
-        !iparm(4) = 0 ! no iterative-direct algorithm
-        !iparm(5) = 0 ! no user fill-in reducing permutation
-        !iparm(6) = 0 ! =0 solution on the first n compoments of x
-        !iparm(7) = 0 ! not in use
+!        iparm(1) = 1 ! no solver default
+!        iparm(2) = 2 ! fill-in reordering from METIS
+!        iparm(3) = nprocs ! numbers of processors
+!        iparm(4) = 0 ! no iterative-direct algorithm
+!        iparm(5) = 0 ! no user fill-in reducing permutation
+!        iparm(6) = 0 ! =0 solution on the first n compoments of x
+!        iparm(7) = 0 ! not in use
         !iparm(8) = 9 ! numbers of iterative refinement steps
-        !iparm(9) = 0 ! not in use
-        !iparm(10) = 13 ! perturbe the pivot elements with 1E-13
-        !iparm(11) = 1 ! use nonsymmetric permutation and scaling MPS
-        !iparm(12) = 0 ! not in use
-        !iparm(13) = 1 ! not in use
-        !iparm(14) = 0 ! Output: number of perturbed pivots
-        !iparm(15) = 0 ! not in use
-        !iparm(16) = 0 ! not in use
-        !iparm(17) = 0 ! not in use
-        !iparm(18) = -1 ! Output: number of nonzeros in the factor LU
-        !iparm(19) = -1 ! Output: Mflops for LU factorization
-        !iparm(20) = 0 ! Output: Numbers of CG Iterations
+!        iparm(9) = 0 ! not in use
+!        iparm(10) = 13 ! perturbe the pivot elements with 1E-13
+!        iparm(11) = 1 ! use nonsymmetric permutation and scaling MPS
+!        iparm(12) = 0 ! not in use
+!        iparm(13) = 1 ! not in use
+!        iparm(14) = 0 ! Output: number of perturbed pivots
+!        iparm(15) = 0 ! not in use
+!        iparm(16) = 0 ! not in use
+!        iparm(17) = 0 ! not in use
+!        iparm(18) = -1 ! Output: number of nonzeros in the factor LU
+!        iparm(19) = -1 ! Output: Mflops for LU factorization
+!        iparm(20) = 0 ! Output: Numbers of CG Iterations
 
   !Allocate space for permutation matrix
   if (iparm(5) == 1) then
@@ -215,6 +214,7 @@ if (executionSwitch < 3 ) then
 
     !call PARDISO for releasing memory
     call pardiso (ipt, maxfct, mnum, mtype, iphase, noOfEq, da, ia, ja, perm, nrhs, iparm, msglvl, ddum, ddum, ierror)
+    
     
     !Reset permutation matrix
     if (iparm(5) == 1) then
