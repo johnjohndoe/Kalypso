@@ -88,7 +88,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
   }
 
- 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getNodes()
    */
@@ -181,7 +180,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     final FeatureList wrappedList = m_containers.getWrappedList();
     if( wrappedList.contains( containerID ) )
     {
-      logger.info( "Edge container already registered as container:" + containerID ); //$NON-NLS-1$
+      return;
     }
     else
     {
