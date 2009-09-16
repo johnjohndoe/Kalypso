@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -248,7 +248,7 @@ public class SelectedCalculationComponent
 
     final Label subUnitLabel = toolkit.createLabel( parent, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.21") , SWT.BEGINNING ); //$NON-NLS-1$
     subUnitLabel.setLayoutData( new GridData( SWT.LEFT, SWT.BEGINNING, false, false ) );
-    m_subCalcUnitsTableViewer = new DefaultTableViewer( parent, SWT.FILL | SWT.BORDER );
+    m_subCalcUnitsTableViewer = new DefaultTableViewer( parent, SWT.FILL | SWT.BORDER | SWT.NO_SCROLL );
     final Table subCalcUnitsTable = m_subCalcUnitsTableViewer.getTable();
     subCalcUnitsTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 1, 1 ) );
     subCalcUnitsTable.setLinesVisible( false );

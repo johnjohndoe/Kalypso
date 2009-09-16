@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -93,7 +93,7 @@ class CalculationUnitWidgetFace
     // Creates Section for "Calculation Elements Unit"
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
     calculationElementUnitSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.2") );  //$NON-NLS-1$
-    tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB, 1, 1 );
+    tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.FILL, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
     calculationElementUnitSection.setLayoutData( tableWrapData );
