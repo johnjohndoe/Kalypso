@@ -44,6 +44,9 @@
 
 PROGRAM RMAKalypso
 
+  use mainRoutines
+  use getGeo1_mod
+
   
   implicit none
   
@@ -52,7 +55,6 @@ PROGRAM RMAKalypso
   character (len = 12) :: version
   character (len = 10) :: builddate
   character (len = 1000) :: defaultModelName = 'defaultModelID'
-      
   
   version = '1.1.2 beta'
   builddate = '2009/02/13'

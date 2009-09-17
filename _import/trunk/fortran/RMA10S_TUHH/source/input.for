@@ -1,3 +1,5 @@
+      module mod_input
+      contains
 CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
 CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
@@ -47,7 +49,7 @@ CIPK  LAST UPDATE JAN22 1997 ADD SMAGORINSKY OPTION
 CIPK  LAST UPDATE OCT 1 1996
 cipk  last updated Apr 24 1996
 CIPK  LAST UPDATED SEP 19 1995
-      SUBROUTINE INPUT(IBIN)
+      SUBROUTINE INPUT(IBIN, m_SimModel)
       
       !calls
       !-----
@@ -63,7 +65,10 @@ CIPK  LAST UPDATED SEP 19 1995
       !getcon
       !threed
       
-      
+      use mod_getgeo
+      use mod_getinit
+
+      use mod_Model
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
@@ -86,6 +91,7 @@ CIPK  LAST UPDATED SEP 19 1995
       USE share_profile,only :BANKPROFILES , fenodes, BANKEVOLUTION ! the BANKPROFILES and fenodes array are defined here.
 !-
       SAVE
+      type (simulationModel), pointer :: m_SimModel
 
       type (linkedNode), pointer :: tmpNode => null()
       type (Node), pointer :: node1D_first, node1D_last
@@ -1470,7 +1476,7 @@ C-
 C-.....READ GENERATED GEOMETRY DATA
 C-
    
-      CALL GETGEO
+      CALL GETGEO (m_SimModel)
       
       !get coordinates of the continuity line nodes
       getCoords: do i = 1, ncl
@@ -1900,7 +1906,7 @@ C-
 
       !TODO: This call is only for getting the water levels at Q-boundaries and transitions;
       !      The way of programming is not efficient!
-      call getinit(ibin,1)      
+      call getinit(ibin, 1, m_SimModel)
       
 C-
 C-.....INPUT BOUNDARY AND WIND DATA.....
@@ -2535,16 +2541,13 @@ C-
      1 TH(N), N=J,NE,INT)
   155 CONTINUE
   156 CONTINUE
-C
-C      CALL GETINIT(IBIN)
-C
 
 CIPK AUG95 ADD CALL TO GET MET DATA
       CALL INMET(LOUT,NMETF,TET)
 
 CIPK APR06
 !testing, original place
-      call getinit(ibin,1)
+      call getinit(ibin, 1, m_SimModel)
 !testing, original place-
  !----------------------------------------------------------
  ! HN. JUNE 2009: GETINIT INITILIZES THE WSLL VALUES AND NOW FENODES CAN BE BUILT.
@@ -2872,7 +2875,9 @@ c6190 FORMAT(/15X,'TIME IN VOLUME GENERATION',I6)
      +              5x,'---------------------------------------------')
 !-
 
-      END
+      END subroutine
+      
+      end module
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk feb97 new subroutine to process input files
@@ -2948,4 +2953,5 @@ cipk sep04
       write(75,7000) id,dlin
       write(*,7000) id,dlin
       stop
-      END
+      END subroutine
+      
