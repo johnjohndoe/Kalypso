@@ -97,7 +97,7 @@ C
         !as the last of all the elements, a degree of freedom is connected to.
         K = K - 1
         N = NFIXH (K)
-        IF (N <= NE .AND. N > 0) THEN
+        IF (N > 0 .and. n <= NE) THEN
           IF (ICOLLAPE (N) == 1 .AND. IMAT (N)/1000 /= 1)
      +      CYCLE AssignNLSTEL
 
@@ -115,41 +115,11 @@ C
             ENDIF
             MRC = N
 
-cipk oct98 update to f90
-            NTYP = NETYP (N)
-
-          !NiS,may06,com: for junction elements (7 (1D) or 17 (2D))
-            IF (MOD (NTYP, 10) == 7) THEN
-CIPK JAN99 SKIP OUT FOR 2DV
-              if (ntyp /= 17) THEN
-C-
-C...... Search to see if any entry in NLSTEL
-C-
-                DO M = 1, NCN
-                  L = NCON (M)
-C SKIP OUT FOR ZERO
-                  if (l > 0) THEN
-                    DO I = 1, 7
-                      J = NBC (L, I)
-                      IF (J > 0) THEN
-                        IF (NLSTEL (J) > 0) THEN
-                          IF (NREORD (NLSTEL (J)) > NREORD (MRC)) THEN
-                            MRC = NLSTEL (J)
-                          ENDIF
-                          NLSTEL (J) = 0
-                        ENDIF
-                      ENDIF
-                    ENDDO
-                  ENDIF
-                ENDDO
-              ENDIF
-            ENDIF
 
             DO M = 1, NCN
               L = NCON (M)
 CIPK JAN99 SKIP OUT FOR 2DV
               if (l > 0) THEN
-CIPK MAY02 SWITCH NDF TO 7
                 DO I = 1, 7
                   J = NBC (L, I)
                   IF (J /= 0) THEN
@@ -167,108 +137,107 @@ CIPK MAY02 SWITCH NDF TO 7
 
       NELL=0
       NELM=0
-c      DO N=1,NP
-c        WRITE(75,*) 'nbc',nrx,N,(NBC(N,M),M=1,4)
-c      ENDDO
-!      do n=1,nszf
-!        write(*,*) 'nlst',n,nlstel(n),netyp(n)
-!      enddo
-!
 C
 C     ASSEMBLY
 C
-      DO 15 N=1,NSZF
-        IPOINT(N)=0
-CC      rkeep(n)=0.
-CC      ekeep(j)=0.
-   15 R1(N)=0.
+      !Initializations
+      !---------------
+      init: DO N = 1, NSZF
+        IPOINT (N) = 0
+        R1 (N) = 0.
+      end do init
 C-
 C......ESTABLISH DENSITIES AND PRESSURES
 C-
-      IF(NRX .EQ. 1) THEN
+      IF (NRX == 1) THEN
         CALL PRESR
-        NDF=4
+        NDF = 4
       ENDIF
-      LCOL=0
+      LCOL = 0
+
+
+      !Starting the assembly of the equations
+      !--------------------------------------
+
    18 NELL=NELL+1
       NELM=NELM+1
-      IF(NELL.GT.NE) GO TO 380
-      N=NFIXH(NELM)
 
-c      write(75,*) 'front',n,nelm,netyp(n),imat(n)
-
-      IF (N .EQ. 0)  GO TO 380
-      IF(IMAT(N) .LT. 1) GO TO 18
+      !jump out, if maximum element number is reached
+      IF (NELL > NE) GO TO 380    !exit
+      !get element ID to process
+      N = NFIXH(NELM)
+      !special cases to cycle or to exit
+      IF (N == 0)  GO TO 380      !exit
+      IF(IMAT(N) .LT. 1) GO TO 18 !cycle
+      !monitor time consumption
       CALL SECOND(SINC)
 
 CIPK DEC03 ADD IEDSW DEPENDENCE
-
+      !get material dependent behaviour; due to turbulence model
       if (imat (n) /= 89) then
-        NMATYP=(MOD(IMAT(N),1000))
-        IEDSW=IEDSW1(NMATYP)
-        TBFACT=TBFACT1(NMATYP)
-        TBMIN=TBMIN1(NMATYP)
+        NMATYP = (MOD (IMAT (N), 1000))
+        IEDSW = IEDSW1 (NMATYP)
+        TBFACT = TBFACT1 (NMATYP)
+        TBMIN = TBMIN1 (NMATYP)
       endif
 
-      IF(ITEQV(MAXN) .NE. 5) THEN
 
+!---------------------------
+!Calling proper coef routine
+!---------------------------
+      !collapse from 3D to 2D
+      IF(ITEQV(MAXN) .NE. 5) THEN
         IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
           IF(NRX .EQ. 2) GO TO 18
-
 CIPK NOV99     Either process surface integrals or collapse to 2-d
-
         IF(ICOLLAPE(N) .EQ. 0) THEN
           CALL SURCOF(N,NRX)
         ELSEIF(IMAT(N) .LT. 2000) THEN
           IF(NETYP(N)/10 .LT. 1) THEN
 CIPK MAR05
-!nis,may07
             IF(INOTR .EQ. 0) THEN
               CALL COEF1(N,NRX)
             ELSE
               CALL COEF1NT(N,NRX)
             endif
-
 C     Modify tests to allows for IDIFSW
-
-            ELSEIF(IUTUB.EQ.1 .and. iedsw.eq.2  .AND. ISLP.EQ. 0)
-     +	      THEN
+          ELSEIF(IUTUB.EQ.1 .and. iedsw.eq.2  .AND. ISLP.EQ. 0) THEN
 CIPK MAR05
-              IF(INOTR .EQ. 0) THEN
-                CALL COEF2D(N,NRX)
-              ELSE
-                if(nell .le. 2) then
-                  write(*,*) ' entering COEF2DNT'
-                endif
-                CALL COEF2DNT(N,NRX)
-              ENDIF
+            IF(INOTR .EQ. 0) THEN
+              CALL COEF2D(N,NRX)
+            ELSE
+              if(nell .le. 2) then
+                write(*,*) ' entering COEF2DNT'
+              endif
+              CALL COEF2DNT(N,NRX)
+            ENDIF
 
-            !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
-            !MD:  combined with Dispersion enclosure 2. Reason for this change
-            !MD:  to avoid a switch between different COEF-Routines for one model
-            ELSEIF(ISLP.EQ.1 .AND. IUTUB.EQ.1 .AND. IDIFSW.EQ.2
+          !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
+          !MD:  combined with Dispersion enclosure 2. Reason for this change
+          !MD:  to avoid a switch between different COEF-Routines for one model
+          ELSEIF(ISLP.EQ.1 .AND. IUTUB.EQ.1 .AND. IDIFSW.EQ.2 
      +              .and. IEDSW .EQ. 2) THEN
 CIPK MAR05
-              IF(INOTR .EQ. 0) THEN
-                CALL COEF2D(N,NRX)
-              ELSE
-                if(nell .le. 2) then
-                  write(*,*) ' entering COEF2DNT'
-                endif
-                CALL COEF2DNT(N,NRX)
-              ENDIF
-      	    ELSE
-CIPK MAR05
-              IF(INOTR .EQ. 0) THEN
-                CALL COEF2(N,NRX)
-              ELSE
-                if(nell .le. 2)  then
-                  write(*,*) ' entering COEF25NT'
-                endif
-                CALL COEF2NT(N,NRX)
-              ENDIF
+            IF(INOTR .EQ. 0) THEN
+              CALL COEF2D(N,NRX)
+            ELSE
+              if(nell .le. 2) then
+                write(*,*) ' entering COEF2DNT'
+              endif
+              CALL COEF2DNT(N,NRX)
             ENDIF
-          ELSE
+      	  ELSE
+CIPK MAR05
+            IF(INOTR .EQ. 0) THEN
+              CALL COEF2(N,NRX)
+            ELSE
+              if(nell .le. 2)  then
+                write(*,*) ' entering COEF25NT'
+              endif
+              CALL COEF2NT(N,NRX)
+            ENDIF
+          ENDIF
+        ELSE
             GO TO 18
           ENDIF
           CALL SECOND(SOUC)
@@ -421,39 +390,44 @@ CIPK MAR05
         ENDIF
       ENDIF
 cipk jan99
+!-----------------------------------
+!End of calling proper coef routines
+!-----------------------------------
 
       IF(NETYP(N) .EQ. 15  .OR.  NETYP(N) .EQ. 16) THEN
         IF(NOP(N,14) .NE. 0) NCN=14
         IF(NOP(N,18) .NE. 0) NCN=18
-       
       ENDIF
 
       NBN = NCN*NDF
-
       DO 21 LK=1,NBN
         LDEST(LK)=0 !NiS,may06: position of special degree of freedom (lk) in equation solution window
         NK(LK)=0 !???
    21 CONTINUE
+
+
       KC=0
-      DO 23 J=1,NCN
+      DO J=1,NCN
         IF(ITEQV(MAXN) .EQ. 5) THEN
           I=NOPS(N,J)
         ELSE
           I=NOP(N,J) !NiS,may06: i becomes node number
         ENDIF
-        DO 22 L=1,NDF !NiS,may06: for every degree of freedom
+        inner: DO L=1,NDF !NiS,may06: for every degree of freedom
           KC=KC+1     !NiS,may06: count loop
 CIPK JAN99
-          if(i .eq. 0) go to 22 !NiS,may06: loop cycle, if node is zero
+          if(i .eq. 0) cycle inner !NiS,may06: loop cycle, if node is zero
 
           LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I
           NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
           IF(LL .NE. 0) THEN
-            IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !NiS,may06: if the current element is the last one of the equation (NLSTEL), then make
+            IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !If the current element is the last one of the equation (NLSTEL), then make
                                              !           NK(KC) negative as pointer, that degree of freedom can be taken out
           ENDIF
-   22   CONTINUE
-   23 CONTINUE
+         end do inner
+       end do
+
+
 C-
 C...... Set up heading vectors
 C-
@@ -492,6 +466,8 @@ C
    40     LFZ=LFZZ
         ENDIF
    52 CONTINUE
+
+
 CIPK FEB04
       !nis,dec06: if LHED(L).eq.0, the loop should be cycled because of assignment problems
       DO L=1,LCOL
@@ -504,9 +480,14 @@ CIPK FEB04
       ENDDO !columnassigning
 
       IF(LCOL .GT. LCMAX) LCMAX=LCOL
-      IF(MOD(NELL,1000) .EQ. 0) THEN
-        WRITE(*,'(I18,I15,I14,I10,I15)') NELL,NEC,LCOL,LCMAX,LQ
+
+      !Write out console output during processing of elements (every 1000 elements)
+      !----------------------------------------------------------------------------
+      IF (MOD (NELL, 1000) == 0) THEN
+        WRITE(*,'(I18,I15,I14,I10,I15)') NELL, NEC, LCOL, LCMAX, LQ
       ENDIF
+
+
       IF(LCOL.LE.NMAX) GO TO 54
       NERROR=2
 CIPK SEP04 CREATE ERROR FILE
