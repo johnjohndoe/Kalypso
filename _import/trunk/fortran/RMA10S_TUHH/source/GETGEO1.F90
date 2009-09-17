@@ -1,9 +1,16 @@
+module getgeo1_mod
+
+contains
+
 !******************************************************************************************
 !  subroutine getgeo1.sub reads the model geometry file and examines the size of the mesh
 !    to be able to prepare the arrays in the adapted size during real mesh reading and 
 !    generation process
 !******************************************************************************************
 subroutine GETGEO1
+
+use mod_RDKalypso_routines
+use mod_Model
 
 use BLK10MOD, only: &
 &   maxp, maxe, maxa, maxlt, maxps, maxSE, &
@@ -34,6 +41,8 @@ implicit none
 
 !NiS,mar06: adding declaration of hand-over-parameters between subroutines
 integer :: n, m, a, LT, PA, PQ, PB, ps, mse
+type (simulationModel), pointer :: dummySimulationModel
+character (len = 1000) :: dummyModelName
 
 !initialisations of the mesh size parameters
 !-------------------------------------------
@@ -62,8 +71,11 @@ pb = 0
 ps = 0
 mse = 0
 
+dummyModelName = 'dummyModelName'
+dummySimulationModel => newSimulationModel(dummyModelName)
+
 !call the model reading subroutine to examine the size of the geometry
-call RDKALYPS (N, M, A, PA, PQ, PB, LT, ps, mse, 1)
+call RDKALYPS (N, M, A, PA, PQ, PB, LT, ps, mse, 1, dummySimulationModel)
 
 !bring model input file to the beginning for next read
 rewind IFILE
@@ -105,5 +117,6 @@ MaxPolyQ = PQ
 MaxPolyB = PB
 
 return
-end
+end subroutine
 !***
+end module
