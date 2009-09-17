@@ -1,3 +1,6 @@
+      module mod_initl
+      
+       contains
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -11,7 +14,9 @@ CIPK  LAST UPDATE JAN 22 2002  ADD SIDFF TO INITIALIZATION
 CIPK  LAST UPDATE MAR 18 2001   ADD FOR POWER STATION RECYCLING
 CIPK  LAST UPDATE MAR 13 2001 ADD TIME STEP TRANSITION OPTION
 CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
-      SUBROUTINE INITL
+      SUBROUTINE INITL (m_SimModel)
+      
+      use mod_Model
       
       USE BLK10
       USE BLK10MOD
@@ -44,6 +49,7 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
       DATA VOID/-1.E20/
       
       integer (kind = 4) :: mfww
+      type (simulationModel), pointer :: m_SimModel
 
 c     Initialisation of values
 
@@ -151,6 +157,8 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
       mfwsiz = mfww
       NBS=NBSS
 
+      call setUpNodes (m_SimModel.femesh, maxp)
+      
       ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)
      + ,LDEST(MFWW),QR(MFWW))
 
@@ -766,8 +774,7 @@ CIPK MAR01
       ENDDO
 !-
 !NiS,apr06: allocating arrays for neighbourhood relations
-      ALLOCATE(nconnect(1:MaxP),neighb(1:MaxP,0:3535),mcord(1:MaxE,1:2))
-!-
+      allocate (mcord(1:MaxE,1:2))
 
 !NiS,jul06: allocating the (for the moment) dummy gl_bedform array to pass variables correctly to the subroutine 
 !           formrauheit
@@ -777,7 +784,6 @@ CIPK MAR01
           gl_bedform(i,j) = 0
         enddo
       enddo
-!-
 
 !nis,jun07: Add initializaton of membership of nodes in a transition
       ALLOCATE (TransitionMember (1: MaxP))
@@ -792,7 +798,6 @@ CIPK MAR01
         TransitionElement (i) = .false.
         TransLinePart (i) = 0
       end do
-!-
 
 !nis,nov06: allocating Transition lines for 1D 2D line transition;
 !           1. 1D element number of the coupling
@@ -1073,4 +1078,6 @@ CIPK MAR01
       end do
 
       RETURN
-      END
+      END subroutine
+      
+      end module
