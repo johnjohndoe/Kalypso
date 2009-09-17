@@ -5,6 +5,7 @@ module mod_Model
   !use type modules
   use mod_ContiLines
   use mod_fileType
+  use mod_meshModelFE
   
   !type definition for global simulation model
   !-------------------------------------------
@@ -15,6 +16,9 @@ module mod_Model
     logical :: isNewtonConv = .false.
     !neighbouring models
     type (linkedSimModel), pointer :: modelNeighb => null()
+    
+    !topography model
+    type (FEmesh), pointer :: FEmesh => null()
   end type
   
   type linkedSimModel
