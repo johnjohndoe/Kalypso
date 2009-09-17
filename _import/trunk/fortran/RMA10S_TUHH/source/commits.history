@@ -1391,8 +1391,38 @@ new features introduced/ started to be introduced:
       
 --- Nico Schrage, 15.08.2009
 
-
-
 131.) Deleting non-sense output in OutpuMESS.OUT for cohesive Sediment
      >> SUBR NEWBED     
 --- Monika Donner, 28.08.2009
+
+132.) bugfixing: Declaration mistake at parameter for PARDISO
+      (affects: mkl_solver.f90)
+133.) Introduce "implicit none" to the junction coef-Subroutine
+      (affects: coef1DJunction.f90)
+134.) Get rid of XHT-scaling at junctions (for sigma-Transformation) and some code clenaing
+      (affects: coef1DJunction.f90)
+135.) A lot of code cleaning; especially for junctions the NLSTEL (ID-no. of last element, where an equaiton occurs) was buggy
+      (affects: FRONT.for)
+136.) To pass variables of defined type with variable structure and size, the calling and the addressed subroutines should be contained in modules; thus some routines
+      - are from now on contained in modules
+      - address the modules holding the called subroutines
+      (affects: getgeo1, rdkalypso, model, getgeo, getinit, initl, input, rma10, RMAKalypso)
+137.) Skipping parameter assignment in getgeo for junction elements
+      (affects: getgeoms.f90)
+138.) get rid of neighbourhood relations in terms of arrays, it costs too much memory as the size is allocated with the maximum number of nodes within any continuity line; instead a neighbourhood
+      relation list is introduced to the m_simModel and contained data structures.
+      (affects: ParaKalyps.f90, pasche_trees.f90, Mod_Node.f90)
+139.) Some refactoring (arc -> localArc) because of name conflict
+      (affects rdkalyps.f90)
+140.) Introduce some handling for 1D Junctions
+      (affects rdkalyps.f90)
+141.) Introduce node-type usage in 1D-Profile interpolation
+      (affects rdkalyps.f90)
+142.) Update front_mkl to f90 and bugfix regarding parameter definition for PARDISO.
+      (deleted sub: front_mkl.for added sub: front_mkl.f90)
+143.) Introduce a FEmesh type defintion for the storage of the mesh structure
+      (added module: Mod_meshModelFE.f90 in folder modules_Components_general)
+144.) Introduce a decimal tree structure to hold huge amount of node numbers and find them fast
+      (added module: Mod_Node_DecimalTree.f90 in folder modules_Components_general)
+
+--- Nico Schrage, 17.09.2009
