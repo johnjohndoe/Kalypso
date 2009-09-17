@@ -1,3 +1,5 @@
+module mod_getinit
+contains
 !     Last change:  WP   18 Jun 2008    4:23 pm
 !     Last change:  NIS   5 May 2008   11:42 pm
 !IPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
@@ -9,7 +11,9 @@
 !IPK  LAST UPDATED DEC 5 1997
 !IPK  LAST UPDATED NOVEMBER 13 1997
 !IPK  LAST UPDATE MAY 1 1996
-SUBROUTINE GETINIT(IBIN,ITIMESINIT)
+SUBROUTINE GETINIT(IBIN,ITIMESINIT, m_SimModel)
+use mod_Model
+use mod_RDKalypso_routines
 USE BLK10MOD
 USE BLK11MOD
 USE BLKDRMOD
@@ -33,6 +37,8 @@ SAVE
 !IPK AUG05      INCLUDE 'BLKSED.COM'
 !-
 !IPK APR06
+
+type (simulationModel), pointer :: m_SimModel
 REAL (kind = 8) :: VDUM
 DIMENSION TV(3),TVD(3)
 !NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
@@ -68,7 +74,7 @@ IF (NB > 0 .and. NB < 100) then
 
   RESTARTTEST: IF (inquiretest == 'FORMATTED' .and. nb < 100) THEN
     WRITE(*,*) ' Going to RDKALYPSO for restarting'
-    call RDKALYPS (dummy(1), dummy(2), dummy(3), dummy(4), dummy(5), dummy(6), dummy(7), dummy (8), dummy (9), 2)
+    call RDKALYPS (dummy(1), dummy(2), dummy(3), dummy(4), dummy(5), dummy(6), dummy(7), dummy (8), dummy (9), 2, m_SimModel)
     npx = maxp-1
     ndx = 9
 
@@ -559,4 +565,6 @@ end do TransitionDepths
 
 RETURN
  5032  FORMAT( I5,6E10.0 )
-END
+END subroutine
+
+end module
