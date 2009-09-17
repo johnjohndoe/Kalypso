@@ -10,11 +10,14 @@ module mod_Nodes
   type node
     integer (kind = 4) :: ID = 0
     real (kind = 8) :: cord (1:2) = (/0.0d0, 0.0d0/)
-    real (kind = 8) :: ao = 0.0d0
-
+    real (kind = 8) :: ao = 0.0d0    
+    !neighbour relations
+    type (linkedNode), pointer :: neighbourList => null()
+    !boundary conditions for Schwarz Iteration
     type (boundaryCondition), pointer :: currentBC => null()
     type (boundaryCondition), pointer :: previousBC => null()
   end type
+
 
   type linkedNode
     type (node), pointer :: thisNode => null()
@@ -28,43 +31,74 @@ module mod_Nodes
     real (kind = 8) :: V (1:2) = [0.0, 0.0]
   end type
   
+  type nodeLink
+    type (node), pointer :: node => null()
+  end type
+    
   
 contains
 
-  function newBC (bc_type, bc_value)
-    !function name
-    type (boundaryCondition), pointer :: newBC
-    !arguments
-    integer (kind = 4) :: bc_type
-    real (kind = 8), optional :: bc_value (*)
-    !local variables
-    type (boundaryCondition), pointer :: tmp_bc => null()
+  !add a new Neighbour to the List
+  subroutine addNeighbour (nodeOrigin, newNeighb)
+    implicit none
+    type (node), pointer :: nodeOrigin
+    type (LinkedNode), pointer :: newNeighb
     
-    !allocate boundary condition memory
-    allocate (tmp_bc)
-    !generate BC, by type
-    tmp_bc.bctype = bc_type
-    !set value if present
-    if (present (bc_value)) call setBC (tmp_bc, bc_value)
-    !overgive boundary condition and leave function
-    newBC => tmp_bc
+    if (associated (nodeOrigin.neighbourList)) then
+      newNeighb.next => nodeOrigin.neighbourList
+      newNeighb.prev => newNeighb
+    end if
+    nodeOrigin.neighbourList => newNeighb
+  end subroutine
+  
+  !count the neighbours of a node
+  function noOfNeighbours (nodeOrigin)
+    implicit none
+    !function definition
+    integer (kind = 4) :: noOfNeighbours 
+    !arguments
+    type (node), pointer :: nodeOrigin
+    !local variables
+    integer (kind = 4) :: counter
+    type (LinkedNode), pointer :: nextNeighbour => null()
+    
+    counter = 0
+    nextNeighbour => nodeOrigin.neighbourList
+    countNodes: do 
+      if (.not. (associated (nextNeighbour))) exit countNodes
+      counter = counter + 1
+      nextNeighbour => nextNeighbour.next
+    end do countNodes
+    noOfNeighbours = counter
     return
   end function
   
-  subroutine setBC (bc, bc_value)
+  function isContainedInList (nodeOrigin, node2Check)
+    implicit none
+    !function definition
+    logical :: isContainedInList
     !arguments
-    type (boundaryCondition), pointer :: bc
-    real (kind = 8) :: bc_value (*)
+    type (node), pointer :: nodeOrigin, node2Check
+    !local variables
+    type (LinkedNode), pointer :: tmpNode
+    logical :: isContained
     
-    switch: select case (bc.bctype)
-      case (enum_H_BCtype)
-        bc.h = bc_value (3)
-      case (enum_V_BCtype)
-        bc.v(1) = bc_value (1)
-        bc.v(2) = bc_value (2)
-    end select switch
-  end subroutine
+    tmpNode => nodeOrigin.neighbourList
+    isContained = .false.
 
+    findNode: do
+      if (.not. (associated (tmpNode))) exit findNode
+      
+      if (tmpNode.thisNode.ID == node2Check.ID) then
+        isContained = .true.
+        exit findNode
+      endif
+      
+      tmpNode => tmpNode.next
+    end do findNode
+    isContainedInList = isContained
+    return
+  end function
 
   function newNode (ID, xcord, ycord, zcord)
     implicit none
@@ -167,5 +201,40 @@ contains
     emptyNode.cord(2) = cord (2)
     if (present (cordz)) emptyNode.ao = cordz
   end subroutine
+  
+  function newBC (bc_type, bc_value)
+    !function name
+    type (boundaryCondition), pointer :: newBC
+    !arguments
+    integer (kind = 4) :: bc_type
+    real (kind = 8), optional :: bc_value (*)
+    !local variables
+    type (boundaryCondition), pointer :: tmp_bc => null()
+    
+    !allocate boundary condition memory
+    allocate (tmp_bc)
+    !generate BC, by type
+    tmp_bc.bctype = bc_type
+    !set value if present
+    if (present (bc_value)) call setBC (tmp_bc, bc_value)
+    !overgive boundary condition and leave function
+    newBC => tmp_bc
+    return
+  end function
+  
+  subroutine setBC (bc, bc_value)
+    !arguments
+    type (boundaryCondition), pointer :: bc
+    real (kind = 8) :: bc_value (*)
+    
+    switch: select case (bc.bctype)
+      case (enum_H_BCtype)
+        bc.h = bc_value (3)
+      case (enum_V_BCtype)
+        bc.v(1) = bc_value (1)
+        bc.v(2) = bc_value (2)
+    end select switch
+  end subroutine
+  
   
 end module
