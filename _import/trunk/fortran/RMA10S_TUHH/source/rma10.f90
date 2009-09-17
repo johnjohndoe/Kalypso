@@ -1,3 +1,8 @@
+module mainRoutines
+
+contains
+
+
 subroutine RMA_Kalypso (modelName)
 
 !global constants
@@ -5,6 +10,10 @@ subroutine RMA_Kalypso (modelName)
 !use const_modelConvConstants
 !use type modules
 !----------------
+use mod_input
+use mod_initl
+use mod_vegetation
+
 use mod_Model
 use mod_fileType
 use mod_fileType_lists
@@ -186,7 +195,6 @@ use mod_ContiLines
 implicit none
 
 !arguments
-type (SimulationModel), pointer :: m_SimModel
 character (len = 1000) :: modelName
 
 !local variables
@@ -212,6 +220,7 @@ character (len = 96) :: convergenceStatusFileName
 integer (kind = 4) :: continueCommand
 type (linked_List), pointer :: bcFiles
 real (kind = 8) :: schwarzConvCheckBorder
+type (SimulationModel), pointer :: m_SimModel
 
 !meaning of the variables
 !------------------------
@@ -260,15 +269,19 @@ real (kind = 8) :: schwarzConvCheckBorder
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
-      
+
 m_SimModel => newSimulationModel (modelName)
+m_SimModel.FEmesh => newFEMesh ()
+
+
+      
 !get informations concerning time consumption
 !--------------------------------------------
 call second (ta)
 
 !initialise all the global arrays and variables
 !----------------------------------------------
-call initl
+call initl (m_SimModel)
 
 !initialisations of global variables
 !-----------------------------------
@@ -297,7 +310,7 @@ CallCounter = 0
 
 !input geometry etc
 !------------------
-call input (ibin)
+call input (ibin, m_SimModel)
 
 !input control structure data, if input file for that is present
 !----------------------------
@@ -664,7 +677,7 @@ steadyCalculation: if (niti /= 0) then
 
     !get vegetation parameter, if calculation with vegetation is desired
     !-------------------------------------------------------------------
-    if (ivegetation /= 0) call get_element_cwr
+    if (ivegetation /= 0) call get_element_cwr (m_SimModel)
 
     !If not converged yet, but number of iteration exceeds, end steady calculation
     !-----------------------------------------------------------------------------
@@ -710,7 +723,7 @@ End Do
   !------------------------------------
   temp_maxn = maxn
   maxn = 0
-  if (ivegetation /= 0) call get_element_cwr
+  if (ivegetation /= 0) call get_element_cwr (m_SimModel)
   maxn = temp_maxn
 
 !----------------------------------------------------------------
@@ -1438,7 +1451,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 
       !get vegetation parameter, if calculation with vegetation is desired
       !-------------------------------------------------------------------
-      if (ivegetation /= 0) call get_element_cwr
+      if (ivegetation /= 0) call get_element_cwr (m_SimModel)
 
       !If not converged yet, but number of iteration exceeds, end dynamic calculation
       !------------------------------------------------------------------------------
@@ -1515,7 +1528,7 @@ DynamicTimestepCycle: do n = 1, ncyc
   !------------------------------------
   temp_maxn = maxn
   maxn = 0
-  if (ivegetation /= 0) call get_element_cwr
+  if (ivegetation /= 0) call get_element_cwr (m_SimModel)
   maxn = temp_maxn
 
   !TODO: Isn't this doubled?
@@ -1627,3 +1640,4 @@ end do
 
 end subroutine
 
+end module
