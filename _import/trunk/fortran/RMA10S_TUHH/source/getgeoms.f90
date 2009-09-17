@@ -1,3 +1,5 @@
+module mod_getgeo
+contains
 !******************************************************************************************
 !  subroutine getgeo.sub generates the Finite Element mesh. It calls the reading subroutine
 !    and sets up some general parameters like
@@ -15,10 +17,11 @@
 !   - ErrorMessageAndStop
 !
 !******************************************************************************************
-SUBROUTINE GETGEO
+SUBROUTINE GETGEO (m_SimModel)
 
-
+use mod_Model
 use mod_fileHandler
+use mod_RDKalypso_routines
 
 USE BLK10MOD, only: &
 &  ifile, lout, lin, icfl, id, dlin,       &
@@ -144,6 +147,9 @@ use parakalyps, only: mcord
 implicit none
 save
 
+!arguments
+type (simulationModel), pointer :: m_SimModel
+
 !local variables
 !---------------
 !NiS,jul06: Consistent data types for passing parameters
@@ -216,7 +222,7 @@ WRITE(*,*)' MaxE= ', MAXE
 !read the geometry from the file
 !-------------------------------
 !TODO: Why is there a check, whether the geometry file is present?
-if (ifile /= 0) call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, dummy4, dummy5, 0)
+if (ifile /= 0) call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, dummy4, dummy5, 0, m_SimModel)
 
 !write read continuity lines to the output file (*.out)
 !------------------------------------------------------
@@ -275,7 +281,7 @@ AssignRoughnesses: DO I = 1, MAXE
     if (NOP (i, 6) == 0) J = imat (i)
 
     !skip polynomial approach elements (immt = 89)
-    if (immt /= 89) then
+    if (immt /= 89 .and. immt < 900) then
       !assign Chezy-coefficient, if the parameter > 1.0
       if (ORT (J, 5) > 1.) then
         CHEZ (I) = ORT (J, 5)
@@ -1087,6 +1093,7 @@ return
 !3D-source-code: Just activate, adapt for allocatables, debug and run!
 !---------------------------------------------------------------------
 
-end 
+end subroutine
 !***
 
+end module
