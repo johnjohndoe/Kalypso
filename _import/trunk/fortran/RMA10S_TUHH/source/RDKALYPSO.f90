@@ -1,5 +1,9 @@
+module mod_RDKalypso_routines
+
+contains
+
 !     Last change:  MD   10 Jun 2009    5:16 pm
-SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt, psConn, maxSE, KSWIT)
+SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt, psConn, maxSE, KSWIT, m_SimModel)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
 !
 ! This Subroutine reads the model data to run FE-net-data in Kalypso-2D-format
@@ -36,6 +40,8 @@ SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, Po
 !-----------------------------------------------------------------------
 !data type modules
 use mod_Nodes
+use mod_Model
+use mod_meshModelFE
 
 use blk10mod , only: &
 &   maxe, maxa, maxp, maxt, maxlt, maxps, ncl, &
@@ -112,7 +118,8 @@ use parakalyps , only: &
 &   intpolprof, ispolynomnode, transitionelement, &
 &   nodestointpol, maxintpolelts, &
 &   intpolno, intpolelts, statelsz, statnosz,  &
-&   nconnect, neighb, neighprof, kmweight, isnodeofelement, &
+&   neighprof, kmweight, isnodeofelement, &
+!&   neighprof, kmweight, isnodeofelement, &
 &   name_cwr,&
 &   rausv, &
 &   mcord
@@ -219,7 +226,7 @@ real (kind = 8)                                 :: a, b, c
 real (kind = 8)                                 :: hhmin_loc
 integer (kind = 4)                              :: elzaehl, mittzaehl
 integer (kind = 4)                              :: arcs_without_midside, midsidenode_max
-integer (kind = 4), allocatable, dimension (:,:):: arc
+integer (kind = 4), allocatable, dimension (:,:):: localArc
 integer (kind = 4), dimension (5)               :: temparc
 integer (kind = 4)                              :: ibot, itop
 integer (kind = 4)                              :: ilft, irgt
@@ -237,8 +244,10 @@ logical                                         :: ReorderingNotDone
 integer (kind = 4), dimension (2, 3535)         :: qlist
 integer (kind = 4), allocatable, dimension (:)  :: elfix
 integer (kind = 8)                              :: noDerivs
-type (node), pointer                            :: tmpNode
+type (node), pointer                            :: tmpNode, newFENode, nodeOrigin
+type (linkedNode), pointer                      :: newNeighb
 integer (kind = 4)                              :: CCLID
+type (simulationModel), pointer :: m_SimModel
 !meaning of the variables
 !------------------------
                         !TODO: geometry and restart file become one
@@ -260,7 +269,7 @@ integer (kind = 4)                              :: CCLID
 !mittzaehl              counter of midside nodes that are generated during mesh set up
 !arcs_without_midside   counter for midside nodes without arcs
 !midsidenode_max        counter for midside nodes
-!arc                    !shows definition parts of an arc; local storage for creating mesh geometry
+!localArc               !shows definition parts of an arc; local storage for creating mesh geometry
 !                       1 - first  (bottom) node
 !                       2 - second (top) node
 !                       3 - left element
@@ -321,7 +330,7 @@ if (kswit == 1) then        !in the first case the value maxa has to be found, t
   maxa = 0                  !arc(i,j) is not necessary for the first run, so that it is allocated
   maxe = 0                  !efa nov06
 endif                     !nis,mar06
-allocate (arc (maxa, 5))   !just pro forma, it is deallocated at the end of this run.
+allocate (localArc (maxa, 5))   !just pro forma, it is deallocated at the end of this run.
 
 arcs_without_midside = 0
 midsidenode_max = 0
@@ -370,7 +379,7 @@ ENDDO
 IF (KSWIT == 0) THEN
   outer1: DO i = 1, MaxA
     inner1: DO j = 1, 5
-      arc (i, j) = 0
+      localArc (i, j) = 0
     ENDDO inner1
   ENDDO outer1
   !NiS,mar06: variable name changed; changed mel to MaxE
@@ -430,6 +439,10 @@ reading: do
         !check for kilometer
         if (istat == 0) WRITE (lout, *) 'Die Kilometrierung von Knoten', i, 'wurde eingelesen:', kmx (i)
         nodecnt = max (i, nodecnt)
+        !add new node to model
+        newFENode => newNode (i, cord (i,1), cord (i,2), ao(i))
+        call addNodeToMesh (m_SimModel.FEmesh, newFENode)
+
         IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0d0, 0.0d0)
       ENDIF
 
@@ -452,7 +465,7 @@ reading: do
         ENDIF
       !Read ARC geometry informations
       ELSE
-        READ (linie,'(a2,6i10)') id_local, i, (arc(i,j), j=1, 5)
+        READ (linie,'(a2,6i10)') id_local, i, (localArc(i,j), j=1, 5)
         !Look for errors in enumeration
         IF (i > arccnt) arccnt = i
         !ERROR - negative arc number
@@ -800,7 +813,7 @@ IF (KSWIT == 1) THEN
   nodecnt = nodecnt + arcs_without_midside
 
   REWIND (IFILE)
-  DEALLOCATE (arc)                                                       !the pro forma allocation of arc(i,j) is stopped
+  DEALLOCATE (localArc)                                                 !the pro forma allocation of arc(i,j) is stopped
   RETURN                                                    	        !If the dimension reading option is chosen (that means KSWIT=1), this
                                                                         !subroutine can be returned at this point.
 
@@ -824,19 +837,19 @@ ENDIF
 DO i = 1, arccnt
 
   !DEAD ARCS
-  if (arc (i, 3) == 0 .and. arc (i, 4) == 0) then
+  if (localArc (i, 3) == 0 .and. localArc (i, 4) == 0) then
     write (lout, 9003) i
     write (*   , 9003) i
     
   !1D-ELEMENT or 1D-2D-TRANSITION-ELEMENT
-  elseif ((arc (i, 3) == arc (i, 4)) .and. arc (i, 3) /= 0) then
+  elseif ((localArc (i, 3) == localArc (i, 4)) .and. localArc (i, 3) /= 0) then
     !TODO: these checks are not 100 percent consistent
-    j = arc (i, 3)
+    j = localArc (i, 3)
     
     !ERROR, if 1D-node is already in use
     if (elem (j, 1) /= 0) then
-      call errormessageandstop (1302, j, 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
-                                &          0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
+      call errormessageandstop (1302, j, 0.5 * (cord (localArc (i,1), 1) + cord (localArc (i, 2), 1)), &
+                                &          0.5 * (cord (localArc (i,1), 2) + cord (localArc (i, 2), 2)))
 
     !assign identification for 1D-nodes
     !  elem (j, 1) == -1) - normal 1D-elements
@@ -860,21 +873,21 @@ DO i = 1, arccnt
     !right element k = 4
     DO k = 3, 4
       !get element number
-      j = arc (i, k)
+      j = localArc (i, k)
       !Testing for the existance of the element
       IF (j > 0) then
         !ERROR - element is used twice
         IF (elem (j, 1) == -1) call ErrorMessageAndStop (1302, j,                  &
-                             & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
-                             & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
+                             & 0.5 * (cord (localArc (i,1), 1) + cord (localArc (i, 2), 1)), &
+                             & 0.5 * (cord (localArc (i,1), 2) + cord (localArc (i, 2), 2)))
         !Testing, whether it is the first defining arc
         IF (elem (j, 1) == 0) elem (j, 1) = 1
         !Increase number of assigned ARCS to ELEMENT by increment =1
         elem (j, 1) = elem (j, 1) + 1
         !ERROR - Element is defined with more than 4 arcs (only 3 or 4 is possible)
         IF (elem (j, 1) > 5) call ErrorMessageAndStop (1202, j,                      &
-                               & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
-                               & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
+                               & 0.5 * (cord (localArc (i,1), 1) + cord (localArc (i, 2), 1)), &
+                               & 0.5 * (cord (localArc (i,1), 2) + cord (localArc (i, 2), 2)))
         ! Dem Feld ELEM(j,2...5) wird die Nummer der Kante zugewiesen. (z.B.) ELEM(1000,2)=45
         elem (j, elem (j, 1) ) = i
       ENDIF
@@ -909,24 +922,32 @@ all_elem: DO i = 1, maxe
   elkno (5) = 0
 
   !cycle empty elements
-  IF (elem (i, 1) == 0) CYCLE all_elem
+  IF (elem (i, 1) == 0 .and. (imat(i) < 901 .or. imat (i) > 903)) CYCLE all_elem
 
   !count the number of NOT-empty entries of elcnt
   elzaehl = elzaehl + 1
 
   !normal 1D-elements --------------------
-  dimensionif: IF (elem (i, 1) == -1) THEN
+  dimensionif: if (imat(i) >= 901 .and. imat (i) <= 903) then
+    findJunctions: do j = 8, 1, -1
+      if (nop(i, j) /= 0) then
+        ncorn (i) = j
+        exit findJunctions
+      end if
+    end do findJunctions
+  
+  ELSEIF (elem (i, 1) == -1) THEN
     !for normal 1D-elements, the number of nodes is 3 and the number of corner nodes is 2
     jnum = 2
     ncorn(i) = 3
 
     !Passing corner nodes to node array
-    nop (i, 1) = arc (elem (i, 2), 1)
-    nop (i, 3) = arc (elem (i, 2), 2)
+    nop (i, 1) = localArc (elem (i, 2), 1)
+    nop (i, 3) = localArc (elem (i, 2), 2)
 
     !giving over midsidenode, if present, to temporary node array
-    IF (arc(elem(i,2),5) > 0) THEN
-      nop(i,2) = arc(elem(i,2),5)
+    IF (localArc(elem(i,2),5) > 0) THEN
+      nop(i,2) = localArc(elem(i,2),5)
     ENDIF
 
   !1D-2D-transition elements -------------
@@ -948,24 +969,24 @@ all_elem: DO i = 1, maxe
     !IF (jnum<3) THEN
 
     !ERROR - element has less than 3 arcs, which is not possible
-    IF (jnum == 1 .or. jnum == 2) call ErrorMessageAndStop (1203, i, cord(arc (elem (i, 2), 5), 1) , cord(arc (elem (i, 2), 5), 2))
+    IF (jnum == 1 .or. jnum == 2) call ErrorMessageAndStop (1203, i, cord(localArc (elem (i, 2), 5), 1) , cord(localArc (elem (i, 2), 5), 2))
 
     ! erste Kante:                                                  !starting with the first arc, the element's nodes in anticlockwise direction
     l = 1                                                           !will be saved in a temporary array to write them later into the array nop.
 
     ! akt. Element links der Kante .und. unten-Knoten beginnt:      !the two arrays for temporary saving are:
-    IF (arc (elem (i, 2), 3) ==i) THEN                            !       elkno(1...5)    =       corner nodes of element
-      elkno (1) = arc (elem (i, 2), 1)                              !       mikno(1...4)    =       midside nodes of element, if defined
-      elkno (2) = arc (elem (i, 2), 2)
-      IF (arc (elem (i, 2), 5) > 0) THEN                         !In dependency of the side the actual element is positioned in relation to
-        mikno (1) = arc (elem (i, 2), 5)                            !the first arc, the nodes are saved in elkno(1) and elkno(2)
+    IF (localArc (elem (i, 2), 3) ==i) THEN                            !       elkno(1...5)    =       corner nodes of element
+      elkno (1) = localArc (elem (i, 2), 1)                              !       mikno(1...4)    =       midside nodes of element, if defined
+      elkno (2) = localArc (elem (i, 2), 2)
+      IF (localArc (elem (i, 2), 5) > 0) THEN                         !In dependency of the side the actual element is positioned in relation to
+        mikno (1) = localArc (elem (i, 2), 5)                            !the first arc, the nodes are saved in elkno(1) and elkno(2)
       ENDIF
     ! akt. Element rechts der Kante .und. oben-Knoten beginnt:
     ELSE
-      elkno (1) = arc (elem (i, 2), 2)
-      elkno (2) = arc (elem (i, 2), 1)
-      IF (arc (elem (i, 2), 5) > 0) THEN
-        mikno (1) = arc (elem (i, 2), 5)
+      elkno (1) = localArc (elem (i, 2), 2)
+      elkno (2) = localArc (elem (i, 2), 1)
+      IF (localArc (elem (i, 2), 5) > 0) THEN
+        mikno (1) = localArc (elem (i, 2), 5)
       ENDIF
     ENDIF
 
@@ -979,18 +1000,18 @@ all_elem: DO i = 1, maxe
     END IF
     elem_arc: DO j = 2, jnum                                        !For every left arc with exception of the first, dealt with above, it is checked,
       ! Element links der Kante .und. unten-Knoten knuepft an?      !whether it is the one that is connected to the last node of the last arc.
-      left: IF ((arc (elem (i,j+1),3) == i) .AND. (arc (elem (i,j+1),1) == elkno(l))) then
-        elkno (l + 1) = arc (elem (i, j + 1), 2)                    !In dependency of the side the actual element is positioned in relation
-        IF (arc (elem (i, j + 1), 5) >0) then                    !to the arc j, the node that could be connected with the last one of the last
-          mikno (l) = arc (elem (i, j + 1), 5)                      !arc is checked, whether it is connected. If so the procedure jumps to the
+      left: IF ((localArc (elem (i,j+1),3) == i) .AND. (localArc (elem (i,j+1),1) == elkno(l))) then
+        elkno (l + 1) = localArc (elem (i, j + 1), 2)                    !In dependency of the side the actual element is positioned in relation
+        IF (localArc (elem (i, j + 1), 5) >0) then                    !to the arc j, the node that could be connected with the last one of the last
+          mikno (l) = localArc (elem (i, j + 1), 5)                      !arc is checked, whether it is connected. If so the procedure jumps to the
         END if                                                      !next arc and increases the number of l
         GOTO 2222
       END IF left
       ! Element rechts der Kante .und. oben-Knoten knuepft an?
-      right: IF ((arc (elem (i,j+1),4) == i) .AND. (arc (elem (i,j+1),2) == elkno(l))) then
-        elkno (l + 1) = arc (elem (i, j + 1), 1)
-        IF (arc (elem (i, j + 1), 5) >0) then
-          mikno (l) = arc (elem (i, j + 1), 5)
+      right: IF ((localArc (elem (i,j+1),4) == i) .AND. (localArc (elem (i,j+1),2) == elkno(l))) then
+        elkno (l + 1) = localArc (elem (i, j + 1), 1)
+        IF (localArc (elem (i, j + 1), 5) >0) then
+          mikno (l) = localArc (elem (i, j + 1), 5)
         END if
         GOTO 2222
       END IF right
@@ -1076,37 +1097,37 @@ mittzaehl = 0
 all_arcs: DO i=1,arccnt
 
   !dead arcs have to be skipped
-  if (arc(i,1)==0) CYCLE all_arcs
+  if (localArc(i,1)==0) CYCLE all_arcs
 
   ! Mittseitenknoten vorhanden?
   !NiS,expand test for defined midside nodes in ARC-array but without coordinate-definitions; this was a logical gap
-  IF ((arc(i,5)>0) .and. (arc(i,5)<=nodecnt)) THEN
-    IF ((cord (arc (i, 5), 1) /= 0.0) .and. (cord (arc (i, 5), 2) /= 0.0)) THEN
-      if (ao (arc (i, 5)) + 9999.0 < 1.0e-3) then
+  IF ((localArc(i,5)>0) .and. (localArc(i,5)<=nodecnt)) THEN
+    IF ((cord (localArc (i, 5), 1) /= 0.0) .and. (cord (localArc (i, 5), 2) /= 0.0)) THEN
+      if (ao (localArc (i, 5)) + 9999.0 < 1.0e-3) then
         WRITE(lout,*) 'recalculating elevation        '
-        ao (arc (i, 5)) = 0.5 * (ao (arc (i, 1)) + ao (arc (i, 2)))
-        if (kmx (arc(i,1)) /= 0.0 .and. kmx (arc(i, 2)) /= 0.0) then
-          kmx (arc (i, 5)) = 0.5 * (kmx (arc (i, 1)) + kmx (arc (i, 2)))
+        ao (localArc (i, 5)) = 0.5 * (ao (localArc (i, 1)) + ao (localArc (i, 2)))
+        if (kmx (localArc(i,1)) /= 0.0 .and. kmx (localArc(i, 2)) /= 0.0) then
+          kmx (localArc (i, 5)) = 0.5 * (kmx (localArc (i, 1)) + kmx (localArc (i, 2)))
         end if
       end if
       CYCLE all_arcs
     ELSE
       !Test for distances
-      a = SQRT ( ( cord (arc (i,1), 1) - cord ( arc (i,5), 1) )**2 + ( cord (arc (i,1), 2) - cord (arc (i,5), 2) )**2)
-      b = SQRT ( ( cord (arc (i,2), 1) - cord ( arc (i,5), 1) )**2 + ( cord (arc (i,2), 2) - cord (arc (i,5), 2) )**2)
-      c = SQRT ( ( cord (arc (i,1), 1) - cord ( arc (i,2), 1) )**2 + ( cord (arc (i,1), 2) - cord (arc (i,2), 2) )**2)
+      a = SQRT ( ( cord (localArc (i,1), 1) - cord ( localArc (i,5), 1) )**2 + ( cord (localArc (i,1), 2) - cord (localArc (i,5), 2) )**2)
+      b = SQRT ( ( cord (localArc (i,2), 1) - cord ( localArc (i,5), 1) )**2 + ( cord (localArc (i,2), 2) - cord (localArc (i,5), 2) )**2)
+      c = SQRT ( ( cord (localArc (i,1), 1) - cord ( localArc (i,2), 1) )**2 + ( cord (localArc (i,1), 2) - cord (localArc (i,2), 2) )**2)
       IF (a<c .or. b<c) THEN
-        WRITE (*,1234) arc(i,5), i, arc(i,5)
+        WRITE (*,1234) localArc(i,5), i, localArc(i,5)
 1234    FORMAT (' The NODE ', I5,' is defined in ARC ', i5,'. The Coordinates are the origin (0.0/0.0), but this seems '/ &
               & ' not be define but the default initialized value, because the distance between the corner nodes of the '/&
               & ' arc is shorter than one of the distances between the midside node and the corner nodes! Therefore the '/&
               & ' coordinates of the node ', I56, ' are recalculated.')
         !Recalculation with Linear interpolation of coordinates for nodes, that were not logical before
-        cord (arc(i,5),1) = 0.5 * (cord (arc(i,1),1) + cord (arc(i,2),1) )
-        cord (arc(i,5),2) = 0.5 * (cord (arc(i,1),2) + cord (arc(i,2),2) )
-          ao (arc(i,5)  ) = 0.5 * (  ao (arc(i,1)  ) +   ao (arc(i,2)  ) )
-        if (kmx (arc(i,1)) /= 0.0 .and. kmx (arc(i, 2)) /= 0.0) then
-          kmx (arc (i, 5)) = 0.5 * (kmx (arc (i, 1)) + kmx (arc (i, 2)))
+        cord (localArc(i,5),1) = 0.5 * (cord (localArc(i,1),1) + cord (localArc(i,2),1) )
+        cord (localArc(i,5),2) = 0.5 * (cord (localArc(i,1),2) + cord (localArc(i,2),2) )
+        ao (localArc(i,5)  ) = 0.5 * (  ao (localArc(i,1)  ) +   ao (localArc(i,2)  ) )
+        if (kmx (localArc(i,1)) /= 0.0 .and. kmx (localArc(i, 2)) /= 0.0) then
+          kmx (localArc (i, 5)) = 0.5 * (kmx (localArc (i, 1)) + kmx (localArc (i, 2)))
         end if
       ENDIF
     ENDIF
@@ -1118,10 +1139,10 @@ all_arcs: DO i=1,arccnt
   mittzaehl = mittzaehl + 1
 
   !These lines could be economized with using the arc-array directly, where it is needed; WHY COPY?
-  ibot = arc (i, 1)
-  itop = arc (i, 2)
-  ilft = arc (i, 3)
-  irgt = arc (i, 4)
+  ibot = localArc (i, 1)
+  itop = localArc (i, 2)
+  ilft = localArc (i, 3)
+  irgt = localArc (i, 4)
   !NiS,may06: Test for dead arcs, so the DO-LOOP may be cycled:
   IF (ilft==irgt .and. ilft==0) CYCLE all_arcs
 
@@ -1134,6 +1155,10 @@ all_arcs: DO i=1,arccnt
   cord (nodecnt, 1) = x
   cord (nodecnt, 2) = y
   ao   (nodecnt)    = z
+  
+  !add new node to model
+  newFENode => newNode (nodecnt, x, y, z)
+  call addNodeToMesh (m_SimModel.FEmesh, newFENode)
 
   !NiS,may06: test for 1D- or 2D-ARC
   !1D-ELEMENT ARC or 1D-2D-TRANSITION ELEMENT ARC:
@@ -1182,24 +1207,24 @@ WRITE (*   ,106) mittzaehl
 
 !checking/interpolation of cross section informations on 1D elements under geometry approach (trapezoidal)
 do i = 1, arccnt
-  if (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0) then
-    if (imat(arc(i,3)) < 900) then
+  if (localArc(i,3) == localArc(i,4) .and. localArc(i,3) /= 0) then
+    if (imat(localArc(i,3)) < 900) then
 
-    if (imat (arc (i,3)) /= 89) then
-      checkwidths: do j = 1, 3, 2
-        nd = nop (arc (i, 3), j)
-        !error -  if one of the two corner nodes does not have cross sectional informations
-        if (width (nd) == 0.0) call errormessageandstop (1103, nd, cord (nd, 1), cord (nd, 2))
-      end do checkwidths
-
-      if (width (nop (arc (i, 3), 2)) == 0.0) then
-        width  (nop (arc (i, 3), 2)) = 0.5 * (width (nop (arc (i, 3), 1)) + width (nop (arc (i, 3), 3)))
-        ss1    (nop (arc (i, 3), 2)) = 0.5 * (ss1   (nop (arc (i, 3), 1)) + ss1   (nop (arc (i, 3), 3)))
-        ss2    (nop (arc (i, 3), 2)) = 0.5 * (ss2   (nop (arc (i, 3), 1)) + ss2   (nop (arc (i, 3), 3)))
-        wids   (nop (arc (i, 3), 2)) = 0.5 * (wids  (nop (arc (i, 3), 1)) + wids  (nop (arc (i, 3), 3)))
-        widbs  (nop (arc (i, 3), 2)) = 0.5 * (widbs (nop (arc (i, 3), 1)) + widbs (nop (arc (i, 3), 3)))
-        wss    (nop (arc (i, 3), 2)) = 0.5 * (wss   (nop (arc (i, 3), 1)) + wss   (nop (arc (i, 3), 3)))
-      endif
+      if (imat (localArc (i,3)) /= 89) then
+        checkwidths: do j = 1, 3, 2
+          nd = nop (localArc (i, 3), j)
+          !error -  if one of the two corner nodes does not have cross sectional informations
+          if (width (nd) == 0.0) call errormessageandstop (1103, nd, cord (nd, 1), cord (nd, 2))
+        end do checkwidths
+  
+        if (width (nop (localArc (i, 3), 2)) == 0.0) then
+          width  (nop (localArc (i, 3), 2)) = 0.5 * (width (nop (localArc (i, 3), 1)) + width (nop (localArc (i, 3), 3)))
+          ss1    (nop (localArc (i, 3), 2)) = 0.5 * (ss1   (nop (localArc (i, 3), 1)) + ss1   (nop (localArc (i, 3), 3)))
+          ss2    (nop (localArc (i, 3), 2)) = 0.5 * (ss2   (nop (localArc (i, 3), 1)) + ss2   (nop (localArc (i, 3), 3)))
+          wids   (nop (localArc (i, 3), 2)) = 0.5 * (wids  (nop (localArc (i, 3), 1)) + wids  (nop (localArc (i, 3), 3)))
+          widbs  (nop (localArc (i, 3), 2)) = 0.5 * (widbs (nop (localArc (i, 3), 1)) + widbs (nop (localArc (i, 3), 3)))
+          wss    (nop (localArc (i, 3), 2)) = 0.5 * (wss   (nop (localArc (i, 3), 1)) + wss   (nop (localArc (i, 3), 3)))
+        endif
       endif
     endif
   endif
@@ -1207,7 +1232,7 @@ enddo
 
 
 !TODO: This should call either with alphapoly or betapoly depending on what is used!
-call InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
+call InterpolateProfs (m_SimModel.femesh, statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
                     & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, &
                     & MaxLT, TransLines, IsPolynomNode)
 
@@ -1305,15 +1330,6 @@ END do GetMiddleCoord
 
 ! NEIGHBOURHOOD RELATIONS OF NODES -------------------------------------------------------------------
 !Initialize arrays
-do i = 1, MaxP
-  !neighb(i, j) : ID-number of j-th neighbour of node i
-  !nconnect (i) : number of neighbourhood connections
-  !It's assumed that a node has maximum 30 neighbours
-  do j = 1, 3535
-    neighb (i, j) = 0
-  end do
-  nconnect(i) = 0
-end do
 
 !run through all elements
 neighbours: do i = 1, MaxE
@@ -1329,8 +1345,9 @@ neighbours: do i = 1, MaxE
         ConnLine = TransLines(j,2)
         EXIT findconnection
       end if
-      if (j == MaxLT) ConnNumber = 0
     end do findconnection
+
+
     !If there is a connection assigned to that element process, store the 2D-neighbours
     if (ConnNumber /= 0) then
       !number of connections at this special element (including all 2D-transitioning nodes and the 1D-element's node)
@@ -1352,11 +1369,16 @@ neighbours: do i = 1, MaxE
       !store neighbourhood relations, it's nearly the same loop as in the original loop, shown below
       outerLT: do j = 1, ncorn_temp
         node1 = nop_temp (j)
+
+        !linear search; really to slow
+        nodeOrigin => findNodeInMeshByID (m_SimModel.FEmesh, node1)
+
         innerLT: do l = 1, ncorn_temp
           node2 = nop_temp (l)
           if (node1 /= node2) then
-            nconnect (node1) = nconnect (node1) + 1
-            neighb (node1, nconnect(node1)) = node2
+            tmpNode => findNodeInMeshByID (m_SimModel.FEmesh, node2)
+            newNeighb => makeNodeALinkedNode (tmpNode)
+            if (.not. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
           end if
         end do innerLT
       end do outerLT
@@ -1367,47 +1389,20 @@ neighbours: do i = 1, MaxE
     outer: do j = 1, ncorn (i)
       !For increasing speed of program, bring line to outside of loop
       node1 = nop (i, j)
+      !linear search; really to slow
+      nodeOrigin => findNodeInMeshByID (m_SimModel.FEmesh, node1)
+
       inner: do l = 1, ncorn (i)
         node2 = nop (i, l)
         IF (node1 /= node2) THEN
-          nconnect(node1) = nconnect(node1) + 1
-          neighb (node1, nconnect (node1)) = node2
+          tmpNode => findNodeInMeshByID (m_SimModel.FEmesh, node2)
+          newNeighb => makeNodeALinkedNode (tmpNode)
+          if (.not. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
         END if
       end do inner
     end do outer
   end if
 end do neighbours
-
-!Delete doubled entries in the nconnect array
-do i = 1, nodecnt
-  j = 1
-  !Run through each entry
-  do
-    if (j >= nconnect(i)) exit
-    k = j + 1 
-    vergleich: do
-      !If entries on j-th position and k-th position are the same,
-      !delete the j-th entry, push all entries after the k-th on step forward
-      if (neighb(i,j) == neighb(i,k)) then
-        !push k-th and upward
-        do l = k, nconnect (i) - 1
-          neighb (i, l) = neighb (i, l + 1)
-        end do
-        !Reduce the number of neighbouring nodes
-        nconnect(i) = nconnect(i)-1
-        EXIT vergleich
-      end if
-      if (k >= nconnect(i)) exit
-      k = k + 1
-    end do vergleich
-    j = j + 1
-  end do
-end do
-
-noDerivs = 0
-do i = 1, maxp
-  noDerivs = noDerivs + nconnect (i) + 1
-enddo
 
 !generate upward knowledge, store elements connected to nodes
 BelongingElement: do i = 1, MaxE
@@ -1437,7 +1432,7 @@ WRITE ( *  , 111 )
             &  1X, '-----------------------------------------'//)
 
 !deallocation of temporary arrays
-DEALLOCATE (arc, reweir)
+DEALLOCATE (localArc, reweir)
 !Rewind for possible RESTART
 REWIND(IFILE)
 
@@ -1446,14 +1441,18 @@ RETURN
 END SUBROUTINE RDKALYPS
                                                                         
 
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-subroutine InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, MaxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
+subroutine InterpolateProfs (FE_Mesh, statElSz, statNoSz, MaxP, MaxE, MaxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
                           & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, MaxLT, &
                           & TransLines, IsPolynomNode)
+                          
+use mod_Nodes
+use mod_meshModelFE
 
 implicit none
+!arguments
+type (femesh), pointer :: FE_Mesh
 INTEGER (kind = 4), intent (IN)    :: statElSz, statNoSz, MaxP, MaxE, MaxLT, MaxIntPolElts
 integer, intent (in)    :: IntPolNo (1: MaxE)
 INTEGER, intent (INOUT) :: IntPolElts (1: MaxE, 1: MaxIntPolElts)
@@ -1466,15 +1465,19 @@ REAL, INTENT (INOUT)    :: qgef (1: MaxP)
 LOGICAL, INTENT (INOUT) :: IntPolProf (1: MaxP), IsPolynomNode (1: MaxP), TransitionElement (1: MaxE)
 INTEGER (kind = 4), INTENT (INOUT) :: TransLines (1: MaxLT, 1: 3)
 !
-!*********local ones***********
+!local variables
+type (Node), pointer :: NewFENode
 INTEGER :: i, j
-integer :: NewNode, NewElt, TransLine
+integer :: NewNodeID, NewElt, TransLine
 real (kind = 8) :: DX, DY, DH, DIST, origx, origy
 
 
+NewFENode => null()
 DIST = 0.0D0
-NewNode = statNoSz
+NewNodeID = statNoSz
 NewElt = statElSz
+
+
 !nis,jan08: Interpolate new profiles into mesh
 do i = 1, statElSz
   !here an interpolation should take place
@@ -1494,20 +1497,24 @@ do i = 1, statElSz
       !transform the first intersection element
       if (j == 1) then
         nop (i, 4) = nop (i, 3)
-        NewNode = NewNode + 1
-        nop (i, 3) = NewNode
+        NewNodeID = NewNodeID + 1
+        nop (i, 3) = NewNodeID
 
-        call GenNewNode (NewNode, i, origx, origy, nop(i, 1), nop (i, 4), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef(nop(i, 1)), qgef (nop (i, 4)), qgef (NewNode), IsPolynomNode (NewNode))
+        call GenNewNode (NewNodeID, i, origx, origy, nop(i, 1), nop (i, 4), NeighProf (NewNodeID, :), IntPolProf (NewNodeID), &
+                      &  qgef(nop(i, 1)), qgef (nop (i, 4)), qgef (NewNodeID), IsPolynomNode (NewNodeID))
         cord (nop (i, 3), 1) = cord (nop (i, 1), 1) + DX * j
         cord (nop (i, 3), 2) = cord (nop (i, 1), 2) + DY * j
-        ao (NewNode) = ao (nop (i, 1)) + DH
-        kmWeight (NewNode) = j / REAL(IntPolNo (i) + 1, KIND = 8)
+        ao (NewNodeID) = ao (nop (i, 1)) + DH
+        kmWeight (NewNodeID) = j / REAL(IntPolNo (i) + 1, KIND = 8)
         if (DIST /= 0.0) then
-          kmx (NewNode) = kmx (nop (i, 1) ) + j * DIST
+          kmx (NewNodeID) = kmx (nop (i, 1) ) + j * DIST
         else
-          kmx (NewNode) = -1.0D0
+          kmx (NewNodeID) = -1.0D0
         end if
+        newFENode => NewNode (NewNodeID, cord (NewNodeID,1), cord (NewNodeID,2), ao(NewNodeID))
+        call addNodeToMesh (FE_Mesh, newFENode)
+
+
         !recalculate the position of the midside node at first element
         call GenNewNode (nop (i, 2), i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (nop (i, 2), :), IntPolProf (nop (i, 2)), &
                       &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (nop (i, 2)), IsPolynomNode (nop (i, 2)))
@@ -1518,6 +1525,10 @@ do i = 1, statElSz
         if (DIST /= 0.0) then
           kmx (nop (i, 2)) = kmx (nop (i, 1)) + 0.5 * DIST
         end if
+
+        newFENode => NewNode (nop(i,2), cord (nop(i,2),1), cord (nop(i,2),2), ao(nop(i,2)))
+        call addNodeToMesh (FE_Mesh, newFENode)
+
       !generate the middle elements of interpolation, it's first interesting, if there are more than 2 intersections
       elseif (j > 1) then
         NewElt = NewElt + 1
@@ -1529,32 +1540,38 @@ do i = 1, statElSz
         else
           nop (NewElt, 1) = nop (NewElt - 1, 3)
         end if
-        NewNode = NewNode + 1
-        nop (NewElt, 3) = NewNode
-        call GenNewNode (NewNode, i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNode), IsPolynomNode (NewNode))
-        cord (NewNode, 1) = cord (nop (i, 1), 1) + DX * j
-        cord (NewNode, 2) = cord (nop (i, 1), 2) + DY * j
-        ao (NewNode) = ao (nop (i, 1)) + DH * j
-        kmWeight (NewNode) = j / REAL(IntPolNo (i) + 1, KIND = 8)
+        NewNodeID = NewNodeID + 1
+        nop (NewElt, 3) = NewNodeID
+        call GenNewNode (NewNodeID, i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (NewNodeID, :), IntPolProf (NewNodeID), &
+                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNodeID), IsPolynomNode (NewNodeID))
+        cord (NewNodeID, 1) = cord (nop (i, 1), 1) + DX * j
+        cord (NewNodeID, 2) = cord (nop (i, 1), 2) + DY * j
+        ao (NewNodeID) = ao (nop (i, 1)) + DH * j
+        kmWeight (NewNodeID) = j / REAL(IntPolNo (i) + 1, KIND = 8)
         if (DIST /= 0.0) then
-          kmx (NewNode) = kmx (nop (i, 1) ) + j * DIST
+          kmx (NewNodeID) = kmx (nop (i, 1) ) + j * DIST
         else
-          kmx (NewNode) = -1.0D0
+          kmx (NewNodeID) = -1.0D0
         end if
+        newFENode => NewNode (NewNodeID, cord (NewNodeID,1), cord (NewNodeID,2), ao(NewNodeID))
+        call addNodeToMesh (FE_Mesh, newFENode)
+
         !generate midside node
-        NewNode = NewNode + 1
-        nop (NewElt, 2) = NewNode
-        call GenNewNode (NewNode, i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNode), IsPolynomNode (NewNode))
+        NewNodeID = NewNodeID + 1
+        nop (NewElt, 2) = NewNodeID
+        call GenNewNode (NewNodeID, i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (NewNodeID, :), IntPolProf (NewNodeID), &
+                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNodeID), IsPolynomNode (NewNodeID))
         cord (nop (NewElt, 2), 1) = 0.5 * (cord (nop (NewElt, 1), 1) + cord (nop (NewElt, 3), 1))
         cord (nop (NewElt, 2), 2) = 0.5 * (cord (nop (NewElt, 1), 2) + cord (nop (NewElt, 3), 2))
-        ao (NewNode) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
-        kmWeight (NewNode) = (j - 0.5) / REAL (IntPolNo (i) + 1, KIND = 8)
+        ao (NewNodeID) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
+        kmWeight (NewNodeID) = (j - 0.5) / REAL (IntPolNo (i) + 1, KIND = 8)
         if (DIST /= 0.0) then
-          kmx (NewNode) = kmx (nop (i, 1)) + (j - 0.5) * DIST
+          kmx (NewNodeID) = kmx (nop (i, 1)) + (j - 0.5) * DIST
         end if
+        newFENode => NewNode (NewNodeID, cord (NewNodeID,1), cord (NewNodeID,2), ao(NewNodeID))
+        call addNodeToMesh (FE_Mesh, newFENode)
       end if
+
       !Generate the last element
       if (j == IntPolNo (i) ) then
         NewElt = NewElt + 1
@@ -1581,17 +1598,19 @@ do i = 1, statElSz
         nop (NewElt, 3) = nop (i, 4)
         nop (i, 4) = 0
         !generate midside
-        NewNode = NewNode + 1
-        nop (NewElt, 2) = NewNode
-        call GenNewNode (NewNode, i, origx, origy, nop (i, 1), nop (NewElt, 3), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef (nop (i, 1)), qgef (nop (NewElt, 3)), qgef (NewNode), IsPolynomNode (NewNode))
-        cord (NewNode, 1) = 0.5 * (cord (nop (NewElt, 1), 1) + cord (nop (NewElt, 3), 1))
-        cord (NewNode, 2) = 0.5 * (cord (nop (NewElt, 1), 2) + cord (nop (NewElt, 3), 2))
-        ao (NewNode) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
-        kmWeight (NewNode) = (j + 0.5) / REAL (IntPolNo (i) + 1, KIND = 8)
+        NewNodeID = NewNodeID + 1
+        nop (NewElt, 2) = NewNodeID
+        call GenNewNode (NewNodeID, i, origx, origy, nop (i, 1), nop (NewElt, 3), NeighProf (NewNodeID, :), IntPolProf (NewNodeID), &
+                      &  qgef (nop (i, 1)), qgef (nop (NewElt, 3)), qgef (NewNodeID), IsPolynomNode (NewNodeID))
+        cord (NewNodeID, 1) = 0.5 * (cord (nop (NewElt, 1), 1) + cord (nop (NewElt, 3), 1))
+        cord (NewNodeID, 2) = 0.5 * (cord (nop (NewElt, 1), 2) + cord (nop (NewElt, 3), 2))
+        ao (NewNodeID) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
+        kmWeight (NewNodeID) = (j + 0.5) / REAL (IntPolNo (i) + 1, KIND = 8)
         if (DIST /= 0.0) then
-          kmx (NewNode) = kmx (nop (i, 1)) + (j + 0.5) * DIST
+          kmx (NewNodeID) = kmx (nop (i, 1)) + (j + 0.5) * DIST
         end if
+        newFENode => NewNode (NewNodeID, cord (NewNodeID,1), cord (NewNodeID,2), ao(NewNodeID))
+        call addNodeToMesh (FE_Mesh, newFENode)
       end if
     end do
   end if
@@ -1629,6 +1648,11 @@ end if
 LogIntPolProf = .true.
 IsPolynomNode = .true.
 END subroutine
+
+
+end module
+
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE Read_KALYP_Bed
 
