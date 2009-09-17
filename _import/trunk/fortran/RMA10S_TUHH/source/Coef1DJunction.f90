@@ -1,18 +1,15 @@
-!Last change:  WP    3 Jul 2008    3:02 pm
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
-USE BLK10
-USE BLK10MOD
-USE BLK11MOD
-USE BLKDRMOD
-USE BLKSSTMOD
-USE BLKSANMOD
-USE PARAKalyps
-USE Para1DPoly
-USE blkecom
+USE BLK10, only: r1
+USE BLK10MOD, only: maxn, iteqv, nops, ncn, ncorn, nop, imat, idnopt, vel, ndf, alfa, &
+& width, dir, ss1, ss2, cord, ao, grav, nbc
+USE BLKDRMOD, only: akp, adt, adb, ame, dame
+USE Para1DPoly, only: polyrangea, polysplitsa, ah, apoly, dahdh
+USE blkecom, only: ncon, f, estifm
 
-SAVE
+
+implicit none
 
 
 INTEGER :: NTX, NN, ncnx, mc, iswt, nef
@@ -21,7 +18,7 @@ INTEGER :: i, j, k, n, m
 INTEGER :: IA, JA
 INTEGER :: PolyPos, findPolynom
 
-REAL (KIND = 8) :: SA, CX, R, XHT
+REAL (KIND = 8) :: SA, CX, R
 real (kind = 4) :: dum2, aml
 REAL (KIND = 8) :: WSEL1, WSELX
 REAL (KIND = 8) :: calcpolynomial, calcPolynomial1stDerivative
@@ -29,6 +26,10 @@ REAL (KIND = 8) :: calcpolynomial, calcPolynomial1stDerivative
 REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 
 REAL (KIND=8) :: h
+
+!local variables
+real (kind = 8) :: rx, thn, ry, th1, acx, wsx, acy, wsy
+integer :: nry
 
 
 IF(ITEQV(MAXN) .EQ. 5) THEN
@@ -42,7 +43,6 @@ ELSE
     NCON(N)=NOP(NN,N)
   enddo
 ENDIF
-IF(NCN .EQ. 5  .AND.  IMAT(NN) .LT. 900) NCN=3
 
 !cipk nov97
 ncnx=2
@@ -80,14 +80,6 @@ IMMT=IMAT(NN)
 MR=MOD(IMMT,1000)
 
 
-
-NCN  = NCORN(NN)
-F(1) = 0.
-N1   = NCON(1)
-XHT  = 1.0
-
-
-
 !1st condition is continuity at the junction; time dependency is neglected here!
 checknodes: DO KK = 1, NCN
 
@@ -106,9 +98,9 @@ checknodes: DO KK = 1, NCN
   !using geometry-approach (means trapezoidal channel)
   IF (width(n1) /= 0.0) THEN
     !derivative over velocity
-    ESTIFM(1, NA) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) / 2. * VEL(3, N1)) * VEL(3,N1) * XHT
+    ESTIFM(1, NA) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) / 2. * VEL(3, N1)) * VEL(3,N1)
     !derivative over depth
-    ESTIFM(1, NA+2) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) * VEL(3,N1)) * R * XHT
+    ESTIFM(1, NA+2) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) * VEL(3,N1)) * R
 
   !using polynom approach
   ELSE
@@ -117,11 +109,11 @@ checknodes: DO KK = 1, NCN
     !calculate the cross sectional area
     ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1), ubound (apoly, 3))
     !install derivative of discharge over velocity at current node into local equation 1
-    ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
+    ESTIFM(1, NA) = DIR(N1) * ah(n1)
     !calculate the derivative of the cross sectional area of current node over depth
     dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:12), vel(3, n1), ubound (apoly, 3))
     !install derivative of discharge over depth at current node into local equation 1
-    ESTIFM(1, NA+2) = DIR(N1) * dahdh (n1) * R * XHT
+    ESTIFM(1, NA+2) = DIR(N1) * dahdh (n1) * R
 
   ENDIF
   !install direction dependent discharge of current node into residual error vector; the sum of the in-/outflows must be zero!
@@ -143,9 +135,11 @@ if (imat (NN) == 901) then
     !get local equation number
     NA = (KK - 1) * NDF + 1
     !instal derivatives with respect to (WRT) water depth of reference node and
-    ESTIFM(NA,3)=XHT
-    ESTIFM(NA,NA+2)=-XHT
-    !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
+    ESTIFM (NA, 3) = 1.0
+    ESTIFM (NA, NA + 2) = - 1.0
+
+!FOR MARSH ALGORITHM, NOT OPERATIVE AT THE MOMENT
+  !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
   !  IF (IDNOPT .LT. 0) THEN
   !    HD1 = VEL(3,N1)
   !    CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
@@ -157,12 +151,14 @@ if (imat (NN) == 901) then
   !    WSEL1=AO(N1)+VEL(3,N1)
   !    WSELX=AO(NRX)+VEL(3,NRX)
   !  ENDIF
+!FOR MARSH ALGORITHM, NOT OPERATIVE AT THE MOMENT
+
     !for polynomial approach no marsh-option for the moment!
-    WSEL1=AO(N1)+VEL(3,N1)
-    WSELX=AO(NRX)+VEL(3,NRX)
+    WSEL1 = AO (N1) + VEL (3, N1)
+    WSELX = AO (NRX) + VEL (3, NRX)
 
 
-    F(NA)=XHT*(WSEL1-WSELX)
+    F (NA) = (WSEL1 - WSELX)
   ENDDO checkNodes901
 
 
