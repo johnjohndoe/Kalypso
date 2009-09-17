@@ -1,3 +1,6 @@
+module mod_vegetation
+
+contains
 !     Last change:  WP   28 Jul 2008    7:05 pm
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
@@ -32,7 +35,7 @@
 ! Research Associate
 !
 !
-subroutine get_element_cwr
+subroutine get_element_cwr (m_SimModel)
 !
 !--------------------------------------------------------------------------------------------
 ! Some additional information of relevance:
@@ -49,9 +52,13 @@ subroutine get_element_cwr
 !NiS,apr06: The necessary variables/ arrays, that were declared in common.cfg in Kalypso-2D
 !           are now declared in the modules Blk10mod.module and PARAKalyps.module:
 !include "common.cfg"
+use mod_Model
+
 USE PARAKalyps
 USE Blk10mod
 !-
+!arguments
+type (simulationModel), pointer :: m_SimModel
 
 ! Local variables
 REAL(kind=8), allocatable :: slope (:)  ! Slope of watersurface at node
@@ -75,7 +82,7 @@ allocate (mslope (1:MaxE), meslope (1: MaxE))
 
 ! Main procedure to calculate the slope of the watersurface
 ! for all nodes.
-call GET_NODE_SLOPE(slope, eslope)
+call GET_NODE_SLOPE(slope, eslope, m_SimModel)
 
 ! Initialising of parameters
 DO i=1,ne
@@ -206,7 +213,8 @@ end subroutine get_element_cwr
 
 
 !--------------------------------------------------------------------------------------------
-subroutine GET_NODE_SLOPE(slope, eslope)
+subroutine GET_NODE_SLOPE(slope, eslope, m_SimModel)
+
 !
 ! For each node the slope of the water surface is calculated.
 !
@@ -218,23 +226,33 @@ subroutine GET_NODE_SLOPE(slope, eslope)
 !           and PARAKalyps.module:
 !include "common.cfg"
 !COMMON / raus / rausv (4, mnd), iauslp, iausnpm, zeigma (mnd)
-USE PARAKalyps
-USE Blk10mod
+  use mod_Model
+  use mod_Nodes
+  use mod_Node_DecimalTree
+  use mod_meshModelFE
+USE PARAKalyps, only: rausv
+USE Blk10mod, only: maxp, np, ne, vel, ao, cord, ncorn, nop
 !-
 
+implicit none
 
 
-! Calling variables
+!arguments
 REAL (kind=8) :: slope (1:*)   ! Calculated slope of water surface
 REAL (kind=8) :: eslope (1:*)  ! Calculated slope of energy curve/surface
+type (simulationModel), pointer :: m_SimModel
 
 ! Local variables
+integer (kind = 4) :: nconnect
+
+
 INTEGER :: first_loc		! Neighbour nodes of the flow vector
 INTEGER :: second_loc		! Neighbour nodes of the flow vector
 
 !nis,sep06: Declaring missing variable and overgiving the proper value
 INTEGER                         :: nodecnt
 INTEGER                         :: elcnt
+integer :: node1, node2, node3
 integer (kind = 4) :: length, length2
 
 REAL(kind=8), DIMENSION(1:2)    :: angle_v              ! direction of the actual flow vector
@@ -249,6 +267,10 @@ LOGICAL, allocatable :: marker_slope (:) ! Marker if slope has been calculated (
                                          ! from the neighbouring points in subroutine FILL_SLOPES
 
 INTEGER         		:: i,j,m
+type (node), pointer :: tmpNode => null()
+type (linkedNode), pointer :: neighbNode => null()
+type (node), pointer :: firstNeighb => null()
+type (node), pointer :: secondNeighb => null()
 
 allocate (marker_slope (1: MaxP))
 
@@ -267,7 +289,10 @@ end do
 
 outer: do i = 1, nodecnt
 
-  if (nconnect(i) == 0) CYCLE outer
+  tmpNode => findNodeInMeshByID (m_SimModel.femesh, i)
+  nconnect = noOfNeighbours (tmpNode)
+
+  if (nconnect == 0) CYCLE outer
 
   slope(i) = 0.0
 
@@ -288,15 +313,16 @@ outer: do i = 1, nodecnt
   ! For each neighbour node the angle between the velocity
   ! vector and the vector from point i to neighbour j is
   ! determined
-  inner: do j = 1, nconnect(i)
-
+  neighbNode => tmpNode.neighbourList
+  inner: do j = 1, nconnect
+    !generate vector
     do m = 1,2
-      vector_to_point(m) = cord(neighb(i,j),m) - cord(i,m)
+      vector_to_point(m) = cord(neighbNode.thisNode.ID, m) - cord(tmpNode.ID,m)
     end do
-
     ! Angle between the two vectors
     call GET_ANGLE(angle_v, vector_to_point, angle_delt(j) )
-
+    !next node of neighbours
+    neighbNode => neighbNode.next
   end do inner
 
   ! Detecting the neighbour with the smallest angle (FIRST_LOC) and the neighbour
@@ -304,12 +330,12 @@ outer: do i = 1, nodecnt
   ! If there is no neighbour with an angle with the other sign (e.g. at the
   ! boundary of the mesh) the SECOND_LOC is set to 0.
   ! The slope of this point will not be calculated!
-  call GET_MIN_ANGLE_POINTS(angle_delt, nconnect(i), i, first_loc, second_loc)
+  nullify (firstNeighb, secondNeighb)
+  call GET_MIN_ANGLE_POINTS(angle_delt, nconnect, tmpNode.NeighbourList, firstNeighb, secondNeighb)
 
-  if (second_loc /= 0) then
+  if (associated (secondNeighb)) then
 !nis,dec06: Only the marker_slope of the passed node i is wanted!!!
-    call GET_SLOPE(angle_v, i, neighb(i,first_loc), neighb(i,second_loc), slope, eslope, marker_slope(i))
-!-
+    call GET_SLOPE(angle_v, i, firstNeighb, secondNeighb, slope, eslope, marker_slope(i))
   else
     marker_slope(i) = .false.
   end if
@@ -338,8 +364,10 @@ outer1D: do i = 1, elcnt
     do j = 1,3
       !node, whose slopes shall be calculated
       node2=nop(i,j)
+      tmpNode => findNodeInMeshByID (m_SimModel.femesh, node2)
+      nconnect = noOfNeighbours (tmpNode)
 
-      if (nconnect(node2).gt.5) CYCLE outer1D
+      if (nconnect .gt.5) CYCLE outer1D
 
       if (j.eq.2) then
         !if midside node get the two corner nodes
@@ -362,7 +390,7 @@ end do outer1D
 ! All point that have been marked as not detected (MARKER_SLOPE = .false.)
 ! the slope will be interpolated from the neighbouring points.
 !nis,dec06: Correction of line, replacing mnd with MaxP
-call FILL_SLOPES(nodecnt, slope,eslope, marker_slope)
+call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, m_SimModel.femesh)
 
 
 deallocate (marker_slope)
@@ -424,7 +452,7 @@ end subroutine
 
 
 !--------------------------------------------------------------------------------------
-subroutine GET_MIN_ANGLE_POINTS(angle_delt, anz, nr, first, second)
+subroutine GET_MIN_ANGLE_POINTS(angle_delt, anz, neighbourList, firstNode, secondNode)
 !
 ! The array of the calculated angles to all neighbour nodes ANGLE_DELT is
 ! analysed in this subroutine. The values of ANGLE_DELT are sorted for negative
@@ -439,20 +467,23 @@ subroutine GET_MIN_ANGLE_POINTS(angle_delt, anz, nr, first, second)
 !
 !                                               Wolf Ploeger, Jul 2004
 !--------------------------------------------------------------------------------------
+use mod_Nodes
 
 implicit none
 
-! Calling variables
+!arguments
 REAL(kind=8), DIMENSION(1:100), INTENT(IN)      :: angle_delt
-INTEGER, INTENT(IN)                             :: anz          ! no. of neighbours (nconnect(i)
-INTEGER, INTENT(IN)                             :: nr           ! no. of actual element
-INTEGER, INTENT(OUT)                            :: first        ! node no. of nearest neighbour
-INTEGER, INTENT(OUT)                            :: second       ! node no. of second nearest neighbour
+INTEGER, INTENT(IN)                             :: anz
+type (linkedNode), pointer :: neighbourList
+type (node), pointer :: firstNode    ! node no.ID of nearest neighbour
+type (node), pointer :: secondNode   ! node no ID of second nearest neighbour
 
-! Local variables
-INTEGER 	:: i
-REAL(kind=8) 	:: min_angle_pos, min_angle_neg
-INTEGER         :: min_nr_pos, min_nr_neg
+!local variables
+type (linkedNode), pointer :: tmpNode
+type (node), pointer :: negNode, posNode
+INTEGER :: i, first
+REAL (kind=8) :: min_angle_pos, min_angle_neg
+INTEGER :: min_nr_pos, min_nr_neg
 
 min_nr_pos = 0
 min_nr_neg = 0
@@ -461,43 +492,44 @@ min_angle_pos =  100.0
 min_angle_neg = -100.0
 
 
+!Initialize
+firstNode => null()
+secondNode => null()
+
 ! Two points are detected: The nearest neighbour
 ! with a positiv sign and the nearest neighbour
 ! with a negative sign.
+tmpNode => neighbourList
 do i = 1, anz
-
   if (angle_delt(i) < 0.0) then
-
-    if ( ABS(angle_delt(i)) < ABS(min_angle_neg) ) then
+    if (ABS (angle_delt (i)) < ABS (min_angle_neg) ) then
       min_angle_neg = angle_delt(i)
+      negNode => tmpNode.thisNode
       min_nr_neg = i
-
     end if
-
-  else
-    ! angle_delt(i) => 0.0
-
+  else ! angle_delt(i) => 0.0
     if (angle_delt(i) < min_angle_pos) then
       min_angle_pos = angle_delt(i)
+      posNode => tmpNode.thisNode
       min_nr_pos = i
     end if
-
   end if
-
+  tmpNode => tmpNode.next
 end do
 
-! The detected point with the minimum absolute angle
-! is set to first neighbour!
+!Turn around the order of the first and the second node, depending on the minimum absolute angle
 if (ABS(min_angle_pos) < ABS(min_angle_neg)) then
+  firstNode => posNode
+  secondNode => negNode
   first = min_nr_pos
-  second = min_nr_neg
 else
+  firstNode => negNode
+  secondNode => posNode
   first = min_nr_neg
-  second = min_nr_pos
 end if
 
 if (ABS(angle_delt(first)) < 0.0001) then
-  second = 0
+  secondNode => null()
 end if
 
 end subroutine GET_MIN_ANGLE_POINTS
@@ -505,7 +537,7 @@ end subroutine GET_MIN_ANGLE_POINTS
 
 
 !----------------------------------------------------------------------------------------
-subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope)
+subroutine FILL_SLOPES (nodecnt, slope, eslope, marker_slope, FE_Mesh)
 !
 ! For some nodes the slope could not be detected directly (e.g. if the node is dry).
 ! To have a completely filled array of slopes for each node of the mesh, the slope of the
@@ -515,23 +547,29 @@ subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope)
 !----------------------------------------------------------------------------------------
 
 !nis,jan07: For checking, whether nodes are active, the coordinates must be present
-USE blk10mod
-use parakalyps
-!-
+USE blk10mod, only: cord
+use parakalyps, only: ispolynomnode
+use mod_Nodes
+use mod_meshModelFE
 
 implicit none
 
-! Calling variables
+!arguments
 INTEGER, INTENT(IN)  :: nodecnt
-
 REAL(kind=8), INTENT(INOUT) :: slope (1:*)
 REAL(kind=8), INTENT(INOUT) :: eslope (1:*)
-
 LOGICAL, INTENT (INOUT) :: marker_slope (1:*)
+type (femesh), pointer :: fe_mesh
 
-! Local variables
-INTEGER      :: i, j, anz, temp_anz
-REAL(kind=8) :: temp_slope, temp_eslope
+!local variables
+INTEGER :: i, j, anz, temp_anz
+integer :: nconnect
+REAL (kind=8) :: temp_slope, temp_eslope
+type (linkedNode), pointer :: neighbourNode
+type (node), pointer :: tmpNode
+
+tmpNode => null()
+neighbourNode => null()
 
 anz = 0
 
@@ -555,7 +593,7 @@ numbertest: do i = 1, nodecnt
   endif
 
   !all other nodes, that have no slope yet and have a number of neighbours are counted
-  if (.not. marker_slope(i) .and. nconnect(i) /= 0) then
+  if (.not. marker_slope(i) .and. nconnect /= 0) then
 	    anz = anz + 1
   else
     continue
@@ -585,11 +623,9 @@ eliminate: do
   if (anz == 0) exit eliminate
 
   all_nodes: do i = 1, nodecnt
-
-    !nis,dec06,testing
-    !WRITE(*,*)'Knoten: ',i
-    !WRITE(*,*)'marker: ', marker_slope(i)
-    !-
+  
+    tmpNode => findNodeInMeshByID (FE_Mesh, i)
+    nconnect = noOfNeighbours (tmpNode)
 
     if (marker_slope(i)) CYCLE all_nodes
 
@@ -598,17 +634,15 @@ eliminate: do
      temp_slope = 0.0
      temp_eslope= 0.0
 
-     all_neighb: do j = 1, nconnect(i)
-       !nis,oct06,testing:
-       !WRITE(*,*)'nachbarn: ', nconnect(i)
-       !WRITE(*,*)'Nachbar: ', neighb(i,j), marker_slope(neighb(i,j))
-       !-
-       if ( marker_slope(neighb(i,j)) .and. (.not. IsPolynomNode (neighb (i, j)))) then
+     neighbourNode => tmpNode.neighbourList
+     all_neighb: do j = 1, nconnect
+       if ( marker_slope(NeighbourNode.thisNode.ID) .and. (.not. IsPolynomNode (NeighbourNode.thisNode.ID))) then
          temp_anz   = temp_anz + 1
-         temp_slope = temp_slope + slope(neighb(i,j))
-         temp_eslope = temp_eslope + eslope(neighb(i,j))
+         temp_slope = temp_slope + slope(NeighbourNode.thisNode.ID)
+         temp_eslope = temp_eslope + eslope(NeighbourNode.thisNode.ID)
        end if
 
+       neighbourNode => neighbourNode.next
      end do all_neighb
 
      ! Interpolated value will only be applied
@@ -654,13 +688,14 @@ end subroutine FILL_SLOPES
 !COMMON / raus / rausv (4, mnd), iauslp, iausnpm, zeigma (mnd)
 USE PARAKalyps
 USE Blk10mod
+use mod_Nodes
 !-
 
 ! Calling variables
 REAL(kind=8), DIMENSION(1:2), INTENT(IN) 	:: angle_v	! Velocity vector
 INTEGER, INTENT(IN) :: pn      	! Point of velocity vector
-INTEGER, INTENT(IN) :: first_neighb	! First neighbour to calculated cross-point.
-INTEGER, INTENT(IN) :: second_neighb! Second neighbour to calculated cross-point.
+type (node), pointer :: first_neighb	! First neighbour to calculated cross-point.
+type (node), pointer :: second_neighb   ! Second neighbour to calculated cross-point.
 !NiS,apr06: changing mnd to MaxP
 REAL(kind=8), INTENT(OUT) :: slope (1:*)       ! Slope to be calculated
 REAL(kind=8), INTENT(OUT) :: eslope (1:*)      ! Energy-Slope to be calculated
@@ -701,11 +736,11 @@ he_pn = rausv(3,pn) + ((v_pn**2)/(2*9.81))
 ! -------
 ! The vector is heading exactly towards point FIRST_NEIGHB
 ! SECOND_NEIGHB is set to 0 in subroutine GET_MIN_ANGLE_POINTS.
-if (second_neighb == 0) then
-  cross_v    = SQRT(rausv(1,first_neighb)**2 + rausv(2,first_neighb)**2)
-  d_cross_pn = SQRT( (cord(first_neighb,1) - cord(pn,1))**2 + (cord(first_neighb,2) - cord(pn,2))**2 )
-  slope(pn)  = ABS( (rausv(3,first_neighb) - rausv(3,pn)) / d_cross_pn )
-  he_cross   = rausv(3,first_neighb) + ((cross_v**2)/(2*9.81))
+if (second_neighb.ID == 0) then
+  cross_v    = SQRT(rausv(1,first_neighb.ID)**2 + rausv(2,first_neighb.ID)**2)
+  d_cross_pn = SQRT( (cord(first_neighb.ID,1) - cord(pn,1))**2 + (cord(first_neighb.ID,2) - cord(pn,2))**2 )
+  slope(pn)  = ABS( (rausv(3,first_neighb.ID) - rausv(3,pn)) / d_cross_pn )
+  he_cross   = rausv(3,first_neighb.ID) + ((cross_v**2)/(2*9.81))
   eslope(pn) = ABS( (he_pn - he_cross) / d_cross_pn )
 !nis,dec06: Detected error, because line just counts for one node, by the way: only one value is needed in this subroutine
 !  marker_slope = .true.
@@ -720,7 +755,7 @@ end if
 ! Flow depth of at point FIRST_NEIGHB or SECOND_NEIGHB is very small
 ! e.g. the node is about to fall dry or rewet or the node is dry.
 ! => No slope will be calculated.
-if (vel(3,first_neighb) < 0.01 .or. vel(3,second_neighb) < 0.01) then
+if (vel(3,first_neighb.ID) < 0.01 .or. vel(3,second_neighb.ID) < 0.01) then
   slope(pn) = 0.0
   eslope(pn)= 0.0
 !nis,dec06: Only one value is needed in this subroutine
@@ -768,10 +803,10 @@ ax = cord(pn,1)
 ay = cord(pn,2)
 bx = angle_v(1)
 by = angle_v(2)
-cx = cord(first_neighb,1)
-cy = cord(first_neighb,2)
-dx = cord(second_neighb,1) - cord(first_neighb,1)
-dy = cord(second_neighb,2) - cord(first_neighb,2)
+cx = cord(first_neighb.ID,1)
+cy = cord(first_neighb.ID,2)
+dx = cord(second_neighb.ID,1) - cord(first_neighb.ID,1)
+dy = cord(second_neighb.ID,2) - cord(first_neighb.ID,2)
 
 a(1,1) = bx
 a(1,2) = -dx
@@ -804,25 +839,25 @@ cross_y = ay + X(1) * by
 ! -------------------------------------------
 
 ! Difference of water-level elevation between first- and second_neighb.
-h_1_2 = rausv(3,first_neighb) - rausv(3,second_neighb)
+h_1_2 = rausv(3,first_neighb.ID) - rausv(3,second_neighb.ID)
 
 ! Difference of velocity between first- and second_neighb.
-v_1   = SQRT(rausv(1, first_neighb)**2 + rausv(2,first_neighb)**2)
-v_2   = SQRT(rausv(1, second_neighb)**2 + rausv(2,second_neighb)**2)
+v_1   = SQRT(rausv(1, first_neighb.ID)**2 + rausv(2,first_neighb.ID)**2)
+v_2   = SQRT(rausv(1, second_neighb.ID)**2 + rausv(2,second_neighb.ID)**2)
 v_1_2 = v_1 - v_2
 
 ! Distance between first- and second_neighb.
-temp1 = (cord(second_neighb,1) - cord(first_neighb,1))**2
-temp2 = (cord(second_neighb,2) - cord(first_neighb,2))**2
+temp1 = (cord(second_neighb.ID,1) - cord(first_neighb.ID,1))**2
+temp2 = (cord(second_neighb.ID,2) - cord(first_neighb.ID,2))**2
 d_1_2 = SQRT(temp1 + temp2)
 
 ! Distance between cross point and second_neighb.
-temp1 = (cross_x - cord(second_neighb,1))**2
-temp2 = (cross_y - cord(second_neighb,2))**2
+temp1 = (cross_x - cord(second_neighb.ID,1))**2
+temp2 = (cross_y - cord(second_neighb.ID,2))**2
 d_cross_2 = SQRT(temp1 + temp2)
 
 ! Elevation at cross point
-cross_h = h_1_2 * (d_cross_2/d_1_2) + rausv(3,second_neighb)
+cross_h = h_1_2 * (d_cross_2/d_1_2) + rausv(3,second_neighb.ID)
 
 ! Velocity at cross point
 cross_v = v_1_2 * (d_cross_2/d_1_2) + v_2
@@ -985,9 +1020,9 @@ REAL :: Fr2     = 0.0          ! Froudenumber 2
 REAL :: delta_cw= 0.0          ! Delta C_W
 REAL :: nu_10 	= 0.0          ! viscosity of water for 10 degrees.
 
-REAL :: GET_CW_UN
-REAL :: GET_A_NL
-REAL :: GET_A_NB
+!REAL :: GET_CW_UN
+!REAL :: GET_A_NL
+!REAL :: GET_A_NB
 
 INTEGER :: i, j
 
@@ -1471,3 +1506,4 @@ END subroutine cwr_read
 
 
 
+end module

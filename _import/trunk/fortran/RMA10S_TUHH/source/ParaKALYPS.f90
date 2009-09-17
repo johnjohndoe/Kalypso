@@ -40,8 +40,7 @@ real (kind = 8), allocatable, dimension (:) :: correctionks, correctionaxay, cor
 !node informations
 !-----------------
 logical, allocatable, dimension (:)              :: intpolprof, ispolynomnode
-integer (kind = 4), allocatable, dimension (:)   :: nconnect
-integer (kind = 4), allocatable, dimension (:,:) :: neighb, neighprof
+integer (kind = 4), allocatable, dimension (:,:) :: neighprof
 real (kind = 8), allocatable, dimension (:)      :: kmweight
 integer (kind = 4), allocatable, dimension (:,:) :: isnodeofelement
 !meaning of the variables
@@ -52,8 +51,6 @@ integer (kind = 4), allocatable, dimension (:,:) :: isnodeofelement
 !ispolynomnode    switch for type of 1D node
 !                 .t. - 1D-node described via polynomials
 !                 .f. - 1D-node described via geometry definition (trapezoidal approach)
-!nconnect         number of connected nodes to another node
-!neighb           stores the IDs of the nodes that are connected to a certain node
 !neighprof        stores the two neighbouring original profiles' flow kilometers to an interpolated node
 !kmweight         stores the weighted influence of two neighbouring original nodes to interpolated ones via the distance
 !isnodeofelement  stores all element IDs, where a node is inside; restriction is that nodes are having maximum 12 elements, where they are part of
