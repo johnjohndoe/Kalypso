@@ -133,7 +133,7 @@ public class Restart1DImporter
       final IStepResultMeta stepResultMeta = createStepResult( calcUnitResult, calcName );
       final IDocumentResultMeta vectorDocument = createDocument( projectName, calcName, stepResultMeta );
 
-      /* create the real folder, if necessairy */
+      /* create the real folder, if necessary */
       final IPath fullPath = stepResultMeta.getFullPath();
       final IFolder stepFolder = m_scenarioFolder.getFolder( fullPath );
       FolderUtilities.mkdirs( stepFolder );
@@ -276,7 +276,7 @@ public class Restart1DImporter
       }
     }
 
-    // TODO: message box if this document was already existant?
+    // TODO: message box if this document was already existent?
     return ResultMeta1d2dHelper.addDocument( stepResultMeta, "vektoren", description, DOCUMENTTYPE.nodes, Path.fromPortableString( "results.gml" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
