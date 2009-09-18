@@ -49,13 +49,22 @@ import java.util.ResourceBundle;
  */
 public class Messages
 {
-
   private static final String BUNDLE_NAME = "org.kalypso.model.wspm.core.i18n.messages"; //$NON-NLS-1$
+
+  private static final Object[] NO_ARGS = new Object[0];
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
   private Messages( )
   {
+  }
+
+/*
+ * java reflections needs this method-signatur
+ */
+  public static String getString( final String key )
+  {
+    return getString( key, NO_ARGS );
   }
 
   public static String getString( final String key, final Object... args )
