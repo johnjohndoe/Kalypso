@@ -54,8 +54,18 @@ public class Messages
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
+  private static final Object[] NO_ARGS = new Object[0];
+
   private Messages( )
   {
+  }
+
+/*
+ * java reflections needs this method-signatur
+ */
+  public static String getString( final String key )
+  {
+    return getString( key, NO_ARGS );
   }
 
   public static String getString( final String key, final Object... args )
