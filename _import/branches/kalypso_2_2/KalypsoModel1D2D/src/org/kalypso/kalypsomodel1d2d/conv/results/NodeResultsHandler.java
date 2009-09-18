@@ -51,6 +51,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -785,7 +786,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         for( final GM_SurfacePatch surfacePatch : element )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
-          feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, ring );
+          feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, Arrays.copyOf( ring, 3) );
         }
       }
     }
