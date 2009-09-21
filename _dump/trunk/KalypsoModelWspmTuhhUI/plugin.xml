@@ -289,7 +289,7 @@
 					</with>
 					<!--reference definitionId="mapContext" /-->
 					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+						<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
 					</with>
 				</and>
 			</visibleWhen>
@@ -309,7 +309,7 @@
 			<and>
 				<!--reference definitionId="mapContext" /-->
 				<with variable="activeMapPanel">
-					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
 				</with>
 			</and>
 		</enabledWhen>
