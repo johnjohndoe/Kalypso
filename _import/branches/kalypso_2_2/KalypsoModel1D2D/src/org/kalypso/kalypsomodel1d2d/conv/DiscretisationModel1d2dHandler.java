@@ -243,7 +243,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       // this means that in .2d file several nodes with different IDs have the same coords!
       // What to do?
       // For the moment, we will assume that it is the same node
-      Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "Multiple nodes with the same coordinates found. " + node.getPoint().toString() );
+      Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.3", node.getPoint().toString() )); //$NON-NLS-1$
       return;
     }
 

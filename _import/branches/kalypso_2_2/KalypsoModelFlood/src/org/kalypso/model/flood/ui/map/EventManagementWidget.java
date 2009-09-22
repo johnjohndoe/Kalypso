@@ -554,11 +554,11 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     try
     {
       final UserStyle[] styles = runoffEventTheme.getStyles();
-      final UserStyle style = findUserStyle( styles, Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.0") ); //$NON-NLS-1$
+      final UserStyle style = findUserStyle( styles, "wspUserStyle") ; //$NON-NLS-1$
       if( style != null )
       {
 
-        final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.1") ); //$NON-NLS-1$
+        final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" ); //$NON-NLS-1$
         final Rule wspRule = wspFts.getRule( "wspRule" ); //$NON-NLS-1$
         final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
         return symb.getColorMap();
