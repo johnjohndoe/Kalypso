@@ -578,22 +578,26 @@ anz = 0
 !nis,jan07: Naming this loop
 !do i = 1, nodecnt
 numbertest: do i = 1, nodecnt
-  !nis,jan07: There might be dead nodes within the network. Their coordinates are initialized by -1e20. These nodes have to be cycled.
-  if (cord(i,1) .lt. (-0.5E20) .and. cord(i,2) .lt. (-0.5E20)) then
-    !Those nodes shouldn't be a hindrance factor, so give them attribute 'has slope = true'
-    marker_slope(i) = .True.
-    !anz shouldn't be increased
-    CYCLE numbertest
-  END if
 
-  !nis,may08: Mark 1D nodes as having a slope
+  !dead nodes within the network (their coordinates are initialized by -1e20) have to be ignored
+  if (cord(i,1) .lt. (-0.5E20) .and. cord(i,2) .lt. (-0.5E20)) then
+    !mark dead nodes as processed
+    marker_slope(i) = .True.
+    cycle numbertest
+  end if
+
+  !mark 1D nodes as having a slope
   if (IsPolynomNode (i)) then
     marker_slope (i) = .true.
     CYCLE numbertest
   endif
 
+  tmpNode => findNodeInMeshByID (fe_mesh, i)
+  nconnect = noOfNeighbours (tmpNode)
+
   !all other nodes, that have no slope yet and have a number of neighbours are counted
   if (.not. marker_slope(i) .and. nconnect /= 0) then
+  
 	    anz = anz + 1
   else
     continue

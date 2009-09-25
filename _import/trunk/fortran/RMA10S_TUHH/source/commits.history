@@ -1426,3 +1426,8 @@ new features introduced/ started to be introduced:
       (added module: Mod_Node_DecimalTree.f90 in folder modules_Components_general)
 
 --- Nico Schrage, 17.09.2009
+
+145.) Bugfix in fill_slopes; when checking the nodes without slope, the current node must first be taken from the mesh before dealing with the neighbours
+      (affects: Pasche_trees.f90)
+
+--- Nico Schrage, 25.09.2009
