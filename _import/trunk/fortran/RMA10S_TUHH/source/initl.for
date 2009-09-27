@@ -851,10 +851,10 @@ CIPK MAR01
 
       !EFa Nov06, allocating für Teschke-1D-Elemente
       !polynom coefficients
-      ALLOCATE (apoly      (1: MaxPolyA, 1: maxp, 0:12))
-      ALLOCATE (qpoly      (1: MaxPolyQ, 1: maxp, 0:12))
-      ALLOCATE (alphapoly  (1: MaxPolyB, 1: maxp, 0:12))
-      ALLOCATE (betapoly   (1: MaxPolyB, 1: maxp, 0:12))
+      ALLOCATE (apoly      (1: MaxPolyA, 1: maxp, 0:4))
+      ALLOCATE (qpoly      (1: MaxPolyQ, 1: maxp, 0:4))
+      ALLOCATE (alphapoly  (1: MaxPolyB, 1: maxp, 0:4))
+      ALLOCATE (betapoly   (1: MaxPolyB, 1: maxp, 0:4))
       WRITE(*,*) maxpolya, maxpolyq, maxpolyb
       ALLOCATE (polyrangeA (1: maxp, 1: MaxPolyA))
       ALLOCATE (polyrangeQ (1: maxp, 1: MaxPolyQ))
@@ -881,19 +881,19 @@ CIPK MAR01
         !polynom coefficients
         do p = 1, MaxPolyA
           polyrangeA (i, p) = 0.0
-          DO j = 0, 12
+          DO j = 0, 4
             apoly (p, i, j) = 0.0
           enddo
         enddo
         do p = 1, MaxPolyQ
           polyrangeQ (i, p) = 0.0
-          DO j = 0, 12
+          DO j = 0, 4
             qpoly (p, i, j) = 0.0
           enddo
         enddo
         do p = 1, MaxPolyB
           polyrangeB (i, p) = 0.0
-          DO j = 0, 12
+          DO j = 0, 4
             alphapoly (p, i, j) = 0.0
             betapoly  (p, i, j) = 0.0
           enddo

@@ -107,11 +107,11 @@ checknodes: DO KK = 1, NCN
     !get position in polynomial for current node with present water stage
     PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1), PolySplitsA (n1), cord(n1, 1), cord (n1, 2), n1)
     !calculate the cross sectional area
-    ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1), ubound (apoly, 3))
+    ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:4), vel (3, n1), ubound (apoly, 3))
     !install derivative of discharge over velocity at current node into local equation 1
     ESTIFM(1, NA) = DIR(N1) * ah(n1)
     !calculate the derivative of the cross sectional area of current node over depth
-    dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:12), vel(3, n1), ubound (apoly, 3))
+    dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:4), vel(3, n1), ubound (apoly, 3))
     !install derivative of discharge over depth at current node into local equation 1
     ESTIFM(1, NA+2) = DIR(N1) * dahdh (n1) * R
 
@@ -185,12 +185,12 @@ ELSEIF (imat (nn) == 903) then
   nry = nop (nn, 2)
 
   PolyPos = findPolynom (PolyRangeA (nrx, :), vel(3, nrx), PolySplitsA (nrx), cord (nrx, 1), cord (nrx, 2), nrx)
-  acx = calcPolynomial (apoly (PolyPos, nrx, 0:12), vel (3, nrx), ubound (apoly, 3))
-  wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:12), vel(3, nrx), ubound (apoly, 3))
+  acx = calcPolynomial (apoly (PolyPos, nrx, 0:4), vel (3, nrx), ubound (apoly, 3))
+  wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:4), vel(3, nrx), ubound (apoly, 3))
 
   PolyPos = findPolynom (PolyRangeA (nry, :), vel(3, nry), PolySplitsA (nry), cord (nry, 1), cord (nry, 2), nry)
-  acy = calcPolynomial (apoly (PolyPos, nry, 0:12), vel (3, nry), ubound (apoly, 3))
-  wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:12), vel(3, nry), ubound (apoly, 3))
+  acy = calcPolynomial (apoly (PolyPos, nry, 0:4), vel (3, nry), ubound (apoly, 3))
+  wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:4), vel(3, nry), ubound (apoly, 3))
 
   rx = vel (1, nrx) * COS (ALFA (nrx)) + vel (2, nrx) * SIN (ALFA (nrx))
   ry = vel (1, nry) * COS (ALFA (nry)) + vel (2, nry) * SIN (ALFA (nry))

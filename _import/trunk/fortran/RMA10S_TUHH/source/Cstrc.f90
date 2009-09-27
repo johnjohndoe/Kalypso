@@ -50,12 +50,12 @@ if (width(nop(nn,1)) == 0.0) then
   PolyPos(2) = findPolynom (PolyRangeA (nop (nn, 3), :), vel (3, nop(nn, 3)), PolySplitsA (nop (nn, 3)), cord (nop (nn,3), 1), cord (nop (nn,3), 2), nop (nn, 3))
 
   !A(h)
-  ah (nop (nn, 1)) = calcPolynomial (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)), ubound (apoly, 3))
-  ah (nop (nn, 3)) = calcPolynomial (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)), ubound (apoly, 3))
+  ah (nop (nn, 1)) = calcPolynomial (apoly (PolyPos (1), nop (nn, 1), 0:4), vel (3, nop (nn, 1)), ubound (apoly, 3))
+  ah (nop (nn, 3)) = calcPolynomial (apoly (PolyPos (2), nop (nn, 3), 0:4), vel (3, nop (nn, 3)), ubound (apoly, 3))
 
   !dA(h)/dh
-  dahdh (nop (nn, 1)) = calcPolynomial1stDerivative (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)), ubound (apoly, 3))
-  dahdh (nop (nn, 3)) = calcPolynomial1stDerivative (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)), ubound (apoly, 3))
+  dahdh (nop (nn, 1)) = calcPolynomial1stDerivative (apoly (PolyPos (1), nop (nn, 1), 0:4), vel (3, nop (nn, 1)), ubound (apoly, 3))
+  dahdh (nop (nn, 3)) = calcPolynomial1stDerivative (apoly (PolyPos (2), nop (nn, 3), 0:4), vel (3, nop (nn, 3)), ubound (apoly, 3))
 else
   
   !A(h)

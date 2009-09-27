@@ -271,14 +271,14 @@ do i = 1, 3, 2
   !Check, whether all necessary parameters are given
   !A-Polynom test
   PolyTest = 3
-  ACheck: do j = 0, 12
+  ACheck: do j = 0, 4
     if (apoly (1, n1, j) /= 0.0) then
       PolyTest = PolyTest - 1
       exit ACheck
     endif
   ENDDO ACheck
   !QSch-Polynom test
-  QCheck: do j = 0, 12
+  QCheck: do j = 0, 4
     if (qpoly(1, n1, j) /= 0.0) then
       PolyTest = PolyTest - 2
       exit Qcheck
@@ -457,11 +457,11 @@ if (ntx == 1) then
 
     if (.not. IntPolProf (n)) then
       !A(h)
-      ah(n)    = CalcPolynomial (apoly (PPA (1), n, 0:12), h, ubound (apoly, 3))
+      ah(n)    = CalcPolynomial (apoly (PPA (1), n, 0:4), h, ubound (apoly, 3))
     else
       !A(h)
-      ah(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (apoly (PPA (1), NeighProf (n, 1), 0: 12), h, ubound (apoly, 3)) &
-               & +        kmWeight (n)  * CalcPolynomial (apoly (PPA (2), NeighProf (n, 2), 0: 12), h, ubound (apoly, 3))
+      ah(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (apoly (PPA (1), NeighProf (n, 1), 0: 4), h, ubound (apoly, 3)) &
+               & +        kmWeight (n)  * CalcPolynomial (apoly (PPA (2), NeighProf (n, 2), 0: 4), h, ubound (apoly, 3))
     endif
 
     !Check for critical/ subcritical discharge
@@ -493,7 +493,7 @@ if (ntx == 1) then
       end if
 
       !dA(h)/dh
-      dahdh(n)  = dahdh (n) + LocalWeight * calcPolynomial1stDerivative (apoly (PPA (j), nod, 0:12), vel(3, n), ubound (apoly, 3))
+      dahdh(n)  = dahdh (n) + LocalWeight * calcPolynomial1stDerivative (apoly (PPA (j), nod, 0:4), vel(3, n), ubound (apoly, 3))
 
     end do
   enddo
@@ -625,8 +625,8 @@ Gaussloop: DO I = 1, NGP
       aint1(i)   = 0.0D0
       aint2(i)   = 0.0D0
     end if
-    aint1(i) = aint1(i) + WeightN1 * CalcPolynomial (apoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (apoly, 3))
-    aint2(i) = aint2(i) + WeightN3 * CalcPolynomial (apoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (apoly, 3))
+    aint1(i) = aint1(i) + WeightN1 * CalcPolynomial (apoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (apoly, 3))
+    aint2(i) = aint2(i) + WeightN3 * CalcPolynomial (apoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (apoly, 3))
     if (k == 2) areaint(i) = xm(1) * aint1(i) + xm(2) * aint2(i)
 
     !Integration of A over h at GP
@@ -634,8 +634,8 @@ Gaussloop: DO I = 1, NGP
       inta1(i) = 0.0D0
       inta2(i) = 0.0D0
     end if
-    inta1(i) = inta1(i) + WeightN1 * CalcPolynomialIntegral (apoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (apoly, 3))
-    inta2(i) = inta2(i) + WeightN3 * CalcPolynomialIntegral (apoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (apoly, 3))
+    inta1(i) = inta1(i) + WeightN1 * CalcPolynomialIntegral (apoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (apoly, 3))
+    inta2(i) = inta2(i) + WeightN3 * CalcPolynomialIntegral (apoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (apoly, 3))
     if (k == 2) Intareaint(i) = xm(1) * inta1(i) + xm(2) * inta2(i)
 
     !dA/dt at GP
@@ -644,8 +644,8 @@ Gaussloop: DO I = 1, NGP
       daintdh1(i) = 0.0D0
       daintdh2(i) = 0.0D0
     end if
-    daintdh1(i)   = daintdh1(i) + WeightN1 * calcPolynomial1stDerivative (apoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (apoly, 3))
-    daintdh2(i)   = daintdh2(i) + WeightN3 * calcPolynomial1stDerivative (apoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (apoly, 3))
+    daintdh1(i)   = daintdh1(i) + WeightN1 * calcPolynomial1stDerivative (apoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (apoly, 3))
+    daintdh2(i)   = daintdh2(i) + WeightN3 * calcPolynomial1stDerivative (apoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (apoly, 3))
     if (k == 2) dareaintdh(i) = xm(1) * daintdh1(i) +  xm(2) * daintdh2(i)
 
     !d2A/dh2 at GP
@@ -653,8 +653,8 @@ Gaussloop: DO I = 1, NGP
       d2aintdh1(i) = 0.0D0
       d2aintdh2(i) = 0.0D0
     end if
-    d2aintdh1(i)   = d2aintdh1(i) + WeightN1 * calcPolynomial2ndDerivative (apoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (apoly, 3))
-    d2aintdh2(i)   = d2aintdh2(i) + WeightN3 * calcPolynomial2ndDerivative (apoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (apoly, 3))
+    d2aintdh1(i)   = d2aintdh1(i) + WeightN1 * calcPolynomial2ndDerivative (apoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (apoly, 3))
+    d2aintdh2(i)   = d2aintdh2(i) + WeightN3 * calcPolynomial2ndDerivative (apoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (apoly, 3))
     if (k == 2) d2areaintdh(i) = xm(1) * d2aintdh1(i) +  xm(2) * d2aintdh2(i)
 
     if (k == 2) then
@@ -686,8 +686,8 @@ Gaussloop: DO I = 1, NGP
       qschint1(i) = 0.0D0
       qschint2(i) = 0.0D0
     end if
-    qschint1(i) = qschint1(i) + WeightN1 * CalcPolynomial (qpoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (qpoly, 3))
-    qschint2(i) = qschint2(i) + WeightN3 * CalcPolynomial (qpoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (qpoly, 3))
+    qschint1(i) = qschint1(i) + WeightN1 * CalcPolynomial (qpoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (qpoly, 3))
+    qschint2(i) = qschint2(i) + WeightN3 * CalcPolynomial (qpoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (qpoly, 3))
     if (k == 2) qschint(i) = xm(1) * qschint1(i) + xm(2) * qschint2(i)
 
     !dQSch/dh at GP
@@ -695,8 +695,8 @@ Gaussloop: DO I = 1, NGP
       dqsintdh1(i) = 0.0D0
       dqsintdh2(i) = 0.0D0
     end if
-    dqsintdh1(i) = dqsintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (qpoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (qpoly, 3))
-    dqsintdh2(i) = dqsintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (qpoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (qpoly, 3))
+    dqsintdh1(i) = dqsintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (qpoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (qpoly, 3))
+    dqsintdh2(i) = dqsintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (qpoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (qpoly, 3))
     if (k == 2) dqsintdh(i) = xm(1) * dqsintdh1(i) + xm(2) * dqsintdh2(i)
 
     !d2QSch/dh2 at GP
@@ -704,8 +704,8 @@ Gaussloop: DO I = 1, NGP
      d2qsidh1(i) = 0.0D0
      d2qsidh2(i) = 0.0D0
     end if
-    d2qsidh1(i) = d2qsidh1(i) + WeightN1 * CalcPolynomial2ndDerivative (qpoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (qpoly, 3))
-    d2qsidh2(i) = d2qsidh2(i) + WeightN3 * CalcPolynomial2ndDerivative (qpoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (qpoly, 3))
+    d2qsidh1(i) = d2qsidh1(i) + WeightN1 * CalcPolynomial2ndDerivative (qpoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (qpoly, 3))
+    d2qsidh2(i) = d2qsidh2(i) + WeightN3 * CalcPolynomial2ndDerivative (qpoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (qpoly, 3))
     if (k == 2) d2qsidh(i) = xm(1) * d2qsidh1(i) + xm(2) * d2qsidh2(i)
 
     if (k == 2) then
@@ -750,8 +750,8 @@ Gaussloop: DO I = 1, NGP
         beiint1(i) = 0.0D0
         beiint2(i) = 0.0D0
       ENDIF
-      beiint1(i) = beiint1(i) + WeightN1 * CalcPolynomial (Alphapoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (Alphapoly, 3))
-      beiint2(i) = beiint2(i) + WeightN3 * CalcPolynomial (Alphapoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (Alphapoly, 3))
+      beiint1(i) = beiint1(i) + WeightN1 * CalcPolynomial (Alphapoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (Alphapoly, 3))
+      beiint2(i) = beiint2(i) + WeightN3 * CalcPolynomial (Alphapoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (Alphapoly, 3))
       IF (k == 2) beiint(i) = xm(1) * beiint1(i) + xm(2) * beiint2(i)
 
       !dbeta/dh at GP
@@ -759,8 +759,8 @@ Gaussloop: DO I = 1, NGP
         dbeiintdh1(i) = 0.0D0
         dbeiintdh2(i) = 0.0D0
       ENDIF
-      dbeiintdh1(i) = dbeiintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (Alphapoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (Alphapoly, 3))
-      dbeiintdh2(i) = dbeiintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (Alphapoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (Alphapoly, 3))
+      dbeiintdh1(i) = dbeiintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (Alphapoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (Alphapoly, 3))
+      dbeiintdh2(i) = dbeiintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (Alphapoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (Alphapoly, 3))
       if (k == 2) dbeiintdh(i) = xm(1) * dbeiintdh1(i) + xm(2) * dbeiintdh2(i)
 
       !d2beta/dh2 at GP
@@ -768,8 +768,8 @@ Gaussloop: DO I = 1, NGP
        d2beiintdh1(i) = 0.0D0
        d2beiintdh2(i) = 0.0D0
       ENDIF
-      d2beiintdh1(i) = d2beiintdh1(i) + WeightN1 * CalcPolynomial2ndDerivative (Alphapoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (Alphapoly, 3))
-      d2beiintdh2(i) = d2beiintdh2(i) + WeightN3 * CalcPolynomial2ndDerivative (Alphapoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (Alphapoly, 3))
+      d2beiintdh1(i) = d2beiintdh1(i) + WeightN1 * CalcPolynomial2ndDerivative (Alphapoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (Alphapoly, 3))
+      d2beiintdh2(i) = d2beiintdh2(i) + WeightN3 * CalcPolynomial2ndDerivative (Alphapoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (Alphapoly, 3))
       IF (k == 2) d2beiintdh(i) = xm(1) * d2beiintdh1(i) + xm(2) * d2beiintdh2(i)
 
       !derivatives over dx
@@ -793,8 +793,8 @@ Gaussloop: DO I = 1, NGP
         beiint1(i) = 0.0D0
         beiint2(i) = 0.0D0
       ENDIF
-      beiint1(i) = beiint1(i) + WeightN1 * CalcPolynomial (Betapoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (Betapoly, 3))
-      beiint2(i) = beiint2(i) + WeightN3 * CalcPolynomial (Betapoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (Betapoly, 3))
+      beiint1(i) = beiint1(i) + WeightN1 * CalcPolynomial (Betapoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (Betapoly, 3))
+      beiint2(i) = beiint2(i) + WeightN3 * CalcPolynomial (Betapoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (Betapoly, 3))
       IF (k == 2) beiint(i) = xm(1) * beiint1(i) + xm(2) * beiint2(i)
 
       !dbeta/dh at GP
@@ -802,8 +802,8 @@ Gaussloop: DO I = 1, NGP
         dbeiintdh1(i) = 0.0D0
         dbeiintdh2(i) = 0.0D0
       ENDIF
-      dbeiintdh1(i) = dbeiintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (Betapoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (Betapoly, 3))
-      dbeiintdh2(i) = dbeiintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (Betapoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (Betapoly, 3))
+      dbeiintdh1(i) = dbeiintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (Betapoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (Betapoly, 3))
+      dbeiintdh2(i) = dbeiintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (Betapoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (Betapoly, 3))
       IF (k == 2) dbeiintdh(i) = xm(1) * dbeiintdh1(i) + xm(2) * dbeiintdh2(i)
 
       !d2beta/dh2 at GP
@@ -811,8 +811,8 @@ Gaussloop: DO I = 1, NGP
        d2beiintdh1(i) = 0.0D0
        d2beiintdh2(i) = 0.0D0
       ENDIF
-      d2beiintdh1(i) = d2beiintdh1(i) + WeightN1 * CalcPolynomial2ndDerivative (Betapoly (PP(1), RefNodeN1, 0:12), hhint(i), ubound (Betapoly, 3))
-      d2beiintdh2(i) = d2beiintdh2(i) + WeightN3 * CalcPolynomial2ndDerivative (Betapoly (PP(2), RefNodeN3, 0:12), hhint(i), ubound (Betapoly, 3))
+      d2beiintdh1(i) = d2beiintdh1(i) + WeightN1 * CalcPolynomial2ndDerivative (Betapoly (PP(1), RefNodeN1, 0:4), hhint(i), ubound (Betapoly, 3))
+      d2beiintdh2(i) = d2beiintdh2(i) + WeightN3 * CalcPolynomial2ndDerivative (Betapoly (PP(2), RefNodeN3, 0:4), hhint(i), ubound (Betapoly, 3))
       IF (k == 2) d2beiintdh(i) = xm(1) * d2beiintdh1(i) + xm(2) * d2beiintdh2(i)
 
       !derivatives over dx
@@ -857,21 +857,21 @@ Gaussloop: DO I = 1, NGP
 !      !Fint
 !      Fint1(i) = 0.0
 !      Fint2(i) = 0.0
-!      do j = 0, 12
+!      do j = 0, 4
 !        Fint1(i) = Fint1(i) + (j / (j+1.)) * apoly (PP(1), n1, j) * hhint(i)**(j+1)
 !        Fint2(i) = Fint2(i) + (j / (j+1.)) * apoly (PP(2), n3, j) * hhint(i)**(j+1)
 !      enddo
 !      !dFintdh
 !      dFintdh1(i) = 0.0
 !      dFintdh2(i) = 0.0
-!      do j = 0, 12
+!      do j = 0, 4
 !        dFintdh1(i) = dFintdh1(i) + (j) * apoly (PP(1), n1, j) * hhint(i)**j
 !        dFintdh2(i) = dFintdh2(i) + (j) * apoly (PP(2), n3, j) * hhint(i)**j
 !      end do
 !      !d2Fintdh
 !      d2Fintdh1(i) = 0.0
 !      d2Fintdh2(i) = 0.0
-!      do j = 0, 12
+!      do j = 0, 4
 !        d2Fintdh1(i) = d2Fintdh1(i) + (j**2) * apoly (PP(1), n1,j) * hhint(i)**(j-1)
 !        d2Fintdh2(i) = d2Fintdh2(i) + (j**2) * apoly (PP(2), n3,j) * hhint(i)**(j-1)
 !      end do
@@ -1355,7 +1355,7 @@ HBCAssign: DO L=1, NCN, 2
       NA = (L-1) * ndf + 1
 
       !get required cross sectional flow area
-      ASoll = CalcPolynomial (apoly (PPA(1), n1, 0:12), speclocal, ubound (apoly, 3))
+      ASoll = CalcPolynomial (apoly (PPA(1), n1, 0:4), speclocal, ubound (apoly, 3))
 
       ppl   = grav * ASoll * rho* qfact(l)
       if (l == 1) ppl = -ppl
@@ -1378,7 +1378,7 @@ HBCAssign: DO L=1, NCN, 2
       NA = (L-1) * ndf + 1
 
       !find required cross sectional flow area
-      ASoll = CalcPolynomial (apoly (PPA(1), n1, 0:12), speclocal, ubound (apoly, 3))
+      ASoll = CalcPolynomial (apoly (PPA(1), n1, 0:4), speclocal, ubound (apoly, 3))
 
       ppl = grav * ASoll * rho * qfact(l)
 
@@ -1388,7 +1388,7 @@ HBCAssign: DO L=1, NCN, 2
       FBCSoll   = 0.0
       FBCIst    = 0.0
       dFBCistdh = 0.0
-      do j = 0, 12
+      do j = 0, 4
         FBCSoll = FBCSoll + (j / (j+1.)) * apoly (PPA(1), n1, j) * spec(n1,3)**(j+1)
         FBCIst  = FBCIst  + (j / (j+1.)) * apoly (PPA(1), n1, j) *  vel(3,n1)**(j+1)
         dFBCIstdh  = dFBCIstdh  + (j) * apoly (PPA(1), n1, j) *  vel(3,n1)**(j)
@@ -1667,12 +1667,12 @@ IF(IMAT(NN) .GT. 903) THEN
   PP(2) = FindPolynom (PolyrangeA (n3, :), vel(3, N3), PolySplitsA (N3), cord (N3, 1), cord (N3, 2), N3)
 
   !A(h)
-  ah(n1) = CalcPolynomial (apoly (PP(1), n1, 0:12), vel(3, n1), ubound (apoly, 3))
-  ah(n3) = CalcPolynomial (apoly (PP(2), n3, 0:12), vel(3, n3), ubound (apoly, 3))
+  ah(n1) = CalcPolynomial (apoly (PP(1), n1, 0:4), vel(3, n1), ubound (apoly, 3))
+  ah(n3) = CalcPolynomial (apoly (PP(2), n3, 0:4), vel(3, n3), ubound (apoly, 3))
 
   !dA(h)/dh
-  dahdh(n1) = calcPolynomial1stDerivative (apoly (PP(1), n1, 0:12), vel(3, n1), ubound (apoly, 3))
-  dahdh(n3) = calcPolynomial1stDerivative (apoly (PP(2), n3, 0:12), vel(3, n3), ubound (apoly, 3))
+  dahdh(n1) = calcPolynomial1stDerivative (apoly (PP(1), n1, 0:4), vel(3, n1), ubound (apoly, 3))
+  dahdh(n3) = calcPolynomial1stDerivative (apoly (PP(2), n3, 0:4), vel(3, n3), ubound (apoly, 3))
 
   CALL CSTRC(NN)
   GO TO 1320

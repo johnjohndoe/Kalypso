@@ -536,12 +536,12 @@ reading: do
     ELSEIF (linie(1:3) == 'AP ') then
       IF (KSWIT /= 1) then
         linestat = 0
-        read (linie, *, iostat = linestat) id_local, i, j, (apoly(j, i, k), k = 0, 12)
+        read (linie, *, iostat = linestat) id_local, i, j, (apoly(j, i, k), k = 0, 4)
       endif
     ELSEIF (linie(1:3) == 'QP ') then
       IF (KSWIT /= 1) then
         linestat = 0
-        read (linie, *, iostat = linestat) id_local, i, j, qgef(i), (qpoly(j, i, k), k = 0, 12)
+        read (linie, *, iostat = linestat) id_local, i, j, qgef(i), (qpoly(j, i, k), k = 0, 4)
         !remember, that the node is a 1D polynomial approach node
         if (.not. IsPolynomNode (i)) IsPolynomNode (i) = .true.
       endif
@@ -549,14 +549,14 @@ reading: do
       if (beient /= 0 .and. beient /= 3) then
         IF (KSWIT /= 1) then
           linestat = 0
-          read (linie, *, iostat = linestat) id_local, i, j, (alphapoly(j, i, k), k = 0, 12)
+          read (linie, *, iostat = linestat) id_local, i, j, (alphapoly(j, i, k), k = 0, 4)
         endif
       endif
     ELSEIF (linie(1:3) == 'BEP') then
       if (beient /= 0 .and. beient /= 3) then
         IF (KSWIT /= 1) then
           linestat = 0
-          read (linie, *, iostat = linestat) id_local, i, j, (betapoly(j, i, 0), k = 0, 12)
+          read (linie, *, iostat = linestat) id_local, i, j, (betapoly(j, i, 0), k = 0, 4)
         endif
       endif
 

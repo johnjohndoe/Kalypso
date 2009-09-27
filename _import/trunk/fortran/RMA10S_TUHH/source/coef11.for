@@ -1318,7 +1318,7 @@ c     WRITE(*,*) NN,NCN
           PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1),
      +                           PolySplitsA (n1), cord(n1, 1),
      +                           cord (n1, 2), n1)
-          ah(n1) = calcPolynomial (apoly (PolyPos, n1, 0: 12),
+          ah(n1) = calcPolynomial (apoly (PolyPos, n1, 0: 4),
      +                             vel(3, n1), ubound(apoly, 3))
           !derivative over velocity
           ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht

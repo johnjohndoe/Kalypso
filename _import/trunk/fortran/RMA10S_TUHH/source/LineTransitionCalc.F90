@@ -138,7 +138,7 @@ transitionloop: do i = 1, MaxLT
       !polynom-approach
       else
         PolyPos = findPolynom (PolyRangeA (TransNo, :), TransDep, PolySplitsA (TransNo), cord (TransNo, 1), cord (TransNo, 2), TransNo)
-        CSArea  = calcPolynomial (apoly (PolyPos, TransNo, 0:12), TransDep, ubound (apoly, 3))
+        CSArea  = calcPolynomial (apoly (PolyPos, TransNo, 0:4), TransDep, ubound (apoly, 3))
       end if
       !Calculate discharge-value
       Discharge = ABS(CSArea * TransVel)

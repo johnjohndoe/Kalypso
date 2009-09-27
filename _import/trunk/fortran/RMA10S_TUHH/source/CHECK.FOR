@@ -319,7 +319,7 @@ cipk feb01  skip out for zero lines
               PolyPos = findPolynom (polyRangeA (NA, :), vel(3, NA),
      +                               PolySplitsA (na), cord (na, 1),
      +                               cord (na, 2), na)
-              TempArea = calcPolynomial (apoly(PolyPos, NA, 0:12),
+              TempArea = calcPolynomial (apoly(PolyPos, NA, 0:4),
      +                                   vel(3, NA), ubound (apoly, 3))
 
               if (vel(1,na) /= 0.0d0 .and. vel(2,na) /= 0.0d0) then
