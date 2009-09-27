@@ -303,11 +303,12 @@ write_nodes: DO i = 1, np
     write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   ELSEIF (.not. (IntPolProf (i)) .and. kmx (i) == -1.0) then
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), ao(i)
-  !for interpolated profiles
-  ELSEIF (IntPolProf (i) .AND. kmx (i) /= -1.0) then
-    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
-  ELSEIF (IntPolProf (i)) then
-    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), ao(i)
+  !IN-Zeile
+!  !for interpolated profiles
+!  ELSEIF (IntPolProf (i) .AND. kmx (i) /= -1.0) then
+!    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+!  ELSEIF (IntPolProf (i)) then
+!    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), ao(i)
   endif
 
   if (resultType == 'resu') THEN
@@ -317,7 +318,8 @@ write_nodes: DO i = 1, np
       !NiS,may06: All degrees of freedom have to be written and read for restart
       WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
     else
-      WRITE (IKALYPSOFM, 7045) i, (vel (j, i), j = 1, 3) , wsll(i)
+      !IR-Zeile
+!      WRITE (IKALYPSOFM, 7045) i, (vel (j, i), j = 1, 3) , wsll(i)
     end if
   ELSEIF ( resultType == 'mini') THEN
     WRITE (IKALYPSOFM, 7003) i, (minvel (j, i), j = 1, 3) , minrausv (i)
@@ -369,8 +371,8 @@ write_nodes: DO i = 1, np
       do j = 1, PolySplitsB(i)
         WRITE (dataline, *) 'ALP', i, j, alphapoly(j, i, :)
         WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
-        WRITE (dataline, *) 'BEP', i, j, betapoly(j, i, :)
-        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+!        WRITE (dataline, *) 'BEP', i, j, betapoly(j, i, :)
+!        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
       end do
     end if
   end if
