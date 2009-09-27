@@ -1433,5 +1433,6 @@ new features introduced/ started to be introduced:
 --- Nico Schrage, 25.09.2009
 
 146.) Delete writing of interpolated node results to reduce the amount of necessary  memory; IR and IN lines will be ignored!
+147.) Reduce the degree of polynomials for 1D approach from 0:12 to 0:4
 
 --- Nico Schrage, 27.09.2009
