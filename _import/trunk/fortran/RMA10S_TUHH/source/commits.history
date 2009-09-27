@@ -1431,3 +1431,7 @@ new features introduced/ started to be introduced:
       (affects: Pasche_trees.f90)
 
 --- Nico Schrage, 25.09.2009
+
+146.) Delete writing of interpolated node results to reduce the amount of necessary  memory; IR and IN lines will be ignored!
+
+--- Nico Schrage, 27.09.2009
