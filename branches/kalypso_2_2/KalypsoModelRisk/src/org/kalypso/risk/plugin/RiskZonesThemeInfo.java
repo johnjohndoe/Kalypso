@@ -6,10 +6,12 @@ import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
@@ -25,7 +27,9 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     super.init( theme, props );
-    m_formatString = props.getProperty( PROP_FORMAT, "%.2f \u20ac/m\u00b2/a - %s" ); //$NON-NLS-1$
+    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final int digits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
+    m_formatString = props.getProperty( PROP_FORMAT, "%." + digits + "f \u20ac/m\u00b2/a - %s" ); //$NON-NLS-1$
   }
 
   public static void updateZonesDefinition( final Map<Double, String> values )
