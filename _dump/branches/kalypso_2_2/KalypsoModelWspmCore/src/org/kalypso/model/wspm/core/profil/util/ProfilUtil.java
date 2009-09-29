@@ -267,69 +267,62 @@ public class ProfilUtil
    */
   public static final void flipProfile( final IProfil profile )
   {
-    final Map<String, IComponent> properties = getComponentsFromProfile( profile );
+    flipProfile( profile, false );
+  }
 
-    final TupleResult result = profile.getResult();
-    final IRecord[] rows = result.toArray( new IRecord[] {} );
-    result.clear();
+  /**
+   * mirror the profiles points (axis 0.0)
+   */
+  public static final void flipProfile( final IProfil profile, boolean fireNoEvent )
+  {
+    final IComponent[] components = profile.getPointProperties();
+    final IRecord[] records = profile.getPoints();
+    final int len = records.length;
+    int iBreite = -1;
+    IRecord lastRec = records[0];
 
-    final int indexBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-
-    /* flip the profile by re-adding with negative width */
-    for( final IRecord record : rows )
+    for( int i = 0; i < len / 2; i++ )
     {
-      final Double breite = (Double) record.getValue( indexBreite );
-      record.setValue( indexBreite, Double.valueOf( breite * -1 ) );
+      final IRecord currentRec = records[i].cloneRecord();
+      final int k = len - 1 - i;
+      for( int j = 0; j < components.length; j++ )
+      {
+        if( iBreite < 0 && components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
+        {
+          iBreite = j;
+        }
+        if( iBreite == j )
+        {
+          final Double value = (Double) records[i].getValue( j ) * -1;
+          records[i].setValue( j, (Double) records[k].getValue( j ) * -1, fireNoEvent );
+          records[k].setValue( j, value, fireNoEvent );
+        }
+        else if( components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+        {
+          final Object value = lastRec.getValue( j );
+          records[i].setValue( j, records[k - 1].getValue( j ), fireNoEvent );
+          records[k].setValue( j, value, fireNoEvent );
+        }
+        else
+        {
+          final Object value = records[i].getValue( j );
+          records[i].setValue( j, records[k].getValue( j ), fireNoEvent );
+          records[k].setValue( j, value, fireNoEvent );
+        }
+      }
+      lastRec = currentRec;
+
     }
-    
-    ArrayUtils.reverse( rows );
-    result.addAll( Arrays.asList( rows ) );
 
-    final IRecord[] points = profile.getPoints();
-    IRecord previousPoint = null;
-    for( final IRecord point : points )
+    if( (len / 2) * 2 < len )
     {
-      if( previousPoint == null )
-      {
-        previousPoint = point;
-        continue;
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-      previousPoint = point;
+      final int mid = len / 2;
+      final Double dBreite = (Double) records[mid].getValue( iBreite );
+      records[mid].setValue( iBreite, dBreite * -1, fireNoEvent );
     }
 
   }
