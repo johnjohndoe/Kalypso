@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
+import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -118,7 +119,7 @@ public class PropertyEditWizard extends Wizard
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
     m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.1" ), null, false ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.5") ); //$NON-NLS-1$
+    m_profileChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.5" ) ); //$NON-NLS-1$
   }
 
   public PropertyEditWizard( final IProfil profile, final ISelection selection )
@@ -179,7 +180,7 @@ public class PropertyEditWizard extends Wizard
 
     m_operationChooserPage = new OperationChooserPage( m_selectedPoints, Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.1" ) ); //$NON-NLS-1$
     m_operationChooserPage.setPageComplete( false );
-    m_operationChooserPage.setMessage( Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.7") ); //$NON-NLS-1$
+    m_operationChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.7" ) ); //$NON-NLS-1$
 
     addPage( m_propertyChooserPage );
     addPage( m_operationChooserPage );
@@ -217,26 +218,13 @@ public class PropertyEditWizard extends Wizard
     final IProfil[] choosenProfiles = toProfiles( profilFeatures );
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
-    IProfilChange[] profilChanges = null;
 
     for( int i = 0; i < choosenProfiles.length; i++ )
     {
-      profilChanges = m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
-      if( m_profile == null )
-      {
-        try
-        {
-          for( final IProfilChange change : profilChanges )
-          {
-            change.doChange( null );
-          }
-        }
-        catch( final IllegalProfileOperationException e )
-        {
-          KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( Status.ERROR, KalypsoModelWspmUIPlugin.getDefault().id(), e.getMessage() ) );
-        }
-        //featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
-      }
+      m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
+      if( profilFeatures != null )
+        featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
+
     }
     if( m_profile == null )
     {
@@ -254,7 +242,7 @@ public class PropertyEditWizard extends Wizard
     }
     else
     {
-      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.3" ), m_profile, profilChanges, true ); //$NON-NLS-1$
+      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.3" ), m_profile, new IProfilChange[] { new TupleResultChange() }, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
 
