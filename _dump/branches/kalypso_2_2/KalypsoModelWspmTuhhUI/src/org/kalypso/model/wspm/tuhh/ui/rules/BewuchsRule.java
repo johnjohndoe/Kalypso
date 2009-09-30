@@ -144,7 +144,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
           final Double ax2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, rightP );
 
-          if( (VorlandLhasValues == true && !ax2.isNaN()) && (VorlandLhasValues && ax2 == 0.0) )
+          if( (VorlandRhasValues == true && !ax2.isNaN()) && (VorlandRhasValues && ax2 == 0.0) )
             collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.4"), "km " + profil.getStation(), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
 
         }
