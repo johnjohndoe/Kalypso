@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -242,8 +243,9 @@ public class PropertyEditWizard extends Wizard
     }
     else
     {
-      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.3" ), m_profile, new IProfilChange[] { new TupleResultChange() }, true ); //$NON-NLS-1$
-      new ProfilOperationJob( operation ).schedule();
+      final ProfilChangeHint pch = new ProfilChangeHint();
+      pch.setPointsChanged();
+      m_profile.fireProfilChanged(pch , new IProfilChange[]{new TupleResultChange()} );
     }
 
     return true;
