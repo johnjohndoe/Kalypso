@@ -1112,14 +1112,22 @@ CIPK AUG06 ADD QIN
       !               ------   -------   -------   ---------   ----   ---------   -------
       !                  A        B         C           D        E        F          G
       !
-      !                                                                                  --
-      !                      da   du             da   du             da          h*h  da  |
-      !           - epsXX*h*----*---- - epsXY*h*----*---- + rho*g*h*---- + rho*g*---*---- |
-      !                      dx   dx             dy   dy             dx           2   dx  |
-      !                                                                                  --
+      !                                                                                  
+      !                      da   du             da   du             da          h*h  da  
+      !           - epsXX*h*----*---- - epsXY*h*----*---- + rho*g*h*---- + rho*g*---*---- 
+      !                      dx   dx             dy   dy             dx           2   dx  
+      !                                                                                  
       !             -----------------   -----------------   ------------   --------------
       !                      H                   I                J               K
+      !                                                                         --
+      !                            du                   du    dv              h   |         
+      !           + DNX *2epsXX*h*---- - DNY *epsXY*h*(---- + ----)- DNX *g*h*--  |         
+      !                            dx                   dy    dx              2   |        
+      !                                                                         --                             
+      !             -----------------   --------------------------   ----------- 
+      !                      L                        M                    N   
       !
+      !  The terms H and I are neglected due to multiplication of two gradients (a and u)
 !
 !.....INITIALIZE.....
 !
@@ -1161,16 +1169,20 @@ C
       FRNZ=EPSXZ*H*(DRDZ+DSDX)
       FSNX=EPSZX*H*(DRDZ+DSDX)
       FSNZ=EPSZ*H*DSDZ
+!           -----------------
+!                L ,   M
 C
 C.....SURFACE AND BOTTOM SLOPE (PRESSURE) TERMS.....
 C
 
       FRN = FRN + GHC * DAODX +DAODX*GHC*H/(2.*XHT)
       FSN = FSN + GHC * DAODZ +DAODZ*GHC*H/(2.*XHT)
-      !           -----------
-      !                J
+      !           -----------  -------------------
+      !                J               K
       FRNX=FRNX-H*GHC/2.
       FSNZ=FSNZ-H*GHC/2.
+    !           -------
+    !             N
 C
 C.....BOTTOM FRICTION TERMS.....
 C
