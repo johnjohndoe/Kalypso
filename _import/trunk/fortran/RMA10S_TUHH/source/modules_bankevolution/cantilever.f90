@@ -11,11 +11,11 @@ USE BLKSANMOD, ONLY :  &
 
 implicit none
 
-TYPE(profile),save :: CANTI_PR        ! CANTI_PR is the profile after CANTILEVER FAILURE calculations
+!TYPE(profile),save :: CANTI_PR        ! CANTI_PR is the profile after CANTILEVER FAILURE calculations
 
 CONTAINS
 
-subroutine cantilever_failure( AVAL_PR , WATERELEV , UNSATURATED_SLOPE , EffectVolume , fenode )
+subroutine cantilever_failure( CANTI_PR, AVAL_PR , WATERELEV , UNSATURATED_SLOPE , EffectVolume , fenode, Submerged_Overhang )
 
 USE types
 use share_profile
@@ -24,13 +24,14 @@ USE PARAM
 implicit none
 
 TYPE (finite_element_node), DIMENSION (:), INTENT (IN)   :: fenode   
+TYPE(profile)                            , INTENT (INOUT):: CANTI_PR
 REAL (KIND = 8)           , DIMENSION (2), INTENT (OUT)  :: EffectVolume            ! the effective volume of collapsed overhang
-
-TYPE (profile) , INTENT (IN)      :: aval_pr
+TYPE (profile) , INTENT (INOUT)   :: aval_pr
 REAL (KIND = 8), INTENT (IN)      :: waterelev
 REAL           , INTENT (IN)      :: unsaturated_slope
+LOGICAL   , INTENT (IN), OPTIONAL :: Submerged_Overhang            
 
-REAL (KIND = 8)    ,DIMENSION (2) :: SAFTEYFACTOR=1.0, source                               ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
+REAL (KIND = 8)    ,DIMENSION (2) :: SAFTEYFACTOR, source                               ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
 INTEGER            ,DIMENSION (2) :: INTSECT_NO 
 TYPE (profile_node),DIMENSION (2) :: INTSECT_NODE
 TYPE (profile)     ,DIMENSION (1) :: INITIATE_PROFILE
@@ -41,7 +42,7 @@ REAL (KIND = 8)                   :: DIST, elev , POLYGON_AREA , WEIGHT , AREA
 REAL (KIND = 8)                   :: SLIP_LENGTH , BASE_SUCTION , TOP_SUCTION , MID_SUCTION 
 REAL (KIND = 8)                   :: MATRICHEAD , MATRIC_SUCTION , MATRIC_FORCE  
 REAL (KIND = 8)                   :: EFFECTIVE_COHESION_FORCE , SHEAR_STRENGTH
-!REAL (KIND = 8)                   :: UNSATURATED_RADIAN
+REAL (KIND = 8)                   :: ypsilon, func
 INTEGER                           :: i, j, indeks, start, K ,  r , N , JTEMP , LR
 
 LOGICAL            ,DIMENSION (2) :: COINCIDE 
@@ -52,14 +53,20 @@ Write (*,*) ' Entering to Cantilever failure Modelling ....'
 ! Initialize variables
 SOURCE = 0.
 INTSECT_NO = 0
+SAFTEYFACTOR=1.0
 
 CALL INIT_PROFILE ( PNODE = INTSECT_NODE  , SIZE = 2 )
 CALL INIT_PROFILE ( PROFIL= INITIATE_PROFILE , SIZE = 1 )
 CANTI_PR     = INITIATE_PROFILE(1)
-! 30APRIL2009, 12:33;  CANTI_PR     = AVAL_PR
 TEMP_PROFILE = INITIATE_PROFILE(1)
 
 COINCIDE = .FALSE.                                            ! COINCIDENCE OF INTERSECTION POINT OF EXTRAPOLATION LINE WITH A PROFILE NODE.
+
+if(PRESENT(Submerged_Overhang) ) then
+  ypsilon = 0.001
+else
+  ypsilon = 0.01
+end if    
 
 ! determine if there are one bank or two banks available.
 ! if the right bank is totally submerged, it implies there is no rightbnak morphological evolution
@@ -97,12 +104,10 @@ MN: DO i  = 1,LR                                                ! loop over two 
       FRONT = aval_pr%prnode(START)
 
  END SELECT
-
 ! IN THE FOLLOWING THE INTERSECTION BETWEEN THE EXTRAPOLATION LINE, STARING FROM FRONT AND ENDING ON THE TOP OF THE OVERHANG,
 ! IS COMPUTED ( DIST AND ELEV ARE COORDINATE OF THIS POINT.
- !UNSATURATED_RADIAN = PI*UNSATURATED_SLOPE/180.
 
- CALL INTERSECT ( AVAL_PR , FRONT , UNSATURATED_SLOPE , START , N , R , DIST , ELEV , INDEKS )
+ CALL INTERSECT ( AVAL_PR , FRONT , UNSATURATED_SLOPE , START , N , R , DIST , ELEV , INDEKS, 0.001 )
 
 
  INTSECT_NODE(I)%DISTANCE      = DIST
@@ -111,12 +116,12 @@ MN: DO i  = 1,LR                                                ! loop over two 
  INTSECT_NODE(I)%WATER_ELEV    = 0.                                   !SINCE, IT HAS NO CONJUGATED FE NODE TO ASSIGN A COMPUTED WATER ELEVATION TO IT.
  INTSECT_NODE(I)%ATTRIBUTE     = 'profile'
 
-
  INTSECT_NO (I) = INDEKS                                              ! the profile node number of intersecting point OR the node before intersection, when it
                                                                       ! doesn't coincide with an already existing profile node.
  N              = INDEKS
 
- IF ( ABS ( AVAL_PR%PRNODE(N)%DISTANCE - DIST ) <= 0.01 ) THEN                     ! therefore, the intersection point concides with a profile node.
+ IF ( ABS ( AVAL_PR%PRNODE(N)%DISTANCE - DIST ) <= ypsilon ) THEN                     ! therefore, the intersection point concides with a profile node.
+!---------------------------------------------------------------------------------------------------
 
  SOURCE(I)  = POLYGON_AREA ( START, N , R , aval_pr )                      ! ASSIGNMENT OF THE LOST AREA/ VOLUME AS SOURCE TERM.
  WEIGHT     = SOURCE (I) * RHOS * GRAVITY
@@ -139,11 +144,15 @@ MN: DO i  = 1,LR                                                ! loop over two 
  WEIGHT     = AREA * RHOS * GRAVITY                                      ! RHOS CAN BE LATER COMPUTED BASED ON THE PROSITY OF THE SOIL AND WATER CONTENT.
  end if
 
+
+  IF (.NOT.PRESENT(Submerged_Overhang)) THEN
+
  ! COMPUTATION OF APPARENT COHESION ALONG THE SLIP SURFACE; WHICH IS ASSUMED TO BE ALONG THE EXTRAPOLATION LINE:
  ! LATER A MORE REALISTIC MODEL OF SLIP SURFACE CAN BE ADDED; IN WHICH THIS SLOPE IS DETERMINED BASED ON THE MOST
  ! CRITICAL PLANE.
 
  SLIP_LENGTH     = ( ( DIST - FRONT%DISTANCE ) ** 2 + ( ELEV - FRONT%ELEVATION ) ** 2 ) ** 0.5
+
 
 ! COMPUTATION OF MATRIC SUCTION:
 !-----------------------------------------------------------------------------
@@ -152,26 +161,31 @@ MN: DO i  = 1,LR                                                ! loop over two 
  
  IF( ( EXPO3 == 0.).AND. (EXPO2 == 0.) ) THEN
  
- BASE_SUCTION    = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
+   BASE_SUCTION    = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
  
- TOP_SUCTION     = SUCTIONHEIGHT ( WATERELEV , ELEV )
+   TOP_SUCTION     = SUCTIONHEIGHT ( WATERELEV , ELEV )
 
- IF ( (TOP_SUCTION == - 1.0 * EXPO1) .AND. (BASE_SUCTION > - 1.0 * EXPO1 ) ) THEN
+   IF ( (TOP_SUCTION == - 1.0 * EXPO1) .AND. (BASE_SUCTION > - 1.0 * EXPO1 ) ) THEN
 
-  MID_SUCTION    = - 1.0 * EXPO1
-  MATRICHEAD     = ( BASE_SUCTION + MID_SUCTION ) * ( 1. + WATERELEV - FRONT%ELEVATION ) / 2.
-  MATRICHEAD     = MATRICHEAD + TOP_SUCTION * ( ELEV - ( WATERELEV + 1.0 ) )
+    MID_SUCTION    = - 1.0 * EXPO1
+    MATRICHEAD     = ( BASE_SUCTION + MID_SUCTION ) * ( 1. + WATERELEV - FRONT%ELEVATION ) / 2.
+    MATRICHEAD     = MATRICHEAD + TOP_SUCTION * ( ELEV - ( WATERELEV + 1.0 ) )
 
+   ELSE
+
+    MATRICHEAD     = ( BASE_SUCTION + TOP_SUCTION ) * ( ELEV - FRONT%ELEVATION ) / 2.
+
+   END IF
+ 
  ELSE
 
-  MATRICHEAD     = ( BASE_SUCTION + TOP_SUCTION ) * ( ELEV - FRONT%ELEVATION ) / 2.
-
- END IF
- 
- ELSE
-
-  MATRICHEAD     = -1.0 * SUCTIONHEIGHT ( WATERELEV , ELEV )
- 
+  BASE_SUCTION = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
+  
+  MATRICHEAD   = SUCTIONHEIGHT ( WATERELEV , ELEV )
+  MATRICHEAD   = MATRICHEAD - BASE_SUCTION
+  MATRICHEAD   = func(ELEV- WATERELEV, EXPO3,EXPO2,EXPO1) * (ELEV - FRONT%ELEVATION)- MATRICHEAD
+  MATRICHEAD   = -1.0 * MATRICHEAD
+  
  ENDIF
 
  MATRIC_SUCTION = RHO * GRAVITY * MATRICHEAD
@@ -181,21 +195,26 @@ MN: DO i  = 1,LR                                                ! loop over two 
 
  SAFTEYFACTOR (I) = SHEAR_STRENGTH / ( WEIGHT * SIN ( UNSATURATED_SLOPE * PI /180. ) )
 
- ! check if the intersection coincides with a node, if not creat the node and sort the profile betwwen front
- ! and intersection in a temporary allocatable profile and compute the failure test on this profile, in the case
- ! a failure happens, then remove the nodes between front and intersection point and sort the new profile in a new
- !  variable (TYPE : profile).
+ELSE
+
+ SAFTEYFACTOR(i) = 0.9
+
+END IF 
 
 end do MN
+
 
 ! SORTING THE PROFILE NODES INTO A NEW PROFILE
 J = 0
 K = 0
 ! RETAIN THE NOSE AND FRONT IF IT IS NOT CHANGED LATER IN THE FOLLOWING IF BLOCK.
-CANTI_PR%LFRONT = AVAL_PR%LFRONT 
-CANTI_PR%LNOSE  = AVAL_PR%LNOSE
-CANTI_PR%RFRONT = AVAL_PR%RFRONT
-CANTI_PR%RNOSE  = AVAL_PR%RNOSE
+CANTI_PR%LFRONT     = AVAL_PR%LFRONT 
+CANTI_PR%LNOSE      = AVAL_PR%LNOSE
+CANTI_PR%RFRONT     = AVAL_PR%RFRONT
+CANTI_PR%RNOSE      = AVAL_PR%RNOSE
+CANTI_PR%ACTIVATION = .FALSE.
+CANTI_PR%CL_NUMBER  = AVAL_PR%CL_NUMBER
+CANTI_PR%WATER_ELEV = AVAL_PR%WATER_ELEV
 
 SRT: DO
 
@@ -211,8 +230,8 @@ SRT: DO
     CALL SIMPLE_PROJECTION ( J  , AVAL_PR%PRNODE(AVAL_PR%LFRONT)%DISTANCE , 1 , K )                                ! include the fe_nodes on the extrapolation line as new profile nodes.
     K = K - 1 !30APRIL2009, 16:29
    
-   call EffectiveVolume (J ,AVAL_PR%LFRONT,1, AVAL_PR%PRNODE(1)%DISTANCE, EffectVolume(1)) 
-   
+ !  call EffectiveVolume (J ,AVAL_PR%LFRONT,1, AVAL_PR%PRNODE(1)%DISTANCE, EffectVolume(1)) 
+    EffectVolume(1) = source(1)
     J = AVAL_PR%LFRONT
 
     IF ( AVAL_PR%PRNODE(J)%FE_NODENUMBER /= 0 ) THEN
@@ -225,37 +244,86 @@ SRT: DO
     CANTI_PR%LNOSE  = 0
 
   ELSEIF ( ( J == AVAL_PR%RFRONT ) .AND. ( SAFTEYFACTOR (2) < 1.0 ) ) THEN
-!----------------------------------------------
-!30APRIL2009, 18:22
- !   IF ( AVAL_PR%PRNODE(J)%FE_NODENUMBER /= 0 ) THEN
- !   CANTI_PR%PRNODE(K) = AVAL_PR%PRNODE(J)
- !   CANTI_PR%PRNODE(K)%ATTRIBUTE = 'profile'                                              ! OMIT THE ATTRIBUTE FRONT ; SINCE IT EXISTS NO MORE DUE TO THE FAILURE.
- !   K = K + 1
- !   ENDIF
-!30APRIL2009, 18:22
-!----------------------------------------------
+
     CANTI_PR%RFRONT = 0
     CANTI_PR%RNOSE  = 0
     
-!    J = J + 1
-    
-!30APRIL2009, 12:47    CALL SIMPLE_PROJECTION ( J , INTSECT_NO (2)- 1 , 1 , K )                          ! include the fe_nodes on the extrapolation line as new profile nodes.
- !30APRIL2009, 19:14   CALL SIMPLE_PROJECTION ( J , INTSECT_NO (2) , 1 , K )                                !30APRIL2009, 12:47
     CALL SIMPLE_PROJECTION ( J , INTSECT_NODE(2)%DISTANCE , 1 , K )
-! CALL SIMPLE_PROJECTION ( J , 1 , K , INTERSECTION_POINT = INTSECT_NODE(2) )
- !30APRIL2009, 12:47   K = K + 1
+
     J = INTSECT_NO (2)
     JTEMP = J
+
     CALL COINCID ( K , J , 2 , CANTI_PR)
     
     IF ( JTEMP < J ) J = J - 1    !30APRIL2009, 16:03     ; BECAUSE IN COINCID IN THE CASE THAT THE INTERSECTION POINT COINCIDES WITH A PROFILE NODE, J IS INCREASED BY 1; HOWEVER THE CONTROL AT THE BEGINING OF THE CURRENT LOOP WILL DO THIS INCREMENT AGAIN.
     
-    call EffectiveVolume (J, AVAL_PR%RFRONT,-1, AVAL_PR%PRNODE(AVAL_PR%MAX_NODES)%DISTANCE, EffectVolume(2)) 
-  
+ !   call EffectiveVolume (J, AVAL_PR%RFRONT,-1, AVAL_PR%PRNODE(AVAL_PR%MAX_NODES)%DISTANCE, EffectVolume(2)) 
+   EffectVolume(2) = source(2) 
   ELSE
 
-   CANTI_PR%PRNODE(K) = AVAL_PR%PRNODE(J)
+     IF (TRIM( ADJUSTL (AVAL_PR%PRNODE(J)%ATTRIBUTE) ) == 'basepoint') THEN
+      IF ( AVAL_PR%PRNODE(J)%FE_NODENUMBER == 0) THEN
+    
+        K = K - 1
+        cycle SRT
 
+      ELSE 
+
+        AVAL_PR%PRNODE(J)%ATTRIBUTE = 'profile'
+     
+      END IF    
+     END iF
+   
+     CANTI_PR%PRNODE(K) = AVAL_PR%PRNODE(J)
+     
+     IF ( K > 1 ) THEN
+   
+       DIST = SQRT ( ( CANTI_PR%PRNODE(K)%DISTANCE - CANTI_PR%PRNODE(K - 1)%DISTANCE)** 2 &
+       &            +( CANTI_PR%PRNODE(K)%ELEVATION - CANTI_PR%PRNODE(K - 1)%ELEVATION)**2 )
+   
+       IF ( DIST  <= 0.01) THEN
+         
+         IF ( (TRIM(ADJUSTL(CANTI_PR%PRNODE(K)%ATTRIBUTE))  == 'front') .OR. &
+          &   (TRIM(ADJUSTL(CANTI_PR%PRNODE(K)%ATTRIBUTE))  == 'nose' ) .OR. &
+          &   (TRIM(ADJUSTL(CANTI_PR%PRNODE(K-1)%ATTRIBUTE))== 'front') .OR. &
+          &   (TRIM(ADJUSTL(CANTI_PR%PRNODE(K-1)%ATTRIBUTE))== 'nose' ) ) THEN 
+    
+           CANTI_PR%MAX_NODES = K
+     
+           CYCLE SRT
+         
+         END IF  
+
+          IF ((CANTI_PR%PRNODE(K - 1)%FE_NODENUMBER /= 0 ).AND. &
+            & (CANTI_PR%PRNODE(K)%FE_NODENUMBER == 0 ) )  THEN
+              
+              CAll SHIFTNOSE 
+              K = K - 1
+   
+          ELSEIF ( (CANTI_PR%PRNODE(K)%FE_NODENUMBER /= 0 ).AND. &
+           &       (CANTI_PR%PRNODE(K - 1)%FE_NODENUMBER == 0 )) THEN   
+   
+              CAll SHIFTNOSE
+              CANTI_PR%PRNODE(K - 1) = CANTI_PR%PRNODE(K)
+              K = K - 1
+   
+          ELSEIF ( (CANTI_PR%PRNODE(K)%FE_NODENUMBER /= 0 ).AND. &
+           &       (CANTI_PR%PRNODE(K - 1)%FE_NODENUMBER /= 0 ) )THEN  
+   
+               WRITE (*,*) ' WARNING!!, IN CONTILINE NUMBER ' ,CANTI_PR%CL_NUMBER , & 
+                   ' THE PROFILE NODES ', K - 1,' AND ', K , ' ARE ', &
+               &   ' CLOSER THAN 1 CM TOGETHER '
+          ELSE
+               
+               CAll SHIFTNOSE
+               K = K - 1   
+   
+          END IF   
+   
+       END IF  
+   
+     END IF
+  
   END IF
    
    
@@ -263,12 +331,35 @@ SRT: DO
 
  END DO  SRT
 
-   CANTI_PR%ACTIVATION = .FALSE.
-   CANTI_PR%CL_NUMBER  = AVAL_PR%CL_NUMBER
-   CANTI_PR%WATER_ELEV = AVAL_PR%WATER_ELEV
 
-!------------------------  INCLUDED PROCEDURE  ---------------------------------
+!------------------------  INCLUDED PROCEDURES  ---------------------------------
 CONTAINS
+
+SUBROUTINE  SHIFTNOSE 
+
+               IF ( k < CANTI_PR%LNOSE) THEN
+                
+                CANTI_PR%LNOSE  = CANTI_PR%LNOSE - 1
+                CANTI_PR%LFRONT = CANTI_PR%LFRONT - 1
+
+                IF (CANTI_PR%RNOSE /= 0) THEN
+                  CANTI_PR%RNOSE  = CANTI_PR%RNOSE - 1 
+                  CANTI_PR%RFRONT = CANTI_PR%RFRONT - 1
+                ENDIF
+                  
+              ELSEIF (CANTI_PR%RNOSE /= 0) THEN
+               
+               IF (k < CANTI_PR%RNOSE ) THEN 
+                CANTI_PR%RNOSE  = CANTI_PR%RNOSE - 1
+                CANTI_PR%RFRONT = CANTI_PR%RFRONT - 1
+               ENDIF
+              
+              ENDIF
+
+END SUBROUTINE SHIFTNOSE
+ 
+
+
 SUBROUTINE COINCID (L, N , M , OUTPROFILE )
 
 INTEGER        , INTENT (IN)    :: L , M !,N    !30APRIL2009, 12:47
@@ -321,30 +412,21 @@ INTEGER                          :: O , Q , ENDINDEX
     
     IF ( Q == 0 )CYCLE 
     
- !30APRIL2009, 18:57   RELATIVE_DISTANCE   = AVAL_PR%PRNODE(O)%DISTANCE !- AVAL_PR%PRNODE(1)%DISTANCE 
+
     RELATIVE_DISTANCE   =  AVAL_PR%PRNODE(O)%DISTANCE - UPPERBOUND
-    IF ( ( RELATIVE_DISTANCE  > 0.01  ) .OR. ( ABS (RELATIVE_DISTANCE) <= 0.01  ) ) EXIT !30APRIL2009, 18:57
+    IF ( ( RELATIVE_DISTANCE  > 0.01  ) .OR. ( ABS (RELATIVE_DISTANCE) <= 0.01  ) ) EXIT 
     if (AVAL_PR%RFRONT /=0) then
     IF ( ( ABS(AVAL_PR%PRNODE(O)%DISTANCE - AVAL_PR%PRNODE(AVAL_PR%RFRONT)%DISTANCE)  <= 0.01  ) .AND. ( ABS(AVAL_PR%PRNODE(O)%ELEVATION - AVAL_PR%PRNODE(BEGIN)%ELEVATION)  <= 0.01 ) ) CYCLE !02MAY2009, 13:37,  IN THE CASE THAT A PROFILE NODE IN TH EOVERHANG LOCATES OVER THE RIGHT FRONT, CYCLE THE LOOP, SINCE THE STARTING POINT HAS BEEN ALREADY INCLUDED.
     end if
-!30APRIL2009, 18:57    IF ( ( RELATIVE_DISTANCE  <= UPPERBAND  ) .AND. ( RELATIVE_DISTANCE >= LOWERBAND  ) ) THEN
- !30APRIL2009, 12:12   CURRENT_CANTI_INDEX = CURRENT_CANTI_INDEX + 1
-    
- !30APRIL2009, 15:40   CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)               = AVAL_PR%PRNODE(O)       ! COPY THE NEXT AVAL_PR NODE AS PROJECTED NODE ON EXTRAPOLATION LINE TO CANTI_PR.
-   
- !30APRIL2009, 15:50   IF ( ABS ( CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ELEVATION - fenode( Q )%ELEVATION ) > 0.01 ) THEN   ! IT IS INCULDED TO PROHIBIT DUPLICATION OF INTERSECTION POINT, WHEN IT COINCIDES WITH A PROFILE NODE.
- !30APRIL2009, 18:36   IF ( ABS ( AVAL_PR%PRNODE(O)%ELEVATION - fenode( Q )%ELEVATION ) > 0.01 ) THEN !30APRIL2009, 15:50
-  IF (  AVAL_PR%PRNODE(O)%DISTANCE  >= LOWERBOUND  )  THEN !30APRIL2009, 19:59
-    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)               = AVAL_PR%PRNODE(O)       ! 30APRIL2009, 15:40
 
-    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ELEVATION     = fenode( Q )%ELEVATION  ! SINCE THE ELEVATION OF THE fenode ON EXTRAPOLATION LINE HAS BEEN ALREADY CALCULATED IN SUBROUTINE PROJECTION, THEY ARE USED AS PROJECTED ELEVATION OF AVAL_PR NODE.
+  IF (  AVAL_PR%PRNODE(O)%DISTANCE  >= LOWERBOUND  )  THEN 
+    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)               = AVAL_PR%PRNODE(O)      
+
+    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ELEVATION     = fenode( Q )%ELEVATION   ! SINCE THE ELEVATION OF THE fenode ON EXTRAPOLATION LINE HAS BEEN ALREADY CALCULATED IN SUBROUTINE PROJECTION, THEY ARE USED AS PROJECTED ELEVATION OF AVAL_PR NODE.
     CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ATTRIBUTE     = 'profile'               ! CORRECT THE ATTRIBUTE OF PROFIEL NODE ON THE EXTRAPOLATION LINE AS ' PROFILE' , NOMORE OVERHANG.
     CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%FE_NODENUMBER = Q                       ! ASSIGN THE POSITIVE FENODE NUMBER TO THE PROJECTED NODE ON THE FORMER EXTRAPOLATION LINE.
-    CURRENT_CANTI_INDEX = CURRENT_CANTI_INDEX + 1             !30APRIL2009, 15:50
-!30APRIL2009, 18:36    END IF
-!30APRIL2009, 15:50    CURRENT_CANTI_INDEX = CURRENT_CANTI_INDEX + 1     !30APRIL2009, 12:12
- !30APRIL2009, 18:57   END IF 
-  END IF !30APRIL2009, 19:59
+    CURRENT_CANTI_INDEX = CURRENT_CANTI_INDEX + 1            
+  END IF
   END DO
  
 END SUBROUTINE SIMPLE_PROJECTION
