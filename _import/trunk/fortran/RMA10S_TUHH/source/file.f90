@@ -492,6 +492,13 @@ FileRead: DO
     IPROFIN = 73
     call fileOpen (IPROFIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM18, IERMSG)
 
+ !HN082009: "RESTART" PROFILE DATA FILE FOR BANK EVOLUTION MODELLING.
+ ! It must be available for restarting a morphological timestep with bank evolution.
+  !---------------------------------------------------------------------------------
+  ELSEIF ( ID(1:7) == 'PRFREST' ) THEN
+    ! UNIT NUMBER
+    IPROFIN = 731
+    call fileOpen (IPROFIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM18, IERMSG)
   !--------------------------------
   ELSEIF(ID == 'OUTMET  ') THEN
     IOMET=72
