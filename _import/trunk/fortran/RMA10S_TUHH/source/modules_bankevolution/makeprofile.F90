@@ -46,10 +46,6 @@ if (.NOT. associated (CCLine.firstSegment)) then
 
   NextNode => CCLine.FirstNode
   
-  !write (*,*) 'NextNode '
-
-!write (*,*) CCLine.FirstNode.thisnode.ID, '  ',CCLine.FirstNode.thisnode.cord (1),'   ', &
-!&           CCLine.FirstNode.thisnode.cord (2),'   ', CCLine.FirstNode.thisnode.ao
  write (*,*) 'NodeNumber     distance    elevation       attribute '
 
  do j = 1,NumberFenodes
