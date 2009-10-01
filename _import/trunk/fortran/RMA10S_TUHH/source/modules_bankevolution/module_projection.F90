@@ -21,9 +21,9 @@ use param
 
 implicit none
 
-TYPE     (profile) , INTENT (INOUT)        :: newprofile               ! newprofile is the profile storing projected nodes
-TYPE     (profile) , INTENT (INOUT)        :: oldprofile
 TYPE (finite_element_node) , DIMENSION (:), INTENT (INOUT):: fenode
+TYPE (profile)     , INTENT (INOUT)        :: newprofile               ! newprofile is the profile storing projected nodes
+TYPE (profile)     , INTENT (INOUT)        :: oldprofile
 INTEGER            , INTENT (INOUT)        :: current_index            ! is the starting or current index of the profile node in newprofile.
 REAL (kind = 8)    , INTENT (IN)           :: pointA_distance
 TYPE (profile_node), INTENT (IN), OPTIONAL :: nose
@@ -45,20 +45,25 @@ REAL(KIND = 8)                             :: dd, elev, del_d1, del_d2, rel_b
 REAL(KIND = 8)                             :: SLOP, deltaElev, Ref_height, Sumvolume, Eff_area
 
 INTEGER                                    :: r,j,u,i,m, en,p,t,s,ind, begin, save_index, k
-LOGICAL                                    :: flag, flag_newfront , intsec
+LOGICAL                                    :: flag, flag_newfront , intsec, NewFrontCoBase 
 
 ! dont forget to update corresponding fe_nodes (conjugate fe-nodes)
 !----------------------  SORTING ALGORITHM AND PROJECTION OF NEW NODES ON EXTRAPOLATION LINE ------------------------------------------
 
 save_index = current_index
+! initialize 
+elev = 0.
+if (present(lost) ) lost = 0.
+
 if (present (front)) then
    flag = front
 else
    flag = .FALSE.
 end if
 
-flag_newfront = .FALSE.
-intsec = .FALSE.
+flag_newfront  = .FALSE.
+NewFrontCoBase = .FALSE.
+intsec         = .FALSE.
 
 r = (-1)** side                            ! for left bank, side= 1 then r = -1 and for right bank side = 2 and r = 1
 j = 0
@@ -96,22 +101,27 @@ j = 0
                 if (dd < 0.) then
                   write (*,*)
                   write (*,*) ' WARNING , Module Projection...'
-                  write (*,*) ' The distance coordinate of the new undercutting front is negative...'
+                  write (*,*) ' The distance coordinate of the new undercutting front is negative in ContLine: ',oldprofile%CL_number
                   pause
                  end if  
 
         
         rel_dd = ABS(dd- origin)
         rel_dist_oldfront = ABS(oldprofile%prnode(p)%distance - origin)                             ! relativ distance of the old front with respect to the origin.
-
+       
+        if (abs( rel_dd - b) <= 0.001 )  NewFrontCoBase = .TRUE.                                   ! Singalaize that newfront coincides with base, It means water level is equal to the front elevation.
+ 
  ! check if the computed new front undrcuts the old one or lies on the other side of the front. In the latter case, it meeans the
  ! extrapolation line meets the profile of the bank below the old front. This case, introduces a new profile node on intersection point
  ! which should be correctly sorted into the new profile.
 
         if( (rel_dd - rel_dist_oldfront )> 0.01 )then                     ! it means the extrapolation line from base point intersects with the profile before reaching to the elevation of the old front.
-           call intersect(oldprofile, pointB,angle/pi*180.,start,p,r,dd,elev,ind)                            ! therefore, the intersection point should be computed and substituted with dd.
+           call intersect(oldprofile, pointB,angle/pi*180.,start,p,r,dd,elev,ind, 0.001)                            ! therefore, the intersection point should be computed and substituted with dd.
            rel_dd = ABS(dd- origin)
            intsec = .TRUE.
+        elseif ( ABS(rel_dd - rel_dist_oldfront )<= 0.01) then
+           rel_dd = rel_dist_oldfront   
+           dd     = oldprofile%prnode(p)%distance 
         end if
 
             if (present (lost).AND. (abs (oldprofile%prnode(p)%elevation - oldprofile%prnode(p)%water_elev)> 0.01)) then  ! if it is required the lost area be computed and the water level is not equal to front elevation.
@@ -125,6 +135,7 @@ j = 0
 
                    case default
                     del_d2 = ABS(oldprofile%prnode(p)%distance - dd)
+                    elev = oldprofile%prnode(p)%elevation
                     lost = (del_d1 + del_d2) * (elev - pointB%elevation)/2.       ! the triangular area lost betweenpotential nose, front (pointB = basepoint) and intersection of extrapolation line with bank profile.
 
                end select
@@ -140,8 +151,6 @@ j = 0
 ! for the right bank.
 ! ****************************************************************************************************
 
-!??????????????   check the algorithm for the case that no profile node locates over the extrpolation region  ??????????????
-
 !------------------------  projection between old front (or nose) and new front ----------------------------
 
 proj:do i = start + r, en ,r
@@ -151,29 +160,44 @@ proj:do i = start + r, en ,r
       
        u     = oldprofile%prnode(i)%fe_nodenumber
        
-!if (u== 0) cycle proj
- ! here it can be added if u<= 0 then cycle, however , before adding it, it should be tested if it works for all cases (scenario).
- l1:    if ( ABS(rel_d - b) <= 0.001 ) then              ! check if the new front(or basepoint) coincides with a profile node(in the case of basepoint, it can be any node even old front)
-           j = j +1                                      ! on the upper profile, resulting to have a conjugate FE node (in the case old front is projecting and it has no fe_conjugate, the new.
+ l1:    IF ( ABS(rel_d - b) <= 0.001 ) THEN              ! check if the new front(or basepoint) coincides with a profile node(in the case of basepoint, it can be any node even old front)
+                                                         ! on the upper profile, resulting to have a conjugate FE node (in the case old front is projecting and it has no fe_conjugate, the new
                                                          ! just generated node will have also no conjugate fe_node.
+           if (flag) cycle proj                          ! in the case that the current node has a conjugate in the overhnag and has been projected already once on base point(usuallay it happens when the current node is Front). 
+                                                         ! then igonre th eprojection.
+           j = j +1                                      
+                                                         
            flag = .TRUE.                                 ! signaling that front(or basepoint) has been already added to the new profile(important for sorting the nodes).
            oldprofile%prnode(i)%fe_nodenumber   = - abs(u)    ! although those nodes in overhang zone (above extrapolation line) have already in avalanche subroutine -1 x fe_nodenumber as their conjugate fe_node, but to be on safe side, it is done here again.
            newprofile%prnode(current_index + j) = pointB ! projection /equating pointB as a new node in newprofile.
            newprofile%prnode(current_index + j)%fe_nodenumber = abs(u)
            newprofile%prnode(current_index + j)%distance  =  oldprofile%prnode(i)%distance   !30APRIL2009;17:57  IT IS DONE TO ENSURE THAT THE COMPUTED DISTANCE IS EXACTLY EQUAL TO THAT OF THE CONICDED PROFILE NODE TO PROHIBIT ERROR IN SUBROUTINE SIMPLE_PROJECTION IN SUBROUTINE CANTILEVER.
            oldprofile%prnode(i)%attribute = 'overhang'
+           
             if (u>0) then
              fenode(u)%elevation = pointB%elevation       ! update the fenode's elevation accordingly.
              fenode(u)%statuss = 'deactivate'             ! reset the fe_ndoe status for fututre computation in Exner subroutine and evaluation in Bankevolution subroutine.
             end if
 
-             if ((trim(pointB%attribute) == 'front').AND. (.NOT. PRESENT (oldpr_index) ) ) then          ! if the pointB is the new front and it is not going to be undercut by base point.
+             if ((trim(adjustL(pointB%attribute)) == 'front').AND. (.NOT. PRESENT (oldpr_index) ) ) then          ! if the pointB is the new front and it is not going to be undercut by base point.
                if (side == 1) then
                  newprofile%Lfront = current_index + j
                ELSE IF (side == 2) THEN
                  newprofile%Rfront = current_index + j
                end if
              end if
+          
+             if ((trim(adjustL(pointB%attribute)) == 'basepoint').AND. (NewFrontCoBase ) ) then          ! if the pointB is the base and coincides with new front. 
+               newprofile%prnode(current_index + j)%attribute = 'front'
+               flag_newfront= .TRUE.
+               
+               if (side == 1) then
+                 newprofile%Lfront = current_index + j
+               ELSE IF (side == 2) THEN
+                 newprofile%Rfront = current_index + j
+               end if
+             end if
+          
 
         ELSE IF ( ( ABS (rel_d - c) <=0.001 ) .AND. (trim(oldprofile%prnode(i)%attribute) == 'front') ) THEN    l1       ! in the case that current profile node is an old front and coincides with potential nose (wsl1[water surface] = front's elevation).
                                                                                                           ! otherwise, rel_d = c has been already considered in Avalanche module.
@@ -193,12 +217,15 @@ proj:do i = start + r, en ,r
             fenode(u)%statuss = 'deactivate'                             ! reset the fe_ndoe status for fututre computation in Exner subroutine and evaluation in Bankevolution subroutine.
            end if
 
-        else if ( (rel_d > b).and.(rel_d < c).AND. (u>0) ) then   l1      ! when the profile nodes are located between new_front/nose and old front/basepoint and have not been already projected (u>0, u=0 will not be projected)
-            j = j +1                                                     ! if rel_d = c has been already considered in Avalanche module, in case it coincides with a profile node.
-
+     !   else if ( (rel_d > b).and.(rel_d < c).AND. (u>0) ) then   l1      ! when the profile nodes are located between new_front/nose and old front/basepoint and have not been already projected (u>0, u=0 will not be projected)
+     !       j = j +1                                                     ! if rel_d = c has been already considered in Avalanche module, in case it coincides with a profile node.
+        ELSE IF ( (rel_d > b).and.(rel_d < c) ) THEN   l1 
+           
             oldprofile%prnode(i)%fe_nodenumber = -abs(u)                      ! although those nodes in overhang zone (above extrapolation line) have already in avalanche subroutine -1 x fe_nodenumber as their conjugate fe_node, but to be on safe side, it is done here again.
             oldprofile%prnode(i)%attribute = 'overhang'
-
+           
+           if (u>0) then
+            j = j +1
             newprofile%prnode(current_index + j) = oldprofile%prnode(i)
             newprofile%prnode(current_index + j)%fe_nodenumber = abs(u)       ! to make sure that a positive value is assaigned to new profile's Fe-nodenumber.
             newprofile%prnode(current_index + j)%attribute = 'profile'
@@ -212,48 +239,72 @@ proj:do i = start + r, en ,r
             newprofile%prnode(current_index + j)%elevation = z
             fenode(u)%elevation = z
             fenode(u)%statuss = 'deactivate'                            ! reset the fe_ndoe status for fututre computation in Exner subroutine and evaluation in Bankevolution subroutine.
-
+           end if
+           
         ELSE IF (rel_d < b) THEN       l1
 
-prs:       if ((PRESENT(oldpr_index)).AND.(rel_d>rel_dd))  then    ! the point is between basepoint and the new front.
+prs:       if ((PRESENT(oldpr_index)).AND.(rel_d-rel_dd>0.001))  then    ! the point is between basepoint and the new front.
 
              if (.not. flag) then                                 ! if none of the profile nodes coincides with the basepoint, then include the base point seperately
               j = j + 1                                           ! in the temporary sorting array newprofile.
               newprofile%prnode(current_index + j) = pointB       ! the new basepoint has then no conjugate Fe-node.
               flag = .TRUE.
              ENDIF
+             
              if (u>0) then                                         ! 04.05.2009 17:39  . To prevent the nodes in overhangs with negative Fe_nodenumbers to be re-projected on the extrapolation line beyond basepoint.
-             j = j + 1
-             newprofile%prnode(current_index + j) = oldprofile%prnode(i)
-             oldprofile%prnode(i)%fe_nodenumber = -ABS(u)
-             oldprofile.prnode(i).attribute = 'overhang'
+              j = j + 1
+              newprofile%prnode(current_index + j) = oldprofile%prnode(i)
+             
+               if (.NOT.intsec) then
+                oldprofile%prnode(i)%fe_nodenumber = -ABS(u)
+                oldprofile.prnode(i).attribute = 'overhang'
 
-             newprofile%prnode(current_index + j)%fe_nodenumber = ABS(u)               ! to make sure that a positive value is assaigned to new profile's Fe-nodenumber.
-             newprofile%prnode(current_index + j)%attribute = 'profile'
-             z = pointB%elevation + ((-1)**side) * TAN(angle)* (d - pointB%distance)   ! Projection of the current profile's node on extrapolation line-unsaturated slope (the elevation), The equation is based on new front (left)
-             newprofile%prnode(current_index + j)%elevation = z
+                newprofile%prnode(current_index + j)%fe_nodenumber = ABS(u)               ! to make sure that a positive value is assaigned to new profile's Fe-nodenumber.
+                newprofile%prnode(current_index + j)%attribute = 'profile'
+                z = pointB%elevation + ((-1)**side) * TAN(angle)* (d - pointB%distance)   ! Projection of the current profile's node on extrapolation line-unsaturated slope (the elevation), The equation is based on new front (left)
+               else
+                z = elev + (rel_d - rel_dd)/(b - rel_dd)* (pointB%elevation - elev)
+               end if
 
-               fenode(u)%elevation = z
-               fenode(u)%statuss = 'deactivate'                   ! reset the fe_ndoe status for fututre computation in Exner subroutine and evaluation in Bankevolution subroutine.
+              newprofile%prnode(current_index + j)%elevation = z
+
+              fenode(u)%elevation = z
+              fenode(u)%statuss = 'deactivate'                   ! reset the fe_ndoe status for fututre computation in Exner subroutine and evaluation in Bankevolution subroutine.
+             
+             elseif (u == 0.AND..NOT. intsec ) then
+             
+              oldprofile.prnode(i).attribute = 'overhang'
+             
              end if
 
            else if ( ( PRESENT(oldpr_index) ) .AND. ( ABS (rel_d-rel_dd) <=0.001 ) )  then    prs
 
+             IF ( flag_newfront) CYCLE proj
              j = j + 1
              newprofile%prnode(current_index + j) = oldprofile%prnode(i)
-             oldprofile%prnode(i)%fe_nodenumber = -ABS(u)
-             oldprofile.prnode(i).attribute = 'overhang'
-
-             newprofile%prnode(current_index + j)%fe_nodenumber = ABS(u)                 ! to make sure that a positive value is assaigned to new profile's Fe-nodenumber.
-             newprofile%prnode(current_index + j)%elevation = oldprofile%prnode(p)%elevation    ! the new front's elevation is equal to the old fornt's elevation (p determines if it was on left or right bank)
-  !           z = pointB%elevation + ((-1)**side) * TAN(angle)* (dd - pointB%distance)   ! Projection of the current profile's node on  point dd(new front) with unsaturated slope, The equation is based on new front (left)
-   !          newprofile%prnode(current_index + j)%elevation = z
              flag_newfront= .TRUE.
-
+             flag = .TRUE.                                                              ! It means: in the case that the point i is old front and coincides
+                                                                                        ! with the new front then donot include base point anymore. 
     sec:     if (intsec) then
+
               newprofile%prnode(current_index + j)%attribute = 'profile'
 
              else             sec
+   
+              oldprofile%prnode(i)%fe_nodenumber = -ABS(u)
+              oldprofile.prnode(i).attribute = 'overhang'
+
+              newprofile%prnode(current_index + j)%fe_nodenumber = ABS(u)                 ! to make sure that a positive value is assaigned to new profile's Fe-nodenumber.
+              newprofile%prnode(current_index + j)%elevation = oldprofile%prnode(p)%elevation    ! the new front's elevation is equal to the old fornt's elevation (p determines if it was on left or right bank)
+  
+  !           z = pointB%elevation + ((-1)**side) * TAN(angle)* (dd - pointB%distance)   ! Projection of the current profile's node on  point dd(new front) with unsaturated slope, The equation is based on new front (left)
+   !          newprofile%prnode(current_index + j)%elevation = z
+!             flag_newfront= .TRUE.
+
+!    sec:     if (intsec) then
+ !             newprofile%prnode(current_index + j)%attribute = 'profile'
+
+  !           else             sec
 
               newprofile%prnode(current_index + j)%attribute = 'front'
 
@@ -341,7 +392,7 @@ fr:if (trim(pointB%attribute) == 'front') then                               ! i
   
           if (oldprofile%prnode(start)%fe_nodenumber > 0 ) &                         ! in the case that the START node is beynod projection zone (between nose and front)
 &            newprofile%prnode(current_index + j)%attribute = 'profile'              ! don't include it as an overhang node.
-
+ !         if ( (ABS(oldprofile%prnode(start)%distance - origin) - ABS(pointB%distance - origin) )
     else if ((present (nose)).AND.(trim(oldprofile%prnode(start)%attribute) =='nose')) then    ! if the overhang is just being generated, and the node with the index "start" is the nose then assiagn it as a nose to the new profile.
           j = j + 1
           newprofile%prnode(current_index + j)= nose
@@ -354,7 +405,6 @@ fr:if (trim(pointB%attribute) == 'front') then                               ! i
     end if
 ENDif fr
 
-!???????? it seems that this part is not logical to be here, the rest of profile above nose should be built in avalanche by controling if the slope exeeds the critical one ! ????
 !----------------------------- Start sorting the rest of the profile above front /nose (overhang and top of the profile)------------------------------------------------------------------
 
   if (present (oldpr_index) .and. (.not.intsec) ) then                ! the case that basepoint has been created, however there is no intersection of extrapolation line with the profile.
@@ -384,7 +434,7 @@ ENDif fr
            else if ((side == 2).and. (i == oldprofile%Rnose) ) then
             newprofile%Rnose = current_index + j
            end if 
-          
+
           d = newprofile%prnode(current_index + j)%distance
           h = newprofile%prnode(current_index + j)%elevation
 
@@ -420,56 +470,62 @@ ENDif fr
       newprofile%max_nodes = current_index
 
 ! compute the failure volume due to undercutting by falling water level in the river (production and propagation of base point).      
- 
+!********************************************************************************************
+! The following algorithm should be actived only in the case,  volume should be distributed
+! based on connecting FE element's area to each node. Otherwise, the exact eroded area
+! has been already calculated above and assigned to LOST!
+!******************************************************************************************** 
    !if (present (lost).AND. (abs (oldprofile%prnode(p)%elevation - oldprofile%prnode(p)%water_elev)> 0.01)) then  ! if it is required the lost area be computed and the water level is not equal to front elevation.
-    if (present (lost)) then
-       Sumvolume = 0.
-       k =0                                                                                                           ! since the lost area below water level is computed always in avalanche subroutine.
  
- volume: do i = start + r, en ,r
+ ! DEACTIVATE DUE TO SIMPLER ALGORITHM
+!    if (present (lost)) then
+!       Sumvolume = 0.
+!       k =0                                                                                                           ! since the lost area below water level is computed always in avalanche subroutine.
+ 
+! volume: do i = start + r, en ,r
         
-         d     = oldprofile%prnode(i)%distance
-         rel_d = ABS(d - origin)                           ! distance of the current point to the origin (left or right end)
+ !        d     = oldprofile%prnode(i)%distance
+ !        rel_d = ABS(d - origin)                           ! distance of the current point to the origin (left or right end)
         
-         k = k + 1
-         m         = abs (newprofile%prnode(save_index + k)%fe_nodenumber )
+ !        k = k + 1
+ !        m         = abs (newprofile%prnode(save_index + k)%fe_nodenumber )
          ! if there is no conjugate Fe node for this prnode cycle
          
-         if ( (Oldprofile%prnode(i)%fe_nodenumber == 0 ).OR.(m == 0) ) cycle volume
+ !        if ( (Oldprofile%prnode(i)%fe_nodenumber == 0 ).OR.(m == 0) ) cycle volume
          
-         if (newprofile%prnode(save_index + k)%attribute == 'front' ) exit
+  !       if (newprofile%prnode(save_index + k)%attribute == 'front' ) exit
          
          ! if the node is beyond ( towards the bank) old front then the use the difference between the height of old front
          ! and the node of newprofile below it as deltaElev. 
          
-         if ( p /= 0) then  ! case of alreeady exiting overhang
+  !       if ( p /= 0) then  ! case of alreeady exiting overhang
          
-          if ( rel_d <= abs(d - oldprofile%prnode(p)%distance) ) then
-           ref_height = oldprofile%prnode(p)%elevation
-          else 
-           ref_height = oldprofile%prnode(i)%elevation
-          end if
+  !        if ( rel_d <= abs(d - oldprofile%prnode(p)%distance) ) then
+  !         ref_height = oldprofile%prnode(p)%elevation
+  !        else 
+  !         ref_height = oldprofile%prnode(i)%elevation
+  !        end if
          
-         else              ! case of just generating overhang
-           ref_height = newprofile%water_elev
-         end if 
-         deltaElev = abs ( ref_height - newprofile%prnode(save_index + k)%elevation )
+  !       else              ! case of just generating overhang
+  !         ref_height = newprofile%water_elev
+  !       end if 
+  !       deltaElev = abs ( ref_height - newprofile%prnode(save_index + k)%elevation )
          
-         call EffectiveArea(Eff_area,m)
+  !       call EffectiveArea(Eff_area,m)
          
-         Sumvolume = SumVolume + Eff_area * deltaElev
+  !       Sumvolume = SumVolume + Eff_area * deltaElev
          
-         end do volume
+  !       end do volume
          
-         lost = SumVolume
-   end if    
+ !        lost = SumVolume
+ !  end if    
 
 end subroutine  projection
 end module   projectn
 
 !-----------------------------------------------------------------------------------------------------------------------------------------
 ! this subroutine computes the intersection coordiante of the extrapolation line from base point with the profile under the old front.
-subroutine intersect(profil,pivotnode,angle,start,p,r,distance,elevation,indx)
+subroutine intersect(profil,pivotnode,angle,start,p,r,distance,elevation,indx, ips)
   USE types
   use share_profile
   USE PARAM
@@ -478,17 +534,24 @@ subroutine intersect(profil,pivotnode,angle,start,p,r,distance,elevation,indx)
   TYPE (profile)     , INTENT (IN)   :: profil
   TYPE (profile_node), INTENT (IN)   :: pivotnode
   REAL               , INTENT (IN)   :: angle
+  REAl(kind = 8)     , INTENT (IN)   :: ips  
   INTEGER            , INTENT (IN)   :: start,p,r
 
   REAL (KIND = 8)    , INTENT (OUT)  :: distance, elevation
   INTEGER            , INTENT (OUT)  :: indx
 
-  REAL (KIND = 8)                    :: y,y1,y2, x1, x2
+  REAL (KIND = 8)                    :: y,y1,y2, x1, x2,ypsilon
   real (KIND = 8)                    :: y1_projected , y2_projected
-  REAL (KIND = 8)                    :: slopeofelement
+  REAL (KIND = 8)                    :: slopeofelement, vector_dis1,vector_dis2
   INTEGER                            :: i
 
   indx = 0
+  !if (present(ips)) then
+   ypsilon = ips
+ ! else
+ !  ypsilon = 0.001
+ ! end if 
+  
   do i  = start,p-r,r               ! look for the nodes between starting node and front with increment r, all defined in the implicit interface subroutine above.
 
      y1 = profil%prnode(i)%elevation
@@ -504,20 +567,23 @@ subroutine intersect(profil,pivotnode,angle,start,p,r,distance,elevation,indx)
         distance  = (y1 - pivotnode%elevation - slopeofelement(x1,y1,x2,y2) * x1 + r * TAN (angle*pi/180.) * pivotnode%distance ) /&       ! d coordiane of intersection point
         & ( r * TAN (angle*pi/180.) - slopeofelement(x1,y1,x2,y2))
         elevation = pivotnode%elevation + r * TAN (angle*pi/180.) * (distance - pivotnode%distance)                              ! elevation coordiante of the intersection point
+        vector_dis1 = sqrt ( (distance - X1)**2 + (elevation - y1) **2 )
+        vector_dis2 = sqrt ( (distance - X2)**2 + (elevation - y2) **2 )
 !-----------------------------------      
-! 30APRIL2009; 15:33  
-        IF ( ABS( DISTANCE - X2 ) <= 0.01 ) THEN
+
+        IF ( vector_dis2  <= ypsilon ) THEN
         indx = i + R
         distance  = profil%prnode(indx)%distance ! 30APRIL2009; 16:20
         elevation = profil%prnode(indx)%elevation ! 30APRIL2009; 16:20
-        ELSEIF ( ABS( DISTANCE - X1 ) <= 0.01 ) THEN ! 30APRIL2009; 16:20
+
+        ELSEIF ( vector_dis1 <= ypsilon ) THEN 
         indx = i                                     ! 30APRIL2009; 16:20
         distance  = profil%prnode(indx)%distance      ! 30APRIL2009; 16:20
         elevation = profil%prnode(indx)%elevation     ! 30APRIL2009; 16:20
         ELSE
         indx = i
         END IF 
-! 30APRIL2009; 15:33
+
 !-----------------------------------      
         EXIT
 
