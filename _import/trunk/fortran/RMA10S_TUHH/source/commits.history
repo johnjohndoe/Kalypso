@@ -1436,3 +1436,54 @@ new features introduced/ started to be introduced:
 147.) Reduce the degree of polynomials for 1D approach from 0:12 to 0:4
 
 --- Nico Schrage, 27.09.2009
+
+--- M.Hassan Nasermoaddeli, 01.10.2009  
+
+148.) Completing comments regarding mathematical formulation of momentum equation.
+        >> SubR: coef25, coef2dnt, coef2
+149.) Correcting the explanation of the Variable ITURB in comment block.
+        >> SubR Turbulence  
+150.) Now it is possible to create restart file for profiles after the keyword PRFREST in file block of control file.
+      SubR : file, rma10, ReadBankProfiles, input
+151.) Addition the option of refine mesh adaptation in tensile failure computation by variable refine.
+        >>SubR: INSAND; Module : BLKSANDMOD ,Tensile.
+152.) Removing the bug regarding correct computation of control nodes (last submerged node and bank-toe node)
+      by introducing new Module : ControlNodes including explicit subroutine CriticalNodes. These nodes determine
+      the extent of ditribution of failed material at bank-toe.
+        >>SubR/Modules: ControlNodes, Avalanche, DistributeWastedMass, bank_erosion.
+153.) Changing wasted mass distribution algorithm. Due to great amount of source term, the ADV-Diff equation couldn't converge.
+      even with 10% of this volume it couldn't converge. It was decided to summ all the waste mass together and assign it directly to the 
+      bank-toe via the same distribution fuction used to be applied for distribuing source term at bank-toe.Now it is smoothly distributed 
+      over bank-toe. Therefore, the former subroutines, used to compute the source term were deactivated, which includes:
+        >>SubR/Module  EffectiveVolume,   EffectiveArea, ResuspensionRate  and the algorithm for this purpose at the end of Module projection
+      was commented out.
+      the other affected subroutines:
+        >> SubR/Module DistributeWastedMass,  Avalanche, Cantilever                
+154.) Include node filters for the following cases:
+       a) When front and nose are very close together (<=0.001 m) 
+          >>  SubR : Avalanche
+       b) When basepoint has no conjugate fenode, it is filtered out
+          >>  SubR: Cantilever
+       c) When non-conjugated nodes(without linked fenodes)are closer than 1 cm together.
+          >>  SubR: Cantilever
+155.) Bug fix: correcting an error in computation of negative pore pressure in the overhang.
+       Now the area of the pore pressure distribution's curve to the y-axe is computed as matric force.
+          >>  SubR: Cantilever                           
+156.) Bug fix: the profile after avalanche was limited only to the left bank down to talweg in case only left bank is available.
+      now the correct number of profile nodes are preserved after avalanche in the mentioned case.
+        >> Module Avalanche
+157.) Several new yet unpredicted profile node adaptation scenarios were added to the node adaptation algorithm. 
+      SubR: Tensile, Avalanche, Module_projection, Cantilever.        
+158.) Bug fix:the computation of lost mass "lost" was corrected.
+        >> Module projection
+159.)  Bug fix: The updating of elevation of bank-toe nodes due to deposition of failed mass was not included in the output profiles. 
+      It was due to the fact that the whole mass waste was assigned to the source term in ADV-DIFF equation (see below for more information).
+      Now after cantilever failure(output) the output data includes the final shape of profile including bank-toe aggradation due to mass waste. 
+        >> Module  Avalanche , Bank_erosion
+160.) Global variables ava_pr and canti_pr were removed and made local.
+      SubR: Avalanche, cantilever, tensile and bank_erosion.
+161.) Potential nose computation was improved for the case of uneven zig-zag profile.
+       >> SubR: Bank_erosion, Potentialnose        
+    
+
+        
