@@ -1,7 +1,7 @@
 !     Last change:  HN    9 Apr 2009    4:45 pm
 module types
+
 ! the data defined as types for profiles and their nodes are defined here.
-!????????????   donot forget to initilize the data defines as each of the following data types in an initialization program or within that program???
 implicit none
       integer , parameter :: single=4
       integer , parameter :: DOUBLE=8
@@ -13,14 +13,12 @@ implicit none
       real (KIND=DOUBLE)  :: distance
       real (KIND=DOUBLE)  :: elevation
       real (KIND=DOUBLE)  :: Water_elev
-!      real (KIND=double):: source
       CHARACTER(LEN=9)    :: attribute          !(Profile,Nose,Overhang,Front,basepoint,edge)
     END TYPE profile_node
 
     TYPE :: profile
      integer              :: CL_number
      INTEGER              :: max_nodes          ! maximum prnodes in each profile, which might be less than 100 but not more than it
- !    Type (profile_node), dimension (:),Pointer :: PRnode_pointer
      Type (profile_node), dimension (200) :: PRnode
      real (KIND=DOUBLE)   :: water_elev
      integer              :: Rnose              ! the profile's node number of the nose of the right overhang
@@ -35,10 +33,9 @@ implicit none
      CHARACTER (LEN =7)   :: typ                !(corner,midside)
      INTEGER              :: Node_Number
      INTEGER              :: Profile_Number
-    ! REAL (KIND=DOUBLE)   :: x_cor, y_cor
      REAL (KIND=DOUBLE)   :: elevation, water_level          ! IT CAN BE A TYPE OF COORDIATE; FOR EXAPMPLE TYPE (COORDINATE) :: POINT; AND COORDINATE IS REAL ::(X;Y;Z)
      REAL (KIND=DOUBLE)   :: sed_source
-     CHARACTER (LEN =10)   :: statuss            !(activate, deactivate)
+     CHARACTER (LEN =10)  :: statuss            !(activate, deactivate)
     END TYPE finite_element_node
 
    TYPE :: potential_nose
