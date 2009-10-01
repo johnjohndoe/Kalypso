@@ -24,7 +24,8 @@ IMPLICIT NONE
 INTEGER                       , INTENT (IN)  :: PROFILEUNIT
 INTEGER                       , INTENT (OUT) :: CURRENTPROFILE
 
-INTEGER                                     :: ISTAT , I , J
+INTEGER                                      :: ISTAT , I , J, ContiLineNumber
+CHARACTER (LEN = 18)                         :: TEMPCHAR
 
 !OPEN (UNIT=168 ,FILENAME = PROFILENAME STATUS='OLD', ACTION='READ', IOSTAT=istat)
 
@@ -39,6 +40,7 @@ READ (PROFILEUNIT,*,IOSTAT=istat)SIZ
 
 IF (ISTAT/=0) THEN
  WRITE (*,*) 'FAILURE BY reading the profile data SIZ....'
+ pause
  stop
 END IF
 
@@ -48,6 +50,7 @@ ALLOCATE ( BANKPROFILES (SIZ), stat=ISTAT)
 
 IF (ISTAT/=0) THEN
  WRITE (*,*) 'FAILURE BY ALLOCATION OF PROFILE ARRAY IN SUBROUTINE READPROFILE....'
+ pause
  stop
 END IF
 
@@ -61,16 +64,40 @@ MN: Do
 
 ! READ THE CURRENT NUMBER OF PROFILE.
 I = I + 1
+IF (I > siz) exit MN
+IF ( PROFILEUNIT == 731) THEN                                 ! if a restart file should be read.
+
+  READ (PROFILEUNIT,FMT = 121,IOSTAT = ISTAT)TEMPCHAR, I
+
+  IF (ISTAT > 0) THEN
+    WRITE (*,*) 'FAILURE BY reading the profile data in retsart file,..., at line :', I
+    pause
+    stop
+  ELSEIF (ISTAT == -1 ) THEN
+    EXIT MN
+  END IF
+
+  READ (PROFILEUNIT,FMT = 121,IOSTAT = ISTAT)TEMPCHAR, ContiLineNumber
+  BANKPROFILES(I).CL_NUMBER = ContiLineNumber
+
+ENDIF
 
 READ (PROFILEUNIT,*,IOSTAT = ISTAT) BANKPROFILES(I).LNOSE ,BANKPROFILES(I).RNOSE , BANKPROFILES(I).LFRONT , &
 &                                   BANKPROFILES(I).RFRONT , BANKPROFILES(I).MAX_NODES
 
 IF (ISTAT > 0) THEN
  WRITE (*,*) 'FAILURE BY reading the profile data, nose,..., at line :', I
+  pause
   stop
 ELSEIF (ISTAT == -1 ) THEN
   EXIT MN
 END IF
+
+IF ( PROFILEUNIT == 731) THEN                                 ! if a restart file should be read.
+
+  READ (PROFILEUNIT,FMT = *)TEMPCHAR
+
+ENDIF  
 
 write (*,*)BANKPROFILES(I).LNOSE ,BANKPROFILES(I).RNOSE , BANKPROFILES(I).LFRONT ,BANKPROFILES(I).RFRONT , BANKPROFILES(I).MAX_NODES
  
@@ -79,10 +106,11 @@ write (*,*)BANKPROFILES(I).LNOSE ,BANKPROFILES(I).RNOSE , BANKPROFILES(I).LFRONT
    READ (PROFILEUNIT,127, IOSTAT = ISTAT ) BANKPROFILES(I).PRNODE(J).FE_NODENUMBER, BANKPROFILES(I).PRNODE(J).DISTANCE ,&
    &                                       BANKPROFILES(I).PRNODE(J).ELEVATION , BANKPROFILES(I).PRNODE(J).ATTRIBUTE
 
- 127 FORMAT (1X,I7,2X, F7.3,1x,F7.4,1X, A9)
+ 127 FORMAT (1x,I7,2x,F8.4,2x,f7.4, 1x,a9)
  
  IF (ISTAT/=0) THEN
   WRITE (*,*) 'FAILURE BY reading the profile data, variables...'
+  pause
   stop
 END IF
 
@@ -93,7 +121,7 @@ END DO
 END DO MN  
 
 CURRENTPROFILE = I
-
+121 Format (a18, T26,I6)
 CLOSE (PROFILEUNIT)
 
 END SUBROUTINE READPROFILES
