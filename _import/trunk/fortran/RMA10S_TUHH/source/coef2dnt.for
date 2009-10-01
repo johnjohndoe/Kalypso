@@ -1141,6 +1141,14 @@ CIPK AUG06 ADD QIN
       !             -----------------   -----------------   ------------   --------------
       !                      H                   I                J               K
       !
+      !                                                                         --
+      !                            du                   du    dv              h   |         
+      !           + DNX *2epsXX*h*---- - DNY *epsXY*h*(---- + ----)- DNX *g*h*--  |         
+      !                            dx                   dy    dx              2   |        
+      !                                                                         --                             
+      !             -----------------   --------------------------   ----------- 
+      !                      L                        M                    N   
+  !
 !
 !.....INITIALIZE.....
 !
@@ -1182,6 +1190,9 @@ C
       FRNZ=EPSXZ*H*(DRDZ+DSDX)
       FSNX=EPSZX*H*(DRDZ+DSDX)
       FSNZ=EPSZ*H*DSDZ
+!           -----------------
+!                L ,   M
+
 C
 C.....SURFACE AND BOTTOM SLOPE (PRESSURE) TERMS.....
 C
@@ -1199,6 +1210,9 @@ C
 
       FRNX=FRNX-H*GHC/2.
       FSNZ=FSNZ-H*GHC/2.
+    !           -------
+    !             N
+
 C
 C.....BOTTOM FRICTION TERMS.....
 C
