@@ -59,6 +59,7 @@ CIPK JUN06
       ! FRICTION_ANGLE    ::   Friction angle of sand
       ! MATRIC_ANGLE      ::   Angle of matric suction (negative pore pressure)
       ! ROOT              ::   Extra cohesion due to roots of vegetation
+      ! Refine            :: a switch to determine if a refined node adoptation for tensile failure is wished(1), not wished (0)
       REAl           :: critical_slope,crepose,repose,EFFECTIVE_COHESION
      +     ,FRICTION_ANGLE, MATRIC_ANGLE, ROOT
       ! HN Pore Pressure Distribution parameters.
@@ -66,7 +67,7 @@ CIPK JUN06
       !                      in the river bank as follows: (EXPO3* h**3 + EXPO2 *h**2 + EXPO1 * h)
       !                      h is elevation over water table.                        
       REAL (kind = 8):: EXPO3,EXPO2,EXPO1
-      
+      INTEGER        :: refine
 C     +              ,CRSLOP(MEL),TRSLOP(MNP),srate(mnp),gpbsav(mnp)        
 C     +              ,RCAE(:),RWAE(:),RCAN(MNP),RWAN(MNP),TRRAT(MNP)
 C     +              ,CAI(MNP)
