@@ -1352,6 +1352,15 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
       !             -----------------   -----------------   ------------   --------------
       !                      H                   I                J               K
       !
+      !
+      !                                                                   --
+      !                            du                  du               h   |         
+      !           + DNX *2epsXX*h*---- - DNY *epsXY*h*----  - DNX *g*h* --  |         
+      !                            dx                  dy               2   |        
+      !                                                                   --                             
+      !             -----------------   ---------------------   ----------- 
+      !                      L                        M               N   
+
 !
 !.....INITIALIZE.....
 !
@@ -1402,6 +1411,8 @@ C
       FRNZ=EPSXZ*H*DRDZ
       FSNX=EPSZX*H*DSDX
       FSNZ=EPSZ*H*DSDZ
+!          -------------
+!             L , M
 
 C
 C.....SURFACE AND BOTTOM SLOPE (PRESSURE) TERMS.....
@@ -1420,6 +1431,9 @@ C
 
       FRNX=FRNX-H*GHC/2.
       FSNZ=FSNZ-H*GHC/2.
+    !           -------
+    !             N
+
 C
 C.....BOTTOM FRICTION TERMS.....
 C
