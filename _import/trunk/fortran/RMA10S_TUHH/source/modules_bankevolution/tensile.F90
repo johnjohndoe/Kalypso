@@ -58,6 +58,8 @@ MODULE tensile
 USE types
 USE share_profile
 USE param
+USE cantilever
+USE init_type
 USE BLK10MOD  , ONLY : DELT
 USE BLKSANMOD , ONLY : TRIBAREA, EXTLD, SGSAND, critical_slope 
 
@@ -66,34 +68,65 @@ implicit none
 TYPE(profile_node) , allocatable ,DIMENSION (:), save :: newnodes                   ! the save statment make the array available to the main program, since in Fortran95 allocatable arrays are automatically deallocated after ending the subroutine.
 
 CONTAINS
-subroutine tensile_failure(pr,fenode,side,newwater_elev, pot_nose_dist ,new_front,number_newnodes,lost_nodes)
+
+subroutine tensile_failure(pr,fenode,side,newwater_elev, potnose ,new_front,number_newnodes,lost_nodes,Sumsource,refined)
 
  implicit none
 
- TYPE (finite_element_node), DIMENSION (:), intent (INOUT) :: fenode
- type ( profile )                         , intent (INOUT) :: pr
- Real (kind = 8), INTENT (IN) :: pot_nose_dist, newwater_elev
- CHARACTER (LEN=5), INTENT (IN) :: side
+! Subroutine arguments
+!----------------------
+ TYPE (finite_element_node), DIMENSION (:), INTENT (INOUT) :: fenode
+ TYPE ( profile )                         , INTENT (INOUT) :: pr
+ TYPE (potential_nose)                    , INTENT (IN)    :: potnose
+ TYPE (profile_node)                      , INTENT (OUT)   :: new_front        ! is the distance of the new front to the origin of the profile
+ Real (kind = 8)                          , INTENT (out)   :: Sumsource
+ Real (kind = 8)                          , INTENT (IN)    :: newwater_elev
+ INTEGER                                  , INTENT (OUT)   :: number_newnodes, lost_nodes
+ CHARACTER (LEN=5)                        , INTENT (IN)    :: side
+ LOGICAL                                  , INTENT (IN)    :: refined
 
- TYPE (profile_node) , INTENT (OUT) :: new_front        ! is the distance of the new front to the origin of the profile
- integer , intent (OUT) :: number_newnodes, lost_nodes
- INTEGER , parameter :: DOUBL = 8
- INTEGER , DIMENSION (20,3) :: buffer    ! the variable holding THE fe_ node NUMBER, distance and elevation of THE new nodes projected ON extrapolation line.
- REAL (KIND=8) :: dis,z,z1,x,d,d1,d2,h,h1,h2,del_h1,del_h2, sourceterm,sourceterm1
- REAL (KIND=8) :: trans1, trans2          ! these two variables define the borders defined for the computation of the lost volume due to tensile failure.
- REAL (KIND=8) :: RHOBS
- real          :: radian
+! Local variables
+!-------------------
+ INTEGER , parameter            :: DOUBL = 8
+
+ TYPE (profile_node)            :: frontnode
+ TYPE (PROFILE), DIMENSION (1)  :: TMP_PROFILE
+ TYPE (PROFILE)                 :: TEMP_PROFILE ,TENSILE_PR
+ REAL(KIND=8), DIMENSION (20,3) :: buffer    ! the variable holding THE fe_ node NUMBER, distance and elevation of THE new nodes projected ON extrapolation line.
+ REAL(KIND=8), DIMENSION (2)    :: EffectVolume            ! the effective volume of collapsed overhang
+
+ INTEGER     , DIMENSION (2)    :: front     ! this critical slope is consolidated unsaturated critical slope (unsubmerged area)
+ INTEGER                        :: i,j,k,l,m,n,p,q,r,s,s1,s2,t,u,b,bb,counter
+ INTEGER                        :: status, q1, INDEX
+
+ REAL (KIND=DOUBL)              :: dis,z,z1,x,d,d1,d2,h,h1,h2,del_h1,del_h2, sourceterm,sourceterm1
+ REAL (KIND=DOUBL)              :: trans1, trans2          ! these two variables define the borders defined for the computation of the lost volume due to tensile failure.
+ REAL (KIND=DOUBL)              :: RHOBS, deld, delz, ELEV, AREA
+ REAL                           :: radian
+
+ LOGICAL                        :: FrontCounted, TwistFlag, potnose_coincid_newfront
  
- INTEGER , dimension (2) :: front         ! this critical slope is consolidated unsaturated critical slope (unsubmerged area)
- INTEGER :: i,j,k,l,m,n,p,q,r,s,s1,t,u,b,bb,counter
- INTEGER :: status, q1
+ !Program Body
+ !------------
 
+ Write (*,*) ' Entering to Tensile failure Modelling ....'
 
-Write (*,*) ' Entering to Tensile failure Modelling ....'
-
+ ! Initializing the variables
+ !---------------------------
+ 
  if (ALLOCATED(newnodes)) then               ! To make the array available for the the next call, make it deallocated if it is allocated.
   deallocate (newnodes)
  end if
+ 
+ call INIT_PROFILE(TMP_PROFILE, 1)
+ 
+ TEMP_PROFILE = TMP_PROFILE(1)
+ 
+ potnose_coincid_newfront = .FALSE.
+ FrontCounted = .FALSE.
+ TwistFlag    = .FALSE.
+ Sumsource    = 0.0
+ EffectVolume = 0.0
  ! the profile's node number corresponding to fronts (left and/or) right , if available, if not, they are equal to zero.
  front(1) = pr%Lfront
  front(2) = pr%Rfront
@@ -101,6 +134,7 @@ Write (*,*) ' Entering to Tensile failure Modelling ....'
 ! In the following if-clause the local coordiante of the new front is computed, where elevation is equal to the water elevation*
 ! and the only unkwon is the distance to the origin of the profile. That is here the variable x.                               *
 !*******************************************************************************************************************************
+ 
  if (side =='left') then
 
     dis = pr%prnode(front(1))%distance                        ! the distance component of the old front
@@ -108,30 +142,52 @@ Write (*,*) ' Entering to Tensile failure Modelling ....'
     x = dis - 1./TAN(radian(critical_slope)) * (newwater_elev - z)                   ! the distance component of the new front
     m = 1
     p = 1
-    n = pr%Lnose                                                     ! m, P and n are starting,increment and ending index of the the next loop,respectively.
+    n = pr%Lnose  
+    frontnode = pr%prnode(front(1))
+                                                   ! m, P and n are starting,increment and ending index of the the next loop,respectively.
+! In the case that new front distance (x) > potential nose (due to the mild slope of the overhang)
+! then assume a slipe surface parallel to the overhang's face OR compute the intersection point.
+    
+    if ( (x-potnose%dist) >= -0.01 ) then
+  
+      if (refined ) then
+       
+       CALL cantilever_failure( TENSILE_PR, PR , PR%WATER_ELEV , critical_slope , EffectVolume , fenode ,potnose_coincid_newfront)
+      
+       sumsource  = EffectVolume(1)
+       PR = TENSILE_PR
+       lost_nodes = -999
+       
+       ALLOCATE (newnodes(1),stat=STATUS)  
+       if (status > 0) then
+        write (*,*)' the memory allocation for new nodes after tensile failure, was unsuccessful ...'
+        pause
+       end if
+
+       RETURN
+      
+      else
+      
+       x = potnose%dist
+      
+      end if 
+    end if  
 
   ! HN06March09: correction for probable relative positions of potential nose and old front.
 
-     if (dis < pot_nose_dist) then                                          ! if the old front distance is smaller than potential nose distance
+     if (dis < potnose%dist) then                                          ! if the old front distance is smaller than potential nose distance
        trans1 = dis
-       trans2 = pot_nose_dist
-     ELSEIF (dis > pot_nose_dist) then                                      ! if the old front distance is greater than potential nose distance
-       trans1 = pot_nose_dist
+       trans2 = potnose%dist
+     ELSEIF (dis > potnose%dist) then                                      ! if the old front distance is greater than potential nose distance
+       trans1 = potnose%dist
        trans2 = dis
-     ELSEIF (ABS(dis - pot_nose_dist)< 0.001) then                          ! if the old front distance is equal to the potential nose distance
+       TwistFlag = .TRUE.
+     ELSEIF (ABS(dis - potnose%dist)< 0.001) then                          ! if the old front distance is equal to the potential nose distance
        trans1 = dis
        trans2 = trans1
      end if
 
  elseif (side =='right') then
-! if the input is side = right , the following if statemnet is not needed, since
-! it is claer that a front is existing, and front(2) is equal to the front of right %Rfront
- !    if (front(2)==0 ) then                                  ! if there is no second front. then the first front is either right or left, if side=right then
-                                                            ! the first front is right. However if there are two fronts then the secnod one is right.
-  !     dis = pr%prnode(front(1))%distnace                        ! the distance component of the old front
-   !    z = pr%prnode(front(1))%elevation
-    !   x = dis - 1./TAN(critical_slope) * (newwater_elev - z)    ! the distance component of the new front
-     !else
 
        dis = pr%prnode(front(2))%distance
        z   = pr%prnode(front(2))%elevation
@@ -139,45 +195,73 @@ Write (*,*) ' Entering to Tensile failure Modelling ....'
        m = pr%max_nodes
        p = -1
        n = pr%Rnose
+       frontnode = pr%prnode(front(2))
 
-     if (dis < pot_nose_dist) then                                          ! if the old front distance is smaller than potential nose distance
-       trans1 = pot_nose_dist
-       trans2 = dis
-     ELSEIF (dis > pot_nose_dist) then                                      ! if the old front distance is greater than potential nose distance
-       trans1 = dis
-       trans2 = pot_nose_dist
-     ELSEIF (ABS(dis - pot_nose_dist)< 0.001) then                          ! if the old front distance is equal to the potential nose distance
-       trans1 = dis
-       trans2 = trans1
-     end if
+! In the case that new front distance (x) > potential nose (due to the mild slope of the overhang
+! then assume a slipe surface parallel to the overhang's face OR compute the intersection point.
+  
+       if ( (potnose%dist - x) >= -0.01 ) then
+          
+        if  (refined ) then
+          
+          CALL cantilever_failure( TENSILE_PR, PR , PR%WATER_ELEV , critical_slope , EffectVolume , fenode,potnose_coincid_newfront  )
+          
+          sumsource  = EffectVolume(2)
+          PR = TENSILE_PR
+          lost_nodes = -999
 
+          ALLOCATE (newnodes(1),stat=STATUS)  
+          if (status > 0) then
+           write (*,*)' the memory allocation for new nodes after tensile failure, was unsuccessful ...'
+           pause
+          end if
+ 
+          RETURN
+        else
+          x = potnose%dist
+        end if
+          
+       end if  
+
+       if (dis < potnose%dist) then                                          ! if the old front distance is smaller than potential nose distance
+          trans1 = potnose%dist
+          trans2 = dis
+          TwistFlag = .TRUE.
+       ELSEIF (dis > potnose%dist) then                                      ! if the old front distance is greater than potential nose distance
+          trans1 = dis
+          trans2 = potnose%dist
+       ELSEIF (ABS(dis - potnose%dist)< 0.001) then                          ! if the old front distance is equal to the potential nose distance
+          trans1 = dis
+          trans2 = trans1
+       end if
 
  end if
 
  new_front%fe_nodenumber = 0                               ! at the beginning it is assumed that there is no conjugate fe_node, however, it will be later determined if it is correct or not.
  new_front%distance = x
-! new_front%elevation = pr%water_elev
  new_front%elevation =  newwater_elev
  new_front%water_elev = newwater_elev
- !new_front%water_elev = pr%water_elev
  new_front%attribute = 'front'
+   
 !*******************************************************************************************************************************
 ! Initialization of counters, arrays and varibles.
-s = 0
+s  = 0
 s1 = 0
+s2 = 0
 d1 = x
 h1 = newwater_elev
 d2 = dis
 h2 = z                 ! elevation of the old front
-t = 0
-q = 0
-k = 0
-l = 0
+t  = 0
+q  = 0
+k  = 0
+l  = 0
 !RHOBS=1000.*(1-porosity)* RHOS   !conversion of density[Kg/m^3] to concentration [gr/m^3]
 buffer = 0
 
 sourceterm = 0.
 sourceterm1 = 0.
+
 !**************    Start of compuatation of tensile failure for the left bank   ***************************************************!
 ! for each slice (between two subsequent profile node) the wasted mass is allocated to the corresponding FE nodes beneath the overhang.
 ! it computes also the number of profile nodes lost due to tensile failure and computes the coordiante of the new projected nodes
@@ -187,25 +271,30 @@ sourceterm1 = 0.
 ! However, after computation of the lost volume due to the tensile failure, the actual elevation of profile nodes in this region is updated
 ! using their conjugate FE nodes.
 !**********************************************************************************************************************************
-!?????????????? check in the following, if there were no node available between d=x upto d = dis or d= pot_nose_dis or even d= nose
-! the code works properly???????????????????????????????????
+
 !HN0309.  improved for the case where q = 0, meaning that there is no fe node associated to the profile node (for the case of front ad nose
+
 main: do i = m,n,p
 
   d= pr%prnode(i)%distance
   u= ABS(pr%prnode(i)%fe_nodenumber)
+
 LR:   if (side =='left') then
 
-        if (ABS(d-x)<0.001) then                                  ! if the current node distance coincides with new front, then assign the fe_node number to it.
+!        if (ABS(d-x)<0.001) then                                  ! if the current node distance coincides with new front, then assign the fe_node number to it.
+        if (ABS(d-x)<=0.001) then                                  ! if the current node distance coincides with new front, then assign the fe_node number to it.
            new_front%fe_nodenumber= u
+           new_front%distance = pr%prnode(i)%distance
            pr%prnode(i)%fe_nodenumber = -u        ! although those nodes in overhang zone (above extrapolation line) have already, in avalanche subroutine, the value of -1 x fe_nodenumber as their conjugate fe_node, but to be on safe side, it is done here again.
+           pr%prnode(i)%attribute = 'overhang'
         end if
 
- L1:     if ((d > x).and.(d<= trans1)) then                    ! when the profile nodes are located between new_front and old front
-            pr%prnode(i)%fe_nodenumber = -u     ! The fe node number of the profile nodes, on the top of the profile, turns to negative signalising its projection on extrapolation line(under water).
-            h = newwater_elev - TAN(radian(critical_slope))* (d - x)   ! Projection of the current profile's node on extrapolation line (the elevation), The equation is based on new front (left)
-                                                               ! this elevation is only to be used for calculation of mass lost (area loss) in overhang zone.
-                                                               ! the actual elevation of the profile node is equal to that of fenode, which has been computed by Exner, which may have not be identical with that of the extrapolation line (which is the original initial position).
+ L1:     if ((d-x > 0.001).and.(d<= trans1)) then                       ! when the profile nodes are located between new_front and old front         
+            if ( pr%prnode(i)%fe_nodenumber < 0 ) cycle main          ! if the current node has already a projection on the old profile no need to create double node (once more of it).
+            pr%prnode(i)%fe_nodenumber = -u                            ! The fe node number of the profile nodes, on the top of the profile, turns to negative signalising its projection on extrapolation line(under water).
+            h = newwater_elev - TAN(radian(critical_slope))* (d - x)   ! Projection of the current profile's node on extrapolation line (the elevation), 
+                                                                       ! this elevation is only to be used for calculation of mass lost (area loss) in overhang zone.
+            pr%prnode(i)%attribute = 'overhang'                        ! the actual elevation of the profile node is equal to that of fenode, which has been computed by Exner, which may have not be identical with that of the extrapolation line (which is the original initial position).
 !start computing the lost mass through tensile failure.
             del_h1 = newwater_elev - h1            ! since the elevation of the profile nodes on lower edge are all the same and equal to front(1).
             del_h2 = newwater_elev - h
@@ -213,25 +302,30 @@ LR:   if (side =='left') then
             sourceterm =1./2. * (d - d1) * (del_h1 + del_h2)
             d1 = pr%prnode(i)%distance
             h1 = h
-
+            Sumsource = Sumsource + sourceterm
 ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [mg/m^2.s].
 ! since the node which receives the mass is directly beneath profile node therefore the TRIBAREA (which is the contributing area of the elements connected to each node)
 ! is the same for  denoting node(source) as well as receiving node.Hence the ratio of this two areas is equal to 1.           
           
-            sourceterm = del_h2 * RHOBS *1000./(DELT*3600.)
+      !      sourceterm = del_h2 * RHOBS *1000./DELT
             
             q = ABS(pr%prnode(i)%fe_nodenumber)    ! assiagning the lost mass to the corresponding Fe- node as source term for suspension
-            fenode(q)%sed_source = sourceterm
-
+!            fenode(q)%sed_source = sourceterm + fenode(q)%sed_source 
+            
+            if (trim(ADJUSTL(pr%prnode(i)%attribute))=='front') cycle main   ! if the current node is conjugated node of front, no need to account it in added nodes (buffer).
+            if (q == 0) cycle main                               ! in the case that the node is an old intersection point or base point with q=0, do not include it as new node projection. 
             l=l+1                                                ! Number of the new nodes on left bank on extrapolation line.
             buffer(l,1) = q                                      ! The associated fe_node number to the new profile node on the extrapolation line.
             buffer(l,2) = d                                      ! The distance of the new profile node on the extrapolation line.
             buffer(l,3) = fenode(q)%elevation                   ! The elevation of the new profile node on the overhang is not the one on the extrapolation line
                                                                  ! but the one in fenode array, because the node might have been eroded due to the erosion resulting from flooding.
+               
+        
          elseif ((d> trans1).and.(d<=trans2)) then   L1
 !            pr%prnode(i)%fe_nodenumber = -u       ! 04.05.2009 11:10 .
             s = s + 1
+  
 
 CO:         if (s==1) then                                       ! this if statement computes the case of crossing over old front.
                                                                  ! It should be noted that by the first entrance into this if statement, h1 and d1
@@ -249,16 +343,17 @@ CO:         if (s==1) then                                       ! this if state
               sourceterm1 = sourceterm1 + 1./2. * (d2 - d1) * (del_h1 + del_h2) ! the new area correspondes to the area between the old front the node following it
                                                                                 ! (the area right to the old front-node).The sum of righ and left to the old.front make the total
                                                                                 ! source term pssing to the Fe-node beneath the current profile's node.
+             Sumsource = Sumsource + sourceterm1
+
              q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the current profile's node.
 ! in the case that q1 = 0, the INTERNAL FUNCTION q compute this FE node.
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
+  !            RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+   !            sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
+   !           fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
 !--------------------------------------------------------------------------------------------------------------------------------------
             else  CO        !cross over case
 
@@ -271,19 +366,34 @@ CO:         if (s==1) then                                       ! this if state
               del_h2 = newwater_elev - h2
 
               sourceterm =1./2. * (d2 - d1) * (del_h1 + del_h2) ! as a matter of fact Del_h1 and del_he are equal
+              Sumsource = Sumsource + sourceterm
              q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the profile node.
 ! in the case that q1 = 0, the INTERNAL FUNCTION q compute this FE node.
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
+    !          RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+     !          sourceterm = del_h2 * RHOBS * 1000./(DELT)
+     !         fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
 !--------------------------------------------------------------------------------------------------------------------------------------
             end if  CO
-
+            
+            if (TwistFlag) then
+            
+             q = ABS(pr%prnode(i)%fe_nodenumber)    ! assiagning the lost mass to the corresponding Fe- node as source term for suspension
+             s2 = s2 + 1
+             if (q == 0) cycle main                               ! in the case that the node is an old intersection point or base point with q=0, do not include it as new node projection. 
+            
+             h = newwater_elev + delz/deld* (dis - d)   ! Projection of the current profile's node on line element between new front and old front.
+             fenode(q)%elevation = h
+             l=l+1                                                ! Number of the new nodes on left bank on extrapolation line.
+             buffer(l,1) = q                                      ! The associated fe_node number to the new profile node on the extrapolation line.
+             buffer(l,2) = d                                      ! The distance of the new profile node on the extrapolation line.
+             buffer(l,3) = fenode(q)%elevation                   ! The elevation of the new profile node on the overhang is not the one on the extrapolation line
+            
+            end if
+            
          ELSEIF (d > trans2) then  L1
 
              s1 = s1 + 1                                         ! number of nodes, which will be deleted in the new profile due to tensile failure
@@ -303,10 +413,11 @@ CO:         if (s==1) then                                       ! this if state
               d2 = pr%prnode(i)%distance          ! sustitute the second area-computing node with the current node Distance
                                                                  ! d2 is equal to d, in fact it was not necessary to make a new variable 'd2'
               del_h1 = newwater_elev - h1         ! from here on, the water elevation, will not be the refrence , but the elevation of upper edge of overhang
-              del_h2 = pr%prnode(i)%elevation - h2 ! should be subtracted from that of the lower edge , since the nodes following potential nose are fully submerged.
+              del_h2 = abs(pr%prnode(i)%elevation - h2) ! should be subtracted from that of the lower edge , since the nodes following potential nose are fully submerged.
               sourceterm1 = sourceterm1 + 1./2. * (d2 - d1) * (del_h1 + del_h2) ! the new area correspondes to the area between the potential nose and the node following it
                                                                                 ! (the area right to the potential nose).The sum of righ and left to the potential nose make the total
                                                                                 ! source term passing to the Fe-node beneath the current profile's node.
+              Sumsource = Sumsource + sourceterm1
               z1 = pr%prnode(i)%elevation
               q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the current profile's node.
@@ -314,10 +425,9 @@ CO:         if (s==1) then                                       ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
+      !        RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+       !        sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
+       !       fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
 !--------------------------------------------------------------------------------------------------------------------------------------
             else  CO1        !after cross over case
 
@@ -329,18 +439,17 @@ CO:         if (s==1) then                                       ! this if state
               del_h2 = pr%prnode(i)%elevation - h2
 
               sourceterm =1./2. * (d2 - d1) * (del_h1 + del_h2)
-
+              Sumsource = Sumsource + sourceterm
               z1 = pr%prnode(i)%elevation
-             q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
+              q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the profile node.
 ! in the case that q1 = 0, the INTERNAL FUNCTION q compute this FE node.
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
+        !      RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+         !      sourceterm = del_h2 * RHOBS * 1000./(DELT)
+      !        fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
 !--------------------------------------------------------------------------------------------------------------------------------------
             end if  CO1
 
@@ -350,13 +459,19 @@ CO:         if (s==1) then                                       ! this if state
 !**************   Start of compuatation of tensile failure for the right bank   ********************************!
 
       else    LR         ! the right overhang
-           if (ABS(d-x)<0.001) then
+ !          if (ABS(d-x)<0.001) then
+           if (ABS(d-x)<=0.001) then
 !             u= ABS(pr%prnode(i)%fe_nodenumber)    ! it is computed in the main loop!
              new_front%fe_nodenumber= u
+             new_front%distance = pr%prnode(i)%distance
              pr%prnode(i)%fe_nodenumber = -u        ! although those nodes in overhang zone (above extrapolation line) have already in avalanche subroutine -1 x fe_nodenumber as their conjugate fe_node, but to be on safe side, it is done here again.
+             pr%prnode(i)%attribute = 'overhang'
            end if
 
-L2:        if ((d<x).and.(d>=trans1)) then
+!L2:        if ((d<x).and.(d>=trans1)) then
+L2:        if ((d- x<-0.001).and.(d>=trans1)) then
+            if ( pr%prnode(i)%fe_nodenumber < 0 ) cycle main          ! if the current node has already a projection on the old profile no need to create double node (once more of it).
+            pr%prnode(i)%attribute = 'overhang'
             pr%prnode(i)%fe_nodenumber = -u     ! The fe node number of the profile nodes, on the top of the profile, turns to negative signalising its projection on extrapolation line(under water).
             h = z + TAN(radian(critical_slope)) * (d - dis)   				       ! Image of the current profile's node on extrapolation line (the elevation). The equation is based on old front (right).
             del_h1= newwater_elev - h1            ! since the elevation of the profile nodes on lower edge are all the same and equal to front(1).
@@ -365,23 +480,25 @@ L2:        if ((d<x).and.(d>=trans1)) then
             sourceterm =1./2. * (d1 - d) * (del_h1 + del_h2)
             d1 = pr%prnode(i)%distance
             h1 = h
-
+            Sumsource = Sumsource + sourceterm
             q = ABS(pr%prnode(i)%fe_nodenumber)         ! assiagning the lost mass to the corresponding Fe- node as source term for suspension
     
     ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
     ! in the following it is directly assigned to the nodes below overhang. The source term is in [mg/m^2.s]           
-            RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-            sourceterm = del_h2 * RHOBS * 1000./DELT
-            !sourceterm = del_h2 * RHOBS * 1000./(DELT*3600.)
+          !  RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+           ! sourceterm = del_h2 * RHOBS * 1000./DELT
     
-            fenode(q)%sed_source = sourceterm
-
+      !      fenode(q)%sed_source = sourceterm + fenode(q)%sed_source
+          
+            if (trim(ADJUSTL(pr%prnode(i)%attribute))=='front') cycle main   ! if the current node is conjugated node of front, no need to account it in added nodes (buffer).
+            if (q == 0) cycle main                               ! in the case that the node is an old intersection point or base point with q=0, do not include it as new node projection. 
             l=l+1                                                ! Number of the new nodes on right bank.
             buffer(l,1) = q                                      ! The associated fe_node number to the new profile node on the overhang.
             buffer(l,2) = d                                      ! The distance of the new profile node on the overhang.
             buffer(l,3) = fenode(q)%elevation                   ! The elevation of the new profile node on the overhang is not the one on the extrapolation line but the one in fenode array, because the node may have been eroded due to the flooding.
 
-
+            if (abs(d-trans1) <= 0.001) FrontCounted = .TRUE.
+            
          elseif ((d<trans1).and.(d>=trans2)) then   L2
 !            pr%prnode(i)%fe_nodenumber = -u       ! 04.05.2009 11:10 .
 
@@ -403,7 +520,7 @@ CO2:         if (s==1) then                                      ! this if state
               sourceterm1 = sourceterm1 + 1./2. * (d1 - d2) * (del_h1 + del_h2) ! the new area correspondes to the rea between the old front the node following it
                                                                                 ! (the area right to the old front-node).The sum of righ and left to the old.front make the total
                                                                                 ! source term pssing to the Fe-node beneath the current profile's node.
-
+             Sumsource = Sumsource + sourceterm1
              q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the current profile's node.
 ! in the case that q1 = 0, the INTERNAL FUNCTION q compute this FE node.
@@ -417,10 +534,10 @@ CO2:         if (s==1) then                                      ! this if state
    
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
+            !  RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+              
+             !  sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
+     !         fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
 !--------------------------------------------------------------------------------------------------------------------------------------
             else  CO2        !cross over case
 
@@ -433,18 +550,34 @@ CO2:         if (s==1) then                                      ! this if state
               del_h2 = del_h1
 
               sourceterm =1./2. * (d1 - d2) * (del_h1 + del_h2) ! as a matter of fact Del_h1 and del_he are equal
+              Sumsource = Sumsource + sourceterm
              q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the profile node.
 ! in the case that q1 = 0, the INTERNAL FUNCTION q compute this FE node.
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
+             ! RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+              
+              ! sourceterm = del_h2 * RHOBS * 1000./(DELT)
+     !         fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
 !--------------------------------------------------------------------------------------------------------------------------------------
             end if  CO2
+         
+            if (TwistFlag) then
+             s2 = s2 + 1
+             q = ABS(pr%prnode(i)%fe_nodenumber)    ! assiagning the lost mass to the corresponding Fe- node as source term for suspension
+            
+             if (q == 0) cycle main                               ! in the case that the node is an old intersection point or base point with q=0, do not include it as new node projection. 
+            
+             h = newwater_elev - delz/deld * (x - d)   ! Projection of the current profile's node on line element between new front and old front.
+             fenode(q)%elevation = h
+             l=l+1                                                ! Number of the new nodes on left bank on extrapolation line.
+             buffer(l,1) = q                                      ! The associated fe_node number to the new profile node on the extrapolation line.
+             buffer(l,2) = d                                      ! The distance of the new profile node on the extrapolation line.
+             buffer(l,3) = fenode(q)%elevation                   ! The elevation of the new profile node on the overhang is not the one on the extrapolation line
+            
+            end if
 
          ELSEIF (d < trans2) then  L2      !
 
@@ -469,6 +602,7 @@ CO2:         if (s==1) then                                      ! this if state
               sourceterm1 = sourceterm1 + 1./2. * (d1 - d2) * (del_h1 + del_h2) ! the new area correspondes to the area between the potential nose and the node following it
                                                                                 ! (the area right to the potential nose).The sum of righ and left to the potential nose make the total
                                                                                 ! source term passing to the Fe-node beneath the current profile's node.
+              Sumsource = Sumsource + sourceterm1
               z1 = pr%prnode(i)%elevation
              q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the current profile's node.
@@ -476,10 +610,10 @@ CO2:         if (s==1) then                                      ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
+          !    RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+           
+          !     sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
+        !      fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm1
 !--------------------------------------------------------------------------------------------------------------------------------------
             else  CO3        !after cross over case
 
@@ -491,7 +625,7 @@ CO2:         if (s==1) then                                      ! this if state
               del_h2 = pr%prnode(i)%elevation - h2
 
               sourceterm =1./2. * (d1 - d2) * (del_h1 + del_h2)
-
+              Sumsource = Sumsource + sourceterm
               z1 = pr%prnode(i)%elevation
               q1 = ABS(pr%prnode(i)%fe_nodenumber)                 ! to test if q1 = q in the program so that the findnode algorithm is omitted later.
 ! finding the corresponding Fe-node, which receives the wasted mass as source term, this node lies directly beneath the profile node.
@@ -499,10 +633,10 @@ CO2:         if (s==1) then                                      ! this if state
 !--------------------------------------------------------------------------------------------------------------------------------------
  ! HN. 11June2009. Computation of source volume directly assigned to the nodes below it.
 ! in the following it is directly assigned to the nodes below overhang. The source term is in [g/m^2.s]           
-              RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
-              !sourceterm1 = del_h2 * RHOBS * 1000./(DELT*3600.)
-               sourceterm1 = del_h2 * RHOBS * 1000./(DELT)
-              fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
+           !   RHOBS=1000.*(1-porosity)* SGSAND (q_fenode(q1))  ![kg/m^3], i.e. SGSAND = 2.65
+             
+            !   sourceterm = del_h2 * RHOBS * 1000./(DELT)
+           !   fenode(q_fenode(q1))%sed_source = fenode(q_fenode(q1))%sed_source + sourceterm
 !--------------------------------------------------------------------------------------------------------------------------------------
             end if  CO3
 
@@ -517,16 +651,18 @@ if (status > 0) then
  write (*,*)' the memory allocation for new nodes after tensile failure, was unsuccessful ...'
  pause
 end if
+! initalize the array newnodes
 
 do i = 1,l
-   newnodes(i)%fe_nodenumber = buffer(i,1)
+   newnodes(i)%fe_nodenumber = INT(buffer(i,1))
    newnodes(i)%distance = buffer(i,2)
    newnodes(i)%elevation = buffer(i,3)
    newnodes(i)%water_elev = fenode(newnodes(i)%fe_nodenumber)%water_level
    newnodes(i)%attribute = 'profile'
 end do
-number_newnodes = l                      ! minus 1 since the overhang's old nose is counted in l.
-lost_nodes = s1
+
+ number_newnodes = l          ! minus 1 since the overhang's old nose is counted in l.
+ lost_nodes = s1 + s2
 !------------------------ Internal function ------------------------------
 CONTAINS
 INTEGER function q_fenode(conjugate_node)
@@ -536,7 +672,6 @@ INTEGER :: t, start, endd,inc
 REAL (KIND = 8) :: a, b, c
 
  if (side == 'left') then
-  !  a = d2
     b = pr%prnode(i)%distance
     c = 0.
     start = front(1)
@@ -544,12 +679,8 @@ REAL (KIND = 8) :: a, b, c
     inc = 1
 
  ELSE IF (side == 'right') then
-  !  a = pr%prnode(i)%distance
-   ! b = d2
     b = pr%prnode(i)%distance
     c = pr%prnode(pr%max_nodes)%distance
-!    start = pr%max_nodes
- !   endd =  front(2)
     endd  = 1
     start = front(2) 
     inc   = -1
