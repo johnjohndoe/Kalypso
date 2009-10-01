@@ -38,62 +38,51 @@ use param
 USE BLK10MOD       ! it contins water level of nodes and their elevation (ao), MAXE,MAXP and ......
 USE ASSIGNROFILES  ! the size of profile SIZ is defined here.
 USE INIT_TYPE
-USE BLKSANMOD      ! the source term variable EXTLD has been defined there.
+USE BLKSANMOD      ! the source term variable EXTLD, refine , ... have been defined there.
 USE BLKDRMOD
 
       implicit none
-    !  INTEGER , INTENT (IN) :: numberofnodes
-   !   TYPE(finite_element_node), DIMENSION (numberofnodes), INTENT (INOUT) :: Fenodes    ! it is better to define Fenodes in a module by reading the input data file of continuity lines.
-     ! integer :: number_of_profiles                                                                                   !   fenodes has been defined in share_module
-
-!      integer , intent (IN),optional :: number_of_profiles
       
       INTEGER , INTENT (IN) :: CallCounter
+
 ! Local variables
-!      TYPE(profile_node), ALLOCATABLE,DIMENSION (:),TARGET  :: Pr_node
-     
-      TYPE(profile_node) , ALLOCATABLE,DIMENSION (:) :: Ladded_nodes,Radded_nodes !,pr_node
-      TYPE(profile_node) :: Lnew_front, Rnew_front                                   ! newprofile  front node number in case of submerged overhang
-
-      TYPE(potential_nose),DIMENSION (2) :: potentialnose
-      TYPE(profile)       ,DIMENSION (1) :: temp_prof
-      TYPE(profile)                      :: Profil , pr                              ! no need to define original profile here(old_pr), it has been already defined as global array
-                                                                                     ! in subroutne getgeo. pr is the profile after adoption to Exner calculations and profil the one after adoption to tensile failure calculations.
-   !   TYPE(finite_element_node), DIMENSION (:), allocatable :: Fenodes
-
-      TYPE(finite_element_node), DIMENSION (MAXP) :: Fenode
-      ! maxp is a global array saving the number of finite element nodes including midside nodes.
- !     integer , parameter :: single=4
-  !    integer , parameter :: DOUBLE=8
-            
-      Real , parameter :: ypsilon = 0.01
-      Real (kind = DOUBLE) , DIMENSION (MAXE)     :: ElementSource                   ! maxe is a global array saving the number of elements.
-      Real (kind = DOUBLE) , DIMENSION (MAXP)     :: diffbed 
-      Real (kind = DOUBLE) , DIMENSION (2) :: failure_source , EffectiveWidth_Overhang, avalanche_source
+      Real , parameter :: ypsilon = 1.0E-6
+      
+      TYPE(profile_node) , ALLOCATABLE,DIMENSION    (:) :: Ladded_nodes,Radded_nodes !,pr_node
+      TYPE(finite_element_node)       ,DIMENSION (MAXP) :: Fenode                    ! maxp is a global array saving the number of finite element nodes including midside nodes.
+      TYPE(potential_nose)            ,DIMENSION (2)    :: potentialnose
+      TYPE(profile)                   ,DIMENSION (1)    :: temp_prof
+      TYPE(profile_node)                                :: Lnew_front, Rnew_front    ! newprofile  front node number in case of submerged overhang
+      TYPE(profile)                                     :: Profil , pr      &        ! no need to define original profile here(old_pr), it has been already defined as global array
+                                                         & , canti_pr, ava_pr        ! in subroutne getgeo. pr is the profile after adoption to Exner calculations and profil the one after adoption to tensile failure calculations.
+      
+      Real (kind = DOUBLE)            ,DIMENSION (MAXE) :: ElementSource             ! maxe is a global array saving the number of elements.
+      Real (kind = DOUBLE)            ,DIMENSION (MAXP) :: diffbed 
+      Real (kind = DOUBLE)            ,DIMENSION (2)    :: failure_source , EffectiveWidth_Overhang, avalanche_source
            
-      REAL(KIND=DOUBLE) :: z1,z2,zz2, realtemp
-     ! REAL(KIND=DOUBLE) :: average_water_level,distfromwater
-      REAL(KIND=DOUBLE) :: distfromwater
-      REAL(KIND=doublE) :: HTP , DIFF1, D1, D2
-    !  REAL(KIND=DOUBLE), (IN) :: wsll                                               	! no need to define it here, since included in Fenodes data type
-     
-      INTEGER , DIMENSION (2) ::  front                                              ! front is an array that stores the profile node number of overhang's front.
-      INTEGER , DIMENSION (2) ::  last_submerged_node , Banktoe_node   ! for left and right banks.
-     
-      INTEGER :: Lnumber_newnodes,Rnumber_newnodes,Lnumber_lostnodes,Rnumber_lostnodes ! Lnumber_lostnodes  and Rnumber_lostnodes are the number (Anzahl) of deleted profile nodes in overhang due to submergence (tensile failure)
-      INTEGER :: Ltotal, Rtotal, Total ,totalprnode                                    ! number_of_profiles is also a global variable like profile
-      INTEGER :: h,hh,i,j,k,kk,l,m,n,b,t,g, u , j1, j2
-      integer :: integertemp
-      integer :: deleted_nodesL ,deleted_nodesR , pr_number
-      INTEGER :: status, lstatus , rstatus
-      INTEGER :: numberofnodes , number_of_profiles
+      INTEGER                         ,DIMENSION (2)    ::  front                                ! front is an array that stores the profile node number of overhang's front.
+      INTEGER                         ,DIMENSION (2)    ::  last_submerged_node , Banktoe_node   ! for left and right banks.
 
-      CHARACTER (LEN = 35):: exner_pr, tens_pr, Avalanch_pr, Cantilever_pr 
-      CHARACTER (LEN = 1) :: seign,sgn
-      CHARACTER (LEN = 5) :: side                                                     ! it is a tag that is either 'left' or 'right', and it signals tensile failure subroutine
-      CHARACTER (LEN = 3) :: digit                                                                             ! with which overhang it deals.
-      CHARACTER (LEN = 9):: distribution
-      LOGICAL :: Lsubmerged,Rsubmerged
+      
+      REAL(KIND=DOUBLE)      :: z1,z2,zz2, realtemp
+      REAL(KIND=DOUBLE)      :: distfromwater, SumsourceL, SumsourceR
+      REAL(KIND=doublE)      :: HTP , DIFF1, D1, D2
+     
+     
+      INTEGER                :: Lnumber_newnodes,Rnumber_newnodes,Lnumber_lostnodes,Rnumber_lostnodes ! Lnumber_lostnodes  and Rnumber_lostnodes are the number (Anzahl) of deleted profile nodes in overhang due to submergence (tensile failure)
+      INTEGER                :: Ltotal, Rtotal, Total ,totalprnode                                    ! number_of_profiles is also a global variable like profile
+      INTEGER                :: h,hh,i,j,k,kk,l,m,n,b,t,g, u , j1, j2
+      INTEGER                :: integertemp
+      INTEGER                :: deleted_nodesL ,deleted_nodesR , pr_number
+      INTEGER                :: status, lstatus , rstatus
+      INTEGER                :: numberofnodes , number_of_profiles
+
+      CHARACTER (LEN = 35)   :: exner_pr, tens_pr, Avalanch_pr, Cantilever_pr ,difff
+      CHARACTER (LEN = 9)    :: distribution
+      CHARACTER (LEN = 5)    :: side                                                     ! it is a tag that is either 'left' or 'right', and it signals tensile failure subroutine
+      CHARACTER (LEN = 3)    :: digit                                                                             ! with which overhang it deals.
+   
+      LOGICAL                :: Lsubmerged,Rsubmerged, refined
 
 !******* Initialization of variables ****************************************
 Write (*,*) ' Entering to Bank Evolution Modelling ....'
@@ -102,16 +91,18 @@ Lnumber_newnodes = 0
 Rnumber_newnodes = 0
 Lnumber_lostnodes = 0
 Rnumber_lostnodes = 0
+SumSourceL = 0.
+SumSourceR = 0.
 H = 1
 
 DiffBed = 0.  ! array initialization
 EXTLD = 0.0   ! array initialization
 
-!allocate ( ElementSource(MAXE), stat = lstatus)
- !  if (lstatus /= 0) then
-  !    write (*,*) ' failure by allocating array "ElementSource" in subroutine BankErosion '
-      !STOP ' Program will be terminated!'
-   !  end if 
+if (refine == 1)then
+  refined = .TRUE.
+elseif (refine == 0) then
+  refined = .FALSE.
+end if  
 
 ! call Counter is the number of times that this subroutine is called from RMA10s.f90
 write (digit,'(I3)' )CallCounter
@@ -131,7 +122,7 @@ exner_pr      = 'afterexner' // digit // '.txt'
 tens_pr       = 'aftertensile' // digit // '.txt'
 Avalanch_pr   = 'afteravalanche' // digit // '.txt'
 Cantilever_pr = 'aftercantilever' // digit // '.txt'
-
+difff         = 'difff'//digit//'.txt'
 
 numberofnodes = maxp
 
@@ -140,8 +131,7 @@ number_of_profiles = SIZ
 else
 number_of_profiles = SIZE (BANKPROFILES)
 end if
-!???? is needed to allocate old_pr every time this subroutine is called, or it is needed to 
-! preserve its value between calls by save statement.????????????????
+
 if (.NOT. allocated(old_pr) ) then
    allocate (old_pr (number_of_profiles) , stat = lstatus)
    if (lstatus /= 0) then
@@ -158,6 +148,7 @@ old_pr = BANKPROFILES        ! old_pr is a global variable defined in share_prof
 FENODES.sed_source =0.0
 fenode = FENODES             ! FENODES IS DEFINED IN MODULE SHARE_PROFILE AND ASSIGNED IN SUBROUTINE INPUT.FOR
 
+
 ! Each profile is checked first wether they are active for further computation.
 prof: do i= 1, number_of_profiles
 
@@ -172,16 +163,20 @@ prof: do i= 1, number_of_profiles
         potentialnose%dist = 0.
         front=0
 
-       if (.not.old_pr(i)%activation) then 
-         CYCLE                                                                         ! so if activation is .false. then .not..false. is true and it cycles if th eprofile is inactive.
-       end if                                                                              ! if the profile is active then the average new water elevation is computed across the profile
-! HN June2009. It is  better to use local water depth over the nodes instead of 
-!    average water level, since in a large river or riverbend, there is a traverse 
-!    water level slope. However for example for computation of suction head in riverbank
-! it seems that this average of water level should be enough. The main idea was to damp
-! the marsh effect on water slope close to the riverbank.
         pr%water_elev = average_water_level(i)                    ! average of water level in new profile (new time step)
 
+! if the the node elevations have been not changed and water elevation
+! has not rised (in respect to last time step) and there is no overhang
+! then no bank evolution computation is necessary for this profile.
+
+       if (.not.old_pr(i)%activation) then 
+        if (pr%water_elev <= old_pr(i)%water_elev)then
+         if( (pr%lfront==0).and.(pr%rfront==0) )then
+          CYCLE                                                                         ! so if activation is .false. then .not..false. is true and it cycles if th eprofile is inactive.
+          end if
+         end if
+       end if    
+                                                                                 ! if the profile is active then the average new water elevation is computed across the profile
 profnod: do j=1, old_pr(i)%max_nodes-1
 
       ! in the following block only the profile nodes belonging to profile and front types are updated using new Fenodes elevations
@@ -201,15 +196,60 @@ profnod: do j=1, old_pr(i)%max_nodes-1
 
 
     IF( ( ABS ( DISTFROMWATER) <= 0.001 ).AND. (TRIM(OLD_PR(I)%PRNODE(J)%ATTRIBUTE) /='front')  )THEN    !IN THE CASE THE WATER LEVEL COINCIDES WITH A NODE, WHICH IS NOT A FRONT. SINCE THE POTENTIAL NOSE DISTANCE IS REQUIRED IN TENSILE FAILURE                         ! THE CASE IN WHICH WATER LEVEL HAS NOT BEEN CHANGED AND IS EQUAL TO THE NOSE ELEVATION OF THE OLD PROFILE: STEADY STATE.
-                                                                                                                                         ! THE POTENTIAL NOSE DISTANCE SHOULD NOT BE MISTAKEN WITH THE DISTANCE OF FRONT; WHEN WATER LEVEL IS EQUAL TO FRONT ELEVATION.     
-      POTENTIALNOSE(H)%node     = J
-      POTENTIALNOSE(H)%nextnode = -(J + 1)
-      POTENTIALNOSE(H)%dist     = OLD_PR(I)%PRNODE(J)%DISTANCE
-      H = H + 1
+  
+     SELECT CASE(H)
+      
+      CASE (1)
+      
+       POTENTIALNOSE(H)%node     = J
+       POTENTIALNOSE(H)%nextnode = -(J + 1)
+       POTENTIALNOSE(H)%dist     = OLD_PR(I)%PRNODE(J)%DISTANCE
+       H = H + 1
+    
+      CASE (2)
+   
+       POTENTIALNOSE(H)%node     = J
+       POTENTIALNOSE(H)%nextnode = -(J + 1)
+       POTENTIALNOSE(H)%dist     = OLD_PR(I)%PRNODE(J)%DISTANCE
+      
+       ! Avoid creation of a new potential nose around the first one,in the case of unevenness in profile geometry.
+       IF (ABS(POTENTIALNOSE(H)%dist-POTENTIALNOSE(H-1)%dist)<=0.7)Then
+        POTENTIALNOSE(H)%node     = 0
+        POTENTIALNOSE(H)%nextnode = 0
+        POTENTIALNOSE(H)%dist     = 0.0
+       ELSE 
+        H = H + 1
+       ENDIF
+
+     END SELECT
+      
     ELSEIF ( ( (distfromwater > 0.001) .AND. (ZZ2 < -0.001) ).OR.( (distfromwater < -0.001) .AND. (ZZ2 > 0.001) ) ) THEN     ! TRANSITAION THROUGH WATER SURFACE FOR THE LEFT AND RIGHT BANKS; RESPECTIVELY.
-      potentialnose(H)%nextnode = (j + 1)           ! if the node doesnot  coincide with water then potential nose should be computed.
-      CALL mk_potentialnose(pr,potentialnose(H))
-      H = H + 1
+     
+     SELECT CASE(H)
+      
+      CASE (1)
+      
+       potentialnose(H)%nextnode = (j + 1)           ! if the node doesnot  coincide with water then potential nose should be computed.
+       CALL mk_potentialnose(pr,potentialnose(H),1)
+       H = H + 1
+      
+      CASE (2)
+       
+       potentialnose(H)%nextnode = (j + 1)           ! if the node doesnot  coincide with water then potential nose should be computed.
+       CALL mk_potentialnose(pr,potentialnose(H),1)
+       
+       ! Avoid creation of a new potential nose around the first one,in the case of unevenness in profile geometry.
+       IF (ABS(POTENTIALNOSE(H)%dist-POTENTIALNOSE(H-1)%dist)<=0.7)Then
+        potentialnose(H)%node = 0
+        potentialnose(H)%nextnode = 0
+        potentialnose(H)%dist = 0.
+       
+       ELSE 
+        H = H + 1
+       ENDIF
+     
+     END SELECT     
+    
     END IF  
 
            pr%prnode(j)            = old_pr(i)%prnode(j)                                    ! the elevation of the new nodes will be overwritten if necessary in the following.
@@ -233,32 +273,36 @@ profnod: do j=1, old_pr(i)%max_nodes-1
               cycle  profnod
            end if
            
-           z1= fenode(m)%elevation                                                  ! and in the case of 'front' if it correspondes to a FE node (m>0). m= - old_pr(i)%prnode(j)%Fe_nodenumber for the nodes in overhang zone.
-!---------------------  ??????????????????????????????????????                       ! and zero for those who have to conjugate fe_node (probably like nose or front).
+           z1= fenode(m)%elevation                                                   ! and in the case of 'front' if it correspondes to a FE node (m>0). m= - old_pr(i)%prnode(j)%Fe_nodenumber for the nodes in overhang zone.
+!---------------------                                                               ! and zero for those who have no conjugate fe_node (probably like nose or front).
 ! new elevation of profile nodes are updated
-           z2=old_pr(i)%prnode(j)%elevation                                      !??????? here in the case of unsteady flow, a flood plain node can be displaced
+           z2=old_pr(i)%prnode(j)%elevation                                      
+  
            if (ABS(z2-z1)>ypsilon) then                                              ! wrongly, before finding its image Pr_node.
-                  pr%prnode(j)%elevation=z1                                      ! Note that the old profile nodes are not displaced but it is the new profile
+                  pr%prnode(j)%elevation=z1                                          ! Note that the old profile nodes are not displaced but it is the new profile
            end if                                                                    !so that at the moment old data is still retrievable(it is necessary for the case
                                                                                      !that Front point is linked to a submerged Fe node and is eroded. The original
-         end do profnod                                      		                      !position of the Front is needed for calculation of tensile failure volume/area.
+         end do profnod                                      	                     !position of the Front is needed for calculation of tensile failure volume/area.
 
-! at this stage the updated profile of old_pr(i) is pr which identical to old_profile except
-! the updated elevation of the nodes (..pr%elevation), due to erosion or deposition computed
-! by Exner equation. In the following a new profile variable called profil will save the changes made
-! to the profile old_pr(i) due to the probable tensile stress.
+         call output1 (pr, exner_pr, 11, i)
 
-!--------------------- Computation of tensile failure of overhang (submerged) -------------------
+!--------------------- Computation of tensile failure of overhang (submerged) -------------------------------------------------------
+  ! In the case that overhang (nose) already exists(produced in avalanch subroutine),
+ ! and potential nose doesnot coincide with already existing nose and it is submerged then tensile subroutine
+ ! should compute the tensile failure area in overhang.    
+ ! %lnose and %rnose store the prnode number of the nose on the left and right bank. Zero means no nose and no overhang respectively.
+!-------------------------------------------------------------------------------------------------------------------------------------  
+
      lsubmerged=.false.
      rsubmerged=.false.
-                                                                                    ! in the case that overhang (nose) already exists(produced in avalanch subroutine)
-        if (old_pr(i)%lnose/=0) then                                                ! and it is submerged then tensile subroutine should compute the tensile failure area in overhang.
-            integertemp=old_pr(i)%lnose                                             ! %lnose and %rnose store the prnode number of the nose on the left and right bank. Zero means no nose
-            side='left'                                                             ! and no overhang respectively.
-             IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.01 )then   ! if new water stage is over nose, then the old nose is submerged and tensile failure should be run.
+                                                                                    
+        if ((old_pr(i)%lnose/=0).and. (potentialnose(1)%node /=old_pr(i)%lnose) ) then 
+            integertemp=old_pr(i)%lnose                                             
+            side='left'                                                             
+             IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.001 )then   ! if new water stage is over nose, then the old nose is submerged and tensile failure should be run.
                Lsubmerged=.true.
-               call tensile_failure(pr,fenode, side, pr%water_elev,potentialnose(1)%dist,Lnew_front,Lnumber_newnodes, &
-                &                   Lnumber_lostnodes)
+               call tensile_failure(pr,fenode, side, pr%water_elev,potentialnose(1),Lnew_front,Lnumber_newnodes, &
+                &                   Lnumber_lostnodes,sumsourceL,refined)
 
                ALLOCATE (Ladded_nodes(Lnumber_newnodes),stat=lstatus)
                 if (lstatus>0) then
@@ -272,13 +316,13 @@ profnod: do j=1, old_pr(i)%max_nodes-1
              END if
         ENDif
 
-        if ((old_pr(i)%rnose/=0)) then
+        if ((old_pr(i)%rnose/=0).and. (potentialnose(2)%node/=old_pr(i)%rnose ) )then
               integertemp=old_pr(i)%rnose
               side='right'
-              IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.01 )then  ! ifnew water stage is over nose, then the old nose is submerged and tensile failure should be run.
+              IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.001 )then  ! ifnew water stage is over nose, then the old nose is submerged and tensile failure should be run.
                  Rsubmerged =.true.
-                 call tensile_failure(pr,fenode,side,pr%water_elev,potentialnose(2)%dist,Rnew_front,Rnumber_newnodes, &
-                      &              Rnumber_lostnodes)
+                 call tensile_failure(pr,fenode,side,pr%water_elev,potentialnose(2),Rnew_front,Rnumber_newnodes, &
+                      &              Rnumber_lostnodes,sumsourceR,refined)
 
                  ALLOCATE (Radded_nodes(Lnumber_newnodes),stat=rstatus)
                    if (rstatus>0) then
@@ -292,10 +336,11 @@ profnod: do j=1, old_pr(i)%max_nodes-1
                END if
         end if
 ! transfer source term to global variable EXTLD, which is global external source term for sand computation in total load trasport.
-       EXTLD = fenode.Sed_source
-! If either of the overhang's noses is submerged then the following block is executed
-submerg:if (lsubmerged.or.rsubmerged) then
+ !      EXTLD = fenode.Sed_source
 
+! If either of the overhang's noses is submerged then the following block is executed
+      
+submerg:if (lsubmerged.or.rsubmerged) then
            Ltotal = Lnumber_newnodes - Lnumber_lostnodes
            Rtotal = Rnumber_newnodes - Rnumber_lostnodes
            total = Ltotal + Rtotal
@@ -345,8 +390,8 @@ sort:     do
              
              
             
-sortnode:    if ( (g == kk).AND.(lsubmerged) ) then
-
+!sortnode:    if ( (g == kk).AND.(lsubmerged) ) then
+sortnode:    if ( (g == kk).AND.(lsubmerged).AND.(Lnumber_lostnodes/=-999 ) )then
 leftbank:       if (potentialnose(1)%node == 0) then                      ! the potential nose is between two fe-nodes.
 
                   profil%prnode(j)%distance = potentialnose(1)%dist
@@ -360,13 +405,13 @@ leftbank:       if (potentialnose(1)%node == 0) then                      ! the 
                   profil%lfront = j
                   m = 1
                   j = j + 1
-
-                    do l = j , j+Lnumber_newnodes - 2          ! Since the old front is counted in added nodes, therefor, if added nose is equal to 1, it means the old front, which should not be added here at this moment,
+                     do l = j , j+Lnumber_newnodes - 1          ! Since the old front is no more counted in added nodes, therefore -1
+                 !   do l = j , j+Lnumber_newnodes - 2          ! Since the old front is counted in added nodes, therefor, if added nose is equal to 1, it means the old front, which should not be added here at this moment,
                      profil%prnode(l) = Ladded_nodes(m)        !before checking if it has a conjugate fenode. However, if the loop executes up to j + added_nodes - 1 and added_nose = 1, then the loop executes from l = j to j+1-1= j
                      m= m + 1                                  ! However, l = j,j, executes the loop once before it increses its index to j+1, which should not be the case. Therefore, the last index is j + added_nodes - 2
                     end do
-
-                  j= j + Lnumber_newnodes - 1                                 ! the index of the next node of the new profile, if add_node = 1(meaning only old front, it should be subtracted from added nodes, because it will be dealt with in the following.Therefore: -1
+                  j= j + Lnumber_newnodes 
+   !               j= j + Lnumber_newnodes - 1                                 ! the index of the next node of the new profile, if add_node = 1(meaning only old front, it should be subtracted from added nodes, because it will be dealt with in the following.Therefore: -1
                   u = g + Lnumber_lostnodes                                   !from the current node g , which is the node after potential nose, plus deleted nodes (which include also the current node, meaning the current node has been considered twice)then u should be the node after old nose that is old front.
 
                     if (pr%prnode(u)%fe_nodenumber > 0) then   ! then if the old front has a conjugate fe_node it should be the next node in new profile
@@ -379,10 +424,6 @@ leftbank:       if (potentialnose(1)%node == 0) then                      ! the 
                     end if
                        
                        g = g + u  
-                   
-                   !    do l = 1,u                           ! since the current old profile node is among the counted deleted nodes, therefore
-                    !     CYCLE sort                         ! the loop must extend to Lnumber_lostnodes - 1 + 2 (2 for the old node and front)
-                     !  end do
 
                 ELSE                          leftbank   ! potential nose is a profile node.
 
@@ -394,14 +435,15 @@ leftbank:       if (potentialnose(1)%node == 0) then                      ! the 
                   profil%lfront = j
                   m = 1
                   j = j + 1
-
-                    do l = j , j+Lnumber_newnodes - 2
+                    
+                    do l = j , j+Lnumber_newnodes - 1
+             !       do l = j , j+Lnumber_newnodes - 2
                      profil%prnode(l) = Ladded_nodes(m)
                      m= m + 1
                     end do
 
-                  j= j + Lnumber_newnodes - 1
-
+              !    j= j + Lnumber_newnodes - 1
+                  j = j + Lnumber_newnodes 
                   u = g + Lnumber_lostnodes + 1                               !from the current node g , which is the potential nose plus deleted nodes , plus 1 (for front), then u should be old front
                                                                               ! then if the old front has a conjugate fe_node it should be the next node in new profile
                     if (pr%prnode(u)%fe_nodenumber > 0) then
@@ -413,15 +455,13 @@ leftbank:       if (potentialnose(1)%node == 0) then                      ! the 
                        u = Lnumber_lostnodes + 1 !2
                     end if
                       g = g + u
-                      
-                      ! do l = 1,u                           ! since the old profile's deleted nodes start from current old profile node, then
-                       !  CYCLE sort                         ! the loop must extend to Lnumber_lostnodes + 2 (2 for the old node and front)
-                       !end do
 
                 ENDIF                         leftbank
 
   ! the same procedure of sorting new nodes for the right bank
-             ELSEIF ((trim(pr%prnode(g)%attribute) =='front').AND.(Rsubmerged) ) then     sortnode
+             ! ELSEIF ((trim(pr%prnode(g)%attribute) =='front').AND.(Rsubmerged)) then     sortnode
+             ELSEIF ((trim(pr%prnode(g)%attribute) =='front').AND.(Rsubmerged) &
+             & .and.(Rnumber_lostnodes/=-999) ) then     sortnode
 
 rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if the right front has a conjugate fe_node.
 !04.05.2009 11:26
@@ -506,83 +546,62 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
 
           end do                   sort
         end if    submerg
-   profil%max_nodes = j - 1
+  
+           profil%max_nodes = j - 1
 
-           call output1 (pr, exner_pr, 11, i)
 
            if (Lsubmerged .or. Rsubmerged ) call output1 (profil,tens_pr, 21, i)
 
-
-
-
-! I thinkt the right thing for definition of temporary profile data is to define a temporary variable: "pr" (type:profile) for saving
-! the updated profile according to Exner equation with the same size prnode numbers as old_pr(pr_number). then define another
-! temporary variable "profil"  (type:profile) to store the updated prnode of pr after probable tensile failure. then send the  latter
-! variable to avalanche to compute new fe and profile node in the case of avalanching (first stored within a local temporary variable in avalanche
-! but given back to "profil" in the current subroutine (profil as inout variable for avalanche subroutine). Then it will be passed to catilever_failure
-! subroutine, which produce new updated profile after cantilever failure and send it back to another new Temporary variable in the current program.
-! this new variable is saved back to the old_pr(pr_number), BUT IF IT IS POSSIBLE to change the size of the pr_node array within old_pr without
-! destroying the rest of prnodes belonging to other profiles than old_pr(pr_number). Then this process can be acheived within the main loop.
-! Otherwise a new temporaray array of profile should be created to hold all new profiles and then deallocated and reallocate old_profile
-! and assign new updated profile to it.
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !--------------------- Computation of AVALANCHE of submerged sandy bank -------------------
           ! initialize variables
           last_submerged_node     = 0
           Banktoe_node            = 0
-          EffectiveWidth_Overhang = 0.0
+     !     EffectiveWidth_Overhang = 0.0
           avalanche_source        = 0.0
           
           if (lsubmerged.or.rsubmerged) then
-             ! ??? call suspended sediment transport routine to update bed and bank-toe due to tensile failure
-             ! ??? call recurssively the current subroutine to update profile nodes
-             call avalanche (profil,totalprnode, fenode, last_submerged_node, Banktoe_node,EffectiveWidth_Overhang,avalanche_source)
+          !   call avalanche (profil, fenode, last_submerged_node, Banktoe_node,EffectiveWidth_Overhang,avalanche_source)
+              call avalanche (ava_pr, profil, fenode, avalanche_source)
           else
-             call avalanche (pr,pr%max_nodes, fenode, last_submerged_node, Banktoe_node,EffectiveWidth_Overhang,avalanche_source)
+          !   call avalanche (pr, fenode, last_submerged_node, Banktoe_node,EffectiveWidth_Overhang,avalanche_source)
+              call avalanche (ava_pr, pr    , fenode, avalanche_source)
           end if
           
            call output1 (ava_pr,Avalanch_pr, 31, i)
 
+
 !--------------------- Computation of Cantilever failure of overhang (not submerged)-------------------
-  ! ava_pr is the profile after computation of avalanche, it is defined as a global profile in interface of the module , which includes avalanche subroutine.
+  ! ava_pr is the profile after computation of avalanche.
            
            failure_source = 0.0
            
-           call cantilever_failure (ava_pr,pr%water_elev,critical_slope,failure_source , fenode)
+           call cantilever_failure (canti_pr , ava_pr,pr%water_elev,critical_slope,failure_source , fenode)
          
-           call output1 (canti_pr,Cantilever_pr, 41, i)
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !   DISTRIBUTATION OF MASS WASTE AT BANK-TOE  !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
-    ! find the current profile node number of left an dright bank-toe and last submerged node.
-    ! These IDs could have been changed due to addition or deletion of profile nodes due to
-    ! avalanche and failure of the bank.
-    
-    do kk = 1,canti_pr%max_nodes
-    do j = 1,2
-      if (canti_pr%prnode(kk)%fe_nodenumber == last_submerged_node(j))then
-          last_submerged_node(j) = kk
-      elseif (canti_pr%prnode(kk)%fe_nodenumber == Banktoe_node(j))then 
-          Banktoe_node(j)  = kk
-      end if      
-    end do  
-    end do
-  
+    Avalanche_source(1) = Avalanche_source(1) +SumsourceL
+    Avalanche_source(2) = Avalanche_source(2) +SumsourceR
   ! cant_pr is the profile after computation of probable mass failure,it is defined as a global profile in interface of the module , which includes cantilever_failure subroutine.
     
     if ((failure_source(1) /=0) .or.(failure_source(2) /=0) ) then
      Avalanche_source = Avalanche_source + failure_source
     end if
     
-    distribution = 'linear' 
-    call DistributeWastedMass(Avalanche_source , canti_pr, last_submerged_node , Banktoe_node, &
-    &          Distribution, EffectiveWidth_Overhang ,fenode, numberofnodes ,ElementSource)
+    if ( (Avalanche_source(1)/=0) .or. (Avalanche_source(2)/=0 ) )then
+     
+     distribution = 'linear' 
     
-        !   fenode(abs(last_submerged_node(1)))%sed_source =  fenode(abs(last_submerged_node(1)))%sed_source + failure_source(1)
-         !  fenode(abs(last_submerged_node(2)))%sed_source =  fenode(abs(last_submerged_node(2)))%sed_source + failure_source(2)
-          
+  !   call DistributeWastedMass(Avalanche_source , canti_pr, last_submerged_node , Banktoe_node, &
+  !   &          Distribution, EffectiveWidth_Overhang ,fenode, numberofnodes )
+      call DistributeWastedMass(Avalanche_source , canti_pr, Distribution ,fenode, numberofnodes )
+    
+    end if
+         
+           call output1 (canti_pr,Cantilever_pr, 41, i)
+         
            old_pr(i)=canti_pr
       
        if (lsubmerged ) then
@@ -593,19 +612,20 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
        end if
 
       end do  prof
+
   ! array manipulation. Ersoion is (+) and deposition is (-)
   ! in the following the application of (-) sign will reverse their sign
   ! for updating bed features.
   
-     DiffBed = FENODES.elevation - fenode.elevation         
+    DiffBed = FENODES.elevation - fenode.elevation         
      
       ELEVB  = ELEVB  - DiffBed
       TTHICK = TTHICK - DiffBed
 	  DELBED = DELBED - DiffBed
- 
+
  ! THE FOLLOWING HAS BEEN COPIED FROM SLUMP.FOR                                  
  
-  !     set distribution linear
+  !     set distribution linear, update mid side nodes linearly
 
       ncn=0
       do n=1,ne             ! ne is maximum number of elements, defined as global variable in module BLK10MOD
@@ -623,7 +643,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
               delbed(nop(n,j))=(delbed(nop(n,j1))+delbed(nop(n,j2)))/2.
               elevb(nop(n,j))=(elevb(nop(n,j1))+elevb(nop(n,j2)))/2.
               tthick(nop(n,j))=(tthick(nop(n,j1))+tthick(nop(n,j2)))/2.
-              dgn(nop(n,j))=(dgn(nop(n,j1))+dgn(nop(n,j2)))/2.
+ !             dgn(nop(n,j))=(dgn(nop(n,j1))+dgn(nop(n,j2)))/2.
             enddo
           endif
         endif
@@ -632,11 +652,6 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
  ! CIPK MAY02 UPDATE BED ELEVATION
 	DO N=1,NP
 
-!        IF(N .EQ. 141) THEN
-!	  AAA=0
-!	ENDIF
-
-        !TODO: Differ between Marsh and not-Marsh as well as dimensions; it shouldn't be applied for 1D Polynomial
 	DIFF1=ELEVB(N)-AO(N)
 	IF(DIFF1 .NE. 0.) THEN
   	  AO(N)=ELEVB(N)
@@ -644,15 +659,14 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
           HEL(N)=WSLL(N)-ADO(N)
           CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
 	  VEL(3,N)=HTP
+	  fenode(N).elevation = ao(N)
 	ENDIF
 
 	ENDDO
 
       BANKPROFILES = old_pr
       FENODES = fenode
-            
-   !   deallocate (fenodes)
-      
+     
        deallocate (old_pr)
 contains 
 !-----------------------------------------------------------------------------------------------------------------------------------------
@@ -693,7 +707,7 @@ end if
 !return
 end function average_water_level
 
-end subroutine bank_evolution
+!end subroutine bank_evolution
 
 !-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -720,26 +734,29 @@ logical                            :: exists
     else
      open (UNIT=unitt, file = filename , STATUS='new', ACTION='write', IOSTAT=istat)
      call file_error (filename, istat)
+     write (unitt, *)number_of_profiles
     endif 
    
      write (unitt, *) 'profile number: ' , profilenumber
    
      write (unitt, *) 'Contiline number: ', profileIN%cl_number
    
-     write (unitt, 110) profileIN%lnose, profileIN%Rnose, profileIN%lfront, profileIN%Rfront
-    110 format (4(2x, I4))
+     write (unitt, 110) profileIN%lnose, profileIN%Rnose, profileIN%lfront, profileIN%Rfront,profileIN%max_nodes
+    110 format (5(2x, I4))
    
-    write (unitt, '( 2x,a6,6x,a1,7x,a1,4x,a9)')'fenode','D','Z','attribute'
+    write (unitt, '( 2x,a6,9x,a1,7x,a1,1x,a9)')'fenode','D','Z','attribute'
     
     do i = 1, profileIN%max_nodes
      write (unitt,120) profileIN%prnode(i)%fe_nodenumber , profileIN%prnode(i)%distance, profileIN%prnode(i)%elevation &
      &                       , profileIN%prnode(i)%attribute   
     end do
     
-    120 format (1x,I7,3x,F7.3,1x,f7.4, 1x,a9)
+    120 format (1x,I7,2x,F8.4,2x,f7.4, 1x,a9)
     close (unit = unitt) 
-   return 
+ !  return 
 end subroutine output1
+end subroutine bank_evolution
+
 !-----------------------------------------------------------------
 subroutine file_error (filename, ierror)
 
@@ -750,56 +767,93 @@ integer              , intent (in) :: ierror
 
      if (ierror /= 0) then
       write (*,*) ' failure by opening the file:', filename, ' it does not exist!'
-      STOP ' Program will be terminated!'
+      pause ' Program will be terminated!'
+      STOP 
      end if
      
  end subroutine file_error
  
  !---------------------------------------------
- subroutine DistributeWastedMass(WastedVolume , CurrentProfile, FirstPoint,&
- &                    LastPoint, Distribution, EffectiveWidth, fenode, nn, ElementSource)
+ ! subroutine DistributeWastedMass(WastedVolume , CurrentProfile, FirstPoint,&
+ ! &                    LastPoint, Distribution, EffectiveWidth, fenode, nn)
+ subroutine DistributeWastedMass(WastedVolume , CurrentProfile, Distribution, fenode, nn)
  
  USE Types
  USE Param
  USE parakalyps, ONLY : IsNodeOfElement
  USE BLK10MOD  , ONLY : MAXE , AREA , DELT
- USE BLKSANMOD , ONLY : EXTLD, TRIBAREA, SGSAND
+ USE BLKSANMOD , ONLY : EXTLD, TRIBAREA, SGSAND, ELEVB, TTHICK, DELBED
+ USE ControlNodes
+ 
  implicit none 
  
  Integer          , intent (in) :: nn
- type (Profile)   , intent (in) :: CurrentProfile
+ type (Profile)   , intent (inout) :: CurrentProfile
  type (Finite_element_node) , intent (inout) :: fenode(nn)
   
  
  Real (Kind= 8)   , intent (in) :: WastedVolume (2)
- Real (Kind= 8)   , intent (in) :: EffectiveWidth(2)    ! It is for later consideration of the effective width
+! Real (Kind= 8)   , intent (in) :: EffectiveWidth(2)    ! It is for later consideration of the effective width
                                                         ! of the overhnag and its relation with berm width to 
                                                         ! compute the EffectiveBanktoeWidth. However, firstly
                                                         ! Berm attribute should be added to the profiles and control
                                                         ! against probable failure in the rest of code, when facing
                                                         ! with the new attribute.
- Integer          , intent (in) :: FirstPoint (2) , LastPoint(2) 
+ ! Integer          , intent (in) :: FirstPoint (2) , LastPoint(2) 
  Character(Len= 9), intent (in) :: Distribution        
- Real (Kind= 8)   , intent (out) :: ElementSource (MAXE)
  
  Real (Kind= 8)   :: StartDistance , EndDistance , RelativeDistance
  Real (Kind= 8)   :: EffectiveBanktoeWidth , PreviousDistance, origin
- Real (Kind= 8)   :: DistributingRate , WastedSourceTerm 
- Real (Kind= 8)   :: PreviousDistributingRate ,TrapezoidRule
- Real (Kind= 8)   :: SumConnectedElementArea
+ Real (Kind= 8)   :: DistributingRate , WastedSourceTerm , DELTAB, DELTAB_old
+ Real (Kind= 8)   :: PreviousDistributingRate ,TrapezoidRule, sum
  Real (Kind= 8)   :: NodalSource, DryTRIBAREA   ! DryTRIBAREA: the contributing area to a node with connected dry elements 
+ 
+ INTEGER          :: st(2), en(2)
  integer          :: Increment(2)
- integer          :: i , m , j, k, ELEMNO , FirstNode, LastNode, LR
+ integer          :: i , m , j, k, ELEMNO , FirstNode, LastNode, LR, mm
+ 
+ Logical          :: MassMethod
+ 
+ 
+ ! MassMethod is based on contributig wasted mass over nodes according
+ ! to the contributing area of the elements connecting to the node (King's Method).
+ ! However, it makes the ADV-DIFF Eq. unstable most of the time.
+ ! So at the moment it is deactivated.
+ 
+ MassMethod = .FALSE.
  
 ! determine if there are one bank or two banks available.
 ! if the right bank is totally submerged, it implies there is no rightbnak morphological evolution
 ! meant.
+
+FirstNode = 0
+LastNode  = 0
 
 if (CurrentProfile%water_elev > CurrentProfile%prnode(CurrentProfile%max_nodes)%elevation ) then
    LR = 1                  ! only left bank is available.
 else 
    LR = 2                  ! Left and rigtht banks area available.
 end if      
+
+! left bank
+ 
+  if (CurrentProfile%lfront /= 0) then
+      st(1) = CurrentProfile%lfront  ! start
+  else                        
+      st(1)=1                   
+  end if
+
+      en(1) = CurrentProfile%max_nodes  ! end
+
+! right bank
+
+   if (CurrentProfile%rfront /= 0) then
+      st(2) = CurrentProfile%rfront
+   else
+      st(2) = CurrentProfile%max_nodes      ! the search for local minima(deepest node) towards the end of profile (right)
+   end if
+
+      en(2) = 1
 
  LeftRightBank: do  j = 1, LR
  
@@ -811,8 +865,11 @@ end if
   Increment(2) = -1
   endif 
   
-  FirstNode = FirstPoint (j)
-  LastNode  = LastPoint  (j)
+!  FirstNode = FirstPoint (j)
+ ! LastNode  = LastPoint  (j)
+ 
+  call CriticalNodes(CurrentProfile, st(j),en(j),increment(j), LastNode, FirstNode)
+  
   ! at the moment deactivated. For Reasons, refer to the description in subroutine
   ! HasPrnodeFenode
   
@@ -827,6 +884,8 @@ end if
  
  PreviousDistributingRate  = 0.0
  PreviousDistance          = 0.0
+ DELTAB_old                = 0.0
+ sum                       = 0.0
  
  FirstNode = FirstNode + Increment(j)
  
@@ -836,72 +895,104 @@ NodDistr: do i = FirstNode, LastNode , Increment(j)
            RelativeDistance = ABS (RelativeDistance - StartDistance )   ! relative distance to the starting point of distribution (first wet node from each bank)
  
            if (trim(distribution) == 'linear') then
+           
               DistributingRate = 2.0 * RelativeDistance / EffectiveBanktoeWidth ** 2 
+           
            elseif (trim(distribution) == 'binominal') then
+           
               DistributingRate = 3.0 * RelativeDistance ** 2 / EffectiveBanktoeWidth ** 3 
+           
            end if
  
            TrapezoidRule    = 0.5 * (DistributingRate + PreviousDistributingRate)* &
            &                        ( RelativeDistance - PreviousDistance )  
          
            m                = CurrentProfile.Prnode(i).Fe_NodeNumber
-   ! wasted source term in m^3 x kg/m^3
-           WastedSourceTerm = TrapezoidRule * WastedVolume(j) *(1- POROSITY)* SGSAND(m)* 1000.  
- ! check if it is correct to multiply wasted volume by rhos and porosity, since it has been already done in avalanche
- 
+           k                = i
+           
+mass:     IF (MassMethod) Then
+           
+           if (m==0)   then
+           
+            call HasPrnodeFenode (CurrentProfile, k , Increment(j))
+          
+            m = CurrentProfile.Prnode(k).Fe_NodeNumber
+          
+           ! wasted source term in m^3 x kg/m^3 
+            WastedSourceTerm = TrapezoidRule * WastedVolume(j) *(1- POROSITY)* SGSAND(m)* 1000.  
+           
+           ! check if it is correct to multiply wasted volume by rhos and porosity, since it has been already done in avalanche
+           
+           else
+           
+            WastedSourceTerm = TrapezoidRule * WastedVolume(j) *(1- POROSITY)* SGSAND(m)* 1000.
+          
+           end if 
 
-           PreviousDistributingRate  = DistributingRate
-           PreviousDistance          = RelativeDistance
- 
-  !         SumConnectedElementArea = 0.0
-          ElementSource           = 0.0
- ! get the elements connencted to this node
- ! Get the area of each element
- ! distribute the mass among the elements based on their area
- 
- ! this block is commented out, because the total effective vloume of overhang has been already computed in 
- ! WastedVolume and it has been distributed over fenodes at banktoe using WastedSourceTerm (mass[g]).
- ! Now it is only needed to divide this nodal mass by nodal effective area of receiving nodes.
- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- !sumarea:   do k = 1,IsnodeOfElement (m,0) ! total number of elements connected to the node "m"
-  !           SumConnectedElementArea = SumConnectedElementArea + AREA (IsnodeOfElement (m,k))
-   !         end do sumarea
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  ! TODO the source term should be distributed over nodes (EXTLD) and not elements
+  ! the source term should be distributed over nodes (EXTLD) and not elements
   ! so that later in COEF subroutine it will be multiplied by weighing function XM
   ! and summed over all nodes in the element and assigned as EXTL.
-  ! therefoe it might be better to distribute the wasted mass to the elements 
-  ! connected to that node, and then redistribute the mass of each element to its nodes
-  ! and then summ all of cotributing masses from sourounding elements of each node to that node.
  
+        ! TRIBAREA = 0 for a node connecting to dry or partly wet elements.
+           if (TRIBAREA (m)/= 0. ) then
+
+           ! Nodal Source term is in [g]/[m^2.s]
+             NodalSource = 0.1 * WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !   [kg] * [1000 g/kg] /[m^2.s]
+  
+           ! compute the rest of mass which goes directly to the bed    
+             DELTAB      = 0.9 * TrapezoidRule * WastedVolume(j)/ TRIBAREA (m)
+             
+ !18.08.09   DELTAB = 0.9 * TrapezoidRule * WastedVolume(j)/ TRIBAREA (m)
+ !24.09.09   DELTAB =  TrapezoidRule * WastedVolume(j)/ (RelativeDistance - PreviousDistance)
+
+             fenode(m).Sed_source = fenode(m).Sed_source +  NodalSource 
+             EXTLD (m)            = EXTLD (m)            +  fenode(m).Sed_source
+     
+    
+           else 
+
+              call EffectiveArea (DryTRIBAREA,m)
+            
+              NodalSource = 0.1 * WastedSourceTerm * 1000. / (DryTRIBAREA  * DELT ) !   [kg] * [1000 g/kg] /[m^2.s]
+              DELTAB      = 0.9 * TrapezoidRule    * WastedVolume(j)/ DryTRIBAREA
+
+ !24.09.09    DELTAB =  TrapezoidRule * WastedVolume(j)/ (RelativeDistance - PreviousDistance)
+
+          ! compute the nodal source terms  
+
+              fenode(m).Sed_source = fenode(m).Sed_source + NodalSource 
+              EXTLD (m)            = EXTLD (m)            + fenode(m).Sed_source
+
+ !18.08.09     fenode(m).Sed_source = fenode(m).Sed_source +  NodalSource 
+ !18.08.09    EXTLD (m)            = EXTLD (m) + NodalSource        !   The fe_node_sed_source is totally identical to the EXTLD.
+            ! EXTLD (m)            = EXTLD (m) + fenode(m).Sed_source
+
+           end if
+           
+           IF (k /= i) THEN
+             CurrentProfile.Prnode(k).elevation = CurrentProfile.Prnode(k).elevation + DELTAB
+           ELSE
+             CurrentProfile.Prnode(i).elevation = CurrentProfile.Prnode(i).elevation + DELTAB
+           END IF
+           
+          ELSE  mass
+          
+              DELTAB = 2.* TrapezoidRule * WastedVolume(j)/(RelativeDistance - PreviousDistance)- DELTAB_OLD 
+   
+          ! update the nodal elevations
+              IF (m > 0 ) fenode(m).elevation    = fenode(m).elevation                + DELTAB
+              CurrentProfile.Prnode(i).elevation = CurrentProfile.Prnode(i).elevation + DELTAB
+        
+          END IF mass
+          
+	      !check the sum of waste volume/area
+          sum =(deltab + deltab_old)*(RelativeDistance - PreviousDistance)/2+sum
+          
+          DELTAB_old = DELTAB
+          PreviousDistributingRate  = DistributingRate
+          PreviousDistance          = RelativeDistance
+
  
- ! this block is commented out, because the total effective vloume of overhang has been already computed in 
- ! WastedVolume and it has been distributed over fenodes at banktoe using WastedSourceTerm (mass[g]).
- ! Now it is only needed to divide this nodal mass by nodal effective area of receiving nodes.
- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- !ElemDistr: do k = 1,IsnodeOfElement (m,0)
-  !            ELEMNO    = IsnodeOfElement (m,k)
-   !           if (DELT > 0 ) then
-    !          ElementSource(ELEMNO) = ElementSource(ELEMNO) + (AREA (ELEMNO) / &
-     !       &                         SumConnectedElementArea )* fenode(m).Sed_source * &
-      !      &                        1000. /(DELT * 3600.)
-!             ElementSource is now in g/m.s            
-       !      end if            
-        !    end do ElemDistr
- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             ! TRIBAREA = 0 for a node connecting to wet or partly wet elements.
-             if (TRIBAREA (m)/= 0. ) then
-          !   NodalSource = NodalSource +  WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !* 3600.)
-               NodalSource = WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !   [kg] * [1000 g/kg] /[m^2.s]
-             ! Nodal Source term is in [g]/[m^2.s]
-             else 
-               call EffectiveArea (DryTRIBAREA,m)
-               NodalSource = WastedSourceTerm * 1000. / (TRIBAREA (m) * DELT ) !   [kg] * [1000 g/kg] /[m^2.s]
-               fenode(m).Sed_source = fenode(m).Sed_source + NodalSource 
-               EXTLD (m)            = EXTLD (m) + NodalSource        !   The fe_node_sed_source is tottaly identical to the EXTLD.
-             ! EXTLD (m)            = EXTLD (m) + fenode(m).Sed_source
-             end if
  end do NodDistr
  end do LeftRightBank
  
@@ -912,7 +1003,7 @@ subroutine HasPrnodeFenode (ThisProfile, ProfileNode , increment)
 ! with conjugate Fe node.
 ! Since it is not decided yet to retain non-conjugate profile nodes (due to the problem of 
 ! later updating of their elevation, which have no conjugate fe-node to do that), 
-! this subroutine will remain at the moment inactive.!!!
+! this subroutine will remain at some points inactive.!!!
  USE Types
  
  implicit none 
@@ -949,11 +1040,15 @@ USE Types
 USE INIT_TYPE
 USE share_profile , only : BANKPROFILES
 USE ASSIGNROFILES , only : SIZ
+! Data Block
 implicit none
-     INTEGER , INTENT (in) :: no ,callcount 
-     TYPE(finite_element_node), DIMENSION (no), INTENT (OUT) :: Fenod    
+
+INTEGER , INTENT (in) :: no ,callcount 
+TYPE(finite_element_node), DIMENSION (no), INTENT (OUT) :: Fenod    
 
 integer :: i, istat, j, k,nn
+
+! Program Block
 
 SELECT CASE ( callcount)
  
@@ -966,34 +1061,21 @@ SELECT CASE ( callcount)
 fenod.typ ='corner'
 fenod.sed_source = 0.0
 fenod.Profile_Number = 0
-!fenod.x_cor = 0.0
-!fenod.y_cor = 0.0
- 
 fenod.statuss ='deactivate'
   
   do i = 1,no
-     fenod(i).Node_Number = i
+     fenod(i).Node_Number = 0
      fenod(i).elevation = ao(i)
      fenod(i).water_level = wsll(i)          
-  
-  ! find each fenod to which profile belongs.
- !    do j = 1,SIZ
- !     do k = 1,200
- !       nn = BANKPROFILES (j).Prnode(k).fe_nodenumber
- !       if (i == nn) then
- !        fenod(i).Profile_Number = j
- !        BANKPROFILES (j).Prnode(k).Water_elev = fenod(i).water_level
- !       end if
- !     end do   
- !    end do
-     
+    
   end do
    
    ! Assign profileID of each fenode.
      do j = 1,SIZ
       do k = 1,BANKPROFILES (j).max_nodes
-        nn = BANKPROFILES (j).Prnode(k).fe_nodenumber
+        nn = abs(BANKPROFILES (j).Prnode(k).fe_nodenumber)
         if (nn /= 0) then
+         fenod(nn).Node_Number = k
          fenod(nn).Profile_Number = j
          BANKPROFILES (j).Prnode(k).Water_elev = fenod(nn).water_level
         end if
@@ -1006,22 +1088,6 @@ fenod.statuss ='deactivate'
    end do
   end do   
  
- ! HN JUNE 2009
- ! THE FOLLOWING PART (UPDATING FENODES) HAS BEEN MOVED TO A SEPARATE SUBROUTINE CALLED UpdateFenodes.   
-
-!case (3)               ! Update fenod in dynamic (unsteady) simulation
-! check if the node elevation has changed, activate the stattus of fenode and activate the corresponding bankprofile.
- ! DO I = 1, NO
-  
-  ! if ( abs (fenod(i).elevation - ao(i) ) > 0.005) then
-!         fenod(i).statuss ='activate'
- !   if ( fenod(i).Profile_Number /= 0) then
-  !   nn = fenod(i).Profile_Number
-   !  BankProfiles(nn).Activation = .TRUE.
- !   end if
-  ! end if
-    
- ! END DO
 
 END SELECT
 end subroutine  MakeFenodes 
@@ -1034,24 +1100,33 @@ USE Types
 USE share_profile , only : BANKPROFILES
 
 implicit none
-     
-     INTEGER , INTENT (in) :: no  
+
+!Arguments
+!---------     
+     INTEGER                                  , INTENT (in)    :: no  
      TYPE(finite_element_node), DIMENSION (no), INTENT (INOUT) :: Fenod    
 
-     integer :: i, nn
-
+! Local variables
+!-----------------     
+     REAL(kind = 8)  :: diff 
+     integer         :: i, nn
+! Code body
 
 ! check if the node elevation has changed, activate the stattus of fenode and activate the corresponding bankprofile.
   DO I = 1, NO
-  fenod(i).water_level = wsll(i)
   
-   if ( abs (fenod(i).elevation - ao(i) ) > 0.005) then
+  fenod(i).water_level = wsll(i)
+  Diff = abs (fenod(i).elevation - ao(i) )
+  fenod(i).elevation = ao(i)
+  
+   if (diff >= 1.E-5) then
      fenod(i).statuss ='activate'
-     fenod(i).elevation = ao(i)
+     
     if ( fenod(i).Profile_Number /= 0) then
      nn = fenod(i).Profile_Number
      BankProfiles(nn).Activation = .TRUE.
     end if
+  
    end if
     
   END DO
