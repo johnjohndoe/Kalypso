@@ -42,8 +42,8 @@ USE BLK10MOD, only: &
 &  sidff, &
 &  mxsedlay, &
 &  itransit, ndep, nref, dfct, &
-&  storageElts !,&
-!&  IPROFIN   !HN. June2009
+&  storageElts ,&
+&  IPROFIN   !HN. Sept2009
 !meaning of the variables
 !------------------------
 !niti                   number of steady state iterations
@@ -1207,7 +1207,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     !----------------------------------------------------------------------------------------------------------------
     !HN. 12June2009
     !ICK is a flag to define the degree of freedom, for example: 
-    !ICK = 3 is Salinity (iteqs = 0).
+    !ICK = 4 is Salinity (iteqs = 0).
     !ICK = 5 is Temprature(iteqs = 1).
     !ICK = 6 is concentration(iteqs = 2).
     !ICK = 7 is the bed change/equilibrium bed load(iteqs = 3).  
@@ -1519,7 +1519,13 @@ DynamicTimestepCycle: do n = 1, ncyc
   ! contlines in the form of profile then run bank_evolution once.
     
   if (BANKEVOLUTION) then
+  ! Restart bank profiles 
+   if ( (IPROFIN == 731).and.(CallCounter == 0) ) then
+    CallCounter = iaccyc
+   else 
     CallCounter = CallCounter + 1
+   endif
+    
     call bank_evolution (CallCounter)
   endif 
 !-------------------------------------------------------------------------------'
