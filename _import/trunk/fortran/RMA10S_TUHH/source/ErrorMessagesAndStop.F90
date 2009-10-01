@@ -1,4 +1,3 @@
-!     Last change:  MD   28 Jul 2008    5:29 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory, objectName)
 
 implicit none
