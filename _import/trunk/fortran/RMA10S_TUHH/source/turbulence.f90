@@ -48,13 +48,13 @@ SUBROUTINE turbulence(nn, iturb, mineddy, &
 ! Calculates turbulence parameter nu_T for all elements
 ! depending on input-variable ITURB
 !
-! ITURB = 0   : Constant eddy viscosity
-! ITURB = 1   : Bottom-generated turbulence model
-! ITURB = 2   : PRANTDL-mixing length
-! ITURB = 3   : PRANDTL-mixing length with SMAGORINSKY model
-! ITURB = 4   : Combination of 3 and 1
-! ITURB = 5   : Combination of 2 and 1
-! ITURB = 6   : Combination of 1 and 2 and 3
+! ITURB = 10   : Constant eddy viscosity
+! ITURB = 11   : Bottom-generated turbulence model
+! ITURB = 12   : PRANTDL-mixing length
+! ITURB = 13   : PRANDTL-mixing length with SMAGORINSKY model
+! ITURB = 14   : Combination of 13 and 11
+! ITURB = 15   : Combination of 12 and 11
+! ITURB = 16   : Combination of 11 and 12 and 13
 !
 !---------------------------------------------------------------------
 
