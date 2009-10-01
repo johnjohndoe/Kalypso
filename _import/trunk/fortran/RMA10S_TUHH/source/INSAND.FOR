@@ -110,12 +110,12 @@ CIPK MAR06 MOVED        CONP=1.-POSA
        ! HN 17July 2009 Reading Geothechnical properties.
         IF(ID(1:3) .EQ. 'GTP') THEN                     
           READ(DLIN,1031) critical_slope,crepose,repose,
-     +     EFFECTIVE_COHESION,FRICTION_ANGLE, MATRIC_ANGLE, ROOT
+     +     EFFECTIVE_COHESION,FRICTION_ANGLE, MATRIC_ANGLE, ROOT,refine
           CALL GINPT(LIN,ID,DLIN)
         ENDIF  
         ! HN 23 Jul 2009: Reading polynomial factors , describing pore pressure distribution. 
         IF(ID(1:3) .EQ. 'POR') THEN                     
-          READ(DLIN,1031) EXPO3,EXPO2,EXPO1
+          READ(DLIN,1131) EXPO3,EXPO2,EXPO1
           CALL GINPT(LIN,ID,DLIN)
         ENDIF  
         
@@ -340,7 +340,8 @@ C      END IF
 
  1020 FORMAT(9F8.0)
  1030 FORMAT(3F8.4,i8,F8.0)
- 1031 FORMAT(7F8.4)
+ 1031 FORMAT(7F8.4, I8)
+ 1131 FORMAT(3F8.4)
  1032 FORMAT(3F8.3)
 CIPK MAR06 UPDATE HEADER
  2030 FORMAT(//
