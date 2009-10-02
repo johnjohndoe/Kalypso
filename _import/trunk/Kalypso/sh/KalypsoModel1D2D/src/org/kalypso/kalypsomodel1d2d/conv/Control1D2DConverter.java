@@ -745,7 +745,7 @@ public class Control1D2DConverter
     return lListFactorsRes;
   }
 
-  /**
+ /**
    * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into according to 
    * amount of steps values and put them into pListFactors as floats
    */
@@ -761,14 +761,13 @@ public class Control1D2DConverter
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
-//      float lFloatInc = ((lFloatEnd - lFloatStart) / pIntNumberIterations);
       float lFloatInc = (float) ((lFloatEnd - lFloatStart) / 0.1);
       int lIntPer = (int) (pIntNumberIterations / ( Math.abs( lFloatInc ) + 1 ) );
       int lIntInc = 0;
       float lFloatSignum = Math.signum( lFloatInc );
       for( int i = 1; i <= pIntNumberIterations; ++i ){
         pListFactors.add( (float) (lFloatStart + 0.1 * lIntInc * lFloatSignum ) ) ;
-        if( (i) % lIntPer == 0 && pIntNumberIterations - i > Math.abs( lIntPer ) ){
+        if( (i) % lIntPer == 0 && pIntNumberIterations - i > Math.abs( lIntPer ) && lIntInc < Math.abs( lFloatInc ) ){
           lIntInc++; 
         }
       }
