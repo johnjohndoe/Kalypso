@@ -241,7 +241,10 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           /* check min/max */
           m_min = m_min.min( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
           m_max = m_max.max( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-
+          
+//          if(!Double.isNaN( returnValue )&& returnValue!=0.0)
+//            System.out.println(returnValue);
+          
           return returnValue;
         }
       }
