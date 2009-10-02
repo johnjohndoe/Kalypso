@@ -1,4 +1,4 @@
-package org.kalypso.calculation.plc.postprocessing.na;
+package org.kalypso.na.postprocessing;
 
 import java.awt.Color;
 import java.util.HashMap;
