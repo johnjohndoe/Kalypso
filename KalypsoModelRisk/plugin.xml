@@ -267,6 +267,10 @@
                      simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesDifferenceCalculation"
                      typeID="KalypsoRisk_RiskZonesDifferenceCalculation">
                </simulation>
+               <simulation
+                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_PLCPreprocessing"
+                     typeID="KalypsoRisk_PLCPreprocessing">
+               </simulation>
             </extension>
             <extension
                   point="org.kalypso.project.database.client.kalypsoModule">

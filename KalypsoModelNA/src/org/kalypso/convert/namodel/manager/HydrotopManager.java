@@ -209,6 +209,7 @@ public class HydrotopManager extends AbstractManager
         boolean anySuds = false;
         final List<String> hydIdList = new ArrayList<String>();
         final List<String> hydrotopOutputList = new ArrayList<String>();
+        double totalHydrotopArea = 0.0;
         double totalHydrotopNaturalArea = 0.0;
         double totalHydrotopSealedArea = 0.0;
         double totalSudsNaturalArea = 0.0;
@@ -233,9 +234,10 @@ public class HydrotopManager extends AbstractManager
               m_conf.getLogger().severe( msg );
               throw new SimulationException( msg );
             }
-            final double combinedSealingRate = hydrotop.getCorrSealing() * landuseSealing.doubleValue();
+            final double combinedSealingRate = landuseSealing.doubleValue() * hydrotop.getCorrSealing();
             final double hydrotopSealedArea = hydrotopArea * combinedSealingRate;
             final double hydrotopNaturalArea = hydrotopArea - hydrotopSealedArea;
+            totalHydrotopArea += hydrotopArea;
             totalHydrotopSealedArea += hydrotopSealedArea;
             totalHydrotopNaturalArea += hydrotopNaturalArea;
             String soilType = hydrotop.getSoilType();
@@ -297,10 +299,10 @@ public class HydrotopManager extends AbstractManager
         }
 
         // TODO: throw exception (to the user), if writing of hydrotope file is checked (testing!!!)
-        final double fehler = Math.abs( catchmentGeometry.getArea() - totalHydrotopNaturalArea );
-        final double fehlerinProzent = 100.0 * fehler / totalHydrotopNaturalArea;
+        final double fehler = Math.abs( catchmentGeometry.getArea() - totalHydrotopArea );
+        final double fehlerinProzent = 100.0 * fehler / totalHydrotopArea;
         if( fehlerinProzent > 1.0 )
-          m_conf.getLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", totalHydrotopNaturalArea, catchmentFE.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) ); //$NON-NLS-1$
+          m_conf.getLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", totalHydrotopArea, catchmentFE.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) ); //$NON-NLS-1$
 
         if( anySuds )
         {

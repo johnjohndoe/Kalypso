@@ -274,7 +274,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           };
 
           /* add the new coverage to the collection */
-          final String outputCoverageFileName = "specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final String outputCoverageFileName = String.format("specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
           final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$

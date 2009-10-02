@@ -4,8 +4,8 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.kalypso.calculation.connector.AbstractInternalStatusJob;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_LZNA_KZNA;
+import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;

@@ -174,7 +174,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
         final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(), controlModel.getLanduseClassesList(), controlModel.getRiskZoneDefinitionsList() );
 
         // TODO: change name: better: use input name
-        final String outputCoverageFileName = String.format( "%s_%2d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
+        final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
         // final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
         final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );

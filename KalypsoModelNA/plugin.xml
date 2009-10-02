@@ -4,9 +4,17 @@
      <extension
            point="org.kalypso.simulation.core.simulation">
         <simulation
-              catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
               simulationClass="org.kalypso.convert.namodel.NaModelCalcJob"
+              catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
               typeID="KalypsoNA"/>
+      <simulation
+            simulationClass="org.kalypso.na.preprocessing.NA_PreprocessingJob"
+            typeID="KalypsoNA_Preprocessing">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.na.postprocessing.NA_PostprocessingJob"
+            typeID="KalypsoNA_Postprocessing">
+      </simulation>
      </extension>
      <extension
            point="org.kalypso.contribs.java.urlCatalog">
