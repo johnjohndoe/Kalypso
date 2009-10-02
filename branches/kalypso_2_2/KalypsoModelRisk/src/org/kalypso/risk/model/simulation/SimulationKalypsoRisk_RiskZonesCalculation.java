@@ -55,6 +55,7 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -81,6 +82,7 @@ import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskStatisticTableValues;
+import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -119,6 +121,9 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
+    
     try
     {
       final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
@@ -134,7 +139,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
       outputRasterTmpDir.mkdir();
 
-      doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, simulationMonitorAdaptor );
+      doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, importantDigits, simulationMonitorAdaptor );
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" ); //$NON-NLS-1$
       resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
@@ -146,7 +151,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     }
   }
 
-  private void doRiskZonesCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final IProgressMonitor monitor ) throws SimulationException
+  private void doRiskZonesCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final int importantDigits, final IProgressMonitor monitor ) throws SimulationException
   {
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
 
@@ -178,7 +183,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
         // final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
         final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-        final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( ticks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
+        final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( ticks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
         outputGrid.dispose();
         inputGrid.dispose();

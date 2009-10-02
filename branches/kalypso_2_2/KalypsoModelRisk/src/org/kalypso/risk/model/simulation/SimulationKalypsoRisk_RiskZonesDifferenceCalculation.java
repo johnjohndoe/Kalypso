@@ -49,12 +49,14 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -141,6 +143,9 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
   private void doRiskZonesCalculation( final File tmpdir, final IRasterDataModel rasterModelOutput, final IRasterDataModel rasterModelInput1, final IRasterDataModel rasterModelInput2, final IProgressMonitor monitor ) throws SimulationException
   {
+    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
+    
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
 
     try
@@ -180,7 +185,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
           final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-          final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
+          final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           m_totalDifference += ((RiskZonesDifferenceGrid) outputGrid).getDifference();
 
