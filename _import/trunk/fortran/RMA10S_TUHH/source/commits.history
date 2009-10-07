@@ -1437,8 +1437,6 @@ new features introduced/ started to be introduced:
 
 --- Nico Schrage, 27.09.2009
 
---- M.Hassan Nasermoaddeli, 01.10.2009  
-
 148.) Completing comments regarding mathematical formulation of momentum equation.
         >> SubR: coef25, coef2dnt, coef2
 149.) Correcting the explanation of the Variable ITURB in comment block.
@@ -1476,7 +1474,7 @@ new features introduced/ started to be introduced:
       SubR: Tensile, Avalanche, Module_projection, Cantilever.        
 158.) Bug fix:the computation of lost mass "lost" was corrected.
         >> Module projection
-159.)  Bug fix: The updating of elevation of bank-toe nodes due to deposition of failed mass was not included in the output profiles. 
+159.) Bug fix: The updating of elevation of bank-toe nodes due to deposition of failed mass was not included in the output profiles. 
       It was due to the fact that the whole mass waste was assigned to the source term in ADV-DIFF equation (see below for more information).
       Now after cantilever failure(output) the output data includes the final shape of profile including bank-toe aggradation due to mass waste. 
         >> Module  Avalanche , Bank_erosion
@@ -1485,5 +1483,13 @@ new features introduced/ started to be introduced:
 161.) Potential nose computation was improved for the case of uneven zig-zag profile.
        >> SubR: Bank_erosion, Potentialnose        
     
+--- M.Hassan Nasermoaddeli, 01.10.2009 
 
+162.) Correction of an error in computation of pore pressure force.
+       >> Module Cantilever
+163.) Creation of an output file "SF.txt" to log the time of cantilever failure.
+       >> Module: Cantilever, Tensile and SubR: bank_erosion, output1.
+
+--- M.Hassan Nasermoaddeli, 07.10.2009 
+      
         
