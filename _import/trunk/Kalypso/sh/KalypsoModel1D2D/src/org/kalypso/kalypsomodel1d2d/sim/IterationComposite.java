@@ -91,7 +91,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class IterationComposite extends Composite
 {
-  private static final String STR_NO_RESULTS = Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.0"); //$NON-NLS-1$
+  private static final String STR_NO_RESULTS = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationComposite.0" ); //$NON-NLS-1$
 
   private final DefaultTableViewer m_tableViewer;
 
@@ -107,11 +107,23 @@ public class IterationComposite extends Composite
   {
     super( composite, style );
 
+    m_tableViewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION );
+
+    final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( null );
+    final TupleResultContentProvider cp = new TupleResultContentProvider( provider );
+    m_tableViewer.setContentProvider( cp );
+    m_tableViewer.setLabelProvider( new TupleResultLabelProvider( cp ) );
+
+    final Table table = m_tableViewer.getTable();
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+    table.setHeaderVisible( true );
+    table.setVisible( false );
+
     /* Create control */
     setLayout( new GridLayout( 2, false ) );
 
     final Label comboLabel = new Label( this, SWT.NONE );
-    comboLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.1") ); //$NON-NLS-1$
+    comboLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationComposite.1" ) ); //$NON-NLS-1$
 
     m_comboViewer = new ComboViewer( this, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_comboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
@@ -150,16 +162,11 @@ public class IterationComposite extends Composite
     m_statusComposite = new StatusComposite( this, StatusComposite.DETAILS );
     m_statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    m_tableViewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION );
-    final Table table = m_tableViewer.getTable();
-    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
-    table.setHeaderVisible( true );
-
     setStatus( null );
-    table.setVisible( false );
+
     m_comboViewer.getControl().setEnabled( false );
 
-    final Job refreshJob = new UIJob( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.2") ) //$NON-NLS-1$
+    final Job refreshJob = new UIJob( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationComposite.2" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -233,7 +240,7 @@ public class IterationComposite extends Composite
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.3"), e ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationComposite.3" ), e ); //$NON-NLS-1$
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         setStatus( status );
       }
@@ -311,12 +318,10 @@ public class IterationComposite extends Composite
     if( tr == null )
       return;
 
-    final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( null );
-    final TupleResultContentProvider cp = new TupleResultContentProvider( provider );
-    m_tableViewer.setContentProvider( cp );
-    m_tableViewer.setLabelProvider( new TupleResultLabelProvider( cp ) );
-
     m_tableViewer.setInput( tr );
+    
+    // resize id column
+    m_tableViewer.getTable().getColumn( 1 ).setWidth( 24 );
 
     /* Always reveal the last element */
     final Object[] records = tr.toArray(); // use to array, the tuple result may be changing
