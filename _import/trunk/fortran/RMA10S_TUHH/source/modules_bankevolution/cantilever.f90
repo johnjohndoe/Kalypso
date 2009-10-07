@@ -15,7 +15,7 @@ implicit none
 
 CONTAINS
 
-subroutine cantilever_failure( CANTI_PR, AVAL_PR , WATERELEV , UNSATURATED_SLOPE , EffectVolume , fenode, Submerged_Overhang )
+subroutine cantilever_failure( CANTI_PR, AVAL_PR , WATERELEV , UNSATURATED_SLOPE , EffectVolume , fenode, SAFTEYFACTOR, Submerged_Overhang )
 
 USE types
 use share_profile
@@ -25,13 +25,13 @@ implicit none
 
 TYPE (finite_element_node), DIMENSION (:), INTENT (IN)   :: fenode   
 TYPE(profile)                            , INTENT (INOUT):: CANTI_PR
-REAL (KIND = 8)           , DIMENSION (2), INTENT (OUT)  :: EffectVolume            ! the effective volume of collapsed overhang
+REAL (KIND = 8)           , DIMENSION (2), INTENT (OUT)  :: EffectVolume ,SAFTEYFACTOR           ! the effective volume of collapsed overhang
 TYPE (profile) , INTENT (INOUT)   :: aval_pr
 REAL (KIND = 8), INTENT (IN)      :: waterelev
 REAL           , INTENT (IN)      :: unsaturated_slope
 LOGICAL   , INTENT (IN), OPTIONAL :: Submerged_Overhang            
 
-REAL (KIND = 8)    ,DIMENSION (2) :: SAFTEYFACTOR, source                               ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
+REAL (KIND = 8)    ,DIMENSION (2) ::  source !,SAFTEYFACTOR                              ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
 INTEGER            ,DIMENSION (2) :: INTSECT_NO 
 TYPE (profile_node),DIMENSION (2) :: INTSECT_NODE
 TYPE (profile)     ,DIMENSION (1) :: INITIATE_PROFILE
@@ -179,11 +179,11 @@ MN: DO i  = 1,LR                                                ! loop over two 
  
  ELSE
 
-  BASE_SUCTION = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
+ ! BASE_SUCTION = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
   
-  MATRICHEAD   = SUCTIONHEIGHT ( WATERELEV , ELEV )
-  MATRICHEAD   = MATRICHEAD - BASE_SUCTION
-  MATRICHEAD   = func(ELEV- WATERELEV, EXPO3,EXPO2,EXPO1) * (ELEV - FRONT%ELEVATION)- MATRICHEAD
+  MATRICHEAD   = SUCTIONHEIGHT ( FRONT%ELEVATION-WATERELEV , ELEV-WATERELEV )
+  !MATRICHEAD   = MATRICHEAD - BASE_SUCTION
+!  MATRICHEAD   = func(ELEV- WATERELEV, EXPO3,EXPO2,EXPO1) * (ELEV - FRONT%ELEVATION)- MATRICHEAD
   MATRICHEAD   = -1.0 * MATRICHEAD
   
  ENDIF
@@ -450,9 +450,10 @@ IF ( SUCTIONHEIGHT < -1.0 * expo1 ) SUCTIONHEIGHT = -1.0 * EXPO1
 
 ELSE
 
-REL_HEIGHT_START = 0.
-REL_HEIGHT_END   = ELEVATION - WATER_LEVEL
-
+!REL_HEIGHT_START = 0.
+!REL_HEIGHT_END   = ELEVATION - WATER_LEVEL
+REL_HEIGHT_START = WATER_LEVEL
+REL_HEIGHT_END   = ELEVATION 
 CALL INTEGRAL (REL_HEIGHT_START, REL_HEIGHT_END ,EXPO3, EXPO2, EXPO1 , AREA_UNDER_CURVE)
 
 SUCTIONHEIGHT =  AREA_UNDER_CURVE
