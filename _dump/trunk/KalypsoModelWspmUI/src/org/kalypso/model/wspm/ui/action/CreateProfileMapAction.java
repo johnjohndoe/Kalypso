@@ -23,6 +23,7 @@ import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -36,7 +37,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.gismapview.Gismapview;
@@ -117,7 +117,8 @@ public class CreateProfileMapAction extends ActionDelegate
 
           final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
           final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
-          final IEditorInput input = new StorageEditorInput( new StringStorage( storageName, mapTemplate, storagePath ) );
+
+          final IFileEditorInput input = new StorageEditorInput( new StringStorage( mapTemplate, storagePath ) );
 
           page.openEditor( input, editorDescription.getId(), true );
         }
