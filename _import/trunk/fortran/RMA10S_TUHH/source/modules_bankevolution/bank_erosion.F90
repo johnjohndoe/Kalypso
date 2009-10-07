@@ -58,7 +58,7 @@ USE BLKDRMOD
       
       Real (kind = DOUBLE)            ,DIMENSION (MAXE) :: ElementSource             ! maxe is a global array saving the number of elements.
       Real (kind = DOUBLE)            ,DIMENSION (MAXP) :: diffbed 
-      Real (kind = DOUBLE)            ,DIMENSION (2)    :: failure_source , EffectiveWidth_Overhang, avalanche_source
+      Real (kind = DOUBLE)            ,DIMENSION (2)    :: failure_source , EffectiveWidth_Overhang, avalanche_source,SF
            
       INTEGER                         ,DIMENSION (2)    ::  front                                ! front is an array that stores the profile node number of overhang's front.
       INTEGER                         ,DIMENSION (2)    ::  last_submerged_node , Banktoe_node   ! for left and right banks.
@@ -77,7 +77,7 @@ USE BLKDRMOD
       INTEGER                :: status, lstatus , rstatus
       INTEGER                :: numberofnodes , number_of_profiles
 
-      CHARACTER (LEN = 35)   :: exner_pr, tens_pr, Avalanch_pr, Cantilever_pr ,difff
+      CHARACTER (LEN = 35)   :: exner_pr, tens_pr, Avalanch_pr, Cantilever_pr ,difff,Safteyfactor
       CHARACTER (LEN = 9)    :: distribution
       CHARACTER (LEN = 5)    :: side                                                     ! it is a tag that is either 'left' or 'right', and it signals tensile failure subroutine
       CHARACTER (LEN = 3)    :: digit                                                                             ! with which overhang it deals.
@@ -123,6 +123,7 @@ tens_pr       = 'aftertensile' // digit // '.txt'
 Avalanch_pr   = 'afteravalanche' // digit // '.txt'
 Cantilever_pr = 'aftercantilever' // digit // '.txt'
 difff         = 'difff'//digit//'.txt'
+Safteyfactor  = 'SF.txt'
 
 numberofnodes = maxp
 
@@ -575,8 +576,9 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
            
            failure_source = 0.0
            
-           call cantilever_failure (canti_pr , ava_pr,pr%water_elev,critical_slope,failure_source , fenode)
+           call cantilever_failure (canti_pr , ava_pr,pr%water_elev,critical_slope,failure_source , fenode,SF)
          
+           if (SF(1)<1.0 .or. SF(2) <1.0 ) call output1 (canti_pr,safteyfactor, 51, i,callcounter,SF)
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !   DISTRIBUTATION OF MASS WASTE AT BANK-TOE  !
@@ -711,7 +713,7 @@ end function average_water_level
 
 !-----------------------------------------------------------------------------------------------------------------------------------------
 
-subroutine output1(profileIN, filename, unitt, profilenumber)
+subroutine output1(profileIN, filename, unitt, profilenumber,timestep, SF)
 
 use types
 
@@ -720,6 +722,9 @@ implicit none
 type (profile)       , intent (in) :: profileIN
 character (len = 35) , intent (in) :: filename
 integer              , intent (in) :: unitt, profilenumber
+integer     , intent (in),optional :: timestep
+Real(kind=8), dimension(2), intent (in),optional :: SF
+
 integer                            :: i,istat
 logical                            :: exists
    
@@ -734,13 +739,17 @@ logical                            :: exists
     else
      open (UNIT=unitt, file = filename , STATUS='new', ACTION='write', IOSTAT=istat)
      call file_error (filename, istat)
-     write (unitt, *)number_of_profiles
+     if (.not.present(timestep)) write (unitt, *)number_of_profiles
     endif 
    
+     
+     if (present(timestep) )  write (unitt, *) 'Time step: ' ,timestep, '   Safteyfactor:1', SF(1),'   Safteyfactor:2', SF(2) 
+     
      write (unitt, *) 'profile number: ' , profilenumber
    
      write (unitt, *) 'Contiline number: ', profileIN%cl_number
    
+   if (.not.present(timestep) )then
      write (unitt, 110) profileIN%lnose, profileIN%Rnose, profileIN%lfront, profileIN%Rfront,profileIN%max_nodes
     110 format (5(2x, I4))
    
@@ -750,6 +759,7 @@ logical                            :: exists
      write (unitt,120) profileIN%prnode(i)%fe_nodenumber , profileIN%prnode(i)%distance, profileIN%prnode(i)%elevation &
      &                       , profileIN%prnode(i)%attribute   
     end do
+   end if
     
     120 format (1x,I7,2x,F8.4,2x,f7.4, 1x,a9)
     close (unit = unitt) 
