@@ -2,7 +2,6 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
