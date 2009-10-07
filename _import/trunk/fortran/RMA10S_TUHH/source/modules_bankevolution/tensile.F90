@@ -94,7 +94,7 @@ subroutine tensile_failure(pr,fenode,side,newwater_elev, potnose ,new_front,numb
  TYPE (PROFILE)                 :: TEMP_PROFILE ,TENSILE_PR
  REAL(KIND=8), DIMENSION (20,3) :: buffer    ! the variable holding THE fe_ node NUMBER, distance and elevation of THE new nodes projected ON extrapolation line.
  REAL(KIND=8), DIMENSION (2)    :: EffectVolume            ! the effective volume of collapsed overhang
-
+ REAL(KIND=8), DIMENSION (2)    :: SF
  INTEGER     , DIMENSION (2)    :: front     ! this critical slope is consolidated unsaturated critical slope (unsubmerged area)
  INTEGER                        :: i,j,k,l,m,n,p,q,r,s,s1,s2,t,u,b,bb,counter
  INTEGER                        :: status, q1, INDEX
@@ -152,7 +152,7 @@ subroutine tensile_failure(pr,fenode,side,newwater_elev, potnose ,new_front,numb
   
       if (refined ) then
        
-       CALL cantilever_failure( TENSILE_PR, PR , PR%WATER_ELEV , critical_slope , EffectVolume , fenode ,potnose_coincid_newfront)
+       CALL cantilever_failure( TENSILE_PR, PR , PR%WATER_ELEV , critical_slope , EffectVolume , fenode ,SF,potnose_coincid_newfront)
       
        sumsource  = EffectVolume(1)
        PR = TENSILE_PR
@@ -204,7 +204,7 @@ subroutine tensile_failure(pr,fenode,side,newwater_elev, potnose ,new_front,numb
           
         if  (refined ) then
           
-          CALL cantilever_failure( TENSILE_PR, PR , PR%WATER_ELEV , critical_slope , EffectVolume , fenode,potnose_coincid_newfront  )
+          CALL cantilever_failure( TENSILE_PR, PR , PR%WATER_ELEV , critical_slope , EffectVolume , fenode,SF,potnose_coincid_newfront  )
           
           sumsource  = EffectVolume(2)
           PR = TENSILE_PR
