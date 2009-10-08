@@ -1,6 +1,6 @@
 package org.kalypso.calculation.plc.postprocessing.na;
 
-import java.io.BufferedWriter;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -147,7 +147,9 @@ public class PLCPostprocessing_NA_Job extends AbstractInternalStatusJob implemen
 		final String nodeID = steadyNodeFolder.getName();
 		final Obsdiagview view = NodeResultsComparisonViewCreator.createView("Gesamtabfluss: " + nodeID, "", "izNodes/" + nodeID + "/Gesamtabfluss.zml", "sudsNodes/" + nodeID + "/Gesamtabfluss.zml", nodeID);
 		final File odtFile = new File(tmpdir, nodeID + ".odt");
-		final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(odtFile), "UTF-8"));
+				final OutputStreamWriter out = new OutputStreamWriter(
+						new BufferedOutputStream(new FileOutputStream(odtFile)),
+						"UTF-8");
 		DiagViewUtils.saveDiagramTemplateXML(view, out);
 	    }
 
@@ -204,7 +206,7 @@ public class PLCPostprocessing_NA_Job extends AbstractInternalStatusJob implemen
 		dataList.add(max2.getValue());
 		dataList.add(max2.getDate().getTime());
 		final double valueDifference = max1.getValue() - max2.getValue();
-		long timeDifference = max1.getDate().getTime() - max2.getDate().getTime();
+		final long timeDifference = max1.getDate().getTime() - max2.getDate().getTime();
 		dataList.add(valueDifference);
 		dataList.add(timeDifference);
 		if (valueDifference == 0.0)
