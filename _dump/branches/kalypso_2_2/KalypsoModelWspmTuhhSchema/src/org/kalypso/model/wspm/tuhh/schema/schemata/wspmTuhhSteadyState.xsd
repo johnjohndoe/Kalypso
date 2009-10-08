@@ -380,9 +380,10 @@
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="exeVersion" default="_2_1_4_0">
+					<element name="exeVersion" default="_2_1_5_1">
 						<simpleType>
 							<restriction base="string">
+								<enumeration value="_2_1_5_1"></enumeration>
 								<enumeration value="_2_1_5_0"></enumeration>
 								<enumeration value="_2_1_4_1"></enumeration>
 								<enumeration value="_2_1_4_0"></enumeration>
