@@ -1490,6 +1490,14 @@ new features introduced/ started to be introduced:
 163.) Creation of an output file "SF.txt" to log the time of cantilever failure.
        >> Module: Cantilever, Tensile and SubR: bank_erosion, output1.
 
---- M.Hassan Nasermoaddeli, 07.10.2009 
-      
-        
+--- M.Hassan Nasermoaddeli, 07.10.2009
+
+164.) Message level reduction (msglvl = 1 -> msglvl = 0) to reduce output from MKL; it's anoying! For using a higher msglvl set it in front_mkl.f90
+      (affects: front_mkl.f90)
+165.) Some improvements for distributed calcualtions, i.e.
+      - 'Schwarz' iteration output
+      - introduction of an inner BC-improvement algorithm wrapper, where any improvement algorithm can be introduced
+      - handling of stop-events
+
+--- Nico Schrage, 09.10.2009
+     
