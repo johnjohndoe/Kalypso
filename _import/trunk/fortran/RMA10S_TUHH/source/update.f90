@@ -6,7 +6,7 @@
 !IPK  last update Jan 16 2000 fix bug from SL condition
 !IPK  LAST UPDATED NOVEMBER 13 1997
 !IPK  LAST UPDATE APR 30 1996
-SUBROUTINE UPDATE
+SUBROUTINE UPDATE (schwarzIt)
 USE BLK10
 USE BLK10MOD
 USE BLK11MOD
@@ -22,6 +22,7 @@ SAVE
 !IPK AUG05      INCLUDE 'BLKDR.COM'
 !NiS,jul06: Consistent data types for passing paramters
 REAL(KIND=8) H, H1, VT, HS
+integer (kind = 4), intent (in) :: schwarzIt
 !-
 !nis,feb07: Cross section of Flow1dFE elements
 REAL (KIND=8) :: NodalArea
@@ -498,7 +499,7 @@ WriteDOFOutputs: DO J = 1, 7
   !write first line including informations about time step and iteration cycle
   IF (J == 1) THEN
     !write header of output block in console
-    write (*, 6011) icyc, maxn
+    write (*, 6011) schwarzIt, icyc, maxn
     write (*, 6012)
     if (percentCheck == 1) then
       write (*, 6014)
@@ -751,7 +752,7 @@ ENDIF
 
  6010 FORMAT (I2, 2F11.5, I9, 1x, f8.3,1x, F9.3, I9, 1x, f8.3, 1X, 2A4)
 
- 6011 FORMAT (// 62x, 'STEP', I4, ' ITER', I3 /)
+ 6011 FORMAT (// 20x, ' SCHWARZ ITERATION', I4, ' TIME STEP', I4, ' NEWTON ITERATION', I3 /)
  
  6012 FORMAT ('      AVG CHG    MAX CHG  MaxNode    MaxKM MaxRelChg  RelNode    RelKM' / &
            &  '******************************************************************************')

@@ -42,7 +42,7 @@ contains
     write (fileNameChar, '(a9,i5.5,a1,i3.3)') 'nextStep_', currCalcStep, '_', schwarzStep
     nextSchwarzStepFile => newFile (fileName = fileNameChar)
     !stop command file
-    write (fileNameChar, '(a4)')  'stop'
+    write (fileNameChar, '(a5,i5.5,a1,i3.3)')  'stop_', currCalcStep, '_', schwarzStep
     stopFile => newFile (fileName = fileNameChar)
 
     !Wait for command files
@@ -88,7 +88,7 @@ subroutine writeInnerBoundaryConditons (m_simModel, schwarzIt, calcStep, ccls, n
   integer (kind = 4) :: i
 
   !Generate and open BC output file
-  write (BCOutFilename, '(a3,a,a1,i5.5,a1,i3.3,a3)') 'BC_', trim(m_SimModel.ID), '_', calcStep, '_',schwarzIt , '.bc'
+  write (BCOutFilename, '(a3,a,a1,i5.5,a1,i3.3)') 'BC_', trim(m_SimModel.ID), '_', calcStep, '_',schwarzIt 
   BCOutFile => newFile (fileName = BCOutFilename, fileStatus = 'REPLACE')
   call openFileObject (BCOutFile, .true.)
 
@@ -129,7 +129,7 @@ function getNeighbourBCFiles (schwarzIt, calcStep, m_SimModel) result (bcFiles)
   tmpNeighbour => m_simModel.modelNeighb
 
   generateFileNames: do
-    write(bcFileName, '(a3,a,a1,i5.5,a1,i3.3,a3)') 'BC_',trim(tmpNeighbour.m_simModel.ID), '_', calcStep, '_', schwarzIt, '.bc'
+    write(bcFileName, '(a3,a,a1,i5.5,a1,i3.3)') 'BC_',trim(tmpNeighbour.m_simModel.ID), '_', calcStep, '_', schwarzIt
     bcFile => newFile (fileName = bcFileName, fileStatus = 'OLD')
     !Add file to the list
     if (associated (bcFiles)) then
@@ -237,6 +237,26 @@ subroutine getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
     call sleep (1)
   end do waitLoop
 end subroutine
+
+!-------------------------------------------------------------------------------------------
+!subroutine: storeOldInnerBoundaryConditions
+!-------------------------------------------------------------------------------------------
+subroutine improveBCs (improveAlgo, ccls, ncl, spec, maxp)
+  implicit none
+  !arguments
+  integer (kind = 4) :: improveAlgo
+  type (contiLine), target :: ccls (1:)
+  real (kind = 8) :: spec (1:, 1:)
+  integer (kind = 4) :: ncl, maxp
+  !local variables
+  type (contiLine), pointer :: tmpCCL
+  integer (kind = 4) :: i
+  
+  do i = 1, ncl
+    tmpCCL => ccls (i)
+    if (tmpCCL.isInnerBoundary .and. associated (tmpCCL.firstNode.thisNode.previousBC)) call improveNodalBC (improveAlgo, tmpCCL, spec (1:maxp, 1:3))
+  end do
+end subroutine
       
       
 !-------------------------------------------------------------------------------------------
@@ -255,7 +275,7 @@ subroutine storeOldInnerBoundaryConditions (ccls, spec, ncl, maxp)
   !Store old BCs
   do i = 1, ncl
     tmpCCL => ccls(i)
-    if (tmpCCL.isInnerBoundary) call storeOldBCs (tmpCCL, spec(1:maxp, 1:3))
+    if (tmpCCL.isInnerBoundary .and. associated (tmpCCL.firstNode.thisNode.currentBC)) call storeOldBCs (tmpCCL, spec(1:maxp, 1:3))
   end do
 end subroutine
 
@@ -282,8 +302,12 @@ function checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder) result (sch
   checkSchwarzConv: do i = 1, ncl
     tmpCCL => ccls (i)
     if (.not. (tmpCCL.isInnerBoundary)) cycle checkSchwarzConv
-    call checkBoundaryConv (tmpCCL, schwarzConvCheckBorder)
-    if (.not. (tmpCCL.innerCondition.isSchwarzConv)) schwarzConvStatus = .false.
+    if (associated (tmpCCL.firstNode.thisNode.previousBC)) then
+      call checkBoundaryConv (tmpCCL, schwarzConvCheckBorder)
+      if (.not. (tmpCCL.innerCondition.isSchwarzConv)) schwarzConvStatus = .false.
+    else
+      schwarzConvStatus = .false.
+    endif
   end do checkSchwarzConv
   
   return

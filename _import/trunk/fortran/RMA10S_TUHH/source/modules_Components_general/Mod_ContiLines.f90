@@ -1,10 +1,17 @@
 module mod_ContiLines
   use mod_Nodes
   use mod_Arcs
-  USE TYPES
   use mod_storageElt
   use mod_fileType
+  !FIXME: @Hassan -> meaningless name; change to a readable name
+  USE TYPES
   
+  !module internal constants
+  !-------------------------
+  integer (kind = 4), parameter :: enum_nestedIntervals = 1  
+  
+  !module types
+  !------------
   type contiLine
     integer (kind = 4) :: ID = 0
     type (linkedNode), pointer :: firstNode => null()
@@ -219,7 +226,7 @@ CONTAINS
   
   subroutine write_innerBC (BCOutFile, ccl, vel, wsll, cord)
     !FIXME:
-    !This here is very bad; AVOID GLOBAL ARRAYS
+    !This here is very bad; AVOID editing GLOBAL ARRAYS (vel, wsll, cord)
     implicit none
     !arguments
     type (file), pointer :: BCOutFile
@@ -227,8 +234,12 @@ CONTAINS
     real (kind = 8), intent (in) :: vel(1:,1:), wsll(1:), cord(1:,1:)
     !local variables
     integer (kind = 4) :: i
+    integer (kind = 4) :: nodeID
     type (linkedNode), pointer :: tmpNode => null()
     character (len = 1000) :: tmpString
+    real (kind = 8) :: qx, qy
+    integer (kind = 4) :: ndCnter
+    real (kind = 8) :: waspi
     
 
     !Write header of boundary condition block, containing the line ID and the boundary condition type to be written
@@ -241,18 +252,44 @@ CONTAINS
     
     !get first node
     tmpNode => ccl.firstNode
+    ndCnter = 0
+
+    !just for a testing case with constant water level at transition
+    call getLineAverageWaterLevel (ccl.ID, waspi)
     
     forNodes: do
+      ndCnter = ndCnter + 1
       !write values
       switch: select case (ccl.InnerCondition.BCtype)
 
         !H-Boundary condition has to hand out velocity boundary conditions
         case (enum_H_BCtype)
-          write (tmpString, *)  tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), vel(1,tmpNode.thisNode.ID), vel (2, tmpNode.thisNode.ID)
+          nodeID = tmpNode.thisNode.ID
+          qx = vel (1, nodeID) * vel (3, nodeID)
+          qy = vel (2, nodeID) * vel (3, nodeID)
+          !write (tmpString, *)  tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), vel(1,tmpNode.thisNode.ID), vel (2, tmpNode.thisNode.ID)
+          write (tmpString, *)  tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), qx, qy
 
         !V-boundary conditions has to hand out water level boundary conditions
         case (enum_V_BCtype)
-          write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.thisNode.ID)
+            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), waspi
+
+
+!          !midside node
+!          if (mod(ndCnter, 2) == 0) then
+!            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.thisNode.ID)
+!          else
+!            !first corner node
+!            if (tmpNode.thisNode.ID == ccl.firstNode.thisNode.ID) then
+!              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.next.thisNode.ID)
+!            !last corner node
+!            elseif (tmpNode.thisNode.ID == ccl.lastNode.thisNode.ID) then
+!              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.prev.thisNode.ID)
+!            !any corner node in between
+!            else 
+!              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), 0.5 * (wsll(tmpNode.prev.thisNode.ID) + wsll(tmpNode.next.thisNode.ID))
+!            endif
+!          endif
       end select switch
       write (BCOutFile.unit,'(a)')  tmpString
       
@@ -401,7 +438,9 @@ CONTAINS
     tmpNode => tmpCCL.firstNode
     localOrdinate = 0.0d0
     throughNodes: do
-
+      !re-initializations
+      nfix (tmpNode.thisNode.ID) = 0
+      spec (tmpNode.thisNode.ID, :) = 0.0d0
       if (associated (hFunction)) then
         spec (tmpNode.thisNode.ID, 3) = functionValue (hFunction, localOrdinate)
         nfix (tmpNode.thisNode.ID) = 00200
@@ -409,7 +448,7 @@ CONTAINS
       elseif (associated (vxFunction)) then
         spec (tmpNode.thisnode.ID, 1) = quadrFunValue (vxFunction, localOrdinate)
         spec (tmpNode.thisnode.ID, 2) = quadrFunValue (vyFunction, localOrdinate)
-        nfix (tmpNode.thisNode.ID) = 11000
+        nfix (tmpNode.thisNode.ID) = 31000
       end if
       !update boundary condition to the model
       call bform (tmpNode.thisNode.ID)
@@ -471,6 +510,7 @@ CONTAINS
 !    endif
   
   subroutine storeOldBCs (ccl, spec)
+    implicit none
     !arguments
     type (contiLine), pointer :: ccl
     real (kind = 8), intent (in) :: spec (1:, 1:)
@@ -481,14 +521,15 @@ CONTAINS
     tmpNode => ccl.firstNode
     
     storeBCs: do
-      local_spec (1:3) = spec(tmpNode.thisNode.ID, 1:3)
+      local_spec (1:2) = tmpNode.thisNode.currentBC.v(1:2)
+      local_spec (3)   = tmpNode.thisNode.currentBC.h
       !assign boundary condition, if not existent yet
       if (associated (tmpNode.thisNode.previousBC)) then
         !set old value
-        call setBC (tmpNode.thisNode.previousBC, local_spec(1:3))
+        call setBC (tmpNode.thisNode.previousBC, local_spec (1:3))
       !assign new boundary condition, if not existent yet and set values
       else
-        tmpNode.thisNode.previousBC => newBC (bc_type = ccl.innerCondition.bctype, bc_value = local_spec(1:3))
+        tmpNode.thisNode.previousBC => newBC (bc_type = ccl.innerCondition.bctype, bc_value = local_spec (1:3))
       endif
 
       !go to next node of line or leave loop
@@ -521,10 +562,10 @@ CONTAINS
       selectConvCheckCase: select case (ccl.innerCondition.BCtype)
         case (enum_H_BCtype)
 
-          if (tmpNode.thisNode.previousBC.h > 0.0) then
+          if (tmpNode.thisNode.previousBC.h /= 0.0) then
 
             !Check for maximum change in boundary condition
-            absChange(3) = abs ((tmpNode.thisNode.currentBC.h - tmpNode.thisNode.previousBC.h)/ tmpNode.thisNode.previousBC.h)
+            absChange(3) = abs ((tmpNode.thisNode.currentBC.h - tmpNode.thisNode.previousBC.h)/ (0.5* (tmpNode.thisNode.previousBC.h + tmpNode.thisNode.currentBC.h)))
             if (absChange(3) > maxChange(3)) maxChange(3) = absChange(3)
             if (maxChange(3) > convBorder .and. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
           else
@@ -534,10 +575,9 @@ CONTAINS
         case (enum_V_BCtype)
         
           do i = 1, 2
-            if (tmpNode.thisNode.previousBC.v(i) > 0.0) then
-            
+            if (tmpNode.thisNode.previousBC.v(i) /= 0.0) then
               !Check for maximum change in boundary condition
-              absChange(i) = abs ((tmpNode.thisNode.currentBC.v(i) - tmpNode.thisNode.previousBC.v(i))/ tmpNode.thisNode.previousBC.v(i))
+              absChange(i) = abs ((tmpNode.thisNode.currentBC.v(i) - tmpNode.thisNode.previousBC.v(i))/ (0.5 * (tmpNode.thisNode.previousBC.v(i) + tmpNode.thisNode.currentBC.v(i))))
               if (absChange(i) > maxChange(i)) maxChange(i) = absChange(i)
               if (maxChange(i) > convBorder .and. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
             else
@@ -552,12 +592,47 @@ CONTAINS
        endif
     end do convCheck
     
+    !write output to console
+    !-----------------------
+    !CCL    vx-conv max    vy-conv max    h-conv max'
+    write (*,'(i5,3(2x,f13.6))') ccl.ID, (maxChange(i), i = 1, 3)
+    
   end subroutine
-  ! SUBROUTINE TO FORM PROFILES OUT OF PROFILE DATA AND CONTINUITY LINES
- ! FUNCTION ADDPROFILE (BANKPROFILE,CCL)
-  !IMPLICIT NONE
   
-  !TYPE (PROFILE),
-  
+  subroutine improveNodalBC (improveAlgo, ccl, spec)
+    implicit none
+    !arguments
+    integer (kind = 4) :: improveAlgo
+    type (contiLine), pointer :: ccl
+    real (kind = 8) :: spec (1:, 1:)
+    !local variables
+    type (linkedNode), pointer :: tmpNode => null()
+    real (kind = 8) :: newh, newqx, newqy
+    
+    tmpNode => ccl.firstNode
+    if (associated (tmpNode.thisNode.previousBC)) then
+      improveBCs: do
+        improvement: select case (ccl.InnerCondition.BCtype)
+          case (enum_H_BCtype)
+            himprove: select case (improveAlgo)
+              case (enum_nestedIntervals)
+                tmpNode.thisNode.currentBC.H = 0.5 * (tmpNode.thisNode.currentBC.H + tmpNode.thisNode.previousBC.H)
+                spec (tmpNode.thisNode.ID, 3) = tmpNode.thisNode.currentBC.H
+            end select himprove
+          case (enum_V_BCtype)
+            qimprove: select case (improveAlgo)
+              case (enum_nestedIntervals)
+                tmpNode.thisNode.currentBC.V = 0.5 * (tmpNode.thisNode.currentBC.V + tmpNode.thisNode.previousBC.V)
+                spec (tmpNode.thisNode.ID, 1:2) = tmpNode.thisNode.currentBC.V(1:2)
+              end select qimprove
+        end select improvement
+        if (associated (tmpNode.next)) then
+          tmpNode => tmpNode.next
+        else
+          exit improveBCs
+        endif
+      end do improveBCs
+    end if
+  end subroutine
 
 end module

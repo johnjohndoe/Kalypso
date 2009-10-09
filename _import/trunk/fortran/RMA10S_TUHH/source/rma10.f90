@@ -205,7 +205,8 @@ integer (kind = 4) :: temp_maxn, SchwarzIt
 integer (kind = 4) :: ndl
 integer (kind = 4) :: teststat
 integer (kind = 4) :: ibin
-integer (kind = 4) :: CallCounter  
+integer (kind = 4) :: CallCounter
+integer (kind = 4) :: improvementAlgo
 real (kind = 8) :: vtm, htp, vh, h, hs
 real (kind = 8) :: ta
 real (kind = 8) :: d1, d2, ame1
@@ -425,9 +426,24 @@ steadyCalculation: if (niti /= 0) then
       !Read the incoming boundary conditions from the neighbours
       !---------------------------------------------------------
       call getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
+
+      !Improve boundary conditions by nested intervals (variables are still local)
+      !-----------------------------------------------
+      !TODO: Make it more flexible, invoking different algorithms!
+      improvementAlgo = 1
+      ! defined in Mod_ContiLines: enum_nestedIntervals = 1
+      call improveBCs (improvementAlgo, ccls, ncl, spec, maxp)
+
+      !Set conv border
+      !---------------
+      schwarzConvCheckBorder = 0.001
+      !write header of console output
+      !------------------------------
+      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', schwarzConvCheckBorder
+      write (*,'(a)') 'CCL    vx-conv max    vy-conv max    h-conv max'
+      write (*,'(a)') '----------------------------------------------------'
       !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
       !-------------------------------------------------------------------------------------
-      schwarzConvCheckBorder = 0.01
       m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder)
       if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
     endif
@@ -594,7 +610,7 @@ steadyCalculation: if (niti /= 0) then
 
   !update degrees of freedom and check for convergence
   !---------------------------------------------------
-  call update
+  call update (schwarzIt)
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -617,7 +633,7 @@ steadyCalculation: if (niti /= 0) then
 
   !print out result at freqency match, after last iteration (always) and convergence before reaching last iteration
   !----------------
-  if (mod (maxn, iprtMetai) == 0 .or. maxn == nita .or. nconv == 1) then
+  if (mod (maxn, iprtMetai) == 0 .or. maxn == nita .or. nconv == 2) then
     !generate and write some output data
     call output (2)
     !check for continuity at CCLs
@@ -1113,9 +1129,24 @@ DynamicTimestepCycle: do n = 1, ncyc
       !Read the incoming boundary conditions from the neighbours
       !---------------------------------------------------------
       call getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
+
+      !Improve boundary conditions by nested intervals (variables are still local)
+      !-----------------------------------------------
+      !TODO: Make it more flexible, invoking different algorithms!
+      improvementAlgo = 1
+      ! defined in Mod_ContiLines: enum_nestedIntervals = 1
+      call improveBCs (improvementAlgo, ccls, ncl, spec,maxp)
+
+      !Set conv border
+      !---------------
+      schwarzConvCheckBorder = 0.001
+      !write header of console output
+      !------------------------------
+      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', schwarzConvCheckBorder
+      write (*,'(a)') 'CCL    vx-conv max    vy-conv max    h-conv max'
+      write (*,'(a)') '----------------------------------------------------'
       !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
       !-------------------------------------------------------------------------------------
-      schwarzConvCheckBorder = 0.01
       m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder)
       if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
     endif
@@ -1344,7 +1375,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 
     !update degrees of freedom and check for convergence
     !---------------------------------------------------
-    call update
+    call update (schwarzIt)
 
     !Find the maximum values at each node
     !------------------------------------

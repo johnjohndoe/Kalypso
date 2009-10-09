@@ -102,9 +102,9 @@ contains
     !write filename based on the global Schwarz Conv status
     switch: select case (convStatus)
       case (case_SchwarzConv)
-        write (convStatusFileName, '(a10,a,a1,i3.3,a1,i6.6)')  'Converged_', trim(simModelIDString),'_', schwarzIt, '_', icyc
+        write (convStatusFileName, '(a10,a,a1,i5.5,a1,i3.3)')  'Converged_', trim(simModelIDString),'_', icyc, '_', schwarzIt
       case (case_NotSchwarzConv)
-        write (convStatusFileName, '(a13,a,a1,i3.3,a1,i6.6)')  'NotConverged_', trim(simModelIDString),'_', schwarzIt, '_', icyc
+        write (convStatusFileName, '(a13,a,a1,i5.5,a1,i3.3)')  'NotConverged_', trim(simModelIDString),'_', icyc, '_', schwarzIt
       case (case_diverged)
         write (convStatusFileName, '(a8)')  'Diverged'
      end select switch
