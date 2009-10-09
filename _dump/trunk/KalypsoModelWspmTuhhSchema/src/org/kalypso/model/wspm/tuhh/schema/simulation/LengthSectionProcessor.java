@@ -200,9 +200,7 @@ public class LengthSectionProcessor
 
     final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
     final TupleResult result = lengthSectionObs.getResult();
-    final String strStationierung = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation";
-    final String strWsp = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel";
-
+ 
     final TuhhReachProfileSegment[] reachProfileSegments = m_reach.getReachProfileSegments();
 
     /* sort the segments */
@@ -256,7 +254,7 @@ public class LengthSectionProcessor
 // timeLogger.takeInterimTime();
 // timeLogger.printCurrentInterim( "Start-Create Breaklines " );
 
-      BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( m_epsThinning ), m_breaklineFile, m_tinFile );
+      BreakLinesHelper.createBreaklines( reachProfileSegments, result,IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, Double.valueOf( m_epsThinning ), m_breaklineFile, m_tinFile );
     }
     catch( final Exception e )
     {
@@ -271,7 +269,7 @@ public class LengthSectionProcessor
 // timeLogger.takeInterimTime();
 // timeLogger.printCurrentInterim( "Start-Create Modelboundary " );
 
-      BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, m_boundaryFile, false );
+      BreakLinesHelper.createModelBoundary( reachProfileSegments, result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, m_boundaryFile, false );
     }
     catch( final Exception e )
     {
@@ -286,7 +284,7 @@ public class LengthSectionProcessor
 // timeLogger.takeInterimTime();
 // timeLogger.printCurrentInterim( "Start-Waterlevel " );
 
-      BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, m_waterlevelFile, true );
+      BreakLinesHelper.createModelBoundary( reachProfileSegments, result,IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, m_waterlevelFile, true );
     }
     catch( final Exception e )
     {

@@ -13,6 +13,12 @@
             extension="prf"
             id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
             name="PrfSink"/>
+      <sink
+            class="org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink"
+            extension="lng"
+            id="org.kalypso.model.wspm.tuhh.core.wspwin.lng.LngSink"
+            name="LngSink">
+      </sink>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profilePointFilter">

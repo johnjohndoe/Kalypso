@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core;
 
-
 /**
  * Contains constants for the wspm models.
- *
+ * 
  * @author thuel2
  */
 public interface IWspmConstants
@@ -67,6 +66,10 @@ public interface IWspmConstants
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary"; //$NON-NLS-1$
 
+  public static final String WSPWIN_PLOTTER = "org.kalypso.model.wspwin.plotter"; //$NON-NLS-1$
+
+  public static final String WSPWIN_PLOTTER_PATH = WSPWIN_PLOTTER + ".path"; //$NON-NLS-1$
+
   public static final String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 
   public static final String POINT_PROPERTY_BEWUCHS_AX = POINT_PROPERTY + "BEWUCHS_AX"; //$NON-NLS-1$
@@ -89,6 +92,30 @@ public interface IWspmConstants
   public static final String POINT_PROPERTY_RAUHEIT_KST = POINT_PROPERTY + "RAUHEIT_KST"; //$NON-NLS-1$
 
   public static final String POINT_PROPERTY_RECHTSWERT = POINT_PROPERTY + "RECHTSWERT"; //$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:components#";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_STATION = LENGTH_SECTION_PROPERTY + "LengthSectionStation";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_TYPE = LENGTH_SECTION_PROPERTY + "LengthSectionProfileType";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_GROUND = LENGTH_SECTION_PROPERTY + "LengthSectionGround";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_BOE_LI = LENGTH_SECTION_PROPERTY + "LengthSection_Boe_li";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERT_BOE_RE = LENGTH_SECTION_PROPERTY + "LengthSection_Boe_re";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_WEIR_OK = LENGTH_SECTION_PROPERTY + "LengthSection_WeirOK";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_BRIDGE_OK = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeOK";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_BRIDGE_UK = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeUK";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeWidth";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_ROHR_DN = LENGTH_SECTION_PROPERTY + "LengthSection_RohrDN";//$NON-NLS-1$
+  
+  public static final String LENGTH_SECTION_PROPERTY_WATERLEVEL = LENGTH_SECTION_PROPERTY + "LengthSectionWaterlevel";//$NON-NLS-1$
 
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM"; //$NON-NLS-1$

@@ -71,12 +71,14 @@ public class AddFixValueOperator implements IPointPropertyCalculator
       for( final IComponent property : properties )
       {
         final TupleResult result = point.getOwner();
+        final int i = result.indexOfComponent( property );
 
-        if( result.hasComponent( property ) )
+        if( i>-1 )
         {
           final Double oldValue = ProfilUtil.getDoubleValueFor( property.getId(), point );
           final double newValue = oldValue.isNaN() ? operand : oldValue + operand;
           changes.add( new PointPropertyEdit( point, property, newValue ) );
+          point.setValue( i, newValue, true );
         }
         else
           KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(),

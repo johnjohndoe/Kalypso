@@ -49,6 +49,7 @@ import org.kalypso.observation.result.IRecord;
 /**
  * @author kimwerner
  */
+
 public class PointAdd implements IProfilChange
 {
   private final IProfil m_profil;

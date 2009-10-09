@@ -52,18 +52,25 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.loader.PooledXLinkFeatureProvider;
+import org.kalypso.ogc.gml.om.FeatureComponent;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -101,6 +108,24 @@ public class ProfilUtil
     return values;
   }
 
+  public static IComponent getFeatureComponent( final String propertyId )
+  {
+    final String[] split = propertyId.split( "#" ); //$NON-NLS-1$
+    final String urn = split[0];
+
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    final PooledXLinkFeatureProvider featureProvider = new PooledXLinkFeatureProvider( null, uri );
+
+    final Feature componentFeature = featureProvider.getFeature( split[1] );
+
+    final FeatureComponent featureComponent = new FeatureComponent( componentFeature, urn );
+
+    return featureComponent;
+  }
+
+  
   /**
    * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
    * 
@@ -195,7 +220,7 @@ public class ProfilUtil
       return false;
     final int index = owner.indexOf( component );
 
-    for( int i = i1; i < i2-1; i++ )
+    for( int i = i1; i < i2 - 1; i++ )
     {
       if( Math.abs( (Double) (owner.get( i ).getValue( index )) - (Double) (owner.get( i + 1 ).getValue( index )) ) > p )
       {
@@ -261,75 +286,60 @@ public class ProfilUtil
     return comparePoints( new IComponent[] { property }, point1, point2 );
   }
 
+  private static IRecord flipInnerPoints( final TupleResult result, final int iBreite, final int index1, final int index2 )
+  {
+    final IRecord oldRec2 = index2 - index1 > 1 ? flipInnerPoints( result, iBreite, index1 + 1, index2 - 1 ) : result.get( index1 ).cloneRecord();
+
+    final IComponent[] components = result.getComponents();
+    final IRecord rec2 = result.get( index2 ).cloneRecord();
+
+    for( int i = 0; i < components.length; i++ )
+    {
+      final Object val = result.get( index1 ).getValue( i );
+      if( iBreite == i )
+      {
+        result.get( index1 ).setValue( i, (Double) result.get( index2 ).getValue( i ) * -1, true );
+        result.get( index2 ).setValue( i, (Double) val * -1, true );
+      }
+      else if( components[i].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) //
+          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) //
+          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) //
+          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) //
+          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+      {
+        result.get( index1 ).setValue( i, oldRec2.getValue( i ), true );
+        if( index1 > 0 )
+          result.get( index2 ).setValue( i, result.get( index1 - 1 ).getValue( i ), true );
+      }
+      else
+      {
+        result.get( index1 ).setValue( i, result.get( index2 ).getValue( i ), true );
+        result.get( index2 ).setValue( i, val, true );
+      }
+    }
+    return rec2;
+  }
+
   /**
    * mirror the profiles points (axis 0.0)
    */
   public static final void flipProfile( final IProfil profile )
   {
-    final HashMap<String, IComponent> properties = getComponentsFromProfile( profile );
+    flipProfile( profile, false );
+  }
 
-    final TupleResult result = profile.getResult();
-    final IRecord[] rows = result.toArray( new IRecord[] {} );
-    result.clear();
-
-    final int indexBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-
-    /* flip the profile by re-adding with negative width */
-    for( final IRecord record : rows )
+  /**
+   * mirror the profiles points (axis 0.0)
+   */
+  public static final void flipProfile( final IProfil profile, boolean fireNoEvent )
+  {
+    flipInnerPoints( profile.getResult(), profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE ), 0, profile.getResult().size() - 1 );
+    if( !fireNoEvent )
     {
-      final Double breite = (Double) record.getValue( indexBreite );
-      record.setValue( indexBreite, Double.valueOf( breite * -1 ) );
-
-      WspmProfileHelper.addRecordByWidth( profile, record );
+      final ProfilChangeHint hint = new ProfilChangeHint();
+      hint.setPointValuesChanged();
+      profile.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
     }
-
-    final IRecord[] points = profile.getPoints();
-    IRecord previousPoint = null;
-    for( final IRecord point : points )
-    {
-      if( previousPoint == null )
-      {
-        previousPoint = point;
-        continue;
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-
-      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
-      {
-        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
-        final Double value = (Double) point.getValue( i );
-        previousPoint.setValue( i, value );
-      }
-      previousPoint = point;
-    }
-
   }
 
   public final static HashMap<String, IComponent> getComponentsFromProfile( final IProfil profile )
@@ -522,7 +532,7 @@ public class ProfilUtil
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;
-    Double maxValue = Double.MIN_VALUE;
+    Double maxValue = -Double.MAX_VALUE;
     for( final IRecord point : points )
     {
       final Object o = point.getValue( index );
@@ -530,7 +540,7 @@ public class ProfilUtil
         maxValue = Math.max( maxValue, (Double) o );
 
     }
-    return maxValue > Double.MIN_VALUE ? maxValue : null;
+    return maxValue > -Double.MAX_VALUE ? maxValue : null;
   }
 
   public static IComponent getComponentForID( final IComponent[] components, final String propertyID )
@@ -629,7 +639,34 @@ public class ProfilUtil
     }
     return points2D;
   }
-
+  public static final Double getSectionMinValueFor(final IRecord[] section, final IComponent property )
+  {
+    if(section.length <1)return Double.NaN;
+    final TupleResult owner = section[0].getOwner();
+    final int index = owner.indexOfComponent( property );
+    if(index < 0)return Double.NaN ;
+    Double minValue = getDoubleValueFor( property, section[0]);
+    if(minValue.isNaN())return minValue;
+    for(final IRecord rec :section)
+    {
+      minValue=Math.min( minValue, (Double)rec.getValue( index ) );
+    }
+    return minValue;
+  }
+  public static final Double getSectionMaxValueFor(final IRecord[] section, final IComponent property )
+  {
+    if(section.length <1)return Double.NaN;
+    final TupleResult owner = section[0].getOwner();
+    final int index = owner.indexOfComponent( property );
+    if(index < 0)return Double.NaN ;
+    Double maxValue = getDoubleValueFor( property, section[0]);
+    if(maxValue.isNaN())return maxValue;
+    for(final IRecord rec :section)
+    {
+      maxValue=Math.max( maxValue, (Double)rec.getValue( index ) );
+    }
+    return maxValue;
+  }
   public static Double getMinValueFor( final IProfil profil, final IComponent property )
   {
     final IRecord minPoint = getMinPoint( profil, property );

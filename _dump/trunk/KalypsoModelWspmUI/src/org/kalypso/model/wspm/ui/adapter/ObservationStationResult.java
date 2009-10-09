@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.adapter;
 
 import java.util.HashMap;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -99,7 +100,7 @@ public class ObservationStationResult implements IStationResult
 
       final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_feature );
       final TupleResult result = obs.getResult();
-      final IComponent stationComp = TupleResultUtilities.findComponentById( result, "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" ); //$NON-NLS-1$
+      final IComponent stationComp = TupleResultUtilities.findComponentById( result,IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ); //$NON-NLS-1$
       if( stationComp != null )
       {
         final int index = result.indexOfComponent( stationComp );

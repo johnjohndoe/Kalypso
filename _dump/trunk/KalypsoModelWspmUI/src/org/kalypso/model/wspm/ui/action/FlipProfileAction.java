@@ -130,7 +130,7 @@ public class FlipProfileAction extends ActionDelegate
           final Feature feature = features.get( i );
 
           final IProfil profile = ((IProfileFeature)feature).getProfil();
-          ProfilUtil.flipProfile( profile );
+          ProfilUtil.flipProfile( profile ,true);
 
           monitor.worked( 1 );
           if( monitor.isCanceled() )

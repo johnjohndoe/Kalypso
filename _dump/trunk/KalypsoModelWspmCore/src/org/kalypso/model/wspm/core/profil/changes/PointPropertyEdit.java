@@ -92,8 +92,9 @@ public final class PointPropertyEdit implements IProfilChange
     {
       final IRecord point = m_points[i];
       oldValues[i] = point.getValue( index );
-      point.setValue( index, i < m_newValues.length ? m_newValues[i] : Double.NaN );
+      point.setValue( index, i < m_newValues.length ? m_newValues[i] : Double.NaN,i < m_points.length-1 );
     }
+   
     return new PointPropertyEdit( m_points, m_property, oldValues );
   }
 

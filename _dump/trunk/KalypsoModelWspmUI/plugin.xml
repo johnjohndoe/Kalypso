@@ -282,6 +282,20 @@
                  style="push"
                  tooltip="%com.bce.profil.app.profilLayerContributions.showProperties.tooltip"/>
         </objectContribution>
+        <objectContribution
+              adaptable="false"
+              id="org.kalypso.model.wspm.ui.objectContribution.plotterExport"
+              objectClass="org.kalypsodeegree.model.feature.Feature">
+           <action
+                 class="org.kalypso.model.wspm.ui.action.PlotterExportAction"
+                 id="org.kalypso.model.wspm.ui.action.PlotterExportAction"
+                 label="PlotterExport">
+           </action>
+           <filter
+                 name="featureType"
+                 value="org.kalypso.model.wspmprofile#Profile">
+           </filter>
+        </objectContribution>
      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">

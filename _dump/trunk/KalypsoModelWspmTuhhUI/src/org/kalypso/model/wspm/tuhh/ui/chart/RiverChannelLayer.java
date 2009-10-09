@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -119,10 +120,14 @@ public class RiverChannelLayer extends PointMarkerLayer
     {
       for (final IProfilChange change : changes)
       {
-        if (change.getInfo().equals(IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE))
+        if (change instanceof PointMarkerSetPoint)
         {
           //TODO: Kim set river channel roughness values
-          final IRecord[] points = (IRecord[])(change.getObjects());
+         // if (change instanceof PointMarkerSetPoint )
+         // {
+         //   final IProfilPointMarker marker = (IProfilPointMarker)(change.getObjects()[0]);
+            final IRecord[] points = (IRecord[])(change.getObjects());
+         // }
         }
       }
     }

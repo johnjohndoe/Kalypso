@@ -63,6 +63,8 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -217,27 +219,28 @@ public class PropertyEditWizard extends Wizard
     final IProfil[] choosenProfiles = toProfiles( profilFeatures );
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
-    IProfilChange[] profilChanges = null;
+//    IProfilChange[] profilChanges = null;
 
     for( int i = 0; i < choosenProfiles.length; i++ )
     {
-      profilChanges = m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
-      if( m_profile == null )
-      {
-        try
-        {
-          for( final IProfilChange change : profilChanges )
-          {
-            change.doChange( null );
-          }
-        }
-        catch( final IllegalProfileOperationException e )
-        {
-          KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( Status.ERROR, KalypsoModelWspmUIPlugin.getDefault().id(), e.getMessage() ) );
-        }
-        //featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
+      m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
+//      if( m_profile == null )
+//      {
+//        try
+//        {
+//          for( final IProfilChange change : profilChanges )
+//          {
+//            change.doChange( null );
+//          }
+//        }
+//        catch( final IllegalProfileOperationException e )
+//        {
+//          KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( Status.ERROR, KalypsoModelWspmUIPlugin.getDefault().id(), e.getMessage() ) );
+//        }
+      
+//        featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
       }
-    }
+//    }
     if( m_profile == null )
     {
       final GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
@@ -254,8 +257,11 @@ public class PropertyEditWizard extends Wizard
     }
     else
     {
-      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.3" ), m_profile, profilChanges, true ); //$NON-NLS-1$
-      new ProfilOperationJob( operation ).schedule();
+      final ProfilChangeHint hint = new ProfilChangeHint();
+      hint.setPointValuesChanged();
+      m_profile.fireProfilChanged( hint,new IProfilChange[]{new TupleResultChange()} );
+//      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.3" ), m_profile, profilChanges, true ); //$NON-NLS-1$
+//      new ProfilOperationJob( operation ).schedule();
     }
 
     return true;

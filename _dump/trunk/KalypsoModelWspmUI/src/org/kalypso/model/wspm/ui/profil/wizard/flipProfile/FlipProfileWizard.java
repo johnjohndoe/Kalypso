@@ -119,7 +119,7 @@ public class FlipProfileWizard extends Wizard
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
     for( int i = 0; i < choosenProfiles.length; i++ )
     {
-      ProfilUtil.flipProfile( choosenProfiles[i] );
+      ProfilUtil.flipProfile( choosenProfiles[i],true );
       featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
     }
 

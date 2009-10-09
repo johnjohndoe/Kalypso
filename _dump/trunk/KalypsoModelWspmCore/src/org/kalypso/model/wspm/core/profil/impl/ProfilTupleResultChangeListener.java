@@ -45,8 +45,12 @@ import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
+import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -60,6 +64,8 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 public class ProfilTupleResultChangeListener implements ITupleResultChangedListener
 {
   private final IProfil m_profil;
+
+  private IProfilChange m_onMarkerMovedDelete = null;
 
   public ProfilTupleResultChangeListener( final IProfil profil )
   {
@@ -87,15 +93,15 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
    */
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
-//    if( type == TYPE.ADDED )
-//    {
-      /*
-       * we only need a refresh here, so fire a "null-change"
-       */
-      final ProfilChangeHint hint = new ProfilChangeHint();
-      hint.setProfilPropertyChanged( true );
-      m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
-//    }
+// if( type == TYPE.ADDED )
+// {
+    /*
+     * we only need a refresh here, so fire a "null-change"
+     */
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setProfilPropertyChanged( true );
+    m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
+// }
 
   }
 
@@ -112,15 +118,38 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
     {
       final IComponent component = m_profil.getResult().getComponent( change.getComponent() );
 
-      final PointPropertyEdit pointPropertyEdit = new PointPropertyEdit( change.getRecord(), component, change.getNewValue() );
-      profChanges.add( pointPropertyEdit );
-
-      hint.setPointValuesChanged();
       if( m_profil.isPointMarker( component.getId() ) )
-        hint.setMarkerMoved();
+      {
+        IProfilPointMarker marker = null;
+        for( IProfilPointMarker m : m_profil.getPointMarkerFor( change.getRecord() ) )
+        {
+          if( m.getId() == component )
+          {
+            marker = m;
+            break;
+          }
+        }
+        if( marker == null )
+        {
+          m_onMarkerMovedDelete = new PointPropertyEdit( change.getRecord(), component, change.getNewValue() );
+        }
+        else
+        {
+          profChanges.add(m_onMarkerMovedDelete);
+          profChanges.add( new PointMarkerSetPoint(marker,change.getRecord() ));
+          m_onMarkerMovedDelete = null;
+          hint.setPointValuesChanged();
+          hint.setMarkerMoved();
+        }
+      }
+      else
+      {
+        profChanges.add( new PointPropertyEdit( change.getRecord(), component, change.getNewValue() ) );
+        hint.setPointValuesChanged();
+      }
     }
-
-    m_profil.fireProfilChanged( hint, profChanges.toArray( new IProfilChange[profChanges.size()] ) );
+    if( profChanges.size() > 0 )
+      m_profil.fireProfilChanged( hint, profChanges.toArray( new IProfilChange[profChanges.size()] ) );
 
   }
 
