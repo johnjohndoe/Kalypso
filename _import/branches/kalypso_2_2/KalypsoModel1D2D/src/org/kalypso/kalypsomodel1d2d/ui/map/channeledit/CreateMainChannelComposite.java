@@ -75,6 +75,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.chart.ui.editor.commandhandler.ExportHandler;
 import org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragPanHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
@@ -112,9 +113,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class CreateMainChannelComposite extends Composite
 {
-  // private final ColorRegistry m_colorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( getDisplay()
-  // );
-
   final CreateChannelData m_data;
 
   final CreateMainChannelWidget m_widget;
@@ -939,18 +937,19 @@ public class CreateMainChannelComposite extends Composite
 
       final Label label = m_toolkit.createLabel( sectionClient, "", SWT.BORDER | SWT.CENTER ); //$NON-NLS-1$
       label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      label.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11" ) + profil.getStation() ); //$NON-NLS-1$
+      label.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11", profil.getStation() ) ); //$NON-NLS-1$
       label.setBackground( label.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
       final Control profilControl = profilChartView.createControl( sectionClient );
+ 
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
       final ILayerManager mngr = profilChartView.getChart().getChartModel().getLayerManager();
-
-      for( final String layerId : layerProvider.getRequiredLayer( profilChartView ) )
-      {
-        mngr.addLayer( layerProvider.createLayer( layerId, profilChartView ) );
-      }
+//
+//      for( final String layerId : layerProvider.getRequiredLayer( profilChartView ) )
+//      {
+//        mngr.addLayer( layerProvider.createLayer( layerId, profilChartView ) );
+//      }
 
       final IChartLayer overlayLayer = mngr.getLayerById( IWspmOverlayConstants.LAYER_OVERLAY );
 
@@ -976,10 +975,10 @@ public class CreateMainChannelComposite extends Composite
         mngr.moveLayerToPosition( overlayLayer, last );
 
       final ChartComposite chartComposite = profilChartView.getChartComposite();
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ), null ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ), new AxisDragZoomInHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ), null ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ), null ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler() ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE, new ExportHandler() ) );
       ChartUtilities.maximize( profilChartView.getChart().getChartModel() );
