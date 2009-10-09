@@ -13,7 +13,7 @@ real (kind = 8) :: a(*), b(*), x(*)
 !local variables
 !---------------
 !general parameters passed to PARDISO, they will not change
-integer (kind = 4), parameter :: maxfct = 1, mnum = 1, mtype = 11, nrhs = 1, msglvl = 1
+integer (kind = 4), parameter :: maxfct = 1, mnum = 1, mtype = 11, nrhs = 1, msglvl = 0
 !dimension of the equation system
 integer (kind = 8) :: nonZeros
 !Parameters passed to PARDISO
