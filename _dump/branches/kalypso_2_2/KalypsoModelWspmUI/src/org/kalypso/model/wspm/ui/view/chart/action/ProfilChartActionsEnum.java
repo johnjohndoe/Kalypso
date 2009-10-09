@@ -51,6 +51,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.ISources;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+import org.kalypso.chart.ui.editor.mousehandler.IAxisDragHandler;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
@@ -123,7 +124,7 @@ public enum ProfilChartActionsEnum
     return m_label;
   }
 
-  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction, final IChartDragHandler chartHandler )
+  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction, final IChartDragHandler chartHandler, final IAxisDragHandler axisHandler )
   {
     final int style = chartAction.getStyle();
     final String label = chartAction.toString();
@@ -136,7 +137,10 @@ public enum ProfilChartActionsEnum
       @Override
       public void run( )
       {
-        profilView.getPlotDragHandler().setActiveHandler( chartHandler );
+        if( chartHandler != null )
+          profilView.getPlotDragHandler().setActiveHandler( chartHandler );
+        if( axisHandler != null )
+          profilView.getAxisDragHandler().setActiveHandler( axisHandler );
       }
     };
 
