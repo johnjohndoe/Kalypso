@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0_RC1" useFeatures="false" includeLaunchers="true">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0_RC1_build20091010" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -18,8 +18,6 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-nl
-de_DE</programArgs>
       <vmArgs>-Xmx1024m  -XX:PermSize=64M -XX:MaxPermSize=128M</vmArgs>
    </launcherArgs>
 
