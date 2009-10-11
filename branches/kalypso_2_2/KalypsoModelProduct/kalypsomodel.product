@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0_RC1_build20091010" useFeatures="false" includeLaunchers="true">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0.RC1_build20091010" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -59,7 +59,7 @@
       <plugin id="de.openali.odysseus.chart.ui"/>
       <plugin id="de.renew.workflow.connector"/>
       <plugin id="de.renew.workflow.model"/>
-      <plugin id="javax.servlet"/>
+      <plugin id="javax.servlet" version="2.5.0"/>
       <plugin id="javax.servlet.jsp"/>
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.commons.el"/>
