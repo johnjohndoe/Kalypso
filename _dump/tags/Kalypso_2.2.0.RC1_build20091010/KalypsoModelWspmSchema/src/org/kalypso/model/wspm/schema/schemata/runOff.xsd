@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms  
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema targetNamespace="org.kalypso.model.wspmrunoff" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:runoff="org.kalypso.model.wspmrunoff">
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
+        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+        <import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+        <!-- Abflussereignisse -->
+        <complexType name="RunOffEventInlinePropertyType">
+                <sequence minOccurs="1" maxOccurs="1">
+                        <element ref="runoff:RunOffEvent"/>
+                </sequence>
+        </complexType>
+        <complexType name="RunOffEventLinkPropertyType">
+                <sequence minOccurs="0" maxOccurs="0">
+                        <element ref="runoff:RunOffEvent"/>
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        </complexType>
+        <element name="RunOffEvent" type="runoff:RunOffEventType" substitutionGroup="om:Observation">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Abflussereignis</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+                                <tooltip>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</tooltip>
+                                <description>${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Run-off event</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+                                <tooltip>${property:http://www.opengis.net/gml#name;-no name-}</tooltip>
+                                <description>${property:http://www.opengis.net/gml#description;-no description-}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <complexType name="RunOffEventType">
+                <annotation>
+                        <documentation>Wir definieren einen eigenen Observation Typ für Abflussereignisse. Ein Abflussereignis leitet von CommonObservation ab und beinhaltet also die Tupel. Sie werden anhand von resultDefinition angegeben. TODO: es sollte eine feste resultDefinition für Abflüsse vorgegeben sein..</documentation>
+                        <appinfo xmlns:kapp="org.kalypso.appinfo">
+                                <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.fixedResultDefinition" kapp:property="om:resultDefinition">
+                                        <kapp:parameter>
+                                                <kapp:name>component1</kapp:name>
+                                                <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation</kapp:value>
+                                        </kapp:parameter>
+                                        <kapp:parameter>
+                                                <kapp:name>component2</kapp:name>
+                                                <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff</kapp:value>
+                                        </kapp:parameter>
+                                </kapp:functionProperty>
+                        </appinfo>
+                </annotation>
+                <complexContent>
+					<extension base="om:ObservationType">
+						<sequence>
+							<element name="returnPeriod" type="runoff:PositiveIntType" default="1">
+							<!-- default = "1" only for backward compatibility -->
+								<annotation>
+									<documentation xml:lang="de">
+										<label><![CDATA[Wiederkehr Intervall]]></label>
+										<tooltip><![CDATA[Wiederkehr Intervall]]></tooltip>
+										<description><![CDATA[Wiederkehr Intervall]]></description>
+									</documentation>
+									<documentation xml:lang="en">
+										<label><![CDATA[Return interval]]></label>
+										<tooltip><![CDATA[Return interval]]></tooltip>
+										<description><![CDATA[Return interval of the event]]></description>
+									</documentation>
+								</annotation>
+							</element>
+						</sequence>
+					</extension>
+                </complexContent>
+        </complexType>
+		<simpleType name="PositiveIntType">
+			<restriction base="int">
+				<minInclusive value="1" />
+			</restriction>
+		</simpleType>
+        <!-- Wasserspiegelfixierung -->
+        <complexType name="WaterlevelFixationInlinePropertyType">
+                <sequence minOccurs="1" maxOccurs="1">
+                        <element ref="runoff:WaterlevelFixation"/>
+                </sequence>
+        </complexType>
+        <complexType name="WaterlevelFixationLinkPropertyType">
+                <sequence minOccurs="0" maxOccurs="0">
+                        <element ref="runoff:WaterlevelFixation"/>
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        </complexType>
+        <element name="WaterlevelFixation" type="runoff:WaterlevelFixationType" substitutionGroup="om:Observation">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Wasserspiegelfixierung</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+                                <tooltip>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</tooltip>
+                                <description>${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Water level fixing</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+                                <tooltip>${property:http://www.opengis.net/gml#name;-no name-}</tooltip>
+                                <description>${property:http://www.opengis.net/gml#description;-no description-}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <complexType name="WaterlevelFixationType">
+                <annotation>
+                        <documentation>Wir definieren einen eigenen Observation Typ für Wasserspiegelfixierungen. Ein Wasserspiegelfixierungen leitet von CommonObservation ab und beinhaltet also die Tupel. Sie werden anhand von resultDefinition angegeben. TODO: es sollte eine feste resultDefinition für Wasserspiegelfixierungen vorgegeben sein..</documentation>
+                        <appinfo xmlns:kapp="org.kalypso.appinfo">
+                                <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.fixedResultDefinition" kapp:property="om:resultDefinition">
+                                        <kapp:parameter>
+                                                <kapp:name>component1</kapp:name>
+                                                <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation</kapp:value>
+                                        </kapp:parameter>
+                                        <kapp:parameter>
+                                                <kapp:name>component2</kapp:name>
+                                                <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel</kapp:value>
+                                        </kapp:parameter>
+                                </kapp:functionProperty>
+                        </appinfo>
+                </annotation>
+                <complexContent>
+                        <extension base="om:ObservationType"/>
+                </complexContent>
+        </complexType>
+</schema>
