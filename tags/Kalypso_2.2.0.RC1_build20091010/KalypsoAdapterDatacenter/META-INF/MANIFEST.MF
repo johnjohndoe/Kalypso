@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoDatacenterAdapter
+Bundle-SymbolicName: org.kalypso.dcadapter; singleton:=true
+Bundle-Version: 0.0.5
+Bundle-ClassPath: lib/edbc.jar,
+ kalypsodc.jar
+Bundle-Activator: org.kalypso.dcadapter.DataCenterPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: ca.edbc.jdbc,
+ com.bce.datacenter,
+ com.bce.datacenter.db,
+ com.bce.datacenter.db.common,
+ com.bce.datacenter.db.persistent,
+ com.bce.datacenter.db.timeseries,
+ org.kalypso.dcadapter,
+ org.kalypso.dcadapter.resource
+Require-Bundle: org.kalypso.core,
+ org.eclipse.ui,
+ org.junit;resolution:=optional
+Eclipse-LazyStart: true
