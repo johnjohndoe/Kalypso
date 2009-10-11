@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:na="org.kalypso.namodell.control" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="org.kalypso.namodell.control" elementFormDefault="qualified" version="0.2">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<element name="NAModellControl" type="na:_NAModellControlType"/>
+	<complexType name="baseFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="_NAModellControlType">
+		<complexContent>
+			<extension base="na:baseFeatureType">
+				<sequence>
+					<element name="description" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Beschreibung</label>
+								<tooltip>Beschreibung</tooltip>
+								<description>Beschreibung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>description</label>
+								<tooltip>description</tooltip>
+								<description>description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="name" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Name</label>
+								<tooltip>Name der Rechenvariante</tooltip>
+								<description>Name als Bezeichnung der Rechenvariante</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>name</label>
+								<tooltip>name of the calculation version</tooltip>
+								<description>name as identification of the calculation version</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="tmp" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Temperatur</label>
+								<tooltip>Temperaturzeitreihe</tooltip>
+								<description>Ausgabe der verwendeten Temperaturzeitreihe</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>temperature</label>
+								<tooltip>temperature time series</tooltip>
+								<description>output of the used temperature time series</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="pre" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlag</label>
+								<tooltip>Niederschlagzeitreihe</tooltip>
+								<description>Ausgabe der verwendeten Niederschlagzeitreihe</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>precipitation</label>
+								<tooltip>precipitation time series</tooltip>
+								<description>output of the used precipitation time series</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="sch" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Schneehöhe</label>
+								<tooltip>Zeitreihe Schneehöhe</tooltip>
+								<description>Ausgabe der Ergebnisse der Schneeberechnung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>snow</label>
+								<tooltip>snow time series</tooltip>
+								<description>output of the used snow time series</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bof" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenfeuchte</label>
+								<tooltip>Ergebnisse Bodenfeuchte</tooltip>
+								<description>Ausgabe der Ergebnisse zur Bodenfeuchte</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil moisture</label>
+								<tooltip>soil moisture output</tooltip>
+								<description>output of the results for soil moisture</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bsp" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenspeicherbilanz</label>
+								<tooltip>Ergebnisse Bodenspeicher</tooltip>
+								<description>Ausgabe der Ergebnisse zum Bodenspeicher </description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil storage balance</label>
+								<tooltip>soil storage output</tooltip>
+								<description>output of the results for soil storage</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="gws" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Grundwasserstand</label>
+								<tooltip>Ergebnisse Grundwasserstand</tooltip>
+								<description>Ausgabe der Ergebnisse zum Grundwasserstand </description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>groundwater level</label>
+								<tooltip>groundwater level output</tooltip>
+								<description>output of the results for groundwater level </description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qgs" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gesamtknotenabfluss</label>
+								<tooltip>Ergebnisse Gesamtknotenabfluss</tooltip>
+								<description>Ausgabe der Ergebnisse zum Gesamtknotenabfluss</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>total node discharge</label>
+								<tooltip>total node discharge output</tooltip>
+								<description>output of the results for total node discharge</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qgg" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gesamtteilgebietsabfluss</label>
+								<tooltip>Ergebnisse Gesamtteilgebietsabfluss</tooltip>
+								<description>Ausgabe der Ergebnisse zum Gesamtteilgebietsabfluss</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>total subcatchment discharge</label>
+								<tooltip>total subcatchment discharge output</tooltip>
+								<description>output of the results for total subcatchment discharge</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qna" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Oberflaechenabfluss, natürlich</label>
+								<tooltip>Ergebnis Oberflaechenabfluss, natürlich</tooltip>
+								<description>Ausgabe der Ergebnisse zum Oberflaechenabfluss natürlicher Flaechen </description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>surface area discharge, natural </label>
+								<tooltip>surface area discharge output, natural </tooltip>
+								<description>output of the results for surfacea area discharge of natural areas </description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qif" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Interflow</label>
+								<tooltip>Ergebnisse Interflow</tooltip>
+								<description>Ausgabe der Ergebnisse zum Interflow</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>interflow</label>
+								<tooltip>interflow output</tooltip>
+								<description>output of the results for the Interflow</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qvs" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Oberflaechenabfluss, versiegelt</label>
+								<tooltip>Ergebnisse Oberflaechenabfluss, versiegelt</tooltip>
+								<description>Ausgabe der Ergebnisse zum Oberflaechenabfluss versiegelter Flaechen</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>surface area discharge, sealed</label>
+								<tooltip>surface area discharge output, sealed</tooltip>
+								<description>output of the results for surfacea area discharge of sealed areas</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qbs" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Basisabfluss</label>
+								<tooltip>Ergebnisse Basisabfluss</tooltip>
+								<description>Ausgabe der Ergebnisse zu Basisabfluss</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>baseflow</label>
+								<tooltip>baseflow output</tooltip>
+								<description>output of the results for baseflow</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- JH: Ausgabe Kluftgrundwasser wurde nie getestet, funktioniert sie???-->
+					<element name="qt1" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Kluftgrundwasser1</label>
+								<tooltip>Ergebnisse Kluftgrundwasser1</tooltip>
+								<description>Ausgabe der Ergebnisse zum Kluftgrundwasser1</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>fissure groundwater1</label>
+								<tooltip>fissure groundwater1 output</tooltip>
+								<description>output of the results for fissure groundwater1</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qtg" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Kluftgrundwasser2</label>
+								<tooltip>Ergebnisse Kluftgrundwasser2</tooltip>
+								<description>Ausgabe der Ergebnisse zum Kluftgrundwasser2</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>fissure groundwater2</label>
+								<tooltip>fissure groundwater2 output</tooltip>
+								<description>output of the results for fissure groundwater2</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qgw" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Grundwasserabfluss</label>
+								<tooltip>Ergebnisse Grundwasserabfluss</tooltip>
+								<description>Ausgabe der Ergebnisse zum Grundwasserabfluss</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>groundwaterflow</label>
+								<tooltip>groundwaterflow output</tooltip>
+								<description>output of the results for groundwaterflow</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- JH: wird vom Modell nicht berechne, Ausgabe daher sinnlos-->
+					<!--
+					<element name="kap" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>kap. Aufstieg</label>
+								<tooltip>Ergebnisse kapillarer Aufstieg</tooltip>
+								<description>Ausgabe der Ergebnisse zum kapillaren Aufstieg (zur Zeit nicht aktiv)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>capillary rise</label>
+								<tooltip>capillary rise output</tooltip>
+								<description>output of the results for capillary rise (not active for the momment)</description>
+							</documentation>
+						</annotation>
+					</element>
+-->
+					<element name="vet" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Evapotranspiration</label>
+								<tooltip>Ergebnisse Evapotranspiration</tooltip>
+								<description>Ausgabe der Ergebnisse zur Evapotranspiration</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>evapotranspiration</label>
+								<tooltip>evapotranspiration output</tooltip>
+								<description>output of the results for Evapotranspiration</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--JH: hier muss 1oder 2 stehen,1 für Jahreswerte - 2 für Mittelwerte (evtl. im Fortran-Code umstellen?!?)-->
+					<element name="hyd" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Hydrotope</label>
+								<tooltip>Ergebisse Hydrotope</tooltip>
+								<description>Ausgabe der Ergebnisse zu Hydrotopen als Mittelwerte</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>hydrotope</label>
+								<tooltip>hydrotope output</tooltip>
+								<description>output of the results for Hydrotops as average value</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--JH: hier kann true (Abflussbilanz bil.dat), false, 1 (Abflussbilanz bil.txt) oder 2 (Abflussbilanz bil.dat und bil.txt) angegeben werden (evtl. im Fortran-Code umstellen)-->
+					<element name="bil" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Abflussbilanz</label>
+								<tooltip>Bilanzausgabe</tooltip>
+								<description>Ausgabe der Bilanz der Ergebnisse</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>balance</label>
+								<tooltip>balance output</tooltip>
+								<description>output of the balance results</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="nmq" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>stat. Abflusswerte</label>
+								<tooltip>Ergebnisse stat. Abflusswerte</tooltip>
+								<description>Ausgabe der Ergebnisse alsstat. Abflusswerte </description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>stat. discharge value</label>
+								<tooltip>stat. discharge value output</tooltip>
+								<description>output of the stat. discharge results </description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--JH: es werden durch true an dieser stelle spi.dat, sph.dat, spv.dat, spn.dat und spb.dat erzeugt-->
+					<element name="spi" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Speicherzeitreihen</label>
+								<tooltip>Ausgabe sämtlicher Speicherwerte</tooltip>
+								<description>Ausgabe der Ergebnisse zur Speicherberechnung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>storage time series</label>
+								<tooltip>output storage calculation</tooltip>
+								<description>output of the results for storage</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--
+					<element name="sph" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wasserspiegelhoehe</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="spv" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Verdunstung aus der Talsperre</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="spn" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlag in Talsperre</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="spb" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zehrung</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+-->
+					<element name="sup" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Speicherueberlauf</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>storage overflow</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- parameter fuer den prognose-kallibrierung -->
+					<element name="automaticCallibration" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>optimieren</label>
+								<tooltip>schaltet Optimierung ein</tooltip>
+								<description>Schalter fuer Optimierung bei der Berechnung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>optimizing</label>
+								<tooltip>setting up the optimizing</tooltip>
+								<description>Switch for optimization in the calculation</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="Catchments" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Teilgebiete zur Optimierung</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>subcatchments for optimization</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="CatchmentsBianf" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Opt.Faktor Bianf</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label/>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="CatchmentsFaktorRetobTetint" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Opt. Faktor Retob, Retint</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label/>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="CatchmentsFaktn" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Opt. Faktor Niederschlag</label>
+								<tooltip>Korrekturwert fuer Niederschlag</tooltip>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Precipitation factor</label>
+								<tooltip>Correction value for precipitation</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="CatchmentsFaktorAigw" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Opt.Faktor Aigw</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label/>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="KMChannels" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>KM Straenge zur Optimierung</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label/>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="KMChannelsFaktorRkf" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Opt. Faktor k</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>opt. factor k</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="KMChannelsFaktorRnf" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Opt. Faktor n</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>opt. factor n</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- fuer die erstellung der netzdatei -->
+					<element name="rootNode" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnungknoten</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>result node</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- link auf den pegel -->
+					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Pegel</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>gauge</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- link auf das simulationsergebnis -->
+					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnungsergebnis</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>calculation result</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
