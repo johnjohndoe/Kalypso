@@ -3,13 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoManual1d Plug-in
 Bundle-SymbolicName: org.kalypso.KalypsoManual1D2D;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: build
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.help,
- org.eclipse.help.appserver,
- org.eclipse.help.base,
- org.eclipse.help.webapp
-Eclipse-LazyStart: true
+Require-Bundle: org.eclipse.help
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.KalypsoManual1d2d.help
 Bundle-Vendor: kalypso.sourceforge.net
+Bundle-ClassPath: library.jar
