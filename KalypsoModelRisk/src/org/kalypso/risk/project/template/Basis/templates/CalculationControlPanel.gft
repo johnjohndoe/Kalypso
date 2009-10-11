@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featuretemplate name="Calculation Parameters"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+	<gft:layer id="layer_1" featurePath="#fid#root" linktype="gml"
+		xlink:href="../models/RasterizationControlModel.gml" />
+
+	<gft:view typename="krrcm:RasterizationControlModel" style="SWT.NONE"
+		xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel">
+		<gft:gridData verticalAlignment="GridData.FILL"
+			horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+			grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="2" numRows="4"
+			makeColumnsEqualWidth="false" horizontalSpacing="10" />
+		<!-- text="Landnutzungsklassen" -->
+		<gft:group property="krrcm:landuseClassMember" style="0">
+			<gft:gridData horizontalSpan="2" verticalSpan="2"
+				horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
+				heightHint="200" grabExcessHorizontalSpace="true"
+				grabExcessVerticalSpace="true" />
+			<gft:gridLayout numColumns="2" horizontalSpacing="10"
+				numRows="2" />
+			<gft:table property="krrcm:landuseClassMember" style="SWT.NONE">
+				<gft:gridData verticalAlignment="GridData.FILL"
+					grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+				<ns1:gistableview>
+					<ns1:layer>
+						<!-- label="Landnutzungsklasse" -->
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="name" width="150" />
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="landuseRiskTypeLink" width="140" />
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="damageFunctionLink" width="140" />
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="AssetValueClassLink" width="140" />
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="colorStyle" width="120" />
+						<!--  label="Beschreibung"  -->
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="description" width="400" />
+
+						<ns1:sort propertyName="name" />
+					</ns1:layer>
+				</ns1:gistableview>
+			</gft:table>
+		</gft:group>
+		<!-- text="Schadensfunktionen" -->
+		<gft:group property="krrcm:damageFunctionMember" style="0">
+			<gft:gridData horizontalSpan="1" minimumHeight="150"
+				horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
+				grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+			<gft:gridLayout numColumns="1" horizontalSpacing="5" />
+			<gft:table property="krrcm:damageFunctionMember" style="SWT.NONE">
+				<gft:gridData verticalAlignment="GridData.FILL"
+					heightHint="150" grabExcessVerticalSpace="true"
+					grabExcessHorizontalSpace="true" />
+				<ns1:gistableview>
+					<ns1:layer>
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="name" width="180" />
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" label="Funktion" name="function" width="180" />
+						<!-- label="Beschreibung" -->
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="description" width="250" />
+						<ns1:sort propertyName="name" />
+					</ns1:layer>
+				</ns1:gistableview>
+			</gft:table>
+		</gft:group>
+		<!-- text="spez. Vermögenswerte" -->
+		<gft:group property="krrcm:assetValueClassMember" style="0">
+			<gft:gridData horizontalSpan="1" verticalSpan="2"
+				minimumHeight="200" horizontalAlignment="GridData.FILL"
+				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+				grabExcessVerticalSpace="true" />
+			<gft:gridLayout numColumns="2" horizontalSpacing="5" />
+			<gft:table property="krrcm:assetValueClassMember">
+				<gft:gridData verticalAlignment="GridData.FILL"
+					heightHint="200" grabExcessVerticalSpace="true"
+					grabExcessHorizontalSpace="true" />
+				<ns1:gistableview>
+					<ns1:layer>
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="name" width="150" />
+						<!--
+							<ns1:column alignment="SWT.LEFT" editable="true" format=""
+							name="administrationUnitLink" width="150" />
+						-->
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="value" width="180" />
+						<!-- label="Beschreibung" -->
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="description" width="200" />
+						<ns1:sort propertyName="name" />
+					</ns1:layer>
+				</ns1:gistableview>
+			</gft:table>
+		</gft:group>
+
+	</gft:view>
+
+
+
+</gft:featuretemplate>
+
