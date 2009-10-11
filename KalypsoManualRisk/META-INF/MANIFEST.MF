@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoManualRisk Plug-in
+Bundle-SymbolicName: org.kalypso.KalypsoManualRisk;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.kalypso.KalypsoManualRisk.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.help,
+ org.eclipse.help.appserver,
+ org.eclipse.help.base,
+ org.eclipse.help.webapp
+Eclipse-LazyStart: true
+Export-Package: org.kalypso.KalypsoManualRisk.help
+Bundle-Vendor: kalypso.sourceforge.net
+Bundle-ClassPath: library.jar
