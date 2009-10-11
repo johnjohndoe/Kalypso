@@ -1,0 +1,13 @@
+(istrng,i8)(iknoto,i8)(iknotu,i8)(iteil,i4)
+(nteil,i8)
+(knot,i5)(izug,i5)(iabg,i5)(iueb,i5)(izuf,i5)(ivzwg,i5)
+(qzug,f10.3)
+(qabg,f10.3)(ikzie,i8)
+(queb,f10.3)(ikzue,i8)
+(nzufKnoten,a)
+(nzufPfad,a)
+(zproz,f10.3)(ikz,i8)
+# 
+(zproz,a)_(ikz,a)
+(num,i8)
+(inum,i8)
