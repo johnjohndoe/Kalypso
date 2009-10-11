@@ -3,6 +3,8 @@ package org.kalypso.model.wspm.sobek.result.processing.model.implementation;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -16,6 +18,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 public class BranchLengthSectionsHandler extends AbstractListWrapper implements IBranchLengthSectionModel
 {
@@ -74,6 +78,97 @@ public class BranchLengthSectionsHandler extends AbstractListWrapper implements 
     }
 
     return myList.toArray( new IBranchLengthSection[] {} );
+  }
+
+  @Override
+  public Feature addNew( final QName newChildType )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Feature addNew( final QName newChildType, final String newFeatureId )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public Feature insertNew( final int index, final QName newChildType )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public List<Feature> queryIntersectResolve( final GM_Envelope env, final List<Feature> result )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Feature> queryIntersectResolve( final GM_Point point, final List<Feature> result )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
