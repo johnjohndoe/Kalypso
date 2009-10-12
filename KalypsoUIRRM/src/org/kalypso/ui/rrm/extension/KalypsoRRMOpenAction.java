@@ -43,12 +43,15 @@ package org.kalypso.ui.rrm.extension;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
@@ -79,26 +82,30 @@ public class KalypsoRRMOpenAction implements IKalypsoModuleProjectOpenAction
       return Status.CANCEL_STATUS;
 
     /* close unused perspectives */
+    // FIXME: why: should we really close the other perspectives?? This works against eclipse-philosophiea and is therefore unwise!
     final IPerspectiveDescriptor[] perspectives = page.getOpenPerspectives();
     for( final IPerspectiveDescriptor descriptor : perspectives )
     {
       final String id = descriptor.getId();
       if( id.equals( ModelerPerspectiveFactory.ID ) )
-      {
         continue;
-      }
-      else if( descriptor != null )
-      {
+
+      if( descriptor != null )
         page.closePerspective( descriptor, true, false );
-      }
     }
 
     final IPerspectiveDescriptor descriptor = page.getWorkbenchWindow().getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( ModelerPerspectiveFactory.ID );
     if( descriptor != null )
-    {
       page.setPerspective( descriptor );
-    }
 
+    // At least show project in Resource Navigator
+    ResourceNavigator view = (ResourceNavigator) page.findView( IPageLayout.ID_RES_NAV );
+    if( view != null )
+    {
+      view.selectReveal( new StructuredSelection( project ) );
+      view.getTreeViewer().expandToLevel( project, 1 );
+    }
+    
     return Status.OK_STATUS;
   }
 
