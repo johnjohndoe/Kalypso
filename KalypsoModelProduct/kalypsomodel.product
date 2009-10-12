@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0_M2" useFeatures="false" includeLaunchers="true">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0.RC1_build20091010" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -18,8 +18,6 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-nl
-de_DE</programArgs>
       <vmArgs>-Xmx1024m  -XX:PermSize=64M -XX:MaxPermSize=128M</vmArgs>
    </launcherArgs>
 
@@ -61,7 +59,7 @@ de_DE</programArgs>
       <plugin id="de.openali.odysseus.chart.ui"/>
       <plugin id="de.renew.workflow.connector"/>
       <plugin id="de.renew.workflow.model"/>
-      <plugin id="javax.servlet"/>
+      <plugin id="javax.servlet" version="2.5.0"/>
       <plugin id="javax.servlet.jsp"/>
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.commons.el"/>
@@ -209,6 +207,7 @@ de_DE</programArgs>
       <plugin id="org.kalypso.project.database"/>
       <plugin id="org.kalypso.project.database.client"/>
       <plugin id="org.kalypso.repository"/>
+      <plugin id="org.kalypso.rimax"/>
       <plugin id="org.kalypso.risk"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
       <plugin id="org.kalypso.service.ogc"/>
