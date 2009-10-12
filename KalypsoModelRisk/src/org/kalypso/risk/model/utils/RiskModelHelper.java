@@ -49,6 +49,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.risk.i18n.Messages;
@@ -81,9 +82,10 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RiskModelHelper
 {
-  public static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi";
+  private static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi"; //$NON-NLS-1$
 
-  // public static final String WSP_THEMES_TITLE_i18 = "HQi";
+  /** themeId of the map-layer containing the events */
+  private static final String THEME_PROPERTY_DEPTH = "depthGridThemes"; //$NON-NLS-1$
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
@@ -118,22 +120,11 @@ public class RiskModelHelper
     sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
   }
 
-  public static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final ILandusePolygon polygon, final double damageValue, final Integer landuseClassOrdinalNumber, final double cellSize )
+  public static void fillStatistics( final int returnPeriod, ILanduseClass landuseClass, final double damageValue, final double cellSize )
   {
-    /* add the current damage value to all landuse polygons that covers the current raster cell */
-    polygon.updateStatistics( damageValue, returnPeriod );
-
-    /* find the right landuse class that holds the polygon */
-    for( final ILanduseClass landuseClass : landuseClassesList )
-    {
-      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
-      {
-        final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
-
-        final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-        statistic.updateStatistic( value );
-      }
-    }
+    final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
+    final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    statistic.updateStatistic( value );
   }
 
   /**
@@ -151,6 +142,7 @@ public class RiskModelHelper
    * @return {@link CoverageCollection} with the annual damage values
    * @throws Exception
    */
+  // TODO: nor more used, remove!?
   public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
   {
     final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
@@ -216,7 +208,7 @@ public class RiskModelHelper
                       return Double.NaN;
 
                     /* set statistic for landuse class */
-                    fillStatistics( returnPeriod, landuseClassesList, polygon, damageValue, landuseClassOrdinalNumber, cellSize );
+                    fillStatistics( returnPeriod, landuseClassesList, damageValue, landuseClassOrdinalNumber, cellSize );
                     return damageValue;
                   }
                 }
@@ -243,8 +235,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15" ), sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
-      newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16" ), new Date().toString() ) ); //$NON-NLS-1$
+      newCoverage.setName(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15" , sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
+      newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16" , new Date().toString() ) ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
@@ -253,12 +245,9 @@ public class RiskModelHelper
     return destCoverageCollection;
   }
 
-  protected static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final ILandusePolygon polygon, final double damageValue, final int landuseClassOrdinalNumber, final double cellSize )
+  protected static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final double damageValue, final int landuseClassOrdinalNumber, final double cellSize )
   {
-    /* add the current damage value to all landuse polygons that covers the current raster cell */
-    polygon.updateStatistics( damageValue, returnPeriod );
-
-    /* find the right landuse class that holds the polygon */
+    /* find the right landuse class that holds the polygon */// TODO: potential list search problem!
     for( final ILanduseClass landuseClass : landuseClassesList )
     {
       if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
@@ -370,7 +359,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" ), i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
+        final SubMonitor progress = SubMonitor.convert( monitor,  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" , i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -511,8 +500,7 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final String depthThemeProperty = "depthGridThemes"; //$NON-NLS-1$
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.13" ), depthThemeProperty ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.13" ), THEME_PROPERTY_DEPTH ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -683,7 +671,7 @@ public class RiskModelHelper
     final IKalypsoFeatureTheme existingTheme = CascadingThemeHelper.findThemeWithFeaturePath( parentKalypsoTheme, featurePath );
     if( existingTheme != null )
     {
-      existingTheme.setName( new I10nString( "HQ " + annualCoverageCollection.getReturnPeriod() ) );
+      existingTheme.setName( new I10nString( "HQ " + annualCoverageCollection.getReturnPeriod() ) ); //$NON-NLS-1$
       return;
     }
 
@@ -745,7 +733,7 @@ public class RiskModelHelper
     Assert.isTrue( names.length == returnPeriods.length );
     Assert.isTrue( names.length == descriptions.length );
 
-    monitor.beginTask( "Importing runoff events", names.length );
+    monitor.beginTask( Messages.getString("org.kalypso.risk.model.utils.RiskModelHelper.1"), names.length ); //$NON-NLS-1$
 
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
@@ -779,22 +767,22 @@ public class RiskModelHelper
       int coverageCount = 0;
       for( final ICoverage coverage : grids[i] )
       {
-        final String subtaks = String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" ), names[i], coverageCount + 1, grids[i].size() );
+        final String subtaks =  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" , names[i], coverageCount + 1, grids[i].size() ); //$NON-NLS-1$
         monitor.subTask( subtaks );
-        
+
         // NO! When imported from Flood, return period is always 1 by default, so files will be overwritten!
-//        final String targetFileName = String.format( "grid_%d_%d", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
+        //        final String targetFileName = String.format( "grid_%d_%d", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
         final String targetFileName = String.format( "grid_%s_%d", annualCoverageCollection.getGmlID(), coverageCount ); //$NON-NLS-1$
 
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
-        final File targetFile = FileUtilities.createNewUniqueFile( targetFileName, ".ascbin", rasterFolder.getLocation().toFile() );
+        final File targetFile = FileUtilities.createNewUniqueFile( targetFileName, ".ascbin", rasterFolder.getLocation().toFile() ); //$NON-NLS-1$
         final String targetGridPath = rasterFolderPath + targetFile.getName();
 
         final SubMonitor subMonitor = SubMonitor.convert( monitor, 10 );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", subMonitor ); //$NON-NLS-1$
-        newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18" ), coverageCount + 1 ) ); //$NON-NLS-1$
-        newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19" ), new Date() ) ); //$NON-NLS-1$
+        newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18" , coverageCount + 1 ) ); //$NON-NLS-1$
+        newCoverage.setDescription(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19" , new Date() ) ); //$NON-NLS-1$
         grid.dispose();
         coverageCount++;
         if( !subMonitor.isCanceled() && wspThemes != null )
@@ -815,7 +803,32 @@ public class RiskModelHelper
 
   public static IKalypsoCascadingTheme getHQiTheme( final IMapModell mapModell )
   {
+    // activate cascading theme that contains the events
+    final AbstractCascadingLayerTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, RiskModelHelper.THEME_PROPERTY_DEPTH );
+    if( byThemeId != null )
+      return byThemeId;
+
     return CascadingThemeHelper.getNamedCascadingTheme( mapModell, WSP_THEMES_TITLE_i18 );
+  }
+
+  /**
+   * Finds and activates the event theme if present.
+   * 
+   * @return <code>true</code>, if the theme was succesfully activated.
+   * */
+  public static boolean activateEventTheme( IMapPanel mapPanel )
+  {
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return false;
+
+    final IKalypsoTheme hqiTheme = getHQiTheme( mapModell );
+    if( hqiTheme == null )
+      return false;
+
+    mapModell.activateTheme( hqiTheme );
+
+    return true;
   }
 
 }

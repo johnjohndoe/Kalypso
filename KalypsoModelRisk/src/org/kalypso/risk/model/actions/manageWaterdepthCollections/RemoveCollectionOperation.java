@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -27,9 +27,9 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
 
   private final SzenarioDataProvider m_provider;
 
-  private final AbstractCascadingLayerTheme m_wspThemes;
+  private final IKalypsoCascadingTheme m_wspThemes;
 
-  public RemoveCollectionOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final AbstractCascadingLayerTheme wspThemes )
+  public RemoveCollectionOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
   {
     m_treeSelection = treeSelection;
     m_provider = provider;
@@ -74,7 +74,7 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
     return Status.OK_STATUS;
   }
 
-  private void deleteThemes( final AbstractCascadingLayerTheme wspThemes, final IAnnualCoverageCollection event )
+  private void deleteThemes( final IKalypsoCascadingTheme wspThemes, final IAnnualCoverageCollection event )
   {
     final IKalypsoTheme[] allThemes = wspThemes.getAllThemes();
     IKalypsoTheme themeToRemove = null;

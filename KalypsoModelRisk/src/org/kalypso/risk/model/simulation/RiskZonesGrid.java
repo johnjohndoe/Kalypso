@@ -157,6 +157,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   @Override
   public final double getValue( final int x, final int y ) throws GeoGridException
   {
+    if( m_landusePolygonCollection.size() == 0 )
+      return Double.NaN;
+    
     try
     {
       /* we need a sorted list of the annual coverage collections */
@@ -193,9 +196,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       final double averageAnnualDamageValue = RiskModelHelper.calcAverageAnnualDamageValue( damage, probability );
 
       if( averageAnnualDamageValue <= 0.0 || Double.isNaN( averageAnnualDamageValue ) )
-        return Double.NaN;
-
-      if( m_landusePolygonCollection.size() == 0 )
         return Double.NaN;
 
       final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
@@ -241,7 +241,10 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           /* check min/max */
           m_min = m_min.min( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
           m_max = m_max.max( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-
+          
+//          if(!Double.isNaN( returnValue )&& returnValue!=0.0)
+//            System.out.println(returnValue);
+          
           return returnValue;
         }
       }

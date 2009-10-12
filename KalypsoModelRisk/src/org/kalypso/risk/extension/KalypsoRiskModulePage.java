@@ -40,16 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.extension;
 
-import java.io.File;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
@@ -66,9 +61,6 @@ public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
     super( module );
   }
 
-  protected static boolean INFO_PAGE_EXTRACTED = false;
-
-
   @Override
   public String getHeader( )
   {
@@ -78,39 +70,7 @@ public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
   @Override
   public URL getInfoURL( ) throws MalformedURLException
   {
-    if( !INFO_PAGE_EXTRACTED )
-    {
-      try
-      {
-        /* info page of plugin */
-        final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" ); //$NON-NLS-1$
-        try
-        {
-          final IPath stateLocation = KalypsoRiskPlugin.getDefault().getStateLocation();
-          final File targetDir = new File( stateLocation.toFile(), "infoPage" ); //$NON-NLS-1$
-          // final boolean mkdir = dir.mkdir();
-
-          ZipUtilities.unzip( zipStream, targetDir );
-
-          INFO_PAGE_EXTRACTED = true;
-        }
-        finally
-        {
-          zipStream.close();
-        }
-      }
-      catch( final Exception e )
-      {
-        KalypsoRiskPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-
-    }
-
-    final IPath stateLocation = KalypsoRiskPlugin.getDefault().getStateLocation();
-    final URL baseUrl = stateLocation.toFile().toURI().toURL();
-
-    final URL url = new URL( baseUrl, "infoPage/index.html" ); //$NON-NLS-1$
-    return url;
+    return getInfoURL( getClass(), KalypsoRiskPlugin.getDefault() );
   }
 
   @Override
