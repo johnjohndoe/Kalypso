@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
+import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -120,11 +121,11 @@ public class LengthSectionProcessor
 
     m_buffer.append( header );
 
-    m_runoffPattern = addRunoffToFilename ? "_%.3f" : "";
-    m_titlePattern = addRunoffToFilename ? "Längsschnitt - %.3f" : "Längsschnitt";
-    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f" : "Längsschnitt";
+    m_runoffPattern = addRunoffToFilename ? "_%.3f" : ""; //$NON-NLS-1$ //$NON-NLS-2$
+    m_titlePattern = addRunoffToFilename ? "Längsschnitt - %.3f" : "Längsschnitt"; //$NON-NLS-1$ //$NON-NLS-2$
+    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f" : "Längsschnitt"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_dataDir = new File( m_outDir, "Daten" );
+    m_dataDir = new File( m_outDir, "Daten" ); //$NON-NLS-1$
   }
 
   public void close( final BigDecimal runoff )
@@ -135,13 +136,13 @@ public class LengthSectionProcessor
 
       m_dataDir.mkdirs();
 
-      final String fileName = String.format( m_gmlFilePattern + ".gml", runoff );
+      final String fileName = String.format( m_gmlFilePattern + ".gml", runoff ); //$NON-NLS-1$
       m_gmlFile = new File( m_dataDir, fileName );
 
       /* Configure replace tokens for diagram/table template */
       final Map<String, String> replaceTokens = new LinkedHashMap<String, String>();
-      replaceTokens.put( "%GMLFILENAME%", m_gmlFile.getName() );
-      replaceTokens.put( "%TITLE%", String.format( m_titlePattern, runoff ) );
+      replaceTokens.put( "%GMLFILENAME%", m_gmlFile.getName() ); //$NON-NLS-1$
+      replaceTokens.put( "%TITLE%", String.format( m_titlePattern, runoff ) ); //$NON-NLS-1$
 
       // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
       // (without header) + new footer
@@ -173,14 +174,14 @@ public class LengthSectionProcessor
 // final TimeLogger timeLogger = new TimeLogger( "Post Processing Length-Section" );
 
     if( !gmlFile.exists() )
-      return StatusUtilities.createWarningStatus( "Längsschnitt GML wurde nicht erzeugt." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5") ); //$NON-NLS-1$
 
-    final String diagFilename = String.format( "Längsschnitt" + m_runoffPattern + ".kod", runoff );
-    final String tableFilename = String.format( "Tabelle" + m_runoffPattern + ".gft", runoff );
-    final String breaklineFilename = String.format( "Bruchkanten" + m_runoffPattern + ".gml", runoff );
-    final String tinFilename = String.format( "wspTin" + m_runoffPattern + ".gml", runoff );
-    final String boundaryFilename = String.format( "Modellgrenzen" + m_runoffPattern + ".gml", runoff );
-    final String waterlevelFilename = String.format( "Überschwemmungslinie" + m_runoffPattern + ".gml", runoff );
+    final String diagFilename = String.format( "Längsschnitt" + m_runoffPattern + ".kod", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String tableFilename = String.format( "Tabelle" + m_runoffPattern + ".gft", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String breaklineFilename = String.format( "Bruchkanten" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String tinFilename = String.format( "wspTin" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String boundaryFilename = String.format( "Modellgrenzen" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String waterlevelFilename = String.format( "Überschwemmungslinie" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_diagFile = new File( m_outDir, diagFilename );
     m_tableFile = new File( m_outDir, tableFilename );
@@ -189,7 +190,7 @@ public class LengthSectionProcessor
     m_boundaryFile = new File( m_dataDir, boundaryFilename );
     m_waterlevelFile = new File( m_dataDir, waterlevelFilename );
 
-    final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null );
+    final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null ); //$NON-NLS-1$
 
     // Read Length-Section GML
 // timeLogger.takeInterimTime();
@@ -219,13 +220,13 @@ public class LengthSectionProcessor
 
       final WspmWaterBody waterBody = m_reach.getWaterBody();
       createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
-      final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF8" );
+      final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF8" ); //$NON-NLS-1$
       final String diagram = replaceTokens( diagramTemplate, replaceTokens );
-      FileUtils.writeStringToFile( m_diagFile, diagram, "UTF8" );
+      FileUtils.writeStringToFile( m_diagFile, diagram, "UTF8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, "Diagramm konnte nicht erzeugt werden" ) );
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.0") ) ); //$NON-NLS-1$
     }
 
     //
@@ -236,14 +237,14 @@ public class LengthSectionProcessor
 // timeLogger.takeInterimTime();
 // timeLogger.printCurrentInterim( "Start-Create Table " );
 
-      final URL tableUrl = getClass().getResource( "resources/table.gft" );
-      final String tableTemplate = FileUtilities.toString( tableUrl, "UTF8" );
+      final URL tableUrl = getClass().getResource( "resources/table.gft" ); //$NON-NLS-1$
+      final String tableTemplate = FileUtilities.toString( tableUrl, "UTF8" ); //$NON-NLS-1$
       final String table = replaceTokens( tableTemplate, replaceTokens );
-      FileUtils.writeStringToFile( m_tableFile, table, "UTF8" );
+      FileUtils.writeStringToFile( m_tableFile, table, "UTF8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, "Tabelle konnte nicht erzeugt werden" ) );
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.1") ) ); //$NON-NLS-1$
     }
 
     //
@@ -258,7 +259,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, "Bruchkanten konnten nicht erzeugt werden" ) );
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.2") ) ); //$NON-NLS-1$
     }
 
     //
@@ -273,7 +274,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, "Modellgrenzen konnten nicht erzeugt werden" ) );
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.3") ) ); //$NON-NLS-1$
     }
 
     //
@@ -288,7 +289,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, "Überschwemmungslinie konnte nicht erzeugt werden" ) );
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.4") ) ); //$NON-NLS-1$
     }
 
 // timeLogger.takeInterimTime();
@@ -356,7 +357,7 @@ public class LengthSectionProcessor
 //      return;
 
     /* We just load the template and tweak the direction of the station-axis */
-    final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" );
+    final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
     final ChartConfigurationLoader ccl = new ChartConfigurationLoader( kodResource );
     final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.parse( kodResource );
 
@@ -372,7 +373,7 @@ public class LengthSectionProcessor
       final AxisType[] axes = chart.getMappers().getAxisArray();
       for( final AxisType axis : axes )
       {
-        if( axis.getLabel().equals( "Station_Axis" ) )
+        if( axis.getLabel().equals( "Station_Axis" ) ) //$NON-NLS-1$
         {
           if( isDirectionUpstreams )
             axis.setDirection( Direction.NEGATIVE );
