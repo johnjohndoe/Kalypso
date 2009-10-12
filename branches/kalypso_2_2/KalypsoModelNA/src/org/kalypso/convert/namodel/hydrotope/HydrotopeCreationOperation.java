@@ -213,7 +213,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             {
               catchmentFound = true;
               final IFeatureType featureType = catchment.getFeatureType();
-              final String href = String.format( "project:/modell.gml#%s", catchment.getId() ); //$NON-NLS-1$
+              final String href = String.format( "modell.gml#%s", catchment.getId() ); //$NON-NLS-1$
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
               hydrotop.setCatchmentMember( lnk );
               break;
@@ -254,7 +254,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             if( feature instanceof XLinkedFeature_Impl )
             {
               final IFeatureType ft = feature.getFeatureType();
-              final String href = String.format( "project:/suds.gml#%s", ((XLinkedFeature_Impl) feature).getFeatureId() ); //$NON-NLS-1$
+              final String href = String.format( "suds.gml#%s", ((XLinkedFeature_Impl) feature).getFeatureId() ); //$NON-NLS-1$
 
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
               hydrotopeSudsCollection.add( lnk );
