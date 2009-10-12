@@ -83,9 +83,9 @@ public class Greenroof extends AbstractSud implements IGreenRoof
    * @see org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof#getElementType()
    */
   @Override
-  public Object getElementType( )
+  public String getElementType( )
   {
-    return getProperty( QN_PROPERTY_ELEMENT_TYPE );
+    return getProperty( QN_PROPERTY_ELEMENT_TYPE, String.class );
   }
 
   /**

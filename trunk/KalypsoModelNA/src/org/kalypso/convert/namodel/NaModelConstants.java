@@ -431,6 +431,8 @@ public interface NaModelConstants
 
   public static final QName PARA_SOIL_LAYER_LINK = new QName( NS_NAPARAMETER, "soilLayerLink" ); //$NON-NLS-1$
 
+  public static final QName PARA_PROP_XTIEF = new QName( NS_NAPARAMETER, "xtief" ); //$NON-NLS-1$
+
   public static final QName PARA_PROP_XRET = new QName( NS_NAPARAMETER, "xret" ); //$NON-NLS-1$
 
   // default values

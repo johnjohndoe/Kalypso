@@ -73,6 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -107,6 +108,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   private boolean m_dissolveFeatures = true;
 
+  private GM_MultiSurface m_workingArea = null;
+
   public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final FeatureList outputList, final GMLWorkspace outputWorkspace )
   {
     m_landuseList = landuseList;
@@ -118,9 +121,39 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     m_featureType = m_workspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
   }
 
+  public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final FeatureList outputList, final GMLWorkspace outputWorkspace, final GM_MultiSurface workingArea )
+  {
+    m_landuseList = landuseList;
+    m_pedologyList = pedologyList;
+    m_geologyList = geologyList;
+    m_catchmentsList = catchmentsList;
+    m_outputList = outputList;
+    m_workspace = outputWorkspace;
+    m_featureType = m_workspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
+    m_workingArea = workingArea;
+  }
+
   public final void setDissolveMode( final boolean dissolveFeatures )
   {
     m_dissolveFeatures = dissolveFeatures;
+  }
+
+  private final FeatureListGeometryIntersector getIntersector( )
+  {
+    final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
+//    if( m_workingArea == null )
+    {
+      geometryIntersector.addFeatureList( m_catchmentsList );
+      geometryIntersector.addFeatureList( m_pedologyList );
+      geometryIntersector.addFeatureList( m_geologyList );
+      geometryIntersector.addFeatureList( m_landuseList );
+      m_outputList.clear();
+    }
+//    else{
+//      final GM_Envelope envelope = m_workingArea.getEnvelope();
+//      m_catchmentsList.query( envelope, null );
+//    }
+    return geometryIntersector;
   }
 
   /**
@@ -133,11 +166,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.0" ), 100 ); //$NON-NLS-1$
 
-    final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
-    geometryIntersector.addFeatureList( m_catchmentsList );
-    geometryIntersector.addFeatureList( m_pedologyList );
-    geometryIntersector.addFeatureList( m_geologyList );
-    geometryIntersector.addFeatureList( m_landuseList );
+    final FeatureListGeometryIntersector geometryIntersector = getIntersector();
     final List<MultiPolygon> intersectionList;
     try
     {
@@ -156,7 +185,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       for( final Geometry geometry : intersectionList )
       {
         if( count % 100 == 0 )
-          progress.subTask( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.3" , count, intersectionList.size() ) ); //$NON-NLS-1$
+          progress.subTask( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() ) ); //$NON-NLS-1$
         count++;
 
         // TODO: belongs to the end of this loop, but there are just too many else's
