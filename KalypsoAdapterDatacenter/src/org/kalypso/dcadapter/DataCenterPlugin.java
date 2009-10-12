@@ -25,7 +25,7 @@ public class DataCenterPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.dcadapter" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.dcadapter" ); //$NON-NLS-1$
     }
     catch( MissingResourceException x )
     {

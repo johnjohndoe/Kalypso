@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.dcadapter.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -66,7 +67,7 @@ public class DataCenterTuppleModel implements ITuppleModel
       case 0:
         return new DefaultAxisRange( m_tupples[0].getDate(), m_tupples[m_tupples.length - 1 ].getDate() );
       default:
-        throw new SensorException( "Axis " + axis + " not supported for method getRangeFor() " );
+        throw new SensorException( "Axis " + axis + " not supported for method getRangeFor() " ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -85,7 +86,7 @@ public class DataCenterTuppleModel implements ITuppleModel
       case 2:
         return m_tupples[index].getStatus();
       default:
-        throw new SensorException( "Invalid axis position. Must be 0, 1 or 2." );
+        throw new SensorException( "Invalid axis position. Must be 0, 1 or 2." ); //$NON-NLS-1$
     }
   }
 
@@ -103,9 +104,9 @@ public class DataCenterTuppleModel implements ITuppleModel
       case 1:
         m_tupples[index].setValue( (Double) element );
       case 2:
-        m_tupples[index].setStatus( "x" ); // TODO richtigen Status ermitteln
+        m_tupples[index].setStatus( "x" ); // TODO richtigen Status ermitteln //$NON-NLS-1$
       default:
-        throw new SensorException( "Invalid axis position. Must be 0, 1 or 2." );
+        throw new SensorException( "Invalid axis position. Must be 0, 1 or 2." ); //$NON-NLS-1$
     }
   }
 
@@ -155,7 +156,7 @@ public class DataCenterTuppleModel implements ITuppleModel
     if( m_axesPos.containsKey( axis ) )
       return m_axesPos.get( axis ).intValue();
 
-    throw new SensorException( "The axis " + axis
-        + " is not part of this model" );
+    throw new SensorException( "The axis " + axis //$NON-NLS-1$
+        + " is not part of this model" ); //$NON-NLS-1$
   }
 }

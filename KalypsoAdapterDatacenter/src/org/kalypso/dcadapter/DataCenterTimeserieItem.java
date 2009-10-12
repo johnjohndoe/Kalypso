@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.dcadapter.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -67,7 +68,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    */
   public String getIdentifier( )
   {
-    return m_parent.getIdentifier() + "." + String.valueOf( m_ts.getID() );
+    return m_parent.getIdentifier() + "." + String.valueOf( m_ts.getID() ); //$NON-NLS-1$
   }
 
   /**
@@ -137,8 +138,8 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       
       m_metadataList.put( ObservationConstants.MD_NAME, getName() );
       m_metadataList.put( ObservationConstants.MD_DESCRIPTION, 
-          "Daten aus: " + m_ts.getDataTableName() );
-      m_metadataList.put( ObservationConstants.MD_ORIGIN, "DataCenter" );
+          Messages.getString("org.kalypso.dcadapter.DataCenterTimeserieItem.0") + m_ts.getDataTableName() ); //$NON-NLS-1$
+      m_metadataList.put( ObservationConstants.MD_ORIGIN, Messages.getString("org.kalypso.dcadapter.DataCenterTimeserieItem.1") ); //$NON-NLS-1$
       
       final java.sql.Date begin = m_ts.getRealBegin();
       if( begin != null )
@@ -163,10 +164,10 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       // TODO status axis...
       m_axes = new IAxis[2];
       
-      m_axes[0] = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true, true );
+      m_axes[0] = new DefaultAxis( Messages.getString("org.kalypso.dcadapter.DataCenterTimeserieItem.2"), TimeserieConstants.TYPE_DATE, "", Date.class, true, true ); //$NON-NLS-1$ //$NON-NLS-2$
       
-      String type = "?";
-      String unit = "?";
+      String type = "?"; //$NON-NLS-1$
+      String unit = "?"; //$NON-NLS-1$
       
       try
       {
@@ -232,7 +233,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    */
   public String getHref( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**
