@@ -131,7 +131,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
       final double z = snapNode.getPoint().getZ();
       if( !Double.isNaN( z ) )
       {
-        final String format = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.4" ), z ); //$NON-NLS-1$
+        final String format = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.4", z ); //$NON-NLS-1$
         getMapPanel().setMessage( format );
       }
     }

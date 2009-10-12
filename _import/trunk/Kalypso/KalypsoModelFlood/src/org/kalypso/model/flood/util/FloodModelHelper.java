@@ -192,7 +192,7 @@ public class FloodModelHelper
   {
     final StyledLayerType wspLayer = new StyledLayerType();
 
-    wspLayer.setName(String.format(  Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.0") , event.getName() ) ); //$NON-NLS-1$
+    wspLayer.setName(  Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.0" , event.getName() ) ); //$NON-NLS-1$
     wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
     wspLayer.setType( "simple" ); //$NON-NLS-1$

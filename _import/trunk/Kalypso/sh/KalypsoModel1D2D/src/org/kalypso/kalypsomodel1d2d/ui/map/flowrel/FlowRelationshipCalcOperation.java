@@ -380,7 +380,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
     // Add Profiles to reach
     double minStation = Double.MAX_VALUE;
-    double maxStation = Double.MIN_VALUE;
+    double maxStation = -Double.MAX_VALUE;
     for( final IProfil profil : profiles )
     {
       final double station = profil.getStation();

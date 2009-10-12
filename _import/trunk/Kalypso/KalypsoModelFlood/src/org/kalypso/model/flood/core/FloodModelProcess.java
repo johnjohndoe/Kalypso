@@ -290,9 +290,9 @@ public class FloodModelProcess
 
       final String fileName = "../events/" + event.getDataPath() + "/results/" + file.getName(); //$NON-NLS-1$ //$NON-NLS-2$
       final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) ); //$NON-NLS-1$
-      coverage.setName( String.format( Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.10" ), terrainCoverage.getName() ) ); //$NON-NLS-1$
+      coverage.setName(  Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.10" , terrainCoverage.getName() ) ); //$NON-NLS-1$
 
-      final String desc = String.format( Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.11" ), new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
+      final String desc =  Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.11" , new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
       coverage.setDescription( desc );
 
       terrainGrid.dispose();

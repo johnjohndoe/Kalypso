@@ -127,7 +127,7 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
 
     if( exeFiles == null || exeFiles.length == 0 )
     {
-      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.1"), m_exeDir.getAbsolutePath(), m_exePattern ); //$NON-NLS-1$
+      final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.1", m_exeDir.getAbsolutePath(), m_exePattern ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.2"), msg ); //$NON-NLS-1$
       return;
     }

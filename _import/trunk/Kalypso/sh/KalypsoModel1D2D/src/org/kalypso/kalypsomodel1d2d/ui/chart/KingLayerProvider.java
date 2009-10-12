@@ -75,7 +75,7 @@ public class KingLayerProvider extends AbstractLayerProvider
 
     final Feature kingFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
     if( kingFeature == null )
-      throw new ConfigurationException( String.format(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.2"), featureKey) ); //$NON-NLS-1$
+      throw new ConfigurationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.2", featureKey) ); //$NON-NLS-1$
 
     KingDataContainer data = new KingDataContainer( kingFeature );
 

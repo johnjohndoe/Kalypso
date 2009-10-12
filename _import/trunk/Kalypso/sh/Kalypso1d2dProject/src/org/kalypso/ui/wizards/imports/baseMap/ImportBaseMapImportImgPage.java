@@ -200,14 +200,14 @@ public class ImportBaseMapImportImgPage extends WizardPage
     else if( sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile() ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       setMessage( null );
-      setErrorMessage( Messages.getFormatString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
           sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment() } ) ); //$NON-NLS-1$
       return;
     }
     else if( sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile() ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       setMessage( null );
-      setErrorMessage( Messages.getFormatString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
           sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment() } ) ); //$NON-NLS-1$
       return;
     }

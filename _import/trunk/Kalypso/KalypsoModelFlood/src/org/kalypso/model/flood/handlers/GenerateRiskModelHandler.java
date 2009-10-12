@@ -94,7 +94,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       for( int i = 0; i < eventsToProcess.length; i++ )
       {
         eventNames[i] = eventsToProcess[i].getName();
-        final String importText = String.format( "Imported from '%s'", floodModelScenarioFolder.getProject().getName() );
+        final String importText = Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.3", floodModelScenarioFolder.getProject().getName() ); //$NON-NLS-1$
         eventDescriptions[i] = String.format( "%s (%s)", eventsToProcess[i].getDescription(), importText ); //$NON-NLS-1$
         eventPeriods[i] = eventsToProcess[i].getReturnPeriod();
         eventGrids[i] = eventsToProcess[i].getResultCoverages();

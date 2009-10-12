@@ -44,12 +44,15 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -60,6 +63,7 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.PolygonGeoGridArea;
 import org.kalypso.grid.VolumeGeoGridWalker;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IFloodVolumePolygon;
@@ -103,13 +107,13 @@ public class SimulationKalypsoFlood implements ISimulation
 
   public static final String OUTPUT_EVENTS_BASE_FOLDER = "EVENTS_BASE_FOLDER"; //$NON-NLS-1$
 
-  private static final String STR_EREIGNIS_xS = Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.7"); //$NON-NLS-1$
+  private static final String STR_EREIGNIS_xS = Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.7" ); //$NON-NLS-1$
 
-  private static final String STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS = STR_EREIGNIS_xS + Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.8"); //$NON-NLS-1$
+  private static final String STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS = STR_EREIGNIS_xS + Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.8" ); //$NON-NLS-1$
 
-  private static final String STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS = STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS + Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.9"); //$NON-NLS-1$
+  private static final String STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS = STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS + Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.9" ); //$NON-NLS-1$
 
-  private static final String STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS = STR_EREIGNIS_xS + Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.0"); //$NON-NLS-1$
+  private static final String STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS = STR_EREIGNIS_xS + Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.0" ); //$NON-NLS-1$
 
   private static final double VOLUME_EPS = 1.0;
 
@@ -159,9 +163,9 @@ public class SimulationKalypsoFlood implements ISimulation
   {
     try
     {
-      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.15"), 1000 ); //$NON-NLS-1$
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.15" ), 1000 ); //$NON-NLS-1$
 
-      progress.subTask( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.16") ); //$NON-NLS-1$
+      progress.subTask( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.16" ) ); //$NON-NLS-1$
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       final IFloodModel model = (IFloodModel) modelWorkspace.getRootFeature().getAdapter( IFloodModel.class );
       ProgressUtilities.worked( monitor, 100 );
@@ -178,13 +182,14 @@ public class SimulationKalypsoFlood implements ISimulation
       }
 
       if( markedEvents.size() == 0 )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.17"), null ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.17" ), null ) ); //$NON-NLS-1$
 
       progress.setWorkRemaining( events.size() * 2 );
       for( final IRunoffEvent event : markedEvents )
       {
         progress.subTask( String.format( STR_EREIGNIS_xS, event.getName() ) );
-        processVolumes( model, event, progress.newChild( 1 ) );
+        /* final IStatus processVolumes = */processVolumes( model, event, progress.newChild( 1 ) );
+        // TODO: collect stati and log to file and/or present ot user
         final File eventFolder = new File( eventsTmpDir, event.getDataPath().toPortableString() );
         eventFolder.mkdirs();
         processEvent( model, eventFolder, event, progress.newChild( 1 ) );
@@ -207,7 +212,7 @@ public class SimulationKalypsoFlood implements ISimulation
     }
   }
 
-  private void processVolumes( final IFloodModel model, final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
+  private IStatus processVolumes( final IFloodModel model, final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = model.getTerrainModel();
     final IFeatureWrapperCollection<IFloodPolygon> polygons = model.getPolygons();
@@ -220,35 +225,53 @@ public class SimulationKalypsoFlood implements ISimulation
         volumePolygons.add( (IFloodVolumePolygon) floodPolygon );
     }
 
+    final Collection<IStatus> stati = new ArrayList<IStatus>();
     final SubMonitor progress = SubMonitor.convert( monitor, volumePolygons.size() );
     for( final IFloodVolumePolygon floodVolumePolygon : volumePolygons )
     {
       progress.subTask( String.format( STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS, event.getName(), floodVolumePolygon.getName() ) );
-      processVolume( event, floodVolumePolygon, terrainModel, progress.newChild( 1 ) );
+      final IStatus result = processVolume( event, floodVolumePolygon, terrainModel, progress.newChild( 1 ) );
+      if( !result.isOK() )
+      {
+        KalypsoModelFloodPlugin.getDefault().getLog().log( result );
+        stati.add( result );
+      }
     }
+
+    if( stati.size() == 0 )
+      return Status.OK_STATUS;
+
+    final IStatus[] children = stati.toArray( new IStatus[stati.size()] );
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, -1, children, "Volume iteration has warnings", null );
   }
 
-  private void processVolume( final IRunoffEvent event, final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainCoverages, final IProgressMonitor monitor ) throws SimulationException, GeoGridException, GM_Exception
+  private IStatus processVolume( final IRunoffEvent event, final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainCoverages, final IProgressMonitor monitor ) throws SimulationException, GeoGridException, GM_Exception
   {
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() * 2 );
 
     final BigDecimal volumeValue = volumePolygon.getVolume();
+    String volumeName = volumePolygon.getName();
+
+    final String noValueMsg = String.format( "Failed to process polygone '%s', volume value not set.", volumeName );
+    final IStatus noValueStatus = StatusUtilities.createStatus( IStatus.WARNING, noValueMsg, null );
+
     if( volumeValue == null )
-      return;
+      return noValueStatus;
 
     final double volume = volumeValue.doubleValue();
     if( Double.isNaN( volume ) )
-      return;
+      return noValueStatus;
 
     final GM_Object volumeGmObject = volumePolygon.getArea();
 
     // Min/Max-WSP
     double minWsp = Double.POSITIVE_INFINITY;
     double maxWsp = Double.NEGATIVE_INFINITY;
+    double maxVol = Double.NaN;
     final CountGeoGridWalker countWalker = new CountGeoGridWalker( true );
     for( final ICoverage coverage : terrainCoverages )
     {
-      progress.subTask( String.format( STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS, event.getName(), volumePolygon.getName(), coverage.getName() ) );
+      progress.subTask( String.format( STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS, event.getName(), volumeName, coverage.getName() ) );
 
       final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
 
@@ -257,7 +280,7 @@ public class SimulationKalypsoFlood implements ISimulation
 
       final double cellSize = GeoGridUtilities.calcCellArea( geoGrid.getOffsetX(), geoGrid.getOffsetY() );
       final BigDecimal maxTerrain = geoGrid.getMax();
-
+      final BigDecimal minTerrain = geoGrid.getMax();
       /* Minimal waterlevel is the lowest point */
       // REMARK: could even be made higher, but than performance if bad, if result is near the minimum
       minWsp = Math.min( minWsp, geoGrid.getMin().doubleValue() );
@@ -273,70 +296,99 @@ public class SimulationKalypsoFlood implements ISimulation
 
         maxWsp = Math.max( maxWsp, maxGridWsp );
         maxWsp += maxWsp / 2; // in order to improve performance, if waterlevel is near the maximum
+
+        maxVol += coveredArea * (maxWsp - minTerrain.doubleValue());
       }
     }
 
     if( Double.isNaN( minWsp ) || Double.isInfinite( minWsp ) )
-      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.18") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.18" ) ); //$NON-NLS-1$
     if( Double.isNaN( maxWsp ) || Double.isInfinite( maxWsp ) )
-      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.19") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.19" ) ); //$NON-NLS-1$
 
     progress.setWorkRemaining( 100 );
-    final double wsp = searchWsp( volume, minWsp, maxWsp, terrainCoverages, volumeGmObject, progress.newChild( 100 ) );
-    if( Double.isNaN( wsp ) )
+
+    // Calculate maxVol if unable to estimate it
+    // if( Double.isNaN( maxVol ) )
+    // maxVol = calcVolume( volumeGmObject, terrainCoverages, maxWsp, progress.newChild( 10 ) );
+
+    final VolumeResult result = searchWsp( volume, minWsp, 0.0, maxWsp, maxVol, terrainCoverages, volumeGmObject, progress.newChild( 100 ) );
+    final double wsp = result.m_wsp;
+    if( result.m_status.matches( IStatus.ERROR ) )
     {
       volumePolygon.setWaterlevel( null );
-      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.20") ); //$NON-NLS-1$
+      throw new SimulationException( result.m_status.getMessage() );
     }
 
     volumePolygon.setWaterlevel( new BigDecimal( wsp ) );
+
+    return result.m_status;
   }
 
-  private double searchWsp( final double targetVolume, final double minWsp, final double maxWsp, final ICoverageCollection terrainModel, final GM_Object volumeGmObject, final IProgressMonitor monitor ) throws SimulationException
+  private VolumeResult searchWsp( final double targetVolume, final double minWsp, final double minVol, final double maxWsp, final double maxVol, final ICoverageCollection terrainModel, final GM_Object volumeGmObject, final IProgressMonitor monitor ) throws SimulationException
   {
     // Binary search within min/max; we start in the middle
     final double currentWsp = (maxWsp + minWsp) / 2;
 
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.21"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    // HM, check if we could not use Newton iteration to reduce number of iterations.
+    // double currentWsp = Double.NaN;
+    // try
+    // {
+    // final LinearEquation linearEquation = new LinearEquation( minWsp, minVol, maxWsp, maxVol );
+    // currentWsp = linearEquation.computeX( targetVolume );
+    // }
+    // catch( SameXValuesException e )
+    // {
+    // e.printStackTrace();
+    // return Double.NaN;
+    // }
 
-    progress.subTask( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.22"), currentWsp ) ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.21" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     if( Double.isNaN( currentWsp ) || Double.isInfinite( currentWsp ) )
-      return Double.NaN;
+      return new VolumeResult( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.20" ), null ), Double.NaN ); //$NON-NLS-1$
+
     if( Math.abs( currentWsp - minWsp ) < WSP_EPS )
     {
-      // TODO: log
-      // String.format( "Volumenermittlung fehlgeschlagen" );
-      return Double.NaN;
+      final double volumeDif = Math.abs( minVol - targetVolume );
+      final String msg = String.format( "Volume iteration cancelled, change in waterlevel was too small. Using last waterlevel with volume difference of %.1f m³", volumeDif );
+      return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), minWsp );
     }
+
     if( Math.abs( currentWsp - maxWsp ) < WSP_EPS )
     {
-      // TODO: log
-      // String.format( "Volumenermittlung fehlgeschlagen" );
-      return Double.NaN;
+      final double volumeDif = Math.abs( maxVol - targetVolume );
+      final String msg = String.format( "Volume iteration cancelled, change in waterlevel was too small. Using last waterlevel with volume difference of %.1f m³", volumeDif );
+      return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), maxWsp );
     }
 
     // TODO: better condition to avoid endless-loop. Either count loops or stop, if currentWsp is too near to min/max
 
     // System.out.println( "Current WSP: " + currentWsp );
-    final double currentVolume = calcWsp( volumeGmObject, terrainModel, currentWsp, progress.newChild( 10 ) );
+    final double currentVolume = calcVolume( volumeGmObject, terrainModel, currentWsp, progress.newChild( 10 ) );
     // System.out.println( "Current Volume: " + currentVolume );
     // System.out.println( "" );
 
-    if( Math.abs( currentVolume - targetVolume ) < VOLUME_EPS )
-      return currentWsp;
+    final double targetDiff = Math.abs( currentVolume - targetVolume );
+    progress.subTask( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.22", currentWsp, targetDiff ) ); //$NON-NLS-1$
+
+    String msg = String.format( "min: (%.3f/%.1f) max: (%.3f/%.1f) current: (%.3f/%.1f)", minWsp, minVol, maxWsp, maxVol, currentWsp, currentVolume );
+    System.out.println( msg );
+
+    if( targetDiff < VOLUME_EPS )
+      return new VolumeResult( Status.OK_STATUS, maxWsp );
 
     // Depending on sign, search in upper or lower half
     if( currentVolume < targetVolume )
-      return searchWsp( targetVolume, currentWsp, maxWsp, terrainModel, volumeGmObject, progress.newChild( 100 ) );
+      return searchWsp( targetVolume, currentWsp, currentVolume, maxWsp, maxVol, terrainModel, volumeGmObject, progress.newChild( 100 ) );
     else
-      return searchWsp( targetVolume, minWsp, currentWsp, terrainModel, volumeGmObject, progress.newChild( 100 ) );
+      return searchWsp( targetVolume, minWsp, minVol, currentWsp, currentVolume, terrainModel, volumeGmObject, progress.newChild( 100 ) );
   }
 
   /**
    * Calculates the volume for a specific wsp value
    */
-  private double calcWsp( final GM_Object volumeGmObject, final ICoverageCollection terrainCollection, final double currentWsp, final IProgressMonitor monitor ) throws SimulationException
+  private double calcVolume( final GM_Object volumeGmObject, final ICoverageCollection terrainCollection, final double currentWsp, final IProgressMonitor monitor ) throws SimulationException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCollection.size() );
 
@@ -351,7 +403,7 @@ public class SimulationKalypsoFlood implements ISimulation
 
         final String sourceCRS = grid.getSourceCRS();
         final Geometry volumeGeometry = JTSAdapter.export( GeoTransformUtils.transformQuiet( volumeGmObject, sourceCRS ) );
-        grid.getWalkingStrategy().walk( grid, volumeWalker, new PolygonGeoGridArea( grid, volumeGeometry ), progress.newChild( 1 ) );
+        grid.getWalkingStrategy().walk( grid, volumeWalker, new PolygonGeoGridArea( grid, volumeGeometry ), progress.newChild( 1, SubMonitor.SUPPRESS_ALL_LABELS ) );
 
         volume += volumeWalker.getVolume();
       }
@@ -360,11 +412,11 @@ public class SimulationKalypsoFlood implements ISimulation
     }
     catch( final GeoGridException e )
     {
-      throw new SimulationException( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.23"), e.getLocalizedMessage() ), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.23", e.getLocalizedMessage() ), e ); //$NON-NLS-1$
     }
     catch( final GM_Exception e )
     {
-      throw new SimulationException( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.24"), e.getLocalizedMessage() ), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.24", e.getLocalizedMessage() ), e ); //$NON-NLS-1$
     }
   }
 
@@ -415,9 +467,9 @@ public class SimulationKalypsoFlood implements ISimulation
       final String fileName = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + event.getDataPath() + "/results/" + outputCoverageFile.getName();//$NON-NLS-1$
 
       final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, outputCoverageFile, fileName, "image/bin", progress.newChild( 1 ) );//$NON-NLS-1$
-      coverage.setName( String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.10" ), terrainCoverage.getName() ) ); //$NON-NLS-1$
+      coverage.setName( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.10", terrainCoverage.getName() ) ); //$NON-NLS-1$
 
-      final String desc = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.11" ), new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
+      final String desc = Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.11", new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
       coverage.setDescription( desc );
 
       terrainGrid.dispose();
@@ -439,5 +491,18 @@ public class SimulationKalypsoFlood implements ISimulation
   //
   // return filteredPolygons.toArray( new IFloodPolygon[filteredPolygons.size()] );
   // }
+
+  private static class VolumeResult
+  {
+    public final IStatus m_status;
+
+    public final double m_wsp;
+
+    public VolumeResult( final IStatus status, final double wsp )
+    {
+      m_status = status;
+      m_wsp = wsp;
+    }
+  }
 
 }

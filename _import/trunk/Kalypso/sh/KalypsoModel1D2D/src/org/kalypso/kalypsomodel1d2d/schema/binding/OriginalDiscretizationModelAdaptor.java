@@ -201,7 +201,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             // Edge
             if( !allEdges.containsKey( nodeContainer.getId() ) )
             {
-              statusList.add( StatusUtilities.createWarningStatus( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.6"), nodeContainer, node ) ) ); //$NON-NLS-1$
+              statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.6", nodeContainer, node ) ) ); //$NON-NLS-1$
               continue nextNode;
             }
 
@@ -212,7 +212,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             final int nodeCount = myNodes.length;
             if( nodeCount != 2 )
             {
-              statusList.add( StatusUtilities.createWarningStatus( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.7"), nodeContainer, nodeCount ) ) ); //$NON-NLS-1$
+              statusList.add( StatusUtilities.createWarningStatus(  Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.7", nodeContainer, nodeCount ) ) ); //$NON-NLS-1$
               continue nextNode;
             }
 
@@ -233,7 +233,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
               if( (p0.equals( op0 ) && p1.equals( op1 )) || (p0.equals( op1 ) && p1.equals( op0 )) )
               {
-                statusList.add( StatusUtilities.createWarningStatus( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.8"), otherEdge, nodeContainer ) ) ); //$NON-NLS-1$
+                statusList.add( StatusUtilities.createWarningStatus(Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.8", otherEdge, nodeContainer ) ) ); //$NON-NLS-1$
                 continue nextNode;
               }
             }
@@ -307,7 +307,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       if( elementFeature == null )
       {
         // feature does not exist
-        statusList.add( StatusUtilities.createWarningStatus( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.14"), elementOrId, complexElement ) ) ); //$NON-NLS-1$
+        statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.14", elementOrId, complexElement ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -390,12 +390,12 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     final int numberOfEdges = edgesInElement.size();
     if( numberOfEdges < 3 )
     {
-      statusList.add( StatusUtilities.createWarningStatus( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.16"), element ) ) ); //$NON-NLS-1$
+      statusList.add( StatusUtilities.createWarningStatus(  Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.16", element ) ) ); //$NON-NLS-1$
       return false;
     }
     if( numberOfEdges > 4 )
     {
-      statusList.add( StatusUtilities.createWarningStatus( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.17"), element ) ) ); //$NON-NLS-1$
+      statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.17", element ) ) ); //$NON-NLS-1$
       return false;
     }
 
@@ -419,7 +419,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       if( !newEdges.contains( id ) )
         newEdges.add( id );
       else
-        statusList.add( StatusUtilities.createWarningStatus( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19"), id, element ) ) ); //$NON-NLS-1$
+        statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19", id, element ) ) ); //$NON-NLS-1$
       System.out.println();
       if( !collectEdges.containsKey( id ) )
         collectEdges.put( id, edgeOrInvEdge );

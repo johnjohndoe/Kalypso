@@ -221,7 +221,7 @@ public class DeleteFeElementsHelper
         final IFeatureSelectionManager selectionManager = pMapPanel.getSelectionManager();
         selectionManager.clear();
         
-        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.2") ); //$NON-NLS-1$
+        final CompositeCommand compositeCommand = new CompositeCommand(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.14")) ;  //$NON-NLS-1$
         {
           lBuildingFeature = lBuildingElement.getFeature();
           selectionManager.changeSelection( new Feature[] { lBuildingFeature }, new EasyFeatureWrapper[] {} );

@@ -62,7 +62,7 @@ public class EdgeOps
   {
     if( !TypeInfo.is1DEdge( elementEdge ) )
     {
-      throw new IllegalArgumentException( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ops.EdgeOps.0") , elementEdge.getFeature().getFeatureType().getQName() ,elementEdge )); //$NON-NLS-1$
+      throw new IllegalArgumentException(  Messages.getString("org.kalypso.kalypsomodel1d2d.ops.EdgeOps.0" , elementEdge.getFeature().getFeatureType().getQName() ,elementEdge )); //$NON-NLS-1$
     }
     IFE1D2DNode node1 = elementEdge.getNode( 1 );
     if( node1.getContainers().size() == 1 )

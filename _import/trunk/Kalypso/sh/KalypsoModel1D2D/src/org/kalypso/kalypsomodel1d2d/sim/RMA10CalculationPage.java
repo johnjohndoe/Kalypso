@@ -102,7 +102,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     final ICalculationUnit calculationUnit = m_calculation.getControlModel().getCalculationUnit();
 
-    setTitle( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" ), calculationUnit.getName() ) ); //$NON-NLS-1$
+    setTitle(  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" , calculationUnit.getName() ) ); //$NON-NLS-1$
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.2" ) ); //$NON-NLS-1$
   }
 

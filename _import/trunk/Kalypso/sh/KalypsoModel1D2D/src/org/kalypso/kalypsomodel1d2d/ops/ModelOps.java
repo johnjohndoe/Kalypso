@@ -156,7 +156,7 @@ public class ModelOps
       }
       else
       {
-        throw new RuntimeException( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ops.ModelOps.3" ), edge, edges ) ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ops.ModelOps.3" , edge, edges ) ); //$NON-NLS-1$
       }
     }
   }

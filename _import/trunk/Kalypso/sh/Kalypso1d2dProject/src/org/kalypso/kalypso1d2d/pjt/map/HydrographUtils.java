@@ -263,7 +263,7 @@ public class HydrographUtils
       final StyledLayerType hydroLayer = new StyledLayerType();
       String path = "../" + calcResult.getFullPath().toPortableString() + "/hydrograph/hydrograph.gml"; //$NON-NLS-1$ //$NON-NLS-2$
 
-      hydroLayer.setName( String.format( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.7"), hydroCollection.getName())); //$NON-NLS-1$
+      hydroLayer.setName(Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.7", hydroCollection.getName())); //$NON-NLS-1$
       hydroLayer.setFeaturePath( "hydrographMember" ); //$NON-NLS-1$
       hydroLayer.setLinktype( "gml" ); //$NON-NLS-1$
       hydroLayer.setType( "simple" ); //$NON-NLS-1$

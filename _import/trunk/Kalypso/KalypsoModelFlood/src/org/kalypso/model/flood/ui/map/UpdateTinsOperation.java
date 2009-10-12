@@ -176,7 +176,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         final GM_TriangulatedSurface surface = findSurface( sourceObject );
         if( surface == null )
         {
-          final String msg = String.format( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.4"), sourcePath, sourceObject ); //$NON-NLS-1$
+          final String msg = Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.4", sourcePath, sourceObject ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
         }
 
@@ -193,7 +193,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.6") ); //$NON-NLS-1$
         clonedSurface.acceptSurfacePatches( clonedSurface.getEnvelope(), minmaxVisitor, subMon );
 
-        desc = String.format( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.7"), sourceLocation.toExternalForm(), sourcePath, sourceDate ); //$NON-NLS-1$
+        desc =  Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.7", sourceLocation.toExternalForm(), sourcePath, sourceDate ); //$NON-NLS-1$
 
         ref.setDescription( desc );
         ref.setMin( minmaxVisitor.getMin() );
@@ -240,7 +240,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor, subMon );
 
         // TODO: check for right time zone?
-        desc = String.format( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.14"), sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
+        desc =  Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.14", sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
 
         ref.setDescription( desc );
         ref.setMin( minmaxVisitor.getMin() );
@@ -309,7 +309,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
           gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor, subMon );
           // TODO: check for right time zone?
-          desc = String.format( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.19"), sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
+          desc = Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.19", sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
 
           ref.setDescription( desc );
           ref.setMin( minmaxVisitor.getMin() );

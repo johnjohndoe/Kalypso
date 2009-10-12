@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.i18n;
 
+import java.util.IllegalFormatException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -49,6 +50,8 @@ import java.util.ResourceBundle;
  */
 public class Messages
 {
+  private static final Object[] NO_ARGS = new Object[0];
+
   private static final String BUNDLE_NAME = "org.kalypso.kalypso1d2d.pjt.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
@@ -59,13 +62,28 @@ public class Messages
 
   public static String getString( final String key )
   {
+    return getString( key, NO_ARGS );
+  }
+
+  public static String getString( final String key, final Object... args )
+  {
+    String formatStr = ""; //$NON-NLS-1$
     try
     {
-      return RESOURCE_BUNDLE.getString( key );
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
+      return String.format( formatStr, args );
     }
     catch( final MissingResourceException e )
     {
       return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      e.printStackTrace();
+      return '!' + formatStr + '!';
     }
   }
 }

@@ -361,7 +361,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
     }
     catch( final IOException e )
     {
-      final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.14" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.14" , e.getLocalizedMessage() ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, CODE_PRE, msg, e ) );
     }
     finally
@@ -388,7 +388,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
     if( exeFile.exists() )
       return exeFile;
 
-    final String exeMissingMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.26" ), exeFile.getAbsolutePath() ); //$NON-NLS-1$
+    final String exeMissingMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.26" , exeFile.getAbsolutePath() ); //$NON-NLS-1$
     throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
   }
 }

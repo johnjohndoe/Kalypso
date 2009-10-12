@@ -404,7 +404,7 @@ public class Gml2SMSConv implements INativeIDProvider
       return m_roughnessIDProvider.getOrAdd( roughnessClsID );
 
     // TODO: georefed, core exception!
-    final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.5"), roughnessClsID, element ); //$NON-NLS-1$
+    final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.5", roughnessClsID, element ); //$NON-NLS-1$
     // TODO: use default zone instead
     throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
   }

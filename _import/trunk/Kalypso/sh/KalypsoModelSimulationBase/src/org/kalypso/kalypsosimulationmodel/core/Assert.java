@@ -87,7 +87,7 @@ public class Assert
     {
       if( ele == null )
       {
-        final String message = String.format( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.Assert.2" ) + Messages.getString("org.kalypso.kalypsosimulationmodel.core.Assert.3"), paramName, param ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String message = Messages.getString( "org.kalypso.kalypsosimulationmodel.core.Assert.2"  + Messages.getString("org.kalypso.kalypsosimulationmodel.core.Assert.3"), paramName, param ); //$NON-NLS-1$ //$NON-NLS-2$
         throw new IllegalArgumentException( message );
       }
     }
@@ -97,13 +97,13 @@ public class Assert
   {
     if( param == null )
     {
-      final String message = String.format( Messages.getString("org.kalypso.kalypsosimulationmodel.core.Assert.4"), paramName ); //$NON-NLS-1$
+      final String message =  Messages.getString("org.kalypso.kalypsosimulationmodel.core.Assert.4", paramName ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
     }
 
     if( param.isEmpty() )
     {
-      final String message = String.format( Messages.getString("org.kalypso.kalypsosimulationmodel.core.Assert.5"), paramName ); //$NON-NLS-1$
+      final String message =  Messages.getString("org.kalypso.kalypsosimulationmodel.core.Assert.5", paramName ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
     }
 

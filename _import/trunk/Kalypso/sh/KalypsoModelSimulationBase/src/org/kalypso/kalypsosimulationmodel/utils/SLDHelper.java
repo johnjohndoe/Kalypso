@@ -342,6 +342,9 @@ public class SLDHelper
       final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, geomPropertyName );
       final Rule rule = StyleFactory.createRule( newSymbolizer );
       final String ruleName = styledFeature.getName();
+      if( ruleName == null )
+        continue;
+      
       final Operation operation = new PropertyIsLikeOperation( new PropertyName( styleProperty.getLocalPart(), null ), new Literal( ruleName ), '*', '$', '/' );
       final Filter filter = new ComplexFilter( operation );
       rule.setName( styledFeature.getGmlID() );

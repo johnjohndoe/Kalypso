@@ -288,7 +288,7 @@ public class Control1D2DConverter
 
       if( ks == null )
       {
-        final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7" ), rClass.getName() );//$NON-NLS-1$
+        final String msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7" , rClass.getName() );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
 
@@ -444,14 +444,14 @@ public class Control1D2DConverter
           final String uRVal = ((String) record.getValue( indexRelaxationsFaktor ));
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( indexTime )).toGregorianCalendar();
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
-          final String unsteadyMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
+          final String unsteadyMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.36" , stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
 
           lastStepCal = stepCal;
         }
         if( m_controlModel.getIaccyc() > stepCount )
         {
-          final String errMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.12" ), stepCount, m_controlModel.getIaccyc() ); //$NON-NLS-1$
+          final String errMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.12" , stepCount, m_controlModel.getIaccyc() ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
         }
       }
@@ -536,14 +536,14 @@ public class Control1D2DConverter
       int lIntDirection = 0;
       if( building instanceof IBuildingFlowRelation ){
         if( ( ( IBuildingFlowRelation )building ).getKind() != KIND.TABULAR ){
-          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), ( ( IBuildingFlowRelation )building ).getKind() );//$NON-NLS-1$
+          final String msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" , ( ( IBuildingFlowRelation )building ).getKind() );//$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
         }
         lIntDirection = ( ( IBuildingFlowRelation )building ).getDirection();
       }
       else if( building instanceof IBuildingFlowRelation2D ){
         if( ( ( IBuildingFlowRelation2D )building ).getKind() != KIND2D.TABULAR ){
-          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), ( ( IBuildingFlowRelation )building ).getKind() );//$NON-NLS-1$
+          final String msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" , ( ( IBuildingFlowRelation )building ).getKind() );//$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
         }
         lIntDirection = ( ( IBuildingFlowRelation2D )building ).getDirection();

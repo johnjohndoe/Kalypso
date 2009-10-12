@@ -188,7 +188,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
     addedFeatures.add( networkFeature );
 
     /* Set user friendly name and description */
-    final String desc = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.19" ), m_ProfilePage.getFileName(), ImportTrippleWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
+    final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.19", m_ProfilePage.getFileName(), ImportTrippleWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
     network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
     network.setDescription( desc );
     final String crs = m_ProfilePage.getCoordinateSystem();
