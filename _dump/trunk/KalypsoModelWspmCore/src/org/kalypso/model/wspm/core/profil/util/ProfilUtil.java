@@ -59,12 +59,9 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -101,7 +98,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
+        Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -154,7 +151,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
+        Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -205,7 +202,7 @@ public class ProfilUtil
 
   }
 
-  public final static boolean RangeIsConstantNumberFor( final IRecord start, IRecord end, IComponent component )
+  public final static boolean RangeIsConstantNumberFor( final IRecord start, final IRecord end, final IComponent component )
   {
     final Double p = component.getPrecision();
     if( p == null )
@@ -286,40 +283,6 @@ public class ProfilUtil
     return comparePoints( new IComponent[] { property }, point1, point2 );
   }
 
-  private static IRecord flipInnerPoints( final TupleResult result, final int iBreite, final int index1, final int index2 )
-  {
-    final IRecord oldRec2 = index2 - index1 > 1 ? flipInnerPoints( result, iBreite, index1 + 1, index2 - 1 ) : result.get( index1 ).cloneRecord();
-
-    final IComponent[] components = result.getComponents();
-    final IRecord rec2 = result.get( index2 ).cloneRecord();
-
-    for( int i = 0; i < components.length; i++ )
-    {
-      final Object val = result.get( index1 ).getValue( i );
-      if( iBreite == i )
-      {
-        result.get( index1 ).setValue( i, (Double) result.get( index2 ).getValue( i ) * -1, true );
-        result.get( index2 ).setValue( i, (Double) val * -1, true );
-      }
-      else if( components[i].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) //
-          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) //
-          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) //
-          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) //
-          || components[i].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
-      {
-        result.get( index1 ).setValue( i, oldRec2.getValue( i ), true );
-        if( index1 > 0 )
-          result.get( index2 ).setValue( i, result.get( index1 - 1 ).getValue( i ), true );
-      }
-      else
-      {
-        result.get( index1 ).setValue( i, result.get( index2 ).getValue( i ), true );
-        result.get( index2 ).setValue( i, val, true );
-      }
-    }
-    return rec2;
-  }
-
   /**
    * mirror the profiles points (axis 0.0)
    */
@@ -331,15 +294,58 @@ public class ProfilUtil
   /**
    * mirror the profiles points (axis 0.0)
    */
-  public static final void flipProfile( final IProfil profile, boolean fireNoEvent )
+  public static final void flipProfile( final IProfil profile, final boolean fireNoEvent )
   {
-    flipInnerPoints( profile.getResult(), profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE ), 0, profile.getResult().size() - 1 );
-    if( !fireNoEvent )
+    final IComponent[] components = profile.getPointProperties();
+    final IRecord[] records = profile.getPoints();
+    final int len = records.length;
+    int iBreite = -1;
+    IRecord lastRec = records[0];
+
+    for( int i = 0; i < len / 2; i++ )
     {
-      final ProfilChangeHint hint = new ProfilChangeHint();
-      hint.setPointValuesChanged();
-      profile.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
+      final IRecord currentRec = records[i].cloneRecord();
+      final int k = len - 1 - i;
+      for( int j = 0; j < components.length; j++ )
+      {
+        if( iBreite < 0 && components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
+        {
+          iBreite = j;
+        }
+        if( iBreite == j )
+        {
+          final Double value = (Double) records[i].getValue( j ) * -1;
+          records[i].setValue( j, (Double) records[k].getValue( j ) * -1, fireNoEvent );
+          records[k].setValue( j, value, fireNoEvent );
+        }
+        else if( components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) //
+            || components[j].getId().equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+        {
+          final Object value = lastRec.getValue( j );
+          records[i].setValue( j, records[k - 1].getValue( j ), fireNoEvent );
+          records[k].setValue( j, value, fireNoEvent );
+        }
+        else
+        {
+          final Object value = records[i].getValue( j );
+          records[i].setValue( j, records[k].getValue( j ), fireNoEvent );
+          records[k].setValue( j, value, fireNoEvent );
+        }
+      }
+      lastRec = currentRec;
+
     }
+
+    if( (len / 2) * 2 < len )
+    {
+      final int mid = len / 2;
+      final Double dBreite = (Double) records[mid].getValue( iBreite );
+      records[mid].setValue( iBreite, dBreite * -1, fireNoEvent );
+    }
+
   }
 
   public final static HashMap<String, IComponent> getComponentsFromProfile( final IProfil profile )
@@ -479,7 +485,7 @@ public class ProfilUtil
 
     final int i = points.indexOf( point );
     if( i == -1 )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
 
     return points.get( i - 1 );
   }
@@ -519,7 +525,7 @@ public class ProfilUtil
     if( points.isEmpty() || pos == points.size() - 1 )
       return null;
     if( pos == -1 )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
 
     return points.get( pos + 1 );
   }
@@ -560,7 +566,7 @@ public class ProfilUtil
     final Double x = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );
     final Double y = getDoubleValueFor( pointProperty.getId(), p );
     if( x.isNaN() || y.isNaN() )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) ); //$NON-NLS-1$
     return new Point2D.Double( x, y );
   }
 
@@ -792,7 +798,7 @@ public class ProfilUtil
   {
     final IRecord[] points = profile.getPoints();
     if( points.length < 1 )
-      return Double.MIN_VALUE;
+      return -Double.MAX_VALUE;
     Double maxZ = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[0] );
     for( int i = 1; i < points.length; i++ )
     {
