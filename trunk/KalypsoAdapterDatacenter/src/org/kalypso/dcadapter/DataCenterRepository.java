@@ -20,7 +20,7 @@ public class DataCenterRepository extends AbstractRepository
   public DataCenterRepository( final String name, final String factory, final String conf, final boolean ro,
       final String url, final String userName, final String password )
   {
-    super( name, factory, conf, ro, "datacenter://" );
+    super( name, factory, conf, ro, "datacenter://" ); //$NON-NLS-1$
 
     m_database = new IngresDatabase( url, userName, password );
   }

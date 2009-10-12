@@ -55,7 +55,7 @@ public class DataCenterChannelItem implements IRepositoryItem
    */
   public String getIdentifier( )
   {
-    return m_parent.getIdentifier() + "." + String.valueOf( m_channel.getID() );
+    return m_parent.getIdentifier() + "." + String.valueOf( m_channel.getID() ); //$NON-NLS-1$
   }
 
   /**
