@@ -4,9 +4,17 @@
      <extension
            point="org.kalypso.simulation.core.simulation">
         <simulation
-              catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
               simulationClass="org.kalypso.convert.namodel.NaModelCalcJob"
+              catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
               typeID="KalypsoNA"/>
+      <simulation
+            simulationClass="org.kalypso.na.preprocessing.NA_PreprocessingJob"
+            typeID="KalypsoNA_Preprocessing">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.na.postprocessing.NA_PostprocessingJob"
+            typeID="KalypsoNA_Postprocessing">
+      </simulation>
      </extension>
      <extension
            point="org.kalypso.contribs.java.urlCatalog">
@@ -179,6 +187,10 @@
               class="org.kalypso.convert.namodel.schema.binding.suds.Greenroof"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}GreenRoof">
         </feature>
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.suds.PlaningArea"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}PlaningArea">
+        </feature>
      </extension>
      
      <extension
@@ -188,5 +200,4 @@
               qname="{http://www.tuhh.de/hydrotop}Hydrotop">
         </feature>
      </extension>
-     
 </plugin>

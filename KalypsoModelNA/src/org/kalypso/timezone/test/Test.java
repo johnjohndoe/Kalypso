@@ -55,34 +55,34 @@ public class Test
 
   public static void main( String[] args ) throws ParseException
   {
-    final String[] winterTimes = new String[] { "01.01.1950", "01.01.1979", "01.01.1980", "01.01.1981", "01.01.1989", "01.01.2000" };
-    final String[] summerTimes = new String[] { "01.07.1950", "01.07.1979", "01.07.1980", "01.07.1981", "01.07.1989", "01.07.2000" };
+    final String[] winterTimes = new String[] { Messages.Test_0, Messages.Test_1, Messages.Test_2, Messages.Test_3, Messages.Test_4, Messages.Test_5 };
+    final String[] summerTimes = new String[] { Messages.Test_6, Messages.Test_7, Messages.Test_8, Messages.Test_9, Messages.Test_10, Messages.Test_11 };
     final GregorianCalendar calendar = new GregorianCalendar();
     final DateFormat formatter = DateFormat.getDateInstance( DateFormat.MEDIUM );
 
     // calendar.setTimeZone( TimeZone.getTimeZone( "Europe/Berlin" ) );
     // calendar.setTimeZone( TimeZone.getTimeZone( "CET" ) );
-    calendar.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+    calendar.setTimeZone( TimeZone.getTimeZone( Messages.Test_12 ) );
     // calendar.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
     // calendar.setTimeZone( TimeZone.getTimeZone( "GMT+1" ) );
 
     // formatter.setTimeZone( TimeZone.getTimeZone( "Europe/Berlin" ) );
-    formatter.setTimeZone( TimeZone.getTimeZone( "GMT+1" ) );
+    formatter.setTimeZone( TimeZone.getTimeZone( Messages.Test_13 ) );
 
-    System.out.println( "Winter times:" );
+    System.out.println( Messages.Test_14 );
     for( final String time : winterTimes )
     {
       calendar.setTime( formatter.parse( time ) );
       final XMLGregorianCalendarImpl xmlCalendar = new XMLGregorianCalendarImpl( calendar );
-      System.out.println( time + " (" + formatter.getTimeZone().getDisplayName() + ")   -->   " + xmlCalendar.toString() + " (" + xmlCalendar.getTimezone() + ")" );
+      System.out.println( time + Messages.Test_15 + formatter.getTimeZone().getDisplayName() + Messages.Test_16 + xmlCalendar.toString() + Messages.Test_17 + xmlCalendar.getTimezone() + Messages.Test_18 );
     }
 
-    System.out.println( "Summer times:" );
+    System.out.println( Messages.Test_19 );
     for( final String time : summerTimes )
     {
       calendar.setTime( formatter.parse( time ) );
       final XMLGregorianCalendarImpl xmlCalendar = new XMLGregorianCalendarImpl( calendar );
-      System.out.println( time + " (" + formatter.getTimeZone().getDisplayName() + ")   -->   " + xmlCalendar.toString() + " (" + xmlCalendar.getTimezone() + ")" );
+      System.out.println( time + Messages.Test_20 + formatter.getTimeZone().getDisplayName() + Messages.Test_21 + xmlCalendar.toString() + Messages.Test_22 + xmlCalendar.getTimezone() + Messages.Test_23 );
     }
   }
 

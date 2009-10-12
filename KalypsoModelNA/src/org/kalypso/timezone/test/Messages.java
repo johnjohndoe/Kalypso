@@ -38,20 +38,72 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.test;
+package org.kalypso.timezone.test;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.kalypso.convert.namodel.i18n.Messages;
+import org.eclipse.osgi.util.NLS;
 
 /**
- * @author antanas
+ * @author kimwerner
+ *
  */
-public class TestOutput
+public class Messages extends NLS
 {
-  public static void main( String[] args )
+  private static final String BUNDLE_NAME = "org.kalypso.timezone.test.messages"; //$NON-NLS-1$
+
+  public static String Test_0;
+
+  public static String Test_1;
+
+  public static String Test_10;
+
+  public static String Test_11;
+
+  public static String Test_12;
+
+  public static String Test_13;
+
+  public static String Test_14;
+
+  public static String Test_15;
+
+  public static String Test_16;
+
+  public static String Test_17;
+
+  public static String Test_18;
+
+  public static String Test_19;
+
+  public static String Test_2;
+
+  public static String Test_20;
+
+  public static String Test_21;
+
+  public static String Test_22;
+
+  public static String Test_23;
+
+  public static String Test_3;
+
+  public static String Test_4;
+
+  public static String Test_5;
+
+  public static String Test_6;
+
+  public static String Test_7;
+
+  public static String Test_8;
+
+  public static String Test_9;
+  static
   {
-    Logger.getLogger( "aaaaaaaaaa" ).log( Level.WARNING,  Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3" , 500.0, 2525, 502.635468, 2.635468, 1.2589 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    // initialize resource bundle
+    NLS.initializeMessages( BUNDLE_NAME, Messages.class );
+  }
+
+  private Messages( )
+  {
   }
 }
