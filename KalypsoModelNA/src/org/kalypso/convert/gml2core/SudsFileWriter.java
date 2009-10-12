@@ -97,9 +97,8 @@ public class SudsFileWriter extends AbstractCoreFileWriter
           for( final Feature catchment : list )
             if( catchment.getDefaultGeometryPropertyValue().contains( landuseInteriorPoint ) )
             {
-              final XLinkedFeature_Impl strang = (XLinkedFeature_Impl) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-              final XLinkedFeature_Impl node = (XLinkedFeature_Impl) strang.getFeature().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-              final String drainageNodeName = node.getFeature().getName();
+              final Feature strang = (Feature) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
+              final String drainageNodeName = (String) strang.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
 
               final String catchmentName = catchment.getName();
               if( !sudsMap.containsKey( catchmentName ) )
@@ -135,6 +134,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                    */
                   final Swale sud = (Swale) f;
                   key = sud.getElementType();
+                  value.add( "# SWALES NOT IMPLEMENTED YET!" );
                 }
                 else if( f instanceof Greenroof )
                 {

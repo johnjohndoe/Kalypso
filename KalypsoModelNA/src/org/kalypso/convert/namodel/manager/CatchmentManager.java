@@ -53,6 +53,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -177,8 +179,8 @@ public class CatchmentManager extends AbstractManager
     if( igwzu > 0 )
     {
       final HashMap<String, String> col2 = new HashMap<String, String>();
-      String format13 = FortranFormatHelper.createFormatLine( "ngwzu", "*", "_", igwzu );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-      String format14 = FortranFormatHelper.createFormatLine( "gwwi", "*", "_", igwzu );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+      String format13 = FortranFormatHelper.createFormatLine( "ngwzu", "*", "_", igwzu ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+      String format14 = FortranFormatHelper.createFormatLine( "gwwi", "*", "_", igwzu ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
       line = reader.readLine();
       System.out.println( "13: " + line ); //$NON-NLS-1$
       createProperties( col2, line, format13 );
@@ -299,9 +301,9 @@ public class CatchmentManager extends AbstractManager
     }
     else
     {
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ) ); //$NON-NLS-1$
       asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" ); //$NON-NLS-1$
-      
+
       // BUG: this can never work, as the we999 file is not available
       // TODO: copy the we999 into the inp.dat folder or stop calculation!
     }
@@ -378,7 +380,7 @@ public class CatchmentManager extends AbstractManager
       final Feature linkedFE = workSpace.resolveLink( fe, rt2 );
 
       if( linkedFE == null )
-        throw new Exception( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) )); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
       line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " ); //$NON-NLS-1$
       // line13.append( toAscci( linkedFE, 17 ) + " " );
       line14.append( toAscci( fe, 14 ) + " " ); //$NON-NLS-1$
@@ -386,7 +388,7 @@ public class CatchmentManager extends AbstractManager
     }
 
     if( sumGwwi > 1.001 )
-      throw new Exception( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.84", feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP )) //$NON-NLS-1$
+      throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) ) //$NON-NLS-1$
           + ", AsciiID: " + asciiID ); //$NON-NLS-1$
     if( sumGwwi < 0.999 )
     {
@@ -394,9 +396,8 @@ public class CatchmentManager extends AbstractManager
       double delta = 1 - sumGwwi;
       line13.append( "0 " ); //$NON-NLS-1$
       line14.append( delta + " " ); //$NON-NLS-1$
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.88",feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP) , asciiID , sumGwwi*100)+"/n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.92", delta * 100 )+"\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88"), feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ).toString(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92"), delta * 100.0 ) ); //$NON-NLS-1$
     }
 
     if( gwList.size() > 0 )
@@ -407,7 +408,7 @@ public class CatchmentManager extends AbstractManager
     // 15
 
     StringBuffer buffer = new StringBuffer();
-    buffer.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgru" ), "*" ) );  //$NON-NLS-1$//$NON-NLS-2$
+    buffer.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgru" ), "*" ) ); //$NON-NLS-1$//$NON-NLS-2$
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgro" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rtr" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pors" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -426,7 +427,7 @@ public class CatchmentManager extends AbstractManager
     asciiBuffer.getCatchmentBuffer().append( buffer.toString() );
 
     // KommentarZeile
-    asciiBuffer.getCatchmentBuffer().append( "ende gebietsdatensatz" + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
+    asciiBuffer.getCatchmentBuffer().append( "ende gebietsdatensatz" + "\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
   }
 
@@ -481,7 +482,7 @@ public class CatchmentManager extends AbstractManager
     if( !m_fileMap.containsKey( key ) )
     {
       final int asciiID = conf.getIdManager().getAsciiID( feature );
-      final String name = "C_" + Integer.toString( asciiID ).trim() + "." + axisType;  //$NON-NLS-1$//$NON-NLS-2$
+      final String name = "C_" + Integer.toString( asciiID ).trim() + "." + axisType; //$NON-NLS-1$//$NON-NLS-2$
       m_fileMap.put( key, name );
     }
     return m_fileMap.get( key );
@@ -593,7 +594,7 @@ public class CatchmentManager extends AbstractManager
                 IOUtils.closeQuietly( writer );
               }
               else
-                System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.143", synthNKey , annualityKey) ); //$NON-NLS-1$
+                System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.143", synthNKey, annualityKey ) ); //$NON-NLS-1$
             }
           }
         }
