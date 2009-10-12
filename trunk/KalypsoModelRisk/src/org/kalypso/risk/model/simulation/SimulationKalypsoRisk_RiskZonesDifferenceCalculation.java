@@ -41,17 +41,22 @@
 package org.kalypso.risk.model.simulation;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -70,13 +75,17 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
-  private final static String RASTER_MODEL_1 = "RASTER_MODEL_1";
+  private final static String RASTER_MODEL_1 = "RASTER_MODEL_1"; //$NON-NLS-1$
 
-  private final static String RASTER_MODEL_2 = "RASTER_MODEL_2";
+  private final static String RASTER_MODEL_2 = "RASTER_MODEL_2"; //$NON-NLS-1$
 
-  private final static String OUTPUT_RASTER_MODEL = "OUTPUT_RASTER_MODEL";
+  private final static String OUTPUT_RASTER_MODEL = "OUTPUT_RASTER_MODEL"; //$NON-NLS-1$
 
-  private final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER";
+  private final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER"; //$NON-NLS-1$
+
+  private final static String OUTPUT_PROPERTIES_FILE = "OUTPUT_PROPERTIES_FILE";
+
+  private double m_totalDifference = 0.0;
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
@@ -107,14 +116,24 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       final GMLWorkspace ws_model_output = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( OUTPUT_RASTER_MODEL ), null );
       final IRasterDataModel model_output = (IRasterDataModel) ws_model_output.getRootFeature().getAdapter( IRasterDataModel.class );
 
-      final File outputRasterTmpDir = new File( tmpdir, "outputModel.gml" ); //$NON-NLS-1$
-      outputRasterTmpDir.mkdir();
+      final File outputRasterTmpDir = new File( tmpdir, "rasters" ); //$NON-NLS-1$
+      outputRasterTmpDir.mkdirs();
 
       doRiskZonesCalculation( outputRasterTmpDir, model_output, model_1, model_2, simulationMonitorAdaptor );
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, ws_model_output, "UTF-8" ); //$NON-NLS-1$
+
+      final File propertiesFile = new File( tmpdir, "stats.txt" );
+      final Properties properties = new Properties();
+      properties.put( "TOTAL_DIFFERENCE", NumberFormat.getCurrencyInstance().format( m_totalDifference ) );
+      final FileOutputStream propertiesStream = new FileOutputStream( propertiesFile );
+      properties.store( propertiesStream, "Scenario statistics" );
+      propertiesStream.flush();
+      propertiesStream.close();
+
       resultEater.addResult( OUTPUT_RASTER_MODEL, tmpRasterModel );
       resultEater.addResult( OUTPUT_RASTER_FOLDER, outputRasterTmpDir );
+      resultEater.addResult( OUTPUT_PROPERTIES_FILE, propertiesFile );
     }
     catch( final Exception e )
     {
@@ -124,7 +143,10 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
   private void doRiskZonesCalculation( final File tmpdir, final IRasterDataModel rasterModelOutput, final IRasterDataModel rasterModelInput1, final IRasterDataModel rasterModelInput2, final IProgressMonitor monitor ) throws SimulationException
   {
-    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 );
+    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
+    
+    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
 
     try
     {
@@ -144,23 +166,36 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       for( int i = 0; i < inputCoverages1.size(); i++ )
       {
         final ICoverage inputCoverage1 = inputCoverages1.get( i );
-        final ICoverage inputCoverage2 = inputCoverages2.get( i );
+        ICoverage inputCoverage2 = null;
+        for( final ICoverage iCoverage : inputCoverages2 )
+        {
+          if( iCoverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
+          {
+            inputCoverage2 = iCoverage;
+            break;
+          }
+        }
 
-        final IGeoGrid inputGrid1 = GeoGridUtilities.toGrid( inputCoverage1 );
-        final IGeoGrid inputGrid2 = GeoGridUtilities.toGrid( inputCoverage2 );
-        final IGeoGrid outputGrid = new RiskZonesDifferenceGrid( inputGrid1, inputGrid2 );
+        if( inputCoverage2 != null )
+        {
+          final IGeoGrid inputGrid1 = GeoGridUtilities.toGrid( inputCoverage1 );
+          final IGeoGrid inputGrid2 = GeoGridUtilities.toGrid( inputCoverage2 );
+          final IGeoGrid outputGrid = new RiskZonesDifferenceGrid( inputGrid1, inputGrid2 );
 
-        final String outputCoverageFileName = String.format( "%s_%2d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
-        final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
-        final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-        final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
+          final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
+          final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
+          final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
+          final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
-        outputGrid.dispose();
-        inputGrid1.dispose();
-        inputGrid2.dispose();
+          m_totalDifference += ((RiskZonesDifferenceGrid) outputGrid).getDifference();
 
-        newCoverage.setName( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.4" ) + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
-        newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
+          outputGrid.dispose();
+          inputGrid1.dispose();
+          inputGrid2.dispose();
+
+          newCoverage.setName( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.4" ) + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
+          newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
+        }
 
         /* fireModellEvent to redraw a map */
         final GMLWorkspace workspace = rasterModelOutput.getFeature().getWorkspace();

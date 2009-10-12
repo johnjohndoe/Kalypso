@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -42,10 +43,12 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
+import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk;
 import org.kalypso.risk.model.simulation.RiskZonesGrid;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskStatisticTableValues;
+import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -77,6 +80,9 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   public IStatus execute( final IProgressMonitor monitor )
   {
+    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
+
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
     if( m_rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
@@ -99,10 +105,11 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
         final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, m_rasterModel.getSpecificDamageCoverageCollection(), m_vectorModel.getLandusePolygonCollection(), m_controlModel.getLanduseClassesList(), m_controlModel.getRiskZoneDefinitionsList() );
 
-        // TODO: change name: better: use input name
-        final String outputFilePath = "raster/output/RiskZonesCoverage" + i + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
-        final IFile iFile = m_scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
-        final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, iFile.getLocation().toFile(), outputFilePath, "image/bin", subMonitor ); //$NON-NLS-1$
+        final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
+        // final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
+        final String outputCoverageFileRelativePath = ISimulationSpecKalypsoRisk.CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
+        final IFile outputCoverageFile = m_scenarioFolder.getFile( new Path( "models/" + outputCoverageFileRelativePath ) ); //$NON-NLS-1$
+        final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, importantDigits, outputCoverageFile.getLocation().toFile(), outputCoverageFileRelativePath, "image/bin", subMonitor ); //$NON-NLS-1$
 
         outputGrid.dispose();
         inputGrid.dispose();

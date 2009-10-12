@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gft:featuretemplate name="Calculation values definition"
+<gft:featuretemplate name="Calculation Parameters"
 	xmlns:gft="featureview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
 	<gft:layer id="layer_1" featurePath="#fid#root" linktype="gml"

@@ -52,8 +52,6 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public double getStatisticsAverageAnnualDamage( );
 
-  void updateStatistics( final double value, final double returnPeriod );
-
   public ILanduseClass getLanduseClass( final IRasterizationControlModel mode );
 
 }

@@ -38,55 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.i18n;
+package org.kalypso.risk.model.utils;
 
-import java.util.IllegalFormatException;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.cheffo.jeplite.JEP;
+import org.cheffo.jeplite.ParseException;
 
 /**
- * @author kimwerner
- *
+ * Helper class in order to avoid parsing the function expression for each raster cell.
+ * 
+ * @author Gernot Belger
  */
-public class Messages
+public class FunctionParserCache
 {
-  private static final String BUNDLE_NAME = "org.kalypso.risk.i18n.messages"; //$NON-NLS-1$
+  private static Map<String, JEP> m_parsers = new HashMap<String, JEP>();
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
-
-  private static final Object[] NO_ARGS = new Object[0];
-
-  private Messages( )
+  public synchronized  static double getValue( final String expression, final double value ) throws ParseException
   {
+    final JEP parser = getParser( expression );
+    parser.addVariable( "x", value ); //$NON-NLS-1$
+    return parser.getValue();
   }
 
-/*
- * java reflections needs this method-signatur
- */
-  public static String getString( final String key )
+  private static JEP getParser( String expression )
   {
-    return getString( key, NO_ARGS );
-  }
+    final JEP existing = m_parsers.get( expression );
+    if( existing != null )
+      return existing;
 
-  public static String getString( final String key, final Object... args )
-  {
-    String formatStr = ""; //$NON-NLS-1$
-    try
-    {
-      formatStr = RESOURCE_BUNDLE.getString( key );
-      if( args.length == 0 )
-        return formatStr;
-
-      return String.format( formatStr, args );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-    catch( final IllegalFormatException e )
-    {
-      e.printStackTrace();
-      return '!' + formatStr + '!';
-    }
+    final JEP jep = new JEP();
+    jep.addStandardConstants();
+    jep.addStandardFunctions();
+    jep.addVariable( "x", 0.0 ); //$NON-NLS-1$
+    jep.parseExpression( expression );
+    m_parsers.put( expression, jep );
+    return jep;
   }
 }

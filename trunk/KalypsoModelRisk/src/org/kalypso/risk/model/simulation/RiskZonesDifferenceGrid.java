@@ -54,6 +54,8 @@ public class RiskZonesDifferenceGrid extends AbstractDelegatingGeoGrid implement
 
   private final IGeoGrid m_inputGrid2;
 
+  private double m_difference = 0.0;
+
   public RiskZonesDifferenceGrid( final IGeoGrid inputGrid1, final IGeoGrid inputGrid2 ) throws Exception
   {
     super( inputGrid1 );
@@ -74,7 +76,10 @@ public class RiskZonesDifferenceGrid extends AbstractDelegatingGeoGrid implement
 
         if( Double.isNaN( value1 ) || Double.isNaN( value2 ) )
           return Double.NaN;
-        return Math.abs( value1 ) - Math.abs( value2 );
+        final double value = Math.abs( value1 ) + Math.abs( value2 );
+        m_difference += value;
+//        System.out.println(value);
+        return value;
       }
       return Double.NaN;
     }
@@ -82,6 +87,11 @@ public class RiskZonesDifferenceGrid extends AbstractDelegatingGeoGrid implement
     {
       throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
     }
+  }
+
+  public double getDifference( )
+  {
+    return m_difference;
   }
 
 }

@@ -109,7 +109,7 @@ public class RiskLanduseHelper
     if( !landuseClass.containsStatisticEntry( returnPeriod ) )
     {
       final IRiskLanduseStatistic entry = landuseClass.createNewStatisticEntry();
-      final String entryName = String.format( Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.1" ), returnPeriod ); //$NON-NLS-1$
+      final String entryName = Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.1" , returnPeriod ); //$NON-NLS-1$
 
       entry.setName( entryName );
       entry.setReturnPeriod( returnPeriod );
