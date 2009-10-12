@@ -40,15 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util.pointpropertycalculator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -63,26 +59,23 @@ public class AddPercentValueOperator implements IPointPropertyCalculator
    * @see org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator#calculate(java.lang.Double,
    *      java.lang.String[], java.util.List)
    */
-  public IProfilChange[] calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
+  public void calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
   {
-    final List<IProfilChange> changes = new ArrayList<IProfilChange>();
     for( final IRecord point : points )
     {
+      final TupleResult result = point.getOwner();
       for( final IComponent property : properties )
       {
-        final TupleResult result = point.getOwner();
-
-        if( result.hasComponent( property ) )
+        final int i = result.indexOfComponent( property );
+        final Object oldVal = point.getValue( i );
+        if( i > 0 && oldVal instanceof Double )
         {
-          final Double oldValue = ProfilUtil.getDoubleValueFor( property.getId(), point );
-          final double newValue = oldValue.isNaN() ? operand : oldValue * operand;
-          changes.add( new PointPropertyEdit( point, property, newValue ) );
+          point.setValue( i, (Double) oldVal *operand, true );
         }
         else
-          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(),Messages.getFormatString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0" ,property, point))); //$NON-NLS-1$
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0", property, point ) ) ); //$NON-NLS-1$
       }
     }
-    return changes.toArray( new IProfilChange[changes.size()] );
   }
 
 }

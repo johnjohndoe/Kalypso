@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util.pointpropertycalculator;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
@@ -58,17 +60,21 @@ public class SetFixValueOperator implements IPointPropertyCalculator
    * @see org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator#calculate(java.lang.Double,
    *      java.lang.Strinfinal g[], java.util.List)
    */
-  public final IProfilChange[] calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
+  public final void calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
   {
-    final List<IProfilChange> changes = new ArrayList<IProfilChange>();
     for( final IRecord point : points )
     {
+      final TupleResult result = point.getOwner();
       for( final IComponent property : properties )
       {
-        changes.add( new PointPropertyEdit( point, property, operand ) );
+        final int i = result.indexOfComponent( property );
+        if( i > 0 && property.getValueTypeName().equals( XmlTypes.XS_DOUBLE ) )
+        {
+          point.setValue( i, operand, true );
+        }
+        else
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0", property, point ) ) ); //$NON-NLS-1$
       }
     }
-    return changes.toArray( new IProfilChange[changes.size()] );
   }
-
 }

@@ -69,25 +69,25 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class QIntervallResult extends AbstractFeatureBinder
 {
-  public static final QName QNAME_F_QIntervallResult = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "QIntervallResult" );
+  public static final QName QNAME_F_QIntervallResult = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "QIntervallResult" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_QIntervallResult_station = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "station" );
+  public static final QName QNAME_P_QIntervallResult_station = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "station" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_QIntervallResult_slope = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "slope" );
+  public static final QName QNAME_P_QIntervallResult_slope = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "slope" ); //$NON-NLS-1$
 
-  private static final QName QNAME_P_QIntervallResult_buildingId = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "buildingId" );
+  private static final QName QNAME_P_QIntervallResult_buildingId = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "buildingId" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "pointsMember" );
+  public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "pointsMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_QIntervallResult_buildingMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "buildingParameterMember" );
+  public static final QName QNAME_P_QIntervallResult_buildingMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "buildingParameterMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_QIntervallResult_polynomialMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "polynomialMember" );
+  public static final QName QNAME_P_QIntervallResult_polynomialMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "polynomialMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_QIntervallResult_profileMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "profileMember" );
+  public static final QName QNAME_P_QIntervallResult_profileMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "profileMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_F_WPointsObservation = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "WPointsObservation" );
+  public static final QName QNAME_F_WPointsObservation = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "WPointsObservation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_F_BuildingObservation = new QName( NS.OM, "Observation" );
+  public static final QName QNAME_F_BuildingObservation = new QName( NS.OM, "Observation" ); //$NON-NLS-1$
 
   public QIntervallResult( final Feature featureToBind )
   {
@@ -131,7 +131,7 @@ public class QIntervallResult extends AbstractFeatureBinder
     final IComponent[] pointsComponents = createPointsComponents( obsFeature );
 
     final TupleResult tupleResult = new TupleResult( pointsComponents );
-    return new Observation<TupleResult>( "", "", tupleResult );
+    return new Observation<TupleResult>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void setPointsObservation( final IObservation<TupleResult> observation )
@@ -156,8 +156,8 @@ public class QIntervallResult extends AbstractFeatureBinder
     final IFeatureType ftProfile = schema.getFeatureType( IProfileFeature.QNAME_PROFILE );
     final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_profileMember );
 
-    final String href = "project:/modell.gml#" + profile.getId();
-    final Feature profileFeatureRef = new XLinkedFeature_Impl( feature, profileRelation, ftProfile, href, "", "", "", "", "" );
+    final String href = "project:/modell.gml#" + profile.getId(); //$NON-NLS-1$
+    final Feature profileFeatureRef = new XLinkedFeature_Impl( feature, profileRelation, ftProfile, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     feature.setProperty( profileRelation, profileFeatureRef );
 
     final IProfileObject[] buildings = profile.getProfil().getProfileObjects();
@@ -230,7 +230,7 @@ public class QIntervallResult extends AbstractFeatureBinder
     // Sort by discharge and then downstream waterlevel
     tupleResult.setSortComponents( new IComponent[] { pointsComponents[0], pointsComponents[1] } );
 
-    return new Observation<TupleResult>( "", "", tupleResult );
+    return new Observation<TupleResult>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void setWeirObservation( final IObservation<TupleResult> observation )

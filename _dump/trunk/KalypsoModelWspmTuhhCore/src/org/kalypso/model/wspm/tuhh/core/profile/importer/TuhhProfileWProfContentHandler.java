@@ -106,7 +106,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
     {
       final IProfil profil = findProfil( station, riverId, profileName, profileComment, photoURL );
       if( profil == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.0"), station ), null ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.0", station ), null ) ); //$NON-NLS-1$
 
       if( componentId != null && !componentId.isEmpty() )
       {
@@ -206,7 +206,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
     newProfile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     newProfile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );
 
-    System.out.println( String.format( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.5"), riverId, station ) ); //$NON-NLS-1$
+    System.out.println(  Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.5", riverId, station ) ); //$NON-NLS-1$
 
     return newProfile;
   }

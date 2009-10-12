@@ -91,7 +91,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   public String getComment( final Feature feature )
   {
 //    return ObjectUtils.toString( feature.getProperty( "P_KOMMENTA" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

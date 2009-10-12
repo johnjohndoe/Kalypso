@@ -49,8 +49,9 @@ import java.util.ResourceBundle;
  */
 public class Messages
 {
-
   private static final String BUNDLE_NAME = "org.kalypso.model.wspm.core.i18n.messages"; //$NON-NLS-1$
+
+  private static final Object[] NO_ARGS = new Object[0];
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
@@ -58,24 +59,23 @@ public class Messages
   {
   }
 
+/*
+ * java reflections needs this method-signatur
+ */
   public static String getString( final String key )
   {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
+    return getString( key, NO_ARGS );
   }
 
-  public static String getFormatString( final String key, Object... args )
+  public static String getString( final String key, final Object... args )
   {
-    String formatStr = '!' + key + '!';
+    String formatStr = ""; //$NON-NLS-1$
     try
     {
       formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
       return String.format( formatStr, args );
     }
     catch( final MissingResourceException e )
@@ -84,8 +84,8 @@ public class Messages
     }
     catch( final IllegalFormatException e )
     {
+      e.printStackTrace();
       return '!' + formatStr + '!';
     }
-
   }
 }

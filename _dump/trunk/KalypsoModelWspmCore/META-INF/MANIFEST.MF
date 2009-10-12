@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name.0
+Bundle-Name: KalypsoModelWspmCore
 Bundle-SymbolicName: org.kalypso.model.wspm.core; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin

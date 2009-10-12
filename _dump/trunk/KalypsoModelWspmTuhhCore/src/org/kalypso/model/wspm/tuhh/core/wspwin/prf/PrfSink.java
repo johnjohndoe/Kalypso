@@ -212,7 +212,7 @@ public class PrfSink implements IProfilSink
         Xs[i] = 0;
         Ys[i] = 0;
 
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
       }
     }
     db.setCoords( Xs, Ys );
@@ -261,7 +261,7 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.21", devider.getId().toString() ), e ) ); //$NON-NLS-1$
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.21", devider.getId().toString() ), e ) ); //$NON-NLS-1$
       }
     }
     dbw.setCoords( xs, ys );

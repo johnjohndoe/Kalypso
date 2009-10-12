@@ -56,6 +56,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
+import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.util.LogHelper;
 
@@ -98,14 +99,14 @@ public class LengthSectionParser
   private IStatus processIntern( final LogHelper log ) throws Exception
   {
     if( !m_lsFile.exists() )
-      return StatusUtilities.createErrorStatus( "Längsschnittdatei nicht vorhanden: " + m_lsFile.getName() );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.0") + m_lsFile.getName() ); //$NON-NLS-1$
 
     /* Add Input File to results */
-    m_resultEater.addResult( "LengthSection", m_lsFile );
-    log.log( false, " - Längsschnitt erzeugt." );
+    m_resultEater.addResult( "LengthSection", m_lsFile ); //$NON-NLS-1$
+    log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.1") ); //$NON-NLS-1$
 
-    final String strHeader = FileUtilities.toString( getClass().getResource( "resources/headerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
-    final String strFooter = FileUtilities.toString( getClass().getResource( "resources/footerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
+    final String strHeader = FileUtilities.toString( getClass().getResource( "resources/headerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE ); //$NON-NLS-1$
+    final String strFooter = FileUtilities.toString( getClass().getResource( "resources/footerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE ); //$NON-NLS-1$
 
     processLSFile( strHeader, strFooter, log );
 
@@ -131,7 +132,7 @@ public class LengthSectionParser
           return;
 
         /* Introduce space around 'NaN' and '***' values to make it parseable */
-        final String line = lineIterator.nextLine().replaceAll( "NaN", " -999.999 " );
+        final String line = lineIterator.nextLine().replaceAll( "NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final BigDecimal station = NumberUtils.parseQuietDecimal( line, 0, 11, IWspmTuhhConstants.STATION_SCALE );
         final BigDecimal runoff = NumberUtils.parseQuietDecimal( line, 17, 27, 3 );
@@ -146,7 +147,7 @@ public class LengthSectionParser
         if( sectionEnd )
         {
           closeProcessor( lsProc, previousRunoff );
-          log.log( false, "\tBearbeitet Längsschnittdaten für Abfluss: %.3f", runoff );
+          log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.2"), runoff ); //$NON-NLS-1$
           lsProc = new LengthSectionProcessor( m_outputDir, m_reach, header, footer, m_epsThinning, m_addRunoffToFilename );
         }
 

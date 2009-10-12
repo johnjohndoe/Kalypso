@@ -57,9 +57,9 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public class QIntervallResultCollection extends AbstractFeatureBinder
 {
-  public static final QName QNAME_F_QIntervallResultCollection = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "QIntervallResultCollection" );
+  public static final QName QNAME_F_QIntervallResultCollection = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "QIntervallResultCollection" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_QIntervallResultCollection_resultMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "resultMember" );
+  public static final QName QNAME_P_QIntervallResultCollection_resultMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "resultMember" ); //$NON-NLS-1$
 
   public QIntervallResultCollection( final Feature featureToBind )
   {

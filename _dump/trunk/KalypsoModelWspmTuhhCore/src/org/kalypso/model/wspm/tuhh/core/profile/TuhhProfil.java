@@ -131,12 +131,12 @@ public class TuhhProfil extends AbstractProfil
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     if( provider == null )
-      throw new IllegalStateException( Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.3", getType() ) ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.3", getType() ) ); //$NON-NLS-1$
 
     final IComponent marker = getPointPropertyFor( markerID );
     /* first check, if provider provides markerType */
     if( !provider.isMarker( markerID ) )
-      throw new IllegalStateException( Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.4", marker.getName() ) ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.4", marker.getName() ) ); //$NON-NLS-1$
     /* point has component already defined? */
     if( !hasPointProperty( marker ) )
     {

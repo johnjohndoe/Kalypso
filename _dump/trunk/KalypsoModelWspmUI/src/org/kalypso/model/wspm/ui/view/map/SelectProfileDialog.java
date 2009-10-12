@@ -133,7 +133,7 @@ public class SelectProfileDialog extends TitleAreaDialog
           final Feature waterbody = crossSection.getOwner();
 
           final String wn = FeatureUtils.getFeatureName( NS.GML3, waterbody );
-          final String s = String.format( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.3"), name, station, wn ); //$NON-NLS-1$
+          final String s = Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.3", name, station, wn ); //$NON-NLS-1$
 
           return s;
         }

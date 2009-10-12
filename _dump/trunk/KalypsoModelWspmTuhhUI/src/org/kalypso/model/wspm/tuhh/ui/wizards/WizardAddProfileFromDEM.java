@@ -41,14 +41,11 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author barbarins

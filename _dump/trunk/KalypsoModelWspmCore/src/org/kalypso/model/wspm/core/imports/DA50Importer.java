@@ -148,7 +148,7 @@ public class DA50Importer
     final double vl = Math.sqrt( vx * vx + vy * vy );
     if( vl == 0.0 )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getFormatString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
     }
 
     // den Vektor normieren
@@ -202,7 +202,7 @@ public class DA50Importer
   {
     final List<DA50Entry> result = new ArrayList<DA50Entry>();
 
-    final MultiStatus logStatus = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.core.imports.DA50Importer.2" ), null ); //$NON-NLS-1$
+    final MultiStatus logStatus = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.2" ), null ); //$NON-NLS-1$
 
     while( lnr.ready() )
     {
@@ -256,7 +256,7 @@ public class DA50Importer
       }
       catch( final Exception e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getFormatString( "org.kalypso.model.wspm.core.imports.DA50Importer.4", lnr.getLineNumber() ) ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.4", lnr.getLineNumber() ) ); //$NON-NLS-1$
         logStatus.add( status );
       }
     }

@@ -4,6 +4,8 @@
 	<!-- org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState -->
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:sld:default"
 		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.sld" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:sld:selected"
+		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState_selected.sld" />
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:featureview:default"
 		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.gft" />

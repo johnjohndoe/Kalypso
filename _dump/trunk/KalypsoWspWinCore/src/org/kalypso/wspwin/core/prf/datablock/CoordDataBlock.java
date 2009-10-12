@@ -158,7 +158,7 @@ public class CoordDataBlock extends AbstractDataBlock
         catch( NoSuchElementException e )
         {
           coords[counter] = 0.0;
-          m_logger.log( Level.SEVERE, String.format( Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.2"),dblStr,  counter + 1  , e.getLocalizedMessage()));  //$NON-NLS-1$
+          m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.2",dblStr,  counter + 1  , e.getLocalizedMessage()));  //$NON-NLS-1$
         }
         counter++;
         if( counter == count )

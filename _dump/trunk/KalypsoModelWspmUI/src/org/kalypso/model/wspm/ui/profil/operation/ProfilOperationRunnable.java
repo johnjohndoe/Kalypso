@@ -81,7 +81,7 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     }
     catch( final ExecutionException e )
     {
-      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, Messages.getFormatString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable.0",m_operation.getLabel()) , e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable.0",m_operation.getLabel()) , e ); //$NON-NLS-1$
     }
   }
 

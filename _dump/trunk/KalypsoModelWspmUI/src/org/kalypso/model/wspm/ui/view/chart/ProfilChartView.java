@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -167,13 +168,12 @@ public class ProfilChartView implements IChartPart, IProfilListener
   public Control createControl( final Composite parent )
   {
     m_chartComposite = new ChartComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
-    final GridData gD = new GridData( GridData.FILL_BOTH );
+    final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     gD.exclude = true;
     m_chartComposite.setLayoutData( gD );
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
     {
-
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
@@ -189,6 +189,8 @@ public class ProfilChartView implements IChartPart, IProfilListener
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
+    updateLayer();
+    
     return m_chartComposite;
   }
 
@@ -246,7 +248,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
       if( layer.isActive() )
         return layer.getId();
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   private final void restoreStateVisible( final ILayerManager mngr, final HashMap<String, Boolean> map )
@@ -424,6 +426,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
             || hint.isActivePointChanged() || hint.isActivePropertyChanged() )
         {
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
+          {
             if( layer instanceof IProfilChartLayer )
             {
               // TODO: Kim, wechsel der Achsentexte ermöglichen
@@ -441,6 +444,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
 // }
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
             }
+          }
           redrawChart();
         }
       }
@@ -500,7 +504,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_chartComposite != null && !m_chartComposite.isDisposed() )
     {
       m_profile.addProfilListener( this );
-      m_chartComposite.getChartModel().setTitle( Messages.getFormatString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
+      m_chartComposite.getChartModel().setTitle( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
       ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
       updateLayer();
     }
@@ -561,30 +565,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
       restoreStatePosition( lm, positions );
       restoreStateVisible( lm, visibility );
       restoreStateActive( lm, activeLayerId );
-
-      // activate first layer
-// if( activeLayer == null && lm.getLayers().length > 0 )
-// {
-// lm.getLayers()[0].setActive( true );
-// activeLayerChanged( lm.getLayers()[0] );
-// return;
-// }
-//
-// // reactivate layer
-// final IChartLayer layer = lm.getLayerById( activeLayerId );
-// if( layer != null )
-// {
-// layer.setActive( true );
-// activeLayerChanged( layer );
-// return;
-// }
-//
-// // old active Layer removed
-// if( lm.getLayers().length > 0 )
-// {
-// lm.getLayers()[0].setActive( true );
-// activeLayerChanged( lm.getLayers()[0] );
-// }
     }
   }
 }

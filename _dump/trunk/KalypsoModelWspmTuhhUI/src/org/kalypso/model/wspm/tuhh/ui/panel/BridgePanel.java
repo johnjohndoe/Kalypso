@@ -134,7 +134,7 @@ public class BridgePanel extends AbstractProfilView
             if( val == value )
               return;
 
-            final ProfilOperation operation = new ProfilOperation( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.0",m_property.getName()), getProfil(), true ); //$NON-NLS-1$
+            final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.0",m_property.getName()), getProfil(), true ); //$NON-NLS-1$
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
           }
@@ -184,7 +184,7 @@ public class BridgePanel extends AbstractProfilView
     }
     finally
     {
-      return Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3",label, property.getUnit()); //$NON-NLS-1$
+      return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3",label, property.getUnit()); //$NON-NLS-1$
     }
   }
 

@@ -184,7 +184,7 @@ public class WspLegendPopupDialog extends PopupDialog
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
 
       /* Show the error message to the user. */
-      setInfoText( String.format( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6" ), ex.getLocalizedMessage() ) ); //$NON-NLS-1$
+      setInfoText(  Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6" , ex.getLocalizedMessage() ) ); //$NON-NLS-1$
 
       return main;
     }

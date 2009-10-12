@@ -71,13 +71,13 @@ public class RauheitRule extends AbstractValidatorRule
     IComponent pointPropKST = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( pointPropKS == null && pointPropKST == null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Rauheiten fehlen", stationId, 0, "", pluginId ); //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3"), stationId, 0, "", pluginId );  //$NON-NLS-1$//$NON-NLS-2$
       return;
     }
 
     if( pointPropKS != null && pointPropKST != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "nur ein Rauheitstyp zulässig", stationId, 0, "", pluginId ,new DelRoughnessResolution(new String[]{IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS,IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST},null)); //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.1"), stationId, 0, "", pluginId ,new DelRoughnessResolution(new String[]{IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS,IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST},null));  //$NON-NLS-1$//$NON-NLS-2$
       return;
     }
 
@@ -99,12 +99,12 @@ public class RauheitRule extends AbstractValidatorRule
       if( value.isNaN() )
       {
         Object oVal = point.getValue( profil.indexOfProperty( pointProp ) );
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, String.format( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ), oVal ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR,  Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" , oVal ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
       }
       else if( value <= 0.0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.2", value ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.2", value ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         break;
       }
     }

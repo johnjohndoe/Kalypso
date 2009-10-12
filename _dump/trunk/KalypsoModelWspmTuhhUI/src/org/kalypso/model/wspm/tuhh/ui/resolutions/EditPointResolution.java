@@ -63,7 +63,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    */
   public EditPointResolution( final int index, final IComponent property, final double value )
   {
-    super( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,property.getName() ), null, null ); //$NON-NLS-1$ 
+    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,property.getName() ), null, null ); //$NON-NLS-1$ 
     m_index = index;
     m_propertyId = property.getId();
     m_value = value;
@@ -101,7 +101,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-     return super.getSerializedParameter()+";"+m_index+";"+m_propertyId+";"+m_value; //$NON-NLS-1$ //$NON-NLS-2$
+     return super.getSerializedParameter()+";"+m_index+";"+m_propertyId+";"+m_value; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)

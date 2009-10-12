@@ -53,28 +53,29 @@ public class Messages
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
+  private static final Object[] NO_ARGS = new Object[0];
+
   private Messages( )
   {
   }
 
-  public static String getString( String key )
+/*
+ * java reflections needs this method-signatur
+ */
+  public static String getString( final String key )
   {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
+    return getString( key, NO_ARGS );
   }
 
-  public static String getFormatString( final String key, Object... args )
+  public static String getString( final String key, final Object... args )
   {
     String formatStr = ""; //$NON-NLS-1$
     try
     {
       formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
       return String.format( formatStr, args );
     }
     catch( final MissingResourceException e )
@@ -83,8 +84,8 @@ public class Messages
     }
     catch( final IllegalFormatException e )
     {
+      e.printStackTrace();
       return '!' + formatStr + '!';
     }
-
   }
 }

@@ -56,7 +56,6 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IStrangSink;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -213,7 +212,7 @@ public class LngSink implements IStrangSink
         Xs[i] = 0;
         Ys[i] = 0;
 
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
       }
     }
     db.setCoords( Xs, Ys );
@@ -262,7 +261,7 @@ public class LngSink implements IStrangSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.21", devider.getId().toString() ), e ) ); //$NON-NLS-1$
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.21", devider.getId().toString() ), e ) ); //$NON-NLS-1$
       }
     }
     dbw.setCoords( xs, ys );
@@ -561,7 +560,7 @@ public class LngSink implements IStrangSink
    * @see org.kalypso.model.wspm.core.profil.serializer.IStrangSink#write(org.kalypso.model.wspm.core.profil.IProfil[], java.io.Writer)
    */
   @Override
-  public void write( IProfil[] profiles, Writer writer )
+  public void write( final IProfil[] profiles, final Writer writer )
   {
     write(profiles[0],writer);
     

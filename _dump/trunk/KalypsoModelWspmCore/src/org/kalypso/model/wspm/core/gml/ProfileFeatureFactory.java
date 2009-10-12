@@ -193,7 +193,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     final IFeatureType featureType = targetFeature.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ProfileFeatureFactory.QN_PROF_PROFILE ) )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.gml.ProfileFeatureFactory.0", targetFeature ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.gml.ProfileFeatureFactory.0", targetFeature ) ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
     try

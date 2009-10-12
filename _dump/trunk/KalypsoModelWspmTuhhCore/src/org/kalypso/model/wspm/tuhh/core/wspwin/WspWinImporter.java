@@ -166,7 +166,7 @@ public class WspWinImporter
       if( modelDescription.length() != 0 )
         modelDescription.append( "\n\n" ); //$NON-NLS-1$
 
-      modelDescription.append( Messages.getFormatString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10",wspwinDirectory.getAbsolutePath() ,DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) )) ); //$NON-NLS-1$
+      modelDescription.append( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10",wspwinDirectory.getAbsolutePath() ,DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) )) ); //$NON-NLS-1$
 
       final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
       if( wspwinModelDescription != null )
@@ -275,14 +275,14 @@ public class WspWinImporter
 
         if( Math.abs( profStation.doubleValue() - beanStation.doubleValue() ) > 0.001 )
         {
-          final String msg = String.format( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19"), bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
+          final String msg = Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
           status.add( StatusUtilities.createWarningStatus( msg ) );
           profile.setBigStation( new BigDecimal( bean.getStation() ) );
         }
       }
       catch( final IOException e )
       {
-        final String msg = Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.119", bean.getFileName() );//$NON-NLS-1$
+        final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.119", bean.getFileName() );//$NON-NLS-1$
         status.add( StatusUtilities.createStatus( IStatus.WARNING, msg, e ) );
       }
       catch( final GMLSchemaException e )

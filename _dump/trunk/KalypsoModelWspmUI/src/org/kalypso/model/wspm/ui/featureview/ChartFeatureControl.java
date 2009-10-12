@@ -273,13 +273,13 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     /* Get all elements for the extension point. */
-    IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" );
+    IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" ); //$NON-NLS-1$
     for( IConfigurationElement element : elements )
     {
       /* Get the id. */
-      String id = element.getAttribute( "id" );
+      String id = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id != null && id.length() > 0 && id.equals( chartProviderID ) )
-        return (IChartProvider) element.createExecutableExtension( "class" );
+        return (IChartProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
     }
 
     return null;

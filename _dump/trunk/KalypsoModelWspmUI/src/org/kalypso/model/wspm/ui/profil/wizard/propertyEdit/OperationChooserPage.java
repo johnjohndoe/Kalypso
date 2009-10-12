@@ -74,7 +74,6 @@ import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -349,7 +348,7 @@ public class OperationChooserPage extends WizardPage
     return false;
   }
 
-  public IProfilChange[] changeProfile( final IProfil profil, final Object[] properties )
+  public void changeProfile( final IProfil profil, final Object[] properties )
   {
     final IComponent[] propertyIds = new IComponent[properties.length];
     for( int i = 0; i < properties.length; i++ )
@@ -368,7 +367,7 @@ public class OperationChooserPage extends WizardPage
       }
       final String calculatorId = dialogSettings.get( SETTINGS_CALCULATOR_ID );
       if( calculatorId == null )
-        return new IProfilChange[0];
+        return;
 
       for( final PropertyCalculator pc : m_calculators )
       {
@@ -380,7 +379,7 @@ public class OperationChooserPage extends WizardPage
       }
     }
     final List<IRecord> selectedPoints = new ArrayList<IRecord>();
-    for( final IRecord point : profil.getPoints() )
+    for( final IRecord point : profil.getResult() )
     {
 
       if( isValid( profil, point, filterSet ) )
@@ -389,8 +388,8 @@ public class OperationChooserPage extends WizardPage
       }
     }
     if( m_selectedpoints != null && !m_selectedpoints.isEmpty() && filterSet.contains( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter" ) ) //$NON-NLS-1$
-      return calculator.calculate( m_value, propertyIds, addSelection( selectedPoints ) );
-    return calculator.calculate( m_value, propertyIds, selectedPoints );
+       calculator.calculate( m_value, propertyIds, addSelection( selectedPoints ) );
+    calculator.calculate( m_value, propertyIds, selectedPoints );
 
   }
 

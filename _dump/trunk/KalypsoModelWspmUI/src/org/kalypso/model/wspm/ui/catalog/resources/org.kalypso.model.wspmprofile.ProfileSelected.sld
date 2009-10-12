@@ -7,8 +7,6 @@
 		<Name>profileLine</Name>
 		<Title>Profillinie</Title>
 		<Abstract />
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>9.9999999901E8</MaxScaleDenominator>
 		<TextSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>profileLocation</ogc:PropertyName>

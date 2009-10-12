@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -51,8 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 
 /**

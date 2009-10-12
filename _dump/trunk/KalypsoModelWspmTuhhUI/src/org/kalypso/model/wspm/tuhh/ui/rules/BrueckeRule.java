@@ -214,8 +214,11 @@ public class BrueckeRule extends AbstractValidatorRule
       }
       int minmax = 0;
       int vegetation = Integer.MIN_VALUE;
+      
+      // sicher den ersten okB < minOK
+      // sicher den ersten ukB > maxUK
       Double minOK = Double.MAX_VALUE;
-      Double maxUK = Double.MIN_VALUE;
+      Double maxUK = -Double.MAX_VALUE;
 
       for( int i = outerLeft; i < outerRight; i++ )
       {

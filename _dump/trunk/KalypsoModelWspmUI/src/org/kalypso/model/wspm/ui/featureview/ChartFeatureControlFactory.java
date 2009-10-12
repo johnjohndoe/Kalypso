@@ -95,7 +95,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
     if( commandIds.length != commandStyles.length )
     {
-      final String msg = Messages.getFormatString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
       IStatus status = StatusUtilities.createStatus( IStatus.WARNING, msg, null );
       KalypsoCorePlugin.getDefault().getLog().log( status );
     }

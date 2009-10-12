@@ -393,7 +393,7 @@ public class PrfSource implements IProfilSource
 
     if( rTyp == null )
     {
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.26", rks ), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.26", rks ), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
     p.addPointProperty( rTyp );
@@ -432,7 +432,7 @@ public class PrfSource implements IProfilSource
       pos2 = (int) db.getY()[1];
     }
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.29", p.getStation() ) //$NON-NLS-1$
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.29", p.getStation() ) //$NON-NLS-1$
       , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
@@ -466,7 +466,7 @@ public class PrfSource implements IProfilSource
     if( pCount > 1 )
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.32", p.getStation() ) //$NON-NLS-1$
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.32", p.getStation() ) //$NON-NLS-1$
       , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
@@ -592,7 +592,7 @@ public class PrfSource implements IProfilSource
     if( pCount > 1 )
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.43", p.getStation() ) //$NON-NLS-1$
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.43", p.getStation() ) //$NON-NLS-1$
       , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
