@@ -61,7 +61,6 @@ import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -76,6 +75,7 @@ import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.i18n.I18nUtils;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -303,7 +303,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
 
     try
     {
-      ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor()  );
+      m_projectHandel.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor()  );
       // open modell.gml and hydrotop.gml file to write imported feature
       m_modelPath = new Path( m_projectHandel.getFullPath().append( "/modell.gml" ).toString() ); //$NON-NLS-1$
       final URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
@@ -452,19 +452,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
 
   private void copyResourcesToProject( final IPath path )
   {
-    final Locale locale = Locale.getDefault();
-    final String language = locale.getLanguage();
-
-    final String resourceLang = m_resourceBase + "_" + language + ".zip"; //$NON-NLS-1$ //$NON-NLS-2$
-    final String resourceDefault = m_resourceBase + ".zip"; //$NON-NLS-1$
-
     InputStream is = null;
     try
     {
-      is = getClass().getResourceAsStream( resourceLang );
-      if( is == null )
-        is = getClass().getResourceAsStream( resourceDefault );
-
+      is = I18nUtils.getLocaleResourceAsStream( getClass(), m_resourceBase, ".zip" );//$NON-NLS-1$
       ZipUtilities.unzip( is, path.toFile() );
       is.close();
     }
