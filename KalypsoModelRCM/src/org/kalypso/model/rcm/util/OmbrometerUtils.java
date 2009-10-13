@@ -53,14 +53,15 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.openjump.core.graph.delauneySimplexInsert.DTriangulationForJTS;
 
 import com.vividsolutions.jts.algorithm.ConvexHull;
@@ -125,7 +126,7 @@ public class OmbrometerUtils
     // - ombrometer into geo index for quicker search later
     // - feature changes for ombrometers to null, in order to delete old geometries
     final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<com.vividsolutions.jts.geom.Point>();
-    final SplitSort geoIndex = new SplitSort( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
+    final FeatureList geoIndex =  FeatureFactory.createFeatureList( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
     final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> changeMap = new HashMap<IOmbrometer, GM_Surface<GM_SurfacePatch>>();
     final List<Coordinate> crds = new ArrayList<Coordinate>();
     for( final Object listEntry : ombrometerList )
@@ -188,7 +189,7 @@ public class OmbrometerUtils
     return changeMap;
   }
 
-  private static IOmbrometer findOmbrometerFor( final GM_Surface<GM_SurfacePatch> surface, final SplitSort geoIndex )
+  private static IOmbrometer findOmbrometerFor( final GM_Surface<GM_SurfacePatch> surface, final FeatureList geoIndex )
   {
     final List< ? > query = geoIndex.query( surface.getEnvelope(), null );
     for( final Object object : query )
