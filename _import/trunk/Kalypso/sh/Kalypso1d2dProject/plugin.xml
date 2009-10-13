@@ -121,38 +121,8 @@
        </view>
    </extension>
 
-
      <extension point="org.eclipse.ui.handlers">
 
-        <handler
-              class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-              commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#SelectOneProfile">
-           <activeWhen>
-              <with
-                    variable="activeContexts">
-                 <iterate
-                       operator="or">
-                    <equals
-                          value="{org.kalypso.model.wspmprofile}Profile">
-                    </equals>
-                 </iterate>
-              </with>
-           </activeWhen>
-        </handler>
-
-     <!--*** _FlowRelationship (Parameters1D) context handler ***-->
-		 <handler
-	           class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-	           commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Parameters1D">
-		     <activeWhen>
-		         <with variable="activeContexts">
-		            <iterate operator="or">
-		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship"/>
-		            </iterate>
-		         </with>
-		     </activeWhen>
-		 </handler>
-	 <!--*** BoundaryCondition context handler ***-->
  	 <!--*** handlers for scenario management ***-->
  	 <!--*** import handlers ***-->
 	     <handler

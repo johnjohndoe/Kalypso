@@ -394,7 +394,7 @@
       	<reference definitionId="org.kalypso.ui.views.mapView.expressions.wspmProfile"/>
       </activeWhen>
       <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget" />
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget" />
       </class>
     </handler>
   </extension>
@@ -609,7 +609,9 @@
       <!-- WSPM-Profiles -->
       <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile" style="radio">
         <visibleWhen checkEnabled="false">
-      		<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+           <with variable="activeMapPanel">
+               <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+           </with>
         </visibleWhen>
       </command>
     </menuContribution>
