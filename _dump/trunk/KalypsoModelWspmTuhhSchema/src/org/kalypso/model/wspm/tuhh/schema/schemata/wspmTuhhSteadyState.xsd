@@ -493,9 +493,22 @@
 						<kapp:value>true</kapp:value>
 					</kapp:parameter>
 				</kapp:functionProperty>
+				<kapp:functionProperty kapp:functionId="org.kalypso.gml.functionProperty.copyProperty" kapp:property="tuhh:profileThroughputLocation">
+					<kapp:parameter>
+						<!-- TODO -->
+						<kapp:name>xpath</kapp:name>
+						<kapp:value>
+							tuhh:profileMember/wspmProf:Profile/wspmProf:profileThroughputLocation
+						</kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>copySet</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
 			</appinfo>
 			<documentation>
-				The profileLocation is in reality retrieved from the
+				The profileThroughputLocation is in reality retrieved from the
 				underlying profile.
 			</documentation>
 		</annotation>
@@ -520,6 +533,28 @@
 								by the
 								referenced profile-observation.
 							</appinfo>
+						</annotation>
+					</element>
+					<element name="profileThroughputLocation" type="gml:LineStringPropertyType" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<appinfo>
+								This property is backed by
+								profileMember, more explicit
+								by the
+								referenced profile-observation.
+							</appinfo>
+							<documentation xml:lang="de">
+								<label>Durchfluß</label>
+								<tooltip>Durchfluß</tooltip>
+								<description>Durchfluß</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Profile throughput location</label>
+								<tooltip>Profile throughput location</tooltip>
+								<description>
+									Profile throughput location
+								</description>
+							</documentation>
 						</annotation>
 					</element>
 					<!--

@@ -58,7 +58,8 @@
                                 Trapezen wird das Element member definiert. </documentation>
                         <appinfo xmlns:kapp="org.kalypso.appinfo">
                                 <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry" kapp:property="prof:profileLocation"/>
-                        </appinfo>
+                                <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.ProfileThroughputLocationCreator" kapp:property="prof:profileThroughputLocation"/>
+                        </appinfo>       
                 </annotation>
                 <complexContent>
                         <extension base="om:ObservationType">
@@ -111,6 +112,21 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
+                                        <element name="profileThroughputLocation" type="gml:LineStringPropertyType" minOccurs="0" maxOccurs="1">
+												<annotation>
+													<appinfo>This property is backed by the profile-observation.</appinfo>
+													<documentation xml:lang="de">
+														<label>Durchfluß</label>
+														<tooltip>Durchfluß</tooltip>
+														<description>Durchfluß</description>
+													</documentation>
+													<documentation xml:lang="en">
+														<label>Profile throughput location</label>
+														<tooltip>Profile throughput location</tooltip>
+														<description>Profile throughput location</description>
+													</documentation>
+												</annotation>
+										</element>
                                         <element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
                                                 <annotation>
                                                         <documentation xml:lang="de"> Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden. </documentation>

@@ -61,4 +61,24 @@
             </Stroke>
         </LineSymbolizer>
     </Rule>
+    <Rule>
+		<Name>Durchfluß Bereiche</Name>
+		<Title>Durchfluß Bereiche</Title>
+		<Abstract />
+		<MinScaleDenominator>0.0</MinScaleDenominator>
+		<MaxScaleDenominator>9.9999999901E8</MaxScaleDenominator>
+		
+		<LineSymbolizer uom="meter">
+			<Geometry>
+				<ogc:PropertyName>profileThroughputLocation</ogc:PropertyName>
+			</Geometry>
+			<Stroke>
+				<CssParameter name="stroke">#0055ff</CssParameter>
+				<CssParameter name="stroke-width">6.0</CssParameter>
+				<CssParameter name="stroke-linejoin">mitre</CssParameter>
+				<CssParameter name="stroke-opacity">0.6</CssParameter>
+				<CssParameter name="stroke-linecap">butt</CssParameter>
+			</Stroke>
+		</LineSymbolizer>
+	</Rule>
 </FeatureTypeStyle>

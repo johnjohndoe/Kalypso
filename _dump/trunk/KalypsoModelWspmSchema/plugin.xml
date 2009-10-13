@@ -20,6 +20,10 @@
             id="org.kalypso.model.wspm.functionProperty.profileGeometry"
             name="Profile-Location-Cacher"/>
       <function
+            class="org.kalypso.model.wspm.schema.gml.ProfileThroughputLocationCreator"
+            id="org.kalypso.model.wspm.functionProperty.ProfileThroughputLocationCreator"
+            name="Profile-Throughput-Location-Cacher"/>
+      <function
             class="org.kalypso.model.wspm.schema.gml.FixedResultDefinitionFeaturePropertyFunction"
             id="org.kalypso.model.wspm.functionProperty.fixedResultDefinition"
             name="Fixed-ResultDefinition"/>
