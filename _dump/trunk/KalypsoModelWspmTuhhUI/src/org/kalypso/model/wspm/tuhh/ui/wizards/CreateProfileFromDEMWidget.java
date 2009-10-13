@@ -6,7 +6,6 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,6 +36,9 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -185,6 +187,13 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
             {
               profileFeature = reach.createNewProfile();
               ProfileFeatureFactory.toFeature( profile, profileFeature );
+              
+              GMLWorkspace workspace = profileFeature.getWorkspace();
+              
+              Feature[] changed_features = new Feature[1];
+              changed_features[0] = profileFeature;
+              final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, reach.getFeature(), changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+              workspace.fireModellEvent( event );
             }
             catch( GMLSchemaException e )
             {
