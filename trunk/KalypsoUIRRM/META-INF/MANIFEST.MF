@@ -9,11 +9,11 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.core,
+ org.eclipse.core.expressions;bundle-version="3.4.100",
  org.kalypso.rrm.kalininmiljukov,
  org.kalypso.ui,
  org.eclipse.ui.intro,
  org.kalypso.NACalcJob,
- org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
  org.kalypso.afgui;bundle-version="0.0.0",
  org.kalypso.project.database.client;bundle-version="1.0.0",
  org.kalypso.simulation.ui;bundle-version="0.0.1"
