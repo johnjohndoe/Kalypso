@@ -20,6 +20,10 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
+        <mapv:layer visible="true" name="%fenet.mapv.layer.2D-Netzparameter" id="ID_14" featurePath="#fid#root/flowRelationshipMember[_FlowRelation2D]" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
+            <templ:property name="deleteable">false</templ:property>
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:polynome</templ:legendicon>
+        </mapv:layer>
         <mapv:layer visible="true" name="Demo Strang" featurePath="#fid#RiverProfileNetwork12125819001485/riverProfile" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/terrain.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">true</templ:property>
