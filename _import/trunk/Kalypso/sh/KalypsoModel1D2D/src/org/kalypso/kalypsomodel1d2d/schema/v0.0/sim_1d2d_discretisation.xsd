@@ -38,23 +38,66 @@
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 	<!-- DiscretisationModel root element -->
-	<xs:element name="DiscretisationModel" type="wb1d2d:DiscretisationModelType"
+	<xs:element name="DiscretisationModel" type="wb1d2d:DiscretisationModelType_V2"
 		substitutionGroup="simBase:_FEDiscretisationModel" />
-	<xs:complexType name="DiscretisationModelType">
+	<xs:complexType name="DiscretisationModelType_V2">
 		<xs:complexContent>
-			<xs:extension base="simBase:FEAbstractDiscretisationModelType">
+			<xs:extension base="wb1d2d:DiscretisationModelType_V1">
 				<xs:sequence>
+					<xs:element name="mesh" type="wb1d2d:MeshPropertyType" />
 					<xs:element ref="wb1d2d:complexElement" minOccurs="1"
 						maxOccurs="unbounded" />
-					<xs:element ref="wb1d2d:element" minOccurs="1"
-						maxOccurs="unbounded" />
-					<xs:element ref="wb1d2d:edge" minOccurs="1" maxOccurs="unbounded" />
-					<xs:element ref="wb1d2d:node" minOccurs="1" maxOccurs="unbounded" />
 					<xs:element ref="wb1d2d:continuityLine" minOccurs="1"
 						maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="MeshPropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:Mesh" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<xs:element name="Mesh" type="wb1d2d:MeshType" substitutionGroup="gml:_Feature" />
+	<xs:complexType name="MeshType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="polyhedralSurfaceMember" type="wb1d2d:PolyhedralSurfacePropertyType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PolyhedralSurfacePropertyType">
+		<xs:sequence>
+			<xs:element ref="gml:PolyhedralSurface" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="DiscretisationModelType_V1">
+		<xs:complexContent>
+			<xs:extension base="simBase:FEAbstractDiscretisationModelType">
+				<xs:sequence>
+					<!-- element deprecated in V2 -->
+					<xs:element ref="wb1d2d:element" minOccurs="0"
+						maxOccurs="unbounded" />
+					<!-- edge deprecated in V2 -->
+					<xs:element ref="wb1d2d:edge" minOccurs="0" maxOccurs="unbounded" />
+					<!-- node deprecated in V2 -->
+					<xs:element ref="wb1d2d:node" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="element" type="wb1d2d:ElementPropertyType_V1" />
+	<xs:complexType name="ElementPropertyType_V1">
+		<xs:sequence>
+			<xs:element ref="gml:_Feature" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 
 	<!--
@@ -164,7 +207,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="wb1d2d:CalculationUnitType">
+			<xs:extension base="wb1d2d:CoupledCalculationUnitType">
 				<xs:sequence>
 					<!--
 						TODO: change min- and max-Occurs to 0 to allow only referenced
@@ -172,6 +215,32 @@
 					-->
 					<xs:element ref="wb1d2d:calculationUnit" minOccurs="0"
 						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoupledCalculationUnitType">
+		<xs:annotation>
+			<xs:documentation>
+				calculation unit with subunits only
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:CalculationUnitType">
+				<xs:sequence>
+					<xs:element name="CoupledSimulation" type="xs:boolean"
+						default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Gekoppelte Berechnung
+								Gekoppelte Berechnung
+							</xs:documentation>
+							<xs:documentation>
+								Coupled Simulation
+								Coupled Simulation
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -212,13 +281,15 @@
 							<xs:documentation>
 								Transition type:
 
-								Transition element type (1D to 2D, or 2D to 1D)
+								Transition element type (1D to
+								2D, or 2D to 1D)
 								
 							</xs:documentation>
 							<xs:documentation>
 								1D-2D-Linienkopplung Typ:
 
-								1D-2D-Linienkopplung Typ (1D/2D oder 2D/1D)
+								1D-2D-Linienkopplung
+								Typ (1D/2D oder 2D/1D)
 								
 							</xs:documentation>
 						</xs:annotation>
@@ -291,14 +362,6 @@
 		elements
 		=================================================================
 	-->
-	<!-- property -->
-	<xs:element name="element" type="wb1d2d:ElementPropertyType" />
-	<xs:complexType name="ElementPropertyType">
-		<xs:sequence>
-			<xs:element ref="wb1d2d:Element" minOccurs="0" maxOccurs="1" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
 	<!-- Element (abstract) -->
 	<xs:element name="Element" type="wb1d2d:ElementType"
 		substitutionGroup="gml:_Feature" abstract="true" />

@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Dejan Antanaskovic
  * 
  */
-public class CalculationUnit1D2D extends CalculationUnit implements ICalculationUnit1D2D
+public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalculationUnit1D2D
 {
   private final IFeatureWrapperCollection<ICalculationUnit> m_subCalculationUnits;
 

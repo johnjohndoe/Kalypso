@@ -68,7 +68,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     return m_result;
   }
 
-  // Ignore deprecation, we are using this stuff for backwards compability
+  // Ignore deprecation, we are using this stuff for backwards compatibility
   @SuppressWarnings("deprecation")
   protected IStatus execute( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {

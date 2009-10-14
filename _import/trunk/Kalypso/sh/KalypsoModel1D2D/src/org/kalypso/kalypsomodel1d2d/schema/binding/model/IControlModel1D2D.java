@@ -59,7 +59,6 @@ import org.kalypso.observation.result.TupleResult;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked")
 public interface IControlModel1D2D extends IControlModel
 {
   public static final QName QNAME_PROPERTY_RESTART_INFO = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "restartInfoMember" ); //$NON-NLS-1$
@@ -136,7 +135,7 @@ public interface IControlModel1D2D extends IControlModel
 
   public Double get_P_BOTTOM( );
 
-//changed to string to allow more flexible expansion of "Relaxation Factor"
+  // changed to string to allow more flexible expansion of "Relaxation Factor"
   public String get_RelaxationsFactor( );
 
   public void setCalculationUnit( ICalculationUnit calUnit );

@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Patrice Congo
  * 
  */
-public interface ICalculationUnit1D2D extends ICalculationUnit
+public interface ICalculationUnit1D2D extends ICoupledCalculationUnit
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D2D" ); //$NON-NLS-1$
 

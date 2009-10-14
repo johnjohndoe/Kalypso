@@ -76,6 +76,9 @@ public interface IFEDiscretisationModel1d2d extends IModel
   public final static QName WB1D2D_PROP_CONTINUITY_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
 
   public final static QName WB1D2D_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
+  
+  public final static QName WB1D2D_PROP_MESH = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "mesh" ); //$NON-NLS-1$
+  public final static QName WB1D2D_PROP_MESH_SURFACE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "polyhedralSurfaceMember" ); //$NON-NLS-1$
 
   /**
    * Finds an edge given two bounding nodes. If a the found edge does not have the direction from node0 to node1 a

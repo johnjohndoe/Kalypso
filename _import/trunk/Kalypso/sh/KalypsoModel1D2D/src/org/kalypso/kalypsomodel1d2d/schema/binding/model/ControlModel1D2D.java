@@ -74,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * @author Patrice Congo
  * @author Madanagopal
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class ControlModel1D2D extends AbstractFeatureBinder implements IControlModel1D2D
 {
@@ -169,6 +169,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getTimeSteps()
    */
+  @SuppressWarnings("unchecked")
   public IObservation<TupleResult> getTimeSteps( )
   {
     try
@@ -443,7 +444,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new RuntimeException(Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D.0"), e ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D.0" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -495,21 +496,21 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor()
-   * changed to string to allow more flexible expansion of "Relaxation Factor"
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor() changed to string
+   *      to allow more flexible expansion of "Relaxation Factor"
    */
   public String get_RelaxationsFactor( )
   {
     return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   }
-  
-//  /**
-//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor()
-//   */
-//  public Double get_RelaxationsFactor( )
-//  {
-//    return (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
-//  }
+
+  // /**
+  // * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor()
+  // */
+  // public Double get_RelaxationsFactor( )
+  // {
+  // return (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
+  // }
 
   public boolean isSteadySelected( )
   {
