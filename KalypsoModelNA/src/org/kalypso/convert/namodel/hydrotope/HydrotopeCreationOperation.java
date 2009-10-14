@@ -73,7 +73,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -244,7 +243,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           else
             hydrotop.setLanduse( featureLanduse.getName() );
           hydrotop.setDrainageType( landuse.getDrainageType() );
-          hydrotop.setCorrSealing( landuse.getCorrSealing() );
+          final Double corrSealing = landuse.getCorrSealing();
+          hydrotop.setCorrSealing( corrSealing );
 
           final IFeatureBindingCollection<Feature> landuseSudsCollection = landuse.getSudCollection();
           final IFeatureBindingCollection<Feature> hydrotopeSudsCollection = hydrotop.getSudCollection();

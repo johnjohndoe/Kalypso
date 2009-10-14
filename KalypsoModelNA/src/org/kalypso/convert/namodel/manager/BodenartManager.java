@@ -150,19 +150,44 @@ public class BodenartManager extends AbstractManager
     asciiBuffer.getBodartBuffer().append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" ); //$NON-NLS-1$
     asciiBuffer.getBodartBuffer().append( "                [mm/dm] [mm/dm] [mm/dm]  [mm/d] [-]\n" ); //$NON-NLS-1$
     Iterator iter = list.iterator();
+    final List<String> names = new ArrayList<String>();
     while( iter.hasNext() )
     {
       final Feature bodenartFE = (Feature) iter.next();
       // TODO: nur die schreiben, die auch in Bodentyp verwendet werden.
       writeFeature( asciiBuffer, bodenartFE );
+      names.add( bodenartFE.getName() );
     }
-
+    
+    /* needed for suds, fixed values temporarily...
+    mulde kap 1.0 2.0 99.0 8640.0 0.01
+    rein kap 11.5 28.5 38.5 864.0 0.50
+    filter kap 4.5 36.0 42.0 3110.0 0.50
+    base kap 4.5 19.0 51.0 3110.0 0.50
+    GR-stau kap 1.0 2.0 99.0 8640.0 0.01
+    Substr kap 4.5 19.0 42.0 350.0 0.25
+    Drain kap 4.5 36.0 42.0 4000.0 0.25     
+  */
+    if(!names.contains( "mulde" ))
+      asciiBuffer.getBodartBuffer().append("mulde kap 1.0 2.0 99.0 8640.0 0.01\n");
+    if(!names.contains( "rein" ))
+      asciiBuffer.getBodartBuffer().append("rein kap 11.5 28.5 38.5 864.0 0.50\n");
+    if(!names.contains( "filter" ))
+      asciiBuffer.getBodartBuffer().append("filter kap 4.5 36.0 42.0 3110.0 0.50\n");
+    if(!names.contains( "base" ))
+      asciiBuffer.getBodartBuffer().append("base kap 4.5 19.0 51.0 3110.0 0.50\n");
+    if(!names.contains( "GR-stau" ))
+      asciiBuffer.getBodartBuffer().append("GR-stau kap 1.0 2.0 99.0 8640.0 0.01\n");
+    if(!names.contains( "Substr" ))
+      asciiBuffer.getBodartBuffer().append("Substr kap 4.5 19.0 42.0 350.0 0.25\n");
+    if(!names.contains( "Drain" ))
+      asciiBuffer.getBodartBuffer().append("Drain kap 4.5 36.0 42.0 4000.0 0.25\n");
   }
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception
   {
     // (name,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
-    asciiBuffer.getBodartBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "*" ) + " kap "  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+    asciiBuffer.getBodartBuffer().append( FortranFormatHelper.printf( feature.getName(), "*" ) + " kap "  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
         + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typwp" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typfk" ), "*" ) + " "  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
         + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbfm" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typkf" ), "*" ) + " "  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
         + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbf0" ), "*" ) + "\n" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$

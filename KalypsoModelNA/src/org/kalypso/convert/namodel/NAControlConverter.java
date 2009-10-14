@@ -51,11 +51,16 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.schema.binding.suds.AbstractSud;
+import org.kalypso.convert.namodel.schema.binding.suds.Greenroof;
+import org.kalypso.convert.namodel.schema.binding.suds.Swale;
+import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -169,9 +174,14 @@ public class NAControlConverter
     // sollte nicht bei der Ausgabe erzeugt werden, da Berechnung mit kap. Aufstieg noch nicht implementiert!
     b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_VET_PROP ) ) + "       Evapotranspiration         .vet\n" ); //$NON-NLS-1$
+
+    
     // FIXME die mulden-rigolen sind abhänging von der version der exe. muss erst noch angepasst werden. rechnet jetzt
     // nur mit der v2.5 (ask Christoph)
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QMR_PROP ) ) + "       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
+//    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QMR_PROP ) ) + "       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
+    
+    
+    
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_HYD_PROP ) ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
     // if "2": output of *.txt and *.bil
     if( ((Boolean) (controlFE.getProperty( NaModelConstants.NACONTROL_BIL_PROP ))).booleanValue() )
@@ -182,6 +192,26 @@ public class NAControlConverter
     // Folgende Dateien werden zusätzlich mit Speicherinhalt generiert .sph, .spv, .spn, .spb
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SPI_PROP ) ) + "       Speicherinhalt             .spi\n" ); //$NON-NLS-1$
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SUP_PROP ) ) + "       Speicherueberlauf          .sup\n" ); //$NON-NLS-1$
+
+    final GMLWorkspace sudsWorkspace = conf.getSudsWorkspace();
+    boolean hasGreenRoofs = false;
+    boolean hasSwaleInfiltrationDitches = false;
+    boolean hasSwales = false;
+    if( sudsWorkspace != null )
+    {
+      final List<AbstractSud> suds = (List<AbstractSud>) sudsWorkspace.getRootFeature().getProperty( new QName( "http://sourceforge.kalypso.org/schemata/hydrology/suds", "sudMember" ) );
+      for( final AbstractSud sudsItem : suds )
+      {
+        hasGreenRoofs |= sudsItem instanceof Greenroof;
+        hasSwaleInfiltrationDitches |= sudsItem instanceof SwaleInfiltrationDitch;
+        hasSwales |= sudsItem instanceof Swale;
+      }
+    }
+    b.append( String.format( "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Überlauf", ".qgu" ) );
+    b.append( String.format( "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Drainrohr", ".qgr" ) );
+    b.append( String.format( "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Überlauf Mulden-Rigolen", ".que" ) );
+    b.append( String.format( "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Drainrohr Mulden-Rigolen", ".qmr" ) );
+    b.append( String.format( "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) );
   }
 
   private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final StringBuffer b, final IDManager idManager )
@@ -249,16 +279,16 @@ public class NAControlConverter
         preForm = 4;
       }
       else
-        System.out.println( Messages.getString("org.kalypso.convert.namodel.NAControlConverter.49") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAControlConverter.49" ) ); //$NON-NLS-1$
 
       b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" ); //$NON-NLS-1$
-      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( conf.getAnnuality(), "f6.3" ) + " " + FortranFormatHelper.printf( conf.getDuration(), "f9.3" )  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( conf.getAnnuality(), "f6.3" ) + " " + FortranFormatHelper.printf( conf.getDuration(), "f9.3" ) //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
           + " " + Integer.toString( preForm ) + " " + "start" + File.separator + startFile.getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     else
     {
       b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" ); //$NON-NLS-1$
-      b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName() + "\n" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+      b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName() + "\n" ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     }
   }
 
