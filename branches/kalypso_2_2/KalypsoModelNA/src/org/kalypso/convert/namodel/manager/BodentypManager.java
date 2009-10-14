@@ -183,15 +183,38 @@ public class BodentypManager extends AbstractManager
     final List<Feature> list = (List<Feature>) rootFeature.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
     asciiBuffer.getBodtypBuffer().append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
     final Iterator<Feature> iter = list.iterator();
+    final List<String> names = new ArrayList<String>();
     while( iter.hasNext() )
     {
       final Feature bodentypFE = iter.next();
       final String bodenTypName = bodentypFE.getName();
-
+      names.add( bodenTypName );
       // TODO: nur die schreiben, die auch in Hydrotopdatei vorkommen
       // if( asciiBuffer.writeFeature( bodentypFE ) )
       writeFeature( asciiBuffer, paraWorkspace, bodentypFE );
     }
+    
+    // needed for suds, fixed values temporarily...
+    /*
+      mrs          4
+      mulde   4.0 0.0 
+      rein    3.0 0.0 
+      filter  7.0 0.0 
+      base    1.0 0.0 
+      grs          3
+      GR-stau 2.0 0.0 
+      Substr  2.0 0.0 
+      Drain   1.0 0.0
+      mulde_b      2
+      mulde   4.0 0.0 
+      rein    3.0 0.0    
+     */
+    if( !names.contains( "mrs" ) )
+      asciiBuffer.getBodtypBuffer().append( "mrs          4\nmulde   4.0 0.0\nrein    3.0 0.0\nfilter  7.0 0.0\nbase    1.0 0.0\n" );
+    if( !names.contains( "grs" ) )
+      asciiBuffer.getBodtypBuffer().append( "grs          3\nGR-stau 2.0 0.0\nSubstr  2.0 0.0\nDrain   1.0 0.0\n" );
+    if( !names.contains( "mulde_b" ) )
+      asciiBuffer.getBodtypBuffer().append( "mulde_b      2\nmulde   4.0 0.0\nrein    3.0 0.0\n" );
   }
 
   private void writeFeature( final AsciiBuffer asciiBuffer, final GMLWorkspace paraWorkspace, final Feature feature ) throws Exception
@@ -220,7 +243,5 @@ public class BodentypManager extends AbstractManager
         Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", feature.getId(), fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) ) ); //$NON-NLS-1$
       }
     }
-
   }
-
 }

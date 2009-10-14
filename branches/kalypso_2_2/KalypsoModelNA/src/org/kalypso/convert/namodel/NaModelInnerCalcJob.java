@@ -162,7 +162,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_13 = "start/kalypso_2.1.3.exe"; //$NON-NLS-1$
 
-  private final String EXE_FILE_2_141 = "start/kalypso_2.1.4.1.exe"; //$NON-NLS-1$
+  private final String EXE_FILE_2_141 = "start/kalypso_2.1.4.1_SUDS.exe"; //$NON-NLS-1$
 
   private final String EXE_FILE_TEST = "start/kalypso_test.exe"; //$NON-NLS-1$
 
@@ -665,12 +665,6 @@ public class NaModelInnerCalcJob implements ISimulation
     // set rootnode
     conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP ) );
 
-    // generate control files
-    NAControlConverter.featureToASCII( conf, tmpDir, controlWorkspace, modellWorkspace );
-
-    // update model with factor values from control
-    updateFactorParameter( modellWorkspace );
-
     // generate modell files
     conf.setModelWorkspace( modellWorkspace );
     conf.setParameterWorkspace( parameterWorkspace );
@@ -678,6 +672,12 @@ public class NaModelInnerCalcJob implements ISimulation
     conf.setSynthNWorkspace( synthNWorkspace );
     conf.setLanduseWorkspace( landuseWorkspace );
     conf.setSudsWorkspace( sudsWorkspace );
+    
+    // generate control files
+    NAControlConverter.featureToASCII( conf, tmpDir, controlWorkspace, modellWorkspace );
+    
+    // update model with factor values from control
+    updateFactorParameter( modellWorkspace );
 
     final NAModellConverter main = new NAModellConverter( conf );
     main.write();
