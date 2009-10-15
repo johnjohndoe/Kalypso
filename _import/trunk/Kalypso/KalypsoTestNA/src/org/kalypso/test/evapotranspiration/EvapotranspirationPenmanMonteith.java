@@ -81,18 +81,18 @@ public class EvapotranspirationPenmanMonteith extends TestCase
 
   public void testCalcEvapotranspirationPenmanMonteith( ) throws SensorException, FactoryException, JAXBException, IOException
   {
-    File zmlClimateFile = new File( "C:\\TMP\\eva\\input\\Climate.zml" );
-    IObservation obsClimate = ZmlFactory.parseXML( zmlClimateFile.toURL(), "" );
+    final File zmlClimateFile = new File( "C:\\TMP\\eva\\input\\Climate.zml" );
+    final IObservation obsClimate = ZmlFactory.parseXML( zmlClimateFile.toURL(), "" );
     // calculate Penman-Monteith
-    IObservation obsEva = calcPenmanMonteith( obsClimate );
+    final IObservation obsEva = calcPenmanMonteith( obsClimate );
     final Observation observation = ZmlFactory.createXML( obsEva, null );
-    FileOutputStream outs = new FileOutputStream( new File( "C:\\TMP\\eva\\out\\PenmanMonteith.zml" ) );
+    final FileOutputStream outs = new FileOutputStream( new File( "C:\\TMP\\eva\\out\\PenmanMonteith.zml" ) );
     ZmlFactory.getMarshaller().marshal( observation, outs );
     outs.close();
 
   }
 
-  private IObservation calcPenmanMonteith( IObservation inputClimateObs ) throws SensorException
+  private IObservation calcPenmanMonteith( final IObservation inputClimateObs ) throws SensorException
   {
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
@@ -105,12 +105,12 @@ public class EvapotranspirationPenmanMonteith extends TestCase
 
     for( int i = 0; i < valuesClimate.getCount(); i++ )
     {
-      Date date = (Date) valuesClimate.getElement( i, dateAxis );
+      final Date date = (Date) valuesClimate.getElement( i, dateAxis );
       dateCollector.add( date );
-      Double valueT = (Double) valuesClimate.getElement( i, tAxis );
-      Double valueU = (Double) valuesClimate.getElement( i, uAxis );
-      Double valueSun = (Double) valuesClimate.getElement( i, sunAxis );
-      Double valueWind = (Double) valuesClimate.getElement( i, windAxis );
+      final Double valueT = (Double) valuesClimate.getElement( i, tAxis );
+      final Double valueU = (Double) valuesClimate.getElement( i, uAxis );
+      final Double valueSun = (Double) valuesClimate.getElement( i, sunAxis );
+      final Double valueWind = (Double) valuesClimate.getElement( i, windAxis );
       Double Es;
       Double s;
       // Berechnung des Sättigungddampfdruckes
@@ -124,50 +124,50 @@ public class EvapotranspirationPenmanMonteith extends TestCase
         Es = 6.11 * Math.exp( (17.62 * valueT) / (243.12 + valueT) );
         s = Es * (4284d / Math.pow( (243.12 + valueT), 2 ));
       }
-      Double gamma = getGamma( valueT );
-      Double f = (Es / s) * ((gamma * 3.75) / (valueT + 273d));
-      Double v2 = valueWind * (4.2 / (Math.log( m_hoehe ) + 3.5));
-      Double g = s / (s + gamma * (1d + 0.34 * v2));
-      Double L = 249.8 - 0.242 * valueT;
-      int JT = getJT( date );
-      Double chi = 0.0172 * JT - 1.39;
-      Double S0 = 12.3 + Math.sin( chi) * (4.3 + (m_latitude - 51d) / 6d); //Math.sin erfordert rad - chi ist in rad
-      Double R0 = 245d * (9.9 + 7.08 * Math.sin( chi ) + 0.18 * (m_latitude - 51d) * (Math.sin( chi ) - 1d));
-      Double RG = R0 * (0.19 + 0.55 * valueSun / S0);
+      final Double gamma = getGamma( valueT );
+      final Double f = (Es / s) * ((gamma * 3.75) / (valueT + 273d));
+      final Double v2 = valueWind * (4.2 / (Math.log( m_hoehe ) + 3.5));
+      final Double g = s / (s + gamma * (1d + 0.34 * v2));
+      final Double L = 249.8 - 0.242 * valueT;
+      final int JT = getJT( date );
+      final Double chi = 0.0172 * JT - 1.39;
+      final Double S0 = 12.3 + Math.sin( chi) * (4.3 + (m_latitude - 51d) / 6d); //Math.sin erfordert rad - chi ist in rad
+      final Double R0 = 245d * (9.9 + 7.08 * Math.sin( chi ) + 0.18 * (m_latitude - 51d) * (Math.sin( chi ) - 1d));
+      final Double RG = R0 * (0.19 + 0.55 * valueSun / S0);
       Double Rn = (1d - 0.23) * RG - 0.00000049 * Math.pow( (273d + valueT), 4d ) * (0.1 + 0.9 * valueSun / S0) * (0.34 - 0.044 * Math.sqrt( Es * valueU / 100d ));
       if( Rn < 0 )
         Rn = 0.0;
 
-      Double valueET = g * (Rn / L + f * 24d * v2 * (1 - valueU / 100));
+      final Double valueET = g * (Rn / L + f * 24d * v2 * (1 - valueU / 100));
       valueCollector.add( valueET );
     }
-    Object[][] tupelData = new Object[dateCollector.size()][2];
+    final Object[][] tupelData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tupelData[i][0] = dateCollector.get( i );
       tupelData[i][1] = valueCollector.get( i );
     }
-    IAxis[] axis = createAxis();
-    SimpleTuppleModel evaHaudeTupple = new SimpleTuppleModel( axis, tupelData );
+    final IAxis[] axis = createAxis();
+    final SimpleTuppleModel evaHaudeTupple = new SimpleTuppleModel( axis, tupelData );
     final MetadataList metaDataList = new MetadataList();
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, evaHaudeTupple );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, metaDataList, axis, evaHaudeTupple );
     return observation;
 
   }
 
-  private int getJT( Date inputDate )
+  private int getJT( final Date inputDate )
   {// Tage seit Jahresbeginn
-    Date startDate = new Date();
+    final Date startDate = new Date();
     startDate.setTime( inputDate.getTime() );
     startDate.setMonth( 0 );
     startDate.setDate( 1 );
     // zeit seit Jahresbeginn in Millisekunden
-    long diffTime = (inputDate.getTime() - startDate.getTime());
-    int days = (int) (diffTime / (1000 * 60 * 60 * 24) + 1);
+    final long diffTime = (inputDate.getTime() - startDate.getTime());
+    final int days = (int) (diffTime / (1000 * 60 * 60 * 24) + 1);
     return days;
   }
 
-  private double getGamma( Double valueT )
+  private double getGamma( final Double valueT )
   {
     // gamma: Psychrometerkonstante
     Double gamma;

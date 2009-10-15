@@ -46,12 +46,12 @@ public class EvapotranspirationHaude extends TestCase
 
   public void testCalcEvapotranspirationHaude( ) throws Exception
   {
-    File zmlTUFile = new File( "C:\\TMP\\eva\\input\\Climate.zml" );
-    IObservation obsTU = ZmlFactory.parseXML( zmlTUFile.toURL(), "TU" );
+    final File zmlTUFile = new File( "C:\\TMP\\eva\\input\\Climate.zml" );
+    final IObservation obsTU = ZmlFactory.parseXML( zmlTUFile.toURL(), "TU" );
     // calculate haude
-    IObservation obsEva = calcHaude( obsTU );
+    final IObservation obsEva = calcHaude( obsTU );
     final Observation observation = ZmlFactory.createXML( obsEva, null );
-    File outDir = new File( "C:\\TMP\\eva\\out\\Haude.zml" );
+    final File outDir = new File( "C:\\TMP\\eva\\out\\Haude.zml" );
     // File outFile = File.createTempFile( "Haude", ".zml", outDir );
     final FileOutputStream outs = new FileOutputStream( outDir );
     ZmlFactory.getMarshaller().marshal( observation, outs );
@@ -66,7 +66,7 @@ public class EvapotranspirationHaude extends TestCase
     return axis;
   }
 
-  private SimpleObservation calcHaude( IObservation inputTUObs ) throws SensorException
+  private SimpleObservation calcHaude( final IObservation inputTUObs ) throws SensorException
   {
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
@@ -77,10 +77,10 @@ public class EvapotranspirationHaude extends TestCase
 
     for( int i = 0; i < valuesTU.getCount(); i++ )
     {
-      Date date = (Date) valuesTU.getElement( i, dateTAxis );
+      final Date date = (Date) valuesTU.getElement( i, dateTAxis );
       dateCollector.add( date );
-      Double valueT = (Double) valuesTU.getElement( i, tAxis );
-      Double valueU = (Double) valuesTU.getElement( i, uAxis );
+      final Double valueT = (Double) valuesTU.getElement( i, tAxis );
+      final Double valueU = (Double) valuesTU.getElement( i, uAxis );
       Double valueES;
       // Berechnung des Sättigungddampfdruckes
       if( valueT < 0.0 )
@@ -92,43 +92,43 @@ public class EvapotranspirationHaude extends TestCase
         valueES = 6.11 * Math.exp( (17.62 * valueT) / (243.12 + valueT) );
       }
 
-      Double valueE = valueES * valueU / 100d;
-      Double haudeFaktor = getHaudeFaktor( date );
+      final Double valueE = valueES * valueU / 100d;
+      final Double haudeFaktor = getHaudeFaktor( date );
       Double valueET = haudeFaktor * (valueES - valueE);
       if( m_useCorr )
       {
-        double corrFaktor = getCorrFaktor( date );
+        final double corrFaktor = getCorrFaktor( date );
         valueET = corrFaktor * valueET;
       }
       valueCollector.add( valueET );
     }
-    Object[][] tupelData = new Object[dateCollector.size()][2];
+    final Object[][] tupelData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tupelData[i][0] = dateCollector.get( i );
       tupelData[i][1] = valueCollector.get( i );
     }
-    IAxis[] axis = createAxis();
-    SimpleTuppleModel evaHaudeTupple = new SimpleTuppleModel( axis, tupelData );
+    final IAxis[] axis = createAxis();
+    final SimpleTuppleModel evaHaudeTupple = new SimpleTuppleModel( axis, tupelData );
     final MetadataList metaDataList = new MetadataList();
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, evaHaudeTupple );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, metaDataList, axis, evaHaudeTupple );
     return observation;
   }
 
-  private double getHaudeFaktor( Date date )
+  private double getHaudeFaktor( final Date date )
   {
     // Parameter aus DVWK 238 Tafel 6.1
     final double[] haudeParam = new double[] { 0.22, 0.22, 0.22, 0.29, 0.29, 0.28, 0.26, 0.25, 0.23, 0.22, 0.22, 0.22 };
-    int month = date.getMonth();
+    final int month = date.getMonth();
     return haudeParam[month];
 
   }
 
-  private double getCorrFaktor( Date date )
+  private double getCorrFaktor( final Date date )
   {
     // Korrekturwerte zum Umrechnen der Haude Werte in Penman-Monteith Ergebnisse (Station Fuhlsbüttel)
     final double[] corrParam = new double[] { 2.146, 2.388, 2.787, 2.149, 2.172, 2.212, 2.259, 2.173, 2.371, 2.195, 1.983, 2.022 };
-    int month = date.getMonth();
+    final int month = date.getMonth();
     return corrParam[month];
 
   }
