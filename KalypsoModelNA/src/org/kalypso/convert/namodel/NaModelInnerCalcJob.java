@@ -1296,7 +1296,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // create observation object
         final String titleForObservation = DefaultPathGenerator.generateTitleForObservation( feature, titlePropName, suffix );
 
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", titleForObservation, false, null, metadataList, axis, qTuppelModel ); //$NON-NLS-1$
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", titleForObservation, false, metadataList, axis, qTuppelModel ); //$NON-NLS-1$
 
         // update with Scenario metadata
         final String scenarioID = conf.getScenarioID();
@@ -1399,7 +1399,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     final IAxis[] axis = resultAxisList.toArray( new IAxis[0] );
     final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axis, resultValuesList.toArray( new Object[0][] ) );
-    final IObservation resultObservation = new SimpleObservation( reportPathZML, "ID", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), false, null, new MetadataList(), axis, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IObservation resultObservation = new SimpleObservation( reportPathZML, "ID", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), false, new MetadataList(), axis, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
     final Observation observation = ZmlFactory.createXML( resultObservation, null );
     final Marshaller marshaller = ZmlFactory.getMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );

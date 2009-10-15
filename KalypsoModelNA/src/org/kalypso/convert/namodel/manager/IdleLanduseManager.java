@@ -75,13 +75,13 @@ public class IdleLanduseManager extends AbstractManager
 
   private final IFeatureType m_landuseFT;
 
-  private IFeatureType m_sealingFT;
+  private final IFeatureType m_sealingFT;
 
   final Hashtable<String, Integer> m_idleLanduseTable = new Hashtable<String, Integer>();
 
   private int m_idCounter = 0;
 
-  public IdleLanduseManager( org.kalypso.gmlschema.GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
+  public IdleLanduseManager( final org.kalypso.gmlschema.GMLSchema parameterSchema, final NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     m_IdleLanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_IDEAL_LANDUSE );
@@ -93,7 +93,7 @@ public class IdleLanduseManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
   @Override
-  public String mapID( int id, IFeatureType ft )
+  public String mapID( final int id, final IFeatureType ft )
   {
     return null;
   }
@@ -102,10 +102,10 @@ public class IdleLanduseManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   @Override
-  public Feature[] parseFile( URL url ) throws Exception
+  public Feature[] parseFile( final URL url ) throws Exception
   {
-    List<Feature> result = new ArrayList<Feature>();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+    final List<Feature> result = new ArrayList<Feature>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
 
     while( (fe = readNextFeature( reader )) != null )
@@ -113,7 +113,7 @@ public class IdleLanduseManager extends AbstractManager
     return result.toArray( new Feature[result.size()] );
   }
 
-  private Feature readNextFeature( LineNumberReader reader ) throws Exception
+  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
   {
     final HashMap<String, String> propCollector = new HashMap<String, String>();
     String line;
@@ -128,13 +128,13 @@ public class IdleLanduseManager extends AbstractManager
     line = reader.readLine();
     line = reader.readLine();
 
-    String fileDescription = propCollector.get( "name" ); //$NON-NLS-1$
+    final String fileDescription = propCollector.get( "name" ); //$NON-NLS-1$
     final Feature feature;
     if( !m_idleLanduseTable.containsKey( fileDescription ) )
     {
       m_idCounter = m_idCounter + 1;
-      Integer id = new Integer( m_idCounter );
-      String asciiStringid = id.toString();
+      final Integer id = new Integer( m_idCounter );
+      final String asciiStringid = id.toString();
       m_idleLanduseTable.put( fileDescription, id );
       feature = getFeature( asciiStringid, m_IdleLanduseFT );
     }
@@ -154,9 +154,9 @@ public class IdleLanduseManager extends AbstractManager
       // day.month.[-1|00]
       final String dateAsString = propCollector.get( "dat" ); //$NON-NLS-1$
       final String[] dateComponents = dateAsString.split( "\\." ); //$NON-NLS-1$
-      int day = Integer.parseInt( dateComponents[0] );
-      int month = Integer.parseInt( dateComponents[1] );
-      int year = Integer.parseInt( dateComponents[2] );
+      final int day = Integer.parseInt( dateComponents[0] );
+      final int month = Integer.parseInt( dateComponents[1] );
+      final int year = Integer.parseInt( dateComponents[2] );
       final Calendar calendar = NATimeSettings.getInstance().getCalendar();
       calendar.clear();
       calendar.set( Calendar.SECOND, 0 );
@@ -165,9 +165,9 @@ public class IdleLanduseManager extends AbstractManager
       calendar.set( Calendar.DATE, day );
       calendar.set( Calendar.MONTH, month - 1 );
       calendar.set( Calendar.YEAR, year + 2001 );
-      Object xkc = propCollector.get( "xkc" ); //$NON-NLS-1$
-      Object xwt = propCollector.get( "xwt" ); //$NON-NLS-1$
-      Object xlai = propCollector.get( "xlai" ); //$NON-NLS-1$
+      final Object xkc = propCollector.get( "xkc" ); //$NON-NLS-1$
+      final Object xwt = propCollector.get( "xwt" ); //$NON-NLS-1$
+      final Object xlai = propCollector.get( "xlai" ); //$NON-NLS-1$
       values[i][0] = calendar.getTime();
       values[i][1] = xkc;
       values[i][2] = xwt;
@@ -175,7 +175,7 @@ public class IdleLanduseManager extends AbstractManager
     }
 
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    SimpleObservation observation = new SimpleObservation( null, null, fileDescription, true, null, new MetadataList(), axis, model );
+    final SimpleObservation observation = new SimpleObservation( null, null, fileDescription, true, new MetadataList(), axis, model );
     feature.setProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML, observation );
 
     line = reader.readLine();
@@ -185,10 +185,10 @@ public class IdleLanduseManager extends AbstractManager
     return feature;
   }
 
-  public Feature[] parseFilecsv( URL url ) throws Exception
+  public Feature[] parseFilecsv( final URL url ) throws Exception
   {
-    List<Feature> result = new ArrayList<Feature>();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+    final List<Feature> result = new ArrayList<Feature>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     while( (fe = readNextcsvFeature( reader )) != null )
       result.add( fe );
@@ -196,7 +196,7 @@ public class IdleLanduseManager extends AbstractManager
 
   }
 
-  public Feature readNextcsvFeature( LineNumberReader reader2 ) throws IOException
+  public Feature readNextcsvFeature( final LineNumberReader reader2 ) throws IOException
   {
 
     final HashMap<String, String> landusePropCollector = new HashMap<String, String>();
@@ -204,18 +204,18 @@ public class IdleLanduseManager extends AbstractManager
     line = reader2.readLine();
     if( line == null )
       return null;
-    String[] strings = line.split( ";" ); //$NON-NLS-1$
+    final String[] strings = line.split( ";" ); //$NON-NLS-1$
     System.out.println( line );
-    String landuse = strings[0];
+    final String landuse = strings[0];
     final Feature feature = getFeature( landuse, m_landuseFT );
     landusePropCollector.put( "name", landuse ); //$NON-NLS-1$
-    String description = strings[1];
+    final String description = strings[1];
     landusePropCollector.put( "description", description ); //$NON-NLS-1$
-    String sealinglink = strings[2];
+    final String sealinglink = strings[2];
     final Feature sealingFE = getFeature( sealinglink, m_sealingFT );
     landusePropCollector.put( "sealingLink", sealingFE.getId() ); //$NON-NLS-1$
     feature.setProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK, sealingFE.getId() );
-    String landuseperiodlink = strings[3];
+    final String landuseperiodlink = strings[3];
     final Feature idleLanduseFE = getFeature( landuseperiodlink, m_IdleLanduseFT );
     landusePropCollector.put( "idealLandUsePeriodLink", idleLanduseFE.getId() ); //$NON-NLS-1$
     feature.setProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK, idleLanduseFE.getId() );
@@ -224,10 +224,10 @@ public class IdleLanduseManager extends AbstractManager
     return feature;
   }
 
-  public Feature[] parseSealingFilecsv( URL url ) throws IOException
+  public Feature[] parseSealingFilecsv( final URL url ) throws IOException
   {
-    List<Feature> result = new ArrayList<Feature>();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+    final List<Feature> result = new ArrayList<Feature>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     while( (fe = readNextsealingFeature( reader )) != null )
       result.add( fe );
@@ -235,7 +235,7 @@ public class IdleLanduseManager extends AbstractManager
 
   }
 
-  public Feature readNextsealingFeature( LineNumberReader reader3 ) throws IOException
+  public Feature readNextsealingFeature( final LineNumberReader reader3 ) throws IOException
   {
 
     final HashMap<String, String> sealingPropCollector = new HashMap<String, String>();
@@ -243,14 +243,14 @@ public class IdleLanduseManager extends AbstractManager
     line = reader3.readLine();
     if( line == null )
       return null;
-    String[] strings = line.split( ";" ); //$NON-NLS-1$
+    final String[] strings = line.split( ";" ); //$NON-NLS-1$
     System.out.println( line );
-    String sealing = strings[0];
+    final String sealing = strings[0];
     final Feature feature = getFeature( sealing, m_sealingFT );
     sealingPropCollector.put( "name", "Klasse_" + sealing ); //$NON-NLS-1$ //$NON-NLS-2$
-    String description = strings[1];
+    final String description = strings[1];
     sealingPropCollector.put( "description", description ); //$NON-NLS-1$
-    String vers = strings[2];
+    final String vers = strings[2];
     sealingPropCollector.put( "m_vers", vers ); //$NON-NLS-1$
 
     setParsedProperties( feature, sealingPropCollector, null );

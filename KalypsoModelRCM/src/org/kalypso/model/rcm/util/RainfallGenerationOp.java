@@ -219,7 +219,6 @@ public class RainfallGenerationOp
     final String href = o.getHref();
     final String identifier = o.getIdentifier();
     final String name = o.getName();
-    final Object target = o.getTarget();
     final MetadataList metadataList = new MetadataList();
     metadataList.putAll( o.getMetadataList() );
     final IAxis[] axisList = o.getAxisList(); // clone?
@@ -227,7 +226,7 @@ public class RainfallGenerationOp
 
     final SimpleTuppleModel clonedValues = new SimpleTuppleModel( values, new DateRange( from, to ) );
 
-    final SimpleObservation simpleObservation = new SimpleObservation( href, identifier, name, false, target, metadataList, axisList, clonedValues );
+    final SimpleObservation simpleObservation = new SimpleObservation( href, identifier, name, false, metadataList, axisList, clonedValues );
     return simpleObservation;
   }
 
