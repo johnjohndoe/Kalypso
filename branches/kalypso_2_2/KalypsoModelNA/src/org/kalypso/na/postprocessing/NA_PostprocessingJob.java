@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -30,6 +32,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
@@ -38,6 +41,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obstableview.Obstableview;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -142,18 +146,24 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         final int cnt1 = values1.getCount();
         final int cnt2 = values2.getCount();
         if( cnt1 != cnt2 )
-          throw new SimulationException( "Cannot compare NA results" );
+          Logger.getAnonymousLogger().log( Level.WARNING, "Compared NA results are not of the same size; check calculation config!" );
 
-        for( int i = 0; i < cnt1; i++ )
+        for( int i = 0; i < Math.max( cnt1, cnt2 ); i++ )
         {
-          final String id1 = values1.getElement( i, idAxis1 ).toString();
-          final String id2 = values2.getElement( i, idAxis2 ).toString();
-          final double val1 = (Double) values1.getElement( i, valueAxis1 );
-          final double val2 = (Double) values2.getElement( i, valueAxis2 );
-          final Date date1 = (Date) values1.getElement( i, dateAxis1 );
-          final Date date2 = (Date) values2.getElement( i, dateAxis2 );
-          izNodesMaxData.put( id1, new DischargeData( val1, date1 ) );
-          calcNodesMaxData.put( id2, new DischargeData( val2, date2 ) );
+          if( i < values1.getCount() )
+          {
+            final String id1 = values1.getElement( i, idAxis1 ).toString();
+            final double val1 = (Double) values1.getElement( i, valueAxis1 );
+            final Date date1 = (Date) values1.getElement( i, dateAxis1 );
+            izNodesMaxData.put( id1, new DischargeData( val1, date1 ) );
+          }
+          if( i < values2.getCount() )
+          {
+            final String id2 = values2.getElement( i, idAxis2 ).toString();
+            final double val2 = (Double) values2.getElement( i, valueAxis2 );
+            final Date date2 = (Date) values2.getElement( i, dateAxis2 );
+            calcNodesMaxData.put( id2, new DischargeData( val2, date2 ) );
+          }
         }
 
         final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null );
@@ -199,9 +209,13 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           final String nodeID = steadyNodeFolder.getName();
           final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + nodeID, "", "izNodes/" + nodeID + "/Gesamtabfluss.zml", "sudsNodes/" + nodeID
               + "/Gesamtabfluss.zml", nodeID );
+          final Obstableview table = NodeResultsComparisonViewCreator.createTableView( "izNodes/" + nodeID + "/Gesamtabfluss.zml", "sudsNodes/" + nodeID + "/Gesamtabfluss.zml" );
           final File odtFile = new File( tmpdir, nodeID + ".odt" );
-          final BufferedWriter out = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) );
-          DiagViewUtils.saveDiagramTemplateXML( view, out );
+          final File ottFile = new File( tmpdir, nodeID + ".ott" );
+          final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) );
+          final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) );
+          DiagViewUtils.saveDiagramTemplateXML( view, outDiag );
+          TableViewUtils.saveTableTemplateXML( table, outTable );
         }
 
         /*

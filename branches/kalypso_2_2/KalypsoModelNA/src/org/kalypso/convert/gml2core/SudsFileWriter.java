@@ -97,8 +97,8 @@ public class SudsFileWriter extends AbstractCoreFileWriter
           for( final Feature catchment : list )
             if( catchment.getDefaultGeometryPropertyValue().contains( landuseInteriorPoint ) )
             {
-              final Feature strang = (Feature) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-              final String drainageNodeName = (String) strang.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+//              final Feature strang = (Feature) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
+//              final String drainageNodeName = (String) strang.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
 
               final String catchmentName = catchment.getName();
               if( !sudsMap.containsKey( catchmentName ) )
