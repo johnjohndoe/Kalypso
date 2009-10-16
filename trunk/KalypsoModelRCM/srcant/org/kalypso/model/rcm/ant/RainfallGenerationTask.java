@@ -48,6 +48,8 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.model.rcm.util.RainfallGenerationOp;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This task generates rainfall for catchment areas.
@@ -196,7 +198,11 @@ public class RainfallGenerationTask extends Task
       final SubMonitor progress = SubMonitor.convert( monitor, taskMessage, 100 );
       progress.subTask( "Operation wird initialisiert" );
 
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, m_catchmentUrl, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, m_targetFilter, m_targetFrom, m_targetTo );
+      final GMLWorkspace catchmentWorkspace = GmlSerializer.createGMLWorkspace( m_catchmentUrl, null );
+      // TODO: transform??
+      ProgressUtilities.worked( progress, 4 );
+
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, m_targetFilter, m_targetFrom, m_targetTo );
       for( final Generator generator : m_generators )
       {
         final Date fromDate = new Date( generator.getFrom() );
@@ -209,7 +215,7 @@ public class RainfallGenerationTask extends Task
       // call the operation
       try
       {
-        final SubMonitor subMon = progress.newChild( 99, SubMonitor.SUPPRESS_NONE );
+        final SubMonitor subMon = progress.newChild( 95, SubMonitor.SUPPRESS_NONE );
         operation.execute( logger, subMon );
       }
       catch( final CoreException ce )
