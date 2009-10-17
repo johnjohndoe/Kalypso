@@ -306,7 +306,7 @@ public class BreakLinesHelper implements IWspmConstants
         // add first point to close the ring
         posList.add( firstLeftPoint.getPosition() );
 
-        final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, null, crs );
+        final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, crs );
         rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface ); //$NON-NLS-1$
       }
 
