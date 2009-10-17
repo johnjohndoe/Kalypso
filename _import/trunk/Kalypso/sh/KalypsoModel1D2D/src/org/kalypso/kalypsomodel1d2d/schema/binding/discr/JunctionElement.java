@@ -65,12 +65,12 @@ public class JunctionElement extends AbstractFeatureBinder implements IJunctionE
 {
   private FeatureWrapperCollection<IFELine> m_continuityLines;
 
-  public JunctionElement( Feature featureToBind )
+  public JunctionElement( final Feature featureToBind )
   {
     this( featureToBind, IJunctionElement.QNAME );
   }
 
-  public JunctionElement( Feature featureToBind, QName qnameToBind )
+  public JunctionElement( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
     final Object prop = featureToBind.getProperty( IJunctionElement.PROP_CONTI_LINES );
@@ -112,7 +112,7 @@ public class JunctionElement extends AbstractFeatureBinder implements IJunctionE
     // close the ring
     elementPositions.add( elementPositions.get( 0 ) );
 
-    final GM_Surface<GM_SurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, null, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
+    final GM_Surface<GM_SurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
     final Geometry export = JTSAdapter.export( createGM_Surface );
     final Geometry convexHull = export.convexHull();
     return JTSAdapter.wrap( convexHull );
@@ -138,7 +138,7 @@ public class JunctionElement extends AbstractFeatureBinder implements IJunctionE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
-  public void removeElementAsRef( IFENetItem elment )
+  public void removeElementAsRef( final IFENetItem elment )
   {
     // TODO Auto-generated method stub
   }

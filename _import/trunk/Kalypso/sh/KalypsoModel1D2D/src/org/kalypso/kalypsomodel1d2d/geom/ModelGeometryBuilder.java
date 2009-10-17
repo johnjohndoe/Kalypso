@@ -52,8 +52,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
-import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -98,7 +96,7 @@ public class ModelGeometryBuilder
       poses[i] = point.getPosition();
     }
 
-    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
+    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], crs );
   }
 
   @SuppressWarnings("unchecked")

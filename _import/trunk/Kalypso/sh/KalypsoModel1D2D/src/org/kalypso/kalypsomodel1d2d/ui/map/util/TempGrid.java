@@ -348,7 +348,7 @@ public class TempGrid
           return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5" ) ); //$NON-NLS-1$
 
         // New Element intersects other elements
-        final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
         for( final IFE1D2DElement element : elements )
         {

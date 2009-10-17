@@ -60,12 +60,12 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
 
   private ITransitionElement.TRANSITION_TYPE m_transition_type;
 
-  public TransitionElement( Feature featureToBind )
+  public TransitionElement( final Feature featureToBind )
   {
     this( featureToBind, ITransitionElement.QNAME );
   }
 
-  public TransitionElement( Feature featureToBind, QName qnameToBind )
+  public TransitionElement( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
     // m_continuityLines = (List<IFELine>) featureToBind.getProperty( ITransitionElement.PROP_CONTI_LINES );
@@ -115,15 +115,15 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
     final double distanceToLast = positions0[positions0.length - 1].getDistance( positions1[positions1.length - 1] );
     int k = positions0.length;
     if( distanceToFirst < distanceToLast )
-      for( int i = 0; i < positions1.length; i++ )
-        positions[k++] = positions1[i];
+      for( final GM_Position element : positions1 )
+        positions[k++] = element;
     else
       for( int i = positions1.length - 1; i >= 0; i-- )
         positions[k++] = positions1[i];
 
     // close the ring
     positions[positions.length - 1] = positions0[0];
-    return GeometryFactory.createGM_Surface( positions, new GM_Position[][] {}, null, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
+    return GeometryFactory.createGM_Surface( positions, new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
   }
 
   /**
@@ -146,7 +146,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
-  public void removeElementAsRef( IFENetItem elment )
+  public void removeElementAsRef( final IFENetItem elment )
   {
     // TODO Auto-generated method stub
   }

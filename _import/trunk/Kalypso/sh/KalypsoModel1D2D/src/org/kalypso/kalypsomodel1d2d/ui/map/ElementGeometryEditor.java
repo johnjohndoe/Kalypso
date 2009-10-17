@@ -248,7 +248,7 @@ public class ElementGeometryEditor
         if( GeometryUtilities.isSelfIntersecting( poses ) )
           return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4" ) ); //$NON-NLS-1$
 
-        final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, null, crs );
+        final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, crs );
         
         // D.2) new element is not convex
         if( newSurface.getConvexHull().difference( newSurface ) != null && poses.length < 4 )

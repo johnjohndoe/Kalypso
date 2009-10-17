@@ -324,7 +324,7 @@ public class ElementGeometryBuilder
       if( GeometryUtilities.isSelfIntersecting( ring ) && pBoolFinalPont )
         return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
 
-      final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       
       // new element is not convex
       if( m_cnt_points > 0 && newSurface.getConvexHull().difference( newSurface ) != null )
