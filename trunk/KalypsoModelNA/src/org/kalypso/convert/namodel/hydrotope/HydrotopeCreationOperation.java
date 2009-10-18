@@ -64,6 +64,7 @@ import org.kalypso.convert.namodel.schema.binding.suds.Swale;
 import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -73,7 +74,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -197,7 +197,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
         final Hydrotop hydrotop = (Hydrotop) m_workspace.createFeature( null, null, m_featureType );
         final Point interiorPoint = geometry.getInteriorPoint();
-        final GM_Envelope envelope = JTSAdapter.wrap( interiorPoint.getEnvelopeInternal() );
+        final GM_Envelope envelope = JTSAdapter.wrap( interiorPoint.getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final GM_Point point = (GM_Point) JTSAdapter.wrap( interiorPoint );
 
         final List<Object> catchmentList = m_catchmentsList.query( envelope, null );
@@ -317,7 +317,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
         if( m_dissolveFeatures )
         {
-          final GM_Envelope featureGeometryEnvelope = JTSAdapter.wrap( geometry.getEnvelopeInternal() );
+          final GM_Envelope featureGeometryEnvelope = JTSAdapter.wrap( geometry.getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
           final List<Feature> list = m_outputList.query( featureGeometryEnvelope, null );
           final List<Feature> featuresToMergeWith = new ArrayList<Feature>();
           final List<Geometry> geometriesToMergeWith = new ArrayList<Geometry>();
