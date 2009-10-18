@@ -436,16 +436,6 @@ public class RefineFEGeometryWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
-   */
-  @Override
-  public void rightClicked( final Point p )
-  {
-    convertRefinementToModel();
-    super.rightClicked( p );
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
