@@ -57,6 +57,7 @@ import org.kalypso.convert.namodel.schema.binding.SoilType;
 import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -114,7 +115,7 @@ public class Test_Intersection extends TestCase
     for( final Geometry geometry : intersectionList )
     {
       final Feature feature = outputWS.createFeature( null, null, typeHydrotop );
-      final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal() );
+      final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 
       final List<Object> catchmentList = catchmentFeatureList.query( envelope, null );
