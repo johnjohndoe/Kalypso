@@ -102,7 +102,9 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   {
     try
     {
-      final Object property = getShapeFile().getGM_ObjectByRecNo( index + 1 );
+      // TODO: important: let user enter crs of shape and transform read geometry to kalypso crs.
+      final String crs = null;
+      final Object property = getShapeFile().getGM_ObjectByRecNo( index + 1, crs );
 
       /* allow for null geometries */
       if( property == null )
