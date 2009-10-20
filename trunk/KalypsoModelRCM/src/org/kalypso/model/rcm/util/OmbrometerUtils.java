@@ -129,10 +129,12 @@ public class OmbrometerUtils
     final FeatureList geoIndex =  FeatureFactory.createFeatureList( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
     final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> changeMap = new HashMap<IOmbrometer, GM_Surface<GM_SurfacePatch>>();
     final List<Coordinate> crds = new ArrayList<Coordinate>();
+    String crs = null;
     for( final Object listEntry : ombrometerList )
     {
       final IOmbrometer ombro = (IOmbrometer) listEntry;
       final GM_Point stationLocation = ombro.getStationLocation();
+      crs = stationLocation.getCoordinateSystem();
       final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
       if( ombro.isUsed() )
       {
@@ -161,7 +163,8 @@ public class OmbrometerUtils
     else if( geoIndex.size() == 1 )
     {
       final IOmbrometer ombro = (IOmbrometer) geoIndex.get( 0 );
-      final GM_Surface<GM_SurfacePatch> gmBoundary = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( thiessenBoundary );
+      final GM_Surface<GM_SurfacePatch> gmBoundary = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( thiessenBoundary, crs );
+      gmBoundary.setCoordinateSystem( crs );
       changeMap.put( ombro, gmBoundary );
     }
     else
@@ -173,7 +176,7 @@ public class OmbrometerUtils
 
       for( final Polygon polygon : thiessenPolys )
       {
-        final GM_Surface<GM_SurfacePatch> affectedArea = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( polygon );
+        final GM_Surface<GM_SurfacePatch> affectedArea = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( polygon, crs );
         final IOmbrometer ombro = findOmbrometerFor( affectedArea, geoIndex );
         if( ombro == null )
           throw new GM_Exception( "Fehler bei der Ermittlung der Thiessen Polygone" );
