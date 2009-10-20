@@ -14,4 +14,4 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.commons;visibility:=reexport,
  org.kalypso.core,
  org.eclipse.ant.core
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy

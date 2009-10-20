@@ -207,7 +207,7 @@ public class DWDTaskDelegate
 
         final MetadataList metadataList = new MetadataList();
 
-        final IObservation dwdObservation = new SimpleObservation( "href", "ID", title, false, null, metadataList, axis, tupleModel );
+        final IObservation dwdObservation = new SimpleObservation( "href", "ID", title, false, metadataList, axis, tupleModel );
 
         final IObservation forecastObservation;
         // generate href from filter and intervall
