@@ -194,7 +194,6 @@ public class RainfallGenerationOp
             }
           }
         }
-
       }
       catch( final Exception e )
       {
