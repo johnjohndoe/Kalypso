@@ -29,6 +29,8 @@
 				<dirset dir="${workspace}">
 					<include name="EclipseRCPContributions/build/bin" />
 					<include name="JavaApiContributions/build/bin" />
+					<include name="KalypsoDeegree/build/bin" />
+					<include name="KalypsoCore/build/bin" />
 					<include name="KalypsoModelRCM/build/bin" />
 				</dirset>
 				<fileset dir="${eclipse.home}">
