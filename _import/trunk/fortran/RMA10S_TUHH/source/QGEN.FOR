@@ -584,111 +584,19 @@ CIPK OCT01
 C-
 C...... Find correct components for boundary nodes
 C-
-
-!NiS,sep06,com: Objective is to find the right direction of the node inflow, parallel to the boundary at the inflow
-          DO K=1,maxL,maxL-1
-            !node
-            NA=LINE(J,K)
-            findCorrectElement: do i = 1, IsNodeOfElement(NA, 0)
-              !get element
-              N = IsNodeOfElement(NA, i)
-              !find entry in node list of element
-              ncn = ncorn(n)
-              findentry: do M = 1, ncn, 2
-                if (nop(N, M) == NA) EXIT findentry
-              end do findentry
-C-
-C....... Found a match node. Now determine side for parallel flow
-C-
-              !get neighbour node index on boundary line
-              IF(K .EQ. 1) THEN
-                KK = 2
-              ELSE
-                KK = maxL-1
-              ENDIF
-
-              IF(m .EQ. 1) THEN
-                MLW=NCN
-              ELSE
-                MLW=M-1
-              ENDIF
-
-cipk oct98 update to f90
-
-cipk oct98            MLX=ABS(NOP(N,MLW))
-              MSL=MOD(MLW+2,NCN)
-              IF(MSL .EQ. 0) MSL=NCN
-              MFR=MOD(MLW+3,NCN)
-
-cipk oct98 update to f90
-              MSL=ABS(NOP(N,MSL))
-              IF(MSL .EQ. LINE(J,KK)) GO TO 317
-              IF(IBN(MSL) .EQ. 1) EXIT findCorrectElement
-  317         CONTINUE
-!nis,aug07: following lines are more efficient (better to read and do the same, because MLW has already
-!           a defined index value.
-!              MLW=MOD(M+1,NCN)
-!              IF(MLW .EQ. 0) MLW=NCN
-!cipk oct98 update to f90
-!cipk oct98            MLX=ABS(NOP(N,MLW))
-!              IF(MLW .GT. 2) THEN
-!                MSL=MLW-2
-!                MFR=MLW-3
-!              ELSE
-!                MSL=NCN
-!                MFR=NCN-1
-!              ENDIF
-              MSL = MLW
-              MFR = MLW - 1
-!-
-
-!cipk oct98 update to f90
-              MSL=ABS(NOP(N,MSL))
-              IF(MSL .EQ. LINE(J,KK)) CYCLE findCorrectElement
-              IF(IBN(MSL) .EQ. 1) EXIT findCorrectElement
-            ENDDO findCorrectElement
-cipk oct98 update to f90
-              MFR=ABS(NOP(N,MFR))
-C-
-C...... Now compute boundary angle
-C-
-              DX=2.*(CORD(MSL,1)-CORD(NA,1))
-     +           -0.5*(CORD(MFR,1)-CORD(NA,1))
-              DY=2.*(CORD(MSL,2)-CORD(NA,2))
-     +           -0.5*(CORD(MFR,2)-CORD(NA,2))
-              BEETA=ATAN2(DY,DX)
-C-
-C...... Find angle of side that flow crosses
-C-
-              IF(K .EQ. 1) THEN
-                NAD=LINE(J,3)
-              ELSE
-                NAD=LINE(J,maxL-2)
-              ENDIF
-              DXA=CORD(NAD,1)-CORD(NA,1)
-              DYA=-(CORD(NAD,2)-CORD(NA,2))
-              AALFA=ATAN2(DXA,DYA)
-              IF(ABS(AALFA-THET) .GT. 1.570796  .AND.
-     +           ABS(AALFA-THET) .LT. 4.712394) THEN
-                AALFA=AALFA+3.141596
-              ENDIF
-              IF(ABS(AALFA-BEETA) .GT. 1.570796  .AND.
-     +           ABS(AALFA-BEETA) .LT. 4.712394) THEN
-                BEETA=BEETA+3.141596
-              ENDIF
-C-
-C...... Finally adjust flows
-C-
-              IF(COS(THET) .NE. 0.) THEN
-              QMAG=SPEC(NA,1)*COS(AALFA-THET)/
-     +             (COS(THET)*COS(AALFA-BEETA))
-              ELSE
-              QMAG=SPEC(NA,2)*COS(AALFA-THET)/
-     +             (SIN(THET)*COS(AALFA-BEETA))
-              ENDIF
-              SPEC(NA,1)=QMAG*COS(BEETA)
-              SPEC(NA,2)=QMAG*SIN(BEETA)
-          enddo
+        DO K=1,maxL,maxL-1
+          !node
+          NA=LINE(j,K)
+          IF(K .EQ. 1) THEN
+            neighbourMidside = line (j, 2)
+            neighbourCorner = line (j, 3)
+          ELSE
+            neighbourMidside = line (j, maxL-1)
+            neighbourCorner = line (j, maxL-2)
+          ENDIF
+          
+         call fixDirection (na, neighbourMidside, NeighbourCorner, thet)
+        enddo
 
           !set usable boundary conditions only for unsteady,
           !  steady update is done somewhere else
@@ -709,3 +617,96 @@ C-
       !----------------------------------
       RETURN
       END
+
+
+      subroutine fixDirection (thisNode, NeighbourMidsideOnLine, 
+     +                          NeighbourCornerOnLine, thet)
+        use blk10mod, only: ncn, ncorn, nop, ibn, cord, spec
+        use parakalyps, only: isNodeOfElement
+        implicit none
+        !arguments
+        integer (kind = 4), intent (in) :: thisNode
+        integer (kind = 4), intent (in) :: NeighbourCornerOnLine
+        integer (kind = 4), intent (in) :: NeighbourMidsideOnLine
+        real (kind = 8), intent (in) :: thet
+        !local variables
+        integer (kind = 4) :: mlw, msl, mfr
+        integer (kind = 4) :: i, k, m, n
+        integer (kind = 4) :: kk
+        real (kind = 8) :: dx, dy, dxa, dya
+        real (kind = 8) :: beeta, aalfa
+        real (kind = 8) :: qmag
+!NiS,sep06,com: Objective is to find the right direction of the node inflow, parallel to the boundary at the inflow
+            findCorrectElement: do i = 1, IsNodeOfElement(thisNode, 0)
+              !get element
+              N = IsNodeOfElement(thisNode, i)
+              !find entry in node list of element
+              ncn = ncorn(n)
+              findentry: do M = 1, ncn, 2
+                if (nop(N, M) == thisNode) EXIT findentry
+              end do findentry
+C-
+C....... Found a match node. Now determine side for parallel flow
+C-
+              MLW = M - 1
+              IF (m == 1) MLW = NCN
+
+cipk oct98 update to f90
+
+cipk oct98            MLX=ABS(NOP(N,MLW))
+              MSL=MOD(MLW+2,NCN)
+              IF(MSL .EQ. 0) MSL=NCN
+              MFR=MOD(MLW+3,NCN)
+
+cipk oct98 update to f90
+              MSL=ABS(NOP(N,MSL))
+              IF(MSL /= NeighbourMidsideOnLine) then
+                IF(IBN(MSL) .EQ. 1) EXIT findCorrectElement
+              endif
+
+              MSL = MLW
+              MFR = MLW - 1
+
+!cipk oct98 update to f90
+              MSL=ABS(NOP(N,MSL))
+              IF(MSL == NeighbourMidsideOnLine) CYCLE findCorrectElement
+              IF(IBN(MSL) .EQ. 1) EXIT findCorrectElement
+            ENDDO findCorrectElement
+
+cipk oct98 update to f90
+              MFR=ABS(NOP(N,MFR))
+C-
+C...... Now compute boundary angle
+C-
+              DX=2.*(CORD(MSL,1)-CORD(thisNode,1))
+     +           -0.5*(CORD(MFR,1)-CORD(thisNode,1))
+              DY=2.*(CORD(MSL,2)-CORD(thisNode,2))
+     +           -0.5*(CORD(MFR,2)-CORD(thisNode,2))
+              BEETA=ATAN2(DY,DX)
+C-
+C...... Find angle of side that flow crosses
+C-
+              DXA=CORD(NeighbourCornerOnLine,1)-CORD(thisNode,1)
+              DYA=-(CORD(NeighbourCornerOnLine,2)-CORD(thisNode,2))
+              AALFA=ATAN2(DXA,DYA)
+              IF(ABS(AALFA-THET) .GT. 1.570796  .AND.
+     +           ABS(AALFA-THET) .LT. 4.712394) THEN
+                AALFA=AALFA+3.141596
+              ENDIF
+              IF(ABS(AALFA-BEETA) .GT. 1.570796  .AND.
+     +           ABS(AALFA-BEETA) .LT. 4.712394) THEN
+                BEETA=BEETA+3.141596
+              ENDIF
+C-
+C...... Finally adjust flows
+C-
+              IF(COS(THET) .NE. 0.) THEN
+              QMAG=SPEC(thisNode,1)*COS(AALFA-THET)/
+     +             (COS(THET)*COS(AALFA-BEETA))
+              ELSE
+              QMAG=SPEC(thisNode,2)*COS(AALFA-THET)/
+     +             (SIN(THET)*COS(AALFA-BEETA))
+              ENDIF
+              SPEC(thisNode,1)=QMAG*COS(BEETA)
+              SPEC(thisNode,2)=QMAG*SIN(BEETA)
+      end subroutine
