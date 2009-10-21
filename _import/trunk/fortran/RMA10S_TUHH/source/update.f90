@@ -268,18 +268,15 @@ UpdateDOFs: DO KK = 1, NDFM
       !the maximum changes are stored, as well as the location, where it applies; the sign of the maximum change is always kept by not using aex
       !for the depth degree of freedom (K = 3), this can't be easily done, because marsh algorithm has to be considered
       if (k /= 3) then
-        !nis,aug08: Store relative changes
-        if (abs(vel (k, j)) > 5.0*10.0e-6 .or. vel (k, j) == 0.0) then
-          !this happens at reacitvated nodes
-          if (vel (k, j) == 0.0) then
-            EPercMax (k) = 5.0
-            NRel (k) = j
-          elseif (abs(aex/ vel(k, j)) > abs(EPercMax (k))) then
-            EPercMax (k) = ex/ vel (k, j)
-            NRel (k) = j
-          endif
-
+        !this happens at reacitvated nodes
+        if (abs(vel (k, j)) <= 1.0e-7) then
+          EPercMax (k) = 5.0
+          NRel (k) = j
+        elseif (abs(aex/ vel(k, j)) > abs(EPercMax (k))) then
+          EPercMax (k) = ex/ vel (k, j)
+          NRel (k) = j
         endif
+
         !store maximum absolute changes
         IF (AEX >= ABS (EMAX (K))) then
           EMAX (K) = EX
@@ -469,7 +466,7 @@ UpdateDOFs: DO KK = 1, NDFM
 
   !If there is any change above the convergency border, then degree of freedom (NCNV) and full model (NCONV) is not converged
   if (percentCheck == 1) then
-    if (abs (EPercMax (k)) > conv (k) ) then
+    if (abs (EPercMax (k)) > conv (k) .and. abs(EMAX(k)) > 0.00001) then
       NCONV = 0
       ncnv (k) = 1
     endif
@@ -510,7 +507,7 @@ WriteDOFOutputs: DO J = 1, 7
 
   IF (nmx (j) == 0 .or. nRel (j) == 0) THEN
     WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
-  ELSEIF (kmx (nmx (j)) /= 0.0) THEN
+  ELSEIF (kmx (nmx (j)) /= -1.0) THEN
     WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j), kmx (nmx (J)), EPercMax (J), NRel (J), kmx (nRel (J)), IVAR (J, 1), IVAR (J, 2)
   ELSE
     WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
