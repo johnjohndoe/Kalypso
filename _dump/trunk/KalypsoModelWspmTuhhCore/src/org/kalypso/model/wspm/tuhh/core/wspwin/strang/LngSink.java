@@ -135,11 +135,12 @@ public class LngSink implements IStrangSink
     prfwriter.store( pw );
   }
 
+  // TODO Kim: kann das nicht weg?
+
   /**
    * @see org.kalypso.model.wspm.core.profil.serializer.IStrangSink#write(org.kalypso.model.wspm.core.profil.IProfil[],
    *      java.io.Writer)
    */
-  @Override
   public void write( final IProfil[] profiles, final Writer writer )
   {
     throw new NotImplementedException();
@@ -149,7 +150,6 @@ public class LngSink implements IStrangSink
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil,
    *      java.io.Writer)
    */
-  @Override
   public void write( final IProfil profil, final Writer writer )
   {
     throw new NotImplementedException();
