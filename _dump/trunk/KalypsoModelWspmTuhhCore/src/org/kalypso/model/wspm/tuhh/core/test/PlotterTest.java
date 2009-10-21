@@ -54,8 +54,8 @@ public class PlotterTest
   @Test
   public void test( )
   {
-    String arg1 = "";
-    String arg2 = "";
+    String arg1 = "c:/test.csv";
+    String arg2 = "c:/test.lng";
 
     final LngSink sink = new LngSink();
     sink.write( arg1, arg2 );

@@ -67,7 +67,7 @@ public class LngSink implements IStrangSink
   private void extractDataBlocks( final PrfWriter pw, final Reader reader, final int colStation ) throws IOException
   {
 
-    final CSVReader tableReader = new CSVReader( reader,';' );
+    final CSVReader tableReader = new CSVReader( reader, ';' );
     final String[] cols = tableReader.readNext();
     final Object[] table = new Object[cols.length];
     for( int i = 0; i < cols.length; i++ )
@@ -81,17 +81,20 @@ public class LngSink implements IStrangSink
       {
         for( int i = 0; i < cols.length; i++ )
         {
-                   ((ArrayList<Double>) table[i]).add( NumberUtils.parseQuietDouble( values[i] ) );
+          ((ArrayList<Double>) table[i]).add( NumberUtils.parseQuietDouble( values[i] ) );
         }
         values = tableReader.readNext();
       }
     }
     for( int i = 0; i < cols.length; i++ )
     {
-      final DataBlockHeader dbh = PrfWriter.createHeader( cols[i] ); //$NON-NLS-1$
-      final CoordDataBlock block = new CoordDataBlock( dbh );
-      block.setCoords( ((ArrayList<Double>) table[colStation]).toArray( new Double[] {} ), ((ArrayList<Double>) table[i]).toArray( new Double[] {} ) );
-      pw.addDataBlock( block );
+      if( i != colStation )
+      {
+        final DataBlockHeader dbh = PrfWriter.createHeader( cols[i] ); //$NON-NLS-1$
+        final CoordDataBlock block = new CoordDataBlock( dbh );
+        block.setCoords( ((ArrayList<Double>) table[colStation]).toArray( new Double[] {} ), ((ArrayList<Double>) table[i]).toArray( new Double[] {} ) );
+        pw.addDataBlock( block );
+      }
     }
   }
 
