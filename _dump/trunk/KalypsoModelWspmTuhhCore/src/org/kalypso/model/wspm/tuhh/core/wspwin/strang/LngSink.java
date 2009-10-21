@@ -47,9 +47,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IStrangSink;
 import org.kalypso.wspwin.core.prf.PrfWriter;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
@@ -108,7 +111,7 @@ public class LngSink implements IStrangSink
     {
       pw = new PrintWriter( new FileOutputStream( new File( destination ) ) );
     }
-    catch( FileNotFoundException e1 )
+    catch( final FileNotFoundException e1 )
     {
       // TODO Auto-generated catch block
       e1.printStackTrace();
@@ -119,17 +122,37 @@ public class LngSink implements IStrangSink
     {
       extractDataBlocks( prfwriter, new FileReader( source ), 0 );
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
     prfwriter.store( pw );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.serializer.IStrangSink#write(org.kalypso.model.wspm.core.profil.IProfil[],
+   *      java.io.Writer)
+   */
+  @Override
+  public void write( final IProfil[] profiles, final Writer writer )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil,
+   *      java.io.Writer)
+   */
+  @Override
+  public void write( final IProfil profil, final Writer writer )
+  {
+    throw new NotImplementedException();
   }
 
 }
