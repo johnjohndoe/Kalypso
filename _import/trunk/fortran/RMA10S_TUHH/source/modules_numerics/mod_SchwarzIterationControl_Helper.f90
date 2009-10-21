@@ -254,7 +254,9 @@ subroutine improveBCs (improveAlgo, ccls, ncl, spec, maxp)
   
   do i = 1, ncl
     tmpCCL => ccls (i)
-    if (tmpCCL.isInnerBoundary .and. associated (tmpCCL.firstNode.thisNode.previousBC)) call improveNodalBC (improveAlgo, tmpCCL, spec (1:maxp, 1:3))
+    if (tmpCCL.isInnerBoundary .and. associated (tmpCCL.firstNode.thisNode.previousBC)) then
+      if (tmpCCL.innerCondition.BCtype == enum_H_BCtype) call improveNodalBC (improveAlgo, tmpCCL, spec (1:maxp, 1:3))
+    end if
   end do
 end subroutine
       
@@ -282,14 +284,14 @@ end subroutine
 !-------------------------------------------------------------------------------------------
 !function: checkSchwarzConvergence
 !-------------------------------------------------------------------------------------------
-function checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder) result (schwarzConvStatus)
+function checkSchwarzConvergence (ccls, ncl, schwarzConv) result (schwarzConvStatus)
   implicit none
   !function definition
   logical :: schwarzConvStatus
   !arguments
   type (contiLine), target :: ccls (1:)
   integer (kind = 4), intent (in) :: ncl
-  real (kind = 8), intent (in) :: schwarzConvCheckBorder
+  real (kind = 8), intent (in) :: schwarzConv
   
   !local variables
   type (contiLine), pointer :: tmpCCL
@@ -303,7 +305,7 @@ function checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder) result (sch
     tmpCCL => ccls (i)
     if (.not. (tmpCCL.isInnerBoundary)) cycle checkSchwarzConv
     if (associated (tmpCCL.firstNode.thisNode.previousBC)) then
-      call checkBoundaryConv (tmpCCL, schwarzConvCheckBorder)
+      call checkBoundaryConv (tmpCCL, schwarzConv)
       if (.not. (tmpCCL.innerCondition.isSchwarzConv)) schwarzConvStatus = .false.
     else
       schwarzConvStatus = .false.
@@ -348,5 +350,21 @@ subroutine nullifyInnerBCstatus (ccls, nfix, nfixp, alfa, ncl)
   end do
 end subroutine 
 
+subroutine setInnerBC_NFIX (ccls, ncl, nfix)
+  implicit none
+  !arguments
+  type (contiLine), target :: ccls (1:)
+  integer (kind = 4), intent (in) :: ncl
+  integer (kind = 4), intent (inout) :: nfix (*)
+  !local variables
+  type (contiLine), pointer :: tmpCCL
+  integer (kind = 4) :: i
+  
+  do i = 1, ncl
+    tmpCCL => ccls(i)
+    if (tmpCCL.isInnerBoundary) call innerType_NFIX (tmpCCL, nfix)
+  enddo
+  
+end subroutine
 
 end module

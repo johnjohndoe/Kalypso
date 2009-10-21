@@ -220,7 +220,6 @@ type (file), pointer :: convergenceStatusFile => null()
 character (len = 96) :: convergenceStatusFileName
 integer (kind = 4) :: continueCommand
 type (linked_List), pointer :: bcFiles
-real (kind = 8) :: schwarzConvCheckBorder
 type (SimulationModel), pointer :: m_SimModel
 
 !meaning of the variables
@@ -432,19 +431,16 @@ steadyCalculation: if (niti /= 0) then
       !TODO: Make it more flexible, invoking different algorithms!
       improvementAlgo = 1
       ! defined in Mod_ContiLines: enum_nestedIntervals = 1
-      call improveBCs (improvementAlgo, ccls, ncl, spec, maxp)
-
-      !Set conv border
-      !---------------
-      schwarzConvCheckBorder = 0.001
+      if (schwarzIt <= 2) call improveBCs (improvementAlgo, ccls, ncl, spec, maxp)
+      
       !write header of console output
       !------------------------------
-      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', schwarzConvCheckBorder
+      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', m_SimModel.schwarzConv
       write (*,'(a)') 'CCL    vx-conv max    vy-conv max    h-conv max'
       write (*,'(a)') '----------------------------------------------------'
       !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
       !-------------------------------------------------------------------------------------
-      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder)
+      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel.schwarzConv)
       if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
     endif
 
@@ -1135,19 +1131,16 @@ DynamicTimestepCycle: do n = 1, ncyc
       !TODO: Make it more flexible, invoking different algorithms!
       improvementAlgo = 1
       ! defined in Mod_ContiLines: enum_nestedIntervals = 1
-      call improveBCs (improvementAlgo, ccls, ncl, spec,maxp)
+      if (schwarzIt <= 2) call improveBCs (improvementAlgo, ccls, ncl, spec,maxp)
 
-      !Set conv border
-      !---------------
-      schwarzConvCheckBorder = 0.001
       !write header of console output
       !------------------------------
-      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', schwarzConvCheckBorder
+      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', m_SimModel.schwarzConv
       write (*,'(a)') 'CCL    vx-conv max    vy-conv max    h-conv max'
       write (*,'(a)') '----------------------------------------------------'
       !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
       !-------------------------------------------------------------------------------------
-      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, schwarzConvCheckBorder)
+      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel.schwarzConv)
       if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
     endif
 
@@ -1177,7 +1170,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 
       !counter for newton iterations
       maxn = maxn + 1
-
+      
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------

@@ -24,6 +24,9 @@ module mod_Nodes
     type (linkedNode), pointer :: prev => null()
     type (linkedNode), pointer :: next => null()
   end type
+  interface operator (==)
+    module procedure linkedNodeCompare
+  end interface
   
   type boundaryCondition
     integer (kind = 4) :: bctype = enum_empty_BCtype
@@ -236,5 +239,19 @@ contains
     end select switch
   end subroutine
   
+  !node operator functions
+  !-----------------------
+  !'==' for 'linkedNodes'
+  function linkedNodeCompare (node1, node2)
+    implicit none
+    !function definition
+    logical :: linkedNodeCompare
+    !arguments
+    type (linkedNode), pointer, intent (in) :: node1, node2
+    
+    linkedNodeCompare = .false.
+    if (node1.thisNode.ID == node2.thisNode.ID) linkedNodeCompare = .true.
+    return
+  end function
   
 end module

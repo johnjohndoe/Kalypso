@@ -101,6 +101,9 @@ CIPK  LAST UPDATED SEP 19 1995
       type (contiLine), pointer :: tmp_singleCCL, tmp_ccl
       integer (kind = 4) :: i
       integer (kind = 4) :: elt
+      
+      integer (kind = 4) :: iostatus
+      real (kind = 8) :: schwarzConv
 
 
 C-
@@ -538,6 +541,7 @@ CIPK AUG07  ADD ICPU
 cipk mar06 allow for output file rewind      
 CIPK AUG07  ADD ICPU
         READ(DLIN,'(4I8)') irMiniMaxiSav, nprtmetai, IOUTRWD,ICPU
+        !irMiniMaxiSav frequency to print out min/max results
         !nprtmetai  frequency to print results to output file at the end of iteration
         !ioutrwd    frequency of rewinding output file to reduce the file size
         !icpu       number of processors; if value is greater than 0 it means that the MKL is used!
@@ -755,7 +759,12 @@ cipk may03 add cutout opton for settling/erosion for element types
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF(ID(1:2) .EQ. 'CV') THEN
 cipk apr97 add to data read for equation dropout
-        READ(DLIN,'(6F8.0,i8,f8.0)') (CONV(J),J=1,6),idrpt,drfact
+        READ(DLIN,'(6F8.0,i8,2f8.0)', iostat = iostatus) 
+     +   (CONV(J),J=1,6),idrpt,drfact, schwarzConv
+     
+      if (iostatus == 0 .and. schwarzConv > 0) then
+        m_SimModel.schwarzConv = schwarzConv
+      endif
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
       ELSE
@@ -1398,7 +1407,7 @@ C-
      +       5x,'Control-output:',/
      +       5x,'max ID-No. ',I3,/
      +       5x,'continuity lines.')
- 6904 FORMAT(5x,'ID: ',I4,', 1.: ',I4,', last: ',I4)
+ 6904 FORMAT(5x,'ID: ',I6,', 1.: ',I6,', last: ',I6)
  6905 FORMAT(5x,'-----------------------------------')
  6906 FORMAT(5x,'---------------------------------',/
      +       5x,'Continuity line definition in',/

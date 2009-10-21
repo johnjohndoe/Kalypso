@@ -14,6 +14,9 @@ module mod_Model
     logical :: hasInnerBoundaries = .false.
     logical :: isSchwarzConv = .false.
     logical :: isNewtonConv = .false.
+    !convergence borders
+    real (kind = 8) :: schwarzConv = 0.01 
+
     !neighbouring models
     type (linkedSimModel), pointer :: modelNeighb => null()
     

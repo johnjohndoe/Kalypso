@@ -14,6 +14,9 @@ CIPK  LAST UPDATED SEP7 1995
       USE BLK11MOD
       USE BLKDRMOD
       USE BLKSUBMOD
+
+      use SchwarzIterationControl_Helper
+      use mod_ContiLines
       SAVE
 
 !MD: Local Varaible for checking BC-data
@@ -414,6 +417,7 @@ cipk jun05
 C-
 C...... Call routine to establish boundary conditions and angles
 C-
+      call setInnerBC_NFIX (ccls, ncl, nfix)
       CALL BLINE(0)
 C-
       RETURN

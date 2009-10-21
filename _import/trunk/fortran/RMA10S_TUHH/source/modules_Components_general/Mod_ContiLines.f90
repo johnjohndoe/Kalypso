@@ -9,7 +9,9 @@ module mod_ContiLines
   !module internal constants
   !-------------------------
   integer (kind = 4), parameter :: enum_nestedIntervals = 1  
-  
+
+  real (kind = 8), parameter :: ConstPI = 3.14159265358979
+
   !module types
   !------------
   type contiLine
@@ -17,14 +19,16 @@ module mod_ContiLines
     type (linkedNode), pointer :: firstNode => null()
     type (linkedNode), pointer :: lastNode => null()
     type (arc), pointer :: firstSegment => null()
-    TYPE (PROFILE), POINTER :: MorphoProfile => NULL()
     real (kind = 8) :: posNormal (1:2) = (/0.0d0, 0.0d0/)
     real (kind = 8) :: km
     type (StorageElement), pointer :: storageElt => null()
-    logical         :: HasProfile
     !for Schwarz iterations
     logical :: isInnerBoundary = .false.
     type (innerBC), pointer :: innerCondition => null()
+
+    !bankevolution stuff
+    TYPE (PROFILE), POINTER :: MorphoProfile => NULL()
+    logical         :: HasProfile
   end type
   
   type innerBC
@@ -74,6 +78,9 @@ CONTAINS
     return
   end function
 
+!-----------------------------------------------------------------------------------------------
+!subroutine: addNode
+!-----------------------------------------------------------------------------------------------
   subroutine addNode (ccl, nextNode)
     implicit none
     !arguments
@@ -93,6 +100,9 @@ CONTAINS
     ccl.lastNode => nextNode
   end subroutine
   
+!-----------------------------------------------------------------------------------------------
+!subroutine: calcSegments
+!-----------------------------------------------------------------------------------------------
   !add segment constructs to continuity line
   subroutine calcSegments (ccl)
     implicit none
@@ -127,6 +137,9 @@ CONTAINS
     endif 
   end subroutine
   
+!-----------------------------------------------------------------------------------------------
+!subroutine: assignSegPosNormals
+!-----------------------------------------------------------------------------------------------
   subroutine assignSegPosNormals (ccl)
     implicit none
     !arguments
@@ -162,7 +175,10 @@ CONTAINS
     endif
   end subroutine
   
-  !add an ID to the continuity line
+!-----------------------------------------------------------------------------------------------
+!subroutine: addID
+!-----------------------------------------------------------------------------------------------
+!add an ID to the continuity line
   subroutine addID (ccl, ID)
     implicit none
     !arguments
@@ -171,6 +187,9 @@ CONTAINS
     ccl.ID = ID
   end subroutine
   
+!-----------------------------------------------------------------------------------------------
+!subroutine: addkm
+!-----------------------------------------------------------------------------------------------
   subroutine addkm (ccl, km)
     implicit none
     !arguments
@@ -179,6 +198,9 @@ CONTAINS
     ccl.km = km
   end subroutine
   
+!-----------------------------------------------------------------------------------------------
+!subroutine: setChordNormal
+!-----------------------------------------------------------------------------------------------
   subroutine setChordNormal (ccl)
     implicit none
     !arguments
@@ -204,6 +226,9 @@ CONTAINS
     endif 
   end subroutine
 
+!-----------------------------------------------------------------------------------------------
+!subroutine: addInnerBC
+!-----------------------------------------------------------------------------------------------
   subroutine addInnerBC (ccl, globalID, BCtype)
     implicit none
     !arguments
@@ -224,6 +249,9 @@ CONTAINS
     endif
   end subroutine
   
+!-----------------------------------------------------------------------------------------------
+!subroutine: write_innerBC
+!-----------------------------------------------------------------------------------------------
   subroutine write_innerBC (BCOutFile, ccl, vel, wsll, cord)
     !FIXME:
     !This here is very bad; AVOID editing GLOBAL ARRAYS (vel, wsll, cord)
@@ -272,24 +300,24 @@ CONTAINS
 
         !V-boundary conditions has to hand out water level boundary conditions
         case (enum_V_BCtype)
-            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), waspi
+!            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), waspi
 
 
-!          !midside node
-!          if (mod(ndCnter, 2) == 0) then
-!            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.thisNode.ID)
-!          else
-!            !first corner node
-!            if (tmpNode.thisNode.ID == ccl.firstNode.thisNode.ID) then
-!              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.next.thisNode.ID)
-!            !last corner node
-!            elseif (tmpNode.thisNode.ID == ccl.lastNode.thisNode.ID) then
-!              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.prev.thisNode.ID)
-!            !any corner node in between
-!            else 
-!              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), 0.5 * (wsll(tmpNode.prev.thisNode.ID) + wsll(tmpNode.next.thisNode.ID))
-!            endif
-!          endif
+          !midside node
+          if (mod(ndCnter, 2) == 0) then
+            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.thisNode.ID)
+          else
+            !first corner node
+            if (tmpNode.thisNode.ID == ccl.firstNode.thisNode.ID) then
+              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.next.thisNode.ID)
+            !last corner node
+            elseif (tmpNode.thisNode.ID == ccl.lastNode.thisNode.ID) then
+              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.prev.thisNode.ID)
+            !any corner node in between
+            else 
+              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), 0.5 * (wsll(tmpNode.prev.thisNode.ID) + wsll(tmpNode.next.thisNode.ID))
+            endif
+          endif
       end select switch
       write (BCOutFile.unit,'(a)')  tmpString
       
@@ -299,8 +327,9 @@ CONTAINS
     end do forNodes
   end subroutine
 
-
-
+!-----------------------------------------------------------------------------------------------
+!subroutine: createInnerBCFunction
+!-----------------------------------------------------------------------------------------------
   subroutine createInnerBCFunction (tmpBCLineType, inputFile, hFunction, vxFunction, vyFunction)
     implicit none
     !arguments
@@ -420,9 +449,9 @@ CONTAINS
 
   end subroutine
 
-
-
-
+!-----------------------------------------------------------------------------------------------
+!subroutine: getBCValues
+!-----------------------------------------------------------------------------------------------
   subroutine getBCValues (tmpCCL, hFunction, vxFunction, vyFunction, spec, nfix)
     !arguments
     type (contiLine), pointer :: tmpCCL
@@ -434,6 +463,8 @@ CONTAINS
     !local variables
     type (LinkedNode), pointer :: tmpNode => null()
     real (kind = 8) :: localOrdinate
+    real (kind = 8) :: thet
+    real (kind = 8) :: a(1:2), b(1:2)
     
     tmpNode => tmpCCL.firstNode
     localOrdinate = 0.0d0
@@ -448,8 +479,31 @@ CONTAINS
       elseif (associated (vxFunction)) then
         spec (tmpNode.thisnode.ID, 1) = quadrFunValue (vxFunction, localOrdinate)
         spec (tmpNode.thisnode.ID, 2) = quadrFunValue (vyFunction, localOrdinate)
+        !nfix (tmpNode.thisNode.ID) = 11000
         nfix (tmpNode.thisNode.ID) = 31000
+      !fix directions of outer nodes first!
+      if (tmpNode == tmpCCL.firstNode .or. tmpNode == tmpCCL.lastNode) then
+        if (spec (tmpNode.thisNode.ID, 2) == 0) then
+          thet = 0.0
+        else
+          !scalar product of spec-vector with (1 0) vector to find angle between global direction
+          !                 a * b
+          !thet = arccos -----------
+          !               |a| * |b|
+          a = [spec(tmpNode.thisNode.ID, 1), spec (tmpNode.thisNode.ID, 2)]
+          b = [1.0d0, 0.0d0]
+          thet = acos ((a(1) * b(1) + a(2) * b(2))/ (sqrt (a(1)**2 + a(2)**2) * sqrt (b(1)**2 + b(2)**2)))
+          thet = thet * (spec (tmpNode.thisNode.ID, 2)/ abs (spec (tmpNode.thisNode.ID, 2)))
+          if (thet < 0) thet = thet + 2* ConstPI
+        endif
+      endif
+      if (tmpNode == tmpCCL.firstNode) then
+        call fixDirection (tmpNode.thisNode.ID, tmpNode.next.thisNode.ID, tmpNode.next.next.thisNode.ID, thet)
+      elseif (tmpNode == tmpCCL.lastNode) then
+        call fixDirection (tmpNode.thisNode.ID, tmpNode.prev.thisNode.ID, tmpNode.prev.prev.thisNode.ID, thet)
+      endif
       end if
+        
       !update boundary condition to the model
       call bform (tmpNode.thisNode.ID)
       
@@ -472,42 +526,7 @@ CONTAINS
     end do throughNodes
   
   end subroutine       
-  
 
-
-!      
-!      readNodeCounter = 0
-!      readNodeData: do 
-!        readNodeCounter = readNodeCounter + 1
-!        BCType: select case (ccl.innerCondition.BCtype)
-!          case (enum_H_BCtype)
-!            !read H line
-!            read (inputFile.unit, *) dummy1, dummy2, dummy3, spec(tmpNode.thisNode.ID, 3)
-!            nfix (tmpNode.thisNode.ID) = 00200
-!            !Add the boundary direction fix!
-!            if (tmpNode.thisNode.ID == ccl.firstNode.thisNode.ID .or. tmpNode.thisNode.ID == ccl.lastNode.thisNode.ID) nfix(tmpNode.thisNode.ID) = nfix(tmpNode.thisNode.ID) + 1000
-!            !set up boundary condition
-!          case (enum_V_BCtype)
-!            !read V line
-!            read (inputFile.unit, *) dummy1, dummy2, dummy3, spec(tmpNode.thisNode.ID, 1), spec(tmpNode.thisNode.ID, 2)
-!            nfix (tmpNode.thisNode.ID) = 11000
-!        end select BCType
-!        !Finish setting up boundary condition
-!        call bform (tmpNode.thisNode.ID)
-!
-!
-!        if (associated (tmpNode.next)) then
-!          tmpNode => tmpNode.next
-!        else
-!          exit readNodeData
-!        endif
-!      enddo readNodeData
-!      
-!      ccl.innerCondition.isAssigned = .true.
-!
-!      !Closing file again
-!      call closeFileObject (inputFile)
-!    endif
   
   subroutine storeOldBCs (ccl, spec)
     implicit none
@@ -568,8 +587,6 @@ CONTAINS
             absChange(3) = abs ((tmpNode.thisNode.currentBC.h - tmpNode.thisNode.previousBC.h)/ (0.5* (tmpNode.thisNode.previousBC.h + tmpNode.thisNode.currentBC.h)))
             if (absChange(3) > maxChange(3)) maxChange(3) = absChange(3)
             if (maxChange(3) > convBorder .and. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
-          else
-            ccl.innerCondition.isSchwarzConv = .false.
           end if
           
         case (enum_V_BCtype)
@@ -578,11 +595,11 @@ CONTAINS
             if (tmpNode.thisNode.previousBC.v(i) /= 0.0) then
               !Check for maximum change in boundary condition
               absChange(i) = abs ((tmpNode.thisNode.currentBC.v(i) - tmpNode.thisNode.previousBC.v(i))/ (0.5 * (tmpNode.thisNode.previousBC.v(i) + tmpNode.thisNode.currentBC.v(i))))
-              if (absChange(i) > maxChange(i)) maxChange(i) = absChange(i)
-              if (maxChange(i) > convBorder .and. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
-            else
-              ccl.innerCondition.isSchwarzConv = .false.
+            elseif (tmpNode.thisNode.previousBC.v(i) == 0.0 .and. tmpNode.thisNode.currentBC.v(i) /= 0.0) then
+              absChange(i) = 1000.0
             end if
+            if (absChange(i) > maxChange(i)) maxChange(i) = absChange(i)
+            if (maxChange(i) > convBorder .and. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
           enddo
          end select selectConvCheckCase
        if (associated (tmpNode.next)) then
@@ -634,5 +651,31 @@ CONTAINS
       end do improveBCs
     end if
   end subroutine
-
+  
+  subroutine innerType_NFIX (tmpCCL, nfix)
+    implicit none
+    !arguments
+    type (contiLine), pointer :: tmpCCL
+    integer (kind = 4), intent (inout) :: nfix (*)
+    !local variables
+    type (linkedNode), pointer :: tmpNode => null()
+    
+    tmpNode => tmpCCL.firstNode
+    
+    setNFIX: do
+      select case (tmpCCL.innerCondition.BCType)
+        case (enum_H_BCtype)
+          nfix (tmpNode.thisNode.ID) = 0200
+        case (enum_V_BCtype)
+          nfix (tmpNode.thisNode.ID) = 31000
+       end select
+       
+       if (associated (tmpNode.next)) then
+         tmpNode => tmpNode.next
+       else
+         exit setNFIX
+       endif
+    enddo setNFIX
+  end subroutine
+  
 end module

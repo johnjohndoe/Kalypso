@@ -16,6 +16,9 @@ CIPK  LAST UPDATED SEP 8 1995
       USE BLKDRMOD
       USE BLKSANMOD
       USE share_profile, ONLY : BANKEVOLUTION   ! HN. June2009
+      
+      use SchwarzIterationControl_Helper
+      use mod_ContiLines
 
       SAVE
 C-
@@ -322,30 +325,12 @@ C
 
       end if
 
-c-
-c
-C Fixed salinity nodes 
-C
-C      IF (ISALBC .GT. 0)  THEN
-C	 DO 710 I=1,NFXSAL
-C	    N = IFXSAL(I)
-C	    NFIX(N) = (NFIX(N)/100)*100 + 11
-C	    NFIX1(N)=1
-C	    SPEC(N,4) = SALBC(1)
-C	    SPEC(N,5) = SALBC(2)
-C	    SPEC(N,6) = SALBC(3)
-C  710    CONTINUE
-C      ENDIF
 C
 CIPK NOV97 ADD CALL
       CALL ELFLOWS(IBIN)
-C      do n=1,ne
-C        if(sidf(n) .ne. 0.  .or. sidq(n,1) .ne. 0.)then
-C          write(75,*) 'elflws',n,sidf(n),sidq(n,1)
-C        endif
-C      enddo
-C
-C-
+
+!Set the boundary condition type for inner boundaries
+      call setInnerBC_NFIX (ccls, ncl, nfix)
 
 C...... Call routine to establish boundary conditions and angles
 C-
