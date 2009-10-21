@@ -1500,4 +1500,21 @@ new features introduced/ started to be introduced:
       - handling of stop-events
 
 --- Nico Schrage, 09.10.2009
-     
+
+166.) Some little refactoring
+      (affects: Bline1.f90)
+167.) Commenting of matrix output (debugging option); some improvements on output
+      (affects: coef2*.for, testoutput.f90)
+168.) Adaptations for distributed calculations:
+      - manual setting of convergence border (input.for)
+      - a-priori setting of inner boundary condition type (getbc.for, inputd.for)
+      - changing of boundary condition update behaviour (rma10.for)
+      - direction fix of nodes at the edge of exchange boundaries
+      (affects: input.for, getbc.for, inputd.for, rma10.for, modules related to distributed calculations)
+169.) improve updating informations for relative changes
+      (affects: update.f90)
+170.) Make direction fix for edge-nodes of Q-boundary lines a seperate subroutine
+      (affects: qgen.for)
+      
+--- Nico Schrage, 21.10.2009
+      
