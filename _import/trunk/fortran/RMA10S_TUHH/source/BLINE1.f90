@@ -1,8 +1,8 @@
 SUBROUTINE BLINE(NTR) 
 !NiS,may06,com:
 !NTR shows calling position
-!NTR = 0: steady start
-!NTR = 1: dynamic start
+!NTR = 0: steady start; after reading the boundary conditions in getbc.sub
+!NTR = 1: dynamic start; after reading the boundary conditions in inputd.sub
 !NTR > 1: during iteration
 !-
 
@@ -40,7 +40,7 @@ real (kind = 8), dimension (1:2, 1:2) :: dl
       integer (kind = 4) :: i, j, k, l, m, n
       integer (kind = 4) :: ng
       integer (kind = 4) :: imt
-      integer (kind = 4) :: nm, nn, ntr, mcl, mtyp
+      integer (kind = 4) :: nn, ntr, mcl, mtyp
       integer (kind = 4) :: n1, n2, n3
       integer (kind = 4) :: nfk, nftyp, nqb, nlft
       integer (kind = 4) :: ibc, iactvbc, nfd
@@ -67,22 +67,17 @@ real (kind = 8), dimension (1:2, 1:2) :: dl
 !--------------------
 if (itimeh == 0) then
   itimeh = 1
+  !allocation and initialization
   allocate (iform (maxp), iod (maxp), ion (maxp))
   iform = 0
   iod = 0
-  ion = 0
+  ion = 1
 endif
-!initialise them
-!---------------
-do n = 1, np
-  iform (n) = 0
-  iod (n) = 0
-enddo
+
 !some copying of values
 !----------------------
 if (ntr <= 1) then
   do n = 1, np
-    ion (n) = 1
     nfixsav (n) = nfix (n)
     nfixsv1 (n) = nfix1 (n)
   enddo
@@ -110,21 +105,22 @@ enddo
 
 !Start examining ibn and partly nfixk
 !------------------------------------
+!objectives: ibn, nfixk, iod
 elements: do n = 1, nem
   !material type
-  nm = imat (n)
+  mtyp = imat (n)
   !cycle on deactive elements
-  if(nm < 1) cycle elements
+  if(mtyp < 1) cycle elements
   !cycle what ever type of elements
   !TODO: What is imat type 90+?
-  if (mod (nm, 100) > 90) cycle elements
+  if (mod (mtyp, 100) > 90) cycle elements
   !cycle 3D elements
-  if (nm > 1000 .and. nm < 5000) cycle elements
+  if (mtyp > 1000 .and. mtyp < 5000) cycle elements
   ncn = ncrn (n)
   !prevent special treatment of 1D/2D element-2-element transition
-  if (ncn == 5 .and. nm < 900) ncn = 3
+  if (ncn == 5 .and. mtyp < 900) ncn = 3
   !for 1D elements and control structure elements
-  if (ncn == 3 .or. nm > 900) then
+  if (ncn == 3 .or. mtyp > 900) then
     mcl = 1
   !other elements
   else
@@ -133,21 +129,40 @@ elements: do n = 1, nem
   !set up ibn and define partly nfixk
   do m = mcl, ncn, mcl
     k = nops (n, m)
+    !If the node exists
     if (k > 0) then
-      !control structure element
-      if (nm > 900 .and. nm < 5000) then
+      !This happens for
+      !  junction elements: [901,...,903]
+      !  control structures: [904,...,989]
+      !  3D elements: [1001,...]
+      if (mtyp > 900 .and. mtyp < 5000) then
+        !TODO: Test, what happens with junction elements and what with control structure elements!
         if (igtp (n) == 0 .and. nfctp (n) == 0) then
           ibn (k) = 3
         else
           ibn (k) = ibn (k) + 10
           nfixk (k) = 01000
         endif
-      !normal elements
+
+      !Following happens for
+      !  1D elements, 2D elements and 1D-2D transition elements
+      !    Last are numerically treated almost as a 1D element. Thus there is no
+      !    reason to distinguish
+      !mcl became:
+      !    1 - for 1D elements [1,...,89]; [101,...,188]
+      !    2 - for 2D elements [1,...,89]; [101,...,188]
+      !    1 - for control structure elements (no meaning at all)
+      !    1 - for junction elements (no meaning at all)
+      !    Reason: Running through midside nodes for 2D elements; running through
+      !      corner nodes for 1D elements; those nodes are the connecting nodes to
+      !      neighbours and are meaningful counters thus!
       else
-        !set pointer for 1D elements and control structure elements
+        !set iod-flag for 1D elements
         if (mcl == 1) iod (k) = 1
         !increase midside nodes' connections
         ibn (k) = ibn (k) + 1
+        !ibn: Counting the occurance of a node in all active elements, i.e. 
+        !     in all 1D elements, 1D-2D transition elements, junction element
       endif
     endif
   enddo
@@ -155,6 +170,7 @@ enddo elements
 
 !Increase for all 1D transitioning nodes the counter ibn to settle, they're not dead ends
 !----------------------------------------------------------------------------------------
+!objectives: ibn
 TransNode1DUpdate: do j = 1, maxlt
   k = translines (j, 3)
   if (k > 0) ibn (k) = ibn (k) + 1
@@ -162,6 +178,7 @@ end do TransNode1DUpdate
 
 !increase the IBN entries at the 2D midside nodes on the arcs connected to a 1D/2D line-2-element transition, so the 2D elements are not considered to be a boundary
 !-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+!objectives: ibn
 TransNodes2DUpdate: do i = 1, MaxLT
   if (TransLines (i, 1) /= 0) then
     LiNo = TransLines (i, 2)
@@ -172,16 +189,15 @@ TransNodes2DUpdate: do i = 1, MaxLT
   end if
 enddo TransNodes2DUpdate
 
-!Reset IBN for merger nodes
-!--------------------------
+!Reset IBN for merger nodes in 2D-3D transition elements
+!-------------------------------------------------------
+!objectives: ibn
 do n = 1, nem
   if (netyp (n) == 18) then
     j = nop (n, 19)
     if (j > 0) ibn (j) = 2
   endif
 enddo
-
-
 
 !For every element
 elements2: do n = 1, nem
@@ -208,33 +224,34 @@ elements2: do n = 1, nem
     n3 = nops (n, 1)
     if (m < ncn) n3 = nops (n, m + 1)
 
-    !Skip slope calculation for sides that have fixed flow or elevation
+    !Checking ibn of midsides to find outer 2D-elements; midside nodes of 1D elements have ibn==0
     if (ibn (n2) == 1) then
 
       !Get direction of outward normal for 2-d plan elements
       if (ncn > 3) then
         call outnrm (cord (n1, 1), cord (n1, 2), cord (n2, 1), cord (n2, 2), cord (n3, 1), cord (n3, 2), srt, 1)
-
       !Get direction for 1D elements and 1D/2D elt-2-elt transition elements
       else
         call outnrm (cord (n1, 1), cord (n1, 2), cord (n2, 1), cord (n2, 2), cord (n3, 1), cord (n3, 2), srt, 2)
       endif
 
-      !store into global arrays
+      !store outward normals into global arrays
       voutn (n1) = srt (1)
       voutn (n2) = srt (2)
       voutn (n3) = srt (3)
       
-      !
+      !get the boundary condition type of the midside node's arc
+      !nfk = 310 -> q-boundary condition
+      !nfk = 130 -> qx-boundary condition
+      !nfk =   2 -> water level condition
+      !nfk = 110 -> v-condition
       nfk = nfixk (n2)/ 100
 
-      !
+      !if not any q- or h-condition, then the boundary slope has to be calculated
       if(nfk < 113  .and.  nfk /= 2) then
-        !get the nodes of the arc
-        n1 = nop (n, m - 1)
-        n3 = nop (n, 1)
-        if (m < ncn) n3 = nop (n, m + 1)
-        
+
+        !TODO: When does this happen? It seems as it is connected to junctions or 1D elements, that are
+        !      control structures
         !reset ibn-values for passive boundaries (implicit boundary conditions)
         if (ncn < 6) then
           if (ibn (n1) >= 10) ibn (n1) = 15
