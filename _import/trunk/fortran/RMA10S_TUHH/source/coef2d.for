@@ -2248,8 +2248,8 @@ CIPK JUN05
  1450 CONTINUE
 
 !write matrix into file as control output
-      if (TransitionElement (nn))
-     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      if (TransitionElement (nn))
+!     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
 !-
 
       RETURN

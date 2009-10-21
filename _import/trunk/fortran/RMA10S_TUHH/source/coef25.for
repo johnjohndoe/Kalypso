@@ -2442,11 +2442,11 @@ c      ENDIF
 
 
 !write matrix into file
-      if (nn == 4621 .or. nn == 4410) then
-      !if (nn == 4624 .or. nn == 4412) then
-        write(*,*) 'Element: ', nn
-        call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
-      endif
+!      if (nn == 4621 .or. nn == 4410) then
+!      !if (nn == 4624 .or. nn == 4412) then
+!        write(*,*) 'Element: ', nn
+!        call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      endif
 !-
 
       RETURN

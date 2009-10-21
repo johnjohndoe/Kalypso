@@ -129,7 +129,6 @@ C
 !---------------
 !Execution block
 !---------------
-
       !define some constants due to unit system
       IF (GRAV .LT. 32.)  THEN
         FCOEF = GRAV
@@ -209,7 +208,7 @@ CIPK JUN05 MOVE LOOP
           ESTIFM(I,J) = 0.0
         ENDDO
       ENDDO
-
+      
 cipk jun05
       inovel=0
       if(iteqv(maxn) .eq. 2) inovel=1
@@ -242,6 +241,7 @@ c     a  normal element
 
       !Find material type definition value (last two digits show type dedinition
       NR = MOD(IMMT,100)
+      
 cipkjun05
       !Leave material types with value .gt. 900 as they are > control structures
       if(immt .gt. 900) nr=immt
@@ -263,6 +263,7 @@ CIPK MAR0 setup switch that says salinity is active
       ELSE
         ISLP=0
       ENDIF
+
 c
 cipk sep96 new logic for control of horiz eddy and diffusion
 
@@ -360,11 +361,14 @@ C-
         IF(k.eq.5) dsid(2)=dside
         IF(k.eq.7) dsid(4)=dside
       end do
+
+      
       !area computation for triangular elements
       semp=(dsid(1)+dsid(2)+dsid(3))/2
       artr1=SQRT(semp*(semp-dsid(1))*(semp-dsid(2))*(semp-dsid(3)))
       gsc1=SQRT(4*artr1/SQRT(3.))
       gscal=gsc1
+
       !area computation for the complementary triangle within a
       !quadrilateral element (for quadrilateral elements only)
       if (ncn.gt.6) then
@@ -378,6 +382,7 @@ CIPK JAN03 add momentum
       EINA=EINX(NN)*CX+EINY(NN)*SA
       EINB=-EINX(NN)*SA+EINY(NN)*SA
       NCNX=NCN/2
+
       IF(NTX .EQ. 0) GO TO 72
 cipk nov97
 !MD  only for NTX=1: Real calculation
@@ -2059,7 +2064,7 @@ C......END GAUSS DO LOOP
 C-
   500 CONTINUE
       IF(NTX .EQ. 0) RETURN
-
+      
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 660
 C       COMPUTE BOUNDARY FORCES
@@ -2680,7 +2685,7 @@ CIPK JUN05
 !      !if (nn == 4621 .or. nn == 4410) then
 !      if (nn == 4624 .or. nn == 4411 .or. nn== 4412) then
 !        write(*,*) 'Element: ', nn
-!        call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn, nfix)
 !      endif
 !-
 
