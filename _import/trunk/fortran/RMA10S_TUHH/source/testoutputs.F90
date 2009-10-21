@@ -203,7 +203,7 @@ end subroutine
 
 
 
-subroutine Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+subroutine Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn, nfix)
 
 implicit none
 
@@ -217,7 +217,7 @@ implicit none
 !ncn    : number of corner nodes
 !maxp   : maximum node ID-number in the mesh
 !maxe   : maximum element ID-number in the mesh
-INTEGER         :: nbc (1:maxp, 1:6)
+INTEGER         :: nbc (1:maxp, 1:6), nfix(*)
 integer (kind = 4) :: nop (1: maxe, 1: 8)
 INTEGER         :: nn, ncn, maxp, maxe
 REAL (KIND = 8) :: f (80), estifm (80, 80)
@@ -234,11 +234,13 @@ REAL (KIND = 8) :: f (80), estifm (80, 80)
 INTEGER              :: dca
 INTEGER              :: nbct (1:32,1:2)
 INTEGER              :: i, j, k
+integer :: status
+!logical :: unitExists, unitHasName, unitIsOpen
+!character (len = 1000) :: unitName
 CHARACTER (LEN =  1) :: sort(1:32)
 CHARACTER (LEN = 16) :: FMT1
-CHARACTER (LEN = 38) :: FMT2
+CHARACTER (LEN = 42) :: FMT2
 
-WRITE(9919,*) 'Matrix for element: ', nn, ' calculated.'
   !active degreecount
   dca = 0
   !active positions
@@ -266,14 +268,28 @@ WRITE(9919,*) 'Matrix for element: ', nn, ' calculated.'
   end do
 
   WRITE(FMT1, '(a5,i2.2,a9)') '(33x,', dca, '(1x,i10))'
-  write(FMT2, '(a18,i2.2,a18)') '(a1,i1,a2,2(1x,i8),', dca+1, '(1x,f10.2),1x,i10)'
+  write(FMT2, '(a18,i2.2,a22)') '(a1,i1,a2,2(1x,i8),', dca+1, '(1x,f10.2),2(1x,i10))'
+!  inquire (unit = 9919, exist = unitExists)
+!  if (unitExists) then
+!    inquire (unit = 9919, opened = unitIsOpen)
+!    inquire (unit = 9919, named = unitHasName)
+!    if (unitHasName) then
+!      inquire (unit = 9919, name = unitName)
+!    endif
+!    write (*,*) 'unitIsOpen: ', unitIsOpen
+!    write (*,*) 'named:      ', unitHasName
+!    write (*,*) 'name:       ', unitName
+!  endif
 
    WRITE(9919,*) 'Element ', nn, 'coef2 t'
    WRITE(9919, FMT1) ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
    DO i = 1, dca
      k = (nbct(i,1) - 1) * 4 + nbct(i,2)
-     WRITE(9919, FMT2) sort(i), nbct(i,1), ': ', nbc( nop(nn, nbct(i,1)), nbct(i,2)), nop(nn, nbct(i,1)), f(k), &
-     & (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca), nbc( nop(nn, nbct(i,1)), nbct(i,2))
+     WRITE(9919, FMT2, iostat = status) sort(i), nbct(i,1), ': ', nbc( nop(nn, nbct(i,1)), nbct(i,2)), nop(nn, nbct(i,1)), f(k), &
+     & (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca), nbc( nop(nn, nbct(i,1)), nbct(i,2)), nfix(nop(nn,nbct(i,1)))
+     if (status /= 0) then
+       continue
+     endif
    ENDDO
    WRITE(9919,*)
    WRITE(9919,*)
