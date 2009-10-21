@@ -162,7 +162,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_13 = "start/kalypso_2.1.3.exe"; //$NON-NLS-1$
 
-  private final String EXE_FILE_2_141 = "start/kalypso_2.1.4.1_SUDS.exe"; //$NON-NLS-1$
+  private final String EXE_FILE_2_141 = "start/cost_paris_new.exe"; //$NON-NLS-1$
 
   private final String EXE_FILE_TEST = "start/kalypso_test.exe"; //$NON-NLS-1$
 
