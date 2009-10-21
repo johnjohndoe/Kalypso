@@ -70,9 +70,9 @@ public class CoordDataBlock extends AbstractDataBlock
 
   private final static Logger m_logger = Logger.getLogger( CoordDataBlock.class.getName() );
 
-  private double[] m_xs = new double[0];
+  private Double[] m_xs = new Double[0];
 
-  private double[] m_ys = new double[0];
+  private Double[] m_ys = new Double[0];
 
   public CoordDataBlock( DataBlockHeader dbh )
   {
@@ -94,7 +94,7 @@ public class CoordDataBlock extends AbstractDataBlock
   /**
    * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.ICoordDataBlock#getX()
    */
-  public double[] getX( )
+  public Double[] getX( )
   {
     return m_xs;
   }
@@ -102,15 +102,15 @@ public class CoordDataBlock extends AbstractDataBlock
   /**
    * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.ICoordDataBlock#getY()
    */
-  public double[] getY( )
+  public Double[] getY( )
   {
     return m_ys;
   }
 
-  private static double[] readDoubleBlock( final int count, final BufferedReader reader )
+  private static Double[] readDoubleBlock( final int count, final BufferedReader reader )
 
   {
-    final double[] coords = new double[count];
+    final Double[] coords = new Double[count];
 
     int counter = 0;
 
@@ -186,7 +186,7 @@ public class CoordDataBlock extends AbstractDataBlock
    * @param pw
    *          -
    */
-  private void writeDoubleBlock( final double[] dbls, final PrintWriter pw )
+  private void writeDoubleBlock( final Double[] dbls, final PrintWriter pw )
 
   {
     for( int i = 0; i < dbls.length; i++ )
@@ -209,7 +209,7 @@ public class CoordDataBlock extends AbstractDataBlock
     return m_xs.length;
   }
 
-  public final void setCoords( final double[] xs, final double[] ys )
+  public final void setCoords( final Double[] xs, final Double[] ys )
   {
     if( xs == null | ys == null | xs.length != ys.length )
       throw new IllegalArgumentException();

@@ -38,14 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.serializer;
+package org.kalypso.model.wspm.tuhh.core.test;
 
+import org.junit.Test;
+import org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink;
 
 /**
  * @author kimwerner
- *
  */
-public interface IStrangSink 
+public class PlotterTest
 {
-  public void write( final String source, final String destination );
+  /**
+   * Entry point.
+   */
+  @Test
+  public void test( )
+  {
+    String arg1 = "";
+    String arg2 = "";
+
+    final LngSink sink = new LngSink();
+    sink.write( arg1, arg2 );
+  }
 }

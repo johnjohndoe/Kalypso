@@ -159,8 +159,8 @@ public class PrfSource implements IProfilSource
       return;
     }
 
-    final double[] xs = db.getX();
-    final double[] ys = db.getY();
+    final Double[] xs = db.getX();
+    final Double[] ys = db.getY();
     for( int i = 0; i < xs.length; i++ )
     {
       final IRecord point = ProfilUtil.findPoint( p, i, xs[i], 0 );
@@ -359,8 +359,8 @@ public class PrfSource implements IProfilSource
     final IDataBlock db = pr.getDataBlock( "Gelae" ); //$NON-NLS-1$
     if( db == null )
       return 0;
-    final double[] xs = db.getX();
-    final double[] ys = db.getY();
+    final Double[] xs = db.getX();
+    final Double[] ys = db.getY();
     final IComponent cBreite = p.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent cHoehe = p.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     p.addPointProperty( cBreite );
@@ -424,12 +424,12 @@ public class PrfSource implements IProfilSource
     if( pCount > 0 )
     {
       p1 = ProfilUtil.findPoint( p, db.getX()[0], 0 );
-      pos1 = (int) db.getY()[0];
+      pos1 = (int) db.getY()[0].doubleValue();
     }
     if( pCount > 1 )
     {
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
-      pos2 = (int) db.getY()[1];
+      pos2 = (int) db.getY()[1].doubleValue();
     }
     if( pCount > 2 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.29", p.getStation() ) //$NON-NLS-1$
@@ -489,7 +489,7 @@ public class PrfSource implements IProfilSource
     final IDataBlock dbt = pr.getDataBlock( "TRENNLINIE" ); //$NON-NLS-1$
     if( dbt == null )
       return;
-    final double[] pos = dbt.getX();
+    final Double[] pos = dbt.getX();
     for( int i = 0; i < pos.length; i++ )
     {
       final IRecord point = ProfilUtil.findPoint( p, pos[i], 0 );

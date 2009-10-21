@@ -66,9 +66,9 @@ public interface IDataBlock
 
   public void setThirdLine( final String text );
 
-  public double[] getX( );
+  public Double[] getX( );
 
-  public double[] getY( );
+  public Double[] getY( );
 
   public String[] getText( );
 

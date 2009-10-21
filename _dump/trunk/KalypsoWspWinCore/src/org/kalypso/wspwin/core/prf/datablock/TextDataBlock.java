@@ -94,7 +94,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getX()
    */
-  public double[] getX( )
+  public Double[] getX( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -103,7 +103,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getY()
    */
-  public double[] getY( )
+  public Double[] getY( )
   {
     // TODO Auto-generated method stub
     return null;

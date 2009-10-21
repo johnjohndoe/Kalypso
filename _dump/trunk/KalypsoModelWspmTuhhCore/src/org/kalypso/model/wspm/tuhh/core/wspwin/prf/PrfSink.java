@@ -171,7 +171,7 @@ public class PrfSink implements IProfilSink
       final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       final int size = profil.getPoints().length;
-      dbr.setCoords( new double[size], new double[size] );
+      dbr.setCoords( new Double[size], new Double[size] );
     }
 
     final IProfileObject[] buildings = profil.getProfileObjects();
@@ -189,8 +189,8 @@ public class PrfSink implements IProfilSink
   private void writeCoords( final IProfil profil, final IComponent prop, final CoordDataBlock db )
   {
     final IRecord[] points = profil.getPoints();
-    final double[] Xs = new double[points.length];
-    final double[] Ys = new double[points.length];
+    final Double[] Xs = new Double[points.length];
+    final Double[] Ys = new Double[points.length];
 
     final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int iProp = profil.indexOfProperty( prop );
@@ -209,8 +209,8 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        Xs[i] = 0;
-        Ys[i] = 0;
+        Xs[i] = 0.0;
+        Ys[i] = 0.0;
 
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
       }
@@ -246,8 +246,8 @@ public class PrfSink implements IProfilSink
       return;
 
     final CoordDataBlock dbw = new CoordDataBlock( PrfWriter.createHeader( key ) );
-    final double[] xs = new double[deviders.length];
-    final double[] ys = new double[deviders.length];
+    final Double[] xs = new Double[deviders.length];
+    final Double[] ys = new Double[deviders.length];
     final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     for( int i = 0; i < deviders.length; i++ )
     {

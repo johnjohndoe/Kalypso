@@ -197,7 +197,10 @@ public class PrfWriter
       dbh.setFirstLine( "TRENNLINIE" ); //$NON-NLS-1$
       dbh.setSecondLine( "WEHR" ); //$NON-NLS-1$
     }
-
+    else
+    {
+      dbh.setFirstLine( key );
+    }
     return dbh;
   }
 
@@ -206,6 +209,11 @@ public class PrfWriter
     for( int i = 1; i < 14; i++ )
     {
       final String[] line = m_metaMap.get( i );
+      if( line == null )
+      {
+        pw.println("");
+        continue;
+      }
       final StringBuffer buffer = new StringBuffer( "#" ); //$NON-NLS-1$
       buffer.append( line[0] );
 
