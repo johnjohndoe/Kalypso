@@ -202,7 +202,7 @@ public class RainfallGenerationTask extends Task
       // TODO: transform??
       ProgressUtilities.worked( progress, 4 );
 
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, m_targetFilter, m_targetFrom, m_targetTo );
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, null, m_targetFilter, m_targetFrom, m_targetTo );
       for( final Generator generator : m_generators )
       {
         final Date fromDate = new Date( generator.getFrom() );

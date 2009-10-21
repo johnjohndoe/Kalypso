@@ -69,13 +69,14 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -95,19 +96,16 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
   public static final QName QNAME_PROP_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
-
   public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
   }
 
   /**
-   * @see
-   *      org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.geometry.GM_Surface<org
-   *      .kalypsodeegree.model.geometry.GM_SurfacePatch>[], java.util.Date, java.util.Date,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.geometry.GM_MultiSurface[],
+   *      java.util.Date, java.util.Date, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IObservation[] createRainfall( final GM_Surface<GM_SurfacePatch>[] areas, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
+  public IObservation[] createRainfall( final GM_MultiSurface[] areas, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
   {
     final Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
     final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
@@ -142,12 +140,12 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
       final IObservation[] result = new IObservation[areas.length];
       for( int i = 0; i < areas.length; i++ )
       {
-        final GM_Surface<GM_SurfacePatch> area = areas[i];
+        final GM_MultiSurface area = areas[i];
         if( area == null )
           continue;
 
-        final Polygon areaPolygon = (Polygon) JTSAdapter.export( area );
-        final double[] weights = JTSUtilities.fractionAreasOf( areaPolygon, ombrometerPolygons );
+        final Geometry areaGeometry = JTSAdapter.export( area );
+        final double[] weights = JTSUtilities.fractionAreasOf( areaGeometry, ombrometerPolygons );
         result[i] = combineObses( ombrometerObservations, weights );
       }
 
