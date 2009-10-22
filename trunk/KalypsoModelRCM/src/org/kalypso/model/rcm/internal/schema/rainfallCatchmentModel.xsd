@@ -1,61 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.model.rcm" version="0.1" xmlns:rcm="org.kalypso.model.rcm" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-	<annotation>
-		<documentation xml:lang="en"><![CDATA[Rainfall Catchment Model.<br>
+  <annotation>
+    <documentation xml:lang="en"><![CDATA[Rainfall Catchment Model.<br>
 A general approach to generate rainfall for catchment areas.]]>
-		</documentation>
-		<appinfo xmlns:kapp="org.kalypso.appinfo">
-        	<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-		</appinfo>
-	</annotation>
-	<import namespace="http://www.opengis.net/gml" />
-	<element name="RainfallGenerator" type="rcm:RainfallGeneratorType" substitutionGroup="gml:_Feature" abstract="true">
-		<annotation>
-			<documentation xml:lang="en"><![CDATA[This element represents one abstract possibility to generate rainfall for catchments.<br>
+    </documentation>
+    <appinfo xmlns:kapp="org.kalypso.appinfo">
+      <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+    </appinfo>
+  </annotation>
+  <import namespace="http://www.opengis.net/gml"/>
+
+  <element name="RainfallGenerator" type="rcm:RainfallGeneratorType" substitutionGroup="gml:_Feature" abstract="true">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[This element represents one abstract possibility to generate rainfall for catchments.<br>
 A generator must be able to return a timeserie for any given area (defined by a polygon geometry).]]></documentation>
-		</annotation>
-	</element>
-	<complexType name="RainfallGeneratorType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType" />
-		</complexContent>
-	</complexType>
-	<element name="OmbrometerRainfallGenerator" substitutionGroup="rcm:RainfallGenerator">
-		<annotation>
-			<documentation xml:lang="en"><![CDATA[This generator creates the rainfall from ombrometer stations (each corresponding to a timeserie),
-which attached (thiessen) polygones that define the affected area of this station.]]></documentation>
-		</annotation>
-		<complexType>
-			<complexContent>
-				<extension base="rcm:RainfallGeneratorType">
-					<sequence>
-						<element name="ombrometerCollection" type="gml:FeaturePropertyType">
-							<annotation>
-								<documentation xml:lang="en"><![CDATA[Refers to any feature that contains the ombrometer-features.<br>
+    </annotation>
+  </element>
+  <complexType name="RainfallGeneratorType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType"/>
+    </complexContent>
+  </complexType>
+
+  <element name="OmbrometerRainfallGenerator" substitutionGroup="rcm:RainfallGenerator">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[This generator creates the rainfall from ombrometer stations (each corresponding to a timeserie),
+with attached (thiessen) polygones that define the affected area of this station.]]></documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="rcm:RainfallGeneratorType">
+          <sequence>
+            <element name="ombrometerCollection" type="gml:FeaturePropertyType">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Refers to any feature that contains the ombrometer-features.<br>
 Probably an external xlink.]]></documentation>
-							</annotation>
-						</element>
-						<element name="ombrometerFeaturePath" type="string">
-							<annotation>
-								<documentation xml:lang="en"><![CDATA[Feature path relative to the given ombrometer collection.
-<br>Denotes the list of given ombromete features.]]></documentation>
-							</annotation>
-						</element>
-						<element name="timeseriesLinkPath" type="string">
-							<annotation>
-								<documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature.<br>
+              </annotation>
+            </element>
+            <element name="ombrometerFeaturePath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to the given ombrometer collection.
+<br>Denotes the list of given ombrometer features.]]></documentation>
+              </annotation>
+            </element>
+            <element name="timeseriesLinkPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature.<br>
 Denotes a timeseries link that contains the attached timeserie of this ombrometer.]]></documentation>
-							</annotation>
-						</element>
-						<element name="areaPath" type="string">
-							<annotation>
-								<documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature.<br>
+              </annotation>
+            </element>
+            <element name="areaPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature.<br>
 Denotes the affected area of the corresponding ombnrometer.]]></documentation>
-							</annotation>
-						</element>
-					</sequence>
-				</extension>
-			</complexContent>
-		</complexType>
-	</element>
+              </annotation>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="InverseDistanceRainfallGenerator" substitutionGroup="rcm:RainfallGenerator">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[This generator creates the rainfall from ombrometer stations (each corresponding to a timeserie),
+using the inverse distance weighting.]]></documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="rcm:RainfallGeneratorType">
+          <sequence>
+            <element name="ombrometerCollection" type="gml:FeaturePropertyType">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Refers to any feature that contains the ombrometer-features.<br>
+Probably an external xlink.]]></documentation>
+              </annotation>
+            </element>
+            <element name="ombrometerFeaturePath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to the given ombrometer collection.
+<br>Denotes the list of given ombrometer features.]]></documentation>
+              </annotation>
+            </element>
+            <element name="timeseriesLinkPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature.<br>
+Denotes a timeseries link that contains the attached timeserie of this ombrometer.]]></documentation>
+              </annotation>
+            </element>
+            <element name="stationLocationPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature.<br>
+Denotes the station location of the corresponding ombnrometer.]]></documentation>
+              </annotation>
+            </element>
+            <element name="numberOmbrometers" type="integer">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[The number of ombrometers, which should be included in the inverse distance weighting.]]></documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
 </schema>

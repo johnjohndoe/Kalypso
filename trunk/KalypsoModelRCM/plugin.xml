@@ -30,6 +30,10 @@
             class="org.kalypso.model.rcm.internal.binding.OmbrometerCollection"
             qname="{org.kalypso.model.rcm.ombrometer}OmbrometerCollection">
       </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.InverseDistanceRainfallGenerator"
+            qname="{org.kalypso.model.rcm}InverseDistanceRainfallGenerator">
+      </feature>
    </extension>
 
 </plugin>
