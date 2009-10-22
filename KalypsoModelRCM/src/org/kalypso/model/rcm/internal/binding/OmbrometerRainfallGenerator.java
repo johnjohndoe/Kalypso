@@ -46,25 +46,18 @@ import java.util.Date;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.filters.NOperationFilter;
-import org.kalypso.ogc.sensor.filter.filters.OperationFilter;
-import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -126,7 +119,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
     try
     {
-      final IObservation[] ombrometerObservations = readObservations( ombrometerLinks, from, to, sourceContext );
+      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceContext );
 
       // Convert to JTS-Geometries
       final Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
@@ -146,7 +139,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
         final Geometry areaGeometry = JTSAdapter.export( area );
         final double[] weights = JTSUtilities.fractionAreasOf( areaGeometry, ombrometerPolygons );
-        result[i] = combineObses( ombrometerObservations, weights );
+        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights );
       }
 
       return result;
@@ -167,40 +160,4 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
       throw new CoreException( status );
     }
   }
-
-  private IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final URL context ) throws MalformedURLException, SensorException
-  {
-    final IRequest request = new ObservationRequest( from, to );
-
-    final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
-    for( int i = 0; i < ombrometerLinks.length; i++ )
-    {
-      final TimeseriesLinkType link = ombrometerLinks[i];
-      if( link != null )
-      {
-        final String href = link.getHref();
-        if( href != null )
-        {
-          final String hrefRequest = ZmlURL.insertRequest( href, request );
-          final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
-          if( zmlLocation != null )
-            readObservations[i] = ZmlFactory.parseXML( zmlLocation, href );
-        }
-      }
-    }
-
-    return readObservations;
-  }
-
-  private IObservation combineObses( final IObservation[] observations, final double[] weights ) throws SensorException
-  {
-    Assert.isTrue( observations.length == weights.length );
-
-    final IObservation[] weightedObervations = new IObservation[observations.length];
-    for( int i = 0; i < weights.length; i++ )
-      weightedObervations[i] = new OperationFilter( OperationFilter.OPERATION_MAL, weights[i], observations[i] );
-
-    return new NOperationFilter( NOperationFilter.OPERATION_PLUS, weightedObervations );
-  }
-
 }

@@ -262,6 +262,8 @@ public class RainfallGenerationOp
       /* All arrays must be in the same order and must have the same length. */
       IObservation observation = combinedObservations[i];
       Feature feature = catchmentFeatureArray[i];
+      if( observation == null || feature == null )
+        continue;
 
       /* Get the metadata list of this observation. */
       MetadataList metadataList = observation.getMetadataList();
