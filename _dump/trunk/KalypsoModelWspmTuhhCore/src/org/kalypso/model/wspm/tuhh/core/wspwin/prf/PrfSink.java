@@ -62,7 +62,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.wspwin.core.prf.PrfWriter;
+import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
@@ -88,7 +88,7 @@ public class PrfSink implements IProfilSink
       return profilKey.toString();
   }
 
-  private void extractDataBlocks( final PrfWriter pw, final IProfil p )
+  private void extractDataBlocks( final DataBlockWriter pw, final IProfil p )
   {
     writePoints( pw, p );
     writeDevider( pw, p );
@@ -103,10 +103,10 @@ public class PrfSink implements IProfilSink
       writeComment( pw, p );
   }
 
-  private void writeComment( final PrfWriter pw, final IProfil profil )
+  private void writeComment( final DataBlockWriter pw, final IProfil profil )
   {
     final String comment = profil.getComment();
-    final DataBlockHeader dbh = PrfWriter.createHeader( "KOM" ); //$NON-NLS-1$
+    final DataBlockHeader dbh = createHeader( "KOM" ); //$NON-NLS-1$
     final TextDataBlock db = new TextDataBlock( dbh );
 
     final StringReader stringReader = new StringReader( comment );
@@ -128,9 +128,9 @@ public class PrfSink implements IProfilSink
     }
   }
 
-  private void writePoints( final PrfWriter pw, final IProfil profil )
+  private void writePoints( final DataBlockWriter pw, final IProfil profil )
   {
-    final DataBlockHeader dbh = PrfWriter.createHeader( "GEL" ); //$NON-NLS-1$
+    final DataBlockHeader dbh = createHeader( "GEL" ); //$NON-NLS-1$
     final CoordDataBlock db = new CoordDataBlock( dbh );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ), db );
     pw.addDataBlock( db );
@@ -148,27 +148,27 @@ public class PrfSink implements IProfilSink
 
   }
 
-  private void writeRauheit( final PrfWriter pw, final IProfil profil )
+  private void writeRauheit( final DataBlockWriter pw, final IProfil profil )
   {
     CoordDataBlock dbr = null;
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
     {
-      final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" ); //$NON-NLS-1$
+      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), dbr );
     }
     else if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null )
     {
-      final DataBlockHeader dbhr = PrfWriter.createHeader( "KST" ); //$NON-NLS-1$
+      final DataBlockHeader dbhr = createHeader( "KST" ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), dbr );
     }
     else
     {
-      // TODO: if (isDurchlass(buildings) {final DataBlockHeader dbhr = PrfWriter.createHeader( building.getRauheitTyp()
+      // TODO: if (isDurchlass(buildings) {final DataBlockHeader dbhr = createHeader( building.getRauheitTyp()
       // );}
 
-      final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" ); //$NON-NLS-1$
+      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       final int size = profil.getPoints().length;
       dbr.setCoords( new Double[size], new Double[size] );
@@ -185,7 +185,102 @@ public class PrfSink implements IProfilSink
     }
     pw.addDataBlock( dbr );
   }
+  private final DataBlockHeader createHeader( final String key )
 
+  {
+    final DataBlockHeader dbh = new DataBlockHeader();
+
+    if( key.startsWith( "GEL" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "GELAENDE-" ); //$NON-NLS-1$
+      dbh.setSecondLine( "HOEHE" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "TRENNF" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "TRENNFLAECHEN" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "DUR" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "DURCHSTROEMTE" ); //$NON-NLS-1$
+      dbh.setSecondLine( "BEREICHE" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "KST" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "RAUHEIT" ); //$NON-NLS-1$
+      dbh.setSecondLine( "kst   m" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "KS" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "RAUHEIT" ); //$NON-NLS-1$
+      dbh.setSecondLine( "k-s   m" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "REC" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "RECHTSWERT" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "HOC" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "HOCHWERT" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "UK-B" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "UK-BRUECKE" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "OK-B" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "OK-BRUECKE" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "KOMMENTAR:" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "BOR" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "BORDVOLL" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "AX" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "AX   m" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "AY" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "AY   m" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "DP" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "DP   m" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "EI" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "EI" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "KRE" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "KREIS" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "TRA" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "TRAPEZ" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "MAU" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "MAULPROFIL" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "OK-W" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "OK-WEHR" ); //$NON-NLS-1$
+    }
+    else if( key.startsWith( "TRENNL" ) ) //$NON-NLS-1$
+    {
+      dbh.setFirstLine( "TRENNLINIE" ); //$NON-NLS-1$
+      dbh.setSecondLine( "WEHR" ); //$NON-NLS-1$
+    }
+    else
+    {
+      dbh.setFirstLine( key );
+    }
+    return dbh;
+  }
   private void writeCoords( final IProfil profil, final IComponent prop, final CoordDataBlock db )
   {
     final IRecord[] points = profil.getPoints();
@@ -218,21 +313,21 @@ public class PrfSink implements IProfilSink
     db.setCoords( Xs, Ys );
   }
 
-  private void writeHochRechts( final PrfWriter pw, final IProfil profil )
+  private void writeHochRechts( final DataBlockWriter pw, final IProfil profil )
   {
 
-    final DataBlockHeader dbhh = PrfWriter.createHeader( "HOC" ); //$NON-NLS-1$
+    final DataBlockHeader dbhh = createHeader( "HOC" ); //$NON-NLS-1$
     final CoordDataBlock dbh = new CoordDataBlock( dbhh );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ), dbh );
     pw.addDataBlock( dbh );
 
-    final DataBlockHeader dbhr = PrfWriter.createHeader( "REC" ); //$NON-NLS-1$
+    final DataBlockHeader dbhr = createHeader( "REC" ); //$NON-NLS-1$
     final CoordDataBlock dbr = new CoordDataBlock( dbhr );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), dbr );
     pw.addDataBlock( dbr );
   }
 
-  private void writeDevider( final PrfWriter pw, final IProfil profil )
+  private void writeDevider( final DataBlockWriter pw, final IProfil profil )
   {
     writeDeviderTyp( pw, "TRENNF", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ), profil ); //$NON-NLS-1$
     writeDeviderTyp( pw, "BOR", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ), profil ); //$NON-NLS-1$
@@ -240,12 +335,12 @@ public class PrfSink implements IProfilSink
     writeDeviderTyp( pw, "TRENNL", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) ), profil ); //$NON-NLS-1$
   }
 
-  private void writeDeviderTyp( final PrfWriter pw, final String key, final IProfilPointMarker[] deviders, final IProfil profil )
+  private void writeDeviderTyp( final DataBlockWriter pw, final String key, final IProfilPointMarker[] deviders, final IProfil profil )
   {
     if( deviders == null || deviders.length == 0 )
       return;
 
-    final CoordDataBlock dbw = new CoordDataBlock( PrfWriter.createHeader( key ) );
+    final CoordDataBlock dbw = new CoordDataBlock( createHeader( key ) );
     final Double[] xs = new Double[deviders.length];
     final Double[] ys = new Double[deviders.length];
     final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -288,7 +383,7 @@ public class PrfSink implements IProfilSink
     return (Double) devider.getPoint().getValue( iHoehe );
   }
 
-  private void writeBuilding( final PrfWriter pw, final IProfil profil )
+  private void writeBuilding( final DataBlockWriter pw, final IProfil profil )
   {
     final IProfileObject[] buildings = profil.getProfileObjects();
 
@@ -299,11 +394,11 @@ public class PrfSink implements IProfilSink
     final String buildingTyp = building == null ? "" : building.getId(); //$NON-NLS-1$
     if( buildingTyp.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
     {
-      final DataBlockHeader dbho = PrfWriter.createHeader( "OK-B" ); //$NON-NLS-1$
+      final DataBlockHeader dbho = createHeader( "OK-B" ); //$NON-NLS-1$
       final CoordDataBlock dbo = new CoordDataBlock( dbho );
       writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), dbo );
       pw.addDataBlock( dbo );
-      final DataBlockHeader dbhu = PrfWriter.createHeader( "UK-B" ); //$NON-NLS-1$
+      final DataBlockHeader dbhu = createHeader( "UK-B" ); //$NON-NLS-1$
       final CoordDataBlock dbu = new CoordDataBlock( dbhu );
       writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), dbu );
       try
@@ -323,7 +418,7 @@ public class PrfSink implements IProfilSink
 
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
     {
-      final DataBlockHeader dbhw = PrfWriter.createHeader( "OK-W" ); //$NON-NLS-1$
+      final DataBlockHeader dbhw = createHeader( "OK-W" ); //$NON-NLS-1$
       final CoordDataBlock dbw = new CoordDataBlock( dbhw );
       writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), dbw );
       try
@@ -345,7 +440,7 @@ public class PrfSink implements IProfilSink
     }
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
     {
-      final DataBlockHeader dbhe = PrfWriter.createHeader( "EI" ); //$NON-NLS-1$
+      final DataBlockHeader dbhe = createHeader( "EI" ); //$NON-NLS-1$
       final TextDataBlock dbe = new TextDataBlock( dbhe );
       dbe.setThirdLine( "0  0  0  0  0  0  0  0  8" ); //$NON-NLS-1$
       try
@@ -362,7 +457,7 @@ public class PrfSink implements IProfilSink
     }
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_MAUL ) == 0 )
     {
-      final DataBlockHeader dbhm = PrfWriter.createHeader( "MAU" ); //$NON-NLS-1$
+      final DataBlockHeader dbhm = createHeader( "MAU" ); //$NON-NLS-1$
       final TextDataBlock dbm = new TextDataBlock( dbhm );
       dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" ); //$NON-NLS-1$
       try
@@ -379,7 +474,7 @@ public class PrfSink implements IProfilSink
     }
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_KREIS ) == 0 )
     {
-      final DataBlockHeader dbhk = PrfWriter.createHeader( "KRE" ); //$NON-NLS-1$
+      final DataBlockHeader dbhk = createHeader( "KRE" ); //$NON-NLS-1$
       final TextDataBlock dbk = new TextDataBlock( dbhk );
       dbk.setThirdLine( "0  0  0  0  0  0  0  0  7" ); //$NON-NLS-1$
       try
@@ -396,7 +491,7 @@ public class PrfSink implements IProfilSink
 
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
     {
-      final DataBlockHeader dbht = PrfWriter.createHeader( "TRA" ); //$NON-NLS-1$
+      final DataBlockHeader dbht = createHeader( "TRA" ); //$NON-NLS-1$
       final TextDataBlock dbt = new TextDataBlock( dbht );
       dbt.setThirdLine( "0  0  0  0  0  0  0  0  6" ); //$NON-NLS-1$
       try
@@ -426,13 +521,13 @@ public class PrfSink implements IProfilSink
     }
   }
 
-  private void writeBewuchs( final PrfWriter pw, final IProfil profil )
+  private void writeBewuchs( final DataBlockWriter pw, final IProfil profil )
   {
-    final DataBlockHeader dbhx = PrfWriter.createHeader( "AX" ); //$NON-NLS-1$
+    final DataBlockHeader dbhx = createHeader( "AX" ); //$NON-NLS-1$
     final CoordDataBlock dbx = new CoordDataBlock( dbhx );
-    final DataBlockHeader dbhy = PrfWriter.createHeader( "AY" ); //$NON-NLS-1$
+    final DataBlockHeader dbhy = createHeader( "AY" ); //$NON-NLS-1$
     final CoordDataBlock dby = new CoordDataBlock( dbhy );
-    final DataBlockHeader dbhp = PrfWriter.createHeader( "DP" ); //$NON-NLS-1$
+    final DataBlockHeader dbhp = createHeader( "DP" ); //$NON-NLS-1$
     final CoordDataBlock dbp = new CoordDataBlock( dbhp );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), dbx );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), dby );
@@ -443,7 +538,7 @@ public class PrfSink implements IProfilSink
   }
 
   @SuppressWarnings("unchecked")
-  private void extractMetaData( final PrfWriter pw, final IProfil p )
+  private void extractMetaData( final DataBlockWriter pw, final IProfil p )
 
   {
 
@@ -549,7 +644,7 @@ public class PrfSink implements IProfilSink
   {
     final PrintWriter pw = new PrintWriter( writer );
 
-    final PrfWriter prfwriter = new PrfWriter();
+    final DataBlockWriter prfwriter = new DataBlockWriter();
     extractMetaData( prfwriter, profil );
     if( profil.getPoints().length > 0 )
       extractDataBlocks( prfwriter, profil );

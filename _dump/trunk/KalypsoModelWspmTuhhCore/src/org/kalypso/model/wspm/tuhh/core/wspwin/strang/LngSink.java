@@ -41,118 +41,109 @@
 package org.kalypso.model.wspm.tuhh.core.wspwin.strang;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IStrangSink;
-import org.kalypso.wspwin.core.prf.PrfWriter;
-import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
+import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
+import org.kalypso.wspwin.core.prf.datablock.LengthSectionDataBlock;
 
 import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author kimwerner
  */
-public class LngSink implements IStrangSink
+public class LngSink
 {
+  private final PrintWriter m_writer;
+
+  private final Reader m_reader;
+
+  private DataBlockWriter m_dataBlockWriter;
+
+  public LngSink( final String source, final String destination ) throws IOException
+  {
+    m_reader = new FileReader( source );
+    m_writer = new PrintWriter( new FileOutputStream( new File( destination ) ) );
+  }
+
+  public LngSink( final Reader source, final PrintWriter destination )
+  {
+    m_reader = source;
+    m_writer = destination;
+  }
 
   @SuppressWarnings("unchecked")
-  private void extractDataBlocks( final PrfWriter pw, final Reader reader, final int colStation ) throws IOException
+  private DataBlockWriter extractDataBlocks( final Reader reader, final int colStation, final char separator ) throws IOException
   {
+    final DataBlockWriter prfwriter = new DataBlockWriter();
+    final CSVReader tableReader = new CSVReader( reader, separator );
+    String[] line = tableReader.readNext();
 
-    final CSVReader tableReader = new CSVReader( reader, ';' );
-    final String[] cols = tableReader.readNext();
-    final Object[] table = new Object[cols.length];
-    for( int i = 0; i < cols.length; i++ )
+    // Get MetaData
+    int nbr = 0;
+    while( line != null && line[0].startsWith( "#" ) )
     {
-      table[i] = new ArrayList<Double>();
+      line[0] = line[0].substring( 1 );
+      prfwriter.addKeyValue( nbr++, line );
+      line = tableReader.readNext();
+    }
+    // Get ColumnData
+    final String[] col1 = line;
+    final String[] col2 = tableReader.readNext();
+
+    // Get TableData
+    final Object[] table = new Object[col1.length];
+    for( int i = 0; i < col1.length; i++ )
+    {
+      table[i] = new ArrayList<Object>();
     }
     String[] values = tableReader.readNext();
     while( values != null )
     {
-      if( values.length == cols.length )
+      if( values.length == col1.length )
       {
-        for( int i = 0; i < cols.length; i++ )
+        for( int i = 0; i < col1.length; i++ )
         {
-          ((ArrayList<Double>) table[i]).add( NumberUtils.parseQuietDouble( values[i] ) );
+          final Double dbl = NumberUtils.parseQuietDouble( values[i].toString() );
+          if( dbl.isNaN() )
+            ((ArrayList<Object>) table[i]).add( values[i] );
+          else
+            ((ArrayList<Object>) table[i]).add( dbl );
         }
         values = tableReader.readNext();
       }
     }
-    for( int i = 0; i < cols.length; i++ )
+
+    // Add DataBlocks
+    for( int i = 0; i < col1.length; i++ )
     {
       if( i != colStation )
       {
-        final DataBlockHeader dbh = PrfWriter.createHeader( cols[i] ); //$NON-NLS-1$
-        final CoordDataBlock block = new CoordDataBlock( dbh );
-        block.setCoords( ((ArrayList<Double>) table[colStation]).toArray( new Double[] {} ), ((ArrayList<Double>) table[i]).toArray( new Double[] {} ) );
-        pw.addDataBlock( block );
+        final DataBlockHeader dbh = new DataBlockHeader();
+        dbh.setFirstLine( col1[i] );
+        if( i < col2.length )
+          dbh.setSecondLine( col2[i] );
+        final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
+        block.setCoords( ((ArrayList<Double>) table[colStation]).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
+        prfwriter.addDataBlock( block );
       }
     }
+    return prfwriter;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil)
-   */
-  public void write( final String source, final String destination )
+  public void read( final char separator, final int colStation ) throws IOException
   {
-    PrintWriter pw = null;
-    try
-    {
-      pw = new PrintWriter( new FileOutputStream( new File( destination ) ) );
-    }
-    catch( final FileNotFoundException e1 )
-    {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-
-    final PrfWriter prfwriter = new PrfWriter();
-    try
-    {
-      extractDataBlocks( prfwriter, new FileReader( source ), 0 );
-    }
-    catch( final FileNotFoundException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    prfwriter.store( pw );
+    m_dataBlockWriter = extractDataBlocks( m_reader, colStation, separator );
   }
 
-  // TODO Kim: kann das nicht weg?
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.serializer.IStrangSink#write(org.kalypso.model.wspm.core.profil.IProfil[],
-   *      java.io.Writer)
-   */
-  public void write( final IProfil[] profiles, final Writer writer )
+  public void write( )
   {
-    throw new NotImplementedException();
+    m_dataBlockWriter.store( m_writer );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil,
-   *      java.io.Writer)
-   */
-  public void write( final IProfil profil, final Writer writer )
-  {
-    throw new NotImplementedException();
-  }
-
 }

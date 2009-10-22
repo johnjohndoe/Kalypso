@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.test;
 
+import java.io.IOException;
+
 import org.junit.Test;
 import org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink;
 
@@ -57,7 +59,16 @@ public class PlotterTest
     String arg1 = "c:/test.csv";
     String arg2 = "c:/test.lng";
 
-    final LngSink sink = new LngSink();
-    sink.write( arg1, arg2 );
+    try
+    {
+      final LngSink lngSink =new LngSink( arg1, arg2 );
+      lngSink.read( ';' ,0);
+      lngSink.write();
+    }
+    catch( IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }
