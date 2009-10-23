@@ -46,12 +46,17 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.filters.NOperationFilter;
-import org.kalypso.ogc.sensor.filter.filters.OperationFilter;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -95,14 +100,97 @@ public class RainfallGeneratorUtilities
     return readObservations;
   }
 
+  /**
+   * This function combines the observations using the specified weights.
+   * 
+   * @param observations
+   *          The observations to combine.
+   * @param weights
+   *          The weights to use.
+   * @return A new combined observation.
+   */
   public static IObservation combineObses( IObservation[] observations, double[] weights ) throws SensorException
   {
+    /* There should be a weight for each observation. */
     Assert.isTrue( observations.length == weights.length );
 
-    IObservation[] weightedObervations = new IObservation[observations.length];
-    for( int i = 0; i < weights.length; i++ )
-      weightedObervations[i] = new OperationFilter( OperationFilter.OPERATION_MAL, weights[i], observations[i] );
+    /* Here the array of the observations and the heights should have the same length. */
+    /* So it is enough to check one of them. */
+    if( observations.length == 0 )
+      return null;
 
-    return new NOperationFilter( NOperationFilter.OPERATION_PLUS, weightedObervations );
+    /* Some things of the first observation. */
+    IObservation firstObservation = observations[0];
+    ITuppleModel firstTuppleModel = firstObservation.getValues( null );
+    IAxis[] firstAxisList = firstTuppleModel.getAxisList();
+    IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
+
+    /* Create a new observation using the axis of the first observation. */
+    /* The other observations should have the same type of axes. */
+    SimpleTuppleModel combinedTuppleModel = new SimpleTuppleModel( firstAxisList );
+    SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), firstAxisList, combinedTuppleModel );
+    IAxis[] combinedAxisList = combinedTuppleModel.getAxisList();
+    IAxis combinedDateAxis = ObservationUtilities.findAxisByClass( combinedAxisList, Date.class );
+    int combinedDatePosition = combinedTuppleModel.getPositionFor( combinedDateAxis );
+    IAxis combinedDoubleAxis = ObservationUtilities.findAxisByClass( combinedAxisList, Double.class );
+    int combinedDoublePosition = combinedTuppleModel.getPositionFor( combinedDoubleAxis );
+    IAxis combinedIntegerAxis = ObservationUtilities.findAxisByClass( combinedAxisList, Integer.class );
+    int combinedIntegerPosition = combinedTuppleModel.getPositionFor( combinedIntegerAxis );
+
+    for( int i = 0; i < firstTuppleModel.getCount(); i++ )
+    {
+      double sum = 0.0;
+      for( int j = 0; j < observations.length; j++ )
+      {
+        /* Get the observation. */
+        IObservation observation = observations[j];
+
+        /* Get the weight. */
+        double weight = weights[j];
+        if( weight == 0.0 )
+          continue;
+
+        /* Get the values of the observation. */
+        ITuppleModel tuppleModel = observation.getValues( null );
+
+        /* Get the axis list of the values. */
+        IAxis[] axisList = tuppleModel.getAxisList();
+
+        /* Find the axis for the double values. */
+        /* The date will be taken later from the first observation. */
+        /* The status bit will be set to ok later. */
+        IAxis doubleAxis = ObservationUtilities.findAxisByClass( axisList, Double.class );
+
+        /* Multiply the values of the current observation. */
+        Double value = (Double) tuppleModel.getElement( i, doubleAxis );
+
+        /* Weight the value. */
+        double weightedValue = value.doubleValue() * weight;
+
+        /* Add to the sum. */
+        sum = sum + weightedValue;
+      }
+
+      /* The list for the values. */
+      Object[] values = new Object[3];
+
+      /* Add the first date to the new observation. */
+      Date firstDate = (Date) firstTuppleModel.getElement( i, firstDateAxis );
+      values[combinedDatePosition] = new Date( firstDate.getTime() );
+      // combinedTuppleModel.setElement( i, new Date( firstDate.getTime() ), combinedDateAxis );
+
+      /* Add the summarized values to the new observation. */
+      values[combinedDoublePosition] = new Double( sum );
+      // combinedTuppleModel.setElement( i, new Double( sum ), combinedDoubleAxis );
+
+      /* Add the status bit to the new observation. */
+      values[combinedIntegerPosition] = new Integer( KalypsoStati.BIT_OK );
+      // combinedTuppleModel.setElement( i, new Integer( KalypsoStati.BIT_OK ), combinedIntegerAxis );
+
+      /* Add a new row. */
+      combinedTuppleModel.addTupple( values );
+    }
+
+    return combinedObservation;
   }
 }
