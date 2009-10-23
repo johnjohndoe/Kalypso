@@ -142,6 +142,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
         Feature feature = FeatureHelper.getFeature( workspace, object );
         if( feature != null )
         {
+          // TODO Should be in the generator gml (rcm) ...
           Boolean active = (Boolean) feature.getProperty( IOmbrometer.QNAME_PROP_ISUSED );
           if( active != null && active.booleanValue() == true )
             featureList.add( feature );
@@ -168,7 +169,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
       IObservation[] result = new IObservation[areas.length];
       for( int i = 0; i < areas.length; i++ )
       {
-        /* GEt the catchment. */
+        /* Get the catchment. */
         GM_MultiSurface area = areas[i];
         if( area == null )
           continue;
@@ -238,6 +239,18 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
     return weights;
   }
 
+  /**
+   * This function determines the factors for each ombrometer observation using the inverse distance weighting.
+   * 
+   * @param areaGeometry
+   *          The area geometry of the catchment.
+   * @param ombrometerPoints
+   *          The point geometries of the ombrometer stations (in the same order as the ombrometers).
+   * @param numberOmbrometers
+   *          The number of ombrometers which should be used in the inverse distance weighting. The nearest ones will be
+   *          used. The unused ombrometers will get a 0.0 factor.
+   * @return The factors for each ombrometer observation (they will be sorted by the distance to the area).
+   */
   private List<InverseDistanceElement> getFactors( Geometry areaGeometry, Point[] ombrometerPoints, int numberOmbrometers )
   {
     /* Create the inverse distance elements. */

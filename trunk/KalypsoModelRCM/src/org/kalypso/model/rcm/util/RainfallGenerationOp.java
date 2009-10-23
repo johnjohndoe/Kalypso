@@ -287,6 +287,8 @@ public class RainfallGenerationOp
         else
           metadataList.setProperty( target, "-" );
       }
+
+      // TODO More fixed metadata ...
     }
   }
 
