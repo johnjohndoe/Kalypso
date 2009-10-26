@@ -76,6 +76,18 @@ public class LngSink
   {
     m_reader = source;
     m_writer = destination;
+
+  }
+
+  final DataBlockHeader createHeader( final String id )
+  {
+    final DataBlockHeader dbh = new DataBlockHeader();
+    dbh.setFirstLine( id );
+    if( "TEXT".equalsIgnoreCase( id ) )
+    {
+      dbh.setThirdLine( " 0  0  0  0  0  0  0  0 12" );
+    }
+    return dbh;
   }
 
   @SuppressWarnings("unchecked")
@@ -96,6 +108,20 @@ public class LngSink
     // Get ColumnData
     final String[] col1 = line;
     final String[] col2 = tableReader.readNext();
+    int colStat = colStation;
+    if( colStat < 0 )
+    {
+      for( int i = 0; i < col1.length; i++ )
+      {
+        {
+          if( "STATION".equalsIgnoreCase( col1[i] ) )
+            colStat = i;
+          break;
+        }
+      }
+    }
+    if( colStat < 0 )
+      throw new IOException( "keine Spalte für Station angegeben" );
 
     // Get TableData
     final Object[] table = new Object[col1.length];
@@ -108,7 +134,7 @@ public class LngSink
     {
       if( values.length == col1.length )
       {
-        for( int i = 0; i < col1.length; i++ )
+        for( int i = 0; i < values.length; i++ )
         {
           final Double dbl = NumberUtils.parseQuietDouble( values[i].toString() );
           if( dbl.isNaN() )
@@ -116,21 +142,22 @@ public class LngSink
           else
             ((ArrayList<Object>) table[i]).add( dbl );
         }
-        values = tableReader.readNext();
       }
+      values = tableReader.readNext();
     }
 
     // Add DataBlocks
     for( int i = 0; i < col1.length; i++ )
     {
-      if( i != colStation )
+      if( i != colStat )
       {
-        final DataBlockHeader dbh = new DataBlockHeader();
-        dbh.setFirstLine( col1[i] );
+        final DataBlockHeader dbh = createHeader( col1[i] );
+
         if( i < col2.length )
           dbh.setSecondLine( col2[i] );
+
         final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
-        block.setCoords( ((ArrayList<Double>) table[colStation]).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
+        block.setCoords( ((ArrayList<Double>) table[colStat]).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
         prfwriter.addDataBlock( block );
       }
     }
@@ -140,6 +167,16 @@ public class LngSink
   public void read( final char separator, final int colStation ) throws IOException
   {
     m_dataBlockWriter = extractDataBlocks( m_reader, colStation, separator );
+  }
+
+  public void read( final char separator ) throws IOException
+  {
+    m_dataBlockWriter = extractDataBlocks( m_reader, -1, separator );
+  }
+
+  public void read( ) throws IOException
+  {
+    m_dataBlockWriter = extractDataBlocks( m_reader, -1, ';' );
   }
 
   public void write( )

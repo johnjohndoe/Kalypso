@@ -70,12 +70,6 @@ public class LengthSectionDataBlock extends AbstractDataBlock
     super( dbh );
   }
 
-  /**
-   * Muss von allen Implementatoren zuerst aufgerufen werden
-   * 
-   * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.IDataBlock#readFromReader(java.lang.String,
-   *      java.io.BufferedReader)
-   */
   @Override
   public final void readFromReader( final int count, final BufferedReader reader )
   {
@@ -105,8 +99,17 @@ public class LengthSectionDataBlock extends AbstractDataBlock
   public void printToPrinter( final PrintWriter pw )
   {
     m_dataBlockHeader.printToPrinter( pw );
-    writeDoubleBlock( m_xs, pw );
-    writeDoubleBlock( m_ys, pw );
+    if( m_dataBlockHeader.getSpecification( 8 ) == 12 )
+    {
+      pw.write( "1 " + getCoordCount() + " 0.0000" );
+      pw.println();
+      writeTextBlock( pw );
+    }
+    else
+    {
+      writeDoubleBlock( m_xs, pw );
+      writeDoubleBlock( m_ys, pw );
+    }
   }
 
   /**
@@ -134,6 +137,19 @@ public class LengthSectionDataBlock extends AbstractDataBlock
     pw.println();
   }
 
+  private void writeTextBlock( final PrintWriter pw )
+
+  {
+    for( int i = 0; i < m_xs.length; i++ )
+    {
+      pw.write( String.format( "1 0 2 2 %.0f 2", m_xs[i] ) );
+      pw.println();
+      pw.print( m_ys[i].toString() );
+      pw.println();
+    }
+    pw.println();
+  }
+
   /**
    * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.IDataBlock#getCoordCount()
    */
@@ -155,7 +171,7 @@ public class LengthSectionDataBlock extends AbstractDataBlock
       if( "".equalsIgnoreCase( ys[i].toString() ) == false )
       {
         target.add( ys[i] );
-        basis.add( xs[i] );
+        basis.add( m_dataBlockHeader.getSpecification( 8 ) == 12 ? new Double( i ) : xs[i] );
       }
     }
     m_xs = basis.toArray( new Double[] {} );
