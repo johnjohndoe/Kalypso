@@ -115,8 +115,10 @@ public class LngSink
       {
         {
           if( "STATION".equalsIgnoreCase( col1[i] ) )
+          {
             colStat = i;
-          break;
+            break;
+          }
         }
       }
     }
