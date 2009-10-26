@@ -124,7 +124,7 @@ public class LengthSectionPlotter extends JFrame {
 					} else {
 						final LngSink sink = new LngSink(source.getText(),
 								target.getText());
-						sink.read(';', 0);
+						sink.read();
 						sink.write();
 						success.setText("well done");
 					}
