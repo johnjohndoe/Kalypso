@@ -185,6 +185,7 @@ public class PrfSink implements IProfilSink
     }
     pw.addDataBlock( dbr );
   }
+
   private final DataBlockHeader createHeader( final String key )
 
   {
@@ -281,6 +282,7 @@ public class PrfSink implements IProfilSink
     }
     return dbh;
   }
+
   private void writeCoords( final IProfil profil, final IComponent prop, final CoordDataBlock db )
   {
     final IRecord[] points = profil.getPoints();
@@ -640,15 +642,18 @@ public class PrfSink implements IProfilSink
   /**
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil)
    */
-  public void write( final IProfil profil, final Writer writer )
+  public boolean write( final Object source, final Writer writer )
   {
     final PrintWriter pw = new PrintWriter( writer );
-
+    final IProfil profil = source instanceof IProfil ? (IProfil) source : null;
+    if( profil == null )
+      return false;
     final DataBlockWriter prfwriter = new DataBlockWriter();
     extractMetaData( prfwriter, profil );
     if( profil.getPoints().length > 0 )
       extractDataBlocks( prfwriter, profil );
     prfwriter.store( pw );
+    return true;
   }
 
 }

@@ -42,12 +42,11 @@ package org.kalypso.model.wspm.core.profil.serializer;
 
 import java.io.Writer;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author kimwerner
  */
 public interface IProfilSink
 {
-  public void write( final IProfil profil, final Writer writer );
+  public boolean write( final Object source, final Writer writer );
 }

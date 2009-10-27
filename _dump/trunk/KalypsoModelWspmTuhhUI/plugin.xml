@@ -88,6 +88,11 @@
             %org.kalypso.model.wspm.exportwizard.wspwin.description
          </description>
       </wizard>
+      <wizard
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.LengthSectionExportWizard"
+            id="org.kalypso.model.wspm.tuhh.ui.wizards.LengthSectionExportWizard"
+            name="LengthSectionWizard">
+      </wizard>
    </extension>
 
    <extension

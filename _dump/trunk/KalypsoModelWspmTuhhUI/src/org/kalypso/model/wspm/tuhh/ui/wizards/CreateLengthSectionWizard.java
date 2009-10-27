@@ -78,7 +78,7 @@ public class CreateLengthSectionWizard extends Wizard
 {
 
   final private ArrayChooserPage m_profileChooserPage;
-
+  
   final private List<Feature> m_profiles;
 
   final private List<Feature> m_selectedProfiles;
@@ -115,7 +115,6 @@ public class CreateLengthSectionWizard extends Wizard
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
-
     URL context = m_GMLws.getContext();
     IProject wspmProjekt = ResourceUtilities.findProjectFromURL( context );
     IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" );
@@ -125,21 +124,19 @@ public class CreateLengthSectionWizard extends Wizard
         parentFolder.create( false, true, new NullProgressMonitor() );
 
       IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( profilFeatures );
-      
 
       final String fName = "station(" + lengthSection.getResult().get( 0 ).getValue( 0 ).toString() + ")-" + lengthSection.getResult().size();
-      IFolder targetFolder = parentFolder.getFolder(fName );
+      IFolder targetFolder = parentFolder.getFolder( fName );
       if( !targetFolder.exists() )
         targetFolder.create( false, true, new NullProgressMonitor() );
- 
-      
+
       URL resource = getClass().getResource( "resources/ls.kod" );
-      final String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "!#localPath#!", fName+".gml") ;
-      IFile kodFile = targetFolder.getFile( new Path( fName+".kod" ) );
+      final String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "!#localPath#!", fName + ".gml" );
+      IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
       InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
-      kodFile.create (inputStream,true, new NullProgressMonitor() );
-       
-      IFile targetFile = targetFolder.getFile( new Path( fName+".gml" ) );
+      kodFile.create( inputStream, true, new NullProgressMonitor() );
+
+      IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) );
       File targetJavaFile = targetFile.getLocation().toFile();
       final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( new QName( "http://www.opengis.net/om", "Observation" ), targetJavaFile.toURI().toURL(), new GmlSerializerFeatureProviderFactory() );
       ObservationFeatureFactory.toFeature( lengthSection, lsWorkspace.getRootFeature() );
@@ -154,4 +151,5 @@ public class CreateLengthSectionWizard extends Wizard
     }
     return true;
   }
+ 
 }

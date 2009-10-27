@@ -168,7 +168,7 @@ public class LengthSectionDataBlock extends AbstractDataBlock
     final ArrayList<Double> basis = new ArrayList<Double>();
     for( int i = 0; i < xs.length; i++ )
     {
-      if( "".equalsIgnoreCase( ys[i].toString() ) == false )
+      if( ys[i] != null && "".equalsIgnoreCase( ys[i].toString() ) == false )
       {
         target.add( ys[i] );
         basis.add( m_dataBlockHeader.getSpecification( 8 ) == 12 ? new Double( i ) : xs[i] );

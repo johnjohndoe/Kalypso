@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -113,6 +114,7 @@ public class WspmTuhhProfileHelper
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
+    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT));
 
     for( Object opf : profilFeatures )
     {
@@ -122,6 +124,7 @@ public class WspmTuhhProfileHelper
       final int indHei = profil.indexOfProperty( profHei );
 
       IRecord station = lsResult.createRecord();
+      station.setValue( 10, profileFeature.getDescription() );
       station.setValue( 0, profileFeature.getBigStation(), true );// Station
       // Kennung
       // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
@@ -147,7 +150,7 @@ public class WspmTuhhProfileHelper
       {
         if( mtf.length < 2 )
         {
-          // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN
+          station.setValue( 9, valueToBigDecimal( profilObject[0].getObjectProperty(IWspmTuhhConstants.BUILDING_PROPERTY_BREITE )),true);// ROHR_DN
         }
         else
         {
@@ -160,7 +163,7 @@ public class WspmTuhhProfileHelper
           {
             station.setValue( 7, valueToBigDecimal( ProfilUtil.getSectionMinValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) ), true ); // BridgeUK
             station.setValue( 6, valueToBigDecimal( ProfilUtil.getSectionMaxValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) ), true ); // BridgeOK
-            station.setValue( 8, valueToBigDecimal( profilObject[0].getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true ); // BridgeWidth
+            station.setValue( 8, valueToBigDecimal( profilObject[0].getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true ); // BridgeWidth
           }
         }
       }

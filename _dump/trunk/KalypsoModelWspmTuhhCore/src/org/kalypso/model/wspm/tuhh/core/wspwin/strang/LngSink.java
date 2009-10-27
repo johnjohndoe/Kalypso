@@ -40,15 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.strang;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.LengthSectionDataBlock;
@@ -58,32 +64,31 @@ import au.com.bytecode.opencsv.CSVReader;
 /**
  * @author kimwerner
  */
-public class LngSink
+public class LngSink implements IProfilSink
 {
-  private final PrintWriter m_writer;
 
-  private final Reader m_reader;
+  private final HashMap<String, String> m_idMap = new HashMap<String, String>();
 
-  private DataBlockWriter m_dataBlockWriter;
-
-  public LngSink( final String source, final String destination ) throws IOException
+  public LngSink( )
   {
-    m_reader = new FileReader( source );
-    m_writer = new PrintWriter( new FileOutputStream( new File( destination ) ) );
-  }
-
-  public LngSink( final Reader source, final PrintWriter destination )
-  {
-    m_reader = source;
-    m_writer = destination;
-
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, "STATION" );
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, "SOHLHOEHE" );
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, "BOESCHUNG-LI" );
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, "BOESCHUNG-RE" );
+   // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, "WEIR_OK" );
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, "DECKENOBERK" );
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, "DECKENUNTERK" );
+   // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
+   // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
+    m_idMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, "TEXT" );
   }
 
   final DataBlockHeader createHeader( final String id )
   {
     final DataBlockHeader dbh = new DataBlockHeader();
-    dbh.setFirstLine( id );
-    if( "TEXT".equalsIgnoreCase( id ) )
+    final String fl = m_idMap.get( id );
+    dbh.setFirstLine( fl == null ? id : fl );
+    if( "TEXT".equalsIgnoreCase( fl ) )
     {
       dbh.setThirdLine( " 0  0  0  0  0  0  0  0 12" );
     }
@@ -166,23 +171,69 @@ public class LngSink
     return prfwriter;
   }
 
-  public void read( final char separator, final int colStation ) throws IOException
+  @SuppressWarnings("unchecked")
+  private DataBlockWriter extractDataBlocks( final IObservation<TupleResult> obs )
   {
-    m_dataBlockWriter = extractDataBlocks( m_reader, colStation, separator );
+    final DataBlockWriter prfwriter = new DataBlockWriter();
+
+    // Get TableData
+    final Object[] table = new Object[obs.getResult().getComponents().length];
+    for( int i = 0; i < obs.getResult().getComponents().length; i++ )
+    {
+      table[i] = new ArrayList<Object>();
+    }
+    for( final IRecord values : obs.getResult() )
+    {
+      for( int i = 0; i < obs.getResult().getComponents().length; i++ )
+      {
+        final Object oVal = values.getValue( i );
+        ((ArrayList<Object>) table[i]).add( oVal instanceof BigDecimal ? ((BigDecimal) oVal).doubleValue() : oVal );
+
+      }
+    }
+
+    // Add DataBlocks
+    for( int i = 0; i < obs.getResult().getComponents().length; i++ )
+    {
+      if( i != obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
+      {
+        final DataBlockHeader dbh = createHeader( obs.getResult().getComponent( i ).getId() );
+
+        final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
+        Object object = table[obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION )];
+        block.setCoords( ((ArrayList< ? >) object).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
+        if( block.getCoordCount() > 0 )
+          prfwriter.addDataBlock( block );
+      }
+    }
+    return prfwriter;
   }
 
-  public void read( final char separator ) throws IOException
+  /**
+   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public boolean write( Object source, Writer writer )
   {
-    m_dataBlockWriter = extractDataBlocks( m_reader, -1, separator );
-  }
-
-  public void read( ) throws IOException
-  {
-    m_dataBlockWriter = extractDataBlocks( m_reader, -1, ';' );
-  }
-
-  public void write( )
-  {
-    m_dataBlockWriter.store( m_writer );
+    DataBlockWriter dataBlockWriter = null;
+    if( source instanceof IObservation< ? > )
+      dataBlockWriter = extractDataBlocks( (IObservation<TupleResult>) source );
+    if( source instanceof String )
+      try
+      {
+        dataBlockWriter = extractDataBlocks( new FileReader( source.toString() ), -1, ';' );
+      }
+      catch( Exception e )
+      {
+        return false;
+      }
+    if( dataBlockWriter == null )
+      return false;
+    if( writer instanceof PrintWriter )
+      dataBlockWriter.store( (PrintWriter) writer );
+    else
+      dataBlockWriter.store( new PrintWriter( writer ) );
+    return true;
   }
 }
