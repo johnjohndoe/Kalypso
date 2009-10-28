@@ -106,7 +106,6 @@ import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
@@ -1244,7 +1243,7 @@ public class NaModelInnerCalcJob implements ISimulation
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { TimeserieConstants.MD_ALARM_1, TimeserieConstants.MD_ALARM_2, TimeserieConstants.MD_ALARM_3,
                 TimeserieConstants.MD_ALARM_4, TimeserieConstants.MD_GEWAESSER, TimeserieConstants.MD_FLUSSGEBIET, TimeserieConstants.MD_GKH, TimeserieConstants.MD_GKR,
                 TimeserieConstants.MD_HOEHENANGABEART, TimeserieConstants.MD_PEGELNULLPUNKT, TimeserieConstants.MD_WQWECHMANN, TimeserieConstants.MD_WQTABLE, TimeserieConstants.MD_TIMEZONE,
-                TimeserieConstants.MD_VORHERSAGE, ObservationConstants.MD_SCENARIO } );
+                TimeserieConstants.MD_VORHERSAGE_START, TimeserieConstants.MD_VORHERSAGE_ENDE } );
 
           }
         }
@@ -1297,11 +1296,6 @@ public class NaModelInnerCalcJob implements ISimulation
         final String titleForObservation = DefaultPathGenerator.generateTitleForObservation( feature, titlePropName, suffix );
 
         final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", titleForObservation, false, metadataList, axis, qTuppelModel ); //$NON-NLS-1$
-
-        // update with Scenario metadata
-        final String scenarioID = conf.getScenarioID();
-        if( scenarioID != null && scenarioID.length() > 0 )
-          resultObservation.getMetadataList().put( ObservationConstants.MD_SCENARIO, scenarioID );
 
         // write result
         // final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
