@@ -62,12 +62,15 @@ import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -162,8 +165,13 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
 
       /* Convert to JTS geometries. */
       Point[] ombrometerPoints = new Point[ombrometerStations.length];
+      GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       for( int i = 0; i < ombrometerStations.length; i++ )
-        ombrometerPoints[i] = (Point) JTSAdapter.export( ombrometerStations[i] );
+      {
+        GM_Point ombrometerPoint = ombrometerStations[i];
+        GM_Object ombrometerTransformed = transformer.transform( ombrometerPoint );
+        ombrometerPoints[i] = (Point) JTSAdapter.export( ombrometerTransformed );
+      }
 
       /* Iterate through all catchments. */
       IObservation[] result = new IObservation[areas.length];
@@ -197,6 +205,10 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
     catch( MalformedURLException e )
     {
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e ) );
+    }
+    catch( Exception e )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
     }
   }
 
