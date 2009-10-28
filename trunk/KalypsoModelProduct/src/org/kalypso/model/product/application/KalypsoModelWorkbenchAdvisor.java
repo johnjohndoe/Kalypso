@@ -71,8 +71,8 @@ public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
 
   /**
    * @param restrictedAccess
-   *            See
-   *            {@link KalypsoModelWorkbenchWindowAdvisor#KalypsoModelWorkbenchWindowAdvisor(KalypsoModelWorkbenchAdvisor, IWorkbenchWindowConfigurer, boolean)}
+   *          See
+   *          {@link KalypsoModelWorkbenchWindowAdvisor#KalypsoModelWorkbenchWindowAdvisor(KalypsoModelWorkbenchAdvisor, IWorkbenchWindowConfigurer, boolean)}
    */
   public KalypsoModelWorkbenchAdvisor( final boolean restrictedAccess )
   {
