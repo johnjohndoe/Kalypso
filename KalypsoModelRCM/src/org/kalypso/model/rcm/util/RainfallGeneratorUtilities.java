@@ -42,7 +42,9 @@ package org.kalypso.model.rcm.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -125,6 +127,32 @@ public class RainfallGeneratorUtilities
     IAxis[] firstAxisList = firstTuppleModel.getAxisList();
     IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
 
+    /* Add the observation values and the rainfall axes in the same order as the observations are. */
+    List<ITuppleModel> observationValues = new ArrayList<ITuppleModel>();
+    List<IAxis> rainfallAxes = new ArrayList<IAxis>();
+    for( int j = 0; j < observations.length; j++ )
+    {
+      /* Get the observation. */
+      IObservation observation = observations[j];
+
+      /* Get the values. */
+      ITuppleModel values = observation.getValues( null );
+      if( values.getCount() != firstTuppleModel.getCount() )
+        throw new SensorException( "The observations in the list must have a equal number of elements ..." );
+
+      /* Add. */
+      observationValues.add( values );
+
+      /* Get the axis list. */
+      IAxis[] axisList = observation.getAxisList();
+
+      /* Get the rainfall axis. */
+      IAxis rainfallAxis = ObservationUtilities.findAxisByClass( axisList, Double.class );
+
+      /* Add. */
+      rainfallAxes.add( rainfallAxis );
+    }
+
     /* Create a new observation using the axis of the first observation. */
     /* The other observations should have the same type of axes. */
     SimpleTuppleModel combinedTuppleModel = new SimpleTuppleModel( firstAxisList );
@@ -142,27 +170,21 @@ public class RainfallGeneratorUtilities
       double sum = 0.0;
       for( int j = 0; j < observations.length; j++ )
       {
-        /* Get the observation. */
-        IObservation observation = observations[j];
-
         /* Get the weight. */
         double weight = weights[j];
         if( weight == 0.0 )
           continue;
 
         /* Get the values of the observation. */
-        ITuppleModel tuppleModel = observation.getValues( null );
+        ITuppleModel tuppleModel = observationValues.get( j );
 
-        /* Get the axis list of the values. */
-        IAxis[] axisList = tuppleModel.getAxisList();
-
-        /* Find the axis for the double values. */
+        /* Get the rainfall axis. */
         /* The date will be taken later from the first observation. */
         /* The status bit will be set to ok later. */
-        IAxis doubleAxis = ObservationUtilities.findAxisByClass( axisList, Double.class );
+        IAxis rainfallAxis = rainfallAxes.get( j );
 
         /* Multiply the values of the current observation. */
-        Double value = (Double) tuppleModel.getElement( i, doubleAxis );
+        Double value = (Double) tuppleModel.getElement( i, rainfallAxis );
 
         /* Weight the value. */
         double weightedValue = value.doubleValue() * weight;
@@ -177,15 +199,12 @@ public class RainfallGeneratorUtilities
       /* Add the first date to the new observation. */
       Date firstDate = (Date) firstTuppleModel.getElement( i, firstDateAxis );
       values[combinedDatePosition] = new Date( firstDate.getTime() );
-      // combinedTuppleModel.setElement( i, new Date( firstDate.getTime() ), combinedDateAxis );
 
       /* Add the summarized values to the new observation. */
       values[combinedDoublePosition] = new Double( sum );
-      // combinedTuppleModel.setElement( i, new Double( sum ), combinedDoubleAxis );
 
       /* Add the status bit to the new observation. */
       values[combinedIntegerPosition] = new Integer( KalypsoStati.BIT_OK );
-      // combinedTuppleModel.setElement( i, new Integer( KalypsoStati.BIT_OK ), combinedIntegerAxis );
 
       /* Add a new row. */
       combinedTuppleModel.addTupple( values );

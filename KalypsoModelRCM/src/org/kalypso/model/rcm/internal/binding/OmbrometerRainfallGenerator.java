@@ -58,11 +58,14 @@ import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -123,10 +126,15 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
       // Convert to JTS-Geometries
       final Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
+      GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       for( int i = 0; i < ombrometerAreas.length; i++ )
       {
         if( ombrometerAreas[i] != null )
-          ombrometerPolygons[i] = (Polygon) JTSAdapter.export( ombrometerAreas[i] );
+        {
+          GM_Surface< ? > ombrometerArea = ombrometerAreas[i];
+          GM_Object ombrometerTransformed = transformer.transform( ombrometerArea );
+          ombrometerPolygons[i] = (Polygon) JTSAdapter.export( ombrometerTransformed );
+        }
       }
 
       // Iterate through all catchments
@@ -158,6 +166,10 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
     {
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e );
       throw new CoreException( status );
+    }
+    catch( Exception e )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
     }
   }
 }
