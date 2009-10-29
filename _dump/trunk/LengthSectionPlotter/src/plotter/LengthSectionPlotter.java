@@ -42,22 +42,6 @@ public class LengthSectionPlotter extends JFrame {
 	public LengthSectionPlotter() {
 	}
 
-	// private final File findPlotter(final Shell shell) {
-	//
-	// String plotterPath = "C:\\Programme\\bce\\WspWin Plotter\\plotter.exe";
-	//
-	// File file = new File(plotterPath);
-	// if (file.exists())
-	// return file;
-	//
-	// final FileDialog dlg = new FileDialog(shell);
-	// plotterPath = dlg.open();
-	// if (plotterPath == null)
-	// return null;
-	//
-	// return new File(plotterPath);
-	// }
-
 	/**
 	 * @param args
 	 */
@@ -112,20 +96,17 @@ public class LengthSectionPlotter extends JFrame {
 					if (target.getText().endsWith(".exe")) {
 						final File file = new File(System
 								.getProperty("java.io.tmpdir"), "exportTmp.lng");//$NON-NLS-1$ //$NON-NLS-2$
-						final LngSink sink = new LngSink(new FileReader(source
-								.getText()), new PrintWriter(
-								new FileOutputStream(file)));
-						sink.read(';', 0);
-						sink.write();
+						final LngSink sink = new LngSink();
+						sink.write(new FileReader(source.getText()),
+								new PrintWriter(new FileOutputStream(file)));
 						Runtime
 								.getRuntime()
 								.exec(
 										"\""	+ target.getText() + "\" \"" + file.getPath() + "\"");//$NON-NLS-1$ //$NON-NLS-2$// $NON-NLS-3$
 					} else {
-						final LngSink sink = new LngSink(source.getText(),
-								target.getText());
-						sink.read();
-						sink.write();
+						final LngSink sink = new LngSink();
+						sink.write(source.getText(), new PrintWriter(target
+								.getText()));
 						success.setText("well done");
 					}
 
