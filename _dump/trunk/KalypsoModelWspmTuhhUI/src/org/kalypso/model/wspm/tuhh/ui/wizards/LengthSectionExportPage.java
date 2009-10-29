@@ -183,6 +183,9 @@ public class LengthSectionExportPage extends WizardPage
         text.setText( findPlotter( parent.getShell() ) );
       }
     } );
+    final Label labelcheck = new Label( group, SWT.NONE );
+    labelcheck.setText( "PlotterCheck?" );
+    labelcheck.setToolTipText( "PlotterCheck?Description" );
     setControl( group );
   }
 

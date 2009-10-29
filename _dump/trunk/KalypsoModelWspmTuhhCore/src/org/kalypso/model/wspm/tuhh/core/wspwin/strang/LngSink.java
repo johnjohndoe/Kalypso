@@ -52,6 +52,7 @@ import java.util.HashMap;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -71,16 +72,16 @@ public class LngSink implements IProfilSink
 
   public LngSink( )
   {
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, "STATION" );
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, "SOHLHOEHE" );
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, "BOESCHUNG-LI" );
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, "BOESCHUNG-RE" );
-   // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, "WEIR_OK" );
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, "DECKENOBERK" );
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, "DECKENUNTERK" );
-   // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
-   // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
-    m_idMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, "TEXT" );
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, "STATION" ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, "SOHLHOEHE" ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, "BOESCHUNG-LI" ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, "BOESCHUNG-RE" ); //$NON-NLS-1$
+    // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, "WEIR_OK" );
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, "DECKENOBERK" ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, "DECKENUNTERK" ); //$NON-NLS-1$
+    // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
+    // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
+    m_idMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, "TEXT" ); //$NON-NLS-1$
   }
 
   final DataBlockHeader createHeader( final String id )
@@ -88,9 +89,9 @@ public class LngSink implements IProfilSink
     final DataBlockHeader dbh = new DataBlockHeader();
     final String fl = m_idMap.get( id );
     dbh.setFirstLine( fl == null ? id : fl );
-    if( "TEXT".equalsIgnoreCase( fl ) )
+    if( "TEXT".equalsIgnoreCase( dbh.getFirstLine() ) ) //$NON-NLS-1$
     {
-      dbh.setThirdLine( " 0  0  0  0  0  0  0  0 12" );
+      dbh.setThirdLine( " 0  0  0  0  0  0  0  0 12" ); //$NON-NLS-1$
     }
     return dbh;
   }
@@ -104,7 +105,7 @@ public class LngSink implements IProfilSink
 
     // Get MetaData
     int nbr = 0;
-    while( line != null && line[0].startsWith( "#" ) )
+    while( line != null && line[0].startsWith( "#" ) ) //$NON-NLS-1$
     {
       line[0] = line[0].substring( 1 );
       prfwriter.addKeyValue( nbr++, line );
@@ -119,7 +120,7 @@ public class LngSink implements IProfilSink
       for( int i = 0; i < col1.length; i++ )
       {
         {
-          if( "STATION".equalsIgnoreCase( col1[i] ) )
+          if( "STATION".equalsIgnoreCase( col1[i] ) ) //$NON-NLS-1$
           {
             colStat = i;
             break;
@@ -128,7 +129,7 @@ public class LngSink implements IProfilSink
       }
     }
     if( colStat < 0 )
-      throw new IOException( "keine Spalte für Station angegeben" );
+      throw new IOException( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink_0") ); //$NON-NLS-1$
 
     // Get TableData
     final Object[] table = new Object[col1.length];
@@ -217,23 +218,20 @@ public class LngSink implements IProfilSink
   public boolean write( Object source, Writer writer )
   {
     DataBlockWriter dataBlockWriter = null;
-    if( source instanceof IObservation< ? > )
-      dataBlockWriter = extractDataBlocks( (IObservation<TupleResult>) source );
-    if( source instanceof String )
-      try
-      {
+    try
+    {
+      if( source instanceof IObservation< ? > )
+        dataBlockWriter = extractDataBlocks( (IObservation<TupleResult>) source );
+      else if( source instanceof String )
         dataBlockWriter = extractDataBlocks( new FileReader( source.toString() ), -1, ';' );
-      }
-      catch( Exception e )
-      {
-        return false;
-      }
-    if( dataBlockWriter == null )
-      return false;
-    if( writer instanceof PrintWriter )
-      dataBlockWriter.store( (PrintWriter) writer );
-    else
+      else if( source instanceof FileReader )
+        dataBlockWriter = extractDataBlocks( (FileReader) source, -1, ';' );
       dataBlockWriter.store( new PrintWriter( writer ) );
-    return true;
+      return true;
+    }
+    catch( IOException e )
+    {
+      return false;
+    }
   }
 }

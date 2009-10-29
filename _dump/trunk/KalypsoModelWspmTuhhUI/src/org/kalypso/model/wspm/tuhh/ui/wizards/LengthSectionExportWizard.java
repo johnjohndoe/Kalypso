@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -72,6 +73,7 @@ public class LengthSectionExportWizard extends Wizard implements IExportWizard
   private IObservation<TupleResult> m_observation = null;
 
   private LengthSectionExportPage m_lengthSectionExportPage;
+ 
 
   /**
    * Creates a wizard for exporting workspace resources into a wspwin project.
@@ -94,7 +96,7 @@ public class LengthSectionExportWizard extends Wizard implements IExportWizard
   @Override
   public void addPages( )
   {
-    m_lengthSectionExportPage = new LengthSectionExportPage( "test" );
+    m_lengthSectionExportPage = new LengthSectionExportPage( "lengthSectionExportPage" );
     addPage( m_lengthSectionExportPage );
   }
 
@@ -103,6 +105,7 @@ public class LengthSectionExportWizard extends Wizard implements IExportWizard
    */
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
+   
     try
     {
       if( !currentSelection.isEmpty() )
@@ -152,7 +155,8 @@ public class LengthSectionExportWizard extends Wizard implements IExportWizard
     }
     catch( Exception e )
     {
-      e.printStackTrace();
+       m_lengthSectionExportPage.setMessage( e.getLocalizedMessage(), IStatus.ERROR);
+      return false;
     }
 
     return true;
