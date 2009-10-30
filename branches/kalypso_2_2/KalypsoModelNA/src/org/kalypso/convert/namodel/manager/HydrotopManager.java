@@ -206,6 +206,7 @@ public class HydrotopManager extends AbstractManager
       final Feature catchmentFE = (Feature) catchmentIter.next();
       if( asciiBuffer.writeFeature( catchmentFE ) ) // do it only for relevant catchments
       {
+        final int catchmentAsciiID = idManager.getAsciiID( catchmentFE );
         boolean anySuds = false;
         final List<String> hydIdList = new ArrayList<String>();
         final List<String> hydrotopOutputList = new ArrayList<String>();
@@ -295,7 +296,8 @@ public class HydrotopManager extends AbstractManager
             totalHydrotopArea += hydrotopArea;
             totalHydrotopSealedArea += hydrotopSealedArea;
             totalHydrotopNaturalArea += hydrotopNaturalArea;
-
+            
+            m_conf.addHydrotopMapping(catchmentAsciiID, hydrotopAsciiID, hydrotop);
             hydIdList.add( hydrotop.getId() );
           }
         }
@@ -308,11 +310,11 @@ public class HydrotopManager extends AbstractManager
 
         if( anySuds )
         {
-          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %.3f %.3f %.3f 1 %.3f %.3f %.3f\n", idManager.getAsciiID( catchmentFE ), hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea, totalSudsSealedArea, totalSudsNaturalArea, totalSudsSealedArea + totalSudsNaturalArea ) ); //$NON-NLS-1$
+          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %.3f %.3f %.3f 1 %.3f %.3f %.3f\n", catchmentAsciiID, hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea, totalSudsSealedArea, totalSudsNaturalArea, totalSudsSealedArea + totalSudsNaturalArea ) ); //$NON-NLS-1$
         }
         else
         {
-          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %g %g %g\n", idManager.getAsciiID( catchmentFE ), hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea ) ); //$NON-NLS-1$
+          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %g %g %g\n", catchmentAsciiID, hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea ) ); //$NON-NLS-1$
         }
         for( final String line : hydrotopOutputList )
           asciiBuffer.getHydBuffer().append( line ).append( "\n" ); //$NON-NLS-1$
