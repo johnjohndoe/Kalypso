@@ -47,13 +47,16 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
@@ -182,6 +185,10 @@ public class NAConfiguration
 
   private final Map<String, String> m_landuseLongNamesMap = new HashMap<String, String>();
 
+  private final File m_hydrotopMappingFile;
+
+  private final List<String> m_hydrotopMapping = new ArrayList<String>();
+  
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws InvocationTargetException
   {
     m_asciiBaseDir = asciiBaseDir;
@@ -222,6 +229,7 @@ public class NAConfiguration
     m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" ); //$NON-NLS-1$
     m_nutzungDir = new File( asciiBaseDir, "hydro.top" ); //$NON-NLS-1$
     m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" ); //$NON-NLS-1$
+    m_hydrotopMappingFile = new File( asciiBaseDir, "inp.dat/mapping.txt" ); //$NON-NLS-1$
     m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" ); //$NON-NLS-1$
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
@@ -649,5 +657,20 @@ public class NAConfiguration
   public GMLWorkspace getSudsWorkspace( )
   {
     return m_sudsWorkspace;
+  }
+
+  public File getHydrotopMappingFile( )
+  {
+    return m_hydrotopMappingFile;
+  }
+
+  public void addHydrotopMapping( final int catchmentAsciiID, final int hydrotopAsciiID, final Hydrotop hydrotop )
+  {
+    getHydrotopMapping().add( String.format( "%-6d %-6d   --->   [%s] %s", catchmentAsciiID, hydrotopAsciiID, hydrotop.getId(),hydrotop.getName() ) );
+  }
+
+  public List<String> getHydrotopMapping( )
+  {
+    return m_hydrotopMapping;
   }
 }

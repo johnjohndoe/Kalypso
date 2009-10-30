@@ -167,7 +167,7 @@ public class IDManager
 
   public void dump( final Writer writer ) throws IOException
   {
-    final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator()
+    final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator<Object>()
     {
       @Override
       public boolean equals( Object obj )
@@ -195,10 +195,11 @@ public class IDManager
       if( value instanceof Feature )
       {
         Feature feature = (Feature) value;
+//        feature.getFeatureType().getQName().getLocalPart().toString();
         writer.write( feature.getId() );
       }
       else
-        writer.write( "dummy" ); //$NON-NLS-1$
+        writer.write( "[control entry]" ); //$NON-NLS-1$
       writer.write( "\n" ); //$NON-NLS-1$
     }
   }
@@ -220,9 +221,7 @@ public class IDManager
 
     int asciiID;
 
-    public IDMap( @SuppressWarnings("hiding")
-    int asciiID, @SuppressWarnings("hiding")
-    int type )
+    public IDMap( @SuppressWarnings("hiding") int asciiID, @SuppressWarnings("hiding") int type )
     {
       this.type = type;
       this.asciiID = asciiID;
@@ -241,7 +240,7 @@ public class IDManager
     @Override
     public String toString( )
     {
-      return asciiID + "\t" + type; //$NON-NLS-1$
+      return asciiID + " [" + type + "]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
