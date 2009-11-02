@@ -43,18 +43,14 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.loader.PooledXLinkFeatureProvider;
-import org.kalypso.ogc.gml.om.FeatureComponent;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Kim Werner, Dirk Kuch
@@ -64,7 +60,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObjectProperty(java.lang.String)
    */
-  public IComponent getObjectProperty( String componentId )
+  public IComponent getObjectProperty( final String componentId )
   {
     final IComponent[] components = getObjectProperties();
     if( components.length < 1 )
@@ -118,7 +114,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValueFor(String)
    */
-  public Object getValueFor( String componentID )
+  public Object getValueFor( final String componentID )
   {
     return getValue( getObjectProperty( componentID ) );
   }
@@ -136,7 +132,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
     if( index < 0 )
       throw new IllegalArgumentException( component.getName() );
 
-    IRecord record = result.size() == 0 ? result.createRecord() : result.get( 0 );
+    final IRecord record = result.size() == 0 ? result.createRecord() : result.get( 0 );
     record.setValue( index, value );
   }
 
@@ -182,19 +178,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
 
   protected IComponent createObjectProperty( final String id )
   {
-    final String[] split = id.split( "#" ); //$NON-NLS-1$
-    final String urn = split[0];
-
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
-
-    final PooledXLinkFeatureProvider featureProvider = new PooledXLinkFeatureProvider( null, uri );
-
-    final Feature componentFeature = featureProvider.getFeature( split[1] );
-
-    final FeatureComponent featureComponent = new FeatureComponent( componentFeature, urn );
-
-    return featureComponent;
+    return ProfilUtil.getFeatureComponent( id );
   }
 
 }

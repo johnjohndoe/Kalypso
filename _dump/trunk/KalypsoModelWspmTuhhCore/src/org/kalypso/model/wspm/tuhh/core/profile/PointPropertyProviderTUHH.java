@@ -40,17 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.AbstractPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.loader.PooledXLinkFeatureProvider;
-import org.kalypso.ogc.gml.om.FeatureComponent;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kimwerner
@@ -126,28 +122,13 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
     if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( propertyID ) )
       return new Double( 0.0 );
 
-   return super.getDefaultValue( propertyID );
+    return super.getDefaultValue( propertyID );
 
   }
-
 
   public IComponent getPointProperty( final String propertyId )
   {
-    final String[] split = propertyId.split( "#" ); //$NON-NLS-1$
-    final String urn = split[0];
-
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
-
-    final PooledXLinkFeatureProvider featureProvider = new PooledXLinkFeatureProvider( null, uri );
-
-    final Feature componentFeature = featureProvider.getFeature( split[1] );
-
-    final FeatureComponent featureComponent = new FeatureComponent( componentFeature, urn );
-
-    return featureComponent;
+    return ProfilUtil.getFeatureComponent( propertyId );
   }
-
-
 
 }
