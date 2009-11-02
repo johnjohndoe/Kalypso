@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.List;
 
@@ -59,6 +61,8 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.IObservation;
@@ -78,7 +82,7 @@ public class CreateLengthSectionWizard extends Wizard
 {
 
   final private ArrayChooserPage m_profileChooserPage;
-  
+
   final private List<Feature> m_profiles;
 
   final private List<Feature> m_selectedProfiles;
@@ -123,25 +127,26 @@ public class CreateLengthSectionWizard extends Wizard
       if( !parentFolder.exists() )
         parentFolder.create( false, true, new NullProgressMonitor() );
 
-      IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( profilFeatures );
-
-      final String fName = "station(" + lengthSection.getResult().get( 0 ).getValue( 0 ).toString() + ")-" + lengthSection.getResult().size();
+      final String fName = String.format( "station(%.4f)+%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length );
       IFolder targetFolder = parentFolder.getFolder( fName );
       if( !targetFolder.exists() )
         targetFolder.create( false, true, new NullProgressMonitor() );
+
+      IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) );
+      File targetJavaFile = targetFile.getLocation().toFile();
+      final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( new QName( "http://www.opengis.net/om", "Observation" ), targetJavaFile.toURI().toURL(), new GmlSerializerFeatureProviderFactory() );
+      final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( (IProfileFeature[]) profilFeatures );
+      ObservationFeatureFactory.toFeature( lengthSection, lsWorkspace.getRootFeature() );
+      GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" );
+      targetFolder.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+
+      KalypsoModelWspmCoreExtensions.createProfilSink( "lng" ).write( profilFeatures, new PrintWriter( new FileOutputStream( targetJavaFile ) ) );
 
       URL resource = getClass().getResource( "resources/ls.kod" );
       final String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "!#localPath#!", fName + ".gml" );
       IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
       InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
       kodFile.create( inputStream, true, new NullProgressMonitor() );
-
-      IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) );
-      File targetJavaFile = targetFile.getLocation().toFile();
-      final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( new QName( "http://www.opengis.net/om", "Observation" ), targetJavaFile.toURI().toURL(), new GmlSerializerFeatureProviderFactory() );
-      ObservationFeatureFactory.toFeature( lengthSection, lsWorkspace.getRootFeature() );
-      GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" );
-      targetFolder.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
 
     }
     catch( Exception e )
@@ -151,5 +156,4 @@ public class CreateLengthSectionWizard extends Wizard
     }
     return true;
   }
- 
 }

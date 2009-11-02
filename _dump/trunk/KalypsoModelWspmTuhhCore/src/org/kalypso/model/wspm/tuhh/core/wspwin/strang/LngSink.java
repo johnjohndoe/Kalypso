@@ -68,31 +68,32 @@ import au.com.bytecode.opencsv.CSVReader;
 public class LngSink implements IProfilSink
 {
 
-  private final HashMap<String, String> m_idMap = new HashMap<String, String>();
+  private final HashMap<String, String[]> m_idMap = new HashMap<String, String[]>();
 
   public LngSink( )
   {
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, "STATION" ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, "SOHLHOEHE" ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, "BOESCHUNG-LI" ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, "BOESCHUNG-RE" ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, new String[] { "STATION" } ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, new String[] { "SOHLHOEHE" } ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, new String[] { "BOESCHUNG-LI" } ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, new String[] { "BOESCHUNG-RE" } ); //$NON-NLS-1$
     // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, "WEIR_OK" );
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, "DECKENOBERK" ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, "DECKENUNTERK" ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, new String[] { "DECKENOBERK" } ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, new String[] { "DECKENUNTERK" } ); //$NON-NLS-1$
     // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
     // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
-    m_idMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, "TEXT" ); //$NON-NLS-1$
+    m_idMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
   }
 
   final DataBlockHeader createHeader( final String id )
   {
     final DataBlockHeader dbh = new DataBlockHeader();
-    final String fl = m_idMap.get( id );
-    dbh.setFirstLine( fl == null ? id : fl );
-    if( "TEXT".equalsIgnoreCase( dbh.getFirstLine() ) ) //$NON-NLS-1$
-    {
-      dbh.setThirdLine( " 0  0  0  0  0  0  0  0 12" ); //$NON-NLS-1$
-    }
+    final String[] fl = m_idMap.get( id );
+    if( fl == null )
+      return null;
+
+    dbh.setFirstLine( fl.length > 0 ? fl[0] : id );
+    dbh.setSecondLine( fl.length > 1 ? new StringBuffer().append( " ", 0, 200 ) + fl[1] : "" );
+    dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );
     return dbh;
   }
 
@@ -129,7 +130,7 @@ public class LngSink implements IProfilSink
       }
     }
     if( colStat < 0 )
-      throw new IOException( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink_0") ); //$NON-NLS-1$
+      throw new IOException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink_0" ) ); //$NON-NLS-1$
 
     // Get TableData
     final Object[] table = new Object[col1.length];
@@ -159,7 +160,8 @@ public class LngSink implements IProfilSink
     {
       if( i != colStat )
       {
-        final DataBlockHeader dbh = createHeader( col1[i] );
+
+        final DataBlockHeader dbh = m_idMap.get( col1[i] ) == null ? new DataBlockHeader( col1[i] ) : createHeader( col1[i] );
 
         if( i < col2.length )
           dbh.setSecondLine( col2[i] );
@@ -199,7 +201,8 @@ public class LngSink implements IProfilSink
       if( i != obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
       {
         final DataBlockHeader dbh = createHeader( obs.getResult().getComponent( i ).getId() );
-
+        if( dbh == null )
+          continue;
         final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
         Object object = table[obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION )];
         block.setCoords( ((ArrayList< ? >) object).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
@@ -217,6 +220,7 @@ public class LngSink implements IProfilSink
   @Override
   public boolean write( Object source, Writer writer )
   {
+
     DataBlockWriter dataBlockWriter = null;
     try
     {

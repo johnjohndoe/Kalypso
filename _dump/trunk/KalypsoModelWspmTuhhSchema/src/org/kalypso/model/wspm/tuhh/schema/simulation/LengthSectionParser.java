@@ -132,7 +132,9 @@ public class LengthSectionParser
           return;
 
         /* Introduce space around 'NaN' and '***' values to make it parseable */
-        final String line = lineIterator.nextLine().replaceAll( "NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
+//        final String line = lineIterator.nextLine().replaceAll( "NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String line1 = lineIterator.nextLine().replaceAll( "NaN", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String line = line1.replaceAll( "-999.999", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final BigDecimal station = NumberUtils.parseQuietDecimal( line, 0, 11, IWspmTuhhConstants.STATION_SCALE );
         final BigDecimal runoff = NumberUtils.parseQuietDecimal( line, 17, 27, 3 );

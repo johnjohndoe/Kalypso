@@ -74,12 +74,13 @@ public class LengthSectionExportPage extends WizardPage
 
   private Button m_plotterCheck;
 
-  public LengthSectionExportPage( final String pageName )
+  public LengthSectionExportPage( final String title, final String description, final String error )
   {
-    super( pageName );
+    super( "lengthSectionExportPage" );
 
-    setTitle( "LengthSectionExportTitle" );
-    setDescription( "LengthSectionExportDescription" );
+    setTitle( title );
+    setErrorMessage( error );
+    setDescription( description );
 
     setPageComplete( false );
   }
@@ -121,11 +122,13 @@ public class LengthSectionExportPage extends WizardPage
     m_text.setLayoutData( new GridData( SWT.FILL, SWT.NONE, true, false ) );
     m_text.setText( "" ); //$NON-NLS-1$
     m_text.setToolTipText( "LengthSectionFileChooserTextDescription" );
+    m_text.setEnabled( getErrorMessage().equals( "" ) );//$NON-NLS-1$
 
     /* The button for opening the FileDialog. */
     final Button button = new Button( group, SWT.NONE );
     button.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     button.setText( "..." ); //$NON-NLS-1$
+    button.setEnabled( getErrorMessage().equals( "" ) );//$NON-NLS-1$
 
     m_text.addModifyListener( new ModifyListener()
     {
@@ -174,7 +177,9 @@ public class LengthSectionExportPage extends WizardPage
     } );
     m_plotterCheck = new Button( group, SWT.CHECK );
     m_plotterCheck.setSelection( false );
-
+    m_plotterCheck.setText( "PlotterCheck?" ); 
+    m_plotterCheck.setToolTipText( "PlotterCheck?Description" );
+    m_plotterCheck.setEnabled( getErrorMessage().equals( "" ) );//$NON-NLS-1$
     m_plotterCheck.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -183,9 +188,9 @@ public class LengthSectionExportPage extends WizardPage
         text.setText( findPlotter( parent.getShell() ) );
       }
     } );
-    final Label labelcheck = new Label( group, SWT.NONE );
-    labelcheck.setText( "PlotterCheck?" );
-    labelcheck.setToolTipText( "PlotterCheck?Description" );
+//    final Label labelcheck = new Label( group, SWT.NONE );
+//    labelcheck.setText( "PlotterCheck?" );
+//    labelcheck.setToolTipText( "PlotterCheck?Description" );
     setControl( group );
   }
 
@@ -199,10 +204,10 @@ public class LengthSectionExportPage extends WizardPage
     return m_text.getText();
   }
 
-  public boolean OpenPlotter()
-{
-  return m_plotterCheck.getSelection();
-}
+  public boolean OpenPlotter( )
+  {
+    return m_plotterCheck.getSelection();
+  }
 
   public File getSourceDirectory( )
   {

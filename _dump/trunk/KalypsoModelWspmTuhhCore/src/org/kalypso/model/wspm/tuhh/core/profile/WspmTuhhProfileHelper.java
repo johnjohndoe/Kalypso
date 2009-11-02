@@ -63,7 +63,6 @@ import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -95,13 +94,12 @@ public class WspmTuhhProfileHelper
     }
   }
 
-  public static final BigDecimal valueToBigDecimal( final Object value )
+  private final static BigDecimal valueToBigDecimal( final Object value )
   {
     return value instanceof Double ? new BigDecimal( (Double) value ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP ) : new BigDecimal( Double.NaN );
-
   }
 
-  public static IObservation<TupleResult> profilesToLengthSection( final Object[] profilFeatures )
+  public static final IObservation<TupleResult> profilesToLengthSection( final IProfileFeature[] profilFeatures )
   {
     TupleResult lsResult = new TupleResult();
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) );
@@ -114,11 +112,10 @@ public class WspmTuhhProfileHelper
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT));
+    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT ) );
 
-    for( Object opf : profilFeatures )
+    for( IProfileFeature profileFeature : profilFeatures )
     {
-      final IProfileFeature profileFeature = (IProfileFeature) opf;
       final IProfil profil = profileFeature.getProfil();
       final IComponent profHei = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       final int indHei = profil.indexOfProperty( profHei );
@@ -150,7 +147,7 @@ public class WspmTuhhProfileHelper
       {
         if( mtf.length < 2 )
         {
-          station.setValue( 9, valueToBigDecimal( profilObject[0].getObjectProperty(IWspmTuhhConstants.BUILDING_PROPERTY_BREITE )),true);// ROHR_DN
+          station.setValue( 9, valueToBigDecimal( profilObject[0].getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true );// ROHR_DN
         }
         else
         {

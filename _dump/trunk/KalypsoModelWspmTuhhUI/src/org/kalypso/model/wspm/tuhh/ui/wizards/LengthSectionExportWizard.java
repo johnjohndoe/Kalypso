@@ -96,7 +96,7 @@ public class LengthSectionExportWizard extends Wizard implements IExportWizard
   @Override
   public void addPages( )
   {
-    m_lengthSectionExportPage = new LengthSectionExportPage( "lengthSectionExportPage" );
+    m_lengthSectionExportPage = new LengthSectionExportPage("ExportTitle","ExportDescription",m_observation==null?"Exporterror":"");
     addPage( m_lengthSectionExportPage );
   }
 
@@ -119,14 +119,16 @@ public class LengthSectionExportWizard extends Wizard implements IExportWizard
           m_observation = ObservationFeatureFactory.toObservation( rootFeature );
           workspace.dispose();
         }
+
       }
     }
     catch( Exception e )
     {
+    //  m_lengthSectionExportPage.setMessage(  e.getLocalizedMessage() );
       e.printStackTrace();
     }
 
-    setWindowTitle( Messages.getString( "Length Section Export" ) );
+    setWindowTitle(  "Length Section Export" );
     setNeedsProgressMonitor( true );
   }
 
@@ -155,7 +157,7 @@ public class LengthSectionExportWizard extends Wizard implements IExportWizard
     }
     catch( Exception e )
     {
-       m_lengthSectionExportPage.setMessage( e.getLocalizedMessage(), IStatus.ERROR);
+       m_lengthSectionExportPage.setErrorMessage( e.getLocalizedMessage());//, IStatus.ERROR);
       return false;
     }
 
