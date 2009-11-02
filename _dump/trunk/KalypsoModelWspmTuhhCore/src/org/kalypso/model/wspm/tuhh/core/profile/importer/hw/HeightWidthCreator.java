@@ -84,7 +84,7 @@ public class HeightWidthCreator implements IWProfContentHandler
   public void newPoint( final String riverId, final BigDecimal station, final String profileName, final BigDecimal distance, final GM_Point location, final double value, final String comment, final String profileComment, final URL photoURL, final String objectType, final int attributeType, final int ord, final int partOrd )
   {
     final HeightWidthData data = getData( riverId, station, profileName );
-    data.addPoint( distance, value, objectType, attributeType, ord, partOrd );
+    data.addPoint( distance, value, objectType, attributeType, ord );
   }
 
   private HeightWidthData getData( final String riverId, final BigDecimal station, final String profileName )

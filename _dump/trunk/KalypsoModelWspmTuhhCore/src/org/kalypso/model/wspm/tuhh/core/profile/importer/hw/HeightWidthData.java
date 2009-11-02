@@ -70,7 +70,7 @@ public class HeightWidthData
     m_tempDir = tempDir;
   }
 
-  public void addPoint( final BigDecimal distance, final double value, final String objectType, final int attributeType, final int ord, final int partOrd )
+  public void addPoint( final BigDecimal distance, final double value, final String objectType, final int attributeType, final int ord )
   {
     // just do hash by object-typ; preserving the order
     final Coordinate coordinate = new Coordinate( distance.doubleValue(), value );
