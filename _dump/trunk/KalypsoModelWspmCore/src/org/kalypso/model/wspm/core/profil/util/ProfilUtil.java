@@ -52,8 +52,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -65,9 +63,9 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.loader.PooledXLinkFeatureProvider;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -82,6 +80,9 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class ProfilUtil
 {
+  // REMARK: it is not ideal to have this global/static cache here, but where is a better place?
+  private static final DictionaryCache DICT_CACHE = new DictionaryCache();
+
   /**
    * @return the values of each point for this pointProperty in the correct order
    */
@@ -108,20 +109,22 @@ public class ProfilUtil
   public static IComponent getFeatureComponent( final String propertyId )
   {
     final String[] split = propertyId.split( "#" ); //$NON-NLS-1$
-    final String urn = split[0];
+    final String dictionaryUrn = split[0];
+    final String itemId = split[1];
 
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
+    final GMLWorkspace dict = DICT_CACHE.get( dictionaryUrn );
+    if( dict == null )
+      throw new IllegalArgumentException( "Unknown dictionary: " + dictionaryUrn );
 
-    final PooledXLinkFeatureProvider featureProvider = new PooledXLinkFeatureProvider( null, uri );
+    final Feature itemDefinition = dict.getFeature( itemId );
+    if( itemDefinition == null )
+    {
+      final String msg = String.format( "Unknown item '%s' in dictionary %s", itemId, dictionaryUrn );
+      throw new IllegalArgumentException( msg );
+    }
 
-    final Feature componentFeature = featureProvider.getFeature( split[1] );
-
-    final FeatureComponent featureComponent = new FeatureComponent( componentFeature, urn );
-
-    return featureComponent;
+    return new FeatureComponent( itemDefinition, dictionaryUrn );
   }
-
   
   /**
    * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
