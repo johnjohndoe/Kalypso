@@ -74,6 +74,9 @@ public interface IWProfContentProvider
 
   String getProfileName( Feature feature );
 
+  /**
+   * The point number within one part of a profile ('ord')
+   */
   int getNumber( Feature feature );
 
   int getPartNumber( Feature feature );
