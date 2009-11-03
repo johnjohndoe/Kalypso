@@ -10,8 +10,8 @@ Export-Package: org.kalypso.dwd,
  org.kalypso.dwd.dwdzml,
  org.kalypso.dwd.schema,
  org.kalypso.dwd.servlet.dwdfilecopy
-Require-Bundle: org.kalypso.deegree;visibility:=reexport,
+Require-Bundle: org.eclipse.ant.core,
  org.kalypso.commons;visibility:=reexport,
  org.kalypso.core,
- org.eclipse.ant.core
+ org.kalypso.deegree;visibility:=reexport
 Bundle-ActivationPolicy: lazy
