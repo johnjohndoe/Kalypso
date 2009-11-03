@@ -152,11 +152,7 @@
                 <Label>Station [km]</Label>
                 <Direction>NEGATIVE</Direction>
                 <Position>BOTTOM</Position>
-                <NumberRange>
-                    <MinValue>0</MinValue>
-                    <MaxValue>1</MaxValue>
-                </NumberRange>
-               <RendererRef ref="NumberAxisRenderer"/>
+                <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
             
             <Axis id="NN_Axis">
@@ -165,11 +161,6 @@
                 <Label>Höhe [NN+m]</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>LEFT</Position>
-                <NumberRange>
-                    <MinValue>0</MinValue>
-                    <MaxValue>1</MaxValue>
-                </NumberRange>
-                <PreferredAdjustment before="1" range="20" after="1"/>	
                 <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
             
@@ -179,11 +170,6 @@
                 <Label>Abfluss [m³/s]</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>RIGHT</Position>
-                <NumberRange>
-                    <MinValue>0</MinValue>
-                    <MaxValue>1</MaxValue>
-                </NumberRange> 
-                <PreferredAdjustment before="1" range="20" after="1"/>	
                 <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
         </Mappers>
@@ -194,7 +180,7 @@
                         <Parameter name="inset_tick" value="2"/>
                         <Parameter name="inset_label" value="2"/>
                         <Parameter name="tick_length" value="5"/>
-                        <Parameter name="gap" value="0"/>
+                        <Parameter name="gap" value="5"/>
                         </Parameters>
                 </Provider>
             </AxisRenderer>
