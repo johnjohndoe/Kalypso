@@ -32,6 +32,7 @@
 					<include name="KalypsoDeegree/build/bin" />
 					<include name="KalypsoCore/build/bin" />
 					<include name="KalypsoModelRCM/build/bin" />
+					<include name="KalypsoGMLSchema/build/bin" />
 				</dirset>
 				<fileset dir="${eclipse.home}">
 					<include name="plugins/org.eclipse.equinox.common*.jar" />
