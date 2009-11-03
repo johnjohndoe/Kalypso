@@ -42,6 +42,13 @@
                value="plugin_customization.ini">
          </property>
       </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="org.kalypso.model.product.application.NavigatorRoot"
+            id="org.kalypso.model.product.application.NavigatorRoot">
+      </factory>
    </extension> 
  <extension
          point="org.eclipse.ui.intro">
@@ -78,6 +85,37 @@
              </implementation>
           </presentation>
        </config>
+    </extension>
+    <extension
+          point="org.eclipse.ui.navigator.viewer">
+       <viewer
+             viewerId="org.eclipse.ui.views.ResourceNavigator">
+       </viewer>
+       <viewerContentBinding
+             viewerId="org.eclipse.ui.views.ResourceNavigator">
+          <includes>
+             <contentExtension
+                   pattern="org.eclipse.ui.navigator.resourceContent">
+             </contentExtension>
+             <contentExtension
+                   pattern="net.videodb.navigator.filters.*">
+             </contentExtension>
+          </includes>
+       </viewerContentBinding>
+       <viewerActionBinding
+             viewerId="org.eclipse.ui.views.ResourceNavigator">
+          <includes>
+             <actionExtension
+                   pattern="org.eclipse.ui.navigator.resources.*">
+             </actionExtension>
+             <actionExtension
+                   pattern="org.eclipse.ui.navigator.resources.NewActions">
+             </actionExtension>
+             <actionExtension
+                   pattern="org.eclipse.ui.navigator.resources.PropertiesActionProvider">
+             </actionExtension>
+          </includes>
+       </viewerActionBinding>
     </extension>
 
 

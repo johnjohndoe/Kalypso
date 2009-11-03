@@ -47,44 +47,50 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
-import org.eclipse.ui.internal.ide.application.IDEWorkbenchWindowAdvisor;
-import org.eclipse.ui.internal.intro.impl.IIntroConstants;
+import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.intro.IIntroPart;
-import org.eclipse.ui.intro.config.CustomizableIntroPart;
+import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.model.product.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
-public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdvisor
+public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 {
+  /**
+   * True, if access is restricted.
+   */
   private final boolean m_restrictedAccess;
 
-  private final String m_defaultPerspective;
-
   /**
+   * The constructor.
+   * 
+   * @param configurer
+   *          An object for configuring the workbench window.
    * @param restrictedAccess
    *          If true, only the model-product perspective will be available to the user. Toolbar and perspective bar
    *          will be hidden.
    */
-  public KalypsoModelWorkbenchWindowAdvisor( final KalypsoModelWorkbenchAdvisor advisor, final IWorkbenchWindowConfigurer configurer, final boolean restrictedAccess )
+  public KalypsoModelWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer, final boolean restrictedAccess )
   {
-    super( advisor, configurer );
+    super( configurer );
+
     m_restrictedAccess = restrictedAccess;
-    m_defaultPerspective = advisor.getInitialWindowPerspectiveId();
   }
 
+  /**
+   * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#createActionBarAdvisor(org.eclipse.ui.application.IActionBarConfigurer)
+   */
   @Override
   public ActionBarAdvisor createActionBarAdvisor( final IActionBarConfigurer configurer )
   {
     if( !m_restrictedAccess )
-      return super.createActionBarAdvisor( configurer );
+      return new UnrestrictedActionBarAdvisor( configurer );
 
-    return new KalypsoModelActionBarAdvisor( configurer );
+    return new RestrictedActionBarAdvisor( configurer );
   }
 
   /**
@@ -103,65 +109,53 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
       final IWorkbenchPage activePage = window.getActivePage();
 
       /* Make sure the default perspective is open. */
-      final IPerspectiveDescriptor defaultPerpDesc = window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( m_defaultPerspective );
+      final IPerspectiveDescriptor defaultPerpDesc = window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( Perspective.ID );
       activePage.setPerspective( defaultPerpDesc );
 
       /* Close all other perspectives */
       final IPerspectiveDescriptor[] openPerspectives = activePage.getOpenPerspectives();
       for( final IPerspectiveDescriptor perspectiveDescriptor : openPerspectives )
       {
-        if( !perspectiveDescriptor.getId().equals( m_defaultPerspective ) )
+        if( !perspectiveDescriptor.getId().equals( Perspective.ID ) )
           activePage.closePerspective( perspectiveDescriptor, true, false );
       }
     }
   }
 
+  /**
+   * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#preWindowOpen()
+   */
   @Override
   public void preWindowOpen( )
   {
     super.preWindowOpen();
 
+    /* Configure the UI. */
     final IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
     configurer.setShowCoolBar( !m_restrictedAccess );
     configurer.setShowPerspectiveBar( !m_restrictedAccess );
     configurer.setShowFastViewBars( !m_restrictedAccess );
-
     configurer.setShowProgressIndicator( true );
     configurer.setShowStatusLine( true );
 
+    /* Set the title. */
     configurer.setTitle( Messages.getString( "org.kalypso.model.product.application.KalypsoModelWorkbenchWindowAdvisor.0" ) ); //$NON-NLS-1$
   }
 
   /**
-   * @see org.eclipse.ui.internal.ide.IDEWorkbenchWindowAdvisor#openIntro()
+   * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#openIntro()
    */
   @Override
   public void openIntro( )
   {
-    // TRICKY: we want to open the welcome page always as the starting page, not in
-    // standby mode (the latter is the default behaviour, if we closed the workbench in standby)
-    // This seemes the only way to force it.
-    final IWorkbench workbench = getWindowConfigurer().getWorkbenchConfigurer().getWorkbench();
-    final IIntroManager introManager = workbench.getIntroManager();
+    /* Open the welcome page not in stand by mode. */
+    IWorkbench workbench = getWindowConfigurer().getWorkbenchConfigurer().getWorkbench();
+    IIntroManager introManager = workbench.getIntroManager();
+    introManager.showIntro( null, false );
 
-    final IWorkbenchPage activePage = workbench.getActiveWorkbenchWindow().getActivePage();
-    /* Do not show intro if we have no perspective (throws an exception). What to do in that case? */
-    if( activePage.getOpenPerspectives().length > 0 )
-    {
-      final IIntroPart part = introManager.showIntro( null, false );
-      if( part instanceof CustomizableIntroPart )
-      {
-        final CustomizableIntroPart customIntro = (CustomizableIntroPart) part;
-        customIntro.getControl().setData( IIntroConstants.SHOW_STANDBY_PART, null );
-      }
-
-      if( part != null )
-        part.standbyStateChanged( false );
-
-      // always start with the main page
-      final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-      if( model != null )
-        model.setCurrentPageId( "rootPage" ); //$NON-NLS-1$
-    }
+    /* Always start with the main page. */
+    IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+    if( model != null )
+      model.setCurrentPageId( "rootPage" ); //$NON-NLS-1$
   }
 }
