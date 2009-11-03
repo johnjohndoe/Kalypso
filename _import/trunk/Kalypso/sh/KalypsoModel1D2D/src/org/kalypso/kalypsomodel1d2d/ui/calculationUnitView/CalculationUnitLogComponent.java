@@ -111,10 +111,10 @@ public class CalculationUnitLogComponent
 
   private void guiProblemViewer( final Composite parent, final FormToolkit toolkit )
   {
-    final Label noLogLabel = toolkit.createLabel( parent, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.0") ); //$NON-NLS-1$
+    final Label noLogLabel = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.0" ) ); //$NON-NLS-1$
     final GridData noLogGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     noLogLabel.setLayoutData( noLogGridData );
-    noLogLabel.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.1") ); //$NON-NLS-1$
+    noLogLabel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.1" ) ); //$NON-NLS-1$
 
     final DefaultTableViewer logTableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.BORDER );
 
@@ -144,7 +144,7 @@ public class CalculationUnitLogComponent
         final IStatus status = (IStatus) sel.getFirstElement();
         if( status != null )
         {
-          final StatusDialog dialog = new StatusDialog( parent.getShell(), status, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.2") ); //$NON-NLS-1$
+          final StatusDialog dialog = new StatusDialog( parent.getShell(), status, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.2" ) ); //$NON-NLS-1$
           dialog.open();
         }
       }
@@ -211,7 +211,7 @@ public class CalculationUnitLogComponent
       }
       else if( location != null )
       {
-        final GM_Envelope env = GeometryUtilities.getEnvelope( location );
+        final GM_Envelope env = location.getEnvelope();
         final GM_Envelope envelope = env.getBuffer( env.getWidth() / 10 );
         mapPanel.setBoundingBox( envelope );
       }
