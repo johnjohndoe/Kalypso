@@ -49,7 +49,9 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.model.rcm.util.RainfallGenerationOp;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * This task generates rainfall for catchment areas.
@@ -198,8 +200,13 @@ public class RainfallGenerationTask extends Task
       final SubMonitor progress = SubMonitor.convert( monitor, taskMessage, 100 );
       progress.subTask( "Operation wird initialisiert" );
 
+      /* Load the catchment workspace. */
       final GMLWorkspace catchmentWorkspace = GmlSerializer.createGMLWorkspace( m_catchmentUrl, null );
-      // TODO: transform??
+
+      /* Tansform the catchment workspace. */
+      final TransformVisitor transformVisitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      catchmentWorkspace.accept( transformVisitor, catchmentWorkspace.getRootFeature(), TransformVisitor.DEPTH_INFINITE );
+
       ProgressUtilities.worked( progress, 4 );
 
       final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, null, m_targetFilter, m_targetFrom, m_targetTo );
