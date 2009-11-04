@@ -207,6 +207,10 @@
           class="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo"
           id="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo">
     </themeInfo>
+    <themeInfo
+          class="org.kalypso.risk.plugin.DamagePotentialThemeInfo"
+          id="org.kalypso.risk.plugin.DamagePotentialThemeInfo">
+    </themeInfo>
  </extension>
  <extension
        point="org.kalypso.contribs.eclipseplatform.projectTemplate">

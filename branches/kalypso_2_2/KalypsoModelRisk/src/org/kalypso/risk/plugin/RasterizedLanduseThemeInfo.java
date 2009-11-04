@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -18,13 +17,12 @@ public class RasterizedLanduseThemeInfo extends CoverageThemeInfo implements IKa
   private static Map<Double, String> LANDUSE_CLASSES_MAP = new HashMap<Double, String>();
 
   /**
-   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
+   * @see org.kalypso.gml.ui.map.CoverageThemeInfo#initFormatString(java.util.Properties)
    */
   @Override
-  public void init( final IKalypsoTheme theme, final Properties props )
+  protected String initFormatString( Properties props )
   {
-    super.init( theme, props );
-    m_formatString = props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
+    return props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
   }
 
   public static void updateClassesDefinition( final HashMap<Double, String> values )
