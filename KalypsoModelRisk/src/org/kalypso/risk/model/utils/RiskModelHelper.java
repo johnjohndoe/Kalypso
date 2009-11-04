@@ -235,8 +235,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15" , sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
-      newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16" , new Date().toString() ) ); //$NON-NLS-1$
+      newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15", sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
+      newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16", new Date().toString() ) ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
@@ -288,7 +288,7 @@ public class RiskModelHelper
     layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
     final Property layerPropertyThemeInfoId = new Property();
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-    layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f \u20ac/m\u00b2" ); //$NON-NLS-1$
+    layerPropertyThemeInfoId.setValue( "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
     final List<Property> layerPropertyList = layer.getProperty();
     layerPropertyList.add( layerPropertyDeletable );
     layerPropertyList.add( layerPropertyThemeInfoId );
@@ -359,7 +359,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor,  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" , i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14", i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -733,7 +733,7 @@ public class RiskModelHelper
     Assert.isTrue( names.length == returnPeriods.length );
     Assert.isTrue( names.length == descriptions.length );
 
-    monitor.beginTask( Messages.getString("org.kalypso.risk.model.utils.RiskModelHelper.1"), names.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.1" ), names.length ); //$NON-NLS-1$
 
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
@@ -767,7 +767,7 @@ public class RiskModelHelper
       int coverageCount = 0;
       for( final ICoverage coverage : grids[i] )
       {
-        final String subtaks =  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" , names[i], coverageCount + 1, grids[i].size() ); //$NON-NLS-1$
+        final String subtaks = Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17", names[i], coverageCount + 1, grids[i].size() ); //$NON-NLS-1$
         monitor.subTask( subtaks );
 
         // NO! When imported from Flood, return period is always 1 by default, so files will be overwritten!
@@ -781,8 +781,8 @@ public class RiskModelHelper
 
         final SubMonitor subMonitor = SubMonitor.convert( monitor, 10 );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", subMonitor ); //$NON-NLS-1$
-        newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18" , coverageCount + 1 ) ); //$NON-NLS-1$
-        newCoverage.setDescription(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19" , new Date() ) ); //$NON-NLS-1$
+        newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18", coverageCount + 1 ) ); //$NON-NLS-1$
+        newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19", new Date() ) ); //$NON-NLS-1$
         grid.dispose();
         coverageCount++;
         if( !subMonitor.isCanceled() && wspThemes != null )
