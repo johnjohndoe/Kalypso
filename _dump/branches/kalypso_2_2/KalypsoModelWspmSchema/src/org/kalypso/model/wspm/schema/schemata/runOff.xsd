@@ -72,7 +72,7 @@
                 </annotation>
                 <complexContent>
 					<extension base="om:ObservationType">
-						<sequence>
+						<sequence minOccurs="0" maxOccurs="1">
 							<element name="returnPeriod" type="runoff:PositiveIntType" default="1">
 							<!-- default = "1" only for backward compatibility -->
 								<annotation>
