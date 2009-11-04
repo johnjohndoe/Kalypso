@@ -99,7 +99,7 @@ public class WspmTuhhProfileHelper
     return value instanceof Double ? new BigDecimal( (Double) value ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP ) : new BigDecimal( Double.NaN );
   }
 
-  public static final IObservation<TupleResult> profilesToLengthSection( final IProfileFeature[] profilFeatures )
+  public static final IObservation<TupleResult> profilesToLengthSection( final Object[] profilFeatures )
   {
     TupleResult lsResult = new TupleResult();
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) );
@@ -114,8 +114,12 @@ public class WspmTuhhProfileHelper
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT ) );
 
-    for( IProfileFeature profileFeature : profilFeatures )
+    for( Object objProfileFeature : profilFeatures )
     {
+      if (! (objProfileFeature instanceof IProfileFeature))
+      continue;
+        
+      final IProfileFeature profileFeature = (IProfileFeature)objProfileFeature;
       final IProfil profil = profileFeature.getProfil();
       final IComponent profHei = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       final int indHei = profil.indexOfProperty( profHei );

@@ -70,6 +70,8 @@ public class LngSink implements IProfilSink
 
   private final HashMap<String, String[]> m_idMap = new HashMap<String, String[]>();
 
+  private final String blanc200 = "                                                                                                                                                                                                        ";
+
   public LngSink( )
   {
     m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, new String[] { "STATION" } ); //$NON-NLS-1$
@@ -92,7 +94,7 @@ public class LngSink implements IProfilSink
       return null;
 
     dbh.setFirstLine( fl.length > 0 ? fl[0] : id );
-    dbh.setSecondLine( fl.length > 1 ? new StringBuffer().append( " ", 0, 200 ) + fl[1] : "" );
+    dbh.setSecondLine( fl.length > 1 ? blanc200+ fl[1]  : "" );
     dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );
     return dbh;
   }

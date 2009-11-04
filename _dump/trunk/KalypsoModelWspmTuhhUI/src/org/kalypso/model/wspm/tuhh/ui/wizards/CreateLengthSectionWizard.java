@@ -127,27 +127,28 @@ public class CreateLengthSectionWizard extends Wizard
       if( !parentFolder.exists() )
         parentFolder.create( false, true, new NullProgressMonitor() );
 
-      final String fName = String.format( "station(%.4f)+%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length );
+      final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length );
       IFolder targetFolder = parentFolder.getFolder( fName );
       if( !targetFolder.exists() )
         targetFolder.create( false, true, new NullProgressMonitor() );
 
-      IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) );
-      File targetJavaFile = targetFile.getLocation().toFile();
+      final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) );
+      final File targetJavaFile = targetFile.getLocation().toFile();
+      final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
+      if( !kodFile.exists() )
+      {
+        final URL resource = getClass().getResource( "resources/ls.kod" );
+        final String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "!#localPath#!", fName + ".gml" );
+        final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
+        kodFile.create( inputStream, true, new NullProgressMonitor() );
+      }
+
       final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( new QName( "http://www.opengis.net/om", "Observation" ), targetJavaFile.toURI().toURL(), new GmlSerializerFeatureProviderFactory() );
-      final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( (IProfileFeature[]) profilFeatures );
+      final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( profilFeatures );
       ObservationFeatureFactory.toFeature( lengthSection, lsWorkspace.getRootFeature() );
       GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" );
+     // KalypsoModelWspmCoreExtensions.createProfilSink( "lng" ).write( lengthSection, new PrintWriter( new FileOutputStream( targetJavaFile ) ) );
       targetFolder.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-
-      KalypsoModelWspmCoreExtensions.createProfilSink( "lng" ).write( profilFeatures, new PrintWriter( new FileOutputStream( targetJavaFile ) ) );
-
-      URL resource = getClass().getResource( "resources/ls.kod" );
-      final String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "!#localPath#!", fName + ".gml" );
-      IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
-      InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
-      kodFile.create( inputStream, true, new NullProgressMonitor() );
-
     }
     catch( Exception e )
     {
