@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,50 +36,25 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
- *  ---------------------------------------------------------------------------*/
-package org.kalypso.gaja3d.service.internal.strategy;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.rmi.RemoteException;
-
-import org.apache.axis.AxisFault;
-import org.kalypso.gaja3d.service.client.Client;
-
-/**
- * This strategy calls a (possibly local) WPS to start the simulation
  * 
- * @author kurzbach
- */
-public class DummyCreateTinStrategy implements CreateTinStrategy
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.gaja3d.service.impl;
+
+import javax.xml.namespace.QName;
+
+public interface WPSQNames_0_4
 {
+  public static final String NS_OWS = "http://www.opengeospatial.net/ows";
 
-  public void setMaxArea( double maxArea )
-  {
-  }
+  public static final String NS_WPS = "http://www.opengeospatial.net/wps";
 
-  public void setMinAngle( double minAngle )
-  {
-  }
+  public static final QName GET_CAPABILITIES = new QName( NS_OWS, "GetCapabilities" );
 
-  public void setDemGridLocation( URI[] gridLocation )
-  {
-  }
+  public static final QName CAPABILITIES = new QName( NS_WPS, "Capabilities" );
 
-  public void setBreaklinesLocation( URI[] breaklinesLocation )
-  {
-  }
+  public static final QName EXECUTE = new QName( NS_WPS, "Execute" );
 
-  public URI createTin( URI[] boundaryLocation ) throws RemoteException
-  {
-    try
-    {
-      return Client.class.getResource( Client.MODEL_TIN_FILENAME ).toURI();
-    }
-    catch( final URISyntaxException e )
-    {
-      throw AxisFault.makeFault( e );
-    }
-  }
+  public static final QName EXECUTE_RESPONSE = new QName( NS_WPS, "ExecuteResponse" );
+
+  public static final QName DESCRIBE_PROCESS = new QName( NS_WPS, "DescribeProcess" );
 }

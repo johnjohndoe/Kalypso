@@ -48,15 +48,6 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
-import net.opengeospatial.ows.stubs.AcceptVersionsType;
-import net.opengeospatial.ows.stubs.CodeType;
-import net.opengeospatial.ows.stubs.GetCapabilitiesType;
-import net.opengeospatial.wps.stubs.Capabilities;
-import net.opengeospatial.wps.stubs.DescribeProcess;
-import net.opengeospatial.wps.stubs.ProcessBriefType;
-import net.opengeospatial.wps.stubs.ProcessDescriptions;
-import net.opengeospatial.wps.stubs.ProcessOfferings;
-
 import org.apache.axis.client.Stub;
 import org.apache.axis.message.MessageElement;
 import org.apache.axis.message.addressing.Address;
@@ -101,18 +92,27 @@ import org.oasis.wsrf.properties.SetResourceProperties_Element;
 import org.oasis.wsrf.properties.UpdateType;
 import org.xml.sax.InputSource;
 
+import www.opengis.net.ows.stubs.AcceptVersionsType;
+import www.opengis.net.ows.stubs.CodeType;
+import www.opengis.net.ows.stubs.GetCapabilitiesType;
+import www.opengis.net.wps.stubs.DescribeProcess;
+import www.opengis.net.wps.stubs.ProcessBriefType;
+import www.opengis.net.wps.stubs.ProcessDescriptions;
+import www.opengis.net.wps.stubs.ProcessOfferings;
+import www.opengis.net.wps.stubs.WPSCapabilitiesType;
+
 /**
  * This client creates a new Gaja3dService instance through a Gaja3dResourceFactoryService or by using the file
  * "test.epr" as EndPointReference. The service's GetCapabilities, DescribeProcess, CreateGrid, DetectBreaklines and
  * CreateTin operations can be called in order.
  */
-public class Client
+public class Client_1_0
 {
 
- private static final String SERVICE_FACTORY_URI =
- "http://gdi-kalypso1.gridlab.uni-hannover.de:8080/services/Gaja3dResourceFactoryService";
+// private static final String SERVICE_FACTORY_URI =
+  // "http://gdi-kalypso1.gridlab.uni-hannover.de:8080/services/Gaja3dResourceFactoryService";
 
-//  private static final String SERVICE_FACTORY_URI = "http://localhost:8080/services/Gaja3dResourceFactoryService";
+  private static final String SERVICE_FACTORY_URI = "http://localhost:8080/services/Gaja3dResourceFactoryService";
 
   private static final String EPR_FILENAME = "test.epr";
 
@@ -136,11 +136,11 @@ public class Client
 
   public static final String MODEL_TIN_FILENAME = "resources/ModelTin.zip";
 
-  private static Log logger = LogFactory.getLog( Client.class.getName() );
+  private static Log logger = LogFactory.getLog( Client_1_0.class.getName() );
 
   public static void main( String[] args ) throws RemoteException, ServiceException
   {
-    PropertyConfigurator.configure( Client.class.getResource( "log4j.properties" ) );
+    PropertyConfigurator.configure( Client_1_0.class.getResource( "log4j.properties" ) );
 
     final EndpointReferenceType instanceEPR;
 
@@ -218,7 +218,7 @@ public class Client
       stub._setProperty( GSIConstants.GSI_MODE, GSIConstants.GSI_MODE_FULL_DELEG );
 
       // call GetCapabilities
-      final Capabilities capabilities = callGetCapabilities( gaja3d );
+      final WPSCapabilitiesType capabilities = callGetCapabilities( gaja3d );
 // call DescribeProcess for all offered processes
       callDescribeProcess( gaja3d, capabilities );
 
@@ -310,19 +310,19 @@ public class Client
   {
     final Breaklines breaklines1 = new Breaklines();
     final URI breaklinesHref1 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0001.zip" );
-    breaklines1.set_value( breaklinesHref1 );
+    breaklines1.setRef( breaklinesHref1 );
 
     final Breaklines breaklines2 = new Breaklines();
     final URI breaklinesHref2 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0002.zip" );
-    breaklines2.set_value( breaklinesHref2 );
+    breaklines2.setRef( breaklinesHref2 );
 
     final Breaklines breaklines3 = new Breaklines();
     final URI breaklinesHref3 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0003.zip" );
-    breaklines3.set_value( breaklinesHref3 );
+    breaklines3.setRef( breaklinesHref3 );
 
     final Breaklines breaklines4 = new Breaklines();
     final URI breaklinesHref4 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0004.zip" );
-    breaklines4.set_value( breaklinesHref4 );
+    breaklines4.setRef( breaklinesHref4 );
 
     final Breaklines[] getBreaklines = new Breaklines[] { breaklines1, breaklines2, breaklines3, breaklines4 };
     return getBreaklines;
@@ -356,19 +356,19 @@ public class Client
   {
     final DemGrid demGrid1 = new DemGrid();
     final URI demGridHref1 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0001.asc" );
-    demGrid1.set_value( demGridHref1 );
+    demGrid1.setRef( demGridHref1 );
 
     final DemGrid demGrid2 = new DemGrid();
     final URI demGridHref2 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0002.asc" );
-    demGrid2.set_value( demGridHref2 );
+    demGrid2.setRef( demGridHref2 );
 
     final DemGrid demGrid3 = new DemGrid();
     final URI demGridHref3 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0003.asc" );
-    demGrid3.set_value( demGridHref3 );
+    demGrid3.setRef( demGridHref3 );
 
     final DemGrid demGrid4 = new DemGrid();
     final URI demGridHref4 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0004.asc" );
-    demGrid4.set_value( demGridHref4 );
+    demGrid4.setRef( demGridHref4 );
 
     final DemGrid[] demGrids = new DemGrid[] { demGrid1, demGrid2, demGrid3, demGrid4 };
     return demGrids;
@@ -384,7 +384,7 @@ public class Client
     {
 
       final URI demPointsHref = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/allpoints.zip" );
-      demPoints.set_value( demPointsHref );
+      demPoints.setRef( demPointsHref );
 
     }
     catch( final MalformedURIException e )
@@ -429,25 +429,25 @@ public class Client
   {
     final Boundary boundary1 = new Boundary();
     final URI boundaryHref1 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary1.zip" );
-    boundary1.set_value( boundaryHref1 );
+    boundary1.setRef( boundaryHref1 );
 
     final Boundary boundary2 = new Boundary();
     final URI boundaryHref2 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary2.zip" );
-    boundary2.set_value( boundaryHref2 );
+    boundary2.setRef( boundaryHref2 );
 
     final Boundary boundary3 = new Boundary();
     final URI boundaryHref3 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary3.zip" );
-    boundary3.set_value( boundaryHref3 );
+    boundary3.setRef( boundaryHref3 );
 
     final Boundary boundary4 = new Boundary();
     final URI boundaryHref4 = new URI( "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary4.zip" );
-    boundary4.set_value( boundaryHref4 );
+    boundary4.setRef( boundaryHref4 );
 
     final Boundary[] boundaries = new Boundary[] { boundary1, boundary2, boundary3, boundary4 };
     return boundaries;
   }
 
-  private static void callDescribeProcess( final Gaja3DPortType gaja3d, final Capabilities capabilities ) throws RemoteException
+  private static void callDescribeProcess( final Gaja3DPortType gaja3d, final WPSCapabilitiesType capabilities ) throws RemoteException
   {
     final DescribeProcess describeProcess = buildDescribeProcess( capabilities );
     final ProcessDescriptions processDescriptions = gaja3d.describeProcess( describeProcess );
@@ -466,10 +466,10 @@ public class Client
     }
   }
 
-  private static Capabilities callGetCapabilities( final Gaja3DPortType gaja3d ) throws RemoteException
+  private static WPSCapabilitiesType callGetCapabilities( final Gaja3DPortType gaja3d ) throws RemoteException
   {
     final GetCapabilitiesType getCapabilities = buildGetCapabilities();
-    final Capabilities capabilities = gaja3d.getCapabilities( getCapabilities );
+    final WPSCapabilitiesType capabilities = gaja3d.getCapabilities( getCapabilities );
     logger.debug( "Got process capabilities." );
     return capabilities;
   }
@@ -477,13 +477,13 @@ public class Client
   private static void setCreateResourceSecurity( final Stub stub )
   {
     stub._setProperty( Constants.GSI_SEC_CONV, Constants.ENCRYPTION );
-//    stub._setProperty( Constants.AUTHORIZATION, SelfAuthorization.getInstance() );
- stub._setProperty( Constants.AUTHORIZATION,
-     org.globus.wsrf.impl.security.authorization.HostAuthorization.getInstance() );
+    stub._setProperty( Constants.AUTHORIZATION, SelfAuthorization.getInstance() );
+// stub._setProperty( Constants.AUTHORIZATION,
+    // org.globus.wsrf.impl.security.authorization.HostAuthorization.getInstance() );
     stub._setProperty( GSIConstants.GSI_MODE, GSIConstants.GSI_MODE_FULL_DELEG );
   }
 
-  private static DescribeProcess buildDescribeProcess( Capabilities capabilities )
+  private static DescribeProcess buildDescribeProcess( WPSCapabilitiesType capabilities )
   {
     final ProcessOfferings processOfferings = capabilities.getProcessOfferings();
     final ProcessBriefType[] processes = processOfferings.getProcess();
@@ -495,7 +495,7 @@ public class Client
     }
     final DescribeProcess describeProcess = new DescribeProcess();
     describeProcess.setService( "WPS" );
-    describeProcess.setVersion( "0.4.0" );
+    describeProcess.setVersion( "0.4" );
     describeProcess.setIdentifier( processIds );
     return describeProcess;
   }
@@ -503,7 +503,8 @@ public class Client
   private static GetCapabilitiesType buildGetCapabilities( )
   {
     final GetCapabilitiesType getCapabilities = new GetCapabilitiesType();
-    final AcceptVersionsType acceptVersions = new AcceptVersionsType( new String[] { "0.4.0" } );
+    final AcceptVersionsType acceptVersions = new AcceptVersionsType();
+    acceptVersions.setVersion( new String[] { "0.4.0" } );
     getCapabilities.setAcceptVersions( acceptVersions );
     return getCapabilities;
   }

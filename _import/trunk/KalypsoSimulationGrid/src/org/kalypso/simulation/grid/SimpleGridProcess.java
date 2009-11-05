@@ -57,7 +57,7 @@ import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystem;
 import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.apache.commons.vfs.provider.gsiftp.GsiFtpFileObject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -103,7 +103,7 @@ public class SimpleGridProcess implements IProcess, GDIObserver
 
   private GDIState m_status = GDIState.UNSUBMITTED;
 
-  private final StandardFileSystemManager m_manager;
+  private final FileSystemManagerWrapper m_manager;
 
 // private IProgressMonitor m_monitor;
 

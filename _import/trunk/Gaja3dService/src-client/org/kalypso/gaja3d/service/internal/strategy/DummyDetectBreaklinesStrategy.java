@@ -52,65 +52,75 @@ import org.kalypso.gaja3d.service.client.Client;
  * 
  * @author kurzbach
  */
-public class DummyDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
+public class DummyDetectBreaklinesStrategy implements DetectBreaklinesStrategy
+{
 
-	public URI[] detectBreaklines(final URI[] boundaryLocation,
-			final URI[] demGridLocation) throws RemoteException {
-		try {
-			return new URI[] { Client.class.getResource(
-					Client.BREAKLINES_FILENAME).toURI() };
-		} catch (final URISyntaxException e) {
-			throw AxisFault.makeFault(e);
-		}
-	}
+  public URI[] detectBreaklines( final URI[] boundaryLocation, final URI[] demGridLocation ) throws RemoteException
+  {
+    try
+    {
+      return new URI[] { Client.class.getResource( Client.BREAKLINES_FILENAME ).toURI() };
+    }
+    catch( final URISyntaxException e )
+    {
+      throw AxisFault.makeFault( e );
+    }
+  }
 
-	/**
-	 * @param edgeMethod
-	 *            the edgeMethod to set
-	 */
-	public void setEdgeMethod(String edgeMethod) {
-	}
+  /**
+   * @param edgeMethod
+   *          the edgeMethod to set
+   */
+  public void setEdgeMethod( String edgeMethod )
+  {
+  }
 
-	/**
-	 * @param smoothMethod
-	 *            the smoothMethod to set
-	 */
-	public void setSmoothMethod(String smoothMethod) {
-	}
+  /**
+   * @param smoothMethod
+   *          the smoothMethod to set
+   */
+  public void setSmoothMethod( String smoothMethod )
+  {
+  }
 
-	/**
-	 * @param smooth
-	 *            the smooth to set
-	 */
-	public void setSmooth(int smooth) {
-	}
+  /**
+   * @param smooth
+   *          the smooth to set
+   */
+  public void setSmooth( int smooth )
+  {
+  }
 
-	/**
-	 * @param featureMethod
-	 *            the featureMethod to set
-	 */
-	public void setFeatureMethod(String featureMethod) {
-	}
+  /**
+   * @param featureMethod
+   *          the featureMethod to set
+   */
+  public void setFeatureMethod( String featureMethod )
+  {
+  }
 
-	/**
-	 * @param lowThresh
-	 *            the lowThresh to set
-	 */
-	public void setLowThresh(double lowThresh) {
-	}
+  /**
+   * @param lowThresh
+   *          the lowThresh to set
+   */
+  public void setLowThresh( double lowThresh )
+  {
+  }
 
-	/**
-	 * @param highThresh
-	 *            the highThresh to set
-	 */
-	public void setHighThresh(double highThresh) {
-	}
+  /**
+   * @param highThresh
+   *          the highThresh to set
+   */
+  public void setHighThresh( double highThresh )
+  {
+  }
 
-	/**
-	 * @param distanceTolerance
-	 *            the distanceTolerance to set
-	 */
-	public void setDistanceTolerance(double distanceTolerance) {
-	}
+  /**
+   * @param distanceTolerance
+   *          the distanceTolerance to set
+   */
+  public void setDistanceTolerance( double distanceTolerance )
+  {
+  }
 
 }

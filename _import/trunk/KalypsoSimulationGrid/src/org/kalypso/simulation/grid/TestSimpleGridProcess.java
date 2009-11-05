@@ -50,7 +50,7 @@ import junit.framework.TestCase;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.KalypsoCommonsExtensions;
@@ -81,7 +81,7 @@ public class TestSimpleGridProcess extends TestCase
     System.setProperty( "GLOBUS_LOCATION", "d:/workspace3.4/org.globus.ws.core" );
     final String sandboxRoot = "testRma";
 
-    final StandardFileSystemManager manager = VFSUtilities.getNewManager();
+    final FileSystemManagerWrapper manager = VFSUtilities.getNewManager();
 
     final String rmaName = "RMA10Sk_35";
 
