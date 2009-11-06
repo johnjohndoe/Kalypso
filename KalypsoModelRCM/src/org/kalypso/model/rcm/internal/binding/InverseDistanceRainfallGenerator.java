@@ -99,6 +99,8 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
 
   public static final QName QNAME_PROP_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" );
 
+  public static final QName QNAME_PROP_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+
   /**
    * The constructor.
    * 
@@ -119,11 +121,11 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.geometry.GM_MultiSurface[],
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
    *      java.util.Date, java.util.Date, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IObservation[] createRainfall( GM_MultiSurface[] areas, Date from, Date to, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, IProgressMonitor monitor ) throws CoreException
   {
     /* Get the needed properties. */
     Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
@@ -131,6 +133,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
     String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
     String stationLocationPath = getProperty( QNAME_PROP_stationLocationPath, String.class );
     BigInteger numberOmbrometers = getProperty( QNAME_PROP_numberOmbrometers, BigInteger.class );
+    String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
 
     try
     {
@@ -172,6 +175,9 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
         GM_Object ombrometerTransformed = transformer.transform( ombrometerPoint );
         ombrometerPoints[i] = (Point) JTSAdapter.export( ombrometerTransformed );
       }
+
+      /* Get all catchment areas. */
+      GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaPath );
 
       /* Iterate through all catchments. */
       IObservation[] result = new IObservation[areas.length];
