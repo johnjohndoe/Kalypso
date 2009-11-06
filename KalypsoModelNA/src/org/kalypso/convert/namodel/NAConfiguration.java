@@ -52,7 +52,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
@@ -163,7 +162,7 @@ public class NAConfiguration
 
   private Boolean m_iniWrite;
 
-  private TreeSet<Date> m_dateWriteSet;
+  private Date[] m_initialDates;
 
   private GMLWorkspace m_modelWorkspace = null;
 
@@ -574,29 +573,19 @@ public class NAConfiguration
 
   }
 
-  public void setIniWrite( Boolean iniWrite )
-  {
-    m_iniWrite = iniWrite;
-  }
-
-  public Boolean getIniWrite( )
-  {
-    return m_iniWrite;
-  }
-
   public URL getSwaleAndTrenchFormatURL( )
   {
     return m_swaleAndTrenchFormatURL;
   }
 
-  public void setInitalValues( TreeSet<Date> dateWriteSet )
+  public void setInitalValues( Date[] initialDates )
   {
-    m_dateWriteSet = dateWriteSet;
+    m_initialDates = initialDates;
   }
 
-  public TreeSet<Date> getDateWriteSet( )
+  public Date[] getInitialDates( )
   {
-    return m_dateWriteSet;
+    return m_initialDates;
   }
 
   public void setModelWorkspace( GMLWorkspace modelWorkspace )

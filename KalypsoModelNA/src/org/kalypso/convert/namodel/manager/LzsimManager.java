@@ -63,7 +63,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
@@ -80,7 +79,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 public class LzsimManager
 {
-
   private final static int STATUS_SEARCH_HEADER = 0;
 
   private static final int STATUS_READ_SNOW = 1;
@@ -91,18 +89,31 @@ public class LzsimManager
 
   private static final int STATUS_READ_QGS = 4;
 
-  public void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception
+  private final Date[] m_initialDates;
+
+  public LzsimManager( Date[] initialDates )
   {
-    final DateFormat formatFileName = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd(HH)" ) ); //$NON-NLS-1$
+    m_initialDates = initialDates;
+  }
+
+  /**
+   * Reads the initial values back from the ascii files, if any have been ordered.
+   */
+  public void readInitialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir ) throws Exception
+  {
+    if( m_initialDates.length == 0 )
+      return;
+
+    // REMARK: we omit any hour here, as the calculation core does not support it. Probably this is a bug of the calculation core, 
+    // even if the people responsible for this do not recognise it. In the input file of the calculation core the hour is specified, but
+    // the produced date is always written without hour information ('00').
+    final DateFormat formatFileName = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd" ) ); //$NON-NLS-1$
     // 19960521 00 h 125 bodf
-    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd HH" ) ); //$NON-NLS-1$
+    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd 00" ) ); //$NON-NLS-1$
     final Pattern patternHeaderBODF = Pattern.compile( "([0-9]{8} [0-9]{2}) h ([0-9]+?) bodf" ); //$NON-NLS-1$
 
-    final TreeSet<Date> dateWriteSet = conf.getDateWriteSet();
-    final Iterator<Date> hydIter = dateWriteSet.iterator();
-    while( hydIter.hasNext() )
+    for( Date initialDate : m_initialDates )
     {
-      final Date initialDate = hydIter.next();
       final String iniDate = dateFormat.format( initialDate );
 
       // create new GMLworkspace for lzsim results
@@ -267,10 +278,8 @@ public class LzsimManager
     }
   }
 
-  public static void writeLzsimFiles( final NAConfiguration conf, final File tmpDir, final GMLWorkspace iniValuesWorkspace )
+  public static void writeLzsimFiles( final IDManager idManager, final File tmpDir, final GMLWorkspace iniValuesWorkspace )
   {
-    final IDManager idManager = conf.getIdManager();
-
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
     final Hashtable<String, Feature> channelIDToFeatureHash = new Hashtable<String, Feature>();
     for( final Feature feature : allNAChannelFeatures )
@@ -285,12 +294,12 @@ public class LzsimManager
     final Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
     // Initial value date
     final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ) ) ); //$NON-NLS-1$
-    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) ); //$NON-NLS-1$
+    final DateFormat dateFormat = NATimeSettings.getInstance().getLzsLzgDateFormat();
     final String iniDate = dateFormat.format( initialDate );
 
     // write initial conditions for the strands
     // TODO:write only for strands of the actual calculation
-    final List channelList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CHANNEL_MEMBER_PROP );
+    final List<?> channelList = (List<?>) iniValuesRootFeature.getProperty( NaModelConstants.INI_CHANNEL_MEMBER_PROP );
     for( int i = 0; i < channelList.size(); i++ )
     {
       final Feature channelFE = (Feature) channelList.get( i );
@@ -323,7 +332,7 @@ public class LzsimManager
     }
 
     // for all catchments in the calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
-    final List catchmentList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
+    final List<?> catchmentList = (List<?>) iniValuesRootFeature.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
     final Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
     for( final String catchmentID : catchmentIdsFromLzsim )
     {
@@ -361,12 +370,12 @@ public class LzsimManager
             lzsBuffer.append( "   1" + FortranFormatHelper.printf( hgws, "f9.2" ) + FortranFormatHelper.printf( qb, "f9.2" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             // hydrotops (interception storage content& soil moisture)
             int hydroPos = 0;
-            final List iniHydsList = (List) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hyd" ) ); //$NON-NLS-1$
+            final List<?> iniHydsList = (List<?>) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hyd" ) ); //$NON-NLS-1$
             lzsBuffer.append( iniDate + " h  " + FortranFormatHelper.printf( Integer.toString( iniHydsList.size() ), "i4" ) + " bodf" + "\n" );  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
             for( final String hydroID : sortedHydrosIDsfromLzsim )
             {
               hydroPos++;
-              final Iterator iter = iniHydsList.iterator();
+              final Iterator<?> iter = iniHydsList.iterator();
               while( iter.hasNext() )
               {
                 final Feature iniHydFe = (Feature) iter.next();
@@ -397,4 +406,28 @@ public class LzsimManager
       }
     }
   }
-}
+
+  /**
+   * Read initial dates from gml-configuration.
+   */
+  public static Date[] getInitialDates( final Feature controlFE )
+  {
+    final List< ? > dateList = (List< ? >) controlFE.getProperty( NaModelConstants.NACONTROL_INITIALVALUEDATE_PROP );
+    if( dateList == null )
+      return new Date[0];
+
+    final TreeSet<Date> dateWriteSet = new TreeSet<Date>();
+    for( final Object object : dateList )
+    {
+      final Feature fe = (Feature) object;
+      final Boolean write = (Boolean) fe.getProperty( NaModelConstants.NACONTROL_WRITE_PROP );
+      // by default it is false now, but for backward compatibility check if there is any value
+      if( write != null && write.booleanValue() )
+      {
+        final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( NaModelConstants.NACONTROL_INITIALDATE_PROP ) );
+        dateWriteSet.add( initialDate );
+      }
+    }
+
+    return dateWriteSet.toArray( new Date[dateWriteSet.size()] );
+  }}

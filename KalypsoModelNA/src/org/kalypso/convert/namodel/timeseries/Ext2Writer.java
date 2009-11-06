@@ -78,8 +78,7 @@ public class Ext2Writer
 
     // TimeserieUtils.
     writer.write( "EX2\n" ); // header //$NON-NLS-1$
-    final Calendar calendarStart = NATimeSettings.getInstance().getCalendar();
-    calendarStart.setTime( m_start );
+    final Calendar calendarStart = NATimeSettings.getInstance().getCalendar( m_start );
     calendarStart.set( Calendar.DAY_OF_YEAR, 0 );
     calendarStart.set( Calendar.HOUR_OF_DAY, 7 );
     calendarStart.set( Calendar.MINUTE, 0 );

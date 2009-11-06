@@ -146,7 +146,7 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="write" type="boolean" default="false"/>
-					<element name="initialDate" type="dateTime"/>
+					<element name="initialDate" type="date"/>
 				</sequence>
 			</extension>
 		</complexContent>
