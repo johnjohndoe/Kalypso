@@ -79,12 +79,9 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class does the real generation stuff.
@@ -119,8 +116,6 @@ public class RainfallGenerationOp
 
   private final String m_catchmentObservationPath;
 
-  private final String m_catchmentAreaPath;
-
   private final Map<QName, String> m_catchmentMetadata;
 
   private final String m_targetFilter;
@@ -131,13 +126,12 @@ public class RainfallGenerationOp
 
   private final GMLWorkspace m_catchmentWorkspace;
 
-  public RainfallGenerationOp( final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final String catchmentAreaPath, Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo )
+  public RainfallGenerationOp( final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo )
   {
     m_rcmGmlLocation = rcmGmlLocation;
     m_catchmentWorkspace = catchmentWorkspace;
     m_catchmentFeaturePath = catchmentFeaturePath;
     m_catchmentObservationPath = catchmentObservationPath;
-    m_catchmentAreaPath = catchmentAreaPath;
     m_catchmentMetadata = catchmentMetadata;
     m_targetFilter = targetFilter;
     m_targetFrom = targetFrom;
@@ -157,8 +151,7 @@ public class RainfallGenerationOp
     final URL targetContext = m_catchmentWorkspace.getContext();
     final Feature[] catchmentFeatureArray = findCatchmentFeatures( m_catchmentWorkspace, logger );
     final TimeseriesLinkType[] targetLinks = findCatchmentLinks( catchmentFeatureArray, logger );
-    final GM_MultiSurface[] catchmentAreas = findCatchmentAreas( catchmentFeatureArray, logger );
-    final List<IObservation>[] results = new List[catchmentAreas.length];
+    final List<IObservation>[] results = new List[catchmentFeatureArray.length];
     for( int i = 0; i < results.length; i++ )
       results[i] = new ArrayList<IObservation>();
 
@@ -171,7 +164,7 @@ public class RainfallGenerationOp
       {
         final Date from = generatorDesc.m_from;
         final Date to = generatorDesc.m_to;
-        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentAreas, from, to, logger, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
+        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentFeatureArray, from, to, logger, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
         if( obses == null )
         {
           final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorDesc.m_gmlId );
@@ -320,7 +313,7 @@ public class RainfallGenerationOp
     }
   }
 
-  private IObservation[] generate( final Generator generatorDesc, final GMLWorkspace rcmWorkspace, final GM_MultiSurface[] catchmentAreas, final Date from, final Date to, final ILogger logger, final IProgressMonitor monitor ) throws CoreException
+  private IObservation[] generate( final Generator generatorDesc, final GMLWorkspace rcmWorkspace, final Feature[] catchmentFeatures, final Date from, final Date to, final ILogger logger, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
@@ -352,7 +345,7 @@ public class RainfallGenerationOp
 
     try
     {
-      final IObservation[] observations = rainGen.createRainfall( catchmentAreas, from, to, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      final IObservation[] observations = rainGen.createRainfall( catchmentFeatures, from, to, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
       final String msg = String.format( "Generator '%s' erfolgreich ausgeführt.", generatorName );
       logger.log( Level.INFO, -1, msg );
       return observations;
@@ -424,44 +417,6 @@ public class RainfallGenerationOp
     }
 
     return links;
-  }
-
-  @SuppressWarnings("unchecked")
-  private GM_MultiSurface[] findCatchmentAreas( final Feature[] catchments, final ILogger logger ) throws CoreException
-  {
-    final FeaturePath featurePath = new FeaturePath( m_catchmentAreaPath );
-    final GM_MultiSurface[] areas = new GM_MultiSurface[catchments.length];
-
-    for( int i = 0; i < catchments.length; i++ )
-    {
-      final Feature catchment = catchments[i];
-      if( catchment == null )
-        continue;
-
-      final Object object = featurePath.getFeatureForSegment( catchment.getWorkspace(), catchment, 0 );
-      if( object instanceof GM_Surface )
-      {
-        GM_Surface surface = (GM_Surface) object;
-        GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
-        areas[i] = multiSurface;
-      }
-      else if( object instanceof GM_MultiSurface )
-      {
-        areas[i] = (GM_MultiSurface) object;
-      }
-      else if( object == null )
-      {
-        logger.log( Level.WARNING, -1, "Einzugsgebiet ohne Polygonfläche: " + catchment );
-        catchments[i] = null; // does not make sense to process
-      }
-      else
-      {
-        final String msg = String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface", object, m_catchmentAreaPath );
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
-      }
-    }
-
-    return areas;
   }
 
   private Feature[] findCatchmentFeatures( final GMLWorkspace catchmentWorkspace, final ILogger logger ) throws CoreException

@@ -109,8 +109,6 @@ public class RainfallGenerationTask extends Task
 
   private String m_catchmentObservationPath;
 
-  private String m_catchmentAreaPath;
-
   private String m_targetFilter;
 
   private Date m_targetFrom;
@@ -140,11 +138,6 @@ public class RainfallGenerationTask extends Task
   public void setCatchmentObservationPath( final String catchmentObservationPath )
   {
     m_catchmentObservationPath = catchmentObservationPath;
-  }
-
-  public void setCatchmentAreaPath( final String catchmentAreaPath )
-  {
-    m_catchmentAreaPath = catchmentAreaPath;
   }
 
   public void setTargetFilter( final String targetFilter )
@@ -209,7 +202,7 @@ public class RainfallGenerationTask extends Task
 
       ProgressUtilities.worked( progress, 4 );
 
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, null, m_targetFilter, m_targetFrom, m_targetTo );
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo );
       for( final Generator generator : m_generators )
       {
         final Date fromDate = new Date( generator.getFrom() );

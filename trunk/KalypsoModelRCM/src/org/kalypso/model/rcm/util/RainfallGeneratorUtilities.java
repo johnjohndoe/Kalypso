@@ -47,6 +47,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -62,6 +65,11 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Utilities for {@link org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator}'s and
@@ -76,6 +84,36 @@ public class RainfallGeneratorUtilities
    */
   private RainfallGeneratorUtilities( )
   {
+  }
+
+  @SuppressWarnings("unchecked")
+  public static GM_MultiSurface[] findCatchmentAreas( Feature[] catchmentFeatures, String catchmentAreaPath ) throws CoreException
+  {
+    FeaturePath featurePath = new FeaturePath( catchmentAreaPath );
+    GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
+
+    for( int i = 0; i < catchmentFeatures.length; i++ )
+    {
+      Feature catchmentFeature = catchmentFeatures[i];
+      if( catchmentFeature == null )
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
+
+      Object object = featurePath.getFeatureForSegment( catchmentFeature.getWorkspace(), catchmentFeature, 0 );
+      if( object instanceof GM_Surface )
+      {
+        GM_Surface surface = (GM_Surface) object;
+        GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
+        areas[i] = multiSurface;
+      }
+      else if( object instanceof GM_MultiSurface )
+        areas[i] = (GM_MultiSurface) object;
+      else if( object == null )
+        catchmentFeatures[i] = null; // does not make sense to process
+      else
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaPath ), null ) );
+    }
+
+    return areas;
   }
 
   public static IObservation[] readObservations( TimeseriesLinkType[] ombrometerLinks, Date from, Date to, URL context ) throws MalformedURLException, SensorException

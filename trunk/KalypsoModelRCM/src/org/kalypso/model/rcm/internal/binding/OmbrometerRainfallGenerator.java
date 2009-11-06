@@ -92,22 +92,25 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
   public static final QName QNAME_PROP_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
+  public static final QName QNAME_PROP_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+
   public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.geometry.GM_MultiSurface[],
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
    *      java.util.Date, java.util.Date, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IObservation[] createRainfall( final GM_MultiSurface[] areas, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
+  public IObservation[] createRainfall( Feature[] catchmentFeatures, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
   {
     final Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
     final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
     final FeatureList ombrometerList = (FeatureList) new FeaturePath( collectionPath ).getFeatureForSegment( ombrometerCollection.getWorkspace(), ombrometerCollection, 0 );
     final String areaPath = getProperty( QNAME_PROP_areaPath, String.class );
     final String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
+    final String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
 
     // Find the ombrometer-areas
     final Feature[] ombrometerFeatures = FeatureHelper.toArray( ombrometerList );
@@ -136,6 +139,9 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
           ombrometerPolygons[i] = (Polygon) JTSAdapter.export( ombrometerTransformed );
         }
       }
+
+      /* Get all catchment areas. */
+      GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaPath );
 
       // Iterate through all catchments
       final IObservation[] result = new IObservation[areas.length];
