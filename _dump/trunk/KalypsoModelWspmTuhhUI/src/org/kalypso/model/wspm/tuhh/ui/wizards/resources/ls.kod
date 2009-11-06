@@ -6,7 +6,7 @@
         <Description>Längsschnitt</Description>
         <Layers>
             <Layer id="soil">
-                <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+                <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="!#localPath#!" name="href"/>
                         <Parameter value="" name="gxlpath"/>
@@ -25,7 +25,7 @@
                     <LineStyle role="line">
                         <Title>Sohlhöhe</Title>
                         <Width>2</Width>
-                        <LineColor>00ff00</LineColor>
+                        <LineColor>FFA000</LineColor>
                     </LineStyle>
                     <PointStyle role="point" isVisible="false">
                         <Title/>
@@ -33,7 +33,7 @@
                     </Styles>
             </Layer>
             <Layer id="Boe_li" visible="false">
-                <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+                <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="!#localPath#!" name="href"/>
                         <Parameter value="" name="gxlpath"/>
@@ -52,7 +52,7 @@
                     <LineStyle role="line">
                         <Title>Böschung (links)</Title>
                         <Width>2</Width>
-                        <LineColor>207f33</LineColor>
+                        <LineColor>C83200</LineColor>
                     </LineStyle>
                     <PointStyle role="point" isVisible="false">
                         <Title/>
@@ -60,8 +60,8 @@
                 </Styles>
             </Layer>
             
-            <Layer id="Bridge_OK" visible="false">
-                <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+            <Layer id="Bridge" visible="false">
+                <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="!#localPath#!" name="href"/>
                         <Parameter value="" name="gxlpath"/>
@@ -70,54 +70,27 @@
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId"/>
                     </Parameters>            
                 </Provider>
-                <Title>Brückenoberkante</Title>
+                <Title>Brücke</Title>
                 <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
                     <TargetAxisRef ref="NN_Axis"/>
                 </MapperRefs>
                 <Styles>
-                    <LineStyle role="line">
-                        <Title>Brückenoberkante</Title>
+                    <PointStyle role="point">
+            			<Title>Brücke</Title>
+            				<Title/>
+          				</PointStyle>
+          			<LineStyle role="line" isVisible="false">
+           				 <Title>Brücke</Title>
                         <Width>2</Width>
-                        <LineColor>207f33</LineColor>
-                    </LineStyle>
-                    <PointStyle role="point" isVisible="false">
-                        <Title/>
-                    </PointStyle>
+                        <LineColor>0080B1</LineColor>
+         			 </LineStyle>
                 </Styles>
             </Layer>
-            
-             <Layer id="Bridge_UK" visible="false">
-                <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
-                    <Parameters>
-                        <Parameter value="!#localPath#!" name="href"/>
-                        <Parameter value="" name="gxlpath"/>
-                        <Parameter value="root" name="observationId"/>
-                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId"/>
-                    </Parameters>            
-                </Provider>
-                <Title>Brückenunterkante</Title>
-                <Description/>
-                <MapperRefs>
-                    <DomainAxisRef ref="Station_Axis"/>
-                    <TargetAxisRef ref="NN_Axis"/>
-                </MapperRefs>
-                <Styles>
-                    <LineStyle role="line">
-                        <Title>Brückenunterkante</Title>
-                        <Width>2</Width>
-                        <LineColor>207f33</LineColor>
-                    </LineStyle>
-                    <PointStyle role="point" isVisible="false">
-                        <Title/>
-                    </PointStyle>
-                </Styles>
-            </Layer>
-            
+                        
             <Layer id="Boe_re" visible="false">
-                <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+                <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="!#localPath#!" name="href"/>
                         <Parameter value="" name="gxlpath"/>
@@ -136,7 +109,7 @@
                     <LineStyle role="line">
                         <Title>Böschung (rechts)</Title>
                         <Width>2</Width>
-                        <LineColor>123456</LineColor>
+                        <LineColor>C83200</LineColor>
                     </LineStyle>
                     <PointStyle role="point" isVisible="false">
                         <Title/>

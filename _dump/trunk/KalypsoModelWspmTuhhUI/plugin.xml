@@ -342,6 +342,13 @@
           name="Create Profile">
     </command>
   </extension>
+  <extension
+        point="de.openali.odysseus.chart.factory.LayerProvider">
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+     </provider>
+  </extension>
 
 	
       
