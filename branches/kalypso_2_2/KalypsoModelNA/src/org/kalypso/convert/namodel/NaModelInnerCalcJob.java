@@ -69,8 +69,6 @@ import java.util.SortedMap;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
