@@ -1517,4 +1517,17 @@ new features introduced/ started to be introduced:
       (affects: qgen.for)
       
 --- Nico Schrage, 21.10.2009
+
+171.) Include wind shear stress calculation by means of windf.f90 file; modernize wind.for to wind.f90
+      (affects: wind.f90, sbgen.sub)
+172.) Store and calculate residual and viscosities in each element and write it into the FE lines to be able 
+      - to visualize residuals in Microstation
+      - to compare really calculated viscosities with minimum viscosities
+      (affects: BLK10MOD, coef25nt, initl, Modell_schreiben)
+173.) Cleaning source code
+      (affects: LineTransitionCalc)
+174.) Enable setting of initial velocities; values in Control file, line C3 are taken
+      attention, if user wants to have 0.0 velocities everywhere (like at the beginning of lake solution procedure) unom must be set to 0.0d0!
+      (affects: input, getinit)
       
+--- Nico Schrage, 06.11.2009
