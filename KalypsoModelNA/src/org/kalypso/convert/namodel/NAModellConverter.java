@@ -52,7 +52,6 @@ import org.kalypso.convert.namodel.manager.BodentypManager;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.HydrotopManager;
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.IdleLanduseManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.manager.NutzungManager;
@@ -155,8 +154,6 @@ public class NAModellConverter
       for( final String line : m_conf.getHydrotopMapping() )
         buffer.append( line ).append( "\n" );
       writeToFile( m_conf.getHydrotopMappingFile(), buffer );
-      
-      
     }
 
     if( m_conf.getParameterWorkspace() != null )

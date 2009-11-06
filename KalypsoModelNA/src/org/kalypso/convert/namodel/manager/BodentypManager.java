@@ -172,10 +172,16 @@ public class BodentypManager extends AbstractManager
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace paraWorkspace ) throws Exception
   {
     final List<Greenroof> greenroofs = new ArrayList<Greenroof>();
-    final List<AbstractSud> suds = (List<AbstractSud>) m_conf.getSudsWorkspace().getRootFeature().getProperty( new QName( "http://sourceforge.kalypso.org/schemata/hydrology/suds", "sudMember" ) );
-    for( final AbstractSud sudsItem : suds )
-      if( sudsItem instanceof Greenroof )
-        greenroofs.add( (Greenroof) sudsItem );
+    GMLWorkspace sudsWorkspace = m_conf.getSudsWorkspace();
+    if( sudsWorkspace != null )
+    {
+      final List<AbstractSud> suds = (List<AbstractSud>) sudsWorkspace.getRootFeature().getProperty( new QName( "http://sourceforge.kalypso.org/schemata/hydrology/suds", "sudMember" ) );
+      for( final AbstractSud sudsItem : suds )
+      {
+        if( sudsItem instanceof Greenroof )
+          greenroofs.add( (Greenroof) sudsItem );
+      }
+    }
 
     final List<Hydrotop> hydrotops = (List<Hydrotop>) m_conf.getHydrotopeWorkspace().getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
 
@@ -193,21 +199,11 @@ public class BodentypManager extends AbstractManager
       // if( asciiBuffer.writeFeature( bodentypFE ) )
       writeFeature( asciiBuffer, paraWorkspace, bodentypFE );
     }
-    
+
     // needed for suds, fixed values temporarily...
     /*
-      mrs          4
-      mulde   4.0 0.0 
-      rein    3.0 0.0 
-      filter  7.0 0.0 
-      base    1.0 0.0 
-      grs          3
-      GR-stau 2.0 0.0 
-      Substr  2.0 0.0 
-      Drain   1.0 0.0
-      mulde_b      2
-      mulde   4.0 0.0 
-      rein    3.0 0.0    
+     * mrs 4 mulde 4.0 0.0 rein 3.0 0.0 filter 7.0 0.0 base 1.0 0.0 grs 3 GR-stau 2.0 0.0 Substr 2.0 0.0 Drain 1.0 0.0
+     * mulde_b 2 mulde 4.0 0.0 rein 3.0 0.0
      */
     if( !names.contains( "mrs" ) )
       asciiBuffer.getBodtypBuffer().append( "mrs          4\nmulde   4.0 0.0\nrein    3.0 0.0\nfilter  7.0 0.0\nbase    1.0 0.0\n" );
@@ -222,7 +218,7 @@ public class BodentypManager extends AbstractManager
     final StringBuffer buffer = asciiBuffer.getBodtypBuffer();
     // 1
     final List<Feature> bodartList = (List<Feature>) feature.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
-    buffer.append( String.format(Locale.US, "%-10s%4d\n", feature.getName(), bodartList.size() ) ); //$NON-NLS-1$
+    buffer.append( String.format( Locale.US, "%-10s%4d\n", feature.getName(), bodartList.size() ) ); //$NON-NLS-1$
     // 2
     final Iterator<Feature> iter = bodartList.iterator();
     while( iter.hasNext() )
@@ -234,9 +230,9 @@ public class BodentypManager extends AbstractManager
       {
         final Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
         if( xretProp )
-          buffer.append( String.format(Locale.US, "%-8s%.3f 1.0\n", bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ) ) ); //$NON-NLS-1$
+          buffer.append( String.format( Locale.US, "%-8s%.3f 1.0\n", bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ) ) ); //$NON-NLS-1$
         else
-          buffer.append( String.format(Locale.US, "%-8s%.3f 0.0\n", bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ) ) ); //$NON-NLS-1$
+          buffer.append( String.format( Locale.US, "%-8s%.3f 0.0\n", bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ) ) ); //$NON-NLS-1$
       }
       else
       {
