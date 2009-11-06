@@ -451,18 +451,20 @@ CALL BFORM(0)
 
 
 !TODEL: These direction fixitations are done in BFORM probably
-!      IF(NB .EQ. 0) THEN
-!        DO 185 N=1,NP
-!          IF(VEL(1,N) .NE. 0.) GO TO 185
-!          IF(NFIX(N)/1000 .EQ. 0) THEN
-!              VEL(1,N)=UNOM*COS(UDIR)
-!              VEL(2,N)=UNOM*SIN(UDIR)
-!          ELSE
-!              VEL(1,N)=UNOM*COS(ALFA(N))
-!              VEL(2,N)=UNOM*SIN(ALFA(N))
-!          ENDIF
-!  185   CONTINUE
-!      ENDIF
+      IF(NB .EQ. 0) THEN
+        if (unom /= 0.0d0) then
+          estimateVelocities: DO N=1,NP
+            IF(VEL(1,N) .NE. 0.) cycle estimateVelocities
+            IF(NFIX(N)/1000 .EQ. 0) THEN
+                VEL(1,N)=UNOM*COS(UDIR)
+                VEL(2,N)=UNOM*SIN(UDIR)
+            ELSE
+                VEL(1,N)=UNOM*COS(ALFA(N))
+                VEL(2,N)=UNOM*SIN(ALFA(N))
+            ENDIF
+          enddo estimateVelocities
+        endif 
+      ENDIF
 !-
 
 

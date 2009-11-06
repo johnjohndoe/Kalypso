@@ -433,7 +433,8 @@ C      IF(HMNN .NE. 0.) HMIN=HMNN
       ELSE
         HMIN=HMNN
       ENDIF
-      IF(UNOM .EQ. 0.) UNOM=0.25
+      !We don't want any minimum value!
+      !IF(UNOM .EQ. 0.) UNOM=0.25
       UDIR=UDIR/57.3
       IF( XSCALE .EQ. 0.0 ) XSCALE = 1.0
       IF( YSCALE .EQ. 0.0) YSCALE =1.0
@@ -1250,9 +1251,9 @@ C-
      +                            tmp_singleCCL.innerCondition.globalID,
      +                            tmp_singleCCL.innerCondition.BCtype
                 !read next line
-                read (filecontrol.lin.unit, '(a)') inputLine
+                read (filecontrol.lin.unit, '(a)') input    Line
               endif
-
+              
               lmt_loop: do j = min (nl + 9, 3535), 1, -1
                 if (line (i, j) /= 0) then
                   lmt (i) = j
