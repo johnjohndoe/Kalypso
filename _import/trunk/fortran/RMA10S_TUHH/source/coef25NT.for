@@ -140,6 +140,11 @@ C
         CVFCT=1.0
       ENDIF
       
+      !Residual shall come to output file (for Microstation visualization)
+      do i = 1, 6
+        fehler (i, nn) = 0.0d0
+      enddo
+
       !determine average density within element
       ROAVG=1.935
       IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
@@ -1230,6 +1235,13 @@ CIPK AUG06 ADD QIN
      +       p_bottom,tbfact,ffact,vecq,h,drdx,drdz,dsdx,dsdz,gscal)
       end if
       !-
+      
+      !in many cases the eddy viscosity values are overwritten with the minimum
+      !viscosity values from the control file: Thus store the calculated viscosities and put them to the output file!
+      epsx_nn (nn) = epsx
+      epsxz_nn (nn) = epsxz
+      epsz_nn (nn) = epsz
+      epszx_nn (nn)= epszx
 
 !MD: Dispersion for sediment, salinity or temperatur
 !MD: Bloc is moved from ca. LN 440 down, because turbulence parameters
@@ -1511,6 +1523,11 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
         IA = 3 + 2*NDF*(M-1)
         F(IA) = F(IA) - AMW * XM (M) * FRN
       enddo ContinuityEquations
+      
+      !Calculate the elements continuity error to visualize it in Microstation
+      fehler (1, nn) = fehler (1, nn) + amw * frn 
+      fehler (2, nn) = fehler (2, nn) + amw * (frn**2) 
+      
 !--------------------------------------------------
 !.....Set up TERMS for the SALINITY EQUATION.....
 !--------------------------------------------------
@@ -2063,6 +2080,45 @@ C-
 C......END GAUSS DO LOOP
 C-
   500 CONTINUE
+  
+!Optionale Berechnungen für den Residuums-Fehler
+!                                                                       
+!     Berechnung von fehler(1) als                                      
+!     auf die Elementflaeche bezogenem, numerisch aufintergriertem      
+!     Residuum der Kontinuitaets-Gleichung. Die so entstehende          
+!     Groesse entspricht einer Eintrittsgeschwindigkeit von Fehlerfluid 
+!     ueber die Gewaessersohle/Oberflaeche.                             
+!                                                                       
+      fehler (1, nn) = fehler (1, nn) / area (nn) 
+                                                                        
+!    fehler(2,) - Volumenverlust - Quadratnorm                          
+                                                                        
+      fehler (2, nn) = (fehler (2, nn) / area (nn) ) **0.5 
+!      fehler(4,nn)=fehler(4,nn)/xarea(nn)                              
+!                                                                       
+!    fehler(3,) - gewichtetes kontinuitaetsresiduum                     
+!      do 1290 m=1,ncnx                                                 
+!        ia = 3 + 2*ndf*(m-1)                                           
+!        fehler(3,nn) = fehler(3,nn) + f(ia)                            
+! 1290 continue                                                         
+!                                                                       
+!    fehler(4,) - gewichtetes 1-Impuls-residuum                         
+!    fehler(4,) - gewichtetes 2-Impuls-residuum                         
+!      do 1285 m = 1, ncn                                               
+!        ia = 1 + ndf*(m-1)                                             
+!        fehler(4,nn) = fehler(4,nn) + f(ia)                            
+!        ia = ia + 1                                                    
+!        fehler(5,nn) = fehler(5,nn) + f(ia)                            
+! 1285 continue                                                         
+!                                                                       
+!    fehler(6,) - Summe der Residuen                                    
+!                                                                       
+!      fehler(6,nn) = fehler(3,nn) + fehler(4,nn) + fehler(5,nn)        
+!                                                                       
+!                                                                       
+      
+  
+  
       IF(NTX .EQ. 0) RETURN
       
 cipk jun05

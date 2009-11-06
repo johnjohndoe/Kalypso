@@ -485,9 +485,15 @@
       !for Control structures
       !----------------------
       type(ControlStructure), allocatable, target :: contrStructures (:)
- 
       
+      !viscosities for output purposes
+      !-------------------------------
+      real (kind = 8), allocatable :: epsx_nn (:), epsz_nn (:)
+      real (kind = 8), allocatable :: epsxz_nn(:), epszx_nn (:)
       
+      !residual output for visualiuzation in Microstation
+      !--------------------------------------------------
+      real (kind = 8), allocatable :: fehler (:,:)
 
 C-
       INTEGER NSZF

@@ -397,7 +397,7 @@ write_elements: DO i = 1, ne
   ELSE
     if (imat (i) /= 89) then
 
-        WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
+        WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i), fehler (2, i), epsx_nn(i), epsxz_nn(i), epsz_nn(i), epszx_nn(i) !
 
       !write material types and reordering number
       if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
@@ -469,7 +469,7 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  !Elemente; Nummer, Rauhigkeitsklase_ursprung; Rauhigkeitsklase_im Zeitschritt; Bearbeitungsreihenfolge (nfixh); Fehlermass2
  !NiS,apr06: Because of excluding the array-value of fehler(2,i) the fomat descriptor must change (see above)
  !7002 FORMAT ('FE', 4i10,f15.7)
- 7002 FORMAT ('FE', 4i10)
+ 7002 FORMAT ('FE', 4i10, 5f15.7)
 
  !aktuelle Freiheitsgrade; Knotennummer, x-, y-Geschwindigkeit, Wasserspiegel):
  7003 FORMAT ('VA', i10, 2f20.14, 2f20.13)

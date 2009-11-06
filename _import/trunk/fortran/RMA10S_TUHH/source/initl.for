@@ -159,6 +159,22 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
       call setUpNodes (m_SimModel.femesh, maxp)
       
+      !viscosities and residual for element output purposes
+      allocate (epsx_nn (1:maxe), epsz_nn(1:maxe))
+      allocate (epsxz_nn (1:maxe), epszx_nn(1:maxe))
+      allocate (fehler (1:6, 1:maxe))
+      do i = 1, maxe
+        epsx_nn(i) = 0.0d0
+        epsxz_nn(i) = 0.d0
+        epszx_nn(i) = 0.0d0
+        epsz_nn(i) = 0.0d0
+      enddo
+      do i = 1, maxe
+        do j = 1, 6
+          fehler (j, i) = 0.0d0
+        enddo
+      enddo
+      
       ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)
      + ,LDEST(MFWW),QR(MFWW))
 
