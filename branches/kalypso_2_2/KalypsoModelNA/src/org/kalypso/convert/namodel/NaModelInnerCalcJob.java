@@ -177,10 +177,6 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private static final String WE_PARAMETER_GML = "resources/WE/parameter.gml"; //$NON-NLS-1$
 
-  private static final String WE_LANDUSE_GML = "resources/WE/landuse.gml"; //$NON-NLS-1$
-
-  private static final String WE_SUDS_GML = "resources/WE/suds.gml"; //$NON-NLS-1$
-
   public NaModelInnerCalcJob( )
   {
     m_urlUtilities = new UrlUtilities();
@@ -287,7 +283,7 @@ public class NaModelInnerCalcJob implements ISimulation
         try
         {
           final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimURL, null );
-          LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
+          LzsimManager.writeLzsimFiles( conf.getIdManager(), tmpdir, iniValuesWorkspace );
         }
         // We still assume it is a file.... ignore file not found, we do not have starting conditions then
         catch( final FileNotFoundException e )
@@ -1086,12 +1082,10 @@ public class NaModelInnerCalcJob implements ISimulation
       logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     loadTextFileResults( tmpdir, logger, resultDir );
-    if( conf.getIniWrite() )
-    {
-      final LzsimManager lzsimManager = new LzsimManager();
-      lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultDir, conf );
-    }
 
+    Date[] initialDates = conf.getInitialDates();
+    final LzsimManager lzsimManager = new LzsimManager( initialDates );
+    lzsimManager.readInitialValues( conf.getIdManager(), tmpdir, logger, resultDir );
   }
 
   private void loadTSResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception

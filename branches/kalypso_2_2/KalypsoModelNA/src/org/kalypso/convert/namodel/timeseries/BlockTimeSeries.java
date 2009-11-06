@@ -58,9 +58,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.kalypso.convert.namodel.i18n.Messages;
-import org.kalypso.ui.KalypsoGisPlugin;
-
 public class BlockTimeSeries
 {
   private final DateFormat m_dateFormat;
@@ -101,8 +98,7 @@ public class BlockTimeSeries
    */
   public BlockTimeSeries( )
   {
-// this( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-    this( TimeZone.getTimeZone( NATimeSettings.CALCULATION_CORE_TIMEZONE ) );
+    this(  NATimeSettings.getInstance().getTimeZone() );
   }
 
   /**

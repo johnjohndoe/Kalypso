@@ -46,17 +46,14 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.convert.namodel.schema.binding.suds.AbstractSud;
 import org.kalypso.convert.namodel.schema.binding.suds.Greenroof;
 import org.kalypso.convert.namodel.schema.binding.suds.Swale;
@@ -121,34 +118,17 @@ public class NAControlConverter
 
   private static void appendInitailDates( final Feature controlFE, final StringBuffer b, NAConfiguration conf )
   {
-    final TreeSet<Date> dateWriteSet = new TreeSet<Date>();
-    final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) ); //$NON-NLS-1$
-    final List< ? > dateList = (List< ? >) controlFE.getProperty( NaModelConstants.NACONTROL_INITIALVALUEDATE_PROP );
-    if( dateList != null )
-    {
-      final Iterator< ? > iter = dateList.iterator();
-      while( iter.hasNext() )
-      {
-        final Feature fe = (Feature) iter.next();
-        final Boolean write = (Boolean) fe.getProperty( NaModelConstants.NACONTROL_WRITE_PROP );
-        // by default it is false now, but for backward compatibility check if there is any value
-        if( write != null && write.booleanValue() )
-        {
-          final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( NaModelConstants.NACONTROL_INITIALDATE_PROP ) );
-          dateWriteSet.add( initialDate );
-          conf.setIniWrite( true );
-        }
-      }
-    }
+    final DateFormat format = NATimeSettings.getInstance().getLzsLzgDateFormat();
 
-    final Iterator<Date> iniIter = dateWriteSet.iterator();
-    while( iniIter.hasNext() )
+    final Date[] initialDates = LzsimManager.getInitialDates( controlFE );
+    conf.setInitalValues( initialDates );
+
+    for( final Date iniDate : initialDates )
     {
-      final String iniDate = format.format( iniIter.next() );
-      b.append( iniDate + "\n" ); //$NON-NLS-1$
+      final String iniString = format.format( iniDate );
+      b.append( iniString + "\n" ); //$NON-NLS-1$
     }
     b.append( "99999\n" ); //$NON-NLS-1$
-    conf.setInitalValues( dateWriteSet );
   }
 
   private static void appendResultsToGenerate( NAConfiguration conf, Feature controlFE, StringBuffer b )
