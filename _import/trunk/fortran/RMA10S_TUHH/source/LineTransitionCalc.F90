@@ -54,14 +54,6 @@ vnomy = 0.0
 gamma = 0.0
 delta = 0.0
 
-
-!testoutput file handling
-!teststat = 0
-!WRITE(filename_out,'(a16,i4.4,a4)') 'Transitionoutput',maxn,'.txt'
-!OPEN(999,filename_out, IOSTAT=teststat)
-!if (teststat.ne.0) STOP 'error with kopplungsoutput.txt'
-
-
 !increments for numerical derivative
 Dh = 0.01
 dv = 0.001
@@ -200,69 +192,13 @@ transitionloop: do i = 1, MaxLT
             dspecdh(na) = - dspecdh(na)
           end if
 
-          !calculate derivative
-          !testing
-          !WRITE(*,*) dspecdh(na), spec(na,1), dh
-          !testing-
-
           dspecdh (na) = (dspecdh(na) - spec(na, 1)) / Dh
 
-          !testing
-          !WRITE(*,*) 'dspecdh(na)', dspecdh(na)
-          !testing-
         end do
-!switched off for the moment
-!      ELSEIF (j == 3) then
-!        !do k = 1, lmt(TransLi)
-!        !  na = line(TransLi, k)
-!        !  dspecdh (na) = 0.5 * (dspecdh (na) + (SQRT( TransSpec(k, 1)**2 + TransSpec(k, 2)**2) - spec(na, 1)) / Dh)
-!        !  !dspecdh (na) = 0.5 * (dspecdh (na) + (TransSpec(k, 1) * COS (alfa (na)) + TransSpec(k, 2) * sin (alfa (na))) / Dh)
-!        !  WRITE(*,*) '3: ', dspecdh(na)
-!        !end do
-!-
       else
         WRITE(*,*) 'ERROR - this is not possible'
         STOP 'in LineTransitionCalc'
       end if
-!switched off for the moment
-!
-!    !numerical derivative over velocities
-!    ELSEIF (j == 4) then
-!      !for every independent 2D-node
-!      do k = 1, lmt(TransLi)
-!        !node
-!        na = line(TransLi, k)
-!        !velocities
-!        vel(1, na) = vel(1, na) + Dv * COS (alfa(na))
-!        vel(2, na) = vel(2, na) + Dv * SIN (alfa(na))
-!        call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
-!        !store value in derivative
-!        dspecdv(na) = TransSpec (k)
-!        !correct direction
-!        if ( (TransVel < 0.0 .and. dspecdv(na) > 0.0) .or. (TransVel > 0.0 .and. dspecdv(na) < 0.0) ) then
-!          dspecdv(na) = dspecdv(na) * (-1.0)
-!        end if
-!        !calculate derivative
-!        dspecdv (na) = (spec(na, 1) - dspecdv(na)) / Dv
-!        !reset velocity
-!        vel(1, na) = vel(1, na) - Dv * COS (alfa(na))
-!        vel(2, na) = vel(2, na) - Dv * SIN (alfa(na))
-!      end do
-!
-!    ELSEIF (j == 5) then
-!      !do k = 1, lmt(TransLi)
-!      !  na = line(TransLi, k)
-!      !  vel(1, na) = vel(1, na) + Dv * COS (alfa(na))
-!      !  vel(2, na) = vel(2, na) + Dv * SIN (alfa(na))
-!      !  call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
-!      !  WRITE(*,*) '2: ', transspec(k,1), transspec(k,2), spec(na,1), spec(na,2)
-!      !  dspecdv (na) = 0.5 * (dspecdv (na) + (SQRT( TransSpec(k, 1)**2 + TransSpec(k, 2)**2) - spec(na, 1)) / Dv)
-!      !  !dspecdv(na)=0.5*(dspecdv (na) + ((TransSpec(k, 1) * COS (alfa(na)) + TransSpec(k, 2) * SIN (alfa (na)) ) - spec(na, 1))/Dv)
-!      !  vel(1, na) = vel(1, na) - Dv * COS (alfa(na))
-!      !  vel(2, na) = vel(2, na) - Dv * SIN (alfa(na))
-!      !  WRITE(*,*) '5: ', dspecdv(na)
-!      !end do
-!-
     ENDIF
   ENDDO
 
@@ -300,19 +236,8 @@ transitionloop: do i = 1, MaxLT
       dspecdv (na) = - dspecdv (na)
     end if
 
-    !testing
-    !WRITE(*,*) 'Berechne Ableitung ueber v'
-    !WRITE(*,*) na, dspecdv (na), spec (na, 1), dv
-    !testing-
     dspecdv (na) = (dspecdv (na) - spec(na, 1)) / Dv
-    !testing
-    !WRITE(*,*) dspecdv (na)
-    !testing-
-
   end do
-  !testing
-  !pause
-  !testing-
 
   DEALLOCATE (TransSpec)
 
@@ -380,7 +305,7 @@ transitionloop: do i = 1, MaxLT
     q2D(i) = SUMX - SUMY
 
     !testing
-    WRITE(*,*) 'calculated discharge at 2D-line. It must be the same than discharge calculated as BC for this line: ', i, q2d(i)
+    !WRITE(*,*) 'calculated discharge at 2D-line. It must be the same than discharge calculated as BC for this line: ', i, q2d(i)
     !testing-
 
   ELSEIF (deriv == 2) then
@@ -392,8 +317,5 @@ transitionloop: do i = 1, MaxLT
 
 
 end do transitionloop
-
-!Close testing file
-!close (999,STATUS='keep')
 
 end subroutine
