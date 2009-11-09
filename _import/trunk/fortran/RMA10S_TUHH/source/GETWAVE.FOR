@@ -13,11 +13,22 @@ CIPK AUG05      INCLUDE 'BLKSAND.COM'
 
       CHARACTER*1000 HEDR
 c
-      data hrinc/0./
+      data itime/0/,hrinc/0./
 C-
 C...... Initialize
 C-
-      IF(IT .EQ. 1) THEN
+      !EFa aug08, changed if-clause
+      !IF(IT .EQ. 1.) THEN
+      IF(itime.eq.0)then
+      !-
+        !EFa aug08, add weighting factors for external coordinates
+          READ(INWGT,'(A1000)') HEADWT
+          DO N=1,NP
+            READ(INWGT,5000) M,(NODWT(M,J),J=1,3),(WAT(M,J),J=1,3)
+ 5000     FORMAT(8X,I8,3I8,3F8.5)
+          ENDDO
+          CLOSE(INWGT)
+        !-
 cipk jan98
         iydd=iyrr
         iyrd=iyrr
@@ -29,24 +40,32 @@ c
 CIPK MAY96 DEFINE TETADD
 CIPK MAY02        TETADD=TTT-TCORR
         TETADD=TTT
-        REWIND IWVIN
-        READ(IWVIN) HEDR
-        IF(HEDR(101:105) .EQ. '    1') THEN
-          MBND=1
-        ELSE
-          MBND=0
-        ENDIF
-        NSCR3=102
+        !EFa aug08, added for ASCII wave data input
+          rewind iwvin
+          READ(iwvin,'(A100)') HEDR (1:100)
+          if (hedr(1:8).eq.'WAVE-S') then
+            MBND = 1
+          else
+            MBND = 0
+          end if
+        !-
       ENDIF
 C-
   161 CONTINUE
+      !EFa aug08, added itime because of changed if-clause
+      itime = 1
+      !-
 C-
 C..... MBND = 1 is the case of only 1 wave data file
 C-
 
       WRITE(75,*) 'GETWAVE-54',MBND,HEDR(101:105)
       IF(MBND .EQ. 1) THEN
-        IF(IT .EQ. 1) THEN
+        !EFa aug08, changed if-clause
+        !IF(IT .EQ. 1.) THEN
+        IF(itime.eq.1)then
+        itime = 2
+        !-
 C
 C      WAVE DATA READ
 C
@@ -57,10 +76,25 @@ C
             WAVEDR(K)=0.
           ENDDO
 
-          READ(IWVIN,ERR=165)
-     +        TTT,NDM,NV,IYDD,(WAVEHT(K),K=1,NV),(PEAKPRD(K),K=1,NV),
-     +        (WAVEDR(K),K=1,NV)
-          GO TO 166
+          !EFa aug08, add case for ASCII wave datat input
+            READ(iwvin,5011,ERR=165 ,END=166)ttt,nv,iydd
+            WRITE(*,*)ttt,nv,iydd
+ 5011       FORMAT(8x,f8.0,2i8)
+            !EFa aug08, changed if-clause of input parameters because of added external coordinates
+            if (icordin.eq.0) then
+              do l=1,nv
+                READ(iwvin,'(8x,i8,3f16.3)')
+     +              k,waveht(k),peakprd(k),wavedr(k)
+              end do
+            else
+              do l=1,nv
+                READ(iwvin,'(8x,i8,3f16.3)')k,wvh1(k),wvt1(k),wva1(k)
+               !WRITE(*,*)k,wvh1(k),wvt1(k),wva1(k)
+              end do
+            endif
+            !-
+            GOTO 166
+          !-
   165     CONTINUE
           STOP 'ERROR IN WAVE DATA'
   166     CONTINUE 
@@ -74,6 +108,20 @@ cipk dec97 add check for zero nodes on input file
           STOP
         ENDIF
         WRITE(75,*) 'Time ONLY file =',ttt,'current time =',TET
+        !EFa aug08, added weighting fctors for external coordinates
+        if (icordin.ne.0) then
+          do n=1,np
+            do m=1,3
+              k=nodwt(n,m)
+              if (k.gt.0) then
+                waveht(n) = waveht(n) + WAT(n,m)*wvh1(k)
+                peakprd(n) = peakprd(n) + WAT(n,m)*wvt1(k)
+                wavedr(n) = wavedr(n) + WAT(n,m)*wva1(k)
+              end if
+            end do
+          end do
+        endif
+        !-
         GO TO 600
 C-
 C..... MBND = 0 is the case of multiple files to be interpolated
@@ -127,10 +175,12 @@ C-
 C
 C      WAVE DATA  read
 C
-          READ(IWVIN,ERR=286) TTTV,NDM,NV,IYDD
-     +                            ,(WVH1(K),K=1,NV),(WVT1(K),K=1,NV),
-     +                             (WVA1(K),K=1,NV)
-
+          !EFa aug08, add case for ASCII wave datat input
+            READ(iwvin,5011,ERR=286)ttt,nv,iydd
+            do l=1,nv
+              READ(iwvin,'(8x,i8,3f16.3)')k,wvh1(k),wvt1(k),wva1(k)
+            end do
+          !-
           WRITE(75,*) 'TIME FROM WAVE DATA FILE',TTTV,NV,IYDD
           GO TO 287
   286     CONTINUE
@@ -178,18 +228,38 @@ cipk            write(75,*) 'Time from file =',ttt,'current time =',TET
 C-
 C...... We have now spanned across the time for interpolation
 C-
-          write(75,*) 'time,t0,ttt',tET,t0,ttt
+          write(75,*) 'time,t0,ttt',TET,t0,ttt
           FCTI=(TET+(DAYOFY-1)*24.-T0)/(TTT+HRINC-T0)
           TTTC=TTT+HRINC
           HRINC=0.
           WRITE(75,*) 'GETWAVE-188  FCTI',FCTI
 
-          DO K=1,NP
-            WAVEHT(K)=wvh0(K)+FCTI*(wvh1(K)-wvh0(K))
-            WAVEDR(K)=wva0(K)+FCTI*(wva1(K)-wva0(K))
-            PEAKPRD(K)=wvt0(K)+FCTI*(wvt1(K)-wvt0(K))
-          ENDDO
-
+          !EFa aug08, added if-clause for the weighting factors of extrernal coordinates
+          if (icordin.eq.0) then
+            do k=1,np
+              WAVEHT(K)=wvh0(K)+FCTI*(wvh1(K)-wvh0(K))
+              WAVEDR(K)=wva0(K)+FCTI*(wva1(K)-wva0(K))
+              PEAKPRD(K)=wvt0(K)+FCTI*(wvt1(K)-wvt0(K))
+            end do
+          else
+            DO n=1,NP
+              waveht(n) = 0
+              peakprd(n) = 0
+              wavedr(n) = 0
+              do m = 1,3
+                k = nodwt(n,m)
+                if (k.gt.0) then
+                  WAVEHT(n)=waveht(n)+(wvh0(k)+FCTI*(wvh1(K)-wvh0(K)))
+     +                      *wat(n,m)
+                  WAVEDR(n)=wavedr(n)+(wva0(k)+FCTI*(wva1(K)-wva0(K)))
+     +                      *wat(n,m)
+                  PEAKPRD(n)=peakprd(n)+(wvt0(k)+FCTI*(wvt1(K)-wvt0(K)))
+     +                       *wat(n,m)
+                end if
+              end do
+            !-
+            ENDDO
+          end if
         ENDIF
       ENDIF
   600 CONTINUE
