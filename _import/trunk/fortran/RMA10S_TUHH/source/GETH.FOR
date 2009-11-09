@@ -5,7 +5,10 @@ CIPK  MAST UPDATE AUG 1 2000 ADD SECOND ELEVATION HF2,FOR INTERPOLATION
 CIPK  LAST UPDATE DEC 16 1997
 cipk  lst update Nov 26 1997
 cipk  last update April 26 1996  many changes
-      SUBROUTINE GETH(LNO,N,HF,HF2,IYRR,DAYNOW,TIME,TETH,QQAL)
+      !EFa oct09, hfd
+      !SUBROUTINE GETH(LNO,N,HF,HF2,IYRR,DAYNOW,TIME,TETH,QQAL)
+      SUBROUTINE GETH(LNO,N,HF,HF2,IYRR,DAYNOW,TIME,TETH,QQAL,hfd)
+      !-
       USE PARAMMOD
       USE BLK11MOD
       use blk_ifu
@@ -27,6 +30,9 @@ CIPK DEC97 CHANGE LIMIT TO NHDS
      +          ILAYRH(:,:)
      +         ,DYQ(:,:),IYDAT(:)
      +         ,HT2(:,:)
+      !EFa oct09, added htd for hfd
+     +         ,htd(:,:)
+      !-
 
       DIMENSION QQAL(*)
 CIPK SEP04
@@ -52,7 +58,10 @@ CIPK SEP04
      +          HT(NCHOBS,NHDS),HD(NCHOBS,NHDS,3),
      +          ILAYRH(NCHOBS,NHDS)
      +         ,DYQ(NCHOBS,NHDS),IYDAT(NHDS)
-     +         ,HT2(NCHOBS,NHDS))
+      !EFa oct09, added htd for hfd
+      !+         ,HT2(NCHOBS,NHDS))
+     +         ,HT2(NCHOBS,NHDS),htd(nchobs,nhds))
+      !-
         ITIMEH=1
         NCLIN=0
         NHY=0
@@ -63,6 +72,9 @@ CIPK SEP04
         DYQ=0.
         IYDAT=0
         HT2=0.
+        !EFa oct09, added htd for hfd
+        htd = 0.
+        !-
       ENDIF
       IF(NHYD .EQ. 0) THEN
 c
@@ -92,9 +104,13 @@ cipk nov97            READ(IHUNIT,'(A8,A72)') ID,DLIN
             call ginpt(ihunit,id,dlin)
             IF(ID(1:2) .EQ. 'HD') THEN
               READ(ID(5:8),'(F4.0)') DYQ(I,NHYD)
-              READ(DLIN,'(F8.0,I8,5F8.0)')
+              !EFa oct09, added htd for hfd
+              !READ(DLIN,'(F8.0,I8,5F8.0)')
+              READ(DLIN,'(F8.0,I8,6F8.0)')
      +        TA(I,NHYD),ILAYRH(I,NHYD),HT(I,NHYD),(HD(I,NHYD,K),K=1,3)
-     +        ,HT2(I,NHYD)
+      !+        ,HT2(I,NHYD)
+     +        ,HT2(I,NHYD),htd(i,nhyd)
+     
 CIPK AUG00 ADD HT2
               NHY(NHYD)=NHY(NHYD)+1
               IF(I .EQ. 1) THEN
@@ -155,6 +171,9 @@ C
               HT(NHY(NHYD),NHYD)=HT(NHY(NHYD)-1,NHYD)
 CIPK AUG00
               HT2(NHY(NHYD),NHYD)=HT2(NHY(NHYD)-1,NHYD)
+              !EFa oct09, added htd for hfd
+              htd(NHY(NHYD),NHYD)=htd(NHY(NHYD)-1,NHYD)
+              !-
               DO K=1,3
                 HD(NHY(NHYD),NHYD,K)=HD(NHY(NHYD)-1,NHYD,K)
               ENDDO
@@ -166,6 +185,9 @@ CIPK AUG00
               HT(NHY(NHYD),NHYD)=HT(NHY(NHYD)-1,NHYD)
 CIPK AUG00
               HT2(NHY(NHYD),NHYD)=HT2(NHY(NHYD)-1,NHYD)
+              !EFa oct09, added htd for hfd
+              htd(NHY(NHYD),NHYD)=htd(NHY(NHYD)-1,NHYD)
+              !-
               DO K=1,3
                 HD(NHY(NHYD),NHYD,K)=HD(NHY(NHYD)-1,NHYD,K)
               ENDDO
@@ -198,6 +220,10 @@ C
 CIPK AUG00
               HF2=HT2(I-1,J)+(HT2(I,J)-HT2(I-1,J))*
      +        (CTIM-TIM)/(TIN-TIM)
+              !EFa oct09, added hfd
+              hfd=htd(I-1,J)+(htd(I,J)-htd(I-1,J))*
+     +        (CTIM-TIM)/(TIN-TIM)              
+              !-
               DO K=1,3
                 QQAL(K)=HD(I-1,J,K)+(HD(I,J,K)-HD(I-1,J,K))*
      +          (CTIM-TIM)/(TIN-TIM)
