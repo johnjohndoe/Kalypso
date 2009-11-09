@@ -29,6 +29,10 @@ C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
 !-
         ELSEIF(ICORDIN .EQ. 0) THEN
           RETURN
+        !EFa aug08, added if-clause for external coordinates for wave data
+        ELSEIF(INSTR .EQ. 0.and.INBNSTR.eq.0) THEN
+          RETURN
+        !-
         ENDIF
         iydd=iyrr
         iyrd=iyrr
@@ -46,10 +50,14 @@ cipk sep04
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
             write(75,*) 'ERROR IN SURFACE STRESS DATA'
-            STOP 'ERROR IN SURFACE STRESS DATA'
-            
-  150       READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
-     +      (K,(STR2(K,J),J=1,6),L=1,NV)
+            STOP 'ERROR IN SURFACE STRESS DATA 111'
+            !EFa jul08, changed do-loop of the read-statement
+  150       do l=1,nv
+              READ(INSTR,'(8X,I8,2F16.0,4F8.0)')K, (str2(k,j),j=1,6)             
+            end do
+           ! READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
+      !+      (K,(STR2(K,J),J=1,6),L=1,NV)
+           !-
           ELSE
             MBND=1
           ENDIF
@@ -73,11 +81,16 @@ C
 C      SURFACE STRESS DATA READ
 C
 
-          READ(INSTR,5001,ERR=165) IDYY,TTT,NV,IYDD
- 5001     FORMAT(8X,I8,F8.0,I8,I8)
-          READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
-     +      ((K,STR2(K,J),J=1,6),L=1,NV)
-          GO TO 166
+            READ(INSTR,5001,ERR=165) IDYY,TTT,NV,IYDD
+ 5001       FORMAT(8X,I8,F8.0,I8,I8)
+            !EFa jul08, changed do-loop of the read-statement
+            do l=1,nv
+              READ(INSTR,'(8X,I8,2F16.0,4F8.0)')K, (str2(k,j),j=1,6)              
+            end do
+            !READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
+      !+      ((K,STR2(K,J),J=1,6),L=1,NV)
+            !-
+            GO TO 166
   165     CONTINUE
 cipk sep04
           CLOSE(75)
@@ -173,9 +186,14 @@ C
 C      SURFACE STRESS DATA  read
 C
 
-          READ(INSTR,5001,ERR=286,END=285) IDYY,TTTV,NV,IYDD
-          READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
-     +      (K,(STR2(K,J),J=1,6),L=1,NV)
+           READ(INSTR,5001,ERR=286,END=285) IDYY,TTTV,NV,IYDD
+            !EFa jul08, changed do-loop of the read-statement
+            do l=1,nv
+              READ(INSTR,'(8X,I8,2F16.0,4F8.0)')K, (str2(k,j),j=1,6)
+            end do
+              !READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
+      !+      (K,(STR2(K,J),J=1,6),L=1,NV)
+            !-
 !REMOVE FOR RMA·KALYPSO
 !nis,nov08: Remove reading from obsolete binary file inbnstr
 !inbnstr is obsolete
@@ -252,6 +270,9 @@ C-
           WRITE(75,*) 'GETSST-169  FCTI',FCTI
 
             if(idebug .eq. 1) then
+            !EFa jul08, testing
+            OPEN(234,FILE='STRESSFUL.TXT')
+            !-
             DO K=1,100
              WRITE(234,'(I8,6F15.3)')K,XUSR(K),YUSR(K),(STR2(K,J),J=3,6)
             ENDDO
@@ -280,6 +301,9 @@ C-
      +              +(STR1(K,6)+FCTI*(STR2(K,6)-STR1(K,6)))*WAT(N,M)
                 ENDIF 
               ENDDO
+              !EFa jul08, testing
+              WRITE(234,*)n,'awl(n): ',awl(n),wat(n,1),wat(n,2),wat(n,3) !(Achtung: interne Knoten!)
+              !-
           ENDDO
 
         ENDIF
