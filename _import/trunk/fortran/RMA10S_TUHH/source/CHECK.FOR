@@ -51,6 +51,14 @@ cipk jul01 add line above
 
       REAL (kind = 8) :: TempArea, calcPolynomial
 !-
+      !EFa aug08, for calculation of qdir and output of external BC
+      REAL (kind = 8) :: meanvx, meanvy ,sumh,sumvx,sumvy
+      REAL (kind = 8) :: meanh ,totalwsll,sumdl    
+      CHARACTER (LEN=96) CLQ
+      CHARACTER (LEN=96) CLH
+      INTEGER :: uclq,uclh !,counth
+      INTEGER*2 STATUS
+      !-
       INTEGER :: PolyPos, findpolynom
 !nis,nov06: For line connections
       INTEGER :: linecheck, LineLength
@@ -295,6 +303,40 @@ CIPK OCT98        NTL=1
         SUMY = 0.0
 cipk jul01
         TOTAL(J) =0.0
+        !EFa aug08, for calculation of qdir and output of external BC
+        meanvx = 0.0
+        meanvy = 0.0
+        meanh = 0.0
+        sumvx = 0.0
+        sumvy = 0.0
+        sumh = 0.0
+        sumdl = 0.0
+        totalwsll = 0.0
+        if (CCLout == 1) then
+          !EFa jun09, added maxn == nitn --> results are needed for SMALL
+          if (nconv==2.or.maxn == nitn) then
+          !-
+            if (icyc == 0.OR.(iaccyc == icyc.and.niti == 0).or.
+     +       (icyc==1.and.niti==0)) then          
+              WRITE(CLQ,'(a10,i4.4,a4)')'result\CLQ', j, '.txt'
+              uclq = 800+j
+              uclh = 900+j
+              OPEN(UNIT=uclq,FILE=CLQ,FORM ='FORMATTED',STATUS='REPLACE'
+     +        ,IOSTAT = istat)
+              WRITE(uclq,'(a2,6x,a72)')'TH','no heading comment'
+              WRITE(uclq,'(a3,i13,i8)')'CLQ',j,iyrr
+              WRITE(CLH,'(a10,i4.4,a4)')'result\CLH', j, '.txt'
+              OPEN(UNIT=uclh,FILE=CLH,FORM ='FORMATTED',STATUS='REPLACE'
+     +        ,IOSTAT = istat)
+              WRITE(uclh,'(a2,6x,a72)')'TT','no heading comment'
+              WRITE(uclh,'(a3,i13,i8)')'CLH',j,iyrr
+            else
+              uclq = 800+j
+              uclh = 900+j
+            end if
+          end if
+        end if
+        !-
         SUMXS= 0.0
         SUMXT= 0.0
         SUMXSD=0.0
@@ -660,6 +702,15 @@ CIPK MAR01  ADD OTHER CONSTITUENTS
               dx = tmpVec(1) * dirScaling
               TEMPY=DX*(VEL(2,NA)*D1+4.0*VEL(2,NB)*D2+VEL(2,NC)*D3)
      1             /6.
+              !EFa aug08, for calculation of qdir and output of external BC
+              meanvx = (vel(1,na)*d1+4.0*vel(1,nb)*d2+vel(1,nc)
+     +         *d3)/6*sqrt(dx**2+dy**2)
+              meanvy =  (vel(2,na)*d1+4.0*vel(2,nb)*d2+vel(2,nc)
+     +         *d3)/6*sqrt(dx**2+dy**2)
+              if (ndry(na)==1.and.ndry(nc)==1) then
+                meanh = (wsll(na)+wsll(nc)) /2*sqrt(dx**2+dy**2)
+              endif
+              !-
               NGP=4
               DO I = 1, NGP
 C-
@@ -684,11 +735,34 @@ C-
 
               SUMX=SUMX+TEMPX
               SUMY=SUMY+TEMPY
+              !EFa nov08, for calculation of qdir and output of external BC
+              sumvx = sumvx + meanvx
+              sumvy = sumvy + meanvy             
+              !if (ndry(na)==1.and.ndry(nc)==1) then
+              !  sumh = sumh + meanh
+              !  sumdl = sumdl + sqrt(dx**2+dy**2)  
+              !endif  
+              !!if (d1>((adt(na)-adb(na))/4.+(adb(na)*akp(na)))
+      !!+         .and.d3>((adt(nc)-adb(nc))/4.+(adb(nc)*akp(nc))))then
+              if (wsll(na)>ao(na).and.wsll(nc)>ao(nc)) then
+                sumh = sumh +meanh
+                sumdl = sumdl + sqrt(dx**2+dy**2)
+              endif                       
+              !-
             ENDIF
   700     CONTINUE
         ENDIF
 CIPK JUL01
         TOTAL(J) = SUMX - SUMY
+
+        !EFa aug08, for calculation of qdir and output of external BC 
+        !EFa jun09, added if-clause        
+        if (sumh. gt. 0.0) then      
+          TOTALWSLL = sumh / sumdl
+        else
+          totalwsll = -99.00
+        endif
+        
         !Save the water that's going through the line within the current step
         if (associated (ccls(j).storageElt)) then
           if (ncall == 0) then
@@ -704,7 +778,7 @@ CIPK JUL01
             SElt => ccls(j).storageElt
             WL = waterlevel (SElt, .true.)
           endif
-        endif
+        endif        
 
 cipk apr01
 CIPK JUL01
@@ -725,6 +799,34 @@ CIPK JUL01
 CIPK OCT98        MX = LMT(J)
         WRITE(LOUT,6035)
      +	  J,TOTAL(J),SUMX,SUMY,PCT,AVES(J),AVET(J),AVESD(J)
+      !EFa aug08, for calculation of qdir and output of external BC
+      if (CCLout == 1) then
+        !EFa jun09, added maxn == nitn --> results are needed for SMALL
+        if (nconv == 2.or. maxn == nitn) then
+        !-
+          if (delt > 0.) then
+            !EFa aug08: layer number is set to zero (ln is not global)
+            !-
+            !EFa jun09, changed tet to tofday (tet: summarized time, tooday: daytime)
+            !WRITE(uclq,'(a2,i6,f8.4,i8,5f8.2)')'QD',dayofy,tet,0,
+            !EFa jun09, added chenged total(j) to abs(total(j)
+            WRITE(uclq,'(a2,i6,f8.4,i8,5f8.2)')'QD',dayofy,tofday,0,
+     +       abs(total(j)),aves(j),avet(j),avesd(j), atan2(sumvy,sumvx) 
+            !WRITE(uclh,'(a2,i6,f8.4,i8,4f8.2)')'HD',dayofy,tet,0,
+            WRITE(uclh,'(a2,i6,f8.4,i8,4f8.2)')'HD',dayofy,tofday,0,
+     +       totalwsll,aves(j),avet(j),avesd(j)
+            call FLUSH(uclq)
+            call FLUSH(uclh)
+            if (icyc.eq.ncyc.OR.nita.eq.0) then
+              write(uclq,'(a7)')'ENDDATA'
+              write(uclh,'(a7)')'ENDDATA'
+              CLOSE(uclq)
+              CLOSE(uclh)
+            end if
+          end if
+        end if
+      end if
+      !-
   180 CONTINUE
       NB = ND
 CIPK JUL01
