@@ -20,7 +20,6 @@ C-
       !two passing dummies
       REAL (KIND = 8) :: dum1, dum2
 !-
-
 C-
 C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
@@ -99,10 +98,15 @@ CIPK NOV96 INDICATE A ZERO PROJECTION PARAMETER
         else
           SPEC(J,3)=SPEC(J,3)-AO(J)
         end if
+        !EFa oct09, testing hfd
+        if (spec(j,8).ne.0.0) then
+          alfa(j) = spec(j,8)
+        endif
+        !-
       endif
       !-
       GO TO 549
-
+      
   540 IF(NFIX(J)/1000 .NE. 13) GO TO 542
 CIPK JUN05
       ISUBM(J)=0
@@ -130,7 +134,7 @@ C          SPEC(J,2)=1.570796
 csep93 ipk end changes
         ENDIF
       ELSE
-        IF(VT .GT. 0.) ALFA(J)=ATAN(SPEC(J,2)/SPEC(J,1))
+        IF(VT .GT. 0.) ALFA(J)=ATAN(SPEC(J,2)/SPEC(J,1))      
         SPEC(J,2)=ATAN2(SPEC(J,2),SPEC(J,1))
         SPEC(J,1)=VT
       ENDIF
