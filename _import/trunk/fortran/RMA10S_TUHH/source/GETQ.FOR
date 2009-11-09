@@ -7,7 +7,8 @@ cipk  last update Jun 29 1998
 CIPK  LAST UPDATE DEC 16 1997
 cipk  last update Nov 26 1997
 CIPK  LAST UPDATE APRIL 28 1996 MANY CHANGES
-      SUBROUTINE GETQ(ILAYR,N,QF,IYRR,DAYNOW,TIME,TETH,QQAL)
+      !EFa apr09, added qdir for input of external boundary conditions, again jun09
+      SUBROUTINE GETQ(ILAYR,N,QF,IYRR,DAYNOW,TIME,TETH,QQAL,QDIR)
       USE PARAMMOD
       use blk_ifu
 !      USE BLK10MOD
@@ -31,7 +32,8 @@ CIPK MAR01
 
       ALLOCATABLE  NCLIN(:),NHY(:),TA(:,:),
      +           ILAYRQ(:,:),IYDAT(:),DYQ(:,:),
-     +           QA(:,:),QD(:,:,:)
+     +           QA(:,:),QD(:,:,:),
+     +           QDIRA(:,:) !EFa jun09, added for qdir in external file
 CIPK SEP04
       CHARACTER*32 FNAMT
 !NiS,jul06: Adjust length of string variable for proper parameter passing
@@ -53,7 +55,8 @@ CIPK SEP04
       IF(ITIMEH .EQ. 0) THEN
         ALLOCATE (NCLIN(NQLDS),NHY(NQLDS),TA(NCQOBS,NQLDS),
      +           ILAYRQ(NCQOBS,NQLDS),IYDAT(NQLDS),DYQ(NCQOBS,NQLDS),
-     +           QA(NCQOBS,NQLDS),QD(NCQOBS,NQLDS,3))
+     +           QA(NCQOBS,NQLDS),QD(NCQOBS,NQLDS,3),
+     +           QDIRA(NCQOBS,NQLDS))!EFa jun09, added for qdir in external file
         NCLIN=0
         NHY=0
         TA=0.
@@ -61,6 +64,7 @@ CIPK SEP04
         IYDAT=0
         DYQ=0.
         QA=0.
+        QDIRA=0. !EFa jun09, added for qdir in external file
         QD=0.
         ITIMEH=1
       ENDIF
@@ -89,8 +93,10 @@ cipk nov97            READ(IQUNIT,'(A8,A72)') ID,DLIN
             call ginpt(iqunit,id,dlin)
             IF(ID(1:2) .EQ. 'QD') THEN
               READ(ID(5:8),'(F4.0)') DYQ(I,NHYD)
-              READ(DLIN,'(F8.0,I8,4F8.0)')
-     +        TA(I,NHYD),ILAYRQ(I,NHYD),QA(I,NHYD),(QD(I,NHYD,K),K=1,3)
+              READ(DLIN,'(F8.0,I8,4F8.2,F8.2)') !EFa jun09, added  f8.2 for adding qdir in external file,changed 4F8.2 to 4F8.0 (for SMALL Q)
+     +        TA(I,NHYD),ILAYRQ(I,NHYD),QA(I,NHYD),(QD(I,NHYD,K),K=1,3),
+     +        QDIRA(I,NHYD) !EFa jun09, added for qdir in external file
+              READ(ID(5:8),'(F4.0)') DYQ(I,NHYD) 
               NHY(NHYD)=NHY(NHYD)+1
               IF(I .EQ. 1) THEN
 C
@@ -149,6 +155,9 @@ cipk jun98   replace CLH with CLQ
               DYQ(NHY(NHYD),NHYD)=1.E+6
               TA(NHY(NHYD),NHYD)=1.E+8
               QA(NHY(NHYD),NHYD)=QA(NHY(NHYD)-1,NHYD)
+              !EFa jun09, added for qdir in external file
+              QDIRA(NHY(NHYD),NHYD)=QDIRA(NHY(NHYD)-1,NHYD) 
+              !-
               ILAYRQ(NHY(NHYD),NHYD)=ILAYRQ(NHY(NHYD)-1,NHYD)
               DO K=1,3
                 QD(NHY(NHYD),NHYD,K)=QD(NHY(NHYD)-1,NHYD,K)
@@ -159,6 +168,9 @@ cipk jun98   replace CLH with CLQ
               DYQ(NHY(NHYD),NHYD)=1.E+6
               TA(NHY(NHYD),NHYD)=1.E+8
               QA(NHY(NHYD),NHYD)=QA(NHY(NHYD)-1,NHYD)
+              !EFa jun09, added for qdir in external file
+              QDIRA(NHY(NHYD),NHYD)=QDIRA(NHY(NHYD)-1,NHYD)
+              !- 
               ILAYRQ(NHY(NHYD),NHYD)=ILAYRQ(NHY(NHYD)-1,NHYD)
               DO K=1,3
                 QD(NHY(NHYD),NHYD,K)=QD(NHY(NHYD)-1,NHYD,K)
@@ -190,6 +202,10 @@ C
             IF(CTIM .LT. TIN) THEN
               QF=QA(I-1,J)+(QA(I,J)-QA(I-1,J))*
      +        (CTIM-TIM)/(TIN-TIM)
+              !EFa jun09, added for qdir in external file
+              QDIR=QDIRA(I-1,J)+(QDIRA(I,J)-QDIRA(I-1,J))*
+     +        (CTIM-TIM)/(TIN-TIM)
+              !-
               DO K=1,3
                 QQAL(K)=QD(I-1,J,K)+(QD(I,J,K)-QD(I-1,J,K))*
      +          (CTIM-TIM)/(TIN-TIM)
