@@ -1191,18 +1191,30 @@ CIPK NOV97
 
 cipk nov97 end changes
 !nis,jan09: That's the NEW way; what are the trigonometric functions for?
-
-      if(h .lt. akapmg*brang) then
-        frsc=ort(nr,12)**2-1.
-        xcd=(akapmg*brang-h)/(brang*AKAPMG)*pi
-        fmult=frsc/2.*(1.-cos(xcd))+1.0
-        dfmdh=-frsc/2.*sin(xcd)*pi/(akapmg*brang)
+!EFa jun09, deactivated the NEW way for testing the NEWEST way
+      !if(h .lt. akapmg*brang) then
+      !  frsc=ort(nr,12)**2-1.
+      !  xcd=(akapmg*brang-h)/(brang*AKAPMG)*pi
+      !  fmult=frsc/2.*(1.-cos(xcd))+1.0
+      !  dfmdh=-frsc/2.*sin(xcd)*pi/(akapmg*brang)
+      !else
+      !  fmult=1.0
+      !  dfmdh=0.0
+      !endif
+      !ffact=FFACT*dfmdh+fmult*dffdh
+      !FFACT=FFACT*fmult
+      
+      if(h .lt. akapmg*brang) then        
+        fmult=(cos(pi*h/(akapmg*brang))+1)*(ort(nr,12)-1)/2+1.0
+        dfmdh=-sin(pi*h/(akapmg*brang))*(ort(nr,12)-1)/2*pi/
+     +         (akapmg*brang)
       else
         fmult=1.0
         dfmdh=0.0
       endif
       dffact=FFACT*dfmdh+fmult*dffdh
-      FFACT=FFACT*fmult
+      FFACT=FFACT*fmult      
+!-
 
 CIPK MAR01 ADD DRAG AND REORGANIZE      TFRIC = 0.0
       IF( VECQ .GT. 1.0E-6 ) THEN
