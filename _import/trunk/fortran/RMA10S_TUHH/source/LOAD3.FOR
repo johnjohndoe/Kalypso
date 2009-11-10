@@ -324,6 +324,9 @@ C.....  Set up for case of straight line salinity
 C
         IF(NSTRT(N,1) .NE. 0) NBC(N,4)=0
         IF(ITEQV(MAXN) .EQ. 10) NBC(N,7)=NBC(N,7)+1
+        !EFa oct09, hfd
+        IF(spec(n,8) .ne. 0.) NBC(N,2)= 0   
+        !-
 C
   220 CONTINUE
 
