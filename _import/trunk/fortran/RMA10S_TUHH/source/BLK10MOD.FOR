@@ -651,5 +651,12 @@ C     LAYER VARIABLE
       !testing variables
       REAL (KIND = 8), allocatable   :: matrix(:,:), vector(:)
 
+      !EFa sept08, switch for the output of waterstage and discharge at all continuity lines
+      !CCLout = 1 output of waterstage and discharge
+      !       = 0 no output
+      !input of CCLout in line 'SCL' of control.r10 in input.for
+      INTEGER                        :: CCLout
+      !-      
+
       END MODULE
 
