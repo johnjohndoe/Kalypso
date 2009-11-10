@@ -109,8 +109,11 @@ CHARACTER (len = 96) :: FNAME, FNAMIN
 !for output purposes every filename gets its own variable
 !--------------------------------------------------------
 character (len = 96) :: FNAMMES
-character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM4,  FNAM6
+character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM6
 character (len = 96) :: FNAM10, FNAM11, FNAM12, FNAM13, FNAM14, FNAM15, FNAM16, FNAM17, FNAM18 , FNAM19
+!EFa aug09, external wind data
+character (len = 96) :: FNAM23
+!-
 character (len = 96) :: FNAM20, FNAM21, FNAM22, FNAM26, FNAM27
 character (len = 96) :: FNAM30, FNAM32, FNAM33, FNAM34, FNAM36, FNAM38, FNAM39
 character (len = 96) :: FNAM40, FNAM41
@@ -140,7 +143,7 @@ character (len = 96) :: FNAM40, FNAM41
 !FNAM20 = CCL hydrograph data              (OUTPUT)
 !FNAM21 = wave data                        (INPUT)
 !FNAM22 = surface stress data              (INPUT)
-!FNAM23 = obsolete
+!FNAM23 = wind data                        (INPUT)
 !FNAM24 = obsolete
 !FNAM25 = obsolete
 !FNAM26 = SWAN control file                (INPUT)
@@ -406,6 +409,25 @@ FileRead: DO
     key=13
     call fileOpen (key, trim(FNAME), 'OLD', 'FORMATTED', FNAM16, IERMSG)
 
+  !wind data file (INPUT)
+  !----------------------
+  ELSEIF(ID == 'AWINDIN ') THEN
+    IWINDIN=70
+    call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM17, IERMSG)
+
+  !EFa aug09, adding external wind data (constant over the model area)
+  !wind data file (INPUT)
+  !----------------------
+  ELSEIF(ID == 'AWINDIN2') THEN
+    IWINDIN=71
+    call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM23, IERMSG)
+  !-
+  !
+  !--------------------------------
+  ELSEIF(ID == 'OUTMET  ') THEN
+    IOMET=72
+    call fileOpen (IOMET, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM19, IERMSG)
+
   !continuity line hydrograph result data (output)
   !-----------------------------------------------
   ELSEIF(ID == 'OUTCON  ') THEN
@@ -643,7 +665,11 @@ IF(KEY > 0) WRITE(LOUT,6027) trim (FNAM16)
 IF(IWINDIN == 70) WRITE(LOUT,6029) trim (FNAM17)
  6029 FORMAT (' INPUT ASCII WIND FILE NAME:     ', A)
 IF(IPROFIN == 73) WRITE(LOUT,6030) trim (FNAM18)
- 6030 FORMAT (' INPUT PROFILE DATA FILE NAME:   ', A)
+ 6030 FORMAT (' INPUT PROFILE DATA FILE NAME:   ', A) 
+!EFa aug09, added for external windgraph (global) 
+IF(IWINDIN == 71) WRITE(LOUT,6035) trim (FNAM23)
+ 6035 FORMAT (' INPUT GLOBAL WIND FILE NAME:    ', A) 
+!-
 IF(IOMET == 72) WRITE(LOUT,6031) trim (FNAM19)
  6031 FORMAT (' OUTPUT MET FILE NAME:           ', A)
 IF(IOCON == 21) WRITE(LOUT,6032) trim (FNAM20)
