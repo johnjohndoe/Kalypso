@@ -1543,6 +1543,8 @@ new features introduced/ started to be introduced:
 
 180.) fix compilation problems
       (affects file.sub, sbgen.sub)
+181.) Allocation of weighting factor for h-boundary conditions adapted to ccl size
+      (affects hgen.sub)
       
 --- Nico Schrage, 10.11.2009
 
