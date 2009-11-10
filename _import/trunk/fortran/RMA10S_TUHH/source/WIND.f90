@@ -17,7 +17,7 @@ WRITE(LOUT,6050)
 !    Three options are available for input of wind data
 !
 !IPK AUG98  CHECK AND READ FILE FIRST
-IF (IWINDIN > 0) THEN
+IF (IWINDIN > 0.and.iwindin.ne.71) THEN
   !read binary wind file
   IF (IWINDIN == 69) THEN
     READ(IWINDIN) NXX,IYFL,DYOFY,TFL,(WNDSP(J),WNDDR(J),J=1,NXX)
@@ -38,7 +38,11 @@ IF (IWINDIN > 0) THEN
 
 !read global wind specification
 ELSEIF(ID(1:3) .EQ. 'WVA') THEN
-  READ(DLIN,'(I8,2F8.0)') N,TW,TA
+  if (iwindin==71) then
+    READ(DLIN,'(I8,2F8.2,i8)') N,TW,TA,lablwind
+  else
+    READ(DLIN,'(I8,2F8.0)') N,TW,TA
+  endif  
 !ipk nov97        READ(IBIN,7000) ID,DLIN
   call ginpt(ibin,id,dlin)
 !ipk APR96 save data to a scratch file
