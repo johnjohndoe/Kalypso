@@ -2,7 +2,10 @@ C     Last change:  MD   20 Aug 2008   10:11 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
 CIPK  LAST UPDATE DEC 16 1997 
-      SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL)
+      !EFa oct09, testing hfd
+      !SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL)
+      SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL,hfd)      
+      !-
       USE BLK10MOD
 CIPK DEC97 calling sequence changed
       SAVE
@@ -68,6 +71,13 @@ cipk dec97
         IF (MOD (NFIX (NA), 1000) < 200) THEN
           NFIX (NA) = NFIX (NA) + 200
         ENDIF
+        !EFa oct09, hfd
+        if(hfd.ne.0.0)then
+          spec(na,8) = hfd  
+        elseif(hfd.eq.0.0.and.spec(na,8).ne.0.0)then
+          spec(na,8) = 0.0     
+        endif
+        !-
 
         NFIX1 (NA) = 0
         !constituent boundary conditions
