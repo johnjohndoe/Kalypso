@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.model.rcm.util.RainfallGenerationOp;
@@ -64,9 +65,9 @@ public class RainfallGenerationTask extends Task
   {
     private String m_id;
 
-    private long m_from;
+    private String m_from;
 
-    private long m_to;
+    private String m_to;
 
     public String getRcmId( )
     {
@@ -78,22 +79,22 @@ public class RainfallGenerationTask extends Task
       m_id = id;
     }
 
-    public long getFrom( )
+    public String getFrom( )
     {
       return m_from;
     }
 
-    public void setFrom( final long from )
+    public void setFrom( final String from )
     {
       m_from = from;
     }
 
-    public long getTo( )
+    public String getTo( )
     {
       return m_to;
     }
 
-    public void setTo( final long to )
+    public void setTo( final String to )
     {
       m_to = to;
     }
@@ -145,14 +146,14 @@ public class RainfallGenerationTask extends Task
     m_targetFilter = targetFilter;
   }
 
-  public void setTargetFrom( final Long targetFrom )
+  public void setTargetFrom( final String targetFrom )
   {
-    m_targetFrom = new Date( targetFrom );
+    m_targetFrom = DateUtilities.parseDateTime( targetFrom );
   }
 
-  public void setTargetTo( final Long targetTo )
+  public void setTargetTo( final String targetTo )
   {
-    m_targetTo = new Date( targetTo );
+    m_targetTo = DateUtilities.parseDateTime( targetTo );
   }
 
   /**
@@ -205,9 +206,9 @@ public class RainfallGenerationTask extends Task
       final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo );
       for( final Generator generator : m_generators )
       {
-        final Date fromDate = new Date( generator.getFrom() );
-        final Date toDate = new Date( generator.getTo() );
         final String id = generator.getRcmId();
+        final Date fromDate = DateUtilities.parseDateTime( generator.getFrom() );
+        final Date toDate = DateUtilities.parseDateTime( generator.getTo() );
         operation.addGenerator( id, fromDate, toDate );
       }
       ProgressUtilities.worked( progress, 1 );

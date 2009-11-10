@@ -211,6 +211,10 @@ public class RainfallGenerationOp
 
     ProgressUtilities.worked( progress, 10 );
 
+    /* Dispose the rainfall catchment workspace. */
+    if( rcmWorkspace != null )
+      rcmWorkspace.dispose();
+
     return combinedObservations;
   }
 
