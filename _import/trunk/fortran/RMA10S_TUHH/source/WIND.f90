@@ -12,6 +12,38 @@ real (kind = 8) :: TW, TA
 
 WRITE(LOUT,6050)
  6050 FORMAT('0   WIND STRESS INFORMATION:')
+ 
+      !EFa aug09, added for external wind graph
+      if (iwindin.eq.71) then
+        if (lablwind.eq.1) then          
+          time = tet          
+          if (time.gt.24.) then
+            daynow = dayofy + 1
+            time = time - 24.  
+          else  
+            daynow = dayofy  
+          endif          
+          if (mod(iyrr,4).eq.0) then  
+            iydays = 366  
+          else  
+            iydays = 365  
+          endif          
+          iyrn = iyrr                    
+          if (daynow.gt.iydays) then
+            iyrn = iyrr +1
+            daynow = daynow - iydays
+          endif         
+          call getwind(iyrn,daynow,time,teth,tw,ta) 
+          WRITE(LOUT,6046) TW,TA
+          WRITE(*,6046) TW,TA
+          WRITE(*,*) 'CHI',CHI        
+          do n = 1,np
+            sigma(n,1) = chi *cos(ta/57.3)*tw**2
+            sigma(n,2) = chi *sin(ta/57.3)*tw**2
+          enddo          
+        endif      
+      endif
+ 
 
 ! 
 !    Three options are available for input of wind data
