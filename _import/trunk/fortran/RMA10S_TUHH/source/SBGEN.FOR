@@ -101,8 +101,12 @@ cipk APR96  add logic for day of year
             IYRN=IYRR+1
             DAYNOW=DAYNOW-IYDAYS
           ENDIF
-          CALL GETQ(LN,J,QF,IYRN,DAYNOW,TIME,TETH,QQAL)
-          QDIR=QDIRS(N)
+          !EFa sep08, for calculation of qdir and output of external BC
+          !           deactivated QDIR = QDIRS(N)
+          !CALL GETQ(LN,J,QF,IYRN,DAYNOW,TIME,TETH,QQAL)
+          CALL GETQ(LN,J,QF,IYRN,DAYNOW,TIME,TETH,QQAL,QDIR) !EFa jun09
+          !QDIR=QDIRS(N) !EFa, dieses dann wieder deaktivieren, wenn mit altem qdir, jun09
+          !-
           WRITE(LOUT,6034) J,LN,QF,QDIR,QQAL
           IF (LN .EQ. 0) THEN
             CALL QGEN(J,QF,QDIR,QQAL)
@@ -290,16 +294,29 @@ cipk APR96  add logic for day of year
           ENDIF
            LN=NLAYH(N)
 CIPK AUG95          TIME=TET+DELT
-CIPK AUG00   ADD HF2        
-          CALL GETH(LN,ABS(J),HF,HF2,IYRN,DAYNOW,TIME,TETH,QQAL)
+CIPK AUG00   ADD HF2                
+          !EFa oct09, hfd
+          !CALL GETH(LN,ABS(J),HF,HF2,IYRN,DAYNOW,TIME,TETH,QQAL)
+          CALL GETH(LN,ABS(J),HF,HF2,IYRN,DAYNOW,TIME,TETH,QQAL,hfd)   
+          !-
           IF(IINTERP(IHGNN) .EQ. 0) THEN
-            WRITE(LOUT,5032) J,LN,HF,QQAL
+          !EFa oct09, hfd
+            !WRITE(LOUT,5032) J,LN,HF,QQAL
+            if(hfd.eq.0.0) then
+              WRITE(LOUT,5032) J,LN,HF,QQAL
+            else
+              WRITE(LOUT,5033) J,LN,HF,QQAL,hfd
+            endif
+          !-
           ELSE
             WRITE(LOUT,5032) J,LN,HF,HF2,QQAL
           ENDIF
           IF (LN .EQ. 0)  THEN
 CIPK DEC97 CALLING SEQUENCE CHANGED
-             CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL)
+             !EFa oct09, testing hfd
+             !CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL)
+             CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL,hfd)
+             !-
           ELSE
 C
 C  Apply elev bc to single 3d layer
@@ -332,10 +349,20 @@ cipk APR96  add logic for day of year
           ENDIF
           CALL GTIDE(HF,IYRR,DAYNOW,TIME,TETH,QQAL)
           LN=0
-          WRITE(LOUT,5032) J,LN,HF,QQAL
+          !EFa oct09, hfd
+          !WRITE(LOUT,5032) J,LN,HF,QQAL
+          if(hfd.eq.0.) then
+            WRITE(LOUT,5032) J,LN,HF,QQAL
+          else
+            WRITE(LOUT,5033) J,LN,HF,QQAL,hfd
+          endif
+          !-
           IF (LN .EQ. 0)  THEN
 CIPK DEC97 CALLING SEQUENCE CHANGED
-             CALL HGEN(IBIN,J,HF,HF2,0,QQAL)
+             !EFa oct09, testing hfd
+             !CALL HGEN(IBIN,J,HF,HF2,0,QQAL)             
+             CALL HGEN(IBIN,J,HF,HF2,0,QQAL,hfd)
+             !-
           ELSE
 C
 C  Apply elev bc to single 3d layer
@@ -426,7 +453,16 @@ cipk nov97        READ(IBIN,7000) ID,DLIN
 CIPK AUG00
         IF(IINTERP(IHGNN) .EQ. 0) THEN
           !write out read data line
-          WRITE(LOUT,5032) J,LN,HF,QQAL
+          !EFa oct09, hfd
+          !WRITE(LOUT,5032) J,LN,HF,QQAL
+          if(hfd.eq.0.) then
+            WRITE(LOUT,5032) J,LN,HF,QQAL
+          else
+            WRITE(LOUT,5033) J,LN,HF,QQAL,hfd
+          endif
+ 5033     FORMAT(2I10,6F15.3)
+          !-
+ 5032     FORMAT(2I10,5F15.3)
         ELSE
 CIPK APR01
           WRITE(LOUT,5032) J,LN,HF,HF2,QQAL
@@ -452,7 +488,10 @@ CIPK APR01
         !Application of boundary conditions to all layers
         if (ln == 0)  then
           !determine the boundary condition settings
+          !EFa oct09, testing hfd
           call hgen (ibin, j, hf, hf2, iinterp (ihgnn), qqal)
+          call hgen (ibin, j, hf, hf2, iinterp (ihgnn), qqal,hfd)
+          !-
         !application of water level boundary conditions to specific layers
         else
           !Apply elev bc to single 3d layer
