@@ -182,11 +182,10 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
       ALLOCATE (LHS(NBS),QS(NBS))
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
-
+      
       !EFa oct09, testing hfd
-      !ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,7),ITAB(MAXP),
       ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,8),ITAB(MAXP),
-      !-
+
      1              ALFA(MAXP),VOLD(7,MAXP),
      2              VDOT(7,MAXP),VDOTO(7,MAXP),
      3              NFIX(MAXP),NLOC(MAXP),NDEP(MAXP),
