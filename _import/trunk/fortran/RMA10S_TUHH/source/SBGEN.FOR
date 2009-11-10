@@ -314,7 +314,6 @@ CIPK AUG00   ADD HF2
           IF (LN .EQ. 0)  THEN
 CIPK DEC97 CALLING SEQUENCE CHANGED
              !EFa oct09, testing hfd
-             !CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL)
              CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL,hfd)
              !-
           ELSE
@@ -360,7 +359,6 @@ cipk APR96  add logic for day of year
           IF (LN .EQ. 0)  THEN
 CIPK DEC97 CALLING SEQUENCE CHANGED
              !EFa oct09, testing hfd
-             !CALL HGEN(IBIN,J,HF,HF2,0,QQAL)             
              CALL HGEN(IBIN,J,HF,HF2,0,QQAL,hfd)
              !-
           ELSE
@@ -460,14 +458,12 @@ CIPK AUG00
           else
             WRITE(LOUT,5033) J,LN,HF,QQAL,hfd
           endif
- 5033     FORMAT(2I10,6F15.3)
-          !-
- 5032     FORMAT(2I10,5F15.3)
         ELSE
 CIPK APR01
           WRITE(LOUT,5032) J,LN,HF,HF2,QQAL
         ENDIF
  5032   FORMAT(2I10,5F15.3)
+ 5033   FORMAT(2I10,6F15.3)
 
 
         !switch for boundary condition to interpolate values from tidal graph or harmonic graph
@@ -489,7 +485,6 @@ CIPK APR01
         if (ln == 0)  then
           !determine the boundary condition settings
           !EFa oct09, testing hfd
-          call hgen (ibin, j, hf, hf2, iinterp (ihgnn), qqal)
           call hgen (ibin, j, hf, hf2, iinterp (ihgnn), qqal,hfd)
           !-
         !application of water level boundary conditions to specific layers
