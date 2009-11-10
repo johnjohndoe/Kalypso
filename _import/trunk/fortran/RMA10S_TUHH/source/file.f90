@@ -109,7 +109,7 @@ CHARACTER (len = 96) :: FNAME, FNAMIN
 !for output purposes every filename gets its own variable
 !--------------------------------------------------------
 character (len = 96) :: FNAMMES
-character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM6
+character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM4, FNAM6
 character (len = 96) :: FNAM10, FNAM11, FNAM12, FNAM13, FNAM14, FNAM15, FNAM16, FNAM17, FNAM18 , FNAM19
 !EFa aug09, external wind data
 character (len = 96) :: FNAM23
@@ -354,7 +354,7 @@ FileRead: DO
     if (.not. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
 
 
-!Input 'BEDREST' = Bed-RESTART (INPUT-Data)
+  !Input 'BEDREST' = Bed-RESTART (INPUT-Data)
   !-----------------------------------------
   ELSEIF(ID(1:7) == 'BEDREST') THEN
     !unit of the Bed-Restart file
@@ -665,7 +665,7 @@ IF(KEY > 0) WRITE(LOUT,6027) trim (FNAM16)
 IF(IWINDIN == 70) WRITE(LOUT,6029) trim (FNAM17)
  6029 FORMAT (' INPUT ASCII WIND FILE NAME:     ', A)
 IF(IPROFIN == 73) WRITE(LOUT,6030) trim (FNAM18)
- 6030 FORMAT (' INPUT PROFILE DATA FILE NAME:   ', A) 
+ 6030 FORMAT (' INPUT PROFILE DATA FILE NAME:   ', A)
 !EFa aug09, added for external windgraph (global) 
 IF(IWINDIN == 71) WRITE(LOUT,6035) trim (FNAM23)
  6035 FORMAT (' INPUT GLOBAL WIND FILE NAME:    ', A) 
