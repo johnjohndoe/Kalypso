@@ -62,13 +62,16 @@ import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -87,9 +90,9 @@ public class RainfallGeneratorUtilities
   }
 
   @SuppressWarnings("unchecked")
-  public static GM_MultiSurface[] findCatchmentAreas( Feature[] catchmentFeatures, String catchmentAreaPath ) throws CoreException
+  public static GM_MultiSurface[] findCatchmentAreas( Feature[] catchmentFeatures, GMLXPath catchmentAreaXPath ) throws CoreException, GMLXPathException
   {
-    FeaturePath featurePath = new FeaturePath( catchmentAreaPath );
+    /* Memory for the results. */
     GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
 
     for( int i = 0; i < catchmentFeatures.length; i++ )
@@ -98,7 +101,7 @@ public class RainfallGeneratorUtilities
       if( catchmentFeature == null )
         throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
 
-      Object object = featurePath.getFeatureForSegment( catchmentFeature.getWorkspace(), catchmentFeature, 0 );
+      Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
       if( object instanceof GM_Surface )
       {
         GM_Surface surface = (GM_Surface) object;
@@ -110,7 +113,7 @@ public class RainfallGeneratorUtilities
       else if( object == null )
         catchmentFeatures[i] = null; // does not make sense to process
       else
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaPath ), null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath ), null ) );
     }
 
     return areas;
@@ -164,6 +167,9 @@ public class RainfallGeneratorUtilities
     ITuppleModel firstTuppleModel = firstObservation.getValues( null );
     IAxis[] firstAxisList = firstTuppleModel.getAxisList();
     IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
+    MetadataList firstMetadataList = firstObservation.getMetadataList();
+    String firstStart = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_START );
+    String firstEnde = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_ENDE );
 
     /* Add the observation values and the rainfall axes in the same order as the observations are. */
     List<ITuppleModel> observationValues = new ArrayList<ITuppleModel>();
@@ -195,6 +201,11 @@ public class RainfallGeneratorUtilities
     /* The other observations should have the same type of axes. */
     SimpleTuppleModel combinedTuppleModel = new SimpleTuppleModel( firstAxisList );
     SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), firstAxisList, combinedTuppleModel );
+    combinedObservation.setName( "Generierte Zeitreihe" );
+    if( firstStart != null )
+      combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_START, firstStart );
+    if( firstEnde != null )
+      combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_ENDE, firstEnde );
     IAxis[] combinedAxisList = combinedTuppleModel.getAxisList();
     IAxis combinedDateAxis = ObservationUtilities.findAxisByClass( combinedAxisList, Date.class );
     int combinedDatePosition = combinedTuppleModel.getPositionFor( combinedDateAxis );

@@ -73,8 +73,9 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -135,10 +136,16 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
     BigInteger numberOmbrometers = getProperty( QNAME_PROP_numberOmbrometers, BigInteger.class );
     String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
 
+    /* Create the paths. */
+    GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
+    GMLXPath linkXPath = new GMLXPath( linkPath, getWorkspace().getNamespaceContext() );
+    GMLXPath stationLocationXPath = new GMLXPath( stationLocationPath, getWorkspace().getNamespaceContext() );
+    GMLXPath catchmentAreaXPath = new GMLXPath( catchmentAreaPath, getWorkspace().getNamespaceContext() );
+
     try
     {
       /* Get the ombrometers. */
-      FeatureList ombrometerList = (FeatureList) new FeaturePath( collectionPath ).getFeatureForSegment( ombrometerCollection.getWorkspace(), ombrometerCollection, 0 );
+      FeatureList ombrometerList = (FeatureList) GMLXPathUtilities.query( collectionXPath, ombrometerCollection );
 
       /* Convert to an array. */
       List<Feature> featureList = new ArrayList<Feature>( ombrometerList.size() );
@@ -159,12 +166,12 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
       Feature[] ombrometerFeatures = featureList.toArray( new Feature[featureList.size()] );
 
       /* Convert to zml observations . */
-      TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkPath, new TimeseriesLinkType[ombrometerFeatures.length] );
+      TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
       URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
       IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceContext );
 
       /* Get the station locations. */
-      GM_Point[] ombrometerStations = FeatureHelper.getProperties( ombrometerFeatures, stationLocationPath, new GM_Point[ombrometerFeatures.length] );
+      GM_Point[] ombrometerStations = FeatureHelper.getProperties( ombrometerFeatures, stationLocationXPath, new GM_Point[ombrometerFeatures.length] );
 
       /* Convert to JTS geometries. */
       Point[] ombrometerPoints = new Point[ombrometerStations.length];
@@ -177,7 +184,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
       }
 
       /* Get all catchment areas. */
-      GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaPath );
+      GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaXPath );
 
       /* Iterate through all catchments. */
       IObservation[] result = new IObservation[areas.length];
