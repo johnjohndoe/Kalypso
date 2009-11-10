@@ -1530,7 +1530,7 @@ new features introduced/ started to be introduced:
       attention, if user wants to have 0.0 velocities everywhere (like at the beginning of lake solution procedure) unom must be set to 0.0d0!
       (affects: input, getinit)
       
---- Eva Falke, 10.11.2009
+--- Nico Schrage, 06.11.2009
 
 175.) updated wind.f90 for the input of external winddata (global variable at diffenrent times)
 176.) new: getind.for; this subroutine is necessary for the input of external wind data (global variable at different times)
@@ -1539,4 +1539,10 @@ new features introduced/ started to be introduced:
 178.) new: getwave.for; this subroutine interpolates wavedata of extrenal nodes
 179.) added input and output of a flow direction for discharge boundary conditions of an extrenal hydrograph in check.for
 
-   
+--- Eva Falke, 10.11.2009
+
+180.) fix compilation problems
+      (affects file.sub, sbgen.sub)
+      
+--- Nico Schrage, 10.11.2009
+
