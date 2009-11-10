@@ -1182,7 +1182,10 @@ C-
         !if continuity line block is present
         if (id == 'SCL') then
           !read number of continuity lines
-          read (dlin, *) ncl
+          !EFa sep08, added CCLout for output of discharge and waterstage at all continuity lines
+          !READ(DLIN,*) NCL
+          READ(DLIN,'(i4,i12)') NCL,CCLout
+          !-
           !allocate continuity line objects
           allocate (ccls(1:ncl))
 !----------------------------------------------------------------
