@@ -58,11 +58,10 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TuppleModesLinearAdd;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -90,22 +89,22 @@ public class RainfallGeneratorUtilities
   }
 
   @SuppressWarnings("unchecked")
-  public static GM_MultiSurface[] findCatchmentAreas( Feature[] catchmentFeatures, GMLXPath catchmentAreaXPath ) throws CoreException, GMLXPathException
+  public static GM_MultiSurface[] findCatchmentAreas( final Feature[] catchmentFeatures, final GMLXPath catchmentAreaXPath ) throws CoreException, GMLXPathException
   {
     /* Memory for the results. */
-    GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
+    final GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
 
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
-      Feature catchmentFeature = catchmentFeatures[i];
+      final Feature catchmentFeature = catchmentFeatures[i];
       if( catchmentFeature == null )
         throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
 
-      Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
+      final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
       if( object instanceof GM_Surface )
       {
-        GM_Surface surface = (GM_Surface) object;
-        GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
+        final GM_Surface surface = (GM_Surface) object;
+        final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
         areas[i] = multiSurface;
       }
       else if( object instanceof GM_MultiSurface )
@@ -119,21 +118,21 @@ public class RainfallGeneratorUtilities
     return areas;
   }
 
-  public static IObservation[] readObservations( TimeseriesLinkType[] ombrometerLinks, Date from, Date to, URL context ) throws MalformedURLException, SensorException
+  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final URL context ) throws MalformedURLException, SensorException
   {
-    IRequest request = new ObservationRequest( from, to );
+    final IRequest request = new ObservationRequest( from, to );
 
-    IObservation[] readObservations = new IObservation[ombrometerLinks.length];
+    final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
     for( int i = 0; i < ombrometerLinks.length; i++ )
     {
-      TimeseriesLinkType link = ombrometerLinks[i];
+      final TimeseriesLinkType link = ombrometerLinks[i];
       if( link != null )
       {
-        String href = link.getHref();
+        final String href = link.getHref();
         if( href != null )
         {
-          String hrefRequest = ZmlURL.insertRequest( href, request );
-          URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
+          final String hrefRequest = ZmlURL.insertRequest( href, request );
+          final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
           if( zmlLocation != null )
             readObservations[i] = ZmlFactory.parseXML( zmlLocation, href );
         }
@@ -152,7 +151,7 @@ public class RainfallGeneratorUtilities
    *          The weights to use.
    * @return A new combined observation.
    */
-  public static IObservation combineObses( IObservation[] observations, double[] weights ) throws SensorException
+  public static IObservation combineObses( final IObservation[] observations, final double[] weights ) throws SensorException
   {
     /* There should be a weight for each observation. */
     Assert.isTrue( observations.length == weights.length );
@@ -163,101 +162,32 @@ public class RainfallGeneratorUtilities
       return null;
 
     /* Some things of the first observation. */
-    IObservation firstObservation = observations[0];
-    ITuppleModel firstTuppleModel = firstObservation.getValues( null );
-    IAxis[] firstAxisList = firstTuppleModel.getAxisList();
-    IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
-    MetadataList firstMetadataList = firstObservation.getMetadataList();
-    String firstStart = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_START );
-    String firstEnde = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_ENDE );
+    final IObservation firstObservation = observations[0];
+    final MetadataList firstMetadataList = firstObservation.getMetadataList();
+    final String firstStart = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_START );
+    final String firstEnde = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_ENDE );
 
-    /* Add the observation values and the rainfall axes in the same order as the observations are. */
-    List<ITuppleModel> observationValues = new ArrayList<ITuppleModel>();
-    List<IAxis> rainfallAxes = new ArrayList<IAxis>();
-    for( int j = 0; j < observations.length; j++ )
-    {
-      /* Get the observation. */
-      IObservation observation = observations[j];
+    final List<ITuppleModel> observationValues = new ArrayList<ITuppleModel>();
+    for( final IObservation observation : observations )
+      observationValues.add( observation.getValues( null ) );
+    final ITuppleModel[] tuppleModels = observationValues.toArray( new ITuppleModel[observationValues.size()] );
 
-      /* Get the values. */
-      ITuppleModel values = observation.getValues( null );
-      if( values.getCount() != firstTuppleModel.getCount() )
-        throw new SensorException( "The observations in the list must have a equal number of elements ..." );
+    final ITuppleModel firstTuppleModel = firstObservation.getValues( null );
+    final IAxis[] firstAxisList = firstTuppleModel.getAxisList();
 
-      /* Add. */
-      observationValues.add( values );
+    final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
+    final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
+    final IAxis firstStatusAxis = ObservationUtilities.findAxisByClass( firstAxisList, Integer.class );
 
-      /* Get the axis list. */
-      IAxis[] axisList = observation.getAxisList();
+    final TuppleModesLinearAdd linearAdd = new TuppleModesLinearAdd( firstValueAxis.getType(), firstDateAxis, firstValueAxis, firstStatusAxis );
+    final ITuppleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
-      /* Get the rainfall axis. */
-      IAxis rainfallAxis = ObservationUtilities.findAxisByClass( axisList, Double.class );
-
-      /* Add. */
-      rainfallAxes.add( rainfallAxis );
-    }
-
-    /* Create a new observation using the axis of the first observation. */
-    /* The other observations should have the same type of axes. */
-    SimpleTuppleModel combinedTuppleModel = new SimpleTuppleModel( firstAxisList );
-    SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), firstAxisList, combinedTuppleModel );
+    final SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), firstAxisList, combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
     if( firstStart != null )
       combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_START, firstStart );
     if( firstEnde != null )
       combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_ENDE, firstEnde );
-    IAxis[] combinedAxisList = combinedTuppleModel.getAxisList();
-    IAxis combinedDateAxis = ObservationUtilities.findAxisByClass( combinedAxisList, Date.class );
-    int combinedDatePosition = combinedTuppleModel.getPositionFor( combinedDateAxis );
-    IAxis combinedDoubleAxis = ObservationUtilities.findAxisByClass( combinedAxisList, Double.class );
-    int combinedDoublePosition = combinedTuppleModel.getPositionFor( combinedDoubleAxis );
-    IAxis combinedIntegerAxis = ObservationUtilities.findAxisByClass( combinedAxisList, Integer.class );
-    int combinedIntegerPosition = combinedTuppleModel.getPositionFor( combinedIntegerAxis );
-
-    for( int i = 0; i < firstTuppleModel.getCount(); i++ )
-    {
-      double sum = 0.0;
-      for( int j = 0; j < observations.length; j++ )
-      {
-        /* Get the weight. */
-        double weight = weights[j];
-        if( weight == 0.0 )
-          continue;
-
-        /* Get the values of the observation. */
-        ITuppleModel tuppleModel = observationValues.get( j );
-
-        /* Get the rainfall axis. */
-        /* The date will be taken later from the first observation. */
-        /* The status bit will be set to ok later. */
-        IAxis rainfallAxis = rainfallAxes.get( j );
-
-        /* Multiply the values of the current observation. */
-        Double value = (Double) tuppleModel.getElement( i, rainfallAxis );
-
-        /* Weight the value. */
-        double weightedValue = value.doubleValue() * weight;
-
-        /* Add to the sum. */
-        sum = sum + weightedValue;
-      }
-
-      /* The list for the values. */
-      Object[] values = new Object[3];
-
-      /* Add the first date to the new observation. */
-      Date firstDate = (Date) firstTuppleModel.getElement( i, firstDateAxis );
-      values[combinedDatePosition] = new Date( firstDate.getTime() );
-
-      /* Add the summarized values to the new observation. */
-      values[combinedDoublePosition] = new Double( sum );
-
-      /* Add the status bit to the new observation. */
-      values[combinedIntegerPosition] = new Integer( KalypsoStati.BIT_OK );
-
-      /* Add a new row. */
-      combinedTuppleModel.addTupple( values );
-    }
 
     return combinedObservation;
   }
