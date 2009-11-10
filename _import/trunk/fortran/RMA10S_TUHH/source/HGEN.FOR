@@ -3,9 +3,8 @@ cipk  last update feb 09 2001 allow for zero length cc lines
 CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
 CIPK  LAST UPDATE DEC 16 1997 
       !EFa oct09, testing hfd
-      !SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL)
       SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL,hfd)      
-      !-
+
       USE BLK10MOD
 CIPK DEC97 calling sequence changed
       SAVE
@@ -19,10 +18,9 @@ CIPK AUG00
       DISTS(N1,N2)=SQRT((CORD(N2,1)-CORD(N1,1))**2
      +                 +(CORD(N2,2)-CORD(N1,2))**2)
 
-      !EFa jun07, changed dimension for autoconverge
-      !,WTS(65)
       REAL,ALLOCATABLE :: wts(:)
-      ALLOCATE (wts(nita))
+      !allocate with the maximal size of a continuity line
+      ALLOCATE (wts(3535))
 
 CIPK DEC97 ADD TO DIMENSION
 C-
