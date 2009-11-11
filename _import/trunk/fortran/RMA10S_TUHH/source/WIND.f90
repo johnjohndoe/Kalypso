@@ -1,6 +1,6 @@
 SUBROUTINE WINDF(IBIN)
-USE BLK10MOD, only: lout, id, dlin, isvs, nscrin, np
-USE BLK11MOD, only: wndsp, wnddr, sigma, chi
+USE BLK10MOD, only: lout, id, dlin, isvs, nscrin, np, tet, iyrr, teth
+USE BLK11MOD, only: wndsp, wnddr, sigma, chi, dayofy
 use blk_ifu, only: iwindin
 
 implicit none
@@ -9,14 +9,17 @@ integer (kind = 4) :: ibin
 integer (kind = 4) :: nxx, j, n
 integer (kind = 4) :: iyfl, dyofy, tfl
 real (kind = 8) :: TW, TA
+integer (kind = 4) :: daynow, iydays, iyrn
+real (kind = 8) :: time
+integer (kind = 4) :: lablwind
 
 WRITE(LOUT,6050)
  6050 FORMAT('0   WIND STRESS INFORMATION:')
  
       !EFa aug09, added for external wind graph
       if (iwindin.eq.71) then
-        if (lablwind.eq.1) then          
-          time = tet          
+        if (lablwind.eq.1) then
+          time = tet
           if (time.gt.24.) then
             daynow = dayofy + 1
             time = time - 24.  

@@ -12,6 +12,7 @@
       CHARACTER*80 HTITLE
       CHARACTER*72 DLIN
       CHARACTER*8 ID
+      integer (kind = 4) :: daynow
       DATA NHYD/0/,ITIMEH/0/
       integer :: ioError
       
