@@ -1548,3 +1548,7 @@ new features introduced/ started to be introduced:
       
 --- Nico Schrage, 10.11.2009
 
+182.) fix compile problems
+      (affects: getwind.sub, wind.sub)
+
+--- Nico Schrage, 11.11.2009
