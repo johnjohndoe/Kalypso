@@ -91,7 +91,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   @Override
   public String getDescription( final int index )
   {
-    return Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
   /**
@@ -111,7 +111,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
       if( property instanceof GM_MultiSurface )
         return (GM_MultiSurface) property;
 
-      throw new NotImplementedException( Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.2") ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
@@ -119,23 +119,17 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
     }
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getCorrSealing(long)
-   */
   @Override
   public double getGWFactor( final int index ) throws CoreException
   {
-    final Object property = getProperty( index, m_maxPerculationRateColumn );
+    final Object property = getProperty( index, m_gwFactorColumn );
     return property == null ? null : (Double) property;
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getDrainageType(long)
-   */
   @Override
   public double getMaxPerkulationsRate( final int index ) throws CoreException
   {
-    final Object property = getProperty( index, m_gwFactorColumn );
+    final Object property = getProperty( index, m_maxPerculationRateColumn );
     return property == null ? null : (Double) property;
   }
 
@@ -185,7 +179,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
     final Integer column = m_propHash.get( property );
     if( column == null )
     {
-      final String message =  Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
     }
 

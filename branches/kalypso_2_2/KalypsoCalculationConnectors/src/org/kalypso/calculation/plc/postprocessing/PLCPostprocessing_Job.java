@@ -49,6 +49,11 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     return getClass().getResource( "resources/template.gml" );
   }
 
+  public URL getSLD( )
+  {
+    return getClass().getResource( "resources/RiskZonesCoverage.sld" );
+  }
+
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
@@ -111,6 +116,17 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       riskFolderDifference.mkdirs();
       file.createNewFile();
       GmlSerializer.serializeWorkspace( file, resultsWorkspace, "UTF-8" );
+
+      final File sldFile = new File( riskFolder, "RiskZonesCoverage.sld" );
+      try
+      {
+        FileUtils.copyURLToFile( getSLD(), sldFile );
+        FileUtils.copyFileToDirectory( sldFile, riskFolder );
+      }
+      catch( final Exception e )
+      {
+      }
+
       FileUtils.copyFileToDirectory( statisticsFile, riskFolder );
       FileUtils.copyDirectoryToDirectory( riskStatusQuoRasterFolder, riskFolderStatusQuo );
       FileUtils.copyDirectoryToDirectory( riskCalculatedRasterFolder, riskFolderCalculated );

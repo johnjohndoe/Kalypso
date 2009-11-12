@@ -1259,7 +1259,7 @@ public class NaModelInnerCalcJob implements ISimulation
               // WTF!?
               // resultPathRelative = href.substring( 19 );
 
-              resultPathRelative = "Berechnet" + href.substring( href.lastIndexOf( "/" ) );
+              resultPathRelative = "Pegel" + href.substring( href.lastIndexOf( "/" ) );
 
             }
           }
@@ -1328,8 +1328,8 @@ public class NaModelInnerCalcJob implements ISimulation
     final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature[] nodes = modellWorkspace.getFeatures( nodeFT );
 
-    final String reportPathZML = "Ergebnisse/Aktuell/Reports/nodesMax.zml"; //$NON-NLS-1$
-    final String reportPathCSV = "Ergebnisse/Aktuell/Reports/nodesMax.csv"; //$NON-NLS-1$
+    final String reportPathZML = "Ergebnisse/Aktuell/Report/nodesMax.zml"; //$NON-NLS-1$
+    final String reportPathCSV = "Ergebnisse/Aktuell/Report/nodesMax.csv"; //$NON-NLS-1$
     final String separatorCSV = ","; //$NON-NLS-1$
 //    final Pattern stationNodePattern = Pattern.compile( "([0-9]+).*" ); //$NON-NLS-1$
 //    final Pattern stationNamePattern = Pattern.compile( ".+_(.+)\\.zml" ); //$NON-NLS-1$
@@ -1735,7 +1735,10 @@ public class NaModelInnerCalcJob implements ISimulation
     final File exeFile = new File( basedir, m_kalypsoKernelPath );
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
-    final long timeOut = 1000l * 60l * 60l; // max 60 minutes
+//    final long timeOut = 1000l * 60l * 60l; // max 60 minutes
+    
+    final long timeOut = 0l; // no timeout control
+    
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
     try

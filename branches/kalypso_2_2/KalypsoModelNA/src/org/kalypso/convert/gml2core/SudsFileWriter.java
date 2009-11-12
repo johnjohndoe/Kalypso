@@ -97,8 +97,8 @@ public class SudsFileWriter extends AbstractCoreFileWriter
           for( final Feature catchment : list )
             if( catchment.getDefaultGeometryPropertyValue().contains( landuseInteriorPoint ) )
             {
-//              final Feature strang = (Feature) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-//              final String drainageNodeName = (String) strang.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+// final Feature strang = (Feature) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
+// final String drainageNodeName = (String) strang.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
 
               final String catchmentName = catchment.getName();
               if( !sudsMap.containsKey( catchmentName ) )
@@ -124,7 +124,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N"; //$NON-NLS-1$
 
                   value.add( String.format( "%s mrs %.4g %.4g", m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) ); //$NON-NLS-1$
-                  value.add( String.format( "%d %d %d %.4g %.4g 0", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope(), sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
+                  value.add( String.format( "%.1d %.1d %.1d %.4g %.4g 0", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope() / 1000.0, sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Swale )
                 {
@@ -147,7 +147,16 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "GRext_N"; //$NON-NLS-1$
 
                   value.add( String.format( "%s grs 2.8E-10 1.0", m_config.getLanduseFeatureShortedName( landuseClassName ) ) ); //$NON-NLS-1$
-                  value.add( String.format( "%.1f %.1f %.1f 2.0 100.0 %.1f 0", new Double(sud.getRainwaterPipeDiameter().toString()), new Double(sud.getEmergencySpillPipeDiameter().toString()), sud.getRainwaterPipeRoughness(), sud.getEmergencySpillPipeRoughness() ) ); //$NON-NLS-1$
+
+                  // second line params:
+                  // 1. Drainage pipe diameter [mm]
+                  // 2. Overflow pipe diameter [mm]
+                  // 3. Drainage pipe sand roughness [mm] - fixed to 2.0
+                  // 4. Overflow pipe sand roughness [mm] - fixed to 2.0
+                  // 5. Drainage area per pipe [m2] - fixed to 100.0
+                  // 6. Overflow height of the roof [mm] - fixed to 100.0, max value equals to layer thickness
+                  // 7. Drainage node ID; 0 = default drainage node of the catchment
+                  value.add( String.format( "%.1f %.1f 2.0 2.0 100.0 100.0 0", new Double( sud.getRainwaterPipeDiameter().toString() ), new Double( sud.getEmergencySpillPipeDiameter().toString() ) ) ); //$NON-NLS-1$
                 }
                 else
                   continue;
