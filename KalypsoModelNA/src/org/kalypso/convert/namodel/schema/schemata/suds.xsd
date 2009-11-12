@@ -45,7 +45,7 @@
 
 	<element name="GreenRoof" type="suds:GreenRoofType" substitutionGroup="suds:_Sud"/>
 
-	<!-- Reference to a sud. Used by landuse etc. to reference suds stored in the SudColection -->
+	<!-- Reference to a suds. Used by landuse etc. to reference suds stored in the SudColection -->
 	<complexType name="SudPropertyType">
 		<sequence minOccurs="0" maxOccurs="0">
 			<element ref="suds:_Sud" />
@@ -157,11 +157,11 @@
 					</element>
 					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="20"/>
 					<element name="emergencySpillPipeRoughness" type="double" default="2.0" />
-					<element name="emergencySpillHeight">
+					<element name="emergencySpillHeight" default="100">
 						<simpleType>
 							<restriction base="integer">
 								<minInclusive value="0" />
-								<maxInclusive value="50" />
+								<maxInclusive value="200" />
 							</restriction>
 						</simpleType>
 					</element>
