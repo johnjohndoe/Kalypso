@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.timeseries.TuppleModesLinearAdd;
+import org.kalypso.ogc.sensor.timeseries.TuppleModelsLinearAdd;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -179,7 +179,7 @@ public class RainfallGeneratorUtilities
     final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
     final IAxis firstStatusAxis = ObservationUtilities.findAxisByClass( firstAxisList, Integer.class );
 
-    final TuppleModesLinearAdd linearAdd = new TuppleModesLinearAdd( firstValueAxis.getType(), firstDateAxis, firstValueAxis, firstStatusAxis );
+    final TuppleModelsLinearAdd linearAdd = new TuppleModelsLinearAdd( firstValueAxis.getType(), firstDateAxis, firstValueAxis, firstStatusAxis );
     final ITuppleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
     final SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), firstAxisList, combinedTuppleModel );
