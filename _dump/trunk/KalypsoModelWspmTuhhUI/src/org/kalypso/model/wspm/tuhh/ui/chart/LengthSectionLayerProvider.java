@@ -42,21 +42,13 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.net.URL;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
@@ -74,8 +66,7 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
     final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK.equals( targetComponentName ) )
     {
-      final LengthSectionBridgeLayer layer = new LengthSectionBridgeLayer( getBridgeDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
-      layer.setTooltip( "Station" );
+      final LengthSectionBridgeLayer layer = new LengthSectionBridgeLayer(getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
       layer.setVisible( true );
       return layer;
     }
@@ -103,23 +94,23 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
 
   }
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
-  @SuppressWarnings("unchecked")
-  public LengthSectionBridgeDataContainer< ? , ? > getBridgeDataContainer( )
-  {
-    final IParameterContainer pc = getParameterContainer();
-
-    final String href = pc.getParameterValue( "href", null );
-
-    final String observationId = pc.getParameterValue( "observationId", null );
-    final String domainComponentName = pc.getParameterValue( "domainComponentId", null );
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
-
-    if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
-      return new LengthSectionBridgeDataContainer( getContext(), href, observationId );
-
-    return null;
-  }
+//  /**
+//   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
+//   */
+//  @SuppressWarnings("unchecked")
+//  public LengthSectionBridgeDataContainer< ? , ? > getBridgeDataContainer( )
+//  {
+//    final IParameterContainer pc = getParameterContainer();
+//
+//    final String href = pc.getParameterValue( "href", null );
+//
+//    final String observationId = pc.getParameterValue( "observationId", null );
+//    final String domainComponentName = pc.getParameterValue( "domainComponentId", null );
+//    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
+//
+//    if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
+//      return new LengthSectionBridgeDataContainer( getContext(), href, observationId );
+//
+//    return null;
+//  }
 }

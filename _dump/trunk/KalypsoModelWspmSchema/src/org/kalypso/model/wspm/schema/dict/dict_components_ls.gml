@@ -22,7 +22,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="4"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#km"/>
+                         <gml:unitOfMeasure uom="km"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -101,7 +101,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -120,7 +120,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -139,7 +139,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -158,7 +158,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -177,7 +177,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -197,7 +197,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m_s"/>
+                         <gml:unitOfMeasure uom="m_s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -217,7 +217,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="2"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#N_m2"/>
+                         <gml:unitOfMeasure uom="N_m2"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -237,7 +237,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m3_s"/>
+                         <gml:unitOfMeasure uom="m3_s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -255,7 +255,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m3_s"/>
+                         <gml:unitOfMeasure uom="m3_s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -273,7 +273,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m3_s"/>
+                         <gml:unitOfMeasure uom="m3_s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -351,7 +351,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                         <gml:unitOfMeasure uom="m2"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -371,7 +371,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                         <gml:unitOfMeasure uom="m2"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -391,7 +391,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                         <gml:unitOfMeasure uom="m2"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -411,7 +411,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                         <gml:unitOfMeasure uom="m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -431,7 +431,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                         <gml:unitOfMeasure uom="m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -451,7 +451,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                         <gml:unitOfMeasure uom="m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -470,7 +470,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -489,7 +489,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -508,7 +508,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                         <gml:unitOfMeasure uom="mNN"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -528,7 +528,7 @@
                               <st:minInclusive value="0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                         <gml:unitOfMeasure uom="m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -548,7 +548,7 @@
                               <st:minInclusive value="0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                         <gml:unitOfMeasure uom="m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>

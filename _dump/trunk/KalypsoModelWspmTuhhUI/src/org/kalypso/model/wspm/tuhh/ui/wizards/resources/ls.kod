@@ -27,12 +27,20 @@
                         <Width>2</Width>
                         <LineColor>FFA000</LineColor>
                     </LineStyle>
-                    <PointStyle role="point" isVisible="false">
-                        <Title/>
+                    <PointStyle role="point">
+                        <Title>Sohlhöhe</Title>
+            			<Width>3</Width>
+            			<Height>3</Height>
+            			<FillColor isVisible="true">
+              				<Color>FFA000</Color>
+            			</FillColor>
+            			<Stroke>
+               				<LineColor>FFA000</LineColor>
+            			</Stroke>
                     </PointStyle>
-                    </Styles>
+            	</Styles>
             </Layer>
-            <Layer id="Boe_li" visible="false">
+            <Layer id="Boe_li" visible="true">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="!#localPath#!" name="href"/>
@@ -55,12 +63,12 @@
                         <LineColor>C83200</LineColor>
                     </LineStyle>
                     <PointStyle role="point" isVisible="false">
-                        <Title/>
+                        <Title></Title>
                     </PointStyle>
                 </Styles>
             </Layer>
             
-            <Layer id="Bridge" visible="false">
+            <Layer id="Bridge" visible="true">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="!#localPath#!" name="href"/>
@@ -79,17 +87,23 @@
                 <Styles>
                     <PointStyle role="point">
             			<Title>Brücke</Title>
-            				<Title/>
+            			<Width>3</Width>
+            			<Height>3</Height>
+            			<FillColor isVisible="true">
+              				<Color>0080B1</Color>
+            			</FillColor>
+            			<Stroke>
+               				<LineColor>0080B1</LineColor>
+            			</Stroke>
+            				
           				</PointStyle>
           			<LineStyle role="line" isVisible="false">
-           				 <Title>Brücke</Title>
-                        <Width>2</Width>
-                        <LineColor>0080B1</LineColor>
+           				 <Title></Title>
          			 </LineStyle>
                 </Styles>
             </Layer>
                         
-            <Layer id="Boe_re" visible="false">
+            <Layer id="Boe_re" visible="true">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="!#localPath#!" name="href"/>

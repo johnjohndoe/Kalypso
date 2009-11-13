@@ -4,60 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
+import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
+import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
-public class LengthSectionBridgeLayer extends AbstractLineLayer
+public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
-
-  private LengthSectionBridgeDataContainer< ? , ? > m_data;
-
-  private String m_tooltip = null;
-
-  public void setTooltip( String tooltip )
+  public LengthSectionBridgeLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    m_tooltip = tooltip;
-  }
+    super( data, lineStyle, pointStyle );
 
-  public LengthSectionBridgeLayer( final LengthSectionBridgeDataContainer< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
-  {
-    super( lineStyle, pointStyle );
-    m_data = data;
   }
 
   @Override
-  public void drawIcon( final Image img )
-  {
-    final Rectangle bounds = img.getBounds();
-    final int height = bounds.height;
-    final int width = bounds.width;
-    final GC gc = new GC( img );
-
-    final ArrayList<Point> path = new ArrayList<Point>();
-
-    path.add( new Point( 0, height / 2 ) );
-    path.add( new Point( width / 5, height / 2 ) );
-    path.add( new Point( width / 5 * 2, height / 4 ) );
-    path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
-    path.add( new Point( width / 5 * 4, height / 2 ) );
-    path.add( new Point( width, height / 2 ) );
-
-    drawLine( gc, path );
-    gc.dispose();
-
-  }
-
   @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
@@ -68,24 +41,28 @@ public class LengthSectionBridgeLayer extends AbstractLineLayer
 
     m_data.open();
 
-    // final TupleResult result = m_data.getTupleResult();
+    final TupleResult result = m_data.getResult();
 
     final Object[] domainValues = m_data.getDomainValues();
     final Object[] targetValues = m_data.getTargetValues();
-    final Object[] uKValues = m_data.getBridgeValues();
 
-    if( domainValues.length > 0 && targetValues.length > 0 )
+    final int iUK = m_data.getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
+    final Object[] uKValues = iUK < 0 ? new Object[] {} : ProfilUtil.getValuesFor( result.toArray( new IRecord[] {} ), result.getComponent( iUK ) );
+
+    if( domainValues.length > 0 && targetValues.length > 0 && uKValues.length > 0 )
     {
       final IAxis domainAxis = getDomainAxis();
       final IAxis targetAxis = getTargetAxis();
-      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );// domainValues[0].getClass()
-      // );
-      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );// targetValues[0].getClass()
-      // );
+      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
+      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
 
       if( dopDomain == null || dopTarget == null )
         return;
 
+      final PointFigure pf = getPointFigure();
+      final IPointStyle ps = pf.getStyle();
+      final FullRectangleFigure rf = new FullRectangleFigure();
+      rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
       for( int i = 0; i < domainValues.length; i++ )
       {
         final Number domainValue = dopDomain.logicalToNumeric( domainValues[i] );
@@ -93,108 +70,27 @@ public class LengthSectionBridgeLayer extends AbstractLineLayer
         final Number domainValRight = i < domainValues.length - 1 ? dopDomain.logicalToNumeric( domainValues[i + 1] ) : domainValue;
         final Number targetValue = dopTarget.logicalToNumeric( targetValues[i] );
         final Number uKValue = dopTarget.logicalToNumeric( uKValues[i] );
-
-        // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
-        // in that case
-        if( domainValue != null && targetValue != null && uKValue != null )
+       if( domainValue != null && targetValue != null && uKValue != null )
         {
           final Point OKLeft = getCoordinateMapper().numericToScreen( (Double) domainValLeft + ((Double) domainValue - (Double) domainValLeft) / 2.0, targetValue );
-          final Point UKLeft = getCoordinateMapper().numericToScreen( (Double) domainValLeft + ((Double) domainValue - (Double) domainValLeft) / 2.0, uKValue );
-          final Point OKRight = getCoordinateMapper().numericToScreen( (Double) domainValue + ((Double) domainValRight - (Double) domainValue) / 2.0, targetValue );
           final Point UKRight = getCoordinateMapper().numericToScreen( (Double) domainValue + ((Double) domainValRight - (Double) domainValue) / 2.0, uKValue );
           path.add( OKLeft );
-          path.add( OKRight );
-          path.add( UKRight );
-          path.add( UKLeft );
-          path.add( OKLeft );
+
+          rf.setRectangle(new Rectangle( OKLeft.x, OKLeft.y, UKRight.x-OKLeft.x,  UKRight.y-OKLeft.y ));
+          rf.paint( gc );
         }
       }
     }
-    drawLine( gc, path );
   }
 
- 
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
-  @SuppressWarnings("unchecked")
-  public IDataRange getDomainRange( )
-  {
-    if( m_data == null )
-      return null;
-
-    final IDataRange dataRange = m_data.getDomainRange();
-
-    final Object min = dataRange.getMin();
-    final Object max = dataRange.getMax();
-    if( min == null || max == null )
-      return null;
-
-    final IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-    final IDataRange numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
-    return numRange;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
-  @SuppressWarnings("unchecked")
-  public IDataRange<Number> getTargetRange( )
-  {
-    if( m_data == null )
-      return null;
-
-    final IDataRange dataRange = m_data.getTargetRange();
-    final Object min = dataRange.getMin();
-    final Object max = dataRange.getMax();
-    if( min == null || max == null )
-      return null;
-
-    final IDataOperator dop = getTargetAxis().getDataOperator( max.getClass() );
-    final IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
-    return numRange;
-  }
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  protected final String getTooltip( final int index )
   {
-    if( !isVisible() || m_tooltip == null )
-      return null;
-    final IAxis domainAxis = getDomainAxis();
-    final IAxis targetAxis = getTargetAxis();
-    final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
-    final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
-    final Object[] domainValues = m_data.getDomainValues();
-    final Object[] targetValues = m_data.getTargetValues();
 
-    for( int i = 0; i < domainValues.length; i++ )
-    {
-      final Object domainValue = domainValues[i];
-      final Object targetValue = targetValues[i];
-      if( targetValue == null )
-        continue;
-      final Point pValue = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
-      final Rectangle hover = RectangleUtils.buffer( pValue );
-      if( hover == null )
-        continue;
-
-      if( hover.contains( pos ) )
-      {
-        if( pValue == null )
-          return new EditInfo( this, null, null, i, m_tooltip, RectangleUtils.getCenterPoint( hover ) );
-
-        return new EditInfo( this, null, null, i, m_tooltip, pValue );
-      }
-    }
-
-    return null;
+    return m_data.getResult().get( index ).toString();
   }
-  @SuppressWarnings("unchecked")
-  protected void setData( final LengthSectionBridgeDataContainer data )
-  {
-    m_data = data;
-  }
+
 }
