@@ -126,6 +126,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       final File propertiesFile = new File( tmpdir, "stats.txt" );
       final Properties properties = new Properties();
 //      properties.put( "TOTAL_DIFFERENCE", NumberFormat.getCurrencyInstance().format( m_totalDifference ) );
+      properties.put( "TOTAL_DIFFERENCE_UNFORMAT", String.format("%.8f", m_totalDifference ) );
       properties.put( "TOTAL_DIFFERENCE", String.format("%.2f Eur", m_totalDifference ) );
       properties.put( "YEARLY_COSTS", "n/a" );
       properties.put( "VALUE_BENEFIT", "n/a" );
