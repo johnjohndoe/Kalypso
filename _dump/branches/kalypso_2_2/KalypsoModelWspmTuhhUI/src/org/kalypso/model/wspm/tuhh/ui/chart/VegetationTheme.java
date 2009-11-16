@@ -155,14 +155,16 @@ public class VegetationTheme extends AbstractProfilTheme
     }
     return null;
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
    */
   @Override
   public IChartLayer[] getLegendNodes( )
   {
-    return new IChartLayer[]{};
+    return new IChartLayer[] {};
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
    */
@@ -182,7 +184,7 @@ public class VegetationTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.1"), getProfil(), true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.1" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) ) );
@@ -192,7 +194,7 @@ public class VegetationTheme extends AbstractProfilTheme
 
   public VegetationTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.2"), chartLayers, cm ); //$NON-NLS-1$
+    super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.2" ), chartLayers, cm ); //$NON-NLS-1$
     setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) ); //$NON-NLS-1$
   }
 
@@ -218,16 +220,18 @@ public class VegetationTheme extends AbstractProfilTheme
     if( profil == null )
       return;
     final IRecord[] profilPoints = profil.getPoints();
-    final int len = profilPoints.length - 2;
+    final int len = profilPoints.length - 1;
     final PolylineFigure pf = new PolylineFigure();
 
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
+
       final Rectangle hover = getHoverRectInternal( profilPoints[i], profilPoints[i + 1] );
       if( hover == null )
         continue;
       drawIcon( gc, hover );
+
     }
   }
 
@@ -252,9 +256,13 @@ public class VegetationTheme extends AbstractProfilTheme
 
   final boolean segmenthasVegetation( final IRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
-    return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
+    if( getProfil().indexOfPoint( point ) > getProfil().getPoints().length - 5 )
+    {
+      final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+      final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+      final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
+      return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
+    }
+    return false;
   }
 }
