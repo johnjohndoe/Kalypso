@@ -1,8 +1,5 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -31,54 +28,23 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
     if( m_data == null )
       return;
-
-    final List<Point> path = new ArrayList<Point>();
-
     m_data.open();
 
-    final TupleResult result = m_data.getResult();
-
-    final Object[] domainValues = m_data.getDomainValues();
-    final Object[] targetValues = m_data.getTargetValues();
-
-    final int iUK = m_data.getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
-    final Object[] uKValues = iUK < 0 ? new Object[] {} : ProfilUtil.getValuesFor( result.toArray( new IRecord[] {} ), result.getComponent( iUK ) );
-
-    if( domainValues.length > 0 && targetValues.length > 0 && uKValues.length > 0 )
+    final PointFigure pf = getPointFigure();
+    final IPointStyle ps = pf.getStyle();
+    final FullRectangleFigure rf = new FullRectangleFigure();
+    rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
+    for( int i = 0; i < m_data.getResult().size(); i++ )
     {
-      final IAxis domainAxis = getDomainAxis();
-      final IAxis targetAxis = getTargetAxis();
-      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
-      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
-
-      if( dopDomain == null || dopTarget == null )
-        return;
-
-      final PointFigure pf = getPointFigure();
-      final IPointStyle ps = pf.getStyle();
-      final FullRectangleFigure rf = new FullRectangleFigure();
-      rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
-      for( int i = 0; i < domainValues.length; i++ )
+      final Rectangle rect = getScreenRect( i );
+      if( rect != null )
       {
-        final Number domainValue = dopDomain.logicalToNumeric( domainValues[i] );
-        final Number domainValLeft = i > 0 ? dopDomain.logicalToNumeric( domainValues[i - 1] ) : domainValue;
-        final Number domainValRight = i < domainValues.length - 1 ? dopDomain.logicalToNumeric( domainValues[i + 1] ) : domainValue;
-        final Number targetValue = dopTarget.logicalToNumeric( targetValues[i] );
-        final Number uKValue = dopTarget.logicalToNumeric( uKValues[i] );
-       if( domainValue != null && targetValue != null && uKValue != null )
-        {
-          final Point OKLeft = getCoordinateMapper().numericToScreen( (Double) domainValLeft + ((Double) domainValue - (Double) domainValLeft) / 2.0, targetValue );
-          final Point UKRight = getCoordinateMapper().numericToScreen( (Double) domainValue + ((Double) domainValRight - (Double) domainValue) / 2.0, uKValue );
-          path.add( OKLeft );
-
-          rf.setRectangle(new Rectangle( OKLeft.x, OKLeft.y, UKRight.x-OKLeft.x,  UKRight.y-OKLeft.y ));
-          rf.paint( gc );
-        }
+        rf.setRectangle( rect );
+        rf.paint( gc );
       }
     }
   }
@@ -89,8 +55,49 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   @Override
   protected final String getTooltip( final int index )
   {
+    final int targetOKComponentIndex = m_data.getResult().indexOfComponent( m_data.getTargetComponentName() );
+    final int targetUKComponentIndex = m_data.getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
+    final String targetOKComponentLabel = m_data.getResult().getComponent( targetOKComponentIndex ).getName();
+    final String targetUKComponentLabel = m_data.getResult().getComponent( targetUKComponentIndex ).getName();
+    final String targetOKComponentUnit = m_data.getResult().getComponent( targetOKComponentIndex ).getUnit();
+    final String targetUKComponentUnit = m_data.getResult().getComponent( targetUKComponentIndex ).getUnit();
+    final Object uk = m_data.getResult().get( index ).getValue( targetUKComponentIndex );
+    final Object ok = m_data.getResult().get( index ).getValue( targetOKComponentIndex );
 
-    return m_data.getResult().get( index ).toString();
+    return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok,targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
   }
 
+  @Override
+  protected Rectangle getHoverRect( final Point screen, final int index )
+  {
+    return getScreenRect( index );
+  }
+
+  private final Rectangle getScreenRect( final int i )
+  {
+    final TupleResult result = m_data.getResult();
+    final int iUK = m_data.getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
+    final Object[] domainValues = m_data.getDomainValues();
+    final Object[] targetValues = m_data.getTargetValues();
+    final Object[] uKValues = iUK < 0 ? new Object[] {} : ProfilUtil.getValuesFor( result.toArray( new IRecord[] {} ), result.getComponent( iUK ) );
+
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis targetAxis = getTargetAxis();
+    final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
+    final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
+    if( dopDomain == null || dopTarget == null )
+      return null;
+    final Number domainValue = dopDomain.logicalToNumeric( domainValues[i] );
+    final Number domainValLeft = i > 0 ? dopDomain.logicalToNumeric( domainValues[i - 1] ) : domainValue;
+    final Number domainValRight = i < domainValues.length - 1 ? dopDomain.logicalToNumeric( domainValues[i + 1] ) : domainValue;
+    final Number targetValue = dopTarget.logicalToNumeric( targetValues[i] );
+    final Number uKValue = dopTarget.logicalToNumeric( uKValues[i] );
+    if( domainValue != null && targetValue != null && uKValue != null )
+    {
+      final Point OKLeft = getCoordinateMapper().numericToScreen( (Double) domainValLeft + ((Double) domainValue - (Double) domainValLeft) / 2.0, targetValue );
+      final Point UKRight = getCoordinateMapper().numericToScreen( (Double) domainValue + ((Double) domainValRight - (Double) domainValue) / 2.0, uKValue );
+      return new Rectangle( OKLeft.x, OKLeft.y, UKRight.x - OKLeft.x, UKRight.y - OKLeft.y );
+    }
+    return null;
+  }
 }
