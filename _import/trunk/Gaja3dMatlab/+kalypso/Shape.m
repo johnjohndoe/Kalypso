@@ -165,7 +165,7 @@ classdef Shape
         end
         
         function this = fromFile(filename, constructorCallback)
-           import org.deegree.io.shpapi.shape_new.*;
+           import org.deegree.io.shpapi.*;
            [pathstr, name, ext] = fileparts(filename);
            switch(lower(ext))
                case '.zip'
@@ -187,16 +187,11 @@ classdef Shape
                        warning(e.message);
                    end
                case '.shp'
-                   reader = ShapeFileReader(filename);
-                   shpfile = reader.read();
-                   shplist = shpfile.getShapes();
-                   shpCount = shplist.size();
-                   shparray = javaArray('org.deegree.io.shpapi.shape_new.Shape', shpCount);
-                   shparray = shplist.toArray(shparray);
+                   shpfile = ShapeFile([pathstr filesep name]);
+                   shpCount = shpfile.getRecordNum;
                    shapeCount = 0;
                    for i=1:shpCount;
-                       shp = shparray(i);
-                       deegreeGeom = shp.getGeometry();
+                       deegreeGeom = shpfile.getGeometryByRecNo(i);
                        if(~isempty(deegreeGeom))
                            jtsGeom = org.deegree.model.spatialschema.JTSAdapter.export(deegreeGeom);
                            geomCount = jtsGeom.getNumGeometries();
@@ -219,6 +214,7 @@ classdef Shape
                            end
                        end
                    end
+                   shpfile.close();
                otherwise
                    warning('File extension %s not recognized.', ext);
                    this = constructorCallback();

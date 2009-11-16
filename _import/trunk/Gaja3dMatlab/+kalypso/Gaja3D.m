@@ -40,8 +40,17 @@ classdef Gaja3D < handle
             if(any(strcmp(src.Name, {'boundaries'})))
                 this.tiles = 1:numel(this.boundaries);
                 this.demTin = kalypso.TriangulatedSurface2.empty(0, numel(this.tiles));
+                this.demGrid = kalypso.RectifiedGridCoverage.empty(0, numel(this.tiles));
+                this.breaklines = cell(0);
+                for i=1:max(this.tiles)
+                    this.breaklines{i} = kalypso.Curve.empty();
+                end                                
             elseif(any(strcmp(src.Name, {'demTin'})))
                 this.demGrid = kalypso.RectifiedGridCoverage.empty(0, numel(this.tiles));
+                this.breaklines = cell(0);
+                for i=1:max(this.tiles)
+                    this.breaklines{i} = kalypso.Curve.empty();
+                end                
             elseif(any(strcmp(src.Name, {'demGrid'})))
                 this.breaklines = cell(0);
                 for i=1:max(this.tiles)
@@ -80,27 +89,34 @@ classdef Gaja3D < handle
             end
             if(nargin >= 2)
                 points = varargin{1};
-
-                if(ischar(points))
-                    points = loadPointData(points,0);
+                if(~iscell(points))
+                    points = {points};
                 end
                 
-                % discard duplicate points and NaN elevations and sort
-                nanEle = isnan(points(:,3));
-                points = points(~nanEle,:);
-                [b, m] = unique(points(:,1:2), 'rows');
-                points = sortrows(points(m,:),1:2);
+                if(~all(size(points)==size(this.boundaries)))
+                    error('Number of point inputs does not match number of boundaries');
+                end
                 
                 % triangulate patches with buffer
                 for i=this.tiles
+                    if(ischar(points{i}))
+                        tilePoints = loadPointData(points{i},0);
+                    end
+                    
+                    % discard duplicate points and NaN elevations and sort
+                    nanEle = isnan(tilePoints(:,3));
+                    tilePoints = tilePoints(~nanEle,:);
+                    [b, m] = unique(tilePoints(:,1:2), 'rows');
+                    tilePoints = sortrows(tilePoints(m,:),1:2);
+
                     % buffer boundary for tin
                     boundary = this.boundaries(i);
                     bufDist = this.bufferTin;
                     boundaryBuffer = boundary.buffer(bufDist);
                     
                     % reduce to boundary
-                    index = inBoundary(points(:,1), points(:,2), boundaryBuffer);
-                    redPoints = points(index,:);
+                    index = inBoundary(tilePoints(:,1), tilePoints(:,2), boundaryBuffer);
+                    redPoints = tilePoints(index,:);
                     
                     % create tin
                     if(isempty(redPoints))
