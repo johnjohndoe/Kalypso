@@ -60,7 +60,6 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -73,7 +72,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.service.wps.client.WPSRequest;
@@ -99,20 +97,17 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
 
   private IterationInfo m_iterationInfo;
 
-  // private IFolder m_scenarioFolder;
-
   private IterationInfoJob m_iterationJob;
 
   private FileObject m_resultsDir;
 
   private FileSystemManagerWrapper m_manager;
 
-  public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider, final String serviceEndpoint ) throws CoreException
+  public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final IControlModel1D2D controlModel, final String serviceEndpoint )
   {
     super( RMAKalypsoSimulation.ID, serviceEndpoint, -1 );
     m_log = geoLog;
-    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
-    m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
+    m_controlModel = controlModel;
   }
 
   public IControlModel1D2D getControlModel( )
@@ -176,11 +171,11 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
       final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
 
-      final IControlModelGroup controlModelGropup = caseDataProvider.getModel( IControlModelGroup.class );
-      final IControlModel1D2D controlModel = controlModelGropup.getModel1D2DCollection().getActiveControlModel();
-      final List<IRestartInfo> restartInfos = controlModel.getRestart() ? controlModel.getRestartInfos() : Collections.EMPTY_LIST;
+      @SuppressWarnings("unchecked")
+      final List<IRestartInfo> restartInfos = m_controlModel.getRestart() ? m_controlModel.getRestartInfos() : Collections.EMPTY_LIST;
+      final Modeldata modeldata = getModeldata( restartInfos );
 
-      final SimulationDelegate delegate = new SimulationDelegate( RMAKalypsoSimulation.ID, scenarioFolder, getModeldata( restartInfos ) );
+      final SimulationDelegate delegate = new SimulationDelegate( RMAKalypsoSimulation.ID, scenarioFolder, modeldata );
       delegate.init();
 
       final ProcessDescriptionType processDescription = this.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
@@ -188,6 +183,10 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
       final List<String> outputs = delegate.createOutputs();
 
       final IStatus status = this.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
+
+      // in case of a very short simulation, update at least once
+      updateIterationInfo( monitor );
+
       delegate.finish();
       return status;
 
@@ -224,7 +223,11 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
   protected void doProcessStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
   {
     super.doProcessStarted( monitor, exState );
+    updateIterationInfo( monitor );
+  }
 
+  private void updateIterationInfo( final IProgressMonitor monitor ) throws WPSException
+  {
     if( m_iterationJob != null )
     {
       return;

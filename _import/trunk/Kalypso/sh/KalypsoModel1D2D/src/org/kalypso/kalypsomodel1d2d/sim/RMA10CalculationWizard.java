@@ -101,7 +101,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   public RMA10CalculationWizard( final SzenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     m_caseDataProvider = caseDataProvider;
-    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
+    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class );
     final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
     final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
@@ -112,7 +112,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
     m_geoLog = geoLog;
 
-    m_calcPage = new RMA10CalculationPage( "calcPage", geoLog, caseDataProvider ); //$NON-NLS-1$
+    m_calcPage = new RMA10CalculationPage( "calcPage", geoLog, controlModel ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
     setForcePreviousAndNextButtons( true );
