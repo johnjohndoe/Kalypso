@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -70,6 +71,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.sim.IterationInfo.IterationBean;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -103,12 +105,19 @@ public class IterationComposite extends Composite
 
   private final StatusComposite m_statusComposite;
 
-  public IterationComposite( final RMAKalypsoSimulationRunner calculation, final Composite composite, final int style )
+  private final ICalculationUnit m_subUnit;
+
+  public IterationComposite( final Composite composite, final RMAKalypsoSimulationRunner calculation, final ICalculationUnit subUnit, final int style )
   {
     super( composite, style );
 
-    m_tableViewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION );
+    m_subUnit = subUnit;
 
+    final Label unitLable = new Label( this, SWT.CENTER );
+    unitLable.setText( m_subUnit.getName() );
+    unitLable.setFont( JFaceResources.getBannerFont() );
+
+    m_tableViewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION );
     final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( null );
     final TupleResultContentProvider cp = new TupleResultContentProvider( provider );
     m_tableViewer.setContentProvider( cp );
@@ -138,6 +147,7 @@ public class IterationComposite extends Composite
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
+      @SuppressWarnings("unchecked")
       @Override
       public String getText( final Object element )
       {
@@ -205,6 +215,7 @@ public class IterationComposite extends Composite
     } );
   }
 
+  @SuppressWarnings("unchecked")
   protected void handleComboSelectionChanged( final IStructuredSelection selection )
   {
     setStatus( null );
@@ -319,7 +330,7 @@ public class IterationComposite extends Composite
       return;
 
     m_tableViewer.setInput( tr );
-    
+
     // resize id column
     m_tableViewer.getTable().getColumn( 1 ).setWidth( 24 );
 
