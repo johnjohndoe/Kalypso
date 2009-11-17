@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema.gml;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -49,17 +47,11 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
-import org.kalypso.model.wspm.schema.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
@@ -94,70 +86,9 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
   {
     try
     {
-      IProfileFeature profile = (IProfileFeature) feature;
-
-      final IProfil profil = profile.getProfil();
-      if( profil == null )
-        return null;
-
-      final IRecord[] points = profil.getPoints();
-      final List<GM_Position> positions = new ArrayList<GM_Position>( points.length );
-
-      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
-      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
-
-      String srsName = profile.getSrsName();
-      for( final IRecord point : points )
-      {
-        /* If there are no rw/hw create pseudo geometries from breite and station */
-        final Double rw;
-        final Double hw;
-
-        if( compRechtswert != -1 && compHochwert != -1 )
-        {
-          rw = (Double) point.getValue( compRechtswert );
-          hw = (Double) point.getValue( compHochwert );
-
-          /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-          if( srsName == null )
-            srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-        }
-        else
-        {
-          if( compBreite == -1 )
-            throw new IllegalStateException( Messages.getString("org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction.0") ); //$NON-NLS-1$
-
-          rw = (Double) point.getValue( compBreite );
-          hw = profil.getStation() * 1000;
-
-          /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-          if( srsName == null )
-            srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        }
-
-        if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
-          continue;
-
-        final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
-
-        final GM_Position position;
-        if( h == null )
-          position = GeometryFactory.createGM_Position( rw, hw );
-        else
-          position = GeometryFactory.createGM_Position( rw, hw, h );
-
-        positions.add( position );
-      }
-
-      if( positions.size() < 2 )
-        return null;
-
-      final GM_Position[] poses = positions.toArray( new GM_Position[positions.size()] );
-      final GM_Curve curve = GeometryFactory.createGM_Curve( poses, srsName );
-
-      return WspmGeometryUtilities.GEO_TRANSFORMER.transform( curve );
+      final IProfileFeature profile = (IProfileFeature) feature;
+      return profile.getLine();
+// return ProfileFeatureBinding.toLine( feature );
     }
     catch( final Exception e )
     {
@@ -166,6 +97,8 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
 
     return null;
   }
+
+
 
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
