@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import org.apache.commons.vfs.FileObject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -55,19 +54,23 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit.TYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.util.swt.StatusComposite;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
@@ -76,33 +79,35 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 {
   private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing"; //$NON-NLS-1$
 
-  protected final RMAKalypsoSimulationRunner m_calculation;
-
-  private IStatus m_simulationStatus;
+  // protected final RMAKalypsoSimulationRunner m_calculation;
+  private final IControlModel1D2D m_controlModel;
 
   private StatusComposite m_statusComp;
 
   protected boolean m_startResultProcessing = false;
 
+  protected boolean m_isCoupledSimulation = false;
+
   private Button m_startResultProcessingCheck;
 
   private Spinner m_resultInterval;
 
-  protected RMA10CalculationPage( final String pageName, final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider ) throws CoreException
+  protected Button m_coupledSimulationCheck;
+
+  private final IGeoLog m_geoLog;
+
+  private Group m_iterGroup;
+
+  protected RMAKalypsoSimulationRunner m_calculation;
+
+  protected RMA10CalculationPage( final String pageName, final IGeoLog geoLog, final IControlModel1D2D controlModel )
   {
     super( pageName );
+    m_geoLog = geoLog;
+    m_controlModel = controlModel;
 
-    // default to local simulation
-    String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
-    if( serviceEndpoint == null || serviceEndpoint.equals( "" ) ) //$NON-NLS-1$
-    {
-      serviceEndpoint = WPSRequest.SERVICE_LOCAL;
-    }
-    m_calculation = new RMAKalypsoSimulationRunner( geoLog, caseDataProvider, serviceEndpoint );
-
-    final ICalculationUnit calculationUnit = m_calculation.getControlModel().getCalculationUnit();
-
-    setTitle(  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" , calculationUnit.getName() ) ); //$NON-NLS-1$
+    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
+    setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0", calculationUnit.getName() ) ); //$NON-NLS-1$
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.2" ) ); //$NON-NLS-1$
   }
 
@@ -129,8 +134,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.4" ), null ) ); //$NON-NLS-1$
 
     final Group tweakGroup = new Group( composite, SWT.NONE );
-    final GridLayout tweakLayout = new GridLayout();
-    tweakLayout.numColumns = 2;
+    final GridLayout tweakLayout = new GridLayout( 3, false );
     tweakGroup.setLayout( tweakLayout );
     tweakGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     tweakGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.5" ) ); //$NON-NLS-1$
@@ -160,7 +164,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     final GridLayout layout = new GridLayout();
     layout.numColumns = 3;
     buttonComposite.setLayout( layout );
-    buttonComposite.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+    buttonComposite.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
 
     final Label spinnerLabel1 = new Label( buttonComposite, SWT.NONE );
     spinnerLabel1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.8" ) ); //$NON-NLS-1$
@@ -185,21 +189,106 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     spinnerLabel2.setLayoutData( gridData2 );
 
     /* Iteration viewer */
-    final Group iterGroup = new Group( composite, SWT.NONE );
-    iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    final GridLayout iterLayout = new GridLayout();
-    iterGroup.setLayout( iterLayout );
-    iterGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.11" ) ); //$NON-NLS-1$
+    final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
 
-    final Composite iterComp = new IterationComposite( m_calculation, iterGroup, SWT.NONE );
-    iterComp.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_iterGroup = new Group( composite, SWT.NONE );
+    m_iterGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.11" ) ); //$NON-NLS-1$
+
+    m_coupledSimulationCheck = new Button( tweakGroup, SWT.CHECK );
+    m_coupledSimulationCheck.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
+    m_coupledSimulationCheck.setText( "Coupled simulation" );
+    m_coupledSimulationCheck.setEnabled( false );
+    m_coupledSimulationCheck.setToolTipText( "Run a coupled simulation with separate processes for each subunit." );
+    if( calculationUnit.getType() != TYPE.TYPE1D2D )
+    {
+      m_isCoupledSimulation = false;
+      m_coupledSimulationCheck.setEnabled( false );
+    }
+    else
+    {
+      m_isCoupledSimulation = false;
+      m_coupledSimulationCheck.setEnabled( false );
+      // m_isCoupledSimulation = ((ICoupledCalculationUnit) calculationUnit).isCoupledSimulation();
+      // m_coupledSimulationCheck.setSelection( m_isCoupledSimulation );
+      // m_coupledSimulationCheck.addSelectionListener( new SelectionAdapter()
+      // {
+      // /**
+      // * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+      // */
+      // @Override
+      // public void widgetSelected( final SelectionEvent e )
+      // {
+      // m_isCoupledSimulation = m_coupledSimulationCheck.getSelection();
+      // ((ICoupledCalculationUnit) calculationUnit).setCoupledSimulation( m_isCoupledSimulation );
+      // }
+      // } );
+    }
+    updateIterationViewerGroup( null );
 
     setControl( composite );
+  }
+
+  protected void updateIterationViewerGroup( final RMAKalypsoSimulationRunner calculation )
+  {
+    // remove old controls
+    final Control[] children = m_iterGroup.getChildren();
+    if( children.length > 0 )
+    {
+      for( final Control iterComp : children )
+      {
+        iterComp.dispose();
+      }
+    }
+
+    if( calculation == null )
+    {
+      m_iterGroup.setLayout( new GridLayout() );
+      m_iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    }
+    else
+    {
+      final ICalculationUnit calcUnit = calculation.getControlModel().getCalculationUnit();
+
+      if( isCoupledSimulation() )
+      {
+        // if coupled simulation is selected, display one iteration composite per subunit
+        final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) calcUnit;
+        final IFeatureWrapperCollection<ICalculationUnit> subUnits = calculationUnit1D2D.getChangedSubUnits();
+
+        final int numSubunits = subUnits.size();
+        m_iterGroup.setLayout( new GridLayout( (int) Math.ceil( numSubunits / 2.0 ), true ) );
+        m_iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+        final Control[] newIterComps = new Control[numSubunits];
+        for( int i = 0; i < numSubunits; i++ )
+        {
+          final ICalculationUnit subUnit = subUnits.get( i );
+          newIterComps[i] = new IterationComposite( m_iterGroup, calculation, subUnit, SWT.NONE );
+          newIterComps[i].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+        }
+      }
+      else
+      {
+        // if no coupled simulation is selected, display only one iteration composite
+        m_iterGroup.setLayout( new GridLayout() );
+        m_iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+        final Composite iterComp = new IterationComposite( m_iterGroup, calculation, calcUnit, SWT.NONE );
+        iterComp.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      }
+    }
+    // refresh
+    m_iterGroup.layout();
   }
 
   public boolean getStartResultProcessing( )
   {
     return m_startResultProcessing;
+  }
+
+  public boolean isCoupledSimulation( )
+  {
+    return m_isCoupledSimulation;
   }
 
   public Integer getResultInterval( )
@@ -214,8 +303,28 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12" ), null ) ); //$NON-NLS-1$
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.13" ) ); //$NON-NLS-1$
 
+    // default to local simulation
+    String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
+    if( serviceEndpoint == null || serviceEndpoint.equals( "" ) ) //$NON-NLS-1$
+    {
+      serviceEndpoint = WPSRequest.SERVICE_LOCAL;
+    }
+
+    if( m_isCoupledSimulation )
+    {
+      // final ICalculationUnit1D2D calculationUnit1d2d = (ICalculationUnit1D2D) m_controlModel.getCalculationUnit();
+      // final ICalculationUnit calculationUnit = calculationUnit1d2d.getChangedSubUnits().get( 0 );
+      m_calculation = new RMAKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+    }
+    else
+    {
+      m_calculation = new RMAKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+    }
+    updateIterationViewerGroup( m_calculation );
+
     final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         return m_calculation.runCalculation( monitor );
@@ -227,33 +336,37 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     {
       /* Do not block the UI while simulation is running... */
       final WizardDialog2 wd2 = (WizardDialog2) container;
-      m_simulationStatus = wd2.executeUnblocked( true, true, calculationOperation );
+      wd2.executeUnblocked( true, true, calculationOperation );
     }
     else
-      m_simulationStatus = RunnableContextHelper.execute( container, true, true, calculationOperation );
+      RunnableContextHelper.execute( container, true, true, calculationOperation );
 
-    if( m_simulationStatus.matches( IStatus.CANCEL ) )
+    final IStatus simulationStatus = getSimulationStatus();
+    if( simulationStatus.matches( IStatus.CANCEL ) )
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.14" ), WARNING ); //$NON-NLS-1$
-    else if( m_simulationStatus.matches( IStatus.WARNING ) )
+    else if( simulationStatus.matches( IStatus.WARNING ) )
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.15" ), WARNING ); //$NON-NLS-1$
-    else if( m_simulationStatus.matches( IStatus.ERROR ) )
+    else if( simulationStatus.matches( IStatus.ERROR ) )
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.16" ), ERROR ); //$NON-NLS-1$
     else
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.17" ) ); //$NON-NLS-1$
 
-    m_statusComp.setStatus( m_simulationStatus );
+    m_statusComp.setStatus( simulationStatus );
 
     if( !m_startResultProcessingCheck.isDisposed() )
       m_startResultProcessingCheck.setEnabled( false );
+
+    if( !m_coupledSimulationCheck.isDisposed() )
+      m_coupledSimulationCheck.setEnabled( false );
   }
 
   public IStatus getSimulationStatus( )
   {
-    return m_simulationStatus;
+    return m_calculation != null ? m_calculation.getSimulationStatus() : null;
   }
 
   public FileObject getResultDir( )
   {
-    return m_calculation.getTempDir();
+    return m_calculation != null ? m_calculation.getTempDir() : null;
   }
 }
