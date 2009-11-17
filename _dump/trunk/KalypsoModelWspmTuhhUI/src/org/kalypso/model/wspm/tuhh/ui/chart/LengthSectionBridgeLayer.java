@@ -38,7 +38,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final IPointStyle ps = pf.getStyle();
     final FullRectangleFigure rf = new FullRectangleFigure();
     rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
-    for( int i = 0; i < m_data.getResult().size(); i++ )
+    for( int i = 0; i < m_data.getObservation().getResult().size(); i++ )
     {
       final Rectangle rect = getScreenRect( i );
       if( rect != null )
@@ -55,16 +55,17 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   @Override
   protected final String getTooltip( final int index )
   {
-    final int targetOKComponentIndex = m_data.getResult().indexOfComponent( m_data.getTargetComponentName() );
-    final int targetUKComponentIndex = m_data.getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
-    final String targetOKComponentLabel = m_data.getResult().getComponent( targetOKComponentIndex ).getName();
-    final String targetUKComponentLabel = m_data.getResult().getComponent( targetUKComponentIndex ).getName();
-    final String targetOKComponentUnit = m_data.getResult().getComponent( targetOKComponentIndex ).getUnit();
-    final String targetUKComponentUnit = m_data.getResult().getComponent( targetUKComponentIndex ).getUnit();
-    final Object uk = m_data.getResult().get( index ).getValue( targetUKComponentIndex );
-    final Object ok = m_data.getResult().get( index ).getValue( targetOKComponentIndex );
+    final TupleResult tr = m_data.getObservation().getResult();
+    final int targetOKComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
+    final int targetUKComponentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
+    final String targetOKComponentLabel = tr.getComponent( targetOKComponentIndex ).getName();
+    final String targetUKComponentLabel = tr.getComponent( targetUKComponentIndex ).getName();
+    final String targetOKComponentUnit = tr.getComponent( targetOKComponentIndex ).getUnit();
+    final String targetUKComponentUnit = tr.getComponent( targetUKComponentIndex ).getUnit();
+    final Object uk = tr.get( index ).getValue( targetUKComponentIndex );
+    final Object ok = tr.get( index ).getValue( targetOKComponentIndex );
 
-    return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok,targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
+    return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
   }
 
   @Override
@@ -75,8 +76,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
 
   private final Rectangle getScreenRect( final int i )
   {
-    final TupleResult result = m_data.getResult();
-    final int iUK = m_data.getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
+    final TupleResult result = m_data.getObservation().getResult();
+    final int iUK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
     final Object[] domainValues = m_data.getDomainValues();
     final Object[] targetValues = m_data.getTargetValues();
     final Object[] uKValues = iUK < 0 ? new Object[] {} : ProfilUtil.getValuesFor( result.toArray( new IRecord[] {} ), result.getComponent( iUK ) );

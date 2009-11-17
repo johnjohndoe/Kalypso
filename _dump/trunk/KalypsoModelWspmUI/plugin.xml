@@ -457,6 +457,19 @@
                   style="push">
             </command>
          </menuContribution>
+         <menuContribution
+               locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
+            <command
+                  commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+                  style="radio">
+               <visibleWhen
+                     checkEnabled="true">
+                  <reference
+                        definitionId="org.kalypso.chart.ui.chartEditorActive">
+                  </reference>
+               </visibleWhen>
+            </command>
+         </menuContribution>
       </extension>
       <extension
             point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -507,12 +520,21 @@
                commandId="org.kalypso.model.wspm.ui.view.legend.removelayer"
                icon="icons/etool16/delete_layer.gif">
          </image>
+         <image
+               commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+               icon="icons/eview16/profil_editor.gif">
+         </image>
       </extension>
      
     <!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
+  <command
+        defaultHandler="org.kalypso.model.wspm.ui.action.LengthSectionExportHandler"
+        id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+        name="LengthSectionExport">
+  </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.handlers">

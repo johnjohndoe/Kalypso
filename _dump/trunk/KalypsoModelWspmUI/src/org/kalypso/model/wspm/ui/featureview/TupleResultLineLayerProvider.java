@@ -102,10 +102,10 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
       return null;
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-    final TupleResult result = obs.getResult();
+   // final TupleResult result = obs.getResult();
     final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final TupleResultDomainValueData data = new TupleResultDomainValueData( result, domainComponentId, valueComponentId );
+    final TupleResultDomainValueData data = new TupleResultDomainValueData( obs, domainComponentId, valueComponentId );
     return data;
   }
 }

@@ -153,8 +153,8 @@ public class ProfilUtil
     for( final IRecord point : points )
     {
       final Object value = point.getValue( iProp );
-      if( value == null )
-        Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
+     // if( value == null )
+       // Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", pointProperty.getName(), iProp ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
