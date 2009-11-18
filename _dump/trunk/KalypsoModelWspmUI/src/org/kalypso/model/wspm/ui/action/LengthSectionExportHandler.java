@@ -53,7 +53,6 @@ import org.eclipse.ui.ISources;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.chart.ui.editor.ui.SafeSaveDialog;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -73,106 +72,79 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class LengthSectionExportHandler extends AbstractHandler
 {
 
+  public static String PLOTTER_FILE_NOT_FOUND = "plotter_file_not_found";
+
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
   public Object execute( ExecutionEvent event )
   {
-
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
     if( chartPart == null )
       return null;
-
-    final ChartComposite chart = chartPart.getChartComposite();
-
-    String plotterPath = KalypsoCorePlugin.getDefault().getPreferenceStore().getString( IWspmConstants.WSPWIN_PLOTTER_PATH );
-
-    if( chart != null )
+    final IObservation<TupleResult> obs = getLSObservation( chartPart );
+    final String plotterPath = KalypsoCorePlugin.getDefault().getPreferenceStore().getString( IWspmConstants.WSPWIN_PLOTTER_PATH );
+    if( !doExport( obs, plotterPath ) )
     {
-
-      if( plotterPath == "" )
+      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      if( shell != null )
       {
-        final FileDialog dia = new FileDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ) );
+        final FileDialog dia = new FileDialog( shell );
+        dia.setFilterExtensions( new String[] { "*.exe" } ); //$NON-NLS-1$
+        doExport( obs, dia.open() )
 
-        dia.setFilterExtensions( new String[] { "*.exe" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        ;
 
-        plotterPath = dia.open();
       }
-      if( plotterPath != null )
-      {
+    }
+    return null;
+  }
 
-        IChartModel chartModel = chartPart.getChartComposite().getChartModel();
-        ILayerManager layerManager = chartModel.getLayerManager();
-        IChartLayer[] layers = layerManager.getLayers();
-        for( IChartLayer iChartLayer : layers )
+  private final boolean doExport( final IObservation<TupleResult> obs, final String plotterPath )
+  {
+    if( plotterPath == null || obs == null )
+      return false;
+    try
+    {
+      final File file = new File( System.getProperty( "java.io.tmpdir" ), "exportTmp.lng" );//$NON-NLS-1$ //$NON-NLS-2$
+      final IProfilSink sink = KalypsoModelWspmCoreExtensions.createProfilSink( "lng" );
+      sink.write( obs, new PrintWriter( new FileOutputStream( file ) ) );
+      Runtime.getRuntime().exec( "\"" + plotterPath + "\" \"" + file.getPath() + "\"" );//$NON-NLS-1$ //$NON-NLS-2$// $NON-NLS-3$
+      KalypsoCorePlugin.getDefault().getPreferenceStore().putValue( IWspmConstants.WSPWIN_PLOTTER_PATH, plotterPath );
+      return true;
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      KalypsoCorePlugin.getDefault().getPreferenceStore().putValue( IWspmConstants.WSPWIN_PLOTTER_PATH, PLOTTER_FILE_NOT_FOUND );
+    }
+
+    return false;
+  }
+
+  private final IObservation<TupleResult> getLSObservation( final IChartPart chartPart )
+  {
+    IChartModel chartModel = chartPart.getChartComposite().getChartModel();
+    ILayerManager layerManager = chartModel.getLayerManager();
+    IChartLayer[] layers = layerManager.getLayers();
+    for( IChartLayer iChartLayer : layers )
+    {
+      if( iChartLayer instanceof TupleResultLineLayer )
+      {
+        IObservation<TupleResult> obs = ((TupleResultLineLayer) iChartLayer).getObservation();
+        if( obs != null )
         {
-          if( iChartLayer instanceof TupleResultLineLayer )
+          for( final IComponent comp : obs.getResult().getComponents() )
           {
-            IObservation<TupleResult> obs = ((TupleResultLineLayer) iChartLayer).getObservation();
-            if( obs != null )
-            {
-              try
-              {
-                for( final IComponent comp : obs.getResult().getComponents() )
-                {
-                  if( comp.getId().equals( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
-                  {
-                    plotterPath = doExport( obs, plotterPath ) ;
-                    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IWspmConstants.WSPWIN_PLOTTER_PATH, plotterPath);
-                    return null;
-                  }
-                }
-              }
-              catch( Exception e )
-              {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-              }
-              return null;
-            }
+            if( comp.getId().equals( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
+              return obs;
           }
         }
       }
     }
-//       
-// // TupleResultLineLayer x = layers[0];
-// // x.getObservation();
-// // // TODO: check omcponents: ists ein LS
-// // // wenn ja:
-// // URL locationOfLengthsectionGML = x.getLocation();
-// // // -> export it
-//      
-//      
-//      
-// if( chartPart == null )
-// return null;
-//
-// final DragZoomOutHandler plotDragZoomOutHandler = new DragZoomOutHandler( chartPart.getChartComposite() );
-// chartPart.getPlotDragHandler().setActiveHandler( plotDragZoomOutHandler );
-// final AxisDragZoomOutHandler axisDragZoomOutHandler = new AxisDragZoomOutHandler( chartPart.getChartComposite() );
-// chartPart.getAxisDragHandler().setActiveHandler( axisDragZoomOutHandler );
-// ChartHandlerUtilities.updateElements( chartPart );
-
     return null;
   }
 
-  private final String doExport( final IObservation<TupleResult> obs, final String plotterPath ) throws Exception
-  {
-    final File file = new File( System.getProperty( "java.io.tmpdir" ), "exportTmp.lng" );//$NON-NLS-1$ //$NON-NLS-2$
-    final IProfilSink sink = KalypsoModelWspmCoreExtensions.createProfilSink( "lng" );
-    sink.write( obs, new PrintWriter( new FileOutputStream( file ) ) );
-    try
-    {
-      Runtime.getRuntime().exec( "\"" + plotterPath + "\" \"" + file.getPath() + "\"" );//$NON-NLS-1$ //$NON-NLS-2$// $NON-NLS-3$
-      return plotterPath;
-
-    }
-    catch( Exception e )
-    {
-      return "";
-    }
-
-  }
 }

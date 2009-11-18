@@ -41,9 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.List;
 
@@ -61,7 +59,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -137,7 +134,7 @@ public class CreateLengthSectionWizard extends Wizard
       final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
       if( !kodFile.exists() )
       {
-        final URL resource = getClass().getResource( "resources/ls.kod" );
+        final URL resource = getClass().getResource( "resources/LS_no_result.kod" );
         final String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "!#localPath#!", fName + ".gml" );
         final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
         kodFile.create( inputStream, true, new NullProgressMonitor() );

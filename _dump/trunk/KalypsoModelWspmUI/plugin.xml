@@ -461,7 +461,7 @@
                locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
             <command
                   commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-                  style="radio">
+                  style="push">
                <visibleWhen
                      checkEnabled="true">
                   <reference
