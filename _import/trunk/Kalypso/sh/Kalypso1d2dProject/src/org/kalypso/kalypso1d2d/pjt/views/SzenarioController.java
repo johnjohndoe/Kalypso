@@ -57,7 +57,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
  * A central place for controlling scenario specific stuff for Kalypso1d2d.
  * <p>
  * Get informed when models are loaded and/or scenario is changed.
- *
+ * 
  * @author Dejan Antanaskovic
  * @author Gernot Belger
  */
@@ -80,6 +80,12 @@ public class SzenarioController implements IScenarioDataListener
 
   public synchronized void modelLoaded( final IModel model, final IStatus status )
   {
+    if( m_discModel != null && m_terrainModel != null )
+    {
+      m_discModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
+      m_terrainModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
+    }
+
     if( model instanceof IFEDiscretisationModel1d2d )
     {
       m_discModel = (IFEDiscretisationModel1d2d) model;
