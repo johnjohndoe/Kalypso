@@ -62,9 +62,9 @@ c     Initialisation of values
       !Band width of the system
       MFWSIZ    =5000
       !size of the right-hand-side vector, i.e. the number of active equations
-      MR1SIZ   = 500000
+      MR1SIZ   = 5000000
       !number of entries in the Jacobian Matrix, i.e. all non-zero derivatives of the Jacobian
-      NBUFFSIZ = 50000000
+      NBUFFSIZ = 20000000
 
 
       MNPP=MAXP

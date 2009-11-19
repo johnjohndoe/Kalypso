@@ -135,7 +135,7 @@ C-
         IPT (NR) = N
       ENDDO EliminatedElements
       !Write out eliminated elements
-      IF (NR > 0) WRITE (LOUT, 6030) (IPT (N), N = 1, NR)
+      IF (NR > 0) WRITE (LOUT, *) (IPT (N), N = 1, NR)
  6030 FORMAT(10I5)
 
       !******************************
@@ -178,7 +178,7 @@ C-
         IPT (NR) = N
       ENDDO EliminatedNodes
       !Write eliminated nodes
-      IF (NR > 0) WRITE (LOUT, 6030) (IPT (N), N = 1, NR)
+      IF (NR > 0) WRITE (LOUT, *) (IPT (N), N = 1, NR)
 
       !**********************
       !Process rewetted nodes

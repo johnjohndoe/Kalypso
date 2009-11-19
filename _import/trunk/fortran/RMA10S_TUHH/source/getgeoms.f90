@@ -236,7 +236,7 @@ IF (NCL > 0) THEN
     !number of nodes within line j
     NA = LMT (J)
     !write out line's nodes
-    IF (NA > 0) WRITE (LOUT, 6125) J, (LINE (J, K), K = 1, NA)
+    IF (NA > 0) WRITE (LOUT, *) J, (LINE (J, K), K = 1, NA)
   enddo throughLines
 ELSE
   !write information, there is no CCL
