@@ -98,6 +98,9 @@ if (executionSwitch == 0)  then
   !          has to be given by the user!
   !number of processors has always to be set
   iparm(3) = NPROCS 
+  !use auto-parallelization in factorization
+  iparm(2) = 3
+  
   !individual parameters; only for very advanced users of PARDISO
   !--------------------------------------------------------------
 !        iparm(1) = 1 ! no solver default
