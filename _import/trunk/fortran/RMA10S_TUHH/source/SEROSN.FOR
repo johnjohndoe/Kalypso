@@ -1,4 +1,4 @@
-C     Last change:  MD   30 Jul 2009    1:50 pm
+C     Last change:  MD    5 Oct 2009    6:31 pm
 cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -27,6 +27,7 @@ C
 !MD:  Erosion in den Layern an der Sohle: als Sohlerosion
 !MD:   --> Ergebnis Erosionsrate SERAT(NN) in [mg/l x m/s]
 C
+C     FACT_SPEED_UP = Speed-up factor for bed evolution
 C
 !MD:  Neu Kennung des Aufrufs II:
 !MD     II = 1 in der Iterations-Schleife eines Zeitschrittes
@@ -121,15 +122,15 @@ cipk mar06
             Seratnewl= EROST(NN,NLAYT) *(BSHEAR(NN)/SS(NLAYT)-1.)
 
             !MD   INDC = 1  :never used!!
-            TMERODE = SERATNEWL*DELT
+            TMERODE = SERATNEWL*DELT*FACT_SPEED_UP
             DTHK = TMERODE/GAD(NLAYT)
 
 C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED.
             BALAN = THICK(N,NLAYT) - DTHK
             IF(BALAN .LE. 0) THEN
-              AMASER=THICK(N,NLAYT)*GAD(NLAYT)
-              SERATNEWL=AMASER/DELT
-              DELTREM=DELT*(1.-THICK(N,NLAYT)/DTHK)
+              AMASER    =THICK(N,NLAYT)*GAD(NLAYT)
+              SERATNEWL =AMASER/ (DELT*FACT_SPEED_UP)
+              DELTREM   =DELT*FACT_SPEED_UP * (1.-THICK(N,NLAYT)/DTHK)
               IF(II .EQ. 2) THEN
                 BEDEL(N) = BEDEL(N) - THICK(N,NLAYT)
                 THICK(N,NLAYT) = 0.
@@ -163,7 +164,7 @@ c             newval=mass from full layers+new layer
             ELSE
               seratold1 = SMVAL(N,L)*(BSHEAR(NN)/SSTO(N,L)-1.)
 c             seratold1 is rate for this layer assuming full erosion              
-              OLDEROD=SERATOLD1*DELTREM
+              OLDEROD=SERATOLD1*DELTREM*FACT_SPEED_UP
 
               !MD: NEUE Berechnung der Trocken-Rohdichte BETT[kg/m3]
               GADLN =(GBO(N,L)-ROAVG)*GAC/(GAC-ROAVG)
@@ -176,7 +177,7 @@ c  rates for this layer computed  balold positive means all taken so finalize
 C-    ONLY THIS LAYER ERODED
               IF (BALOLD .GT. 0.0) THEN
 c               new thickness computed add to accumulate more erosion
-                SERATNEWL=SERATOLD+SERATOLD1*DELTREM/DELT+SERATNEWL
+                SERATNEWL=SERATOLD + SERATOLD1*DELTREM/DELT + SERATNEWL
 c               new value = mass from full layer+current+new layer
                 IF(II .EQ. 2) THEN
                   BEDEL(N) = BEDEL(N) - DTHKOLD
@@ -185,9 +186,9 @@ c               new value = mass from full layer+current+new layer
                 GO TO 1
               ELSE
 C-            MORE THAN THIS LAYER MAY BE ERODED.
-                AMASER=THICKO(N,L)*GADLN
-                DELTREM=DELTREM*(1.-THICKO(N,L)/DTHKOLD)
-                SERATOLD=SERATOLD+AMASER/DELT
+                AMASER  =THICKO(N,L)*GADLN
+                DELTREM =DELTREM*FACT_SPEED_UP*(1.-THICKO(N,L)/DTHKOLD)
+                SERATOLD=SERATOLD + AMASER/(DELT*FACT_SPEED_UP)
                 IF(II .EQ. 2) THEN
                   BEDEL(N) = BEDEL(N) - THICKO(N,L)
                   THICKO(N,L) = 0.0
