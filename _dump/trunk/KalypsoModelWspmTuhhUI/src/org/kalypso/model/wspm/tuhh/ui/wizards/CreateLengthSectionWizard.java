@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -131,20 +132,30 @@ public class CreateLengthSectionWizard extends Wizard
 
       final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) );
       final File targetJavaFile = targetFile.getLocation().toFile();
-      final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
-      if( !kodFile.exists() )
-      {
-        final URL resource = getClass().getResource( "resources/LS_no_result.kod" );
-        final String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "!#localPath#!", fName + ".gml" );
-        final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
-        kodFile.create( inputStream, true, new NullProgressMonitor() );
-      }
-
+      
       final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( new QName( "http://www.opengis.net/om", "Observation" ), targetJavaFile.toURI().toURL(), new GmlSerializerFeatureProviderFactory() );
       final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( profilFeatures );
       ObservationFeatureFactory.toFeature( lengthSection, lsWorkspace.getRootFeature() );
       GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" );
      // KalypsoModelWspmCoreExtensions.createProfilSink( "lng" ).write( lengthSection, new PrintWriter( new FileOutputStream( targetJavaFile ) ) );
+      
+      final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
+      if( !kodFile.exists() )
+      {
+        final URL resource = getClass().getResource( "resources/LS_no_result.kod" );
+        String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "%localPath%", fName + ".gml" );
+        kod = kod.replaceAll( "%title%","LengthSectionChartTitle");
+        kod = kod.replaceAll( "%description%","LengthSectionChartDescription");
+        for(final IComponent comp : lengthSection.getResult().getComponents())
+        {
+          kod = kod.replaceAll( "%"+comp.getId()+"_title%", comp.getName());//getPhenomenon().getName() );
+        }
+        final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
+        kodFile.create( inputStream, true, new NullProgressMonitor() );
+      }
+      
+      
+      
       targetFolder.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
     }
     catch( Exception e )

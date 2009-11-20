@@ -88,7 +88,12 @@ public class DataBlockHeader
     m_secondLine = "[-]"; //$NON-NLS-1$
     m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
   }
-
+  public DataBlockHeader(final String firstLine ,final String secondLine)
+  {
+    m_firstLine = firstLine;
+    m_secondLine = secondLine;
+    m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
+  }
   public String getFirstLine( )
   {
     return m_firstLine;

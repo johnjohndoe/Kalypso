@@ -93,7 +93,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Number domainValRight = i < domainValues.length - 1 ? dopDomain.logicalToNumeric( domainValues[i + 1] ) : domainValue;
     final Number targetValue = dopTarget.logicalToNumeric( targetValues[i] );
     final Number uKValue = dopTarget.logicalToNumeric( uKValues[i] );
-    if( domainValue != null && targetValue != null && uKValue != null )
+    if( domainValue != null && targetValue != null && uKValue != null &&domainValRight!=null&&domainValLeft!=null)
     {
       final Point OKLeft = getCoordinateMapper().numericToScreen( (Double) domainValLeft + ((Double) domainValue - (Double) domainValLeft) / 2.0, targetValue );
       final Point UKRight = getCoordinateMapper().numericToScreen( (Double) domainValue + ((Double) domainValRight - (Double) domainValue) / 2.0, uKValue );

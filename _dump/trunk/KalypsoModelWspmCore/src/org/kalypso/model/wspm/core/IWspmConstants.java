@@ -114,8 +114,10 @@ public interface IWspmConstants
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeWidth";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_ROHR_DN = LENGTH_SECTION_PROPERTY + "LengthSection_RohrDN";//$NON-NLS-1$
-  
+
   public static final String LENGTH_SECTION_PROPERTY_WATERLEVEL = LENGTH_SECTION_PROPERTY + "LengthSectionWaterlevel";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_H_BV = LENGTH_SECTION_PROPERTY + "LengthSection_h_BV";//$NON-NLS-1$
 
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM"; //$NON-NLS-1$

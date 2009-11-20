@@ -84,6 +84,7 @@ public class LngSink implements IProfilSink
     // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
     // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
     m_idMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
+    m_idMap.put( "TEXT", new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
     m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, new String[] { "Wasserspiegel NN+m"});//$NON-NLS-1$
   }
 
@@ -167,7 +168,7 @@ public class LngSink implements IProfilSink
         final DataBlockHeader dbh = m_idMap.get( col1[i] ) == null ? new DataBlockHeader( col1[i] ) : createHeader( col1[i] );
 
         if( i < col2.length )
-          dbh.setSecondLine( col2[i] );
+          dbh.setSecondLine(blanc200+ col2[i] );
 
         final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
         block.setCoords( ((ArrayList<Double>) table[colStat]).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );

@@ -113,19 +113,21 @@ public class WspmTuhhProfileHelper
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT ) );
+    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_H_BV ) );
 
     for( Object objProfileFeature : profilFeatures )
     {
-      if (! (objProfileFeature instanceof IProfileFeature))
-      continue;
-        
-      final IProfileFeature profileFeature = (IProfileFeature)objProfileFeature;
+      if( !(objProfileFeature instanceof IProfileFeature) )
+        continue;
+
+      final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
       final IProfil profil = profileFeature.getProfil();
       final IComponent profHei = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       final int indHei = profil.indexOfProperty( profHei );
 
       IRecord station = lsResult.createRecord();
-      station.setValue( 10, profileFeature.getDescription() );
+      final String desc = profileFeature.getDescription();
+      station.setValue( 10, "".equals( desc ) ? null : desc );
       station.setValue( 0, profileFeature.getBigStation(), true );// Station
       // Kennung
       // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
@@ -136,13 +138,19 @@ public class WspmTuhhProfileHelper
       // Devider
       if( mbv.length == 2 )
       {
-        station.setValue( 3, valueToBigDecimal( mbv[0].getPoint().getValue( indHei ) ), true ); // BOE_LI
-        station.setValue( 4, valueToBigDecimal( mbv[1].getPoint().getValue( indHei ) ), true ); // BOE_RE
+        final BigDecimal boLi = valueToBigDecimal( mbv[0].getPoint().getValue( indHei ) );
+        final BigDecimal boRe = valueToBigDecimal( mbv[1].getPoint().getValue( indHei ) );
+        station.setValue( 3, boLi, true ); // BOE_LI
+        station.setValue( 4, boRe, true ); // BOE_RE
+        station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ), true ); // H_BV
       }
       else if( mtf.length == 2 )
       {
-        station.setValue( 3, valueToBigDecimal( mtf[0].getPoint().getValue( indHei ) ), true ); // BOE_LI
-        station.setValue( 4, valueToBigDecimal( mtf[1].getPoint().getValue( indHei ) ), true ); // BOE_RE
+        final BigDecimal boLi = valueToBigDecimal( mtf[0].getPoint().getValue( indHei ) );
+        final BigDecimal boRe = valueToBigDecimal( mtf[1].getPoint().getValue( indHei ) );
+        station.setValue( 3, boLi, true ); // BOE_LI
+        station.setValue( 4, boRe, true ); // BOE_RE
+        station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ), true ); // H_BV
       }
 
       // Profile Objects

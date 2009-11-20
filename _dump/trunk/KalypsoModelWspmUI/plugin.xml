@@ -470,6 +470,13 @@
                </visibleWhen>
             </command>
          </menuContribution>
+         <menuContribution
+               locationURI="menu:org.kalypso.chart.ui.editor.menu?after=additions">
+            <command
+                  commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+                  style="push">
+            </command>
+         </menuContribution>
       </extension>
       <extension
             point="de.openali.odysseus.chart.factory.LayerProvider">

@@ -2,20 +2,20 @@
 <ChartConfiguration xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd" xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     
     <Chart id="ls">
-        <Title>Längsschnitt</Title>
-        <Description>Längsschnitt</Description>
+        <Title>%title%</Title>
+        <Description>%description%</Description>
         <Layers>
             <Layer id="soil">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
-                        <Parameter value="!#localPath#!" name="href"/>
+                        <Parameter value="%localPath%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
                         <Parameter value="root" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId"/>
                     </Parameters>
                 </Provider>
-                <Title>Sohlhöhe</Title>
+                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround_title%</Title>
                 <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
@@ -23,12 +23,12 @@
                 </MapperRefs>
                 <Styles>
                     <LineStyle role="line">
-                        <Title>Sohlhöhe</Title>
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround_title%</Title>
                         <Width>2</Width>
                         <LineColor>FFA000</LineColor>
                     </LineStyle>
                     <PointStyle role="point">
-                        <Title>Sohlhöhe</Title>
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround_title%</Title>
             			<Width>6</Width>
             			<Height>6</Height>
             			<FillColor isVisible="true">
@@ -41,14 +41,14 @@
             <Layer id="Boe_li" visible="false">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
-                        <Parameter value="!#localPath#!" name="href"/>
+                        <Parameter value="%localPath%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
                         <Parameter value="root" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId"/>
                     </Parameters>            
                 </Provider>
-                <Title>Böschung (links)</Title>
+                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li_title%</Title>
                 <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
@@ -56,12 +56,12 @@
                 </MapperRefs>
                 <Styles>
                     <LineStyle role="line">
-                        <Title>Böschung (links)</Title>
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li_title%</Title>
                         <Width>2</Width>
                         <LineColor>C83200</LineColor>
                     </LineStyle>
                     <PointStyle role="point">
-                        <Title>Sohlhöhe</Title>
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li_title%</Title>
             			<Width>6</Width>
             			<Height>6</Height>
             			<FillColor isVisible="true">
@@ -72,17 +72,51 @@
                 </Styles>
             </Layer>
             
+            <Layer id="h_BV" visible="true">
+                <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+                    <Parameters>
+                        <Parameter value="%localPath%" name="href"/>
+                        <Parameter value="" name="gxlpath"/>
+                        <Parameter value="root" name="observationId"/>
+                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
+                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId"/>
+                    </Parameters>            
+                </Provider>
+                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV_title%</Title>
+                <Description/>
+                <MapperRefs>
+                    <DomainAxisRef ref="Station_Axis"/>
+                    <TargetAxisRef ref="NN_Axis"/>
+                </MapperRefs>
+                <Styles>
+                    <LineStyle role="line">
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV_title%</Title>
+                        <Width>2</Width>
+                        <LineColor>641900</LineColor>
+                    </LineStyle>
+                    <PointStyle role="point">
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV_title%</Title>
+            			<Width>6</Width>
+            			<Height>6</Height>
+            			<FillColor isVisible="true">
+              				<Color>C83200</Color>
+            			</FillColor>
+            			<Stroke isVisible="false"></Stroke>
+                    </PointStyle>
+                </Styles>
+            </Layer>
+            
             <Layer id="Bridge" visible="true">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
-                        <Parameter value="!#localPath#!" name="href"/>
+                        <Parameter value="%localPath%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
                         <Parameter value="root" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId"/>
                     </Parameters>            
                 </Provider>
-                <Title>Brücke</Title>
+                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK_title%</Title>
                 <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
@@ -90,12 +124,12 @@
                 </MapperRefs>
                 <Styles>
                     <PointStyle role="point">
-            			<Title>Brücke</Title>
+            			<Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK_title%</Title>
             			<Width>3</Width>
             			<Height>3</Height>
-            			<alpha>100</alpha>
+            			<Alpha>40</Alpha>
             			<FillColor isVisible="true">
-              				<Color>0080B1</Color>
+              				<Color>404040</Color>
             			</FillColor>
             			<Stroke>
                				<LineColor>0080B1</LineColor>
@@ -111,14 +145,14 @@
             <Layer id="Boe_re" visible="false">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
-                        <Parameter value="!#localPath#!" name="href"/>
+                        <Parameter value="%localPath%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
                         <Parameter value="root" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId"/>
                     </Parameters>    
                 </Provider>
-                <Title>Böschung (rechts)</Title>
+                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re_title%</Title>
                 <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
@@ -126,12 +160,12 @@
                 </MapperRefs>
                 <Styles>
                     <LineStyle role="line">
-                        <Title>Böschung (rechts)</Title>
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re_title%</Title>
                         <Width>2</Width>
                         <LineColor>C83200</LineColor>
                     </LineStyle>
                     <PointStyle role="point">
-                        <Title>Sohlhöhe</Title>
+                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re_title%</Title>
             			<Width>6</Width>
             			<Height>6</Height>
             			<FillColor isVisible="true">
@@ -147,7 +181,7 @@
             <Axis id="Station_Axis">
                 <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
                 </Provider>
-                <Label>Station [km]</Label>
+                <Label>Station_Axis_label</Label>
                 <Direction>NEGATIVE</Direction>
                 <Position>BOTTOM</Position>
                 <RendererRef ref="NumberAxisRenderer"/>
@@ -156,7 +190,7 @@
             <Axis id="NN_Axis">
                 <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
                 </Provider>
-                <Label>Höhe [NN+m]</Label>
+                <Label>NN_Axis_label</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>LEFT</Position>
                 <RendererRef ref="NumberAxisRenderer"/>
