@@ -1,5 +1,9 @@
-C     Last change:  MD   10 Jun 2009    3:10 pm
+C     Last change:  MD    5 Oct 2009    6:17 pm
       MODULE BLKSEDMOD
+
+!MD:    FACT_SPEED_UP = Speed-up factor for bed evolution as a multipilier
+!MD:                    for each DELT (timestep) and change of suspended and bed layers
+      REAL(KIND = 8):: FACT_SPEED_UP
 
 
       INTEGER IMTREF(100)
