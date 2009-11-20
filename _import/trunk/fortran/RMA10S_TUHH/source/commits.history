@@ -1552,3 +1552,8 @@ new features introduced/ started to be introduced:
       (affects: getwind.sub, wind.sub)
 
 --- Nico Schrage, 11.11.2009
+
+183.) Add factor to speed up bed evolution in case of cohesive sediment simulation.
+      (affects: input, serosion, merosion, newbed, blksedmod)
+      
+--- Edgar Nehlsen, 20.11.2009
