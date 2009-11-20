@@ -1,4 +1,4 @@
-C     Last change:  MD   28 Aug 2009    3:51 pm
+C     Last change:  MD    5 Oct 2009    6:39 pm
 cipk last update jan 11 2007 allow for 5 node transition elements
 CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
 CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
@@ -16,10 +16,14 @@ CIPK  LAST UPDATE APR 4 1997
       SUBROUTINE NEWBED(II)
 
 C----------------------------------------------------------------------
-C       THIS ROUTINE FORMS THE NEW BED THAT IS A RESULT OF DEPOSITION
+C     THIS ROUTINE FORMS THE NEW BED THAT IS A RESULT OF DEPOSITION
 C     IN THE LAST TIME INTERVAL
 C----------------------------------------------------------------------
 C
+C
+C     FACT_SPEED_UP = Speed-up factor for bed evolution
+C
+C----------------------------------------------------------------------
       USE BLK10MOD
       USE BLKDRMOD
       USE BLKSEDMOD
@@ -115,11 +119,11 @@ c        TM(NN)=ABS(VST)*DELT*((3.*TAUCD-2.*TAUO-TAU)*CSO+
 c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
 
 !MD: Use orginale Parameters
-        TMTMP1=deprat(nn)*DELT*VEL(6,N)
+        TMTMP1=deprat(nn)* (DELT*FACT_SPEED_UP) *VEL(6,N)
 
 CIPK REVISE TO USE OLD DEPRATO
 !MD: Use orginale Parameters
-        TMTMP2=DEPRATO(NN)*DELT*VOLD(6,N)
+        TMTMP2=DEPRATO(NN)* (DELT*FACT_SPEED_UP) *VOLD(6,N)
 c        TMTMP2A=TEMP1*ABS(VST)*DELT*CS
 C        write(215,*) nn,temp,vst,delt
 C        write(215,*) TM(NN),TMTMP1,TMTMP2,deprat(nn)
@@ -292,8 +296,8 @@ cipk jan99    EDM=(DMER+SER-DR)*DELT
 
 !MD:      Used original Parameters
       !MD:    EDM=((DMER+SER)/1000.-DR)*DELT
-          EDM=((EDOT(N)+SERAT(N))/1000.-(TMD(I)/DELT))*DELT
-
+          EDM = ((EDOT(N)+SERAT(N))/1000. -
+     +           (TMD(I)/(DELT*FACT_SPEED_UP)))* (DELT*FACT_SPEED_UP)
 
 
 !MD: Test ob sohlevultion richtig: !MD: Test ob sohlevultion richtig:
@@ -502,17 +506,17 @@ cipk may06 get nodal masses for susp sed and bed
 CIPK AUG06 REVISE MASS COMPUTATION
 	 TMSED(NN) =TVN
 
-	 TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
-     +             +(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
+	 TMSSED(NN)= VEL(3,NN)*VEL(6,NN)/1000. + (EDOT(nn)+ SERAT(nn))
+     +             * (delt*FACT_SPEED_UP)/1000.*(ALPHA-1.)/ALPHA
 
-	 TMSADD(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))
-     +             *delt/(1000.*ALPHA)+TMASSLEFT(NN)
+	 TMSADD(NN)= (EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))
+     +             * (delt*FACT_SPEED_UP)/(1000.*ALPHA)+TMASSLEFT(NN)
          !MD:  TMLF =TMASSLEFT(NN)    :never used
 
-	 TMASSLEFT(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))
-     +                *delt/1000.*(ALPHA-1.)/ALPHA
+	 TMASSLEFT(NN)= (EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))
+     +                * (delt*FACT_SPEED_UP)/1000.*(ALPHA-1.)/ALPHA
 
-	 TMSDEP(NN) =(DEPRAT(NN)*VEL(6,NN))*delt/1000.
+	 TMSDEP(NN) =(DEPRAT(NN)*VEL(6,NN))* (delt*FACT_SPEED_UP)/1000.
 
 C Print layer info
 cipk jan99 fix reference to N when it should be NN
@@ -573,13 +577,13 @@ CIPK AUG06 REVISE TO FULL ELEMENT INTEGRATION
 
          TMD(0)= TMD(0)-
      +  (serat(NOP(N,1))+serat(NOP(N,3))+serat(NOP(N,5)))*
-     +           (AREA(N)*delt/6000.)+        
+     +           (AREA(N)*(delt*FACT_SPEED_UP)/6000.)+
      +  (serat(NOP(N,2))+serat(NOP(N,4))+serat(NOP(N,6)))*
-     +           (AREA(N)*delt/2000.)        
+     +           (AREA(N)*(delt*FACT_SPEED_UP)/2000.)
      + -(edot(NOP(N,1))+edot(NOP(N,3))+edot(NOP(N,5)))*
-     +           (AREA(N)*delt/6000.)+        
+     +           (AREA(N)*(delt*FACT_SPEED_UP)/6000.)+
      +  (edot(NOP(N,2))+edot(NOP(N,4))+edot(NOP(N,6)))*
-     +           (AREA(N)*delt/2000.)        
+     +           (AREA(N)*(delt*FACT_SPEED_UP)/2000.)
          
         ELSEIF(NCN .EQ. 8) THEN
         TMSED(0)=TMSED(0)-
@@ -605,13 +609,13 @@ CIPK AUG06 REVISE TO FULL ELEMENT INTEGRATION
 
          TMD(0)= TMD(0)-
      + (serat(NOP(N,1))+serat(NOP(N,3))+serat(NOP(N,5))+serat(NOP(N,7)))
-     +          *(AREA(N)*delt/12000.)+        
+     +          *(AREA(N)*(delt*FACT_SPEED_UP)/12000.)+
      + (serat(NOP(N,2))+serat(NOP(N,4))+serat(NOP(N,6))+serat(NOP(N,8)))
-     +          *(AREA(N)*delt/3000.)        
+     +          *(AREA(N)*(delt*FACT_SPEED_UP)/3000.)
      +-(edot(NOP(N,1))+edot(NOP(N,3))+edot(NOP(N,5))+edot(NOP(N,7)))
-     +          *(AREA(N)*delt/12000.)+        
+     +          *(AREA(N)*(delt*FACT_SPEED_UP)/12000.)+
      + (edot(NOP(N,2))+edot(NOP(N,4))+edot(NOP(N,6))+edot(NOP(N,8)))
-     +          *(AREA(N)*delt/3000.)        
+     +          *(AREA(N)*(delt*FACT_SPEED_UP)/3000.)
 c     +  (TMD(NOP(N,1))+TMD(NOP(N,3))+TMD(NOP(N,5))+TMD(NOP(N,7)))*
 c     +           (AREA(N)/6.)+        
 c     +  (TMD(NOP(N,2))+TMD(NOP(N,4))+TMD(NOP(N,6))+TMD(NOP(N,8)))*
