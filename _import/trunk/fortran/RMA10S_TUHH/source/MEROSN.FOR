@@ -1,4 +1,4 @@
-C     Last change:  MD   30 Jul 2009    1:59 pm
+C     Last change:  MD    5 Oct 2009    6:24 pm
 cipk last update JUNE 5 2006  add test marshing
 cipk last update MAY 30 2006  add test for zero thickness and correct NL
 cipk last update dec 21 2004 fix bug getting node at bed for averaging
@@ -21,13 +21,14 @@ C     THIS SUBROUTINE COMPUTES THE EROSION RATE FOR MASS EROSION
 C     WHICH OCCURS FOR THE TOP NLAYT-1 sus.LAYERS OF DEPOSIT. ALL
 C     COMPUTATIONS ARE MADE ON A NODAL BASIS.
 C         THE EROSION RATE IS RETURNED IN ARRAY EDOT(N).
-C         BEDEL(N) KEEPS TRACK OF THE BED LEVEL
-C         THICK(N,J) RECORDS THE THICKNESS OF EACH LAYER
-C         ESRO(N) = OLD VERSION OF BSHEAR(N)
-C         SS(1) = CRITICAL SHEAR STRENGTH (NEWTONS/M2
-C         SST(N,J) = LAYER SHEAR STRENGTH
-C         DELT = TIME STEP
-C         VEL(3,N) = WATER DEPTH
+C         BEDEL(N)      = KEEPS TRACK OF THE BED LEVEL
+C         THICK(N,J)    = RECORDS THE THICKNESS OF EACH LAYER
+C         ESRO(N)       = OLD VERSION OF BSHEAR(N)
+C         SS(1)         = CRITICAL SHEAR STRENGTH (NEWTONS/M2
+C         SST(N,J)      = LAYER SHEAR STRENGTH
+C         DELT          = TIME STEP
+C         VEL(3,N)      = WATER DEPTH
+C         FACT_SPEED_UP = Speed-up factor for bed evolution
 C
 !MD:  Neu Kennung des Aufrufs II:
 !MD     II = 1 in der Iterations-Schleife eines Zeitschrittes
@@ -122,7 +123,7 @@ c        IF(SST(NN,J) .GT. ES) GO TO 11
            ELSE
              seratnewl= EROSTM(J)*(BSHEAR(N)/SS(J)-1.)
              !MD:  INDC = 1  :never used!!
-             TMERODE = SERATNEWL*DELT
+             TMERODE = SERATNEWL*DELT*FACT_SPEED_UP
              DTHK = TMERODE/GAD(J)
 CIPK MAY06   EDOT(NN)=SERATNEWL*DELT
 
@@ -130,16 +131,16 @@ C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED
 !    ---------------------------------------------
              BALAN = THICK(NN,J) - DTHK
              IF(BALAN .LE. 0) THEN
-               AMASER=THICK(NN,J)*GAD(J)
-               SERATNEWL=AMASER/DELT
-               DELTREM=DELT*(1.-THICK(NN,J)/DTHK)
-               EDOT(NN)=EDOT(NN)+SERATNEWL*DELT
+               AMASER   =THICK(NN,J)*GAD(J)
+               SERATNEWL=AMASER/ (DELT*FACT_SPEED_UP)
+               DELTREM  =DELT*FACT_SPEED_UP*(1.-THICK(NN,J)/DTHK)
+               EDOT(NN) =EDOT(NN)+ SERATNEWL*DELT*FACT_SPEED_UP
                IF(II .EQ. 2) THEN
                  BEDEL(NN) = BEDEL(NN) - THICK(NN,J)
                  THICK(NN,J) = 0.
                Endif
              ELSE
-               EDOT(NN)=EDOT(NN)+SERATNEWL*DELT
+               EDOT(NN) =EDOT(NN)+ SERATNEWL*DELT*FACT_SPEED_UP
                IF(II .EQ. 2) THEN
                  BEDEL(NN) = BEDEL(NN) - DTHK
                  THICK(NN,J) = THICK(NN,J) - DTHK
@@ -157,7 +158,7 @@ c        IF(NLAY(NN) .GT. NLAYT) NLAY(NN)=NLAYT
 c        SST(NN,J+1)=SS(1)
 C        EDOT(N)=EDOT(N)/(DELT*WD(N))
 crr aug97 end changes
-        EDOT(N)=EDOT(N)/DELT
+        EDOT(N)=EDOT(N)/ (DELT*FACT_SPEED_UP)
         EDOT(N)=EDOT(N)*1000.
 cipk mar00
         edot(nn)=edot(n)
