@@ -638,6 +638,17 @@ cipk aug02 add BEDLOAD OPTION data
       ENDIF
 
 
+!MD:
+!MD:   New Option to Speed-up Morphology for cohesive Sediment
+!MD
+      FACT_SPEED_UP=1.0D0
+      IF(ID(1:6) .EQ. 'FACTSU') THEN
+        READ(DLIN,'(F8.1)') FACT_SPEED_UP
+	WRITE(LOUT,'(F8.1)') FACT_SPEED_UP
+        call ginpt(lin,id,dlin)
+      ENDIF
+!
+
 !
 !  DJW Dec 2004.  Adding Option to Switch off Morphology
 !
@@ -645,7 +656,7 @@ cipk aug02 add BEDLOAD OPTION data
       IF(ID(1:3) .EQ. 'SMO') THEN
       
         READ(DLIN,'(F8.0)') FACTMORPH
-	  WRITE(LOUT,'(F8.0)') FACTMORPH
+	WRITE(LOUT,'(F8.0)') FACTMORPH
         call ginpt(lin,id,dlin)
       ENDIF
 !
