@@ -41,14 +41,13 @@
 package org.kalypso.ui.rrm.extension;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author kuch
  *
  */
-public class KalypsoRrmWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public class KalypsoRrmWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {
   protected static final Image IMG = new Image( null, KalypsoRrmWelcomePageFrame.class.getResourceAsStream( "icons/hydrology_no.gif" ) ); //$NON-NLS-1$
 
@@ -67,16 +66,8 @@ public class KalypsoRrmWelcomePageFrame implements IKalypsoModuleWelcomePageFram
   }
 
   @Override
-  public String getTooltip( )
-  {
-    return Messages.getString("org.kalypso.ui.rrm.extension.KalypsoRrmWelcomePageFrame.3"); //$NON-NLS-1$
-  }
-
-  @Override
   public Image getHoverIcon( )
   {
     return IMG_HOVER;
   }
-
-
 }
