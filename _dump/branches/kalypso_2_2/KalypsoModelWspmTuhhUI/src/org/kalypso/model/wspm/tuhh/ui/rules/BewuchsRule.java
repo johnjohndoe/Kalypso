@@ -68,7 +68,6 @@ public class BewuchsRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-
     if( profil == null )
       return;
 
@@ -145,7 +144,7 @@ public class BewuchsRule extends AbstractValidatorRule
           final Double ax2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, rightP );
 
           if( (VorlandRhasValues == true && !ax2.isNaN()) && (VorlandRhasValues && ax2 == 0.0) )
-            collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.4"), "km " + profil.getStation(), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
+            collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2"), "km " + profil.getStation(), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
 
         }
       }
@@ -170,6 +169,7 @@ public class BewuchsRule extends AbstractValidatorRule
       if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
       {
         // TODO: führt zu 1000 Fehlern, wenn der Bewuchs nicht gesetzt ist (nach Zuweisung Landnutzung z.b.)
+        // TODO: die Fehlermeldung ist nicht hilfreich
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7"), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         continue;
       }

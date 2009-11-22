@@ -95,11 +95,11 @@ public class DurchlassRule extends AbstractValidatorRule
     final IComponent compKST = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( compKS != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_WARNING,  Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules..DurchlassRule.0", compKS.getName() ), "km " + Double.toString( profil.getStation() ), 0, null, pluginId, new DelRoughnessResolution( new String[] {}, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) );  //$NON-NLS-1$//$NON-NLS-2$ 
+      collector.createProfilMarker( IMarker.SEVERITY_WARNING,  Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.0", compKS.getName() ), "km " + Double.toString( profil.getStation() ), 0, null, pluginId, new DelRoughnessResolution( new String[] {}, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) );  //$NON-NLS-1$//$NON-NLS-2$ 
     }
     if( compKST != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_WARNING,  Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules..DurchlassRule.1", compKST.getName() ), "km " + Double.toString( profil.getStation() ), 0, null, pluginId, new DelRoughnessResolution( new String[] {}, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) );  //$NON-NLS-1$//$NON-NLS-2$ 
+      collector.createProfilMarker( IMarker.SEVERITY_WARNING,  Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKST.getName() ), "km " + Double.toString( profil.getStation() ), 0, null, pluginId, new DelRoughnessResolution( new String[] {}, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) );  //$NON-NLS-1$//$NON-NLS-2$ 
     }
 
     try
