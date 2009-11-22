@@ -41,21 +41,18 @@
 package org.kalypso.risk.extension;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.risk.i18n.Messages;
+import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author kuch
  *
  */
-public class KalypsoRiskWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public class KalypsoRiskWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {
-
   protected static final Image IMG = new Image( null, KalypsoRiskWelcomePageFrame.class.getResourceAsStream( "icons/risk_no.gif" ) ); //$NON-NLS-1$
 
   protected static final Image IMG_HOVER = new Image( null, KalypsoRiskWelcomePageFrame.class.getResourceAsStream( "icons/risk_hover.gif" ) ); //$NON-NLS-1$
 
-  
   @Override
   public Image getIcon( )
   {
@@ -69,15 +66,8 @@ public class KalypsoRiskWelcomePageFrame implements IKalypsoModuleWelcomePageFra
   }
 
   @Override
-  public String getTooltip( )
-  {
-    return Messages.getString("org.kalypso.risk.extension.KalypsoRiskWelcomePageFrame.3"); //$NON-NLS-1$
-  }
-
-  @Override
   public Image getHoverIcon( )
   {
     return IMG_HOVER;
   }
-
 }
