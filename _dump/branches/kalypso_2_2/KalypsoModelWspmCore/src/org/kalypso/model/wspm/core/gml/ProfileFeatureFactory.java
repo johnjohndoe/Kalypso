@@ -47,6 +47,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -102,7 +103,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     for( final FeatureChange change : changes )
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
 
-    targetFeature.invalidEnvelope();
+    targetFeature.setEnvelopesUpdated();
   }
 
   /**
@@ -117,10 +118,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       /* name */
       final String profileName = profile.getName();
       final String bindingName = binding.getName();
-      if( !profileName.equals( bindingName ) )
-      {
+      if( !ObjectUtils.equals( profileName, bindingName ) )
         changes.add( getFeatureChangeName( binding, profileName ) );
-      }
 
       /* description */
       final String profileDescription = profile.getComment();
