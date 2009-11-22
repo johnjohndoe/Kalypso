@@ -3,5 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelProductDemos Plug-in
 Bundle-SymbolicName: org.kalypso.model.product.demos;singleton:=true
 Bundle-Version: 1.0.0
+Bundle-Localization: plugin
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.eclipseplatform
