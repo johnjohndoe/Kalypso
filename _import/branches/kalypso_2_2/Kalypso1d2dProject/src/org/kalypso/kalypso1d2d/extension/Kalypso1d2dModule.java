@@ -9,7 +9,6 @@ public class Kalypso1d2dModule implements IKalypsoModule
 {
   public static final String ID = "Kalypso1d2dModel"; //$NON-NLS-1$
   
-  
   // public constructor, needed because of declared extension point and java class loader
   public Kalypso1d2dModule( )
   {

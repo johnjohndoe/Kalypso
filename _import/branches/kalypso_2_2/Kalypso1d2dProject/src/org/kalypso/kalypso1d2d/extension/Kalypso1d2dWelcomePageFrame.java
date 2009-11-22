@@ -41,14 +41,12 @@
 package org.kalypso.kalypso1d2d.extension;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.kalypso1d2d.extension.i18n.Messages;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author kuch
- *
  */
-public class Kalypso1d2dWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public class Kalypso1d2dWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {
   protected static final Image IMG = new Image( null, Kalypso1d2dWelcomePageFrame.class.getResourceAsStream( "icons/1d_2d_no.gif" ) ); //$NON-NLS-1$
 
@@ -67,15 +65,8 @@ public class Kalypso1d2dWelcomePageFrame implements IKalypsoModuleWelcomePageFra
   }
 
   @Override
-  public String getTooltip( )
-  {
-    return Messages.getString( "org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule.3" ); //$NON-NLS-1$
-  }
-
-  @Override
   public Image getHoverIcon( )
   {
     return IMG_HOVER;
   }
-
 }

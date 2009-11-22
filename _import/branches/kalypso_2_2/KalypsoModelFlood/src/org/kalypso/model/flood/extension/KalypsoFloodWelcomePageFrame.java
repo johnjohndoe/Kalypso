@@ -42,12 +42,12 @@ package org.kalypso.model.flood.extension;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.flood.i18n.Messages;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author kuch
  */
-public class KalypsoFloodWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public class KalypsoFloodWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {
   protected static final Image IMG = new Image( null, KalypsoFloodWelcomePageFrame.class.getResourceAsStream( "icons/flood_no.gif" ) ); //$NON-NLS-1$
 
@@ -63,12 +63,6 @@ public class KalypsoFloodWelcomePageFrame implements IKalypsoModuleWelcomePageFr
   public String getLabel( )
   {
     return Messages.getString("org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.2"); //$NON-NLS-1$
-  }
-
-  @Override
-  public String getTooltip( )
-  {
-    return Messages.getString("org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.3"); //$NON-NLS-1$
   }
 
   @Override
