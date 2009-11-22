@@ -10861,7 +10861,7 @@
       <tuhh:SpecialOptions gml:id="SpecialOptions1211996775952109">
        <tuhh:doCalcBridges>true</tuhh:doCalcBridges>
        <tuhh:doCalcBarrages>true</tuhh:doCalcBarrages>
-       <tuhh:useExtremeRoughness>true</tuhh:useExtremeRoughness>
+       <tuhh:useExtremeRoughness>false</tuhh:useExtremeRoughness>
       </tuhh:SpecialOptions>
      </tuhh:specialOptionsMember>
     </tuhh:WaterlevelParameter>
@@ -10912,7 +10912,7 @@
       <tuhh:SpecialOptions gml:id="SpecialOptions1211995689224427">
        <tuhh:doCalcBridges>true</tuhh:doCalcBridges>
        <tuhh:doCalcBarrages>true</tuhh:doCalcBarrages>
-       <tuhh:useExtremeRoughness>true</tuhh:useExtremeRoughness>
+       <tuhh:useExtremeRoughness>false</tuhh:useExtremeRoughness>
       </tuhh:SpecialOptions>
      </tuhh:specialOptionsMember>
     </tuhh:WaterlevelParameter>

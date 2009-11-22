@@ -59,11 +59,6 @@
                         <extension base="gml:AbstractFeatureType">
                                 <sequence>
                                         <element ref="wspm:waterBodyMember" minOccurs="0" maxOccurs="unbounded"/>
-                                        <!-- TODO: auskommentiert, da im Moment nicht benutzt -->
-                                        <!--element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"
-						maxOccurs="unbounded"/-->
-                                        <!--element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"
-						maxOccurs="unbounded"/-->
                                         <element ref="wspm:calculationMember" minOccurs="0" maxOccurs="unbounded"/>
                                 </sequence>
                         </extension>
