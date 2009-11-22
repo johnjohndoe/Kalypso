@@ -207,11 +207,9 @@ public class WspWinExporter
     {
       final IObservation<TupleResult> runOffEvent = calculation.getRunOffEvent();
       if( runOffEvent == null )
-      {
         throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12") ); //$NON-NLS-1$
-      }
-      else
-        write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
+
+      write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
     }
   }
 
@@ -258,11 +256,13 @@ public class WspWinExporter
 
       pw = new PrintWriter( new BufferedWriter( new FileWriter( qwtFile ) ) );
 
-      pw.print( runOffEvent.getName().replaceAll( " ", "_" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      String runoffName = runOffEvent.getName();
+      String cleanRunoffName = cleanupRunoffName( runoffName );
+      pw.print( cleanRunoffName );
       pw.print( " " ); //$NON-NLS-1$
       pw.println( result.size() );
 
-      // write it sorted into the flle
+      // write it sorted into the file
       for( final Map.Entry<BigDecimal, BigDecimal> entry : values.entrySet() )
       {
         final BigDecimal station = entry.getKey();
@@ -278,6 +278,11 @@ public class WspWinExporter
     {
       IOUtils.closeQuietly( pw );
     }
+  }
+
+  private static String cleanupRunoffName( String runoffName )
+  {
+    return runoffName.replaceAll( "( |,|\\.)", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile ) throws IOException
