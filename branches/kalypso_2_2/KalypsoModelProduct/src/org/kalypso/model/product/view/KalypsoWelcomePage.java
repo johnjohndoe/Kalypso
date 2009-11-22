@@ -41,10 +41,13 @@
 package org.kalypso.model.product.view;
 
 import java.awt.Point;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -55,13 +58,15 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IntroPart;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
@@ -76,6 +81,8 @@ import org.kalypso.project.database.client.ui.composites.WelcomePageComposite;
  */
 public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 {
+  private static final String KALYPSO_WEB_PAGE = "http://kalypso.sourceforge.net/";
+
   private static final Image IMG_BACKGROUND = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/background.gif" ) ); //$NON-NLS-1$
 
   protected static final Image IMG_FOOTER = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/footer.gif" ) ); //$NON-NLS-1$
@@ -154,7 +161,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
         final org.eclipse.swt.graphics.Point size = m_contentArea.getSize();
         if( size == null )
           return;
-        
+
         if( m_size == null )
         {
           m_size = size;
@@ -187,6 +194,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
     };
 
     footerHelpContent.setImage( IMG_HELP );
+    footerHelpContent.setTooltip( Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.4" ) ); //$NON-NLS-1$
     footerHelpContent.setMouseListener( new MouseAdapter()
     {
       /**
@@ -198,7 +206,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
         final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
         helpSystem.displayHelp();
       }
-    }, Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.4" ) ); //$NON-NLS-1$
+    } );
 
     footer.addContentArea( footerHelpContent );
 
@@ -217,6 +225,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       };
 
       footerBackContent.setImage( IMG_HOME );
+      footerBackContent.setTooltip( Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.5" ) ); //$NON-NLS-1$
       footerBackContent.setMouseListener( new MouseAdapter()
       {
         /**
@@ -227,14 +236,13 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
         {
           setSelectedModule( null );
         }
-      }, Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.5" ) ); //$NON-NLS-1$
+      } );
 
       footer.addContentArea( footerBackContent );
     }
 
     final DefaultContentArea footerLogo = new DefaultContentArea()
     {
-
       @Override
       public Point getContentAreaAnchorPoint( )
       {
@@ -243,6 +251,8 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
     };
 
     footerLogo.setImage( IMG_FOOTER );
+    final String footerLogoTooltip = Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.6" );
+    footerLogo.setTooltip( footerLogoTooltip ); //$NON-NLS-1$
     footerLogo.setMouseListener( new MouseAdapter()
     {
       /**
@@ -251,20 +261,26 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       @Override
       public void mouseUp( final MouseEvent e )
       {
-        // TODO: platform dependent; try to find other solution
-        final String command = "cmd /C start http://kalypso.sourceforge.net/"; //$NON-NLS-1$
-
         try
         {
-          Runtime.getRuntime().exec( command );
+          final IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+          final IWebBrowser externalBrowser = browserSupport.getExternalBrowser();
+          externalBrowser.openURL( new URL( KALYPSO_WEB_PAGE ) );
         }
-        catch( final Exception e1 )
+        catch( final PartInitException ex )
         {
-          KalypsoModelProductPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+          final String message = String.format( "Failed to open external browser at %s", KALYPSO_WEB_PAGE );
+          MessageDialog.openError( e.widget.getDisplay().getActiveShell(), footerLogoTooltip, message );
+          KalypsoModelProductPlugin.getDefault().getLog().log( ex.getStatus() );
+        }
+        catch( final MalformedURLException ex )
+        {
+          final String message = String.format( "Failed to open external browser at %s", KALYPSO_WEB_PAGE );
+          MessageDialog.openError( e.widget.getDisplay().getActiveShell(), footerLogoTooltip, message );
         }
 
       }
-    }, Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.6" ) ); //$NON-NLS-1$
+    } );
 
     footer.addContentArea( footerLogo );
 
