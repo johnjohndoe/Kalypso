@@ -116,7 +116,7 @@ public class PropertyEditWizard extends Wizard
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
     m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.1" ), null, false ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.5" ) ); //$NON-NLS-1$
+    m_profileChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ) ); //$NON-NLS-1$
   }
 
   public PropertyEditWizard( final IProfil profile, final ISelection selection )
@@ -127,6 +127,7 @@ public class PropertyEditWizard extends Wizard
     m_profiles = null;
     m_selectedProfiles = null;
     m_profileChooserPage = null;
+    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -158,7 +159,7 @@ public class PropertyEditWizard extends Wizard
     if( m_profile == null )
       addPage( m_profileChooserPage );
 
-    m_propertyChooserPage = new ArrayChooserPage( null, null, null, 1, "profilePropertiesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.1" ), null, true ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_propertyChooserPage = new ArrayChooserPage( null, null, null, 1, "profilePropertiesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.8" ), null, true ); //$NON-NLS-1$ //$NON-NLS-2$
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
       /**
@@ -173,11 +174,11 @@ public class PropertyEditWizard extends Wizard
         return element.toString();
       }
     } );
-    m_propertyChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ) ); //$NON-NLS-1$
+    m_propertyChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.9" ) ); //$NON-NLS-1$
 
-    m_operationChooserPage = new OperationChooserPage( m_selectedPoints, Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.1" ) ); //$NON-NLS-1$
+    m_operationChooserPage = new OperationChooserPage( m_selectedPoints, Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.10" ) ); //$NON-NLS-1$
     m_operationChooserPage.setPageComplete( false );
-    m_operationChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.7" ) ); //$NON-NLS-1$
+    m_operationChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.11" ) ); //$NON-NLS-1$
 
     addPage( m_propertyChooserPage );
     addPage( m_operationChooserPage );

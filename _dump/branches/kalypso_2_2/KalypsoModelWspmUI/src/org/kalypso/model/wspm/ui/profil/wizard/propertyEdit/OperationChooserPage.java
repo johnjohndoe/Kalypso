@@ -65,7 +65,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -80,7 +79,6 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
@@ -195,7 +193,6 @@ public class OperationChooserPage extends WizardPage
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
     group.setText( Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.3") ); //$NON-NLS-1$
-    new Label( group, SWT.NONE ).setText( Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.4") ); //$NON-NLS-1$
 
     if( m_filters == null )
     {
@@ -213,34 +210,31 @@ public class OperationChooserPage extends WizardPage
   {
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    group.setLayout( new GridLayout( 2, false ) );
+    group.setLayout( new GridLayout( 3, false ) );
     group.setText( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.0" ) ); //$NON-NLS-1$
+    
     final Label lbl = new Label( group, SWT.NONE );
     lbl.setText( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.1" ) ); //$NON-NLS-1$
-    final GridData labelData = new GridData();
-    labelData.horizontalSpan = 2;
-    lbl.setLayoutData( labelData );
+    lbl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    
     final Combo combo = new Combo( group, SWT.DROP_DOWN | SWT.READ_ONLY );
-    combo.setLayoutData( new GridData() );
+    combo.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     final Display display = group.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-    final Label lbltip = new Label( group, SWT.NONE );
-    final GridData gd = new GridData();
-    gd.horizontalSpan = 2;
-    lbltip.setLayoutData( gd );
     final Text bldText = new Text( group, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    bldText.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, false, true ) );
+    bldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( value != null )
       bldText.setText( value );
 
     if( m_calculators == null )
     {
       m_calculators = new ArrayList<PropertyCalculator>();
+      // TODO: move this code into a separate class
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.2") ); //$NON-NLS-1$
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.pointPropertyCalculator" ); //$NON-NLS-1$
       for( final IConfigurationElement element : elements )
       {
         final String id = element.getAttribute( "id" ); //$NON-NLS-1$
@@ -255,7 +249,7 @@ public class OperationChooserPage extends WizardPage
           if( id.equals( calculatorId ) )
           {
             combo.select( combo.getItemCount() - 1 );
-            lbltip.setText( tooltip );
+            bldText.setToolTipText( tooltip );
           }
         }
         catch( final CoreException e )
@@ -285,7 +279,6 @@ public class OperationChooserPage extends WizardPage
 
     combo.addSelectionListener( new SelectionAdapter()
     {
-
       @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
@@ -295,9 +288,7 @@ public class OperationChooserPage extends WizardPage
         {
           final PropertyCalculator propertyCalculator = m_calculators.get( combo.getSelectionIndex() );
           dialogSettings.put( SETTINGS_CALCULATOR_ID, propertyCalculator.m_id );
-          lbltip.setText( propertyCalculator.m_tooltip );
-          lbltip.pack( true );
-          group.changed( new Control[] { lbltip } );
+          bldText.setToolTipText( propertyCalculator.m_tooltip );
         }
       }
     } );

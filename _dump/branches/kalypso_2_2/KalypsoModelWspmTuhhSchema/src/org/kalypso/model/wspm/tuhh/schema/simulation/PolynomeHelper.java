@@ -242,7 +242,7 @@ public class PolynomeHelper
     catch( final ProcessTimeoutException e )
     {
       log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11") ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.12") ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11") ); //$NON-NLS-1$
       return;
     }
     finally

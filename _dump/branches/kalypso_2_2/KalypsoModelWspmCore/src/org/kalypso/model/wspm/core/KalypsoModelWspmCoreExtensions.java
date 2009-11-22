@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
-import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfileType;
@@ -61,11 +60,9 @@ public class KalypsoModelWspmCoreExtensions
     if( stati.size() > 0 )
     {
       final IStatus[] childrens = stati.toArray( new IStatus[stati.size()] );
-      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString("org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0"), null ); //$NON-NLS-1$
-      if( status != null )
-      {
-        // TODO: what to do whith this status?
-      }
+      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, "One or more QuickFix-Tools could not be initialized.", null ); //$NON-NLS-1$
+      if( !status.isOK() )
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
     }
 
     return reparators.toArray( new IProfilMarkerResolution[reparators.size()] );

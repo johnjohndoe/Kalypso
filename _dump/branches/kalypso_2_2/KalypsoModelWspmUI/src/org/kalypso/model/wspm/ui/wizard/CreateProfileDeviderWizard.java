@@ -120,7 +120,7 @@ public class CreateProfileDeviderWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.1"), Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, "profileFeaturesChooserPage", Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
     m_profileChooserPage.setMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.3") ); //$NON-NLS-1$
 

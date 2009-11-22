@@ -93,7 +93,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
+        Debug.print( point, String.format( "Zero value for %s (property number %d)", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -128,7 +128,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
+        Debug.print( point, String.format( "Zero value for %s (property number %d)", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
