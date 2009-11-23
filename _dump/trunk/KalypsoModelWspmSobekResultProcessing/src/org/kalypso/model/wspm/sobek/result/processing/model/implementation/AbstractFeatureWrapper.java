@@ -340,4 +340,20 @@ public abstract class AbstractFeatureWrapper implements Feature
   {
     m_feature.setProperty( NamedFeatureHelper.GML_LOCATION, location );
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
+   */
+  public void setCachedGeometry( Object value )
+  {
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
+   */
+  public Object getCachedGeometry( )
+  {
+    return null;
+  }
+
 }

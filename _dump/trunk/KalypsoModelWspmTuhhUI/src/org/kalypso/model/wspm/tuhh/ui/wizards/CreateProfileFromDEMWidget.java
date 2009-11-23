@@ -17,6 +17,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
@@ -170,7 +171,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       }
       
     
-      final WspmWaterBody reach = m_reach;
+      final WspmWaterBody lWaterBodyReach = m_reach;
 
       new UIJob( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3") )
       {
@@ -185,14 +186,14 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
             IProfileFeature profileFeature;
             try
             {
-              profileFeature = reach.createNewProfile();
+              profileFeature = lWaterBodyReach.createNewProfile();
               ProfileFeatureFactory.toFeature( profile, profileFeature );
               
               GMLWorkspace workspace = profileFeature.getWorkspace();
               
               Feature[] changed_features = new Feature[1];
               changed_features[0] = profileFeature;
-              final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, reach.getFeature(), changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+              final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, lWaterBodyReach.getFeature(), changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
               workspace.fireModellEvent( event );
             }
             catch( GMLSchemaException e )

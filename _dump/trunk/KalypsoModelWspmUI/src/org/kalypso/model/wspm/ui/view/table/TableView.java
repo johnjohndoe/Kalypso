@@ -256,9 +256,19 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     final ControlEditor m_controlEditor = new ControlEditor( m_cursor );
     m_controlEditor.grabHorizontal = true;
     m_controlEditor.grabVertical = true;
-
-    m_cursor.setVisible( true );
-    m_cursor.setEnabled( true );
+    
+    try{
+      m_cursor.setVisible( true );
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    try{
+      m_cursor.setEnabled( true );
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
 
     m_view.getTable().setHeaderVisible( true );
     m_view.getTable().setLinesVisible( true );
