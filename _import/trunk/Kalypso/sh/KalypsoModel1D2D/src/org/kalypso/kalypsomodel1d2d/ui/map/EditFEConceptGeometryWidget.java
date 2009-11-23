@@ -269,14 +269,12 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
           final GM_Position lFlowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( element );
           final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
           final ChangeFeatureCommand lChangeFeatureCommand = new ChangeFeatureCommand( lBuilding.getFeature(), lBuilding.getFeature().getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
-// lBuilding.setPosition( GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
           try
           {
             m_flowWorkspace.postCommand( lChangeFeatureCommand );
           }
           catch( final Exception e )
           {
-            // TODO Auto-generated catch block
             e.printStackTrace();
           }
         }

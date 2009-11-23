@@ -40,25 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * The handler that converts the RMA�Kalypso element events into discretisation model elements and links
@@ -84,6 +95,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final HashMap<Integer, String> m_elementsNameConversionMap = new HashMap<Integer, String>();
 
+  private GM_Envelope m_gmExistingEnvelope;
+
+  private Set< Integer > m_setNotInsertedNodes;
+
   private static boolean[] NOT_CREATED = new boolean[1];
 
   public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider )
@@ -91,6 +106,15 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_model = model;
     m_workspace = model.getFeature().getWorkspace();
     m_positionProvider = positionProvider;
+    m_setNotInsertedNodes = new HashSet< Integer >();
+    try
+    {
+      m_gmExistingEnvelope = m_model.getNodes().getBoundingBox();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -105,22 +129,80 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void end( )
   {
-    final Feature[] allElements = m_model.getElements().getWrappedList().toFeatures();
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), allElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final Feature[] lElementsToRemove = getElementsWithoutGeometry();
+    final Feature[] lAllElements = m_model.getElements().getWrappedList().toFeatures();
+   
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), lAllElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    
+    removeElements( lElementsToRemove );
+  }
+
+  private void removeElements( Feature[] elementsToRemove )
+  {
+    final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( m_model );
+    
+    
+    for( final Feature feature : elementsToRemove )
+    {
+      if( feature != null )
+      {
+
+        if( TypeInfo.isPolyElementFeature( feature ) )
+        {
+          ((DeletePolyElementCmd) deleteCmdPolyElement).addElementToRemove( feature );
+        }
+      }
+    }
+    try
+    {
+      deleteCmdPolyElement.process();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), elementsToRemove, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_model.getElements().removeAllAtOnce( Arrays.asList( elementsToRemove ) );
+  }
+  
+  @SuppressWarnings("unchecked")
+  private Feature[] getElementsWithoutGeometry( )
+  {
+    Set< Feature > lSetToRemove = new HashSet< Feature >();
+    for( final IFE1D2DElement lElement: m_model.getElements() ){
+      if( lElement instanceof IPolyElement ){
+        final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) lElement).getGeometry();
+        if( eleGeom == null )
+        {
+          lSetToRemove.add( lElement.getFeature() );
+        }
+      }
+    }
+    return lSetToRemove.toArray( new Feature[ lSetToRemove.size() ] );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int,
    *      int, int)
    */
+  @SuppressWarnings("unchecked")
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
     final IFE1D2DNode node1 = getNode( node1ID );
     final IFE1D2DNode node2 = getNode( node2ID );
-    if( node1 == null )
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.0", node1ID, id ) ); //$NON-NLS-1$
-    if( node2 == null )
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.1", node1ID, id ) ); //$NON-NLS-1$
+    if( node1 == null ){
+      if( !m_setNotInsertedNodes.contains( node1ID ) ){
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.0", node1ID, id ) ); //$NON-NLS-1$
+      }
+      return;
+    }
+    if( node2 == null ){
+      if( !m_setNotInsertedNodes.contains( node2ID ) ){
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.1", node1ID, id ) ); //$NON-NLS-1$
+      }
+      return;
+    }
 
     final IFE1D2DEdge existingEdge = m_model.findEdge( node1, node2 );
     final IFE1D2DEdge edge;
@@ -251,6 +333,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     node = m_model.findNode( nodeLocation, 0.01 );
     if( node == null )
     {
+      if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( nodeLocation.getPosition() ) ){
+         IPolyElement lFoundElement = m_model.find2DElement( nodeLocation, 0.01 );
+         if( lFoundElement != null )
+         {
+           //do not insert nodes that are placed on existing model(overlapped elements) 
+           m_setNotInsertedNodes.add( id );
+           Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "removed node ", nodeLocation.toString() ); //$NON-NLS-1$
+           return;
+         }
+      }
       // new node, create
       node = m_model.createNode( nodeLocation, -1, NOT_CREATED );
     }

@@ -41,8 +41,10 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -63,16 +65,15 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
 {
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  @SuppressWarnings("unchecked")
-  private final IPolyElement m_element2D;
+  private List< Feature > m_changedFeatureList;
+  
+  private Set< Feature > m_setFeaturesToRemove = null;
 
-  private List<Feature> m_changedFeatureList;
-
-  @SuppressWarnings("unchecked")
-  public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature feature )
+  public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature pFeature )
   {
     m_model1d2d = model1d2d;
-    m_element2D = (IPolyElement) feature.getAdapter( IPolyElement.class );
+    m_setFeaturesToRemove = new HashSet< Feature >();
+    addElementToRemove( pFeature );
   }
 
   /**
@@ -98,39 +99,52 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   public void process( ) throws Exception
   {
     m_changedFeatureList = new ArrayList<Feature>();
-    final String elementID = m_element2D.getGmlID();
     final RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
-
-    // delete link to complex elements
-    final List<IFE1D2DComplexElement> parentComplexElements = m_element2D.getContainers();
-    for( final IFE1D2DComplexElement complexElement : parentComplexElements )
+    for( final Feature lFeature : m_setFeaturesToRemove )
     {
-      complexElement.getElements().remove( elementID );
-      m_changedFeatureList.add( complexElement.getFeature() );
-    }
-    m_changedFeatureList.add( m_element2D.getFeature() );
+      IPolyElement lElement = (IPolyElement) lFeature.getAdapter( IPolyElement.class );
+      final String elementID = lElement.getGmlID();
 
-    // delete link to edges and the edges itself (with the nodes)
-    final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_element2D.getEdges();
-    for( final IFE1D2DEdge edge : edges )
-    {
-      final FeatureList containers = edge.getContainers().getWrappedList();
-      if( containers.contains( elementID ) )
-        containers.remove( elementID );
-      remEdgeCmd.setEdgeToDel( edge );
-      m_changedFeatureList.add( edge.getFeature() );
-
-      remEdgeCmd.process();
-      final IFeatureWrapperCollection nodes = edge.getNodes();
-      for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
+      // delete link to complex elements
+      final List<IFE1D2DComplexElement> parentComplexElements = lElement.getContainers();
+      for( final IFE1D2DComplexElement complexElement : parentComplexElements )
       {
-        IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
-        Feature wrappedFeature = featureWrapper.getFeature();
-        m_changedFeatureList.add( wrappedFeature );
+        complexElement.getElements().remove( elementID );
+        m_changedFeatureList.add( complexElement.getFeature() );
+      }
+      m_changedFeatureList.add( lElement.getFeature() );
+
+      // delete link to edges and the edges itself (with the nodes)
+      final IFeatureWrapperCollection<IFE1D2DEdge> edges = lElement.getEdges();
+      for( final IFE1D2DEdge edge : edges )
+      {
+        final FeatureList containers = edge.getContainers().getWrappedList();
+        final List< IPolyElement > lListContainers = edge.getContainers();
+        boolean lBoolContainsAll = true;
+        for( final IPolyElement lFeatureAct: lListContainers ){
+          if( !m_setFeaturesToRemove.contains( lFeatureAct.getFeature() ) ){
+            lBoolContainsAll = false;
+            break;
+          }
+        }
+        if( lBoolContainsAll ){
+          remEdgeCmd.addEdgeToRemove( edge );
+        }
+        containers.remove( elementID );
+        m_changedFeatureList.add( edge.getFeature() );
+
+        final IFeatureWrapperCollection nodes = edge.getNodes();
+        for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
+        {
+          IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
+          Feature wrappedFeature = featureWrapper.getFeature();
+          m_changedFeatureList.add( wrappedFeature );
+        }
       }
     }
+    remEdgeCmd.process();
     // delete element from model
-    m_model1d2d.getElements().remove( m_element2D );
+    m_model1d2d.getElements().removeAllAtOnce( m_setFeaturesToRemove );
   }
 
   /**
@@ -154,12 +168,19 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { m_element2D };
+    return null;
+//    IFeatureWrapper2[] lFeaturesChanged = new IFeatureWrapper2[ m_setFeatureToRemove.size() ];
+//    int i = 0;
+//    for( final IPolyElement lElement: m_setFeatureToRemove ){
+//      lFeaturesChanged[ i++ ] = (IFeatureWrapper2) lElement.getFeature();
+//    }
+//    return lFeaturesChanged;
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
    */
+  @Deprecated
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return m_model1d2d;
@@ -169,4 +190,11 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   {
     return m_changedFeatureList;
   }
+  
+  public void addElementToRemove( Feature pFeature ){
+    if( pFeature != null )
+      m_setFeaturesToRemove.add( pFeature );
+  }
+
+
 }

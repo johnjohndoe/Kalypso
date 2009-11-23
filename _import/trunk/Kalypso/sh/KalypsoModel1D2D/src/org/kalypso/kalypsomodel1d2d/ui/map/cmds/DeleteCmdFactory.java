@@ -115,4 +115,25 @@ public class DeleteCmdFactory
       }
     }
   }
+
+  /**
+   * Creates a delete command. <BR>
+   * <ul>
+   * <li>PolyElementFeature
+   */
+  @SuppressWarnings("deprecation")
+  public static final IDiscrModel1d2dChangeCommand createDeleteCmdPoly(  final IFEDiscretisationModel1d2d model1d2d )
+  {
+    return new DeletePolyElementCmd( model1d2d, null );
+  }
+  /**
+   * Creates a delete command. <BR>
+   * <ul>
+   * <li>Element1DFeature
+   */
+  @SuppressWarnings("deprecation")
+  public static final IDiscrModel1d2dChangeCommand createDeleteCmd1dElement( final IFEDiscretisationModel1d2d model1d2d )
+  {
+    return new DeleteElement1DCmd( model1d2d, null );
+  }
 }
