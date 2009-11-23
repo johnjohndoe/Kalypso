@@ -212,15 +212,11 @@
 							<xs:documentation>
 								Transition type:
 
-								Transition element type (1D to 2D, or 2D to 1D)
+								Transition element type (1D to
+								2D, or 2D to 1D)
 								
 							</xs:documentation>
-							<xs:documentation>
-								1D-2D-Linienkopplung Typ:
 
-								1D-2D-Linienkopplung Typ (1D/2D oder 2D/1D)
-								
-							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -230,10 +226,7 @@
 											<![CDATA[1D to 2D transition]]>
 											<![CDATA[1D to 2D transition element type]]>
 										</xs:documentation>
-										<xs:documentation>
-											<![CDATA[1D nach 2D Übergang]]>
-											<![CDATA[1D nach 2D Übergang Linienkopplung Typ]]>
-										</xs:documentation>
+
 									</xs:annotation>
 								</xs:enumeration>
 								<xs:enumeration value="2D1D">
@@ -242,10 +235,7 @@
 											<![CDATA[2D to 1D transition]]>
 											<![CDATA[2D to 1D transition element type]]>
 										</xs:documentation>
-										<xs:documentation>
-											<![CDATA[2D nach 1D Übergang]]>
-											<![CDATA[2D nach 1D Übergang Linienkopplung Typ]]>
-										</xs:documentation>
+
 									</xs:annotation>
 								</xs:enumeration>
 							</xs:restriction>

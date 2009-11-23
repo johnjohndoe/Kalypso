@@ -298,18 +298,13 @@
 								<xs:enumeration value="0">
 									<xs:annotation>
 										<xs:documentation>
-											<![CDATA[00 konst. Wirbelviskosität (RMA)]]>
-										</xs:documentation>
-										<xs:documentation>
 											<![CDATA[00 const. eddy viscosity (RMA)]]>
 										</xs:documentation>
 									</xs:annotation>
 								</xs:enumeration>
 								<xs:enumeration value="2">
 									<xs:annotation>
-										<xs:documentation>
-											<![CDATA[02 Smagorinsky Ansatz (RMA)]]>
-										</xs:documentation>
+
 										<xs:documentation>
 											<![CDATA[02 Smagorinsky approach (RMA)]]>
 										</xs:documentation>
@@ -317,9 +312,7 @@
 								</xs:enumeration>
 								<xs:enumeration value="10">
 									<xs:annotation>
-										<xs:documentation>
-											<![CDATA[10 konst. Wirbelviskosität]]>
-										</xs:documentation>
+
 										<xs:documentation>
 											<![CDATA[10 const. eddy viscosity]]>
 										</xs:documentation>
@@ -327,9 +320,7 @@
 								</xs:enumeration>
 								<xs:enumeration value="11">
 									<xs:annotation>
-										<xs:documentation>
-											<![CDATA[11 sohlinduzierte Turbulenz]]>
-										</xs:documentation>
+
 										<xs:documentation>
 											<![CDATA[11 bottom generated turbulence]]>
 										</xs:documentation>
@@ -337,9 +328,7 @@
 								</xs:enumeration>
 								<xs:enumeration value="12">
 									<xs:annotation>
-										<xs:documentation>
-											<![CDATA[12 Prandtl'scher Mischungswegansatz (konst.)]]>
-										</xs:documentation>
+
 										<xs:documentation>
 											<![CDATA[12 Prandtl's mixing length (const.)]]>
 										</xs:documentation>
@@ -347,9 +336,7 @@
 								</xs:enumeration>
 								<xs:enumeration value="13">
 									<xs:annotation>
-										<xs:documentation>
-											<![CDATA[13 Smagorinsky Ansatz]]>
-										</xs:documentation>
+
 										<xs:documentation>
 											<![CDATA[13 Smagorinsky approach]]>
 										</xs:documentation>
@@ -357,9 +344,7 @@
 								</xs:enumeration>
 								<xs:enumeration value="14">
 									<xs:annotation>
-										<xs:documentation>
-											<![CDATA[14 Smagorinsky Ansatz m. sohlind. Turb.]]>
-										</xs:documentation>
+
 										<xs:documentation>
 											<![CDATA[14 Smagorinsky approach w. bottom induced turb.]]>
 										</xs:documentation>
@@ -370,16 +355,12 @@
 										<xs:documentation>
 											<![CDATA[15 Prandtl'scher Mischungsweg u. sohlind. Turb.]]>
 										</xs:documentation>
-										<xs:documentation>
-											<![CDATA[15 Prandtl's mixing length w. bottom induced turb.]]>
-										</xs:documentation>
+
 									</xs:annotation>
 								</xs:enumeration>
 								<xs:enumeration value="16">
 									<xs:annotation>
-										<xs:documentation>
-											<![CDATA[16 Mittelwert Prandtl u. Smago. m. sohlind. Turbulenz]]>
-										</xs:documentation>
+
 										<xs:documentation>
 											<![CDATA[16 ave. of Prandtl and Smago w. bottom induced turbulence]]>
 										</xs:documentation>
@@ -820,7 +801,10 @@
 							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
-						<!-- changed to string to allow more flexible expansion of "Relaxation Factor" -->
+							<!--
+								changed to string to allow more flexible expansion of
+								"Relaxation Factor"
+							-->
 							<xs:restriction base="xs:string">
 								<xs:minLength value="3" />
 							</xs:restriction>
