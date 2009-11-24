@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_subcatchment</Name>
 		<Title>%rule_subcatchment_title=Sub-Catchment</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PolygonSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>

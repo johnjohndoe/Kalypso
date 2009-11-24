@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_geometry</Name>
 		<Title>%rule_geometry_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PointSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -35,8 +33,6 @@
 	<Rule>
 		<Name>rule_downStreamNode</Name>
 		<Title>%rule_downStreamNode_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_downStreamNodeMember</ogc:PropertyName>
@@ -88,8 +84,6 @@
 	<Rule>
 		<Name>rule_overflowNode</Name>
 		<Title>%rule_overflowNode_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_iknotNodeMember</ogc:PropertyName>
