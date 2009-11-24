@@ -4,12 +4,14 @@
 	
 	<input id="naResultsFolder" />
 	<input id="riskStatusQuoRasterDataModel" />
-	<input id="riskStatusQuoRasterFolder" />
+	<input id="riskStatusQuoRasterFolderInput" />
+	<input id="riskStatusQuoRasterFolderOutput" />
 	<input id="riskCalculatedRasterDataModel" />
-	<input id="riskCalculatedRasterFolder" />
+	<input id="riskCalculatedRasterFolderInput" />
+	<input id="riskCalculatedRasterFolderOutput" />
 	<input id="riskDifferenceStatistics" />
 	<input id="riskDifferenceRasterDataModel" />
-	<input id="riskDifferenceRasterFolder" />
+	<input id="riskDifferenceRasterFolderOutput" />
 	
 	<output id="outputFolder" />
 

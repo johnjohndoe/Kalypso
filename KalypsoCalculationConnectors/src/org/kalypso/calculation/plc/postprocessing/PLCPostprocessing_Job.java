@@ -2,6 +2,8 @@ package org.kalypso.calculation.plc.postprocessing;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -10,6 +12,7 @@ import ogc31.www.opengis.net.gml.FileType;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.calculation.UrlCatalog;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
@@ -25,7 +28,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements ISimulation
 {
-
   private final static QName INUNDATION_STATUSQUO_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationStatusQuoCoverageCollection" );
 
   private final static QName INUNDATION_CALCULATED_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationCalculatedCoverageCollection" );
@@ -59,26 +61,24 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
   {
     try
     {
-      /**
-       * <input id="naResultsFolder" /> <input id="riskStatusQuoRasterDataModel" /> <input
-       * id="riskStatusQuoRasterFolder" /> <input id="riskCalculatedRasterDataModel" /> <input
-       * id="riskCalculatedRasterFolder" /> <input id="riskDifferenceStatistics" /> <input
-       * id="riskDifferenceRasterDataModel" /> <input id="riskDifferenceRasterFolder" /> <output id="outputFolder" />
-       */
-
       final GMLWorkspace riskStatusQuoRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskStatusQuoRasterDataModel" ), null );
       final GMLWorkspace riskCalculatedRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskCalculatedRasterDataModel" ), null );
       final GMLWorkspace riskDifferenceRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskDifferenceRasterDataModel" ), null );
 
       final File naResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "naResultsFolder" ) );
       final File statisticsFile = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskDifferenceStatistics" ) );
-      final File riskStatusQuoRasterFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterFolder" ) );
-      final File riskCalculatedRasterFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskCalculatedRasterFolder" ) );
-      final File riskDifferenceRasterFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskDifferenceRasterFolder" ) );
+      final File riskStatusQuoRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterFolderInput" ) );
+      final File riskStatusQuoRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterFolderOutput" ) );
+      final File riskCalculatedRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskCalculatedRasterFolderInput" ) );
+      final File riskCalculatedRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskCalculatedRasterFolderOutput" ) );
+      final File riskDifferenceRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskDifferenceRasterFolderOutput" ) );
 
 // final File outputModel = FileUtils.toFile(getTemplate());
 
       final GMLWorkspace resultsWorkspace = GmlSerializer.createGMLWorkspace( getTemplate(), null );
+      final ICoverageCollection inundationStatusQuoCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( INUNDATION_STATUSQUO_COVERAGECOLLECTION )).getAdapter( ICoverageCollection.class );
+      final ICoverageCollection inundationCalculatedCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( INUNDATION_CALCULATED_COVERAGECOLLECTION )).getAdapter( ICoverageCollection.class );
+      final ICoverageCollection inundationDifferenceCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( INUNDATION_DIFFERENCE_COVERAGECOLLECTION )).getAdapter( ICoverageCollection.class );
       final ICoverageCollection riskStatusQuoCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( RISK_STATUSQUO_COVERAGECOLLECTION )).getAdapter( ICoverageCollection.class );
       final ICoverageCollection riskCalculatedCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( RISK_CALCULATED_COVERAGECOLLECTION )).getAdapter( ICoverageCollection.class );
       final ICoverageCollection riskDifferenceCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( RISK_DIFFERENCE_COVERAGECOLLECTION )).getAdapter( ICoverageCollection.class );
@@ -87,19 +87,55 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       final IRasterDataModel riskCalculatedRasterDataModel = (IRasterDataModel) riskCalculatedRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
       final IRasterDataModel riskDifferenceRasterDataModel = (IRasterDataModel) riskDifferenceRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
 
+      // adding representative (HQ100) inundation coverages to the model
+      for( final IAnnualCoverageCollection coverageCollection : riskStatusQuoRasterDataModel.getWaterlevelCoverageCollection() )
+      {
+        if( coverageCollection.getReturnPeriod() == 100 )
+        {
+          for( final ICoverage coverage : coverageCollection )
+          {
+            changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderInput.getName() );
+            inundationStatusQuoCoverageCollection.add( coverage );
+          }
+        }
+      }
+      for( final IAnnualCoverageCollection coverageCollection : riskCalculatedRasterDataModel.getWaterlevelCoverageCollection() )
+      {
+        if( coverageCollection.getReturnPeriod() == 100 )
+        {
+          for( final ICoverage coverage : coverageCollection )
+          {
+            changeCoverageFilePathPrefix( coverage, "calculated/" + riskStatusQuoRasterFolderInput.getName() );
+            inundationCalculatedCoverageCollection.add( coverage );
+          }
+        }
+      }
+      for( final IAnnualCoverageCollection coverageCollection : riskDifferenceRasterDataModel.getWaterlevelCoverageCollection() )
+      {
+        if( coverageCollection.getReturnPeriod() == 100 )
+        {
+          for( final ICoverage coverage : coverageCollection )
+          {
+            changeCoverageFilePathPrefix( coverage, "difference/" + riskStatusQuoRasterFolderOutput.getName() );
+            inundationDifferenceCoverageCollection.add( coverage );
+          }
+        }
+      }
+
+      // adding risk zones coverages to the model
       for( final ICoverage coverage : riskStatusQuoRasterDataModel.getRiskZonesCoverage() )
       {
-        changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolder.getName() );
+        changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderOutput.getName() );
         riskStatusQuoCoverageCollection.add( coverage );
       }
       for( final ICoverage coverage : riskCalculatedRasterDataModel.getRiskZonesCoverage() )
       {
-        changeCoverageFilePathPrefix( coverage, "calculated/" + riskCalculatedRasterFolder.getName() );
+        changeCoverageFilePathPrefix( coverage, "calculated/" + riskCalculatedRasterFolderOutput.getName() );
         riskCalculatedCoverageCollection.add( coverage );
       }
       for( final ICoverage coverage : riskDifferenceRasterDataModel.getRiskZonesCoverage() )
       {
-        changeCoverageFilePathPrefix( coverage, "difference/" + riskDifferenceRasterFolder.getName() );
+        changeCoverageFilePathPrefix( coverage, "difference/" + riskDifferenceRasterFolderOutput.getName() );
         riskDifferenceCoverageCollection.add( coverage );
       }
 
@@ -125,18 +161,22 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       }
       catch( final Exception e )
       {
+        Logger.getAnonymousLogger().log( Level.WARNING, "Could not copy SLD file. Reason: " + e.getLocalizedMessage() );
       }
 
       FileUtils.copyFileToDirectory( statisticsFile, riskFolder );
-      FileUtils.copyDirectoryToDirectory( riskStatusQuoRasterFolder, riskFolderStatusQuo );
-      FileUtils.copyDirectoryToDirectory( riskCalculatedRasterFolder, riskFolderCalculated );
-      FileUtils.copyDirectoryToDirectory( riskDifferenceRasterFolder, riskFolderDifference );
+      FileUtils.copyDirectoryToDirectory( riskStatusQuoRasterFolderInput, riskFolderStatusQuo );
+      FileUtils.copyDirectoryToDirectory( riskStatusQuoRasterFolderOutput, riskFolderStatusQuo );
+      FileUtils.copyDirectoryToDirectory( riskCalculatedRasterFolderInput, riskFolderCalculated );
+      FileUtils.copyDirectoryToDirectory( riskCalculatedRasterFolderOutput, riskFolderCalculated );
+      FileUtils.copyDirectoryToDirectory( riskDifferenceRasterFolderOutput, riskFolderDifference );
       FileUtils.copyDirectoryToDirectory( naResultsFolder, naFolder );
 
     }
     catch( final Exception e )
     {
       e.printStackTrace();
+      Logger.getAnonymousLogger().log( Level.SEVERE, e.getLocalizedMessage() );
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
     }
     resultEater.addResult( "outputFolder", tmpdir );
