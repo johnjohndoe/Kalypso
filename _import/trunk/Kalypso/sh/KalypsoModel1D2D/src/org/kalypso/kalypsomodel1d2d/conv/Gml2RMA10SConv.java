@@ -60,7 +60,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -81,6 +80,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
@@ -93,7 +93,6 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
@@ -105,6 +104,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
+@SuppressWarnings("unchecked")
 public class Gml2RMA10SConv implements INativeIDProvider
 {
   private static enum LINE_CASES
@@ -140,7 +140,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final ICalculationUnit m_calculationUnit;
 
-  private final GM_Envelope m_calcUnitBBox;
+//  private final GM_Envelope m_calcUnitBBox;
 
   private final RestartNodes m_restartNodes;
 
@@ -156,6 +156,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final Map<Integer, String> m_mapTmpElementToPolyWeir = new HashMap<Integer, String>();
 
+  private final Map< IPolyElement, IFlowRelation2D > m_mapPolyElementsWithWeir = new HashMap< IPolyElement, IFlowRelation2D >();
+
   // TODO: check: calculation?
   public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
   {
@@ -167,7 +169,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     m_calculationUnit = calcUnit;
     m_log = log;
-    m_calcUnitBBox = calcUnit == null ? null : CalcUnitOps.getBoundingBox( m_calculationUnit );
+//    m_calcUnitBBox = calcUnit == null ? null : CalcUnitOps.getBoundingBox( m_calculationUnit );
 
     m_restartNodes = restartNodes;
 
@@ -180,6 +182,19 @@ public class Gml2RMA10SConv implements INativeIDProvider
       m_roughnessIDProvider = new IdMap( roughnessModel.size() );
       for( final IRoughnessCls o : roughnessModel )
         m_roughnessIDProvider.getOrAdd( o.getGmlID() );
+    }
+    
+    //collect information about 2d buildings to perform this mapping fast on demand 
+    for( final IFlowRelationship relationship : flowrelationModel )
+    {
+      if( relationship instanceof IFlowRelation2D )
+      {
+        IFlowRelation2D lBuilding2d = (IFlowRelation2D) relationship;
+        IPolyElement lPolyElementWithWeir = m_discretisationModel1d2d.find2DElement( lBuilding2d.getPosition(), 0.01 );
+        if( m_calculationUnit.contains( lPolyElementWithWeir ) ){
+          m_mapPolyElementsWithWeir.put( lPolyElementWithWeir, lBuilding2d );
+        }
+      }
     }
     // m_intBuildingsIdCounter = 1;
   }
@@ -269,12 +284,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  @SuppressWarnings("unchecked")
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
-    final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
+    //we dont need all elements to check each one for membership in calculation unit.
+    //we get it direct from the calculation unit
+//    final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
 
-    writeElementsNodesAndEdges( formatter, elements );
+    writeElementsNodesAndEdges( formatter );
 
     final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
 
@@ -319,7 +335,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     FormatterUtils.checkIoException( formatter );
   }
 
-  @SuppressWarnings("unchecked")
   private void writeTransitionLine( final Formatter formatter, final ITransitionElement transitionElement ) throws CoreException, IOException
   {
     final int transitionElementID = getConversionID( transitionElement );
@@ -390,7 +405,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     FormatterUtils.checkIoException( formatter );
   }
 
-  @SuppressWarnings("unchecked")
   private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges ) throws IOException
   {
     int cnt = 1;
@@ -504,15 +518,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           leftParent = getConversionIDIntern( leftElement, edge );
           rightParent = getConversionIDIntern( rightElement, edge );
-          // leftParent = getConversionID( leftElement );
-          // rightParent = getConversionID( rightElement );
         }
         else
         {
           leftParent = m_calculationUnit.contains( leftElement ) ? getConversionIDIntern( leftElement, edge ) : 0;
           rightParent = m_calculationUnit.contains( rightElement ) ? getConversionIDIntern( rightElement, edge ) : 0;
-          // leftParent = m_calculationUnit.contains( leftElement ) ? getConversionID( leftElement ) : 0;
-          // rightParent = m_calculationUnit.contains( rightElement ) ? getConversionID( rightElement ) : 0;
         }
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID ); //$NON-NLS-1$
       }
@@ -559,7 +569,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * for pseudo edges determine the according id of pseudo element or in others cases returns the conversion id of given
    * element
    */
-  @SuppressWarnings("unchecked")
   private int getConversionIDIntern( final IFE1D2DElement pElement, final IFE1D2DEdge pEdge )
   {
     if( pElement == null )
@@ -589,7 +598,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return 0;
   }
 
-  @SuppressWarnings("unchecked")
   private IFE1D2DNode getAdjacentPseudoNode( final IFE1D2DElement pElement, final IFE1D2DEdge pEdge )
   {
     if( m_mapTmpElementToPolyWeir.containsValue( pElement.getGmlID() ) )
@@ -612,7 +620,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return null;
   }
 
-  @SuppressWarnings("unchecked")
   private int getDirectionOfPseudoEdges( final List<IFE1D2DNode> pListNodes )
   {
     int lIntResDirection = -1;
@@ -649,14 +656,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return lIntResDirection;
   }
 
-  @SuppressWarnings("unchecked")
-  private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws CoreException, IOException
-  {
-    final List<IFE1D2DNode> nodesInBBox = m_exportRequest ? nodes : nodes.query( m_calcUnitBBox );
-    writeNodes( formatter, nodesInBBox );
-  }
-
-  @SuppressWarnings("unchecked")
   private void writeNodes( final Formatter formatter, final List<IFE1D2DNode> nodes ) throws CoreException, IOException
   {
     for( final IFE1D2DNode node : nodes )
@@ -856,20 +855,34 @@ public class Gml2RMA10SConv implements INativeIDProvider
   /**
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    */
-  @SuppressWarnings("unchecked")
-  private void writeElementsNodesAndEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws CoreException, IOException
+  private void writeElementsNodesAndEdges( final Formatter formatter ) throws CoreException, IOException
   {
-    final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
-    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
+    //it is not needed to query for elements in box of calculation unit - calc. unit contains already only this needed elements.
+    //for the export case we also do not need the "box", we will just export all of the elements from the model.
+    //additional check for membership of calculation unit for each element in the loop, was also removed.
+    
+//    final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
+    
+    List< IFE1D2DElement > lListAllElements = new ArrayList< IFE1D2DElement >();
+    if( m_exportRequest ){
+      lListAllElements = m_discretisationModel1d2d.getElements();
+    }
+    else{
+      final List<IElement1D> elements1dInBBox = m_calculationUnit.getElements1D();
+      final List<IPolyElement> elements2dInBBox = m_calculationUnit.getElements2D();
+      lListAllElements.addAll( elements1dInBBox );
+      lListAllElements.addAll( elements2dInBBox );
+    }
+    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( lListAllElements.size() * 2 );
 
-    if( elementsInBBox.size() == 0 )
+    if( lListAllElements.size() == 0 )
     {
       final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.25" ); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
       throw new CoreException( status );
     }
 
-    for( final IFE1D2DElement element : elementsInBBox )
+    for( final IFE1D2DElement element : lListAllElements )
     {
       // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit?
       if( !m_exportRequest && !m_calculationUnit.contains( element ) )
@@ -922,7 +935,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( element instanceof IPolyElement )
       {
-        final IFlowRelationship building = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowrelationModel );
+        final IFlowRelationship building = m_mapPolyElementsWithWeir.get( element );
 
         if( building != null )
         {
@@ -1033,7 +1046,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     writeEdgeSet( formatter, edgeSet );
   }
 
-  @SuppressWarnings("unchecked")
   private List<IFE1D2DNode> getOrderedListOfNodes( final IFE1D2DElement element )
   {
     final List<IFE1D2DNode> lOrderedListRes = new ArrayList<IFE1D2DNode>();
@@ -1069,7 +1081,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * Finds the first 1D-Calculation unit which contains the given element.<br>
    * Recursively searches within sub-units of 1d2d units.
    */
-  @SuppressWarnings("unchecked")
   private static ICalculationUnit1D find1dCalcUnit( final ICalculationUnit calcUnit, final IElement1D element1D )
   {
     if( calcUnit == null )
@@ -1225,7 +1236,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  @SuppressWarnings("unchecked")
   private int getRoughnessID( final IFE1D2DElement element )
   {
     final String roughnessClsID = element.getRoughnessClsID();
@@ -1248,7 +1258,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return m_buildingIDProvider;
   }
 
-  @SuppressWarnings("unchecked")
   class PseudoEdge
   {
     private IFE1D2DNode m_node1;
