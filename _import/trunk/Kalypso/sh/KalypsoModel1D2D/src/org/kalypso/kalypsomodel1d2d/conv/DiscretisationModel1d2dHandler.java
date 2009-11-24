@@ -72,7 +72,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
- * The handler that converts the RMA�Kalypso element events into discretisation model elements and links
+ * The handler that converts the RMA-Kalypso element events into discretisation model elements and links
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
