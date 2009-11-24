@@ -78,7 +78,6 @@ public class RiskZonesDifferenceGrid extends AbstractDelegatingGeoGrid implement
           return Double.NaN;
         final double value = Math.abs( value1 ) + Math.abs( value2 );
         m_difference += value;
-//        System.out.println(value);
         return value;
       }
       return Double.NaN;
