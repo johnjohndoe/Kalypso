@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_geometry</Name>
 		<Title>%rule_geometry_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PolygonSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -51,8 +49,6 @@
 	<Rule>
 		<Name>rule_gw_relation</Name>
 		<Title>%rule_gw_relation_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_grundwasserabflussMember</ogc:PropertyName>
@@ -69,8 +65,6 @@
 	<Rule>
 		<Name>rule_izkn</Name>
 		<Title>%rule_izkn_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_izkn</ogc:PropertyName>

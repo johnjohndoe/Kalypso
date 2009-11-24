@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_channelrhb</Name>
 		<Title>%rule_channelrhb_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
