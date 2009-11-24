@@ -41,10 +41,8 @@
 package org.kalypso.risk.model.simulation;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.Date;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -52,8 +50,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.SubstractionGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
@@ -62,17 +62,15 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Dejan Antanaskovic
  * 
  */
-public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISimulationSpecKalypsoRisk, ISimulation
+public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
   private final static String RASTER_MODEL_1 = "RASTER_MODEL_1"; //$NON-NLS-1$
 
@@ -82,17 +80,13 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
   private final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER"; //$NON-NLS-1$
 
-  private final static String OUTPUT_PROPERTIES_FILE = "OUTPUT_PROPERTIES_FILE";
-
-  private double m_totalDifference = 0.0;
-
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
    */
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "Specification_RiskZonesDifferenceCalculation.xml" ); //$NON-NLS-1$
+    return getClass().getResource( "Specification_InnundationDifferenceCalculation.xml" ); //$NON-NLS-1$
   }
 
   /**
@@ -118,25 +112,12 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       final File outputRasterTmpDir = new File( tmpdir, "rasters" ); //$NON-NLS-1$
       outputRasterTmpDir.mkdirs();
 
-      doRiskZonesCalculation( outputRasterTmpDir, model_output, model_1, model_2, simulationMonitorAdaptor );
+      doInnundationDifferenceCalculation( outputRasterTmpDir, model_output, model_1, model_2, simulationMonitorAdaptor );
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, ws_model_output, "UTF-8" ); //$NON-NLS-1$
 
-      final File propertiesFile = new File( tmpdir, "stats.txt" );
-      final Properties properties = new Properties();
-//      properties.put( "TOTAL_DIFFERENCE", NumberFormat.getCurrencyInstance().format( m_totalDifference ) );
-      properties.put( "TOTAL_DIFFERENCE_UNFORMAT", String.format("%.8f", m_totalDifference ) );
-      properties.put( "TOTAL_DIFFERENCE", String.format("%.2f Eur", m_totalDifference ) );
-      properties.put( "YEARLY_COSTS", "n/a" );
-      properties.put( "VALUE_BENEFIT", "n/a" );
-      final FileOutputStream propertiesStream = new FileOutputStream( propertiesFile );
-      properties.store( propertiesStream, "Scenario statistics" );
-      propertiesStream.flush();
-      propertiesStream.close();
-
       resultEater.addResult( OUTPUT_RASTER_MODEL, tmpRasterModel );
       resultEater.addResult( OUTPUT_RASTER_FOLDER, outputRasterTmpDir );
-      resultEater.addResult( OUTPUT_PROPERTIES_FILE, propertiesFile );
     }
     catch( final Exception e )
     {
@@ -144,33 +125,59 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
     }
   }
 
-  private void doRiskZonesCalculation( final File tmpdir, final IRasterDataModel rasterModelOutput, final IRasterDataModel rasterModelInput1, final IRasterDataModel rasterModelInput2, final IProgressMonitor monitor ) throws SimulationException
+  private void doInnundationDifferenceCalculation( final File tmpdir, final IRasterDataModel rasterModelOutput, final IRasterDataModel rasterModelInput1, final IRasterDataModel rasterModelInput2, final IProgressMonitor monitor ) throws SimulationException
   {
     final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
     final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-    
-    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
+
+    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.0" ), 100 ); //$NON-NLS-1$
 
     try
     {
       /* remove existing (invalid) coverages from the model */
-      final ICoverageCollection outputCoverages = rasterModelOutput.getRiskZonesCoverage();
-      for( final ICoverage coverage : outputCoverages )
-        CoverageManagementHelper.deleteGridFile( coverage );
+      final IFeatureWrapperCollection<IAnnualCoverageCollection> resultCollection = rasterModelOutput.getWaterlevelCoverageCollection();
+      for( final IAnnualCoverageCollection collection : resultCollection )
+        for( final ICoverage coverage : collection )
+          CoverageManagementHelper.deleteGridFile( coverage );
+      resultCollection.clear();
+      
+      final IFeatureWrapperCollection<IAnnualCoverageCollection> inputCoverageCollection1 = rasterModelInput1.getWaterlevelCoverageCollection();
+      final IFeatureWrapperCollection<IAnnualCoverageCollection> inputCoverageCollection2 = rasterModelInput2.getWaterlevelCoverageCollection();
 
-      outputCoverages.clear();
-
-      final ICoverageCollection inputCoverages1 = rasterModelInput1.getRiskZonesCoverage();
-      final ICoverageCollection inputCoverages2 = rasterModelInput2.getRiskZonesCoverage();
-
-      if( inputCoverages1.size() != inputCoverages2.size() )
+      if( inputCoverageCollection1.size() != inputCoverageCollection2.size() )
         return;
 
-      for( int i = 0; i < inputCoverages1.size(); i++ )
+      // select representative HQ collection (HQ100)
+      IAnnualCoverageCollection collection1_HQ100 = null;
+      IAnnualCoverageCollection collection2_HQ100 = null;
+      for( int i = 0; i < inputCoverageCollection1.size(); i++ )
       {
-        final ICoverage inputCoverage1 = inputCoverages1.get( i );
+        final IAnnualCoverageCollection collection1 = inputCoverageCollection1.get( i );
+        final IAnnualCoverageCollection collection2 = inputCoverageCollection2.get( i );
+        if( collection1.getReturnPeriod() == 100 )
+          collection1_HQ100 = collection1;
+        if( collection2.getReturnPeriod() == 100 )
+          collection2_HQ100 = collection2;
+      }
+
+      if( collection1_HQ100 == null || collection2_HQ100 == null )
+        return;
+
+      final IAnnualCoverageCollection resultCoverageCollection = resultCollection.addNew( IAnnualCoverageCollection.QNAME );
+      resultCoverageCollection.setReturnPeriod( 100 );
+      resultCoverageCollection.setName( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.1" ) ); //$NON-NLS-1$
+      resultCoverageCollection.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.2" ), 100 ) ); //$NON-NLS-1$
+
+      // calculate actual difference
+      for( int i = 0; i < collection1_HQ100.size(); i++ )
+      {
+        final ICoverage inputCoverage1 = collection1_HQ100.get( i );
         ICoverage inputCoverage2 = null;
-        for( final ICoverage iCoverage : inputCoverages2 )
+
+        // find the appropriate coverage from another collection
+        // we assumed that both collections contains coverage sets which member coverage always covers the same area in
+        // both sets, which is the case for Planer-Client calculation
+        for( final ICoverage iCoverage : collection2_HQ100 )
         {
           if( iCoverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
           {
@@ -183,33 +190,26 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
         {
           final IGeoGrid inputGrid1 = GeoGridUtilities.toGrid( inputCoverage1 );
           final IGeoGrid inputGrid2 = GeoGridUtilities.toGrid( inputCoverage2 );
-          final IGeoGrid outputGrid = new RiskZonesDifferenceGrid( inputGrid1, inputGrid2 );
+          final IGeoGrid outputGrid = new SubstractionGrid( inputGrid1, inputGrid2 );
 
-          final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
+          final String outputCoverageFileName = String.format( "%s_%02d.bin", resultCoverageCollection.getGmlID(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-          final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
-
-          m_totalDifference += ((RiskZonesDifferenceGrid) outputGrid).getDifference();
+          final ICoverage newCoverage = GeoGridUtilities.addCoverage( resultCoverageCollection, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           outputGrid.dispose();
           inputGrid1.dispose();
           inputGrid2.dispose();
 
-          newCoverage.setName( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.4" ) + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
-          newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
+          newCoverage.setName( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.3" ), i ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          newCoverage.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.4" ), new Date().toString() ) ); //$NON-NLS-1$
         }
-
-        /* fireModellEvent to redraw a map */
-        final GMLWorkspace workspace = rasterModelOutput.getFeature().getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModelOutput.getFeature(), new Feature[] { outputCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
-
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.6" ) + org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.4" ) + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.5" ) + org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.4" ) + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
   }
