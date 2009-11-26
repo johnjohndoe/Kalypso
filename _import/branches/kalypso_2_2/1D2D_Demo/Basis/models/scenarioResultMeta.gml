@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resultMeta1d2d:ScenarioResultMeta xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:resultMeta1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta" xmlns:commonShp="org.kalypso.gml.common" gml:id="root">
  <gml:name>Ergebnisse</gml:name>
  <resultMeta:path xmlns:resultMeta="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta">results</resultMeta:path>
  <resultMeta:childMember xmlns:resultMeta="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta">
   <resultMeta1d2d:CalculationUnitResultMeta gml:id="CalculationUnitResultMeta12125835310821">
-   <gml:description>Ergebnisimporte aus dem WSPM-Projekt '1D-stationär: WSPMDemo'</gml:description>
-   <gml:name>1D-stationär: WSPMDemo</gml:name>
+   <gml:description>Ergebnisimporte aus dem WSPM-Projekt '1D-stationÃ¤r: WSPMDemo'</gml:description>
+   <gml:name>1D-stationÃ¤r: WSPMDemo</gml:name>
    <resultMeta:path>restart1dStationary1212583531082</resultMeta:path>
    <resultMeta:childMember>
     <resultMeta1d2d:StepResultMeta gml:id="StepResultMeta12125835311292">
@@ -89,7 +89,7 @@ WSPMDemo - 250</gml:description>
  </resultMeta:childMember>
  <resultMeta:childMember xmlns:resultMeta="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta">
   <resultMeta1d2d:CalculationUnitResultMeta gml:id="CalculationUnitResultMeta1229429456937107">
-   <gml:name>Demo 2D stationär</gml:name>
+   <gml:name>Demo 2D stationÃ¤r</gml:name>
    <resultMeta:path>CalculationUnit1D2D12294293459017619</resultMeta:path>
    <resultMeta1d2d:simulationStartTime/>
    <resultMeta1d2d:simulationEndTime>2009-01-27T09:22:46.145Z</resultMeta1d2d:simulationEndTime>

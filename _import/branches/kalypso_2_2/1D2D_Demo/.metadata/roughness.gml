@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <wbr:RoughnessClsCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" gml:id="root">
  <gml:name>Rauheit</gml:name>
  <wbr:roughnessClsMember>

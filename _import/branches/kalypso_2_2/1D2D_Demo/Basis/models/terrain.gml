@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <simBase:TerrainModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:swe="http://www.opengis.net/swe" xmlns:ns2="http://www.tu-harburg.de/wb/kalypso/schemata/observation" xmlns:math="org.kalypso.gml.common.math" xmlns:commonShp="org.kalypso.gml.common" xmlns:om="http://www.opengis.net/om" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
  <simBase:version>0.0</simBase:version>
  <simBase:terrainElevationModelSystem>
@@ -4506,7 +4506,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308631332"/>
-     <simBase:roughnessStyle>Böschung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4524,7 +4524,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308631332"/>
-     <simBase:roughnessStyle>Böschung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4542,7 +4542,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308631332"/>
-     <simBase:roughnessStyle>Böschung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4560,7 +4560,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308631332"/>
-     <simBase:roughnessStyle>Böschung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4578,7 +4578,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308631332"/>
-     <simBase:roughnessStyle>Böschung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4596,7 +4596,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308631332"/>
-     <simBase:roughnessStyle>Böschung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4614,7 +4614,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308631332"/>
-     <simBase:roughnessStyle>Böschung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4632,7 +4632,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4650,7 +4650,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4668,7 +4668,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4686,7 +4686,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4704,7 +4704,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4722,7 +4722,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4740,7 +4740,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4758,7 +4758,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4776,7 +4776,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4794,7 +4794,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4812,7 +4812,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4830,7 +4830,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4848,7 +4848,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4866,7 +4866,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4884,7 +4884,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4902,7 +4902,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4920,7 +4920,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4938,7 +4938,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4956,7 +4956,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4974,7 +4974,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -4992,7 +4992,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5010,7 +5010,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5028,7 +5028,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5046,7 +5046,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5064,7 +5064,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5082,7 +5082,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5100,7 +5100,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5118,7 +5118,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5136,7 +5136,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5154,7 +5154,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5172,7 +5172,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5190,7 +5190,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5208,7 +5208,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5226,7 +5226,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5244,7 +5244,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5262,7 +5262,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5280,7 +5280,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5298,7 +5298,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5316,7 +5316,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5334,7 +5334,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5352,7 +5352,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5370,7 +5370,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5388,7 +5388,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5406,7 +5406,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5424,7 +5424,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5442,7 +5442,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5460,7 +5460,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5478,7 +5478,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5496,7 +5496,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5514,7 +5514,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5532,7 +5532,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5550,7 +5550,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5568,7 +5568,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5586,7 +5586,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5604,7 +5604,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5622,7 +5622,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5640,7 +5640,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5658,7 +5658,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5676,7 +5676,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5694,7 +5694,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5712,7 +5712,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5730,7 +5730,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5748,7 +5748,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5766,7 +5766,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5784,7 +5784,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5802,7 +5802,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5820,7 +5820,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5838,7 +5838,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5856,7 +5856,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5874,7 +5874,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5892,7 +5892,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5910,7 +5910,7 @@
       </gml:Polygon>
      </simBase:polygonGeometry>
      <simBase:roughnessClassMember xlink:href="project:/.metadata/roughness.gml#RoughnessCls117812308473018"/>
-     <simBase:roughnessStyle>Böschungssicherung</simBase:roughnessStyle>
+     <simBase:roughnessStyle>BÃ¶schungssicherung</simBase:roughnessStyle>
      <simBase:correction_ks/>
      <simBase:correction_axay/>
      <simBase:correction_dp/>
@@ -5922,7 +5922,7 @@
   <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840">
    <simBase:riverProfileNetwork>
     <simBase:RiverProfileNetwork gml:id="RiverProfileNetwork12125819001485">
-     <gml:description>Importiert aus WSPM-Gewässerstrang: Demo - Demo Strang
+     <gml:description>Importiert aus WSPM-GewÃ¤sserstrang: Demo - Demo Strang
 Importiert am 05.06.2008 17:46 aus platform:/resource//WSPMDemo/modell.gml</gml:description>
      <gml:name>Demo Strang</gml:name>
      <simBase:riverProfile>
