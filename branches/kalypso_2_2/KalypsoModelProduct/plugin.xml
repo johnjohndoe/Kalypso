@@ -68,7 +68,7 @@
   
       <activity
             name="Model Product Activity"
-            description="Disables a lot of not wanted things."
+            description="Disables a lot of unwanted things."
             id="org.kalypso.model.product.activity">
       </activity>
       
