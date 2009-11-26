@@ -359,9 +359,7 @@
 					<xs:element name="kind" type="wb1d2d:buildingKind"
 						fixed="10">
 						<xs:annotation>
-							<xs:documentation>
-								Fließformel
-
+							<xs:documentation>Fließformel</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="direction" type="gml:DegreeValueType"
