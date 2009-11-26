@@ -1,4 +1,4 @@
-#Tue Jun 24 10:55:30 CEST 2008
+#Thu Nov 26 23:37:44 GMT 2009
 eclipse.preferences.version=1
 encoding//.metadata/roughness.gml=Cp1252
 encoding//.metadata/roughness.sld=Cp1252
@@ -8,3 +8,4 @@ encoding//Basis/models/flowrelations.gml=Cp1252
 encoding//Basis/models/scenarioResultMeta.gml=Cp1252
 encoding//Basis/models/simulation.gml=Cp1252
 encoding//Basis/models/terrain.gml=Cp1252
+encoding/<project>=UTF-8

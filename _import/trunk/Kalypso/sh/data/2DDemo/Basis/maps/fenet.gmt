@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mapv:gismapview name="FE-Netz" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <mapv:extent top="774595.0760467269" srs="EPSG:31467" right="3930332.4392067567" left="3930252.100267524" bottom="774504.094806453"/>
     <mapv:layers>
@@ -17,7 +17,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Ränder/ Übergänge" id="ID_3" featurePath="#fid#root/continuityLine" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="RÃ¤nder/ ÃœbergÃ¤nge" id="ID_3" featurePath="#fid#root/continuityLine" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
@@ -30,7 +30,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="1D-Einmündung" id="ID_6" featurePath="#fid#root/complexElement[JunctionElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="1D-EinmÃ¼ndung" id="ID_6" featurePath="#fid#root/complexElement[JunctionElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
@@ -49,7 +49,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Höhenmodelle" id="ID_10" featurePath="#fid#Scenario_Terrain_Elevation_ModelSystem/terrainElevationModel[NativeTerrainElevationModelWrapper]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="HÃ¶henmodelle" id="ID_10" featurePath="#fid#Scenario_Terrain_Elevation_ModelSystem/terrainElevationModel[NativeTerrainElevationModelWrapper]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
