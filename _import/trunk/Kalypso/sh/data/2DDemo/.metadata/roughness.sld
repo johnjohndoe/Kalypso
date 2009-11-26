@@ -160,12 +160,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812308790520</Name>
-                    <Title>Sohlschüttung</Title>
-                    <Abstract>Sohlschüttung</Abstract>
+                    <Title>SohlschÃ¼ttung</Title>
+                    <Abstract>SohlschÃ¼ttung</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Sohlschüttung</ogc:Literal>
+                            <ogc:Literal>SohlschÃ¼ttung</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -212,12 +212,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812308631332</Name>
-                    <Title>Böschung</Title>
-                    <Abstract>Böschung</Abstract>
+                    <Title>BÃ¶schung</Title>
+                    <Abstract>BÃ¶schung</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Böschung</ogc:Literal>
+                            <ogc:Literal>BÃ¶schung</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -238,12 +238,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812308554222</Name>
-                    <Title>Böschung_rauh</Title>
-                    <Abstract>Böschung_rauh</Abstract>
+                    <Title>BÃ¶schung_rauh</Title>
+                    <Abstract>BÃ¶schung_rauh</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Böschung_rauh</ogc:Literal>
+                            <ogc:Literal>BÃ¶schung_rauh</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -264,12 +264,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812308473018</Name>
-                    <Title>Böschungssicherung</Title>
-                    <Abstract>Böschungssicherung</Abstract>
+                    <Title>BÃ¶schungssicherung</Title>
+                    <Abstract>BÃ¶schungssicherung</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Böschungssicherung</ogc:Literal>
+                            <ogc:Literal>BÃ¶schungssicherung</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -342,12 +342,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812308185619</Name>
-                    <Title>Vorland Röhricht ohne Bewuchs</Title>
-                    <Abstract>Vorland Röhricht ohne Bewuchs</Abstract>
+                    <Title>Vorland RÃ¶hricht ohne Bewuchs</Title>
+                    <Abstract>Vorland RÃ¶hricht ohne Bewuchs</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland Röhricht ohne Bewuchs</ogc:Literal>
+                            <ogc:Literal>Vorland RÃ¶hricht ohne Bewuchs</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -966,12 +966,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482232364651</Name>
-                    <Title>Gras mit dichtem mehrjährigen Baumbesatz</Title>
-                    <Abstract>Gras mit dichtem mehrjährigen Baumbesatz</Abstract>
+                    <Title>Gras mit dichtem mehrjÃ¤hrigen Baumbesatz</Title>
+                    <Abstract>Gras mit dichtem mehrjÃ¤hrigen Baumbesatz</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit dichtem mehrjährigen Baumbesatz</ogc:Literal>
+                            <ogc:Literal>Gras mit dichtem mehrjÃ¤hrigen Baumbesatz</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1018,12 +1018,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482230732181</Name>
-                    <Title>Gras mit mehrjährigem Baumbesatz</Title>
-                    <Abstract>Gras mit mehrjährigem Baumbesatz</Abstract>
+                    <Title>Gras mit mehrjÃ¤hrigem Baumbesatz</Title>
+                    <Abstract>Gras mit mehrjÃ¤hrigem Baumbesatz</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit mehrjährigem Baumbesatz</ogc:Literal>
+                            <ogc:Literal>Gras mit mehrjÃ¤hrigem Baumbesatz</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1044,12 +1044,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482229950481</Name>
-                    <Title>Gras mit aufgelockerten Büschen</Title>
-                    <Abstract>Gras mit aufgelockerten Büschen</Abstract>
+                    <Title>Gras mit aufgelockerten BÃ¼schen</Title>
+                    <Abstract>Gras mit aufgelockerten BÃ¼schen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit aufgelockerten Büschen</ogc:Literal>
+                            <ogc:Literal>Gras mit aufgelockerten BÃ¼schen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1070,12 +1070,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482229109461</Name>
-                    <Title>Gras mit großen Büschen</Title>
-                    <Abstract>Gras mit großen Büschen</Abstract>
+                    <Title>Gras mit groÃŸen BÃ¼schen</Title>
+                    <Abstract>Gras mit groÃŸen BÃ¼schen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit großen Büschen</ogc:Literal>
+                            <ogc:Literal>Gras mit groÃŸen BÃ¼schen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1122,12 +1122,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482215419581</Name>
-                    <Title>Gras mit kleinen Büschen</Title>
-                    <Abstract>Gras mit kleinen Büschen</Abstract>
+                    <Title>Gras mit kleinen BÃ¼schen</Title>
+                    <Abstract>Gras mit kleinen BÃ¼schen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit kleinen Büschen</ogc:Literal>
+                            <ogc:Literal>Gras mit kleinen BÃ¼schen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1148,12 +1148,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482214208401</Name>
-                    <Title>Gras mit Büschen mit Kronenschluss</Title>
-                    <Abstract>Gras mit Büschen mit Kronenschluss</Abstract>
+                    <Title>Gras mit BÃ¼schen mit Kronenschluss</Title>
+                    <Abstract>Gras mit BÃ¼schen mit Kronenschluss</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit Büschen mit Kronenschluss</ogc:Literal>
+                            <ogc:Literal>Gras mit BÃ¼schen mit Kronenschluss</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1174,12 +1174,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482213347331</Name>
-                    <Title>Gras mit Büschen mittlerer Größe</Title>
-                    <Abstract>Gras mit Büschen mittlerer Größe</Abstract>
+                    <Title>Gras mit BÃ¼schen mittlerer GrÃ¶ÃŸe</Title>
+                    <Abstract>Gras mit BÃ¼schen mittlerer GrÃ¶ÃŸe</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit Büschen mittlerer Größe</ogc:Literal>
+                            <ogc:Literal>Gras mit BÃ¼schen mittlerer GrÃ¶ÃŸe</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1200,12 +1200,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls118348221256501</Name>
-                    <Title>Gras mit großen Buschgruppen</Title>
-                    <Abstract>Gras mit großen Buschgruppen</Abstract>
+                    <Title>Gras mit groÃŸen Buschgruppen</Title>
+                    <Abstract>Gras mit groÃŸen Buschgruppen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Gras mit großen Buschgruppen</ogc:Literal>
+                            <ogc:Literal>Gras mit groÃŸen Buschgruppen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1252,12 +1252,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482210663381</Name>
-                    <Title>Kraut mit dichtem mehrjährigen Baumbesatz</Title>
-                    <Abstract>Kraut mit dichtem mehrjährigen Baumbesatz</Abstract>
+                    <Title>Kraut mit dichtem mehrjÃ¤hrigen Baumbesatz</Title>
+                    <Abstract>Kraut mit dichtem mehrjÃ¤hrigen Baumbesatz</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit dichtem mehrjährigen Baumbesatz</ogc:Literal>
+                            <ogc:Literal>Kraut mit dichtem mehrjÃ¤hrigen Baumbesatz</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1304,12 +1304,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482208950281</Name>
-                    <Title>Kraut mit aufgelockerten Büschen</Title>
-                    <Abstract>Kraut mit aufgelockerten Büschen</Abstract>
+                    <Title>Kraut mit aufgelockerten BÃ¼schen</Title>
+                    <Abstract>Kraut mit aufgelockerten BÃ¼schen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit aufgelockerten Büschen</ogc:Literal>
+                            <ogc:Literal>Kraut mit aufgelockerten BÃ¼schen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1330,12 +1330,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1183482208039171</Name>
-                    <Title>Kraut mit großen Büschen</Title>
-                    <Abstract>Kraut mit großen Büschen</Abstract>
+                    <Title>Kraut mit groÃŸen BÃ¼schen</Title>
+                    <Abstract>Kraut mit groÃŸen BÃ¼schen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit großen Büschen</ogc:Literal>
+                            <ogc:Literal>Kraut mit groÃŸen BÃ¼schen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1382,12 +1382,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812307020841</Name>
-                    <Title>Kraut mit kleinen Büschen</Title>
-                    <Abstract>Kraut mit kleinen Büschen</Abstract>
+                    <Title>Kraut mit kleinen BÃ¼schen</Title>
+                    <Abstract>Kraut mit kleinen BÃ¼schen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit kleinen Büschen</ogc:Literal>
+                            <ogc:Literal>Kraut mit kleinen BÃ¼schen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1408,12 +1408,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls1178123069356121</Name>
-                    <Title>Kraut mit Büschen mit Kronenschluss</Title>
-                    <Abstract>Kraut mit Büschen mit Kronenschluss</Abstract>
+                    <Title>Kraut mit BÃ¼schen mit Kronenschluss</Title>
+                    <Abstract>Kraut mit BÃ¼schen mit Kronenschluss</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit Büschen mit Kronenschluss</ogc:Literal>
+                            <ogc:Literal>Kraut mit BÃ¼schen mit Kronenschluss</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1434,12 +1434,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812305739891</Name>
-                    <Title>Kraut mit Büschen mittlerer Größe</Title>
-                    <Abstract>Kraut mit Büschen mittlerer Größe</Abstract>
+                    <Title>Kraut mit BÃ¼schen mittlerer GrÃ¶ÃŸe</Title>
+                    <Abstract>Kraut mit BÃ¼schen mittlerer GrÃ¶ÃŸe</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit Büschen mittlerer Größe</ogc:Literal>
+                            <ogc:Literal>Kraut mit BÃ¼schen mittlerer GrÃ¶ÃŸe</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1460,12 +1460,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812305485411</Name>
-                    <Title>Kraut mit mehrjährigem Baumbesatz</Title>
-                    <Abstract>Kraut mit mehrjährigem Baumbesatz</Abstract>
+                    <Title>Kraut mit mehrjÃ¤hrigem Baumbesatz</Title>
+                    <Abstract>Kraut mit mehrjÃ¤hrigem Baumbesatz</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit mehrjährigem Baumbesatz</ogc:Literal>
+                            <ogc:Literal>Kraut mit mehrjÃ¤hrigem Baumbesatz</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1486,12 +1486,12 @@
                 </Rule>
                 <Rule>
                     <Name>RoughnessCls117812305579681</Name>
-                    <Title>Kraut mit großen Buschgruppen</Title>
-                    <Abstract>Kraut mit großen Buschgruppen</Abstract>
+                    <Title>Kraut mit groÃŸen Buschgruppen</Title>
+                    <Abstract>Kraut mit groÃŸen Buschgruppen</Abstract>
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Kraut mit großen Buschgruppen</ogc:Literal>
+                            <ogc:Literal>Kraut mit groÃŸen Buschgruppen</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
