@@ -1560,6 +1560,13 @@ cipk jun05
      +    LPS(MR1),rkeep(0:mR1),ekeep(mR1),rkeepeq(mR1))
         ENDIF
       ENDIF
+      
+      !initialize right-hand-side vector
+      r1 = 0.0d0
+      rkeep = 0.0d0
+      ekeep = 0.0d0
+      rkeepeq = 0.0d0
+      
 
 C      DO N=1,NP
 C        WRITE(75,'(8I5)') N,(NBC(N,M),M=1,7)
