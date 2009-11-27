@@ -65,6 +65,8 @@ CIPK  LAST UPDATED SEP 7 1995
 !-
       integer :: TransLine, transtype
       
+      integer (kind = 8) :: ia, ja
+      
       real (kind = 8) :: lambda, lamKS, lamP, lamDunes
 
 C
@@ -1175,39 +1177,27 @@ CIPK SEP02 END ADDITION
 !It is linearily increased down to ADO, where it reaches the friction correction factor given by the user (range 5.0 to 20.0)
 !
 !
-CIPK NOV97
-!nis,jan09: That's the OLD way; why not used anymore?
-!      IF(H .LT. AKAPMG*BRANG) THEN
+      if(h .lt. akapmg*brang) then        
+
+!OLD way: linear distribution of friction multiplier 
 !        FRSC=ort(nr,12)**2-1.
 !        FMULT=FRSC*(AKAPMG*BRANG-H)/(AKAPMG*BRANG)+1.0
 !        dfmdh=-frsc/(akapmg*brang)
-!      ELSE
-!        FMULT=1.0
-!        dfmdh=0.0
-!      ENDIF
-!      dffact=ffact*dfmdh+fmult*dffdh
-!      FFACT=FFACT*FMULT
+!-
 
+!Newer way: Instead of linear distribution a trigonometric funciton is used to adapt
+!        frsc=ort(nr,12)**2-1.
+!        xcd=(akapmg*brang-h)/(brang*AKAPMG)*pi
+!        fmult=frsc/2.*(1.-cos(xcd))+1.0
+!        dfmdh=-frsc/2.*sin(xcd)*pi/(akapmg*brang)
+!-
 
-cipk nov97 end changes
-!nis,jan09: That's the NEW way; what are the trigonometric functions for?
 !EFa jun09, deactivated the NEW way for testing the NEWEST way
-      !if(h .lt. akapmg*brang) then
-      !  frsc=ort(nr,12)**2-1.
-      !  xcd=(akapmg*brang-h)/(brang*AKAPMG)*pi
-      !  fmult=frsc/2.*(1.-cos(xcd))+1.0
-      !  dfmdh=-frsc/2.*sin(xcd)*pi/(akapmg*brang)
-      !else
-      !  fmult=1.0
-      !  dfmdh=0.0
-      !endif
-      !ffact=FFACT*dfmdh+fmult*dffdh
-      !FFACT=FFACT*fmult
-      
-      if(h .lt. akapmg*brang) then        
         fmult=(cos(pi*h/(akapmg*brang))+1)*(ort(nr,12)-1)/2+1.0
         dfmdh=-sin(pi*h/(akapmg*brang))*(ort(nr,12)-1)/2*pi/
      +         (akapmg*brang)
+!-
+
       else
         fmult=1.0
         dfmdh=0.0
@@ -2738,7 +2728,7 @@ CIPK JUN05
         !through all nodal degrees of freedom
         DO 1400 K=1,NDF
           !local equation number
-          IA=IA+1
+          IA = IA + 1
           !global equation number
           JA=NBC(J,K)
           !summing the residual vector
