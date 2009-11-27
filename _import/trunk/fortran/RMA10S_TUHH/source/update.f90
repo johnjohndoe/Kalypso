@@ -466,7 +466,7 @@ UpdateDOFs: DO KK = 1, NDFM
 
   !If there is any change above the convergency border, then degree of freedom (NCNV) and full model (NCONV) is not converged
   if (percentCheck == 1) then
-    if (abs (EPercMax (k)) > conv (k) .and. abs(EMAX(k)) > 0.00001) then
+    if (abs (EPercMax (k)) > conv (k) .and. abs(EMAX(k)) > 0.0003) then
       NCONV = 0
       ncnv (k) = 1
     endif
