@@ -131,7 +131,8 @@ END DO
 !     (Kantennummer =Mittseitenknotennummer)                            
 !     an allen Elementen :                                              
       !Run through every element
-      DO 300 nelem = 1, ne 
+      prepareArcs: DO nelem = 1, ne
+        if (imat (nelem) >= 901 .and. imat (nelem) <= 903) cycle prepareArcs
         !Initialize nnum for first estimation of quadrilateral element to 8 nodes
         nnum = 8
         !Decrease nnum for triangular to 6 nodes
@@ -222,7 +223,7 @@ END DO
             ENDIF
     301   END DO
        ENDIF
- 300 END DO
+ END DO prepareArcs
 
 ! ----------------------------------------------------------------------------------
 ! Kantennummern von 1 aufsteigend nummerieren:                          
@@ -393,6 +394,7 @@ write_elements: DO i = 1, ne
   !for weir elements
   if (imat(i) >= 901 .and. imat(i) <= 903) then
     WRITE (IKALYPSOFM, 7019) i, (nop(i, j), j= 1, ncorn(i))
+    WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
   !for 1D or 2D elements; interpolated elements are excluded; no necessary informations
   ELSE
     if (imat (i) /= 89) then
