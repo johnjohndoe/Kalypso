@@ -4,8 +4,8 @@ implicit none
 
 !dummy arguments
 !---------------
-integer (kind = 4), intent (in) :: nprocs
-integer (kind = 4), intent (in) :: noOfEq
+integer (kind = 4), intent (inout) :: nprocs
+integer (kind = 4), intent (inout) :: noOfEq
 !values of ia and ja for the unsorted matrix a
 integer (kind = 4) :: irow(*), icol(*)
 real (kind = 8) :: a(*), b(*), x(*)
@@ -13,7 +13,7 @@ real (kind = 8) :: a(*), b(*), x(*)
 !local variables
 !---------------
 !general parameters passed to PARDISO, they will not change
-integer (kind = 4), parameter :: maxfct = 1, mnum = 1, mtype = 11, nrhs = 1, msglvl = 0
+integer (kind = 4) :: maxfct = 1, mnum = 1, mtype = 11, nrhs = 1, msglvl = 0
 !dimension of the equation system
 integer (kind = 8) :: nonZeros
 !Parameters passed to PARDISO
@@ -39,6 +39,10 @@ integer (kind = 4) :: nsort
 integer (kind = 4) :: i, k, kk
 !Time Monitoring
 real (kind = 8) :: sutim1, sutim2, sutim3
+
+integer omp_get_max_threads
+external omp_get_max_threads
+
 
 !meaning of the variables
 !------------------------
@@ -93,36 +97,61 @@ if (executionSwitch == 0)  then
   !----------------------------
   !Initialize parameter array to use default values of PARDISO
   iparm = 0
-  !iparm = 0 means: Apply default values of PARDISO!
-  !          If iparm = 0, only iparm (3), that is the number of processors (threads)
-  !          has to be given by the user!
-  !number of processors has always to be set
-  iparm(3) = NPROCS 
-  !use auto-parallelization in factorization
-  iparm(2) = 3
   
-  !individual parameters; only for very advanced users of PARDISO
-  !--------------------------------------------------------------
-!        iparm(1) = 1 ! no solver default
-!        iparm(2) = 2 ! fill-in reordering from METIS
-!        iparm(3) = nprocs ! numbers of processors
+!  !individual parameters; only for very advanced users of PARDISO
+!  !--------------------------------------------------------------
+!        !default iparm (1) = 0: default behviour or not
+!        iparm(1) = 1 !no solver default
+!        !default iparm (2) = 2: Reordering algorithm
+!        iparm(2) = 2 !fill-in reordering from METIS
+        !default iparm (3) = no default: Reordering method
+        iparm(3) = omp_get_max_threads() ! numbers of processors
+!        !default iparm (4) = 0: Preconditioned CGS
 !        iparm(4) = 0 ! no iterative-direct algorithm
+!        !default iparm (5) = 0: Permutation
 !        iparm(5) = 0 ! no user fill-in reducing permutation
+!        !default iparm (6) = 0: write solution on x
 !        iparm(6) = 0 ! =0 solution on the first n compoments of x
-!        iparm(7) = 0 ! not in use
-        !iparm(8) = 9 ! numbers of iterative refinement steps
-!        iparm(9) = 0 ! not in use
+!          !default iparm (7) = no default; output data
+!          iparm(7) = 0 ! output: number of performed iterative refinement steps
+!        !default iparm (8) = 0: Iterative refinement steps
+!        iparm(8) = 0 ! numbers of iterative refinement steps
+!        !default iparm (9) = 0; reserved for future usage
+!        iparm(9) = 0 ! not in use, but must be set!
+!        !default iparm (10) = 13 for mtype = 11: pivoting pertubation
 !        iparm(10) = 13 ! perturbe the pivot elements with 1E-13
+!        !default iparm (11) = 1 for mtype = 11: scaling vectors
 !        iparm(11) = 1 ! use nonsymmetric permutation and scaling MPS
-!        iparm(12) = 0 ! not in use
+!        !default iparm (12) = 0; reserved for future usage
+!        iparm(12) = 0 ! not in use, but must be set!
+!        !default iparm (13) = 1 for mtype = 11: improved accuracy using (non-)symmetric weighted matchings
 !        iparm(13) = 1 ! not in use
-!        iparm(14) = 0 ! Output: number of perturbed pivots
-!        iparm(15) = 0 ! not in use
-!        iparm(16) = 0 ! not in use
-!        iparm(17) = 0 ! not in use
-!        iparm(18) = -1 ! Output: number of nonzeros in the factor LU
-!        iparm(19) = -1 ! Output: Mflops for LU factorization
-!        iparm(20) = 0 ! Output: Numbers of CG Iterations
+!        !default iparm (14) no default; output data
+!          iparm(14) = 0 ! Output: number of perturbed pivots
+!          !default iparm (15) no default; output data
+!          iparm(15) = 0 ! Output: peak memory symbolid factorization
+!          !default iparm (16) no default; output data
+!          iparm(16) = 0 ! Output: permanent memory symbolic factorization
+!          !default iparm (17) no default; output data
+!          iparm(17) = 0 ! Output: memory numerical factorization and solution
+!          !default iparm (18) no default; output data
+!          iparm(18) = -1 ! Output: number of nonzeros in the factor LU
+!        !default iparm (19) = 0: Report on MFlops (10**6)
+!        iparm(19) = 0 ! Output: Mflops for LU factorization
+!        !default iparm (20) = no default; output data
+!          iparm(20) = 0 ! Output: CG/CGS diagnostics
+!          !default iparm (21) = 0: pivoting for symmetric indefinite matrices
+!        iparm (21) = 0
+!        !default iparm (22) = no default, output data
+!          iparm (22) = 0 ! Output number of positive eigenvalues
+!          !default iparm (23) = no default, output data
+!          iparm (23) = 0 ! Output number of negative eigenvalues
+!        !default iparm (27) = 0: No matrix checking
+!          iparm (27) = 0
+!        !default iparm (28) = 0: Precision of values
+!        iparm (28) = 0 ! Double precision
+!          
+!          !iparm (24) through iparm (26) and iparm (29) through iparm (64) are reserved for further settings
 
   !Allocate space for permutation matrix
   if (iparm(5) == 1) then
@@ -238,7 +267,7 @@ if (executionSwitch < 3 ) then
   write(*,*) '********************'
   write(*,*) 'reordering of matrix'
   write(*,*) '********************'
-
+  
   !call PARDISO for ANALYSIS and SYMBOLIC FACTORIZATION
   call pardiso(ipt, maxfct, mnum, mtype, iphase, noOfEq, da, ia, ja, perm, nrhs, iparm, msglvl, ddum, ddum, ierror )
      
