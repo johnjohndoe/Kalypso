@@ -118,6 +118,10 @@ elseif (ErrorID == 1111) then
   WRITE (ErrorUnit, 1111) ObjectID
   WRITE (        *, 1111) ObjectID
 
+elseif (ErrorID == 1112) then
+  WRITE (ErrorUnit, 1112) ObjectID
+  WRITE (        *, 1112) ObjectID
+
 elseif (ErrorID == 1201) then
   WRITE (ErrorUnit, 1201) ObjectID
   WRITE (        *, 1201) ObjectID
@@ -358,7 +362,7 @@ end if
             & 1x, "Please decrease the number of nodes! Model can't deal with" / &
             & 1x, 'the actual number of nodes.')
  !coef1, coef1nt
- 1103 FORMAT (1x, 'ERROR - Width is missing for a node in element', I5, '. Please '/ &
+ 1103 FORMAT (1x, 'ERROR - Width data is missing for a node in element', I5, '. Please '/ &
             & 1x, 'assign width data to both of the nodes!')
  !coef1DPoly
  1104 format (1x, 'ERROR - cross sectional area polynomial is missing for node ', I5 / &
@@ -378,6 +382,9 @@ end if
  1111 format (1x, 'ERROR - If you want to interpolate between profiles, these profiles must have the'/&
             & 1x, ' same roughness slope, otherwise a reference Q calculation does not make sense!'/&
             & 1x, 'Error occured at element ', i5, ' Program stopped.')
+ !rdkalypso
+ 1112 FORMAT (1x, 'ERROR - Width data is missing for a node', I5, '!')
+            
 
 !1200  Errors with elements
 !****

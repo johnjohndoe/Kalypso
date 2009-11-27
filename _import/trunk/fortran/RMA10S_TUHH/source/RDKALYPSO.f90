@@ -1214,7 +1214,7 @@ do i = 1, arccnt
         checkwidths: do j = 1, 3, 2
           nd = nop (localArc (i, 3), j)
           !error -  if one of the two corner nodes does not have cross sectional informations
-          if (width (nd) == 0.0) call errormessageandstop (1103, nd, cord (nd, 1), cord (nd, 2))
+          if (width (nd) == 0.0) call errormessageandstop (1112, nd, cord (nd, 1), cord (nd, 2))
         end do checkwidths
   
         if (width (nop (localArc (i, 3), 2)) == 0.0) then
