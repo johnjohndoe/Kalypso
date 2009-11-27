@@ -158,6 +158,9 @@ IF (NB > 0 .and. NB < 100) then
     if (IntPolProf (i)) then
       do j = 1, 3
         vel (j, i) = (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) + kmWeight(i)  * vel (j, NeighProf(i, 2))
+        vold (j, i) = (1.0D0 - kmWeight(i)) * vold (j, NeighProf(i, 1)) + kmWeight(i)  * vold (j, NeighProf(i, 2))
+        vdot (j, i) = (1.0D0 - kmWeight(i)) * vdot (j, NeighProf(i, 1)) + kmWeight(i)  * vdot (j, NeighProf(i, 2))
+        vdoto (j, i) = (1.0D0 - kmWeight(i)) * vdoto (j, NeighProf(i, 1)) + kmWeight(i)  * vdoto (j, NeighProf(i, 2))
       end do
     end if
   end do
