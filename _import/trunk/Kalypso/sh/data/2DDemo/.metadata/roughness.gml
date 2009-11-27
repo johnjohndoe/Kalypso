@@ -40,7 +40,7 @@
  </wbr:roughnessClsMember>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812308790520">
-   <gml:name>Sohlschüttung</gml:name>
+   <gml:name>SohlschÃ¼ttung</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812341634323"/>
    <wbr:colorStyle>#6b6b6b</wbr:colorStyle>
   </wbr:RoughnessCls>
@@ -54,21 +54,21 @@
  </wbr:roughnessClsMember>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812308631332">
-   <gml:name>Böschung</gml:name>
+   <gml:name>BÃ¶schung</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812341544240"/>
    <wbr:colorStyle>#ff8000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812308554222">
-   <gml:name>Böschung_rauh</gml:name>
+   <gml:name>BÃ¶schung_rauh</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812341424022"/>
    <wbr:colorStyle>#ffff00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812308473018">
-   <gml:name>Böschungssicherung</gml:name>
+   <gml:name>BÃ¶schungssicherung</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812346816436"/>
    <wbr:colorStyle>#808080</wbr:colorStyle>
   </wbr:RoughnessCls>
@@ -90,7 +90,7 @@
  </wbr:roughnessClsMember>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812308185619">
-   <gml:name>Vorland Röhricht ohne Bewuchs</gml:name>
+   <gml:name>Vorland RÃ¶hricht ohne Bewuchs</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812349000723"/>
    <wbr:colorStyle>#ff80ff</wbr:colorStyle>
   </wbr:RoughnessCls>
@@ -282,7 +282,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482232364651">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit dichtem mehrjährigen Baumbesatz</gml:name>
+   <gml:name>Gras mit dichtem mehrjÃ¤hrigen Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358751841"/>
    <wbr:colorStyle>#005100</wbr:colorStyle>
@@ -300,7 +300,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482230732181">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit mehrjährigem Baumbesatz</gml:name>
+   <gml:name>Gras mit mehrjÃ¤hrigem Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358844061"/>
    <wbr:colorStyle>#008c00</wbr:colorStyle>
@@ -309,7 +309,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482229950481">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit aufgelockerten Büschen</gml:name>
+   <gml:name>Gras mit aufgelockerten BÃ¼schen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123656375631"/>
    <wbr:colorStyle>#00aa00</wbr:colorStyle>
@@ -318,7 +318,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482229109461">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit großen Büschen</gml:name>
+   <gml:name>Gras mit groÃŸen BÃ¼schen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657066251"/>
    <wbr:colorStyle>#00aa00</wbr:colorStyle>
@@ -336,7 +336,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482215419581">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit kleinen Büschen</gml:name>
+   <gml:name>Gras mit kleinen BÃ¼schen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123690828601"/>
    <wbr:colorStyle>#00e800</wbr:colorStyle>
@@ -345,7 +345,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482214208401">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit Büschen mit Kronenschluss</gml:name>
+   <gml:name>Gras mit BÃ¼schen mit Kronenschluss</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123590673351"/>
    <wbr:colorStyle>#15ff15</wbr:colorStyle>
@@ -354,7 +354,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482213347331">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit Büschen mittlerer Größe</gml:name>
+   <gml:name>Gras mit BÃ¼schen mittlerer GrÃ¶ÃŸe</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657737501"/>
    <wbr:colorStyle>#53ff53</wbr:colorStyle>
@@ -363,7 +363,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls118348221256501">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Gras mit großen Buschgruppen</gml:name>
+   <gml:name>Gras mit groÃŸen Buschgruppen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123654442561"/>
    <wbr:colorStyle>#95ff95</wbr:colorStyle>
@@ -381,7 +381,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482210663381">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit dichtem mehrjährigen Baumbesatz</gml:name>
+   <gml:name>Kraut mit dichtem mehrjÃ¤hrigen Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358751841"/>
    <wbr:colorStyle>#b35900</wbr:colorStyle>
@@ -399,7 +399,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482208950281">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit aufgelockerten Büschen</gml:name>
+   <gml:name>Kraut mit aufgelockerten BÃ¼schen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123656375631"/>
    <wbr:colorStyle>#ff8b17</wbr:colorStyle>
@@ -408,7 +408,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1183482208039171">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit großen Büschen</gml:name>
+   <gml:name>Kraut mit groÃŸen BÃ¼schen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657066251"/>
    <wbr:colorStyle>#ffaa55</wbr:colorStyle>
@@ -426,7 +426,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812307020841">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit kleinen Büschen</gml:name>
+   <gml:name>Kraut mit kleinen BÃ¼schen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123690828601"/>
    <wbr:colorStyle>#ffe6cc</wbr:colorStyle>
@@ -435,7 +435,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls1178123069356121">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit Büschen mit Kronenschluss</gml:name>
+   <gml:name>Kraut mit BÃ¼schen mit Kronenschluss</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123590673351"/>
    <wbr:colorStyle>#fefbc5</wbr:colorStyle>
@@ -444,7 +444,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812305739891">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit Büschen mittlerer Größe</gml:name>
+   <gml:name>Kraut mit BÃ¼schen mittlerer GrÃ¶ÃŸe</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657737501"/>
    <wbr:colorStyle>#fded80</wbr:colorStyle>
@@ -453,7 +453,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812305485411">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit mehrjährigem Baumbesatz</gml:name>
+   <gml:name>Kraut mit mehrjÃ¤hrigem Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358844061"/>
    <wbr:colorStyle>#f4dd59</wbr:colorStyle>
@@ -462,7 +462,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117812305579681">
    <gml:description>Beispiel zur Modelierung</gml:description>
-   <gml:name>Kraut mit großen Buschgruppen</gml:name>
+   <gml:name>Kraut mit groÃŸen Buschgruppen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123654442561"/>
    <wbr:colorStyle>#ffff00</wbr:colorStyle>
@@ -482,31 +482,31 @@
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls117812349000723">
-   <gml:name>Vorland Röhricht</gml:name>
+   <gml:name>Vorland RÃ¶hricht</gml:name>
    <wbr:ks>0.4</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls117812346816436">
-   <gml:name>Böschungssicherung</gml:name>
+   <gml:name>BÃ¶schungssicherung</gml:name>
    <wbr:ks>0.3</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls117812341634323">
-   <gml:name>Sohlschüttung</gml:name>
+   <gml:name>SohlschÃ¼ttung</gml:name>
    <wbr:ks>0.15</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls117812341544240">
-   <gml:name>Böschung</gml:name>
+   <gml:name>BÃ¶schung</gml:name>
    <wbr:ks>0.2</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls117812341424022">
-   <gml:name>Böschung rauh</gml:name>
+   <gml:name>BÃ¶schung rauh</gml:name>
    <wbr:ks>0.25</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
@@ -531,42 +531,42 @@
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls118347186081081">
-   <gml:description>ungefährer Mittelwert</gml:description>
+   <gml:description>ungefÃ¤hrer Mittelwert</gml:description>
    <gml:name>Feinsand</gml:name>
    <wbr:ks>1.5E-4</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls1183471795787251">
-   <gml:description>ungefährer Mittelwert</gml:description>
+   <gml:description>ungefÃ¤hrer Mittelwert</gml:description>
    <gml:name>Mittelsand</gml:name>
    <wbr:ks>4.0E-4</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls1183471794114201">
-   <gml:description>ungefährer Mittelwert</gml:description>
+   <gml:description>ungefÃ¤hrer Mittelwert</gml:description>
    <gml:name>Grobsand</gml:name>
    <wbr:ks>0.0015</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls1183471793173321">
-   <gml:description>ungefährer Mittelwert</gml:description>
+   <gml:description>ungefÃ¤hrer Mittelwert</gml:description>
    <gml:name>Feinkies</gml:name>
    <wbr:ks>0.0040</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls1183471792122561">
-   <gml:description>ungefährer Mittelwert</gml:description>
+   <gml:description>ungefÃ¤hrer Mittelwert</gml:description>
    <gml:name>Mittelkies</gml:name>
    <wbr:ks>0.015</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls118347179102071">
-   <gml:description>ungefährer Mittelwert</gml:description>
+   <gml:description>ungefÃ¤hrer Mittelwert</gml:description>
    <gml:name>Grobkies</gml:name>
    <wbr:ks>0.04</wbr:ks>
   </wbr:Roughness_GroundCls>
@@ -581,7 +581,7 @@
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls1183471789147421">
    <gml:description>gemittelt nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Steinschüttung, schwer</gml:name>
+   <gml:name>SteinschÃ¼ttung, schwer</gml:name>
    <wbr:ks>0.25</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
@@ -630,14 +630,14 @@
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls1183471675504181">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Steinschüttung 80/450 mit Grasbewuchs</gml:name>
+   <gml:name>SteinschÃ¼ttung 80/450 mit Grasbewuchs</gml:name>
    <wbr:ks>0.3</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
  <wbr:roughness_GroundClsMember>
   <wbr:Roughness_GroundCls gml:id="Roughness_GroundCls1183471674633581">
    <gml:description>gemittelt nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Steinschüttung mit Krautbewuchs</gml:name>
+   <gml:name>SteinschÃ¼ttung mit Krautbewuchs</gml:name>
    <wbr:ks>0.5</wbr:ks>
   </wbr:Roughness_GroundCls>
  </wbr:roughness_GroundClsMember>
@@ -882,7 +882,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123696036141">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Röhricht</gml:name>
+   <gml:name>RÃ¶hricht</gml:name>
    <wbr:axay>0.02</wbr:axay>
    <wbr:dp>0.0070</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -890,7 +890,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123695375561">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Sträucher, einjährig</gml:name>
+   <gml:name>StrÃ¤ucher, einjÃ¤hrig</gml:name>
    <wbr:axay>0.3</wbr:axay>
    <wbr:dp>0.03</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -898,7 +898,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123692341601">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Sträucher, mehrjährig</gml:name>
+   <gml:name>StrÃ¤ucher, mehrjÃ¤hrig</gml:name>
    <wbr:axay>0.2</wbr:axay>
    <wbr:dp>0.045</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -914,7 +914,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123690828601">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Büsche, klein</gml:name>
+   <gml:name>BÃ¼sche, klein</gml:name>
    <wbr:axay>1.5</wbr:axay>
    <wbr:dp>0.3</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -922,7 +922,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123657737501">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Büsche, mittlere Größe</gml:name>
+   <gml:name>BÃ¼sche, mittlere GrÃ¶ÃŸe</gml:name>
    <wbr:axay>3.0</wbr:axay>
    <wbr:dp>0.4</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -930,7 +930,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123657066251">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Büsche, groß</gml:name>
+   <gml:name>BÃ¼sche, groÃŸ</gml:name>
    <wbr:axay>3.0</wbr:axay>
    <wbr:dp>0.8</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -938,7 +938,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123656375631">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Büsche, aufgelockert</gml:name>
+   <gml:name>BÃ¼sche, aufgelockert</gml:name>
    <wbr:axay>4.0</wbr:axay>
    <wbr:dp>0.1</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -946,7 +946,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123655423251">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Büsche, in kleineren Gruppen</gml:name>
+   <gml:name>BÃ¼sche, in kleineren Gruppen</gml:name>
    <wbr:axay>6.0</wbr:axay>
    <wbr:dp>0.5</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -954,7 +954,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123654442561">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Büsche in großen Gruppen</gml:name>
+   <gml:name>BÃ¼sche in groÃŸen Gruppen</gml:name>
    <wbr:axay>7.0</wbr:axay>
    <wbr:dp>1.0</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -962,7 +962,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123590673351">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Büsche, mit Kronenschluss</gml:name>
+   <gml:name>BÃ¼sche, mit Kronenschluss</gml:name>
    <wbr:axay>0.15</wbr:axay>
    <wbr:dp>0.03</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -970,7 +970,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123590132241">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Bäume, lockerer Besatz</gml:name>
+   <gml:name>BÃ¤ume, lockerer Besatz</gml:name>
    <wbr:axay>10.0</wbr:axay>
    <wbr:dp>0.5</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -978,7 +978,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls1178123589381281">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Bäume, dichter junger Besatz</gml:name>
+   <gml:name>BÃ¤ume, dichter junger Besatz</gml:name>
    <wbr:axay>5.0</wbr:axay>
    <wbr:dp>0.2</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -986,7 +986,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls117812358844061">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Bäume, mehrjähriger Besatz</gml:name>
+   <gml:name>BÃ¤ume, mehrjÃ¤hriger Besatz</gml:name>
    <wbr:axay>5.0</wbr:axay>
    <wbr:dp>0.4</wbr:dp>
   </wbr:Roughness_VegetationCls>
@@ -994,7 +994,7 @@
  <wbr:roughness_VegetationClsMember>
   <wbr:Roughness_VegetationCls gml:id="Roughness_VegetationCls117812358751841">
    <gml:description>nach Merkblatt 1/BWK, September 1999</gml:description>
-   <gml:name>Bäume, dichter mehrjähriger Besatz</gml:name>
+   <gml:name>BÃ¤ume, dichter mehrjÃ¤hriger Besatz</gml:name>
    <wbr:axay>5.0</wbr:axay>
    <wbr:dp>0.8</wbr:dp>
   </wbr:Roughness_VegetationCls>
