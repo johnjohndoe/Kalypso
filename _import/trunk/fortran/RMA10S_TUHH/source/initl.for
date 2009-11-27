@@ -62,7 +62,7 @@ c     Initialisation of values
       !Band width of the system
       MFWSIZ    =5000
       !size of the right-hand-side vector, i.e. the number of active equations
-      MR1SIZ   = 5000000
+      MR1SIZ   = 2000000
       !number of entries in the Jacobian Matrix, i.e. all non-zero derivatives of the Jacobian
       NBUFFSIZ = 20000000
 
@@ -104,6 +104,8 @@ cipk mar06  add call for ENDLIMIT case
         READ(DLIN,'(I16)') NBSS
         LBMAX=NBSS
         nbuffsiz = lbmax
+      ELSEIF(ID(1:8) == 'MAXR1   ') then
+        read (dlin, *) mr1siz
       ELSEIF(ID(1:8) .EQ. 'MAXQPTS ') THEN
 CIPK MAR06
         READ(DLIN,'(I8)') NCQOBS
