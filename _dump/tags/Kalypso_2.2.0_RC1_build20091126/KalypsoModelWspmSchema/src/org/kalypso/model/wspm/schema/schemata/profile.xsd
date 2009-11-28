@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+    This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/ Kalypso is free software: you can
+    redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+    the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with Kalypso. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.model.wspmprofile"
+  elementFormDefault="qualified" version="0.1">
+  <annotation>
+    <appinfo xmlns:kapp="org.kalypso.appinfo">
+      <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+    </appinfo>
+  </annotation>
+  <import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd" />
+  <import namespace="org.kalypso.gml.common" />
+  <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
+  <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
+  <import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" />
+  <!-- schema for WSPM Profiles  -->
+  <!--
+		_________________________________________________________________________________________
+		ELEMENTS
+		_________________________________________________________________________________________
+	-->
+  <element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
+    <annotation>
+      <documentation><![CDATA[${property:http://www.opengis.net/gml#description;-no	description-}]]></documentation>
+    </annotation>
+  </element>
+  <complexType name="ProfileType">
+    <annotation>
+      <documentation> Wir definieren einen eigenen Observation Typ für
+        Querprofile. Damit wird die Stationierung direkt im Schema
+        berücksichtigt: die Stationierung wird konsequent benutzt um
+        Querprofil zu bearbeiten. Wir packen deswegen diese Information als
+        Element und nicht als Metadata. Ein Querprofil leitet von
+        CommonObservation ab und beinhaltet also die Tupeln. Sie werden
+        anhand von
+        resultDefinition angegeben. Für die zusätzliche
+        Durchlässe, Maulprofile, Kreise und
+        Trapezen wird das Element member
+        definiert. </documentation>
+      <appinfo xmlns:kapp="org.kalypso.appinfo">
+        <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry" kapp:property="prof:profileLocation" />
+      </appinfo>
+    </annotation>
+    <complexContent>
+      <extension base="om:ObservationType">
+        <sequence>
+          <element name="station" type="wspmcommon:stationDouble" minOccurs="1" maxOccurs="1">
+            <annotation>
+              <documentation> The profile stationing, important for editing cross sections.</documentation>
+            </annotation>
+          </element>
+          <element name="type" type="string" minOccurs="1" maxOccurs="1">
+            <annotation>
+              <documentation> The profile type, determines how the profile is shown or validated.</documentation>
+            </annotation>
+          </element>
+          <element name="srsName" type="anyURI" minOccurs="0">
+            <annotation>
+              <documentation><![CDATA[Coordinate System, used for the 'RECHTSWERT' and 'HOCHWERT' properties of the profile.]]></documentation>
+            </annotation>
+          </element>
+          <element name="profileLocation" type="gml:LineStringPropertyType">
+            <annotation>
+              <appinfo>This property is backed by the profile-observation.</appinfo>
+              <documentation>Profile location</documentation>
+            </annotation>
+          </element>
+          <element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation> List of additional observations: e.g. outlets,arch, circular and trapezoidal profiles can be modelled.</documentation>
+            </annotation>
+          </element>
+          <element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded" />
+          <element name="imageMember" type="prof:imageFeaturePropertyType" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- 
+	-->
+  <complexType name="imageFeaturePropertyType">
+    <sequence>
+      <element ref="common:Image" />
+    </sequence>
+  </complexType>
+  <!--  
+	-->
+  <element name="localEnergyLossMember" type="prof:localEnergyLossPropertyType">
+    <annotation>
+      <documentation>Attrition coefficients
+                        </documentation>
+    </annotation>
+  </element>
+  <element name="LocalEnergyLoss" type="prof:LocalEnergyLossType">
+    <annotation>
+      <documentation>Attrition coefficient
+                        </documentation>
+    </annotation>
+  </element>
+  <!--
+		_________________________________________________________________________________________
+		TYPES
+		_________________________________________________________________________________________
+	-->
+  <complexType name="localEnergyLossPropertyType">
+    <sequence>
+      <element ref="prof:LocalEnergyLoss" />
+    </sequence>
+  </complexType>
+  <complexType name="LocalEnergyLossType">
+    <complexContent>
+      <!-- Can't use wspm namespace here because we get cyclic import. -->
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="kind">
+            <annotation>
+              <documentation>Type of local attrition</documentation>
+            </annotation>
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="EINLAUF">
+                  <annotation>
+                    <documentation>Inlet</documentation>
+                  </annotation>
+                </enumeration>
+                <enumeration value="KRUEMMER">
+                  <annotation>
+                    <documentation>elbow</documentation>
+                  </annotation>
+                </enumeration>
+                <enumeration value="ZUSATZVERLUST">
+                  <annotation>
+                    <documentation>Additional attrition</documentation>
+                  </annotation>
+                </enumeration>
+                <enumeration value="RECHEN">
+                  <annotation>
+                    <documentation>Rake</documentation>
+                  </annotation>
+                </enumeration>
+                <enumeration value="AUSLAUF">
+                  <annotation>
+                    <documentation>Outlet</documentation>
+                  </annotation>
+                </enumeration>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="value" type="double">
+            <annotation>
+              <documentation>Value of local attrition</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+</schema>
