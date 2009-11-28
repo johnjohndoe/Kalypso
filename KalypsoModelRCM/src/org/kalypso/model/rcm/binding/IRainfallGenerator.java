@@ -46,6 +46,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * GML-binding for the rcm:RainfallGenerator's
@@ -54,5 +56,5 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IRainfallGenerator extends Feature
 {
-  IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final IProgressMonitor monitor ) throws CoreException;
+  IObservation[] createRainfall( final GM_Surface<GM_SurfacePatch>[] areas, final Date from, final Date to, final IProgressMonitor monitor ) throws CoreException;
 }
