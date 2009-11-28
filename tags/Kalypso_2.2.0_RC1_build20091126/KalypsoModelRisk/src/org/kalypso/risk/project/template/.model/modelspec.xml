@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoRisk">
+    <input id="VectorDataModel" path="models/VectorDataModel.gml" relativeToCalcCase="true"/>
+	<input id="RasterDataModel" path="models/RasterDataModel.gml" relativeToCalcCase="true"/>
+	<input id="ControlModel" path="models/RasterizationControlModel.gml" relativeToCalcCase="true"/>
+	<!-- 
+	<input id="SpecificDamagePotentialMap" path="maps/SpecificDamagePotentialMap.gmt" relativeToCalcCase="true"/>
+	 -->
+	<input id="InputRasterFolder" path="models/raster/input" relativeToCalcCase="true"/>
+	<input id="OutputRasterFolder" path="models/raster/output" relativeToCalcCase="true"/>
+	<output id="RasterDataModel" path="models/RasterDataModel.gml" relativeToCalcCase="true"/>
+	<output id="OutputRasterFolder" path="models/raster/output" relativeToCalcCase="true"/>
+</modeldata>
