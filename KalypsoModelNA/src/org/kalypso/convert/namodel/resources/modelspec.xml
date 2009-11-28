@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
+    <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
+    <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
+    <input id="Control" path="expertControl.gml" relativeToCalcCase="true"/>
+	<input id="Hydrotop" path="calcHydrotop.gml" relativeToCalcCase="true"/>
+	<input id="Parameter" path="parameter.gml" relativeToCalcCase="false"/>
+	<input id="Landuse" path="landuse.gml" relativeToCalcCase="false" optional="true"/>
+	<input id="Suds" path="suds.gml" relativeToCalcCase="false" optional="true"/>
+
+	<!-- Zeitreihen als Verzeichnisse -->
+    <input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true"/>
+    <input id="KlimaDir" path="Klima" relativeToCalcCase="true"/>    
+    <input id="PegelDir" path="Pegel" relativeToCalcCase="true"/>
+    <input id="ErgebnisDir" path="Ergebnisse" relativeToCalcCase="true"/>
+    <input id="LZSIM_IN" path="Anfangswerte" relativeToCalcCase="true"/>   
+	<output id="OUT_ZML" path="Ergebnisse" relativeToCalcCase="true"/>
+
+</modeldata>
+
