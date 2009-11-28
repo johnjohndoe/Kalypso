@@ -5,7 +5,7 @@
         <class xmlns="">org.kalypso.kalypso1d2d.pjt:org.kalypso.kalypso1d2d.pjt.i18n.Messages</class>
     </mapv:translator>
     <mapv:layers>
-        <mapv:layer visible="true" name="tk2" featurePath="" id="ID_0" linktype="jpg" xlink:actuate="onRequest" xlink:href="project:\imports\basemap\tk2.jpg#EPSG:31467" xlink:type="simple">
+        <mapv:layer visible="true" name="tk2" featurePath="" id="ID_0" linktype="jpg" xlink:actuate="onRequest" xlink:href="project:/imports/basemap/tk2.jpg#EPSG:31467" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
         </mapv:layer>
     </mapv:layers>
