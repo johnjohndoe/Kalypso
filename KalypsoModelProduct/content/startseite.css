@@ -1,0 +1,71 @@
+body {
+margin:0;
+padding:0;
+background:url(images/startseite_hi.gif) left bottom no-repeat #369;
+}
+
+/*Positioniert ein weiteres Hintergrundbild*/
+#image {
+position:absolute;
+right:0;
+bottom:0;
+width:750px;
+height:216px;
+margin:0;
+padding:0;
+background:url(images/nymphe_hi.gif) right bottom no-repeat;
+    z-index:-1;
+}
+
+
+/*Positionierung Navigationsleiste*/
+#navi {
+position:absolute;
+left:200px;
+top:5%;
+width:600px;
+//margin-left:200px;
+}
+
+
+#navi p {
+height:55px;
+font-family:helvetica, arial, sans-serif;
+font-size:15px;
+font-weight:bold;
+color:#9bb6cf;
+vertical-align:bottom;
+}
+
+#navi a {
+padding:0 5px 0 0;
+}
+
+#navi a img {
+width:70px;
+border:none;
+padding:0;
+margin:0;
+}
+
+#navi a {
+float:left;
+margin:0 5px 0 0;
+padding:0;
+border-top:2px solid #85a7c8;
+border-left:2px solid #85a7c8;
+border-bottom:2px solid #053f79;
+border-right:2px solid #053f79;
+vertical-align:bottom;
+}
+
+#navi a:hover {
+border-top:2px solid #053f79;
+border-left:2px solid #053f79;
+border-bottom:2px solid #85a7c8;
+border-right:2px solid #85a7c8;
+}
+
+#navi p span {
+margin:30px 0 0 0;
+}
