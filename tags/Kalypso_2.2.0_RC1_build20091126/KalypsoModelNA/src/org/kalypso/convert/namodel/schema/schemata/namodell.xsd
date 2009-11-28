@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="1.0">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org"/>
+	<import namespace="inline.zml.kalypso.org"/>
+	<element name="NaModell" type="na:NaModellType"/>
+	<complexType name="NaModellType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="CatchmentCollectionMember" type="na:CatchmentCollectionAssociationType"/>
+					<element name="ChannelCollectionMember" type="na:ChannelCollectionAssociationType"/>
+					<element name="NodeCollectionMember" type="na:NodeCollectionAssociationType"/>
+					<element name="SwaleAndTrenchCollectionMember" type="na:SwaleAndTrenchCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- __ Nodes _________________________________ -->
+	<complexType name="NodeCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:NodeCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="NodeCollection" type="na:NodeCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="NodeCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="nodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="NodeAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:Node"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="NodeFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Ort" type="gml:PointPropertyType"/>
+					<element name="generateResult" type="boolean"/>
+					<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0"/>
+					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<!-- ZR berechnet, hier wird das ergebnis gespeichert-->
+					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<!-- ZR Zufluss falls zufluss vorhanden -->
+					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="syntheticZuflussZR" type="boolean" default="false" />
+					<!-- branching ab hier aktivieren-->
+					<element name="branchingMember" type="na:BranchingAssociationType" minOccurs="0"/>
+					<element name="riverCode" type="string" />
+					<element name="riverKilometer" >
+						<simpleType id="nonNegativeDouble">
+							<restriction base="double">
+								<minInclusive value="0.0"></minInclusive>
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BranchingAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:_Branching"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="_Branching" type="na:AbstractBranchingType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<complexType name="AbstractBranchingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="KontZufluss" type="na:ContInflowFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="ContInflowFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="qzug" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="KontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="ContExtractionFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="branchingNodeMember" type="na:NodeAssociationType"/>
+					<element name="qabg" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Ueberlauf" type="na:OverfallFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="OverfallFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="branchingNodeMember" type="na:NodeAssociationType"/>
+					<element name="queb" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="BranchingFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="branchingNodeMember" type="na:NodeAssociationType"/>
+					<element name="zproz" default="1.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="1.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ________Catchments__________________ -->
+	<complexType name="CatchmentCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:CatchmentCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="CatchmentCollection" type="na:CatchmentCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="CatchmentAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:Catchment"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="CatchmentCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="catchmentMember" type="na:CatchmentAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<!-- Element created to reference catchments -->
+	<element name="catchmentLinkMember" type="na:CatchmentPropertyType" />
+	<complexType name="CatchmentPropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="na:Catchment" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+	</complexType>
+	
+	<element name="Catchment" type="na:CatchmentFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="CatchmentFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+            ___________(inum,i5)____(ispk,i3)
+            (text,a80)
+            (flaech,*)
+            (pns,a1)_(kurzzeit,a)_(namfn,a)_(langzeit,a)_(faktn,f5.2)
+            (namft,a)_(namept,a)
+            (namfzf,a)
+            (namhydro,a)
+            (snowtype,a15)(ftem,*)_(fver,*)
+          -->
+					<element name="Ort" type="gml:PolygonPropertyType"/>
+					<element name="entwaesserungsStrangMember" type="na:ChannelAssociationType"/>
+					<element name="generateResult" type="boolean"/>
+					<!-- JH, Flaeche kann auch aus der Hydrotopdatei hierher übernommen werden (wird im Modell ohnehin aus Hydrotopdatei übernommen)-->
+					<element name="flaech" type="long"/>
+					<element name="faktn" default="1.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="3.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<!-- TODO standard oder snowdatei uebernehmen -->
+					<element name="snowtype" type="string"/>
+					<element name="ftem" default="0.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="10.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="fver" default="1.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0"/>
+								<maxInclusive value="3.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<!--
+            (vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,f5.1)_____(tint,f5.1)_____(rintmx,f5.1)
+          -->
+					<element name="bianf" default="0.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="2.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="izkn_vers" type="na:NodeAssociationType" minOccurs="0"/>
+					<element name="tint" type="double" minOccurs="0"/>
+					<element name="rintmx" type="double" minOccurs="0"/>
+					<!-- 
+            (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
+            siehe bodenkorrekturmember...
+          -->
+					<element name="bodenkorrekturmember" type="na:bodenschichtkorrekturAssociationType" maxOccurs="10"/>
+					<!--
+            (f_eva,f4.1)_(aint,f4.1)_(aigw,f6.2)_(fint,f4.2)_(ftra,f4.2)
+            (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
+            (igwzu,*)
+          -->
+					<element name="aigw" type="double"/>
+					<!--        Retentionskonstanten       -->
+					<element name="retvs" default="2.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.01"/>
+								<maxInclusive value="20"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="retob" default="50.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.1"/>
+								<maxInclusive value="50.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="retint" default="200.0">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+								<maxInclusive value="200.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="retbas" default="1000.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="1.0"/>
+								<maxInclusive value="1000.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="retgw" default="10000.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="1.0"/>
+								<maxInclusive value="50000.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="retklu" default="100000.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="1.0"/>
+								<maxInclusive value="100000.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<!-- (ngwzu,*)_...
+            (gwwi,*)_...-->
+					<!--     Grundwasser       -->
+					<element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6"/>
+					<!--	<element name="ngwzu" type="string"/>
+            <element name="gwwi" type="string"/>
+          -->
+					<!-- (hgru,*)(hgro,*)(rtr,*)(pors,*)(gwsent,*)(klupor,*)(izkn,*)  -->
+					<element name="hgru" type="double"/>
+					<element name="hgro" type="double"/>
+					<element name="rtr" default="1.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="1.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="pors" default="0.16">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="1.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="gwsent" type="double"/>
+					<element name="klupor" default="1.0">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="1.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="izkn" type="na:NodeAssociationType" minOccurs="0"/>
+					<!-- ZR niederschlag -->
+					<element name="niederschlagZR" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<!--ZR Temperatur-->
+					<element name="temperaturZR" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<!-- ZR Verdunstung -->
+					<element name="verdunstungZR" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<!--Zeitflächenfunktion-->
+					<element name="zft" type="zmlinline:ZmlInlineTAType"/>
+					<!--               Optimierung              -->
+					<element name="faktorAigw" type="double" minOccurs="0"/>
+					<element name="faktorRetobRetint" type="double" minOccurs="0"/>
+					<element name="synthZR" type="string"/>
+					<!-- Korrekturfaktoren (zur Kalibrierung) der Retentionskonstanten       -->
+					<element name="faktorRetvs" type="double" minOccurs="0"/>
+					<element name="faktorRetob" type="double" minOccurs="0"/>
+					<element name="faktorRetint" type="double" minOccurs="0"/>
+					<element name="faktorRetbas" type="double" minOccurs="0"/>
+					<element name="faktorRetgw" type="double" minOccurs="0"/>
+					<element name="faktorRetklu" type="double" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ______________Channels_____________________ -->
+	<complexType name="ChannelCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:ChannelCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="ChannelCollection" type="na:ChannelCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ChannelCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="channelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="ChannelAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:_Channel"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<!-- Channel super type -->
+	<complexType name="AbstractChannelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Ort" type="gml:LineStringPropertyType"/>
+					<element name="downStreamNodeMember" type="na:NodeAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Virtual Channel -->
+	<element name="VirtualChannel" type="na:VirtualChannelFeatureType" substitutionGroup="na:_Channel"/>
+	<complexType name="VirtualChannelFeatureType">
+		<complexContent>
+			<extension base="na:AbstractChannelType"/>
+		</complexContent>
+	</complexType>
+	<!-- KM-Channel -->
+	<element name="KMChannel" type="na:KMChannelFeatureType" substitutionGroup="na:_Channel"/>
+	<complexType name="KMChannelFeatureType">
+		<complexContent>
+			<extension base="na:AbstractChannelType">
+				<sequence>
+					<element name="startkm" type="double" minOccurs="0"/>
+					<element name="endkm" type="double" minOccurs="0"/>
+					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5"/>
+					<!--    Optimierung   -->
+					<element name="faktorRkf" type="double" minOccurs="0"/>
+					<element name="faktorRnf" type="double" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Storage Channel -->
+	<element name="StorageChannel" type="na:StorageChannelFeatureType" substitutionGroup="na:_Channel"/>
+	<complexType name="StorageChannelFeatureType">
+		<complexContent>
+			<extension base="na:AbstractChannelType">
+				<sequence>
+					<element name="iknotNodeMember" type="na:NodeAssociationType" minOccurs="0"/>
+					<element name="sv" type="double"/>
+					<element name="vmax" type="double"/>
+					<element name="vmin" type="double"/>
+					<element name="hvvsqd" type="zmlinline:ZmlInlineWVQType"/>
+					<element name="generateResult" type="boolean"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ________Muldenrigolen_______________ -->
+	<complexType name="SwaleAndTrenchCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:SwaleAndTrenchCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SwaleAndTrenchCollection" type="na:SwaleAndTrenchCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SwaleAndTrenchCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="swaleTrenchMember" type="na:SwaleAndTrenchAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="SwaleAndTrenchAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:SwaleAndTrench"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SwaleAndTrench" type="na:SwaleAndTrenchFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SwaleAndTrenchFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="position" type="gml:LineStringPropertyType"/>
+					<element name="drainPipeSlope" type="double"/>
+					<element name="kfPipe" type="double"/>
+					<element name="diameterPipe" type="double"/>
+					<element name="roughnessPipe" type="double"/>
+					<element name="widthTrench" type="double"/>
+					<element name="nutzung" type="string"/>
+					<element name="boden" type="string"/>
+					<element name="maxPerk" type="double"/>
+					<element name="InflowGW" type="double"/>
+					<element name="dischargeNode" type="na:NodeAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ________Sonstiges__________________ -->
+	<!--Kalinin-Miljukov Parameter -->
+	<complexType name="KMParameterAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:KMParameter"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="KMParameter" type="na:KMParameterType"/>
+	<complexType name="KMParameterType">
+		<complexContent>
+			<extension base="na:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="qrk">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="rkf">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="rnf">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+								<maxInclusive value="30.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="rkv">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="rnv">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+								<maxInclusive value="30.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="c">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0"/>
+								<maxInclusive value="1"/>
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NonGeometricAbstractFeatureType" abstract="true">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="bodenschichtkorrekturAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:bodenschichtkorrektur"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="bodenschichtkorrektur" type="na:bodenschichtkorrekturType" substitutionGroup="gml:_Feature"/>
+	<!--
+    (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
+  -->
+	<complexType name="bodenschichtkorrekturType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="cinh">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="cind">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="cex">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="bmax">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="banf">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="fko">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0.0"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="retlay">
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0"/>
+								<maxInclusive value="1"/>
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="grundwasserabflussAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:grundwasserabfluss"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="grundwasserabfluss" type="na:grundwasserabflussType" substitutionGroup="gml:_Feature"/>
+	<complexType name="grundwasserabflussType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="ngwzu" type="na:CatchmentLinkType"/>
+					<element name="gwwi">
+						<simpleType>
+							<restriction base="double">
+								<minExclusive value="0"/>
+								<maxInclusive value="1"/>
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CatchmentLinkType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:Catchment"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+</schema>
