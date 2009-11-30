@@ -181,7 +181,7 @@
             <Axis id="Station_Axis">
                 <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
                 </Provider>
-                <Label>Station_Axis_label</Label>
+                <Label>%Station_Axis_label%</Label>
                 <Direction>NEGATIVE</Direction>
                 <Position>BOTTOM</Position>
                 <RendererRef ref="NumberAxisRenderer"/>
@@ -190,7 +190,7 @@
             <Axis id="NN_Axis">
                 <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
                 </Provider>
-                <Label>NN_Axis_label</Label>
+                <Label>%NN_Axis_label%</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>LEFT</Position>
                 <RendererRef ref="NumberAxisRenderer"/>

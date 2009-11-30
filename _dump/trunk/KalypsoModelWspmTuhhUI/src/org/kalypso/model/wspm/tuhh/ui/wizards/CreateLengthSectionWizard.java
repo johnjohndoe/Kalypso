@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -92,12 +93,12 @@ public class CreateLengthSectionWizard extends Wizard
     m_GMLws = ws;
     m_profiles = profiles;
     m_selectedProfiles = selection;
-    setWindowTitle( "Length Section from Profiles " );
+    setWindowTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", "choose Cross Sections", null ); //$NON-NLS-1$ 
+    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$ 
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( "bitte wählen Sie die Stationen für den Längsschnitt aus" );
+    m_profileChooserPage.setMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -119,38 +120,39 @@ public class CreateLengthSectionWizard extends Wizard
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
     URL context = m_GMLws.getContext();
     IProject wspmProjekt = ResourceUtilities.findProjectFromURL( context );
-    IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" );
+    IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte") ; //$NON-NLS-1$
     try
     {
       if( !parentFolder.exists() )
         parentFolder.create( false, true, new NullProgressMonitor() );
 
-      final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length );
+      final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length ); //$NON-NLS-1$
       IFolder targetFolder = parentFolder.getFolder( fName );
       if( !targetFolder.exists() )
         targetFolder.create( false, true, new NullProgressMonitor() );
 
-      final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) );
+      final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) ); //$NON-NLS-1$
       final File targetJavaFile = targetFile.getLocation().toFile();
       
-      final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( new QName( "http://www.opengis.net/om", "Observation" ), targetJavaFile.toURI().toURL(), new GmlSerializerFeatureProviderFactory() );
+      final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( new QName( "http://www.opengis.net/om", "Observation" ), targetJavaFile.toURI().toURL(), new GmlSerializerFeatureProviderFactory() ); //$NON-NLS-1$ //$NON-NLS-2$
       final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( profilFeatures );
       ObservationFeatureFactory.toFeature( lengthSection, lsWorkspace.getRootFeature() );
-      GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" );
-     // KalypsoModelWspmCoreExtensions.createProfilSink( "lng" ).write( lengthSection, new PrintWriter( new FileOutputStream( targetJavaFile ) ) );
-      
-      final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) );
+      GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" ); //$NON-NLS-1$
+         
+      final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) ); //$NON-NLS-1$
       if( !kodFile.exists() )
       {
-        final URL resource = getClass().getResource( "resources/LS_no_result.kod" );
-        String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "%localPath%", fName + ".gml" );
-        kod = kod.replaceAll( "%title%","LengthSectionChartTitle");
-        kod = kod.replaceAll( "%description%","LengthSectionChartDescription");
+        final URL resource = getClass().getResource( "resources/LS_no_result.kod" ); //$NON-NLS-1$
+        String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "%localPath%", fName + ".gml" ); //$NON-NLS-1$  //$NON-NLS-3$
+        kod = kod.replaceAll( "%title%",fName); //$NON-NLS-1$
+        kod = kod.replaceAll( "%description%",fName); //$NON-NLS-1$
+        kod = kod.replaceAll( "%Station_Axis_label%",Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.19")); //$NON-NLS-1$ //$NON-NLS-2$
+        kod = kod.replaceAll( "%NN_Axis_label%",Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.21")); //$NON-NLS-1$ //$NON-NLS-2$
         for(final IComponent comp : lengthSection.getResult().getComponents())
         {
-          kod = kod.replaceAll( "%"+comp.getId()+"_title%", comp.getName());//getPhenomenon().getName() );
+          kod = kod.replaceAll( "%"+comp.getId()+"_title%", comp.getName());//getPhenomenon().getName() ); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" );
+        final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" ); //$NON-NLS-1$
         kodFile.create( inputStream, true, new NullProgressMonitor() );
       }
       
