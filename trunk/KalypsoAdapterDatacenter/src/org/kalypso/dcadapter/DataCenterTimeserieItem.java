@@ -267,4 +267,13 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   {
     m_evtPrv.fireChangedEvent( source );
   }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
+   */
+  @Override
+  public boolean hasAdapter( final Class< ? > adapter )
+  {
+    return false;
+  }
 }

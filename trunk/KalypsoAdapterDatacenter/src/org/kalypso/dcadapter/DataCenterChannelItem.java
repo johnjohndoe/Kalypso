@@ -101,8 +101,18 @@ public class DataCenterChannelItem implements IRepositoryItem
     return m_rep;
   }
 
-  public Object getAdapter( Class anotherClass )
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class anotherClass )
   {
     return null;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
+   */
+  @Override
+  public boolean hasAdapter( final Class< ? > adapter )
+  {
+    return false;
   }
 }
