@@ -1271,13 +1271,13 @@ if (maxlt /= 0) then
 endif
 
 ! REORDERING -------------------------------------------------------------------
-DO i = 1, elcnt
+DO i = 1, maxe
   elfix (i) = 0
 END do
 
 !examine, whether reordering has to be done
 ReorderingNotDone = .true.
-DO i = 1, elcnt
+DO i = 1, maxe
   IF (nfixh (i) <= 0 .or. nfixh (i) > MaxE) then
     !NiS,mar06: unit name changed; changed iout to Lout
     WRITE (Lout,105)
@@ -1287,12 +1287,12 @@ DO i = 1, elcnt
     call reord_Kalyps (qlist)
     ReorderingNotDone = .false.
   endif
-  IF (imat (nfixh (i)) > 0) elfix (nfixh (i)) = elfix (nfixh (i)) + 1
+  IF (imat (nfixh (i)) /= 0) elfix (nfixh (i)) = elfix (nfixh (i)) + 1
 END DO
 
 if (ReorderingNotDone) then
-  DO i = 1, elcnt
-    IF ((imat (i) > 0) .and. (elfix (i) /= 1) ) then
+  DO i = 1, maxe
+    IF ((imat (i) /= 0) .and. (elfix (i) /= 1) ) then
       !NiS,mar06: unit name changed; changed iout to Lout
       WRITE (Lout,105)
       WRITE ( * , 105)
