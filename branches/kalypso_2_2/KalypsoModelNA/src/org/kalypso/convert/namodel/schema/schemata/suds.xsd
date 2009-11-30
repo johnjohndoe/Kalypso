@@ -187,7 +187,9 @@
 	<simpleType name="EnumSwaleType">
 		<restriction base="string">
 			<enumeration value="20"/>
+			<!-- obsolete, see trac ticket #419 
 			<enumeration value="21"/>
+			 -->
 		</restriction>
 	</simpleType>
 
@@ -203,7 +205,9 @@
 			<enumeration value="10"/>
 			<enumeration value="11"/>
 			<enumeration value="12"/>
-			<enumeration value="13"/>
+			<!-- obsolete, see trac ticket #419
+				<enumeration value="13"/>
+			 -->
 		</restriction>
 	</simpleType>
 
