@@ -256,15 +256,15 @@ cipk apr96 save data to a scratch file
 C
 C...... Go to read boundary conditions along line and wind data
 C
-      if (iaccyc <= icyc .or. iaccyc == 1 .or. iaccyc == 0) then
+!      if (iaccyc <= icyc .or. iaccyc == 1 .or. iaccyc == 0) then
         CALL SBGEN(IBIN)
-      ELSEIF (iaccyc > icyc) then
-        WRITE(*,*) 'Jump over steady boundary conditions input data'
-        findEndStep: do
-          call ginpt(ibin, id, dlin)
-          if (ID(1:7) == 'ENDSTEP') EXIT findEndStep
-        end do findEndStep
-      end if
+!      ELSEIF (iaccyc > icyc) then
+!        WRITE(*,*) 'Jump over steady boundary conditions input data'
+!        findEndStep: do
+!          call ginpt(ibin, id, dlin)
+!          if (ID(1:7) == 'ENDSTEP') EXIT findEndStep
+!        end do findEndStep
+!      end if
 
 cipk jun05 save nfix and test for weir data
 

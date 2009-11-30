@@ -154,8 +154,8 @@ IF (NB > 0 .and. NB < 100) then
 
   !introducing the restart values for interpolated profiles
   do i = 1, maxp
-    !if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
-    if (IntPolProf (i)) then
+    if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
+    !if (IntPolProf (i)) then
       do j = 1, 3
         vel (j, i) = (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) + kmWeight(i)  * vel (j, NeighProf(i, 2))
         vold (j, i) = (1.0D0 - kmWeight(i)) * vold (j, NeighProf(i, 1)) + kmWeight(i)  * vold (j, NeighProf(i, 2))

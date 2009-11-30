@@ -89,6 +89,7 @@ INTEGER, ALLOCATABLE :: Trans_nodes(:,:)               !informations for writing
 INTEGER              :: trans_els                      !counter and name-giver for transition-elements
 
 CHARACTER (LEN = 1000) :: dataline
+real (kind = 8) :: cord_tmp(1:2), ao_tmp, kmx_tmp
 
 real (kind = 8) :: h
 real :: aat, d1
@@ -304,12 +305,6 @@ write_nodes: DO i = 1, np
     write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   ELSEIF (.not. (IntPolProf (i)) .and. kmx (i) == -1.0) then
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), ao(i)
-  !IN-Zeile
-!  !for interpolated profiles
-!  ELSEIF (IntPolProf (i) .AND. kmx (i) /= -1.0) then
-!    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
-!  ELSEIF (IntPolProf (i)) then
-!    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), ao(i)
   endif
 
   if (resultType == 'resu') THEN
@@ -320,7 +315,7 @@ write_nodes: DO i = 1, np
       WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
     else
       !IR-Zeile
-!      WRITE (IKALYPSOFM, 7045) i, (vel (j, i), j = 1, 3) , wsll(i)
+      WRITE (IKALYPSOFM, 7051) i, (vel (j, i), j = 1, 3) , wsll(i)
     end if
   ELSEIF ( resultType == 'mini') THEN
     WRITE (IKALYPSOFM, 7003) i, (minvel (j, i), j = 1, 3) , minrausv (i)
@@ -331,11 +326,17 @@ write_nodes: DO i = 1, np
 
   !only for real results not for minmax-result-files
   !if (resultType == 'resu') then
-  if (.not. IntPolProf (i)) then
     IF (icyc .ne. 0) then
-      WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
-      WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
-      WRITE (IKALYPSOFM, 7006) i, (vdoto (j, i), j = 1, 3)
+    
+      if (.not. (intPolProf(i))) then
+        WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
+        WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
+        WRITE (IKALYPSOFM, 7006) i, (vdoto (j, i), j = 1, 3)
+      else
+        WRITE (IKALYPSOFM, 7052) i, (vdot (j, i), j = 1, 3)
+        WRITE (IKALYPSOFM, 7053) i, (vold (j, i), j = 1, 3)
+        WRITE (IKALYPSOFM, 7054) i, (vdoto (j, i), j = 1, 3)
+      endif
     ENDIF
 
     WRITE (IKALYPSOFM, 7007) i, ndry (i), hel (i), hol (i), hdet (i), hdot (i)
@@ -376,7 +377,6 @@ write_nodes: DO i = 1, np
 !        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
       end do
     end if
-  end if
 
 
 END DO write_nodes
@@ -384,6 +384,13 @@ END DO write_nodes
 ! Arcs:
 write_arcs: DO i = 1, arccnt
   WRITE (IKALYPSOFM, 7001) i, (arc_tmp (i, j), j = 1, 5)
+  if (intPolProf (arc_tmp(i,5))) then
+    cord_tmp(1) = 0.5 * (cord (arc_tmp(i,1),1) + cord (arc_tmp(i,2),1))
+    cord_tmp(2) = 0.5 * (cord (arc_tmp(i,1),2) + cord (arc_tmp(i,2),2))
+    ao_tmp = 0.5 * (ao(arc_tmp(i,1)) + ao(arc_tmp(i,2)))
+    kmx_tmp = 0.5 * (kmx(arc_tmp(i,1)) + kmx(arc_tmp(i,2)))
+    write (IKALYPSOFM, 6999) arc_tmp(i,5), cord_tmp(1), cord_tmp(2), ao_tmp, kmx_tmp  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+  endif
 end do write_arcs
 
 !NiS,apr06: the array-value of fehler(2,i) is not so important for the displaying of results at first; later it might be interesting to insert the option
@@ -535,8 +542,6 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7043 FORMAT ('IN', i10, 4f20.7)
  !nis,jan08: interpolated nodes in 1D polynomial approach
  7044 FORMAT ('IN', i10, 3f20.7)
- !nis,jan08: results of interpolated nodes or profiles; like VA-line
- 7045 FORMAT ('IR', i10,4f20.7)
  !nis,jan08: no. of interpolated profiles
  7046 FORMAT ('IP', 2i10)
  !nis,jan08: for Calculation units
@@ -545,6 +550,14 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7049 format ('PS', 3i10)
  !nis,mar09: storage elements
  7050 format ('SE', 2i10, 2f20.7)
+ !nis,jan08: results of interpolated nodes or profiles; like VA-line
+ 7051 FORMAT ('VAI', i9,4f20.7)
+ !aktuelle Zeitgradienten:
+ 7052 FORMAT ('GAI', i9,3f20.7)
+ !Freiheitsgrade des vergangenen Zeitschritt (Geschwindigkeiten und Wasserspiegel):
+ 7053 FORMAT ('VOI', i9,3f20.7) 
+ !Zeitgradienten des vergangenen Zeitschrit
+ 7054 FORMAT ('GOI', i9,3f20.7) 
 
 
 
