@@ -97,7 +97,7 @@ public class DataCenterLevelItem implements IRepositoryItem
     return m_rep;
   }
 
-  public Object getAdapter( Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     return null;
   }
@@ -109,5 +109,14 @@ public class DataCenterLevelItem implements IRepositoryItem
   public String toString()
   {
     return getName();
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
+   */
+  @Override
+  public boolean hasAdapter( final Class adapter )
+  {
+    return false;
   }
 }
