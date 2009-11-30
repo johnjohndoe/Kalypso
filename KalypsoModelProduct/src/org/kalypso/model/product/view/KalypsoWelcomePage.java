@@ -278,7 +278,6 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
           final String message = String.format( "Failed to open external browser at %s", KALYPSO_WEB_PAGE );
           MessageDialog.openError( e.widget.getDisplay().getActiveShell(), footerLogoTooltip, message );
         }
-
       }
     } );
 
