@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="runoff:WaterlevelFixation" style="SWT.NONE" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+	<gft:label property="gml:name" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:name"  style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData widthHint="200" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING" />
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:label property="gml:description" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:description"  style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData widthHint="200" verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+
+	<gft:composite style="SWT.NONE">
+		<gft:gridData horizontalSpan="2" verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" heightHint="300" />
+		<gft:gridLayout />
+		<gft:tabFolder style="SWT.NONE">
+			<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalSpan="1" />
+			<gft:tabItem>
+				<gft:tabLabel>Tabelle</gft:tabLabel>
+				<gft:tupleResult property="gml:description" tooltip="Abflussereignis" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:gml="http://www.opengis.net/gml">
+					<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+					<gft:toolbar>
+						<gft:menuContribution uri="org.kalypso.ui.tupleResult.menus.standardEdit" />
+					</gft:toolbar>
+					<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" alignment="SWT.RIGHT" editable="true" width="50" widthPercent="50" displayFormat="%.4f" nullFormat="-bitte ausfüllen-" label="Station km" />
+					<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" alignment="SWT.RIGHT" editable="true" width="50" widthPercent="50" displayFormat="%.2f" nullFormat="-bitte ausfüllen-" label="Wasserspiegel NN+m" />
+				</gft:tupleResult>
+			</gft:tabItem>
+
+			<gft:tabItem>
+				<gft:tabLabel>Diagramm</gft:tabLabel>
+				<gft:extensioncontrol property="gml:description" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+					<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+					<gft:param name="configuration" value="urn:kalypso:chart:configuration:org.kalypso.model.wspmrunoff:WaterlevelFixation:default" />
+					<gft:param name="featureKeyName" value="waterlevelFeatureKey" />
+					<gft:param name="commands" value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+					<gft:param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+				</gft:extensioncontrol>
+			</gft:tabItem>
+		</gft:tabFolder>
+	</gft:composite>
+</gft:featureview>
