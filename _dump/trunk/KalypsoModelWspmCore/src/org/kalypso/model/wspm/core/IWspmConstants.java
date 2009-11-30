@@ -110,6 +110,8 @@ public interface IWspmConstants
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_OK = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeOK";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_UK = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeUK";//$NON-NLS-1$
+  
+  public static final String LENGTH_SECTION_PROPERTY_TEXT = LENGTH_SECTION_PROPERTY + "LengthSectionText";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeWidth";//$NON-NLS-1$
 

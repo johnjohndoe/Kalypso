@@ -58,14 +58,17 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final TupleResult tr = m_data.getObservation().getResult();
     final int targetOKComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
     final int targetUKComponentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
+    final int commentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TEXT );
     final String targetOKComponentLabel = tr.getComponent( targetOKComponentIndex ).getName();
     final String targetUKComponentLabel = tr.getComponent( targetUKComponentIndex ).getName();
     final String targetOKComponentUnit = tr.getComponent( targetOKComponentIndex ).getUnit();
     final String targetUKComponentUnit = tr.getComponent( targetUKComponentIndex ).getUnit();
     final Object uk = tr.get( index ).getValue( targetUKComponentIndex );
     final Object ok = tr.get( index ).getValue( targetOKComponentIndex );
+    if( commentIndex < 0 )
+      return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
+    return String.format( TOOLTIP_FORMAT + "%n%s", new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit ,tr.get(index).getValue( commentIndex )} );
 
-    return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
   }
 
   @Override
@@ -93,7 +96,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Number domainValRight = i < domainValues.length - 1 ? dopDomain.logicalToNumeric( domainValues[i + 1] ) : domainValue;
     final Number targetValue = dopTarget.logicalToNumeric( targetValues[i] );
     final Number uKValue = dopTarget.logicalToNumeric( uKValues[i] );
-    if( domainValue != null && targetValue != null && uKValue != null &&domainValRight!=null&&domainValLeft!=null)
+    if( domainValue != null && targetValue != null && uKValue != null && domainValRight != null && domainValLeft != null )
     {
       final Point OKLeft = getCoordinateMapper().numericToScreen( (Double) domainValLeft + ((Double) domainValue - (Double) domainValLeft) / 2.0, targetValue );
       final Point UKRight = getCoordinateMapper().numericToScreen( (Double) domainValue + ((Double) domainValRight - (Double) domainValue) / 2.0, uKValue );

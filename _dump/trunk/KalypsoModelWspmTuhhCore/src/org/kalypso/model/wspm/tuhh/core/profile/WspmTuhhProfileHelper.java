@@ -112,7 +112,7 @@ public class WspmTuhhProfileHelper
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT ) );
+    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_H_BV ) );
 
     for( Object objProfileFeature : profilFeatures )
