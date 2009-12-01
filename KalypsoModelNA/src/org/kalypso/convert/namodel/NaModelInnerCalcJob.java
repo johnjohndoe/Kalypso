@@ -161,7 +161,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_13 = "start/kalypso_2.1.3.exe"; //$NON-NLS-1$
 
-  private final String EXE_FILE_2_141 = "start/cost_paris_new.exe"; //$NON-NLS-1$
+  private final String EXE_FILE_2_141 = "start/update_bodenhorizonte_10_11_09.exe"; //$NON-NLS-1$
 
   private final String EXE_FILE_TEST = "start/kalypso_test.exe"; //$NON-NLS-1$
 
@@ -1343,6 +1343,7 @@ public class NaModelInnerCalcJob implements ISimulation
     resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.151" ), TimeserieConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
     resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.153" ), TimeserieConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
     resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.155" ), TimeserieConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( TimeserieConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.159" ), TimeserieConstants.TYPE_PATH, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     for( final String nodeID : m_resultMap.keySet() )
     {
@@ -1395,7 +1396,7 @@ public class NaModelInnerCalcJob implements ISimulation
         continue;
       }
 
-      resultValuesList.add( new Object[] { nodeName, nodeDescription, maxValueDate, maxValue } );
+      resultValuesList.add( new Object[] { nodeName, nodeDescription, maxValueDate, maxValue, resultFileRelativePath } );
 
 // if( isNodeResult )
 // {
@@ -1446,6 +1447,9 @@ public class NaModelInnerCalcJob implements ISimulation
         writerCSV.write( separatorCSV );
         currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 3 ) );
         writerCSV.write( currentElement.toString().replaceFirst( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        writerCSV.write( separatorCSV );
+        currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 4 ) );
+        writerCSV.write( currentElement.toString() );
         writerCSV.write( "\n" ); //$NON-NLS-1$
       }
       writerCSV.flush();
@@ -1735,10 +1739,10 @@ public class NaModelInnerCalcJob implements ISimulation
     final File exeFile = new File( basedir, m_kalypsoKernelPath );
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
-//    final long timeOut = 1000l * 60l * 60l; // max 60 minutes
-    
+// final long timeOut = 1000l * 60l * 60l; // max 60 minutes
+
     final long timeOut = 0l; // no timeout control
-    
+
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
     try

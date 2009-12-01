@@ -33,6 +33,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
@@ -107,7 +108,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final boolean hasCalculationNature = inputProvider.hasID( "CalculationNature" );
+    final boolean hasCalculationNature = inputProvider.hasID( "CalculationNature" ); //$NON-NLS-1$
     if( !hasCalculationNature )
     {
       setStatus( STATUS.OK, "Success" );
@@ -115,22 +116,24 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     }
     // TODO: Workaround for PLC Ticket #374, switch after fixing to the commented line
     // final String calculationNature = (String) inputProvider.getInputForID( "CalculationNature" );
-    String calculationNature = (String) inputProvider.getInputForID( "CalculationNature" );
+    String calculationNature = (String) inputProvider.getInputForID( "CalculationNature" ); //$NON-NLS-1$
     calculationNature = calculationNature.substring( calculationNature.lastIndexOf( "/" ) + 1 );
 
     if( "PLC".equals( calculationNature ) )
     {
-      File statusQuoResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "StatusQuoResultsFolder" ) );
-      File calculatedResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "CalculatedResultsFolder" ) );
+      File statusQuoResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "StatusQuoResultsFolder" ) ); //$NON-NLS-1$
+      File calculatedResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "CalculatedResultsFolder" ) ); //$NON-NLS-1$
 
       try
       {
         /* read statistics: max discharge / date of max discharge */
+        final Map<String, String> izNodesPath = new HashMap<String, String>();
+        final Map<String, String> calculatedNodesPath = new HashMap<String, String>();
         final Map<String, DischargeData> izNodesMaxData = new HashMap<String, DischargeData>();
         final Map<String, DischargeData> calcNodesMaxData = new HashMap<String, DischargeData>();
 
-        final IObservation obs1 = ZmlFactory.parseXML( new File( statusQuoResultsFolder, "Reports/nodesMax.zml" ).toURI().toURL(), "ID1" ); //$NON-NLS-1$ //$NON-NLS-2$
-        final IObservation obs2 = ZmlFactory.parseXML( new File( calculatedResultsFolder, "Reports/nodesMax.zml" ).toURI().toURL(), "ID2" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IObservation obs1 = ZmlFactory.parseXML( new File( statusQuoResultsFolder, "Report/nodesMax.zml" ).toURI().toURL(), "ID1" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IObservation obs2 = ZmlFactory.parseXML( new File( calculatedResultsFolder, "Report/nodesMax.zml" ).toURI().toURL(), "ID2" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final IAxis[] axes1 = obs1.getAxisList();
         final IAxis[] axes2 = obs2.getAxisList();
@@ -140,6 +143,36 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         final IAxis dateAxis2 = ObservationUtilities.findAxisByClass( axes2, Date.class );
         final IAxis valueAxis1 = ObservationUtilities.findAxisByClass( axes1, Double.class );
         final IAxis valueAxis2 = ObservationUtilities.findAxisByClass( axes2, Double.class );
+        final IAxis[] stringAxes1 = ObservationUtilities.findAxesByClass( axes1, String.class );
+        final IAxis[] stringAxes2 = ObservationUtilities.findAxesByClass( axes2, String.class );
+        IAxis pathAxis1 = null;
+        IAxis pathAxis2 = null;
+        for( int i = 0; i < stringAxes1.length; i++ )
+        {
+          final IAxis axis = stringAxes1[i];
+          if( TimeserieConstants.TYPE_PATH.equals( axis.getType() ) )
+          {
+            pathAxis1 = axis;
+            break;
+          }
+        }
+        for( int i = 0; i < stringAxes2.length; i++ )
+        {
+          final IAxis axis = stringAxes2[i];
+          if( TimeserieConstants.TYPE_PATH.equals( axis.getType() ) )
+          {
+            pathAxis2 = axis;
+            break;
+          }
+        }
+        if( pathAxis2 == null )
+        {
+          Logger.getAnonymousLogger().log( Level.SEVERE, "Unable to detect node result path. Postprocessing aborted." );
+          return;
+        }
+        final boolean useOnlyResult = pathAxis1 == null;
+        if( useOnlyResult )
+          pathAxis1 = pathAxis2;
 
         final ITuppleModel values1 = obs1.getValues( null );
         final ITuppleModel values2 = obs2.getValues( null );
@@ -156,6 +189,9 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
             final double val1 = (Double) values1.getElement( i, valueAxis1 );
             final Date date1 = (Date) values1.getElement( i, dateAxis1 );
             izNodesMaxData.put( id1, new DischargeData( val1, date1 ) );
+            final String path = values1.getElement( i, pathAxis1 ).toString();
+            if( !useOnlyResult )
+              izNodesPath.put( id1, path );
           }
           if( i < values2.getCount() )
           {
@@ -163,15 +199,19 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
             final double val2 = (Double) values2.getElement( i, valueAxis2 );
             final Date date2 = (Date) values2.getElement( i, dateAxis2 );
             calcNodesMaxData.put( id2, new DischargeData( val2, date2 ) );
+            final String path = values2.getElement( i, pathAxis2 ).toString();
+            calculatedNodesPath.put( id2, path );
+            if( useOnlyResult )
+              izNodesPath.put( id2, path );
           }
         }
 
-        final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null );
+        final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null ); //$NON-NLS-1$
         final Feature nodeCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
         final FeatureList nodeList = (FeatureList) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
 
-        final File outputSubfolderSteady = new File( tmpdir, "izNodes" );
-        final File outputSubfolderCalculated = new File( tmpdir, "sudsNodes" );
+        final File outputSubfolderSteady = new File( tmpdir, "izNodes" ); //$NON-NLS-1$
+        final File outputSubfolderCalculated = new File( tmpdir, "sudsNodes" ); //$NON-NLS-1$
         outputSubfolderSteady.mkdirs();
         outputSubfolderCalculated.mkdirs();
         if( !calculatedResultsFolder.isDirectory() || !statusQuoResultsFolder.isDirectory() )
@@ -179,41 +219,29 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           setStatus( STATUS.ERROR, "Input folder(s) does not exists." );
           return;
         }
-        for( final File file : statusQuoResultsFolder.listFiles() )
-        {
-          final String name = file.getName();
-          if( "Knoten".equals( name ) || "Node".equals( name ) )
-          {
-            statusQuoResultsFolder = file;
-            break;
-          }
-        }
-        for( final File file : calculatedResultsFolder.listFiles() )
-        {
-          final String name = file.getName();
-          if( "Knoten".equals( name ) || "Node".equals( name ) )
-          {
-            calculatedResultsFolder = file;
-            break;
-          }
-        }
 
-        final File[] inputSteadyNodesSubfolder = statusQuoResultsFolder.listFiles();
-        final File[] inputCalculatedNodesSubfolder = calculatedResultsFolder.listFiles();
-        for( int i = 0; i < inputSteadyNodesSubfolder.length; i++ )
+        for( final Object n : nodeList )
         {
-          final File steadyNodeFolder = inputSteadyNodesSubfolder[i];
-          final File calculatedNodeFolder = inputCalculatedNodesSubfolder[i];
-          FileUtils.copyDirectoryToDirectory( steadyNodeFolder, outputSubfolderSteady );
-          FileUtils.copyDirectoryToDirectory( calculatedNodeFolder, outputSubfolderCalculated );
-          final String nodeID = steadyNodeFolder.getName();
-          final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + nodeID, "", "izNodes/" + nodeID + "/Gesamtabfluss.zml", "sudsNodes/" + nodeID
-              + "/Gesamtabfluss.zml", nodeID );
-          final Obstableview table = NodeResultsComparisonViewCreator.createTableView( "izNodes/" + nodeID + "/Gesamtabfluss.zml", "sudsNodes/" + nodeID + "/Gesamtabfluss.zml" );
-          final File odtFile = new File( tmpdir, nodeID + ".odt" );
-          final File ottFile = new File( tmpdir, nodeID + ".ott" );
-          final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) );
-          final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) );
+          final Feature node = (Feature) n;
+          String name = node.getName();
+          if( name == null || name.length() == 0 )
+            name = node.getId();
+          final File izFile = new File( statusQuoResultsFolder, izNodesPath.get( name ) );
+          final File calcFile = new File( calculatedResultsFolder, calculatedNodesPath.get( name ) );
+          final File izFolder = new File( outputSubfolderSteady, name );
+          final File calcFolder = new File( outputSubfolderCalculated, name );
+          izFolder.mkdirs();
+          calcFolder.mkdirs();
+          FileUtils.copyFileToDirectory( izFile, izFolder );
+          FileUtils.copyFileToDirectory( calcFile, calcFolder );
+          final String izPath = String.format( "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
+          final String calcPath = String.format( "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
+          final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name );
+          final Obstableview table = NodeResultsComparisonViewCreator.createTableView( izPath, calcPath );
+          final File odtFile = new File( tmpdir, name + ".odt" );
+          final File ottFile = new File( tmpdir, name + ".ott" );
+          final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) ); //$NON-NLS-1$
+          final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) ); //$NON-NLS-1$
           DiagViewUtils.saveDiagramTemplateXML( view, outDiag );
           TableViewUtils.saveTableTemplateXML( table, outTable );
         }
@@ -273,16 +301,16 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           final Double riverKm = (Double) node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
           dataList.add( riverKm == null ? Double.NaN : riverKm );
 
-          final DischargeData max1 = izNodesMaxData.get( node.getName() );
-          final DischargeData max2 = calcNodesMaxData.get( node.getName() );
-          if( max1 == null || max2 == null )
+          final DischargeData izMax = izNodesMaxData.get( node.getName() );
+          final DischargeData calcMax = calcNodesMaxData.get( node.getName() );
+          if( izMax == null || calcMax == null )
             continue;
-          dataList.add( max1.getValue() );
-          dataList.add( max1.getDate().getTime() );
-          dataList.add( max2.getValue() );
-          dataList.add( max2.getDate().getTime() );
-          final double valueDifference = max1.getValue() - max2.getValue();
-          long timeDifference = max1.getDate().getTime() - max2.getDate().getTime();
+          dataList.add( izMax.getValue() );
+          dataList.add( izMax.getDate().getTime() );
+          dataList.add( calcMax.getValue() );
+          dataList.add( calcMax.getDate().getTime() );
+          final double valueDifference = izMax.getValue() - calcMax.getValue();
+          long timeDifference = izMax.getDate().getTime() - calcMax.getDate().getTime();
           dataList.add( valueDifference );
           dataList.add( timeDifference );
           if( valueDifference == 0.0 )

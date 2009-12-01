@@ -22,7 +22,7 @@ public final class NodeResultsComparisonViewCreator
 {
   final static Color[] OBS_COLOR = new Color[] { new Color( 78, 227, 28 ), new Color( 0, 128, 64 ) };
 
-  public final static Obsdiagview createView( final String title, final String legendTitle, final String path1, final String path2, final String nodeID )
+  public final static Obsdiagview createView( final String title, final String legendTitle, final String izPath, final String calculatePath, final String nodeID )
   {
     final Obsdiagview view = new Obsdiagview();
     view.setTitle( title );
@@ -38,18 +38,18 @@ public final class NodeResultsComparisonViewCreator
     mappingsMap.put( "date", "Datum" );
     mappingsMap.put( "Q", "Abfluss" );
     final List<TypeObservation> observationList = view.getObservation();
-    observationList.add( createDiagObservation( path1, "Q - " + nodeID + " - Gesamtabfluss ohne AW-Massnahmen", "C1", OBS_COLOR[0], mappingsMap ) );
-    observationList.add( createDiagObservation( path2, "Q - " + nodeID + " - Gesamtabfluss mit AW-Massnahmen", "C2", OBS_COLOR[1], mappingsMap ) );
+    observationList.add( createDiagObservation( izPath, "Q - " + nodeID + " - Gesamtabfluss ohne AW-Massnahmen", "C1", OBS_COLOR[0], mappingsMap ) );
+    observationList.add( createDiagObservation( calculatePath, "Q - " + nodeID + " - Gesamtabfluss mit AW-Massnahmen", "C2", OBS_COLOR[1], mappingsMap ) );
     return view;
   }
 
-  public final static Obstableview createTableView( final String path1, final String path2 )
+  public final static Obstableview createTableView( final String izPath, final String calculatedPath )
   {
     final Obstableview view = new Obstableview();
     view.setFeatures( "Vorhersage;Alarmstufen" );
     final List<org.kalypso.template.obstableview.TypeObservation> observationList = view.getObservation();
-    observationList.add( createTableObservation( path1, "Gesamtabfluss ohne AW-Massnahmen", "C1", "Abfluss" ) );
-    observationList.add( createTableObservation( path2, "Gesamtabfluss mit AW-Massnahmen", "C2", "Abfluss" ) );
+    observationList.add( createTableObservation( izPath, "Gesamtabfluss ohne AW-Massnahmen", "C1", "Abfluss" ) );
+    observationList.add( createTableObservation( calculatedPath, "Gesamtabfluss mit AW-Massnahmen", "C2", "Abfluss" ) );
     view.setAlphaSort( false );
     final TypeRenderingRule rule1 = new TypeRenderingRule();
     rule1.setMask( 16 );
