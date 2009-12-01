@@ -124,7 +124,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N"; //$NON-NLS-1$
 
                   value.add( String.format( "%s mrs %.4g %.4g", m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) ); //$NON-NLS-1$
-                  value.add( String.format( "%.1d %.1d %.1d %.4g %.4g 0", sud.getPipeDiameter(), sud.getPipeKfValue(), sud.getPipeSlope() / 1000.0, sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
+                  value.add( String.format( "%.1f %.1f %.1f %.4g %.4g 0", (double) sud.getPipeDiameter(), (double) sud.getPipeKfValue(), sud.getPipeSlope() / 1000.0, sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Swale )
                 {
