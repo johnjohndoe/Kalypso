@@ -103,6 +103,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * Converts discretisation model to RMA·Kalypso model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ * @author ig
  */
 @SuppressWarnings("unchecked")
 public class Gml2RMA10SConv implements INativeIDProvider
@@ -140,8 +141,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final ICalculationUnit m_calculationUnit;
 
-//  private final GM_Envelope m_calcUnitBBox;
-
   private final RestartNodes m_restartNodes;
 
   private final boolean m_exportRequest;
@@ -156,7 +155,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final Map<Integer, String> m_mapTmpElementToPolyWeir = new HashMap<Integer, String>();
 
-  private final Map< IPolyElement, IFlowRelation2D > m_mapPolyElementsWithWeir = new HashMap< IPolyElement, IFlowRelation2D >();
+  private final Map<IPolyElement, IFlowRelation2D> m_mapPolyElementsWithWeir = new HashMap<IPolyElement, IFlowRelation2D>();
 
   // TODO: check: calculation?
   public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
@@ -169,8 +168,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     m_calculationUnit = calcUnit;
     m_log = log;
-//    m_calcUnitBBox = calcUnit == null ? null : CalcUnitOps.getBoundingBox( m_calculationUnit );
-
     m_restartNodes = restartNodes;
 
     // initialize Roughness IDs
@@ -183,15 +180,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
       for( final IRoughnessCls o : roughnessModel )
         m_roughnessIDProvider.getOrAdd( o.getGmlID() );
     }
-    
-    //collect information about 2d buildings to perform this mapping fast on demand 
+
+    // collect information about 2d buildings to perform this mapping fast on demand
     for( final IFlowRelationship relationship : flowrelationModel )
     {
       if( relationship instanceof IFlowRelation2D )
       {
         IFlowRelation2D lBuilding2d = (IFlowRelation2D) relationship;
         IPolyElement lPolyElementWithWeir = m_discretisationModel1d2d.find2DElement( lBuilding2d.getPosition(), 0.01 );
-        if( m_calculationUnit.contains( lPolyElementWithWeir ) ){
+        if( m_calculationUnit.contains( lPolyElementWithWeir ) )
+        {
           m_mapPolyElementsWithWeir.put( lPolyElementWithWeir, lBuilding2d );
         }
       }
@@ -286,9 +284,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
-    //we dont need all elements to check each one for membership in calculation unit.
-    //we get it direct from the calculation unit
-//    final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
+    // we dont need all elements to check each one for membership in calculation unit.
+    // we get it direct from the calculation unit
+    // final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
 
     writeElementsNodesAndEdges( formatter );
 
@@ -778,7 +776,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         else
         {
-          final String msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.26" , relationship );//$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.26", relationship );//$NON-NLS-1$
           final GM_Object location = node.getLocation();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
@@ -857,22 +855,27 @@ public class Gml2RMA10SConv implements INativeIDProvider
    */
   private void writeElementsNodesAndEdges( final Formatter formatter ) throws CoreException, IOException
   {
-    //it is not needed to query for elements in box of calculation unit - calc. unit contains already only this needed elements.
-    //for the export case we also do not need the "box", we will just export all of the elements from the model.
-    //additional check for membership of calculation unit for each element in the loop, was also removed.
-    
-//    final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
-    
-    List< IFE1D2DElement > lListAllElements = new ArrayList< IFE1D2DElement >();
-    if( m_exportRequest ){
-      lListAllElements = m_discretisationModel1d2d.getElements();
-    }
-    else{
-      final List<IElement1D> elements1dInBBox = m_calculationUnit.getElements1D();
-      final List<IPolyElement> elements2dInBBox = m_calculationUnit.getElements2D();
-      lListAllElements.addAll( elements1dInBBox );
-      lListAllElements.addAll( elements2dInBBox );
-    }
+    // it is not needed to query for elements in box of calculation unit - calc. unit contains already only this needed
+    // elements.
+    // for the export case we also do not need the "box", we will just export all of the elements from the model.
+    // additional check for membership of calculation unit for each element in the loop, was also removed.
+
+    final List<IFE1D2DElement> elementsInBBox = m_discretisationModel1d2d.getElements();
+
+    List<IFE1D2DElement> lListAllElements = new ArrayList<IFE1D2DElement>();
+    lListAllElements.addAll( elementsInBBox );
+
+    // better way, but creates some errors because of the order of elements in output
+    // TODO: check the reordering problem
+    // if( m_exportRequest ){
+    // lListAllElements = m_discretisationModel1d2d.getElements();
+    // }
+    // else{
+    // final List<IElement1D> elements1dInBBox = m_calculationUnit.getElements1D();
+    // final List<IPolyElement> elements2dInBBox = m_calculationUnit.getElements2D();
+    // lListAllElements.addAll( elements2dInBBox );
+    // lListAllElements.addAll( elements1dInBBox );
+    // }
     final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( lListAllElements.size() * 2 );
 
     if( lListAllElements.size() == 0 )
@@ -919,7 +922,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
         {
           // TODO: give hint what 1D-element is was?
-          final String msg =Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43" , element1D.getGmlID() );//$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43", element1D.getGmlID() );//$NON-NLS-1$
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
           throw new CoreException( status );
         }
@@ -1244,7 +1247,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     // TODO: use default zone instead.
     // Right now it is set to '0' which means the element is deactivated for the simulation
-    final String msg =  org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31" , element.getGmlID() ); //$NON-NLS-1$
+    final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31", element.getGmlID() ); //$NON-NLS-1$
 
     final IFE1D2DNode node = (IFE1D2DNode) element.getNodes().get( 0 );
     final GM_Point point = node.getPoint();
