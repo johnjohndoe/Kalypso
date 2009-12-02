@@ -78,22 +78,25 @@ public class CalculationUnitPerformWidgetFace
     // Calculation Unit Section
     final Section selectCalcUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
     selectCalcUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.1" ) ); //$NON-NLS-1$
-    final GridData selectCalcUnitGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, false );
+    final GridData selectCalcUnitGridData = new GridData( SWT.FILL, SWT.BEGINNING | SWT.SCROLL_PAGE, true, true );
     selectCalcUnitSection.setLayoutData( selectCalcUnitGridData );
+    selectCalcUnitGridData.minimumHeight = 140;
 
     selectCalcUnitSection.setExpanded( true );
 
     // Creates Section for "Calculation Elements Unit"
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
     calculationElementUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.2" ) ); //$NON-NLS-1$
-    calculationElementUnitSection.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+    final GridData lCalcElementUnitGridData = new GridData( SWT.FILL, SWT.BEGINNING | SWT.SCROLL_PAGE, true, true );
+    lCalcElementUnitGridData.minimumHeight = 250;
+    calculationElementUnitSection.setLayoutData( lCalcElementUnitGridData );
     calculationElementUnitSection.setExpanded( true );
 
     // Creates Section for "Calculation Settings Unit"
     final Section logSection = toolkit.createSection( body, Section.TITLE_BAR );
-    logSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.5") ); //$NON-NLS-1$
+    logSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.5" ) ); //$NON-NLS-1$
 
-    final GridData logGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final GridData logGridData = new GridData( SWT.FILL, SWT.END | SWT.SCROLL_PAGE, true, false );
     logSection.setLayoutData( logGridData );
     logSection.setExpanded( true );
 

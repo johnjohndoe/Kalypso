@@ -123,7 +123,7 @@ public class CalculationUnitLogComponent
 
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-    final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final GridData tableGridData = new GridData( SWT.FILL, SWT.END, true, true );
     table.setLayoutData( tableGridData );
 
     StatusLabelProvider.configureTableViewer( logTableViewer );
