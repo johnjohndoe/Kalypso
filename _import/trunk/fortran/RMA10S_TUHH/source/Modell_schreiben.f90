@@ -164,6 +164,10 @@ END DO
             arcmid (k, 2) = nop (IntPolElts (nelem, IntPolNo (nelem)), 3)
             arcmid (k, 3) = nelem
             arcmid (k, 4) = nelem
+          !testing
+          else
+            stop 'not handled problem at interpolated elements in sub -Modell_schreiben-'
+          !testing-
           end if
 
           !Save informations for 1D-2D-TRANSITION ELEMENTS
@@ -384,6 +388,7 @@ END DO write_nodes
 ! Arcs:
 write_arcs: DO i = 1, arccnt
   WRITE (IKALYPSOFM, 7001) i, (arc_tmp (i, j), j = 1, 5)
+  !Write out original position of midside node of an element with interpolated data
   if (intPolProf (arc_tmp(i,5))) then
     cord_tmp(1) = 0.5 * (cord (arc_tmp(i,1),1) + cord (arc_tmp(i,2),1))
     cord_tmp(2) = 0.5 * (cord (arc_tmp(i,1),2) + cord (arc_tmp(i,2),2))
@@ -441,7 +446,7 @@ ENDDO write_trans_els
 
 !nis,apr07: write informations of transition lines
 write_trans_lines: do i = 1, MaxLT
-  WRITE(IKALYPSOFM, 7041) i, (translines(i,j), j = 1, 3)
+  WRITE(IKALYPSOFM, 7041) i, (translines(i,j), j = 1, 4)
 end do write_trans_lines
 
 write_PipeSurfConn: do i = 1, MaxPS
@@ -481,16 +486,16 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7002 FORMAT ('FE', 4i10, 5f15.7)
 
  !aktuelle Freiheitsgrade; Knotennummer, x-, y-Geschwindigkeit, Wasserspiegel):
- 7003 FORMAT ('VA', i10, 2f20.14, 2f20.13)
+ 7003 FORMAT ('VA', i10, 4ES19.12)
  
  !aktuelle Zeitgradienten:
- 7004 FORMAT ('GA', i10,3f20.7)
+ 7004 FORMAT ('GA', i10,3ES19.12)
                                                                         
  !Freiheitsgrade des vergangenen Zeitschritt (Geschwindigkeiten und Wasserspiegel):
- 7005 FORMAT ('VO', i10,3f20.7) 
+ 7005 FORMAT ('VO', i10,3ES19.12) 
                                                                         
  !Zeitgradienten des vergangenen Zeitschrit
- 7006 FORMAT ('GO', i10,3f20.7) 
+ 7006 FORMAT ('GO', i10,3ES19.12) 
                                                                         
  !Zusatzinformationen am Knoten:
  7007 FORMAT ('ZU',i10,i6,4f15.7)
@@ -533,7 +538,7 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7040 FORMAT ('TE', 6i10)
 
  !nis,apr07: 1D-2D-Transition line: 1D-element, Continuity line, coupling 1D node
- 7041 FORMAT ('TL', 4i10)
+ 7041 FORMAT ('TL', 5i10)
 
  !nis,apr07: continuity line definition
  7042 FORMAT ('CC', i1, 9i8)
@@ -551,13 +556,13 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  !nis,mar09: storage elements
  7050 format ('SE', 2i10, 2f20.7)
  !nis,jan08: results of interpolated nodes or profiles; like VA-line
- 7051 FORMAT ('VAI', i9,4f20.7)
+ 7051 FORMAT ('VAI', i9,4f19.12)
  !aktuelle Zeitgradienten:
- 7052 FORMAT ('GAI', i9,3f20.7)
+ 7052 FORMAT ('GAI', i9,3f19.12)
  !Freiheitsgrade des vergangenen Zeitschritt (Geschwindigkeiten und Wasserspiegel):
- 7053 FORMAT ('VOI', i9,3f20.7) 
+ 7053 FORMAT ('VOI', i9,3f19.12) 
  !Zeitgradienten des vergangenen Zeitschrit
- 7054 FORMAT ('GOI', i9,3f20.7) 
+ 7054 FORMAT ('GOI', i9,3f19.12) 
 
 
 
