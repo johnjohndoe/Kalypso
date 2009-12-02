@@ -94,22 +94,6 @@ nc = line (TLine, maxL)
 dxline = cord (nc, 1) - cord (na, 1)
 dyline = cord (nc, 2) - cord (na, 2)
 
-!Initializing average waterlevel at the line
-!waspi = 0.0
-!marsh-option not active
-!if (idnopt == 0) then
-!  waspi = ao(TNode) + TDep
-!marsh-option active
-!else
-!  CALL amf (TDepv, TDep, akp (TNode), adt (TNode), adb (TNode), dum1, dum2, 0)
-!  waspi = ado(TNode) + TDepV
-!end if
-!testfile ouput ('TransitionoutputXXXX.txt
-!WRITE(*,*) 'Average waterlevel at transition:', waspi
-!WRITE(*,*) 'required discharge:              ', qreq
-!WRITE(*,*) 'inflow angle:                    ', thet
-!-
-
 !Initialize factor suma
 suma = 0.
 
@@ -154,9 +138,6 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
 
   !Average the water depth for the midside node
   di(1) = (di(0) + di(2)) / 2.0
-
-  !If roghness-value.gt.0 applied Darcy-Weisbach-law (ks-value)
-  !IF (cniku (lineimat (TLine, k + 1)) .gt.0.) then
 
   do no = 0, 2
     !Darcy-Weisbach:
@@ -216,9 +197,6 @@ ENDIF
 !Due to the formula of the Conveyance factor vest is the root of the energy slope (Q=sqrt(I)*K; K=Conveyance factor)
 vest = qreq / suma
 
-!testing
-!WRITE(*,*) 'root of Slope is: ', vest ,'(',qreq, suma, ')'
-
 !Set values for the flow velocity at every node of transition
 
 !Run through every node of the CCL for applying the specified discharge
@@ -270,8 +248,6 @@ AssignVelocities: DO k = 1, maxL
   !Set depth 0, if ngelectable
   IF (d1 <= 0.0) d1 = 0.0
 
-!  WRITE(*,'(a7, i4.4, 1x, a6, f12.4, 1x, a5, 2(f12.4, 1x), f12.4)') &
-!  &    'Knoten ', k, 'conv: ', Conveyance(k), 'dxl: ', dxl(k), d1, vest
   specdischarge (k) = vest * Conveyance (k) / dxl (k)
 
   !Set the absolute velocities at 2D transition nodes and copy specific discharges to global arrays
@@ -283,8 +259,4 @@ AssignVelocities: DO k = 1, maxL
 
 ENDDO assignvelocities
 
-!WRITE(*,*) 'Testoutput of specs'
-!do k = 1, lmt(TLine)
-!  WRITE(*,'(a7,i4.4,1x,a5,f12.4)') 'Knoten ', k, 'spec ', TransSpec(k)
-!end do
 END
