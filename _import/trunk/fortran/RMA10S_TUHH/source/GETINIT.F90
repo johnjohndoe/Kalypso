@@ -155,7 +155,6 @@ IF (NB > 0 .and. NB < 100) then
   !introducing the restart values for interpolated profiles
   do i = 1, maxp
     if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
-    !if (IntPolProf (i)) then
       do j = 1, 3
         vel (j, i) = (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) + kmWeight(i)  * vel (j, NeighProf(i, 2))
         vold (j, i) = (1.0D0 - kmWeight(i)) * vold (j, NeighProf(i, 1)) + kmWeight(i)  * vold (j, NeighProf(i, 2))
@@ -392,13 +391,10 @@ ELSEIF (NB == 0) then
 !-
   Assign1DVelos: DO N = 1, NE
     IF (IMAT (N) == 0) CYCLE Assign1DVelos
-    !TOASK: Why is this here present and to lines later, same logic is deacitvated; the logic beyond is never reached for values > 905
-    !       Probably following line has to be deactivated, because otherwise control structures don't get initial velocity values
+    !TODO: How to handle weir elements and junction elements
     IF (IMAT (N) > 900) CYCLE Assign1DVelos
     IF (NOP (N, 6) > 0) CYCLE Assign1DVelos
-!ipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
     IF (IMAT (N) > 900 .and. IMAT (N) < 904) CYCLE Assign1DVelos
-
 
     !for transitions only the first (corner node) and the second (midside) node must get a velocity; the rest is set up by 2D-part of transition
     IF (NCRN (N) == 5) THEN
@@ -438,13 +434,12 @@ ELSEIF (NB == 0) then
     ENDDO Get1DInits
   ENDDO Assign1DVelos
 
+!-----------------------------------
+!Here setting of initial values ends
+!-----------------------------------
 ENDIF
 
 
-!TODEL: This fixitation of the vel(2,*)-field is not necessary?
-!      DO 1780 N=1,NP
-!        VEL(2,N)=0.1
-! 1780 CONTINUE
 
 
 !-
