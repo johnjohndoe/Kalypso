@@ -47,8 +47,10 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,9 +62,10 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Provides algorithm to convert from a bce2d model to a 1d2d discretisation model
- *
+ * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
+ * @author ig
  */
 public class RMA10S2GmlConv
 {
@@ -70,27 +73,59 @@ public class RMA10S2GmlConv
 
   public static boolean VERBOSE_MODE = false;
 
-  public static enum RESULTLINES  {    LINE_VA,    LINE_VO,    LINE_GA,    LINE_GO  }
+  public static enum RESULTLINES
+  {
+    LINE_VA,
+    LINE_VO,
+    LINE_GA,
+    LINE_GO
+  }
 
   private final IProgressMonitor m_monitor;
 
   private final int m_monitorStep;
 
+  // all of the patterns are left here as comments to show the format of parsed strings.
+
   //  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" ); //$NON-NLS-1$
-
-  private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-
-  private static final Pattern ARC_LINE_PATTERN2 = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-
-  private static final Pattern ELEMENT_LINE_PATTERN_4 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-
-  private static final Pattern ELEMENT_LINE_PATTERN_3 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
-
-  private static final Pattern ELEMENT_LINE_PATTERN_2 = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-
-  private static final Pattern ELEMENT_LINE_PATTERN_1 = Pattern.compile( "FE\\s*([0-9]+).*" ); //$NON-NLS-1$
-
-  private static final Pattern ZU_LINE_PATTERN = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern ARC_LINE_PATTERN2 = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern ELEMENT_LINE_PATTERN_4 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern ELEMENT_LINE_PATTERN_3 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern ELEMENT_LINE_PATTERN_2 = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern ELEMENT_LINE_PATTERN_1 = Pattern.compile( "FE\\s*([0-9]+).*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern ZU_LINE_PATTERN = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineFP = Pattern.compile( "FP.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineFE = Pattern.compile( "FE.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineAR = Pattern.compile( "AR.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineRK = Pattern.compile( "RK.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineVA = Pattern.compile( "VA.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineVO = Pattern.compile( "VO.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineGA = Pattern.compile( "GA.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineGO = Pattern.compile( "GO.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineDA = Pattern.compile( "DA.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineTL = Pattern.compile( "TL.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineZU = Pattern.compile( "ZU.*" ); //$NON-NLS-1$
+  //
+  //  private static final Pattern lineJE = Pattern.compile( "JE.*" ); //$NON-NLS-1$
 
   public RMA10S2GmlConv( final IProgressMonitor monitor, final int numberOfLinesToProcess )
   {
@@ -116,18 +151,6 @@ public class RMA10S2GmlConv
   public void parse( final Reader reader ) throws IllegalStateException, IOException
   {
     Assert.throwIAEOnNullParam( reader, "inputStreamReader" ); //$NON-NLS-1$
-    final Pattern lineFP = Pattern.compile( "FP.*" ); //$NON-NLS-1$
-    final Pattern lineFE = Pattern.compile( "FE.*" ); //$NON-NLS-1$
-    final Pattern lineAR = Pattern.compile( "AR.*" ); //$NON-NLS-1$
-    final Pattern lineRK = Pattern.compile( "RK.*" ); //$NON-NLS-1$
-    final Pattern lineVA = Pattern.compile( "VA.*" ); //$NON-NLS-1$
-    final Pattern lineVO = Pattern.compile( "VO.*" ); //$NON-NLS-1$
-    final Pattern lineGA = Pattern.compile( "GA.*" ); //$NON-NLS-1$
-    final Pattern lineGO = Pattern.compile( "GO.*" ); //$NON-NLS-1$
-    final Pattern lineDA = Pattern.compile( "DA.*" ); //$NON-NLS-1$
-    final Pattern lineTL = Pattern.compile( "TL.*" ); //$NON-NLS-1$
-    final Pattern lineZU = Pattern.compile( "ZU.*" ); //$NON-NLS-1$
-    final Pattern lineJE = Pattern.compile( "JE.*" ); //$NON-NLS-1$
 
     m_monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.0" ), 100 );//$NON-NLS-1$
     m_handler.start();
@@ -146,32 +169,33 @@ public class RMA10S2GmlConv
       }
       if( line.length() < 2 )
         continue;
-      if( lineFP.matcher( line ).matches() )
+      if( line.startsWith( "FP" ) )
         interpreteNodeLine( line );
-      else if( lineFE.matcher( line ).matches() )
+      if( line.startsWith( "FE" ) )
         interpreteElementLine( line );
-      else if( lineAR.matcher( line ).matches() )
+      if( line.startsWith( "AR" ) )
         interpreteArcLine( line );
-      else if( lineRK.matcher( line ).matches() )
+      if( line.startsWith( "RK" ) )
       {
         // still not implemented
       }
-      else if( lineVA.matcher( line ).matches() )
+      if( line.startsWith( "VA" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VA );
-      else if( lineVO.matcher( line ).matches() )
+      if( line.startsWith( "VO" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VO );
-      else if( lineGA.matcher( line ).matches() )
+      if( line.startsWith( "GA" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GA );
-      else if( lineGO.matcher( line ).matches() )
+      if( line.startsWith( "GO" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GO );
-      else if( lineDA.matcher( line ).matches() )
+      if( line.startsWith( "DA" ) )
         interpreteTimeLine( line );
-      else if( lineTL.matcher( line ).matches() )
+      if( line.startsWith( "TL" ) )
         interprete1d2dJunctionElement( line );
-      else if( lineZU.matcher( line ).matches() )
+      if( line.startsWith( "ZU" ) )
         interpreteNodeInformationLine( line );
-      else if( lineJE.matcher( line ).matches() )
+      if( line.startsWith( "JE" ) )
         interpreteJunctionInformationLine( line );
+      
       else if( VERBOSE_MODE )
         System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
     }
@@ -181,6 +205,10 @@ public class RMA10S2GmlConv
 
   }
 
+  // this form of parsing was used on all types of lines from the result line
+  // the compiling of pattern on the fly for each call is very expensive operation,
+  // so it was replaced by simple string parsing
+  // with the implementation placed in private parsing class(RMA10ResultsLineSplitter)
   private void interprete1d2dJunctionElement( final String line )
   {
     // TL JunctionID, 1d-ElementID, BoundaryLineID, 1d-NodeID
@@ -203,9 +231,11 @@ public class RMA10S2GmlConv
       }
     }
     else
-      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+      System.out.println( "Line will be not interpreted: " + line );
+    // m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 
+  @SuppressWarnings("deprecation")
   private void interpreteTimeLine( final String line )
   {
     // TODO implement Pattern-like parsing, instead of getting line parts via string index
@@ -252,16 +282,20 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeLine( final String line )
   {
-    final String[] nodeLineStrings = line.split( "[ ]+" ); //$NON-NLS-1$
-
-    if( nodeLineStrings[0].equals( "FP" ) ) //$NON-NLS-1$
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
     {
       try
       {
-        final int id = Integer.parseInt( nodeLineStrings[1] );
-        final double easting = Double.parseDouble( nodeLineStrings[2] );
-        final double northing = Double.parseDouble( nodeLineStrings[3] );
-        double elevation = Double.parseDouble( nodeLineStrings[4] );
+        //other way to use this parser to get the custom substrings  
+        // lStringParser.getFirstSub();
+        // final int id = Integer.parseInt( lStringParser.getNextSub() );
+        // final double easting = Double.parseDouble( lStringParser.getNextSub() );
+        // final double northing = Double.parseDouble( lStringParser.getNextSub() );
+        // double elevation = Double.parseDouble( lStringParser.getNextSub() );
+        final int id = Integer.parseInt( lStringParser.getSub( 1 ) );
+        final double easting = Double.parseDouble( lStringParser.getSub( 2 ) );
+        final double northing = Double.parseDouble( lStringParser.getSub( 3 ) );
+        double elevation = Double.parseDouble( lStringParser.getSub( 4 ) );
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
         if( elevation == -9999 )
           elevation = Double.NaN;
@@ -272,22 +306,21 @@ public class RMA10S2GmlConv
         m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
-    else
-      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 
   private void interpreteResultLine( final String line, final RESULTLINES resultlines )
   {
-    final String[] strings = line.split( "\\s+" ); //$NON-NLS-1$
-    if( strings.length == 6 )
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" );
+    if( lStringParser.getIntSepCounter() == 6 )
     {
       try
       {
-        final int id = Integer.parseInt( strings[1] );
-        final double vx = Double.parseDouble( strings[2] );
-        final double vy = Double.parseDouble( strings[3] );
-        final double depth = Double.parseDouble( strings[4] );
-        final double waterlevel = Double.parseDouble( strings[5] );
+        lStringParser.getFirstSub();
+        final int id = Integer.parseInt( lStringParser.getNextSub() );
+        final double vx = Double.parseDouble( lStringParser.getNextSub() );
+        final double vy = Double.parseDouble( lStringParser.getNextSub() );
+        final double depth = Double.parseDouble( lStringParser.getNextSub() );
+        final double waterlevel = Double.parseDouble( lStringParser.getNextSub() );
         m_handler.handleResult( line, id, vx, vy, depth, waterlevel );
       }
       catch( final NumberFormatException e )
@@ -295,14 +328,15 @@ public class RMA10S2GmlConv
         m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
-    else if( strings.length == 5 )
+    else if( lStringParser.getIntSepCounter() == 5 )
     {
       try
       {
-        final int id = Integer.parseInt( strings[1] );
-        final double veloXComponent = Double.parseDouble( strings[2] );
-        final double veloYComponent = Double.parseDouble( strings[3] );
-        final double depthComponent = Double.parseDouble( strings[4] );
+        lStringParser.getFirstSub();
+        final int id = Integer.parseInt( lStringParser.getNextSub() );
+        final double veloXComponent = Double.parseDouble( lStringParser.getNextSub() );
+        final double veloYComponent = Double.parseDouble( lStringParser.getNextSub() );
+        final double depthComponent = Double.parseDouble( lStringParser.getNextSub() );
         m_handler.handleTimeDependentAdditionalResult( line, id, veloXComponent, veloYComponent, depthComponent, resultlines );
       }
       catch( final NumberFormatException e )
@@ -316,58 +350,54 @@ public class RMA10S2GmlConv
 
   private void interpreteArcLine( final String line )
   {
-    Matcher matcher = ARC_LINE_PATTERN.matcher( line );
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" );
+    // RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+    lStringParser.getFirstSub();
     try
     {
-      if( matcher.matches() )
+      if( lStringParser.getIntSepCounter() == 7 )
       {
-        final int id = Integer.parseInt( matcher.group( 1 ) );
-        final int node1ID = Integer.parseInt( matcher.group( 2 ) );
-        final int node2ID = Integer.parseInt( matcher.group( 3 ) );
-        final int elementLeftID = Integer.parseInt( matcher.group( 4 ) );
-        final int elementRightID = Integer.parseInt( matcher.group( 5 ) );
-        final int middleNodeID = Integer.parseInt( matcher.group( 6 ) );
+        final int id = Integer.parseInt( lStringParser.getNextSub() );
+        final int node1ID = Integer.parseInt( lStringParser.getNextSub() );
+        final int node2ID = Integer.parseInt( lStringParser.getNextSub() );
+        final int elementLeftID = Integer.parseInt( lStringParser.getNextSub() );
+        final int elementRightID = Integer.parseInt( lStringParser.getNextSub() );
+        final int middleNodeID = Integer.parseInt( lStringParser.getNextSub() );
         m_handler.handleArc( line, id, node1ID, node2ID, elementLeftID, elementRightID, middleNodeID );
       }
-      else
+      else if( lStringParser.getIntSepCounter() == 6 )
       {
-        matcher = ARC_LINE_PATTERN2.matcher( line );
-        if( matcher.matches() )
         {
-          final int id = Integer.parseInt( matcher.group( 1 ) );
-          final int node1ID = Integer.parseInt( matcher.group( 2 ) );
-          final int node2ID = Integer.parseInt( matcher.group( 3 ) );
-          final int elementLeftID = Integer.parseInt( matcher.group( 4 ) );
-          final int elementRightID = Integer.parseInt( matcher.group( 5 ) );
+          final int id = Integer.parseInt( lStringParser.getNextSub() );
+          final int node1ID = Integer.parseInt( lStringParser.getNextSub() );
+          final int node2ID = Integer.parseInt( lStringParser.getNextSub() );
+          final int elementLeftID = Integer.parseInt( lStringParser.getNextSub() );
+          final int elementRightID = Integer.parseInt( lStringParser.getNextSub() );
           m_handler.handleArc( line, id, node1ID, node2ID, elementLeftID, elementRightID, -1 );
         }
-        else
-          m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     catch( final NumberFormatException e )
     {
+      e.printStackTrace();
       m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
     }
   }
 
   private void interpreteNodeInformationLine( final String line )
   {
-    final Matcher matcher = ZU_LINE_PATTERN.matcher( line );
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " );
     try
     {
-      if( matcher.matches() )
       {
-        final int id = Integer.parseInt( matcher.group( 1 ) );
-        final int dry = Integer.parseInt( matcher.group( 2 ) );
-        final double value1 = Double.parseDouble( matcher.group( 3 ) );
-        final double value2 = Double.parseDouble( matcher.group( 4 ) );
-        final double value3 = Double.parseDouble( matcher.group( 5 ) );
-        final double value4 = Double.parseDouble( matcher.group( 6 ) );
+        final int id = Integer.parseInt( lStringParser.getNextSub() );
+        final int dry = Integer.parseInt( lStringParser.getNextSub() );
+        final double value1 = Double.parseDouble( lStringParser.getNextSub() );
+        final double value2 = Double.parseDouble( lStringParser.getNextSub() );
+        final double value3 = Double.parseDouble( lStringParser.getNextSub() );
+        final double value4 = Double.parseDouble( lStringParser.getNextSub() );
         m_handler.handleNodeInformation( line, id, dry, value1, value2, value3, value4 );
       }
-      else
-        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
     }
     catch( final NumberFormatException e )
     {
@@ -390,76 +420,18 @@ public class RMA10S2GmlConv
     // - nodeID7 (opt.)
     // - nodeID8 (opt.)
 
-    // TODO: implementation not very nice. right now it only works with junctions up to 5 nodes!
-
-    final Pattern junctionLinePattern3 = Pattern.compile( "JE\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*" ); //$NON-NLS-1$
-    final Pattern junctionLinePattern4 = Pattern.compile( "JE\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*" ); //$NON-NLS-1$
-    final Pattern junctionLinePattern5 = Pattern.compile( "JE\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*" ); //$NON-NLS-1$
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
 
     try
     {
-      Matcher matcher = junctionLinePattern3.matcher( line );
-      if( matcher.matches() )
+      final int junctionId = Integer.parseInt( lStringParser.getSub( 1 ) );
+      final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
+
+      for( int i = 2; i < lStringParser.getIntSepCounter(); ++i )
       {
-        final int junctionId = Integer.parseInt( matcher.group( 1 ) );
-        final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
-
-        final Integer nodeID1 = Integer.parseInt( matcher.group( 2 ) );
-        final Integer nodeID2 = Integer.parseInt( matcher.group( 3 ) );
-        final Integer nodeID3 = Integer.parseInt( matcher.group( 4 ) );
-
-        junctionNodeIDList.add( nodeID1 );
-        junctionNodeIDList.add( nodeID2 );
-        junctionNodeIDList.add( nodeID3 );
-
-        m_handler.handle1dJunctionInformation( line, junctionId, junctionNodeIDList );
+        junctionNodeIDList.add( Integer.parseInt( lStringParser.getSub( i ) ) );
       }
-      else
-      {
-        matcher = junctionLinePattern4.matcher( line );
-
-        if( matcher.matches() )
-        {
-          final int junctionId = Integer.parseInt( matcher.group( 1 ) );
-          final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
-
-          final Integer nodeID1 = Integer.parseInt( matcher.group( 2 ) );
-          final Integer nodeID2 = Integer.parseInt( matcher.group( 3 ) );
-          final Integer nodeID3 = Integer.parseInt( matcher.group( 4 ) );
-          final Integer nodeID4 = Integer.parseInt( matcher.group( 5 ) );
-
-          junctionNodeIDList.add( nodeID1 );
-          junctionNodeIDList.add( nodeID2 );
-          junctionNodeIDList.add( nodeID3 );
-          junctionNodeIDList.add( nodeID4 );
-
-          m_handler.handle1dJunctionInformation( line, junctionId, junctionNodeIDList );
-        }
-        else
-        {
-          matcher = junctionLinePattern5.matcher( line );
-          if( matcher.matches() )
-          {
-            final int junctionId = Integer.parseInt( matcher.group( 1 ) );
-            final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
-
-            final Integer nodeID1 = Integer.parseInt( matcher.group( 2 ) );
-            final Integer nodeID2 = Integer.parseInt( matcher.group( 3 ) );
-            final Integer nodeID3 = Integer.parseInt( matcher.group( 4 ) );
-            final Integer nodeID4 = Integer.parseInt( matcher.group( 5 ) );
-            final Integer nodeID5 = Integer.parseInt( matcher.group( 6 ) );
-
-            junctionNodeIDList.add( nodeID1 );
-            junctionNodeIDList.add( nodeID2 );
-            junctionNodeIDList.add( nodeID3 );
-            junctionNodeIDList.add( nodeID4 );
-            junctionNodeIDList.add( nodeID5 );
-
-            m_handler.handle1dJunctionInformation( line, junctionId, junctionNodeIDList );
-          }
-        }
-      }
-      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handle1dJunctionInformation( line, junctionId, junctionNodeIDList );
     }
     catch( final NumberFormatException e )
     {
@@ -495,46 +467,46 @@ public class RMA10S2GmlConv
 
   private void interpreteElementLine( final String line )
   {
-    Matcher matcher = null;
-    matcher = ELEMENT_LINE_PATTERN_4.matcher( line );
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " );
     try
     {
-      if( matcher.matches() )
+      if( lStringParser.getIntSepCounter() >= 5 )
       {
-        final int id = Integer.parseInt( matcher.group( 1 ) );
-        final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
-        final int previousRoughnessClassID = Integer.parseInt( matcher.group( 3 ) );
-        final int eleminationNumber = Integer.parseInt( matcher.group( 4 ) );
-        // final int weirUpStreamNode = Integer.parseInt( matcher.group( 5 ) ); // opt.
-        // final int calcId = Integer.parseInt( matcher.group( 6 ) );
+        lStringParser.getFirstSub();
+        final int id = Integer.parseInt( lStringParser.getNextSub() );
+        final int currentRougthnessClassID = Integer.parseInt( lStringParser.getNextSub() );
+        final int previousRoughnessClassID = Integer.parseInt( lStringParser.getNextSub() );
+        final int eleminationNumber = Integer.parseInt( lStringParser.getNextSub() );
+        // final int weirUpStreamNode = Integer.parseInt( lStringParser.getNextSub() ); // opt.
+        // final int calcId = Integer.parseInt( lStringParser.getNextSub() );
 
         m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, eleminationNumber );
       }
       else
       {
-        matcher = ELEMENT_LINE_PATTERN_3.matcher( line );
-        if( matcher.matches() )
+        if( lStringParser.getIntSepCounter() == 4 )
         {
-          final int id = Integer.parseInt( matcher.group( 1 ) );
-          final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
-          final int previousRoughnessClassID = Integer.parseInt( matcher.group( 3 ) );
+          lStringParser.getFirstSub();
+          final int id = Integer.parseInt( lStringParser.getNextSub() );
+          final int currentRougthnessClassID = Integer.parseInt( lStringParser.getNextSub() );
+          final int previousRoughnessClassID = Integer.parseInt( lStringParser.getNextSub() );
           m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, -1 );
         }
         else
         {
-          matcher = ELEMENT_LINE_PATTERN_2.matcher( line );
-          if( matcher.matches() )
+          if( lStringParser.getIntSepCounter() == 3 )
           {
-            final int id = Integer.parseInt( matcher.group( 1 ) );
-            final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
+            lStringParser.getFirstSub();
+            final int id = Integer.parseInt( lStringParser.getNextSub() );
+            final int currentRougthnessClassID = Integer.parseInt( lStringParser.getNextSub() );
             m_handler.handleElement( line, id, currentRougthnessClassID, -1, -1 );
           }
           else
           {
-            matcher = ELEMENT_LINE_PATTERN_1.matcher( line );
-            if( matcher.matches() )
+            if( lStringParser.getIntSepCounter() == 2 )
             {
-              final int id = Integer.parseInt( matcher.group( 1 ) );
+              lStringParser.getFirstSub();
+              final int id = Integer.parseInt( lStringParser.getNextSub() );
               m_handler.handleElement( line, id, -1, -1, -1 );
             }
             else
@@ -549,4 +521,110 @@ public class RMA10S2GmlConv
     }
   }
 
+  /**
+   * simple implementation of string splitter based on {@link java.util.StringTokenizer} or on very simple parser of
+   * string without strong validation and error handling.
+   * 
+   * the goal of this class is to out source the string handling and to implement some faster result parsing.
+   * 
+   */
+  class RMA10ResultsLineSplitter
+  {
+
+    private boolean m_boolUseSimpleMethod = true;
+
+    private final String m_strFullString;
+
+    private final char m_charSeparator;
+
+    private boolean m_boolSeparator = false;
+
+    private int m_intStrLen = 0;
+
+    private int m_intSepCounter = 0;
+
+    private char[] m_charStringAsArray;
+
+    private int[] m_intPositionsAsArray;
+
+    StringTokenizer m_stringTokenizer;
+
+    RMA10ResultsLineSplitter( final String pStrFull, final char pCharSeparator )
+    {
+      m_strFullString = pStrFull;
+      init();
+      m_charSeparator = pCharSeparator;
+      m_intPositionsAsArray = new int[m_intStrLen];
+      Arrays.fill( m_intPositionsAsArray, m_intStrLen - 1 );
+      parseLine();
+    }
+
+    RMA10ResultsLineSplitter( final String pStrFull, final String pStrSeparators )
+    {
+      m_strFullString = pStrFull;
+      init();
+      m_charSeparator = ' ';
+      m_stringTokenizer = new StringTokenizer( pStrFull, pStrSeparators );
+      m_boolUseSimpleMethod = false;
+    }
+
+    private void init( )
+    {
+      m_intStrLen = m_strFullString.length();
+      m_charStringAsArray = m_strFullString.toCharArray();
+    }
+
+    private void parseLine( )
+    {
+      m_boolSeparator = true;
+      int j = 0;
+      for( int i = 0; i < m_intStrLen; ++i )
+      {
+        if( m_charStringAsArray[i] == m_charSeparator )
+        {
+          if( !m_boolSeparator )
+          {
+            m_boolSeparator = true;
+          }
+        }
+        else
+        {
+          if( m_boolSeparator )
+          {
+            m_boolSeparator = false;
+            m_intPositionsAsArray[j++] = i;
+            m_intSepCounter++;
+          }
+        }
+      }
+    }
+
+    public final int getIntSepCounter( )
+    {
+      if( m_boolUseSimpleMethod )
+        return m_intSepCounter;
+      return m_stringTokenizer.countTokens();
+    }
+
+    public String getSub( final int pIntPos )
+    {
+      return m_strFullString.substring( m_intPositionsAsArray[pIntPos], m_intPositionsAsArray[pIntPos + 1] ).trim();
+    }
+
+    public String getFirstSub( )
+    {
+      return m_stringTokenizer.nextToken();
+    }
+
+    public String getNextSub( )
+    {
+      if( m_stringTokenizer.hasMoreTokens() )
+      {
+        String lStrRes = m_stringTokenizer.nextToken();
+        return lStrRes;
+      }
+      return "";
+    }
+
+  }
 }
