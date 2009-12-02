@@ -452,9 +452,6 @@ UpdateDOFs: DO KK = 1, NDFM
       !update variables 1 and 2 (without direction restriction) and 4 to 6
       ELSE
         VEL (K, J) = VEL (K, J) + EX
-          !MDMD testout
-          !MD WRITE(75,*) 'VEL(K,J)=',VEL(K,J), 'K=', K,'EX', EX
-          !MDMD testout
       ENDIF
     ENDIF
   ENDDO UpdateNodes
