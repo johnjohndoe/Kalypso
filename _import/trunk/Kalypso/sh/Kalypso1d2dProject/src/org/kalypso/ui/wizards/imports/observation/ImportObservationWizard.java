@@ -188,7 +188,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
     final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*.zml" }, false, true, false ); //$NON-NLS-1$
 
-    final ZmlObservationRepository repository = new ZmlObservationRepository( this.getClass().getName(), configuration, location, "Time Series", false, filter ); //$NON-NLS-1$
+    final ZmlObservationRepository repository = new ZmlObservationRepository( this.getClass().getName(), configuration, location, "Time Series", false, false, filter ); //$NON-NLS-1$
 
     /* set datarange to 0 -> show all observation this item inherits */
     repository.setProperty( DateRangeInputControl.USE_RANGE, "0" ); //$NON-NLS-1$
