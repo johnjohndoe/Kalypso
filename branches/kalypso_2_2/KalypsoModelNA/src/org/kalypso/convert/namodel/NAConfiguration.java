@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -187,7 +188,9 @@ public class NAConfiguration
   private final File m_hydrotopMappingFile;
 
   private final List<String> m_hydrotopMapping = new ArrayList<String>();
-  
+
+  private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
+
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws InvocationTargetException
   {
     m_asciiBaseDir = asciiBaseDir;
@@ -265,7 +268,7 @@ public class NAConfiguration
   {
     if( featureName != null && featureName.length() < 10 )
       return featureName;
-    final String shortName = String.format( PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
+    final String shortName = String.format( Locale.US, PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
     System.out.println( "Created " + shortName + " for " + featureName ); //$NON-NLS-1$ //$NON-NLS-2$
     if( featureName == null )
       return shortName;
@@ -655,11 +658,36 @@ public class NAConfiguration
 
   public void addHydrotopMapping( final int catchmentAsciiID, final int hydrotopAsciiID, final Hydrotop hydrotop )
   {
-    getHydrotopMapping().add( String.format( "%6d %6d   --->   [%s] \t%s", catchmentAsciiID, hydrotopAsciiID, hydrotop.getId(),hydrotop.getName() ) );
+    getHydrotopMapping().add( String.format( Locale.US, "%6d %6d   --->   [%s] \t%s", catchmentAsciiID, hydrotopAsciiID, hydrotop.getId(), hydrotop.getName() ) );
   }
 
   public List<String> getHydrotopMapping( )
   {
     return m_hydrotopMapping;
   }
+
+  public void addSudsMaxPercRateMember( final String sudsFeatureID, final Double hydrotopMaxPerkolationRate )
+  {
+    List<Double> list = m_suds2HydrotopMaxPercRateMap.get( sudsFeatureID );
+    if( list == null )
+    {
+      list = new ArrayList<Double>();
+      m_suds2HydrotopMaxPercRateMap.put( sudsFeatureID, list );
+    }
+    if( hydrotopMaxPerkolationRate == null || Double.isNaN( hydrotopMaxPerkolationRate ) )
+      return;
+    list.add( hydrotopMaxPerkolationRate );
+  }
+
+  public Double getSudsAverageMaxPercRate( final String sudsFeatureID )
+  {
+    final List<Double> list = m_suds2HydrotopMaxPercRateMap.get( sudsFeatureID );
+    if( list == null || list.size() == 0 )
+      return Double.NaN;
+    double average = 0.0;
+    for( double value : list )
+      average += value;
+    return average / list.size();
+  }
+
 }

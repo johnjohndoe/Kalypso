@@ -47,6 +47,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
@@ -187,11 +188,11 @@ public class NAControlConverter
         hasSwales |= sudsItem instanceof Swale;
       }
     }
-    b.append( String.format( "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Überlauf", ".qgu" ) );
-    b.append( String.format( "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Drainrohr", ".qgr" ) );
-    b.append( String.format( "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Überlauf Mulden-Rigolen", ".que" ) );
-    b.append( String.format( "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Drainrohr Mulden-Rigolen", ".qmr" ) );
-    b.append( String.format( "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) );
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Überlauf", ".qgu" ) );
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Drainrohr", ".qgr" ) );
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Überlauf Mulden-Rigolen", ".que" ) );
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Drainrohr Mulden-Rigolen", ".qmr" ) );
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) );
   }
 
   private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final StringBuffer b, final IDManager idManager )

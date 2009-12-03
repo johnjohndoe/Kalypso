@@ -42,6 +42,7 @@ package org.kalypso.convert.gml2core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -123,8 +124,11 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final Object landuseClassLink = landuse.getLanduse();
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N"; //$NON-NLS-1$
 
-                  value.add( String.format( "%s mrs %.4g %.4g", m_config.getLanduseFeatureShortedName( landuseClassName ), sud.getMaxPercRate(), sud.getPercentToGroundwater() ) ); //$NON-NLS-1$
-                  value.add( String.format( "%.1f %.1f %.1f %.4g %.4g 0", (double) sud.getPipeDiameter(), (double) sud.getPipeKfValue(), sud.getPipeSlope() / 1000.0, sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
+                  Double maxPercRate = m_config.getSudsAverageMaxPercRate( sud.getId() );
+                  if( Double.isNaN( maxPercRate ) )
+                    maxPercRate = sud.getMaxPercRate();
+                  value.add( String.format( Locale.US, "%s mrs %.4g %.4g", m_config.getLanduseFeatureShortedName( landuseClassName ), maxPercRate, sud.getPercentToGroundwater() ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%.1f %.1f %.1f %.4g %.4g 0", (double) sud.getPipeDiameter(), (double) sud.getPipeKfValue(), sud.getPipeSlope() / 1000.0, sud.getPipeRoughness(), sud.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Swale )
                 {
@@ -136,8 +140,8 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final Object landuseClassLink = landuse.getLanduse();
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "Mulde_N"; //$NON-NLS-1$
 
-                  value.add( String.format( "%s mulde_b 2.5E-8 1.0", m_config.getLanduseFeatureShortedName( landuseClassName ) ) ); //$NON-NLS-1$
-                  value.add( String.format( "%.3f 0", sud.getWidth() ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s mulde_b 2.5E-8 1.0", m_config.getLanduseFeatureShortedName( landuseClassName ) ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%.3f 0", sud.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Greenroof )
                 {
@@ -146,7 +150,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final Object landuseClassLink = landuse.getLanduse();
                   final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "GRext_N"; //$NON-NLS-1$
 
-                  value.add( String.format( "%s grs 2.8E-10 1.0", m_config.getLanduseFeatureShortedName( landuseClassName ) ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s grs 2.8E-10 1.0", m_config.getLanduseFeatureShortedName( landuseClassName ) ) ); //$NON-NLS-1$
 
                   // second line params:
                   // 1. Drainage pipe diameter [mm]
@@ -156,7 +160,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   // 5. Drainage area per pipe [m2] - fixed to 100.0
                   // 6. Overflow height of the roof [mm] - fixed to 100.0, max value equals to layer thickness
                   // 7. Drainage node ID; 0 = default drainage node of the catchment
-                  value.add( String.format( "%.1f %.1f 2.0 2.0 100.0 100.0 0", new Double( sud.getRainwaterPipeDiameter().toString() ), new Double( sud.getEmergencySpillPipeDiameter().toString() ) ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%.1f %.1f 2.0 2.0 100.0 100.0 0", new Double( sud.getRainwaterPipeDiameter().toString() ), new Double( sud.getEmergencySpillPipeDiameter().toString() ) ) ); //$NON-NLS-1$
                 }
                 else
                   continue;
@@ -170,18 +174,18 @@ public class SudsFileWriter extends AbstractCoreFileWriter
       m_contentBuffer.setLength( 0 );
       for( final String catchment : sudsMap.keySet() )
       {
-        m_contentBuffer.append( String.format( "# Catchment_NR %s\n", catchment ) ); //$NON-NLS-1$
+        m_contentBuffer.append( String.format( Locale.US, "# Catchment_NR %s\n", catchment ) ); //$NON-NLS-1$
         final TreeMap<String, List<String>> map = sudsMap.get( catchment );
         for( final String sudsID : map.keySet() )
         {
           final List<String> list = map.get( sudsID );
           if( list == null )
             continue;
-          m_contentBuffer.append( String.format( "%s %s\n", catchment, sudsID ) ); //$NON-NLS-1$
+          m_contentBuffer.append( String.format( Locale.US, "%s %s\n", catchment, sudsID ) ); //$NON-NLS-1$
           for( final String line : list )
             m_contentBuffer.append( line ).append( "\n" ); //$NON-NLS-1$
         }
-        m_contentBuffer.append( String.format( "# Ende TG %s\n", catchment ) ); //$NON-NLS-1$
+        m_contentBuffer.append( String.format( Locale.US, "# Ende TG %s\n", catchment ) ); //$NON-NLS-1$
       }
     }
   }
