@@ -8,7 +8,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
       USE BLK11MOD, only: ort
       USE BLKECOM, only: ncon, estifm, f
       use PardisoParams, only: mfwsiz, mr1siz, nbuffsiz
-      
+
       implicit none
       SAVE
 
@@ -341,11 +341,16 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
 
       CALL SECOND(SINC)
-  
+
+
+      !-----------------------------
+      !START CYCLE OVER ALL ELEMENTS
+      !-----------------------------      
+      
    18 NELL=NELL+1
       IF(NELL.GT.NE) GO TO 380
       N=NFIXH(NELL)
-
+      
       IF(IMAT(N).LE.0) GO TO 18
       NM=mod(IMAT(N),1000)
       IF(NM .LT. 901) THEN
@@ -568,28 +573,30 @@ SUBROUTINE FRONT_PARDISO(nrx)
       !-----------------------------------------------------------
       !F(IA)  :: local residual (local degree of freedom) in line IA of element matrix
       !RR(JA) :: global residual (degree of freedom) in line JA of the global sparse matrix
-      DO I = 1, NCN
-        J = NOP (N, I)
+    DO I = 1, NCN
+      J = NOP (N, I)
 	  !non-zero node
-	  IF (J > 0) THEN
-          !one step before first degree of freedom at local node is calculated
-          IA = NDF * (I - 1)
-          !k runs through the degrees of freedom of the certain local node
-          DO K = 1, NDF
-            !get the local equation number of degree k at local node I
-            IA = IA + 1
-            !get the global equation number of global degree k at global node J
-            JA = NBC (J, K)
-            !If JA is an active degree; means JA /= 0, fill in local residual in global one!
-            IF (JA /= 0) THEN
-              if (ja < 0 )  then
-                dum = 0
-              endif
-              RR (JA) = RR (JA) + F (IA)
-  	      ENDIF
-          ENDDO
-        ENDIF
-	ENDDO
+      IF (J > 0) THEN
+        !one step before first degree of freedom at local node is calculated
+        IA = NDF * (I - 1)
+        !k runs through the degrees of freedom of the certain local node
+        DO K = 1, NDF
+          !get the local equation number of degree k at local node I
+          IA = IA + 1
+          !get the global equation number of global degree k at global node J
+          JA = NBC (J, K)
+          !If JA is an active degree; means JA /= 0, fill in local residual in global one!
+          IF (JA /= 0) THEN
+            if (ja < 0 )  then
+              dum = 0
+            endif
+            RR (JA) = RR (JA) + F (IA)
+          ENDIF
+        ENDDO
+      ENDIF
+    ENDDO
+    
+    
 
       !---------------------------------------------------
       !reset the NK-array for each local degree of freedom
@@ -753,12 +760,10 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
       !Write out console output during processing of elements (every 1000 elements)
       !----------------------------------------------------------------------------
-      IF (MOD (NELL, 1000) == 0) then
+      IF (MOD (NELL, 10000) == 0) then
         WRITE (*, '(I13,3I15)') NELL, lRow, lRowMax, LELIM
         WRITE (75,'(I13,3I15)') NELL, lRow, lRowMax, LELIM
       end if
-
-
 
 !C
 !C     DETERMINE WHETHER TO COMPACT OR ADD A NEW ELEMENT
@@ -804,7 +809,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
           LELTM=LELTM+1
 	  ELSE
 	    GO TO 100
-        ENDIF
+      ENDIF
 
       ENDDO AddEquations
   100 CONTINUE
@@ -818,10 +823,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !C
 !C ***** OBTAIN INITIAL GUESS (ALL ZEROS)
 !C
-
-      DO I = 1, NSZF
-         R1(I) = 0.0D0
-      END DO
+      R1 = 0.0D0
 
 !C
 !C ***** CALL THE SOLVER
@@ -832,16 +834,14 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
       write(75,*) 'matrix size = ',icur
       write(*,*) 'matrix size = ',icur
-
-            write(*,*) ' maxl = ', maxl
+      write(*,*) ' maxl = ', maxl
       
+
       call second(sutim1)
       
 !C  Set number of processors      
-!ipk FEB07      NPROCS = ICPU
       NPROCS = ICPU
 
-                   
       CALL mkl_solver(NPROCS,NSZF, IRWEPT(1),IRWEPT(NSZF+2),qs1, RR, R1T)
      
       !nis,aug08
