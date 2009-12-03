@@ -144,22 +144,22 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
     IF (ort (lineimat (TLine, k + 1), 15) > 0.) then
 
       !actual node
-      nod = line (TLine, k)
+      nod = line (TLine, k+no)
 
       !calculate the absolute flow-velocity of beginning corner node of the actual CCL-segment
-      vecq = sqrt (vel (1, na)**2 + vel (2, na) **2)
+      vecq = sqrt (vel (1, nod)**2 + vel (2, nod) **2)
 
       !default vegetation cwr-value
       cwr_line = 1.0
 
       !get lambda
       NikuradseRoughness = ort(lineimat(TLine, k+1), 15)
-      CALL darcy (lambda, vecq, di(0), NikuradseRoughness, NullVal, NullVal, 0,  0, gl_bedform, mel, cwr_line, 2, &
+      CALL darcy (lambda, vecq, di(no), NikuradseRoughness, NullVal, NullVal, 0,  0, gl_bedform, mel, cwr_line, 2, &
      &            dummy(1), dummy(2), dummy(3),dset)
 
       !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
-      if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
-        lambda = lambda * (ort (lineimat (TLine, k + 1), 12)**2 - 1.) * (akp(nod) * adb(nod) - d1) / (akp(nod) * adb(nod)) + 1.0
+      if (idnopt /= 0 .and. di(no) < akp(nod) * adb(nod)) then
+        lambda = lambda * (ort (lineimat (TLine, k + 1), 12)**2 - 1.) * (akp(nod) * adb(nod) - di(no)) / (akp(nod) * adb(nod)) + 1.0
       end if
 
       !Conveyance represents the Conveyance factor of the element part.
