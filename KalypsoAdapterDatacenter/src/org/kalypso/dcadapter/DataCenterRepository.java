@@ -17,10 +17,9 @@ public class DataCenterRepository extends AbstractRepository
 
   private DataCenterLevelItem m_root;
 
-  public DataCenterRepository( final String name, final String factory, final String conf, final boolean ro,
-      final String url, final String userName, final String password )
+  public DataCenterRepository( final String name, final String factory, final String conf, final boolean ro, final boolean cached, final String url, final String userName, final String password )
   {
-    super( name, name, factory, conf, ro, "datacenter://" ); //$NON-NLS-1$
+    super( name, name, factory, conf, ro, cached, "datacenter://" ); //$NON-NLS-1$
 
     m_database = new IngresDatabase( url, userName, password );
   }
@@ -33,7 +32,7 @@ public class DataCenterRepository extends AbstractRepository
   {
     return m_database.getUrl();
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
@@ -51,12 +50,10 @@ public class DataCenterRepository extends AbstractRepository
     m_root = null;
   }
 
-
   private DataCenterLevelItem getRootItem( )
   {
     if( m_root == null )
-      m_root = new DataCenterLevelItem( this, null, Level.getRoot( m_database
-          .getConnection() ) );
+      m_root = new DataCenterLevelItem( this, null, Level.getRoot( m_database.getConnection() ) );
 
     return m_root;
   }

@@ -29,7 +29,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository()
+  public boolean configureRepository( )
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
@@ -50,9 +50,8 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
    * <pre>
    * 
    *  url#username#password
-   *  
-   * </pre>
    * 
+   * </pre>
    * <p>
    * url: the url for the connection Example: jdbc:edbc://LOCALHOST:II7/vnode::kalypso/INGRES
    * <p>
@@ -62,7 +61,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository() throws RepositoryException
+  public IRepository createRepository( ) throws RepositoryException
   {
     final String[] conf = getConfiguration().split( "#" ); //$NON-NLS-1$
 
@@ -73,8 +72,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     final String userName = conf[1];
     final String password = conf[2];
 
-    return new DataCenterRepository( getRepositoryName(), getClass().getName(), getConfiguration(), isReadOnly(), url,
-        userName, password );
+    return new DataCenterRepository( getRepositoryName(), getClass().getName(), getConfiguration(), isReadOnly(), isCached(), url, userName, password );
   }
 
   private static class ConfigDialog extends TitleAreaDialog
@@ -104,7 +102,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
      * @see org.eclipse.jface.dialogs.Dialog#close()
      */
     @Override
-    public boolean close()
+    public boolean close( )
     {
       final IDialogSettings section = DataCenterPlugin.getDefault().getDialogSettings().getSection( "connection" ); //$NON-NLS-1$
       section.put( "url", m_url ); //$NON-NLS-1$
@@ -117,7 +115,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
      * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createDialogArea( Composite parent )
+    protected Control createDialogArea( final Composite parent )
     {
       final Composite panel = new Composite( parent, SWT.FILL );
       panel.setLayout( new GridLayout( 2, false ) );
@@ -132,7 +130,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
       txtUrl.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       txtUrl.addModifyListener( new ModifyListener()
       {
-        public void modifyText( ModifyEvent e )
+        public void modifyText( final ModifyEvent e )
         {
           m_url = txtUrl.getText();
         }
@@ -141,14 +139,14 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
       // Username
       final Label lblName = new Label( panel, SWT.LEFT );
-      lblName.setText( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.0") ); //$NON-NLS-1$
+      lblName.setText( Messages.getString( "org.kalypso.dcadapter.DataCenterRepositoryFactory.0" ) ); //$NON-NLS-1$
 
       final Text txtName = new Text( panel, SWT.BORDER );
       txtName.setText( m_username );
       txtName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       txtName.addModifyListener( new ModifyListener()
       {
-        public void modifyText( ModifyEvent e )
+        public void modifyText( final ModifyEvent e )
         {
           m_username = txtName.getText();
         }
@@ -157,36 +155,36 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
       // Password
       final Label lblPw = new Label( panel, SWT.LEFT );
-      lblPw.setText( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.1") ); //$NON-NLS-1$
+      lblPw.setText( Messages.getString( "org.kalypso.dcadapter.DataCenterRepositoryFactory.1" ) ); //$NON-NLS-1$
 
       final Text txtPw = new Text( panel, SWT.BORDER | SWT.PASSWORD );
       txtPw.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       txtPw.addModifyListener( new ModifyListener()
       {
-        public void modifyText( ModifyEvent e )
+        public void modifyText( final ModifyEvent e )
         {
           m_password = txtPw.getText();
         }
       } );
       txtPw.setSize( 100, txtUrl.getSize().y );
 
-      setMessage( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.2") ); //$NON-NLS-1$
-      setTitle( Messages.getString("org.kalypso.dcadapter.DataCenterRepositoryFactory.3") ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.dcadapter.DataCenterRepositoryFactory.2" ) ); //$NON-NLS-1$
+      setTitle( Messages.getString( "org.kalypso.dcadapter.DataCenterRepositoryFactory.3" ) ); //$NON-NLS-1$
 
       return panel;
     }
 
-    public String getPassword()
+    public String getPassword( )
     {
       return m_password;
     }
 
-    public String getUrl()
+    public String getUrl( )
     {
       return m_url;
     }
 
-    public String getUsername()
+    public String getUsername( )
     {
       return m_username;
     }
