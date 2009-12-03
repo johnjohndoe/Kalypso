@@ -164,10 +164,6 @@ END DO
             arcmid (k, 2) = nop (IntPolElts (nelem, IntPolNo (nelem)), 3)
             arcmid (k, 3) = nelem
             arcmid (k, 4) = nelem
-          !testing
-          else
-            stop 'not handled problem at interpolated elements in sub -Modell_schreiben-'
-          !testing-
           end if
 
           !Save informations for 1D-2D-TRANSITION ELEMENTS
@@ -486,16 +482,16 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7002 FORMAT ('FE', 4i10, 5f15.7)
 
  !aktuelle Freiheitsgrade; Knotennummer, x-, y-Geschwindigkeit, Wasserspiegel):
- 7003 FORMAT ('VA', i10, 4ES19.12)
+ 7003 FORMAT ('VA', i10, 4(1x,ES19.12))
  
  !aktuelle Zeitgradienten:
- 7004 FORMAT ('GA', i10,3ES19.12)
+ 7004 FORMAT ('GA', i10,3(1x,ES19.12))
                                                                         
  !Freiheitsgrade des vergangenen Zeitschritt (Geschwindigkeiten und Wasserspiegel):
- 7005 FORMAT ('VO', i10,3ES19.12) 
+ 7005 FORMAT ('VO', i10,3(1x,ES19.12))
                                                                         
  !Zeitgradienten des vergangenen Zeitschrit
- 7006 FORMAT ('GO', i10,3ES19.12) 
+ 7006 FORMAT ('GO', i10,3(1x,ES19.12))
                                                                         
  !Zusatzinformationen am Knoten:
  7007 FORMAT ('ZU',i10,i6,4f15.7)
@@ -556,13 +552,13 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  !nis,mar09: storage elements
  7050 format ('SE', 2i10, 2f20.7)
  !nis,jan08: results of interpolated nodes or profiles; like VA-line
- 7051 FORMAT ('VAI', i9,4f19.12)
+ 7051 FORMAT ('VAI', i9,4(1x,ES19.12))
  !aktuelle Zeitgradienten:
- 7052 FORMAT ('GAI', i9,3f19.12)
+ 7052 FORMAT ('GAI', i9,3(1x,ES19.12))
  !Freiheitsgrade des vergangenen Zeitschritt (Geschwindigkeiten und Wasserspiegel):
- 7053 FORMAT ('VOI', i9,3f19.12) 
+ 7053 FORMAT ('VOI', i9,3(1x,ES19.12))
  !Zeitgradienten des vergangenen Zeitschrit
- 7054 FORMAT ('GOI', i9,3f19.12) 
+ 7054 FORMAT ('GOI', i9,3(1x,ES19.12))
 
 
 
