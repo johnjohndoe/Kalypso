@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -186,17 +187,17 @@ public class IDManager
       }
     } );
     sort.addAll( m_idMapFeature.keySet() );
-    writer.write( String.format( "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$
+    writer.write( String.format( Locale.US, "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$
     for( Iterator<IDMap> iter = sort.iterator(); iter.hasNext(); )
     {
       final IDMap idmap = iter.next();
-      writer.write( String.format( "%-10s -->  ", idmap.toString() ) ); //$NON-NLS-1$
+      writer.write( String.format( Locale.US, "%-10s -->  ", idmap.toString() ) ); //$NON-NLS-1$
       final Object value = m_idMapFeature.get( idmap );
       if( value instanceof Feature )
       {
         final Feature feature = (Feature) value;
         final String type = feature.getFeatureType().getQName().getLocalPart().toString();
-        writer.write( String.format( "%-16s %-32s %-32s %-32s\n", type, feature.getId(), feature.getName(), feature.getDescription() ) ); //$NON-NLS-1$
+        writer.write( String.format( Locale.US, "%-16s %-32s %-32s %-32s\n", type, feature.getId(), feature.getName(), feature.getDescription() ) ); //$NON-NLS-1$
       }
       else
       {

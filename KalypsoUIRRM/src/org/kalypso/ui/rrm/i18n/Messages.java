@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.i18n;
 
 import java.util.IllegalFormatException;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -76,7 +77,7 @@ public class Messages
       if( args.length == 0 )
         return formatStr;
 
-      return String.format( formatStr, args );
+      return String.format( Locale.US, formatStr, args );
     }
     catch( final MissingResourceException e )
     {

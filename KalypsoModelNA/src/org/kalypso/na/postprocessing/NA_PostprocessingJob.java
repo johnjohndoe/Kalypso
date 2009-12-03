@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -234,8 +235,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           calcFolder.mkdirs();
           FileUtils.copyFileToDirectory( izFile, izFolder );
           FileUtils.copyFileToDirectory( calcFile, calcFolder );
-          final String izPath = String.format( "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
-          final String calcPath = String.format( "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
+          final String izPath = String.format( Locale.US, "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
+          final String calcPath = String.format( Locale.US, "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
           final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name );
           final Obstableview table = NodeResultsComparisonViewCreator.createTableView( izPath, calcPath );
           final File odtFile = new File( tmpdir, name + ".odt" );

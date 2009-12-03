@@ -140,7 +140,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         for( final ICoverage coverage : collection )
           CoverageManagementHelper.deleteGridFile( coverage );
       resultCollection.clear();
-      
+
       final IFeatureWrapperCollection<IAnnualCoverageCollection> inputCoverageCollection1 = rasterModelInput1.getWaterlevelCoverageCollection();
       final IFeatureWrapperCollection<IAnnualCoverageCollection> inputCoverageCollection2 = rasterModelInput2.getWaterlevelCoverageCollection();
 
@@ -190,7 +190,8 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         {
           final IGeoGrid inputGrid1 = GeoGridUtilities.toGrid( inputCoverage1 );
           final IGeoGrid inputGrid2 = GeoGridUtilities.toGrid( inputCoverage2 );
-          final IGeoGrid outputGrid = new SubstractionGrid( inputGrid1, inputGrid2 );
+          final SubstractionGrid outputGrid = new SubstractionGrid( inputGrid1, inputGrid2 );
+          outputGrid.usePositiveValuesOnly( true );
 
           final String outputCoverageFileName = String.format( "%s_%02d.bin", resultCoverageCollection.getGmlID(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
