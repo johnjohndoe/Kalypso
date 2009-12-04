@@ -73,7 +73,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * @author huebsch
+ * @author Dejan Antanaskovic
  */
 public class HydrotopManager extends AbstractManager
 {
@@ -107,8 +107,8 @@ public class HydrotopManager extends AbstractManager
       public String getAscii( )
       {
         if( m_bothSet )
-          return String.format( "%.3f %.3f", m_naturalAreaPercentage, m_sealedAreaPercentage ); //$NON-NLS-1$
-        return String.format( "%.3f", m_sealedAreaPercentage ); //$NON-NLS-1$
+          return String.format( Locale.US, "%.3f %.3f", m_naturalAreaPercentage, m_sealedAreaPercentage ); //$NON-NLS-1$
+        return String.format( Locale.US, "%.3f", m_sealedAreaPercentage ); //$NON-NLS-1$
       }
     }
 
@@ -140,7 +140,7 @@ public class HydrotopManager extends AbstractManager
 
     public String getAscii( )
     {
-      return String.format( "%s %s %s %s %s %s %s %s %s %s", m_map.get( "10" ).getAscii(), m_map.get( "11" ).getAscii(), m_map.get( "12" ).getAscii(), m_map.get( "13" ).getAscii(), m_map.get( "20" ).getAscii(), m_map.get( "21" ).getAscii(), m_map.get( "30" ).getAscii(), m_map.get( "31" ).getAscii(), m_map.get( "40" ).getAscii(), m_map.get( "41" ).getAscii() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+      return String.format( Locale.US, "%s %s %s %s %s %s %s %s %s %s", m_map.get( "10" ).getAscii(), m_map.get( "11" ).getAscii(), m_map.get( "12" ).getAscii(), m_map.get( "13" ).getAscii(), m_map.get( "20" ).getAscii(), m_map.get( "21" ).getAscii(), m_map.get( "30" ).getAscii(), m_map.get( "31" ).getAscii(), m_map.get( "40" ).getAscii(), m_map.get( "41" ).getAscii() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
     }
   }
 
@@ -267,6 +267,7 @@ public class HydrotopManager extends AbstractManager
                   hydrotopSealedArea -= sealedAreaPart;
                   totalSudsNaturalArea += naturalAreaPart;
                   totalSudsSealedArea += sealedAreaPart;
+                  m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
                 }
                 else if( feature instanceof ISwale )
                 {
@@ -279,6 +280,7 @@ public class HydrotopManager extends AbstractManager
                   hydrotopSealedArea -= sealedAreaPart;
                   totalSudsNaturalArea += naturalAreaPart;
                   totalSudsSealedArea += sealedAreaPart;
+                  m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
                 }
                 else if( feature instanceof IGreenRoof )
                 {
@@ -288,6 +290,7 @@ public class HydrotopManager extends AbstractManager
                   hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sealedAreaPart );
                   hydrotopSealedArea -= sealedAreaPart;
                   totalSudsSealedArea += sealedAreaPart;
+                  m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
                 }
               }
               anySuds = true;
@@ -296,8 +299,8 @@ public class HydrotopManager extends AbstractManager
             totalHydrotopArea += hydrotopArea;
             totalHydrotopSealedArea += hydrotopSealedArea;
             totalHydrotopNaturalArea += hydrotopNaturalArea;
-            
-            m_conf.addHydrotopMapping(catchmentAsciiID, hydrotopAsciiID, hydrotop);
+
+            m_conf.addHydrotopMapping( catchmentAsciiID, hydrotopAsciiID, hydrotop );
             hydIdList.add( hydrotop.getId() );
           }
         }
