@@ -15,20 +15,16 @@
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId"/>
                     </Parameters>
                 </Provider>
-                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround_title%</Title>
-                <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
                     <TargetAxisRef ref="NN_Axis"/>
                 </MapperRefs>
                 <Styles>
                     <LineStyle role="line">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround_title%</Title>
                         <Width>2</Width>
                         <LineColor>FFA000</LineColor>
                     </LineStyle>
                     <PointStyle role="point">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround_title%</Title>
             			<Width>6</Width>
             			<Height>6</Height>
             			<FillColor isVisible="true">
@@ -48,21 +44,18 @@
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId"/>
                     </Parameters>            
                 </Provider>
-                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li_title%</Title>
-                <Description/>
+                
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
                     <TargetAxisRef ref="NN_Axis"/>
                 </MapperRefs>
                 <Styles>
                     <LineStyle role="line">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li_title%</Title>
                         <Width>2</Width>
                         <LineColor>C83200</LineColor>
                     </LineStyle>
                     <PointStyle role="point">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li_title%</Title>
-            			<Width>6</Width>
+                        <Width>6</Width>
             			<Height>6</Height>
             			<FillColor isVisible="true">
               				<Color>641900</Color>
@@ -82,21 +75,17 @@
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId"/>
                     </Parameters>            
                 </Provider>
-                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV_title%</Title>
-                <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
                     <TargetAxisRef ref="NN_Axis"/>
                 </MapperRefs>
                 <Styles>
                     <LineStyle role="line">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV_title%</Title>
                         <Width>2</Width>
                         <LineColor>641900</LineColor>
                     </LineStyle>
                     <PointStyle role="point">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV_title%</Title>
-            			<Width>6</Width>
+                        <Width>6</Width>
             			<Height>6</Height>
             			<FillColor isVisible="true">
               				<Color>C83200</Color>
@@ -116,7 +105,6 @@
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId"/>
                     </Parameters>            
                 </Provider>
-                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK_title%</Title>
                 <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
@@ -124,7 +112,6 @@
                 </MapperRefs>
                 <Styles>
                     <PointStyle role="point">
-            			<Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK_title%</Title>
             			<Width>3</Width>
             			<Height>3</Height>
             			<Alpha>40</Alpha>
@@ -137,8 +124,7 @@
             				
           				</PointStyle>
           			<LineStyle role="line" isVisible="false">
-           				 <Title></Title>
-         			 </LineStyle>
+           				 </LineStyle>
                 </Styles>
             </Layer>
                         
@@ -152,21 +138,17 @@
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId"/>
                     </Parameters>    
                 </Provider>
-                <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re_title%</Title>
-                <Description/>
                 <MapperRefs>
                     <DomainAxisRef ref="Station_Axis"/>
                     <TargetAxisRef ref="NN_Axis"/>
                 </MapperRefs>
                 <Styles>
                     <LineStyle role="line">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re_title%</Title>
                         <Width>2</Width>
                         <LineColor>C83200</LineColor>
                     </LineStyle>
                     <PointStyle role="point">
-                        <Title>%urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re_title%</Title>
-            			<Width>6</Width>
+                        <Width>6</Width>
             			<Height>6</Height>
             			<FillColor isVisible="true">
               				<Color>641900</Color>
@@ -181,7 +163,7 @@
             <Axis id="Station_Axis">
                 <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
                 </Provider>
-                <Label>%Station_Axis_label%</Label>
+                <Label>Station [km]</Label>
                 <Direction>NEGATIVE</Direction>
                 <Position>BOTTOM</Position>
                 <RendererRef ref="NumberAxisRenderer"/>
@@ -190,7 +172,7 @@
             <Axis id="NN_Axis">
                 <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
                 </Provider>
-                <Label>%NN_Axis_label%</Label>
+                <Label>Höhe [NN+m]</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>LEFT</Position>
                 <RendererRef ref="NumberAxisRenderer"/>
