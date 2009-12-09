@@ -70,6 +70,12 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
       layer.setVisible( true );
       return layer;
     }
+    if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
+    {
+      final LengthSectionWeirLayer layer = new LengthSectionWeirLayer(getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+      layer.setVisible( true );
+      return layer;
+    }
     return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
@@ -93,24 +99,4 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
     return null;
 
   }
-
-//  /**
-//   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-//   */
-//  @SuppressWarnings("unchecked")
-//  public LengthSectionBridgeDataContainer< ? , ? > getBridgeDataContainer( )
-//  {
-//    final IParameterContainer pc = getParameterContainer();
-//
-//    final String href = pc.getParameterValue( "href", null );
-//
-//    final String observationId = pc.getParameterValue( "observationId", null );
-//    final String domainComponentName = pc.getParameterValue( "domainComponentId", null );
-//    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
-//
-//    if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
-//      return new LengthSectionBridgeDataContainer( getContext(), href, observationId );
-//
-//    return null;
-//  }
 }

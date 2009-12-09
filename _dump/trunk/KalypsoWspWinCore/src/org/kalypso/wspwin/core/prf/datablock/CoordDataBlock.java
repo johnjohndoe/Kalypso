@@ -192,7 +192,7 @@ public class CoordDataBlock extends AbstractDataBlock
     for( int i = 0; i < dbls.length; i++ )
     {
 
-      pw.write( formatDouble( dbls[i] ) );
+      pw.write( formatDouble( dbls[i]==null? Double.NaN:dbls[i] ) );
 
       if( (i + 1) % 8 == 0 & i != dbls.length - 1 )
         pw.println();

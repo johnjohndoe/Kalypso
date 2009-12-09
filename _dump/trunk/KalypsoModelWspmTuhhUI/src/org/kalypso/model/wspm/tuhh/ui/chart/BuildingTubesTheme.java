@@ -98,7 +98,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   {
     final IProfil profil = getProfil();
     final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1"), getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
+    operation.addChange( new ProfileObjectSet( profil, null) );
     new ProfilOperationJob( operation ).schedule();
   }
 

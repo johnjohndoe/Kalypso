@@ -121,10 +121,10 @@
             			<Stroke>
                				<LineColor>0080B1</LineColor>
             			</Stroke>
-            				
-          				</PointStyle>
-          			<LineStyle role="line" isVisible="false">
-           				 </LineStyle>
+      					<LineStyle role="line" isVisible="false">
+           				</LineStyle>
+          			</PointStyle>
+          			
                 </Styles>
             </Layer>
                         
@@ -166,6 +166,7 @@
                 <Label>Station [km]</Label>
                 <Direction>NEGATIVE</Direction>
                 <Position>BOTTOM</Position>
+                <NumberRange></NumberRange>
                 <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
             
@@ -175,6 +176,7 @@
                 <Label>Höhe [NN+m]</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>LEFT</Position>
+                <NumberRange></NumberRange>
                 <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
         </Mappers>

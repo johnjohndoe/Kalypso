@@ -220,9 +220,9 @@ public class LengthSectionProcessor
 
       final WspmWaterBody waterBody = m_reach.getWaterBody();
       createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
-      final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF8" ); //$NON-NLS-1$
+      final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF-8" ); //$NON-NLS-1$
       final String diagram = replaceTokens( diagramTemplate, replaceTokens );
-      FileUtils.writeStringToFile( m_diagFile, diagram, "UTF8" ); //$NON-NLS-1$
+      FileUtils.writeStringToFile( m_diagFile, diagram, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -238,9 +238,9 @@ public class LengthSectionProcessor
 // timeLogger.printCurrentInterim( "Start-Create Table " );
 
       final URL tableUrl = getClass().getResource( "resources/table.gft" ); //$NON-NLS-1$
-      final String tableTemplate = FileUtilities.toString( tableUrl, "UTF8" ); //$NON-NLS-1$
+      final String tableTemplate = FileUtilities.toString( tableUrl, "UTF-8" ); //$NON-NLS-1$
       final String table = replaceTokens( tableTemplate, replaceTokens );
-      FileUtils.writeStringToFile( m_tableFile, table, "UTF8" ); //$NON-NLS-1$
+      FileUtils.writeStringToFile( m_tableFile, table, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
