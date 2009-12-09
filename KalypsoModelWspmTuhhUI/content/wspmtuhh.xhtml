@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Kalypso WSPM</title>
+    <link rel="stylesheet" href="css/shared.css" type="text/css"/>
+  </head>
+
+  <body>
+    <h1>Kalypso WSPM</h1>
+	<div class="colorbox">
+    <h2>Allgemeine Informationen</h2>
+	<p><span class="titleImage"><img src="images/button_1d.gif"/></span>
+
+	Das eindimensionale Spiegellinienmodell WSPM integriert die aktuellen Verfahren der
+	hydraulischen Berechnung naturnaher Fließgewässer aus den Merkblättern des BWKs und
+	DVWKs.
+	</p>
+	<p>
+
+	Die Besonderheiten des Rechenkerns sind:
+
+	<ul>
+		<li>stationär ungleichförmige Spiegellinienberechnung.</li>
+		<li>detaillierte Rauheitsmodellierung mit äquivalenten Sandrauheiten ks (nach COLEBROOK-WHITE).</li>
+		<li>Berücksichtigung von Trennflächenrauheiten (nach PASCHE).</li>
+		<li>Berücksichtigung von Rauhigkeit durch Bewuchs (nach LINDER/PASCHE).</li>
+		<li>Berechnung von Brücken mit komplizierten Geometrien bei verschiedenen Abflusszuständen.</li>
+		<li>Berechnung von Wehren mit einem oder mehreren Wehrfeldern.</li>
+		<li>Bestimmung von Kalinin-Miljukov-Parametern für das Flood-Routing in Niederschlags-Abfluss-Simulationen (siehe KALYPSO-NA).</li>
+	</ul>
+</p>
+	</div>
+
+	<div class="projectActions">
+    <a class="newProject"
+      href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
+      id="newWspmProject">
+      <img src="css/kalypso16.gif" alt="Neues Projekt"/><span>Neues Projekt erstellen...</span></a>
+      <br/>
+
+    <a class="newProject"
+      href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard"
+      id="demoProject">
+      <img src="css/kalypso16.gif" alt="WspWin Demo Projekt"/><span>WspWin Demo Projekt anlegen...</span></a>
+      <br/>
+
+    <a class="newProject"
+      href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
+      id="importWspWinProject">
+      <img src="css/wspwin16.gif" alt="WspWin Import"/><span>WspWin Projekt importieren...</span></a>
+      <br/>
+
+    <a class="newProject"
+      href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction&amp;perspectiveId=org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
+      id="openWspmPerspective">
+      <img src="css/link_obj.gif" alt="Vorhandene Projekte"/><span>Bereits vorhandene Projekte bearbeiten...</span></a>
+      <br/>
+
+    <!--contentProvider id="1dProjectsContentProvider" class="org.kalypso.model.application.SimulationProjectsContentProvider" pluginId="org.kalypso.model.product"/-->
+	</div>
+
+  </body>
+</html>
