@@ -48,23 +48,24 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.namespace.QName;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.i18n.Messages;
-import org.kalypso.convert.namodel.schema.binding.Hydrotop;
-import org.kalypso.convert.namodel.schema.binding.suds.AbstractSud;
-import org.kalypso.convert.namodel.schema.binding.suds.Greenroof;
+import org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale;
+import org.kalypso.convert.namodel.schema.binding.suds.ISwale;
+import org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -79,6 +80,8 @@ public class BodentypManager extends AbstractManager
   private final IFeatureType m_bodentypFT;
 
   private final IFeatureType m_bodenartFT;
+
+  private final Map<String, Map<String, Double[]>> m_soilTypes = new LinkedHashMap<String, Map<String, Double[]>>();
 
   // private static final String BodArtParameterPropName = "soilLayerParameterMember";
 
@@ -171,73 +174,127 @@ public class BodentypManager extends AbstractManager
 
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace paraWorkspace ) throws Exception
   {
-    final List<Greenroof> greenroofs = new ArrayList<Greenroof>();
-    GMLWorkspace sudsWorkspace = m_conf.getSudsWorkspace();
-    if( sudsWorkspace != null )
+    final List<Feature> paramSoiltypeLayers = (List<Feature>) paraWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
+    for( final Feature paramSoiltypeLayer : paramSoiltypeLayers )
     {
-      final List<AbstractSud> suds = (List<AbstractSud>) sudsWorkspace.getRootFeature().getProperty( new QName( "http://sourceforge.kalypso.org/schemata/hydrology/suds", "sudMember" ) );
-      for( final AbstractSud sudsItem : suds )
+      final List<Feature> bodartList = (List<Feature>) paramSoiltypeLayer.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
+      final Map<String, Double[]> layers = new LinkedHashMap<String, Double[]>();
+      for( final Feature fe : bodartList )
       {
-        if( sudsItem instanceof Greenroof )
-          greenroofs.add( (Greenroof) sudsItem );
+        final Feature bodArtLink = paraWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) );
+        if( bodArtLink != null )
+        {
+          final Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
+          if( xretProp == null )
+            throw new SimulationException( "Parameter WS: Property xretProp is null for feature " + paramSoiltypeLayer.getId() );
+          layers.put( bodArtLink.getName(), new Double[] { Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ), xretProp ? 1.0 : 0.0 } );
+        }
+        else
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", paramSoiltypeLayer.getId(), fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) ) ); //$NON-NLS-1$
+      }
+      final String layerName = paramSoiltypeLayer.getName();
+      if( !m_soilTypes.containsKey( layerName ) )
+        m_soilTypes.put( layerName, layers );
+    }
+    addSudsSoilLayers();
+
+    final StringBuffer buffer = asciiBuffer.getBodtypBuffer();
+
+    buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
+    final Iterator<String> soilTypesIterator = m_soilTypes.keySet().iterator();
+    while( soilTypesIterator.hasNext() )
+    {
+      final String soilType = soilTypesIterator.next();
+      final Map<String, Double[]> layers = m_soilTypes.get( soilType );
+      buffer.append( String.format( Locale.US, "%-10s%4d\n", soilType, layers.size() ) ); //$NON-NLS-1$
+      final Iterator<String> layersIterator = layers.keySet().iterator();
+      while( layersIterator.hasNext() )
+      {
+        final String layer = layersIterator.next();
+        final Double[] values = layers.get( layer );
+        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", layer, values[0], values[1] ) ); //$NON-NLS-1$
       }
     }
-
-    final List<Hydrotop> hydrotops = (List<Hydrotop>) m_conf.getHydrotopeWorkspace().getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
-
-    final Feature rootFeature = paraWorkspace.getRootFeature();
-    final List<Feature> list = (List<Feature>) rootFeature.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
-    asciiBuffer.getBodtypBuffer().append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
-    final Iterator<Feature> iter = list.iterator();
-    final List<String> names = new ArrayList<String>();
-    while( iter.hasNext() )
-    {
-      final Feature bodentypFE = iter.next();
-      final String bodenTypName = bodentypFE.getName();
-      names.add( bodenTypName );
-      // TODO: nur die schreiben, die auch in Hydrotopdatei vorkommen
-      // if( asciiBuffer.writeFeature( bodentypFE ) )
-      writeFeature( asciiBuffer, paraWorkspace, bodentypFE );
-    }
-
-    // needed for suds, fixed values temporarily...
-    /*
-     * mrs 4 mulde 4.0 0.0 rein 3.0 0.0 filter 7.0 0.0 base 1.0 0.0 grs 3 GR-stau 2.0 0.0 Substr 2.0 0.0 Drain 1.0 0.0
-     * mulde_b 2 mulde 4.0 0.0 rein 3.0 0.0
-     */
-    if( !names.contains( "mrs" ) )
-      asciiBuffer.getBodtypBuffer().append( "mrs          4\nmulde   4.0 0.0\nrein    3.0 0.0\nfilter  7.0 0.0\nbase    1.0 0.0\n" );
-    if( !names.contains( "grs" ) )
-      asciiBuffer.getBodtypBuffer().append( "grs          3\nGR-stau 2.0 0.0\nSubstr  2.0 0.0\nDrain   1.0 0.0\n" );
-    if( !names.contains( "mulde_b" ) )
-      asciiBuffer.getBodtypBuffer().append( "mulde_b      2\nmulde   4.0 0.0\nrein    3.0 0.0\n" );
   }
 
-  private void writeFeature( final AsciiBuffer asciiBuffer, final GMLWorkspace paraWorkspace, final Feature feature ) throws Exception
+  /**
+   * Adds the suds soil types to the existing set. If the type with the same name was already defined, it will be
+   * overwritten.
+   */
+  private final void addSudsSoilLayers( )
   {
-    final StringBuffer buffer = asciiBuffer.getBodtypBuffer();
-    // 1
-    final List<Feature> bodartList = (List<Feature>) feature.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
-    buffer.append( String.format( Locale.US, "%-10s%4d\n", feature.getName(), bodartList.size() ) ); //$NON-NLS-1$
-    // 2
-    final Iterator<Feature> iter = bodartList.iterator();
-    while( iter.hasNext() )
-    {
-      final Feature fe = iter.next();
+    // add Greenroof type
+    final Map<String, Double[]> grsLayers = new LinkedHashMap<String, Double[]>();
+    grsLayers.put( "GR-stau", new Double[] { 2.0, 0.0 } ); //$NON-NLS-1$
+    grsLayers.put( "Substr", new Double[] { 2.0, 0.0 } ); //$NON-NLS-1$
+    grsLayers.put( "Drain", new Double[] { 1.0, 0.0 } ); //$NON-NLS-1$
+    m_soilTypes.put( "grs", grsLayers ); //$NON-NLS-1$
 
-      final Feature bodArtLink = paraWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) );
-      if( bodArtLink != null )
-      {
-        final Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
-        if( xretProp )
-          buffer.append( String.format( Locale.US, "%-8s%.3f 1.0\n", bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ) ) ); //$NON-NLS-1$
-        else
-          buffer.append( String.format( Locale.US, "%-8s%.3f 0.0\n", bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ) ) ); //$NON-NLS-1$
-      }
-      else
-      {
-        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", feature.getId(), fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) ) ); //$NON-NLS-1$
-      }
+    final Map<String, Double> mrsTypes = new LinkedHashMap<String, Double>();
+    // default is 4.0
+    mrsTypes.put( "mrs", 4.0 ); //$NON-NLS-1$
+    mrsTypes.put( "mrs_30", 3.0 ); //$NON-NLS-1$
+    mrsTypes.put( "mrs_60", 6.0 ); //$NON-NLS-1$
+    mrsTypes.put( "mrs_80", 8.0 ); //$NON-NLS-1$
+
+    final Map<String, Double> muldeTypes = new LinkedHashMap<String, Double>();
+    // default is 4.0
+    muldeTypes.put( "mulde_b", 4.0 ); //$NON-NLS-1$
+    muldeTypes.put( "mulde_30", 3.0 ); //$NON-NLS-1$
+    muldeTypes.put( "mulde_60", 6.0 ); //$NON-NLS-1$
+    muldeTypes.put( "mulde_80", 8.0 ); //$NON-NLS-1$
+
+    // add Mulde-Rigole types
+    for( final String typeName : mrsTypes.keySet() )
+    {
+      final Map<String, Double[]> layers = new LinkedHashMap<String, Double[]>();
+      layers.put( "mulde", new Double[] { mrsTypes.get( typeName ), 0.0 } ); //$NON-NLS-1$
+      layers.put( "rein", new Double[] { 3.0, 0.0 } ); //$NON-NLS-1$
+      layers.put( "filter", new Double[] { 7.0, 0.0 } ); //$NON-NLS-1$
+      layers.put( "base", new Double[] { 1.0, 0.0 } ); //$NON-NLS-1$
+      m_soilTypes.put( typeName, layers );
     }
+
+    // add Mulde types
+    for( final String typeName : muldeTypes.keySet() )
+    {
+      final Map<String, Double[]> layers = new LinkedHashMap<String, Double[]>();
+      layers.put( "mulde", new Double[] { muldeTypes.get( typeName ), 0.0 } ); //$NON-NLS-1$
+      layers.put( "rein", new Double[] { 3.0, 0.0 } ); //$NON-NLS-1$
+      m_soilTypes.put( typeName, layers );
+    }
+  }
+
+  /**
+   * Returns the predefined soil type name for given swale
+   */
+  public static final String getSwaleSoiltypeName( final IAbstractSwale swale ) throws Exception
+  {
+    final Double profileThickness = swale.getProfileThickness();
+    if( swale instanceof ISwale )
+    {
+      if( profileThickness == null )
+        return "mulde_b";
+      if( profileThickness == 3.0 )
+        return "mulde_30";
+      if( profileThickness == 6.0 )
+        return "mulde_60";
+      if( profileThickness == 8.0 )
+        return "mulde_80";
+      return "mulde_b";
+    }
+    if( swale instanceof ISwaleInfiltrationDitch )
+    {
+      if( profileThickness == null )
+        return "mrs";
+      if( profileThickness == 3.0 )
+        return "mrs_30";
+      if( profileThickness == 6.0 )
+        return "mrs_60";
+      if( profileThickness == 8.0 )
+        return "mrs_80";
+      return "mrs";
+    }
+    throw new Exception( "Unknown swale type, class: " + swale.getClass().getCanonicalName() );
   }
 }
