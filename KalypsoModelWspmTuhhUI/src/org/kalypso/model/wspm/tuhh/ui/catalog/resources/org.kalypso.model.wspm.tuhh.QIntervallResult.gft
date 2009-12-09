@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<gft:featureview typename="tuhh:WPointsObservation" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:om="http://www.opengis.net/om" xmlns:ogc="http://www.opengis.net/ogc">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+	<gft:label property="gml:name" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:name"  style="SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label property="gml:description" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:description"  style="SWT.MULTI | SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL"
+			heightHint="30" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label property="tuhh:station" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="tuhh:station"  style="SWT.BORDER">
+		<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:format>%.4f</gft:format>		
+	</gft:text>
+	<gft:label property="tuhh:slope" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="tuhh:slope"  style="SWT.BORDER">
+		<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:format>%.5f</gft:format>		
+	</gft:text>
+	<gft:extensioncontrol property="om:result"
+		extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+			verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+		<gft:param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+		<gft:param name="featureKeyName" value="theResultFeatureKey" />
+		<gft:param name="commands" value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+		<gft:param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+	</gft:extensioncontrol>
+
+	<gft:group style="SWT.V_SCROLL" text="Building-Parameter">
+		<gft:visibleOperation>
+			<ogc:Not>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>tuhh:buildingParameterMember</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</ogc:Not>
+		</gft:visibleOperation>
+		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+			verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" heightHint="200">
+			<gft:excludeOperation>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>tuhh:buildingParameterMember</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</gft:excludeOperation>
+		</gft:gridData>
+		<gft:gridLayout numColumns="1" />
+		<gft:tupleResult style="SWT.BORDER" property="tuhh:buildingParameterMember">
+			<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+				verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+			<gft:toolbar>
+				<gft:menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly"/>
+			</gft:toolbar>
+		</gft:tupleResult>
+	</gft:group>
+
+</gft:featureview>
+
