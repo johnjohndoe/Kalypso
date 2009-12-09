@@ -54,7 +54,7 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( final IKalypsoTheme element : themes )
       {
-        if( element.getName().getKey().equals( "%MainMap.mapv.layer.damagePotential" ) ) //$NON-NLS-1$
+        if( element.getName().getKey().equals( "%SpecificDamagePotentialMap.gismapview.Schadenspotentiale" ) ) //$NON-NLS-1$
         {
           mapModell.activateTheme( element );
           break;
