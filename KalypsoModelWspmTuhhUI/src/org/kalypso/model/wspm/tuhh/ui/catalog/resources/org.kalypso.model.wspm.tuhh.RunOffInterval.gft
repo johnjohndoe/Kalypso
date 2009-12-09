@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<gft:featureview typename="tuhh:RunOffInterval" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc">
+
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true">
+	</gft:gridData>
+	<gft:gridLayout numColumns="4"></gft:gridLayout>
+	<gft:label property="tuhh:minimalRunOff" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+		</gft:gridData>
+	</gft:label>
+	<gft:text editable="true" property="tuhh:minimalRunOff" style="SWT.BORDER">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"></gft:gridData>
+		<gft:format>%.3f</gft:format>
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+		</gft:gridData>
+	</gft:label>
+	<gft:validatorlabel property="tuhh:minimalRunOff" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"></gft:gridData>
+	</gft:validatorlabel>
+	<gft:label property="tuhh:runOffStep" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+		</gft:gridData>
+	</gft:label>
+	<gft:text editable="true" property="tuhh:runOffStep" style="SWT.BORDER">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"></gft:gridData>
+		<gft:format>%.3f</gft:format>
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+		</gft:gridData>
+	</gft:label>
+	<gft:validatorlabel property="tuhh:runOffStep" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"></gft:gridData>
+	</gft:validatorlabel>
+	<gft:label property="tuhh:maximalRunOff" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+		</gft:gridData>
+	</gft:label>
+	<gft:text editable="true" property="tuhh:maximalRunOff" style="SWT.BORDER">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"></gft:gridData>
+		<gft:format>%.3f</gft:format>
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+		</gft:gridData>
+	</gft:label>
+	<gft:validatorlabel property="tuhh:maximalRunOff" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"></gft:gridData>
+	</gft:validatorlabel>
+
+</gft:featureview>
