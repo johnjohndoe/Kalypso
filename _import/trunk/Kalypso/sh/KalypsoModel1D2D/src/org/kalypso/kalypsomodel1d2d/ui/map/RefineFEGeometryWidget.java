@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
@@ -72,7 +73,9 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
+import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -86,7 +89,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -99,11 +101,7 @@ import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.refinement.Refinement;
-import org.openjump.core.graph.delauneySimplexInsert.DTriangulationForJTS;
-
-import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * This widget is used in order to refine an existing 2D mesh by drawing a refinement line. The user gets a preview
@@ -117,11 +115,13 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RefineFEGeometryWidget extends AbstractWidget
 {
+  private boolean m_modePolygon = false;
+
   private Point m_currentMapPoint;
 
   private PointSnapper m_pointSnapper;
 
-  private LineGeometryBuilder m_lineBuilder = null;
+  private IGeometryBuilder m_geometryBuilder = null;
 
   private IKalypsoFeatureTheme m_theme;
 
@@ -164,12 +164,16 @@ public class RefineFEGeometryWidget extends AbstractWidget
     m_theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
+    final String modeTooltip = "\n    '<Space>': Change mode " + (m_modePolygon ? "(Polygon)" : "(Line)");
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
 
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
-    m_lineBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
+    if( m_modePolygon )
+      m_geometryBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
+    else
+      m_geometryBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
     m_pointSnapper = new PointSnapper( m_model1d2d, mapPanel );
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
@@ -185,7 +189,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "rawtypes" })
   @Override
   public void leftPressed( final Point p )
   {
@@ -193,7 +197,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     try
     {
-      if( m_lineBuilder == null )
+      if( m_geometryBuilder == null )
         return;
 
       final IMapPanel mapPanel = getMapPanel();
@@ -205,12 +209,12 @@ public class RefineFEGeometryWidget extends AbstractWidget
       {
         final GM_Point point = ((IFE1D2DNode) newNode).getPoint();
         m_currentMapPoint = MapUtilities.retransform( getMapPanel(), point );
-        m_lineBuilder.addPoint( point );
+        m_geometryBuilder.addPoint( point );
       }
       else
       {
         m_currentMapPoint = p;
-        m_lineBuilder.addPoint( MapUtilities.transform( mapPanel, p ) );
+        m_geometryBuilder.addPoint( MapUtilities.transform( mapPanel, p ) );
       }
       mapPanel.setCursor( Cursor.getDefaultCursor() );
 
@@ -224,7 +228,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "rawtypes" })
   @Override
   public void moved( final Point p )
   {
@@ -279,14 +283,13 @@ public class RefineFEGeometryWidget extends AbstractWidget
     final Rectangle bounds = mapPanel.getScreenBounds();
     final GeoTransform projection = mapPanel.getProjection();
 
-    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.3" ) ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
       m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 80 ), g, bounds );
 
-    if( m_lineBuilder != null )
-      m_lineBuilder.paint( g, projection, m_currentMapPoint );
+    if( m_geometryBuilder != null )
+      m_geometryBuilder.paint( g, projection, m_currentMapPoint );
     try
     {
       if( m_objects != null )
@@ -299,7 +302,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   private void drawRefinement( final Graphics g, final GeoTransform projection ) throws CoreException, GM_Exception
   {
     /* Paint a rect. */
@@ -336,15 +339,20 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
+    if( e.getKeyCode() == KeyEvent.VK_SPACE )
+    {
+      m_modePolygon = !m_modePolygon;
       reinit();
-    if( e.getKeyCode() == KeyEvent.VK_ENTER )
+    }
+    else if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
+      reinit();
+    else if( e.getKeyCode() == KeyEvent.VK_ENTER )
       convertRefinementToModel();
     else
       super.keyPressed( e );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
   private void convertRefinementToModel( )
   {
     if( m_objects == null )
@@ -393,7 +401,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   private List<Feature> reselectFeatures( final List<GM_Point> centroidList )
   {
     final List<Feature> refineList = new ArrayList<Feature>();
@@ -417,7 +425,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     return refineList;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   private List<GM_Point> getCentroids( final GM_Object[] objects )
   {
     final List<GM_Point> centroidList = new ArrayList<GM_Point>();
@@ -441,12 +449,12 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @Override
   public void doubleClickedLeft( final Point p )
   {
-    if( m_lineBuilder != null )
+    if( m_geometryBuilder != null )
     {
       try
       {
-        final GM_Curve curve = (GM_Curve) m_lineBuilder.finish();
-        finishLine( curve );
+        final GM_Object geom = m_geometryBuilder.finish();
+        finishGeometry( geom );
       }
       catch( final Exception e )
       {
@@ -460,8 +468,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings("unchecked")
-  private void finishLine( final GM_Curve curve ) throws GM_Exception
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  private void finishGeometry( final GM_Object geom ) throws GM_Exception
   {
     m_warning = false;
 
@@ -471,9 +479,9 @@ public class RefineFEGeometryWidget extends AbstractWidget
       return;
 
     /* select features */
-    final String crs = curve.getCoordinateSystem();
+    final String crs = geom.getCoordinateSystem();
 
-    final List<Feature> selectedFeatures = doSelect( curve, m_featureList );
+    final List<Feature> selectedFeatures = doSelect( geom, m_featureList );
 
     final List<GM_Surface> surfaceList = new ArrayList<GM_Surface>();
 
@@ -482,10 +490,10 @@ public class RefineFEGeometryWidget extends AbstractWidget
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
       {
         // get the geometry
-        final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
-        if( geom instanceof GM_Surface )
+        final GM_Object selectedGeom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
+        if( selectedGeom instanceof GM_Surface )
         {
-          final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) geom;
+          final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) selectedGeom;
 
           surfaceList.add( surface );
         }
@@ -501,36 +509,38 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     final Refinement refinement = new Refinement();
 
-    final GM_Object[] refinements = refinement.doRefine( multiSurfaces, curve );
+    final GM_Object[] refinements = refinement.doRefine( multiSurfaces, geom );
 
     final List<GM_Surface> refinementList = new ArrayList<GM_Surface>();
 
-    for( final GM_Object geom : refinements )
+    for( final GM_Object refineGeom : refinements )
     {
-      if( geom instanceof GM_Surface )
+      if( refineGeom instanceof GM_Surface )
       {
-        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) geom;
+        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) refineGeom;
 
         for( final GM_SurfacePatch surfacePatch : surface )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
           if( ring.length > 5 )
           {
-            /* split all elements that have more than 4 corners */
-            // -> right now: simple polygon triangulation
-            // make a polygon from the curves (polygon must be oriented ccw)
-            final List<com.vividsolutions.jts.geom.Point> pointList = new ArrayList<com.vividsolutions.jts.geom.Point>();
-
-            for( final GM_Position position : ring )
-            {
-              final Coordinate coord = JTSAdapter.export( position );
-              final com.vividsolutions.jts.geom.GeometryFactory gf = new com.vividsolutions.jts.geom.GeometryFactory();
-              final com.vividsolutions.jts.geom.Point jtspoint = gf.createPoint( coord );
-              pointList.add( jtspoint );
-            }
-            final DTriangulationForJTS triangulationForJTS = new DTriangulationForJTS( pointList, null );
-            final List<GM_Triangle> triangles = triangulationForJTS.getInnerTriangles( crs );
-            triangulationForJTS.getAllTrianglesWithZValues( ring, crs );
+            final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( surface, surface.getCoordinateSystem(), false );
+            // /* split all elements that have more than 4 corners */
+            // // -> right now: simple polygon triangulation
+            // // make a polygon from the curves (polygon must be oriented ccw)
+            // final List<com.vividsolutions.jts.geom.Point> pointList = new
+            // ArrayList<com.vividsolutions.jts.geom.Point>();
+            //
+            // for( final GM_Position position : ring )
+            // {
+            // final Coordinate coord = JTSAdapter.export( position );
+            // final com.vividsolutions.jts.geom.GeometryFactory gf = new com.vividsolutions.jts.geom.GeometryFactory();
+            // final com.vividsolutions.jts.geom.Point jtspoint = gf.createPoint( coord );
+            // pointList.add( jtspoint );
+            // }
+            // final DTriangulationForJTS triangulationForJTS = new DTriangulationForJTS( pointList, null );
+            // final List<GM_Triangle> triangles = triangulationForJTS.getInnerTriangles( crs );
+            // triangulationForJTS.getAllTrianglesWithZValues( ring, crs );
             for( final GM_Triangle triangle : triangles )
               refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
           }
@@ -549,7 +559,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     // create new GM_Objects
     m_objects = refinementList.toArray( new GM_Surface[refinementList.size()] );
 
-    m_lineBuilder.reset();
+    m_geometryBuilder.reset();
 
     getMapPanel().repaintMap();
   }
@@ -571,36 +581,28 @@ public class RefineFEGeometryWidget extends AbstractWidget
     return selectedFeatures;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   private static List<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry )
   {
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
 
-    if( selectGeometry instanceof GM_Curve )
+    final GM_Envelope envelope = selectGeometry.getEnvelope();
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+    final List result = featureList.query( envelope, null );
+
+    for( final Object object : result )
     {
-      final GM_Curve curve = (GM_Curve) selectGeometry;
+      final Feature feature = FeatureHelper.getFeature( workspace, object );
 
-      final GM_Envelope envelope = curve.getEnvelope();
-      final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
-      final List result = featureList.query( envelope, null );
-
-      for( final Object object : result )
+      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
       {
-        final Feature feature = FeatureHelper.getFeature( workspace, object );
-
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
+        final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
+        if( geom != null )
         {
-          final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
-          if( geom != null )
+          final GM_Object intersection = selectGeometry.intersection( geom );
+          if( intersection != null )
           {
-            final GM_Object intersection = curve.intersection( geom );
-            if( intersection != null )
-            {
-              if( intersection instanceof GM_Curve )
-                selectedFeatures.add( feature );
-              else if( intersection instanceof GM_MultiCurve )
-                selectedFeatures.add( feature );
-            }
+            selectedFeatures.add( feature );
           }
         }
       }
@@ -609,7 +611,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     return selectedFeatures;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "rawtypes" })
   private Object checkNewNode( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
