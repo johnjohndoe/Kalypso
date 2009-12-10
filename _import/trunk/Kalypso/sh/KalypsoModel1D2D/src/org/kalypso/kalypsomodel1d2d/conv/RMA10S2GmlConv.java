@@ -295,7 +295,13 @@ public class RMA10S2GmlConv
         final int id = Integer.parseInt( lStringParser.getSub( 1 ) );
         final double easting = Double.parseDouble( lStringParser.getSub( 2 ) );
         final double northing = Double.parseDouble( lStringParser.getSub( 3 ) );
-        double elevation = Double.parseDouble( lStringParser.getSub( 4 ) );
+        double elevation = Double.NaN;
+        try{
+          elevation = Double.parseDouble( lStringParser.getSub( 4 ) );
+        }
+        catch (Exception e) {
+          // also allow the NaN in result file
+        }
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
         if( elevation == -9999 )
           elevation = Double.NaN;
@@ -351,12 +357,11 @@ public class RMA10S2GmlConv
   private void interpreteArcLine( final String line )
   {
     RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" );
-    // RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
-    lStringParser.getFirstSub();
     try
     {
       if( lStringParser.getIntSepCounter() == 7 )
       {
+        lStringParser.getFirstSub();
         final int id = Integer.parseInt( lStringParser.getNextSub() );
         final int node1ID = Integer.parseInt( lStringParser.getNextSub() );
         final int node2ID = Integer.parseInt( lStringParser.getNextSub() );
@@ -368,6 +373,7 @@ public class RMA10S2GmlConv
       else if( lStringParser.getIntSepCounter() == 6 )
       {
         {
+          lStringParser.getFirstSub();
           final int id = Integer.parseInt( lStringParser.getNextSub() );
           final int node1ID = Integer.parseInt( lStringParser.getNextSub() );
           final int node2ID = Integer.parseInt( lStringParser.getNextSub() );
@@ -390,6 +396,7 @@ public class RMA10S2GmlConv
     try
     {
       {
+        lStringParser.getFirstSub();
         final int id = Integer.parseInt( lStringParser.getNextSub() );
         final int dry = Integer.parseInt( lStringParser.getNextSub() );
         final double value1 = Double.parseDouble( lStringParser.getNextSub() );
