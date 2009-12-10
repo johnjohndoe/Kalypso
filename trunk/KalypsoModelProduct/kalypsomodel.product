@@ -59,7 +59,7 @@
       <plugin id="de.openali.odysseus.chart.ui"/>
       <plugin id="de.renew.workflow.connector"/>
       <plugin id="de.renew.workflow.model"/>
-      <plugin id="javax.servlet" version="2.5.0"/>
+      <plugin id="javax.servlet"/>
       <plugin id="javax.servlet.jsp"/>
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.commons.el"/>
@@ -96,6 +96,7 @@
       <plugin id="org.eclipse.ecf"/>
       <plugin id="org.eclipse.ecf.filetransfer"/>
       <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer"/>
       <plugin id="org.eclipse.ecf.ssl" fragment="true"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
@@ -176,6 +177,7 @@
       <plugin id="org.kalypso.KalypsoManualWSPM"/>
       <plugin id="org.kalypso.ModelSimulationBase"/>
       <plugin id="org.kalypso.NACalcJob"/>
+      <plugin id="org.kalypso.activities"/>
       <plugin id="org.kalypso.afgui"/>
       <plugin id="org.kalypso.auth"/>
       <plugin id="org.kalypso.commons"/>
