@@ -23,6 +23,7 @@
       !real variables 
       REAL          :: cwr_line
       REAL (KIND=8) :: lambda, NikuradseRoughness
+      real (kind=8) :: porosity, slotDepth
       REAL (KIND=8) :: tmpvx,tmpvy,tmpdepth,tmpwl
       REAL (KIND=8) :: fliesstiefe, waspi
       REAL (KIND=8) :: d1,d3,d1v,d3v,d2_kind8
@@ -158,8 +159,19 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
      &            dummy(1), dummy(2), dummy(3),dset)
 
       !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
-      if (idnopt /= 0 .and. di(no) < akp(nod) * adb(nod)) then
-        lambda = lambda * (ort (lineimat (TLine, k + 1), 12)**2 - 1.) * (akp(nod) * adb(nod) - di(no)) / (akp(nod) * adb(nod)) + 1.0
+      if (idnopt /= 0) then
+        !corner nodes
+        if (no == 0 .or. no == 2) then
+          porosity = akp (nod)
+          slotDepth = adb (nod)
+        else
+          porosity = (akp (line(Tline,k)) + akp (line(Tline,k+2))) * 0.5
+          slotDepth= (adb (line(Tline,k)) + adb (line(Tline,k+2))) * 0.5
+        endif
+          
+        if (di(no) < porosity * slotDepth) then
+          lambda = lambda * (ort (lineimat (TLine, k + 1), 12)**2 - 1.) * (porosity * slotDepth - di(no)) / (porosity * slotDepth) + 1.0
+        endif
       end if
 
       !Conveyance represents the Conveyance factor of the element part.
