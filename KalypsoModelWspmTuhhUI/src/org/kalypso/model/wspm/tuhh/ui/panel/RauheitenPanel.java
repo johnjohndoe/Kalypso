@@ -288,7 +288,7 @@ public class RauheitenPanel extends AbstractProfilView
           return;
 
         final int i_left = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
-        final int i_rechts = profil.getPoints().length - 1;
+        final int i_rechts = profil.getPoints().length;
         setValues( i_left, i_rechts, value );
       }
     } );
