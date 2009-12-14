@@ -7,6 +7,7 @@ import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -33,12 +34,14 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     if( m_data == null )
       return;
     m_data.open();
-
+    final IObservation<TupleResult> obs = m_data.getObservation();
+    if( obs == null )
+      return;
     final PointFigure pf = getPointFigure();
     final IPointStyle ps = pf.getStyle();
     final FullRectangleFigure rf = new FullRectangleFigure();
     rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
-    for( int i = 0; i < m_data.getObservation().getResult().size(); i++ )
+    for( int i = 0; i < obs.getResult().size(); i++ )
     {
       final Rectangle rect = getScreenRect( i );
       if( rect != null )
@@ -67,7 +70,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Object ok = tr.get( index ).getValue( targetOKComponentIndex );
     if( commentIndex < 0 )
       return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
-    return String.format( TOOLTIP_FORMAT + "%n%s", new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit ,tr.get(index).getValue( commentIndex )} );
+    return String.format( TOOLTIP_FORMAT + "%n%s", new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit,
+        tr.get( index ).getValue( commentIndex ) } );
 
   }
 

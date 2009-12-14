@@ -2,15 +2,15 @@
 <ChartConfiguration xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd" xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     
     <Chart id="ls">
-        <Title>%title%</Title>
-        <Description>%description%</Description>
+        <Title>%TITLE%</Title>
+        <Description>%TITLE%</Description>
         <Layers>
             <Layer id="soil">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="Daten/%GMLFILENAME%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
-                        <Parameter value="root" name="observationId"/>
+                        <Parameter value="LengthSectionResult" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId"/>
                     </Parameters>
@@ -92,12 +92,41 @@
                   </Styles>
             </Layer>
             
+            <Layer id="v_m" visible="false">
+                <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+                    <Parameters>
+                        <Parameter value="Daten/%GMLFILENAME%" name="href"/>
+                        <Parameter value="" name="gxlpath"/>
+                        <Parameter value="LengthSectionResult" name="observationId"/>
+                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
+                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId"/>
+                    </Parameters>    
+                </Provider>
+                <Title/>
+                <Description/>
+                
+                <MapperRefs>
+                    <DomainAxisRef ref="Station_Axis"/>
+                    <TargetAxisRef ref="NN_Axis"/>
+                </MapperRefs>
+                <Styles>
+                    <LineStyle role="line">
+                        <Title/>
+                        <Width>3</Width>
+                        <LineColor>80aa00</LineColor>
+                    </LineStyle>
+                    <PointStyle role="point" isVisible="false">
+                        <Title/>
+                    </PointStyle>
+                  </Styles>
+            </Layer>
+            
             <Layer id="Boe_li" visible="false">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>
                         <Parameter value="Daten/%GMLFILENAME%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
-                        <Parameter value="root" name="observationId"/>
+                        <Parameter value="LengthSectionResult" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId"/>
                     </Parameters>            
@@ -128,7 +157,7 @@
                     <Parameters>
                         <Parameter value="Daten/%GMLFILENAME%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
-                        <Parameter value="root" name="observationId"/>
+                        <Parameter value="LengthSectionResult" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId"/>
                     </Parameters>            
@@ -158,7 +187,7 @@
                     <Parameters>
                         <Parameter value="Daten/%GMLFILENAME%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
-                        <Parameter value="root" name="observationId"/>
+                        <Parameter value="LengthSectionResult" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId"/>
                     </Parameters>            
@@ -191,9 +220,9 @@
                     <Parameters>
                         <Parameter value="Daten/%GMLFILENAME%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
-                        <Parameter value="root" name="observationId"/>
+                        <Parameter value="LengthSectionResult" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Weir_OK" name="targetComponentId"/>
+                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK" name="targetComponentId"/>
                     </Parameters>            
                 </Provider>
                 <Description/>
@@ -224,7 +253,7 @@
                     <Parameters>
                         <Parameter value="Daten/%GMLFILENAME%" name="href"/>
                         <Parameter value="" name="gxlpath"/>
-                        <Parameter value="root" name="observationId"/>
+                        <Parameter value="LengthSectionResult" name="observationId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
                         <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId"/>
                     </Parameters>    
@@ -272,7 +301,7 @@
                       <LineColor>0000ff</LineColor>
                   </LineStyle>
                   <PointStyle role="point" isVisible="false">
-                      <Title></Title>
+                      <Title/>
                   </PointStyle>
                 </Styles>
             </Layer>
@@ -301,7 +330,7 @@
                         <LineColor>ff0000</LineColor>
                     </LineStyle>
                     <PointStyle role="point" isVisible="false">
-                        <Title></Title>
+                        <Title/>
                     </PointStyle>
                 
                 </Styles>
@@ -315,7 +344,8 @@
                 <Label>Station [km]</Label>
                 <Direction>NEGATIVE</Direction>
                 <Position>BOTTOM</Position>
-                <NumberRange></NumberRange>
+                <PreferredAdjustment before="3" range="94" after="3"></PreferredAdjustment>
+                <NumberRange/>
                 <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
             <Axis id="M3S_Axis">
@@ -324,7 +354,8 @@
                 <Label>Abfluss [m³/s]</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>RIGHT</Position>
-                <NumberRange></NumberRange> 
+                <NumberRange/> 
+                <PreferredAdjustment before="10" range="80" after="10"></PreferredAdjustment>
                 <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
             <Axis id="NN_Axis">
@@ -333,7 +364,8 @@
                 <Label>H�he [NN+m]</Label>
                 <Direction>POSITIVE</Direction>
                 <Position>LEFT</Position>
-                <NumberRange></NumberRange>
+                <PreferredAdjustment before="3" range="94" after="3"></PreferredAdjustment>
+                <NumberRange/>
                 <RendererRef ref="NumberAxisRenderer"/>
             </Axis>
         </Mappers>
