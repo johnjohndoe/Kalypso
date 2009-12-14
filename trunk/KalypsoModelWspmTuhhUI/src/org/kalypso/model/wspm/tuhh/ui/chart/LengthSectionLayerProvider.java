@@ -66,13 +66,19 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
     final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK.equals( targetComponentName ) )
     {
-      final LengthSectionBridgeLayer layer = new LengthSectionBridgeLayer(getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+      final LengthSectionBridgeLayer layer = new LengthSectionBridgeLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
       layer.setVisible( true );
       return layer;
     }
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
     {
-      final LengthSectionWeirLayer layer = new LengthSectionWeirLayer(getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+      final LengthSectionWeirLayer layer = new LengthSectionWeirLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+      layer.setVisible( true );
+      return layer;
+    }
+    if( IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF.equals( targetComponentName ) )
+    {
+      final LengthSectionRunOffLayer layer = new LengthSectionRunOffLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
       layer.setVisible( true );
       return layer;
     }
