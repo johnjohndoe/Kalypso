@@ -91,7 +91,7 @@ public class NA_PreprocessingJob extends AbstractInternalStatusJob implements IS
           {
             final File differenceFolder = new File( tmpdir, "Difference" );
             differenceFolder.mkdirs();
-            final File dummyFile = new File( differenceFolder, "dummy.dmy" );
+            final File dummyFile = new File( differenceFolder, "control.ctl" );
             dummyFile.createNewFile();
           }
         }

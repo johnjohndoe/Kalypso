@@ -122,8 +122,14 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
     if( "PLC".equals( calculationNature ) )
     {
-      File statusQuoResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "StatusQuoResultsFolder" ) ); //$NON-NLS-1$
-      File calculatedResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "CalculatedResultsFolder" ) ); //$NON-NLS-1$
+      final File statusQuoResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "StatusQuoResultsFolder" ) ); //$NON-NLS-1$
+      final File calculatedResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "CalculatedResultsFolder" ) ); //$NON-NLS-1$
+
+      if( !calculatedResultsFolder.isDirectory() || !statusQuoResultsFolder.isDirectory() )
+      {
+        setStatus( STATUS.ERROR, "Input data not available." );
+        return;
+      }
 
       try
       {
@@ -138,34 +144,14 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
         final IAxis[] axes1 = obs1.getAxisList();
         final IAxis[] axes2 = obs2.getAxisList();
-        final IAxis idAxis1 = ObservationUtilities.findAxisByClass( axes1, Integer.class );
-        final IAxis idAxis2 = ObservationUtilities.findAxisByClass( axes2, Integer.class );
+        final IAxis idAxis1 = ObservationUtilities.findAxisByType( axes1, TimeserieConstants.TYPE_NODEID );
+        final IAxis idAxis2 = ObservationUtilities.findAxisByType( axes2, TimeserieConstants.TYPE_NODEID );
         final IAxis dateAxis1 = ObservationUtilities.findAxisByClass( axes1, Date.class );
         final IAxis dateAxis2 = ObservationUtilities.findAxisByClass( axes2, Date.class );
         final IAxis valueAxis1 = ObservationUtilities.findAxisByClass( axes1, Double.class );
         final IAxis valueAxis2 = ObservationUtilities.findAxisByClass( axes2, Double.class );
-        final IAxis[] stringAxes1 = ObservationUtilities.findAxesByClass( axes1, String.class );
-        final IAxis[] stringAxes2 = ObservationUtilities.findAxesByClass( axes2, String.class );
-        IAxis pathAxis1 = null;
-        IAxis pathAxis2 = null;
-        for( int i = 0; i < stringAxes1.length; i++ )
-        {
-          final IAxis axis = stringAxes1[i];
-          if( TimeserieConstants.TYPE_PATH.equals( axis.getType() ) )
-          {
-            pathAxis1 = axis;
-            break;
-          }
-        }
-        for( int i = 0; i < stringAxes2.length; i++ )
-        {
-          final IAxis axis = stringAxes2[i];
-          if( TimeserieConstants.TYPE_PATH.equals( axis.getType() ) )
-          {
-            pathAxis2 = axis;
-            break;
-          }
-        }
+        IAxis pathAxis1 = ObservationUtilities.findAxisByType( axes1, TimeserieConstants.TYPE_PATH );
+        final IAxis pathAxis2 = ObservationUtilities.findAxisByType( axes2, TimeserieConstants.TYPE_PATH );
         if( pathAxis2 == null )
         {
           Logger.getAnonymousLogger().log( Level.SEVERE, "Unable to detect node result path. Postprocessing aborted." );
@@ -215,11 +201,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         final File outputSubfolderCalculated = new File( tmpdir, "sudsNodes" ); //$NON-NLS-1$
         outputSubfolderSteady.mkdirs();
         outputSubfolderCalculated.mkdirs();
-        if( !calculatedResultsFolder.isDirectory() || !statusQuoResultsFolder.isDirectory() )
-        {
-          setStatus( STATUS.ERROR, "Input folder(s) does not exists." );
-          return;
-        }
+
+        final List<Feature> affectedNodes = new ArrayList<Feature>();
 
         for( final Object n : nodeList )
         {
@@ -227,8 +210,13 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           String name = node.getName();
           if( name == null || name.length() == 0 )
             name = node.getId();
-          final File izFile = new File( statusQuoResultsFolder, izNodesPath.get( name ) );
-          final File calcFile = new File( calculatedResultsFolder, calculatedNodesPath.get( name ) );
+          final String izNodePath = izNodesPath.get( name );
+          final String calculatedNodePath = calculatedNodesPath.get( name );
+          if( izNodePath == null || calculatedNodePath == null )
+            continue;
+          affectedNodes.add( node );
+          final File izFile = new File( statusQuoResultsFolder, izNodePath );
+          final File calcFile = new File( calculatedResultsFolder, calculatedNodePath );
           final File izFolder = new File( outputSubfolderSteady, name );
           final File calcFolder = new File( outputSubfolderCalculated, name );
           izFolder.mkdirs();
@@ -290,9 +278,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
         /* Now create some features of this type */
         int fid = 0;
-        for( final Object n : nodeList )
+        for( final Feature node : affectedNodes )
         {
-          final Feature node = (Feature) n;
           final List<Object> dataList = new ArrayList<Object>();
           dataList.add( node.getDefaultGeometryPropertyValue() );
           dataList.add( node.getName() );
@@ -302,8 +289,11 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           final Double riverKm = (Double) node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
           dataList.add( riverKm == null ? Double.NaN : riverKm );
 
-          final DischargeData izMax = izNodesMaxData.get( node.getName() );
-          final DischargeData calcMax = calcNodesMaxData.get( node.getName() );
+          String name = node.getName();
+          if( name == null || name.length() == 0 )
+            name = node.getId();
+          final DischargeData izMax = izNodesMaxData.get( name );
+          final DischargeData calcMax = calcNodesMaxData.get( name );
           if( izMax == null || calcMax == null )
             continue;
           dataList.add( izMax.getValue() );
@@ -326,7 +316,6 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + fid++, shapeFT, dataList.toArray() ); //$NON-NLS-1$
           workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
         }
-
         final File shapeFile = new File( tmpdir, "difference" ); //$NON-NLS-1$
         ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
 
