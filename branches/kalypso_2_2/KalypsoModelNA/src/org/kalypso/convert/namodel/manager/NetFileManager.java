@@ -55,6 +55,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
@@ -163,23 +165,23 @@ public class NetFileManager extends AbstractManager
       final Feature fe = getFeature( knot, nodeFT );
       if( izug > 0 ) // ZUGABE
       {
-        throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.8") ); //$NON-NLS-1$
+        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.8" ) ); //$NON-NLS-1$
         // TODO...
       }
       if( iabg > 0 ) // ABGABE
       {
-        throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.9") ); //$NON-NLS-1$
+        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.9" ) ); //$NON-NLS-1$
         // TODO...
       }
       if( iueb > 0 ) // UEBERLAUF
       {
-        throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.10") ); //$NON-NLS-1$
+        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.10" ) ); //$NON-NLS-1$
         // TODO...
       }
       if( izuf > 0 ) // ZUGABE oder ABGABE Kennlinie
       {
         if( izuf != 5 )
-          throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.11",izuf )); //$NON-NLS-1$
+          throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.11", izuf ) ); //$NON-NLS-1$
         line = reader.readLine();
         System.out.println( 6 + ": " + line ); //$NON-NLS-1$
         // da nur izuf==5 unterstuetzt wird ist zeile 6 nicht relevant
@@ -228,7 +230,7 @@ public class NetFileManager extends AbstractManager
 
       final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
       // NA_PEGEL
-      .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true );  //$NON-NLS-1$//$NON-NLS-2$
+      .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
       final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
       fePropMap.put( pt, pegelLink );
 
@@ -316,9 +318,9 @@ public class NetFileManager extends AbstractManager
    * generate NetElements for rrm model
    * 
    * @param workspace
-   *            the rrm workspace
+   *          the rrm workspace
    * @param synthNWorkspace
-   *            the synth precipitation workspace
+   *          the synth precipitation workspace
    * @return a HashMap containing Channel-FeatureID (key) and NetElements (value)
    */
   public HashMap<String, NetElement> generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
@@ -443,11 +445,16 @@ public class NetFileManager extends AbstractManager
         final Feature abflussFE = abflussFEs[j];
         final IRelationType rt2 = (IRelationType) abflussFE.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_NGWZU );
         final Feature downStreamCatchmentFE = workspace.resolveLink( abflussFE, rt2 );
+        if( downStreamCatchmentFE == null )
+        {
+          Logger.getAnonymousLogger().log( Level.WARNING, String.format( "Downstream catchment for #%s cannot be resolved.", abflussFE.getId() ) ); //$NON-NLS-1$
+          continue;
+        }
         final IRelationType rt3 = (IRelationType) downStreamCatchmentFE.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
         final Feature downStreamChannelFE = workspace.resolveLink( downStreamCatchmentFE, rt3 );
         if( downStreamChannelFE == null )
         {
-          System.out.println( " Catchment #" + downStreamCatchmentFE.getId() + " is not connected to network" ); //$NON-NLS-1$ //$NON-NLS-2$
+          Logger.getAnonymousLogger().log( Level.WARNING, String.format( "Catchment #%s is not connected to network.", downStreamCatchmentFE.getId() ) ); //$NON-NLS-1$
           continue;
         }
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
@@ -473,11 +480,11 @@ public class NetFileManager extends AbstractManager
    * writes netfile (ascii)
    * 
    * @param asciiBuffer
-   *            buffer for output buffering
+   *          buffer for output buffering
    * @param workspace
-   *            rrm workspace
+   *          rrm workspace
    * @param synthNWorkspace
-   *            workspace for synthetic precipitation
+   *          workspace for synthetic precipitation
    */
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
   {
