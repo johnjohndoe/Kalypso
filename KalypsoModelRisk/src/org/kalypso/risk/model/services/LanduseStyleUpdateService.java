@@ -171,7 +171,6 @@ public class LanduseStyleUpdateService extends Job
           else
             values.put( -key, riskZoneDefinition.getName() );
         }
-        RiskZonesThemeInfo.updateZonesDefinition( values );
 
         // final List<ColorMapEntry> valueDefinitionList = new ArrayList<ColorMapEntry>();
         // for( final IRiskZoneDefinition zoneDef : riskZonesList )
