@@ -147,7 +147,6 @@ public class LengthSectionDataBlock extends AbstractDataBlock
       pw.print( m_ys[i].toString() );
       pw.println();
     }
-    pw.println();
   }
 
   /**
