@@ -96,7 +96,7 @@ public class LngSink implements IProfilSink
       return null;
 
     dbh.setFirstLine( fl.length > 0 ? fl[0] : id );
-    dbh.setSecondLine( fl.length > 1 ? blanc200+ fl[1]  : "" );
+    dbh.setSecondLine( fl.length > 1 ? blanc200+ fl[1]+"@"  : "" );
     dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );
     return dbh;
   }
