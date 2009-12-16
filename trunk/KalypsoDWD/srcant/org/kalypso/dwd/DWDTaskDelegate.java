@@ -246,7 +246,7 @@ public class DWDTaskDelegate
           baseObservation = new SimpleObservation( axis );
 
         fc.initFilter( srcObs, baseObservation, targetContext.toURL() );
-        TimeserieUtils.setForecast( fc, startForecast, stopSim );
+        TimeserieUtils.setTargetForecast( fc, startForecast, stopSim );
 
         // ----------------
         // add all the metadata from task-parameters
