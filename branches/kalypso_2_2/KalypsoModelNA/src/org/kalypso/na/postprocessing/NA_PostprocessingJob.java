@@ -19,6 +19,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.schema.binding.suds.PlaningArea;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -49,7 +50,10 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * This class is the post processor for standard rainfall-runoff calculation. The behaviour of it depends on the
@@ -133,6 +137,10 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       try
       {
+        final GMLWorkspace sudsWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "sudsModel" ), null ); //$NON-NLS-1$
+        final PlaningArea planingArea = (PlaningArea) sudsWorkspace.getRootFeature().getProperty( PlaningArea.QNAME );
+        final Geometry planingAreaGeometry = JTSAdapter.export( planingArea.getGeometry() );
+
         /* read statistics: max discharge / date of max discharge */
         final Map<String, String> izNodesPath = new HashMap<String, String>();
         final Map<String, String> calculatedNodesPath = new HashMap<String, String>();
@@ -207,32 +215,36 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         for( final Object n : nodeList )
         {
           final Feature node = (Feature) n;
-          String name = node.getName();
-          if( name == null || name.length() == 0 )
-            name = node.getId();
-          final String izNodePath = izNodesPath.get( name );
-          final String calculatedNodePath = calculatedNodesPath.get( name );
-          if( izNodePath == null || calculatedNodePath == null )
-            continue;
-          affectedNodes.add( node );
-          final File izFile = new File( statusQuoResultsFolder, izNodePath );
-          final File calcFile = new File( calculatedResultsFolder, calculatedNodePath );
-          final File izFolder = new File( outputSubfolderSteady, name );
-          final File calcFolder = new File( outputSubfolderCalculated, name );
-          izFolder.mkdirs();
-          calcFolder.mkdirs();
-          FileUtils.copyFileToDirectory( izFile, izFolder );
-          FileUtils.copyFileToDirectory( calcFile, calcFolder );
-          final String izPath = String.format( Locale.US, "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
-          final String calcPath = String.format( Locale.US, "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
-          final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name );
-          final Obstableview table = NodeResultsComparisonViewCreator.createTableView( izPath, calcPath );
-          final File odtFile = new File( tmpdir, name + ".odt" );
-          final File ottFile = new File( tmpdir, name + ".ott" );
-          final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) ); //$NON-NLS-1$
-          final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) ); //$NON-NLS-1$
-          DiagViewUtils.saveDiagramTemplateXML( view, outDiag );
-          TableViewUtils.saveTableTemplateXML( table, outTable );
+          final Geometry geometry = JTSAdapter.export( node.getDefaultGeometryPropertyValue() );
+          if( planingAreaGeometry.intersects( geometry ) )
+          {
+            String name = node.getName();
+            if( name == null || name.length() == 0 )
+              name = node.getId();
+            final String izNodePath = izNodesPath.get( name );
+            final String calculatedNodePath = calculatedNodesPath.get( name );
+            if( izNodePath == null || calculatedNodePath == null )
+              continue;
+            affectedNodes.add( node );
+            final File izFile = new File( statusQuoResultsFolder, izNodePath );
+            final File calcFile = new File( calculatedResultsFolder, calculatedNodePath );
+            final File izFolder = new File( outputSubfolderSteady, name );
+            final File calcFolder = new File( outputSubfolderCalculated, name );
+            izFolder.mkdirs();
+            calcFolder.mkdirs();
+            FileUtils.copyFileToDirectory( izFile, izFolder );
+            FileUtils.copyFileToDirectory( calcFile, calcFolder );
+            final String izPath = String.format( Locale.US, "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
+            final String calcPath = String.format( Locale.US, "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
+            final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name );
+            final Obstableview table = NodeResultsComparisonViewCreator.createTableView( izPath, calcPath );
+            final File odtFile = new File( tmpdir, name + ".odt" );
+            final File ottFile = new File( tmpdir, name + ".ott" );
+            final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) ); //$NON-NLS-1$
+            final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) ); //$NON-NLS-1$
+            DiagViewUtils.saveDiagramTemplateXML( view, outDiag );
+            TableViewUtils.saveTableTemplateXML( table, outTable );
+          }
         }
 
         /*
