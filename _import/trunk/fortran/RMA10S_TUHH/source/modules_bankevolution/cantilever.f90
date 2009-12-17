@@ -180,14 +180,15 @@ MN: DO i  = 1,LR                                                ! loop over two 
  ELSE
 
  ! BASE_SUCTION = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
-  
+  ! Here matric head is not as usual pressure over specifc weight, but force over specific weight.
   MATRICHEAD   = SUCTIONHEIGHT ( FRONT%ELEVATION-WATERELEV , ELEV-WATERELEV )
   !MATRICHEAD   = MATRICHEAD - BASE_SUCTION
 !  MATRICHEAD   = func(ELEV- WATERELEV, EXPO3,EXPO2,EXPO1) * (ELEV - FRONT%ELEVATION)- MATRICHEAD
   MATRICHEAD   = -1.0 * MATRICHEAD
   
  ENDIF
-
+ ROOT = 1.2 * ROOT * 0.1 / SLIP_LENGTH           ! 0.1 is the common depth(m) of thiny vegetation root. TODO: defined by the user. 
+!matric_suction is in unit of force (per meter of width).
  MATRIC_SUCTION = RHO * GRAVITY * MATRICHEAD
  MATRIC_FORCE             = - MATRIC_SUCTION * TAN( MATRIC_ANGLE * PI / 180.)
  EFFECTIVE_COHESION_FORCE = (EFFECTIVE_COHESION + ROOT )* SLIP_LENGTH
