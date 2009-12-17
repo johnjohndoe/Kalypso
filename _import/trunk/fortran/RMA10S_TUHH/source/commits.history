@@ -1557,3 +1557,12 @@ new features introduced/ started to be introduced:
       (affects: input, serosion, merosion, newbed, blksedmod)
       
 --- Edgar Nehlsen, 20.11.2009
+
+184.) Adding the fiber-break mode force equilibrium equation for computation of shear strength of vegetation root.
+      Now in the control file in the position of data corresponding to ROOT, the shear strength of the root in Newton
+      should be given.
+      (affects: cantilever.f90)
+      
+--- M.Hassan Nasermoaddeli, 17.12.2009
+      
+      
