@@ -59,7 +59,8 @@ parameter (maxcn = 60)
 
 !locals
 integer :: i, j, k, l, n, m
-integer :: mp, mpp, idxx, is
+integer :: mp, idxx, is
+integer (kind = 8) :: mpp
 
 !nis,dec06: Allocating the kntimel-array for storage of connected nodes to one element. The background is the new number nodes, that might be
 !           connected to a Transition line
@@ -246,6 +247,7 @@ nepem = 0
 DO n = 1, MaxP
   IF (icon (n, 1) > 0) nepem = nepem + 1
 END DO
+
 mpq = 0
 list (1) = 1
 mp = 1
@@ -274,26 +276,14 @@ allnodes: DO n = 1, MaxP
     mp = mp + 1
     list (mp) = i
 
-    !NiS,mar06: unit name changed; changed iout to Lout
-    !    if( mp .eq. mnd ) write(Lout,80)
-    !80 FORMAT( / 10x, 'over 1000 terms in list' )
-
   END DO allconnects
 
-  !NiS,mar06: unit name changed; changed iout to Lout
-  !      if(nprt.eq.3) write(Lout,'(25i4)') (list(m),m=1,mp)
-  !      mpq=mpq+mp*mp
   mpq = mpq + mp
 ENDDO allnodes
 
-
-!NiS,mar06: unit name changed; changed iout to Lout
-!      write(Lout,99) mpq
-!   99 FORMAT(1h1//10x,'for initial order, reordering sum =',i10)
 mpp = mpq
                                                                         
 ! korrektur von mpp                                                     
-                                                                        
 orderloop: DO
 
   DO i = 1, MaxP
@@ -411,6 +401,8 @@ USE BLK10MOD
 USE BLK2
 USE BLKASTEPH
 
+implicit none
+
 INTEGER :: ia
 INTEGER :: maxsize
 INTEGER :: counter
@@ -418,8 +410,13 @@ INTEGER :: counter
 INTEGER :: qlist (2, 3535)
 !INTEGER :: icon (:,:), kntimel (:,:)
 INTEGER :: icon (1:MaxP, 1:60), kntimel (1:MaxE, 1:maxsize)
-integer :: maxcn
-DIMENSION nlist (3535)
+integer :: maxcn, maxc
+integer (kind = 8) :: mpo, isum
+integer :: i, j, k, m, n, ii, jj, mm
+integer :: nod, nelt, nel, mp
+integer (kind = 4) :: nlist (1:3535)
+
+
 
 parameter (maxcn = 60)
 

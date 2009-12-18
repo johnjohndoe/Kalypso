@@ -8,7 +8,8 @@ C     Last change:  WP   31 Aug 2007    6:31 pm
 !           that are capable to read Kalypso-2D geometry-data.
 !           The arrays are allocated and deallocated in the reorder-subroutine.
 
-      INTEGER              :: mpq, nepem, nr, nc, nprt, mist
+      INTEGER              :: nepem, nr, nc, nprt, mist
+      integer (kind = 8) :: mpq
       INTEGER, ALLOCATABLE :: mlist(:), msn(:), icol(:,:), nadm(:),
      +                        inum(:)
 
