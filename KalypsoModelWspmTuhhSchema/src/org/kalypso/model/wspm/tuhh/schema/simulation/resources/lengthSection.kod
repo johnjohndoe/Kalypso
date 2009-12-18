@@ -92,35 +92,6 @@
                   </Styles>
             </Layer>
             
-            <Layer id="v_m" visible="false">
-                <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
-                    <Parameters>
-                        <Parameter value="Daten/%GMLFILENAME%" name="href"/>
-                        <Parameter value="" name="gxlpath"/>
-                        <Parameter value="LengthSectionResult" name="observationId"/>
-                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-                        <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId"/>
-                    </Parameters>    
-                </Provider>
-                <Title/>
-                <Description/>
-                
-                <MapperRefs>
-                    <DomainAxisRef ref="Station_Axis"/>
-                    <TargetAxisRef ref="NN_Axis"/>
-                </MapperRefs>
-                <Styles>
-                    <LineStyle role="line">
-                        <Title/>
-                        <Width>3</Width>
-                        <LineColor>80aa00</LineColor>
-                    </LineStyle>
-                    <PointStyle role="point" isVisible="false">
-                        <Title/>
-                    </PointStyle>
-                  </Styles>
-            </Layer>
-            
             <Layer id="Boe_li" visible="false">
                 <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
                     <Parameters>

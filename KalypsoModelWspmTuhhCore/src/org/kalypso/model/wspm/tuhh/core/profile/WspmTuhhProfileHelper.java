@@ -179,6 +179,6 @@ public class WspmTuhhProfileHelper
 
       lsResult.add( station );
     }
-    return new Observation<TupleResult>( "root", "Profiles Length Section", lsResult );
+    return new Observation<TupleResult>( "LengthSectionResult", "Profiles Length Section", lsResult );
   }
 }
