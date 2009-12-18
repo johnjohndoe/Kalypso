@@ -193,9 +193,6 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !ipk jun07        DO J=1,NCN
         DO J = 1, 20
           I = NOP (N, J)
-          if (i == 82 .or. i== 83) then
-            continue
-          endif
           IF (I == 0) THEN
             KC = KC + NDF
           ELSE
