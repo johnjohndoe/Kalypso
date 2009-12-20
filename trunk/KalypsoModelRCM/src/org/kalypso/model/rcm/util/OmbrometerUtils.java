@@ -122,11 +122,11 @@ public class OmbrometerUtils
 
     // Gather data:
     // - used point into point-list
-    // - all coordinates into for convex hull
+    // - all coordinates into list for convex hull
     // - ombrometer into geo index for quicker search later
     // - feature changes for ombrometers to null, in order to delete old geometries
     final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<com.vividsolutions.jts.geom.Point>();
-    final FeatureList geoIndex =  FeatureFactory.createFeatureList( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
+    final FeatureList geoIndex = FeatureFactory.createFeatureList( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
     final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> changeMap = new HashMap<IOmbrometer, GM_Surface<GM_SurfacePatch>>();
     final List<Coordinate> crds = new ArrayList<Coordinate>();
     String crs = null;
@@ -134,15 +134,18 @@ public class OmbrometerUtils
     {
       final IOmbrometer ombro = (IOmbrometer) listEntry;
       final GM_Point stationLocation = ombro.getStationLocation();
-      crs = stationLocation.getCoordinateSystem();
-      final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
-      if( ombro.isUsed() )
+      if( stationLocation != null )
       {
-        points.add( point );
-        geoIndex.add( ombro );
+        final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
+        if( ombro.isUsed() )
+        {
+          crs = stationLocation.getCoordinateSystem();
+          points.add( point );
+          geoIndex.add( ombro );
+        }
+        crds.add( point.getCoordinate() );
       }
       changeMap.put( ombro, null );
-      crds.add( point.getCoordinate() );
     }
 
     ProgressUtilities.worked( monitor, 1 );
