@@ -465,7 +465,7 @@ if (ntx == 1) then
     endif
 
     !Check for critical/ subcritical discharge
-    if (vel_res(j) / sqrt (grav * h) .gt. 1) WRITE (*,*) 'Supercritical flow at node ', n
+    if (vel_res(j) / sqrt (grav * h) .gt. 1) WRITE (*,*) 'Supercritical flow at node ', n, kmx(n)
 
     dahdh(n) = 0.0D0
 
