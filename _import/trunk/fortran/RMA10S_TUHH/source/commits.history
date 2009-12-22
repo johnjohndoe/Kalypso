@@ -1,31 +1,31 @@
-features für Kalypso bis dahin implementiert
+features fï¿½r Kalypso bis dahin implementiert
 
 Polynomansatz
 -------------
-- Implementierung eines alternativen eindimensionalen Ansatzes für natürliche Fließgewässer mittels Abbildung durch Polynomfunktionen
-  - Implementierung basiert auf den Komponenten WasserTIEFE und Fließgeschwindigkeit
-  - Implementierung berücksichtigt Polynome bis zum Grad 4 (5 Koeffizienten). Es können beliebig viele Polynome verwendet werden. Dazu müssen allerdings die Gültigkeitsbereiche eindeutig definiert sein
+- Implementierung eines alternativen eindimensionalen Ansatzes fï¿½r natï¿½rliche Flieï¿½gewï¿½sser mittels Abbildung durch Polynomfunktionen
+  - Implementierung basiert auf den Komponenten WasserTIEFE und Flieï¿½geschwindigkeit
+  - Implementierung berï¿½cksichtigt Polynome bis zum Grad 4 (5 Koeffizienten). Es kï¿½nnen beliebig viele Polynome verwendet werden. Dazu mï¿½ssen allerdings die Gï¿½ltigkeitsbereiche eindeutig definiert sein
   - Implementierung einer automatischen Interpolation von Profilen zwischen Originalprofilen. Polynome werden gewichtet nach Entfernung zu den Nachbarn interpoliert.
 
 1D-2D-Kopplung
 --------------
-- Implementierug einer generellen Modellkopplung zwischen 1D- und 2D-Bereichen. Die Kopplung ist bislang nur für die Kombination mit dem Polynomansatz vorgesehen.
+- Implementierug einer generellen Modellkopplung zwischen 1D- und 2D-Bereichen. Die Kopplung ist bislang nur fï¿½r die Kombination mit dem Polynomansatz vorgesehen.
   - Funktionsweise: - Reduktion der Freiheitsgrade auf einen 2D-WasserSTAND
-                    - Impulsgleichung 1D wird ersetzt mit Identitätsbedingung, dass 2D-Linienabfluss gleich dem 1D-Kopplungsknotenabfluss sein muss.
-                    - Kontinuitätsgleichung 1D bleibt bestehen, wird aber nur von einer Seite gespeist.
-                    - Impulsgleichungen 2D werden durch eine Bedingung für den nötigen spezifischen Abfluss ersetzt. Auf der Basis des 1D-Abflusses und WasserSTANDES wird eine q-Verteilung bestimmt, die jeweils an den Knoten eingehalten werden muss.
-                    - Kontinuitätsgleichungen 2D werden auf eine einzige Kontinuitätsgleichung reduziert.
+                    - Impulsgleichung 1D wird ersetzt mit Identitï¿½tsbedingung, dass 2D-Linienabfluss gleich dem 1D-Kopplungsknotenabfluss sein muss.
+                    - Kontinuitï¿½tsgleichung 1D bleibt bestehen, wird aber nur von einer Seite gespeist.
+                    - Impulsgleichungen 2D werden durch eine Bedingung fï¿½r den nï¿½tigen spezifischen Abfluss ersetzt. Auf der Basis des 1D-Abflusses und WasserSTANDES wird eine q-Verteilung bestimmt, die jeweils an den Knoten eingehalten werden muss.
+                    - Kontinuitï¿½tsgleichungen 2D werden auf eine einzige Kontinuitï¿½tsgleichung reduziert.
 
 Bauwerksimplementierung
 -----------------------
-- Implementierung der Interpolation aus Kurvenscharen anstelle einer tabellarischen Interpolation; außerdem Verwendung von Energiehöhen, um bei Abflussnull weiter rechnen zu können.
-  - Verwendung von Kurvenscharen, d.h. Stützstellenauswertung mittels linearer Funktionen
+- Implementierung der Interpolation aus Kurvenscharen anstelle einer tabellarischen Interpolation; auï¿½erdem Verwendung von Energiehï¿½hen, um bei Abflussnull weiter rechnen zu kï¿½nnen.
+  - Verwendung von Kurvenscharen, d.h. Stï¿½tzstellenauswertung mittels linearer Funktionen
   - Funktionen Oberwasserstand als Funktion des Unterwasserstandes bei gegebenem Q. Je Abfluss Q ein funktionaler Zusammenhang.
-  - Verwendung von Energiehöhen zur Darstellung
+  - Verwendung von Energiehï¿½hen zur Darstellung
 
 Randbedingungen
 ---------------
-- Zusätzlich zur originalen RMA 10S Methode werden Q-Ränder nun per Verteilungsberechnung bestimmt. Der Vorteil ist, dass schon am Rand eine sinnvolle v-Verteilung vorhanden ist, so dass das Modell in der Länge aussagekräftiger wird.
+- Zusï¿½tzlich zur originalen RMA 10S Methode werden Q-Rï¿½nder nun per Verteilungsberechnung bestimmt. Der Vorteil ist, dass schon am Rand eine sinnvolle v-Verteilung vorhanden ist, so dass das Modell in der Lï¿½nge aussagekrï¿½ftiger wird.
 - Einbau von HQ-Randbedingungen als Tabellenfunktion
 
 autoconverge
@@ -34,17 +34,17 @@ autoconverge
 
 Rauheitskorrektur
 -----------------
-- Benutzer kann Rauheitswerte korrigieren. Dabei können die festen Rauheitsparameter der Rauheitsklassen bestehen bleiben und nur die Elemente mit einem Faktor auf die entsprechenden Parameter verändert werden.
+- Benutzer kann Rauheitswerte korrigieren. Dabei kï¿½nnen die festen Rauheitsparameter der Rauheitsklassen bestehen bleiben und nur die Elemente mit einem Faktor auf die entsprechenden Parameter verï¿½ndert werden.
 
-History geführt ab dem 27.02.2008
+History gefï¿½hrt ab dem 27.02.2008
 ---------------------------------
-- Kopplung hat starke Probleme bei der Kontinuität verursacht. Grundsätzlich haben Modelle konvergiert, aber der Abfluss ist immer kleiner geworden mit fortschreitender Berechnung. Die numerische Ursache war, dass die Abflussidentität auf der 2D- und 1D-Seite sich jeweils hoch oder runter geschaukelt haben. Alternativ wurden nun die Impulsgleichungen auf der 2d-Seite beibehalten und der WasserSTAND der 1D-Seite als Rand verwendet.
+- Kopplung hat starke Probleme bei der Kontinuitï¿½t verursacht. Grundsï¿½tzlich haben Modelle konvergiert, aber der Abfluss ist immer kleiner geworden mit fortschreitender Berechnung. Die numerische Ursache war, dass die Abflussidentitï¿½t auf der 2D- und 1D-Seite sich jeweils hoch oder runter geschaukelt haben. Alternativ wurden nun die Impulsgleichungen auf der 2d-Seite beibehalten und der WasserSTAND der 1D-Seite als Rand verwendet.
   - Impulsgleichungen 2D werden durch den WasserSTAND auf der 1D-Seite berandet (innere Randbedingung).
   - dies ist bisher nur 2D-1D ERFOLGREICH getestet.
   
-Änderungen 12.03.2008
+ï¿½nderungen 12.03.2008
 ---------------------
-bugfix - H-Q-Beziehung als Randbedingung in coef1DFE hat nicht die korrekten Wasserstände berücksichtigt.
+bugfix - H-Q-Beziehung als Randbedingung in coef1DFE hat nicht die korrekten Wasserstï¿½nde berï¿½cksichtigt.
 (coef1DFE)
 bugfix - ErrorMessagesAndStop had wrong entry
 (ErrorMessagesAndStop)
@@ -52,37 +52,37 @@ bugfix - ErrorMessagesAndStop had wrong entry
 Nico Schrage
 
 
-Änderungen 27.05.2008
+ï¿½nderungen 27.05.2008
 ---------------------
-Mit dem 27.05.2008 wurde ein Versionstag eingeführt. Die erste Version heißt v_0_0_1. Sie ist Grundlage des Vergleiches von RMA10S 3.5g mit RMA10SK. Ab diesem Punkt muss geprüft werden, inwiefern Änderungen gegenüber RMA10S 3.5g eingetreten sind. Von der Version aus wird exakt dokumentiert, was sich im Detail geändert hat.
-Außerdem wurde mit dem Datum ein Branch eingeführt, der dazu gedacht ist, die Subroutinen zu aktualisieren, d.h. auf f90 zu bringen und veraltete Strukturen (z.B. Jumpmarks) zu eliminieren.
+Mit dem 27.05.2008 wurde ein Versionstag eingefï¿½hrt. Die erste Version heiï¿½t v_0_0_1. Sie ist Grundlage des Vergleiches von RMA10S 3.5g mit RMA10SK. Ab diesem Punkt muss geprï¿½ft werden, inwiefern ï¿½nderungen gegenï¿½ber RMA10S 3.5g eingetreten sind. Von der Version aus wird exakt dokumentiert, was sich im Detail geï¿½ndert hat.
+Auï¿½erdem wurde mit dem Datum ein Branch eingefï¿½hrt, der dazu gedacht ist, die Subroutinen zu aktualisieren, d.h. auf f90 zu bringen und veraltete Strukturen (z.B. Jumpmarks) zu eliminieren.
 
 Version 0.0.1 (tag gesetzt)
 ---------------------------
-001.) initialer Startpunkt für Versionierung
+001.) initialer Startpunkt fï¿½r Versionierung
 
 --- Nico Schrage, 27.05.2008
 
-Version 0.0.2/ Version 1.0.0 (laufende Änderungen)
+Version 0.0.2/ Version 1.0.0 (laufende ï¿½nderungen)
 -------------------------------------------------
 
 !comment: Enumeration was not done in a consequent way. Numbering 1.0.0 is now up to date. Sotware is called rma10sk now.
 
-001.) Neuschreiben der Routinen DEL, REWET nach neuer Struktur; Löschen aller Sprungmarken
+001.) Neuschreiben der Routinen DEL, REWET nach neuer Struktur; Lï¿½schen aller Sprungmarken
       und Strukturieren der Schleifen
-002.) rma10.for wurde nicht korrekt aus HEAD übernommen in Version 0.0.1. sie muss mit
-      Datei-Version 1.32 von HEAD überschrieben werden für Version 0.0.1
+002.) rma10.for wurde nicht korrekt aus HEAD ï¿½bernommen in Version 0.0.1. sie muss mit
+      Datei-Version 1.32 von HEAD ï¿½berschrieben werden fï¿½r Version 0.0.1
 
 --- Nico Schrage, 27.05.2008 (0.0.2beta1/ 1.0.0beta1)
 
-003.) Anpassung des rewettings an Marsh-Algorithmus. Dazu wird zunächst die "reale
-      Fließtiefe" über der slot Tiefe des Marshbereiches bestimmt. Daraufhin wird der
-      Wasserstand über die slot-Tiefe der benachbarten Modellknoten berechnet und die
-      Wassertiefe in die Rechentiefe (virtuelle Fließtiefe) umgerechnet. Diese Option
-      läuft parallel zur alten Implementierung, in der der Marsh-Algorithmus nicht
-      berücksichtigt wird.
-004.) Berücksichtigung von head losses beim rewetting ausgeschaltet; HLOS wird weiterhin
-      berechnet, jedoch beim Extrapolieren der Werte nach außen nicht berücksichtigt. Kann
+003.) Anpassung des rewettings an Marsh-Algorithmus. Dazu wird zunï¿½chst die "reale
+      Flieï¿½tiefe" ï¿½ber der slot Tiefe des Marshbereiches bestimmt. Daraufhin wird der
+      Wasserstand ï¿½ber die slot-Tiefe der benachbarten Modellknoten berechnet und die
+      Wassertiefe in die Rechentiefe (virtuelle Flieï¿½tiefe) umgerechnet. Diese Option
+      lï¿½uft parallel zur alten Implementierung, in der der Marsh-Algorithmus nicht
+      berï¿½cksichtigt wird.
+004.) Berï¿½cksichtigung von head losses beim rewetting ausgeschaltet; HLOS wird weiterhin
+      berechnet, jedoch beim Extrapolieren der Werte nach auï¿½en nicht berï¿½cksichtigt. Kann
       ohne Probleme wieder eingeschaltet werden.
 005.) Format updates in coef11nt.for: Loops 290, 360 and 365 were changed to become 'normal' do-loops
 006.) Minor change in RMA10.for without relevance (splitting a line into to lines)
@@ -149,7 +149,7 @@ Version 0.0.2/ Version 1.0.0 (laufende Änderungen)
 
 --- Nico Schrage, 22.07.2008 (release 1.0.0)
 
-Version 1.0.1 (laufende Änderungen)
+Version 1.0.1 (laufende ï¿½nderungen)
 -----------------------------------
 
 001.) Introduce "use BLKECOM" module in subroutines and get rid of shared include blke.com file. That module contains residual vector f(80), element stiffnes matrix estifm (80, 80) and node connector ncon
@@ -197,7 +197,7 @@ Version 1.0.1 (laufende Änderungen)
 
 --- Nico Schrage, 24.07.2008 (release 1.0.1)
 
-Version 1.0.2 (laufende Änderungen)
+Version 1.0.2 (laufende ï¿½nderungen)
 -----------------------------------
 
 001.) Delete some testing code in coef25.sub and coef25NT.sub
@@ -212,7 +212,7 @@ Version 1.0.2 (laufende Änderungen)
 28.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
 -----------------------------------------------------------------------------------------------------
 
-Ziel-Version 1.1.0 (laufende Änderungen)
+Ziel-Version 1.1.0 (laufende ï¿½nderungen)
 -----------------------------------
 
 001.) update automake.fig file; makefile for IntelCompiler doesn't exist yet.
@@ -227,7 +227,7 @@ Ziel-Version 1.1.0 (laufende Änderungen)
 005.) Supporting water constituents at discharge-boundarys(QC) for Kalypso-Boundarys (BSWIT=2 bzw. "KAL_BC")
        >> SubR QGEN (--> QVAL(4 till 6))     
 006.) Avoiding the calculation of kinematic Viscosity in SubR KINVIS with Temperature=0 if Heatflux is not activ.
-      If Temperature is 0 at a node, the default value TDC = 20°C is used.
+      If Temperature is 0 at a node, the default value TDC = 20ï¿½C is used.
       >> SubR KINVIS (TDC and VEL(5,n))
 007.) Avoiding the calculation and iteration with negative concentration of sediment in SubR UPDATE. IF concentration
       of sediment is negative at a one its setted to 0.
@@ -265,7 +265,7 @@ Ziel-Version 1.1.0 (laufende Änderungen)
        >> SubR ErrorMessagesAndStop    
 --- Monika Donner, 28.07.2008
 
-018.) Friction factor FFACT loacally: wieder zurück
+018.) Friction factor FFACT loacally: wieder zurï¿½ck
       >> SubR COEF11, COEF11NT, COEF25, COEF25NT, COEF2d, COEF2dNT, turbulence
       >> SubR ParaKalyps and SubR INITL
 019.) Friction factor (FFACT_EL(1:maxe)) in order to calculate friction factor
@@ -294,7 +294,7 @@ Ziel-Version 1.1.0 (laufende Änderungen)
 026.) Correction for all three Bed-Load-Transports without waves: Reactivate and
       correct the option for mineral size fraction (Parameter diam) 
       (DE: Korrektur und Reaktivierung des Ansatzes mehrerer Kornfraktionen
-           fuer alle Geschiebetransportansätze OHNE Wellen!)   
+           fuer alle Geschiebetransportansï¿½tze OHNE Wellen!)   
       >> SubR VANRIJN, AWHITE, BROWNLIE      
 027.) Avoiding the call of BEDLBED from RMA10SUB, because the incoming and outcoming
       values (GAN and GAN0) are ZERO. Now the right and complete SubR BEDSUR is used
@@ -304,7 +304,7 @@ Ziel-Version 1.1.0 (laufende Änderungen)
 028.) In all COEFXX Routines the Parameters GAN and GAN0 are used to allocate the
       Bed-Load-Transport. Till today these values (GAN and GAN0) were ZERO. Now the 
       corresponding values are selected: GAN0 = CBS und GAN = EDOT (beides sind 
-      Erosionsraten in [kg/m³/s])  
+      Erosionsraten in [kg/mï¿½/s])  
       Now in SubR BEDSUR the Parameters GAN and GAN0 are allocated.
       >> SubR BEDSUR       
 029.) Correction of wrong formulares in Subr AWHITE: for clog was (drglog**2)missing.
@@ -315,8 +315,8 @@ Ziel-Version 1.1.0 (laufende Änderungen)
       Therefore the Shields-Parameter, Acker-White- and van Rijn formulares were 
       corrected in there typical boundary-Values. In order to get the new steady
       transitions the boundary-Values are calculated based on the given Functions.
-      (DE: Glättung der Uebergänge zwischen abschnittsweisen Funktionen, so dass keine
-       Rücksprünge auftreten. Die neuen Grenzwerte decken sich somit nicht mehr mit
+      (DE: Glï¿½ttung der Uebergï¿½nge zwischen abschnittsweisen Funktionen, so dass keine
+       Rï¿½cksprï¿½nge auftreten. Die neuen Grenzwerte decken sich somit nicht mehr mit
        den klassischen Angaben der Literatur, aber stabilisieren das numerische 
        Verfahren!) 
       >> SubR AWHITE, VANRIJN      
@@ -360,7 +360,7 @@ Ziel-Version 1.1.0 (laufende Änderungen)
       cbh   
       cbh   --- Nico Schrage, 01.08.2008 (release 1.0.2)
       cbh   
-      cbh   Version 1.0.3 (laufende Änderungen)
+      cbh   Version 1.0.3 (laufende ï¿½nderungen)
       cbh   
       cbh   001.) Get rid of data field aour, which is just a copy of al (affects: blk10mod, rdkalyps, initl, rdrm1); writing out is now only related to ao-field (affects: modell_schreiben)
       cbh   002.) delete "old" way of polynomial definition in input files, only support new way (affects: rdkalyps)
@@ -531,7 +531,7 @@ bugfixes and small changes
 076.) Increase the border to store relative changes for small models in update.sub
 077.) Replacing common blocks IFU and swanf by module definitions.
 
-refactoring for the purpose of generating freeware RMA·KALYPSO
+refactoring for the purpose of generating freeware RMAï¿½KALYPSO
 --------------------------------------------------------------
 A lot of changes were made to some subroutines starting with the program unit and the reading subroutines. Following goals were followed:
  - Change program file rma10mnms.for by RMAKalypso.f90 and change initial console output.
@@ -549,7 +549,7 @@ A lot of changes were made to some subroutines starting with the program unit an
 
 ***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
 ------------------------------------------------
-RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
+RENAMING THE PRODUCT FROM RMA10SK TO RMAï¿½KALYPSO
 ------------------------------------------------
 ***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
 
@@ -569,7 +569,7 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 090.) Bug fix for interpolation of elements in 1D, i.e. number of nodes for interpolated elements was not correct. (affects InterpolateProfs.sub)
 --- committed ---
 
---- Nico Schrage, 09.01.2009 (released RMA·Kalypso 1.1.0 'rma-kalypso_1_1_0_20090109.exe')
+--- Nico Schrage, 09.01.2009 (released RMAï¿½Kalypso 1.1.0 'rma-kalypso_1_1_0_20090109.exe')
 
 001.) Reduce exchange conditions at 1D2D junctions only to the proper values they as the transition type intends it.
 002.) Direction fix for boundary nodes in 1D2D line transition (affects BLINE.sub)
@@ -589,11 +589,11 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 --- Nico Schrage, 04.02.2009 (RMAKalypso 1.1.1alpha2)
 
 009.) Introduce changes from coef25nt to the other coef2* subroutines: Goal is to make them comparable so the can be merged for reducing the amount of files.
-010.) Release notes into RMA·Kalypso console output
+010.) Release notes into RMAï¿½Kalypso console output
 
 --- committed ---
 
---- Nico Schrage, 13.02.2009 (released RMA·Kalypso Version 1.1.1 build 13.02.2009 with filename: rma-kalypso_1.1.1_build20090213.exe)
+--- Nico Schrage, 13.02.2009 (released RMAï¿½Kalypso Version 1.1.1 build 13.02.2009 with filename: rma-kalypso_1.1.1_build20090213.exe)
 
 --- Monika Donner, 19.03.2009
 001.) Corrections for cohesive Sediment:
@@ -606,7 +606,7 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 002.) Corrections for cohesive Sediment:
       Using general formulations for suspended-water density GAW in all cohesive
       sediment calculations by using water density ROAVG, sediment density GACND
-      bzw. GAC (~2650 kg/m³) and suspended sediment concentration VEL(6,J)[mg/l]:     
+      bzw. GAC (~2650 kg/mï¿½) and suspended sediment concentration VEL(6,J)[mg/l]:     
          GAW = (VEL(6,J)/1000.)*(1.-(ROAVG/GACND(J))) + ROAVG      
       The option to define GAW by user in the Control-File is overwritten by
       this new approach (>> SubR SPROP)
@@ -615,12 +615,12 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 003.) Corrections for cohesive Sediment:
       Using general formulations for calculation the dry mass of suspended-sediment
       WEGTM by using Layer-Thickness TTLAYM [m], bulk density GAB, water density ROAVG
-      and sediment density GACND bzw. GAC (~2650 kg/m³)in :          
+      and sediment density GACND bzw. GAC (~2650 kg/mï¿½)in :          
          WEGTM =TTLAYM *(GABM -ROAVG)*GACM/ (GACM -ROAVG)     
       >> SubR SPROP, GETMAS,
 004.) Corrections for cohesive Sediment:
       Using suspended-water density GAW for bed-shear-stress calculation. 
-      Water density or 1000. kg/m³ is deleted.  
+      Water density or 1000. kg/mï¿½ is deleted.  
       >> SubR SHEAR, KALYPSO-SHEAR 
 005.) New Output for cohesive Sediment:
       Writing actual cohesive bed-structur with all layers and its thickness by
@@ -667,7 +667,7 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
       this is some introduction of object based thinking. For the future new elements should be introduced modulary in this more modern way to come
       to a higher efficiency in execution and programming.
 010.) outcommenting of autoconverge code as it is not tested to be operative properly
-011.) Versioning in RMA·Kalypso main routine
+011.) Versioning in RMAï¿½Kalypso main routine
 012.) Look for the end of equations to add, then exit loop to add equations: Not nice hotfix!
 new features introduced/ started to be introduced:
 013.) discrete function:
@@ -1097,9 +1097,9 @@ new features introduced/ started to be introduced:
      and last Bed Layer             
      >> SUBR NEWBED          
 076.) Correction in writing out Erosion and Deposition rates:
-      - Written out Erosion rate EDOT(NN) from SUBR MEROSN is in [kg/m³ x m/s] with DELT 
+      - Written out Erosion rate EDOT(NN) from SUBR MEROSN is in [kg/mï¿½ x m/s] with DELT 
         must be divided by DELT and multiplied with 1000.0
-      - Written out Erosion rate SERAT(NN) from SUBR SEROSN is already in [g/m³ x m/s] without DELT 
+      - Written out Erosion rate SERAT(NN) from SUBR SEROSN is already in [g/mï¿½ x m/s] without DELT 
       - Written out Deposition rate DEPRAT(NN) from SUBR DEPSN is in [m/s] without DELT and without C
         must be multiplied with C (VEL(6,NN)   
       >> SUBR WRITE_KALYP_BED
@@ -1337,7 +1337,7 @@ new features introduced/ started to be introduced:
 118.) Add the oportunity to specify the time step in different units (e.g. hours, minutes, seconds, milli seconds); hours remains as standard;
       The time unit specification can be given as additional information in the DT-line.
 119.) Add new possibility to write out Error-Message by using a message string.
-      TODO: The Error-handling in RMA·Kalypso should be reworked completely
+      TODO: The Error-handling in RMAï¿½Kalypso should be reworked completely
       (Affects: ErrorMessagesAndStop)
 120.) Add Error messages for some missing input lines during boundary condition
       TODO: A generalized way of reading in data should be established!
@@ -1558,11 +1558,81 @@ new features introduced/ started to be introduced:
       
 --- Edgar Nehlsen, 20.11.2009
 
-184.) Adding the fiber-break mode force equilibrium equation for computation of shear strength of vegetation root.
+183b.) Allocate ESTIFM array correctly for coef usage; seems not to be senseful, but makes it 'compilable'
+      (affects BLKECOM)
+183c.) Reverting the friction multiplicator for Marsh flowto quadratic distribution; there's no knowledge about better behaviour of a linear distribution
+      of the friction multiplicator; it needs to be discussed in detail, what to use!
+      (affects: coef25nt)
+184.) Some declarations!
+      (affects: coef25nt)
+185.) Interpolate restart results for interpolation profiles in 1D, i.e. not only vel but as well vold, vdot, vdoto
+      (affects: getinit)
+186.) Hard coded maximum number of equations can now be set in control file, thus the default value can be reduced to 2000000
+      (affects: initl)
+187.) Add missing initializations
+      (affects: load3)
+188.) Create list of default initializations according to manual to be able to change PARDISO options easily
+      (affects: mkl_solver)
+189.) Change definitions slightly; variable passing to PARDISO is still not without errors; perhaps wrong libraries are linked
+      (affects mkl_solver)
+190.) Adapt to write junction elements correctly
+      (affects: Modell_schreiben)
+191.) Change error message for 1D-nodes in Geo-approach without data
+      (affects: rdkalypso, errormessageandstop)
+192.) Reduce maximum change tolerance to 0.3 [mm] respectively [mm/s] if restarting
+      (affects: update)
+
+--- Nico Schrage, 27.11.2009
+
+193.) Adapt number of elements in reordering sequence to interpolated nodes of 1D-approach, if restarting.
+      (affects RDKalyps.for)
+194.) Increase the tolerance for absolute changes if using the relative change check during convergence
+      (affects update.for)
+195.) Improvements for restarting with interpolated profiles.
+      (affects: getinit, getbc, modell_schreiben, rdkalypso)      
+
+--- Nico Schrage, 30.11.2009
+
+196.) Write out variables (vel, vold, vdot, vdoto) with higher precision (scientific format)
+      (affects Modell_schreiben)
+197.) Write out type of 1D-2D transition to result file for proper restarting
+      (affects Modell_schreiben)
+198.) Delete commented code
+199.) Add some comments      
+
+
+--- Nico Schrage, 02.12.2009
+
+200.) Fix critical bug in distribution calculation at 1D/2D transitions
+      (affects: QgenTransition)
+201.) Format fix with higher accuracy, so it remains readable for BCE2d
+      (affects: Modell_schreiben)
+202.) Beauty farm
+      (affects: front_mkl)
+      
+--- Nico Schrage
+
+203.) bug fix at Q-distribution calculation at 1D-2D transitions: Marsh parameters of midside nodes were used. They're not updated correctly as a linear shape function should be used.
+
+--- Nico Schrage, 11.12.2009
+
+204.) Adding the fiber-break mode force equilibrium equation for computation of shear strength of vegetation root.
       Now in the control file in the position of data corresponding to ROOT, the shear strength of the root in Newton
       should be given.
       (affects: cantilever.f90)
       
 --- M.Hassan Nasermoaddeli, 17.12.2009
       
-      
+
+205.) Extend precision of some variables in reordering
+      (affects: reordering.f90, blkasteph.for)
+206.) minor changes
+
+--- Nico Schrage, 18.12.2009
+
+207.) additional kilometre information at supercritical flow
+      (affects coef1dpolynomials.f90)
+208.)
+version information
+
+--- Nico Schrage, 22.12.2009 (version 1.2.0 beta build 2009/12/22)
