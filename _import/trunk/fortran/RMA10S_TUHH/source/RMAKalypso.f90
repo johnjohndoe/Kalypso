@@ -40,6 +40,7 @@
 !           - Changes for input lines C5 and C6 regarding output frequencies
 !
 !          --- Nico Schrage
+!
 !......... Main program unit for the 1D/2D coupled hydrodynamics model RMA·Kalypso
 
 PROGRAM RMAKalypso
@@ -56,8 +57,8 @@ PROGRAM RMAKalypso
   character (len = 10) :: builddate
   character (len = 1000) :: defaultModelName = 'defaultModelID'
   
-  version = '1.1.2 beta'
-  builddate = '2009/02/13'
+  version = '1.2.0 beta'
+  builddate = '2009/12/22'
 
 !information during the execution:
   do i = 1, 8
@@ -80,7 +81,7 @@ PROGRAM RMAKalypso
   WRITE(*,*) '                        21073 Hamburg'
   WRITE(*,*) '                         Germany'
   write(*,*)
-  WRITE(*,*) '                    February, 13th 2009'
+  WRITE(*,*) '                    December, 22nd 2009'
   write(*,*)
   write(*,*) '     *                  **********                  *'
   write(*,*) '     *                                              *'
