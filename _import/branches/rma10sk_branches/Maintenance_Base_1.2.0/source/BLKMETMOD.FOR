@@ -1,0 +1,23 @@
+      MODULE BLKMETMOD
+
+c
+c     BLK4A
+c
+      INTEGER METFL
+
+      ALLOCATABLE WDT1(:,:),WDT0(:,:),IYS(:)
+     +       ,METID(:,:),DA(:),TTM(:),AETMP(:)
+     +       ,BETMP(:),ISOL(:)
+     +       ,DSOL(:),SOLIN0(:),SOLIN1(:),IDPT(:)
+
+CIPK JUL01 ADD IDPT
+C      COMMON /BLK4A/ WDT1(11,MMAT),WDT0(11,MMAT),IYS(MMAT)
+C     +       ,METFL,METID(MMAT,9),DA(MMAT),TTM(MMAT),AETMP(MMAT)
+C     +       ,BETMP(MMAT),ISOL(MMAT)
+C     +       ,DSOL(MMAT),SOLIN0(MMAT),SOLIN1(MMAT),IDPT(MMAT)
+
+
+      END MODULE
+
+
+
