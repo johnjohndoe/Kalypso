@@ -112,7 +112,7 @@ type(VECTOR_DATA) function vector_at( vec, n )
     type(VECTOR)       :: vec
     integer            :: n
 
-    if ( n .lt. 1 .or. n .gt. vec%no_used ) then
+    if ( n < 1 .OR. n > vec%no_used ) then
         vector_at = empty_vector_data
     else
         vector_at = vec%data(n)
@@ -134,11 +134,11 @@ subroutine vector_insert_empty( vec, pos, number )
 
     integer              :: i
 
-    if ( number .lt. 1 .or. pos .lt. 1 .or. pos .gt. vec%no_used ) then
+    if ( number < 1 .OR. pos < 1 .OR. pos > vec%no_used ) then
         return
     endif
 
-    if ( vec%no_used+number .ge. size(vec%data) ) then
+    if ( vec%no_used+number >= size(vec%data) ) then
         call vector_increase_capacity( vec, vec%no_used+number )
     endif
 
@@ -168,7 +168,7 @@ subroutine vector_delete_elements( vec, pos, number )
 
     integer              :: i
 
-    if ( number .lt. 1 .or. pos .lt. 1 .or. pos .gt. vec%no_used ) then
+    if ( number < 1 .OR. pos < 1 .OR. pos > vec%no_used ) then
         return
     endif
 
@@ -190,7 +190,7 @@ subroutine vector_append( vec, data )
     type(VECTOR)       :: vec
     type(VECTOR_DATA)  :: data
 
-    if ( vec%no_used .ge. size(vec%data) ) then
+    if ( vec%no_used >= size(vec%data) ) then
         call vector_increase_capacity( vec, vec%no_used+1 )
     endif
 
@@ -212,10 +212,10 @@ subroutine vector_put( vec, n, data )
     integer            :: n
     type(VECTOR_DATA)  :: data
 
-    if ( n .lt. 1 ) then
+    if ( n < 1 ) then
         return
     endif
-    if ( n .gt. size(vec%data) ) then
+    if ( n > size(vec%data) ) then
         call vector_increase_capacity( vec, n )
     endif
 
@@ -239,7 +239,7 @@ subroutine vector_increase_capacity( vec, capacity )
 
     new_cap = max( capacity, nint( growth_rate * size(vec%data) ) )
 
-    if ( new_cap .gt. size(vec%data) ) then
+    if ( new_cap > size(vec%data) ) then
         allocate( new_data(1:new_cap) )
         new_data(1:vec%no_used) = vec%data(1:vec%no_used)
         new_data(vec%no_used+1:new_cap) = empty_vector_data

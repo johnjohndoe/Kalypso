@@ -109,7 +109,7 @@ character(len=40) function typename( column, primary )
    type(SQLITE_COLUMN), intent(in) :: column
    character(len=*), intent(in)    :: primary
 
-   if ( column%name .ne. primary ) then
+   if ( column%name /= primary ) then
       typename = column%type
    else
       !write( typename, '(2a)' ) trim(column%type), ' primary key'
@@ -128,7 +128,7 @@ end function typename
 character(len=80) function column_func( column )
    type(SQLITE_COLUMN), intent(in) :: column
 
-   if ( column%function .ne. ' ' ) then
+   if ( column%function /= ' ' ) then
       column_func = trim(column%function) // '(' // trim(column%name) // ')'
    else
       column_func = column%name
@@ -147,7 +147,7 @@ subroutine stringtof( string )
 
    integer          :: last
    last = index( string, char(0) )
-   if ( last .gt. 0 ) then
+   if ( last > 0 ) then
       string(last:) = ' '
    endif
 
@@ -347,7 +347,7 @@ end subroutine sqlite3_get_column_char
 logical function sqlite3_error( db )
    type(SQLITE_DATABASE) :: db
 
-   sqlite3_error = db%error .ne. 0
+   sqlite3_error = db%error /= 0
 end function sqlite3_error
 
 
@@ -679,7 +679,7 @@ subroutine sqlite3_insert( db, tablename, columns )
       case (SQLITE_CHAR)
          rc = sqlite3_bind_text_c( stmt%stmt_handle, i, trim(columns(i)%char_value) )
       end select
-      if ( rc .ne. 0 ) then
+      if ( rc /= 0 ) then
          db%error = rc
          call sqlite3_errmsg_c( db%db_handle, db%errmsg )
          call stringtof( db%errmsg )
@@ -737,7 +737,7 @@ subroutine sqlite3_next_row( stmt, columns, finished )
 
    call sqlite3_step( stmt, rc )
 
-   if ( rc .eq. SQLITE_ROW ) then
+   if ( rc == SQLITE_ROW ) then
       finished = .false.
 
       !
@@ -755,7 +755,7 @@ subroutine sqlite3_next_row( stmt, columns, finished )
             rc = sqlite3_column_text_c( stmt%stmt_handle, i-1, columns(i)%char_value )
             call stringtof( columns(i)%char_value )
          end select
-        ! if ( rc .ne. 0 ) then
+        ! if ( rc /= 0 ) then
         !    db%error = rc
         !    call sqlite3_errmsg_c( db%db_handle, db%errmsg )
         !    call stringtof( db%errmsg )
@@ -898,7 +898,7 @@ subroutine sqlite3_prepare( db, command, stmt, columns )
    call stringtoc( commandc )
    db%error = sqlite3_prepare_c( db%db_handle, commandc, stmt%stmt_handle )
 
-   if ( db%error .eq. 0 ) then
+   if ( db%error == 0 ) then
       if ( associated(columns) ) return ! Assumption: they are already known
 
       call sqlite3_column_count_c( stmt%stmt_handle, count )

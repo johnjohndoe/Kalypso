@@ -61,12 +61,12 @@ PRIVATE
 !
 PUBLIC ::         &
 & DateType       ,& ! User-defined type for year, month, day, hour and minute
-& OPERATOR(.EQ.) ,& ! Comparison of two DateTypes
-& OPERATOR(.NE.) ,& ! Comparison of two DateTypes
-& OPERATOR(.GT.) ,& ! Comparison of two DateTypes
-& OPERATOR(.GE.) ,& ! Comparison of two DateTypes
-& OPERATOR(.LT.) ,& ! Comparison of two DateTypes
-& OPERATOR(.LE.) ,& ! Comparison of two DateTypes
+& OPERATOR( == ) ,& ! Comparison of two DateTypes
+& OPERATOR( /= ) ,& ! Comparison of two DateTypes
+& OPERATOR( > ) ,& ! Comparison of two DateTypes
+& OPERATOR( >= ) ,& ! Comparison of two DateTypes
+& OPERATOR( < ) ,& ! Comparison of two DateTypes
+& OPERATOR( <= ) ,& ! Comparison of two DateTypes
 & LeapYear       ,& ! LOGICAL function of 1 INTEGER arguement that is .TRUE. is its arguement is a leap-year
 & DOY            ,& ! INTEGER number, giving the Day Of Year of its DateType arguement
 & MinDate        ,& ! Compare two DateTypes and return the one that is earlier in time
@@ -95,22 +95,22 @@ PUBLIC ::         &
       MODULE PROCEDURE SubtractDates
    END INTERFACE
 
-   INTERFACE OPERATOR (.EQ.)
+   INTERFACE OPERATOR ( == )
       MODULE PROCEDURE EqualDates
    END INTERFACE
-   INTERFACE OPERATOR (.NE.)
+   INTERFACE OPERATOR ( /= )
       MODULE PROCEDURE NotEqualDates
    END INTERFACE
-   INTERFACE OPERATOR (.GT.)
+   INTERFACE OPERATOR ( > )
       MODULE PROCEDURE LargerDates
    END INTERFACE
-   INTERFACE OPERATOR (.LT.)
+   INTERFACE OPERATOR ( < )
       MODULE PROCEDURE SmallerDates
    END INTERFACE
-   INTERFACE OPERATOR (.GE.)
+   INTERFACE OPERATOR ( >= )
       MODULE PROCEDURE LargerEqualDates
    END INTERFACE
-   INTERFACE OPERATOR (.LE.)
+   INTERFACE OPERATOR ( <= )
       MODULE PROCEDURE SmallerEqualDates
    END INTERFACE
 
@@ -162,7 +162,7 @@ INTEGER :: Century,E,F,D
 !
 ! Calculation starts 1st of March (after possible leap-day)
 !
-   IF (iiMonth .LT. 3) THEN
+   IF (iiMonth < 3) THEN
       iiYear = iiYear -1
       iiMonth = iiMonth + 12
    ENDIF
@@ -187,7 +187,7 @@ INTEGER :: Century,E,F,D
    DumJulian%Head = Dum
    DumJulian%Tail = ThisDate%Hour/24._Float + ThisDate%Minute/(24._Float*60._Float)
 
-   IF (DumJulian%Tail.GE.0.5_Float) THEN
+   IF (DumJulian%Tail >= 0.5_Float) THEN
      DumJulian%Head = DumJulian%Head + 0.5_Float
      DumJulian%Tail = DumJulian%Tail - 0.5_Float
    ELSE
@@ -217,7 +217,7 @@ REAL(Float) :: Dum
 
    DumJulian%Tail = NINT(DumJulian%Tail*24._Float*60._Float)/(24._Float*60._Float)
 
-   IF (DumJulian%Tail.GE.0.5_Float) THEN
+   IF (DumJulian%Tail >= 0.5_Float) THEN
      DumJulian%Head = DumJulian%Head + 0.5_Float
      DumJulian%Tail = DumJulian%Tail - 0.5_Float
    ELSE
@@ -242,17 +242,17 @@ REAL(Float) :: Dum
    D = d + 1
 
    Dum = 60._Float*24._Float*DumJulian%Tail
-    IF (DebugLevel.GT.0) WRITE(*,40) Dum
+    IF (DebugLevel > 0) WRITE(*,40) Dum
  40 FORMAT('Julian2Date : Dum = ',F20.10)
    iDum = NINT(Dum) ! Number of minutes in this day
-    IF (DebugLevel.GT.0) WRITE(*,30) iDum
+    IF (DebugLevel > 0) WRITE(*,30) iDum
  30 FORMAT('Julian2Date : iDum = ',I10)
    Hour = iDum/60 ! integer division gives DIV
-    IF (DebugLevel.GT.0) WRITE(*,10) Hour
+    IF (DebugLevel > 0) WRITE(*,10) Hour
  10 FORMAT('Julian2Date : Hour = ',I2)
 !   Minute = INT(60.*(24.*DumJulian%Tail - Hour))
    Minute = iDum - Hour*60
-    IF (DebugLevel.GT.0) WRITE(*,20) Minute
+    IF (DebugLevel > 0) WRITE(*,20) Minute
  20 FORMAT('Julian2Date : Minute = ',I2)
 
    Julian2Date = DateType(Y,M,D,Hour,Minute)
@@ -276,16 +276,16 @@ END FUNCTION Julian2Date
 !
 ! Convert to Julian calendar
 !
-      IF (DebugLevel.GT.0) WRITE(*,10) BaseDate
+      IF (DebugLevel > 0) WRITE(*,10) BaseDate
  10   FORMAT('AddDates : BaseDate = ',5(1X,I4))
       JulianDate = Date2Julian(BaseDate)
-      IF (DebugLevel.GT.0) WRITE(*,20) JulianDate
+      IF (DebugLevel > 0) WRITE(*,20) JulianDate
  20   FORMAT('AddDates : JulianDate = ',2(1X,F20.10))
 !
 ! Remove the large number of days in the Julian reference date
 !
       JulianMainShare = JulianDate%Head
-      IF (DebugLevel.GT.0) WRITE(*,30) JulianMainShare
+      IF (DebugLevel > 0) WRITE(*,30) JulianMainShare
  30   FORMAT('AddDates : JulianMainShare = ',F20.10)
 !
 ! Consider the bits and pieces behand the comma and account for the step
@@ -293,29 +293,29 @@ END FUNCTION Julian2Date
       JulianDate%Head = JulianDate%Tail &
       & + TimeStep%Day + TimeStep%Hour/24.&
       & + TimeStep%Minute/(24.*60.)
-      IF (DebugLevel.GT.0) WRITE(*,40) JulianDate%Head
+      IF (DebugLevel > 0) WRITE(*,40) JulianDate%Head
  40   FORMAT('AddDates : JulianDate%Head = ',F20.10)
 !
 ! Give the part behand the comma to the tail
 !
       JulianDate%Tail = MOD(JulianDate%Head,1._Float)
-      IF (DebugLevel.GT.0) WRITE(*,50) JulianDate%Tail
+      IF (DebugLevel > 0) WRITE(*,50) JulianDate%Tail
  50   FORMAT('AddDates : JulianDate%Tail = ',F20.10)
       JulianDate%Head = JulianMainShare + INT(JulianDate%Head)
-      IF (DebugLevel.GT.0) WRITE(*,60) JulianDate%Head
+      IF (DebugLevel > 0) WRITE(*,60) JulianDate%Head
  60   FORMAT('AddDates : JulianDate%Head = ',F20.10)
 
-      IF (JulianDate%Tail.LT.0.) THEN
-	JulianDate%Tail = JulianDate%Tail + 1._Float
-      IF (DebugLevel.GT.0) WRITE(*,70) JulianDate%Tail
+      IF (JulianDate%Tail < 0.) THEN
+      JulianDate%Tail = JulianDate%Tail + 1._Float
+      IF (DebugLevel > 0) WRITE(*,70) JulianDate%Tail
  70   FORMAT('AddDates : JulianDate%Tail = ',F20.10)
-	JulianDate%Head = JulianDate%Head - 1._Float
-      IF (DebugLevel.GT.0) WRITE(*,80) JulianDate%Head
+      JulianDate%Head = JulianDate%Head - 1._Float
+      IF (DebugLevel > 0) WRITE(*,80) JulianDate%Head
  80   FORMAT('AddDates : JulianDate%Head = ',F20.10)
       ENDIF
 
       DumDate = Julian2Date(JulianDate)
-      IF (DebugLevel.GT.0) WRITE(*,90) DumDate
+      IF (DebugLevel > 0) WRITE(*,90) DumDate
  90   FORMAT('AddDates : DumDate = ',5(1X,I4))
 
       AddDates = DumDate
@@ -354,11 +354,11 @@ END FUNCTION Julian2Date
    TYPE( DateType ), INTENT( IN ) :: Date1,Date2
    LOGICAL :: EqualDates
 !
-   EqualDates = (Date1%Year  .EQ.Date2%Year  )&
-   &       .AND.(Date1%Month .EQ.Date2%Month )&
-   &       .AND.(Date1%Day   .EQ.Date2%Day   )&
-   &       .AND.(Date1%Hour  .EQ.Date2%Hour  )&
-   &       .AND.(Date1%Minute.EQ.Date2%Minute)
+   EqualDates = (Date1%Year == Date2%Year  )&
+   &      .AND. (Date1%Month == Date2%Month )&
+   &      .AND. (Date1%Day  == Date2%Day   )&
+   &      .AND. (Date1%Hour == Date2%Hour  )&
+   &      .AND. (Date1%Minute == Date2%Minute)
 !
    END FUNCTION EqualDates
 
@@ -371,7 +371,7 @@ END FUNCTION Julian2Date
    TYPE( DateType ), INTENT( IN ) :: Date1,Date2
    LOGICAL :: NotEqualDates
 !
-   NotEqualDates = (.NOT.EqualDates(Date1,Date2))
+   NotEqualDates = ( .NOT. EqualDates(Date1,Date2))
 !
    END FUNCTION NotEqualDates
 
@@ -390,8 +390,8 @@ END FUNCTION Julian2Date
    Julian1 = Date2Julian(Date1)
    Julian2 = Date2Julian(Date2)
 
-   DumBool = (Julian1%Head.GT.Julian2%Head)&
-   & .OR.((NINT(Julian1%Head-Julian2%Head).EQ.0).AND.(Julian1%Tail.GT.Julian2%Tail))
+   DumBool = (Julian1%Head > Julian2%Head)&
+   & .OR. ((NINT(Julian1%Head-Julian2%Head) == 0) .AND. (Julian1%Tail > Julian2%Tail))
 
    LargerDates = DumBool
 !
@@ -406,7 +406,7 @@ END FUNCTION Julian2Date
    TYPE( DateType ), INTENT( IN ) :: Date1,Date2
    LOGICAL :: LargerEqualDates
 !
-   LargerEqualDates = (EqualDates(Date1,Date2).OR.LargerDates(Date1,Date2))
+   LargerEqualDates = (EqualDates(Date1,Date2) .OR. LargerDates(Date1,Date2))
 !
    END FUNCTION LargerEqualDates
 
@@ -432,7 +432,7 @@ END FUNCTION Julian2Date
    TYPE( DateType ), INTENT( IN ) :: Date1,Date2
    LOGICAL :: SmallerEqualDates
 !
-   SmallerEqualDates = (EqualDates(Date1,Date2).OR.SmallerDates(Date1,Date2))
+   SmallerEqualDates = (EqualDates(Date1,Date2) .OR. SmallerDates(Date1,Date2))
 !
    END FUNCTION SmallerEqualDates
 
@@ -544,9 +544,9 @@ END FUNCTION Julian2Date
    INTEGER, INTENT(IN) :: iYear
    LOGICAL :: LeapYear
 !
-   LeapYear = ((MOD(iYear,4).EQ.0) &
-   &           .AND. &
-   &    ((MOD(iYear,100).NE.0)  .OR.  (MOD(iYear,400).EQ.0)))
+   LeapYear = ((MOD(iYear,4) == 0) &
+   &          .AND. &
+   &    ((MOD(iYear,100) /= 0) .OR. (MOD(iYear,400) == 0)))
 !
    END FUNCTION LeapYear
 
@@ -581,7 +581,7 @@ END FUNCTION Julian2Date
    TYPE(DateType), INTENT(IN) :: Date1,Date2
    TYPE(DateType) :: DumDate,MinDate
 !
-   IF (Date1.LT.Date2) THEN
+   IF (Date1 < Date2) THEN
      DumDate = Date1
    ELSE
      DumDate = Date2
@@ -602,7 +602,7 @@ END FUNCTION Julian2Date
    TYPE(DateType), INTENT(IN) :: Date1,Date2
    TYPE(DateType) :: DumDate,MaxDate
 !
-   IF (Date1.GT.Date2) THEN
+   IF (Date1 > Date2) THEN
      DumDate = Date1
    ELSE
      DumDate = Date2

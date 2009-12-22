@@ -161,7 +161,7 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
       !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
       if (idnopt /= 0) then
         !corner nodes
-        if (no == 0 .or. no == 2) then
+        if (no == 0 .OR. no == 2) then
           porosity = akp (nod)
           slotDepth = adb (nod)
         else
@@ -200,7 +200,7 @@ END DO
 
 !Testing of the Conveyance factors
 suma = abs (suma)
-IF (abs (suma / qreq) .lt.0.0000001) then
+IF (abs (suma / qreq) < 0.0000001) then
   WRITE (Lout, * ) 'no flow at transition'
   WRITE (Lout, * ) 'no flow depth at  transition-line: ', TLine
   STOP 'no flow at transition line'
@@ -217,7 +217,7 @@ AssignVelocities: DO k = 1, maxL
   !Get the actual node number
   na = line (TLine, k)
   !Skip non existing point
-  IF (na.le.0) cycle AssignVelocities
+  IF (na <= 0) cycle AssignVelocities
 
   !Process on midsidenodes to get their depths
   IF (mod (k, 2) == 0) then
@@ -226,7 +226,7 @@ AssignVelocities: DO k = 1, maxL
     na2 = line (TLine, k + 1)
 
     !If wetting/drying is activated, just calculate the waterdepths of the two adjacent corner nodes of the actual midside node
-    IF (idnopt.eq.0) then
+    IF (idnopt == 0) then
       d1 = waspi - ao (na1)
       d3 = waspi - ao (na2)
     !If marsh-algorithm is applied, calculate the waterdepths of the two adjacent corner nodes of the actual midsied node and

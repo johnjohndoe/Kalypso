@@ -49,12 +49,12 @@ call w_goto('test_w.f90',37,'test_w', '10',*10)
 
 10 continue
 x = 1
-if ( x .eq. 1 ) then
+if ( x == 1 ) then
       call w_call('test_w.f90',41,'test_w','subc')
       call subc( 1 ) 
       call w_endcall 
       endif
-if ( x .eq. 1 ) &
+if ( x == 1 ) &
 then
       call w_call('test_w.f90',42,'test_w','subc')
       call subc( 2 ) 

@@ -55,7 +55,7 @@ REAL (KIND = 8) :: waspi, TDep, TDepv
 !RESTARTING, BECAUSE RESTART FILE UNIT IS GREATER 0; RESTARTING, BECAUSE RESTART FILE UNIT IS GREATER 0
 !******************************************************************************************************
 
-IF (NB > 0 .and. NB < 100) then
+IF (NB > 0 .AND. NB < 100) then
 
   NXX = NB
   NB = IABS(NB)
@@ -63,7 +63,7 @@ IF (NB > 0 .and. NB < 100) then
   !NiS,apr06: Making an INQUIRE-test for finding the format of restarting; Restarting from Kalypso-2D-file means FORMATTED file
   INQUIRE (nb, FORM = inquiretest)
 
-  RESTARTTEST: IF (inquiretest == 'FORMATTED' .and. nb < 100) THEN
+  RESTARTTEST: IF (inquiretest == 'FORMATTED' .AND. nb < 100) THEN
     WRITE(*,*) ' Going to RDKALYPSO for restarting'
     call RDKALYPS (dummy(1), dummy(2), dummy(3), dummy(4), dummy(5), dummy(6), dummy(7), dummy (8), dummy (9), 2, m_SimModel)
     npx = maxp-1
@@ -145,7 +145,7 @@ IF (NB > 0 .and. NB < 100) then
 
   !introducing the restart values for interpolated profiles
   do i = 1, maxp
-    if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
+    if (IntPolProf (i) .AND. vel (1, i) == 0.0D0) then
       do j = 1, 3
         vel (j, i) = (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) + kmWeight(i)  * vel (j, NeighProf(i, 2))
         vold (j, i) = (1.0D0 - kmWeight(i)) * vold (j, NeighProf(i, 1)) + kmWeight(i)  * vold (j, NeighProf(i, 2))
@@ -159,7 +159,7 @@ IF (NB > 0 .and. NB < 100) then
   Assign1DMidsidesValues: DO i = 1, MaxE
     IF (nop (i, 1) == 0) CYCLE Assign1DMidsidesValues
     IF (IsPolynomNode (nop (i, 1))) THEN
-      IF (vel (1, nop (i, 1)) /= 0.0 .and. vel (1, nop (i, 2)) == 0.0) THEN
+      IF (vel (1, nop (i, 1)) /= 0.0 .AND. vel (1, nop (i, 2)) == 0.0) THEN
         DO j = 1, 2
           vel (j, nop (i, 2)) = 0.5 * (vel (j, nop (i, 1)) + vel (j, nop (i, 3)))
         ENDDO
@@ -315,8 +315,8 @@ ELSEIF (NB == 0) then
     !initializing the velocities at every node
     VEL (1, J) = 0.00
     VEL (2, J) = 0.00
-!IPK NOV9T	VEL(3,J) = ELEV - AO(J)
-!IPK NOV97	IF(VEL(3,J) .LT. HMIN) VEL(3,J)=HMIN
+!IPK NOV9T      VEL(3,J) = ELEV - AO(J)
+!IPK NOV97      IF(VEL(3,J) < HMIN) VEL(3,J)=HMIN
 !IPK DEC99 CHANGE TP ELEV1
     !calculating the real water depth over ADO
     HEL (J) = ELEV1 - ADO (J)
@@ -335,7 +335,7 @@ ELSEIF (NB == 0) then
         !remember the water surface elevation (at the beginning, it comes from the user's input value ELEV1)
     WSLL (J) = ELEV1
 !     VEL(4,J)=0.
-!     IF(ICK .EQ. 1) VEL(4,J)=TEMP
+!     IF(ICK == 1) VEL(4,J)=TEMP
 
     VEL (4, J) = SALI
     VEL (5, J) = TEMPI
@@ -385,7 +385,7 @@ ELSEIF (NB == 0) then
     !TODO: How to handle weir elements and junction elements
     IF (IMAT (N) > 900) CYCLE Assign1DVelos
     IF (NOP (N, 6) > 0) CYCLE Assign1DVelos
-    IF (IMAT (N) > 900 .and. IMAT (N) < 904) CYCLE Assign1DVelos
+    IF (IMAT (N) > 900 .AND. IMAT (N) < 904) CYCLE Assign1DVelos
 
     !for transitions only the first (corner node) and the second (midside) node must get a velocity; the rest is set up by 2D-part of transition
     IF (NCRN (N) == 5) THEN
@@ -403,13 +403,13 @@ ELSEIF (NB == 0) then
 !***************************************************
 !nis,may08: Restructuring of this code is necessary!
       !skip midsides of polynomial approach
-      if (m == 2 .and. imat (n) == 89) CYCLE Get1DInits
+      if (m == 2 .AND. imat (n) == 89) CYCLE Get1DInits
 
       !testing for polynomial nodes
-      if (imat (n) == 89 .and. (.not. IntPolProf(na))) then
+      if (imat (n) == 89 .AND. ( .NOT. IntPolProf(na))) then
         vel (3, na) = 0.5 * (hhmin (na) + hhmax (na))
 
-      ELSEIF (imat(n) == 89 .and. IntPolProf (na)) then
+      ELSEIF (imat(n) == 89 .AND. IntPolProf (na)) then
         VEL (3, na) = kmWeight (na)             * 0.5 *(hhmin (NeighProf (na, 1)) + hhmax (NeighProf (na, 1))) &
         &             + (1.0D0 - kmWeight (na)) * 0.5 *(hhmin (NeighProf (na, 2)) + hhmax (NeighProf (na, 2)))
       !fill vel(3,*) midsides for polynomial approach
@@ -440,11 +440,11 @@ CALL BFORM(0)
 
 
 !TODEL: These direction fixitations are done in BFORM probably
-      IF(NB .EQ. 0) THEN
+      IF(NB == 0) THEN
         if (unom /= 0.0d0) then
           estimateVelocities: DO N=1,NP
-            IF(VEL(1,N) .NE. 0.) cycle estimateVelocities
-            IF(NFIX(N)/1000 .EQ. 0) THEN
+            IF(VEL(1,N) /= 0.) cycle estimateVelocities
+            IF(NFIX(N)/1000 == 0) THEN
                 VEL(1,N)=UNOM*COS(UDIR)
                 VEL(2,N)=UNOM*SIN(UDIR)
             ELSE

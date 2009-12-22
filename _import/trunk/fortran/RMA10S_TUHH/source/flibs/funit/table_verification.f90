@@ -235,7 +235,7 @@ subroutine free_lun( lun )
 
     do i = 10,99
         inquire( unit = i, opened = opend )
-        if ( .not. opend ) then
+        if ( .NOT. opend ) then
             lun = i
             exit
         endif
@@ -298,14 +298,14 @@ subroutine set_keyword( lurep, test_params, line )
             test_params%tablename = value
             test_params%title     = value
         case( 'absolute-tolerance' )
-            if ( value == '-' .or. value == 'N/A' ) then
+            if ( value == '-' .OR. value == 'N/A' ) then
                 test_params%abs_tolerance = -999.0
             else
                 read( value, *, iostat=ierr ) test_params%abs_tolerance
             endif
 
         case( 'relative-tolerance' )
-            if ( value == '-' .or. value == 'N/A' ) then
+            if ( value == '-' .OR. value == 'N/A' ) then
                 test_params%rel_tolerance = -999.0
             else
                 read( value, *, iostat=ierr ) test_params%rel_tolerance
@@ -368,12 +368,12 @@ subroutine set_names_units( lurep, test_params, line )
     allocate( string(1:count) )
     read( line, *, iostat = ierr ) ( string(i), i=1,count )
 
-    if ( .not. associated(test_params%name) ) then
+    if ( .NOT. associated(test_params%name) ) then
         test_params%name => string
         string => null()
     endif
 
-    if ( .not. associated(test_params%unit) ) then
+    if ( .NOT. associated(test_params%unit) ) then
         test_params%unit => string
         string => null()
         if ( size(test_params%name) /= size(test_params%unit) ) then
@@ -429,7 +429,7 @@ subroutine get_parameters( lurep, test_params, line, error )
     read( line, * ) ( string(i), i=1,count )
 
     do i = 1,count
-        if ( string(i) == '-' .or. string(i) == 'error' ) then
+        if ( string(i) == '-' .OR. string(i) == 'error' ) then
             test_params%values(i) = missing_value
         else
             read( string(i), *, iostat = ierr ) test_params%values(i)

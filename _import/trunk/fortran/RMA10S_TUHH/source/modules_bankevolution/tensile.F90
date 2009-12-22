@@ -3,7 +3,7 @@
 ! the Fe-node number corresponding to the profile nodes in overhang region are equal
 ! to the negative value of the corresponding fe-node number
 ! pr(i)%prnode(j)%Fe_nodenumber = - Fe_node%number
-!      |<-	here is    the overhang zone   <-------------------------------------|
+!      |<-      here is    the overhang zone   <-------------------------------------|
 ! *****************
 !      +           *                                                  upper edge
 !       +           *                                                **************************
@@ -289,7 +289,7 @@ LR:   if (side =='left') then
            pr%prnode(i)%attribute = 'overhang'
         end if
 
- L1:     if ((d-x > 0.001).and.(d<= trans1)) then                       ! when the profile nodes are located between new_front and old front         
+ L1:     if ((d-x > 0.001) .AND. (d<= trans1)) then                       ! when the profile nodes are located between new_front and old front         
             if ( pr%prnode(i)%fe_nodenumber < 0 ) cycle main          ! if the current node has already a projection on the old profile no need to create double node (once more of it).
             pr%prnode(i)%fe_nodenumber = -u                            ! The fe node number of the profile nodes, on the top of the profile, turns to negative signalising its projection on extrapolation line(under water).
             h = newwater_elev - TAN(radian(critical_slope))* (d - x)   ! Projection of the current profile's node on extrapolation line (the elevation), 
@@ -322,7 +322,7 @@ LR:   if (side =='left') then
                                                                  ! but the one in fenode array, because the node might have been eroded due to the erosion resulting from flooding.
                
         
-         elseif ((d> trans1).and.(d<=trans2)) then   L1
+         elseif ((d> trans1) .AND. (d<=trans2)) then   L1
 !            pr%prnode(i)%fe_nodenumber = -u       ! 04.05.2009 11:10 .
             s = s + 1
   
@@ -468,12 +468,12 @@ CO:         if (s==1) then                                       ! this if state
              pr%prnode(i)%attribute = 'overhang'
            end if
 
-!L2:        if ((d<x).and.(d>=trans1)) then
-L2:        if ((d- x<-0.001).and.(d>=trans1)) then
+!L2:        if ((d<x) .AND. (d>=trans1)) then
+L2:        if ((d- x<-0.001) .AND. (d>=trans1)) then
             if ( pr%prnode(i)%fe_nodenumber < 0 ) cycle main          ! if the current node has already a projection on the old profile no need to create double node (once more of it).
             pr%prnode(i)%attribute = 'overhang'
             pr%prnode(i)%fe_nodenumber = -u     ! The fe node number of the profile nodes, on the top of the profile, turns to negative signalising its projection on extrapolation line(under water).
-            h = z + TAN(radian(critical_slope)) * (d - dis)   				       ! Image of the current profile's node on extrapolation line (the elevation). The equation is based on old front (right).
+            h = z + TAN(radian(critical_slope)) * (d - dis)                                  ! Image of the current profile's node on extrapolation line (the elevation). The equation is based on old front (right).
             del_h1= newwater_elev - h1            ! since the elevation of the profile nodes on lower edge are all the same and equal to front(1).
             del_h2 = newwater_elev - h
 
@@ -499,7 +499,7 @@ L2:        if ((d- x<-0.001).and.(d>=trans1)) then
 
             if (abs(d-trans1) <= 0.001) FrontCounted = .TRUE.
             
-         elseif ((d<trans1).and.(d>=trans2)) then   L2
+         elseif ((d<trans1) .AND. (d>=trans2)) then   L2
 !            pr%prnode(i)%fe_nodenumber = -u       ! 04.05.2009 11:10 .
 
             s = s + 1

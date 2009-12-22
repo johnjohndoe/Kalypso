@@ -111,7 +111,7 @@ if ( CallCounter < 10 ) then
 digit = ADJUSTL(digit)
 digit = TRIM (digit)
 digit = '00'//digit
-elseif ( ( CallCounter >= 10 ).and.( CallCounter < 100 ) ) then
+elseif ( ( CallCounter >= 10 ) .AND. ( CallCounter < 100 ) ) then
 digit = ADJUSTL(digit)
 digit = TRIM (digit)
 digit = '0'//digit
@@ -133,7 +133,7 @@ else
 number_of_profiles = SIZE (BANKPROFILES)
 end if
 
-if (.NOT. allocated(old_pr) ) then
+if ( .NOT. allocated(old_pr) ) then
    allocate (old_pr (number_of_profiles) , stat = lstatus)
    if (lstatus /= 0) then
       write (*,*) ' failure by allocation array "old_pr" '
@@ -170,10 +170,10 @@ prof: do i= 1, number_of_profiles
 ! has not rised (in respect to last time step) and there is no overhang
 ! then no bank evolution computation is necessary for this profile.
 
-       if (.not.old_pr(i)%activation) then 
+       if ( .NOT. old_pr(i)%activation) then 
         if (pr%water_elev <= old_pr(i)%water_elev)then
-         if( (pr%lfront==0).and.(pr%rfront==0) )then
-          CYCLE                                                                         ! so if activation is .false. then .not..false. is true and it cycles if th eprofile is inactive.
+         if( (pr%lfront==0) .AND. (pr%rfront==0) )then
+          CYCLE                                                                         ! so if activation is .false. then .NOT. .false. is true and it cycles if th eprofile is inactive.
           end if
          end if
        end if    
@@ -196,7 +196,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-    IF( ( ABS ( DISTFROMWATER) <= 0.001 ).AND. (TRIM(OLD_PR(I)%PRNODE(J)%ATTRIBUTE) /='front')  )THEN    !IN THE CASE THE WATER LEVEL COINCIDES WITH A NODE, WHICH IS NOT A FRONT. SINCE THE POTENTIAL NOSE DISTANCE IS REQUIRED IN TENSILE FAILURE                         ! THE CASE IN WHICH WATER LEVEL HAS NOT BEEN CHANGED AND IS EQUAL TO THE NOSE ELEVATION OF THE OLD PROFILE: STEADY STATE.
+    IF( ( ABS ( DISTFROMWATER) <= 0.001 ) .AND. (TRIM(OLD_PR(I)%PRNODE(J)%ATTRIBUTE) /='front')  )THEN    !IN THE CASE THE WATER LEVEL COINCIDES WITH A NODE, WHICH IS NOT A FRONT. SINCE THE POTENTIAL NOSE DISTANCE IS REQUIRED IN TENSILE FAILURE                         ! THE CASE IN WHICH WATER LEVEL HAS NOT BEEN CHANGED AND IS EQUAL TO THE NOSE ELEVATION OF THE OLD PROFILE: STEADY STATE.
   
      SELECT CASE(H)
       
@@ -224,7 +224,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
 
      END SELECT
       
-    ELSEIF ( ( (distfromwater > 0.001) .AND. (ZZ2 < -0.001) ).OR.( (distfromwater < -0.001) .AND. (ZZ2 > 0.001) ) ) THEN     ! TRANSITAION THROUGH WATER SURFACE FOR THE LEFT AND RIGHT BANKS; RESPECTIVELY.
+    ELSEIF ( ( (distfromwater > 0.001) .AND. (ZZ2 < -0.001) ) .OR. ( (distfromwater < -0.001) .AND. (ZZ2 > 0.001) ) ) THEN     ! TRANSITAION THROUGH WATER SURFACE FOR THE LEFT AND RIGHT BANKS; RESPECTIVELY.
      
      SELECT CASE(H)
       
@@ -283,7 +283,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
                   pr%prnode(j)%elevation=z1                                          ! Note that the old profile nodes are not displaced but it is the new profile
            end if                                                                    !so that at the moment old data is still retrievable(it is necessary for the case
                                                                                      !that Front point is linked to a submerged Fe node and is eroded. The original
-         end do profnod                                      	                     !position of the Front is needed for calculation of tensile failure volume/area.
+         end do profnod                                                                 !position of the Front is needed for calculation of tensile failure volume/area.
 
          call output1 (pr, exner_pr, 11, i)
 
@@ -297,7 +297,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
      lsubmerged=.false.
      rsubmerged=.false.
                                                                                     
-        if ((old_pr(i)%lnose/=0).and. (potentialnose(1)%node /=old_pr(i)%lnose) ) then 
+        if ((old_pr(i)%lnose/=0) .AND. (potentialnose(1)%node /=old_pr(i)%lnose) ) then 
             integertemp=old_pr(i)%lnose                                             
             side='left'                                                             
              IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.001 )then   ! if new water stage is over nose, then the old nose is submerged and tensile failure should be run.
@@ -317,7 +317,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
              END if
         ENDif
 
-        if ((old_pr(i)%rnose/=0).and. (potentialnose(2)%node/=old_pr(i)%rnose ) )then
+        if ((old_pr(i)%rnose/=0) .AND. (potentialnose(2)%node/=old_pr(i)%rnose ) )then
               integertemp=old_pr(i)%rnose
               side='right'
               IF ( (old_pr(i)%prnode(integertemp)%elevation - pr%water_elev) <= -0.001 )then  ! ifnew water stage is over nose, then the old nose is submerged and tensile failure should be run.
@@ -341,7 +341,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
 
 ! If either of the overhang's noses is submerged then the following block is executed
       
-submerg:if (lsubmerged.or.rsubmerged) then
+submerg:if (lsubmerged .OR. rsubmerged) then
            Ltotal = Lnumber_newnodes - Lnumber_lostnodes
            Rtotal = Rnumber_newnodes - Rnumber_lostnodes
            total = Ltotal + Rtotal
@@ -391,8 +391,8 @@ sort:     do
              
              
             
-!sortnode:    if ( (g == kk).AND.(lsubmerged) ) then
-sortnode:    if ( (g == kk).AND.(lsubmerged).AND.(Lnumber_lostnodes/=-999 ) )then
+!sortnode:    if ( (g == kk) .AND. (lsubmerged) ) then
+sortnode:    if ( (g == kk) .AND. (lsubmerged) .AND. (Lnumber_lostnodes/=-999 ) )then
 leftbank:       if (potentialnose(1)%node == 0) then                      ! the potential nose is between two fe-nodes.
 
                   profil%prnode(j)%distance = potentialnose(1)%dist
@@ -460,9 +460,9 @@ leftbank:       if (potentialnose(1)%node == 0) then                      ! the 
                 ENDIF                         leftbank
 
   ! the same procedure of sorting new nodes for the right bank
-             ! ELSEIF ((trim(pr%prnode(g)%attribute) =='front').AND.(Rsubmerged)) then     sortnode
-             ELSEIF ((trim(pr%prnode(g)%attribute) =='front').AND.(Rsubmerged) &
-             & .and.(Rnumber_lostnodes/=-999) ) then     sortnode
+             ! ELSEIF ((trim(pr%prnode(g)%attribute) =='front') .AND. (Rsubmerged)) then     sortnode
+             ELSEIF ((trim(pr%prnode(g)%attribute) =='front') .AND. (Rsubmerged) &
+             & .AND. (Rnumber_lostnodes/=-999) ) then     sortnode
 
 rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if the right front has a conjugate fe_node.
 !04.05.2009 11:26
@@ -551,7 +551,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
            profil%max_nodes = j - 1
 
 
-           if (Lsubmerged .or. Rsubmerged ) call output1 (profil,tens_pr, 21, i)
+           if (Lsubmerged .OR. Rsubmerged ) call output1 (profil,tens_pr, 21, i)
 
 !--------------------- Computation of AVALANCHE of submerged sandy bank -------------------
           ! initialize variables
@@ -560,7 +560,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
      !     EffectiveWidth_Overhang = 0.0
           avalanche_source        = 0.0
           
-          if (lsubmerged.or.rsubmerged) then
+          if (lsubmerged .OR. rsubmerged) then
           !   call avalanche (profil, fenode, last_submerged_node, Banktoe_node,EffectiveWidth_Overhang,avalanche_source)
               call avalanche (ava_pr, profil, fenode, avalanche_source)
           else
@@ -578,7 +578,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
            
            call cantilever_failure (canti_pr , ava_pr,pr%water_elev,critical_slope,failure_source , fenode,SF)
          
-           if (SF(1)<1.0 .or. SF(2) <1.0 ) call output1 (canti_pr,safteyfactor, 51, i,callcounter,SF)
+           if (SF(1)<1.0 .OR. SF(2) <1.0 ) call output1 (canti_pr,safteyfactor, 51, i,callcounter,SF)
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !   DISTRIBUTATION OF MASS WASTE AT BANK-TOE  !
@@ -588,11 +588,11 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
     Avalanche_source(2) = Avalanche_source(2) +SumsourceR
   ! cant_pr is the profile after computation of probable mass failure,it is defined as a global profile in interface of the module , which includes cantilever_failure subroutine.
     
-    if ((failure_source(1) /=0) .or.(failure_source(2) /=0) ) then
+    if ((failure_source(1) /=0) .OR. (failure_source(2) /=0) ) then
      Avalanche_source = Avalanche_source + failure_source
     end if
     
-    if ( (Avalanche_source(1)/=0) .or. (Avalanche_source(2)/=0 ) )then
+    if ( (Avalanche_source(1)/=0) .OR. (Avalanche_source(2)/=0 ) )then
      
      distribution = 'linear' 
     
@@ -623,7 +623,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
      
       ELEVB  = ELEVB  - DiffBed
       TTHICK = TTHICK - DiffBed
-	  DELBED = DELBED - DiffBed
+        DELBED = DELBED - DiffBed
 
  ! THE FOLLOWING HAS BEEN COPIED FROM SLUMP.FOR                                  
  
@@ -631,14 +631,14 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
 
       ncn=0
       do n=1,ne             ! ne is maximum number of elements, defined as global variable in module BLK10MOD
-        if(imat(n) .gt. 0  ) then
-          if(imat(n) .lt. 1000  .and.  ncorn(n) .lt. 9) then
+        if(imat(n) > 0  ) then
+          if(imat(n) < 1000 .AND. ncorn(n) < 9) then
             ncn=ncorn(n)
-          elseif(imat(n)/1000 .eq. 1  .or.  imat(n)/1000 .eq. 2) then
+          elseif(imat(n)/1000 == 1 .OR. imat(n)/1000 == 2) then
             ncn=ncorn(n)
           endif
-          if(ncn .gt. 0) then
-            if(ncn .eq. 5) ncn=3
+          if(ncn > 0) then
+            if(ncn == 5) ncn=3
             do j=2,ncn,2
               j1=j-1
               j2=mod(j,ncn)+1
@@ -652,19 +652,19 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then                    ! if
       enddo 
 
  ! CIPK MAY02 UPDATE BED ELEVATION
-	DO N=1,NP
+      DO N=1,NP
 
-	DIFF1=ELEVB(N)-AO(N)
-	IF(DIFF1 .NE. 0.) THEN
-  	  AO(N)=ELEVB(N)
-	  ADO(N)=ADO(N)+DIFF1
+      DIFF1=ELEVB(N)-AO(N)
+      IF(DIFF1 /= 0.) THEN
+          AO(N)=ELEVB(N)
+        ADO(N)=ADO(N)+DIFF1
           HEL(N)=WSLL(N)-ADO(N)
           CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-	  VEL(3,N)=HTP
-	  fenode(N).elevation = ao(N)
-	ENDIF
+        VEL(3,N)=HTP
+        fenode(N).elevation = ao(N)
+      ENDIF
 
-	ENDDO
+      ENDDO
 
       BANKPROFILES = old_pr
       FENODES = fenode
@@ -739,7 +739,7 @@ logical                            :: exists
     else
      open (UNIT=unitt, file = filename , STATUS='new', ACTION='write', IOSTAT=istat)
      call file_error (filename, istat)
-     if (.not.present(timestep)) write (unitt, *)number_of_profiles
+     if ( .NOT. present(timestep)) write (unitt, *)number_of_profiles
     endif 
    
      
@@ -749,7 +749,7 @@ logical                            :: exists
    
      write (unitt, *) 'Contiline number: ', profileIN%cl_number
    
-   if (.not.present(timestep) )then
+   if ( .NOT. present(timestep) )then
      write (unitt, 110) profileIN%lnose, profileIN%Rnose, profileIN%lfront, profileIN%Rfront,profileIN%max_nodes
     110 format (5(2x, I4))
    
@@ -886,7 +886,7 @@ end if
   !call HasPrnodeFenode (CurrentProfile, FirstNode , Increment(j))
   !call HasPrnodeFenode (CurrentProfile, LastNode  , Increment(j))
 
- if( (FirstNode == 0).OR.(LastNode == 0) ) cycle  LeftRightBank     ! in the case that no bank erosion has occured on either of bank side cycle to the next one. 
+ if( (FirstNode == 0) .OR. (LastNode == 0) ) cycle  LeftRightBank     ! in the case that no bank erosion has occured on either of bank side cycle to the next one. 
  StartDistance = ABS (CurrentProfile.Prnode(FirstNode).Distance - origin)
  EndDistance   = ABS (CurrentProfile.Prnode(LastNode).Distance  - origin)
  
@@ -995,7 +995,7 @@ mass:     IF (MassMethod) Then
         
           END IF mass
           
-	      !check the sum of waste volume/area
+            !check the sum of waste volume/area
           sum =(deltab + deltab_old)*(RelativeDistance - PreviousDistance)/2+sum
           
           DELTAB_old = DELTAB

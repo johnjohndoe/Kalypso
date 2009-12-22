@@ -96,7 +96,7 @@ contains
     do step = 1 , 2
        nbunits = 0
        do iunit = 1, FILEUNIT_MAX_UNIT_NUMBER
-          if ( iunit /= 5 .and. iunit /= 6 .and. iunit /= 9 ) then
+          if ( iunit /= 5 .AND. iunit /= 6 .AND. iunit /= 9 ) then
              inquire ( UNIT = iunit, opened = lopen )
              if ( lopen ) then
                 if ( step == 1 ) then
@@ -277,10 +277,10 @@ contains
     unit_found = .false.
     freeunit = 0
     do iunit = 1, FILEUNIT_MAX_UNIT_NUMBER
-       if ( iunit /= 5 .and. iunit /= 6 .and. iunit /= 9 ) then
+       if ( iunit /= 5 .AND. iunit /= 6 .AND. iunit /= 9 ) then
           inquire ( UNIT = iunit, opened = lopen, iostat = ios )
           if ( ios == 0 ) then
-             if ( .not. lopen ) then
+             if ( .NOT. lopen ) then
                 freeunit = iunit
                 unit_found = .true.
                 exit
@@ -288,7 +288,7 @@ contains
           end if
        end if
     end do
-    if (.NOT.unit_found) then
+    if ( .NOT. unit_found) then
        call fileunit_error ( message = "No unit free in fileunit_getfreeunit." )
     endif
   end function fileunit_getfreeunit

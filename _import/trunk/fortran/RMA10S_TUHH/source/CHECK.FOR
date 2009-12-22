@@ -62,13 +62,13 @@ cipk jul01 add line above
 !-
       type (StorageElement), pointer :: SElt => null()
 
-      IF( NCL .LE. 0 ) RETURN
+      IF( NCL <= 0 ) RETURN
 
       !initializations
       LineLength = 0
 
       !nis,sep06,com: Jump over, if not called the first time
-      IF( NCALL .GT. 0 ) GO TO 140
+      IF( NCALL > 0 ) GO TO 140
 C-
 C-..... Augment continuity lists.....
 C-
@@ -80,7 +80,7 @@ C-
         M = LMT(J)
 cipk feb01  skip out for zero lines
         !nis,sep06,com: Cycle loop, if CCL has no node
-        IF(M .EQ. 0) cycle SetupCCLs
+        IF(M == 0) cycle SetupCCLs
         !nis,sep06,com: ITEMP(K) temporaryly stores the CCL J
         localNodeCopy: DO K = 1, M
           ITEMP(K) = LINE(J,K)
@@ -93,7 +93,7 @@ cipk feb01  skip out for zero lines
         !nis,sep06,com: Counter for corner nodes
         N = 0
         !nis,sep06,com: Jump over, if the CCL consist only of one node
-        IF(M .EQ. 1) cycle SetupCCLs
+        IF(M == 1) cycle SetupCCLs
 
         !nis,sep06: New, taken from Kalypso-2D-code. Initializing the fields
         !           line(J,L) and lineimat (J,L) for the CCL J. The values of line(J,L) are
@@ -117,7 +117,7 @@ cipk feb01  skip out for zero lines
         !           of the loop.
         throughLineSegments: DO L = 1, LineLength-2, 2
   
-          if (.not. (associated (tmpSeg))) then
+          if ( .NOT. (associated (tmpSeg))) then
             tmpSeg => tmpContiLine.firstSegment
             tmpLinkedNode => tmpContiLine.firstNode
           else
@@ -139,7 +139,7 @@ cipk feb01  skip out for zero lines
 
             !nis,sep06: If the material type of the adjacent element is 0, no flow
             !           can occur there: Jump over that segment
-            if (imat(jj).eq.0) cycle findElement
+            if (imat(jj) == 0) cycle findElement
             !-
 
             !nis,sep06,com: Get number of corner nodes (element arcs)
@@ -148,15 +148,15 @@ cipk feb01  skip out for zero lines
             DO 117 KK = 1, NCN, 2
               !nis,sep06,com: Get the two corner nodes of actual arc
               KKK = MOD(KK+2,NCN)
-              IF(KKK .EQ. 0) KKK=3
+              IF(KKK == 0) KKK=3
 CIPK OCT98 CONVERT TO F90
               N1 = ABS(NOP(JJ,KK))
               N2 = ABS(NOP(JJ,KKK))
               !nis,sep06,com: Compare corner nodes with actual nodes of CCL J
               !               If it fits at one element process the midside
               !               node at marker 115
-              IF( NA .EQ. N1 .AND. NC .EQ. N2 ) GO TO 115
-              IF( NC .EQ. N1 .AND. NA .EQ. N2 ) GO TO 115
+              IF( NA == N1 .AND. NC == N2 ) GO TO 115
+              IF( NC == N1 .AND. NA == N2 ) GO TO 115
               !nis,sep06,com: If the comparison doesn't fit, cycle loop
               GO TO 117
 CIPK OCT98 CONVERT TO F90
@@ -199,9 +199,9 @@ CIPK OCT98 CONVERT TO F90
 
 CIPK JUL02 TEST FOR FAILURE TO FIND CONTINUITY LINE
           !TODO: ErrorMessage
-          IF(LINE(J,L+1) .EQ. 0) THEN
+          IF(LINE(J,L+1) == 0) THEN
 CIPK SEP04
-            IF(IERR .NE. 1) THEN
+            IF(IERR /= 1) THEN
               CLOSE(75)
               OPEN(75,file='ERROR.OUT')
             ENDIF
@@ -219,15 +219,15 @@ CIPK SEP04
       !           continuation of the parts in the GETGEO.subroutine. It will lead to problems, if there was only 1 element, that defines
       !           the transition. For that case it is already tested in the subroutine GETGEO. Thus at this point, there is no possibility
       !           that the transition line is shorter than 2 elements.
-        if (MaxLT.ne.0) then
+        if (MaxLT /= 0) then
 
           !for every transition
           Transitiontest: do i=1,MaxLT
 
             !test, whether actual Continuityline is a Transitionline
-            if (J.eq.TransLines(i,2)) then
+            if (J == TransLines(i,2)) then
 
-              !LMT of the Line must be .ge.5, because the minimum element number is 2 (tested in GETGEO.subroutine)
+              !LMT of the Line must be >= 5, because the minimum element number is 2 (tested in GETGEO.subroutine)
               DO nodeno=2,LMT(J),2
                 !all midside nodes get the direction angle of the 3rd node in the line. There are a combination of reasons
                 !for chosing the 3rd node
@@ -252,7 +252,7 @@ CIPK SEP04
 
       !nis,jun07: deactivating line check appeareance
       ! !nis,nov06: Check, whether all 1D-2D-line-Transitions are connected. The Question ist, whether connecting node is part of the transition line:
-      if (MaxLT.ne.0) then
+      if (MaxLT /= 0) then
         call check_linetransition
       end if
       ! !-
@@ -260,7 +260,7 @@ CIPK SEP04
 
 CIPK JUL02
       !TODO: ErrorMessage
-      IF(IERR .EQ. 1) THEN
+      IF(IERR == 1) THEN
         WRITE(*,*)
      +   'EXECUTION TERMINATED - FULL LIST OF ERRORS IN ERROR.OUT'
         STOP
@@ -271,14 +271,14 @@ CIPK JUL02
       !-
 
 CIPK JUL01
-      IF(IOCON .GT. 0) THEN
+      IF(IOCON > 0) THEN
         WRITE(IOCON,6200) (J,J=1,NCL)
- 6200	  FORMAT('      TOTAL CONTINUITY LINE FLOWS BY CONTINUITY LINE NUM
+ 6200        FORMAT('      TOTAL CONTINUITY LINE FLOWS BY CONTINUITY LINE NUM
      +BER'//'  DAY      HOUR',I9,19I11)
       ENDIF
 
 
-      IF(NB .EQ. 0) then
+      IF(NB == 0) then
         ncall = 1
         RETURN
       endif
@@ -305,10 +305,10 @@ cipk jul01
         totalwsll = 0.0
         if (CCLout == 1) then
           !EFa jun09, added maxn == nitn --> results are needed for SMALL
-          if (nconv==2.or.maxn == nitn) then
+          if (nconv==2 .OR. maxn == nitn) then
           !-
-            if (icyc == 0.OR.(iaccyc == icyc.and.niti == 0).or.
-     +       (icyc==1.and.niti==0)) then          
+            if (icyc == 0 .OR. (iaccyc == icyc .AND. niti == 0) .OR. 
+     +       (icyc==1 .AND. niti==0)) then          
               WRITE(CLQ,'(a10,i4.4,a4)')'result\CLQ', j, '.txt'
               uclq = 800+j
               uclh = 900+j
@@ -335,16 +335,16 @@ cipk jul01
         SUMYT= 0.0
         SUMYSD=0.0
 cipk feb01  skip out for zero lines
-        IF(LMT(j) .EQ. 0) THEN
+        IF(LMT(j) == 0) THEN
           GO TO 180
         !---------------------------------------------------------------------
         !calculate discharge through 1D or 2D horizontally averaged boundaries
         !---------------------------------------------------------------------
-        ELSEIF(LMT(J) .EQ. 1) THEN
+        ELSEIF(LMT(J) == 1) THEN
           NA=LINE(J,1)
           !1D 1D 1D 1D 1D 1D 1D 1D 
           !-----------------------
-          IF(NDEP(NA) .LT. 2) THEN
+          IF(NDEP(NA) < 2) THEN
             !nis,feb07: Allow for continuity checks at nodes with polynomial approach
             !Proceed on nodes of polynomial approach
             if (width (na) == 0.0) then
@@ -355,7 +355,7 @@ cipk feb01  skip out for zero lines
               TempArea = calcPolynomial (apoly(PolyPos, NA, 0:4),
      +                                   vel(3, NA), ubound (apoly, 3))
 
-              if (vel(1,na) /= 0.0d0 .and. vel(2,na) /= 0.0d0) then
+              if (vel(1,na) /= 0.0d0 .AND. vel(2,na) /= 0.0d0) then
                 dirScaling = projectionDirPointer
      +          (tmpContiLine.posNormal, vel(1:2,na))
               else
@@ -381,7 +381,7 @@ cipk mar01 add constituents
             SUMX=0.0
             XHT=ELEV-AO(NA)
             DO 160 M=K,L,2
-              IF(M .EQ. K) THEN
+              IF(M == K) THEN
                 M1=NA
               ELSE
                 M1=M
@@ -429,7 +429,7 @@ cip apr01 fix error using V1 for lines below
           MAX = LMT(J)-2
           if (associated (tmpSeg)) nullify (tmpSeg)
           DO 700 K = 1, MAX, 2
-            if (.not. (associated (tmpSeg))) then
+            if ( .NOT. (associated (tmpSeg))) then
               tmpSeg => tmpContiLine.firstSegment
             else
               tmpSeg => tmpSeg.nextSeg
@@ -446,7 +446,7 @@ cip apr01 fix error using V1 for lines below
 
             !3D applications
             !---------------
-            IF(NDEP(NB) .GT. 1) THEN
+            IF(NDEP(NB) > 1) THEN
               !temporary
               continue
               !temporary-
@@ -462,13 +462,13 @@ cip apr01 fix error using V1 for lines below
 !C...... Count elements downward
 !C-
 !              NEL=NDEP(NA)-2
-!              IF(NDEP(NC)-2 .GT. NEL) NEL=NDEP(NC)-2
+!              IF(NDEP(NC)-2 > NEL) NEL=NDEP(NC)-2
 !              DO 500 M=1,NEL,2
 !C-
 !C...... Test for triangle
 !C-
-!                IF(IDPK .GT. 1) THEN
-!                  IF(IDPI .GT. 1) THEN
+!                IF(IDPK > 1) THEN
+!                  IF(IDPI > 1) THEN
 !C-
 !C...... This is quadrilateral
 !C-
@@ -519,7 +519,7 @@ cip apr01 fix error using V1 for lines below
 !                  SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
 !     +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,K2)*XN(6)
 !     +              +VEL(6,K1)*XN(7)+VEL(6,J1)*XN(8)
-!                        IF(LA .EQ. 1) THEN
+!                        IF(LA == 1) THEN
 !                          SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
 !                          SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
 !                          SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
@@ -560,7 +560,7 @@ cip apr01 fix error using V1 for lines below
 !C-.....COPY PROPER WEIGHTING FUNCTIONS.....
 !C-
 !                      NGP = 7
-!	                NCN = 6
+!                      NCN = 6
 !C-
 !C-.....COPY SHAPE FUNCTIONS
 !C-
@@ -582,7 +582,7 @@ cip apr01 fix error using V1 for lines below
 !     +              +VEL(5,K2)*XN(4)+VEL(5,K1)*XN(5)+VEL(5,J1)*XN(6)
 !                  SD1=VEL(6,I3)*XN(1)+VEL(6,J2)*XN(2)+VEL(6,K3)*XN(3)
 !     +              +VEL(6,K2)*XN(4)+VEL(6,K1)*XN(5)+VEL(6,J1)*XN(6)
-!                        IF(LA .EQ. 1) THEN
+!                        IF(LA == 1) THEN
 !                          SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
 !                          SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
 !                          SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
@@ -625,7 +625,7 @@ cip apr01 fix error using V1 for lines below
 !C-.....COPY PROPER WEIGHTING FUNCTIONS.....
 !C-
 !                    NGP = 7
-!	              NCN = 6
+!                    NCN = 6
 !C-
 !C-.....COPY SHAPE FUNCTIONS
 !C-
@@ -647,7 +647,7 @@ cip apr01 fix error using V1 for lines below
 !     +              +VEL(5,J2)*XN(4)+VEL(5,K3)*XN(5)+VEL(5,J1)*XN(6)
 !                  SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
 !     +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,J1)*XN(6)
-!                      IF(LA .EQ. 1) THEN
+!                      IF(LA == 1) THEN
 !                        SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
 !                        SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
 !                        SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
@@ -680,7 +680,7 @@ C-
               !get water levels of segment
               d1 = vel (3, na)
               d3 = vel (3, nc)
-              if (d1 <= dset .or. d3 <= dset) go to 700
+              if (d1 <= dset .OR. d3 <= dset) go to 700
               d2 = (d1 + d3)/ 2.
 
 CIPK MAR01  ADD OTHER CONSTITUENTS
@@ -698,7 +698,7 @@ CIPK MAR01  ADD OTHER CONSTITUENTS
      +         *d3)/6*sqrt(dx**2+dy**2)
               meanvy =  (vel(2,na)*d1+4.0*vel(2,nb)*d2+vel(2,nc)
      +         *d3)/6*sqrt(dx**2+dy**2)
-              if (ndry(na)==1.and.ndry(nc)==1) then
+              if (ndry(na)==1 .AND. ndry(nc)==1) then
                 meanh = (wsll(na)+wsll(nc)) /2*sqrt(dx**2+dy**2)
               endif
               !-
@@ -729,13 +729,13 @@ C-
               !EFa nov08, for calculation of qdir and output of external BC
               sumvx = sumvx + meanvx
               sumvy = sumvy + meanvy             
-              !if (ndry(na)==1.and.ndry(nc)==1) then
+              !if (ndry(na)==1 .AND. ndry(nc)==1) then
               !  sumh = sumh + meanh
               !  sumdl = sumdl + sqrt(dx**2+dy**2)  
               !endif  
               !!if (d1>((adt(na)-adb(na))/4.+(adb(na)*akp(na)))
-      !!+         .and.d3>((adt(nc)-adb(nc))/4.+(adb(nc)*akp(nc))))then
-              if (wsll(na)>ao(na).and.wsll(nc)>ao(nc)) then
+      !!+        .AND. d3>((adt(nc)-adb(nc))/4.+(adb(nc)*akp(nc))))then
+              if (wsll(na)>ao(na) .AND. wsll(nc)>ao(nc)) then
                 sumh = sumh +meanh
                 sumdl = sumdl + sqrt(dx**2+dy**2)
               endif                       
@@ -773,7 +773,7 @@ CIPK JUL01
 
 cipk apr01
 CIPK JUL01
-        IF(TOTAL(J) .NE. 0.) THEN
+        IF(TOTAL(J) /= 0.) THEN
         AVES(J) = (SUMXS - SUMYS)/TOTAL(J)
         AVET(J) = (SUMXT - SUMYT)/TOTAL(J)
         AVESD(J)= (SUMXSD - SUMYSD)/TOTAL(J)
@@ -783,17 +783,17 @@ CIPK JUL01
           AVESD(J)=0.
         ENDIF
 CIPK JUL01
-        IF( J .EQ. 1 ) REF = TOTAL(J)
-        IF(ABS(REF) .LT. 0.0001) REF=1.
+        IF( J == 1 ) REF = TOTAL(J)
+        IF(ABS(REF) < 0.0001) REF=1.
 CIPK JUL01
         PCT = 100.0*TOTAL(J)/REF
 CIPK OCT98        MX = LMT(J)
         WRITE(LOUT,6035)
-     +	  J,TOTAL(J),SUMX,SUMY,PCT,AVES(J),AVET(J),AVESD(J)
+     +        J,TOTAL(J),SUMX,SUMY,PCT,AVES(J),AVET(J),AVESD(J)
       !EFa aug08, for calculation of qdir and output of external BC
       if (CCLout == 1) then
         !EFa jun09, added maxn == nitn --> results are needed for SMALL
-        if (nconv == 2.or. maxn == nitn) then
+        if (nconv == 2 .OR. maxn == nitn) then
         !-
           if (delt > 0.) then
             !EFa aug08: layer number is set to zero (ln is not global)
@@ -808,7 +808,7 @@ CIPK OCT98        MX = LMT(J)
      +       totalwsll,aves(j),avet(j),avesd(j)
             call FLUSH(uclq)
             call FLUSH(uclh)
-            if (icyc.eq.ncyc.OR.nita.eq.0) then
+            if (icyc == ncyc .OR. nita == 0) then
               write(uclq,'(a7)')'ENDDATA'
               write(uclh,'(a7)')'ENDDATA'
               CLOSE(uclq)
@@ -821,12 +821,12 @@ CIPK OCT98        MX = LMT(J)
   180 CONTINUE
       NB = ND
 CIPK JUL01
-      IF(IOCON .GT. 0) THEN
+      IF(IOCON > 0) THEN
         DO JJ=1,NCL,20
           JT=MIN(JJ+19,NCL)
-          IF(JJ .EQ. 1) THEN
+          IF(JJ == 1) THEN
             WRITE(IOCON,'(I5,F10.2,1P20E11.3)')
-     +		 DAYOFY,TET,(TOTAL(J),J=JJ,JT)
+     +             DAYOFY,TET,(TOTAL(J),J=JJ,JT)
           ELSE
             WRITE(IOCON,'(15X,1P20E11.3)') (TOTAL(J),J=JJ,JT)
           ENDIF

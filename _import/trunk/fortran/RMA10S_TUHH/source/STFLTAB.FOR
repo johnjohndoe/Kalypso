@@ -15,17 +15,17 @@ CIPK FEB05
 
 C     FOR ISWTB = 0 SET NODAL SWITCH FOR APPRORIATE CONTINUITY LINE
 
-      IF(ISWTB .EQ. 0) THEN
+      IF(ISWTB == 0) THEN
         DO N=1,NP
-      	    ISTAB(N)=0
+                ISTAB(N)=0
         ENDDO
-        IF(INSFL .EQ. 0) RETURN
+        IF(INSFL == 0) RETURN
 
 C     FIRST ENTRY FOR TABLE READ DATA
 
         NTBL=1
         CALL GINPT(INSFL,IDT,DLINT)
-        IF(IDT(1:3) .EQ. 'TIT') THEN
+        IF(IDT(1:3) == 'TIT') THEN
           READ(DLINT,'(A72)') TITLETB
         ELSE
 CIPK SEP04
@@ -41,7 +41,7 @@ CIPK SEP04
         !only if the file is emptyly present
         if (IDT(1:6) == 'ENDDAT') RETURN
 
-  250   IF(IDT(1:3) .EQ. 'CTL') THEN
+  250   IF(IDT(1:3) == 'CTL') THEN
           READ(DLINT,'(I8)') IDTBL(NTBL)
         ELSE
 CIPK SEP04
@@ -54,14 +54,14 @@ CIPK SEP04
         ENDIF
         I=1
   300   CALL GINPT(INSFL,IDT,DLINT)
-        IF(IDT(1:3) .EQ. 'STD') THEN
+        IF(IDT(1:3) == 'STD') THEN
           READ(DLINT,'(2F8.0)') ELEVTBL(NTBL,I),FLOWTBL(NTBL,I)
           I=I+1
           GO TO 300
-        ELSEIF(IDT(1:6) .EQ. 'ENDDAT') THEN
+        ELSEIF(IDT(1:6) == 'ENDDAT') THEN
           ITBL(NTBL)=I-1
           GO TO 500
-        ELSEIF(IDT(1:3) .EQ. 'CTL') THEN
+        ELSEIF(IDT(1:3) == 'CTL') THEN
           ITBL(NTBL)=I-1
           NTBL=NTBL+1
           GO TO 250
@@ -78,7 +78,7 @@ CIPK SEP04
   500   CONTINUE
 
         DO J=1,NTBL
-          IF(ITBL(J) .GT. 0) THEN
+          IF(ITBL(J) > 0) THEN
             KK=LMT(IDTBL(J))
             DO K=1,KK
               ISTAB(LINE(IDTBL(J),K))=J
@@ -92,14 +92,14 @@ C     PROCESS CASE
 
       ILINTB=ISTAB(M)
 
-      IF(ITBL(ILINTB) .EQ. 0) THEN
+      IF(ITBL(ILINTB) == 0) THEN
         RETURN
       ENDIF
       !JREDERR=0
       DO I=1,ITBL(ILINTB)
-        IF(SRFEL .LT. ELEVTBL(ILINTB,I)) THEN
-          IF(I .EQ. 1) THEN
-            !IF(JRED .EQ. 0) THEN
+        IF(SRFEL < ELEVTBL(ILINTB,I)) THEN
+          IF(I == 1) THEN
+            !IF(JRED == 0) THEN
 CIPK SEP04
              !CLOSE(75)
              !OPEN(75,file='ERROR.OUT')
@@ -109,7 +109,7 @@ CIPK SEP04
 !     +                 ,ELEVTBL(ILINTB,1)
 !           WRITE(*,*)'WATER SURFACE ELEVATION BELOW LOWEST TABLE ENTRY'
 CIPK AUG04
-           !IF(JRED .GT.0) THEN
+           !IF(JRED > 0) THEN
            !  JREDERR=1
            !  RETURN
            !ENDIF
@@ -128,7 +128,7 @@ CIPK AUG04
           ENDIF
         ENDIF
       ENDDO
-      !IF(JRED .EQ. 0) THEN
+      !IF(JRED == 0) THEN
 CIPK SEP04
       !  CLOSE(75)
       !  OPEN(75,file='ERROR.OUT')
@@ -138,7 +138,7 @@ CIPK SEP04
 !     +                 ,ELEVTBL(ILINTB,1)
 !      WRITE(*,*)'WATER SURFACE ELEVATION ABOVE HIGHEST TABLE ENTRY'
 CIPK AUG04
-      !IF(JRED .GT.0) THEN
+      !IF(JRED > 0) THEN
       !  JREDERR=1
       !  RETURN
       !ENDIF

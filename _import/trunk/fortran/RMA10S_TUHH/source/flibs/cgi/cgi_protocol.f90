@@ -130,7 +130,7 @@ subroutine cgi_begin( html, dict, luout )
     if ( method == 2 ) then
         do luout = 10,99
             inquire( luout, opened = opend )
-            if ( .not. opend ) then
+            if ( .NOT. opend ) then
                 exit
             endif
         enddo
@@ -269,7 +269,7 @@ subroutine cgi_store_dict( dict, string )
 
     do
         k = index( buffer, '&' )
-        if ( k .le. 0 ) then
+        if ( k <= 0 ) then
             if ( buffer == ' ' ) then
                 exit
             else
@@ -287,7 +287,7 @@ subroutine cgi_store_dict( dict, string )
             key = buffer(1:keq-1)
             data%value = buffer(keq+1:k-1)
 
-            if ( .not. associated( dict ) ) then
+            if ( .NOT. associated( dict ) ) then
                 call dict_create( dict, key, data )
             else
                 call dict_add_key( dict, key, data )
@@ -321,7 +321,7 @@ subroutine cgi_decode_string( string )
     !
     do
         k = index( string, '+' )
-        if ( k .le. 0 ) exit
+        if ( k <= 0 ) exit
 
         string(k:k) = ' '
     enddo
@@ -331,7 +331,7 @@ subroutine cgi_decode_string( string )
     !
     do
         k = index( string, '%' )
-        if ( k .le. 0 ) exit
+        if ( k <= 0 ) exit
 
         read( string(k+1:k+2), '(z2)' ) ch
         string(k:) = achar(ch) // string(k+3:)
@@ -354,7 +354,7 @@ subroutine cgi_end
     if ( method == 2 ) then
         do lu = 10,99
             inquire( lu, opened=opend )
-            if ( .not. opend ) then
+            if ( .NOT. opend ) then
                 open( lu, file = "cgiready" )
                 close( lu )
                 exit
@@ -388,7 +388,7 @@ subroutine cgi_error( msg, template )
         inquire( file = template, exist = exists )
     endif
 
-    if ( .not. header_written ) then
+    if ( .NOT. header_written ) then
         write( luout_cgi, '(a)' ) 'Content-Type: text/html;charset=iso8859-1'
         write( luout_cgi, '(a)' ) ''
     endif
@@ -396,7 +396,7 @@ subroutine cgi_error( msg, template )
     if ( exists ) then
         do lu = 10,99
             inquire( lu, opened = opend )
-            if ( .not. opend ) then
+            if ( .NOT. opend ) then
                 exit
             endif
         enddo

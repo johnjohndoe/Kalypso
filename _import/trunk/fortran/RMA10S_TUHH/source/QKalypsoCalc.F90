@@ -72,7 +72,7 @@ AddNodeWSLL: DO k = 1, lmt (CCL)
 ENDDO AddNodeWSLL
 
 !Test for the whole CCL, whether it is dry
-IF (lump.eq.0) then
+IF (lump == 0) then
   write ( *  , 9000) CCL
   write (Lout, 9000) CCL
  9000       format (/1X, 'Error: Inflow line No. ', I3,' is dry!', / 'Stopping program!')

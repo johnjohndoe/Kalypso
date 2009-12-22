@@ -71,48 +71,48 @@ c     Initialisation of values
       NDPTS = 2600
   200 CONTINUE
       call ginpt(Lin,id,dlin)
-      IF(ID(1:8) .EQ. 'ENDLIMIT') THEN
+      IF(ID(1:8) == 'ENDLIMIT') THEN
 cipk mar06  add call for ENDLIMIT case
       call ginpt(Lin,id,dlin)
         GO TO 250
-      ELSEIF(ID(1:2) .EQ. 'TI') THEN
+      ELSEIF(ID(1:2) == 'TI') THEN
         GO TO 250
-      ELSEIF(ID(1:7) .EQ. 'MAXNODE') THEN
+      ELSEIF(ID(1:7) == 'MAXNODE') THEN
         READ(DLIN,'(I8)') MAXP
-      ELSEIF(ID(1:6) .EQ. 'MAXELT') THEN
+      ELSEIF(ID(1:6) == 'MAXELT') THEN
         READ(DLIN,'(I8)') MAXE
-      ELSEIF(ID(1:8) .EQ. 'MAXFRONT') THEN
+      ELSEIF(ID(1:8) == 'MAXFRONT') THEN
         READ(DLIN, *) MFWW
-      ELSEIF(ID(1:8) .EQ. 'MAXLAYER') THEN
+      ELSEIF(ID(1:8) == 'MAXLAYER') THEN
         READ(DLIN,'(I8)') NLAYMX
-      ELSEIF(ID(1:8) .EQ. 'MXSEDLAY') THEN
+      ELSEIF(ID(1:8) == 'MXSEDLAY') THEN
         READ(DLIN,'(I8)') MXSEDLAY
-      ELSEIF(ID(1:8) .EQ. 'BUFFSIZ ') THEN
+      ELSEIF(ID(1:8) == 'BUFFSIZ ') THEN
         READ(DLIN,'(I8)') NBSS
         LBMAX=NBSS
         nbuffsiz = lbmax
-      ELSEIF(ID(1:8) .EQ. 'BUFFSIZL') THEN
+      ELSEIF(ID(1:8) == 'BUFFSIZL') THEN
         READ(DLIN,'(I16)') NBSS
         LBMAX=NBSS
         nbuffsiz = lbmax
       ELSEIF(ID(1:8) == 'MAXR1   ') then
         read (dlin, *) mr1siz
-      ELSEIF(ID(1:8) .EQ. 'MAXQPTS ') THEN
+      ELSEIF(ID(1:8) == 'MAXQPTS ') THEN
 CIPK MAR06
         READ(DLIN,'(I8)') NCQOBS
-      ELSEIF(ID(1:8) .EQ. 'MAXQINPT') THEN
+      ELSEIF(ID(1:8) == 'MAXQINPT') THEN
         READ(DLIN,'(I8)') NQLDS
-      ELSEIF(ID(1:8) .EQ. 'MAXHPTS ') THEN
+      ELSEIF(ID(1:8) == 'MAXHPTS ') THEN
         READ(DLIN,'(I8)') NCHOBS
-      ELSEIF(ID(1:8) .EQ. 'MAXHINPT') THEN
+      ELSEIF(ID(1:8) == 'MAXHINPT') THEN
         READ(DLIN,'(I8)') NHDS
-      ELSEIF(ID(1:8) .EQ. 'MAXELPTS') THEN
+      ELSEIF(ID(1:8) == 'MAXELPTS') THEN
         READ(DLIN,'(I8)') NDPTS
-      ELSEIF(ID(1:8) .EQ. 'MAXEINPT') THEN
+      ELSEIF(ID(1:8) == 'MAXEINPT') THEN
         READ(DLIN,'(I8)') NELDS
-C      ELSEIF(ID(1:8) .EQ. 'MAXPBUFR') THEN
+C      ELSEIF(ID(1:8) == 'MAXPBUFR') THEN
 C        READ(DLIN,'(I8)') MPB
-C      ELSEIF(ID(1:8) .EQ. 'MAXSTEPS') THEN
+C      ELSEIF(ID(1:8) == 'MAXSTEPS') THEN
 C        READ(DLIN,'(I8)') MAXSTP
       ENDIF
       GO TO 200

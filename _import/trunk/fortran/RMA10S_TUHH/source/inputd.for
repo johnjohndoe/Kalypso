@@ -58,12 +58,12 @@ cipk apr96 define save parameter
 !time handling is done by Kalypso
 !thus, the time handling is switched off for the moment
 !cipk apr96 keep track of data for end of time step
-!      if(iyend+idye+hrend .eq. 0) then
+!      if(iyend+idye+hrend == 0) then
 !        isvs=1
 !        rewind nscrin
-!      elseif(iyrr .eq. iyend  .and.  dayofy .eq. idye) then
-!cipk mar98        if(abs(tet-hrend) .lt. 0.001) then
-!        if(tet .gt. hrend-0.001) then
+!      elseif(iyrr == iyend .AND. dayofy == idye) then
+!cipk mar98        if(abs(tet-hrend) < 0.001) then
+!        if(tet > hrend-0.001) then
 !          isvs=1
 !          ibin=ibinrst
 !        else
@@ -72,7 +72,7 @@ cipk apr96 define save parameter
 !          isvs=0
 !        endif
 !cipk mar98
-!      elseif (tet .gt. (idye-dayofy)*24.+hrend-0.001) then
+!      elseif (tet > (idye-dayofy)*24.+hrend-0.001) then
 !        isvs=1
 !        ibin=ibinrst
 !      else
@@ -86,17 +86,17 @@ cipk apr96 define save parameter
 
  1961 READ(IBIN,7000,END=197,ERR=197) ID,DLIN
       write(75,7000) id,dlin
-      IF(ID(1:3) .EQ. 'com') GO TO 1961
-      IF(ID(1:3) .EQ. 'COM') GO TO 1961
-      IF(ID(1:3) .EQ. 'Com') GO TO 1961
-      IF(ID(1:8) .EQ. '        ') GO TO 1961
-      IF(ID(1:6) .NE. 'ENDDAT') GO TO 198
+      IF(ID(1:3) == 'com') GO TO 1961
+      IF(ID(1:3) == 'COM') GO TO 1961
+      IF(ID(1:3) == 'Com') GO TO 1961
+      IF(ID(1:8) == '        ') GO TO 1961
+      IF(ID(1:6) /= 'ENDDAT') GO TO 198
 C
 C   Allow for partial B.C. input from unit 5 and unit IBUP
 C
-  197 IF(IBIN .EQ. IBUP) REWIND IBIN
+  197 IF(IBIN == IBUP) REWIND IBIN
       IBK=IBK+1
-        IF(IBK .GT. 1) THEN
+        IF(IBK > 1) THEN
 cipk sep04
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
@@ -112,7 +112,7 @@ cipk sep04
 !----------------------------------
   198 CONTINUE
 cipk apr96 end changes
-      IF(ID(1:2) .NE. 'DT')
+      IF(ID(1:2) /= 'DT')
      +  call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'DT')
 
 cipk apr96 add ending time for time step
@@ -148,23 +148,23 @@ cipk apr96 add ending time for time step
 
 CIPK MAR01  TEST FOR ELEVATION AND SCALE TIME STEP
 !MD: Only for 'TST' = Time step LENGTHENING
-      IF(NODETR .NE. 0) THEN
-        IF(WSLL(NODETR) .GT. TRELEV) THEN
+      IF(NODETR /= 0) THEN
+        IF(WSLL(NODETR) > TRELEV) THEN
           DELT = DELT*TRFACT
         ENDIF
       ENDIF
 
 
-      if(ibin .ne. nscrin) then
+      if(ibin /= nscrin) then
         write(lout,6156) delt,iyend,idye,hrend
       endif
-      if(isvs .eq. 1) then
+      if(isvs == 1) then
         rewind nscrin
         write(nscrin,7000) id,dlin
       endif
 cipk sep96 add altm
 cpk dec99 add test for zero DELT
-      if(delt .gt. 0.) then
+      if(delt > 0.) then
         altm=alpha/(delt*3600.)
       else
         altm=0.
@@ -182,9 +182,9 @@ C      READ(DLIN,5010) DELT
 
 C     ADD SIDE ERODED MATERIAL
 CIPK FEB03 CATCH THE STEADY STATE CASE
-        IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .AND. DELT .GT. 0.) THEN
+        IF((LSAND > 0 .OR. LBED > 0) .AND. DELT > 0.) THEN
 !HN June2009. IN the case that bankevolution is activated, deactivate slumpit subroutine.
-          if (.NOT. bankevolution) CALL SLUMPIT
+          if ( .NOT. bankevolution) CALL SLUMPIT
 CALL SLUMPIT
         ELSE 
           EXTLD=0.
@@ -196,7 +196,7 @@ C-.... Read iteration controls
 CIPK NOV97      READ(IBIN,7000) ID,DLIN
       call ginpt(ibin,id,dlin)
 cipk apr96 save data to a scratch file
-      if(isvs .eq. 1) then
+      if(isvs == 1) then
         write(nscrin,7000) id,dlin
       endif
 
@@ -204,25 +204,25 @@ CIPK JUN05 MODIFY BED PROFILE
 c
 c...... Input slope adjustment factor
 c
-      if(id(1:3) .eq. 'SAD') then
+      if(id(1:3) == 'SAD') then
         read(dlin,'(2f8.0)') sadx,sadel
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
         call ginpt(ibin,id,dlin)
-	  CALL REVAO
-	  ISAD=1
+        CALL REVAO
+        ISAD=1
       else
-	  IF(ISAD .EQ. 1) THEN
+        IF(ISAD == 1) THEN
           sadx=1.0
-	    CALL REVAO
-	    ISAD=0
-	  ENDIF
+          CALL REVAO
+          ISAD=0
+        ENDIF
       endif
 
 !MD: Read Iteration-Data for URFC and equations
 !----------------------------------------------
-      IF(ID(1:2) .NE. 'BC') THEN
+      IF(ID(1:2) /= 'BC') THEN
 cipk sep04
         !MD: check if old Iteration-Data is available
         DO I = 1, NITN
@@ -231,33 +231,33 @@ cipk sep04
           !MD:   defined in CONTROL
 
           !ERROR - Could not locate required BC line
-          IF (Check_BC_Data.eq.0)
+          IF (Check_BC_Data == 0)
      +      call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
         END DO
         goto 315
         !MD: New Jump, because next line was already read by ginpt(..)
 
-      Elseif(ID(1:2) .EQ. 'BC') THEN
+      Elseif(ID(1:2) == 'BC') THEN
         READ(DLIN,5011)
      +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=1,9)
-        IF(NITN .GT. 9) THEN
+        IF(NITN > 9) THEN
           N1=1
   199     N1=N1+9
           N2=N1+8
 CIPK NOV97        READ(IBIN,7000) ID,DLIN
           call ginpt(ibin,id,dlin)
 cipk apr96 save data to a scratch file
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
 
         !ERROR - Could not locate required BC line
-        IF(ID(1:2) .NE. 'BC')
+        IF(ID(1:2) /= 'BC')
      +    call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
 
           READ(DLIN,5011)
      +           (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
-          IF(NITN .GT. N2) GO TO 199
+          IF(NITN > N2) GO TO 199
         ENDIF
       Endif
 C
@@ -273,7 +273,7 @@ C-
           ENDIF
           IF (ITEQV (I) == 3) THEN
             ITEQV (I) = ITEQS (I) + 10
-cipk may02	      ITEQV(I)=ITEQS(I)+9
+cipk may02            ITEQV(I)=ITEQS(I)+9
           ENDIF
         ENDIF
       ENDDO SetCalcType
@@ -287,7 +287,7 @@ cipk dec99  read data line and see if it is a stray BC line, if so skip
 !MD: Does not make sense to have 'BC' lines, which are not used...
   215 continue
       call ginpt(ibin,id,dlin)
-      if(id(1:2) .eq. 'BC') goto 215
+      if(id(1:2) == 'BC') goto 215
 
 !MD: new jump in order to use old Iteration-Data, if no new block is
 !MD:   defined in CONTROL
@@ -295,10 +295,10 @@ cipk dec99  read data line and see if it is a stray BC line, if so skip
 
 
 cipk apr96 save data to a scratch file
-      if(isvs .eq. 1) then
+      if(isvs == 1) then
         write(nscrin,7000) id,dlin
       endif
-      IF(ID(1:2) .EQ. 'BN') THEN
+      IF(ID(1:2) == 'BN') THEN
         READ(DLIN,5050) N,NFIX(N),NFIX1(N),(SPEC(N,M),M=1,NDF)
         write(lout,6050) n,nfix(n),nfix1(n),(spec(n,m),m=1,ndf)
         CALL BFORM(N)
@@ -339,15 +339,15 @@ C-
       CALL BCS(IBIN,CMIN,CPR)
 C-
       CALL QGENSPCL(1,0,0, 0.,0.,QDM)
-C	
+C      
       CALL HGENSPCL(1,0,0, 0.,QDM)
 C-
 C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
       
       DO 800 N=1,NP
-        IF(NSPL(N) .EQ. 1) THEN
-          IF(NDEP(N) .GT. 1) THEN
+        IF(NSPL(N) == 1) THEN
+          IF(NDEP(N) > 1) THEN
             CALL BFORM(N)
             NL=NREF(N)+1
             NT=NL+NDEP(N)-2

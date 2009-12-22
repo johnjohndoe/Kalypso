@@ -60,7 +60,7 @@ subroutine timer_create( name, timerid )
 
     timerid = -1
     do i = 1,max_timers
-        if ( timers(i)%number_iterations .eq. -1 ) then
+        if ( timers(i)%number_iterations == -1 ) then
             timerid = i
             timers(i)%name = name
             call timer_reset( timerid )
@@ -79,7 +79,7 @@ end subroutine timer_create
 subroutine timer_destroy( timerid )
     integer, intent(in)             :: timerid
 
-    if ( timerid .ge. 1 .and. timerid .le. max_timers ) then
+    if ( timerid >= 1 .AND. timerid <= max_timers ) then
         timers(timerid)%number_iterations = -1
     endif
 end subroutine timer_destroy
@@ -93,7 +93,7 @@ end subroutine timer_destroy
 subroutine timer_reset( timerid )
     integer, intent(in)             :: timerid
 
-    if ( timerid .ge. 1 .and. timerid .le. max_timers ) then
+    if ( timerid >= 1 .AND. timerid <= max_timers ) then
         timers(timerid)%number_iterations = 0
         timers(timerid)%start_clock       = 0
         timers(timerid)%start_cpu         = 0
@@ -115,13 +115,13 @@ subroutine timer_report( lun )
 
     integer                         :: i
 
-    if ( lun .gt. 0 ) then
+    if ( lun > 0 ) then
         write( lun, '(1x,a)' ) 'Timing report:'
         write( lun, '(1x,a)' ) &
         'Timer                                    Mean real time  Mean CPU time        Minimum        Maximum',&
         '----------------------------------------            (s)            (s)            (s)            (s)'
         do i = 1,max_timers
-            if ( timers(i)%number_iterations .gt. 0 ) then
+            if ( timers(i)%number_iterations > 0 ) then
                 write( lun, '(1x,a,4e15.4)' ) &
                     timers(i)%name, &
                     timers(i)%total_sys_time / timers(i)%number_iterations, &
@@ -136,7 +136,7 @@ subroutine timer_report( lun )
         'Timer                                    Mean real time  Mean CPU time        Minimum        Maximum',&
         '----------------------------------------            (s)            (s)            (s)            (s)'
         do i = 1,max_timers
-            if ( timers(i)%number_iterations .gt. 0 ) then
+            if ( timers(i)%number_iterations > 0 ) then
                 write( *, '(1x,a,4e15.4)' ) &
                     timers(i)%name, &
                     timers(i)%total_sys_time / timers(i)%number_iterations, &
@@ -161,7 +161,7 @@ subroutine timer_start( timerid )
     integer                         :: count_scale
     integer                         :: count_max
 
-    if ( timerid .ge. 1 .and. timerid .le. max_timers ) then
+    if ( timerid >= 1 .AND. timerid <= max_timers ) then
         call cpu_time( timers(timerid)%start_cpu )
         call system_clock( count, count_scale, count_max )
         timers(timerid)%start_clock = count
@@ -187,7 +187,7 @@ subroutine timer_stop( timerid, noiter )
     real                            :: stop_time
     real                            :: period
 
-    if ( timerid .ge. 1 .and. timerid .le. max_timers ) then
+    if ( timerid >= 1 .AND. timerid <= max_timers ) then
         call cpu_time( stop_time )
         call system_clock( count, count_scale, count_max )
 

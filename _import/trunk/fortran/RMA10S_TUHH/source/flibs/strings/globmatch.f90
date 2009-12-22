@@ -55,10 +55,10 @@ recursive function string_match( string, pattern ) result(match)
     do while ( p <= ptrim )
         select case ( pattern(p:p) )
             case( star )
-                if ( ll .ne. 0 ) exit
+                if ( ll /= 0 ) exit
                 method = 1
             case( question )
-                if ( ll .ne. 0 ) exit
+                if ( ll /= 0 ) exit
                 method = 2
                 start  = start + 1
             case( backslash )
@@ -80,7 +80,7 @@ recursive function string_match( string, pattern ) result(match)
         !
         ! We are at the end of the pattern, and of the string?
         !
-        if ( strim == 0 .and. ptrim == 0 ) then
+        if ( strim == 0 .AND. ptrim == 0 ) then
             match = .true.
         else
             !
@@ -117,7 +117,7 @@ recursive function string_match( string, pattern ) result(match)
         endif
     endif
 
-    if ( method == 2 .and. ll > 0 ) then
+    if ( method == 2 .AND. ll > 0 ) then
         !
         ! Scan the whole of the remaining string ...
         !

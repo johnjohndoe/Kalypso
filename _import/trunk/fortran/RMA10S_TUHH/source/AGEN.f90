@@ -22,7 +22,7 @@ AllLines: DO J = 1, NCL
   !Skip 1D boundary lines
   IF(MAXL < 3) CYCLE AllLines
   !Skip line that is not a stage flow BC
-  IF (STQA(J) == 0. .or. istab(Line(j, 1)) == 0) CYCLE AllLines
+  IF (STQA(J) == 0. .OR. istab(Line(j, 1)) == 0) CYCLE AllLines
 
   !Initialize
   ALN (J) = 0.

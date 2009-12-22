@@ -133,7 +133,7 @@ end do
 
 all_elements: do i = 1, ne
 
-  if (imat(i) <= 0 .or. abst(i) < 0.0001 .or. imat(i) == 89) then
+  if (imat(i) <= 0 .OR. abst(i) < 0.0001 .OR. imat(i) == 89) then
 
     ! Deactivated element or element without trees
     c_wr(i) = 1.30
@@ -176,16 +176,16 @@ end do all_elements
 ! friction due to trees.
 
 !NiS,jun06: name creation dependent on steady or dynamic as well as within iteration or after convergence:
-if (maxn.eq.0) then
+if (maxn == 0) then
 !-
-  IF (icyc .eq.0) THEN
+  IF (icyc == 0) THEN
     call GenerateOutputFileName ('stat', niti, 0, maxn, 'cwr',modellein, modellrst, ct, nb,name_cwr, inputFileName)
   ELSE
     call GenerateOutputFileName ('inst', niti, icyc, maxn, 'cwr', modellein,modellrst, ct, nb, name_cwr, inputFileName)
   ENDIF
 elseif (nprti /= 0) then
   if (mod(maxn, nprti) == 0) then
-    IF (icyc .eq.0) THEN
+    IF (icyc == 0) THEN
       call GenerateOutputFileName ('stat', niti, 0, maxn, 'cwr',modellein, modellrst, ct, nb,name_cwr, inputFileName)
     ELSE
       call GenerateOutputFileName ('inst', niti, icyc, maxn, 'cwr', modellein,modellrst, ct, nb, name_cwr, inputFileName)
@@ -246,8 +246,8 @@ type (simulationModel), pointer :: m_SimModel
 integer (kind = 4) :: nconnect
 
 
-INTEGER :: first_loc		! Neighbour nodes of the flow vector
-INTEGER :: second_loc		! Neighbour nodes of the flow vector
+INTEGER :: first_loc            ! Neighbour nodes of the flow vector
+INTEGER :: second_loc            ! Neighbour nodes of the flow vector
 
 !nis,sep06: Declaring missing variable and overgiving the proper value
 INTEGER                         :: nodecnt
@@ -266,7 +266,7 @@ LOGICAL, allocatable :: marker_slope (:) ! Marker if slope has been calculated (
                                          ! The slope of all nodes with MARKER_SLOPE=.false. will be interpolated
                                          ! from the neighbouring points in subroutine FILL_SLOPES
 
-INTEGER         		:: i,j,m
+INTEGER                     :: i,j,m
 type (node), pointer :: tmpNode => null()
 type (linkedNode), pointer :: neighbNode => null()
 type (node), pointer :: firstNeighb => null()
@@ -303,7 +303,7 @@ outer: do i = 1, nodecnt
   !nis,jul08: Test for smaller velocity (original value: 0.001). Problems are very low flow areas, where trees are present. If values are too small,
   !           they will become better and better with each iteration, because the calculation of the cwr-values takes place every iteration. This
   !           is the opposite to BCE-2D (old RMA2-adaptation), where this comes from
-  if (vecq < 0.001 .or. rausv(3,i) < ao(i)) then
+  if (vecq < 0.001 .OR. rausv(3,i) < ao(i)) then
     ! If velocity is very small or water surface is below node,
     ! no slope can be calculated.
     marker_slope(i) = .false.
@@ -344,7 +344,7 @@ end do outer
 
 !for 1D-elts, the slopes have to be resetted
 resetslopes: do i = 1,elcnt
-  if (ncorn(i).eq.3) then
+  if (ncorn(i) == 3) then
     !nis,dec06,testing
     !WRITE(*,*) '1D-Elemente:',i
     !-
@@ -360,16 +360,16 @@ end do resetslopes
 
 !nis,dec06: using another subroutine for 1D-elements
 outer1D: do i = 1, elcnt
-  if (ncorn(i).eq.3) then
+  if (ncorn(i) == 3) then
     do j = 1,3
       !node, whose slopes shall be calculated
       node2=nop(i,j)
       tmpNode => findNodeInMeshByID (m_SimModel.femesh, node2)
       nconnect = noOfNeighbours (tmpNode)
 
-      if (nconnect .gt.5) CYCLE outer1D
+      if (nconnect > 5) CYCLE outer1D
 
-      if (j.eq.2) then
+      if (j == 2) then
         !if midside node get the two corner nodes
         node1=nop(i,1)
         node3=nop(i,3)
@@ -421,7 +421,7 @@ subroutine GET_1D_SLOPE(node1,node2,node3,slope_temp, eslope_temp)
   dh1 = vel(3,node1) - vel(3,node2)
   dz1 = ao(node1) - ao(node2)
 
-  if (node3.ne.0) then
+  if (node3 /= 0) then
     dx2 = cord(node3,1) - cord(node2,1)
     dy2 = cord(node3,2) - cord(node2,2)
     dl2 = SQRT(dx2*dx2 +dy2*dy2)
@@ -435,13 +435,13 @@ subroutine GET_1D_SLOPE(node1,node2,node3,slope_temp, eslope_temp)
     n = 1
   endif
 
-  if (slope_temp.eq.0.0) then
+  if (slope_temp == 0.0) then
     slope_temp = (dz1/dl1+dz2/dl2) / n
   else
     slope_temp = 1/2 * slope_temp + 1/2* (1/n * (dz1/dl1+dz2/dl2))
   end if
 
-  if (eslope_temp.eq.0.0) then
+  if (eslope_temp == 0.0) then
     eslope_temp = 1/n * (dh1/dl1+dh2/dl2)
   else
     eslope_temp = 1/2 * eslope_temp + 1/2* (1/n * (dh1/dl1+dh2/dl2))
@@ -580,7 +580,7 @@ anz = 0
 numbertest: do i = 1, nodecnt
 
   !dead nodes within the network (their coordinates are initialized by -1e20) have to be ignored
-  if (cord(i,1) .lt. (-0.5E20) .and. cord(i,2) .lt. (-0.5E20)) then
+  if (cord(i,1) < (-0.5E20) .AND. cord(i,2) < (-0.5E20)) then
     !mark dead nodes as processed
     marker_slope(i) = .True.
     cycle numbertest
@@ -596,9 +596,9 @@ numbertest: do i = 1, nodecnt
   nconnect = noOfNeighbours (tmpNode)
 
   !all other nodes, that have no slope yet and have a number of neighbours are counted
-  if (.not. marker_slope(i) .and. nconnect /= 0) then
+  if ( .NOT. marker_slope(i) .AND. nconnect /= 0) then
   
-	    anz = anz + 1
+          anz = anz + 1
   else
     continue
   end if
@@ -640,7 +640,7 @@ eliminate: do
 
      neighbourNode => tmpNode.neighbourList
      all_neighb: do j = 1, nconnect
-       if ( marker_slope(NeighbourNode.thisNode.ID) .and. (.not. IsPolynomNode (NeighbourNode.thisNode.ID))) then
+       if ( marker_slope(NeighbourNode.thisNode.ID) .AND. ( .NOT. IsPolynomNode (NeighbourNode.thisNode.ID))) then
          temp_anz   = temp_anz + 1
          temp_slope = temp_slope + slope(NeighbourNode.thisNode.ID)
          temp_eslope = temp_eslope + eslope(NeighbourNode.thisNode.ID)
@@ -696,21 +696,21 @@ use mod_Nodes
 !-
 
 ! Calling variables
-REAL(kind=8), DIMENSION(1:2), INTENT(IN) 	:: angle_v	! Velocity vector
-INTEGER, INTENT(IN) :: pn      	! Point of velocity vector
-type (node), pointer :: first_neighb	! First neighbour to calculated cross-point.
+REAL(kind=8), DIMENSION(1:2), INTENT(IN)       :: angle_v      ! Velocity vector
+INTEGER, INTENT(IN) :: pn            ! Point of velocity vector
+type (node), pointer :: first_neighb      ! First neighbour to calculated cross-point.
 type (node), pointer :: second_neighb   ! Second neighbour to calculated cross-point.
 !NiS,apr06: changing mnd to MaxP
 REAL(kind=8), INTENT(OUT) :: slope (1:*)       ! Slope to be calculated
 REAL(kind=8), INTENT(OUT) :: eslope (1:*)      ! Energy-Slope to be calculated
 !nis,dec06, just one value is needed here
-LOGICAL,INTENT(OUT)       	                :: marker_slope_pn ! Marker if slope could be determined
+LOGICAL,INTENT(OUT)                             :: marker_slope_pn ! Marker if slope could be determined
 !-
 ! Local variables
-REAL(KIND=8) 	:: ax,ay,bx,by,cx,cy,dx,dy, he_pn, he_cross
-REAL(KIND=8) 	:: cross_x, cross_y, cross_h, cross_v, v_pn
-REAL(KIND=8) 	:: h_1_2, d_1_2, d_cross_2, d_cross_pn
-REAL(KIND=8) 	:: temp1, temp2
+REAL(KIND=8)       :: ax,ay,bx,by,cx,cy,dx,dy, he_pn, he_cross
+REAL(KIND=8)       :: cross_x, cross_y, cross_h, cross_v, v_pn
+REAL(KIND=8)       :: h_1_2, d_1_2, d_cross_2, d_cross_pn
+REAL(KIND=8)       :: temp1, temp2
 
 
 ! Solving the linear equation
@@ -759,7 +759,7 @@ end if
 ! Flow depth of at point FIRST_NEIGHB or SECOND_NEIGHB is very small
 ! e.g. the node is about to fall dry or rewet or the node is dry.
 ! => No slope will be calculated.
-if (vel(3,first_neighb.ID) < 0.01 .or. vel(3,second_neighb.ID) < 0.01) then
+if (vel(3,first_neighb.ID) < 0.01 .OR. vel(3,second_neighb.ID) < 0.01) then
   slope(pn) = 0.0
   eslope(pn)= 0.0
 !nis,dec06: Only one value is needed in this subroutine
@@ -908,9 +908,9 @@ subroutine GET_ANGLE(vec1, vec2, delt_angle)
 implicit none
 
 ! Calling variables
-REAL(kind=8), DIMENSION(1:2), INTENT(IN) 	:: vec1 	! Flow direction
-REAL(kind=8), DIMENSION(1:2), INTENT(IN)	:: vec2 	! Direction between points
-REAL(kind=8), INTENT(OUT)       		:: delt_angle 	! angle difference
+REAL(kind=8), DIMENSION(1:2), INTENT(IN)       :: vec1       ! Flow direction
+REAL(kind=8), DIMENSION(1:2), INTENT(IN)      :: vec2       ! Direction between points
+REAL(kind=8), INTENT(OUT)                   :: delt_angle       ! angle difference
 
 ! Local variables
 REAL(kind=8)                    :: alpha1, alpha2
@@ -932,7 +932,7 @@ if (alpha1 < 0.0) then
     delt_angle = alpha2 - alpha1
 
   else
-    ! Alpha1 < 0.0 .and. alpha2 >= 0.0
+    ! Alpha1 < 0.0 .AND. alpha2 >= 0.0
 
     if ((alpha1 + pi) > alpha2) then
 
@@ -953,7 +953,7 @@ else
     delt_angle = alpha2 - alpha1
 
   else
-    ! Alpha1 >= 0.0 .and. alpha2 < 0.0
+    ! Alpha1 >= 0.0 .AND. alpha2 < 0.0
     if ((alpha1 - pi) < alpha2) then
 
       delt_angle = - ( ABS(alpha2) + alpha1)
@@ -978,7 +978,7 @@ end subroutine GET_ANGLE
 !********************************************************************************
 
 !--------------------------------------------------------------------------------
-subroutine GET_CWR(I_R,	h_m, a_x, d_p, lambda_s, c_wr)
+subroutine GET_CWR(I_R,      h_m, a_x, d_p, lambda_s, c_wr)
 !
 ! The drag coefficient C_WR of vegetation in an element with the
 ! characteristic properties
@@ -1004,7 +1004,7 @@ REAL (KIND = 8), INTENT(IN) :: h_m ! Mean flow depth
 REAL, INTENT(IN)            :: a_x      ! distance of trees/branches
 REAL, INTENT(IN)            :: d_p      ! diameter of trees/branches
 REAL (KIND = 8), INTENT(IN) :: lambda_s ! friction factor by COLBROOK/WHITE
-REAL, INTENT(OUT)           :: c_wr  	  ! Drag coefficient for the vegetation
+REAL, INTENT(OUT)           :: c_wr          ! Drag coefficient for the vegetation
 
 ! Local variables
 REAL :: a_y
@@ -1022,7 +1022,7 @@ REAL :: lambda_p= 0.0          ! temporary vegeation lambda
 REAL :: Fr1     = 0.0          ! Froudenumber 1
 REAL :: Fr2     = 0.0          ! Froudenumber 2
 REAL :: delta_cw= 0.0          ! Delta C_W
-REAL :: nu_10 	= 0.0          ! viscosity of water for 10 degrees.
+REAL :: nu_10       = 0.0          ! viscosity of water for 10 degrees.
 
 !REAL :: GET_CW_UN
 !REAL :: GET_A_NL
@@ -1048,24 +1048,24 @@ j = 0                                   ! Zähler der äußeren Iteration von C_WR
 
 iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für C_WR erfüllt ist
 
-	Fr1 = 0.0                       ! Bei jeder neuen Iteration müssen die beiden Froudezahlen
-  	Fr2 = 0.0                       ! neu bestimmt werden -> Y_STERN
+      Fr1 = 0.0                       ! Bei jeder neuen Iteration müssen die beiden Froudezahlen
+        Fr2 = 0.0                       ! neu bestimmt werden -> Y_STERN
 
-  	j = j + 1                       ! Inkrementieren des Schleifenzählers
+        j = j + 1                       ! Inkrementieren des Schleifenzählers
 
                                         ! Abbruchkriterium für die Konvergenz, ist jetzt willkürlich
                                         ! auf 0.01 gesetzt, kann auch erhöht oder verringert werden.
                                         ! (Komprimiss Geschwindigkeit <-> Genauigkeit)
 
 
-  	if ( ABS(1-(c_wr/c_wr2)) < 0.002 ) exit iteration_cwr
+        if ( ABS(1-(c_wr/c_wr2)) < 0.002 ) exit iteration_cwr
 
         if (c_wr2 > 2.5) then
-    	  c_wr = 1.30
-    	  EXIT iteration_cwr
+            c_wr = 1.30
+            EXIT iteration_cwr
         end if
 
-  	c_wr = c_wr2
+        c_wr = c_wr2
 
         !WP
         ! Mit Hilfe von LAMBDA_SO wird ein neuer Gesamtwiderstandsbeiwert
@@ -1074,73 +1074,73 @@ iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für 
         ! -> Nötig für Berechnung von C_WR_UN und a_NL!
         !WP
 
-  	lambda_p = (4 * c_wr * h_m * d_p)/(a_x * a_y)
-  	lambda_g = lambda_p + lambda_s
+        lambda_p = (4 * c_wr * h_m * d_p)/(a_x * a_y)
+        lambda_g = lambda_p + lambda_s
 
-  	v_vor = 1/SQRT(lambda_g) * SQRT(8 * 9.81 * I_R * h_m)
+        v_vor = 1/SQRT(lambda_g) * SQRT(8 * 9.81 * I_R * h_m)
 
         c_wr_un = GET_CW_UN(v_vor, d_p, nu_10)  ! Bestimmung von C_WR_UN
 
         a_NL = GET_A_NL(c_wr_un, d_p, I_R, &    ! Bestimmung von a_NL, gibt 0.0 zurueck, falls Fehler aufgetreten ist.
-           	& v_vor, a_NL_anf)
+                 & v_vor, a_NL_anf)
 
         if (a_NL == 0.0) then
           write (14,*) 'Fehler bei GET_A_NL! -> ABBRUCH'
           stop
         end if
 
-	a_NB = GET_A_NB(c_wr_un, d_p, a_NL)     ! Nachlaufbreite
+      a_NB = GET_A_NB(c_wr_un, d_p, a_NL)     ! Nachlaufbreite
 
         ! WP 19.10.2004: Der Faktor 0.5 vor dem zweiten Term fehlte!
-  	vn_vvor2 = 1.15 * (a_NL/a_x) ** (-0.48) + 0.5 * (a_NB/a_y) ** 1.1
+        vn_vvor2 = 1.15 * (a_NL/a_x) ** (-0.48) + 0.5 * (a_NB/a_y) ** 1.1
 
-  	Fr1 = v_vor / SQRT(9.81 * h_m)       	! Bestimmung der Froudezahl der Strömung
+        Fr1 = v_vor / SQRT(9.81 * h_m)             ! Bestimmung der Froudezahl der Strömung
 
-  	y_stern = 1.00
+        y_stern = 1.00
 
-  	i = 0
+        i = 0
 
-  	iteration_y_stern: do !--------	Iteration für Fr2 über y_stern-----------------------
+        iteration_y_stern: do !--------      Iteration für Fr2 über y_stern-----------------------
 
-    		i = i+1
+                i = i+1
 
-    		!WP
-    		! Mehrere Versuche haben gezeigt, dass sich bei der
+                !WP
+                ! Mehrere Versuche haben gezeigt, dass sich bei der
                 ! Iteration von Fr nach y_stern Problemem bei sehr
                 ! niederigen Froudzahlen einstellen! Da die zu lösende
                 ! Gleichung quadratisch ist, und der Wert von y_stern
-    		! nahe 1 liegen muss, ist gerade am Anfang in sehr
+                ! nahe 1 liegen muss, ist gerade am Anfang in sehr
                 ! kleinen Schritten vorzugehen!
                 ! Bei Werten von Fr1 < 0.1 wird zur Erhöhung der
                 ! Stabilität von einem konstanten y_stern = 0.999 ausgegangen.
-    		!WP
+                !WP
 
-    		if (Fr1 < 0.1 ) then
-      		  y_stern = 0.9999
-      		  exit iteration_y_stern
-    		else if (Fr1 < 0.3 .and. Fr1 >= 0.1) then
-      		  y_stern = y_stern - 0.0001
-    		else if (Fr1 < 0.6 .and. Fr1 >= 0.3) then
-      		  y_stern = y_stern - 0.001
-    		else
-      		  y_stern = y_stern - 0.01
-    		end if
+                if (Fr1 < 0.1 ) then
+                    y_stern = 0.9999
+                    exit iteration_y_stern
+                else if (Fr1 < 0.3 .AND. Fr1 >= 0.1) then
+                    y_stern = y_stern - 0.0001
+                else if (Fr1 < 0.6 .AND. Fr1 >= 0.3) then
+                    y_stern = y_stern - 0.001
+                else
+                    y_stern = y_stern - 0.01
+                end if
 
-    		Fr2 = (y_stern * (y_stern**2 -1)) / (2 * (y_stern - c_temp))
-    		if (fr2<0.0) then 
-    		  y_stern = 0.9999
-    		  exit iteration_y_stern
-    		endif
-    		Fr2 = SQRT(Fr2)
+                Fr2 = (y_stern * (y_stern**2 -1)) / (2 * (y_stern - c_temp))
+                if (fr2<0.0) then 
+                  y_stern = 0.9999
+                  exit iteration_y_stern
+                endif
+                Fr2 = SQRT(Fr2)
 
-    		if ( ABS(1-(Fr1/Fr2)) < 0.1) exit iteration_y_stern
+                if ( ABS(1-(Fr1/Fr2)) < 0.1) exit iteration_y_stern
 
-    		if (i > 100) then
-      		  y_stern = 0.9999
-      		  exit iteration_y_stern
-    		END if
+                if (i > 100) then
+                    y_stern = 0.9999
+                    exit iteration_y_stern
+                END if
 
-  	end do iteration_y_stern !-------- Iteration für Fr2 über y_stern-----------------------
+        end do iteration_y_stern !-------- Iteration für Fr2 über y_stern-----------------------
 
         !WP
         ! Während der ersten fünf Iterationszyclen wird zunächst
@@ -1153,22 +1153,22 @@ iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für 
         ! eingebaut.
         !WP
 
-  	if (j < 5) then
-    	  delta_cw = 2 * (1-y_stern) / (Fr1**2)
-  	else if (j >= 5 .AND. j < 10) then
-    	  delta_cw = (delta_cw + (2 * (1-y_stern) / (Fr1**2))) / 2
+        if (j < 5) then
+            delta_cw = 2 * (1-y_stern) / (Fr1**2)
+        else if (j >= 5 .AND. j < 10) then
+            delta_cw = (delta_cw + (2 * (1-y_stern) / (Fr1**2))) / 2
         else if (j >= 10) then
-    	  delta_cw = (2*delta_cw + (2 * (1-y_stern) / (Fr1**2))) / 3
-  	end if
+            delta_cw = (2*delta_cw + (2 * (1-y_stern) / (Fr1**2))) / 3
+        end if
 
-  	! Auch hier wird die Veränderung des Iterationsparameters durch Einbeziehung
-  	! des vorherigen Wertes abgebremst!
-  	c_wr2 = (c_wr + (1.3124 * c_wr_un * vn_vvor2 + delta_cw)) / 2
+        ! Auch hier wird die Veränderung des Iterationsparameters durch Einbeziehung
+        ! des vorherigen Wertes abgebremst!
+        c_wr2 = (c_wr + (1.3124 * c_wr_un * vn_vvor2 + delta_cw)) / 2
 
-  	if (j > 50) then               ! Keine Konvergenz nach 100 Iterationen
-    	  c_wr = 1.30
-    	  EXIT iteration_cwr
-  	END if
+        if (j > 50) then               ! Keine Konvergenz nach 100 Iterationen
+            c_wr = 1.30
+            EXIT iteration_cwr
+        END if
 
 end do iteration_cwr ! -----------------  Iteration bis Konvergenzkriterium für C_WR erfüllt ist
 
@@ -1188,18 +1188,18 @@ REAL function GET_CW_UN(v, d_p, nu)
 
 implicit none
 ! calling variables
-REAL, INTENT(IN) :: v      	! Fließgeschwindigkeit
+REAL, INTENT(IN) :: v            ! Fließgeschwindigkeit
 REAL, INTENT(IN) :: d_p        ! Durchmesser des Bewuchselementes
 REAL, INTENT(IN) :: nu         ! kinematische Viskosität
 
 ! Local variables
-REAL :: Re_p			! Reynolds-Zahl, bezogen auf den Bewuchs
+REAL :: Re_p                  ! Reynolds-Zahl, bezogen auf den Bewuchs
 
 Re_p = (v * d_p) / nu
 
 if (Re_p <= 800) then
   GET_CW_UN = 3.07 * Re_p ** (-0.168)
-else if (Re_p > 800 .and. Re_p <= 8000) then
+else if (Re_p > 800 .AND. Re_p <= 8000) then
   GET_CW_UN = 1.0
 else
   GET_CW_UN = 1.2
@@ -1222,8 +1222,8 @@ implicit none
 REAL, INTENT(IN) :: c_wr_un    ! Widerstandsbeiwert
 REAL, INTENT(IN) :: d_p        ! Durchmesser des Bewuchselementes
 REAL, INTENT(IN) :: I_R        ! Stationäres Gefälle
-REAL, INTENT(IN) :: v      	! Maßgebende Fließgeschwindigkeit
-REAL, INTENT(IN) :: anf      	! Anfangswert für Iteration ( = 2 * ax )
+REAL, INTENT(IN) :: v            ! Maßgebende Fließgeschwindigkeit
+REAL, INTENT(IN) :: anf            ! Anfangswert für Iteration ( = 2 * ax )
 
 ! Local variables
 INTEGER :: i
@@ -1236,24 +1236,24 @@ g = 9.81
 a_NL  = anf
 a_NL2 = 2 * anf
 
-i = 0                           	! Zähler der Iteration von a_NL
+i = 0                                 ! Zähler der Iteration von a_NL
 
-iteration_a_NL: do			! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
+iteration_a_NL: do                  ! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
 
   if ( ABS(1-(a_NL/a_NL2)) < 0.001 ) exit iteration_a_NL
-  i = i + 1               		! Inkrementieren des Schleifenzählers
+  i = i + 1                           ! Inkrementieren des Schleifenzählers
   a_NL  = a_NL2
   a_NL2 = (a_NL + 128.9 * c_wr_un * d_p * &
      & (1 + (g * a_NL * I_R)/((v**2)/2))**(-2.14)) / 2
 
-  if (i > 50) then       		! Keine Konvergenz nach 100 Iterationen
+  if (i > 50) then                   ! Keine Konvergenz nach 100 Iterationen
     WRITE(*,*) 'Fehlerhaftes Element ist: '
     WRITE(*,*) 'anl = ', a_nl
     GET_A_NL = 0.0                      ! Der Wert 0.0 zeigt dem aufrufenden Programm
     GOTO 100                            ! an, dass die Iteration NICHT erfolgreich war!
   END if
 
-end do iteration_a_NL			! Iteration von a_NL erfolgreich!
+end do iteration_a_NL                  ! Iteration von a_NL erfolgreich!
 
 GET_A_NL = a_NL                         ! Zuweisung des endgültigen Wertes
 
@@ -1276,7 +1276,7 @@ implicit none
 ! calling variables
 REAL, INTENT(IN) :: c_wr_un    ! Widerstandsbeiwert
 REAL, INTENT(IN) :: d_p        ! Durchmesser des Bewuchselementes
-REAL, INTENT(IN) :: a_NL      	! Nachlauflänge
+REAL, INTENT(IN) :: a_NL            ! Nachlauflänge
 
 GET_A_NB = 0.24 * (a_NL ** 0.59) * (c_wr_un * d_p) ** 0.41
 
@@ -1295,18 +1295,18 @@ SUBROUTINE cwr_write(name_cwr, ne, mcord, c_wr, mslope, meslope, mh, mvxvy, mel)
 implicit none
 
 ! Calling variables
-CHARACTER(LEN=32), INTENT(IN) 			:: name_cwr
-INTEGER, INTENT(IN) 				:: ne
+CHARACTER(LEN=32), INTENT(IN)                   :: name_cwr
+INTEGER, INTENT(IN)                         :: ne
 INTEGER, INTENT(IN)                             :: mel
-REAL(KIND=8), DIMENSION(1:mel,1:2), INTENT(IN) 	:: mcord
-REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: c_wr
-REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: mslope
-REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: meslope
+REAL(KIND=8), DIMENSION(1:mel,1:2), INTENT(IN)       :: mcord
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN)       :: c_wr
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN)       :: mslope
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN)       :: meslope
 !NiS,jul06: Consistent data type for passing parameters
-!REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: mh
-REAL(KIND=8), DIMENSION(1:mel), INTENT(IN) 	:: mh
+!REAL(kind=8), DIMENSION(1:mel), INTENT(IN)       :: mh
+REAL(KIND=8), DIMENSION(1:mel), INTENT(IN)       :: mh
 !-
-REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: mvxvy
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN)       :: mvxvy
 
 
 ! Local variables
@@ -1330,7 +1330,7 @@ write_elements: do i = 1, ne
 
   ! This check is necessary, if there are elements defined, that have no connection
   ! to the mesh and are not calculated. Then for example mcord(i,1) = -NaN.
-  if (mcord(i,2) > 0.0 .and. mcord(i,2) > 0.0) then
+  if (mcord(i,2) > 0.0 .AND. mcord(i,2) > 0.0) then
     write (14,1001) i, mcord(i,1), mcord(i,2), c_wr(i), mslope(i), meslope(i), mh(i), mvxvy(i)
   end if
 

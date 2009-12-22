@@ -99,7 +99,7 @@ readCstrcData: do
     weirCounter = weirCounter + 1
     ContrStructures (weirCounter) = newCstrc (ID = weirCounter, TypeID = weirTypeID)
     tmpCstrc => ContrStructures (weirCounter)
-    if (weirTypeID < 903 .or. weirTypeID > 990) call ErrorMessageAndStop(1208, weirTypeID, 0.0d0, 0.0d0)
+    if (weirTypeID < 903 .OR. weirTypeID > 990) call ErrorMessageAndStop(1208, weirTypeID, 0.0d0, 0.0d0)
     nctref(weirTypeID) = weirCounter
 
     readCstrc_QCurve: do 
@@ -109,7 +109,7 @@ readCstrcData: do
       !Read data line
       read (lineToEval, *) lineID, Qinner, EUW, EOW
       !Add Q-Curves data set to cstrc
-      if (.not. (associated (tmpCstrc.QCurves))) call addQCurveGroup (tmpCstrc)
+      if ( .NOT. (associated (tmpCstrc.QCurves))) call addQCurveGroup (tmpCstrc)
       !Add Q-Curve to Q-Curves data set of cstrc
       call addQCurve (tmpCstrc, Qinner)
       !Add Triple of Q-Eow-Euw
@@ -129,9 +129,9 @@ readCstrcData: do
     NLO=1
 
     rows: DO
-      IF(IDC(1:3) .EQ. 'HRW') THEN
+      IF(IDC(1:3) == 'HRW') THEN
         NHI=NLO+8
-        IF (NROWCS(nsetsCounter) .LT. NHI) THEN
+        IF (NROWCS(nsetsCounter) < NHI) THEN
           NHI = NROWCS(nsetsCounter)
         ENDIF
         READ(DLINC,5010) (HRW(nsetsCounter,J), J=NLO,NHI)
@@ -144,9 +144,9 @@ readCstrcData: do
     NLO=1
 
     cols: do
-      IF(IDC(1:3) .EQ. 'HCL') THEN
+      IF(IDC(1:3) == 'HCL') THEN
         NHI=NLO+8
-        IF(NCOLCS(nsetsCounter) .LT. NHI) THEN
+        IF(NCOLCS(nsetsCounter) < NHI) THEN
           NHI=NCOLCS(nsetsCounter)
         ENDIF
         READ(DLINC,5010) (HCL(nsetsCounter,J), J=NLO,NHI)
@@ -159,9 +159,9 @@ readCstrcData: do
     DO J=1,NROWCS(nsetsCounter)
       NLO=1
       flows: do
-        IF(IDC(1:3) .EQ. 'FLW') THEN
+        IF(IDC(1:3) == 'FLW') THEN
           NHI=NLO+8
-          IF(NCOLCS(nsetsCounter) .LT. NHI) THEN
+          IF(NCOLCS(nsetsCounter) < NHI) THEN
             NHI=NCOLCS(nsetsCounter)
           ENDIF
           READ(DLINC,5010) (FLWCS(nsetsCounter,J,L), L=NLO,NHI)

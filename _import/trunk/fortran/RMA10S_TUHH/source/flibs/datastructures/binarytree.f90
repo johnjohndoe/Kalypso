@@ -132,10 +132,10 @@ subroutine btree_append_data( btree, data, right )
 
     type(BINARY_TREE), pointer :: new
 
-    if ( right .and. associated(btree%right) ) then
+    if ( right .AND. associated(btree%right) ) then
         return
     endif
-    if ( .not. right .and. associated(btree%left) ) then
+    if ( .NOT. right .AND. associated(btree%left) ) then
         return
     endif
 
@@ -161,10 +161,10 @@ subroutine btree_append_subtree( btree, subtree, right )
     type(BINARY_TREE), pointer  :: subtree
     logical, intent(in)        :: right
 
-    if ( right .and. associated(btree%right) ) then
+    if ( right .AND. associated(btree%right) ) then
         return
     endif
-    if ( .not. right .and. associated(btree%left) ) then
+    if ( .NOT. right .AND. associated(btree%left) ) then
         return
     endif
 
@@ -190,10 +190,10 @@ subroutine btree_remove_subtree( btree, subtree, right )
 
     subtree => null()
 
-    if ( right .and. associated(btree%right) ) then
+    if ( right .AND. associated(btree%right) ) then
         return
     endif
-    if ( .not. right .and. associated(btree%left) ) then
+    if ( .NOT. right .AND. associated(btree%left) ) then
         return
     endif
 

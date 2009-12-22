@@ -31,7 +31,7 @@ cipk jan96      DATA KEY/0/
 C
 C
 C  Read data, print out tide for 25 hours
-      IF (KEY .EQ. 0) THEN
+      IF (KEY == 0) THEN
         WRITE(*,*) 'Filename for tidal coefficients not defined'
         WRITE(*,*) 'Enter filename for tidal coefficients'
 cipk sep04
@@ -40,7 +40,7 @@ cipk sep04
         key=13
         OPEN(UNIT=13,FILE=FNAMT,STATUS='OLD')
       ENDIF
-      IF(KEYSWT .EQ. 0) THEN
+      IF(KEYSWT == 0) THEN
         KEYSWT=1
 cipk APR96 end changes
 C
@@ -62,7 +62,7 @@ C
          read(key,'(3i3,i5,2f10.0)')  iyr, imo, ida, ihr,  tdum, utilt
          
 CIPK JAN02 ADD 2000 AS OPTIONAL TEST
-         IF(IYR+1900 .NE. IYRR  .AND.  IYR+2000 .NE. IYRR) THEN
+         IF(IYR+1900 /= IYRR .AND. IYR+2000 /= IYRR) THEN
 cipk sep04
            CLOSE(75)
            OPEN(75,FILE='ERROR.OUT')
@@ -71,7 +71,7 @@ cipk sep04
            STOP
          ENDIF
          NLP=1
-         IF(MOD(IYR,4) .EQ. 0) NLP=2
+         IF(MOD(IYR,4) == 0) NLP=2
          JDAY=JUDAYM(IMO,NLP)+IDA-1
          HSTART=(JDAY-1)*24.+IHR/100.
          HDAT=(DAYOFY-1)*24.+TIME-TDTIM
@@ -147,7 +147,7 @@ C            tidout = 3.28*tide/100.
             write (75,'(I10,F10.3,F15.5)') idayout,hrout,tidout
 C
             time = time + DELT
-            if (time .le. tmax) go to 100
+            if (time <= tmax) go to 100
 C
 C  Generate tidal b.c. for this timestep
       ENDIF

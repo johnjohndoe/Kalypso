@@ -39,7 +39,7 @@ BankProfile = tmp_profile(1)
 
  write (*,*) ' NumberFenodes  ',NumberFenodes
  
-if (.NOT. associated (CCLine.firstSegment)) then
+if ( .NOT. associated (CCLine.firstSegment)) then
 
 ! if there is only side nodes the following will be executed, otherwise (midside nodes includes
 ! then the statement after else is executed.
@@ -92,7 +92,7 @@ if (.NOT. associated (CCLine.firstSegment)) then
   do
  
 !  if (j >= NumberFenodes -1) exit
- if (.not. associated(nextarc) ) exit
+ if ( .NOT. associated(nextarc) ) exit
  
  midside: IF ( WithMideSide ) then 
  j = j + 1

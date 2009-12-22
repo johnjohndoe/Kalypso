@@ -126,7 +126,7 @@ subroutine generateTreeForID (baseTree, ID)
   !generate the tree structure based on the levelIDs
   localTree => baseTree
   do i = startLevel, 1, -1
-    if (.not. hasSubtreeWithID (localTree, levelID(i))) then
+    if ( .NOT. hasSubtreeWithID (localTree, levelID(i))) then
       levelTree => newTree (i, levelID(i))
       call addTree (localTree, levelTree)
     endif
@@ -192,7 +192,7 @@ function hasSubtreeWithID (baseTree, ID)
   !local variables
   type (decimalTree_Nodes), pointer :: tmpTree => null()
   !check for tree occurance
-  if (.not. (associated (baseTree.subtree))) then
+  if ( .NOT. (associated (baseTree.subtree))) then
     hasSubtreeWithID = .false.
   else
     tmpTree => baseTree.subTree

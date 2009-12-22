@@ -42,7 +42,7 @@ CIPK SEP04
       CHARACTER*8 ID
       DATA NHYD/0/,ITIMEH/0/
 C      WRITE(*,*) 'N,TIME',N,TIME
-      IF(IHUNIT .EQ. 0) THEN
+      IF(IHUNIT == 0) THEN
         WRITE(*,*) 'Filename for tidalgraphs not defined'
         WRITE(*,*) 'Enter filename for continuity line tidalgraphs'
 CIPK SEP04
@@ -50,7 +50,7 @@ CIPK SEP04
         IHUNIT=12
         OPEN(UNIT=12,FILE=FNAMT,STATUS='OLD')
       ENDIF
-      IF(ITIMEH .EQ. 0) THEN
+      IF(ITIMEH == 0) THEN
         ALLOCATE (NCLIN(NHDS),NHY(NHDS),TA(NCHOBS,NHDS),
      +          HT(NCHOBS,NHDS),HD(NCHOBS,NHDS,3),
      +          ILAYRH(NCHOBS,NHDS)
@@ -73,7 +73,7 @@ CIPK SEP04
         htd = 0.
         !-
       ENDIF
-      IF(NHYD .EQ. 0) THEN
+      IF(NHYD == 0) THEN
 c
 c     set starting time in hours of the year
 c     teth contains the first time step
@@ -82,10 +82,10 @@ c     teth contains the first time step
   100   READ(IHUNIT,'(A8,A72)') ID,HTITLE
 cipk nov97        READ(IHUNIT,'(A8,A72)') ID,DLIN
         call ginpt(ihunit,id,dlin)
-        IF(ID(1:3) .EQ. 'CLH') THEN
+        IF(ID(1:3) == 'CLH') THEN
   101     NHYD=NHYD+1
 CIPKSEP00 TEST FOR LIMIT
-          IF(NHYD .GT. NHDS) THEN
+          IF(NHYD > NHDS) THEN
 cipk sep04
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
@@ -99,7 +99,7 @@ c
           DO 120 I=1,NCHOBS
 cipk nov97            READ(IHUNIT,'(A8,A72)') ID,DLIN
             call ginpt(ihunit,id,dlin)
-            IF(ID(1:2) .EQ. 'HD') THEN
+            IF(ID(1:2) == 'HD') THEN
               READ(ID(5:8),'(F4.0)') DYQ(I,NHYD)
               !EFa oct09, added htd for hfd
               !READ(DLIN,'(F8.0,I8,5F8.0)')
@@ -110,17 +110,17 @@ cipk nov97            READ(IHUNIT,'(A8,A72)') ID,DLIN
      
 CIPK AUG00 ADD HT2
               NHY(NHYD)=NHY(NHYD)+1
-              IF(I .EQ. 1) THEN
+              IF(I == 1) THEN
 C
 C      reduce input time to time since that set to start simulation
 C
   110           CONTINUE
-                IF(MOD(IYD,4) .EQ. 0) THEN
+                IF(MOD(IYD,4) == 0) THEN
                   ILP=1
                 ELSE
                   ILP=0
                 ENDIF
-                IF(IYD .EQ. IYRR) THEN
+                IF(IYD == IYRR) THEN
 C
 C      If now for for the same year
 C
@@ -129,8 +129,8 @@ C
 C      set time as the difference
 C
                   TA(I,NHYD)=TCUR1-TPRVH-TSTARTS
-                ELSEIF(IYD .LT. IYRR) THEN
-                  IF(MOD(IYD,4) .EQ. 0) THEN
+                ELSEIF(IYD < IYRR) THEN
+                  IF(MOD(IYD,4) == 0) THEN
                     TPRVH=TPRVH+366.*24.
                   ELSE
                     TPRVH=TPRVH+365.*24.
@@ -147,11 +147,11 @@ C
                   STOP
                 ENDIF
               ELSE
-                IF(DYQ(I,NHYD) .LT. DYQ(I-1,NHYD)) THEN
+                IF(DYQ(I,NHYD) < DYQ(I-1,NHYD)) THEN
                   TCUR1=TCUR1-365.*24.
-                  IF(ILP .EQ. 1) TCUR1=TCUR1-24.
+                  IF(ILP == 1) TCUR1=TCUR1-24.
                   IYD=IYD+1
-                  IF(MOD(IYD,4) .EQ. 0) THEN
+                  IF(MOD(IYD,4) == 0) THEN
                     ILP=1
                   ELSE
                     ILP=0
@@ -161,7 +161,7 @@ C
                 TA(I,NHYD)=TA(I-1,NHYD)+TCUR-TCUR1
                 TCUR1=TCUR
               ENDIF
-            ELSEIF(ID(1:3) .EQ. 'CLH') THEN
+            ELSEIF(ID(1:3) == 'CLH') THEN
               NHY(NHYD)=NHY(NHYD)+1
               DYQ(NHY(NHYD),NHYD)=1.E+6
               TA(NHY(NHYD),NHYD)=1.E+8
@@ -207,11 +207,11 @@ C     INTERPOLATE TO OBTAIN HYDROGRAPH
 C
       CTIM=TETH
       DO 300 J=1,NHYD
-        IF(N .EQ. NCLIN(J)) THEN
+        IF(N == NCLIN(J)) THEN
           DO 260 I=2,NHY(J)
             TIM=TA(I-1,J)
             TIN=TA(I,J)
-            IF(CTIM .LT. TIN) THEN
+            IF(CTIM < TIN) THEN
               HF=HT(I-1,J)+(HT(I,J)-HT(I-1,J))*
      +        (CTIM-TIM)/(TIN-TIM)
 CIPK AUG00

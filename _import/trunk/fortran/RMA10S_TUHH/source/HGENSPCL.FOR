@@ -12,14 +12,14 @@ C-
 c
       DATA VOID/-1.E20/
 C
-      IF (IFIRST .EQ. 0)  THEN
+      IF (IFIRST == 0)  THEN
          ALLOCATE (IHSPCL(MAXP), HREQQ(MAXP))
          IHSPCL = 0
           HREQQ = 0.0
          IFIRST = 1
       ENDIF
 
-      IF (IKEY .EQ. 1)  GO TO 600
+      IF (IKEY == 1)  GO TO 600
 C
 C
 C-
@@ -27,40 +27,40 @@ C...... Insert values into SPEC  and  NFIX arrays
 C
       MAX = LMT(J)
 CIPK FEB01
-	IF(MAX .EQ. 0) THEN
-	  WRITE(75,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',J
-	  WRITE(75,*) 'EXECUTION TERMINATED'
-	  WRITE(*,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',J
-	  WRITE(*,*) 'EXECUTION TERMINATED'
-	ENDIF
+      IF(MAX == 0) THEN
+        WRITE(75,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',J
+        WRITE(75,*) 'EXECUTION TERMINATED'
+        WRITE(*,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',J
+        WRITE(*,*) 'EXECUTION TERMINATED'
+      ENDIF
 C
       DO 300 K=1,MAX
          NA = LINE(J,K)
          SPEC(NA,3) = HREQ
          hreqq(na) = hreq
-         IF (MOD(NFIX(NA),1000) .LT. 200) THEN
+         IF (MOD(NFIX(NA),1000) < 200) THEN
             NFIX(NA) = NFIX(NA) + 200
          ENDIF
-         IF (QQAL(1) .GE. 0.) THEN
+         IF (QQAL(1) >= 0.) THEN
             SPEC(NA,4) = QQAL(1)
-            IF (MOD(NFIX(NA),100)/10 .EQ. 0) NFIX(NA) = NFIX(NA) + 10
+            IF (MOD(NFIX(NA),100)/10 == 0) NFIX(NA) = NFIX(NA) + 10
          ENDIF
-         IF (QQAL(2) .GE. 0.) THEN
+         IF (QQAL(2) >= 0.) THEN
             SPEC(NA,5) = QQAL(2)
-            IF (MOD(NFIX(NA),10) .EQ. 0)  NFIX(NA) = NFIX(NA) + 1
+            IF (MOD(NFIX(NA),10) == 0)  NFIX(NA) = NFIX(NA) + 1
          ENDIF
-         IF (QQAL(3) .GE. 0.) THEN
+         IF (QQAL(3) >= 0.) THEN
             SPEC(NA,6) = QQAL(3)
-            IF (NFIX1(NA) .EQ. 0)  NFIX1(NA) = 1
+            IF (NFIX1(NA) == 0)  NFIX1(NA) = 1
          ENDIF
 C
 C  2-dv element
 C
-         IF (MAX .EQ. 1)  THEN
+         IF (MAX == 1)  THEN
             NDP = NDEP(NA)
             N1 = NREF(NA) + 1
             NV = NDEP(NA) + N1 - 2
-            IF (N1 .GT. 1)  THEN
+            IF (N1 > 1)  THEN
                IHSPCL(NA) = 0
                DO I=N1,NV
                   IHSPCL(I) = 0
@@ -81,13 +81,13 @@ C
                NDP = NDEP(ND)
                N1 = NREF(ND) + 1
                NV = NDEP(ND) + N1 - 2
-               IF (N1 .GT. 1)  THEN
+               IF (N1 > 1)  THEN
                   IHSPCL(ND) = 0
                   DO I=N1,NV
                      IHSPCL(I) = 0
                   ENDDO
 c
-                  IF (MOD(KK,2) .NE. 0)   THEN
+                  IF (MOD(KK,2) /= 0)   THEN
                      LDX = NREF(ND) + 1 + 2*(ILAYR-1) 
                      IHSPCL(LDX) = 1 
                   ENDIF 
@@ -97,7 +97,7 @@ c
 C
          ENDIF
 C
-         IF ( ICYC .GT. 0) CALL BFORM(NA)
+         IF ( ICYC > 0) CALL BFORM(NA)
 C
   300 CONTINUE
 C
@@ -109,13 +109,13 @@ C
 C  Assign flow to proper layer
 C
       DO 610 N=1,NPM
-         IF (IHSPCL(N) .EQ. -1  .OR.  IHSPCL(N) .EQ. -2)  THEN
+         IF (IHSPCL(N) == -1 .OR. IHSPCL(N) == -2)  THEN
 C
             NDP = NDEP(N)
             N1 = NREF(N) + 1
             NV = NDEP(NA) + N1 - 2
 C
-            IF (N1 .GT. 1)  THEN
+            IF (N1 > 1)  THEN
 C
                NFIX(N) = 11200
                SPEC(N,1) = 0.0
@@ -126,7 +126,7 @@ C
                DO 630 K=N1,NV
                   SPEC(K,3) = HREQQ(N) 
                   NSPL(K) = 1
-                  IF (IHSPCL(K) .EQ. 1)  THEN
+                  IF (IHSPCL(K) == 1)  THEN
                      NFIX(K) = 1200
                   ELSE
                      SPEC(K,1) = 0.0

@@ -89,12 +89,12 @@ subroutine textstream_open( stream, lun, filename, error )
 
     open( lun, file=filename, status = 'old', iostat=ierr )
 
-    if ( ierr .eq. 0 ) then
+    if ( ierr == 0 ) then
         stream%lun     = lun
         stream%endline = .false.
         stream%buffer  = ' '
         call textstream_readbuffer( stream, .false., ierr )
-        error = ierr .ne. 0
+        error = ierr /= 0
     else
         error = .true.
         stream%lun    = 0
@@ -138,10 +138,10 @@ subroutine textstream_read_char( stream, char, ierr )
         ! (To reliably detect the end of the record, we read one extra)
         !
         read( stream%dbuffer, *, iostat=ierr ) (dummy, i=1,stream%offset), char, dummy
-        if ( ierr .gt. 0 ) then
+        if ( ierr > 0 ) then
             return
         endif
-        if ( ierr .eq. 0 ) then
+        if ( ierr == 0 ) then
             stream%offset = stream%offset + 1
             return
         endif
@@ -151,10 +151,10 @@ subroutine textstream_read_char( stream, char, ierr )
         !
         if ( stream%endline ) then
             read( stream%dbuffer, *, iostat=ierr ) (dummy, i=1,stream%offset), char
-            if ( ierr .gt. 0 ) then
+            if ( ierr > 0 ) then
                 return
             endif
-            if ( ierr .eq. 0 ) then
+            if ( ierr == 0 ) then
                 stream%offset = stream%offset + 1
                 return
             endif
@@ -168,8 +168,8 @@ subroutine textstream_read_char( stream, char, ierr )
         else
             stream%dbuffer = stream%buffer    ! Shift maxbuf characters
         endif
-        call textstream_readbuffer( stream, (.not. stream%endline), ierr )
-        if ( ierr .ne. 0 ) return
+        call textstream_readbuffer( stream, ( .NOT. stream%endline), ierr )
+        if ( ierr /= 0 ) return
     enddo
 
 end subroutine textstream_read_char

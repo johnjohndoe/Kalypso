@@ -7,23 +7,23 @@ CIPK  LAST UPDATE SEP 6 2004 RENAME character variable FNAM to FNAMT
       
       LOGICAL EX
       DATA IPASS/0/
-        IF(IPASS .EQ. 0) MAXFIL=0
+        IF(IPASS == 0) MAXFIL=0
 C-
-      IF(IVRSID .LT. 4  .OR. IVRSID .EQ. 5) THEN
-        IF(IPASS .EQ. 0) THEN
-          IF(IVRSID .EQ. 1) THEN
+      IF(IVRSID < 4 .OR. IVRSID == 5) THEN
+        IF(IPASS == 0) THEN
+          IF(IVRSID == 1) THEN
 C
 C       NSIZ in bytes
 C
             NSIZ=8*NBS+4
 C
-          ELSEIF(IVRSID .EQ. 2) THEN
+          ELSEIF(IVRSID == 2) THEN
 C
 C       NSIZ for short words (2 bytes)
 C
             NSIZ=4*NBS+2
 C
-          ELSEIF(IVRSID .EQ. 3) THEN
+          ELSEIF(IVRSID == 3) THEN
 C
 C       NSIZ for long words (4 bytes)
 C
@@ -41,12 +41,12 @@ C
           IPASS=1
           NRR=0
         ENDIF
-        IF( N .EQ. 0 ) RETURN
+        IF( N == 0 ) RETURN
         NRR=NRR+1
         WRITE(ND1,REC=NRR) LQ,LHS,QS
 C
       ELSE
-        IF(IPASS .EQ. 0) THEN
+        IF(IPASS == 0) THEN
 C
 C    Develop a name for the scratch file
 C
@@ -54,7 +54,7 @@ C
           WRITE(TNUM,3001) NSCT
  3001     FORMAT(I3.3)
           FHED='H'//TNUM(1:3)
-          IF(IVRSID .EQ. 4) THEN
+          IF(IVRSID == 4) THEN
 CIPK SEP04
             FNAMT=FHED//'.001'
             INQUIRE(FILE=FNAMT,EXIST=EX)
@@ -84,21 +84,21 @@ C
         NRR=NRR+1
         WRITE(TSUB,3000) NRR
  3000   FORMAT(I3.3)
-        IF(MAXFIL .LT. NRR) MAXFIL=NRR
-        IF(IVRSID .EQ. 4) THEN
+        IF(MAXFIL < NRR) MAXFIL=NRR
+        IF(IVRSID == 4) THEN
 CIPK SEP04
           FNAMT=FHED//'.'//TSUB(1:3)
-          IF(NRR .GT. 1  .OR. IPASS .GT. 0)   CLOSE (ND1)
+          IF(NRR > 1 .OR. IPASS > 0)   CLOSE (ND1)
           OPEN(ND1,FILE=FNAMT,STATUS='UNKNOWN',
      +    FORM='UNFORMATTED')
         ELSE
           FNBM=FHED//TSUB(1:3)
-          IF(NRR .GT. 1  .OR. IPASS .GT. 0)   CLOSE (ND1)
+          IF(NRR > 1 .OR. IPASS > 0)   CLOSE (ND1)
           OPEN(ND1,FILE=FNBM,STATUS='UNKNOWN',
      +    FORM='UNFORMATTED')
         ENDIF
 C
-        IF( N .EQ. 0 ) RETURN
+        IF( N == 0 ) RETURN
 C
         WRITE(ND1) LQ,LHS,QS
 C

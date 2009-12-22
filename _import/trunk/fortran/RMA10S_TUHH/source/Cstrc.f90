@@ -28,7 +28,7 @@ REAL (KIND = 8) :: DX, DY, CosinusAlpha
 !...... Det up cutoff values
 !-
 
-IF(GRAV .LT. 32.) THEN
+IF(GRAV < 32.) THEN
   HCUT=0.001
 ELSE
   HCUT=0.003
@@ -140,7 +140,7 @@ estifm (5, 5) = -1.0
 !      1 - approach using Q-curves (Kalypso approach!)
 
 
-  if (njt(nm) == 10 .or. njt(nm) == 11 .or. njt(nm) == 12) then
+  if (njt(nm) == 10 .OR. njt(nm) == 11 .OR. njt(nm) == 12) then
 
     !njt defines type of flow controller
     ! 10 - Q-curve group
@@ -166,14 +166,14 @@ estifm (5, 5) = -1.0
     NodB = 9
 
     !if weir is submerged, then leave subroutine: Can only be used with njt(nm) == 12
-    !if(isubm(n1) .eq. 2) return
+    !if(isubm(n1) == 2) return
 
     !set increments for numerical derivatives
     DH = 0.002
     DV = 0.01
 
     !Check, if node is submerged
-    !IF(WSLL(N1) .LT. TRANSEL(N1)) return
+    !IF(WSLL(N1) < TRANSEL(N1)) return
 
     !Calculate the discharge based on the present values of both nodes
     Q = (U(1) * ah(n1) + U(3) * ah(N2)) / 2.
@@ -187,9 +187,9 @@ estifm (5, 5) = -1.0
 
     
     !Check if control structure is controlled time dependently; means cstrc might be inoperative
-    IF(NTMREF(IMAT(NN)) .NE. 0) THEN
+    IF(NTMREF(IMAT(NN)) /= 0) THEN
       CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET,QFACT1)
-      IF(ISWTOF .EQ. 1) THEN
+      IF(ISWTOF == 1) THEN
         Q1T=0.0
         F(NodB)=Q-Q1T
         VEL(1,NOP(NN,1))=0.
@@ -208,7 +208,7 @@ estifm (5, 5) = -1.0
     !Factorization for using metric or SI units
     unitFac1 = 1.0d0
     unitFac2 = 1.0d0
-    if (grav > 30.0 .and. nctref (nn) == 0) then
+    if (grav > 30.0 .AND. nctref (nn) == 0) then
       unitFac1 = 1.0/ 3.2808
       unitFac2 = 10.7636
     endif
@@ -231,15 +231,15 @@ estifm (5, 5) = -1.0
     if (njt (nm) == 12) then
       CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,widem)
       Q1T = Q1T * unitFac2
-	!QFunction relationship
+      !QFunction relationship
     elseif (njt (nm) == 10) then
       q1t = cstrcQ_fromQCurves (imat (nn), ws1 + wv1**2/(2.0*grav), ws2 + wv2**2/(2.0*grav))
     !Q tabular relationship
     elseif (njt (nm) == 11) then
       call wtform(q1t,nctref(imat(nn)),ws1,ws2, mcord(nn,1),mcord(nn,2))
-	endif
-	!Factorize discharge by direction fix
-	Q1T = Q1T * QFACT1
+      endif
+      !Factorize discharge by direction fix
+      Q1T = Q1T * QFACT1
     !Form residual
     F (nodB) = Q - Q1T
 
@@ -250,7 +250,7 @@ estifm (5, 5) = -1.0
     upstream_or_downstream: do j = 1, 2
       plus_minus_Dh: do i = 1, 2
         if (j == 1) then
-  	      if (i == 1) then
+              if (i == 1) then
             wh1 = wh1 + 0.5 * dh
             ws1 = ws1 + 0.5 * dh
           else
@@ -269,14 +269,14 @@ estifm (5, 5) = -1.0
           endif
         endif
 
-	    if (njt (nm) == 12) then
+          if (njt (nm) == 12) then
           call wform (qDh (i), wh1, ws1, wv1, wh2, ws2, wv2, wec, wln, itp, widem)
           qDh(i) = qDh(i) * unitfac2
-	    elseif (njt (nm) == 11) then
-	      call wtform (qdh (i), imat (nn), ws1, ws2, mcord(nn,1), mcord(nn,2))
+          elseif (njt (nm) == 11) then
+            call wtform (qdh (i), imat (nn), ws1, ws2, mcord(nn,1), mcord(nn,2))
         elseif (njt (nm) == 10) then
           qdh(i) = cstrcQ_fromQCurves (imat (nn), ws1 + wv1**2/(2.0*grav), ws2 + wv2**2/(2.0*grav))
-	    endif
+          endif
         qDh(i) = qDh(i) * QFACT1
 
         !after looping up and down
@@ -306,7 +306,7 @@ estifm (5, 5) = -1.0
     upstream_or_downstream_2: do j = 1, 2
       plus_minus_Dv: do i = 1, 2
         if (j == 1) then
-  	      if (i == 1) then
+              if (i == 1) then
             wv1 = wv1 + 0.5 * dv
           else
             wv1 = wv1 - dv
@@ -324,7 +324,7 @@ estifm (5, 5) = -1.0
           call wform (qDh (i), wh1, ws1, wv1, wh2, ws2, wv2, wec, wln, itp, widem)
           qDh(i) = qDh(i) * unitfac2
         elseif (njt (nm) == 11) then
-	      call wtform (qdh(i), imat (nn), ws1, ws2, mcord(nn,1),mcord(nn,2))
+            call wtform (qdh(i), imat (nn), ws1, ws2, mcord(nn,1),mcord(nn,2))
         elseif (njt (nm) == 10) then
           qdh(i) = cstrcQ_fromQCurves (imat (nn), ws1 + wv1**2/(2.0*grav), ws2 + wv2**2/(2.0*grav))
         endif
@@ -351,7 +351,7 @@ estifm (5, 5) = -1.0
 !-
 !...... The other is some kind elevation relationship
 !-
-  elseIF(NJT(NM) .EQ. 1) THEN
+  elseIF(NJT(NM) == 1) THEN
 !-
 !...... Balance total head
 !-
@@ -370,13 +370,13 @@ estifm (5, 5) = -1.0
           F(NodA)=TH1-THN
         ENDDO
 !
-      ELSEIF(NJT(NM) .EQ. 2) THEN
+      ELSEIF(NJT(NM) == 2) THEN
 !-
 !...... Reversible Q = function of head loss ( h1 -h2 -c)
 !-
         N1=NOP(NN,1)
         RX1=VEL(1,N1)*COS(ALFA(N1))+VEL(2,N1)*SIN(ALFA(N1))
-        IF(ABS(ALFA(N1)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N1)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N1)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N1)-QD(NM)) < 4.713388) THEN
           RSWT1=-1.
         ELSE
           RSWT1=1.
@@ -384,7 +384,7 @@ estifm (5, 5) = -1.0
 !IPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         N2=NOP(NN,3)
         RX2=VEL(1,N2)*COS(ALFA(N2))+VEL(2,N2)*SIN(ALFA(N2))
-        IF(ABS(ALFA(N2)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N2)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N2)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N2)-QD(NM)) < 4.713388) THEN
           RSWT2=-1.
         ELSE
           RSWT2=1.
@@ -409,7 +409,7 @@ estifm (5, 5) = -1.0
         HLD=SIGN(1.,WS1-WS2)
         !residual  equation
         F(NodA)=Q-AJ(NM)-BJ(NM)*HLD*HLOS**GAMJ(NM)
-        IF(HLOS .LT. HCUT)   HLOS=HCUT
+        IF(HLOS < HCUT)   HLOS=HCUT
         ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
         ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
         ESTIFM(NodA,3)=BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.) -RX1*RSWT1*AWD1/2.
@@ -422,13 +422,13 @@ estifm (5, 5) = -1.0
         ESTIFM(NodA+3,NodA+3)=1.
 
 !-
-      ELSEIF(NJT(NM) .EQ. 3) THEN
+      ELSEIF(NJT(NM) == 3) THEN
 !-
 !...... Non-reversible Q = function of head loss ( h1 -h2 -c)
 !-
         N1=NOP(NN,1)
         RX1=VEL(1,N1)*COS(ALFA(N1))+VEL(2,N1)*SIN(ALFA(N1))
-        IF(ABS(ALFA(N1)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N1)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N1)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N1)-QD(NM)) < 4.713388) THEN
           RSWT1=-1.
         ELSE
           RSWT1=1.
@@ -436,7 +436,7 @@ estifm (5, 5) = -1.0
 !IPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         N2=NOP(NN,3)
         RX2=VEL(1,N2)*COS(ALFA(N2))+VEL(2,N2)*SIN(ALFA(N2))
-        IF(ABS(ALFA(N2)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N2)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N2)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N2)-QD(NM)) < 4.713388) THEN
           RSWT2=-1.
         ELSE
           RSWT2=1.
@@ -450,14 +450,14 @@ estifm (5, 5) = -1.0
         WS1=HEL(N1)+AO(N1)
         WS2=HEL(N2)+AO(N2)
         HLOS=WS1-WS2-CJ(NM)
-        IF(HLOS .LT. 0.) THEN
+        IF(HLOS < 0.) THEN
           F(NodA)=Q
           ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
           ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
 
         ELSE
           F(NodA)=Q-AJ(NM)-BJ(NM)*HLOS**GAMJ(NM)
-          IF(HLOS .LT. HCUT)   HLOS=HCUT
+          IF(HLOS < HCUT)   HLOS=HCUT
           ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
           ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
           ESTIFM(NodA,3)=BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.) -RX1*RSWT1*AWD1/2.
@@ -471,13 +471,13 @@ estifm (5, 5) = -1.0
 
         ENDIF
 !-
-      ELSEIF(NJT(NM) .EQ. 4) THEN
+      ELSEIF(NJT(NM) == 4) THEN
 !-
 !......  Q = function of head  ( h1 )
 !-
         N1=NOP(NN,1)
         RX1=VEL(1,N1)*COS(ALFA(N1))+VEL(2,N1)*SIN(ALFA(N1))
-        IF(ABS(ALFA(N1)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N1)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N1)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N1)-QD(NM)) < 4.713388) THEN
           RSWT1=-1.
         ELSE
           RSWT1=1.
@@ -485,7 +485,7 @@ estifm (5, 5) = -1.0
 !IPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         N2=NOP(NN,3)
         RX2=VEL(1,N2)*COS(ALFA(N2))+VEL(2,N2)*SIN(ALFA(N2))
-        IF(ABS(ALFA(N2)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N2)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N2)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N2)-QD(NM)) < 4.713388) THEN
           RSWT2=-1.
         ELSE
           RSWT2=1.
@@ -510,13 +510,13 @@ estifm (5, 5) = -1.0
         ESTIFM(NodA+3,4)=-1.
         ESTIFM(NodA+3,NodA+3)=1.
 
-      ELSEIF(NJT(NM) .EQ. 5) THEN
+      ELSEIF(NJT(NM) == 5) THEN
 !-
 !...... Reversible   Head loss ( h1 -h2) = function of Q
 !-
         N1=NOP(NN,1)
         RX1=VEL(1,N1)*COS(ALFA(N1))+VEL(2,N1)*SIN(ALFA(N1))
-        IF(ABS(ALFA(N1)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N1)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N1)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N1)-QD(NM)) < 4.713388) THEN
           RSWT1=-1.
         ELSE
           RSWT1=1.
@@ -524,7 +524,7 @@ estifm (5, 5) = -1.0
 !IPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         N2=NOP(NN,3)
         RX2=VEL(1,N2)*COS(ALFA(N2))+VEL(2,N2)*SIN(ALFA(N2))
-        IF(ABS(ALFA(N2)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N2)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N2)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N2)-QD(NM)) < 4.713388) THEN
           RSWT2=-1.
         ELSE
           RSWT2=1.
@@ -553,7 +553,7 @@ estifm (5, 5) = -1.0
         ESTIFM(NodA+3,4)=-1.
         ESTIFM(NodA+3,NodA+3)=1.
 
-      ELSEIF(NJT(NM) .EQ. 6) THEN
+      ELSEIF(NJT(NM) == 6) THEN
 !-
 !......  Q = function of head  ( h1 -c)
 !-
@@ -563,7 +563,7 @@ estifm (5, 5) = -1.0
 !      RSWT1 and RSWT2 are direction multipliers
 !       AWD1 and AWD2 are area/depth
         RX1=VEL(1,N1)*COS(ALFA(N1))+VEL(2,N1)*SIN(ALFA(N1))
-        IF(ABS(ALFA(N1)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N1)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N1)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N1)-QD(NM)) < 4.713388) THEN
           RSWT1=-1.
         ELSE
           RSWT1=1.
@@ -571,7 +571,7 @@ estifm (5, 5) = -1.0
 !IPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         N2=NOP(NN,3)
         RX2=VEL(1,N2)*COS(ALFA(N2))+VEL(2,N2)*SIN(ALFA(N2))
-        IF(ABS(ALFA(N2)-QD(NM)) .GT. 1.570796  .AND. ABS(ALFA(N2)-QD(NM)) .LT. 4.713388) THEN
+        IF(ABS(ALFA(N2)-QD(NM)) > 1.570796 .AND. ABS(ALFA(N2)-QD(NM)) < 4.713388) THEN
           RSWT2=-1.
         ELSE
           RSWT2=1.
@@ -586,7 +586,7 @@ estifm (5, 5) = -1.0
         WS1=HEL(N1)+AO(N1)-BJ(NM)
         WS2=HEL(N2)+AO(N2)-BJ(NM)
         WRITE(75,*) 'WS1,WS2',WS1,WS2
-        IF(WS1 .LE. 0.   .AND.  WS2 .LE. 0.) THEN
+        IF(WS1 <= 0.  .AND. WS2 <= 0.) THEN
 
 !    No Flow case
 
@@ -595,7 +595,7 @@ estifm (5, 5) = -1.0
           ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
           ESTIFM(NodA,3)= -RX1*RSWT1*AWD1/2.
           ESTIFM(NodA,NodA+2)=-RX2*RSWT2*AWD2/2.
-        ELSEIF(WS1 .GT. 0.  .AND.  WS2 .LE. 0.) THEN
+        ELSEIF(WS1 > 0. .AND. WS2 <= 0.) THEN
 
 !    Flow controlled from upstream N1
 
@@ -611,7 +611,7 @@ estifm (5, 5) = -1.0
           ESTIFM(NodA+3,4)=-1.
           ESTIFM(NodA+3,NodA+3)=1.
 
-        ELSEIF(WS1 .LE. 0.  .AND.  WS2 .GT. 0.) THEN        
+        ELSEIF(WS1 <= 0. .AND. WS2 > 0.) THEN        
 
 !    Flow controlled from upstream N2
 
@@ -631,7 +631,7 @@ estifm (5, 5) = -1.0
 
 !C    Flow controlled by H1-H2  Get new AJ
 
-          IF(WS1 .GE. WS2) THEN
+          IF(WS1 >= WS2) THEN
             AJN=AJ(NM)*(WS1-WS2)**(GAMJ(NM)-CJ(NM))
             F(NodA)=Q-AJN*(WS1-WS2)**CJ(NM)
             ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
@@ -672,7 +672,7 @@ estifm (5, 5) = -1.0
     WS1=WSLL(N1)
     WS2=WSLL(N2)
 !ipk oct00
-    if(isubm(n1) .eq. 2) go to 500
+    if(isubm(n1) == 2) go to 500
 
     F(NodB)=WS1-WS2-(U(1)+U(3))**2/20.
 !

@@ -248,7 +248,7 @@ ENDIF
 !-------------------------------------
 readELdata: do
   !if there is data, read and evaluate it
-  if(ID(1:2) .EQ. 'EL') then
+  if(ID(1:2) == 'EL') then
     !read data for the element
     read(DLIN,5040) J,(NOP(J,K),K=1,8),IMAT(J),TH(J)
     !read next input file line
@@ -281,12 +281,12 @@ AssignRoughnesses: DO I = 1, MAXE
     if (NOP (i, 6) == 0) J = imat (i)
 
     !skip polynomial approach elements (immt = 89)
-    if (immt /= 89 .and. immt < 900) then
+    if (immt /= 89 .AND. immt < 900) then
       !assign Chezy-coefficient, if the parameter > 1.0
       if (ORT (J, 5) > 1.) then
         CHEZ (I) = ORT (J, 5)
       !assign Manning's N, if the parameter is between 0.0 and 1.0
-      elseif (0.0 < ORT (J, 5) .and. ORT (j, 5) <= 1.0) then
+      elseif (0.0 < ORT (J, 5) .AND. ORT (j, 5) <= 1.0) then
         ZMANN (I) = ORT (J, 5)
       !continue on Darcy-Weisbach equation utilisation
       elseif (ort (j, 5) == -1.0) then
@@ -541,8 +541,8 @@ if (ndp /= 0) ndp = 0
 !C-
 !C......Read number of layers at each node for 3d cases
 !C-
-!        IF(NDP .NE. 0) THEN
-!          IF(ID(1:2) .EQ. 'VD') THEN
+!        IF(NDP /= 0) THEN
+!          IF(ID(1:2) == 'VD') THEN
 !CIPK SEP96 CHANGE TO READ EDD1 SEPARATELY
 !            READ(DLIN,5021) VMIN,POWER,UMIN,PWERIN
 !            WRITE(LOUT,6040) VMIN,POWER,UMIN,PWERIN
@@ -551,7 +551,7 @@ if (ndp /= 0) ndp = 0
 !            call ginpt(lin,id,dlin)
 !cipk sep96 add variable distribution of edd1's etc
 !            WRITE(LOUT,6041)
-! 113        IF(ID(1:2) .EQ. 'TD') THEN
+! 113        IF(ID(1:2) == 'TD') THEN
 !              READ(DLIN,'(I8,3F8.0)') K,EDD1(K),EDD2(K),EDD3(K)
 !              WRITE(LOUT,6042) K,EDD1(K),EDD2(K),EDD3(K)
 !cipk nov97          READ(LIN,'(A8,A72)') ID,DLIN
@@ -578,11 +578,11 @@ if (ndp /= 0) ndp = 0
 !             WRITE(LOUT,*) 'DEFAULT VD VALUES USED'
 !             WRITE(*,*) 'DEFAULT VD VALUES USED'
 !          ENDIF
-!          IF(NDP .LT. 0) THEN
+!          IF(NDP < 0) THEN
 !C-
-!C      NDP .lt. -1 says use this value globally
+!C      NDP < -1 says use this value globally
 !C-
-!            IF(NDP .LT. -1) THEN
+!            IF(NDP < -1) THEN
 !              DO 814 J=1,NP
 !                NDEP(J) = -NDP-1
 !  814         CONTINUE
@@ -593,16 +593,16 @@ if (ndp /= 0) ndp = 0
 !C-
 !  815         CONTINUE
 !              WRITE(*,'(1X,A3)') ID
-!              IF(ID(1:3) .EQ. 'LD2') THEN
+!              IF(ID(1:3) == 'LD2') THEN
 !                READ(DLIN,'(2I8)') J,NTS
 !cipk feb99
 !cWP Feb 2006, Change NLAYM to NLAYMX
-!                if(nts .gt. nlaymx) then
+!                if(nts > nlaymx) then
 !CIPK SEP04 CREATE ERROR FILE
-!  	            CLOSE(75)
+!                    CLOSE(75)
 !                  OPEN(75,FILE='ERROR.OUT')
 !
-!cWP Feb 2006, Change NLAYM to NLAYMX	  
+!cWP Feb 2006, Change NLAYM to NLAYMX        
 !                 WRITE(75,*) 'Too many layers Increase NLAYMX in PARAM.'
 !     +            ,'COM'
 !                 WRITE(*,*) 'Too many layers Increase NLAYMX in PARAM.C'
@@ -611,21 +611,21 @@ if (ndp /= 0) ndp = 0
 !                endif
 !
 !                N2=NTS
-!                IF(N2 .GT. 7) N2=7
+!                IF(N2 > 7) N2=7
 !                READ(DLIN,'(2I8,7F8.0)') J,NTS,(THL(N),N=1,N2)
-!                IF(NTS .GT. 7) THEN
+!                IF(NTS > 7) THEN
 !cipk jan99                  N1=-2
 !                  N1=-1
 ! 8151             N1=N1+9
 !                  N2=N1+8
 !CIPK JAN99
-!                  IF(N2 .GT. NTS) N2=NTS
+!                  IF(N2 > NTS) N2=NTS
 !
 !cipk nov97          READ(LIN,'(A8,A72)') ID,DLIN
 !                  call ginpt(lin,id,dlin)
-!                  IF(ID(1:4) .EQ. 'LD2A') THEN 
+!                  IF(ID(1:4) == 'LD2A') THEN 
 !                    READ(DLIN,'(9F8.0)') (THL(N),N=N1,N2)
-!                    IF(NTS .GT. N2) GO TO 8151
+!                    IF(NTS > N2) GO TO 8151
 !                  ENDIF
 !cipk nov97          READ(LIN,'(A8,A72)') ID,DLIN
 !                  call ginpt(lin,id,dlin)
@@ -636,27 +636,27 @@ if (ndp /= 0) ndp = 0
 !C-
 !C      J > MAXP skips out
 !C-
-!                IF(J .GT. MAXP) GO TO 819
+!                IF(J > MAXP) GO TO 819
 !C-
 !C      Test for limit violation on MLAY parameter
 !C-
 !
 !cWP Feb 2006, Change MLAY to NLAYMX
-!                IF (J .GT. NLAYMX)  THEN
+!                IF (J > NLAYMX)  THEN
 !CIPK SEP04 CREATE ERROR FILE
-!  	            CLOSE(75)
+!                    CLOSE(75)
 !                  OPEN(75,FILE='ERROR.OUT')
 !                  WRITE(*,*)  ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
 !                  WRITE(75,*) ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
 !                  STOP
 !                ENDIF
 !CIPK JAN99 ALLOW FOR J=0
-!                IF(J .EQ. 0) THEN
+!                IF(J == 0) THEN
 !                  DO J=1,NP
 !
 !                    DO  N=1,NTS
 !                      THLAY(J,N)=THL(N)
-!                      IF(THL(N) .LE. 0.) THLAY(J,N)=1.0
+!                      IF(THL(N) <= 0.) THLAY(J,N)=1.0
 !                    ENDDO
 !                    NDEP(J)=NTS
 !                  ENDDO
@@ -665,7 +665,7 @@ if (ndp /= 0) ndp = 0
 !
 !                DO  N=1,NTS
 !                  THLAY(J,N)=THL(N)
-!                  IF(THL(N) .LE. 0.) THLAY(J,N)=1.0
+!                  IF(THL(N) <= 0.) THLAY(J,N)=1.0
 !                ENDDO
 !                NDEP(J)=NTS
 !                GO TO 815
@@ -675,22 +675,22 @@ if (ndp /= 0) ndp = 0
 !C-
 !C      NDP = 1  Read a complete block of values for all 2d nodes
 !C-
-!          ELSEIF(NDP .EQ. 1) THEN
-!            IF(ID(1:3) .EQ. 'LD1') THEN
+!          ELSEIF(NDP == 1) THEN
+!            IF(ID(1:3) == 'LD1') THEN
 !              READ(DLIN,5015) (NDEP(J),J=1,9)
 !              N1=1
 !  816         N1=N1+9
 !              N2=N1+8
-!              IF(N2 .GT. NP) N2=NP
+!              IF(N2 > NP) N2=NP
 !cipk nov97          READ(LIN,'(A8,A72)') ID,DLIN
 !              call ginpt(lin,id,dlin)
-!              IF(ID(1:4) .EQ. 'LD1') THEN
+!              IF(ID(1:4) == 'LD1') THEN
 !                READ(DLIN,5015) (NDEP(J),J=N1,N2)
 !                GO TO 816
 !              ENDIF
 !            ELSE
 !CIPK SEP04 CREATE ERROR FILE
-!  	        CLOSE(75)
+!                CLOSE(75)
 !              OPEN(75,FILE='ERROR.OUT')
 !              WRITE(*,*) 'ERROR -- NO LD1 LINES IN DATA SET'
 !              WRITE(75,*) 'ERROR -- NO LD1 LINES IN DATA SET'
@@ -699,14 +699,14 @@ if (ndp /= 0) ndp = 0
 !C-
 !C      NDP = 2  Read layer data with elevations set
 !C-
-!          ELSEIF(NDP .EQ. 2) THEN
-!  817       IF(ID(1:3) .EQ. 'LD3') THEN
+!          ELSEIF(NDP == 2) THEN
+!  817       IF(ID(1:3) == 'LD3') THEN
 !              READ(DLIN,'(2I8)') J,NTS
 !cipk feb99
 !cWP Feb 2006, Change NLAYM to NLAYMX
-!                if(nts .gt. nlaymx) then
+!                if(nts > nlaymx) then
 !CIPK SEP04 CREATE ERROR FILE
-!  	            CLOSE(75)
+!                    CLOSE(75)
 !                  OPEN(75,FILE='ERROR.OUT')
 !                 WRITE(75,*) 'Too many layers Increase NLAYMX in PARAM.'
 !     +            ,'COM'
@@ -717,59 +717,59 @@ if (ndp /= 0) ndp = 0
 !                endif
 !
 !              N2=NTS
-!              IF(N2 .GT. 7) N2=7
+!              IF(N2 > 7) N2=7
 !              READ(DLIN,'(2I8,7F8.0)') J,NTS,(THL(N),N=1,N2)
 !cipk nov97          READ(LIN,'(A8,A72)') ID,DLIN
 !              call ginpt(lin,id,dlin)
-!              IF(NTS .GT. 7) THEN
+!              IF(NTS > 7) THEN
 !CIPK JAN99                N1=-2
 !                N1=-1
 !  818           N1=N1+9
 !                N2=N1+8
 !CIPK JAN99
-!                IF(N2 .GT. NTS) N2=NTS
-!                IF(ID(1:4) .EQ. 'LD3A') THEN 
+!                IF(N2 > NTS) N2=NTS
+!                IF(ID(1:4) == 'LD3A') THEN 
 !                  READ(DLIN,'(9F8.0)') (THL(N),N=N1,N2)
 !cipk nov97          READ(LIN,'(A8,A72)') ID,DLIN
 !                  call ginpt(lin,id,dlin)
-!                  IF(NTS .GT. N2) GO TO 818
+!                  IF(NTS > N2) GO TO 818
 !                ENDIF
 !              ENDIF
-!              IF(J .EQ. 0) WRITE(LOUT,6007) (THL(N),N=1,NTS)
+!              IF(J == 0) WRITE(LOUT,6007) (THL(N),N=1,NTS)
 !C
 !C    Permit reading of a single list of depths
 !C    when the node number is read in as zero.  A 15% margin is
 !C    applied at the bottom element to avoid small elements.
 !C
-!              IF(J .EQ. 0) THEN
+!              IF(J == 0) THEN
 !                DO J=1,NPM
 !C-
 !C    Test for NTS =0
 !C
-!                  IF(NTS .GT. 0) THEN
+!                  IF(NTS > 0) THEN
 !                    DO N=1,NTS
-!                      IF(N .EQ. 1) THEN
-!                        IF(N .EQ. NTS) THEN
+!                      IF(N == 1) THEN
+!                        IF(N == NTS) THEN
 !                          THLAY(J,1)=1.0
 !                          NDEP(J)=1
 !                          GO TO 8171
 !                        ENDIF
 !                        TKLAY=ELEV-THL(N)
-!                        IF(ELEV-TKLAY*1.15 .LT. AO(J)) THEN
+!                        IF(ELEV-TKLAY*1.15 < AO(J)) THEN
 !                          THLAY(J,1)=1.0
 !                          NDEP(J)=1
 !                          GO TO 8171
 !                        ELSE
 !                          THLAY(J,N)= (ELEV-THL(N))/(ELEV-AO(J))
 !                        ENDIF
-!                      ELSEIF(N .EQ. NTS) THEN
+!                      ELSEIF(N == NTS) THEN
 !                        TKLAY= THL(N-1)-AO(J)
 !                        THLAY(J,N)=TKLAY/(ELEV-AO(J))
 !                        NDEP(J)=N
 !                        GO TO 8171
 !                      ELSE
 !                        TKLAY=THL(N-1)-THL(N)
-!                        IF(THL(N-1)-TKLAY*1.15 .LT. AO(J)) THEN
+!                        IF(THL(N-1)-TKLAY*1.15 < AO(J)) THEN
 !                          TKLAY= THL(N-1)-AO(J)
 !                          THLAY(J,N)=TKLAY/(ELEV-AO(J))
 !                          NDEP(J)=N
@@ -788,28 +788,28 @@ if (ndp /= 0) ndp = 0
 !C
 !C     Process individual nodal values
 !C
-!              ELSEIF(J .LE. MAXP) THEN
+!              ELSEIF(J <= MAXP) THEN
 !
 !cWP Feb 2006, Change MLAY to NLAYMX
-!                IF (J .GT. NLAYMX)  THEN
+!                IF (J > NLAYMX)  THEN
 !CIPK SEP04 CREATE ERROR FILE
-!  	            CLOSE(75)
+!                    CLOSE(75)
 !                  OPEN(75,FILE='ERROR.OUT')
 !                  WRITE(*,*)  ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
 !                  WRITE(75,*) ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
 !                  STOP
 !                ENDIF
-!                IF(J .GT. 0) THEN
+!                IF(J > 0) THEN
 !                  DO  N=1,NTS
-!                    IF(N .EQ. 1) THEN
-!                      IF(N .EQ. NTS) THEN
+!                    IF(N == 1) THEN
+!                      IF(N == NTS) THEN
 !                        THLAY(J,1)=1.0
 !                        NDEP(J)=1
 !CIPK JUL01
 !                          GO TO 817
 !                      ELSE
 !                        TKLAY=ELEV-THL(N)
-!                        IF(ELEV-TKLAY*1.15 .LT. AO(J)) THEN
+!                        IF(ELEV-TKLAY*1.15 < AO(J)) THEN
 !                          THLAY(J,1)=1.0
 !                          NDEP(J)=1
 !CIPK JUL01
@@ -818,7 +818,7 @@ if (ndp /= 0) ndp = 0
 !                          THLAY(J,N)= (ELEV-THL(N))/(ELEV-AO(J))
 !                        ENDIF
 !                      ENDIF
-!                    ELSEIF(N .EQ. NTS) THEN
+!                    ELSEIF(N == NTS) THEN
 !                      TKLAY= THL(N-1)-AO(J)
 !                      THLAY(J,N)=TKLAY/(ELEV-AO(J))
 !                      NDEP(J)=N
@@ -826,7 +826,7 @@ if (ndp /= 0) ndp = 0
 !                          GO TO 817
 !                    ELSE
 !                      TKLAY=THL(N-1)-THL(N)
-!                      IF(THL(N-1)-TKLAY*1.15 .LT. AO(J)) THEN
+!                      IF(THL(N-1)-TKLAY*1.15 < AO(J)) THEN
 !                        TKLAY= THL(N-1)-AO(J)
 !                        THLAY(J,N)=TKLAY/(ELEV-AO(J))
 !                        NDEP(J)=N
@@ -848,7 +848,7 @@ if (ndp /= 0) ndp = 0
 !        ENDIF
 !
 !CIPK DEC99 ADD TEST TO SKIP PAST UNUSED 'VD' LINE
-!        IF(ID(1:2) .EQ. 'VD') THEN
+!        IF(ID(1:2) == 'VD') THEN
 !          call ginpt(lin,id,dlin)
 !        ENDIF
 !
@@ -857,7 +857,7 @@ if (ndp /= 0) ndp = 0
 !C-
 !C       Print the NDEP values
 !C-
-!        IF(NDP .NE. 0) THEN
+!        IF(NDP /= 0) THEN
 !          WRITE(LOUT,6877) (NDEP(J),J=1,NP)
 !        ENDIF
 !---------------------------------------------------------------------
@@ -880,9 +880,9 @@ enddo
 !C....... Create new node for junctions of 2 and 3D systems (vertically)
 !C-
 !        DO 83 J=1,NE
-!          IF(NETYP(J) .EQ. 18) THEN
+!          IF(NETYP(J) == 18) THEN
 !            K=NOP(J,3)
-!            IF(NDEP(K) .GT. 1) THEN
+!            IF(NDEP(K) > 1) THEN
 !C-
 !C...... nop(j,19) is used to store the common node
 !C-
@@ -927,9 +927,9 @@ TransitionsDirections: DO N = 1, NE
 !C
 !C....... Establish speical conditions for junctions when 2dv
 !C
-!        IF(IMAT(N) .GT. 900) THEN
+!        IF(IMAT(N) > 900) THEN
 !          N1=NOP(N,1)
-!          IF(NDEP(N1) .GT. 1) THEN
+!          IF(NDEP(N1) > 1) THEN
 !            N1=NOP(N,1)
 !            N2=NOP(N,2)
 !
@@ -960,7 +960,7 @@ TransitionsDirections: DO N = 1, NE
   ! - adjust side slope
   !
   ! - reactivate elseif, if 3D option is switched on again (upper control flow)
-  !ELSEIF (NCRN(N) .EQ. 5 .AND. IMAT(N) .LT. 901) THEN
+  !ELSEIF (NCRN(N) == 5 .AND. IMAT(N) < 901) THEN
   IF (NCRN (N) == 5 .AND. IMAT (N) < 901) THEN
     !left 2D-arc's node
     N1 = NOP (n, 4)
@@ -997,7 +997,7 @@ TransitionsDirections: DO N = 1, NE
       !control output
       WRITE(*,*) ' SETTING WIDTH, OLD WIDTH',N3, WIDTH(N3), WIDTO
       !force to be a rectangular cross section
-      IF (SS1 (N3) /= 0. .OR.  SS2 (N3) /= 0.) THEN
+      IF (SS1 (N3) /= 0. .OR. SS2 (N3) /= 0.) THEN
         !warning output
         WRITE(*,*)' ATTENTION - SIDE SLOPES AT NODE ', N3
         write(*,*)' OR ', n1, 'NON-ZERO - VALUES FORCED TO ZERO'

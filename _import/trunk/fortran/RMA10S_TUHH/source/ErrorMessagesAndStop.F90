@@ -304,7 +304,7 @@ end if
 
 
 !Write coordinates or not
-if (coorx <= 0.001 .and. coory <= 0.001) then
+if (coorx <= 0.001 .AND. coory <= 0.001) then
   write (ErrorUnit, 998)
   write (        *, 998)
 else

@@ -39,9 +39,9 @@ C...... Loop on all surface nodes
 C-
       DO 350 N=1,NPM
         K=NREF(N)+1
-        IF(K .EQ. 1) GO TO 350
+        IF(K == 1) GO TO 350
         L=K+NDEP(N)-2
-        IF( L .LT. K) GO TO 350
+        IF( L < K) GO TO 350
         MO=N
 C-
 C......LOOP DOWNWARDS AT THIS SURFACE POINT
@@ -55,7 +55,7 @@ C-
         UVSUM=0.
         VVSUM=0.
         DO 300 M=K,L,2
-          IF(M .EQ. K) THEN
+          IF(M == K) THEN
             M1=N
           ELSE
             M1=M-1
@@ -79,9 +79,9 @@ C-
             VVSUM=VVSUM+V**2*HFACT(INT)*XL
   250     CONTINUE
   300   CONTINUE
-        IF(ABS(USUM) .GT. THRESH) UUDST(N)=UUSUM/USUM**2
-        IF(ABS(USUM*VSUM) .GT. THRESH) UVDST(N)=UVSUM/USUM*VSUM
-        IF(ABS(VSUM) .GT. THRESH) VVDST(N)=VVSUM/VSUM**2
+        IF(ABS(USUM) > THRESH) UUDST(N)=UUSUM/USUM**2
+        IF(ABS(USUM*VSUM) > THRESH) UVDST(N)=UVSUM/USUM*VSUM
+        IF(ABS(VSUM) > THRESH) VVDST(N)=VVSUM/VSUM**2
 C-
 C...... Loop down through nodes to setup coefficients
 C-
@@ -89,7 +89,7 @@ C-
         L=K+NDEP(N)-1
         MO=N
         DO 325 M=K,L
-          IF(M .EQ. K) THEN
+          IF(M == K) THEN
             M1=N
           ELSE
             M1=M
@@ -97,41 +97,41 @@ C-
           DO 320 J=1,NDF
             NBC(M1,J)=NBC(N,J)
   320     CONTINUE
-          IF(NBC(M1,3) .EQ. 0) GO TO 325
-          IF(UDST(M1) .EQ. 1.) THEN
-            IF(ABS(USUM) .GT. THRESH) UDST(M1)=VEL(1,M1)/USUM
-            IF(ABS(VSUM) .GT. THRESH) VDST(M1)=VEL(2,M1)/VSUM
+          IF(NBC(M1,3) == 0) GO TO 325
+          IF(UDST(M1) == 1.) THEN
+            IF(ABS(USUM) > THRESH) UDST(M1)=VEL(1,M1)/USUM
+            IF(ABS(VSUM) > THRESH) VDST(M1)=VEL(2,M1)/VSUM
           ENDIF
-          IF(ABS(SSUM) .GT. THRESH) SDST(M1)=VEL(4,M1)/SSUM
-          IF(ABS(TSUM) .GT. THRESH) TDST(M1)=VEL(5,M1)/SSUM
-          IF(ABS(SESUM) .GT. THRESH) SEDST(M1)=VEL(6,M1)/SSUM
+          IF(ABS(SSUM) > THRESH) SDST(M1)=VEL(4,M1)/SSUM
+          IF(ABS(TSUM) > THRESH) TDST(M1)=VEL(5,M1)/SSUM
+          IF(ABS(SESUM) > THRESH) SEDST(M1)=VEL(6,M1)/SSUM
   325   CONTINUE
   350 CONTINUE
 C-
 C....... Distribute to mid side nodes
 C-
       DO 480 N=1,NESAV
-        IF(IMAT(N) .GT. 0  .AND.  IMAT(N) .LT. 1000
-     1 .OR.  IMAT(N) .GT. 5000) THEN
+        IF(IMAT(N) > 0 .AND. IMAT(N) < 1000
+     1 .OR. IMAT(N) > 5000) THEN
           NCN=NCORN(N)
           IK=1
-          IF(NCN .EQ. 15) IK=2
-          IF(NCN .EQ. 13) IK=4
-          IF(NCN .EQ. 10) IK=3
+          IF(NCN == 15) IK=2
+          IF(NCN == 13) IK=4
+          IF(NCN == 10) IK=3
           DO 460 K=1,NCN
-            IF(IH(K,IK) .NE. 0) THEN
+            IF(IH(K,IK) /= 0) THEN
               NL=IH(K,IK)
               NR=IL(K,IK)
               N1=NOP(N,NL)
               N2=NOP(N,K)
               N3=NOP(N,NR)
-              IF(DIST(N1,N3) .GT. 1.E-3) THEN
+              IF(DIST(N1,N3) > 1.E-3) THEN
                 UDST(N2)=(UDST(N1)+UDST(N3))/2.
                 VDST(N2)=(VDST(N1)+VDST(N3))/2.
                 SDST(N2)=(SDST(N1)+SDST(N3))/2.
                 TDST(N2)=(TDST(N1)+TDST(N3))/2.
                 SEDST(N2)=(SEDST(N1)+SEDST(N3))/2.
-                IF(N2 .LE. NPM) THEN
+                IF(N2 <= NPM) THEN
                   UUDST(N2)=(UUDST(N1)+UUDST(N3))/2.
                   UVDST(N2)=(UVDST(N1)+UVDST(N3))/2.
                   VVDST(N2)=(VVDST(N1)+VVDST(N3))/2.

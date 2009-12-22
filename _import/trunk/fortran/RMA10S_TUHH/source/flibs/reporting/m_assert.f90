@@ -121,7 +121,7 @@ contains
 #ifdef _ASSERT_ENABLE
     logical :: istrue
     istrue = assert_istrue ( test )
-    if (.not. istrue) then
+    if ( .NOT. istrue) then
        call exception_raiseFatalError ( message )
     endif
 #else
@@ -140,7 +140,7 @@ contains
 #ifdef _ASSERT_ENABLE
     logical :: istrue
     istrue = assert_istrue ( test )
-    if (.not. istrue) then
+    if ( .NOT. istrue) then
        call exception_raiseError ( message )
     endif
 #else
@@ -159,7 +159,7 @@ contains
 #ifdef _ASSERT_ENABLE
     logical :: istrue
     istrue = assert_istrue ( test )
-    if (.not. istrue) then
+    if ( .NOT. istrue) then
        call exception_raiseWarning ( message )
     endif
 #else
@@ -178,7 +178,7 @@ contains
 #ifdef _ASSERT_ENABLE
     logical :: istrue
     istrue = assert_istrue ( test )
-    if (.not. istrue) then
+    if ( .NOT. istrue) then
        call exception_raiseInformation ( message )
     endif
 #else
@@ -197,7 +197,7 @@ contains
 #ifdef _ASSERT_ENABLE
     logical :: istrue
     istrue = assert_istrue ( test )
-    if (.not. istrue) then
+    if ( .NOT. istrue) then
        call exception_raiseFailure ( message )
     endif
 #else
@@ -231,7 +231,7 @@ contains
 #ifdef _ASSERT_ENABLE
     if ( assert_enabled ) then
        call assert_countersupdate ( test )
-       if ( .not.test ) then
+       if ( .NOT. test ) then
           assert_istrue = .false.
        endif
     endif

@@ -47,9 +47,9 @@ c     LBMAX=MBUF
 
 CIPK MAR0 setup switch that says salinity is active
 
-      IF(ITEQV(MAXN) .EQ. 2  .OR.  ITEQV(MAXN) .EQ. 8
-     +                       .OR.  ITEQV(MAXN) .EQ. 9) THEN
-        IF(IDIFSW .EQ. 0) THEN
+      IF(ITEQV(MAXN) == 2 .OR. ITEQV(MAXN) == 8
+     +                      .OR. ITEQV(MAXN) == 9) THEN
+        IF(IDIFSW == 0) THEN
           ISLP=0
         ELSE
           ISLP=1
@@ -87,7 +87,7 @@ C
         !as the last of all the elements, a degree of freedom is connected to.
         K = K - 1
         N = NFIXH (K)
-        IF (N > 0 .and. n <= NE) THEN
+        IF (N > 0 .AND. n <= NE) THEN
           IF (ICOLLAPE (N) == 1 .AND. IMAT (N)/1000 /= 1)
      +      CYCLE AssignNLSTEL
 
@@ -158,7 +158,7 @@ C-
       N = NFIXH(NELM)
       !special cases to cycle or to exit
       IF (N == 0)  GO TO 380      !exit
-      IF(IMAT(N) .LT. 1) GO TO 18 !cycle
+      IF(IMAT(N) < 1) GO TO 18 !cycle
       !monitor time consumption
       CALL SECOND(SINC)
 
@@ -176,27 +176,27 @@ CIPK DEC03 ADD IEDSW DEPENDENCE
 !Calling proper coef routine
 !---------------------------
       !collapse from 3D to 2D
-      IF(ITEQV(MAXN) .NE. 5) THEN
-        IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
-          IF(NRX .EQ. 2) GO TO 18
+      IF(ITEQV(MAXN) /= 5) THEN
+        IF(IMAT(N) > 1000 .AND. IMAT(N) < 5000) THEN
+          IF(NRX == 2) GO TO 18
 CIPK NOV99     Either process surface integrals or collapse to 2-d
-        IF(ICOLLAPE(N) .EQ. 0) THEN
+        IF(ICOLLAPE(N) == 0) THEN
           CALL SURCOF(N,NRX)
-        ELSEIF(IMAT(N) .LT. 2000) THEN
-          IF(NETYP(N)/10 .LT. 1) THEN
+        ELSEIF(IMAT(N) < 2000) THEN
+          IF(NETYP(N)/10 < 1) THEN
 CIPK MAR05
-            IF(INOTR .EQ. 0) THEN
+            IF(INOTR == 0) THEN
               CALL COEF1(N,NRX)
             ELSE
               CALL COEF1NT(N,NRX)
             endif
 C     Modify tests to allows for IDIFSW
-          ELSEIF(IUTUB.EQ.1 .and. iedsw.eq.2  .AND. ISLP.EQ. 0) THEN
+          ELSEIF(IUTUB == 1 .AND. iedsw == 2 .AND. ISLP == 0) THEN
 CIPK MAR05
-            IF(INOTR .EQ. 0) THEN
+            IF(INOTR == 0) THEN
               CALL COEF2D(N,NRX)
             ELSE
-              if(nell .le. 2) then
+              if(nell <= 2) then
                 write(*,*) ' entering COEF2DNT'
               endif
               CALL COEF2DNT(N,NRX)
@@ -205,23 +205,23 @@ CIPK MAR05
           !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
           !MD:  combined with Dispersion enclosure 2. Reason for this change
           !MD:  to avoid a switch between different COEF-Routines for one model
-          ELSEIF(ISLP.EQ.1 .AND. IUTUB.EQ.1 .AND. IDIFSW.EQ.2 
-     +              .and. IEDSW .EQ. 2) THEN
+          ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND. IDIFSW == 2 
+     +             .AND. IEDSW == 2) THEN
 CIPK MAR05
-            IF(INOTR .EQ. 0) THEN
+            IF(INOTR == 0) THEN
               CALL COEF2D(N,NRX)
             ELSE
-              if(nell .le. 2) then
+              if(nell <= 2) then
                 write(*,*) ' entering COEF2DNT'
               endif
               CALL COEF2DNT(N,NRX)
             ENDIF
-      	  ELSE
+              ELSE
 CIPK MAR05
-            IF(INOTR .EQ. 0) THEN
+            IF(INOTR == 0) THEN
               CALL COEF2(N,NRX)
             ELSE
-              if(nell .le. 2)  then
+              if(nell <= 2)  then
                 write(*,*) ' entering COEF25NT'
               endif
               CALL COEF2NT(N,NRX)
@@ -234,15 +234,15 @@ CIPK MAR05
           TSURC=SOUC-SINC+TSURC
 
         ELSE
-          IF(NETYP(N)/10 .EQ. 2) THEN
+          IF(NETYP(N)/10 == 2) THEN
 
 cipk nov99 skip if collapsing to 2-d
 
-            IF(ICOLLAPE(N) .EQ. 1 .AND. NRX .NE. 2) GO TO 18
+            IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 18
 
 C     Process   threed element
 cipk jan97
-            if(iutub .eq. 1  .AND.  IEDSW .EQ. 2) then
+            if(iutub == 1 .AND. IEDSW == 2) then
               CALL COEF3D(N,NRX)
             else
               call coef3(n,nrx)
@@ -251,27 +251,27 @@ cipk jan97 end changes
             CALL SECOND(SOUC)
             TCOEFS=TCOEFS+SOUC-SINC
           ELSE
-            IF(NETYP(N)/10 .EQ. 1) THEN
+            IF(NETYP(N)/10 == 1) THEN
 
 C     Process   twod elements
 
 CIPK JUN05
-              IF(IMAT(N)  .LT. 900  .OR.  NCORN(N) .GT. 5) THEN
+              IF(IMAT(N) < 900 .OR. NCORN(N) > 5) THEN
 
 C     Process   horizontal 2d
 
-          	IF(NRX .EQ. 2) GO TO 18
+                IF(NRX == 2) GO TO 18
 cipk jan97
-                if(iutub .eq. 1  .AND.  IEDSW .EQ. 2  .AND. ISLP .EQ. 0)
+                if(iutub == 1 .AND. IEDSW == 2 .AND. ISLP == 0)
      +            then
-                  if(nell .eq. 1) then
+                  if(nell == 1) then
                     write(75,*) 'going to smag'
                   endif
 CIPK MAR05
-                  IF(INOTR .EQ. 0) THEN
+                  IF(INOTR == 0) THEN
                     CALL COEF2D(N,NRX)
                   ELSE
-                    if(nell .le. 2) then
+                    if(nell <= 2) then
                       write(*,*) ' entering COEF2DNT'
                     endif
                     CALL COEF2DNT(N,NRX)
@@ -281,23 +281,23 @@ CIPK MAR05
                 !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
                 !MD:  combined with Dispersion enclosure 2. Reason for this change
                 !MD:  to avoid a switch between different COEF-Routines for one model
-                ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND.
-     +                 IDIFSW .EQ. 2. .and. IEDSW .EQ. 2) THEN
+                ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND. 
+     +                 IDIFSW == 2. .AND. IEDSW == 2) THEN
 CIPK MAR05
-                  IF(INOTR .EQ. 0) THEN
+                  IF(INOTR == 0) THEN
                     CALL COEF2D(N,NRX)
                   ELSE
-                    if(nell .le. 2) then
+                    if(nell <= 2) then
                       write(*,*) ' entering COEF2DNT'
                     endif
                     CALL COEF2DNT(N,NRX)
                   ENDIF
                 else
 CIPK MAR05
-                  IF(INOTR .EQ. 0) THEN
+                  IF(INOTR == 0) THEN
                     CALL COEF2(N,NRX)
                   ELSE
-                    if(nell .le. 2)then
+                    if(nell <= 2)then
                       write(*,*) ' entering COEF25NT'
                     endif
                     CALL COEF2NT(N,NRX)
@@ -306,12 +306,12 @@ CIPK MAR05
 cipk jan97 end changes
               ELSE
 CIPK JAN99
-                IF(IMAT(N) .GT. 900  .AND.  IMAT(N) .LT. 1000) GO TO 18
+                IF(IMAT(N) > 900 .AND. IMAT(N) < 1000) GO TO 18
 
 C      Process vertical 2d
 
 cipk nov99 skip if collapsing to 2-d
-                IF(ICOLLAPE(N) .EQ. 1  .AND.  NRX .NE. 2) GO TO 18
+                IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 18
 
                 CALL COEFV(N,NRX)
               ENDIF
@@ -321,17 +321,17 @@ cipk nov99 skip if collapsing to 2-d
 
 C      Process one-d elements
 
-              IF(NRX .EQ. 2) GO TO 18
+              IF(NRX == 2) GO TO 18
 CIPK MAR05
 !nis,may07
 
-              IF ((imat(n) >= 901 .and. imat(n) <= 903)
-     +             .and. IGTP(n) == 0) then
+              IF ((imat(n) >= 901 .AND. imat(n) <= 903)
+     +            .AND. IGTP(n) == 0) then
                 CALL Coef1DJunction (N, NRX)
 
               !material type 89 is used for polynom approach
               ELSEIF (imat(n) /= 89) THEN
-                IF(INOTR .EQ. 0) THEN
+                IF(INOTR == 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
@@ -351,17 +351,17 @@ CIPK MAR05
 C-
 C...... The calls below are for the case of vertical averaging
 C-
-   19   IF(N .LE. NE) GO TO 20
+   19   IF(N <= NE) GO TO 20
         NELM=NELM+1
         N=NFIXH(NELM)
         GO TO 19
    20   CONTINUE
-        IF(NOPS(N,6) .GT. 0) THEN
+        IF(NOPS(N,6) > 0) THEN
 CIPK MAR05
-          IF(INOTR .EQ. 0) THEN
+          IF(INOTR == 0) THEN
             CALL COEF2(N,NRX)
           ELSE
-            if(nell .le. 2)  then
+            if(nell <= 2)  then
               write(*,*) ' entering COEF25NT at goto_20 '
             endif
             CALL COEF2NT(N,NRX)
@@ -370,7 +370,7 @@ CIPK MAR05
           TCOEF2=TCOEF2+SOUC-SINC
         ELSE
 CIPK MAR05
-          IF(INOTR .EQ. 0) THEN
+          IF(INOTR == 0) THEN
             CALL COEF1(N,NRX)
           ELSE
             CALL COEF1NT(N,NRX)
@@ -384,9 +384,9 @@ cipk jan99
 !End of calling proper coef routines
 !-----------------------------------
 
-      IF(NETYP(N) .EQ. 15  .OR.  NETYP(N) .EQ. 16) THEN
-        IF(NOP(N,14) .NE. 0) NCN=14
-        IF(NOP(N,18) .NE. 0) NCN=18
+      IF(NETYP(N) == 15 .OR. NETYP(N) == 16) THEN
+        IF(NOP(N,14) /= 0) NCN=14
+        IF(NOP(N,18) /= 0) NCN=18
       ENDIF
 
       NBN = NCN*NDF
@@ -398,7 +398,7 @@ cipk jan99
 
       KC=0
       DO J=1,NCN
-        IF(ITEQV(MAXN) .EQ. 5) THEN
+        IF(ITEQV(MAXN) == 5) THEN
           I=NOPS(N,J)
         ELSE
           I=NOP(N,J) !NiS,may06: i becomes node number
@@ -406,12 +406,12 @@ cipk jan99
         inner: DO L=1,NDF !NiS,may06: for every degree of freedom
           KC=KC+1     !NiS,may06: count loop
 CIPK JAN99
-          if(i .eq. 0) cycle inner !NiS,may06: loop cycle, if node is zero
+          if(i == 0) cycle inner !NiS,may06: loop cycle, if node is zero
 
           LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I
           NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
-          IF(LL .NE. 0) THEN
-            IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !If the current element is the last one of the equation (NLSTEL), then make
+          IF(LL /= 0) THEN
+            IF(NLSTEL(LL) == N) NK(KC)=-LL !If the current element is the last one of the equation (NLSTEL), then make
                                              !           NK(KC) negative as pointer, that degree of freedom can be taken out
           ENDIF
          end do inner
@@ -424,18 +424,18 @@ C-
       LFZ=1
       DO 52 LK=1,NBN !NiS,may06: do for every node-degree-of-freedom; nbn=ndf*ncn
         nod=NK(LK)  !NiS,may06: get equation number of node-degree-of-freedom
-        IF(nod.EQ.0) GO TO 52 !NiS,may06: if equation number is deactivated, switch
+        IF(nod == 0) GO TO 52 !NiS,may06: if equation number is deactivated, switch
         LM=IABS(nod) !NiS,may06: get absolute number
         LL=IPOINT(LM) !NiS,may06: IPOINT is always zero at the first call
-        IF(LL .NE. 0) THEN
+        IF(LL /= 0) THEN
           LDEST(LK)=LL
-          IF(nod .LT. 0) LHED(LL)=nod
+          IF(nod < 0) LHED(LL)=nod
         ELSE
 C
 C     Look for vacant slot
 C
           DO 35 L=LFZ,LCOL
-            IF(LHED(L) .EQ. 0) THEN
+            IF(LHED(L) == 0) THEN
               IPOINT(LM)=L
               LHED(L)=nod
               LDEST(LK)=L
@@ -459,17 +459,17 @@ C
 
 
 CIPK FEB04
-      !nis,dec06: if LHED(L).eq.0, the loop should be cycled because of assignment problems
+      !nis,dec06: if LHED(L) == 0, the loop should be cycled because of assignment problems
       DO L=1,LCOL
       !columnassigning: DO L=1,LCOL
           LEQ=ABS(LHED(L))
           !nis,dec06: see above
-          !if (LEQ.eq.0) CYCLE columnassigning
+          !if (LEQ == 0) CYCLE columnassigning
           !-
-          IF(NLSTEL(LEQ) .EQ. N) LHED(L)=-ABS(LHED(L))
+          IF(NLSTEL(LEQ) == N) LHED(L)=-ABS(LHED(L))
       ENDDO !columnassigning
 
-      IF(LCOL .GT. LCMAX) LCMAX=LCOL
+      IF(LCOL > LCMAX) LCMAX=LCOL
 
       !Write out console output during processing of elements (every 1000 elements)
       !----------------------------------------------------------------------------
@@ -478,7 +478,7 @@ CIPK FEB04
       ENDIF
 
 
-      IF(LCOL.LE.NMAX) GO TO 54
+      IF(LCOL <= NMAX) GO TO 54
       NERROR=2
 CIPK SEP04 CREATE ERROR FILE
       CLOSE(75)
@@ -496,10 +496,10 @@ CIPK FEB04
         WRITE(75,9823)
         DO L=1,LCOL
           NEQN=ABS(LHED(L))
-          IF(NEQN .GT. 0) THEN
+          IF(NEQN > 0) THEN
             DO N=1,NP
               DO M=1,3
-                IF(NBC(N,M) .EQ. NEQN) THEN
+                IF(NBC(N,M) == NEQN) THEN
                   WRITE(75,9824) NEQN,N,M
                   GO TO 53
                 ENDIF 
@@ -516,12 +516,12 @@ CIPK FEB04
       !nis,jun06,com: for every nodal degree of freedom (row of element matrix)
       DO 57 L=1,NBN
         !nis,jun06,com: if equation is present
-        IF(NK(L) .NE. 0) THEN
+        IF(NK(L) /= 0) THEN
           !nis,jun06,com: take the solution window slot
           LL=LDEST(L)
           !nis,jun06,com: then take again every nodal degree of freedom (column of element matrix)
           DO 56 K=1,NBN
-            IF(NK(K) .NE. 0) THEN
+            IF(NK(K) /= 0) THEN
             KK=LDEST(K)
             EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
             ENDIF
@@ -537,21 +537,21 @@ C
    60 LPIVCO=0
       PIVOT=0.
       DO 64 L=1,LCOL
-        IF(LHED(L) .GT. -1) GO TO 64
+        IF(LHED(L) > -1) GO TO 64
 C     WRITE(*,*) 'NELL,LHED,EQ',NELL,LHED(L),EQ(L,L)
         PIVA=EQ(L,L)
-        IF(ABS(PIVA) .LT. ABS(PIVOT)) GO TO 64
+        IF(ABS(PIVA) < ABS(PIVOT)) GO TO 64
         PIVOT=PIVA
         LPIVCO=L
    64 CONTINUE
-      IF(LPIVCO.EQ.0) GO TO 18
+      IF(LPIVCO == 0) GO TO 18
 C     WRITE(*,*) 'LPIVCO,PIVOT',LPIVCO,PIVOT
-      IF( ABS(PIVOT) .LT. 1.0E-8 .AND. NELL .LE. NE ) GO TO 18
+      IF( ABS(PIVOT) < 1.0E-8 .AND. NELL <= NE ) GO TO 18
 C
 C     NORMALISE PIVOTAL ROW
 C
       LCO=IABS(LHED(LPIVCO))
-C     IF(ABS(PIVOT).LT.1E-08)WRITE(ICFL,476)
+C     IF(ABS(PIVOT) < 1E-08)WRITE(ICFL,476)
 CTEMP     pivtin=1.0/pivot
       DO 80 L=1,LCOL
         QQ(L)=EQ(L,LPIVCO)/PIVOT
@@ -568,7 +568,7 @@ C
 C     ELIMINATE THEN DELETE PIVOTAL ROW AND COLUMN
 C
       DO 100 K=1,LCOL
-        IF(QR(K) .EQ. 0.) GO TO 100
+        IF(QR(K) == 0.) GO TO 100
         KRW=IABS(LHED(K))
         R1(KRW)=R1(KRW)-QR(K)*RHS
         DO 90 L=1,LCOL
@@ -586,7 +586,7 @@ C
         LHS(LQ)=LHED(L)
         QS(LQ)=QQ(L)
   105 CONTINUE
-      IF(LQ .LT. LBMAX-NMAX) GO TO 108
+      IF(LQ < LBMAX-NMAX) GO TO 108
       CALL XWRT(ND1,-1,NRR)
       IRTC=IRTC+1
       LQ=0
@@ -599,17 +599,17 @@ C
 C
 C     REARRANGE HEADING VECTORS
 C
-C      IF(ISHRK .GT. LCOL/10+4) THEN
-       IF(ISHRK .GE. 40) THEN
+C      IF(ISHRK > LCOL/10+4) THEN
+       IF(ISHRK >= 40) THEN
 C
 CAUG93  Changes start here
 c       KM=0
 c       DO 120 K=1,LCOL
-c         IF(LHED(K) .NE. 0) THEN
+c         IF(LHED(K) /= 0) THEN
 c           KM=KM+1
 c           LM=0
 c           DO 110 L=1,LCOL
-c             IF(LHED(L) .NE. 0) THEN
+c             IF(LHED(L) /= 0) THEN
 c               LM=LM+1
 c               EQ(LM,KM)=EQ(L,K)
 c             ENDIF
@@ -618,7 +618,7 @@ c         ENDIF
 c 120   CONTINUE
 c       KM=0
 c       DO 125 K=1,LCOL
-c         IF(LHED(K) .NE. 0) THEN
+c         IF(LHED(K) /= 0) THEN
 c           KM=KM+1
 c           LHED(KM)=LHED(K)
 c           IPOINT(ABS(LHED(K)))=KM
@@ -628,7 +628,7 @@ c       ISHRK=0
 c       LCOL=KM
         KM=0
         DO 110 K=1,LCOL
-          IF(LHED(K) .NE. 0) THEN
+          IF(LHED(K) /= 0) THEN
             KM=KM+1
             LHED(KM)=LHED(K)
             IPOINT(ABS(LHED(K)))=KM
@@ -653,12 +653,12 @@ CAUG93 changes end here
 C
 C     DETERMINE WHETHER TO ASSEMBLE,ELIMINATE,OR BACKSUBSTITUTE
 C
-      IF( LCOL .GT. 0) GO TO 60
-      IF( NELL .LT. NE) GO TO 18
+      IF( LCOL > 0) GO TO 60
+      IF( NELL < NE) GO TO 18
   380 CONTINUE
-      IF(LCOL .GT. 0) THEN
+      IF(LCOL > 0) THEN
         DO 400 L=1,LCOL
-          IF(LHED(L) .NE. 0) GO TO 405
+          IF(LHED(L) /= 0) GO TO 405
   400   CONTINUE
         GO TO 420
   405   CONTINUE
@@ -710,7 +710,7 @@ C
         LCOL=LCS(NEC)
         LPIVCO=LPS(NEC)
         LQ=LQ-LCOL
-        IF(LQ .GT. -1) GO TO 450
+        IF(LQ > -1) GO TO 450
         CALL XRED(ND1,IRTC,NRR)
 C       CALL RED(ND1,-1)
         LQ=LQ-LCOL
@@ -724,7 +724,7 @@ C       CALL RED(ND1,-1)
       QQ(LPIVCO)=0.
       DO 580 L=1,LCOL
       ITMM=LHED(L)
-      IF(ITMM .NE. 0) THEN
+      IF(ITMM /= 0) THEN
         GASH=GASH-QQ(L)*R1(ITMM)
       ENDIF
   580 CONTINUE
@@ -735,7 +735,7 @@ C       CALL RED(ND1,-1)
       WRITE(ICFL,6199) ADT,TAA
 
 cipk mar01  Save results and NBC for equation dropout
-      IF(IDRPT .GT. 0  .AND. NRX .EQ. 1) THEN
+      IF(IDRPT > 0 .AND. NRX == 1) THEN
         do j=1,nszf
           RKEEP(J)=R1(J)
         enddo
@@ -748,7 +748,7 @@ cipk mar01  Save results and NBC for equation dropout
 
 C      do n=1,np
 C        do m=1,ndf
-C          if(nbc(n,m) .gt. 0) then
+C          if(nbc(n,m) > 0) then
 C            write(73,*) n,m,nbc(n,m),rkeepeq(nbc(n,m))
 C          endif
 C        enddo
@@ -759,6 +759,6 @@ C      enddo
      2,'EMENT'/'  INCREASE MFW IN PARAM.COM OR LOOK FOR ERROR IN'
      3,' ELEMENT ELIMINATION ORDER')
   476 FORMAT(' WARNING-MATRIX SINGULAR OR ILL CONDITIONED')
-      IF(NRX .EQ. 1) NDF=6
+      IF(NRX == 1) NDF=6
       RETURN
       END

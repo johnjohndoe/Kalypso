@@ -32,10 +32,10 @@ real (kind = 8) :: rx, thn, ry, th1, acx, wsx, acy, wsy
 integer :: nry
 
 
-IF(ITEQV(MAXN) .EQ. 5) THEN
+IF(ITEQV(MAXN) == 5) THEN
   DO N=1,8
     NCON(N)=NOPS(NN,N)
-    IF(NCON(N) .NE. 0) NCN=N
+    IF(NCON(N) /= 0) NCN=N
   ENDDO
 ELSE
   NCN=NCORN(NN)
@@ -50,7 +50,7 @@ ncnx=2
 !c
 !c     Initialize AME and DAME
 !c
-IF (IDNOPT.LT.0) THEN
+IF (IDNOPT < 0) THEN
   DO M = 1, NCNX
     MC = 2 * M - 1
     N = NOP(NN,MC)
@@ -140,7 +140,7 @@ if (imat (NN) == 901) then
 
 !FOR MARSH ALGORITHM, NOT OPERATIVE AT THE MOMENT
   !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
-  !  IF (IDNOPT .LT. 0) THEN
+  !  IF (IDNOPT < 0) THEN
   !    HD1 = VEL(3,N1)
   !    CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
   !    WSEL1 = ADO(N1)+HS1
@@ -214,7 +214,7 @@ end if
 
 !-------
 
-!nis,Oct,com: Install element residual values into global vector. NCN.eq.3 for 1D-elements and 1D-2D-elements.
+!nis,Oct,com: Install element residual values into global vector. NCN == 3 for 1D-elements and 1D-2D-elements.
 FindNodesToInstall: DO I = 1, NCN
 
   !get degree of freedom IA from node J to install equations to

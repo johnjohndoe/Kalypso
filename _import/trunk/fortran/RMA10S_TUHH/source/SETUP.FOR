@@ -22,23 +22,23 @@ C-
       NTHREE(N)=1
   197 NBC(N,1)=-1
       DO 199 J=1,NE
-      IF(IMAT(J).LT.1) GO TO 199
-      IF(IMAT(J) .GT. 5000) GO TO 1975
-      IF(IMAT(J) .GT. 1000) GO TO 199
+      IF(IMAT(J) < 1) GO TO 199
+      IF(IMAT(J) > 5000) GO TO 1975
+      IF(IMAT(J) > 1000) GO TO 199
  1975 CONTINUE
 cipk oct98 update to f90
       IMMT=IMAT(J)
       L=MOD(IMMT,100)
       !nis,jan08: Exclude polynomial approach
       if (l /= 89) then
-        IF(ORT(L,1) .EQ. 0.) GO TO 199
+        IF(ORT(L,1) == 0.) GO TO 199
       end if
 
 cipk oct98 update to f90
 CIPK OCT98      ILK=1
       NCN=NCORN(J)
-CIPK OCT98      IF(NCN .EQ. 15) ILK=2
-CIPK OCT98      IF(NCN .EQ. 10) ILK=2
+CIPK OCT98      IF(NCN == 15) ILK=2
+CIPK OCT98      IF(NCN == 10) ILK=2
 
       DeactNBC: DO K=1,NCN
 cipk oct98 update to f90
@@ -52,8 +52,8 @@ cipk oct98 update to f90
 !-
 
         n = ABS(n)
-        IF(NCN .LT. 9) NTHREE(N)=0
-C        IF(IM(K,ILK) .EQ. 0) GO TO 198
+        IF(NCN < 9) NTHREE(N)=0
+C        IF(IM(K,ILK) == 0) GO TO 198
         NBC(N,1)=0
 !  198 CONTINUE
       ENDDO deactNBC
@@ -68,7 +68,7 @@ C
       DO 220 NN=1,NPM
       NBC(NN,1)=0
       L=NDEP(NN)+NREF(NN)-1
-      IF(L .GT. 0) THEN
+      IF(L > 0) THEN
         NBC(L,1)=0
       ENDIF
   220 CONTINUE
@@ -78,7 +78,7 @@ C                                       REARRANGE ARRAY
       N = 0
       DO 300 NN = 1, NP
       N = N + 1
-      IF( NBC(N,1) .NE. 1 ) GO TO 300
+      IF( NBC(N,1) /= 1 ) GO TO 300
       NSZF=NSZF+1
       NBC(N,1)=NSZF
   300 CONTINUE
@@ -91,7 +91,7 @@ C     FIND LAST APPEAREANCE OF EACH NODE REMOVED
 C
 
 C
-      IF( NSZF .LE. IR1MAX ) RETURN
+      IF( NSZF <= IR1MAX ) RETURN
 cipk sep04
       CLOSE(75)
       OPEN(75,FILE='ERROR.OUT')

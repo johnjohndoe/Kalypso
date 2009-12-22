@@ -21,8 +21,8 @@ C
       DATA SL/
      A -1.,0.,1.0,1.0,1.0,0.,-1.,-1.,-1.,-1.,-1.,0.,1.,1.,1.,0./
       DATA IP1/0/,IP2/0/
-      IF( NCN .EQ. 8 ) GO TO 200
-      IF(IP1 .EQ. 0) THEN
+      IF( NCN == 8 ) GO TO 200
+      IF(IP1 == 0) THEN
         IP1=1
         DO 150 K=1,NCN
           DO 150 I=1,NCN
@@ -37,7 +37,7 @@ C
   180 CONTINUE
       GO TO 400
   200 CONTINUE
-      IF(IP2 .EQ. 0) THEN
+      IF(IP2 == 0) THEN
         IP2=1
         DO 250 K=1,NCN
           DO 250 I=1,NCN
@@ -59,7 +59,7 @@ C
         DO 450 K=1,NCN,2
           J=J+1
           NA=K-1
-          IF(K .EQ. 1) NA=NCN
+          IF(K == 1) NA=NCN
           XMX(J,I)=XNX(K,I)+(XNX(NA,I)+XNX(K+1,I))*0.5
           CA(J,I)=DA(K,I)+(DA(NA,I)+DA(K+1,I))*0.5
           CB(J,I)=DB(K,I)+(DB(NA,I)+DB(K+1,I))*0.5

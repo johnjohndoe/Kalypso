@@ -19,7 +19,7 @@ C-
       ALLOCATABLE SOLI(:),DIVIDE(:)
 
       DATA ITIMTR/1/
-      IF(ITIMTR .EQ. 1) THEN
+      IF(ITIMTR == 1) THEN
         ALLOCATE (SOLI(MMAT1),DIVIDE(MAXP))
       ENDIF
 C-
@@ -31,7 +31,7 @@ cipk nov95        NSCR2=8
         NSCRM=40
 C-
         DO KK=1,NMETF
-          IF(ITIMTR .EQ. 1) THEN
+          IF(ITIMTR == 1) THEN
 cipk dec97 cleanup initialisation
             DA(KK)=0.
             TTM(KK)=0.
@@ -50,9 +50,9 @@ CC            IT=2
           SOLIN0(KK)=SOLIN1(KK)
   450     CONTINUE
           WRITE(75,*) 'DA,TTM',DA(KK),TTM(KK),IYRR,IYS(KK)
-          IF(IYRR .GT. IYS(KK)  .OR.  (IYRR .EQ. IYS(KK)  .AND. 
-     +      (DAYOFY .GT. DA(KK)  .OR. (DAYOFY .EQ. DA(KK)  .AND. 
-     +    TIME .GT. TTM(KK)))))THEN
+          IF(IYRR > IYS(KK) .OR. (IYRR == IYS(KK) .AND. 
+     +      (DAYOFY > DA(KK) .OR. (DAYOFY == DA(KK) .AND. 
+     +    TIME > TTM(KK)))))THEN
 C-
 C...... TETM not large enough.  Move V1 to V0 and read another
 C-
@@ -70,14 +70,14 @@ CIPK AUG03 EXTEND LIMIT TO 11 FOR WIND DIRECTION
             READ(NSCRM)
      +                (WDT1(J,KK),J=1,11)
             DA(KK)=WDT1(1,KK)
-            IF(DA(KK) .LT. DAT0) THEN
+            IF(DA(KK) < DAT0) THEN
               IYS(KK)=IYS(KK)+1
             ENDIF
             TTM(KK)=WDT1(2,KK)
 
             T1=DA(KK)*24. + TTM(KK)
-            IF(T1 .LT. T0) THEN
-              IF(MOD(IYS(KK),4) .EQ. 0) THEN
+            IF(T1 < T0) THEN
+              IF(MOD(IYS(KK),4) == 0) THEN
                 ILP=1
               ELSE
                 ILP=0
@@ -97,8 +97,8 @@ C-
             WRITE(LOUT,6226) DAYOFY,TOFDAY
  6226       FORMAT (/' DAY OF YEAR =',I8,' TIME OF DAY =',f8.2/)
             T1=DA(KK)*24. + TTM(KK)
-            IF(T1 .LT. T0) THEN
-              IF(MOD(IYS(KK),4) .EQ. 0) THEN
+            IF(T1 < T0) THEN
+              IF(MOD(IYS(KK),4) == 0) THEN
                 ILP=1
               ELSE
                 ILP=0
@@ -111,7 +111,7 @@ C-
             FCTI=(TS-T0)/(T1+TNY-T0)
             DO L=1,9
               K=METID(KK,L)
-              IF(K .GT. 0) THEN
+              IF(K > 0) THEN
                 DAT(K)=WDT0(3,KK)+FCTI*(WDT1(3,KK)-WDT0(3,KK))
                 CLOUD(K)=WDT0(4,KK)+FCTI*(WDT1(4,KK)-WDT0(4,KK))
                 DRYBLB(K)=WDT0(5,KK)+FCTI*(WDT1(5,KK)-WDT0(5,KK))
@@ -126,7 +126,7 @@ C-
 cipk sep02 extend limit to 10 for snow depth values
                 SNOWMT(K)=WDT0(10,KK)+FCTI*(WDT1(10,KK)-WDT0(10,KK))
 CIPK AUG03 EXTEND TO WIND DIRECTION
-	          WDIRT(K)= WDT0(11,KK)+FCTI*(WDT1(11,KK)-WDT0(11,KK))
+                WDIRT(K)= WDT0(11,KK)+FCTI*(WDT1(11,KK)-WDT0(11,KK))
 
                 WRITE(LOUT,1019) K,DAT(K),CLOUD(K),DRYBLB(K),WETBLB(K)
      +         ,ATMPR(K),WIND(K),AE(K),BE(K),SNOWMT(K),WDIRT(K)
@@ -156,9 +156,9 @@ CIPK AUG03 ADD WIND SPEED AND DIRECTION FOR NODAL VALUES
         DO L=1,8
           immt=imat(k)
           LL=MOD(IMMT,100)
-          IF(LL .GT. 0) THEN
+          IF(LL > 0) THEN
             J=NOPS(K,L)
-            IF(J .GT. 0) THEN
+            IF(J > 0) THEN
               AIRTMP(J)=AIRTMP(J)+DRYBLB(LL)
               SNOWD(J)=SNOWD(J)+SNOWMT(LL)
               DIVIDE(J)=DIVIDE(J)+1.
@@ -173,7 +173,7 @@ CIPK AUG03 ADD WIND SPEED AND DIRECTION FOR NODAL VALUES
       DO J=1,NPM
 cipk nov02   Use correct division test
 
-        IF(DIVIDE(J) .GT. 0.) THEN
+        IF(DIVIDE(J) > 0.) THEN
           SNOWD(J)=SNOWD(J)/DIVIDE(J)
           AIRTMP(J)=AIRTMP(J)/DIVIDE(J)
 CIPK AUG03 ADD WIND SPEED AND DIRECTION FOR NODAL VALUES correct to RMA direction

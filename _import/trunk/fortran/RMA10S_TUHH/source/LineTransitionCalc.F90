@@ -251,7 +251,7 @@ transitionloop: do i = 1, MaxLT
   end if
 
   !Reduce this assignment to the proper transition type
-  if (.not. (TransLines(i,4) == 2)) then
+  if ( .NOT. (TransLines(i,4) == 2)) then
     do j = 1, lmt (TransLines (i, 2))
       nod = line (TransLines (i, 2), j)
       if (idnopt == 0) then
@@ -292,7 +292,7 @@ transitionloop: do i = 1, MaxLT
         D3 = VEL (3, nc) + dh
       endif
 
-      IF (D1 <= DSET  .OR.  D3 <= DSET) CYCLE GetDischarge
+      IF (D1 <= DSET .OR. D3 <= DSET) CYCLE GetDischarge
       D2 = (D1 + D3) / 2.
 
       !calculate discharge components

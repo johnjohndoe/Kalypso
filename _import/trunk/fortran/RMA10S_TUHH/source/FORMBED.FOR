@@ -39,12 +39,12 @@ C-
       !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
       !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
       ROAVG=1.935
-      IF (GRAV.LT.32.) ROAVG=516.*1.935
+      IF (GRAV < 32.) ROAVG=516.*1.935
 !MD: Basis-Variable: Wasserdichte
 
       DO 350 NN=1,NPM
         N=NN
-        IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+        IF(NDEP(NN) > 1) N=NREF(NN)+NDEP(NN)-1
 
 CIPKSEP05
         NLAYT=NLAYTND(N)
@@ -72,8 +72,8 @@ C    MASS READ IN AT THE BOTTOM OF EACH NODE.
 C
   150   CONTINUE
 crrr add test for II = 1
-        IF(IABS(NB) .GT. 0 .AND.  INEWBED .EQ. 0) GO TO 221
-cipk feb95        IF(TM(NN).LE.0.)GO TO 350
+        IF(IABS(NB) > 0 .AND. INEWBED == 0) GO TO 221
+cipk feb95        IF(TM(NN) <= 0.)GO TO 350
 C.......................................................................
 C       NUMBER OF suspended LAYERS ON BOTTOM
 C.......................................................................
@@ -83,7 +83,7 @@ C.......................................................................
 C   ..   CALCULATE THE NUMBER OF LAYERS THAT CAN BE FORMED BY THIS MASS
 c
 cipk apr06        NL=TM(NN)/WEGT
-cipk apr06        if (nl .gt. mxsedlay+10)  then
+cipk apr06        if (nl > mxsedlay+10)  then
 cipk apr06           write(*,*) '  lt > mlayer ', lt, nn,tm(nn)
 cipk apr06           stop 
 cipk apr06        endif
@@ -97,10 +97,10 @@ C
         DO L=1,NLAYT-1
 !MD:    For all suspended Layer, without the last one
 C  Layer not full            
-          IF (THICK(NN,L) .LT. TLAY(L))  THEN
+          IF (THICK(NN,L) < TLAY(L))  THEN
             ATHICK = TLAY(L) - THICK(NN,L)
             THICKNW = TM(NN)/GAD(L)
-            IF (ATHICK .GE. THICKNW)  THEN
+            IF (ATHICK >= THICKNW)  THEN
               THICK(NN,L) = THICK(NN,L) + THICKNW
               TM(NN) = 0.
               GO TO 200
@@ -123,13 +123,13 @@ C
         DO 220 L=1,NLAYT
           BEDORIG(NN) = BEDORIG(NN) + THICK(NN,L)
           SST(NN,L) = SS(L)
-          IF (THICK(NN,L) .GT. 0.0) THEN
+          IF (THICK(NN,L) > 0.0) THEN
             NLAY(NN) = L
           ENDIF
   220   CONTINUE
 
 CIPK JAN05
-        IF(NLAYO(NN) .GT. 0) THEN
+        IF(NLAYO(NN) > 0) THEN
           DO L=1,NLAYO(NN)
             BEDORIG(NN) = BEDORIG(NN) + THICKO(NN,L)
           ENDDO
@@ -151,7 +151,7 @@ C       ENTER HERE ONLY FOR RESTART CASE
         BEDEL(NN) = BEDEL(NN) + TH2
         !MD: BEDEL Sohllage in [mNN] mit GOK!!
 CIPK JAN05
-        IF(NLAYO(NN) .GT. 0) THEN
+        IF(NLAYO(NN) > 0) THEN
           DO L=1,NLAYO(NN)
             BEDEL(NN) = BEDEL(NN) + THICKO(NN,L)
           ENDDO
@@ -163,9 +163,9 @@ CIPK JAN05
 C   BEDEL IS NOW LEVEL OF BED
 ! ---------------------------------------
       DO N=1,NPM
-        IF(IMID(N,1) .GT. 0) THEN
+        IF(IMID(N,1) > 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) > 1) NN = NREF(N) + NDEP(N)-1
           !MD: must be MIN not MAX
           NLAYTND(NN)= MIN (NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2)))
 CIPK MAY06 SET DENSITY
@@ -184,7 +184,7 @@ CIPK MAR06
           ENDDO
           !MD: must be MIN not MAX!!
           NLAYTO=Min(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
-          IF(NLAYTO .GT. 0) THEN
+          IF(NLAYTO > 0) THEN
             DO L=1,NLAYTO
               THICKO(NN,L)=(THICKO(IMID(NN,1),L)
      +                     +THICKO(IMID(NN,2),L))/2.
@@ -200,11 +200,11 @@ C    SET old Elevations and SHEARS-Stress TO NEW VALUES.
 C*********************************************************************
       DO 400 N=1,NPM
 CIPK JAN05
-c        IF(II .EQ. 1  .AND. IABS(NB) .GE. 100  .AND.
-c     +     IDEPCH .NE. 2) THEN
-c	    BEDORIG(N)=BEDEL(N)
-c	  ENDIF
-        IF(INEWBED .EQ. 0) THEN
+c        IF(II == 1 .AND. IABS(NB) >= 100 .AND. 
+c     +     IDEPCH /= 2) THEN
+c          BEDORIG(N)=BEDEL(N)
+c        ENDIF
+        IF(INEWBED == 0) THEN
           AORIG(N)=AORIG(N)-BEDORIG(N)
 C         AORIG is the solid bed level
           bedel(n)=bedel(n)-bedorig(n)        
@@ -222,7 +222,7 @@ C         AORIG is the solid bed level
         
         ENDIF
         I=N
-        IF(NDEP(N) .GT. 1) I=NREF(N)+NDEP(N)-1
+        IF(NDEP(N) > 1) I=NREF(N)+NDEP(N)-1
         ESRO(I)=BSHEAR(I)
         ESRO(N)=BSHEAR(N)
 C       CONCO(I)=CONC(I)
@@ -235,13 +235,13 @@ C       CONCO(I)=CONC(I)
 C*********************************************************************
 C     PRINT THE BED SHEAR ,ER/DEP RATES AND ELEVATIONS.
 C*********************************************************************
-      IF(II .NE. 1) THEN
+      IF(II /= 1) THEN
 cipk apr97 add option
-CIPK SKIP THIS TEST        IF(MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
+CIPK SKIP THIS TEST        IF(MOD(IT,NPRTF) /= 0 .AND. TET /= 0.) RETURN
 C        WRITE(181,80)
         DO 480 I=1,NPM
           N=I
-          IF(NDEP(I) .GT. 1) N=NREF(I)+NDEP(I)-1
+          IF(NDEP(I) > 1) N=NREF(I)+NDEP(I)-1
 
 cipk feb99  BC=BEDEL(I)-AO(I)
 !MD: cleaning up things which are never used
@@ -271,62 +271,62 @@ c update bed elevation for flow calculation
       
       DO M=1,NEM
 
-       IF(IMAT(M) .GT. 0) THEN
+       IF(IMAT(M) > 0) THEN
         DO K=1,NCORN(M),2
-	    N=NOP(M,K)
+          N=NOP(M,K)
 CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
-	    IF(IPASST(N) .EQ. 0) THEN
-	      IPASST(N)=1
-  	      DEP=VEL(3,N)
-       !MD	 AO(N)=AO(N)+DEPINCR(N)
+          IF(IPASST(N) == 0) THEN
+            IPASST(N)=1
+              DEP=VEL(3,N)
+       !MD       AO(N)=AO(N)+DEPINCR(N)
        !MD       ADO(N)=ADO(N)+DEPINCR(N)
        !MD       ADB(N)=ADB(N)+DEPINCR(N)
        !MD       ADT(N)=ADT(N)+DEPINCR(N)
        !MD       HEL(N)=WSLL(N)-ADO(N)
        !MD       CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
        !MD       VEL(3,N)=HTP   !MD HTP=HSIG
-	      RATIO=vel(3,n)/DEP
-	      VEL(1,N)=VEL(1,N)/RATIO
-	      VEL(2,N)=VEL(2,N)/RATIO
+            RATIO=vel(3,n)/DEP
+            VEL(1,N)=VEL(1,N)/RATIO
+            VEL(2,N)=VEL(2,N)/RATIO
               VEL(6,N)=VEL(6,N)/RATIO
-	      VDOT(1,N)=VDOT(1,N)/RATIO
-	      VDOT(2,N)=VDOT(2,N)/RATIO
-       	      VDOT(6,N)=VDOT(6,N)/RATIO
-	    ENDIF 
+            VDOT(1,N)=VDOT(1,N)/RATIO
+            VDOT(2,N)=VDOT(2,N)/RATIO
+                   VDOT(6,N)=VDOT(6,N)/RATIO
+          ENDIF 
           ENDDO
           DO K=2,NCORN(M),2
             N1=NOP(M,K-1)
-	    N=NOP(M,K)
-            IF(K .LT. NCORN(M)) THEN
-	      N2=NOP(M,K+1)
-	    ELSE
+          N=NOP(M,K)
+            IF(K < NCORN(M)) THEN
+            N2=NOP(M,K+1)
+          ELSE
               N2=NOP(M,1)
-	    ENDIF
+          ENDIF
 CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
-	    IF(IPASST(N) .EQ. 0) THEN
-	      IPASST(N)=1
- 	      DEP=VEL(3,N)
-	      VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
-	      AO(N)=(AO(N1)+AO(N2))/2.
-	      ADO(N)=(ADO(N1)+ADO(N2))/2.
-	      ADB(N)=(ADB(N1)+ADB(N2))/2.
-	      ADT(N)=(ADT(N1)+ADT(N2))/2.
+          IF(IPASST(N) == 0) THEN
+            IPASST(N)=1
+             DEP=VEL(3,N)
+            VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
+            AO(N)=(AO(N1)+AO(N2))/2.
+            ADO(N)=(ADO(N1)+ADO(N2))/2.
+            ADB(N)=(ADB(N1)+ADB(N2))/2.
+            ADT(N)=(ADT(N1)+ADT(N2))/2.
               !MD: new new
               ESRO(N)=(BSHEAR(N1)+BSHEAR(N2))/2.
               DEPINCR(N)=(DEPINCR(N)+DEPINCR(N))/2.
-	      BEDELO(N)=(BEDELO(N1)+BEDELO(N2))/2.
+            BEDELO(N)=(BEDELO(N1)+BEDELO(N2))/2.
               !MD: new new
               BEDEL(N)=BEDELO(N)
-	      RATIO=vel(3,n)/DEP
-	      VEL(1,N)=VEL(1,N)/RATIO
-	      VEL(2,N)=VEL(2,N)/RATIO
+            RATIO=vel(3,n)/DEP
+            VEL(1,N)=VEL(1,N)/RATIO
+            VEL(2,N)=VEL(2,N)/RATIO
               VEL(6,N)=VEL(6,N)/RATIO
-	      VDOT(1,N)=VDOT(1,N)/RATIO
-	      VDOT(2,N)=VDOT(2,N)/RATIO
+            VDOT(1,N)=VDOT(1,N)/RATIO
+            VDOT(2,N)=VDOT(2,N)/RATIO
               VDOT(6,N)=VDOT(6,N)/RATIO
-	    ENDIF
+          ENDIF
           ENDDO
-	ENDIF
+      ENDIF
       ENDDO
 C
 C... PRINT OUT LAYER PROPERTIES.
@@ -339,14 +339,14 @@ cipk apr97 add option
 !MD: Output is deactivated, because results are already written into BED-File
 !MD      !MD: Abfrage zur Ausgabe:
 !MD      !MD: Geaendert, da anschließend noch Berechnungen!!
-!MD      !MD:   IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) RETURN
-!MD      IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) THEN
+!MD      !MD:   IF (MOD(IT,IPRTF) /= 0 .AND. TET /= 0.) RETURN
+!MD      IF (MOD(IT,IPRTF) /= 0 .AND. TET /= 0.) THEN
 !MD        WRITE(LINE256,'(A)')
 !MD     &  '  Node Bed Shear Bed-elev   SedMass  SumLayer
 !MD     + SusLayer-Thickness (mm)'
 !MD        IDX = MAX(65,47+NLAYT*10) + 3
 !MD
-!MD        IF (NLAYO(1) .GT. 0) THEN
+!MD        IF (NLAYO(1) > 0) THEN
 !MD          WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
 !MD        ENDIF
 !MD        WRITE(LOUT,'(/A)') LINE256(1:IDX+26)
@@ -364,7 +364,7 @@ cipk apr97 add option
       MLAYRS = MIN(NLAYT,5)
       DO 75 NN=1,NPM
          N = NN
-         IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+         IF(NDEP(NN) > 1) N=NREF(NN)+NDEP(NN)-1
 
 CIPKSEP05
          NLAYT=NLAYTND(N)
@@ -382,7 +382,7 @@ CIPKSEP05
          !MD: GAB=GABND(N) use per Layer
 
          !MD NEU Berechnung der Suspensionsdichte
-         IF (VEL(6,N).ge.0.) THEN
+         IF (VEL(6,N) >= 0.) THEN
            GAWND(N)=(VEL(6,N)/1000.)*(1.-(ROAVG/GACND(N))) + ROAVG
          Else
            GAWND(N)= ROAVG
@@ -400,7 +400,7 @@ C Calculate total dry mass of new bed
             SUMTHICK = SUMTHICK + THICK(NN,L)
          ENDDO
 cipk jan05
-         IF(NLAYO(NN) .GT. 0) THEN
+         IF(NLAYO(NN) > 0) THEN
            DO L=1,NLAYO(NN)
              !MD: GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
              GADLN=(GBO(NN,L)-ROAVG)*GAC/(GAC-ROAVG)
@@ -408,12 +408,12 @@ cipk jan05
              TVN = TVN + THICKO(NN,L)*GADLN
              SUMTHICK = SUMTHICK + THICKO(NN,L)
            ENDDO
-	 ENDIF
+       ENDIF
 
 C
 C Print layer info
 cipk jan99 fix reference to N when it should be NN
-cipk jan99         IF (NLAY(N) .GT. 0 .OR. NLAYO(N) .GT. 0) THEN
+cipk jan99         IF (NLAY(N) > 0 .OR. NLAYO(N) > 0) THEN
 c             SUMTHICK = BEDEL(N) - AO(N)
 cipk jan99             MLAYRS = NLAY(N)
 cipk jan99             WRITE(LOUT,'(I5,F10.4, F10.1, 20F10.3)')
@@ -421,7 +421,7 @@ cipk jan99     &          N, BSHEAR(N), TVN, SUMTHICK*1000.,
 cipk jan99     &             (1000. * THICK(NN,L),L=1,NLAYT),
 cipk jan99     &             (1000. * THICKO(NN,L),L=1,NLAYO(N))
 cipk jan99         ENDIF
-         IF (NLAYT .GT. 0 .OR. NLAYO(NN) .GT. 0) THEN
+         IF (NLAYT > 0 .OR. NLAYO(NN) > 0) THEN
 c             SUMTHICK = BEDEL(N) - AO(N)
              MLAYRS = NLAY(NN)
 !MD             WRITE(LOUT,'(I5,F10.4,F10.6, F10.2, 20F10.3)')
@@ -434,14 +434,14 @@ c             SUMTHICK = BEDEL(N) - AO(N)
 C
 c
 c      WRITE(LOUT,83)
-c      IF(NLAYO(1) .GT. 0) THEN
+c      IF(NLAYO(1) > 0) THEN
 c        WRITE(LOUT,85)
 c        WRITE(LOUT,84)
 c      ENDIF
 c      DO  I=1,NPM
 c        LL=NLAYO(I)
 c        WRITE(LOUT,88) (I,L,THICKO(I,L),SSTO(I,L),L=1,LL)
-c        IF(LL .GT. 0) THEN
+c        IF(LL > 0) THEN
 crr          WRITE(LOUT,86) (L,THICKO(I,L),SSTO(I,L),L=1,LL)
 c          WRITE(LOUT,89) (L,THICKO(I,L),SSTO(I,L),L=1,LL)
 c        ENDIF
@@ -453,7 +453,7 @@ c        LL=NLAY(I)
 c        L=1
 c        N1=LL-L+1
 c        WRITE(LOUT,88) I,L,THICK(I,L),SST(I,L)
-c        IF(LL .GT. 1) THEN
+c        IF(LL > 1) THEN
 c          DO L=2,LL
 c            N1=LL-L+1
 c            WRITE(LOUT,89) L,THICK(I,L),SST(I,L)

@@ -22,7 +22,7 @@ findit: DO i = 1, entries
   IF (depth <= rangearray(i)) THEN
     FindPolynom = i
     RETURN
-  elseif (depth > rangearray (i) .and. i == entries) then
+  elseif (depth > rangearray (i) .AND. i == entries) then
     !nis,aug08: If no entry found, value range too small, stop!
     !weirs and bridges
     if (node == 0) then

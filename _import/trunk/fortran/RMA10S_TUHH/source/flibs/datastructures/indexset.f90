@@ -49,7 +49,7 @@ subroutine idx_ensure_capacity( idxset, member )
 
     integer, allocatable, dimension(:) :: copy
 
-    if ( .not. allocated( idxset%vector ) ) then     ! Change to associated - Not TR 15581
+    if ( .NOT. allocated( idxset%vector ) ) then     ! Change to associated - Not TR 15581
         new_size = max(1+member/bit_size(1),32)
         allocate( idxset%vector(new_size) )
         idxset%vector = 0

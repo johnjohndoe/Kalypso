@@ -12,7 +12,7 @@ CIPK  LAST UPDATE NOV 17 2004 ADD INITIAL VALUE FOR INDIC
 C     Read locations
 
       READ(ICORDIN,'(8X,I8,A24)') NVERT,FMT
-      IF(FMT .EQ. BLANK) THEN
+      IF(FMT == BLANK) THEN
         DO N=1,NVERT
           READ(ICORDIN,'(8X,I8,2F16.0)') J,XUSR(J),YUSR(J)
         ENDDO
@@ -29,17 +29,17 @@ C     Read locations
       ENDDO
   250 CONTINUE
       READ(ICORDIN,'(A80)') DLIN80
-      IF(DLIN80(1:6) .NE. 'ENDDAT') THEN
+      IF(DLIN80(1:6) /= 'ENDDAT') THEN
 
 C     Read data for outline
 cipk aug05 add COUT option
       
-      IF (DLIN80(1:3) .EQ. 'OUT') THEN
+      IF (DLIN80(1:3) == 'OUT') THEN
         IPOL=1
           N2=N1+8
           READ(DLIN80,'(8X,9I8)') (IPOLY(N),N=N1,N2)
           N1=N1+9
-      ELSEIF(DLIN80(1:4) .EQ. 'COUT') THEN
+      ELSEIF(DLIN80(1:4) == 'COUT') THEN
         IPOL=0
           READ(DLIN80,'(8X,2F16.0)') XOUTL(N1),YOUTL(N1)
         N1=N1+1
@@ -47,12 +47,12 @@ cipk aug05 add COUT option
       ENDIF
         GO TO 250
       ENDIF
-      IF(N1 .GT. 1) THEN
+      IF(N1 > 1) THEN
 
 C     Determine number of points read
-        IF(IPOL .EQ. 1) THEN
+        IF(IPOL == 1) THEN
           DO N=1,NVERT
-            IF(IPOLY(N) .NE. 0) THEN
+            IF(IPOLY(N) /= 0) THEN
               NPOLY=N
             ELSE
               GO TO 300
@@ -60,8 +60,8 @@ C     Determine number of points read
           ENDDO
       ELSE
         NPOLY=N1-1
-        IF(XOUTL(NPOLY) .NE. XOUTL(1)  .OR.
-     +       YOUTL(NPOLY) .NE. YOUTL(1)) THEN
+        IF(XOUTL(NPOLY) /= XOUTL(1) .OR. 
+     +       YOUTL(NPOLY) /= YOUTL(1)) THEN
           NPOLY=NPOLY+1
           XOUTL(NPOLY) =XOUTL(1)
           YOUTL(NPOLY) =YOUTL(1)
@@ -70,7 +70,7 @@ C     Determine number of points read
       ENDIF
 
   300   CONTINUE
-        IF(IPOLY(NPOLY) .NE. IPOLY(1)) THEN
+        IF(IPOLY(NPOLY) /= IPOLY(1)) THEN
           NPOLY=NPOLY+1
           IPOLY(NPOLY)=IPOLY(1)
         ENDIF
@@ -93,7 +93,7 @@ C     Interpolate to get weighting factors
         ITIME=0
       DO M=1,NP
       
-       if(m .eq. 8798) then
+       if(m == 8798) then
          aaa=0
        endif      
         DO J=1,3
@@ -105,10 +105,10 @@ C       If there is polygon test if point is inside
 CIPK NOV04 ADD INITIAL VALUE FOR INDIC
         INDIC=1
 C        NPOLY=0
-        IF(NPOLY .GT. 0) THEN
+        IF(NPOLY > 0) THEN
             CALL INPOLY(XUSR,YUSR,M,INDIC,IPOLY,NPOLY,IPOL,XOUTL,YOUTL)
           ENDIF
-          IF(INDIC .EQ. 0) GO TO 350
+          IF(INDIC == 0) GO TO 350
         CALL TRIANINT(XUSR,YUSR,NOPEL,NVERT,NELTS,M,ISWT,ITIME,WGT,NDWT)
         DO J=1,3
           WAT(M,J)=WGT(J)
@@ -120,7 +120,7 @@ C        NPOLY=0
 C     Save weigthing factors
 
       HEADER(1:10)='WEIGHT    ' 
-        IF(IOWGT .GT. 0) THEN
+        IF(IOWGT > 0) THEN
           WRITE(IOWGT,'(A1000)') HEADER
           DO M=1,NP
          WRITE(IOWGT,'(8X,4I8,3F8.5)') 
@@ -171,20 +171,20 @@ c     Loop on the vertices
 
 c     process next point                                                                        
 
-      IF(NN .EQ. 3003) THEN
+      IF(NN == 3003) THEN
         AAA=0
         ENDIF
          N=NKEY(NN) 
 
 c     Skip out if inactive point
 
-         IF(N .EQ. 0) GO TO 500
-         IF(NN .LT. NVERTM) THEN 
+         IF(N == 0) GO TO 500
+         IF(NN < NVERTM) THEN 
            DO KK=NN+1,NVERTM 
              K=NKEY(KK) 
-             IF(K .NE. 0) THEN 
-               IF(XUSR(N) .EQ. XUSR(K)) THEN 
-                 IF(YUSR(N) .EQ. YUSR(K)) THEN 
+             IF(K /= 0) THEN 
+               IF(XUSR(N) == XUSR(K)) THEN 
+                 IF(YUSR(N) == YUSR(K)) THEN 
                    NKEY(KK)=0 
                  ENDIF 
                ELSE 
@@ -197,7 +197,7 @@ c     Skip out if inactive point
                                                                         
 c     Set edge buffers to zero                                          
                                                                         
-         IF(NEDGE .GT. 0) THEN 
+         IF(NEDGE > 0) THEN 
            DO J=1,NEDGE 
              IEDGE(1,J)=0 
              IEDGE(2,J)=0 
@@ -217,7 +217,7 @@ c     test for point in circumcircle
                                                                         
 c     If inside process edges                                           
                                                                         
-           IF(ISWT .EQ. 1) THEN 
+           IF(ISWT == 1) THEN 
              CALL PROCESS(J,IEDGE,NEDGE,NOPEL,IGAP,NGAP)                                 
            ENDIF 
          END DO 
@@ -230,7 +230,7 @@ c     Now form triangles as needed
                                                                         
 
          DO J=1,NEDGE 
-           IF(IEDGE(1,J) .NE. 0) THEN 
+           IF(IEDGE(1,J) /= 0) THEN 
              CALL FORMT(XUSR,YUSR,XCEN,YCEN,RADS,J,N,NOPEL,IEDGE
      +             ,IGAP,NGAP,NELTS)                           
            ENDIF 
@@ -268,11 +268,11 @@ c     Find minimum x and y
       yminm=1.e20 
       x45=-1.e20 
       DO J=1,NVERT 
-        IF(XPT(J) .GT. VDX9) THEN
-          if(xminm .GT. XPT(j) ) then 
+        IF(XPT(J) > VDX9) THEN
+          if(xminm > XPT(j) ) then 
             xminm=XPT(j) 
           end if 
-          IF(yminm .GT. YPT(j)) then 
+          IF(yminm > YPT(j)) then 
             yminm=YPT(j) 
           endif 
         ENDIF
@@ -281,9 +281,9 @@ c     Find minimum x and y
 c     Find max at 45 degrees                                            
 
       DO J=1,NVERT 
-        IF(XPT(J) .GT. VDX9) THEN
+        IF(XPT(J) > VDX9) THEN
           X45T=((XPT(J)-XMINM)+(YPT(J)-YMINM))/1.414 
-          IF(x45 .LT.  X45T) THEN 
+          IF(x45 < X45T) THEN 
             X45=X45T 
           ENDIF 
         ENDIF
@@ -320,7 +320,7 @@ c     Get the distance for this element
                                                                         
 c     Test against the radius                                           
                                                                         
-      IF(DISQ .GT. RADS(J)*RADS(J)) THEN 
+      IF(DISQ > RADS(J)*RADS(J)) THEN 
         ISWT=0 
       ELSE 
         ISWT=1 
@@ -361,7 +361,7 @@ c     Form the triangle
       INTEGER IGAP(*),NOPEL(3,*),IEDGE(2,*)
       REAL*8 XPT(*),YPT(*),XCEN(*),YCEN(*),RADS(*)
 
-      IF(NGAP .GT. 0) THEN 
+      IF(NGAP > 0) THEN 
         K=IGAP(NGAP) 
         NGAP=NGAP-1 
       ELSE 
@@ -409,7 +409,7 @@ C*******************************************************************************
       NCOUNT=0
       DO N=1,NELTS 
         DO K=1,3 
-          IF(NOPEL(K,N) .GT. NVERT-3) THEN 
+          IF(NOPEL(K,N) > NVERT-3) THEN 
             DO L=1,3 
               NOPEL(L,N)=0 
             ENDDO 
@@ -443,7 +443,7 @@ cIPK JAN94      INTEGER*2 NKEY
       REAL*8 A(*) 
       INTEGER NKEY(*) 
                                                                         
-      IF(N.LT.2) RETURN 
+      IF(N < 2) RETURN 
       DO 90 J=1,N 
         NKEY(J)=J 
    90 END DO 
@@ -452,24 +452,24 @@ cIPK JAN94      INTEGER*2 NKEY
   110 IB = 1 
   120 GO TO 200 
   130 IB = IB + 1 
-      IF( IB .LE. ID ) GO TO 200 
-      IF( ID .GT. 1 ) GO TO 100 
+      IF( IB <= ID ) GO TO 200 
+      IF( ID > 1 ) GO TO 100 
       RETURN 
   200 I = IB 
   210 K = I + ID 
-  220 IF( A(NKEY(I)) .LE. A(NKEY(K)) ) GO TO 250 
+  220 IF( A(NKEY(I)) <= A(NKEY(K)) ) GO TO 250 
       NKT = NKEY(K) 
       NKEY(K) = NKEY(I) 
       J = I 
   230 K = J - ID 
-      IF( K .LT. 1 ) GO TO 240 
-      IF( A(NKT) .GT. A(NKEY(K)) ) GO TO 240 
+      IF( K < 1 ) GO TO 240 
+      IF( A(NKT) > A(NKEY(K)) ) GO TO 240 
       NKEY(J) = NKEY(K) 
       J = K 
       GO TO 230 
   240 NKEY(J) = NKT 
   250 I = I + ID 
-      IF( I + ID .LE. N ) GO TO 210 
+      IF( I + ID <= N ) GO TO 210 
       GO TO 130 
       END                                           
 
@@ -481,17 +481,17 @@ C*******************************************************************************
 c     Setup to form new triangles                                       
 
       DO J=1,NEDGE 
-        IF(J .LT. NEDGE) THEN 
+        IF(J < NEDGE) THEN 
           DO K=J+1,NEDGE 
-            IF(IEDGE(1,K) .EQ. IEDGE(1,J)) THEN 
-              IF(IEDGE(2,K) .EQ. IEDGE(2,J)) THEN 
+            IF(IEDGE(1,K) == IEDGE(1,J)) THEN 
+              IF(IEDGE(2,K) == IEDGE(2,J)) THEN 
                 IEDGE(1,J)=0 
                 IEDGE(2,J)=0 
                 IEDGE(1,K)=0 
                 IEDGE(2,K)=0 
               ENDIF 
-            ELSEIF(IEDGE(1,K) .EQ. IEDGE(2,J)) THEN 
-              IF(IEDGE(2,K) .EQ. IEDGE(1,J)) THEN 
+            ELSEIF(IEDGE(1,K) == IEDGE(2,J)) THEN 
+              IF(IEDGE(2,K) == IEDGE(1,J)) THEN 
                 IEDGE(1,J)=0 
                 IEDGE(2,J)=0 
                 IEDGE(1,K)=0 

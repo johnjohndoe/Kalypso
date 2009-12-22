@@ -34,7 +34,7 @@ CIPK LAST UPDATED SPE 8 1995
       
 C-
 CIPK JUN03
-C	COMMON /STR/
+C      COMMON /STR/
 C     +  STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
       REAL QFACT(3)
 C-
@@ -58,10 +58,10 @@ cipk oct98 update to f90
       SAN=SIN(TH(NN))
       NTYPE=IMAT(NN)/1000
       CZ=0.0
-      IF(NTYPE .EQ. 3) THEN
+      IF(NTYPE == 3) THEN
         CZ=ORT(NM,11)
 cipk nov98 add top friction
-      ELSEIF(NTYPE .EQ. 1) THEN
+      ELSEIF(NTYPE == 1) THEN
         CZ=ORT(NM,13)
       ELSE
         CZ=ORT(NM,5)
@@ -76,35 +76,35 @@ C-
       F(I) = 0.0
       DO 77 J=1,NEF
    77 ESTIFM(I,J) = 0.0
-CIPK JULY 1995 MOVE THIS      IF(MOD(IMAT(NN),100) .GT. 90) RETURN
+CIPK JULY 1995 MOVE THIS      IF(MOD(IMAT(NN),100) > 90) RETURN
 C-
 C......TEST FOR NO FRICTION CASE
 C-
-      IF(NTYPE .EQ. 2) THEN
-        IF(CZ .EQ. 0.) RETURN
+      IF(NTYPE == 2) THEN
+        IF(CZ == 0.) RETURN
       ENDIF
 
 CIPK MAY04 RESET ELEMENT INFLOW
 
-      IF(INOFLOW(NN) .EQ. 0) THEN
+      IF(INOFLOW(NN) == 0) THEN
         SIDFQ=SIDF(NN)
       ELSE
         SIDFQ=0.
-	ENDIF
-	SIDFQQ=SIDF(NN)
+      ENDIF
+      SIDFQQ=SIDF(NN)
 
 C-
 C......SHIFT IF ONE-D ELEMENT
 C-
-      IF(NCN .EQ. 3) GO TO 600
+      IF(NCN == 3) GO TO 600
 
 cipk dec99 initialize area
       area(nn)=0.
 
 cipk oct98 update to f90
       IMMT=IMAT(NN)
-      IF(MOD(IMMT,100) .GT. 90) RETURN
-cc      IF(NTX .EQ. 0) RETURN
+      IF(MOD(IMMT,100) > 90) RETURN
+cc      IF(NTX == 0) RETURN
 C-
 C......SET REFERENCE LENGTH
 C-
@@ -114,17 +114,17 @@ cipk oct98 update to f90
       N3=NOP(NN,5)
       XL1=SQRT((CORD(N2,1)-CORD(N1,1))**2+(CORD(N2,2)-CORD(N1,2))**2)
       XL2=SQRT((CORD(N3,1)-CORD(N2,1))**2+(CORD(N3,2)-CORD(N2,2))**2)
-      IF(XL2 .GT. XL1) XL1=XL2
+      IF(XL2 > XL1) XL1=XL2
 C-
 C-.....COPY PROPER WEIGHTING FUNCTIONS.....
 C-
 CIPK SEP02  add logic to make ice cover functions linear
       DO I=1,NCN
-        IF(ICESW .GT. 0) THEN
-          IF(MOD(I,2) .EQ. 0  .AND.  I .LT. NCN) THEN
+        IF(ICESW > 0) THEN
+          IF(MOD(I,2) == 0 .AND. I < NCN) THEN
             THKI(I)=(ICETHK(NOP(NN,I-1))+ICETHK(NOP(NN,I+1)))/2.
             QWLI(I)=(QICE(NOP(NN,I-1))+QICE(NOP(NN,I+1)))/2.
-          ELSEIF(MOD(I,2) .EQ. 0  .AND.  I .EQ. NCN) THEN
+          ELSEIF(MOD(I,2) == 0 .AND. I == NCN) THEN
             THKI(I)=(ICETHK(NOP(NN,I-1))+ICETHK(NOP(NN,1)))/2.
             QWLI(I)=(QICE(NOP(NN,I-1))+QICE(NOP(NN,1)))/2.
           ELSE
@@ -135,9 +135,9 @@ CIPK SEP02  add logic to make ice cover functions linear
           THKI(I)=0.
           QWLI(I)=0.
         ENDIF
-	ENDDO
+      ENDDO
       NGP = 16
-      IF( NCN .LT. 8 ) THEN
+      IF( NCN < 8 ) THEN
         DO 85 M = 1, NGP
           WAITX(M)=WAITTH(M)
    85   CONTINUE
@@ -158,19 +158,19 @@ C-
 CIPK OCT01
       N1A=2
       N2=3
-      IF(NTYPE .LT. 3) NPASS=1
+      IF(NTYPE < 3) NPASS=1
 cipk oct01 get direction for type 3 or 4
-      if(ntype .gt. 2) then
-        DX=CORD(NOP(NN,5),1)-CORD(NOP(NN,1),1)	  
+      if(ntype > 2) then
+        DX=CORD(NOP(NN,5),1)-CORD(NOP(NN,1),1)        
         DY=CORD(NOP(NN,5),2)-CORD(NOP(NN,1),2)
         AGD=ATAN2(DY,DX)+1.0
       ELSE
-	  AGD=0.
-	endif
+        AGD=0.
+      endif
       
 
       DO 550 NPA=1,NPASS
-      IF(NPASS .EQ. 1 ) THEN
+      IF(NPASS == 1 ) THEN
         N1=1
        N2=2
       ENDIF
@@ -190,19 +190,19 @@ C        DYS=DYS+ABS(DY)
         YL(K)=DY
 
 CIPK OCT01  TEST FOR ELEMENT TYPE
-        IF(NTYPE .LT. 3) THEN
+        IF(NTYPE < 3) THEN
           DX=CORD(N,N1)-CORD(NR,N1)
 C          DXS=DXS+ABS(DX)
           XL(K)=DX
         ELSE
-          IF(NPA .EQ. 1) THEN
+          IF(NPA == 1) THEN
             XL(K)=(CORD(N,1)-CORD(NR,1))*COS(AGD)
-     +	  +(CORD(N,2)-CORD(NR,2))*SIN(AGD)
-	    ELSE
+     +        +(CORD(N,2)-CORD(NR,2))*SIN(AGD)
+          ELSE
             XL(K)=-(CORD(N,1)-CORD(NR,1))*SIN(AGD)
-     +	  +(CORD(N,2)-CORD(NR,2))*COS(AGD)
-	    ENDIF
-	  ENDIF
+     +        +(CORD(N,2)-CORD(NR,2))*COS(AGD)
+          ENDIF
+        ENDIF
 
   100 CONTINUE
 C-
@@ -224,7 +224,7 @@ C-
   130 CONTINUE
       DETJ = J11 * J22 - J12 * J21
 CIPK OCT01  CHANGE TRANSFER TO 500
-      IF(ABS(DETJ) .LT. 1.E-8*XL1) GO TO 500
+      IF(ABS(DETJ) < 1.E-8*XL1) GO TO 500
       DO 135 J = 1, NCN
       XN(J) = XNX(J,I)
       DNX(J) = ( J22 * DA(J,I) - J12 * DB(J,I) ) / DETJ
@@ -234,7 +234,7 @@ CIPK OCT01  CHANGE TRANSFER TO 500
 
 cipk dec99 get area then skip out
       area(nn)=area(nn)+amw
-      if(ntx .eq. 0) go to 500
+      if(ntx == 0) go to 500
 
 C-
 C-     REPEAT FOR LINEAR FUNCTION
@@ -295,8 +295,8 @@ c      P=0.0
       RHO=0.0
       RHOS=0.0
 cipk sep02 add ice parameters
-	GSICE=0.
-	GSQLW=0.
+      GSICE=0.
+      GSQLW=0.
       DO M=1,NCNX
         MC = 2*M - 1
 cipk oct98 update to f90
@@ -328,11 +328,11 @@ c     +                        +(SIGMA(MR,2)+stress(mr,2))*CX)
      +                        +(SIGMA(MR,2)+stress(mr,2))*cos(agd))
 
 CIPK APR05
-        IF(WSELL .LT. A0) THEN
-	    SIGMAX=0.
-	    SIGMAY=0.
-	  ENDIF
-        IF(MR .GT. NPM) MR=NSURF(MR)
+        IF(WSELL < A0) THEN
+          SIGMAX=0.
+          SIGMAY=0.
+        ENDIF
+        IF(MR > NPM) MR=NSURF(MR)
         RHOS=RHOS+XM(M)*DEN(MR)
 
 CIPK SEP02 GET GAUSS POINT ICE VALUES
@@ -345,23 +345,23 @@ CIPK      SIGMAX = SIGMAX*(ELEV-A0)
 CIPK      SIGMAY = SIGMAY*(ELEV-A0)
 CIPK SEP02 ADD AN ICE THICKNESS TEST FOR WIND STRESS
 
-      IF(GSICE .LE. 0.0001) THEN
+      IF(GSICE <= 0.0001) THEN
         SIGMAX = SIGMAX*H
         SIGMAY = SIGMAY*H
-	ELSE
-	  SIGMAX=0.0
-	  SIGMAY=0.0
-	ENDIF
+      ELSE
+        SIGMAX=0.0
+        SIGMAY=0.0
+      ENDIF
 CIPK SPE02      sigmax=sigmax*h
 CIPK SEP02      sigmay=sigmay*h
 
 CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
-      IF(WSELL-A0 .LT. ZSTDEP) THEN
-	  SIGMAX=0.
-	  SIGMAY=0.
+      IF(WSELL-A0 < ZSTDEP) THEN
+        SIGMAX=0.
+        SIGMAY=0.
       ENDIF
-CIPK NOV98      IF(NTYPE .EQ. 1) GO TO 400
-      IF(NTYPE .EQ. 2 ) THEN
+CIPK NOV98      IF(NTYPE == 1) GO TO 400
+      IF(NTYPE == 2 ) THEN
 
 
 C     BED ELEMENT
@@ -383,111 +383,111 @@ C...... APPLY CONTINUITY CONDITION
           F(IA)=F(IA)-TEMPX*W
   284   CONTINUE
       ENDIF
-      IF(NTYPE .LT. 4) THEN
+      IF(NTYPE < 4) THEN
 C
 C-
 C......INSERT BOTTOM FRICTION
 C-
          FAC=0.0
-	   IF (GRAV .LT. 32.)  THEN
-          IF(CZ .GT. 1.0) FAC=GRAV*AMW/CZ**2*XHT*RHO
-          IF(CZ .LE. 1.0  .AND.  CZ .GT. 0.) THEN
+         IF (GRAV < 32.)  THEN
+          IF(CZ > 1.0) FAC=GRAV*AMW/CZ**2*XHT*RHO
+          IF(CZ <= 1.0 .AND. CZ > 0.) THEN
 CIPK MAR01  ADD VARIABLE WALL FRICTION BASED ON ELEVATION
-            IF(MANMIN(NM) .GT. 0.) THEN
-	        IF(H+A0 .LT. ELMMIN(NM) ) THEN 
+            IF(MANMIN(NM) > 0.) THEN
+              IF(H+A0 < ELMMIN(NM) ) THEN 
                 FAC = GRAV*AMW* MANMIN(NM)**2*XHT*RHO/(H**0.3333)
-	        ELSEIF(H+A0 .GT. ELMMAX(NM) ) THEN 
+              ELSEIF(H+A0 > ELMMAX(NM) ) THEN 
                 FAC = GRAV*AMW* MANMAX(NM)**2*XHT*RHO/(H**0.3333)
-	        ELSE
-	          FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
+              ELSE
+                FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
                 FAC = GRAV*AMW*(MANMIN(NM)+
-     +	         FSCL*(MANMAX(NM)-MANMIN(NM)))**2*XHT*RHO/(H**0.3333)
-	        ENDIF
+     +              FSCL*(MANMAX(NM)-MANMIN(NM)))**2*XHT*RHO/(H**0.3333)
+              ENDIF
 CIPK SEP04  ADD MAH AND MAT OPTION
-            ELSEIF(HMAN(NM,2) .GT. 0  .OR. HMAN(NM,3) .GT. 0.) THEN
-	        TEMAN=0.
-              IF(HMAN(NM,2) .GT. 0) THEN 
-  	          TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
-	        ENDIF
-	        TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
+            ELSEIF(HMAN(NM,2) > 0 .OR. HMAN(NM,3) > 0.) THEN
+              TEMAN=0.
+              IF(HMAN(NM,2) > 0) THEN 
+                  TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
+              ENDIF
+              TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
               FAC=GRAV*AMW*TEMAN**2*XHT*RHO/(H**0.3333)
-            ELSEIF(MANTAB(NM,1,2) .GT. 0.) THEN
-  	        DO K=1,4
-	          IF(H .LT. MANTAB(NM,K,1)) THEN
-	            IF(K .EQ. 1) THEN
-	              TEMAN=MANTAB(NM,1,2)
-	            ELSE
-	              FACT=(H-MANTAB(NM,K-1,1))/
+            ELSEIF(MANTAB(NM,1,2) > 0.) THEN
+                DO K=1,4
+                IF(H < MANTAB(NM,K,1)) THEN
+                  IF(K == 1) THEN
+                    TEMAN=MANTAB(NM,1,2)
+                  ELSE
+                    FACT=(H-MANTAB(NM,K-1,1))/
      +                  (MANTAB(NM,K,1)-MANTAB(NM,K-1,1))
- 	              TEMAN=MANTAB(NM,K-1,2)
+                     TEMAN=MANTAB(NM,K-1,2)
      +            +FACT*(MANTAB(NM,K,2)-MANTAB(NM,K-1,2))
-	            ENDIF
-	            GO TO 285
-	          ENDIF
-	        ENDDO
-	        TEMAN=MANTAB(NM,4,2)
+                  ENDIF
+                  GO TO 285
+                ENDIF
+              ENDDO
+              TEMAN=MANTAB(NM,4,2)
   285         CONTINUE
               FAC=GRAV*AMW*TEMAN**2*XHT*RHO/(H**0.3333)
 
             ELSE
 
-		    FAC=GRAV*AMW*CZ**2*XHT*RHO/(H**0.3333)
-	      ENDIF
-	    ENDIF
+                FAC=GRAV*AMW*CZ**2*XHT*RHO/(H**0.3333)
+            ENDIF
+          ENDIF
         ELSE
-          IF(CZ .GT. 1.0) FAC=GRAV*AMW/CZ**2*XHT*RHO
-          IF(CZ .LE. 1.0  .AND.  CZ .GT. 0.) THEN
+          IF(CZ > 1.0) FAC=GRAV*AMW/CZ**2*XHT*RHO
+          IF(CZ <= 1.0 .AND. CZ > 0.) THEN
 CIPK MAR01  ADD VARIABLE WALL FRICTION BASED ON ELEVATION
-            IF(MANMIN(NM) .GT. 0.) THEN
-	        IF(H+A0 .LT. ELMMIN(NM) ) THEN 
+            IF(MANMIN(NM) > 0.) THEN
+              IF(H+A0 < ELMMIN(NM) ) THEN 
                 FAC = GRAV*AMW* MANMIN(NM)**2*XHT*RHO/(2.21*H**0.3333)
-	        ELSEIF(H+A0 .GT. ELMMAX(NM) ) THEN 
+              ELSEIF(H+A0 > ELMMAX(NM) ) THEN 
                 FAC = GRAV*AMW* MANMAX(NM)**2*XHT*RHO/(2.21*H**0.3333)
-	        ELSE
-	          FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
+              ELSE
+                FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
                 FAC = GRAV*AMW*(MANMIN(NM)+FSCL*
-     +	        (MANMAX(NM)-MANMIN(NM)))**2*XHT*RHO/(2.21*H**0.3333)
-	        ENDIF
+     +              (MANMAX(NM)-MANMIN(NM)))**2*XHT*RHO/(2.21*H**0.3333)
+              ENDIF
 CIPK SEP04  ADD MAH AND MAT OPTION
-            ELSEIF(HMAN(NM,2) .GT. 0  .OR. HMAN(NM,3) .GT. 0.) THEN
-	        TEMAN=0.
-              IF(HMAN(NM,2) .GT. 0) THEN 
-  	          TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
-	        ENDIF
-	        TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
+            ELSEIF(HMAN(NM,2) > 0 .OR. HMAN(NM,3) > 0.) THEN
+              TEMAN=0.
+              IF(HMAN(NM,2) > 0) THEN 
+                  TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
+              ENDIF
+              TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
               FAC=GRAV*AMW*TEMAN**2*XHT*RHO/(2.21*H**0.3333)
-            ELSEIF(MANTAB(NM,1,2) .GT. 0.) THEN
-  	        DO K=1,4
-	          IF(H .LT. MANTAB(NM,K,1)) THEN
-	            IF(K .EQ. 1) THEN
-	              TEMAN=MANTAB(NM,1,2)
-	            ELSE
-	              FACT=(H-MANTAB(NM,K-1,1))/
+            ELSEIF(MANTAB(NM,1,2) > 0.) THEN
+                DO K=1,4
+                IF(H < MANTAB(NM,K,1)) THEN
+                  IF(K == 1) THEN
+                    TEMAN=MANTAB(NM,1,2)
+                  ELSE
+                    FACT=(H-MANTAB(NM,K-1,1))/
      +                  (MANTAB(NM,K,1)-MANTAB(NM,K-1,1))
- 	              TEMAN=MANTAB(NM,K-1,2)
+                     TEMAN=MANTAB(NM,K-1,2)
      +            +FACT*(MANTAB(NM,K,2)-MANTAB(NM,K-1,2))
-	            ENDIF
-	            GO TO 286
-	          ENDIF
-	        ENDDO
-	        TEMAN=MANTAB(NM,4,2)
+                  ENDIF
+                  GO TO 286
+                ENDIF
+              ENDDO
+              TEMAN=MANTAB(NM,4,2)
   286         CONTINUE
               FAC=GRAV*AMW*TEMAN**2*XHT*RHO/(2.21*H**0.3333)
             ELSE
 
-  	  	    FAC=GRAV*AMW*CZ**2*XHT*RHO/(2.21*H**0.3333)
-	      ENDIF
-	    ENDIF
+                    FAC=GRAV*AMW*CZ**2*XHT*RHO/(2.21*H**0.3333)
+            ENDIF
+          ENDIF
         ENDIF
-c       IF(CZ .LE. 1.0) FAC=GRAV*AMW*CZ**2*XHT*RHO/(2.21*H**0.3333)*1.44
-        IF(NTYPE .EQ. 3) THEN
+c       IF(CZ <= 1.0) FAC=GRAV*AMW*CZ**2*XHT*RHO/(2.21*H**0.3333)*1.44
+        IF(NTYPE == 3) THEN
           FAC=FAC/XHT*H
-          IF(AMW .LT. 0.) FAC=-FAC
+          IF(AMW < 0.) FAC=-FAC
         ENDIF
 C
 C      Set initial values for friction
 C
-        IF(MAXN .GT. 1  .OR.  KRESTF .EQ. 1 ) THEN
+        IF(MAXN > 1 .OR. KRESTF == 1 ) THEN
           UF=U
           VF=V
         ELSE
@@ -498,7 +498,7 @@ C
         TEMPX=FAC*U*VL
         TEMPY=FAC*V*VL
         VL=SQRT(UF**2+VF**2)
-        IF(ABS(VL) .LT. 0.001) GO TO 296
+        IF(ABS(VL) < 0.001) GO TO 296
         TEMPXX=FAC/VL*(2.*UF**2+VF**2)
         TEMPXY=FAC/VL*UF*VF
         TEMPYY=FAC/VL*(UF**2+2.*VF**2)
@@ -521,7 +521,7 @@ C
   295   CONTINUE
   296   CONTINUE
       ENDIF
-      IF(NTYPE .EQ. 2) THEN
+      IF(NTYPE == 2) THEN
 C-
 C...... Insert bottom pressure
 C-
@@ -529,7 +529,7 @@ c        ZA=(ELEV-Z)/XHT
 C        PD=P-RHO*GRAV*ZA*H
         AMS=AMW*DAODX
         DO 315 IC=1,2
-          IF(IC .EQ. 2) AMS=AMW*DAODY
+          IF(IC == 2) AMS=AMW*DAODY
           IA=IC
           TEMP=AMS*H*RHOS*GRAV*H/2.
           DO 310 N=1,NCN
@@ -547,18 +547,18 @@ C        PD=P-RHO*GRAV*ZA*H
       ENDIF
 
 CIPK NOV98
-      IF(NTYPE .EQ. 1) GO TO 400
+      IF(NTYPE == 1) GO TO 400
 
   320 CONTINUE
 C      ZA=(ELEV-Z)/XHT
 C      PD=P-RHO*GRAV*ZA*H
       TEMP=SLOD(NPA)*AMW*H*RHOS*GRAV*H/2.
-      IF(NTYPE .EQ. 4) TEMP=AMW*SLOD(NPA)*2.*SPC*RHOS*GRAV*H/2.-TEMP
+      IF(NTYPE == 4) TEMP=AMW*SLOD(NPA)*2.*SPC*RHOS*GRAV*H/2.-TEMP
       IA=2
-      IF(NPA .EQ. 2) IA=1
+      IF(NPA == 2) IA=1
       DO 350 N=1,NCN
       F(IA)=F(IA)-TEMP*XN(N)
-      IF(NTYPE .EQ. 4) GO TO 345
+      IF(NTYPE == 4) GO TO 345
       TEMPX=SLOD(NPA)*AMW*RHOS*GRAV*H*XN(N)
       IB=3-2*NDF
       DO 340 M=1,NCNX
@@ -589,7 +589,7 @@ C-
       ESTIFM(IA,IB+1)=ESTIFM(IA,IB+1)+TEMPY*XN(N)
   440 CONTINUE
       IB=3-2*NDF
-      IF(ICYC .EQ. 0) GO TO 446
+      IF(ICYC == 0) GO TO 446
       DO 445 N=1,NCNX
       IB=IB+NDF*2
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+AMW*ALTM*XM(M)*XM(N)
@@ -606,12 +606,12 @@ CIPK MAY04 USE SIDFQ
   450 CONTINUE
 CIPK AUG95 ADD LOGIC FOR SURFACE RATE TERMS FOR HEAT BUDGET
 CIPK MAR01 AMEND TO ALLOW FOR SIDF TERMS
-      IF(ICK .EQ. 5) THEN
+      IF(ICK == 5) THEN
         CALL MKTEMP(SALT,H,0.,SRCSNK,GRATE,DELT,NM,NETYP(NN))
-	ELSE
-	  SRCSNK=0.0
-	  GRATE=0.0
-	ENDIF
+      ELSE
+        SRCSNK=0.0
+        GRATE=0.0
+      ENDIF
       IA=4-NDF
       DO M=1,NCN
         IA=IA+NDF
@@ -620,7 +620,7 @@ CIPK MAR01 AMEND TO ALLOW FOR SIDF TERMS
           IB=IB+NDF
 CIPK MAR01  ADD SIDF TERMS USE SIDFQQ MAY04
           ESTIFM(IA,IB)=ESTIFM(IA,IB)-AMW*(H*GRATE/XHT+SIDFQQ)
-     +         		*XN(M)*XN(N)
+     +                     *XN(M)*XN(N)
         ENDDO
 CIPK MAR01  ADD SIDF TERMS USE SIDFQQ MAY04
           F(IA)=F(IA)+AMW*(H*(SRCSNK+GRATE*SALT)/XHT+
@@ -634,14 +634,14 @@ CIPK AUG95 END ADDITIONS
   550 CONTINUE
 
 cipk dec99 add ntx=0 test
-      if(ntx .eq. 0) return
+      if(ntx == 0) return
 
       GO TO 800
 C-
 C......PROCESS ONE-D ELEMENTS
 C-
   600 CONTINUE
-      IF(NTX .GT. 0) THEN
+      IF(NTX > 0) THEN
         TEL=AREA(NN)
       ELSE
         AREA(NN)=0.
@@ -659,8 +659,8 @@ CIPK OCT02
       THKI(3)=ICETHK(NOP(NN,3))
       QWLI(1)=QICE(NOP(NN,1))
       QWLI(3)=QICE(NOP(NN,3))
-      IF(NTX .EQ. 0) THEN
-        IF(NTYPE .GT. 2) THEN
+      IF(NTX == 0) THEN
+        IF(NTYPE > 2) THEN
           KR=NOP(NN,19)
           TH(NN)=TH(KR)
           RETURN
@@ -694,13 +694,13 @@ C-
       DO 606 K=1,3
         N=NOP(NN,K)
         ANGDIF=TH(NN)-ALFA(N)
-        IF(ABS(ANGDIF) .GT. 1.5708  .AND.  ABS(ANGDIF) .LT. 4.7124) THEN
+        IF(ABS(ANGDIF) > 1.5708 .AND. ABS(ANGDIF) < 4.7124) THEN
           QFACT(K)=-1.0
         ELSE
           QFACT(K)=1.0
         ENDIF
   606 CONTINUE
-      IF(NTYPE .EQ. 4) THEN
+      IF(NTYPE == 4) THEN
         XL(1)=CORD(N2,3)-CORD(N1,3)
         XL(2)=CORD(N3,3)-CORD(N1,3)
         TFR=1.
@@ -732,7 +732,7 @@ CIPK JAN99      NS1=NSURF(N1)
 CIPK JAN99      NS3=NSURF(N3)
 CIPK JAN99      RHOS=XM(1)*DEN(NS1)+XM(2)*DEN(NS3)
 
-      IF (N1 .GT. NPM) THEN
+      IF (N1 > NPM) THEN
          NN1 = NSURF(N1)
          NN3 = NSURF(N3)
       ELSE
@@ -752,7 +752,7 @@ C      RHOS=1000.
 CIPK AUG02
       WSELL=XM(1)*WSLL(N1)+XM(2)*WSLL(N3)
       XHT=ELEV-A0
-      IF(NTYPE .EQ. 4) GO TO 730
+      IF(NTYPE == 4) GO TO 730
       U=0.
 CIPK AUG95 ADD LOGIC TO GET SALT
       SALT=0.
@@ -763,9 +763,9 @@ CIPK AUG95 ADD LOGIC TO GET SALT
       U=U+XN(I)*(CXA*VEL(1,MR)+SXA*VEL(2,MR))*QFACT(I)
       SALT=SALT+XN(I)*VEL(ICK,MR)
   610 CONTINUE
-CIPK NOV98      IF(NTYPE .EQ. 1) GO TO 700
-      IF(NTYPE .EQ. 2) THEN
-CC      IF(NTYPE .EQ. 1) GO TO 700
+CIPK NOV98      IF(NTYPE == 1) GO TO 700
+      IF(NTYPE == 2) THEN
+CC      IF(NTYPE == 1) GO TO 700
 C
 C     For bottom elements apply continuity boundary integrals
 C
@@ -787,101 +787,101 @@ C-
 C......BOTTOM FRICTION
 C-
 CIPK JAN99 MOVE JUMP LOCATION
-      IF(CZ .EQ. 0. ) GO TO 641
+      IF(CZ == 0. ) GO TO 641
 C
       TEMP=0.
-      IF (GRAV .LT. 32.)  THEN
-        IF(CZ .GT.1.0) TEMP=GRAV*AMR /CZ**2*XHT
-        IF(CZ .LE. 1.0  .AND.  CZ .GT. 0.) THEN
+      IF (GRAV < 32.)  THEN
+        IF(CZ > 1.0) TEMP=GRAV*AMR /CZ**2*XHT
+        IF(CZ <= 1.0 .AND. CZ > 0.) THEN
 CIPK MAR01  ADD VARIABLE WALL FRICTION BASED ON ELEVATION
-          IF(MANMIN(NM) .GT. 0.) THEN
-	      IF(H+A0 .LT. ELMMIN(NM) ) THEN 
+          IF(MANMIN(NM) > 0.) THEN
+            IF(H+A0 < ELMMIN(NM) ) THEN 
               TEMP = GRAV*AMR* MANMIN(NM)**2*XHT/(H**0.3333)
-	      ELSEIF(H+A0 .GT. ELMMAX(NM) ) THEN 
+            ELSEIF(H+A0 > ELMMAX(NM) ) THEN 
               TEMP = GRAV*AMR* MANMAX(NM)**2*XHT/(H**0.3333)
-	      ELSE
-	        FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
+            ELSE
+              FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
               TEMP = GRAV*AMR*(MANMIN(NM)+
-     +	       FSCL*(MANMAX(NM)-MANMIN(NM)))**2*XHT/(H**0.3333)
-	      ENDIF
+     +             FSCL*(MANMAX(NM)-MANMIN(NM)))**2*XHT/(H**0.3333)
+            ENDIF
 CIPK SEP04  ADD MAH AND MAT OPTION
-          ELSEIF(HMAN(NM,2) .GT. 0  .OR. HMAN(NM,3) .GT. 0.) THEN
+          ELSEIF(HMAN(NM,2) > 0 .OR. HMAN(NM,3) > 0.) THEN
             TEMAN=0.
-            IF(HMAN(NM,2) .GT. 0) THEN 
-  	        TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
-	      ENDIF
-	      TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
+            IF(HMAN(NM,2) > 0) THEN 
+                TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
+            ENDIF
+            TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
             TEMP=GRAV*AMR*TEMAN**2*XHT/(H**0.3333)
-          ELSEIF(MANTAB(NM,1,2) .GT. 0.) THEN
-	      DO K=1,4
-	        IF(H .LT. MANTAB(NM,K,1)) THEN
-	          IF(K .EQ. 1) THEN
-	            TEMAN=MANTAB(NM,1,2)
-	          ELSE
-	            FACT=(H-MANTAB(NM,K-1,1))/
+          ELSEIF(MANTAB(NM,1,2) > 0.) THEN
+            DO K=1,4
+              IF(H < MANTAB(NM,K,1)) THEN
+                IF(K == 1) THEN
+                  TEMAN=MANTAB(NM,1,2)
+                ELSE
+                  FACT=(H-MANTAB(NM,K-1,1))/
      +                (MANTAB(NM,K,1)-MANTAB(NM,K-1,1))
- 	            TEMAN=MANTAB(NM,K-1,2)
+                   TEMAN=MANTAB(NM,K-1,2)
      +            +FACT*(MANTAB(NM,K,2)-MANTAB(NM,K-1,2))
-	          ENDIF
-	          GO TO 622
-	        ENDIF
-	      ENDDO
-	      TEMAN=MANTAB(NM,4,2)
+                ENDIF
+                GO TO 622
+              ENDIF
+            ENDDO
+            TEMAN=MANTAB(NM,4,2)
   622       CONTINUE
             TEMP=GRAV*AMR*TEMAN**2*XHT/(H**0.3333)
 
           ELSE
 
-	      TEMP=GRAV*AMR*CZ**2*XHT/(H**0.3333)
-	    ENDIF
-	  ENDIF
+            TEMP=GRAV*AMR*CZ**2*XHT/(H**0.3333)
+          ENDIF
+        ENDIF
       ELSE
-        IF(CZ .GT.1.0) TEMP=GRAV*AMR /CZ**2*XHT
-        IF(CZ .LE. 1.0  .AND.  CZ .GT. 0.) THEN
+        IF(CZ > 1.0) TEMP=GRAV*AMR /CZ**2*XHT
+        IF(CZ <= 1.0 .AND. CZ > 0.) THEN
 CIPK MAR01  ADD VARIABLE WALL FRICTION BASED ON ELEVATION
-          IF(MANMIN(NM) .GT. 0.) THEN
-	      IF(H+A0 .LT. ELMMIN(NM) ) THEN 
+          IF(MANMIN(NM) > 0.) THEN
+            IF(H+A0 < ELMMIN(NM) ) THEN 
               TEMP = GRAV*AMR* MANMIN(NM)**2*XHT/(2.21*H**0.3333)
-	      ELSEIF(H+A0 .GT. ELMMAX(NM) ) THEN 
+            ELSEIF(H+A0 > ELMMAX(NM) ) THEN 
               TEMP = GRAV*AMR* MANMAX(NM)**2*XHT/(2.21*H**0.3333)
-	      ELSE
-	        FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
+            ELSE
+              FSCL=(H+A0-ELMMIN(NM))/(ELMMAX(NM)-ELMMIN(NM))
               TEMP = GRAV*AMR*(MANMIN(NM)+
-     +	       FSCL*(MANMAX(NM)-MANMIN(NM)))**2*XHT/(2.21*H**0.3333)
-	      ENDIF
+     +             FSCL*(MANMAX(NM)-MANMIN(NM)))**2*XHT/(2.21*H**0.3333)
+            ENDIF
 CIPK SEP04  ADD MAH AND MAT OPTION
-          ELSEIF(HMAN(NM,2) .GT. 0  .OR. HMAN(NM,3) .GT. 0.) THEN
+          ELSEIF(HMAN(NM,2) > 0 .OR. HMAN(NM,3) > 0.) THEN
             TEMAN=0.
-            IF(HMAN(NM,2) .GT. 0) THEN 
-  	        TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
-	      ENDIF
-	      TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
+            IF(HMAN(NM,2) > 0) THEN 
+                TEMAN=HMAN(NM,3)*EXP(-H/HMAN(NM,2))
+            ENDIF
+            TEMAN=TEMAN+HMAN(NM,1)/H**HMAN(NM,4)
             TEMP=GRAV*AMR*TEMAN**2*XHT/(2.21*H**0.3333)
-          ELSEIF(MANTAB(NM,1,2) .GT. 0.) THEN
-	      DO K=1,4
-	        IF(H .LT. MANTAB(NM,K,1)) THEN
-	          IF(K .EQ. 1) THEN
-	            TEMAN=MANTAB(NM,1,2)
-	          ELSE
-	            FACT=(H-MANTAB(NM,K-1,1))/
+          ELSEIF(MANTAB(NM,1,2) > 0.) THEN
+            DO K=1,4
+              IF(H < MANTAB(NM,K,1)) THEN
+                IF(K == 1) THEN
+                  TEMAN=MANTAB(NM,1,2)
+                ELSE
+                  FACT=(H-MANTAB(NM,K-1,1))/
      +                (MANTAB(NM,K,1)-MANTAB(NM,K-1,1))
- 	            TEMAN=MANTAB(NM,K-1,2)
+                   TEMAN=MANTAB(NM,K-1,2)
      +            +FACT*(MANTAB(NM,K,2)-MANTAB(NM,K-1,2))
-	          ENDIF
-	          GO TO 624
-	        ENDIF
-	      ENDDO
-	      TEMAN=MANTAB(NM,4,2)
+                ENDIF
+                GO TO 624
+              ENDIF
+            ENDDO
+            TEMAN=MANTAB(NM,4,2)
   624       CONTINUE
             TEMP=GRAV*AMR*TEMAN**2*XHT/(2.21*H**0.3333)
           ELSE
 
-	      TEMP=GRAV*AMR*CZ**2*XHT/(2.21*H**0.3333)
-	    ENDIF
-	  ENDIF
+            TEMP=GRAV*AMR*CZ**2*XHT/(2.21*H**0.3333)
+          ENDIF
+        ENDIF
       ENDIF
-c     IF(CZ .LE. 1.0) TEMP=GRAV*AMR*CZ**2*XHT/(2.21*H**0.3333)*1.44
-      IF(MAXN .GT. 1  .OR.  KRESTF .EQ. 1) THEN
+c     IF(CZ <= 1.0) TEMP=GRAV*AMR*CZ**2*XHT/(2.21*H**0.3333)*1.44
+      IF(MAXN > 1 .OR. KRESTF == 1) THEN
         UF=U
       ELSE
         UF=UINP
@@ -902,7 +902,7 @@ c     IF(CZ .LE. 1.0) TEMP=GRAV*AMR*CZ**2*XHT/(2.21*H**0.3333)*1.44
 CIPK JAN99 ADD NEW LOCATION
   641 CONTINUE
 CIPK NOV98
-      IF(NTYPE .EQ. 1) GO TO 700
+      IF(NTYPE == 1) GO TO 700
       GO TO 750
 C-
 C......Surface elements apply wind stress
@@ -919,9 +919,9 @@ cipk jun03 add STRESS component
       sigmax=sigmax*h
 
 CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
-      IF(WSELL-A0 .LT. ZSTDEP) THEN
-	  SIGMAX=0.
-	ENDIF
+      IF(WSELL-A0 < ZSTDEP) THEN
+        SIGMAX=0.
+      ENDIF
 
       IA=1-NDF
       DO 715 I=1,NCN
@@ -941,7 +941,7 @@ C-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+TEMPX*XN(I)*QFACT(I)
   718 CONTINUE
       IB=3-2*NDF
-      IF(ICYC .NE. 0) THEN
+      IF(ICYC /= 0) THEN
         DO 720 I=1,2
           IB=IB+NDF*2
           ESTIFM(IA,IB)=ESTIFM(IA,IB)+AMW*ALTM*XM(M)*XM(I)
@@ -960,17 +960,17 @@ C
   725 CONTINUE
 CIPK AUG95 ADD LOGIC FOR SURFACE RATE TERMS FOR HEAT BUDGET
 CIPK MAR01 ADD LOGIC FOR SURFACE SOURCE.LOSS
-      IF(ICK .EQ. 5) THEN
+      IF(ICK == 5) THEN
 
 CIPK OCT02 GET GAUSS POINT ICE VALUES
         GSICE=GSICE+THKI(1)*XM(1)+THKI(3)*XM(2)
         GSQLW=GSQLW+QWLI(1)*XM(1)+QWLI(3)*XM(2)
 
         CALL MKTEMP(SALT,H,0.,SRCSNK,GRATE,DELT,NM,NETYP(NN))
-	ELSE
-	  SRCSNK=0.
-	  GRATE=0.
-	ENDIF
+      ELSE
+        SRCSNK=0.
+        GRATE=0.
+      ENDIF
       IA=4-NDF
       DO M=1,NCN
         IA=IA+NDF
@@ -978,7 +978,7 @@ CIPK OCT02 GET GAUSS POINT ICE VALUES
         DO I=1,NCN
           IB=IB+NDF
           ESTIFM(IA,IB)=ESTIFM(IA,IB)-AMW*(H*GRATE/XHT-SIDFQQ)
-     +             		*XN(M)*XN(I)
+     +                         *XN(M)*XN(I)
 CIPK MAY04 USE SIDFQQ
         ENDDO
         F(IA)=F(IA)+AMW*(H*(SRCSNK+GRATE*SALT)/XHT+
@@ -1013,7 +1013,7 @@ C      RHOS=1000.
 C
 C     Bottom elements
 C
-      IF(NTYPE .EQ. 2) THEN
+      IF(NTYPE == 2) THEN
         XL(1)=CORD(N2,3)-CORD(N1,3)
         XL(2)=CORD(N3,3)-CORD(N1,3)
         DO 790 N=1,4
@@ -1030,7 +1030,7 @@ CIPK JAN99          NS1=NSURF(N1)
 CIPK JAN99          NS3=NSURF(N3)
 CIPK JAN99          RHOS=XM(1)*DEN(NS1)+XM(2)*DEN(NS3)
 c
-          IF (N1 .GT. NPM) THEN
+          IF (N1 > NPM) THEN
              NN1 = NSURF(N1)
              NN3 = NSURF(N3)
           ELSE
@@ -1065,14 +1065,14 @@ C-
 C......BOTTOM FRICTION
 C-
           TEMP=0.
-		IF(CZ .EQ. 0.) GO TO 790
+            IF(CZ == 0.) GO TO 790
 C
-          IF (GRAV .LT. 32.)  THEN
-            IF(CZ .GT. 1.0 ) TEMP=GRAV*AMR /CZ**2*XHT
-            IF(CZ .LE. 1.0 ) TEMP=GRAV*AMR *CZ**2*XHT/(H**0.3333)
+          IF (GRAV < 32.)  THEN
+            IF(CZ > 1.0 ) TEMP=GRAV*AMR /CZ**2*XHT
+            IF(CZ <= 1.0 ) TEMP=GRAV*AMR *CZ**2*XHT/(H**0.3333)
           ELSE
-            IF(CZ .GT. 1.0 ) TEMP=GRAV*AMR /CZ**2*XHT
-            IF(CZ .LE. 1.0 ) TEMP=GRAV*AMR *CZ**2*XHT/(2.21*H**0.3333)
+            IF(CZ > 1.0 ) TEMP=GRAV*AMR /CZ**2*XHT
+            IF(CZ <= 1.0 ) TEMP=GRAV*AMR *CZ**2*XHT/(2.21*H**0.3333)
           ENDIF
           TEMPXX=TEMP *2.*ABS(U)
           TEMPX=TEMP *U*ABS(U)
@@ -1104,21 +1104,21 @@ C
   775     CONTINUE
   790   CONTINUE
       ENDIF
-CC      IF(NTYPE .EQ. 4) GO TO 1001
-CC      IF(MOD(NFIX(N1)/100,10) .NE. 2  .AND.  NFIX(N1)/10000 .EQ. 0) THEN
+CC      IF(NTYPE == 4) GO TO 1001
+CC      IF(MOD(NFIX(N1)/100,10) /= 2 .AND. NFIX(N1)/10000 == 0) THEN
 CC        N1S=NSURF(N1)
 CC      WRITE(*,*) 'N1,N1S,IBN(N1S)',N1,N1S,IBN(N1S)
-CC        IF(IBN(N1S) .EQ. 1) THEN
+CC        IF(IBN(N1S) == 1) THEN
 CC          F(1)=0.
 CC          DO 792 I=1,NEF
 CC            ESTIFM(1,I)=0.
 CC  792     CONTINUE
 CC        ENDIF
 CC      ENDIF
-CC      IF(MOD(NFIX(N3)/100,10) .NE. 2  .AND.  NFIX(N3)/10000 .EQ. 0) THEN
+CC      IF(MOD(NFIX(N3)/100,10) /= 2 .AND. NFIX(N3)/10000 == 0) THEN
 CC        N3S=NSURF(N3)
 CC        WRITE(*,*) 'N3,N3S,IBN(N3S)',N3,N3S,IBN(N3S)
-CC        IF(IBN(N3S) .EQ. 1) THEN
+CC        IF(IBN(N3S) == 1) THEN
 CC          F(9)=0.
 CC          DO 794 I=1,NEF
 CC           ESTIFM(9,I)=0.
@@ -1166,7 +1166,7 @@ C-
       J=NOP(NN,JJ)
       JA=JA+NDF
       FT=FCTV(J)
-      IF(FT .EQ. 1.) GO TO 1010
+      IF(FT == 1.) GO TO 1010
       IA=1-NDF
       DO 1005 II=1,NCN
       I=NOP(NN,II)
@@ -1182,9 +1182,9 @@ C-
       DO 1030 K=1,NCN
 cipk oct98 update to f90
       N=NOP(NN,K)
-      IF(NFIX(N) .LT. 13000) GO TO 1030
+      IF(NFIX(N) < 13000) GO TO 1030
       IRW=(K-1)*NDF+1
-      IF(NFIX(N) .EQ. 13000) IRW=IRW+1
+      IF(NFIX(N) == 13000) IRW=IRW+1
       DO 1025 J=1,NEF
  1025 ESTIFM(IRW,J)=0.
       F(IRW)=0.
@@ -1195,7 +1195,7 @@ C-
       DO 1045 N=1,NCN,2
 cipk oct98 update to f90
         M=NOP(NN,N)
-        IF(ADIF(M) .NE. 0.) THEN
+        IF(ADIF(M) /= 0.) THEN
 C         WRITE(*,*) NN,N,M,ADIF(M)
           NEQ=NDF*NCN
           IA=NDF*(N-1)+1
@@ -1214,8 +1214,8 @@ cipk oct98 update to f90
       DO 1050 K=1,NDF
       IA=IA+1
       JA=NBC(J,K)
-      IF(JA.EQ.0) GO TO 1050
-           if (ja .lt. 0)  then
+      IF(JA == 0) GO TO 1050
+           if (ja < 0)  then
               write(*,*) ' surcof ', nn,ja
               ja = iabs(ja)
               goto 1050
@@ -1225,7 +1225,7 @@ cipk oct98 update to f90
 
       R1(JA)=R1(JA)+F(IA)
  1050 CONTINUE
-c      if(imat(nn) .gt. 4000) then
+c      if(imat(nn) > 4000) then
 c        WRITE(75,7700) NN,(F(I),I=1,NEF)
 c        WRITE(75,7701) ((ESTIFM(I,J),J=1,NEF,4),I=1,NEF,4)
 c 7700 FORMAT(I5,'F'/(1PE12.4))

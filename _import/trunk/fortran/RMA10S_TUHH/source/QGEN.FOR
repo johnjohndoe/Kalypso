@@ -72,7 +72,7 @@ C-
       maxL=LMT(J)
 CIPK FEB01
         !nis,sep06,com: if there is no node for the CCL, stop the program
-      IF(maxL .EQ. 0) THEN
+      IF(maxL == 0) THEN
         WRITE(75,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
         WRITE(75,*) 'EXECUTION TERMINATED'
         WRITE(*,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
@@ -82,28 +82,28 @@ CIPK FEB01
       STQT(J)=THET
 
       !nis,sep06,com: If the CCL has only 1 node, that means 1D-element
-      IF(maxL .EQ. 1) THEN
+      IF(maxL == 1) THEN
 C-
 C...... This is for 1-D element
 C-
         K=0
         DO 120 M=1,NE
           K=K+1
-          IF(NOP(K,3) .EQ. LINE(J,1)) THEN
+          IF(NOP(K,3) == LINE(J,1)) THEN
             NA=NOP(K,3)
             NC=NOP(K,1)
-            IF(NC .GT. NPM) GO TO 120
+            IF(NC > NPM) GO TO 120
             GO TO 127
           ENDIF
-          IF(NOP(K,1) .EQ. LINE(J,1)) THEN
+          IF(NOP(K,1) == LINE(J,1)) THEN
             NA=NOP(K,1)
             NC=NOP(K,3)
-            IF(NC .GT. NPM) GO TO 120
+            IF(NC > NPM) GO TO 120
             GO TO 127
           ENDIF
   120   CONTINUE
   127   NM=NOP(K,2)
-          IF(CORD(NM,1) .GT. VOID) THEN
+          IF(CORD(NM,1) > VOID) THEN
             DX=2.*(CORD(NM,1)-CORD(NA,1))-0.5*(CORD(NC,1)-CORD(NA,1))
             DY=2.*(CORD(NM,2)-CORD(NA,2))-0.5*(CORD(NC,2)-CORD(NA,2))
           ELSE
@@ -111,12 +111,12 @@ C-
             DY=CORD(NC,2)-CORD(NA,2)
           ENDIF
         BEETA=ATAN2(DY,DX)
-        IF(ABS(BEETA-THET) .GT. 1.570796  .AND.
-     +     ABS(BEETA-THET) .LT. 4.712394) BEETA=BEETA+3.141596
+        IF(ABS(BEETA-THET) > 1.570796 .AND. 
+     +     ABS(BEETA-THET) < 4.712394) BEETA=BEETA+3.141596
         SPEC(NA,1)=QREQ*COS(BEETA)
         SPEC(NA,2)=QREQ*SIN(BEETA)
         NFIX(NA)=31000
-        IF(QQAL(1) .GE. 0.) THEN
+        IF(QQAL(1) >= 0.) THEN
           NFIX(NA)=NFIX(NA)+10
           SPEC(NA,4)=QQAL(1)
           VEL(4,NA)=QQAL(1)
@@ -125,7 +125,7 @@ CIPK OCT01
           NFIX(NA)=NFIX(NA)+20
           SPEC(NA,4)=-QQAL(1)
         ENDIF
-        IF(QQAL(2) .GE. 0.) THEN
+        IF(QQAL(2) >= 0.) THEN
           NFIX(NA)=NFIX(NA)+1
           SPEC(NA,5)=QQAL(2)
           VEL(5,NA)=QQAL(2)
@@ -134,7 +134,7 @@ CIPK OCT01
           NFIX(NA)=NFIX(NA)+2
           SPEC(NA,5)=-QQAL(2)
         ENDIF
-        IF(QQAL(3) .GE. 0.) THEN
+        IF(QQAL(3) >= 0.) THEN
           NFIX1(NA)=1
           SPEC(NA,6)=QQAL(3)
           VEL(6,NA)=QQAL(3)
@@ -148,7 +148,7 @@ CIPK OCT01
 !           that the following if control could not be reached by
 !           a 1D-boundary. This is preserved by copying it to this place.
 !           The if control number 500 is replaced by actual way of statement.
-        IF(ICYC .GT. 0) THEN
+        IF(ICYC > 0) THEN
           DO K=1,maxL
             NA=LINE(J,K)
             CALL BFORM(NA)
@@ -163,7 +163,7 @@ CIPK OCT01
 
 
 !nis,sep06,com: If CCL has more than 1 node, that means 2D
-!nis,jan07,com: condition to come here is: maxL.ne.1
+!nis,jan07,com: condition to come here is: maxL /= 1
 
 cipk oc98        VM=SQRT(VEL(1,NA)**2+VEL(2,NA)**2)
 C       VEL(1,NA)=VM*COS(BEETA)
@@ -191,24 +191,24 @@ C-
         !nis,sep06,com: Objective - get the number IBN for every node of all elements; why is that repeated here; it was done in BLINE.sub
         DO 105 N=1,NE
           !nis,sep06,com: Jump over every deactivated
-          IF(IMAT(N) .LT. 1) GO TO 105
+          IF(IMAT(N) < 1) GO TO 105
 
           !nis,sep06,com: Jump over control structure elements
-          !               Here overloading messages are in because, if the value is .lt.1 the code can not reach this code part.
-          !               It would be enough to have if(NM.gt.900) with NM=IMAT(N) without ABS()-function
+          !               Here overloading messages are in because, if the value is < 1 the code can not reach this code part.
+          !               It would be enough to have if(NM > 900) with NM=IMAT(N) without ABS()-function
           !-
 cipk oct98 update to f90
           NM=ABS(IMAT(N))
-          IF(NM .GT. 900) GO TO 105
+          IF(NM > 900) GO TO 105
 
           !nis,sep06,com: Jump over element, that has no turbulence value
-          IF(ORT(NM,1) .EQ. 0.) GO TO 105
+          IF(ORT(NM,1) == 0.) GO TO 105
           !nis,sep06,com: Get node number (might be 3, 5, 6, 8); but how can a 1D-element reach this code part, because if there was
           !               only one node as boundary condition this part of the subroutine is not used
           NCN=NCORN(N)
           !nis,sep06,com: Treat 1D-2D-transition element as 1D-element; corner node of 2D-transition-element part is not touched; those nodes still
           !               act as boundary nodes.
-          IF(NCN .EQ. 5) NCN=3
+          IF(NCN == 5) NCN=3
           !nis,sep06,com: increase IBN by one for every occurance in an element.
           DO 104 M=1,NCN
 cipk oct98 update to f90
@@ -219,9 +219,9 @@ cipk oct98 update to f90
   104     CONTINUE
   105   CONTINUE
 
-!nis,jan07,com: BSWIT.eq.1 means original method of rma10s
+!nis,jan07,com: BSWIT == 1 means original method of rma10s
 !NiS,sep06: Activating possibility of chosing the way of discharge boundary condition transformation
-        IF (BSWIT.eq.1) THEN
+        IF (BSWIT == 1) THEN
 
           !nis,sep06,com: Calculate the discharge crosssectional area (wetted area)
           !nis,sep06,com: initialize summed area SUMA
@@ -254,14 +254,14 @@ C-
             D1=VEL(3,NA)
             SPEC(NA,1)=VEST*D1*COS(THET)
             SPEC(NA,2)=VEST*D1*SIN(THET)
-            IF(SPEC(NA,1) .NE. 0.) THEN
+            IF(SPEC(NA,1) /= 0.) THEN
               NFIX(NA)=31000
             ELSE
               NFIX(NA)=13000
             ENDIF
 
             !NiS,sep06,com: This is just for water-quality calculation
-            IF(QQAL(1) .GE. 0.) THEN
+            IF(QQAL(1) >= 0.) THEN
               NFIX(NA)=NFIX(NA)+10
               SPEC(NA,4)=QQAL(1)
               VEL(4,NA)=QQAL(1)
@@ -270,7 +270,7 @@ CIPK OCT01
               NFIX(NA)=NFIX(NA)+20
               SPEC(NA,4)=-QQAL(1)
             ENDIF
-            IF(QQAL(2) .GE. 0.) THEN
+            IF(QQAL(2) >= 0.) THEN
               NFIX(NA)=NFIX(NA)+1
               SPEC(NA,5)=QQAL(2)
               VEL(5,NA)=QQAL(2)
@@ -279,7 +279,7 @@ CIPK OCT01
               NFIX(NA)=NFIX(NA)+2
               SPEC(NA,5)=-QQAL(2)
             ENDIF
-            IF(QQAL(3) .GE. 0.) THEN
+            IF(QQAL(3) >= 0.) THEN
               NFIX1(NA)=1
               SPEC(NA,6)=QQAL(3)
               VEL(6,NA)=QQAL(3)
@@ -292,7 +292,7 @@ CIPK OCT01
 
 
       !NiS,sep06: Using the Kalypso-2D-option for Q-boundary condition transformation
-        ELSEIF (BSWIT.eq.2) then
+        ELSEIF (BSWIT == 2) then
 
           !check, whether Q-Line is valid. Flow should cross every segment in same direction
           vnomx = COS (thet)
@@ -436,7 +436,7 @@ CIPK OCT01
      +            NullVal, NullVal, 0,  0, gl_bedform, mel, cwr_line, 2,
      +            dummy(1), dummy(2), dummy(3),dset)
                 !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
-                if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
+                if (idnopt /= 0 .AND. d1 < akp(na) * adb(na)) then
                   lambda = lambda
      +              * (ort (lineimat (j, k + 1), 12)**2 - 1.)
      +              * (akp(nod) * adb(nod) - d1)
@@ -469,7 +469,7 @@ CIPK OCT01
           END DO
           !nis,sep06,com: Testing of the Conveyance factors
           suma = abs (suma)
-          IF (abs (suma / qreq) .lt.0.0000001) then
+          IF (abs (suma / qreq) < 0.0000001) then
             WRITE (Lout, * ) 'Volumenstromvorgabe an trockener Linie'
             WRITE (Lout, * ) 'keine fliesztiefe an q-linie: ', j
             STOP 'Volumenstromvorgabe an trockener Linie'
@@ -484,7 +484,7 @@ CIPK OCT01
             !nis,sep06,com: Get the actual node number
             na = line (j, k)
             !nis,sep06,com: Skip non existing point
-            IF (na.le.0) cycle AssginSpecificDischarge
+            IF (na <= 0) cycle AssginSpecificDischarge
 
             !Process on midsidenodes to get their depths
             IF (mod (k, 2) == 0) then
@@ -493,7 +493,7 @@ CIPK OCT01
               na2 = line (j, k + 1)
 
               !If wetting/drying is activated, just calculate the waterdepths of the two adjacent corner nodes of the actual midside node
-              IF (idnopt.eq.0) then
+              IF (idnopt == 0) then
                 d1 = waspi - ao (na1)
                 d3 = waspi - ao (na2)
               !If marsh-algorithm is applied, calculate the waterdepths of the two adjacent corner nodes of the actual midsied node and
@@ -541,14 +541,14 @@ CIPK OCT01
           !nis,sep06,com: Give every node the controlling specifier nfix and set the value of inflow to minimum 0.0001, if nothing is assigned
           DO k = 1, maxL
             na = line (j, k)
-            IF (na.gt.0) then
-              IF (spec (na, 1) .eq.0.) spec (na, 1) = 0.0001
+            IF (na > 0) then
+              IF (spec (na, 1) == 0.) spec (na, 1) = 0.0001
               nfix (na) = 31000
             ENDIF
 
           !NiS,sep06,com: This is just for water-quality calculation
           !NiS,sep06,com: salinity
-          IF(QQAL(1) .GE. 0.) THEN
+          IF(QQAL(1) >= 0.) THEN
             NFIX(NA)=NFIX(NA)+10
             SPEC(NA,4)=QQAL(1)
             VEL(4,NA)=QQAL(1)
@@ -557,7 +557,7 @@ CIPK OCT01
             SPEC(NA,4)=-QQAL(1)
           ENDIF
           !NiS,sep06,com: temperature
-          IF(QQAL(2) .GE. 0.) THEN
+          IF(QQAL(2) >= 0.) THEN
             NFIX(NA)=NFIX(NA)+1
             SPEC(NA,5)=QQAL(2)
             VEL(5,NA)=QQAL(2)
@@ -566,7 +566,7 @@ CIPK OCT01
             SPEC(NA,5)=-QQAL(2)
           ENDIF
           !NiS,sep06,com: sediment-concentration
-          IF(QQAL(3) .GE. 0.) THEN
+          IF(QQAL(3) >= 0.) THEN
             NFIX1(NA)=1
             SPEC(NA,6)=QQAL(3)
             VEL(6,NA)=QQAL(3)
@@ -585,7 +585,7 @@ C-
         DO K=1,maxL,maxL-1
           !node
           NA=LINE(j,K)
-          IF(K .EQ. 1) THEN
+          IF(K == 1) THEN
             neighbourMidside = line (j, 2)
             neighbourCorner = line (j, 3)
           ELSE
@@ -601,7 +601,7 @@ C-
           if (icyc > 0) then
             DO k = 1, lmt (j)
               na = line (j, k)
-              IF (na.gt.0) call bform (na)
+              IF (na > 0) call bform (na)
             END DO
           endif
 
@@ -653,13 +653,13 @@ cipk oct98 update to f90
 
 cipk oct98            MLX=ABS(NOP(N,MLW))
               MSL=MOD(MLW+2,NCN)
-              IF(MSL .EQ. 0) MSL=NCN
+              IF(MSL == 0) MSL=NCN
               MFR=MOD(MLW+3,NCN)
 
 cipk oct98 update to f90
               MSL=ABS(NOP(N,MSL))
               IF(MSL /= NeighbourMidsideOnLine) then
-                IF(IBN(MSL) .EQ. 1) EXIT findCorrectElement
+                IF(IBN(MSL) == 1) EXIT findCorrectElement
               endif
 
               MSL = MLW
@@ -668,7 +668,7 @@ cipk oct98 update to f90
 !cipk oct98 update to f90
               MSL=ABS(NOP(N,MSL))
               IF(MSL == NeighbourMidsideOnLine) CYCLE findCorrectElement
-              IF(IBN(MSL) .EQ. 1) EXIT findCorrectElement
+              IF(IBN(MSL) == 1) EXIT findCorrectElement
             ENDDO findCorrectElement
 
 cipk oct98 update to f90
@@ -687,18 +687,18 @@ C-
               DXA=CORD(NeighbourCornerOnLine,1)-CORD(thisNode,1)
               DYA=-(CORD(NeighbourCornerOnLine,2)-CORD(thisNode,2))
               AALFA=ATAN2(DXA,DYA)
-              IF(ABS(AALFA-THET) .GT. 1.570796  .AND.
-     +           ABS(AALFA-THET) .LT. 4.712394) THEN
+              IF(ABS(AALFA-THET) > 1.570796 .AND. 
+     +           ABS(AALFA-THET) < 4.712394) THEN
                 AALFA=AALFA+3.141596
               ENDIF
-              IF(ABS(AALFA-BEETA) .GT. 1.570796  .AND.
-     +           ABS(AALFA-BEETA) .LT. 4.712394) THEN
+              IF(ABS(AALFA-BEETA) > 1.570796 .AND. 
+     +           ABS(AALFA-BEETA) < 4.712394) THEN
                 BEETA=BEETA+3.141596
               ENDIF
 C-
 C...... Finally adjust flows
 C-
-              IF(COS(THET) .NE. 0.) THEN
+              IF(COS(THET) /= 0.) THEN
               QMAG=SPEC(thisNode,1)*COS(AALFA-THET)/
      +             (COS(THET)*COS(AALFA-BEETA))
               ELSE

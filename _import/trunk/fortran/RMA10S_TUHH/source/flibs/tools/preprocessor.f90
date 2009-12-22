@@ -202,7 +202,7 @@ logical function logical_value( line )
         value = 'NO'    ! TODO: report this!
     endif
 
-    if ( value == 'yes' .or. value == 'Yes' .or. value == 'YES' ) then
+    if ( value == 'yes' .OR. value == 'Yes' .OR. value == 'YES' ) then
         logical_value = .true.
     else
         logical_value = .false.
@@ -299,7 +299,7 @@ function tolower( line )
 
     tolower = line
     do i = 1,len_trim(line)
-        if ( iachar(line(i:i)) >= iachar('A') .and. iachar(line(i:i)) <= iachar('Z') ) then
+        if ( iachar(line(i:i)) >= iachar('A') .AND. iachar(line(i:i)) <= iachar('Z') ) then
             tolower(i:i) = achar(iachar(line(i:i))-offset)
         endif
     enddo
@@ -465,7 +465,7 @@ subroutine open_files( preprocessor, filename, success )
         endif
     enddo
 
-    if ( .not. success ) then
+    if ( .NOT. success ) then
         write( *, '(2a)' ) '==> Error while processing ', trim(filename)
         write( preprocessor%lurep, '(a,/,3x,a)' ) 'ERROR: Problem opening the input file:', &
             trim(preprocessor%input_directory) // dirsep(1)(1:1) // trim(filename)
@@ -483,7 +483,7 @@ subroutine open_files( preprocessor, filename, success )
         endif
     enddo
 
-    if ( .not. success ) then
+    if ( .NOT. success ) then
         write( *, '(2a)' ) '==> Error while processing ', trim(filename)
         write( preprocessor%lurep, '(a,/,3x,a)' ) 'ERROR: Problem opening the output file as new:', &
             trim(preprocessor%output_directory) // dirsep(1)(1:1) // '_' // trim(filename)
@@ -678,7 +678,7 @@ function macros_replaced( input )
             line(k:k+length-1) = routine_name
         endif
 
-        if ( .not. replaced ) then
+        if ( .NOT. replaced ) then
             exit
         endif
 
@@ -756,7 +756,7 @@ subroutine check_return_stop( line, keyword, transformed )
     k      = index( line_copy, 'return' )
 
     if ( k > 0 ) then
-        if ( line_copy(k:) == 'return' .and. kparen < k ) then
+        if ( line_copy(k:) == 'return' .AND. kparen < k ) then
             line(size(line))(k:) = 'then'
             keyword     = 'return'
             transformed = .true.
@@ -766,7 +766,7 @@ subroutine check_return_stop( line, keyword, transformed )
     k = index( line_copy, 'stop' )
 
     if ( k > 0 ) then
-        if ( line_copy(k:) == 'stop' .and. kparen < k ) then
+        if ( line_copy(k:) == 'stop' .AND. kparen < k ) then
             line(size(line))(k:) = 'then'
             keyword     = 'stop'
             transformed = .true.
@@ -821,7 +821,7 @@ subroutine preprocess_file( preprocessor, filename )
         (/ 'subroutine', 'function  ' /)
 
     call open_files( preprocessor, filename, success )
-    if ( .not. success ) return
+    if ( .NOT. success ) return
 
     filename_macro = filename
     luinp          = preprocessor%luinp
@@ -838,7 +838,7 @@ subroutine preprocess_file( preprocessor, filename )
     in_decl        = .true.   ! To avoid comments at the start
 
     eof            = .false.
-    do while ( .not. eof )
+    do while ( .NOT. eof )
         written = .false.
         call get_statement( luinp, line, lineno, eof )
         if ( eof ) then
@@ -847,7 +847,7 @@ subroutine preprocess_file( preprocessor, filename )
 
         line_copy = adjustl( tolower(line(1)) )
 
-        if ( line_copy(1:1) /= '!' .and. &
+        if ( line_copy(1:1) /= '!' .AND. &
              line_copy      /= ' '       ) then
             !
             ! Quick characterisation of the line
@@ -876,8 +876,8 @@ subroutine preprocess_file( preprocessor, filename )
                     ! TODO: check against the ones we need to add?
 
                 case ( 'contains' )
-                    if ( preprocessor%implicit_none .and. &
-                         .not. implicit_found             ) then
+                    if ( preprocessor%implicit_none .AND. &
+                        .NOT. implicit_found             ) then
                         write(luout,*) 'implicit none'
                     endif
                     in_contains = .true.
@@ -885,7 +885,7 @@ subroutine preprocess_file( preprocessor, filename )
 
                 case ( 'subroutine' )
                     in_routine = .true.
-                    add_use    = .not. in_module
+                    add_use    = .NOT. in_module
                     use_added  = .false.
                     add_start  = .true.
                     in_decl    = .true.
@@ -896,7 +896,7 @@ subroutine preprocess_file( preprocessor, filename )
                 case ( 'function' )
                     ! More required!
                     in_routine = .true.
-                    add_use    = .not. in_module
+                    add_use    = .NOT. in_module
                     use_added  = .false.
                     add_start  = .true.
                     in_decl    = .true.
@@ -915,14 +915,14 @@ subroutine preprocess_file( preprocessor, filename )
 
                 case ( 'end' )
                     call get_name( line_copy, keyword )
-                    if ( keyword == 'module' .or. keyword == 'program' ) then
+                    if ( keyword == 'module' .OR. keyword == 'program' ) then
                         in_decl     = .true.
                         in_module   = .false.
                         in_contains = .false.
                     elseif ( keyword == ' ' ) then
                         in_decl = .true.
                         add_end = .true.
-                    elseif ( keyword == 'subroutine' .or. keyword == 'function' ) then
+                    elseif ( keyword == 'subroutine' .OR. keyword == 'function' ) then
                         in_decl    = .true.
                         in_routine = .false.
                         add_end    = .true.
@@ -930,9 +930,9 @@ subroutine preprocess_file( preprocessor, filename )
 
                 case ( 'integer', 'real', 'character', 'logical', 'type', &
                        'parameter', 'private', 'public', 'interface', 'data' )
-                    if ( preprocessor%implicit_none .and. &
-                         .not. implicit_found       .and. &
-                         .not. in_contains                ) then
+                    if ( preprocessor%implicit_none .AND. &
+                        .NOT. implicit_found      .AND. &
+                        .NOT. in_contains                ) then
                         implicit_found = .true.
                         write(luout,*) 'implicit none'
                     endif
@@ -990,15 +990,15 @@ subroutine preprocess_file( preprocessor, filename )
 
             end select
         elseif ( line_copy(1:1) == '!' ) then
-            if ( preprocessor%assertions .and. &
+            if ( preprocessor%assertions .AND. &
                  index( line_copy, 'assert:' ) > 0 ) then
                 call transform_condition( line )
             endif
-            if ( preprocessor%preconditions .and. &
+            if ( preprocessor%preconditions .AND. &
                  index( line_copy, 'pre:' ) > 0 ) then
                 call transform_condition( line )
             endif
-            if ( preprocessor%postconditions .and. &
+            if ( preprocessor%postconditions .AND. &
                  index( line_copy, 'post:' ) > 0 ) then
                 call transform_condition( line )
             endif
@@ -1017,7 +1017,7 @@ subroutine preprocess_file( preprocessor, filename )
 
         if ( add_use ) then
             add_use = .false.
-            if ( associated(preprocessor%use_statement) .and. .not. use_added ) then
+            if ( associated(preprocessor%use_statement) .AND. .NOT. use_added ) then
                 use_added = .true.
                 written   = .true.
                 call write_statement( luout, line, .true. )
@@ -1025,9 +1025,9 @@ subroutine preprocess_file( preprocessor, filename )
             endif
         endif
 
-        if ( add_start .and. .not. in_decl ) then
+        if ( add_start .AND. .NOT. in_decl ) then
             add_start = .false.
-            if ( associated(preprocessor%code_start) .and. .not. start_added ) then
+            if ( associated(preprocessor%code_start) .AND. .NOT. start_added ) then
                 start_added = .true.
                 call write_statement( luout, preprocessor%code_start, .true. )
             endif
@@ -1040,7 +1040,7 @@ subroutine preprocess_file( preprocessor, filename )
             endif
         endif
 
-        if ( .not. in_decl ) then
+        if ( .NOT. in_decl ) then
             if ( associated(preprocessor%code_statement) ) then
                 written = .true.
                 call write_statement( luout, line, .true. )
@@ -1048,7 +1048,7 @@ subroutine preprocess_file( preprocessor, filename )
             endif
         endif
 
-        if ( .not. written ) then
+        if ( .NOT. written ) then
             call write_statement( luout, line, .true. )
         endif
 

@@ -425,7 +425,7 @@ end function get_logical_keyword
 subroutine add_fragments_up_to( keyword )
     character(len=*) :: keyword
 
-    if ( .not. before_loop_set ) then
+    if ( .NOT. before_loop_set ) then
         call write_fragment( 'interface' )
         call write_fragment( 'declarations' )
         call write_fragment( 'initialise' )
@@ -434,31 +434,31 @@ subroutine add_fragments_up_to( keyword )
     endif
     if ( keyword == 'before-loop' ) return
 
-    if ( .not. read_line_set ) then
+    if ( .NOT. read_line_set ) then
         call write_fragment( 'read-line' )
         read_line_set = .true.
     endif
     if ( keyword == 'read-line' ) return
 
-    if ( .not. begin_loop_set ) then
+    if ( .NOT. begin_loop_set ) then
         call write_fragment( 'begin-loop' )
         begin_loop_set = .true.
     endif
     if ( keyword == 'begin-loop' ) return
 
-    if ( .not. case_set ) then
+    if ( .NOT. case_set ) then
         call write_fragment( 'case' )
         case_set = .true.
     endif
     if ( keyword == 'case' ) return
 
-    if ( .not. end_loop_set ) then
+    if ( .NOT. end_loop_set ) then
         call write_fragment( 'end-loop' )
         end_loop_set = .true.
     endif
     if ( keyword == 'end-loop' ) return
 
-    if ( .not. after_loop_set ) then
+    if ( .NOT. after_loop_set ) then
         call write_fragment( 'after-loop' )
         after_loop_set = .true.
     endif

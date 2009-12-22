@@ -141,7 +141,7 @@ function next_token( token, string, length )
     !
     ! Hasty implementation: only gaps
     !
-    if ( token%len_gaps .ne. 0 ) then
+    if ( token%len_gaps /= 0 ) then
         next_token = next_token_gaps( token, string, length )
     else
         next_token = next_token_separs( token, string, length )
@@ -180,9 +180,9 @@ function next_token_gaps( token, string, length )
     delim  = .false.
 
 starttoken: &
-    do while ( pos .le. lenstr )
+    do while ( pos <= lenstr )
        if ( index(token%gaps(1:token%len_gaps), &
-                  string(pos:pos)) .gt. 0 ) then
+                  string(pos:pos)) > 0 ) then
           pos = pos + 1
        else
           pos1 = pos
@@ -190,7 +190,7 @@ starttoken: &
        endif
     enddo starttoken
 
-    if ( pos1 .gt. lenstr ) then
+    if ( pos1 > lenstr ) then
         next_token_gaps = ' '
         length          = -1
         return
@@ -200,11 +200,11 @@ starttoken: &
     !
     if ( token%len_delimiters > 0 ) then
         if ( index(token%delimiters(1:token%len_delimiters), &
-                    string(pos1:pos1)) .gt. 0 ) then
+                    string(pos1:pos1)) > 0 ) then
             delim = .true.
             pos1  = pos1 + 1
             k     = scan( string(pos1+1:), token%delimiters(1:token%len_delimiters) )
-            if ( k .eq. 0 ) then
+            if ( k == 0 ) then
                 pos2 = len(string)
             else
                 pos2 = pos1 + k - 1
@@ -212,12 +212,12 @@ starttoken: &
         endif
     endif
 
-    if ( pos2 .eq. 0 ) then
+    if ( pos2 == 0 ) then
         pos2 = lenstr
 endtoken: &
-        do while ( pos .le. lenstr )
+        do while ( pos <= lenstr )
            if ( index(token%gaps(1:token%len_gaps), &
-                      string(pos:pos)) .le. 0 ) then
+                      string(pos:pos)) <= 0 ) then
               pos = pos + 1
            else
               pos2 = pos - 1
@@ -226,7 +226,7 @@ endtoken: &
         enddo endtoken
     endif
 
-    if ( pos1 .le. lenstr ) then
+    if ( pos1 <= lenstr ) then
        next_token_gaps = string(pos1:pos2)
        length          = pos2-pos1+1
     else
@@ -234,7 +234,7 @@ endtoken: &
        length          = -1
     endif
 
-    if ( .not. delim ) then
+    if ( .NOT. delim ) then
         token%position = pos
     else
         token%position = pos2 + 2
@@ -268,14 +268,14 @@ function next_token_separs( token, string, length )
     lenstr = len(string)
     pos    = token%position
 
-    if ( pos .gt. lenstr ) then
+    if ( pos > lenstr ) then
         next_token_separs = ' '
         length            = -1
         return
     endif
 
     if ( index(token%separators(1:token%len_separators), &
-               string(pos:pos)) .gt. 0 ) then
+               string(pos:pos)) > 0 ) then
         pos = pos + 1
     endif
 
@@ -288,11 +288,11 @@ function next_token_separs( token, string, length )
     !
     if ( token%len_delimiters > 0 ) then
         if ( index(token%delimiters(1:token%len_delimiters), &
-                    string(pos1:pos1)) .gt. 0 ) then
+                    string(pos1:pos1)) > 0 ) then
             delim = .true.
             pos1  = pos1 + 1
             k     = scan( string(pos1+1:), token%delimiters(1:token%len_delimiters) )
-            if ( k .eq. 0 ) then
+            if ( k == 0 ) then
                 pos2 = len(string)
             else
                 pos2 = pos1 + k - 1
@@ -300,12 +300,12 @@ function next_token_separs( token, string, length )
         endif
     endif
 
-    if ( .not. delim ) then
+    if ( .NOT. delim ) then
 
 endtoken: &
-        do while ( pos .le. lenstr )
+        do while ( pos <= lenstr )
             if ( index(token%separators(1:token%len_separators), &
-                       string(pos:pos)) .le. 0 ) then
+                       string(pos:pos)) <= 0 ) then
                 pos = pos + 1
             else
                 pos2 = pos - 1
@@ -314,7 +314,7 @@ endtoken: &
         enddo endtoken
     endif
 
-    if ( pos1 .le. lenstr ) then
+    if ( pos1 <= lenstr ) then
         next_token_separs = string(pos1:pos2)
         length            = pos2-pos1+1
     else
@@ -322,7 +322,7 @@ endtoken: &
         length            = -1
     endif
 
-    if ( .not. delim ) then
+    if ( .NOT. delim ) then
         token%position = pos
     else
         token%position = pos2 + 2

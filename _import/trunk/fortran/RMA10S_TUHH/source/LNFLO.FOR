@@ -30,17 +30,17 @@ C     Allocate to layers for 3-d
 C                               
 C      WRITE(75,*) 'LNFLO',N,SF,NEST,LN,TVOLC(N),TVOL(N)
 cipk mar01   test for global loading and modify
-      !if (nest .lt. 2) go to 100
+      !if (nest < 2) go to 100
       !normally nest is 0 or 1, while calling a value is added to the input of the user for showing special cases
       if (nest >= 2) then
 
         nest = nest - 2
 
         !only if neither for elements marked in a special way nor for a special layer
-        if (.not. ((nest + 2) == 3  .or. ln /= 0)) then
+        if ( .NOT. ((nest + 2) == 3 .OR. ln /= 0)) then
 
           !and only for 3D-applications
-          if (.not. (imat (n) < 1000 .and. ncorn (n) < 10)) THEN
+          if ( .NOT. (imat (n) < 1000 .AND. ncorn (n) < 10)) THEN
 
 
             if (imat (n) / 1000 == 1) then

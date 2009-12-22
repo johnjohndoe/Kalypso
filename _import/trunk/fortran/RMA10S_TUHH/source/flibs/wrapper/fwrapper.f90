@@ -100,7 +100,7 @@ character(len=1) function lower_case( ch )
 
     integer, parameter :: shift = iachar('a') - iachar('A')
 
-    if ( iachar(ch) >= iachar('A') .and. iachar(ch) <= iachar('Z') ) then
+    if ( iachar(ch) >= iachar('A') .AND. iachar(ch) <= iachar('Z') ) then
         lower_case = achar(iachar(ch)+shift)
     else
         lower_case = ch
@@ -124,7 +124,7 @@ function all_caps( string ) result(caps)
 
     do i = 1,len(string)
         ch = string(i:i)
-        if ( iachar(ch) >= iachar('a') .and. iachar(ch) <= iachar('z') ) then
+        if ( iachar(ch) >= iachar('a') .AND. iachar(ch) <= iachar('z') ) then
             caps(i:i) = achar(iachar(ch)+shift)
         else
             caps(i:i) = ch
@@ -190,7 +190,7 @@ subroutine strip_source( lusrc, lufstrip )
         ! Now: filter out those lines that are not part of a declaration
         !
 
-        if ( compact_line == 'end' .or. continued ) then
+        if ( compact_line == 'end' .OR. continued ) then
             continued = index( compact_line, '&' ) > 0
             write( lufstrip, '(a)' ) compact_line
             cycle
@@ -242,7 +242,7 @@ function compact_source_line( line )
             ! TODO: parameter(k=1)
             !
             j = j + 1
-            if ( previous_space .and. &
+            if ( previous_space .AND. &
                  index( before_colon, compact_source_line(j:j) ) > 0 ) then
                 colons_added = colons_added ! Sanity check
                 compact_source_line(j:) = '::'
@@ -269,11 +269,11 @@ function compact_source_line( line )
             endif
         endif
 
-        if ( line(i:i) == '''' .or. line(i:i) == '"' ) then
-            in_quotes = .not. in_quotes
+        if ( line(i:i) == '''' .OR. line(i:i) == '"' ) then
+            in_quotes = .NOT. in_quotes
         endif
 
-        if ( line(i:i) == ',' .and. open_parens > 0 ) then
+        if ( line(i:i) == ',' .AND. open_parens > 0 ) then
             compact_source_line(j:j) = '|'
         endif
     enddo
@@ -315,7 +315,7 @@ subroutine analyse_source( lufstrip, luchead, lucwrap, lufwrap, lufiso )
         read( lufstrip, '(a)', iostat = ierr ) line
         if ( ierr /= 0 ) exit
 
-        if ( line(1:6) == 'module' .and. .not. module_header ) then
+        if ( line(1:6) == 'module' .AND. .NOT. module_header ) then
             module_name   = line(7:)
             in_module     = .true.
             module_header = .true.
@@ -343,7 +343,7 @@ subroutine analyse_source( lufstrip, luchead, lucwrap, lufwrap, lufiso )
                      luchead, lucwrap, lufwrap, lufiso )
             cycle
         endif
-        if ( line(1:4) == 'type' .and. line(5:5) /= '(' ) then
+        if ( line(1:4) == 'type' .AND. line(5:5) /= '(' ) then
             call define_type( line, public_items, lufstrip, luchead, lucwrap, &
                      lufwrap, lufiso )
             cycle
@@ -600,7 +600,7 @@ subroutine define_subr( line, public_items, module_name, lufstrip, &
         read( lufstrip, '(a)', iostat = ierr ) next_line
         if ( ierr /= 0 ) exit
 
-        if ( next_line(1:13) == 'endsubroutine' .or. next_line == 'end') then
+        if ( next_line(1:13) == 'endsubroutine' .OR. next_line == 'end') then
             write( luchead, '(3a)' ) ');'
             write( lufwrap, '(3a)' ) 'endsubroutine ', trim(subname)
             exit

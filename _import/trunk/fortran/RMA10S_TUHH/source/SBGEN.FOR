@@ -41,14 +41,14 @@ CIPK AUG03 MOVE TO BLK11.COM     +         ,WNDSP(MNP),WNDDR(MNP)
       !read/write error catching
       integer :: ioError
       
-      IF(ITIMEH .EQ. 0) THEN
+      IF(ITIMEH == 0) THEN
       ALLOCATE (NHYDQ(NQLDS),QDIRS(NQLDS),NHYDH(NHDS),NHYDG(NHDS)
      +         ,NLAYH(NHDS),NLAYQ(NQLDS),IINTERP(NHDS),IQID(NQLDS))
         ITIMEH=1
       ENDIF
 C
 CIPKFEB94 V4.5
-      IF(ISTDY .EQ. 0) THEN
+      IF(ISTDY == 0) THEN
         DO N=1,NQLDS
           NHYDQ(N)=0
           NLAYQ(N)=0
@@ -73,9 +73,9 @@ C-
       IQGEN=0
 CIPK DEC97 CHANGE LIMITS
       DO N=1,NQLDS
-        IF(NHYDQ(N) .GT. 0) THEN
+        IF(NHYDQ(N) > 0) THEN
           IQGEN=IQGEN+1
-          IF(IQGEN .EQ. 1) THEN
+          IF(IQGEN == 1) THEN
             WRITE(LOUT,6033)
           ENDIF
           J=NHYDQ(N)
@@ -83,19 +83,19 @@ CIPK DEC97 CHANGE LIMITS
 CIPK AUG95          TIME=TET+DELT
           TIME=TET
 cipk APR96  add logic for day of year
-          IF(TIME .GT. 24.) THEN
+          IF(TIME > 24.) THEN
             DAYNOW=DAYOFY+1
             TIME=TIME-24.
           ELSE
             DAYNOW=DAYOFY
           ENDIF
-          IF(MOD(IYRR,4) .EQ. 0) THEN
+          IF(MOD(IYRR,4) == 0) THEN
             IYDAYS=366
           ELSE
             IYDAYS=365
           ENDIF
           IYRN=IYRR
-          IF(DAYNOW .GT. IYDAYS) THEN
+          IF(DAYNOW > IYDAYS) THEN
             IYRN=IYRR+1
             DAYNOW=DAYNOW-IYDAYS
           ENDIF
@@ -106,7 +106,7 @@ cipk APR96  add logic for day of year
           !QDIR=QDIRS(N) !EFa, dieses dann wieder deaktivieren, wenn mit altem qdir, jun09
           !-
           WRITE(LOUT,6034) J,LN,QF,QDIR,QQAL
-          IF (LN .EQ. 0) THEN
+          IF (LN == 0) THEN
             CALL QGEN(J,QF,QDIR,QQAL)
           ELSE
 C
@@ -119,7 +119,7 @@ C
       ENDDO
   204 CONTINUE
 cipk dec06
-      IF(ID(1:2) .EQ. 'QC' .OR. ID(1:2) .EQ. 'QM') THEN
+      IF(ID(1:2) == 'QC' .OR. ID(1:2) == 'QM') THEN
         !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
         !find out the ID-number
         READ(DLIN,'(i8)') J
@@ -127,30 +127,30 @@ cipk dec06
         !Test for every 1D-2D-line transition
         do i = 1, MaxLT
           !test,whether it is present in one coupling
-          if (TransLines(i,2).eq.J)
+          if (TransLines(i,2) == J)
      +      call ErrorMessageAndStop (1409, 0, 0.0d0, 0.0d0)
         enddo
 
         !Count boundary conditions and check for amount
         IQGEN=IQGEN+1
-        IF(ID(1:2) .EQ. 'QM') THEN
+        IF(ID(1:2) == 'QM') THEN
           IQID(IQGEN)=1
         ELSE
           IQID(IQGEN)=0
         endif
 
         !Error, because of too many inflows
-        IF(IQGEN .GT. NQLDS) 
+        IF(IQGEN > NQLDS) 
      +    call ErrorMessageAndStop (1408, 0, 0.0d0, 0.0d0)
 
         !Write header for output-file, that includes a line with a headers for all columns
-        IF(IQGEN .EQ. 1) WRITE(LOUT,6033)
+        IF(IQGEN == 1) WRITE(LOUT,6033)
 
         !If no hydrograph file for that boundary condition, then read values out of control file
-        IF(NHYDQ(IQGEN) .EQ. 0) THEN
+        IF(NHYDQ(IQGEN) == 0) THEN
 
         ioError = 0
-        if (ID(3:4) == 'FF' .or. (ID (3:4) == ' *')) then
+        if (ID(3:4) == 'FF' .OR. (ID (3:4) == ' *')) then
           READ (DLIN, *, iostat = ioError) J, LN, QF, QDIR, QQAL, labl
 
           !labl is not written in Kalypso
@@ -196,7 +196,7 @@ CIPK NOV97          READ(IBIN,7000) ID,DLIN
           call ginpt(ibin,id,dlin)
 cipk APR96 save data to a scratch file
           !nis,sep06,com: Scratch file storage if appropriate
-          if(isvs .eq. 1) then
+          if(isvs == 1) then
             write(nscrin,7000) id,dlin
           endif
           !nis,sep06,com: Control output
@@ -204,28 +204,28 @@ cipk APR96 save data to a scratch file
 
           !nis,sep06,com: Power Station control, not for standard inflow
 CIPK AUG01   ADD FOR POWER STATION RECYCLING
-          IF(NOUTCC(J) .NE. 0  .AND. ICYC .GT. 0) THEN
-	      IF(AVES(NOUTCC(J)) .GT. -100.) THEN
-	        IF(AVES(NOUTCC(J)) .GT. 0.) THEN
-		      QQAL(1)=AVES(NOUTCC(J))*(1.+ADDSAL(J))
-	        ENDIF
-	      ENDIF
-	      IF(AVET(NOUTCC(J)) .GT. -100.) THEN
-              TINC=1000.*ADDTMP(J,1)/(ADDTMP(J,3)*
-     +	         (1000.-0.0178*(ABS(AVET(NOUTCC(J))-4.0))**1.7)*
-     +             QF*4.19)
-	        IF(TINC .GT. ADDMAX(J)) TINC=ADDMAX(J)
-	        IF(AVET(NOUTCC(J)) .GT. 0.) THEN
-			  QQAL(2)=AVET(NOUTCC(J))+TINC
-	        ENDIF
+          IF(NOUTCC(J) /= 0 .AND. ICYC > 0) THEN
+            IF(AVES(NOUTCC(J)) > -100.) THEN
+              IF(AVES(NOUTCC(J)) > 0.) THEN
+                  QQAL(1)=AVES(NOUTCC(J))*(1.+ADDSAL(J))
+              ENDIF
             ENDIF
-	      IF(AVESD(NOUTCC(J)) .GT. -100.) THEN
-	        IF(AVESD(NOUTCC(J)) .EQ. 0.) THEN
-		      QQAL(3)=AVESD(NOUTCC(J))*(1.+ADDSED(J))
-	        ENDIF
-	      ENDIF
-	      WRITE(75,*) 'POWER',J,QF,TINC,QQAL
-	    ENDIF
+            IF(AVET(NOUTCC(J)) > -100.) THEN
+              TINC=1000.*ADDTMP(J,1)/(ADDTMP(J,3)*
+     +               (1000.-0.0178*(ABS(AVET(NOUTCC(J))-4.0))**1.7)*
+     +             QF*4.19)
+              IF(TINC > ADDMAX(J)) TINC=ADDMAX(J)
+              IF(AVET(NOUTCC(J)) > 0.) THEN
+                    QQAL(2)=AVET(NOUTCC(J))+TINC
+              ENDIF
+            ENDIF
+            IF(AVESD(NOUTCC(J)) > -100.) THEN
+              IF(AVESD(NOUTCC(J)) == 0.) THEN
+                  QQAL(3)=AVESD(NOUTCC(J))*(1.+ADDSED(J))
+              ENDIF
+            ENDIF
+            WRITE(75,*) 'POWER',J,QF,TINC,QQAL
+          ENDIF
 
           !nis,sep06,com: Call QGEN for not 3D-continuity line outflow/inflow
           ! Passed variables are:
@@ -234,7 +234,7 @@ CIPK AUG01   ADD FOR POWER STATION RECYCLING
           ! QDIR = direction of total discharge crossing the CCL; measured from the principal x-axis in ANTICLOCKWISE RADIANS)
           ! QQAL = 3 values (array) for the three concentrations of salinity, temperature and sediment
           !-
-          IF (LN .EQ. 0) THEN
+          IF (LN == 0) THEN
              CALL QGEN(J,QF,QDIR,QQAL)
           !nis,sep06,com: Call QGEN for 3D-continuity line outflow/inflow
           ELSE
@@ -246,7 +246,7 @@ C
           ENDIF              
 
           !nis,sep06,com:
-          IF(LABL .EQ. 1) THEN
+          IF(LABL == 1) THEN
  5034       FORMAT(2I8,2F8.1,3F8.2,I8)
             NHYDQ(IQGEN)=J
             NLAYQ(IQGEN)=LN
@@ -268,25 +268,25 @@ C-
 CIPK DEC97 MODIFY LIMITS     DO  N=1,NQBS
       DO N=1,NHDS
         !water level boundary condition with hydrograph file
-        IF(NHYDH(N) .NE. 0) THEN
+        IF(NHYDH(N) /= 0) THEN
           IHGNN=IHGNN+1
-          IF(IHGNN .EQ. 1) WRITE(LOUT,6035)
+          IF(IHGNN == 1) WRITE(LOUT,6035)
           J=NHYDH(N)
           TIME=TET
 cipk APR96  add logic for day of year
-          IF(TIME .GT. 24.) THEN
+          IF(TIME > 24.) THEN
             DAYNOW=DAYOFY+1
             TIME=TIME-24.
           ELSE
             DAYNOW=DAYOFY
           ENDIF
-          IF(MOD(IYRR,4) .EQ. 0) THEN
+          IF(MOD(IYRR,4) == 0) THEN
             IYDAYS=366
           ELSE
             IYDAYS=365
           ENDIF
           IYRN=IYRR
-          IF(DAYNOW .GT. IYDAYS) THEN
+          IF(DAYNOW > IYDAYS) THEN
             IYRN=IYRR+1
             DAYNOW=DAYNOW-IYDAYS
           ENDIF
@@ -297,10 +297,10 @@ CIPK AUG00   ADD HF2
           !CALL GETH(LN,ABS(J),HF,HF2,IYRN,DAYNOW,TIME,TETH,QQAL)
           CALL GETH(LN,ABS(J),HF,HF2,IYRN,DAYNOW,TIME,TETH,QQAL,hfd)   
           !-
-          IF(IINTERP(IHGNN) .EQ. 0) THEN
+          IF(IINTERP(IHGNN) == 0) THEN
           !EFa oct09, hfd
             !WRITE(LOUT,5032) J,LN,HF,QQAL
-            if(hfd.eq.0.0) then
+            if(hfd == 0.0) then
               WRITE(LOUT,5032) J,LN,HF,QQAL
             else
               WRITE(LOUT,5033) J,LN,HF,QQAL,hfd
@@ -309,7 +309,7 @@ CIPK AUG00   ADD HF2
           ELSE
             WRITE(LOUT,5032) J,LN,HF,HF2,QQAL
           ENDIF
-          IF (LN .EQ. 0)  THEN
+          IF (LN == 0)  THEN
 CIPK DEC97 CALLING SEQUENCE CHANGED
              !EFa oct09, testing hfd
              CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL,hfd)
@@ -320,27 +320,27 @@ C  Apply elev bc to single 3d layer
 C
              CALL HGENSPCL(0,LN,J,HF,QQAL)
           ENDIF
-        ELSEIF(NHYDG(N) .NE. 0) THEN
+        ELSEIF(NHYDG(N) /= 0) THEN
           IHGNN=IHGNN+1
-          IF(IHGNN .EQ. 1) WRITE(LOUT,6035)
+          IF(IHGNN == 1) WRITE(LOUT,6035)
           J=NHYDG(N)
           LN=NLAYH(N)
 CIPK AUG95          TIME=TET+DELT
           TIME=TET
 cipk APR96  add logic for day of year
-          IF(TIME .GT. 24.) THEN
+          IF(TIME > 24.) THEN
             DAYNOW=DAYOFY+1
             TIME=TIME-24.
           ELSE
             DAYNOW=DAYOFY
           ENDIF
-          IF(MOD(IYRR,4) .EQ. 0) THEN
+          IF(MOD(IYRR,4) == 0) THEN
             IYDAYS=366
           ELSE
             IYDAYS=365
           ENDIF
           IYRN=IYRR
-          IF(DAYNOW .GT. IYDAYS) THEN
+          IF(DAYNOW > IYDAYS) THEN
             IYRN=IYRR+1
             DAYNOW=DAYNOW-IYDAYS
           ENDIF
@@ -348,13 +348,13 @@ cipk APR96  add logic for day of year
           LN=0
           !EFa oct09, hfd
           !WRITE(LOUT,5032) J,LN,HF,QQAL
-          if(hfd.eq.0.) then
+          if(hfd == 0.) then
             WRITE(LOUT,5032) J,LN,HF,QQAL
           else
             WRITE(LOUT,5033) J,LN,HF,QQAL,hfd
           endif
           !-
-          IF (LN .EQ. 0)  THEN
+          IF (LN == 0)  THEN
 CIPK DEC97 CALLING SEQUENCE CHANGED
              !EFa oct09, testing hfd
              CALL HGEN(IBIN,J,HF,HF2,0,QQAL,hfd)
@@ -371,8 +371,8 @@ CIPK APR01
  208  CONTINUE
 CIPK AUG00
 CIPK JUN03
-      IF (ID (1:2) == 'HC' .or. ID (1:2) == 'HI' .or. 
-     +    ID (1:2) == 'HJ' .or. ID (1:2) == 'HS') THEN
+      IF (ID (1:2) == 'HC' .OR. ID (1:2) == 'HI' .OR. 
+     +    ID (1:2) == 'HJ' .OR. ID (1:2) == 'HS') THEN
         !HC - normal water level boundary condition with constant water level
         !HI - water level boundary condition, where the water level is linearily distributed between two values
         !     from the outer nodes of the continuity line
@@ -401,8 +401,8 @@ CIPK JUN03
         !HJ or HI are standing for H-BCs, where value is interpolated linearily between two values
         !IINTERP (IHGNN) == 1 and IINTERP (IHGNN) == 2 has the same meaning!
         ELSEIF (ID (1:2) == 'HJ') THEN
-	    IINTERP (IHGNN) = 2
-	  ELSE !HI
+          IINTERP (IHGNN) = 2
+        ELSE !HI
           IINTERP (IHGNN) = 1
         ENDIF
 
@@ -442,16 +442,16 @@ cipk nov97        READ(IBIN,7000) ID,DLIN
         call ginpt(ibin,id,dlin)
 
         !TODEL: save data to a scratch file
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
 
 CIPK AUG00
-        IF(IINTERP(IHGNN) .EQ. 0) THEN
+        IF(IINTERP(IHGNN) == 0) THEN
           !write out read data line
           !EFa oct09, hfd
           !WRITE(LOUT,5032) J,LN,HF,QQAL
-          if(hfd.eq.0.) then
+          if(hfd == 0.) then
             WRITE(LOUT,5032) J,LN,HF,QQAL
           else
             WRITE(LOUT,5033) J,LN,HF,QQAL,hfd
@@ -465,13 +465,13 @@ CIPK APR01
 
 
         !switch for boundary condition to interpolate values from tidal graph or harmonic graph
-        IF(LABL .EQ. 1) THEN
+        IF(LABL == 1) THEN
           NHYDH(IHGNN)=ABS(J)
           NLAYH(IHGNN)=LN
           WRITE(LOUT,6031) J
  6031     FORMAT ( 'DYNAMIC TIDALGRAPH WILL BE INTERPOLATED ',
      +    'FOR LINE',I4)
-        ELSEIF(LABL .EQ. 2) THEN
+        ELSEIF(LABL == 2) THEN
           NHYDG(IHGNN)=ABS(J)
           NLAYH(IHGNN)=LN
           WRITE(LOUT,6032) J
@@ -491,7 +491,7 @@ CIPK APR01
           call hgenspcl(0,ln,j,hf,qqal)
         endif
         !TODO: What does JLIN make?
-        IF(J .LT. 0) THEN
+        IF(J < 0) THEN
           JLIN(IHGNN)=-J
         ELSE
           JLIN(IHGNN)=0
@@ -519,7 +519,7 @@ C...... Input stage-flow for a continuity line if required
 C-
       ISTGEN=0
  212  CONTINUE
-      IF(ID(1:3) .EQ. 'SQC') THEN
+      IF(ID(1:3) == 'SQC') THEN
 
         !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
         !find out the ID-number
@@ -527,7 +527,7 @@ C-
         !Test for every line Transition
         do i = 1, MaxLT
           !test,whether it is present in one coupling
-          if (TransLines(i,2).eq.J) then
+          if (TransLines(i,2) == J) then
             WRITE(*,*) 'ERROR!!!'
             WRITE(*,*) 'Transition Line has specified value!'
             WRITE(*,*) 'There can be no specified WL-Q-RELATIONSHIP.'
@@ -539,12 +539,12 @@ C-
 
         ISTGEN=ISTGEN+1
         READ(DLIN,5035) J,AC1,AC2,AC3,AC4,AC5,QQAL
-        IF(ISTGEN .EQ. 1) WRITE(LOUT,6045)
+        IF(ISTGEN == 1) WRITE(LOUT,6045)
         WRITE(LOUT,6036) J,AC1,AC2,AC3,AC4,AC5,QQAL
 cipk nov97        READ(IBIN,7000) ID,DLIN
         call ginpt(ibin,id,dlin)
 cipk APR96 save data to a scratch file
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
         CALL STGEN(J,AC1,AC2,AC3,AC4,AC5,QQAL)
@@ -556,15 +556,15 @@ C-
       ITGEN=0
  213  CONTINUE
 cipk feb98 revised option to CQ
-      IF(ID(1:2) .EQ. 'CQ') THEN
+      IF(ID(1:2) == 'CQ') THEN
         ITGEN=ITGEN+1
-        IF(ITGEN .EQ. 1) WRITE(LOUT,6048)
+        IF(ITGEN == 1) WRITE(LOUT,6048)
         READ(DLIN,5035) J,QQAL
         WRITE(LOUT,6036) J,QQAL
 cipk nov97        READ(IBIN,7000) ID,DLIN
         call ginpt(ibin,id,dlin)
 cipk APR96 save data to a scratch file
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
 
@@ -583,13 +583,13 @@ C..... Input properties flow flow control elements
 C-
   230 CONTINUE
       NCFLW=0
-      IF(ID(1:2) .EQ. 'FC') THEN
+      IF(ID(1:2) == 'FC') THEN
         NCFLW=NCFLW+1
         READ(DLIN,5040) NJN,NJT1,AJ1,BJ1,CJ1,GAM1,QD1,DJ1
         WRITE(LOUT,6040) NJN,NJT1,AJ1,BJ1,CJ1,GAM1,QD1,DJ1
         call ginpt(ibin,id,dlin)
 cipk jan96 save data to a scratch file
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
         NJT(NJN-900)=NJT1
@@ -604,14 +604,14 @@ cipk jan96 save data to a scratch file
 
   240 CONTINUE
       NCGT=0
-      IF(ID(1:2) .EQ. 'GT') THEN
+      IF(ID(1:2) == 'GT') THEN
         NCFLW=NCFLW+1
 CIPK FEB01  ADD EXTRA PARAMETER
         READ(DLIN,5045) NJN,NDUP,NDDN,AJ1,BJ1,NDFL
         WRITE(LOUT,6044) NJN,NDUP,NDDN,AJ1,BJ1,NDFL
         call ginpt(ibin,id,dlin)
 cipk jan96 save data to a scratch file
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
         NDUPJ(NJN-900)=NDUP

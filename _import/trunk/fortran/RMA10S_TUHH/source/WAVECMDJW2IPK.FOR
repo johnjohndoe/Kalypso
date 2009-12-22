@@ -44,40 +44,40 @@ c
 
 CIPK DEC02 ADD TEST FOR STRAY DIRECTIONS
 
-   50 IF(WANG .LT. 0.) THEN
-	  WANG=WANG+360.
-	  GO TO 50
-	ENDIF
-   55 IF(WANG .GT. 360.) THEN
-	  WANG=WANG-360.
-	  GO TO 55
-	ENDIF
-   60 IF(CANG .LT. 0.) THEN
-	  CANG=CANG+360.
-	  GO TO 60
-	ENDIF
-   65 IF(CANG .GT. 360.) THEN
-	  CANG=CANG-360.
-	  GO TO 65
-	ENDIF
+   50 IF(WANG < 0.) THEN
+        WANG=WANG+360.
+        GO TO 50
+      ENDIF
+   55 IF(WANG > 360.) THEN
+        WANG=WANG-360.
+        GO TO 55
+      ENDIF
+   60 IF(CANG < 0.) THEN
+        CANG=CANG+360.
+        GO TO 60
+      ENDIF
+   65 IF(CANG > 360.) THEN
+        CANG=CANG-360.
+        GO TO 65
+      ENDIF
 
 ccc      write(109,'(i5,5f10.2)') 
 ccc     +   node,cdir/pi*180.,wdir/pi*180.,cang,wang,phi
       pi=4.*atan(1.)
-c      if(hsv.le.0.05) hsv=0.05
-c      if(tp.le.1.1) tp=1.1
-c      if(wang.le.0.01) wang=0.01
-      if(UGV.eq.0.) UGV=0.000001
-      if(cang.eq.0.) cang=0.000001
+c      if(hsv <= 0.05) hsv=0.05
+c      if(tp <= 1.1) tp=1.1
+c      if(wang <= 0.01) wang=0.01
+      if(UGV == 0.) UGV=0.000001
+      if(cang == 0.) cang=0.000001
 
 C      WS = ( 10.* RNU / (0.8 * D50) ) * (SQRT(1.+(0.01 * (RHOS/RHOW-1.) 
 C     +* 9.81 * (0.8 * D50 ) ** 3) / RNU ** 2 ) -1.)
 
       PHI = ABS((180.-CANG) + WANG)
-      IF(PHI.GE.180.) PHI = 360. - PHI         
+      IF(PHI >= 180.) PHI = 360. - PHI         
 CIPK JUN02      PHI=WANG-CANG
-CIPK JUN02	IF(ABS(PHI) .LT. 0.001) PHI=0.
-CIPK JUN02	IF(PHI .LT. 0.) PHI=PHI+360.
+CIPK JUN02      IF(ABS(PHI) < 0.001) PHI=0.
+CIPK JUN02      IF(PHI < 0.) PHI=PHI+360.
 
 C
 C  INITIALIZING SOME NUMERICAL AND PHYSICAL PARAMETERS
@@ -91,10 +91,10 @@ C
 C
 C   COMPUTATION OF WAVE LENGTH AND WAVE NUMBER
 C
-c     IF(HD .LE.0.)STOP 'WATER DEPTH .LE. 0'
+c     IF(HD <= 0.)STOP 'WATER DEPTH <= 0'
 
 cipk dec02 add test for wave height
-      IF (TP .GT. 0.  .AND.  HSV .GT. 0.1) THEN
+      IF (TP > 0. .AND. HSV > 0.1) THEN
 
          Y=4.02*HD/TP/TP
 c         print*,'Y=',Y
@@ -104,7 +104,7 @@ c         print*,'POL=',POL
 c         print*,'WAVENR=',WAVENR
          RLS=2.*PI/WAVENR
          ARG=WAVENR*HD
-         IF (ARG.GT.50.) THEN
+         IF (ARG > 50.) THEN
            ABW=0.
            FW=0.
            UBW=0.
@@ -113,7 +113,7 @@ c         print*,'WAVENR=',WAVENR
            PSI = 4.02 * (ABW / TP) ** 2 / ((RHOS/RHOW -1) * D50)
 c      print*,'abw,arg,d50,PSI',abw,arg,d50,psi
 CIPK JUN02
-C           if(rc .ne. 0) go to 100
+C           if(rc /= 0) go to 100
 
 CIPK MAR01 UPDATE TO DIVIDE BY 2 BASED ON NIELSEN 4/10/00
            ATEST1 = (21. * PSI ** (-1.85) * ABW)/2.
@@ -125,11 +125,11 @@ CIPK MAR01 UPDATE TO DIVIDE BY 2 BASED ON NIELSEN 4/10/00
            ATEST2 = 0.072 * ABW * (ABW / (3. * D90)) ** (-0.25)
 c      print*,'atest2',atest2
  
-           IF(PSI.LE.12) THEN
+           IF(PSI <= 12) THEN
 CIPK MAR01 UPDATE TO DIVIDE BY 2 BASED ON NIELSEN 4/10/00
              A = (0.275 - 0.022 * SQRT(PSI)) * ABW/2.
            ELSE 
-             IF(ATEST1.GE.ATEST2) THEN
+             IF(ATEST1 >= ATEST2) THEN
                A = ATEST1
              ELSE
                A = ATEST2
@@ -145,7 +145,7 @@ CIPK MAR01 UPDATE TO MULTIPLY BY 6 BASED ON NIELSEN 4/10/00
 
            DS = 6. * A
 CDJW
-C		 DS = 0.05 
+C             DS = 0.05 
 
 CDJW  6 SEEMS TOO LARGE HERE
            RC = 6. * A
@@ -156,44 +156,44 @@ C           RC = A
 C           RW = A
 
 
-		 RC = MAX(RC,0.2) 
-C		 RW = MAX(RW,0.2)   !Allow it smaller at present
+             RC = MAX(RC,0.2) 
+C             RW = MAX(RW,0.2)   !Allow it smaller at present
 C  LATER TRY RW = MAX(RW, RC)   ???????????
 
 C
 C  DJW 14/04/03
-C		 
-		 DSCHK = (HD*0.5)
+C             
+             DSCHK = (HD*0.5)
            RC = MIN(RC, DSCHK)
            RW = MIN(RW, DSCHK)
 C           DS = RC
-		 DS = MIN(3*RW,DSCHK)
+             DS = MIN(3*RW,DSCHK)
            A = RC
 
 
 
 
 
-C	     IF (DS.GT.DSCHK) THEN
-C		    DS = 0.5 * HD
-C	        RW = 0.5 * HD
-C	     END IF
+C           IF (DS > DSCHK) THEN
+C                DS = 0.5 * HD
+C              RW = 0.5 * HD
+C           END IF
 C DJW APR03
-C		 IF (RC.GT.DSCHK) THEN
-C		    RC = MIN(DSCHK,0.1)
-C	     END IF
+C             IF (RC > DSCHK) THEN
+C                RC = MIN(DSCHK,0.1)
+C           END IF
 CDJW OVERRIDE OF LOGIC 210403
-C		 RC = MIN(DSCHK,0.1)
-C		 RW = MIN(A,DSCHK)
-C	     IF (A.GT.DSCHK) THEN
-C			A = DSCHK
-C		 END IF
-C		 DS = A
-	
+C             RC = MIN(DSCHK,0.1)
+C             RW = MIN(A,DSCHK)
+C           IF (A > DSCHK) THEN
+C                  A = DSCHK
+C             END IF
+C             DS = A
+      
 
 
 
-CDJW		 
+CDJW             
 c              RW = effective wave related bed roughness 
 c              RC = effective current related bed roughness 
 c              DS = mixing layer thickness
@@ -208,7 +208,7 @@ CIPK JUN02
 c               FW = friction factor
 
 c      print*,'fw',fw
-           IF(FW.GT.0.3 )FW=0.3
+           IF(FW > 0.3 )FW=0.3
            UBW  = 2.*PI/TP*ABW
 c          print*,'fw,ubw',fw,ubw
 C                      
@@ -224,12 +224,12 @@ C
            UBMAX=UBW+UCRECT
            UBMIN=UBW-UCRECT
 
-           if(ubmin.le.0.) ubmin=0.0000001
+           if(ubmin <= 0.) ubmin=0.0000001
 
            ABMAX=UBMAX*TP/6.283
            ABMIN=UBMIN*TP/6.283
 
-           if(abmin.le.0.) abmin=0.0000001
+           if(abmin <= 0.) abmin=0.0000001
 
 c          print*,'ubmax,ubmin,abmax,abmin',ubmax,ubmin,abmax,abmin
            DELWMX=0.216*ABMAX/(ABMAX/RW)**0.25
@@ -239,7 +239,7 @@ c          print*,'delwmx,delwmn',delwmx,delwmn
          ENDIF
 c        print*,'ok'
 C         A=0.1
-         if(A.le.0.0001) a=0.0001
+         if(A <= 0.0001) a=0.0001
 c        print*,A
       ELSE
          A=0.00
@@ -251,11 +251,11 @@ c        print*,A
 C
 C  CRITICAL SHEAR STRESS SHIELDS
 C
-      IF(DSTER.LE.4.)THETCR=.24/DSTER
-      IF(4. .LT.DSTER.AND.DSTER.LE.10.)THETCR=.14*DSTER**(-.64)
-      IF(10..LT.DSTER.AND.DSTER.LE.20.)THETCR=.04*DSTER**(-.1 )
-      IF(20..LT.DSTER.AND.DSTER.LE.150.)THETCR=.013*DSTER**(.29 )
-      IF(DSTER.GT.150.)THETCR=.055
+      IF(DSTER <= 4.)THETCR=.24/DSTER
+      IF(4. < DSTER .AND. DSTER <= 10.)THETCR=.14*DSTER**(-.64)
+      IF(10. < DSTER .AND. DSTER <= 20.)THETCR=.04*DSTER**(-.1 )
+      IF(20. < DSTER .AND. DSTER <= 150.)THETCR=.013*DSTER**(.29 )
+      IF(DSTER > 150.)THETCR=.055
       TAUCR=(RHOS-RHOW)*G*D50*THETCR
 
 C
@@ -265,7 +265,7 @@ C
   200 CONTINUE
 
 
-      if(RC.le.0.001) RC=0.001
+      if(RC <= 0.001) RC=0.001
 c      print*,RC
       CC=18.*ALOG10(12.*HD/RC)
       FC=0.24*ALOG10(12.*HD/RC)**(-2)
@@ -274,19 +274,19 @@ c      print*,RC
       RMUW=0.6/DSTER
       UST=G**0.5*ABS(UGV)/CC
       DELS=0.
-      IF(ABW.GT.0.)THEN
+      IF(ABW > 0.)THEN
          DELS=0.216*ABW*(ABW/RW)**(-0.25)
       ENDIF
       HULP10=UBW/UGV
       GAMMA=0.
-      IF(HULP10.GE.2.5)HULP10=2.5
-      IF(0 .LE. PHI  .AND.  PHI .LE. 180.)THEN
+      IF(HULP10 >= 2.5)HULP10=2.5
+      IF(0 <= PHI .AND. PHI <= 180.)THEN
          GAMMA=.75
-         IF(PHI.GT.90.)GAMMA=GAMMA+(PHI-90.)/90.*.35
+         IF(PHI > 90.)GAMMA=GAMMA+(PHI-90.)/90.*.35
       ENDIF
       RA=EXP(GAMMA*HULP10)*RC
       FCA=0.24*ALOG10(12.*HD/RA)**(-2)
-      IF(DELS.LE.RC/10.)THEN
+      IF(DELS <= RC/10.)THEN
         ALFAW=1.
       ELSE
         ALFAW= (ALOG(30.*DELS/RA)/ALOG(30.*DELS/RC))**2
@@ -299,41 +299,41 @@ c      print*,RC
       THET1=TAUCWE/(RHOS-RHOW)/G/D50
       T=(THET1-THETCR)/THETCR
       T=MAX(.0001,T)
-c	write(112,'(i6,7g15.6)') node,thet1,thetcr,tauc,rmuc,alfaw,fca,ra
+c      write(112,'(i6,7g15.6)') node,thet1,thetcr,tauc,rmuc,alfaw,fca,ra
 C
 C     Get ripple height for no wave case
 C
-C	***********************************************************
+C      ***********************************************************
 C
-C	Code Commented by DJW 3/04/03 Routine Rewritten below to ensure
-C	That RC & A are recalculated for all nodes, regardless of wave conditions
-C	And that iteration occurs in calculating T.  Also, a routine for calculating
-C	BETA interactively was added
+C      Code Commented by DJW 3/04/03 Routine Rewritten below to ensure
+C      That RC & A are recalculated for all nodes, regardless of wave conditions
+C      And that iteration occurs in calculating T.  Also, a routine for calculating
+C      BETA interactively was added
 C
-C	***********************************************************
+C      ***********************************************************
 C
-      IF (TP .le. 0.  .or.  HSV .le. 0.1) THEN
+      IF (TP <= 0. .OR. HSV <= 0.1) THEN
 CIPK JUN02
-CDJW APR03        IF(RC .GT. 0.) GO TO 220
-        IF(DSTER .LT. 10.) THEN 
-          IF(T .LE. 3.) THEN
+CDJW APR03        IF(RC > 0.) GO TO 220
+        IF(DSTER < 10.) THEN 
+          IF(T <= 3.) THEN
 C
 C     Mini ripples
 C
             A=150*D50
-          ELSEIF(T .LE. 25.) THEN
+          ELSEIF(T <= 25.) THEN
 C
 C     Dunes
 C     
             A= 0.11*(D50/HD)**0.3*(1.-EXP(-0.5*T))*(25.-T)*HD
-		  A= MAX(0.1,A)
+              A= MAX(0.1,A)
           ELSE
 C
 C     Plane bed
 C
 CDJW APR03            A=0.002
 C
-		  A = 0.02
+              A = 0.02
 C END DJW APR03
           ENDIF
         ELSE
@@ -341,18 +341,18 @@ C
 C       Dunes
 C
           A= 0.11*(D50/HD)**0.3*(1.-EXP(-0.5*T))*(25-T)*HD
-	    A= MAX(0.1,A)
+          A= MAX(0.1,A)
 C
         ENDIF
 CDJW APR03
-C	  DS = 0.05
-C	  RW = 0.05
-	  DSCHK = (HD*0.5)
-C	  IF (DS.GT.DSCHK) THEN
-C	    DS = 0.5 * HD
-C	    RW = 0.5 * HD
-C	  END IF
-	
+C        DS = 0.05
+C        RW = 0.05
+        DSCHK = (HD*0.5)
+C        IF (DS > DSCHK) THEN
+C          DS = 0.5 * HD
+C          RW = 0.5 * HD
+C        END IF
+      
 CDJW APR03      DS = 3. * A
 C        RC = 3. * A
 CDJW APR03
@@ -362,41 +362,41 @@ Cipk APR03
 C        RC = A
 C        RW = A
 CDJW APR03
-C	  DS = A
-C	  IF (A.GT.DSCHK) THEN
-C	    A = DSCHK
-C		DS = DSCHK
-C	    RC = DSCHK
-C		RW = DSCHK
-C	  END IF
+C        DS = A
+C        IF (A > DSCHK) THEN
+C          A = DSCHK
+C            DS = DSCHK
+C          RC = DSCHK
+C            RW = DSCHK
+C        END IF
 
           A = MIN(A, DSCHK)
           RC = MIN(1.5*A, DSCHK)
           RW = A
           DS = A
 
-C	  RW = MAX(RW,0.2)
+C        RW = MAX(RW,0.2)
 CIPK JUN02
 C****************************************************************
 CDJW APR03
 C****************************************************************
 C        TC = (TAUCEF - TAUCR)/TAUCR
-C	  IF (TP .le. 0.  .or.  HSV .le. 0.3) THEN
-C		A= 0.11*(D50/HD)**0.3*(1.-EXP(-0.5*TC))*(25.-TC)*HD
-C	    IF (A.LT.0.02) THEN 
-C	      A = 0.02
+C        IF (TP <= 0. .OR. HSV <= 0.3) THEN
+C            A= 0.11*(D50/HD)**0.3*(1.-EXP(-0.5*TC))*(25.-TC)*HD
+C          IF (A < 0.02) THEN 
+C            A = 0.02
 C         END IF
-C	    RC = 3*A
-C		DS = RW
+C          RC = 3*A
+C            DS = RW
 C       END IF
 CEND DJW APRO3
 C****************************************************************
-	  GO TO 240
+        GO TO 240
   220   CONTINUE      
         DS=MAX(RC,RW)
-	  A=DS
+        A=DS
   240   CONTINUE
-        IF(ABS(TOLD-T) .GT. 0.2) THEN
+        IF(ABS(TOLD-T) > 0.2) THEN
           TOLD=T
           GO TO 200
         ENDIF
@@ -407,45 +407,45 @@ CDJW APR03 BETA CALCULATIONS
 C
 C****************************************************************
 
-	IF (HSV.LE.0.1) THEN
-	  APPROXCHEZY = 18 * LOG10(12*HD/RC)
-	  USTAR = (UGV*(9.81**0.5))/APPROXCHEZY
-	  BETA = 1 + 2 * ((WS/USTAR)**2)
-	  IF (BETA.GT.2.0) THEN
-	    BETA = 2.0
+      IF (HSV <= 0.1) THEN
+        APPROXCHEZY = 18 * LOG10(12*HD/RC)
+        USTAR = (UGV*(9.81**0.5))/APPROXCHEZY
+        BETA = 1 + 2 * ((WS/USTAR)**2)
+        IF (BETA > 2.0) THEN
+          BETA = 2.0
         END IF
-	END IF
+      END IF
 C****************************************************************
 C
 C  ADJUSTS "A" DOWNWARDS TO ACCOUNT FOR MAJORITY OF LOAD BEING ALONG
 C  THE BED
 C 
 C**************************************************************** 
-C	A = 0.05
-	CHK = 0.5*HD
-	IF (DS.GT.CHK) THEN
-	  DS = CHK
+C      A = 0.05
+      CHK = 0.5*HD
+      IF (DS > CHK) THEN
+        DS = CHK
       END IF
-	IF (A.GT.CHK) THEN
-	  A = CHK
+      IF (A > CHK) THEN
+        A = CHK
       END IF
-	IF (DS.LT.0.001) THEN
-	  DS = 0.001
+      IF (DS < 0.001) THEN
+        DS = 0.001
       END IF
-	IF (A.LT.0.001) THEN
-	  A = 0.001
+      IF (A < 0.001) THEN
+        A = 0.001
       END IF
 C****************************************************************
 CDJW APR03 SETS CONSTANT VALUE OF 0.1 FOR RW IF HSV > 0.1 ALSO
 C CHECKS TO MAKE SURE IT IS NOT GREATER THAN THE WAVE HEIGHT
 C****************************************************************
-C	IF (HSV.GT.0.1) THEN
-C	  RW = 0.1
-C	END IF
-	CHK = 0.75 * HD
-	IF (RW.GT.CHK) THEN
-	  RW = CHK
-	END IF
+C      IF (HSV > 0.1) THEN
+C        RW = 0.1
+C      END IF
+      CHK = 0.75 * HD
+      IF (RW > CHK) THEN
+        RW = CHK
+      END IF
 C****************************************************************
 CEND DJW APR03
 C****************************************************************
@@ -487,7 +487,7 @@ C
       DYX = DYM/DXM
       BO  = .FALSE.
       HULP30=-1.+ALOG(30.*HD/RA)
-      IF(DELS.GT.0.)THEN
+      IF(DELS > 0.)THEN
          UDEL=UGV*ALOG(30.*DELS/RA)/HULP30
       ENDIF
 C
@@ -495,33 +495,33 @@ C  COMPUTATION OF DERIVATIVE DC/DY OR DC/DX
 C
       ABR=MAX(3.*(HSV/HD)-.8,1.)
       EBW=.004*DSTER*ABR*DS*UBW
-      IF (TP.GT.1.E-4) THEN
+      IF (TP > 1.E-4) THEN
         EMAXW=0.035*ABR*HD*HSV/TP
       ELSE
         EMAXW=0.
       ENDIF
-      IF(EMAXW .LE. EBW)EMAXW=EBW
+      IF(EMAXW <= EBW)EMAXW=EBW
       EMAXC=0.25*RKAP*UST*HD*BETA
       C=CA
       Z=A
-      IF(Z.LE.DS)ESW=EBW
-      IF(Z.GT.DS.AND.Z.LE.0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
+      IF(Z <= DS)ESW=EBW
+      IF(Z > DS .AND. Z <= 0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
      *(0.5*HD-DS))
-      IF(Z.GE.0.5*HD)ESW=EMAXW
-      IF(Z.GE.0.5*HD)ESC=EMAXC
-      IF(Z.LT.0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
+      IF(Z >= 0.5*HD)ESW=EMAXW
+      IF(Z >= 0.5*HD)ESC=EMAXC
+      IF(Z < 0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
       ES=(ESW**2.+ESC**2.)**0.5
       fcc=0.
-      IF (C.GT.1.E-8) THEN
-        IF(Z.GE.A)fcc=-WS/ES*C*(1.-C)**5.
+      IF (C > 1.E-8) THEN
+        IF(Z >= A)fcc=-WS/ES*C*(1.-C)**5.
       ENDIF
       YPRIME=fcc
       FF = 1./CA*YPRIME
-      IF(DELS.GT.0.)THEN
+      IF(DELS > 0.)THEN
          UC=UDEL*ALOG(30.*A/RC)/ALOG(30.*DELS/RC)
       ENDIF
 
-      IF(A.GE.DELS)UC=UGV*ALOG(30.*A/RA)/HULP30
+      IF(A >= DELS)UC=UGV*ALOG(30.*A/RA)/HULP30
 C
 C  FURTHER INTEGRATION
 C
@@ -536,13 +536,13 @@ C
       NTEL = NTEL+1
       XOLD = XEND
       YOLD = Y
-      IF (-YPRIME .GT. DYX) THEN
+      IF (-YPRIME > DYX) THEN
          Y = YOLD-DYM
-         IF (Y .LT. 2./3.*YOLD) Y = 2./3.*YOLD
+         IF (Y < 2./3.*YOLD) Y = 2./3.*YOLD
          XEND = XOLD+ALOG(Y/YOLD)/FF
       ELSE
          XEND = XOLD+DXM
-         IF (XEND .GE. HD) THEN
+         IF (XEND >= HD) THEN
             XEND = HD
             BO = .TRUE.
          ENDIF
@@ -550,31 +550,31 @@ C
       ENDIF
       C=Y
       Z=XEND
-      IF(Z .LE. DS)ESW=EBW
-      IF(Z .GT. DS  .AND.  Z .LE. 0.5*HD) ESW=EBW+(EMAXW-EBW)*((Z-DS)/
+      IF(Z <= DS)ESW=EBW
+      IF(Z > DS .AND. Z <= 0.5*HD) ESW=EBW+(EMAXW-EBW)*((Z-DS)/
      *(0.5*HD-DS))
-      IF(Z.GE.0.5*HD)ESW=EMAXW
-      IF(Z.GE.0.5*HD)ESC=EMAXC
-      IF(Z.LT.0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
+      IF(Z >= 0.5*HD)ESW=EMAXW
+      IF(Z >= 0.5*HD)ESC=EMAXC
+      IF(Z < 0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
       ES=(ESW**2.+ESC**2.)**0.5
       fcc=0.
-      IF (C.GT.1.E-8) THEN
-        IF(Z.GE.A)fcc=-WS/ES*C*(1.-C)**5.
+      IF (C > 1.E-8) THEN
+        IF(Z >= A)fcc=-WS/ES*C*(1.-C)**5.
       ENDIF
       YPRIME=fcc
       FF = 1./Y*YPRIME
-      IF(DELS.GT.0.)THEN
+      IF(DELS > 0.)THEN
          UC=UDEL*ALOG(30.*XEND/RC)/ALOG(30.*DELS/RC)
       ENDIF
-      IF(XEND.GE.DELS)UC=UGV*ALOG(30.*XEND/RA)/HULP30
+      IF(XEND >= DELS)UC=UGV*ALOG(30.*XEND/RA)/HULP30
       TERM2=UC*Y
       SS=SS+(XEND-XOLD)*(TERM1+TERM2)/2.
       TERM1=TERM2
-      IF (NTEL .EQ. NN/JTAL  .OR.  BO) THEN
+      IF (NTEL == NN/JTAL .OR. BO) THEN
          IT = IT+1
          
       ENDIF
-      IF (.NOT. BO) GOTO 400
+      IF ( .NOT. BO) GOTO 400
       USTER1=SQRT(TAUCEF/RHOW)
       SBF=0.25*D50*USTER1*T**1.5/DSTER**0.3*RHOS/1000.
       SBD=0.25*D50*USTER1*T**1.5/DSTER**0.3
@@ -586,46 +586,46 @@ C
 cipk jan03      QT=((SSR+SBF)**2+QW*QW+2*(SSR+SBF)*QW*COS(PHI*PI/180))**0.5              
       QT=SSR+SBF
 CDJW APR03 ENGELUND & HANSEN OVERRIDE****************************
-C	
-C	QTENGHANS	:  Transport as calculated using Engelund & Hansen (kg/m/s)
-C	HD			:  Local Nodal Depth (m)	
-C     CC			:  Approximate Chezy Coefficient = 18log(12*HD/RC)
-C	RHOS		:  Density of Sand (kg/cu.m)
-C	RHOW		:  Density of Water (kg/cu.m)
-C	SGSA		:  Specific Gravity of Sand 
-C	UGV			:  Local Velocity (m/s)
-C	D50			:  Median Sediment Grain Size (m)
-C	
+C      
+C      QTENGHANS      :  Transport as calculated using Engelund & Hansen (kg/m/s)
+C      HD                  :  Local Nodal Depth (m)      
+C     CC                  :  Approximate Chezy Coefficient = 18log(12*HD/RC)
+C      RHOS            :  Density of Sand (kg/cu.m)
+C      RHOW            :  Density of Water (kg/cu.m)
+C      SGSA            :  Specific Gravity of Sand 
+C      UGV                  :  Local Velocity (m/s)
+C      D50                  :  Median Sediment Grain Size (m)
+C      
 
-	ehNUMERATOR = 0.05 * (UGV**5)
-	DENOMINATOR = (((RHOS/RHOW)-1)**2)*(9.81**(0.5))*D50*(CC**3)
+      ehNUMERATOR = 0.05 * (UGV**5)
+      DENOMINATOR = (((RHOS/RHOW)-1)**2)*(9.81**(0.5))*D50*(CC**3)
 C /1000 SEEMS CONSISTENT WITH IPK CODE
-	QTENGHANS = RHOS * (ehNUMERATOR/DENOMINATOR)/(1000)
+      QTENGHANS = RHOS * (ehNUMERATOR/DENOMINATOR)/(1000)
 C
-C	ENGULAND & HANSEN IS PROBABLY MORE APPROPRIATE FOR AREAS
-C	WHERE CURRENT IS THE PRIMARY TRANSPORTING PROCESS
+C      ENGULAND & HANSEN IS PROBABLY MORE APPROPRIATE FOR AREAS
+C      WHERE CURRENT IS THE PRIMARY TRANSPORTING PROCESS
 C     PARTICULARLY FOR SOFTER, UNCONSOLIDATED SEDIMENTS THEREFORE
 C     OVERRIDE VAN RIJN IN AREAS WHERE ENGULAND HANSEN PREDICTS A HIGHER
-C	RATE OF TRANSPORT.
+C      RATE OF TRANSPORT.
 C
-!      if(NODE .eq. 1850  .or.  NODE .eq. 1991) then
-!	  wriTe(170,'(I6,5F17.4)') NODE,QT*1000.,QTENGHANS*1000.,UGV,HD,CC
-!	endif
-	IF (QTENGHANS.GT.QT) THEN
-	  QT = QTENGHANS
+!      if(NODE == 1850 .OR. NODE == 1991) then
+!        wriTe(170,'(I6,5F17.4)') NODE,QT*1000.,QTENGHANS*1000.,UGV,HD,CC
+!      endif
+      IF (QTENGHANS > QT) THEN
+        QT = QTENGHANS
       END IF
 C****************************************************************
 CEND DJW APR03
 C****************************************************************
       GP(1)=QT/(HD*UGV)
-	TRLOC=QT*1000.
+      TRLOC=QT*1000.
 
-c	write(111,'(i6,6g15.6)') node,ca,t,ugv,hd,trloc,hsv
+c      write(111,'(i6,6g15.6)') node,ca,t,ugv,hd,trloc,hsv
 
 CIPK JUN02
-      IF(abs(ISWT) .ne. 1) RETURN
+      IF(abs(ISWT) /= 1) RETURN
 
-      if(iswt .eq. 1) then
+      if(iswt == 1) then
  
       WRITE(75,'('' HD   = WATER DEPTH [ M ] =                     ''
      +,E10.4)') HD
@@ -700,10 +700,10 @@ c      WRITE(75,'('' FORMULA    : SS=SUSPENDED LOAD TRANSPORT [ KG/SM]''
 c     *,E10.4)')SSF
       WRITE(75,'(''            : SB=BED LOAD TRANSPORT       [ KG/SM]''
      *,E10.4)')SBF*1000.
-	else
-c	  write(109,'(i5,6f10.4,1f10.2)') 
+      else
+c        write(109,'(i5,6f10.4,1f10.2)') 
 c     +   node,trloc,qw*1000.,ssr*1000.,sbf*1000.,rc,rw,wdir*180./pi
-	endif
+      endif
 
       return
       end

@@ -348,7 +348,7 @@ integer function yy_pop_parser_stack( pParser )
     yy_pop_parser_stack = 0
     if( pParser%yyidx < 0  ) return
 
-    if ( yyTraceFILE >= 0 .and. pParser%yyidx >= 0 ) then
+    if ( yyTraceFILE >= 0 .AND. pParser%yyidx >= 0 ) then
         write( yyTraceFILE, "(A,'Popping ',A)" ) &
             trim(yyTracePrompt),                 &
             trim(yyTokenName(yytos%major))
@@ -378,7 +378,7 @@ subroutine ParseFree( pParser )
 
     integer        :: dummy
 
-    if ( .not. associated( pParser%yystack ) ) then
+    if ( .NOT. associated( pParser%yystack ) ) then
         return
     else
         do while( pParser%yyidx >= 0 )
@@ -409,7 +409,7 @@ recursive integer function yy_find_shift_action( pParser, iLookAhead ) result(sh
 
     write(*,*) 'AM: yy_find_shift_action', stateno
 
-    if ( stateno > YY_SHIFT_MAX .or. yy_shift_ofst(stateno) == YY_SHIFT_USE_DFLT ) then
+    if ( stateno > YY_SHIFT_MAX .OR. yy_shift_ofst(stateno) == YY_SHIFT_USE_DFLT ) then
         sh = yy_default(stateno)
         return
     endif
@@ -418,7 +418,7 @@ recursive integer function yy_find_shift_action( pParser, iLookAhead ) result(sh
 
     i = yy_shift_ofst(stateno) + iLookAhead
 
-    if ( i < 0 .or. i >= YY_SZ_ACTTAB .or. yy_lookahead(i) /= iLookAhead ) then
+    if ( i < 0 .OR. i >= YY_SZ_ACTTAB .OR. yy_lookahead(i) /= iLookAhead ) then
         if ( iLookAhead > 0 ) then
             if ( YYHASFALLBACK ) then
                 if ( iLookAhead < size(yyFallback) ) then
@@ -437,7 +437,7 @@ recursive integer function yy_find_shift_action( pParser, iLookAhead ) result(sh
 
             if ( YYWILDCARD >= 0 ) then
                 j = i - iLookAhead + YYWILDCARD
-                if ( j >= 0 .and. j < YY_SZ_ACTTAB .and. yy_lookahead(j)==YYWILDCARD ) then
+                if ( j >= 0 .AND. j < YY_SZ_ACTTAB .AND. yy_lookahead(j)==YYWILDCARD ) then
                     if ( yyTraceFILE >= 0 ) then
                         write( yyTraceFILE, "(A,'WILDCARD ',A,' => ',A)") &
                             trim(yyTracePrompt), trim(yyTokenName(iLookAhead)), &
@@ -489,12 +489,12 @@ integer function yy_find_reduce_action( stateno, iLookAhead )
     i = i + iLookAhead
 
     if ( YYERRORSYMBOL >= 0 ) then
-        if( i < 0 .or. i >= YY_SZ_ACTTAB .or. yy_lookahead(i) /= iLookAhead ) then
+        if( i < 0 .OR. i >= YY_SZ_ACTTAB .OR. yy_lookahead(i) /= iLookAhead ) then
             yy_find_reduce_action = yy_default(stateno)
             return
         endif
     else
-        call assert( i >= 0 .and. i < YY_SZ_ACTTAB, "i>=0 .and. i<YY_SZ_ACTTAB" )
+        call assert( i >= 0 .AND. i < YY_SZ_ACTTAB, "i>=0 .AND. i<YY_SZ_ACTTAB" )
         call assert( yy_lookahead(i)==iLookAhead, "yy_lookahead(i)==iLookAhead" )
     endif
 
@@ -567,7 +567,7 @@ subroutine yy_shift( yypParser, yyNewState, yyMajor, yypMinor )
     yytos%minor = yypMinor
 
     write(*,*) 'AM: yy_shift - idx: ', yypParser%yyidx
-    if ( yyTraceFILE >= 0 .and. yypParser%yyidx>0 ) then
+    if ( yyTraceFILE >= 0 .AND. yypParser%yyidx>0 ) then
         write( yyTraceFILE,"(A,'Shift ',I0)" ) trim(yyTracePrompt), yyNewState
         write( yyTraceFILE,"(A,'Stack: ')" ) trim(yyTracePrompt)
         do i = 1,yypParser%yyidx
@@ -608,8 +608,8 @@ subroutine yy_reduce( yypParser, yyruleno )
 
     yymsp => yypParser%yystack(yypParser%yyidx+1)
 
-    if ( yyTraceFILE >= 0 .and. yyruleno >= 0 &
-          .and. yyruleno < size(yyRuleName) ) then
+    if ( yyTraceFILE >= 0 .AND. yyruleno >= 0 &
+         .AND. yyruleno < size(yyRuleName) ) then
 
         write( yyTraceFILE, "(A,'Reduce [',A,'].')" ) trim(yyTracePrompt), &
             trim(yyRuleName(yyruleno))
@@ -819,7 +819,7 @@ subroutine Parse( yypParser, yymajor, yyminor, extra_arg )
     write(*,*) 'AM: Parse', yyact
 
         if ( yyact < YYNSTATE ) then
-            call assert( .not. yyendofinput, ".not. yyendofinput" ) ! Impossible to shift the $ token !
+            call assert( .NOT. yyendofinput, " .NOT. yyendofinput" ) ! Impossible to shift the $ token !
             call yy_shift( yypParser, yyact, yymajor, yyminorunion )
             yypParser%yyerrcnt = yypParser%yyerrcnt - 1
             yymajor = YYNOCODE
@@ -857,7 +857,7 @@ subroutine Parse( yypParser, yymajor, yyminor, extra_arg )
                 endif
                 yymx = yypParser%yystack(yypParser%yyidx+1)%major
 
-                if ( yymx == YYERRORSYMBOL .or. yyerrorhit ) then
+                if ( yymx == YYERRORSYMBOL .OR. yyerrorhit ) then
                     if ( yyTraceFILE >= 0 ) then
                         write( yyTraceFILE, "(A,'Discard input token ',A)" ) &
                             trim(yyTracePrompt), trim(yyTokenName(yymajor))
@@ -866,7 +866,7 @@ subroutine Parse( yypParser, yymajor, yyminor, extra_arg )
                     call yy_destructor( yymajor, yyminorunion )
                     yymajor = YYNOCODE
                 else
-                    do while ( yypParser%yyidx >= 0 .and. yymx /= YYERRORSYMBOL )
+                    do while ( yypParser%yyidx >= 0 .AND. yymx /= YYERRORSYMBOL )
                         yyact = yy_find_reduce_action( &
                                      yypParser%yystack(yypParser%yyidx+1)%stateno, &
                                      YYERRORSYMBOL)
@@ -875,7 +875,7 @@ subroutine Parse( yypParser, yymajor, yyminor, extra_arg )
                         dummy = yy_pop_parser_stack( yypParser )
                     enddo
 
-                    if ( yypParser%yyidx < 0 .or. yymajor == 0 ) then
+                    if ( yypParser%yyidx < 0 .OR. yymajor == 0 ) then
                         call yy_destructor( yymajor, yyminorunion )
                         call yy_parse_failed( yypParser )
                         yymajor = YYNOCODE
@@ -907,7 +907,7 @@ subroutine Parse( yypParser, yymajor, yyminor, extra_arg )
                 yymajor = YYNOCODE
             endif
         endif
-        if ( yymajor == YYNOCODE .or. yypParser%yyidx < 0 ) exit
+        if ( yymajor == YYNOCODE .OR. yypParser%yyidx < 0 ) exit
 
     enddo
     return
@@ -919,7 +919,7 @@ subroutine assert( expr, text )
     logical          :: expr
     character(len=*) :: text
 
-    if ( .not. expr ) then
+    if ( .NOT. expr ) then
         write( *, * ) 'Assertion failed - terminating program: '
         write( *, * ) trim(text), ' is NOT true'
         stop

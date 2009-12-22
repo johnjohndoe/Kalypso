@@ -14,8 +14,8 @@ C-
 C...... Initialize
 C-
       !EFa aug08, changed if-clause
-      !IF(IT .EQ. 1.) THEN
-      IF(itime.eq.0)then
+      !IF(IT == 1.) THEN
+      IF(itime == 0)then
       !-
         !EFa aug08, add weighting factors for external coordinates
           READ(INWGT,'(A1000)') HEADWT
@@ -39,7 +39,7 @@ CIPK MAY02        TETADD=TTT-TCORR
         !EFa aug08, added for ASCII wave data input
           rewind iwvin
           READ(iwvin,'(A100)') HEDR (1:100)
-          if (hedr(1:8).eq.'WAVE-S') then
+          if (hedr(1:8) == 'WAVE-S') then
             MBND = 1
           else
             MBND = 0
@@ -56,10 +56,10 @@ C..... MBND = 1 is the case of only 1 wave data file
 C-
 
       WRITE(75,*) 'GETWAVE-54',MBND,HEDR(101:105)
-      IF(MBND .EQ. 1) THEN
+      IF(MBND == 1) THEN
         !EFa aug08, changed if-clause
-        !IF(IT .EQ. 1.) THEN
-        IF(itime.eq.1)then
+        !IF(IT == 1.) THEN
+        IF(itime == 1)then
         itime = 2
         !-
 C
@@ -77,7 +77,7 @@ C
             WRITE(*,*)ttt,nv,iydd
  5011       FORMAT(8x,f8.0,2i8)
             !EFa aug08, changed if-clause of input parameters because of added external coordinates
-            if (icordin.eq.0) then
+            if (icordin == 0) then
               do l=1,nv
                 READ(iwvin,'(8x,i8,3f16.3)')
      +              k,waveht(k),peakprd(k),wavedr(k)
@@ -96,7 +96,7 @@ C
   166     CONTINUE 
         ENDIF
 cipk dec97 add check for zero nodes on input file
-        IF(NV .EQ. 0) THEN
+        IF(NV == 0) THEN
           WRITE(75,*) 'Error!!  total nodes = 0 on solution file'
           WRITE(75,*) 'Header contains time',ttt,' Year',iydd
           WRITE(*,*) 'Error!!  total nodes = 0 on solution file'
@@ -105,11 +105,11 @@ cipk dec97 add check for zero nodes on input file
         ENDIF
         WRITE(75,*) 'Time ONLY file =',ttt,'current time =',TET
         !EFa aug08, added weighting fctors for external coordinates
-        if (icordin.ne.0) then
+        if (icordin /= 0) then
           do n=1,np
             do m=1,3
               k=nodwt(n,m)
-              if (k.gt.0) then
+              if (k > 0) then
                 waveht(n) = waveht(n) + WAT(n,m)*wvh1(k)
                 peakprd(n) = peakprd(n) + WAT(n,m)*wvt1(k)
                 wavedr(n) = wavedr(n) + WAT(n,m)*wva1(k)
@@ -129,8 +129,8 @@ C-
 
 c     logic to pass end of year
 
-        IF(IYDD .GT. IYRR) THEN
-          IF(MOD(IYRR,4) .EQ. 0) THEN 
+        IF(IYDD > IYRR) THEN
+          IF(MOD(IYRR,4) == 0) THEN 
             HRINC=HRINC+366.*24.
           ELSE
             HRINC=HRINC+365.*24.
@@ -139,8 +139,8 @@ c     logic to pass end of year
 
 C    Test for data year less than current
 
-        IF(IYDD .LT. IYRR) THEN
-          IF(MOD(IYDD,4) .EQ. 0) THEN 
+        IF(IYDD < IYRR) THEN
+          IF(MOD(IYDD,4) == 0) THEN 
             HRINC=HRINC-366.*24.
           ELSE
             HRINC=HRINC-365.*24.
@@ -152,7 +152,7 @@ C    Test for data year less than current
         WRITE(75,*) TET+(DAYOFY-1.)*24.,TTT,HRINC,IYDD,IYRR
         WRITE(75,*) 'tet,dayofy',tet,dayofy
 
-        IF(TET+(DAYOFY-1.)*24. .GT. TTT+HRINC) THEN
+        IF(TET+(DAYOFY-1.)*24. > TTT+HRINC) THEN
 cipk  reset hrinc
           HRINC=0.
 
@@ -189,7 +189,7 @@ cipk jan98 add to preserve iydd
           IYRD=IYDD
 c     check for zero nodes on input file
 
-          if(nv .eq. 0) then
+          if(nv == 0) then
             write(75,*) 'Error!!  total nodes = 0 on solution file'
             Write(75,*) 'Header contains time',tttv,' Year',iydd
             write(*,*) 'Error!!  total nodes = 0 on solution file'
@@ -199,13 +199,13 @@ c     check for zero nodes on input file
           TTT=TTTV+TETADD
 
   288     CONTINUE
-          IF(MOD(IYDD,4) .EQ. 0) THEN
+          IF(MOD(IYDD,4) == 0) THEN
             HYR=366.*24.
           ELSE
             HYR=365.*24.
           ENDIF
 
-          IF(TTT .GT. HYR) THEN
+          IF(TTT > HYR) THEN
             TTT=TTT-HYR
             IYDD=IYDD+1
           ELSE
@@ -231,7 +231,7 @@ C-
           WRITE(75,*) 'GETWAVE-188  FCTI',FCTI
 
           !EFa aug08, added if-clause for the weighting factors of extrernal coordinates
-          if (icordin.eq.0) then
+          if (icordin == 0) then
             do k=1,np
               WAVEHT(K)=wvh0(K)+FCTI*(wvh1(K)-wvh0(K))
               WAVEDR(K)=wva0(K)+FCTI*(wva1(K)-wva0(K))
@@ -244,7 +244,7 @@ C-
               wavedr(n) = 0
               do m = 1,3
                 k = nodwt(n,m)
-                if (k.gt.0) then
+                if (k > 0) then
                   WAVEHT(n)=waveht(n)+(wvh0(k)+FCTI*(wvh1(K)-wvh0(K)))
      +                      *wat(n,m)
                   WAVEDR(n)=wavedr(n)+(wva0(k)+FCTI*(wva1(K)-wva0(K)))

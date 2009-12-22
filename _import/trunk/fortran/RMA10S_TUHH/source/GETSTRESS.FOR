@@ -11,8 +11,8 @@ CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
 C      COMMON /STR/
 C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
 
-      IF(ITIME .EQ. 0) THEN
-        IF(INWGT .NE. 0) THEN
+      IF(ITIME == 0) THEN
+        IF(INWGT /= 0) THEN
           READ(INWGT,'(A1000)') HEADWT
           DO N=1,NP
             READ(INWGT,5000) M,(NODWT(M,J),J=1,3),(WAT(M,J),J=1,3)
@@ -23,10 +23,10 @@ C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
 !nis,nov08: Remove reading from obsolete binary file inbnwgt
 !inbnwgt is obsolete
 !-
-        ELSEIF(ICORDIN .EQ. 0) THEN
+        ELSEIF(ICORDIN == 0) THEN
           RETURN
         !EFa aug08, added if-clause for external coordinates for wave data
-        ELSEIF(INSTR .EQ. 0.and.INBNSTR.eq.0) THEN
+        ELSEIF(INSTR == 0 .AND. INBNSTR == 0) THEN
           RETURN
         !-
         ENDIF
@@ -34,10 +34,10 @@ C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
         iyrd=iyrr
         TTT=0.
         TETADD=TTT
-        IF(INSTR .GT. 0) THEN
+        IF(INSTR > 0) THEN
           REWIND INSTR
           READ(INSTR,'(A100)') HEDR(1:100)
-          IF(HEDR(1:8) .EQ. 'STRESS-D') THEN
+          IF(HEDR(1:8) == 'STRESS-D') THEN
             MBND=0
             READ(INSTR,5001,ERR=145,END=145) IDYY,TTTV,NV,IYDD
             go to 150
@@ -61,7 +61,7 @@ cipk sep04
 !nis,nov08: Remove reading from obsolete binary file inbnstr
 !inbnstr is obsolete
 !-
-        ELSEIF(ICORDIN .EQ. 0) THEN
+        ELSEIF(ICORDIN == 0) THEN
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
           WRITE(*,*) 'ERROR   No binary weighting file defined'
@@ -70,9 +70,9 @@ cipk sep04
         ENDIF
       ENDIF
       ITIME=1
-      IF(MBND .EQ. 1) THEN
-        IF(ITIME .EQ. 1) THEN
-	    ITIME=2
+      IF(MBND == 1) THEN
+        IF(ITIME == 1) THEN
+          ITIME=2
 C
 C      SURFACE STRESS DATA READ
 C
@@ -97,7 +97,7 @@ cipk sep04
 
 c       Check for zero values on input file
 
-        IF(NV .EQ. 0) THEN
+        IF(NV == 0) THEN
 cipk sep04
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
@@ -120,7 +120,7 @@ c       Now interpolate to get stress values
             WVDR(N)=0
             DO M=1,3
               K=NODWT(N,M)
-              IF(K .GT. 0) THEN
+              IF(K > 0) THEN
                 STRESS(N,1)=STRESS(N,1)+WAT(N,M)*STR2(K,1)
                 STRESS(N,2)=STRESS(N,2)+WAT(N,M)*STR2(K,2)
                 SPWP(N)=SPWP(N)+WAT(N,M)*STR2(K,3)
@@ -141,8 +141,8 @@ C-
 
 c     logic to pass end of year
 
-        IF(IYDD .GT. IYRR) THEN
-          IF(MOD(IYRR,4) .EQ. 0) THEN 
+        IF(IYDD > IYRR) THEN
+          IF(MOD(IYRR,4) == 0) THEN 
             HRINC=HRINC+366.*24.
           ELSE
             HRINC=HRINC+365.*24.
@@ -151,8 +151,8 @@ c     logic to pass end of year
 
 C    Test for data year less than current
 
-        IF(IYDD .LT. IYRR) THEN
-          IF(MOD(IYDD,4) .EQ. 0) THEN 
+        IF(IYDD < IYRR) THEN
+          IF(MOD(IYDD,4) == 0) THEN 
             HRINC=HRINC-366.*24.
           ELSE
             HRINC=HRINC-365.*24.
@@ -164,7 +164,7 @@ C    Test for data year less than current
         WRITE(75,*) TET+(DAYOFY-1.)*24.,TTT,HRINC,IYDD,IYRR
         WRITE(75,*) 'tet,dayofy',tet,dayofy
 
-        IF(TET+(DAYOFY-1.)*24. .GT. TTT+HRINC) THEN
+        IF(TET+(DAYOFY-1.)*24. > TTT+HRINC) THEN
 cipk  reset hrinc
           HRINC=0.
 
@@ -172,11 +172,11 @@ C-
 C...... TTT not yet large enough  move 1 to 0 and read another
 C-
           DO K=1,NV
-	      DO L=1,6
+            DO L=1,6
               STR1(K,L) = STR2(K,L)
               STR2(K,L)=0.
             ENDDO
-	    ENDDO
+          ENDDO
           T0=TTT
 C
 C      SURFACE STRESS DATA  read
@@ -221,7 +221,7 @@ cipk jan98 add to preserve iydd
           IYRD=IYDD
 c     check for zero nodes on input file
 
-          if(nv .eq. 0) then
+          if(nv == 0) then
 cipk sep04
            CLOSE(75)
            OPEN(75,FILE='ERROR.OUT')
@@ -234,13 +234,13 @@ cipk sep04
 cipk jun02          TTT=TTTV+TETADD
 
   288     CONTINUE
-          IF(MOD(IYDD,4) .EQ. 0) THEN
+          IF(MOD(IYDD,4) == 0) THEN
             HYR=366.*24.
           ELSE
             HYR=365.*24.
           ENDIF
 
-          IF(TTT .GT. HYR) THEN
+          IF(TTT > HYR) THEN
             TTT=TTT-HYR
             IYDD=IYDD+1
           ELSE
@@ -265,7 +265,7 @@ C-
           HRINC=0.
           WRITE(75,*) 'GETSST-169  FCTI',FCTI
 
-            if(idebug .eq. 1) then
+            if(idebug == 1) then
             !EFa jul08, testing
             OPEN(234,FILE='STRESSFUL.TXT')
             !-
@@ -282,7 +282,7 @@ C-
               WVDR(N)=0
               DO M=1,3
                 K=NODWT(N,M)
-                IF(K .GT. 0) THEN
+                IF(K > 0) THEN
                 STRESS(N,1)=STRESS(N,1)
      +              +(STR1(K,1)+FCTI*(STR2(K,1)-STR1(K,1)))*WAT(N,M)
                 STRESS(N,2)=STRESS(N,2)
@@ -309,9 +309,9 @@ C-
 C      DO N=1,NP
 C        WRITE(135,'(I5,7F9.3,3I6)') N,SPWP(N),AWL(N),SWH(N),WVDR(N),
 C     +  WAT(N,1),WAT(N,2),WAT(N,3),NODWT(N,1),NODWT(N,2),NODWT(N,3)
-C	ENDDO
+C      ENDDO
 C      DO N=1,NV
 C        WRITE(136,*) N,STR1(N,4),STR2(N,4)
-C	ENDDO
+C      ENDDO
       RETURN
       END

@@ -134,9 +134,9 @@ end subroutine
 
       !DATA line
       else
-        if (.not. (associated (storElt))) then
+        if ( .NOT. (associated (storElt))) then
           write (*,*) 'data without reference storage element'
-        elseif (.not. (associated (storElt.volWlRel))) then
+        elseif ( .NOT. (associated (storElt.volWlRel))) then
           write (*,*) 'data without reference function relation in storage element'
         else
           read (linestring, *, iostat = iostatus) volume, waterlevel

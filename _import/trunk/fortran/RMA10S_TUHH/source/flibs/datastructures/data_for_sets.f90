@@ -17,7 +17,7 @@ type VECTOR_DATA
     type(SET_DATA) :: data
 endtype
 public :: SET_DATA
-public :: element_isequal, operator(.eq.)
+public :: element_isequal, operator( == )
 
 type(VECTOR_DATA), save :: empty_vector_data ! Do not initialise it -
                                              ! it is just a place holder

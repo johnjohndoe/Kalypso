@@ -1,7 +1,7 @@
 !Nis LAST UPDATE JUN XX 2006 Changes for the use in Lahey
 !*************************************************************************************************
 !
-!  Module   		  : WBMMODS.f90
+!  Module                 : WBMMODS.f90
 !  Purpose          : Contains Routines and functions associated with WBM Modifications to RMA10S Code              
 !  Author           : David Wainwright
 !  Initiation Date  : 19/01/04
@@ -79,7 +79,7 @@ integer                             :: NODE1
 integer                             :: NODE2
 integer                             :: NODE3
 integer                             :: NODE4
-integer							         :: COUNT
+integer                                                   :: COUNT
 integer                             :: UPPERBOUND
 real(8)                                :: NODE1N
 real(8)                                :: NODE2N
@@ -88,8 +88,8 @@ real(8)                                :: NODE4N
 real(8)                                :: CHECK
 LOGICAL(4)                             :: MYLOG
 LOGICAL(4)                             :: EXT
-real(8), ALLOCATABLE				   :: TMANNB(:)
-Character(500)						   :: FILENAME
+real(8), ALLOCATABLE                           :: TMANNB(:)
+Character(500)                                       :: FILENAME
 !*************************************************************************************************
 !
 !  Loops Through all elements, updating as we go
@@ -103,7 +103,7 @@ TMANNB = TMANN
 !  If it is the first time step opens an initial roughnesses.txt file to write the initial roughnesses
 !
 !*************************************************************************************************
-!IF (wbm_IT.EQ.0) THEN
+!IF (wbm_IT == 0) THEN
 !  OPEN(8866,FILE='INITROUGH.TXT')
 !  DO I= 1, UPPERBOUND
 !    WRITE(8866,*) I,TMANN(I)
@@ -117,7 +117,7 @@ TMANNB = TMANN
 !
 !*************************************************************************************************
 DO I = 1,NE
-  IF (TSNO.EQ.3) THEN
+  IF (TSNO == 3) THEN
     DIVIDER = 0
   END IF
   NODE1 = NOP(I,1)
@@ -126,36 +126,36 @@ DO I = 1,NE
   NODE4 = NOP(I,7)
   Divider = 0
   TMANN(I) = 0
-  IF (wbm_MANNTRANS(NODE1).NE.0) THEN
+  IF (wbm_MANNTRANS(NODE1) /= 0) THEN
     TMANN(I) = TMANN(I) + wbm_MANNTRANS(NODE1)
     Divider = Divider+1
   END IF
-  IF (wbm_MANNTRANS(NODE2).NE.0) THEN
+  IF (wbm_MANNTRANS(NODE2) /= 0) THEN
     TMANN(I) = TMANN(I) + wbm_MANNTRANS(NODE2)
     Divider = Divider+1
   END IF
-  IF (wbm_MANNTRANS(NODE3).NE.0) THEN
+  IF (wbm_MANNTRANS(NODE3) /= 0) THEN
     TMANN(I) = TMANN(I) + wbm_MANNTRANS(NODE3)
     Divider = Divider+1
   END IF
-  IF (NODE4.NE.0) THEN
-    IF (wbm_MANNTRANS(NODE4).NE.0) THEN
+  IF (NODE4 /= 0) THEN
+    IF (wbm_MANNTRANS(NODE4) /= 0) THEN
       TMANN(I) = TMANN(I) + wbm_MANNTRANS(NODE4)
-	  Divider = Divider+1
-	END IF
+        Divider = Divider+1
+      END IF
   END IF
-  IF (Divider.NE.0) Then
+  IF (Divider /= 0) Then
     TMANN(I) = TMANN(I)/Divider
   END IF
   !
   !  Checks for remaining Zero Values and resets them to previous value 
   !
-  IF (TMANN(I).EQ.0.0) TMANN(I) = TMANNB(I)
+  IF (TMANN(I) == 0.0) TMANN(I) = TMANNB(I)
   !
   !  Check to Ensure Mannings Value is Not too small or too big
   !
-  IF (TMANN(I).GT.0.036) TMANN(I) = 0.036
-  IF (TMANN(I).LT.0.015) TMANN(I) = 0.015
+  IF (TMANN(I) > 0.036) TMANN(I) = 0.036
+  IF (TMANN(I) < 0.015) TMANN(I) = 0.015
   !
   !  Check to Ensure Mannings Value has not changed too significantly this time step
   !
@@ -170,32 +170,32 @@ END DO
 !  If it is the first time step opens an initial roughnesses.txt file to write the initial roughnesses
 !
 !*************************************************************************************************
-!If (IT.EQ.14) Then
-	wbm_IT = wbm_IT+1
-!	CHECK = wbm_IT
+!If (IT == 14) Then
+      wbm_IT = wbm_IT+1
+!      CHECK = wbm_IT
 !  CHECK = (INT(CHECK/24))-(CHECK/24)
 
 !  Override
    Check = 0
 
-	IF (ABS(CHECK).LT.0.0001) THEN
-	  !
+      IF (ABS(CHECK) < 0.0001) THEN
+        !
      !  Works Out if TS File is Connected To
      !
      INQUIRE (FILE='RoughTS.txt', OPENED=mylog)
      !
      ! Opens TS file if it doesn't exist
      !
-     If (.NOT.mylog) Then
+     If ( .NOT. mylog) Then
        INQUIRE (FILE='RoughTS.txt', EXIST=EXT)
-       If (.NOT.EXT) THEN
+       If ( .NOT. EXT) THEN
          OPEN(8867,FILE='RoughTS.txt')    
        End If
      End If
      !
      !  Time series output for given Locations : Based on the Murray Model  
      !
-!     IF (I.EQ.1512) Then
+!     IF (I == 1512) Then
      WRITE(8867,*) wbm_IT,TSNO,ITNNO, "GoolwaChannel",TMANN(430)
      WRITE(8867,*) wbm_IT,TSNO,ITNNO, "EntranceThroat",TMANN(1701)
      WRITE(8867,*) wbm_IT,TSNO,ITNNO, "TauwitchereChannel(DS)",TMANN(1007)
@@ -205,19 +205,19 @@ END DO
      !
      !
 !     Write(Filename,'(I5,a10)')wbm_IT,"roughs.txt"
-!	  OPEN(8866,FILE=Filename)
-!	  DO I= 1, UPPERBOUND
-!	    WRITE(8866,*) I,TMANN(I)
-!	  END DO
+!        OPEN(8866,FILE=Filename)
+!        DO I= 1, UPPERBOUND
+!          WRITE(8866,*) I,TMANN(I)
+!        END DO
 !    CLOSE(8866)
     END IF
 !End If
 !*************************************************************************************************
 DO I = 1, NNOD
-  IF (wbm_MANNTRANS(I).NE.0.0) THEN
+  IF (wbm_MANNTRANS(I) /= 0.0) THEN
     wbm_MANNTRANSOLD(I) = wbm_MANNTRANS(I)  ! keeps a value ofzero if the mannings hasn't been changed
-    IF (wbm_MANNTRANSOLD(I).GT.0.036) wbm_MANNTRANSOLD(I) = 0.036
-    IF (wbm_MANNTRANSOLD(I).LT.0.015) wbm_MANNTRANSOLD(I) = 0.015
+    IF (wbm_MANNTRANSOLD(I) > 0.036) wbm_MANNTRANSOLD(I) = 0.036
+    IF (wbm_MANNTRANSOLD(I) < 0.015) wbm_MANNTRANSOLD(I) = 0.015
   END IF
 END DO
 wbm_MANNTRANS = 0.0
@@ -277,7 +277,7 @@ real(8)                               ::  D50M           ! D50 in m
 !     Body of Routine
 !
 !*************************************************************************************************
-IF (NodeNo.EQ.770.OR.NodeNo.EQ.782.OR.NodeNo.EQ.1552.OR.NodeNo.EQ.1553) Then
+IF (NodeNo == 770 .OR. NodeNo == 782 .OR. NodeNo == 1552 .OR. NodeNo == 1553) Then
   chezygr = 0
 END IF
 !
@@ -289,14 +289,14 @@ d50m=d50mm/1000
 CHEZYGR = 18 * log10((12*hd)/(3*d90m))
 TAUGR = 1030*9.81*((ugv/CHEZYGR)**2)
 T = (TAUGR-TAUCR)/TAUCR
-!IF (T.GT.1.0) THEN  !  djw 19/01/05
-IF (T.GT.0.01) THEN
+!IF (T > 1.0) THEN  !  djw 19/01/05
+IF (T > 0.01) THEN
    DD = 0.11 * hd * ((d50m/hd)**0.3)*((1-EXP(-0.5*T)))*(25-T)
-   IF (DD.LT.0.005) THEN
+   IF (DD < 0.005) THEN
      DD = 0.005
    END IF
    RD = 0.02 * hd * (1 - EXP(-0.1*T))*(10-T)
-   IF (RD.LT.0.005) THEN
+   IF (RD < 0.005) THEN
      RD = 0.005
    END IF
    KSC = (3 * d90m) + (0.7 * RD) + (1.1*0.7*DD*(1-EXP((-25*DD)/(20*DD))))
@@ -304,7 +304,7 @@ IF (T.GT.0.01) THEN
    LMANN = (hd**(0.16666666667))/CC
    NodeRough=LMANN
 ELSE 
-   NodeRough=0			 ! A Value of Zero later on is used as a flag to indicate that 
+   NodeRough=0                   ! A Value of Zero later on is used as a flag to indicate that 
                                   ! No Change should be made in subroutine new Rough
 END IF
 !*************************************************************************************************
@@ -417,7 +417,7 @@ OPEN (3300, File = wbm_InitConsFile)
 !  Loops Through Each Line and assigns to array
 !
 !NiS,jun06: Changes for usage with Lahey
-!Do While (.not.EOF(3300))
+!Do While ( .NOT. EOF(3300))
 !  Read (3300,'(a)') Line
 reading: Do
 
@@ -427,7 +427,7 @@ reading: Do
   Line = temp_line
 !-
 
-  If (Line(2:3).NE.'GE ') Then
+  If (Line(2:3) /= 'GE ') Then
      StartPos = 1
      EndPos = 1
      Do i = 1, 8
@@ -528,7 +528,7 @@ OPEN (3301, File = wbm_ScourLimFile)
 !  Loops Through Each Line and assigns to array
 !
 !NiS,jun06: Changes for usage with Lahey
-!Do While (.not.EOF(3301))
+!Do While ( .NOT. EOF(3301))
 !  Read (3301,'(a)') Line
 reading: Do
   Read (3301,'(a)',IOSTAT=istat) temp_line
@@ -537,7 +537,7 @@ reading: Do
   Line = temp_line
 !-
 
-  If (Line(2:3).NE.'GE ') Then
+  If (Line(2:3) /= 'GE ') Then
      StartPos = 1
      EndPos = 1
      Do i = 1, 6

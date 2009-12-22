@@ -139,7 +139,7 @@ function getNeighbourBCFiles (schwarzIt, calcStep, m_SimModel) result (bcFiles)
     endif
     !prepare for next file or leave loop
     nullify (bcFile)
-    if (.not. (associated (tmpNeighbour.next))) exit generateFileNames
+    if ( .NOT. (associated (tmpNeighbour.next))) exit generateFileNames
     tmpNeighbour => tmpNeighbour.next
   end do generateFileNames
   
@@ -185,7 +185,7 @@ subroutine getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
   !wait loop: Wait until all neighbour boundary condition informations are coming
   waitLoop: do
       
-    if (.not. (associated (currentFile))) exit waitLoop
+    if ( .NOT. (associated (currentFile))) exit waitLoop
 
     checkFiles: do
       bcFile => currentFile.data
@@ -207,7 +207,7 @@ subroutine getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
             findProperCCL: do i =1, ncl
               tmpCCL => ccls(i)
               !Don't care about outer boundary lines
-              if (.not. (tmpCCL.isInnerBoundary)) cycle findProperCCL
+              if ( .NOT. (tmpCCL.isInnerBoundary)) cycle findProperCCL
               if (tmpCCL.InnerCondition.IsAssigned) cycle findProperCCL
   
                 if (tmpCCL.innerCondition.globalID == tmpBCLineID) then
@@ -227,12 +227,12 @@ subroutine getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
         currentFile => list_next(currentFile)
       endif
           
-      if (.not. (associated (currentFile))) exit checkFiles
+      if ( .NOT. (associated (currentFile))) exit checkFiles
 
     end do checkFiles
         
     currentFile => bcFiles
-    if (.not. (associated (currentFile))) exit waitLoop
+    if ( .NOT. (associated (currentFile))) exit waitLoop
 
     call sleep (1)
   end do waitLoop
@@ -254,7 +254,7 @@ subroutine improveBCs (improveAlgo, ccls, ncl, spec, maxp)
   
   do i = 1, ncl
     tmpCCL => ccls (i)
-    if (tmpCCL.isInnerBoundary .and. associated (tmpCCL.firstNode.thisNode.previousBC)) then
+    if (tmpCCL.isInnerBoundary .AND. associated (tmpCCL.firstNode.thisNode.previousBC)) then
       if (tmpCCL.innerCondition.BCtype == enum_H_BCtype) call improveNodalBC (improveAlgo, tmpCCL, spec (1:maxp, 1:3))
     end if
   end do
@@ -277,7 +277,7 @@ subroutine storeOldInnerBoundaryConditions (ccls, spec, ncl, maxp)
   !Store old BCs
   do i = 1, ncl
     tmpCCL => ccls(i)
-    if (tmpCCL.isInnerBoundary .and. associated (tmpCCL.firstNode.thisNode.currentBC)) call storeOldBCs (tmpCCL, spec(1:maxp, 1:3))
+    if (tmpCCL.isInnerBoundary .AND. associated (tmpCCL.firstNode.thisNode.currentBC)) call storeOldBCs (tmpCCL, spec(1:maxp, 1:3))
   end do
 end subroutine
 
@@ -303,10 +303,10 @@ function checkSchwarzConvergence (ccls, ncl, schwarzConv) result (schwarzConvSta
   !Check, if assumption is true
   checkSchwarzConv: do i = 1, ncl
     tmpCCL => ccls (i)
-    if (.not. (tmpCCL.isInnerBoundary)) cycle checkSchwarzConv
+    if ( .NOT. (tmpCCL.isInnerBoundary)) cycle checkSchwarzConv
     if (associated (tmpCCL.firstNode.thisNode.previousBC)) then
       call checkBoundaryConv (tmpCCL, schwarzConv)
-      if (.not. (tmpCCL.innerCondition.isSchwarzConv)) schwarzConvStatus = .false.
+      if ( .NOT. (tmpCCL.innerCondition.isSchwarzConv)) schwarzConvStatus = .false.
     else
       schwarzConvStatus = .false.
     endif
@@ -343,7 +343,7 @@ subroutine nullifyInnerBCstatus (ccls, nfix, nfixp, alfa, ncl)
       resetBCStatus: do 
         nfix (currNode.thisNode.ID) = -1
         nfixp(currNode.thisNode.ID) = -1
-        if (.not. (associated (currNode.next))) exit resetBCStatus
+        if ( .NOT. (associated (currNode.next))) exit resetBCStatus
         currNode => currNode.next
       end do resetBCStatus
     end if

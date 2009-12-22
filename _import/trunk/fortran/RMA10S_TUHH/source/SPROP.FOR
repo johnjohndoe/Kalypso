@@ -42,7 +42,7 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
       !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
       !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
       ROAVG=1.935
-      IF (GRAV.LT.32.) ROAVG=516.*1.935
+      IF (GRAV < 32.) ROAVG=516.*1.935
 !MD: Basis-Variable: Wasserdichte
 
       N1 = 0
@@ -50,13 +50,13 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
 
   200 CONTINUE
       CALL GINPT(LIN,ID,DLIN)
-      IF(ID(1:4) .EQ. 'CSS1') THEN
+      IF(ID(1:4) == 'CSS1') THEN
         N1 = N1 + 1
         !MD: READ(DLIN,'(I8,5F8.5,I8)') ISVL,VSST,CRCON1,VSS1,CRCON2,EXP2,NM
         READ(DLIN,'(I8)') ISVL
 
 
-        IF(ISVL.EQ.2  .and. N1.eq.1) THEN
+        IF(ISVL == 2 .AND. N1 == 1) THEN
           READ(DLIN,'(I8,5F8.3)') ISVL,VSST,CRCON1(1),VSS1(1),
      +                   CRCON2(1),EXP2(1)
           VSK(1)=VSS1(1)/CRCON1(1)**EXP2(1)
@@ -67,12 +67,12 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
           WRITE(LOUT,6036) CRCON2(1),VSS2(1)
         
         !MD: constant Velocity
-        ELSEIF(ISVL .EQ. 1 .and. N1.eq.1) THEN
+        ELSEIF(ISVL == 1 .AND. N1 == 1) THEN
           READ(DLIN,'(I8,F8.3)') ISVL,VSST
           WRITE(LOUT,6037) VSST*1000.
 
         !MD: NEW for Roughness-Classes (IMAT)
-        ElseIF(ISVL .EQ. 3 .or. N1.ge.1) THEN
+        ElseIF(ISVL == 3 .OR. N1 >= 1) THEN
           READ(DLIN,'(I8,I8,4F8.3)') ISVL,NIMAT,
      &           CRC_1(NIMAT),VS_1(NIMAT),CRC_2(NIMAT),EX_2(NIMAT)
 
@@ -99,7 +99,7 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
         STOP
       ENDIF
 
-      IF (VSETMAX.gt.85) Then
+      IF (VSETMAX > 85) Then
         WRITE(75,*) 'Number of available Mat-Classes is exceeded'
         WRITE(75,*) 'Mat-Classes must be < 85 --> STOP'
         WRITE(*,*) 'Number of available Mat-Classes is exceeded'
@@ -110,9 +110,9 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
 
       DO N=1,NE
         !MD: Parameter auch fuer momentan trockene Elemente und Knoten!!
-        IF(IMAT(N).NE.0 .and. ISVL.EQ.3) THEN
+        IF(IMAT(N) /= 0 .AND. ISVL == 3) THEN
           DO I=1,VSETMAX
-            IF(NI_MAT(I).EQ.ABS(IMAT(N)) .OR. NI_MAT(I).EQ.0) THEN
+            IF(NI_MAT(I) == ABS(IMAT(N)) .OR. NI_MAT(I) == 0) THEN
               NIMAT = NI_MAT(I)
               DO JJ=1,NCORN(N)
                 J=NOP(N,JJ)
@@ -125,7 +125,7 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
               EndDo
             Endif
           EndDo
-        ElseIF(IMAT(N).NE.0 .and. ISVL.EQ.2) THEN
+        ElseIF(IMAT(N) /= 0 .AND. ISVL == 2) THEN
           DO JJ=1,NCORN(N)
              J=NOP(N,JJ)
              CRCON1(J)=CRCON1(1)
@@ -139,10 +139,10 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
       Enddo
 
 
-      IF (N1 .eq.1 ) THEN
+      IF (N1 == 1 ) THEN
         CALL GINPT(LIN,ID,DLIN)
       END IF
-      IF(ID(1:4) .EQ. 'CSS2') THEN
+      IF(ID(1:4) == 'CSS2') THEN
         READ (DLIN,'(3F8.5)') VK,RKS,D90
       ELSE
         WRITE(75,*) 'EXPECTED CSS2 DATA - NONE FOUND'
@@ -150,7 +150,7 @@ cipk  set IBNK =0 for the moment until bank shear is implemented
         STOP
       ENDIF
 
-      IF (VK .EQ. 0)  VK=0.4
+      IF (VK == 0)  VK=0.4
       WRITE (LOUT,6038) VK, RKS,D90
 
 C..................................................................
@@ -172,35 +172,35 @@ C.................................................................
   250 CONTINUE
       !MD  CALL GINPT(LIN,ID,DLIN)
 CIPK SEP05
-      NN=NN+1	      
+      NN=NN+1            
       N1=1
 
       !MD: Einlese-Schleife 275 fuer jeden CSMT bis CSS4 Block
       !MD: -----------------------------------------------
   275 CONTINUE
         
-      IF(ID(1:4) .EQ. 'CSMT') THEN
+      IF(ID(1:4) == 'CSMT') THEN
         N9=N1+8
         READ(DLIN,'(9I8)') (IMTREF(I),I=N1,N9)
         N1=N1+9
         CALL GINPT(LIN,ID,DLIN)
         GO TO 275
-      ELSEIF(ID(1:4) .EQ. 'CSS3') THEN
+      ELSEIF(ID(1:4) == 'CSS3') THEN
         READ(DLIN,5001)NLAYTM,TAUCDM,GAWM,GABM
      +     ,TTLAYM ,GACM ,ERCM ,UNM
 
       !MD wenn Ende aller Daten erreicht
-      ELSEIF(ID(1:6) .EQ. 'ENDSED' .OR. ID(1:3) .EQ. 'CB ') THEN
-	NSEDTYP=NN
-	GO TO 300
-      ELSE	  
+      ELSEIF(ID(1:6) == 'ENDSED' .OR. ID(1:3) == 'CB ') THEN
+      NSEDTYP=NN
+      GO TO 300
+      ELSE        
         WRITE(75,*) 'EXPECTED MORE SED DATA - NONE FOUND'
         WRITE(*,*) 'EXPECTED MORE DATA - NONE FOUND'
         STOP
       ENDIF
 
 crrr aug97
-      if (NLAYTM  .GT. MXSEDLAY) THEN
+      if (NLAYTM > MXSEDLAY) THEN
         WRITE(LOUT,'(/A,I3)')
      &      ' Too many cohesive sediment layers, NLAYT =', NLAYTM 
         WRITE(LOUT,'(/A)')
@@ -210,11 +210,11 @@ crrr aug97
    
       DO K=1,NLMTP
         NTYPS=K-1
-        IF(IMTREF(K) .EQ. 0) GO TO 280
+        IF(IMTREF(K) == 0) GO TO 280
       ENDDO
       
   280 CONTINUE      
-      IF(NTYPS .GT. 0) THEN
+      IF(NTYPS > 0) THEN
         WRITE(LOUT,6010) (IMTREF(K),K=1,NTYPS)
       ENDIF
       
@@ -239,16 +239,16 @@ crrr aug97
 
       !MD: Daten ueber alle Boden-Layer L
       DO L=1,NLAYTM 
-	IF(ID(1:4) .EQ. 'CSS4') THEN
+      IF(ID(1:4) == 'CSS4') THEN
 CIPK APR06 ADD INPUT OPTION FOR TLAYM
 CIPK MAY06   ADD EROSTM
           READ(DLIN,5002) I,SSM(I),GBM(I),TLAYM(I),EROSTM(I)
           CALL GINPT(LIN,ID,DLIN)
- 	ELSE
+       ELSE
           WRITE(75,*) 'EXPECTED CSS4 DATA - NONE FOUND'
           WRITE(*,*) 'EXPECTED CSS4 DATA - NONE FOUND'
           STOP
-	ENDIF
+      ENDIF
       ENDDO
 
       DO I=1,NLAYTM
@@ -262,7 +262,7 @@ CIPK MAY06   ADD EROSTM
         !MD  gleich Wasserdichte ist (nicht richtig!)
 
 CIPK APR06 ADD INPUT OPTION FOR TLAYM
-        IF(TLAYM(I) .EQ. 0.) THEN
+        IF(TLAYM(I) == 0.) THEN
           TLAYM(I)=WEGTM /GADM(I)
         ENDIF
 CIPK MAY06   ADD EROSTM        
@@ -270,12 +270,12 @@ CIPK MAY06   ADD EROSTM
       ENDDO
 
       DO N=1,NE
-        !MD:  IF(IMAT(N) .GT. 0) THEN
+        !MD:  IF(IMAT(N) > 0) THEN
         !MD:  Layer auch fuer momentan trockene Elemente und Knoten!!
-        IF(IMAT(N) .NE. 0) THEN
+        IF(IMAT(N) /= 0) THEN
           DO I=1,NLMTP
-            IF(IMTREF(I).EQ.0  .AND.  I.GT.1) GO TO 350
-            IF(IMTREF(I).EQ.ABS(IMAT(N)) .OR. IMTREF(I).EQ.0) THEN
+            IF(IMTREF(I) == 0 .AND. I > 1) GO TO 350
+            IF(IMTREF(I) == ABS(IMAT(N)) .OR. IMTREF(I) == 0) THEN
               DO JJ=1,NCORN(N)
                 J=NOP(N,JJ)
                 NLAYTND(J)=NLAYTM
@@ -287,7 +287,7 @@ CIPK MAY06   ADD EROSTM
                 WEGTND(J)=WEGTM
                 ERCND(J)=ERCM
                 !MD: NEU Berechnung der Suspensionsdichte
-                IF (VEL(6,J).ge.0.) THEN
+                IF (VEL(6,J) >= 0.) THEN
                 GAWND(J)=(VEL(6,J)/1000.)*(1.-(ROAVG/GACND(J))) + ROAVG
                 Else
                   GAWND(J)= ROAVG
@@ -319,9 +319,9 @@ CIPK MAY06   ADD EROSTM
 !MD: neu fuer alle Mittseiten-Knoten
 !MD--------------------------------------
       DO N=1,NPM
-        IF(IMID(N,1) .GT. 0) THEN
+        IF(IMID(N,1) > 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) > 1) NN = NREF(N) + NDEP(N)-1
           NLAYTND(NN)=MIN(NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2)))
           TAUCDND(NN)=(TAUCDND(IMID(NN,1))+TAUCDND(IMID(NN,2)))/2.
           UNND(NN)=(UNND(IMID(NN,1))+UNND(IMID(NN,2)))/2.
@@ -344,19 +344,19 @@ CIPK MAY06   ADD EROSTM
 !MD--------------------------------------
 
 
-      IF(ID(1:3) .EQ. 'CB ') THEN
+      IF(ID(1:3) == 'CB ') THEN
         CALL BED
       Endif
 
-cipk June 1996      IF(IBNK .NE. 0) THEN
+cipk June 1996      IF(IBNK /= 0) THEN
 cipk June 1996        READ(IIQ,5010) BNKCD,BNKGAB,BNKERC,BRKS
 cipk June 1996        WRITE(LOUT,6030) BNKCD,BNKGAB,BNKERC,BRKS
 cipk June 1996      ENDIF
 
-      IF(ID(1:6) .NE. 'ENDSED') THEN
-	WRITE(75,*) 'NO ENDSED DATA LINE FOUND'
-	WRITE(*,*) 'NO ENDSED DATA LINE FOUND'
-	STOP
+      IF(ID(1:6) /= 'ENDSED') THEN
+      WRITE(75,*) 'NO ENDSED DATA LINE FOUND'
+      WRITE(*,*) 'NO ENDSED DATA LINE FOUND'
+      STOP
       ENDIF
 
 

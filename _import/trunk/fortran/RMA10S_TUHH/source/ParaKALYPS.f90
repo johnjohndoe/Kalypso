@@ -59,7 +59,7 @@ integer (kind = 4), allocatable, dimension (:,:) :: isnodeofelement
 !--------------------
 integer (kind = 4), allocatable, dimension (:)   :: intpolno (:)
 integer (kind = 4), allocatable, dimension (:,:) :: intpolelts
-real (kind=8), allocatable  	                   :: mcord(:,:)
+real (kind=8), allocatable                           :: mcord(:,:)
 logical, allocatable, dimension (:)              :: transitionelement
 !meaning of the variables
 !------------------------
@@ -107,12 +107,12 @@ integer (kind = 4) :: ivegetation
 !------------------------
 !ivegetation      calculate resistance with Darcy approach according to big vegetation elements
 
-!NiS,mar06:	The following arrays and variables belonged in Kalypso-2D to the common-block "raus"; now they are part of this module.
-!		At the moment they are allocated in the RDKALYPS-subroutine and deallocated in the main program RMA10, so that they ARE
+!NiS,mar06:      The following arrays and variables belonged in Kalypso-2D to the common-block "raus"; now they are part of this module.
+!            At the moment they are allocated in the RDKALYPS-subroutine and deallocated in the main program RMA10, so that they ARE
 !               deallocated and that they can be used in oter subroutines; because their meaning is not totally clear at the moment later
 !               programming activities might change this. A better way for global access might be to allocate them after the call of getgeo1
 !               from the main program RMA10, because the arrays are dependent on the network size.
-INTEGER 		  :: iauslp, iausnpm
+INTEGER               :: iauslp, iausnpm
 REAL(KIND=8), allocatable :: zeigma(:)
 REAL (KIND = 8), ALLOCATABLE :: minvel (:,:), maxvel (:,:), minrausv(:), maxrausv(:)
 
@@ -137,9 +137,9 @@ REAL(KIND=8)             :: semp,dside,gsc1,gsc2,artr1,artr2,gscal
 !-
 
 !EFa jun07, autoconverge
-REAL, ALLOCATABLE 	:: rss(:), specccold(:,:),speccc(:,:)
-REAL, ALLOCATABLE 	:: specccfut(:,:),temp_vel(:,:)
-REAL, ALLOCATABLE 	:: temp_vdot(:,:),temp_vdoto(:,:)
+REAL, ALLOCATABLE       :: rss(:), specccold(:,:),speccc(:,:)
+REAL, ALLOCATABLE       :: specccfut(:,:),temp_vel(:,:)
+REAL, ALLOCATABLE       :: temp_vdot(:,:),temp_vdoto(:,:)
 REAL               :: rrr,hhh,hhh2,qqq,qqqdir
 INTEGER            :: nitnzero,nitazero,nitizero,extranita
 INTEGER            :: beiauto,nnnunst,nnnst,linlog,exterr

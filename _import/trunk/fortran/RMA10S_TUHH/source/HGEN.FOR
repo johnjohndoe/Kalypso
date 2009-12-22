@@ -31,7 +31,7 @@ cipk dec97
       MAX = LMT (JJ)
 
       !check for continuity line of zero-length
-      IF(MAX .EQ. 0) THEN
+      IF(MAX == 0) THEN
         WRITE(75,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',JJ
         WRITE(75,*) 'EXECUTION TERMINATED'
         WRITE(*,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',JJ
@@ -56,7 +56,7 @@ cipk dec97
           SPEC (NA, 3) = HREQ
         !interpolate water stage boundary conditions for nodes in boundary lines with a varying water
         !level distribution
-        elseif (iswth == 1 .or. iswth == 2) then
+        elseif (iswth == 1 .OR. iswth == 2) then
           FACT = DISTS (NA, NST)/ CONLEN
           SPEC (NA, 3) = HREQ + FACT * (HREQ2 - HREQ)
         !do nothing for volume-waterlevel boundary conditions
@@ -69,9 +69,9 @@ cipk dec97
           NFIX (NA) = NFIX (NA) + 200
         ENDIF
         !EFa oct09, hfd
-        if(hfd.ne.0.0)then
+        if(hfd /= 0.0)then
           spec(na,8) = hfd  
-        elseif(hfd.eq.0.0.and.spec(na,8).ne.0.0)then
+        elseif(hfd == 0.0 .AND. spec(na,8) /= 0.0)then
           spec(na,8) = 0.0     
         endif
         !-
@@ -120,11 +120,11 @@ c
  5010   FORMAT (9F8.0)
         call ginpt(ibin,id,dlin)
 cipk jan96 save data to a scratch file
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
  7000   FORMAT(A8,A72)
-        IF (MAX .GT. N9) THEN
+        IF (MAX > N9) THEN
           N1=N1+9
           N9=N9+9
           GO TO 305
@@ -133,7 +133,7 @@ cipk jan96 save data to a scratch file
         DO 400 K=1,MAX
           NN=LINE(JJ,K)
           VSCALE(NN)=WTS(K)
-          IF(VSCALE(NN) .EQ. 1.0) VSCALE(NN)=0.0
+          IF(VSCALE(NN) == 1.0) VSCALE(NN)=0.0
   400   CONTINUE         
       ENDIF
 cipk dec97 end changes

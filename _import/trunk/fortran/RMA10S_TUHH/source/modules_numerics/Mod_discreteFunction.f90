@@ -152,10 +152,10 @@ module mod_discreteFunction
     !discrete function to put the pair to
     type (discrQuadrFun), pointer :: relationship
     
-    if (.not. (associated (relationship.first))) then
+    if ( .NOT. (associated (relationship.first))) then
       relationship.first => Segment
     else
-      if (.not. (associated (relationship.first.nextSeg))) relationship.first.nextSeg => Segment
+      if ( .NOT. (associated (relationship.first.nextSeg))) relationship.first.nextSeg => Segment
       relationship.last.nextSeg => Segment
       relationship.last.nextSeg.prevSeg => relationship.last
     endif
@@ -202,10 +202,10 @@ module mod_discreteFunction
     new.abszissa = absz
     new.ordinate = ordin
     
-    if (.not. (associated (relationship.first))) then
+    if ( .NOT. (associated (relationship.first))) then
       relationship.first => new
     else
-      if (.not. (associated (relationship.first.nextPair))) relationship.first.nextPair => new
+      if ( .NOT. (associated (relationship.first.nextPair))) relationship.first.nextPair => new
       relationship.last.nextPair => new
       relationship.last.nextPair.prevPair => relationship.last
     endif
@@ -271,7 +271,7 @@ module mod_discreteFunction
       lB = lowerBoundPair (relationship, xValue)
       
       !linear extrapolation beyond upper border by given slope or slopeextrapolation f
-      if (.not.(associated (lB.nextPair))) then
+      if ( .NOT. (associated (lB.nextPair))) then
         functionValue = lB.prevPair.ordinate + difference (lB.prevPair, xValue) * derivative(relationship, xValue)
       
       !normal situation
@@ -306,7 +306,7 @@ module mod_discreteFunction
     funSeg => relationship.first
     
     calcValue: do
-      if ((associated (funSeg.nextSeg) .and. xValue <= funSeg.this.last.abszissa) .or. (.not. (associated (funSeg.nextSeg)))) then
+      if ((associated (funSeg.nextSeg) .AND. xValue <= funSeg.this.last.abszissa) .OR. ( .NOT. (associated (funSeg.nextSeg)))) then
         quadrFunValue = calcPolynomial(funSeg.this.coefs(0:2), xValue, 2)
         return
       endif
@@ -342,7 +342,7 @@ module mod_discreteFunction
       lB = lowerBoundPair (relationship, xValue)
       
       !extrapolate derivative, if beyond upper border
-      if (.not. (associated (lB.nextPair))) then
+      if ( .NOT. (associated (lB.nextPair))) then
         derivative = (lB.ordinate - lB.prevPair.ordinate) / interval(lB.prevPair)
         
       !normal situation
@@ -375,9 +375,9 @@ module mod_discreteFunction
 
     findBound: do
       !no higher abszissa value available, so finished
-      if (.not. (associated (lowerBoundPair.nextPair))) exit findBound
+      if ( .NOT. (associated (lowerBoundPair.nextPair))) exit findBound
       !exit on x-Value in between to discrete points
-      if (lowerBoundPair.abszissa <= xValue .and. xValue < lowerBoundPair.nextPair.abszissa) exit findBound
+      if (lowerBoundPair.abszissa <= xValue .AND. xValue < lowerBoundPair.nextPair.abszissa) exit findBound
       !take next Pair
       lowerBoundPair = lowerBoundPair.nextPair
     enddo findBound

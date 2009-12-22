@@ -176,7 +176,7 @@ subroutine csv_write_char( lun, value, advance )
     k    = index( value,'"')
     pos  = 1
     posb = 1
-    do while ( k .ge. 1 )
+    do while ( k >= 1 )
         buffer(posb:)   = value(pos:)
         buffer(posb+k:) = '"' // value(pos+k:)
         pos             = pos  + k + 1

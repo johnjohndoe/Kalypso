@@ -623,7 +623,7 @@ contains
     kdot   = vstring_last ( filename , '.' )
     kseparator = vfile_last_separator_index ( filename )
     call vstring_new ( rootname )
-    if ( kdot /= 0 .and. kdot > kseparator+1 ) then
+    if ( kdot /= 0 .AND. kdot > kseparator+1 ) then
        subpart = vstring_range ( filename , 1 , kdot-1 )
        call vstring_append ( rootname ,  subpart )
        call vstring_free ( subpart )
@@ -666,7 +666,7 @@ contains
     kdot   = vstring_last ( filename , '.' )
     kseparator = vfile_last_separator_index ( filename )
     call vstring_new ( extension )
-    if ( kdot /= 0 .and. kdot > kseparator+1 ) then
+    if ( kdot /= 0 .AND. kdot > kseparator+1 ) then
        length = vstring_length ( filename )
        subpart = vstring_range ( filename , kdot , length )
        call vstring_append ( extension ,  subpart )
@@ -3283,91 +3283,91 @@ contains
     !
     ! 1. Try TMPDIR environment variable
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        call find_tmpdir_in_environment ( "TMPDIR" , tempdir , tmpdir_found )
-       if ( .NOT.tmpdir_found ) then
+       if ( .NOT. tmpdir_found ) then
           call vstring_free ( tempdir )
        endif
     endif
     !
     ! 2. Try TEMP environment variable
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        call find_tmpdir_in_environment ( "TEMP" , tempdir , tmpdir_found )
-       if ( .NOT.tmpdir_found ) then
+       if ( .NOT. tmpdir_found ) then
           call vstring_free ( tempdir )
        endif
     endif
     !
     ! 3. Try TMP environment variable
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        call find_tmpdir_in_environment ( "TMP" , tempdir , tmpdir_found )
-       if ( .NOT.tmpdir_found ) then
+       if ( .NOT. tmpdir_found ) then
           call vstring_free ( tempdir )
        endif
     endif
     !
     ! 4. Try platform-specific temporary directories
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        platform = platform_get_platform ()
        select case ( platform )
        case ( PLATFORM_PLATFORM_WINDOWS )
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call vstring_new ( tempdir , "C:\TEMP" )
              tmpdir_found = vfile_exists ( tempdir )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call vstring_new ( tempdir , "C:\TMP" )
              tmpdir_found = vfile_exists ( tempdir )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call vstring_new ( tempdir , "\TEMP" )
              tmpdir_found = vfile_exists ( tempdir )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call vstring_new ( tempdir , "\TMP" )
              tmpdir_found = vfile_exists ( tempdir )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
        case ( PLATFORM_PLATFORM_UNIX )
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call vstring_new ( tempdir , "/tmp" )
              tmpdir_found = vfile_exists ( tempdir )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call vstring_new ( tempdir , "/var/tmp" )
              tmpdir_found = vfile_exists ( tempdir )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call vstring_new ( tempdir , "/usr/tmp" )
              tmpdir_found = vfile_exists ( tempdir )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
        case ( PLATFORM_PLATFORM_MAC )
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              call find_tmpdir_in_environment ( "TRASH_FOLDER" , tempdir , tmpdir_found )
-             if ( .NOT.tmpdir_found ) then
+             if ( .NOT. tmpdir_found ) then
                 call vstring_free ( tempdir )
              endif
           endif
@@ -3385,7 +3385,7 @@ contains
     !
     ! Generate a message if no environment variable match
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        call vstring_new ( message )
        call vstring_append ( message , "Unable to find a temporary directory for platform :" )
           platform_string = vstring_format ( platform )
@@ -3496,7 +3496,7 @@ contains
           exit
        endif
     end do
-    if (.NOT.tempfile_done) then
+    if ( .NOT. tempfile_done) then
        call vstring_new ( message )
        call vstring_append ( message , "Unable to create a temporary file in directory :" )
        call vstring_append ( message , tempdir )
@@ -3624,7 +3624,7 @@ contains
     type ( t_vstring ) :: message
     type ( t_vstring ) :: platform_string
 
-    if (.NOT.vfile_static_initialized) then
+    if ( .NOT. vfile_static_initialized) then
        !
        ! 0. Get the current platform
        !

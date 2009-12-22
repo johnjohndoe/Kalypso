@@ -17,15 +17,15 @@ C
       DATA ITIM/0/
 
       TP=TPS
-	HD=HDS
+      HD=HDS
       VR=VRR
-	D50=D50MM/1000.
-	D90=D90MM/1000.
-      if(hs.eq.0.)then
+      D50=D50MM/1000.
+      D90=D90MM/1000.
+      if(hs == 0.)then
         ur=0.
         ub=0.
       endif
-      if(tp.gt.0..and.tp.lt.1.)tp=1.
+      if(tp > 0. .AND. tp < 1.)tp=1.
 CIPK JUN02
       PI     = 4.*ATAN(1.)
       CANG=180./PI*CDIR
@@ -34,33 +34,33 @@ c      WANG=180./PI*WDIR-180.
       WANG=180./PI*WDIR
 
 CIPK DEC02 ADD TEST FOR STRAY DIRECTIONS
-   50 IF(WANG .LT. 0.) THEN
-	  WANG=WANG+360.
-	  GO TO 50
-	ENDIF
-   55 IF(WANG .GT. 360.) THEN
-	  WANG=WANG-360.
-	  GO TO 55
-	ENDIF
-   60 IF(CANG .LT. 0.) THEN
-	  CANG=CANG+360.
-	  GO TO 60
-	ENDIF
-   65 IF(CANG .GT. 360.) THEN
-	  CANG=CANG-360.
-	  GO TO 65
-	ENDIF
+   50 IF(WANG < 0.) THEN
+        WANG=WANG+360.
+        GO TO 50
+      ENDIF
+   55 IF(WANG > 360.) THEN
+        WANG=WANG-360.
+        GO TO 55
+      ENDIF
+   60 IF(CANG < 0.) THEN
+        CANG=CANG+360.
+        GO TO 60
+      ENDIF
+   65 IF(CANG > 360.) THEN
+        CANG=CANG-360.
+        GO TO 65
+      ENDIF
 
-      if(cang.eq.0.) cang=0.000001
-	IF(WANG .LT. 0.) WANG=WANG+360
+      if(cang == 0.) cang=0.000001
+      IF(WANG < 0.) WANG=WANG+360
 CIPK JUN02      PHI = ABS((180.-CANG) + WANG)
-CIPK JUN02      IF(PHI.GE.180.) PHI = 360. - PHI         
+CIPK JUN02      IF(PHI >= 180.) PHI = 360. - PHI         
       PHI=WANG-CANG
-	IF(ABS(PHI) .LT. 0.001) PHI=0.
-	IF(PHI .LT. 0.) PHI=PHI+360.
-      if(phi.eq.0.)phi=0.1
-      if(phi.eq.180.)phi=179.9
-      if(phi.eq.360.)phi=359.9
+      IF(ABS(PHI) < 0.001) PHI=0.
+      IF(PHI < 0.) PHI=PHI+360.
+      if(phi == 0.)phi=0.1
+      if(phi == 180.)phi=179.9
+      if(phi == 360.)phi=359.9
 CIPK MAR06
 C      write(108,'(i5,5f10.2)') 
 C     +   node,cdir/pi*180.,wdir/pi*180.,cang,wang,phi
@@ -75,39 +75,39 @@ CIPK JUN02      rnu=(4.e-5)/(20.+te)
       DEL=(RHOS-RHOW)/RHOW
 CIPK JUN02      dsh=0.01*g*del*dss**3./rnu/rnu
       d50h=0.01*g*del*d50**3./rnu/rnu
-CIPK JUN02      if(dss.lt.0.0001)ws=(del*g*dss*dss)/(18.*rnu)
-      if(d50.lt.0.0001)wsb=(del*g*d50*d50)/(18.*rnu)
-CIPK JUN02      if(dss.ge.0.0001.and.dss.lt.0.001)
+CIPK JUN02      if(dss < 0.0001)ws=(del*g*dss*dss)/(18.*rnu)
+      if(d50 < 0.0001)wsb=(del*g*d50*d50)/(18.*rnu)
+CIPK JUN02      if(dss >= 0.0001 .AND. dss < 0.001)
 CIPK JUN02     * ws=(10.*rnu/dss)*((1.+dsh)**0.5-1.)
-      if(d50.ge.0.0001.and.d50.lt.0.001)
+      if(d50 >= 0.0001 .AND. d50 < 0.001)
      * wsb=(10.*rnu/d50)*((1.+d50h)**0.5-1.)
-CIPK JUN02      if(dss.ge.0.001)ws=1.1*(del*g*dss)**0.5
-      if(d50.ge.0.001)wsb=1.1*(del*g*d50)**0.5
+CIPK JUN02      if(dss >= 0.001)ws=1.1*(del*g*dss)**0.5
+      if(d50 >= 0.001)wsb=1.1*(del*g*d50)**0.5
       RKAP=.4
-CIPK JUN02      if(rc.lt.0.01)rc=0.01
-CIPK JUN02      if(rw.lt.0.01)rw=0.01
+CIPK JUN02      if(rc < 0.01)rc=0.01
+CIPK JUN02      if(rw < 0.01)rw=0.01
       DSTER=D50*(DEL*G/RNU**2)**(1./3.)
 C
 C   COMPUTATION OF WAVE PARAMETERS
 C
-      IF(HD.LE.0.)STOP 'WATER DEPTH .LE. 0'
+      IF(HD <= 0.)STOP 'WATER DEPTH <= 0'
 
 cipk dec02 add test for wave height
-      IF (TP.GE.1.  .and.  hs .gt. 0.1) THEN
+      IF (TP >= 1. .AND. hs > 0.1) THEN
 
         xx=.1
         yy=1.8*tp*tp
         uugg=VR
         VR=0.
         call zeroin(xx,yy,log,fwl,tolx)
-        if(.not.log)then
+        if( .NOT. log)then
           stop 'zeroin no wave length'
         else
           yy=2.0*xx
           xx=.2*xx
           VR=uugg
           call zeroin(xx,yy,log,fwl,tolx)
-          if(.not.log)then
+          if( .NOT. log)then
 CIPK DEC02             stop 'zeroin no wave length'
 
 CIPK DEC02
@@ -117,7 +117,7 @@ CIPK DEC02
              WAVENR=SQRT(Y**2+Y/POL)/HD
              RLS=2.*PI/WAVENR
              ARG=WAVENR*HD
-	       GO TO 200
+             GO TO 200
           else
             rls=xx
           endif
@@ -126,14 +126,14 @@ CIPK DEC02
 
 200     CONTINUE
         tp1=tp/(1.-(VR*tp*cos(phi))/rls)
-        IF (ARG.GT.50.) THEN
+        IF (ARG > 50.) THEN
           ABW=0.
           FW=0.
           FW1=0.
           UBW=0.
         ELSE
           ABW=HS/(2.*SINH(ARG))
-          IF(RC  .EQ. 0.  .OR.  RW .EQ. 0.) THEN
+          IF(RC == 0. .OR. RW == 0.) THEN
             PSI = 4.02 * (ABW / TP) ** 2 / ((RHOS/RHOW -1) * D50)
             ATEST1 = (21. * PSI ** (-1.85) * ABW)
 
@@ -141,10 +141,10 @@ CIPK DEC02
 
             ATEST2 = 0.072 * ABW * (ABW / (3. * D90)) ** (-0.25)*2.
  
-            IF(PSI.LE.12) THEN
+            IF(PSI <= 12) THEN
               A = (0.275 - 0.022 * SQRT(PSI)) * ABW
             ELSE 
-              IF(ATEST1.GE.ATEST2) THEN
+              IF(ATEST1 >= ATEST2) THEN
                 A = ATEST1
               ELSE
                 A = ATEST2
@@ -166,10 +166,10 @@ c              DS = mixing layer thickness
  
           FW=0.
           FW1=0.
-          IF(ABW.GT.0.)FW=EXP(-6.+5.2*(ABW/RW)**(-0.19))
-          IF(ABW.GT.0.)FW1=EXP(-6.+5.2*(ABW/(3.*D90))**(-0.19))
-          IF(FW.GT.0.3 )FW=0.3
-          IF(FW1.GT.0.3)FW1=0.3
+          IF(ABW > 0.)FW=EXP(-6.+5.2*(ABW/RW)**(-0.19))
+          IF(ABW > 0.)FW1=EXP(-6.+5.2*(ABW/(3.*D90))**(-0.19))
+          IF(FW > 0.3 )FW=0.3
+          IF(FW1 > 0.3)FW1=0.3
           UBW  = 2.*PI/TP1*ABW
         ENDIF
       ELSE
@@ -180,48 +180,48 @@ c              DS = mixing layer thickness
         UBW=0.
         tp1=tp
 CIPK JUN02
-        if(rc.lt.0.01)rc=0.01
-        if(rw.lt.0.01)rw=0.01
+        if(rc < 0.01)rc=0.01
+        if(rw < 0.01)rw=0.01
 
       ENDIF
       ubw1=0.
-      if(rls.gt.0.)
+      if(rls > 0.)
      *  ubw1=(3.*pi*pi*hs*hs)/(4.*tp1*rls*(sinh(arg)**4.))
       rhs=hs/hd
       h1=1.+0.3*rhs
       hlimit=0.01*g*tp1*tp1
-      if(hd.ge.hlimit)then
+      if(hd >= hlimit)then
         ubwfor=ubw+ubw1
         ubwback=ubw-ubw1
       endif
-      if(hd.lt.hlimit)then
+      if(hd < hlimit)then
         ubwfor=h1*ubw
         ubwback=(2.-h1)*ubw
       endif
       ufmax=1.2*ubw
       ubmin=0.8*ubw
-      if(ubwfor.ge.ufmax)ubwfor=ufmax
-      if(ubwback.le.ubmin)ubwback=ubmin
+      if(ubwfor >= ufmax)ubwfor=ufmax
+      if(ubwback <= ubmin)ubwback=ubmin
       asym=0.
-      if(abw.gt.0.)asym=ubwfor/(ubwfor+ubwback)
+      if(abw > 0.)asym=ubwfor/(ubwfor+ubwback)
       htrough=hd*(0.95-0.35*(hs/hd))
-CIPK JUN02      if(ur.eq.9.)ur=-0.125*g**0.5*hs**2./(hd**0.5*htrough)
-CIPK JUN02      if(ub.eq.9.)ub=(0.05-(asym-0.5))*ubw
+CIPK JUN02      if(ur == 9.)ur=-0.125*g**0.5*hs**2./(hd**0.5*htrough)
+CIPK JUN02      if(ub == 9.)ub=(0.05-(asym-0.5))*ubw
       ur=-0.125*g**0.5*hs**2./(hd**0.5*htrough)
       ub=(0.05-(asym-0.5))*ubw
 C
 C  CRITICAL SHEAR STRESS SHIELDS
 C
-      IF(DSTER.LE.4.)THETCR=.24/DSTER
-      IF(4. .LT.DSTER.AND.DSTER.LE.10.)THETCR=.14*DSTER**(-.64)
-      IF(10..LT.DSTER.AND.DSTER.LE.20.)THETCR=.04*DSTER**(-.1 )
-      IF(20..LT.DSTER.AND.DSTER.LE.150.)THETCR=.013*DSTER**(.29 )
-      IF(DSTER.GT.150.)THETCR=.055
+      IF(DSTER <= 4.)THETCR=.24/DSTER
+      IF(4. < DSTER .AND. DSTER <= 10.)THETCR=.14*DSTER**(-.64)
+      IF(10. < DSTER .AND. DSTER <= 20.)THETCR=.04*DSTER**(-.1 )
+      IF(20. < DSTER .AND. DSTER <= 150.)THETCR=.013*DSTER**(.29 )
+      IF(DSTER > 150.)THETCR=.055
       TAUCR=(RHOS-RHOW)*G*D50*THETCR
       umcr=5.75*(del*g*d50)**0.5*(thetcr)**0.5*alog10(4.*hd/d90)
       ubwcr=0.
-      if(tp.gt.0.)then
-       if(d50.le.0.0005)then
+      if(tp > 0.)then
+       if(d50 <= 0.0005)then
              ubwcr=(0.12*del*g*d50**0.5*tp**0.5)**0.667
        else
              ubwcr=(1.09*del*g*d50**0.75*tp**0.25)**0.57
@@ -238,32 +238,32 @@ C
       vrr1=(VR**2+ur**2)**0.5
       RMUC=FC1/FC
       RMUWA=0.6/DSTER
-      if(dster.gt.10.)RMUWA=0.06
+      if(dster > 10.)RMUWA=0.06
       rmuw=0.
-      if(fw.ne.0.)rmuw=fw1/fw
+      if(fw /= 0.)rmuw=fw1/fw
       UST=G**0.5*ABS(vrr1)/CC
       DELm=0.
       delw=0.
-      IF(ABW.GT.0.)THEN
+      IF(ABW > 0.)THEN
          DELW=0.072*ABW*(ABW/RW)**(-0.25)
          delm=3.*delw
       ENDIF
       delm=max(delm,rc)
       GAMMA=0.
       h2=phi
-      if(h2.gt.pi)h2=2.*pi-phi
+      if(h2 > pi)h2=2.*pi-phi
       gamma=0.8+h2-0.3*h2*h2
-	if(vrr1 .lt. 0.0001) then
-	  uratio=5.
-	else
+      if(vrr1 < 0.0001) then
+        uratio=5.
+      else
         uratio=ubw/vrr1
-	endif
-      if(uratio.gt.5.)uratio=5.
+      endif
+      if(uratio > 5.)uratio=5.
       RA=EXP(GAMMA*uratio)*RC
       RCC=10.*RC
-      IF(RA.GE.RCC)RA=RCC
+      IF(RA >= RCC)RA=RCC
       FCA=0.24*ALOG10(12.*HD/RA)**(-2)
-      IF(DELm.LE.Ra/29.9)delm=ra/29.9
+      IF(DELm <= Ra/29.9)delm=ra/29.9
       h3=(ALOG(30.*DELM/RA)/ALOG(30.*DELM/RC))**2
       h4=((-1.+alog(30.*hd/rc))/(-1.+alog(30.*hd/ra)))**2
       alfaw=h3*h4
@@ -273,16 +273,16 @@ C
       TAUCEF=RMUC*ALFAW*TAUC
       TAUWEF=RMUWA*TAUW
       TAUCWE=TAUCEF+TAUWEF
-      if(taucwe.le.tauce)taucwe=tauce
+      if(taucwe <= tauce)taucwe=tauce
       uster1=sqrt(taucef/rhow)
       uster2=sqrt(tauce/rhow)
-      IF(USTER1.LE.USTER2)USTER1=USTER2
+      IF(USTER1 <= USTER2)USTER1=USTER2
       TA=(TAUCWE-TAUCR)/TAUCR
       TA=MAX(.0001,TA)
       CA=0.015*D50/A*DSTER**(-.3)*TA**1.5
-      if(ca.ge.0.60)ca=0.6
+      if(ca >= 0.60)ca=0.6
       taub=rmuc*alfaw*tauc+rmuw*tauw
-      if(taub.le.tauce)taub=tauce
+      if(taub <= tauce)taub=tauce
       t=(taub-taucr)/taucr
       t=max(0.0001,t)
 C
@@ -297,49 +297,49 @@ C
       DYX = DYM/DXM
       BO  = .FALSE.
       HULP30=-1.+ALOG(30.*HD/RA)
-      IF(DELM.GT.0.)THEN
+      IF(DELM > 0.)THEN
          UDEL=VR*ALOG(30.*DELM/RA)/HULP30
       ENDIF
 C
 C  COMPUTATION OF DERIVATIVE DC/DY OR DC/DX
 C
       beta=1.+2.*(ws/ust)**2.
-      if(beta.ge.1.5)beta=1.5
+      if(beta >= 1.5)beta=1.5
       ds=0.3*hd*(hs/hd)**0.5
-      if(ds.gt.0.2)ds=0.2
-      if(ds.le.0.05)ds=0.05
+      if(ds > 0.2)ds=0.2
+      if(ds <= 0.05)ds=0.05
       EBW=.004*DSTER*DS*UBW
-      IF (TP.GE.1.) THEN
+      IF (TP >= 1.) THEN
         EMAXW=0.035*HD*HS/TP
       ELSE
         EMAXW=0.
       ENDIF
-      IF(EMAXW.LE.EBW)EMAXW=EBW
+      IF(EMAXW <= EBW)EMAXW=EBW
       EMAXC=0.25*RKAP*UST*HD*BETA
       C=CA
       Z=A
-      IF(Z.LE.DS)ESW=EBW
-      IF(Z.GT.DS.AND.Z.LE.0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
+      IF(Z <= DS)ESW=EBW
+      IF(Z > DS .AND. Z <= 0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
      *(0.5*HD-DS))
-      IF(Z.GE.0.5*HD)ESW=EMAXW
-      IF(Z.GE.0.5*HD)ESC=EMAXC
-      IF(Z.LT.0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
+      IF(Z >= 0.5*HD)ESW=EMAXW
+      IF(Z >= 0.5*HD)ESC=EMAXC
+      IF(Z < 0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
       ES=(ESW**2.+ESC**2.)**0.5
       cm=0.65
       fcc=0.
-      IF (C.GT.1.E-8) THEN
-        IF(Z.GE.A)then
+      IF (C > 1.E-8) THEN
+        IF(Z >= A)then
             fi =1.+(c/cm)**.8-2.*(c/cm)**.4
             fcc=-WS/ES/fi*C*(1.-C)**5.
         endif
       ENDIF
       YPRIME=fcc
       FF = 1./CA*YPRIME
-      IF(DELM.GT.0.)THEN
+      IF(DELM > 0.)THEN
          UC=UDEL*ALOG(30.*A/RC)/ALOG(30.*DELM/RC)
       ENDIF
-      IF(A.GE.DELM)UC=VR*ALOG(30.*A/RA)/HULP30
-      if(a.le.rc/30.)uc=0.
+      IF(A >= DELM)UC=VR*ALOG(30.*A/RA)/HULP30
+      if(a <= rc/30.)uc=0.
 C
 C  STORAGE OF RESULTS IN MATRIX RMAT
 C
@@ -361,13 +361,13 @@ C
       NTEL = NTEL+1
       XOLD = XEND
       YOLD = Y
-      IF (-YPRIME .GT. DYX) THEN
+      IF (-YPRIME > DYX) THEN
          Y = YOLD-DYM
-         IF (Y .LT. 2./3.*YOLD) Y = 2./3.*YOLD
+         IF (Y < 2./3.*YOLD) Y = 2./3.*YOLD
          XEND = XOLD+ALOG(Y/YOLD)/FF
       ELSE
          XEND = XOLD+DXM
-         IF (XEND .GE. HD) THEN
+         IF (XEND >= HD) THEN
             XEND = HD
             BO = .TRUE.
          ENDIF
@@ -375,33 +375,33 @@ C
       ENDIF
       C=Y
       Z=XEND
-      IF(Z.LE.DS)ESW=EBW
-      IF(Z.GT.DS.AND.Z.LE.0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
+      IF(Z <= DS)ESW=EBW
+      IF(Z > DS .AND. Z <= 0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
      *(0.5*HD-DS))
-      IF(Z.GE.0.5*HD)ESW=EMAXW
-      IF(Z.GE.0.5*HD)ESC=EMAXC
-      IF(Z.LT.0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
+      IF(Z >= 0.5*HD)ESW=EMAXW
+      IF(Z >= 0.5*HD)ESC=EMAXC
+      IF(Z < 0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
       ES=(ESW**2.+ESC**2.)**0.5
       fcc=0.
-      IF (C.GT.1.E-8) THEN
-        IF(Z.GE.A)then
+      IF (C > 1.E-8) THEN
+        IF(Z >= A)then
             fi =1.+(c/cm)**.8-2.*(c/cm)**.4
             fcc=-WS/ES/fi*C*(1.-C)**5.
         endif
       ENDIF
       YPRIME=fcc
       FF = 1./Y*YPRIME
-      IF(DELM.GT.0.)THEN
+      IF(DELM > 0.)THEN
          UC=UDEL*ALOG(30.*XEND/RC)/ALOG(30.*DELM/RC)
       ENDIF
-      IF(XEND.GE.DELM)UC=VR*ALOG(30.*XEND/RA)/HULP30
-      if(xend.le.rc/30.)uc=0.
+      IF(XEND >= DELM)UC=VR*ALOG(30.*XEND/RA)/HULP30
+      if(xend <= rc/30.)uc=0.
       TERM2=UC*Y
       TERM1=TERM2
 C
 C  STORAGE OF RESULTS IN MATRIX RMAT
 C
-      IF (NTEL .EQ. NN/JTAL.OR.BO) THEN
+      IF (NTEL == NN/JTAL .OR. BO) THEN
          RMAT(IT,1)=Z
          dz=rmat(it,1)-rmat(it-1,1)
          RMAT(IT,2)=Y*RHOS
@@ -411,7 +411,7 @@ C
          IT = IT+1
          NTEL      = 0
       ENDIF
-      IF (.NOT. BO) GOTO 100
+      IF ( .NOT. BO) GOTO 100
 c
 c  SUSPENDED LOAD TRANSPORT IN WAVE DIRECTION
 c
@@ -433,12 +433,12 @@ c
 c  INSTANTANEOUS BED LOAD TRANSPORT 
 c
       vrdelm=vr*alog(30.*delm/ra)/(-1.+alog(30.*hd/ra))
-      if(abs(vr) .gt. 0.0001) then
-	  urdelm=(ur/vr)*vrdelm
-	else
-	  urdelm=0.
-	endif
-      IF(DELM.LE.RA/30.)THEN
+      if(abs(vr) > 0.0001) then
+        urdelm=(ur/vr)*vrdelm
+      else
+        urdelm=0.
+      endif
+      IF(DELM <= RA/30.)THEN
         vrdelm=0.
         urdelm=0.
       endif
@@ -449,14 +449,14 @@ c
       ntime=201
       dtt=tp1/(ntime-1)
       tfor=0.
-      if(abw.gt.0.)tfor=ubwback/(ubwfor+ubwback)*tp1
+      if(abw > 0.)tfor=ubwback/(ubwfor+ubwback)*tp1
       tback=tp1-tfor
       profact=((-1.+alog(30.*hd/rc))/alog(30.*delm/rc))**2.
       fc11=0.25*fc1*profact
-	if(abs(ubw)+abs(vrdelm) .gt. 0.0001) then
+      if(abs(ubw)+abs(vrdelm) > 0.0001) then
         acw=abs(vrdelm)/(abs(ubw)+abs(vrdelm))
-	else
-	  acw=1.
+      else
+        acw=1.
       endif
       fcw1=acw*fc11+(1.-acw)*fw1
       sbx=0.
@@ -468,11 +468,11 @@ c
   150 continue
       time=nnn*dtt
       udt=0.
-      if(abw.gt.0.)then
-      if(hd.ge.hlimit)then
+      if(abw > 0.)then
+      if(hd >= hlimit)then
          udt=ubw*sin(2.*pi*time/tp1)+ubw1*sin(4.*pi*time/tp1-0.5*pi)
       else
-         if(time.lt.tfor)then
+         if(time < tfor)then
          udt=ubwfor*sin(pi*time/tfor)
       else
          udt=-ubwback*sin(pi*(time-tfor)/tback)
@@ -492,26 +492,26 @@ c
       tt=max(0.0001,tt)
       uster1t=(tau1t/rhow)**0.5
       coeff=0.25*(1.-(hs/hd)**0.5)
-      if(coeff.le.0.075)coeff=0.075
+      if(coeff <= 0.075)coeff=0.075
       sbt=coeff*d50*rhos*uster1t*tt**1.5/(dster**0.3)
-      if(utvec .gt. 0.0001) then
-	  sbx=sbx+uxt/utvec*sbt
+      if(utvec > 0.0001) then
+        sbx=sbx+uxt/utvec*sbt
         sby=sby+uyt/utvec*sbt
         tau1x=tau1x+uxt/utvec*tau1t
         tau1y=tau1y+uyt/utvec*tau1t
-	endif
+      endif
       nnn=nnn+1
-      if(nnn.le.ntime)goto 150
+      if(nnn <= ntime)goto 150
       tau1m=tau1som/(ntime-1)
       tau1x=tau1x/(ntime-1)
       tau1y=tau1y/(ntime-1)
       tau1net=(tau1x**2.+tau1y**2.)**0.5
-	if(tau1y .ne. 0.  .and.  tau1x .eq. 0) then
-	  phi1t=0.
+      if(tau1y /= 0. .AND. tau1x == 0) then
+        phi1t=0.
       else
 cipk jun02        phi1t=(180./pi)*atan(tau1y/tau1x)
         phi1t=(180./pi)*atan2(tau1y,tau1x)
-	endif
+      endif
       sbx=sbx/(ntime-1)
       sby=sby/(ntime-1)
 c
@@ -531,11 +531,11 @@ c
       sbc=sbx-sby/tan(phi)
       sbw=sby/sin(phi)
 cipk jun02      phib1=(180./pi)*atan(sby/sbx)
-      if(sbx .eq. 0.  .and.  sby .eq. 0.) then
+      if(sbx == 0. .AND. sby == 0.) then
         phib1=0.
-	else
+      else
         phib1=(180./pi)*atan2(sby,sbx)
-	endif
+      endif
       phib2=(180./pi)*phi-phib1
 c
 c   TOTAL LOAD TRANSPORT
@@ -544,33 +544,33 @@ c
       sty=ssy+sby
       stvec=(stx**2.+sty**2.)**0.5
 cipk jun02      phit1=(180./pi)*atan(sty/stx)
-      if(stx .eq. 0.  .and.  sty .eq. 0.) then
-	  phit1=0.
-	else
+      if(stx == 0. .AND. sty == 0.) then
+        phit1=0.
+      else
         phit1=(180./pi)*atan2(sty,stx)
-	endif
+      endif
       phit2=(180./pi)*phi-phit1
       stc=stx-sty/tan(phi)
       stw=sty/sin(phi)
-	if(stx .gt. 0.) then
+      if(stx > 0.) then
         stcc=stx
-	else
-	  stcc=0.
-	endif
+      else
+        stcc=0.
+      endif
 c           HDTM=0.5
-c	      IF(HDS .LT. HDTM) HDTM=HDS
+c            IF(HDS < HDTM) HDTM=HDS
 c           GP(1)=STVEC/(HDTM*VRR*1000./5.)
 
 ccc      GP(1)=STVEC/(HDS*VRR*1000.)
 
       GP(1)=STCC/(HDS*VRR*1000.)
-	TRLOC=STCC
+      TRLOC=STCC
 
 
 CIPK JUN02
-      IF(abs(ISWT) .ne. 1) RETURN
+      IF(abs(ISWT) /= 1) RETURN
 
-      if(iswt .eq. 1) then
+      if(iswt == 1) then
       WRITE(75,'('' DSTER = PARTICLE PARAMETER               [   -  ] ''
      *,E10.4)')DSTER
       WRITE(75,'('' L     = WAVE LENGTH                      [  M   ] ''
@@ -695,12 +695,12 @@ CIPK JUN02
      *E10.4)')STC
       WRITE(75,'(''   TOTAL L. TR. COMPONENT IN WAVE DIR.   (KG/SM) ='',
      *E10.4)')STW
-	else
+      else
 CIPK MAR06
-C	  write(108,'(i5,4f10.3,3f10.2)') 
+C        write(108,'(i5,4f10.3,3f10.2)') 
 C     +   node,stvec,stx,sty,stc,stw,STCC/(HDS*VRR)*1000.,rmat(1,2)
-	endif
-	RETURN
+      endif
+      RETURN
       END
 
       SUBROUTINE ZEROIN(X,Y,LOG,F,TOLX)
@@ -723,7 +723,7 @@ C INTERPOLATE
     1 C=A
       FC=FA
 C EXTRAPOLATE:
-    2 IF(ABS(FC).GE.ABS(FB))GOTO 19
+    2 IF(ABS(FC) >= ABS(FB))GOTO 19
       A=B
       FA=FB
       X=C
@@ -734,45 +734,45 @@ C EXTRAPOLATE:
 C END INTERCHANGE
    19 TOL=TOLX(X)
       RM=(C+B)*.5
-      IF(ABS(RM-B).LE.TOL)GOTO 200
+      IF(ABS(RM-B) <= TOL)GOTO 200
       P=(B-A)*FB
-      IF(P.LT.0.)GOTO 5
+      IF(P < 0.)GOTO 5
       Q=FA-FB
       GOTO 6
     5 Q=FB-FA
       P=-P
     6 A=B
       FA=FB
-      IF(P.GT.ABS(Q)*TOL)GOTO 8
-      IF(C.LE.B)GOTO 10
+      IF(P > ABS(Q)*TOL)GOTO 8
+      IF(C <= B)GOTO 10
       B=B+TOL
       X=B
       GOTO 11
    10 B=B-TOL
       X=B
    11 GOTO 12
-    8 IF(P.GE.(RM-B)*Q)GOTO 14
+    8 IF(P >= (RM-B)*Q)GOTO 14
       B=P/Q+B
       X=B
       GOTO 12
    14 B=RM
       X=B
    12 FB=F(X)
-      IF(FC.LT.0.)GOTO 16
-      IF(FB.LT.0.)GOTO 18
+      IF(FC < 0.)GOTO 16
+      IF(FB < 0.)GOTO 18
       GOTO 1
    18 GOTO 2
-   16 IF(FB.GT.0.)GOTO 21
+   16 IF(FB > 0.)GOTO 21
       GOTO 1
    21 GOTO 2
   200 Y=C
-      IF(FC.LT.0.)GOTO 31
-      IF(FB.GT.0.)GOTO 33
+      IF(FC < 0.)GOTO 31
+      IF(FB > 0.)GOTO 33
       LOG=.TRUE.
       GOTO 300
    33 LOG=.FALSE.
       GOTO 300
-   31 IF(FB.LT.0.)GOTO 35
+   31 IF(FB < 0.)GOTO 35
       LOG=.TRUE.
       GOTO 300
    35 LOG=.FALSE.

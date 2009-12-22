@@ -1480,6 +1480,6 @@ contains
     call vstring_set_stoponerror ( stoponerror )
   end subroutine vstringlist_set_stoponerror
 end module m_vstringlist
-	
+      
 
 

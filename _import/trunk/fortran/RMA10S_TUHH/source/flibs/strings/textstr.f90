@@ -145,12 +145,12 @@ subroutine txt_from_string( text, string )
     nosegm = ( len(string) + segment_length - 1 ) / segment_length
 
     if ( associated(text%text) ) then
-        if ( size(text%text) .lt. nosegm ) then
+        if ( size(text%text) < nosegm ) then
             deallocate(text%text)
         endif
     endif
 
-    if ( .not. associated(text%text) ) then
+    if ( .NOT. associated(text%text) ) then
         allocate( text%text(1:nosegm) )
     endif
 
@@ -276,7 +276,7 @@ subroutine txt_write_to_file( lun, text )
     character(len=txt_length(text))  :: string
 
     call txt_to_string( text, string )
-    if ( lun .gt. 0 ) then
+    if ( lun > 0 ) then
         write( lun, '(a)' ) string
     else
         write( *, '(1x,a)' ) string
@@ -409,7 +409,7 @@ subroutine mltxt_insert_string( text, pos, line )
     integer                             :: posn
     type(TEXT_STRING), pointer, dimension(:) :: old_text
 
-    if ( pos .eq. MLTXT_END ) then
+    if ( pos == MLTXT_END ) then
        posn = 0
        if ( associated(text%text) ) then
            posn = size(text%text)
@@ -432,7 +432,7 @@ subroutine mltxt_insert_string( text, pos, line )
 
     if ( associated( old_text ) ) then
         text%text(1:posn) = old_text(1:posn)
-        if ( posn .lt. size(old_text) ) then
+        if ( posn < size(old_text) ) then
             text%text(posn+2:) = old_text(posn+1:)
         endif
         deallocate( old_text )
@@ -464,11 +464,11 @@ subroutine mltxt_delete( text, pos )
     integer                                  :: i
     type(TEXT_STRING), pointer, dimension(:) :: old_text
 
-    if ( .not. associated(text%text) ) then
+    if ( .NOT. associated(text%text) ) then
         return ! We ignore calls with uninitialised items
     endif
 
-    if ( pos .lt. 1 .or. pos .gt. size(text%text) ) then
+    if ( pos < 1 .OR. pos > size(text%text) ) then
         return ! We ignore calls with out-of-bound positions
     endif
 
@@ -499,7 +499,7 @@ subroutine mltxt_get( text, pos, line )
     integer, intent(in)                     :: pos
     type(TEXT_STRING), pointer              :: line
 
-    if ( pos .ge. 1 .and. pos .le. size(text%text) ) then
+    if ( pos >= 1 .AND. pos <= size(text%text) ) then
         line => text%text(pos)
     else
         line => null()

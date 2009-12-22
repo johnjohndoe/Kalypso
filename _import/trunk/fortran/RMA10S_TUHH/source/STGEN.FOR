@@ -13,7 +13,7 @@ C...... Save pointer to define which nodes are stage flow
 C-
       MAXL = LMT(J)
 CIPK FEB01
-      IF(MAXL .EQ. 0) THEN
+      IF(MAXL == 0) THEN
         WRITE(75,*) 'ATTEMPT TO SET STAGE-FLOW FOR NON-EXISTENT LINE',J
         WRITE(75,*) 'EXECUTION TERMINATED'
         WRITE(*,*) 'ATTEMPT TO SET STAGE-FLOW FOR NON-EXISTENT LINE',J
@@ -37,8 +37,8 @@ C-
       !EFa jul07, changes with respect to RMA2
       !QREQ=A1+A2*(VEL(3,NA)+AO(NA)-A3)**A4
       QREQ=A1
-      IF(A1 .EQ. 0.) QREQ=1.
-      !IF(MAXL .EQ. 1) QREQ=A1
+      IF(A1 == 0.) QREQ=1.
+      !IF(MAXL == 1) QREQ=A1
       !-
       CALL QGEN(J,QREQ,A5,QQAL)
       RETURN

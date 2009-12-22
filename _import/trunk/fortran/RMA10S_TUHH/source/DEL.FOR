@@ -27,16 +27,16 @@ C-
       !             ELIMINATE FROM GLOBAL DEFINITION!
 
       !meaning of NDRY
-      !NDRY (J) = 1 .and. NDRYO (J) = 1 : node is wet and was wet
-      !NDRY (J) = 1 .and. NDRYO (J) = 2 : node is wet and was dry ; node is added to the system
-      !NDRY (J) = 2 .and. NDRYO (J) = 1 : node is dry and was wet
-      !NDRY (J) = 2 .and. NDRYO (J) = 2 : node is dry and was dry ; node is eliminated from the system
+      !NDRY (J) = 1 .AND. NDRYO (J) = 1 : node is wet and was wet
+      !NDRY (J) = 1 .AND. NDRYO (J) = 2 : node is wet and was dry ; node is added to the system
+      !NDRY (J) = 2 .AND. NDRYO (J) = 1 : node is dry and was wet
+      !NDRY (J) = 2 .AND. NDRYO (J) = 2 : node is dry and was dry ; node is eliminated from the system
       !NDRY (J) = -1                    : node was just possibly selected to be rewetted in the previous execution of rewet subroutine
 
       !*********************************************
       !Initialize 'old' values in the very first run
       !*********************************************
-      IF(IENT .EQ. 0) THEN
+      IF(IENT == 0) THEN
         ElementOld: DO N = 1, NE
           IMATO (N) = IMAT (N)
         ENDDO ElementOld
@@ -62,16 +62,16 @@ C-
         !get number of corner nodes
         NCN = NCORN (N)
         !only consider up to 2D elements including control structures
-        IF (NCN < 9  .AND. IMAT (N) < 1000) THEN
+        IF (NCN < 9 .AND. IMAT (N) < 1000) THEN
           DryOutNodes: DO M = 1, NCN, 2
             !get node
             L = ABS (NOP (N, M))
             !greater then activation depth: surely wet
             IF (VEL (3, L) > DSETD) CYCLE DryOutNodes
             !only possible value is NDRY (L) = -1, i.e. node is just rewetted in this run. If it doesn't reach the rewetting depth dsetd, element is still dry
-            !.or.
+            ! .OR. 
             !depth is below deactivation depth
-            IF (NDRY (L) < 1 .or. VEL (3, l) <= dset) THEN
+            IF (NDRY (L) < 1 .OR. VEL (3, l) <= dset) THEN
               !Set element dry
               IMAT (N) = - ABS (IMAT (N))
             ENDIF

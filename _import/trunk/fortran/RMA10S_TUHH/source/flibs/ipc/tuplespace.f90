@@ -240,7 +240,7 @@ end function tuple_match
 logical function tuple_empty( tuple )
     type(tuple_data), intent(in) :: tuple
 
-    tuple_empty = .not. associated(tuple%elem)
+    tuple_empty = .NOT. associated(tuple%elem)
 end function tuple_empty
 
 ! tuple_out --
@@ -383,7 +383,7 @@ subroutine tuple_read_in_tuple( server, pattern_array, tuple, operation, wait )
         call ipc_receive_start( server%comm, server%space, tag, id )
 
         if ( tag /= 'READY' ) then
-            if ( .not. wait ) then
+            if ( .NOT. wait ) then
                 exit
             else
                 cycle

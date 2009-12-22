@@ -29,7 +29,7 @@ CIPK SEP04
       CHARACTER*72 QHTITLE,DLIN
       DIMENSION QQAL(*)
       DATA NQHYD/0/,ITIMEH/0/
-      IF(IQEUNIT .EQ. 0) THEN
+      IF(IQEUNIT == 0) THEN
         WRITE(*,*) 'Filename for element inflow missing'
         WRITE(*,*) 'Enter filename for element inflows'
 CIPK SEP04
@@ -37,7 +37,7 @@ CIPK SEP04
         IQEUNIT=14
         OPEN(UNIT=14,FILE=FNAMT,STATUS='OLD')
       ENDIF
-      IF(ITIMEH .EQ. 0) THEN
+      IF(ITIMEH == 0) THEN
         ALLOCATE(NCLIN(NELDS),NHY(NELDS),TA(NDPTS,NELDS),HT(NDPTS,NELDS)
      +         ,DYQ(NDPTS,NELDS),IYDAT(NELDS),NEST(NELDS)
      +         ,HD(NDPTS,NELDS,3),ILAYRH(NDPTS,NELDS))
@@ -52,7 +52,7 @@ CIPK SEP04
         ILAYRH=0
         ITIMEH=1
       ENDIF
-      IF(NQHYD .EQ. 0) THEN
+      IF(NQHYD == 0) THEN
 c
 c     set starting time in hours of the year
 c     teth contains the first time step
@@ -62,34 +62,34 @@ c     teth contains the first time step
   100   READ(IQEUNIT,'(A8,A72)') ID,QHTITLE
 cipk nov97        READ(IQEUNIT,'(A8,A72)') ID,DLIN
         call ginpt(iqeunit,id,dlin)
-        IF(ID(1:3) .EQ. 'QEI') THEN
+        IF(ID(1:3) == 'QEI') THEN
   101     NQHYD=NQHYD+1
           NHY(NQHYD)=0
           READ(DLIN,'(3I8)') NCLIN(NQHYD),NEST(NQHYD),IYDAT(NQHYD)
-          IF(NCLIN(NQHYD) .EQ. 0) NCLIN(NQHYD)=-9999
+          IF(NCLIN(NQHYD) == 0) NCLIN(NQHYD)=-9999
 c
           IYD=IYDAT(NQHYD)
           DO 120 I=1,ndpts-1
 cipk nov97            READ(IQEUNIT,'(A8,A72)') ID,DLIN
             call ginpt(iqeunit,id,dlin)
-            IF(ID(1:3) .EQ. 'QE ') THEN
+            IF(ID(1:3) == 'QE ') THEN
 cipk jan96 add day of year to logic
               READ(ID(5:8),'(F4.0)') DYQ(I,NQHYD)
               READ(DLIN,'(F8.0,I8,4F8.0)')
      +        TA(I,NQHYD),ILAYRH(I,NQHYD),HT(I,NQHYD)
      +      ,(HD(I,NQHYD,K),K=1,3)
               NHY(NQHYD)=NHY(NQHYD)+1
-              IF(I .EQ. 1) THEN
+              IF(I == 1) THEN
 C
 C      reduce input time to time since that set to start simulation
 C
   110           CONTINUE
-                IF(MOD(IYD,4) .EQ. 0) THEN
+                IF(MOD(IYD,4) == 0) THEN
                   ILP=1
                 ELSE
                   ILP=0
                 ENDIF
-                IF(IYD .EQ. IYRR) THEN
+                IF(IYD == IYRR) THEN
 C
 C      If now for for the same year
 C
@@ -98,8 +98,8 @@ C
 C      set time as the difference
 C
                   TA(I,NQHYD)=TCUR1-TPRVH-TSTARTS
-                ELSEIF(IYD .LT. IYRR) THEN
-                  IF(MOD(IYD,4) .EQ. 0) THEN
+                ELSEIF(IYD < IYRR) THEN
+                  IF(MOD(IYD,4) == 0) THEN
                     TPRVH=TPRVH+366.*24.
                   ELSE
                     TPRVH=TPRVH+365.*24.
@@ -117,11 +117,11 @@ CIPK SEP04 CREATE ERROR FILE
                   STOP
                 ENDIF
               ELSE
-                IF(DYQ(I,NQHYD) .LT. DYQ(I-1,NQHYD)) THEN
+                IF(DYQ(I,NQHYD) < DYQ(I-1,NQHYD)) THEN
                   TCUR1=TCUR1-365.*24.
-                  IF(ILP .EQ. 1) TCUR1=TCUR1-24.
+                  IF(ILP == 1) TCUR1=TCUR1-24.
                   IYD=IYD+1
-                  IF(MOD(IYD,4) .EQ. 0) THEN
+                  IF(MOD(IYD,4) == 0) THEN
                     ILP=1
                   ELSE
                     ILP=0
@@ -131,7 +131,7 @@ CIPK SEP04 CREATE ERROR FILE
                 TA(I,NQHYD)=TA(I-1,NQHYD)+TCUR-TCUR1
                 TCUR1=TCUR
               ENDIF
-            ELSEIF(ID(1:3) .EQ. 'QEI') THEN
+            ELSEIF(ID(1:3) == 'QEI') THEN
               NHY(NQHYD)=NHY(NQHYD)+1
 cipk jan96 add day of year to logic
               DYQ(NHY(NQHYD),NQHYD)=1.E+6
@@ -169,16 +169,16 @@ C
 cipk jan96 add day of year to logic
       CTIM=TETH
       DO 300 J=1,NQHYD
-        IF(N .EQ. NCLIN(J)) THEN
+        IF(N == NCLIN(J)) THEN
           DO 260 I=2,NHY(J)
             TIM=TA(I-1,J)
             TIN=TA(I,J)
-            IF(CTIM .LT. TIN) THEN
+            IF(CTIM < TIN) THEN
 cipk nov97 define frac to determine  LN
               FRAC=(CTIM-TIM)/(TIN-TIM)
               QF=HT(I-1,J)+(HT(I,J)-HT(I-1,J))*FRAC
 CIPK NOV97     +        (CTIM-TIM)/(TIN-TIM)
-              IF(FRAC .LT. 0.5) THEN
+              IF(FRAC < 0.5) THEN
                 LN=ILAYRH(I-1,J)
               ELSE
                 LN=ILAYRH(I,J)

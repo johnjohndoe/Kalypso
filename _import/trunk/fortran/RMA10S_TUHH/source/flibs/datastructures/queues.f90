@@ -74,8 +74,8 @@ end subroutine queue_destroy
 logical function queue_empty( queue )
     type(QUEUE_STRUCT), intent(in)  :: queue
 
-    queue_empty = .not. queue%full .and. &
-        queue%end .eq. queue%start - 1
+    queue_empty = .NOT. queue%full .AND. &
+        queue%end == queue%start - 1
 
 end function queue_empty
 
@@ -131,9 +131,9 @@ function queue_retrieve_data( queue ) result(data)
 
     data = queue%data(queue%start)
 
-    if ( .not. queue_empty(queue) ) then
+    if ( .NOT. queue_empty(queue) ) then
         queue%start = queue%start + 1
-        if ( queue%start .gt. size(queue%data) ) then
+        if ( queue%start > size(queue%data) ) then
             queue%start = 1
         endif
         queue%full = .false.
@@ -153,17 +153,17 @@ subroutine queue_append_data( queue, data, success )
     type(QUEUE_DATA), intent(in) :: data
     logical, intent(out)         :: success
 
-    success = .not. queue_full( queue )
+    success = .NOT. queue_full( queue )
     if ( success ) then
         queue%end = queue%end + 1
-        if ( queue%end .gt. size(queue%data) ) then
+        if ( queue%end > size(queue%data) ) then
             queue%end = 1
         endif
-        if ( queue%start .eq. queue%end+1 ) then
+        if ( queue%start == queue%end+1 ) then
             queue%full = .true.
         endif
-        if ( queue%end   .eq. size(queue%data) .and. &
-             queue%start .eq. 1 ) then
+        if ( queue%end  == size(queue%data) .AND. &
+             queue%start == 1 ) then
             queue%full = .true.
         endif
         queue%data(queue%end) = data

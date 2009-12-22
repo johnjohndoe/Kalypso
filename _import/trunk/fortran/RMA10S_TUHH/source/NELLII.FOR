@@ -42,7 +42,7 @@ c      do 100 i=1,ngp
       dengr=-grav*drodz/rho*conver
       dv2=dudz*dudz+dvdz*dvdz
       dv2=dv2*conver*conver
-      if (dv2.lt.vthresh)dv2=vthresh
+      if (dv2 < vthresh)dv2=vthresh
       gri=dengr/dv2
       dudzt=dudz*conver
       dvdzt=dvdz*conver
@@ -55,13 +55,13 @@ c      do 100 i=1,ngp
       sm=(sh*a1/a2)*(b1*(gamma1-c1)/(b1*gamma1))
       q2=b1*elngth*elngth*(sm*dv2)
 c      q2=b1*elngth*elngth*(sm*dv2-sh*dengr)
-      if(q2.lt.0.)q2=0.0
+      if(q2 < 0.)q2=0.0
       q=sqrt(q2)
-c      IF(IWIND.NE.0)THEN
+c      IF(IWIND /= 0)THEN
 c
 c     TEMPORRAILY COMMMENTED OUT
 c
-C        IF(IWIND.NE. 0)THEN
+C        IF(IWIND /= 0)THEN
 C           CE-QUAL-W2 ADJUSTMENT FOR WIND WAVES
 C           TAKEN FROM REPORT E-86-5 (USACE WES)
 C           G. NAIL 12 JULY 1991
@@ -74,14 +74,14 @@ C           COMPUTE DEPTH FACTOR
 cc              TERM2=-2.*WKN*ABS(elev-z)*0.3048/conver
 C           COMPUTE EDDY VISCOSITY CONTRIBUTION
 C           SET FLAG FOR DUDZ OR DVDZ VERY SMALL (POTENTIAL OVERFLOW)
-cc              IF (ABS(DUDZT).LT.0.000001)DUDZT=0.000001
+cc              IF (ABS(DUDZT) < 0.000001)DUDZT=0.000001
 cc              WINDXZ=ABS(SIGMA(1,1)*EXP(TERM2)/DUDZT)
-cc              IF (ABS(DVDZT).LT.0.000001)DVDZT=0.000001
+cc              IF (ABS(DVDZT) < 0.000001)DVDZT=0.000001
 cc              WINDYZ=ABS(SIGMA(1,2)*EXP(TERM2)/DVDZT)
 crcb jan 92 I assumed constant wind stress using node 1
 C           SET LIMITS ON THE EDDY VISCOSITY FOR STABILITY
-cc              IF(ABS(WINDXZ).GT..10)WINDXZ=.10
-cc              IF(ABS(WINDYZ).GT..10)WINDYZ=.10
+cc              IF(ABS(WINDXZ) > .10)WINDXZ=.10
+cc              IF(ABS(WINDYZ) > .10)WINDYZ=.10
 cc              WINDZ=0.14*SQRT(WINDXZ*WINDXZ+WINDYZ*WINDYZ)
 cc        ELSE
               WINDXZ=0.0
@@ -89,8 +89,8 @@ cc        ELSE
               WINDZ=0.0
 cc        ENDIF
 C   **** HENDERSON-SELLERS ADJUSTMENT
-      if(gri.lt.0.)gri=0.
-      if(grav .lt. 10.)  then
+      if(gri < 0.)gri=0.
+      if(grav < 10.)  then
         Epsxz = 1000. *(WINDXZ+SM*ELNGTH*Q)/(1.+0.74*GRI)
         Epsyz = 1000. *(WINDYZ+SM*ELNGTH*Q)/(1.+0.74*GRI)
         Difz = (WINDZ+SH * ELNGTH * Q) / (1. + 37. * GRI*GRI)
@@ -99,11 +99,11 @@ C   **** HENDERSON-SELLERS ADJUSTMENT
         Epsyz = 1.94 *(WINDYZ+SM*ELNGTH*Q)/(1.+0.74*GRI)
         Difz = (WINDZ+SH * ELNGTH * Q) / (1. + 37. * GRI*GRI)
       endif
-       if(difz .le. 0.) then 
+       if(difz <= 0.) then 
          write(*,*) 'difz = 0. at z =',z
        endif
-c      if(icyc.eq.2)then
-c      if(h(i).gt.30.)then
+c      if(icyc == 2)then
+c      if(h(i) > 30.)then
 c      write(*,*)'z,h,drodz,twm',z(i),h(i),drodz(i),twm
 c      write(*,*)'dudz,dvdz',dudz(i),dvdz(i)
 c      write(*,*)'windxz,epsxz',windxz,epsxz(i)

@@ -19,25 +19,25 @@ C-
 C
 C     Test for 3-D
 C
-        IF(NDEP(N) .GT. 1) THEN
+        IF(NDEP(N) > 1) THEN
 
 C
 C     Establish threshold if it is not defined
 C
-        IF(TRANSIT .EQ. 0) THEN
+        IF(TRANSIT == 0) THEN
           TRANSITT= ADT(N)-(ADB(N)+ADT(N))/2.*(1.-AKP(N))
-C          if(n .eq. 1) write(75,*) ' transit=',transitt
+C          if(n == 1) write(75,*) ' transit=',transitt
         ELSE
           TRANSITT=TRANSIT
         ENDIF
 C
 C     Is depth below the threshold
 C
-          IF(VEL(3,N) .LT. TRANSITT) THEN
+          IF(VEL(3,N) < TRANSITT) THEN
 C
 C     Test whether collapse already active, if so skip by
 C
-            IF(ICOLLAP(N) .EQ. 1) GO TO 300
+            IF(ICOLLAP(N) == 1) GO TO 300
 C
 C     We have a candidate to set collapse switch and integrate the velocities
 C
@@ -46,7 +46,7 @@ C
             K=NREF(N)
             L=NREF(N)+NDEP(N)-1
             DO M=K,L
-              IF(M .EQ. K) THEN
+              IF(M == K) THEN
                 MM=N
               ELSE
                 MM=M
@@ -63,73 +63,73 @@ C
       DO N=1,NE
 CIPK JAN02  INITIALIZE SIDFF
         SIDFF(N)=0.
-	  IF(SIDF(N) .NE. 0.) THEN
-	    WRITE(75,*) 'N,SIDF(N),TVOL(N)',N,SIDF(N),TVOL(N)
-	  ENDIF
+        IF(SIDF(N) /= 0.) THEN
+          WRITE(75,*) 'N,SIDF(N),TVOL(N)',N,SIDF(N),TVOL(N)
+        ENDIF
 C
 C     Intialize   ICOLLAPE=1 says this element is connected 
 C     to node with depth below TRANSIT
 C
         ICOLLAPE(N)=0
-        IF(IMAT(N) .GT. 0) THEN
+        IF(IMAT(N) > 0) THEN
           NCN=NCORN(N)
 C
 C     Loop on the nodes looking for  all depths below TRANSIT
 C
 CIPK APR01 ADD BETTER TEST FOR SIDE ELEMENTS
           ICNT=0
-          IF(NETYP(N) .EQ. 13  .OR.  NETYP(N) .EQ. 14) THEN
-	      IF(ICOLLAPE(NRELSF(N)) .EQ. 1) THEN
-	        ICOLLAPE(N)=1
-	      ENDIF
-	    ELSE
+          IF(NETYP(N) == 13 .OR. NETYP(N) == 14) THEN
+            IF(ICOLLAPE(NRELSF(N)) == 1) THEN
+              ICOLLAPE(N)=1
+            ENDIF
+          ELSE
             DO M=1,NCN
               NN=ABS(NSURF(NOP(N,M)))
-              IF(ICOLLAP(NN) .EQ. 1) THEN
+              IF(ICOLLAP(NN) == 1) THEN
                 ICNT=ICNT+1
               ENDIF
             ENDDO 
-crrr MAY00          IF(ICNT .GT. 0) THEN        
+crrr MAY00          IF(ICNT > 0) THEN        
 c if already depth averaged, skip
-            IF (ICNT .GT. 0      .and. 
-     &         (netyp(n) .ne. 15 .and. netyp(n) .ne. 16  .and.
-     &          netyp(n) .ne. 17 .and. netyp(n) .ne. 6   .and.
-     &          netyp(n) .ne. 7  .and. netyp(n) .ne. 8) ) THEN
+            IF (ICNT > 0     .AND. 
+     &         (netyp(n) /= 15 .AND. netyp(n) /= 16 .AND. 
+     &          netyp(n) /= 17 .AND. netyp(n) /= 6  .AND. 
+     &          netyp(n) /= 7 .AND. netyp(n) /= 8) ) THEN
 
               ICOLLAPE(N)=1
 
 cipk jan02  Look for side flows to translate to surface element
 
-              IF(IMAT(N)/1000 .EQ. 1) THEN
-	          NNS=NRELSF(N)
+              IF(IMAT(N)/1000 == 1) THEN
+                NNS=NRELSF(N)
                 K=NEREF(NNS)+1
                 L=NEREF(NNS)+NEDEP(NNS)-1
-	          IF(SIDF(NNS) .NE. 0.) THEN
+                IF(SIDF(NNS) /= 0.) THEN
                   SIDFF(N)=SIDFF(N)+SIDF(NNS)*TVOL(NNS)
                   SIDQ(N,1)=SIDQ(NNS,1)
                   SIDQ(N,2)=SIDQ(NNS,2)
                   SIDQ(N,3)=SIDQ(NNS,3)
-	          ENDIF
-                IF(NEDEP(NNS) .GT. 1) THEN
+                ENDIF
+                IF(NEDEP(NNS) > 1) THEN
                   DO M=K,L
-	              IF(SIDF(M) .NE. 0.) THEN
+                    IF(SIDF(M) /= 0.) THEN
                       SIDFF(N)=SIDFF(N)+SIDF(M)*TVOL(M)
                       SIDQ(M,1)=SIDQ(M,1)
                       SIDQ(M,2)=SIDQ(M,2)
                       SIDQ(M,3)=SIDQ(M,3)
-	              ENDIF
+                    ENDIF
                   ENDDO
                 ENDIF
                 SIDFF(N)=SIDFF(N)/TVOLC(NNS)
-	          IF(SIDFF(N) .NE. 0.) THEN
-			    WRITE(75,*) 'N,SIDFF',N,NNS,SIDFF(N),TVOLC(NNS)
-	          ENDIF
-	        ENDIF
-              IF(IMAT(N) .LT. 1000  .OR.  IMAT(N) .GT. 5000) THEN
+                IF(SIDFF(N) /= 0.) THEN
+                      WRITE(75,*) 'N,SIDFF',N,NNS,SIDFF(N),TVOLC(NNS)
+                ENDIF
+              ENDIF
+              IF(IMAT(N) < 1000 .OR. IMAT(N) > 5000) THEN
                 DO M=1,NCN
               
-                  IF(ICOLLAP(NOP(N,M)) .EQ. 0) THEN
-                    IF(NOP(N,M) .LE. NPM) THEN
+                  IF(ICOLLAP(NOP(N,M)) == 0) THEN
+                    IF(NOP(N,M) <= NPM) THEN
                       NN=NOP(N,M)
                       CALL AVEPARAM(NN,2)
                     ENDIF
@@ -137,7 +137,7 @@ cipk jan02  Look for side flows to translate to surface element
                 ENDDO
               ENDIF
             ENDIF
-	    ENDIF
+          ENDIF
         ENDIF
 
       ENDDO
@@ -145,7 +145,7 @@ cipk sep 03 revise write unit
       write(78,*) 'Collapsed surface nodes for time and iteration',tet,
      +         maxn
       do n=1,npm
-        if(icollap(n) .gt. 0) then
+        if(icollap(n) > 0) then
 cipk sep 03 revise write unit
           write(78,*) n      
         endif
@@ -153,7 +153,7 @@ cipk sep 03 revise write unit
 cipk sep 03 revise write unit
       write(78,*) 'Collapsed elements are'
       do n=1,ne
-        if(icollape(n) .gt. 0) then
+        if(icollape(n) > 0) then
 cipk sep 03 revise write unit
           write(78,*) n
         endif
@@ -166,7 +166,7 @@ cipk sep 03 revise write unit
 
       real*8 vintx,vinty,pints,pintt,pintu,DEPSUM,
      +       voldx,voldy,polds,poldt,poldu,vdotx,vdoty,pdots,pdott,pdott,
-     +	   pdotu,vdotox,vdotoy,pdotos,pdotot,pdotou,dep1
+     +         pdotu,vdotox,vdotoy,pdotos,pdotot,pdotou,dep1
       DEPSUM=0.
       VINTX=0.
       VINTY=0.
@@ -191,14 +191,14 @@ cipk sep 03 revise write unit
       K=NREF(N)
       L=NREF(N)+NDEP(N)-2
 c      write(78,*) n,nsurf(n),k,l,depscl,depsclo
-      IF(NSURF(N) .LT. 0) THEN
+      IF(NSURF(N) < 0) THEN
         LL=1
       ELSE
         LL=2
         L=L-1
       ENDIF
       DO M=K,L,LL
-        IF(M .EQ. K) THEN
+        IF(M == K) THEN
           MM=N
         ELSE
           MM=M
@@ -208,7 +208,7 @@ c      write(78,*) n,nsurf(n),k,l,depscl,depsclo
 C
 C     Check for mod-side nodes
 C
-        IF(NSURF(N) .LT. 0) THEN
+        IF(NSURF(N) < 0) THEN
 C
 C     We have a mid-side
 C
@@ -241,7 +241,7 @@ C
           DEP1=(CORD(MM,3)-CORD(M2,3))
           DEPSUM=DEPSUM+DEP1
 c          write(78,*) 'aveparm',mm,m1,m2,vel(4,mm),vel(4,m1),vel(4,m2),
-c     +		vel(3,mm),vel(3,m2),dep1
+c     +            vel(3,mm),vel(3,m2),dep1
           VINTX=VINTX+(VEL(1,MM)+4.*VEL(1,M1)+VEL(1,M2))/6.*DEP1
           VINTY=VINTY+(VEL(2,MM)+4.*VEL(2,M1)+VEL(2,M2))/6.*DEP1
           PINTS=PINTS+(VEL(4,MM)+4.*VEL(4,M1)+VEL(4,M2))/6.*DEP1
@@ -282,7 +282,7 @@ c     +		vel(3,mm),vel(3,m2),dep1
       K=NREF(N)
       L=NREF(N)+NDEP(N)-1
       DO M=K,L
-        IF(M .EQ. K) THEN
+        IF(M == K) THEN
           MM=N
         ELSE
           MM=M

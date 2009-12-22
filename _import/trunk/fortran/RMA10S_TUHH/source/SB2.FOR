@@ -118,13 +118,13 @@ C-
      + -0.57735026918626D0, -0.57735026918626D0,
      +  0.57735026918626D0,  0.57735026918626D0/
 C-
-      IF( NCN .EQ. 6 ) GO TO 250
+      IF( NCN == 6 ) GO TO 250
 C-
 C......PROCESS RECTANGLE
 C-
-      IF(NGP .EQ. 16) GO TO 160
-      IF(NGP .EQ.  4) GO TO 200
-      IF(ICNR9 .EQ. 0) THEN
+      IF(NGP == 16) GO TO 160
+      IF(NGP == 4) GO TO 200
+      IF(ICNR9 == 0) THEN
         DO 120 I=1,NGP
           X=ETAGPR(I)
           Y=PSIGPR(I)
@@ -144,7 +144,7 @@ C-
   130   CONTINUE
   140 CONTINUE
       GO TO 400
-  160 IF(ICNR16 .EQ. 0) THEN
+  160 IF(ICNR16 == 0) THEN
         DO 170 I=1,NGP
           X=ETGPRH(I)
           Y=PSGPRH(I)
@@ -167,7 +167,7 @@ C-
 C-
 C...... LOWER ORDER POINTS
 C-
-  200 IF(ICNR4 .EQ. 0) THEN
+  200 IF(ICNR4 == 0) THEN
         DO 210 I=1,NGP
           X=ETGPRL(I)
           Y=PSGPRL(I)
@@ -191,8 +191,8 @@ C-
 C......PROCESS TRIANGLE
 C-
   250 CONTINUE
-      IF(NGP .EQ. 16) GO TO 300
-      IF(ICNT7 .EQ. 0) THEN
+      IF(NGP == 16) GO TO 300
+      IF(ICNT7 == 0) THEN
         DO 275 I=1,NGP
           X=ETAGPT(I)
           Y=PSIGPT(I)
@@ -212,7 +212,7 @@ C-
   285   CONTINUE
   290 CONTINUE
       GO TO 400
-  300 IF(ICNT16 .EQ. 0) THEN
+  300 IF(ICNT16 == 0) THEN
         DO 325 I=1,NGP
           X=ETGPTH(I)
           Y=PSGPTH(I)
@@ -240,7 +240,7 @@ C
         DO 450 K=1,NCN,2
           J=J+1
           NA=K-1
-          IF(K .EQ. 1) NA=NCN
+          IF(K == 1) NA=NCN
           XMX(J,I)=XNX(K,I)+(XNX(NA,I)+XNX(K+1,I))*0.5
           CA(J,I)=DA(K,I)+(DA(NA,I)+DA(K+1,I))*0.5
           CB(J,I)=DB(K,I)+(DB(NA,I)+DB(K+1,I))*0.5

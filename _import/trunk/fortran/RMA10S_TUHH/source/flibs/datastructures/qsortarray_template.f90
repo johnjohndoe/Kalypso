@@ -74,11 +74,11 @@ recursive subroutine qsort_sort( array, order, left, right, compare )
   end interface
   integer                                    :: i
   integer                                    :: last
-  if ( left .ge. right ) return
+  if ( left >= right ) return
   call qsort_swap( order, left, qsort_rand(left,right) )
   last = left
   do i = left+1, right
-     if ( compare(array(order(i)), array(order(left)) ) .lt. 0 ) then
+     if ( compare(array(order(i)), array(order(left)) ) < 0 ) then
         last = last + 1
         call qsort_swap( order, last, i )
      endif

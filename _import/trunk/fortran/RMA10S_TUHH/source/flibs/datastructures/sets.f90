@@ -42,8 +42,8 @@ public :: set_create, set_destroy, set_add, set_haselement, &
           operator(.intersect.), &
           operator(.exclude.), &
           operator(.subsetof.), &
-          operator(.eq.), &
-          operator(.ne.)
+          operator( == ), &
+          operator( /= )
 
 interface operator(.elementof.)
     module procedure set_iselement
@@ -65,11 +65,11 @@ interface operator(.exclude.)
     module procedure set_exclusion
 end interface
 
-interface operator(.eq.)
+interface operator( == )
     module procedure set_equal
 end interface
 
-interface operator(.ne.)
+interface operator( /= )
     module procedure set_notequal
 end interface
 
@@ -175,7 +175,7 @@ logical function set_hassubset( set1, set2 )
     set_hassubset = .true.
     do i = 1,size
         vector_elem = vector_at( set2%values, i )
-        if ( .not. set_haselement( set1, vector_elem%data ) ) then
+        if ( .NOT. set_haselement( set1, vector_elem%data ) ) then
             set_hassubset = .false.
             exit
         endif
@@ -222,9 +222,9 @@ logical function set_notequal( set1, set2 )
     type(SET), intent(in)      :: set1
     type(SET), intent(in)      :: set2
 
-    set_notequal = .not. set_hassubset( set2, set1 )
-    if ( .not. set_notequal ) then
-       set_notequal = .not. set_hassubset( set1, set2 )
+    set_notequal = .NOT. set_hassubset( set2, set1 )
+    if ( .NOT. set_notequal ) then
+       set_notequal = .NOT. set_hassubset( set1, set2 )
     endif
 end function set_notequal
 
@@ -304,7 +304,7 @@ function set_exclusion( set1, set2 ) result(exclusion)
     size = vector_size( set1%values )
     do i = 1,size
         vector_elem = vector_at( set1%values, i )
-        if ( .not. set_haselement( set2, vector_elem%data ) ) then
+        if ( .NOT. set_haselement( set2, vector_elem%data ) ) then
             call set_add( exclusion, vector_elem%data )
         endif
     enddo
@@ -323,7 +323,7 @@ subroutine set_add( dataset, elem )
 
     type(VECTOR_DATA)          :: vector_elem
 
-    if ( .not. set_haselement( dataset, elem  ) ) then
+    if ( .NOT. set_haselement( dataset, elem  ) ) then
         vector_elem%data = elem
         call vector_append( dataset%values, vector_elem )
     endif

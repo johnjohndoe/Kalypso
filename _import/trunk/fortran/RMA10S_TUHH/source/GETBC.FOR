@@ -35,7 +35,7 @@ CIPK  LAST UPDATED SEP7 1995
 C-
 cipk apr96  drop initialization of TET
 c      TET=TSTART
-      IF(NITI .GT. 0) THEN
+      IF(NITI > 0) THEN
         NITA=NITI
       ELSE
         NITA=NITN
@@ -54,11 +54,11 @@ cipk apr96 define save parameter
       isvs=0
   570 CONTINUE
 cipk apr96 keep track of data for end of time step
-      if(iyend+idye+hrend .eq. 0) then
+      if(iyend+idye+hrend == 0) then
         isvs=1
         rewind nscrin
-      elseif(iyrr .eq. iyend  .and.  dayofy .eq. idye) then
-        if(abs(tet-hrend) .lt. 0.001) then
+      elseif(iyrr == iyend .AND. dayofy == idye) then
+        if(abs(tet-hrend) < 0.001) then
           isvs=1
           ibin=ibinrst
         else
@@ -73,17 +73,17 @@ cipk apr96 keep track of data for end of time step
       endif
  1961 READ(IBIN,7000,END=197,ERR=197) ID,DLIN
       write(75,7000) id,dlin
-      IF(ID(1:3) .EQ. 'com') GO TO 1961
-      IF(ID(1:3) .EQ. 'COM') GO TO 1961
-      IF(ID(1:3) .EQ. 'Com') GO TO 1961
-      IF(ID(1:8) .EQ. '        ') GO TO 1961
-      IF(ID(1:6) .NE. 'ENDDAT') GO TO 198
+      IF(ID(1:3) == 'com') GO TO 1961
+      IF(ID(1:3) == 'COM') GO TO 1961
+      IF(ID(1:3) == 'Com') GO TO 1961
+      IF(ID(1:8) == '        ') GO TO 1961
+      IF(ID(1:6) /= 'ENDDAT') GO TO 198
 C
 C   Allow for partial B.C. input from unit 5 and unit IBUP
 C
-  197 IF(IBIN .EQ. IBUP) REWIND IBIN
+  197 IF(IBIN == IBUP) REWIND IBIN
       IBK=IBK+1
-        IF(IBK .GT. 1) THEN
+        IF(IBK > 1) THEN
 CIPK SEP04 CREATE ERROR FILE
           !nis,sep07
           !ERROR - ERROR IN DYNAMIC BOUNDARY CONDITION FILES
@@ -103,7 +103,7 @@ CIPK SEP04 CREATE ERROR FILE
 cipk apr96 end changes
       
       !TODO: Why is there any need for time step definitions in a steady step?
-      IF(ID(1:2) .NE. 'DT')
+      IF(ID(1:2) /= 'DT')
      +  call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'DT')
 
 cipk apr96 add ending time for time step
@@ -118,10 +118,10 @@ cipk mar98 remove iwind
         if (istat /= 0) stop 'DT line set up wrongly'
       endif
 
-      if(ibin .ne. nscrin) then
+      if(ibin /= nscrin) then
         write(lout,6156) delt,iyend,idye,hrend
       endif
-      if(isvs .eq. 1) then
+      if(isvs == 1) then
         rewind nscrin
         write(nscrin,7000) id,dlin
       endif
@@ -155,7 +155,7 @@ cc      TETH=TETH+DELT
 C
 C-.... Read iteration controls
 C
-      IF(NITI .GT. 0) THEN
+      IF(NITI > 0) THEN
         NITA=NITI
       ELSE
         NITA=1
@@ -164,7 +164,7 @@ cipk nov97       READ(IBIN,7000) ID,DLIN
       call ginpt(ibin,id,dlin)
       write(*,'(a8,a72)') id,dlin
 cipk apr96 save data to a scratch file
-      if(isvs .eq. 1) then
+      if(isvs == 1) then
         write(nscrin,7000) id,dlin
       endif
 
@@ -172,11 +172,11 @@ CIPK JUN05 MODIFY BED PROFILE
 c
 c...... Input slope adjustment factor
 c
-      if(id(1:3) .eq. 'SAD') then
+      if(id(1:3) == 'SAD') then
 
         read(dlin,'(2f8.0)') sadx,sadel
 
-        if(isvs .eq. 1) then
+        if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
         call ginpt(ibin,id,dlin)
@@ -188,7 +188,7 @@ c
         endif
 
 
-      IF(ID(1:2) .NE. 'BC') THEN
+      IF(ID(1:2) /= 'BC') THEN
        !MD: check if old Iteration-Data is available
         DO I = 1, NITN
           Check_BC_Data = IURVL(I)+ITLVL(I)+ITEQV(I)+ITEQS(I)
@@ -196,34 +196,34 @@ c
           !MD:   defined in CONTROL
 
           !ERROR, because BC line is expected
-          IF (Check_BC_Data.eq.0) 
+          IF (Check_BC_Data == 0) 
      +      call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
         ENDDO
         goto 315
         !MD: New Jump, because next line was already read by ginpt(..)
 
-      Elseif(ID(1:2) .EQ. 'BC') THEN
+      Elseif(ID(1:2) == 'BC') THEN
 CIPK OCT96 CLEAN UP STEADY CASE
         READ(DLIN,5011)
      +         (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=1,9)
-        IF(NITA .GT. 9) THEN
+        IF(NITA > 9) THEN
           N1=1
   199     N1=N1+9
           N2=N1+8
 cipk nov97        READ(IBIN,7000) ID,DLIN
           call ginpt(ibin,id,dlin)
 cipk apr96 save data to a scratch file
-          if(isvs .eq. 1) then
+          if(isvs == 1) then
             write(nscrin,7000) id,dlin
           endif
 
           !ERROR, because BC line is expected
-          IF(ID(1:2) .NE. 'BC')
+          IF(ID(1:2) /= 'BC')
      +      call ErrorMessageAndStop (1801, 0, 0.0d0, 0.0d0, 'BC')
 
           READ(DLIN,5011)
      +          (IURVL(I),ITLVL(I),ITEQV(I),ITEQS(I),I=N1,N2)
-          IF(NITA .GT. N2) GOTO 199
+          IF(NITA > N2) GOTO 199
         ENDIF
       Endif
 C-
@@ -236,7 +236,7 @@ cipk dec99  read data line and see if it is a stray BC line, if so skip
 !MD: Does not make sense to have 'BC' lines, which are not used...
   215 continue
       call ginpt(ibin,id,dlin)
-      if(id(1:2) .eq. 'BC') goto 215
+      if(id(1:2) == 'BC') goto 215
 
 !MD: new jump in order to use old Iteration-Data, if no new block is
 !MD:   defined in CONTROL
@@ -245,10 +245,10 @@ cipk dec99  read data line and see if it is a stray BC line, if so skip
 
 
 cipk apr96 save data to a scratch file
-      if(isvs .eq. 1) then
+      if(isvs == 1) then
         write(nscrin,7000) id,dlin
       endif
-      IF(ID(1:2) .EQ. 'BN') THEN
+      IF(ID(1:2) == 'BN') THEN
         READ(DLIN,5050) N,NFIX(N),NFIX1(N),(SPEC(N,M),M=1,NDF)
         WRITE(LOUT,6155)N,NFIX(N),NFIX1(N),(SPEC(N,M),M=1,NDF)
         GO TO 210
@@ -256,7 +256,7 @@ cipk apr96 save data to a scratch file
 C
 C...... Go to read boundary conditions along line and wind data
 C
-!      if (iaccyc <= icyc .or. iaccyc == 1 .or. iaccyc == 0) then
+!      if (iaccyc <= icyc .OR. iaccyc == 1 .OR. iaccyc == 0) then
         CALL SBGEN(IBIN)
 !      ELSEIF (iaccyc > icyc) then
 !        WRITE(*,*) 'Jump over steady boundary conditions input data'
@@ -274,58 +274,58 @@ cipk jun05 save nfix and test for weir data
 
         DO 725 J=1,NE
 CIPK JUL98 ADD TEST FOR 999
-          IF(IMAT(J) .GT. 903  .and.  imat(j) .lt. 999) THEN
-            IF(NCORN(J) .EQ. 8) THEN
+          IF(IMAT(J) > 903 .AND. imat(j) < 999) THEN
+            IF(NCORN(J) == 8) THEN
               DO 720 KK=1,8
 CIPK MAY00 CHANGES FOR TYPE 10 WEIR
 
 C
 C      get nodal locations
 C
-                IF(KK .LT. 4) THEN
+                IF(KK < 4) THEN
                   N1=NOP(J,KK)
                   N2=NOP(J,8-KK)
 cipk sep00
                   alfak(n1)=atan2(cord(n2,2)-cord(n1,2),
      +                    cord(n2,1)-cord(n1,1))
                   alfak(n2)=alfak(n1)
-                  IF(KK .EQ. 1) THEN
+                  IF(KK == 1) THEN
                     N2=NOP(J,8)
                     alfak(n2)=alfak(n1)
-                  ELSEIF(KK .EQ. 3) THEN
+                  ELSEIF(KK == 3) THEN
                     N2=NOP(J,4)
                     alfak(n2)=alfak(n1)
                   ENDIF
 
                 ENDIF
 cipk jun05 skip for matrix entries
-                  if(NCTREF(imat(j)) .gt. 0) go to 720
+                  if(NCTREF(imat(j)) > 0) go to 720
 
-                IF(KK .EQ. 1) THEN
-                  IF(WHGT(NOP(J,1)) .LT. -9999.) THEN
+                IF(KK == 1) THEN
+                  IF(WHGT(NOP(J,1)) < -9999.) THEN
                     WHGT(NOP(J,1))=WHGT(NOP(J,7))
                     WLEN(NOP(J,1))=WLEN(NOP(J,7))
                     TRANSEL(NOP(J,1))=TRANSEL(NOP(J,7))
                   ENDIF
 cipk sep03
-                  IF(WHGT(NOP(J,7)) .LT. -9999.) THEN
+                  IF(WHGT(NOP(J,7)) < -9999.) THEN
                     WHGT(NOP(J,7))=WHGT(NOP(J,1))
                     WLEN(NOP(J,7))=WLEN(NOP(J,1))
                     TRANSEL(NOP(J,7))=TRANSEL(NOP(J,1))
                   ENDIF
-                  IF(WHGT(NOP(J,3)) .LT. -9999.) THEN
+                  IF(WHGT(NOP(J,3)) < -9999.) THEN
                     WHGT(NOP(J,3))=WHGT(NOP(J,5))
                     WLEN(NOP(J,3))=WLEN(NOP(J,5))
                     TRANSEL(NOP(J,3))=TRANSEL(NOP(J,5))
                   ENDIF
 cipk sep03
-                  IF(WHGT(NOP(J,5)) .LT. -9999.) THEN
+                  IF(WHGT(NOP(J,5)) < -9999.) THEN
                     WHGT(NOP(J,5))=WHGT(NOP(J,3))
                     WLEN(NOP(J,5))=WLEN(NOP(J,3))
                     TRANSEL(NOP(J,5))=TRANSEL(NOP(J,3))
                   ENDIF
                 ENDIF
-                IF(MOD(KK,2) .EQ. 0) THEN
+                IF(MOD(KK,2) == 0) THEN
                   N2=MOD(KK+1,8)
                   WHGT(NOP(J,KK))=
      +             (WHGT(NOP(J,KK-1))+WHGT(NOP(J,N2)))/2.
@@ -335,21 +335,21 @@ cipk sep03
      +             (TRANSEL(NOP(J,KK-1))+TRANSEL(NOP(J,N2)))/2.
                 ENDIF
   720         CONTINUE
-            ELSEIF(NCORN(J) .EQ. 3) THEN
+            ELSEIF(NCORN(J) == 3) THEN
 
               N1=NOP(J,1)
               N2=NOP(J,2)
               N3=NOP(J,3)
-              IF(WHGT(N1) .LT. -9999.) THEN
+              IF(WHGT(N1) < -9999.) THEN
                 WHGT(N1)=WHGT(N3)
                 WLEN(N1)=WLEN(N3)
                 TRANSEL(N1)=TRANSEL(N3)
-              ELSEIF(WHGT(N3) .LT. -9999.) THEN
+              ELSEIF(WHGT(N3) < -9999.) THEN
                 WHGT(N3)=WHGT(N1)
                 WLEN(N3)=WLEN(N1)
                 TRANSEL(N3)=TRANSEL(N1)
               ENDIF
-              IF(WHGT(N2) .LT. -9999.) THEN
+              IF(WHGT(N2) < -9999.) THEN
                 WHGT(N2)=WHGT(N1)
                 WLEN(N2)=WLEN(N1)
                 TRANSEL(N2)=TRANSEL(N1)
@@ -365,8 +365,8 @@ cipkoct93 4.5 end of additions
 cipk jul04 add test for weir heights
 
         DO J=1,NP
-          IF(WHGT(J) .GT. -9000.) THEN
-            IF(WHGT(J) .LT. AO(J)+0.1) THEN
+          IF(WHGT(J) > -9000.) THEN
+            IF(WHGT(J) < AO(J)+0.1) THEN
               WRITE(*,6190) j,whgt(j)-ao(j)
               WRITE(75,6190) j,whgt(j)-ao(j)
 cipk jul04
@@ -403,9 +403,9 @@ C-
 
 cipk dec00   test for gate structure
       do n=1,ne
-        if(imat(n) .gt. 903  .and.  imat(n) .lt. 1000) then
-          if(ndupj(imat(n)-900) .ne. 0  .or. 
-     +       ndflj(imat(n)-900) .ne. 0) then
+        if(imat(n) > 903 .AND. imat(n) < 1000) then
+          if(ndupj(imat(n)-900) /= 0 .OR. 
+     +       ndflj(imat(n)-900) /= 0) then
               igtp(n) = imat(n)-900
 cipk jun05
           else

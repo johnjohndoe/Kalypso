@@ -6,7 +6,7 @@
 !******************************************************************************************************
 !******************************************************************************************************
 !
-!   	This subroutine computes the dynamic dimensions of arrays which are necessary for autoconverge
+!         This subroutine computes the dynamic dimensions of arrays which are necessary for autoconverge
 !
 !
 !******************************************************************************************************

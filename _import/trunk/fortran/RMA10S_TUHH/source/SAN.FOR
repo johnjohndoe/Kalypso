@@ -49,15 +49,15 @@ C-
      +        -1.,-1.,-1.,-0.5,0.,-0.5, 0., 0., 1.0, 1.0, 1.0, 0.5,0.5/
       DATA ILOKUP/5,6,1,2,3,4,9,7,14,15,10,11,13/
       DATA ITIMJ,ITIMM,ITIMK,ITIMS/4*0/
-      IF( NCN .EQ. 20 ) GO TO 50
-      IF( NCN .EQ. 15 ) GO TO 200
-      IF( NCN .EQ. 10 ) GO TO 300
+      IF( NCN == 20 ) GO TO 50
+      IF( NCN == 15 ) GO TO 200
+      IF( NCN == 10 ) GO TO 300
       GO TO 400
 C-
 C......PROCESS CUBE
 C-
    50 CONTINUE
-      IF(ITIMJ .EQ. 0) THEN
+      IF(ITIMJ == 0) THEN
         DO 150 I=1,NCN
           X=SI(I,1)
           Y=SI(I,2)
@@ -81,7 +81,7 @@ C-
 C-
 C......PROCESS TRIANGULAR PRISM
 C-
-  200 IF(ITIMM .EQ. 0) THEN
+  200 IF(ITIMM == 0) THEN
         DO 280 L=1,4
           DO 275 I=1,NCN
             DO 270 K=1,NCN
@@ -102,7 +102,7 @@ C-
 C
 C......PROCESS GAUSS POINTS FOR TETRAHEDRA
 C
-  300 IF(ITIMK .EQ. 0) THEN
+  300 IF(ITIMK == 0) THEN
         DO 380 I=1,NCN
           DO 375 L=1,4
             DO 370 K=1,NCN
@@ -123,7 +123,7 @@ C
 C-
 C......PROCESS RECTANGULAR PYRAMID
 C-
-  400 IF(ITIMS .EQ. 0) THEN
+  400 IF(ITIMS == 0) THEN
         DO 480 I=1,NCN
           DO 475 K=1,NCN
             KL=ILOKUP(K)

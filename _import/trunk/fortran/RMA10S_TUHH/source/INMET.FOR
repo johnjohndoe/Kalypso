@@ -18,7 +18,7 @@ C
 C       Skip if no heat budget
 C
       TOFDAY = TET
-      IF(MMET .EQ. 0) RETURN
+      IF(MMET == 0) RETURN
 C
 C-
 C...... Initialize
@@ -50,7 +50,7 @@ CIPK AUG03 ADD SWITCHES
      +         10X,'SOLAR EXTINCTION COEFFICIENT',T44,F6.3,' (1/M)'/
      +         10X,'MET DATA DEACTIVATE SWITCH',T44,I6/
      +         10X,'WIND STRESS SIMULATION SWITCH',T44,I6)
-      IF(IHTMET .EQ. 1) MMET=0
+      IF(IHTMET == 1) MMET=0
 CIPK AUG03 ADD HEAT AND WIND SWITCH AND TEST FOR ACTIVE HEAT
 cipk nov97      READ(IIQ,'(A8,A72)') ID,DLIN
 CIPK SEP02
@@ -62,7 +62,7 @@ CIPK SEP02
       READ(DLIN10(1:72),'(A72)') METITL
 cipk nov97      READ(IIQ,'(A8,A72)') ID,DLIN
       call ginpt10(iiq,id,dlin10)
-      IF(ID(1:2) .EQ. 'ET') THEN
+      IF(ID(1:2) == 'ET') THEN
         NSCRM=NSCRM+1
         OPEN(NSCRM,FORM='UNFORMATTED',STATUS='SCRATCH')
 CIPK SEP02
@@ -72,7 +72,7 @@ C            WRITE(*,*) (METID(NMETF+1,J),J=1,9)
 cipk nov97        READ(IIQ,'(A8,A72)') ID,DLIN
 CIPK SEP02
         call ginpt10(iiq,id,dlin10)
-        IF(ID(1:2) .EQ. 'EV') THEN
+        IF(ID(1:2) == 'EV') THEN
 cipk dec97 add switch for solar radiation
           READ(DLIN10,'(2F8.6,2I8)') AETMP(NMETF+1),BETMP(NMETF+1)
      +                        ,ISOL(NMETF+1),IDPT(NMETF+1)
@@ -90,8 +90,8 @@ cipk sep04
 cipk nov97        READ(IIQ,'(A8,A72)') ID,DLIN
 CIPK SEP02
         call ginpt10(iiq,id,dlin10)
-        IF(ID(1:2) .EQ. 'TI') GO TO 220
-        IF(ID(1:7) .EQ. 'ENDDATA') THEN
+        IF(ID(1:2) == 'TI') GO TO 220
+        IF(ID(1:7) == 'ENDDATA') THEN
           wdt1(1,1)=1.e20
 CIPK DEC97 CHANGE LIMIT OT 9 TO ALLOW DIRECT SOLAR INPUT
 CIPK AUG03 EXPAND TO ADD WIND DIRECTION
@@ -100,7 +100,7 @@ CIPK AUG03 EXPAND TO ADD WIND DIRECTION
           NMETF=NMETF+1
           GO TO 230
         ENDIF
-        IF(ID(1:3) .EQ. 'MET') THEN
+        IF(ID(1:3) == 'MET') THEN
           READ(ID(5:8),'(F4.0)') WDT1(1,1)
 CIPK DEC97 CHANGE LIMIT OT 9 TO ALLOW DIRECT SOLAR INPUT
 CIPK SEP02

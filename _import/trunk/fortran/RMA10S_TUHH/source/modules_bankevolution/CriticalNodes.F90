@@ -30,7 +30,7 @@ temp = 1000.
 Inn:do i = start,endd,increment
 
    if (prof%prnode(i)%elevation==0.) cycle
-   if( (prof%prnode(i)%attribute =='front').OR.(prof%prnode(i)%attribute =='nose') ) cycle
+   if( (prof%prnode(i)%attribute =='front') .OR. (prof%prnode(i)%attribute =='nose') ) cycle
  
    if (prof%prnode(i)%elevation< temp) then
 

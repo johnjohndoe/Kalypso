@@ -106,7 +106,7 @@ recursive subroutine bt_solve( base, nostage, generate, acceptable, free, collec
 
     do i = 1,size(base)
         accept = (stage == 0)
-        if ( .not. accept) accept = acceptable( base(i), stage )
+        if ( .NOT. accept) accept = acceptable( base(i), stage )
         if ( accept ) then
             if ( stage == nostage ) then
                 call collect( base(i), stop )

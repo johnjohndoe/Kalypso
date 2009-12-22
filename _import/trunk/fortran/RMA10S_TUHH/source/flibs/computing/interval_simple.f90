@@ -327,7 +327,7 @@ function div( x, y ) result(r)
 
     real(kind=wp)              :: r1, r2, r3, r4
 
-    if ( y%lower < 0.0 .and. y%upper > 0.0 ) then
+    if ( y%lower < 0.0 .AND. y%upper > 0.0 ) then
         stop 'Division by zero'
     endif
 
@@ -430,7 +430,7 @@ function abs_i( x ) result( r )
     type(INTERVAL), intent(in) :: x
     type(INTERVAL)             :: r
 
-    if ( x%lower < 0.0 .and. x%upper > 0.0 ) then
+    if ( x%lower < 0.0 .AND. x%upper > 0.0 ) then
         r%lower = 0.0
         r%upper = max( abs(x%lower), abs(x%upper) )
     else
@@ -475,7 +475,7 @@ function cosh_i( x ) result( r )
     type(INTERVAL), intent(in) :: x
     type(INTERVAL)             :: r
 
-    if ( x%lower < 0.0 .and. x%upper > 0.0 ) then
+    if ( x%lower < 0.0 .AND. x%upper > 0.0 ) then
         r%lower = 1.0_wp
         r%upper = max( cosh(x%lower), cosh(x%upper) )
     else
@@ -677,7 +677,7 @@ subroutine find_root( f, fprime, xinit, tolerance, root, found )
         fpvalue = intval( fpleft, fpright )
 
         call find_root_iter( fvalue, fpvalue, root, tolerance, found )
-        if ( found .or. abs(mid(root)) > huge(1.0_wp)/10.0 ) exit
+        if ( found .OR. abs(mid(root)) > huge(1.0_wp)/10.0 ) exit
     enddo
 
 end subroutine find_root

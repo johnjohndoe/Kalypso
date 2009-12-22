@@ -16,21 +16,21 @@ C
 C     USE NETYP TO DETERMINE OUR ELEMENT TYPE
 C
       IETP=ITINC(NETT)
-      IF(IETP .EQ. 0) RETURN
+      IF(IETP == 0) RETURN
 C
 C     ALP1 AND ALP2 ARE IS DELIVERED TO MKSS AS A GAUSS POINT VALUES
 C     IN COMMON
 C
-      IF(IETP.EQ. 4) THEN
+      IF(IETP == 4) THEN
         VSET = -ALP1
         SET=0.
         GRW=0.
-      ELSEIF(IETP .EQ. 3) THEN
+      ELSEIF(IETP == 3) THEN
         SET = -ALP1/D
         VSET = 0.
         GRW=ALP2/D
-      ELSEIF(IETP .EQ. 2) THEN
-        IF(ALP1*T+ALP2 .LE. 0) THEN
+      ELSEIF(IETP == 2) THEN
+        IF(ALP1*T+ALP2 <= 0) THEN
           SET=0.
           VSET=-ALP1
         ELSE
@@ -76,18 +76,18 @@ C
 C
 C     VSET IS DELIVERED TO MKSS AS A GAUSS POINT VALUE
 C     Contribution due to settling (positive rate removes mass)
-      IF(IETP .EQ. 4) THEN
+      IF(IETP == 4) THEN
         VSET= ALP1
         SRC = 0.
         SET = 0.
-      ELSEIF(IETP .EQ. 3) THEN
+      ELSEIF(IETP == 3) THEN
         VSET = 0.
         SRC = ALP2/D
         SET = ALP1/D
-      ELSEIF(IETP .EQ. 2) THEN
+      ELSEIF(IETP == 2) THEN
 
       !MD: NEU NEU
-        IF(ALP1*T+ALP2 .LE. 0) THEN
+        IF(ALP1*T+ALP2 <= 0) THEN
           SET=0.
           VSET=ALP1
         ELSE

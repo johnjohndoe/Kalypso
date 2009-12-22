@@ -13,7 +13,7 @@ c
 C-
 C...... Initialize
 C-
-      IF(IENT .EQ. 1) THEN
+      IF(IENT == 1) THEN
 cipk jan98
         iydd=iyrr
         iyrd=iyrr
@@ -24,7 +24,7 @@ CIPK MAY02        TETADD=TTT-TCORR
         TETADD=TTT
         REWIND IWVFC
         READ(IWVFC) HEDR
-        IF(HEDR(101:105) .EQ. '    1') THEN
+        IF(HEDR(101:105) == '    1') THEN
           MBND=1
         ELSE
           MBND=0
@@ -37,8 +37,8 @@ C..... MBND = 1 is the case of only 1 wind force data file
 C-
 
       WRITE(75,*) 'GETSST-44',HEDR(101:105),mbnd
-      IF(MBND .EQ. 1) THEN
-        IF(IT .EQ. 1) THEN
+      IF(MBND == 1) THEN
+        IF(IT == 1) THEN
 C
 C      SURFACE STRESS DATA READ
 C
@@ -56,7 +56,7 @@ C
   166     CONTINUE 
         ENDIF
 cipk dec97 add check for zero nodes on input file
-        IF(NV .EQ. 0) THEN
+        IF(NV == 0) THEN
           WRITE(75,*) 'Error!! total nodes = 0 on surface stress file'
           WRITE(75,*) 'Header contains time',ttt,' Year',iydd
           WRITE(*,*) 'Error!!  total nodes = 0 on surface stress file'
@@ -75,8 +75,8 @@ C-
 
 c     logic to pass end of year
 
-        IF(IYDD .GT. IYRR) THEN
-          IF(MOD(IYRR,4) .EQ. 0) THEN 
+        IF(IYDD > IYRR) THEN
+          IF(MOD(IYRR,4) == 0) THEN 
             HRINC=HRINC+366.*24.
           ELSE
             HRINC=HRINC+365.*24.
@@ -85,8 +85,8 @@ c     logic to pass end of year
 
 C    Test for data year less than current
 
-        IF(IYDD .LT. IYRR) THEN
-          IF(MOD(IYDD,4) .EQ. 0) THEN 
+        IF(IYDD < IYRR) THEN
+          IF(MOD(IYDD,4) == 0) THEN 
             HRINC=HRINC-366.*24.
           ELSE
             HRINC=HRINC-365.*24.
@@ -98,7 +98,7 @@ C    Test for data year less than current
         WRITE(75,*) TET+(DAYOFY-1.)*24.,TTT,HRINC,IYDD,IYRR
         WRITE(75,*) 'tet,dayofy',tet,dayofy
 
-        IF(TET+(DAYOFY-1.)*24. .GT. TTT+HRINC) THEN
+        IF(TET+(DAYOFY-1.)*24. > TTT+HRINC) THEN
 cipk  reset hrinc
           HRINC=0.
 
@@ -131,7 +131,7 @@ cipk jan98 add to preserve iydd
           IYRD=IYDD
 c     check for zero nodes on input file
 
-          if(nv .eq. 0) then
+          if(nv == 0) then
             write(75,*) 'Error!! total nodes = 0 on surface stress file'
             Write(75,*) 'Header contains time',tttv,' Year',iydd
             write(*,*) 'Error!!  total nodes = 0 on surface stress file'
@@ -141,13 +141,13 @@ c     check for zero nodes on input file
 cipk jun02          TTT=TTTV+TETADD
 
   288     CONTINUE
-          IF(MOD(IYDD,4) .EQ. 0) THEN
+          IF(MOD(IYDD,4) == 0) THEN
             HYR=366.*24.
           ELSE
             HYR=365.*24.
           ENDIF
 
-          IF(TTT .GT. HYR) THEN
+          IF(TTT > HYR) THEN
             TTT=TTT-HYR
             IYDD=IYDD+1
           ELSE

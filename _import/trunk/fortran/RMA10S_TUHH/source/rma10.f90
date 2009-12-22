@@ -443,7 +443,7 @@ steadyCalculation: if (niti /= 0) then
       !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
       !-------------------------------------------------------------------------------------
       m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel.schwarzConv)
-      if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+      if ( .NOT. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
     endif
 
     !PROCESS TIME STEP (STEADY IN THIS CASE) CALCULATION
@@ -533,7 +533,7 @@ steadyCalculation: if (niti /= 0) then
   !-------------------------------------------------------------------------------------------
   !!3D to 2D collapse; experimental
   !!-------------------------------
-  !if (itransit == 1 .and. maxn < 4) call twodsw
+  !if (itransit == 1 .AND. maxn < 4) call twodsw
   !-------------------------------------------------------------------------------------------
   !only operative in 3D applications; i.e. at the moment not in RMA·Kalypso, but only in RMA10
   !-------------------------------------------------------------------------------------------
@@ -548,7 +548,7 @@ steadyCalculation: if (niti /= 0) then
 
   !Initialise Mellor Yamada turbulence formulation
   !-----------------------------------------------
-  if (iteqv (maxn) /= 5 .and. ioptzd > 0 .and. ioptzd < 3) call mellii
+  if (iteqv (maxn) /= 5 .AND. ioptzd > 0 .AND. ioptzd < 3) call mellii
 !-----------------------------------------------------------
 !reserve for testoutput of matrices
 !-----------------------------------------------------------
@@ -627,11 +627,11 @@ steadyCalculation: if (niti /= 0) then
 
   !calculate vertical velocity distribution    
   !----------------------------------------
-  if (iteqv (maxn) /= 5 .and. iteqv (maxn) /= 2 .and. iteqv (maxn) < 8) call vrtvel
+  if (iteqv (maxn) /= 5 .AND. iteqv (maxn) /= 2 .AND. iteqv (maxn) < 8) call vrtvel
 
   !print out result at freqency match, after last iteration (always) and convergence before reaching last iteration
   !----------------
-  if (mod (maxn, iprtMetai) == 0 .or. maxn == nita .or. nconv == 2) then
+  if (mod (maxn, iprtMetai) == 0 .OR. maxn == nita .OR. nconv == 2) then
     !generate and write some output data
     call output (2)
     !check for continuity at CCLs
@@ -675,14 +675,14 @@ steadyCalculation: if (niti /= 0) then
     !write result after iteration cycle, if desired
     !----------------------------------------------
     if (nprti /= 0) then
-      if (mod (maxn, nprti) == 0 .and. ikalypsofm /= 0) then
+      if (mod (maxn, nprti) == 0 .AND. ikalypsofm /= 0) then
         !generate output file name
         call generateoutputfilename ('stat', niti, 0, maxn, modellaus, modellein, modellrst, ct, nb, outputfilename, inputfilename)
         !write the result
         call write_kalypso (outputfilename, 'resu')
 
         !MD: only for kohesive Sediment
-        IF (LSS.gt.0) THEN
+        IF (LSS > 0) THEN
           call generateOutputFileName ('stat', niti, 0, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
           CALL write_KALYP_Bed (outputFileName)
         END IF
@@ -708,7 +708,7 @@ steadyCalculation: if (niti /= 0) then
   end do steadyCycle
 
   !terminate Schwarz iteration, if it doesn't have inner boundaries for Schwarz iteration
-  if (.not. (m_SimModel.hasInnerBoundaries)) exit steadySchwarzCycle
+  if ( .NOT. (m_SimModel.hasInnerBoundaries)) exit steadySchwarzCycle
 
 !end of Schwarz iteration
 end do steadySchwarzCycle
@@ -764,7 +764,7 @@ End Do
     call write_kalypso (outputfilename, 'resu')
   
     !MD: only for kohesive Sediment
-    IF (LSS.gt.0) THEN
+    IF (LSS > 0) THEN
       call generateOutputFileName ('stat', niti, 0, 0, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
       CALL write_KALYP_Bed (outputFileName)
     END IF
@@ -832,7 +832,7 @@ endif
 DynamicTimestepCycle: do n = 1, ncyc
 
   !Jump over all time steps, until given initial step (desired by user) is reached
-  LaterTimestep: if (ifile == 60 .and. n < iaccyc) then
+  LaterTimestep: if (ifile == 60 .AND. n < iaccyc) then
     !increase current time step
     icyc = icyc + 1
     !read the input data lines to continue reading the control file
@@ -882,7 +882,7 @@ DynamicTimestepCycle: do n = 1, ncyc
   
   !get wave data, only required, if desired
   !----------------------------
-  if ((lsand > 0 .or. lbed > 0) .and. iwvin > 0) call getwave
+  if ((lsand > 0 .OR. lbed > 0) .AND. iwvin > 0) call getwave
 
   !get surface stress data, if desired
   !------------------------
@@ -913,7 +913,7 @@ DynamicTimestepCycle: do n = 1, ncyc
   
   !Initialise Mellor Yamada turbulence formulation
   !-----------------------------------------------
-  if (iteqv (maxn) /= 5 .and. ioptzd > 0 .and. ioptzd < 3) call mellii
+  if (iteqv (maxn) /= 5 .AND. ioptzd > 0 .AND. ioptzd < 3) call mellii
 
   !updating the time derivatives
   !-----------------------------
@@ -1005,7 +1005,7 @@ DynamicTimestepCycle: do n = 1, ncyc
       !run through midside nodes
       do l = 2, ncrn (k), 2
         !if not a 1D junction element
-        if (imat (k) < 901 .or. imat (k) > 903) then
+        if (imat (k) < 901 .OR. imat (k) > 903) then
           !get the current midside node from the sequence
           j = nops (k, l)
 
@@ -1143,7 +1143,7 @@ DynamicTimestepCycle: do n = 1, ncyc
       !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence
       !-------------------------------------------------------------------------------------
       m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel.schwarzConv)
-      if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+      if ( .NOT. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
     endif
 
     !reinitialise global variables
@@ -1245,11 +1245,11 @@ DynamicTimestepCycle: do n = 1, ncyc
 
     !3D to 2D collapse; experimental
     !-------------------------------
-    if (itransit == 1 .and. maxn < 4) call twodsw
+    if (itransit == 1 .AND. maxn < 4) call twodsw
 
     !update shears etc.
     !------------------
-    if ((lsand > 0 .or. lbed > 0) .and. ick == 6) then
+    if ((lsand > 0 .OR. lbed > 0) .AND. ick == 6) then
       call kinvis
       !call shear
       write(*,*) 'going to sandx'
@@ -1270,7 +1270,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 
       !MDMD:  Aufruf nur dann, wenn wirklich Wellen vorhanden!!
       !MD Neu:   Abfrage ueber Kennungen
-      if (iwvin == 101 .or. iwvfc==102 .or. iwvfc==104) then
+      if (iwvin == 101 .OR. iwvfc==102 .OR. iwvfc==104) then
         call wshear1
         call wshear2
       else
@@ -1305,12 +1305,12 @@ DynamicTimestepCycle: do n = 1, ncyc
 
     !Initialise Mellor Yamada turbulence formulation
     !-----------------------------------------------
-    if (maxn >= 2 .and. iteqv (maxn) /= 5 .and. iteqv (maxn) /= 2 .and. ioptzd > 0 .and. ioptzd < 3) call mellii
+    if (maxn >= 2 .AND. iteqv (maxn) /= 5 .AND. iteqv (maxn) /= 2 .AND. ioptzd > 0 .AND. ioptzd < 3) call mellii
 
     !set information, that advanced turbulence models can be used
     !------------------------------------------------------------
     if (iutub == 0) then
-      if (maxn > 2 .or. n > 1) iutub = 1
+      if (maxn > 2 .OR. n > 1) iutub = 1
     endif
 
 !-----------------------------------------------------------
@@ -1391,10 +1391,10 @@ DynamicTimestepCycle: do n = 1, ncyc
 
     !calculate vertical velocity distribution    
     !----------------------------------------
-    if (iteqv (maxn) /= 5 .and. iteqv (maxn) /= 2 .and. iteqv (maxn) < 8) call vrtvel
+    if (iteqv (maxn) /= 5 .AND. iteqv (maxn) /= 2 .AND. iteqv (maxn) < 8) call vrtvel
 
     !Write results, if 1. time step matches the frequency and 2. iteration matches the frequency or convergence
-    if (mod (icyc, iprtf) == 0 .and. (mod (maxn, iprtMetai) == 0 .or.  maxn == nita .or. nconv == 1 .or. nconv == 2)) then
+    if (mod (icyc, iprtf) == 0 .AND. (mod (maxn, iprtMetai) == 0 .OR. maxn == nita .OR. nconv == 1 .OR. nconv == 2)) then
       call output(2)
       call check
     endif
@@ -1419,7 +1419,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 !--------------------------------------------------------------------
 !CIPK OCT02  CHECK FOR NEGATIVE TEMPS
 
-      IF(ICESW > 0  .AND. ITEQV(MAXN) == 8  .AND. ITPAS < 4)THEN
+      IF(ICESW > 0 .AND. ITEQV(MAXN) == 8 .AND. ITPAS < 4)THEN
           ITPAS=ITPAS+1
           DO J=1,NPM
             IF(VEL(5,J) < TMED) GO TO 570
@@ -1433,7 +1433,7 @@ DynamicTimestepCycle: do n = 1, ncyc
         GO TO 470
 
   580   CONTINUE
-        IF(ITEQV(MAXN) == 8  .AND.  ITPAS == 0) ITPAS=1 
+        IF(ITEQV(MAXN) == 8 .AND. ITPAS == 0) ITPAS=1 
 !--------------------------------------------------------------------
 !TODO: Following needs to be updated, but more knowledge is necessary
 !--------------------------------------------------------------------
@@ -1460,14 +1460,14 @@ DynamicTimestepCycle: do n = 1, ncyc
     !write result after iteration cycle, if desired
     !----------------------------------------------
     if (nprti /= 0) then
-      if (mod (icyc, iprtf) == 0 .and. mod (maxn, iprti) == 0) then
+      if (mod (icyc, iprtf) == 0 .AND. mod (maxn, iprti) == 0) then
         !generate file name
       call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName,inputFileName)
         !write result after iteration
         call write_kalypso (outputfilename, 'resu')
 
          !MD: only for kohesive Sediment
-         IF (LSS.gt.0) THEN
+         IF (LSS > 0) THEN
            call generateOutputFileName ('inst',niti, icyc, maxn, 'bed', modellein, modellrst, ct,nb, outputFileName, inputFileName)
            CALL write_KALYP_Bed (outputFileName)
          END IF
@@ -1495,10 +1495,10 @@ DynamicTimestepCycle: do n = 1, ncyc
     enddo DynamicIterationCycle
     
     !if model is not distributed (DOMAIN PARTITIONING), do not schwarz iterate
-    if (.not. (m_SimModel.hasInnerBoundaries)) exit SchwarzCycle
+    if ( .NOT. (m_SimModel.hasInnerBoundaries)) exit SchwarzCycle
   
     !If not Schwarz converged it can also not be newton converged
-    if (.not. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+    if ( .NOT. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
     
   enddo SchwarzCycle 
   
@@ -1522,7 +1522,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 
   !MD Aufruf der Sohlentwicklung nur einmal fuer sandige Sohle
   !------------------------------------
-  if (lbed > 0 .and. lsand <= 0) then
+  if (lbed > 0 .AND. lsand <= 0) then
     write(75,*) 'rma10-674 going to bedsur'
     !MD 11.08.2008: BEDLBED wurde deaktiviert, da Routine veraltet und fehlerhaft:
     !MD   alle dort berechneten Werte GAN0 und GAN sind unsinnig, da immer = null
@@ -1546,7 +1546,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     
   if (BANKEVOLUTION) then
   ! Restart bank profiles 
-   if ( (IPROFIN == 731).and.(CallCounter == 0) ) then
+   if ( (IPROFIN == 731) .AND. (CallCounter == 0) ) then
     CallCounter = iaccyc
    else 
     CallCounter = CallCounter + 1
@@ -1602,7 +1602,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 
   !save results file
   !-----------------
-  if (ikalypsofm > 0 .and. mod (icyc, iprtf) == 0) then
+  if (ikalypsofm > 0 .AND. mod (icyc, iprtf) == 0) then
     MAXN = 0
     if (icyc >= irsav) then
       !generate file name for result
@@ -1612,7 +1612,7 @@ DynamicTimestepCycle: do n = 1, ncyc
       !write result
       call write_kalypso (outputfilename, 'resu')
       !MD: only for kohesive Sediment
-      IF (LSS.gt.0) THEN
+      IF (LSS > 0) THEN
         call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
         CALL write_KALYP_Bed (outputFileName)
       END IF

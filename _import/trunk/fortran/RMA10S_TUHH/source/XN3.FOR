@@ -38,13 +38,13 @@ C-
      +      0.25,-1.0,0.0,1.0,-0.25,4*0.0,0.25,-1.0,0.0,1.0,-0.25,0.0,
      +      0.25,-1.0,0.0,-1.0,0.25,4*0.0,-0.25,1.0,0.0,1.0,-0.25,0.0/
       DATA NCALL/0/
-      IF(IT .EQ. 4) GO TO 80
+      IF(IT == 4) GO TO 80
       IF( IT - 2 ) 500,80,300
 C-
 C-.....SHAPE FUNCTIONS FOR RIGHT PRISM AND PYRAMID.....
 C-
    80 NCALL = NCALL + 1
-      IF( NCALL .GT. 1 ) GO TO 125
+      IF( NCALL > 1 ) GO TO 125
 C-
 C-.....CALCULATE INVARIENT TRIANGULAR FUNCTIONS.....
 C-
@@ -67,38 +67,38 @@ C-
 C-.....SET INDEXES AND NORMALIZE COORDINATES.....
 C-
       ZOOO = Z
-      IF( I .LE. 6 ) ZOOO = -Z
-      IF(IT .EQ. 2) GO TO 132
-      if(x .eq. 1.0) go to 250
-C      IF(X .EQ. 1.0) X=0.999
-      IF(X .NE. 1.) ZOOO=ZOOO/(1.-X)
-      IF(X .EQ. 1.) ZOOO=SIGN(X,ZOOO)
-      IF(I .EQ. 3) GO TO 200
-  132 IF( I .GT. 6 .AND. I .LT. 10 ) GO TO 170
+      IF( I <= 6 ) ZOOO = -Z
+      IF(IT == 2) GO TO 132
+      if(x == 1.0) go to 250
+C      IF(X == 1.0) X=0.999
+      IF(X /= 1.) ZOOO=ZOOO/(1.-X)
+      IF(X == 1.) ZOOO=SIGN(X,ZOOO)
+      IF(I == 3) GO TO 200
+  132 IF( I > 6 .AND. I < 10 ) GO TO 170
       L = I
-      IF( I .GT. 9 ) L = I - 9
-      IF( MOD(L,2) .EQ. 0 ) GO TO 150
+      IF( I > 9 ) L = I - 9
+      IF( MOD(L,2) == 0 ) GO TO 150
 C-
 C-.....CORNER NODES.....
 C-
       GO TO (142,144,146,148),LT
   142 SF =  XM(L)*((2.0*XM(L)-1.0)*(1.0+ZOOO)-(1.0-ZOOO**2))/2.0
-      IF(IT .EQ. 4) SF=SF+XM(L)/2.0*X*(1.-ZOOO**2)
+      IF(IT == 4) SF=SF+XM(L)/2.0*X*(1.-ZOOO**2)
       GO TO 180
   144 SF = 0.5*B(L)*((1.0+ZOOO)*(2.0*XM(L)-0.5)-0.5*(1.0-ZOOO**2))
-      IF(IT .EQ. 4) THEN
+      IF(IT == 4) THEN
         SF=SF+XM(L)/2.*((2.*XM(L)-1.)*ZOOO/(1.-X)+ZOOO**2+1.)
         SF=SF+B(L)/4.*(1.-ZOOO**2)*X
       ENDIF
       GO TO 180
   146 SF = 0.5*C(L)*((1.0+ZOOO)*(2.0*XM(L)-0.5)-0.5*(1.0-ZOOO**2))
-      IF(IT .EQ. 4) SF=SF+C(L)/4.*(1-ZOOO**2)*X
+      IF(IT == 4) SF=SF+C(L)/4.*(1-ZOOO**2)*X
       GO TO 180
   148 SF = XM(L)*(XM(L)+ZOOO-0.5)
-      IF(IT .EQ. 4) THEN
+      IF(IT == 4) THEN
         SF=(SF-ZOOO*XM(L))/(1.-X)+XM(L)*ZOOO
       ENDIF
-      IF(I .LE. 6) SF = -SF
+      IF(I <= 6) SF = -SF
       GO TO 180
 C-
 C-.....MID SIDE NODE.....
@@ -109,33 +109,33 @@ C-
   152 SF = 2.0*XM(N1)*XM(N2)*(1.0+ZOOO)
       GO TO 180
   154 SF = (1.0+ZOOO)*(XM(N1)*B(N2) + XM(N2)*B(N1))
-      IF(IT .EQ. 4) THEN
+      IF(IT == 4) THEN
         SF=SF+2.*XM(N1)*XM(N2)*ZOOO/(1.-X)
       ENDIF
       GO TO 180
   156 SF = (1.0+ZOOO)*( XM(N1)*C(N2)+XM(N2)*C(N1))
       GO TO 180
   158 SF = 2.0*XM(N1)*XM(N2)
-      IF(I .LE. 6) SF = -SF
-      IF(IT .EQ. 2) GO TO 180
+      IF(I <= 6) SF = -SF
+      IF(IT == 2) GO TO 180
       SF=SF/(1.-X)
       GO TO 180
 C-
 C-.....MID SIDE RECTANGLE.....
 C-
   170 N1 = 1
-      IF( I .EQ. 8 ) N1 = 3
-      IF( I .EQ. 9 ) N1 = 5
+      IF( I == 8 ) N1 = 3
+      IF( I == 9 ) N1 = 5
       GO TO (172,174,176,178),LT
   172 SF = XM(N1)*(1.0-ZOOO**2)
-      IF(IT .EQ. 4) SF=SF*(1.-X)
+      IF(IT == 4) SF=SF*(1.-X)
       GO TO 180
   174 SF = 0.5*(1.0-ZOOO**2)*B(N1)
-      IF(IT .EQ. 4)
+      IF(IT == 4)
      1 SF=SF*(1.-X)-XM(N1)*(ZOOO**2+1.)
       GO TO 180
   176 SF = 0.5*(1.0-ZOOO**2)*C(N1)
-      IF(IT .EQ. 4) SF=SF*(1.-X)
+      IF(IT == 4) SF=SF*(1.-X)
       GO TO 180
   178 SF = -2.0*XM(N1)*ZOOO
   180 XN3 = SF
@@ -167,7 +167,7 @@ C-
       SX=SI(I,1)*X
       SY=SI(I,2)*Y
       SZ=SI(I,3)*Z
-      IF(ITM(I).EQ.0) GO TO 350
+      IF(ITM(I) == 0) GO TO 350
 C-
 C......CORNER NODES
 C-
@@ -183,22 +183,22 @@ C-
 C-
 C......MID-SIDE NODES
 C-
-  350 IF(SI(I,1).EQ.0.) SX=-(X*X)
-      IF(SI(I,2).EQ.0.) SY=-(Y*Y)
-      IF(SI(I,3).EQ.0.) SZ=-(Z*Z)
+  350 IF(SI(I,1) == 0.) SX=-(X*X)
+      IF(SI(I,2) == 0.) SY=-(Y*Y)
+      IF(SI(I,3) == 0.) SZ=-(Z*Z)
       GO TO (360,370,380,390),LT
   360 XN3=(1.+SX)*(1.+SY)*(1.+SZ)/4.
       RETURN
   370 SX=SI(I,1)
-      IF(SI(I,1).EQ.0.) SX=-2.*X
+      IF(SI(I,1) == 0.) SX=-2.*X
       XN3=SX*(1.+SY)*(1.+SZ)/4.
       RETURN
   380 SY=SI(I,2)
-      IF(SI(I,2).EQ.0.) SY=-2.*Y
+      IF(SI(I,2) == 0.) SY=-2.*Y
       XN3=SY*(1.+SZ)*(1.+SX)/4.
       RETURN
   390 SZ=SI(I,3)
-      IF(SI(I,3).EQ.0.) SZ=-2.*Z
+      IF(SI(I,3) == 0.) SZ=-2.*Z
       XN3=SZ*(1.+SX)*(1.+SY)/4.
       RETURN
   500 CONTINUE
@@ -233,7 +233,7 @@ C-
 C-
 C......TEST FOR CORNER NODES
 C-
-      IF(I1 .EQ. I2) GO TO 650
+      IF(I1 == I2) GO TO 650
 C-
 C......FOR MIDSIDES EVALUATE FUNCTION ETC
 C-

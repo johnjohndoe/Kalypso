@@ -239,7 +239,7 @@ function dict_get_elem( dict, key ) result(elem)
 
     elem => dict%table(hash)%list
     do while ( associated(elem) )
-        if ( elem%data%key .eq. key ) then
+        if ( elem%data%key == key ) then
             exit
         else
             elem => list_next( elem )

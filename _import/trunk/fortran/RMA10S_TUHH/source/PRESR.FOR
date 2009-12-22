@@ -13,25 +13,25 @@ C-
           RHO2=FDN(VEL(5,N),IGF)
           RHO3=FDSED(VEL(6,N),IGF)
 C
-          IF (GRAV .LT. 32.)  THEN
-            IF(IPASS1 .EQ. 1) THEN
+          IF (GRAV < 32.)  THEN
+            IF(IPASS1 == 1) THEN
               RHO1=1.935*516.
             ENDIF
-            IF(IPASS2 .EQ. 1) THEN
+            IF(IPASS2 == 1) THEN
               RHO2=1.935*516.
             ENDIF
-            IF(IPASS3 .EQ. 1) THEN
+            IF(IPASS3 == 1) THEN
               RHO3=1.935*516.
             ENDIF
             DEN(N)=RHO1+RHO2+RHO3 - 3.87*516.
           ELSE
-            IF(IPASS1 .EQ. 1) THEN
+            IF(IPASS1 == 1) THEN
               RHO1=1.935
             ENDIF
-            IF(IPASS2 .EQ. 1) THEN
+            IF(IPASS2 == 1) THEN
               RHO2=1.935
             ENDIF
-            IF(IPASS3 .EQ. 1) THEN
+            IF(IPASS3 == 1) THEN
               RHO3=1.935
             ENDIF
 
@@ -47,9 +47,9 @@ C-
 c      DO 350 N=1,NPM
 c      PRESS(N)=0.
 c      K=NREF(N)+1
-c      IF(K .EQ. 1) GO TO 350
+c      IF(K == 1) GO TO 350
 c      L=K+NDEP(N)-2
-c      IF( L .LT. K) GO TO 350
+c      IF( L < K) GO TO 350
 c      MO=N
 cC-
 cC......LOOP DOWNWARDS AT THIS SURFACE POINT

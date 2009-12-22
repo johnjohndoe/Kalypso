@@ -57,7 +57,7 @@ subroutine set_parameters( params, update, number_descendants, number_parents, &
     real, intent(in), optional         :: crossover_chance
     logical, intent(in), optional      :: verbose
 
-    if ( .not. update ) then
+    if ( .NOT. update ) then
         params%number_descendants = 100
         params%number_parents     = 10
         params%number_iterations  = 100

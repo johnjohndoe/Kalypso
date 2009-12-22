@@ -69,37 +69,37 @@ C-
       DO 300 M=1,NE
       LAB(M)=0
       NTHREE(M)=NFIXH(M)
-      IF(IMAT(M) .LT. 1) GO TO 300
-      IF(NETYP(M) .EQ. 17) GO TO 300
+      IF(IMAT(M) < 1) GO TO 300
+      IF(NETYP(M) == 17) GO TO 300
       NCN=8
-      IF(NOP(M,7) .EQ. 0) NCN=6
-      IF(NOP(M,6) .EQ. 0) NCN=3
-      IF(NOP(M,4) .EQ. 0) NCN=3
+      IF(NOP(M,7) == 0) NCN=6
+      IF(NOP(M,6) == 0) NCN=3
+      IF(NOP(M,4) == 0) NCN=3
       DO 295 J=1,NCN
       N=NOP(M,J)
-      IF(NREF(N) .GT. 0) GO TO 295
-      IF(MOD(J,2) .NE. 0) GO TO 245
+      IF(NREF(N) > 0) GO TO 295
+      IF(MOD(J,2) /= 0) GO TO 245
 C-
 C......WORK ON MID-SIDE NODES
 C-
       N1=NOP(M,J-1)
       MAA=NCN
-      IF(NCN .EQ. 3) MAA=4
+      IF(NCN == 3) MAA=4
       N3=MOD(J+1,MAA)
       N3=NOP(M,N3)
       CORD(N,3)=ELEV
       NDEP(N)=NDEP(N1)
-      IF(NDEP(N3) .GT. NDEP(N)) NDEP(N)=NDEP(N3)
-      IF(NDEP(N1) .EQ. 1 ) NDEP(N)=1
-      IF(NDEP(N3) .EQ. 1 ) NDEP(N)=1
+      IF(NDEP(N3) > NDEP(N)) NDEP(N)=NDEP(N3)
+      IF(NDEP(N1) == 1 ) NDEP(N)=1
+      IF(NDEP(N3) == 1 ) NDEP(N)=1
 C     NREF(N)=NCP
       NV=NDEP(N)-1
-      IF(NV .EQ. 0) GO TO 290
+      IF(NV == 0) GO TO 290
       NREF(N)=NCP
       DO 240 K=1,NV
       L=K+NCP
-cipk sep00      IF(L .GT. MAXP) GO TO 2500
-      if(l .gt. maxp) then
+cipk sep00      IF(L > MAXP) GO TO 2500
+      if(l > maxp) then
         ierr=2
         go to 240
       endif
@@ -111,7 +111,7 @@ cipk sep00      IF(L .GT. MAXP) GO TO 2500
       SPEC(L,6)=SPEC(N,6)
       NSURF(L)=N
       ALFA(L)=ALFA(N)
-      IF(CORD(N,1) .EQ. VOID) GO TO 240
+      IF(CORD(N,1) == VOID) GO TO 240
       CORD(L,1)=CORD(N,1)
       CORD(L,2)=CORD(N,2)
       WIDTH(L)=WIDTH(N)
@@ -132,7 +132,7 @@ C-
 C     NREF(N)=NCP
       NSURF(N)=N
       NV=NDEP(N)-1
-      IF(NV .EQ. 0 ) GO TO 290
+      IF(NV == 0 ) GO TO 290
       NCPR=NCP+1
       NREF(N)=NCP
       FRAC=ELEV
@@ -143,10 +143,10 @@ C     NREF(N)=NCP
       SUM=SUM/(ELEV-AO(N))
       DO 250 K=1,NV
       FRAC=FRAC-THLAY(N,K)/SUM
-      IF(K .EQ. NV) FRAC=AO(N)
+      IF(K == NV) FRAC=AO(N)
       NCP=NCP+2
 cipk sep00
-      if(ncp .gt. maxp) then
+      if(ncp > maxp) then
         ierr=2
         go to 250
       endif
@@ -187,7 +187,7 @@ CIPK NOV97 END ADDITIONS
   248 SPEC(NCP,NDA)=SPEC(N,NDA)
   250 CONTINUE
 cipk sep00
-      if(ierr .ne. 2) then
+      if(ierr /= 2) then
         DO 265 K=NCPR,NCP,2
           NBTN(K)=NCP
   265   CONTINUE
@@ -204,7 +204,7 @@ C     LAB INDICATES TWO-DIMENSIONAL ELEMENT
 C
   295 CONTINUE
   300 CONTINUE
-      if(ierr .eq. 2) then
+      if(ierr == 2) then
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -216,7 +216,7 @@ cipk sep04
       endif
 
       DO 320 N=1,NP
-        IF(NSURF(N) .GT. 0) THEN
+        IF(NSURF(N) > 0) THEN
           NDEP(N)=NDEP(N)*2-1
         ELSE
           NSURF(N)=-N
@@ -236,33 +236,33 @@ C......FIRST PREPARE BOTTOM AND TOP ELEMENTS
 C-
       K=NE
       DO 350 N=1,NE
-      IF(IMAT(N) .LT. 1) GO TO 350
-C      IF(NETYP(N) .EQ. 17) GO TO 350
+      IF(IMAT(N) < 1) GO TO 350
+C      IF(NETYP(N) == 17) GO TO 350
       NCN=8
-      IF(NOP(N,7) .EQ. 0) NCN=6
-      IF(NOP(N,6) .EQ. 0) NCN=5
+      IF(NOP(N,7) == 0) NCN=6
+      IF(NOP(N,6) == 0) NCN=5
 c rae 10/4/96  set NCN for junction elements of 4 nodes
       
-      if(nop(n,5) .eq. 0) ncn = 4
-      IF(NOP(N,4) .EQ. 0) NCN=3
+      if(nop(n,5) == 0) ncn = 4
+      IF(NOP(N,4) == 0) NCN=3
       NCORN(N)=NCN
-      IF(NCN .EQ. 5) NCN=3
+      IF(NCN == 5) NCN=3
       DO 330 M=1,NCN
       I=NOP(N,M)
-      IF(NDEP(I) .EQ. 1) GO TO 335
+      IF(NDEP(I) == 1) GO TO 335
   330 CONTINUE
       GO TO 340
   335 LAB(N)=1
       GO TO 350
-  340 IF(NETYP(N) .EQ. 17) GO TO 350
+  340 IF(NETYP(N) == 17) GO TO 350
       NLOC(N)=K+1
 C-
 C......NOW DEFINE BOTTOM ELEMENTS
 C-
       K=K+1
-      IF(K .GT. MAXE) GO TO 2500
+      IF(K > MAXE) GO TO 2500
       IMAT(K)=2000+IMAT(N)
-      IF(NCN .EQ. 3) THEN
+      IF(NCN == 3) THEN
         NETYP(K)=2
       ELSE
         NETYP(K)=12
@@ -275,11 +275,11 @@ C-
 C-
 C......NOW DEFINE TOP ELEMEMTS
 C-
-C-    IF(IWIND .EQ. 0) GO TO 350
+C-    IF(IWIND == 0) GO TO 350
       K=K+1
-      IF(K .GT. MAXE) GO TO 2500
+      IF(K > MAXE) GO TO 2500
       IMAT(K)=1000+IMAT(N)
-      IF(NCN .EQ. 3) THEN
+      IF(NCN == 3) THEN
         NETYP(K)=1
       ELSE
         NETYP(K)=11
@@ -287,7 +287,7 @@ C-    IF(IWIND .EQ. 0) GO TO 350
       NCORN(K)=NCN
 cipk jan02  This list gives the surface element for top 3d layer
       NRELSF(K)=N
-	TH(K)=TH(N)
+      TH(K)=TH(N)
       DO 347 M=1,NCN
   347 NOP(K,M)=NOP(N,M)
 
@@ -311,24 +311,24 @@ C
       N=NTHREE(NN)
       NSID(N)=K
 cipk aug01
-      IF(IMAT(N) .LT. 1) then
-	  ihh=ihh+1
-	  nfixh(ihh)=n
-	  GO TO 500
-	endif
-C      IF(NETYP(N) .EQ. 17) GO TO 500
-      IF(LAB(N) .NE. 1 ) GO TO 355
+      IF(IMAT(N) < 1) then
+        ihh=ihh+1
+        nfixh(ihh)=n
+        GO TO 500
+      endif
+C      IF(NETYP(N) == 17) GO TO 500
+      IF(LAB(N) /= 1 ) GO TO 355
       IHH=IHH+1
       NFIXH(IHH)=N
       GO TO 500
   355 CONTINUE
-      IF(NETYP(N) .EQ. 17) THEN
+      IF(NETYP(N) == 17) THEN
         IHH=IHH+1
         NFIXH(IHH)=N
         J2=NOP(N,1)
         N2DV=NDEP(J2)
         DO 356 KT=1,N2DV
-          IF(KT .NE. 1) THEN
+          IF(KT /= 1) THEN
             IHH=IHH+1
             NFIXH(IHH)=0
           ENDIF
@@ -337,7 +337,7 @@ C      IF(NETYP(N) .EQ. 17) GO TO 500
       ENDIF
 C     NSID(N)=K
       NCN=NCORN(N)
-      IF(NCORN(N) .LT. 6) GO TO 430
+      IF(NCORN(N) < 6) GO TO 430
 C-
 C..... Prepare to define NFIXH
 C-
@@ -353,27 +353,27 @@ C......Form highest side rectangle and develop number of 3-D elements
 C-
       J2=NOP(N,M)
       NCTM=NDEP(J2)-1
-      IF(NCTM .GT. N3DV) N3DV=NCTM
-      IF(IBN(J2) .EQ. 0) GO TO 420
+      IF(NCTM > N3DV) N3DV=NCTM
+      IF(IBN(J2) == 0) GO TO 420
       J1=NOP(N,M-1)
       J3=MOD(M+1,NCN)
       J3=NOP(N,J3)
 cipk oct98 update to f90
       IMMT=IMAT(N)
-      IF(MOD(IMMT,100) .GT. 90) GO TO 420
-C      IF(ALFA(J3) .EQ. ALFA(J1)  .AND.  IBN(J2) .NE. 2) GO TO 420
+      IF(MOD(IMMT,100) > 90) GO TO 420
+C      IF(ALFA(J3) == ALFA(J1) .AND. IBN(J2) /= 2) GO TO 420
       K=K+1
-      IF( K .GT. MAXE) GO TO 2500
-      IF(IBN(J2) .EQ. 2) THEN
+      IF( K > MAXE) GO TO 2500
+      IF(IBN(J2) == 2) THEN
         IMAT(K)=IMAT(N)+4000
         NETYP(K)=14
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ELSE
         IMAT(K)=3000+IMAT(N)
         NETYP(K)=13
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ENDIF
       NCORN(K)=8
       N1=NREF(J1)
@@ -398,23 +398,23 @@ C...... NSEQ contains side element number
 C-
       NCT=NCT+1
       NSEQ(M,NCT)=K
-  375 IF(ITT(1) .EQ. 1) GO TO 380
-      IF(ITT(3) .EQ. 1) GO TO 400
+  375 IF(ITT(1) == 1) GO TO 380
+      IF(ITT(3) == 1) GO TO 400
 C-
 C......Form other side rectangles
 C-
       K=K+1
-      IF(K .GT. MAXE) GO TO 2500
-      IF(IBN(J2) .EQ. 2) THEN
+      IF(K > MAXE) GO TO 2500
+      IF(IBN(J2) == 2) THEN
         IMAT(K)=IMAT(N)+4000
         NETYP(K)=14
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ELSE
         IMAT(K)=3000+IMAT(N)
         NETYP(K)=13
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ENDIF
       NCORN(K)=8
       NOP(K,1)=N1+IS(1)-ITT(1)
@@ -438,19 +438,19 @@ C-
 C......FORM SIDE TRIANGLE
 C-
   380 CONTINUE
-      IF(ITT(3) .EQ. 1) GO TO 420
+      IF(ITT(3) == 1) GO TO 420
       K=K+1
-      IF(K .GT. MAXE) GO TO 2500
-      IF(IBN(J2) .EQ. 2) THEN
+      IF(K > MAXE) GO TO 2500
+      IF(IBN(J2) == 2) THEN
         IMAT(K)=IMAT(N)+4000
         NETYP(K)=14
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ELSE
         IMAT(K)=3000+IMAT(N)
         NETYP(K)=13
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ENDIF
       NCORN(K)=6
       NOP(K,1)=N1+IS(1)-ITT(1)
@@ -472,17 +472,17 @@ C......FORM OTHER SHAPE TRIANGLE
 C-
   400 CONTINUE
       K=K+1
-      IF(K .GT. MAXE) GO TO 2500
-      IF(IBN(J2) .EQ. 2) THEN
+      IF(K > MAXE) GO TO 2500
+      IF(IBN(J2) == 2) THEN
         IMAT(K)=IMAT(N)+4000
         NETYP(K)=14
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ELSE
         IMAT(K)=3000+IMAT(N)
         NETYP(K)=13
 CIPK APR01
-	  NRELSF(K)=N
+        NRELSF(K)=N
       ENDIF
       NCORN(K)=6
       NOP(K,1)=N1+IS(1)-ITT(1)
@@ -511,12 +511,12 @@ C-
 C-
 C...... After the first pass leave a gap for the 3-D element
 C-
-        IF(KT .NE. 1) THEN
+        IF(KT /= 1) THEN
           IHH=IHH+1
           NFIXH(IHH)=0
         ENDIF
         DO 426 M=2,NCN,2
-          IF(NSEQ(M,KT) .GT. 0) THEN
+          IF(NSEQ(M,KT) > 0) THEN
             IHH=IHH+1
             NFIXH(IHH)=NSEQ(M,KT)
           ENDIF
@@ -539,26 +539,26 @@ cWP Feb 2006, Change NLAYM to NLAYMX
         J1=NOP(N,KT)
 cipk oct98 update to f90
         IMMT=IMAT(N)
-        IF(MOD(IMMT,100) .GT. 90) GO TO 460
-        IF(IBN(J1) .NE. 2) GO TO 460
+        IF(MOD(IMMT,100) > 90) GO TO 460
+        IF(IBN(J1) /= 2) GO TO 460
         N1=NREF(J1)
         IS(1)=NDEP(J1)
         ITT(1)=IS(1)
   440   K=K+1
-        IF(K .GT. MAXE) GO TO 2500
+        IF(K > MAXE) GO TO 2500
         NCT=NCT+1
         NSEQ(KT,NCT)=K
         NCORN(K)=3
         IMAT(K)=IMAT(N)+4000
         NETYP(K)=4
-        IF(IS(1) .EQ. ITT(1)) THEN
+        IF(IS(1) == ITT(1)) THEN
           NOP(K,3)=J1
         ELSE
           NOP(K,3)=N1+IS(1)-ITT(1)
         ENDIF
         NOP(K,2)=N1+IS(1)-ITT(1)+1
         NOP(K,1)=NOP(K,2)+1
-        IF(KT .EQ. 3) THEN
+        IF(KT == 3) THEN
           NOP(K,1)=NOP(K,3)
           NOP(K,3)=NOP(K,2)+1
         ENDIF
@@ -567,7 +567,7 @@ C       store source element number in NOP(19)
 C
         NOP(K,19)=N
         ITT(1)=ITT(1)-2
-        IF(ITT(1) .GT. 1) GO TO 440
+        IF(ITT(1) > 1) GO TO 440
   460 CONTINUE
 C-
 C...... Find the number of 2-D vertical elements at this element
@@ -585,12 +585,12 @@ C-
 C-
 C...... After the first pass leave a gap for the 3-D element
 C-
-        IF(KT .NE. 1) THEN
+        IF(KT /= 1) THEN
           IHH=IHH+1
           NFIXH(IHH)=0
         ENDIF
         DO 470 M=1,3,2
-          IF(NSEQ(M,KT) .GT. 0) THEN
+          IF(NSEQ(M,KT) > 0) THEN
             IHH=IHH+1
             NFIXH(IHH)=NSEQ(M,KT)
           ENDIF
@@ -607,12 +607,12 @@ C
 C     NS IS NUMBER OF SIDE ELEMENTS
 C
       DO 600 N=1,NE
-      IF(IMAT(N) .LT. 1) GO TO 600
-      IF(NETYP(N) .EQ. 17) GO TO 600
+      IF(IMAT(N) < 1) GO TO 600
+      IF(NETYP(N) == 17) GO TO 600
       MSHIFT=12
-      IF(NCORN(N) .EQ. 6) MSHIFT=9
-      IF(LAB(N) .EQ. 1 ) MSHIFT=0
-      IF(NCORN(N) .LT. 6) MSHIFT=0
+      IF(NCORN(N) == 6) MSHIFT=9
+      IF(LAB(N) == 1 ) MSHIFT=0
+      IF(NCORN(N) < 6) MSHIFT=0
       DO 599 M=1,8
       MS=M+MSHIFT
       NOP(N,MS)=NOP(N,M)
@@ -632,25 +632,25 @@ C
       N=NTHREE(NN)
 CIPK OCT98      NXT=NEE
       NNX=NTHREE(NN+1)
-      IF(NN .LT. NE) NXT=NSID(NNX)
+      IF(NN < NE) NXT=NSID(NNX)
       NES=NET-1
       NET=N
       NCN=NCORN(N)
-      IF(NETYP(N) .EQ. 17) GO TO 2090
+      IF(NETYP(N) == 17) GO TO 2090
 C-
 C......TEST FOR QUADRILATERAL
 C-
-      IF(IMAT(N) .LT. 1) GO TO 2150
-      IF(LAB(N) .EQ. 1 ) GO TO 2150
-      IF(NCN .LT. 6) GO TO 1800
-      IF(NCN .EQ. 8) GO TO 1600
+      IF(IMAT(N) < 1) GO TO 2150
+      IF(LAB(N) == 1 ) GO TO 2150
+      IF(NCN < 6) GO TO 1800
+      IF(NCN == 8) GO TO 1600
 C-
 C......WORK ON TRIANGLE
 C-
       DO 1325 M=1,6
       K=NOP(N,M)
       ITT(M)=NDEP(K)
-      IF(MOD(M,2) .EQ. 1) ITT(M)=ITT(M)-1
+      IF(MOD(M,2) == 1) ITT(M)=ITT(M)-1
       IS(M)=ITT(M)
  1325 CONTINUE
 C-
@@ -660,15 +660,15 @@ C......CHECK IF ALL ELEMENTS ARE GENERATED
 C-
  1330 CONTINUE
       DO 1331 M=1,5,2
-      IF(ITT(M) .LT. 0) ITT(M)=0
+      IF(ITT(M) < 0) ITT(M)=0
  1331 CONTINUE
-      IF(ITT(1)+ITT(3)+ITT(5) .EQ. 0) GO TO 2200
-      IF(NET .EQ. N) GO TO 1334
-      IF(NET .GT. MAXE) GO TO 2500
+      IF(ITT(1)+ITT(3)+ITT(5) == 0) GO TO 2200
+      IF(NET == N) GO TO 1334
+      IF(NET > MAXE) GO TO 2500
 C-
 C...... Find a gap in NFIXH and fill it
 C-
- 1332 IF(NFIXH(IHH) .EQ. 0) GO TO 1333
+ 1332 IF(NFIXH(IHH) == 0) GO TO 1333
       IHH=IHH+1
       GO TO 1332
  1333 CONTINUE
@@ -683,18 +683,18 @@ C
 C-
 C......CHECK FOR TRIANGULAR PRISM
 C-
-      IF(ITT(1)*ITT(3)*ITT(5) .GT. 0) GO TO 1500
+      IF(ITT(1)*ITT(3)*ITT(5) > 0) GO TO 1500
 C-
 C......NOW WORK OTHER ELEMENTS
 C-
 C......FIRST TEST IF FIRST TIME THROUGH WHICH IS AN ERROR
 C-
-      IF(NET .NE. N) GO TO 1335
+      IF(NET /= N) GO TO 1335
 cipk sep04
-      if(ierr .ne. 1) then     
+      if(ierr /= 1) then     
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
-	endif
+      endif
       IERR=1
       WRITE(75,6090) N,(IS(K),K=1,6)
       WRITE(*,6090) N,(IS(K),K=1,6)
@@ -706,15 +706,15 @@ C-
 C......DETERMINE NUMBER OF SINGLE POINT CORNERS
 C-
       DO 1380 J=1,5,2
-      IF(ITT(J) .EQ. 0) GO TO 1380
+      IF(ITT(J) == 0) GO TO 1380
         nwlp=NOP(N,J+9)
       N1=NRF(nwlp,J)
         nwlp=NOP(N,J+10)
       NM1=NRF(nwlp,J+1)
       JP=J+2
-      IF(JP .GT. 5) GO TO 1410
+      IF(JP > 5) GO TO 1410
       DO 1375 I=JP,5,2
-      IF(ITT(I) .EQ. 0) GO TO 1375
+      IF(ITT(I) == 0) GO TO 1375
         nwlp=NOP(N,I+9)
       N2=NRF(nwlp,I)
       GO TO 1385
@@ -730,7 +730,7 @@ C-
         nwlp=NOP(N,I+10)
       NM2=NRF(nwlp,I+1)
       NA=18-I-J
-      IF(NA .NE. 12) GO TO 1386
+      IF(NA /= 12) GO TO 1386
       N3=N1
       N1=N2
       N2=N3
@@ -757,13 +757,13 @@ C-
       NOP(NET,2)=NM1+1
       NOP(NET,4)=NM2+1
       DO 1390 I=1,6
-      IF(I .EQ. NA) GO TO 1390
+      IF(I == NA) GO TO 1390
       ITT(I)=ITT(I)-1
-      IF(MOD(I,2) .EQ. 1) ITT(I)=ITT(I)-1
+      IF(MOD(I,2) == 1) ITT(I)=ITT(I)-1
  1390 CONTINUE
-      IF(NET .EQ. N) NET=NES
+      IF(NET == N) NET=NES
       NET=NET+1
-      IF(NET .GT. MAXE) GO TO 2500
+      IF(NET > MAXE) GO TO 2500
       GO TO 1330
 C-
 C......PROCESS 10 POINT ELEMENT
@@ -793,9 +793,9 @@ C-
       ITT(J)=ITT(J)-2
       ITT(J+1)=ITT(J+1)-1
       ITT(NA-8)=ITT(NA-8)-1
-      IF(NET .EQ. N) NET=NES
+      IF(NET == N) NET=NES
       NET=NET+1
-      IF(NET .GT. MAXE) GO TO 2500
+      IF(NET > MAXE) GO TO 2500
       GO TO 1330
 C-
 C......PROCESS 15 POINT ELEMENT
@@ -817,7 +817,7 @@ C-
       NM2=NRF(nwlp,4)
         nwlp=NOP(N,15)
       NM3=NRF(nwlp,6)
-      IF(NET .EQ. N) GO TO 1550
+      IF(NET == N) GO TO 1550
       NOP(NET,10)=N1
       NOP(NET,12)=N2
       NOP(NET,14)=N3
@@ -833,12 +833,12 @@ C-
       NOP(NET,7)=N1+1
       NOP(NET,8)=N2+1
       NOP(NET,9)=N3+1
-      IF(NET .EQ. N) NET=NES
+      IF(NET == N) NET=NES
       NET=NET+1
-      IF(NET .GT. MAXE) GO TO 2500
+      IF(NET > MAXE) GO TO 2500
       DO 1560 I=1,6
       ITT(I)=ITT(I)-1
-      IF(MOD(I,2) .EQ. 1) ITT(I)=ITT(I)-1
+      IF(MOD(I,2) == 1) ITT(I)=ITT(I)-1
  1560 CONTINUE
       GO TO 1330
  1600 CONTINUE
@@ -848,15 +848,15 @@ C-
       DO 1610 M=1,8
       K=NOP(N,M)
       ITT(M)=NDEP(K)
-      IF(MOD(M,2) .EQ. 1) ITT(M)=ITT(M)-1
+      IF(MOD(M,2) == 1) ITT(M)=ITT(M)-1
       IS(M)=ITT(M)
  1610 CONTINUE
  1615 CONTINUE
-      IF(NET .EQ. N) GO TO 1620
+      IF(NET == N) GO TO 1620
 C-
 C...... Find a gap in NFIXH and fill it
 C-
- 1617 IF(NFIXH(IHH) .EQ. 0) GO TO 1618
+ 1617 IF(NFIXH(IHH) == 0) GO TO 1618
       IHH=IHH+1
       GO TO 1617
  1618 CONTINUE
@@ -887,7 +887,7 @@ C
       NM3=NRF(nwlp,6)
         nwlp=NOP(N,20)
       NM4=NRF(nwlp,8)
-      IF(NET .EQ. N) GO TO 1625
+      IF(NET == N) GO TO 1625
       NOP(NET,13)=N1
       NOP(NET,14)=NM1
       NOP(NET,15)=N2
@@ -909,13 +909,13 @@ C
       NOP(NET,6)=NM3+1
       NOP(NET,7)=N4+2
       NOP(NET,8)=NM4+1
-      IF(NET .EQ. N) NET=NES
+      IF(NET == N) NET=NES
       GO TO 1710
  1650 CONTINUE
 C-
 C...... Find a gap in NFIXH and fill it
 C-
- 1652 IF(NFIXH(IHH) .EQ. 0) GO TO 1654
+ 1652 IF(NFIXH(IHH) == 0) GO TO 1654
       IHH=IHH+1
       GO TO 1652
  1654 CONTINUE
@@ -929,8 +929,8 @@ C
       IMAT(NET)=IMAT(N)
       ELAREA(NET)=ELAREA(N)
       DO 1660 I=1,7,2
-      IF(ITT(I) .LT. 0) ITT(I)=ITT(I)+2
-      IF(ITT(I+1) .EQ. 0) ITT(I+1)=ITT(I+1)+1
+      IF(ITT(I) < 0) ITT(I)=ITT(I)+2
+      IF(ITT(I+1) == 0) ITT(I+1)=ITT(I+1)+1
  1660 CONTINUE
       NCORN(NET)=15
       NETYP(NET)=22
@@ -969,29 +969,29 @@ C
       NOP(NET,14)=N3+2
       NOP(NET,15)=NM3+1
  1710 CONTINUE
-      IF(NET .EQ. N) NET=NES
+      IF(NET == N) NET=NES
       NET=NET+1
-      IF(NET .GT. MAXE) GO TO 2500
+      IF(NET > MAXE) GO TO 2500
       DO 1720 I=1,8
       ITT(I)=ITT(I)-1
-      IF(MOD(I,2) .EQ. 1) ITT(I)=ITT(I)-1
+      IF(MOD(I,2) == 1) ITT(I)=ITT(I)-1
  1720 CONTINUE
       ISETS=0
       ISETZ=0
       DO 1730 I=2,8,2
-      IF(ITT(I-1) .GT. 1) ISETS=ISETS+2
-      IF(ITT(I) .GT. 1) GO TO 1730
+      IF(ITT(I-1) > 1) ISETS=ISETS+2
+      IF(ITT(I) > 1) GO TO 1730
       ISETZ=ISETZ+1
       ILOC=MOD(I+1,8)
  1730 CONTINUE
-      IF(ISETZ .EQ. 0  .AND.  ISETS .EQ. 8) GO TO 1615
-      IF(ISETZ .EQ. 1  .AND.  ISETS .EQ. 4) GO TO 1650
-      IF(ISETZ .EQ. 4) GO TO 2200
+      IF(ISETZ == 0 .AND. ISETS == 8) GO TO 1615
+      IF(ISETZ == 1 .AND. ISETS == 4) GO TO 1650
+      IF(ISETZ == 4) GO TO 2200
 cipk sep04
-      if(ierr .ne. 1) then     
+      if(ierr /= 1) then     
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
-	endif
+      endif
       WRITE(75,6090) N,(IS(K),K=1,8)
       WRITE(*,6090) N,(IS(K),K=1,8)
       IERR=1
@@ -1002,12 +1002,12 @@ C-
 C......FORM TOP SIDE RECTANGLE
 C-
       J2=NOP(N,M)
-      IF(IBN(J2) .EQ. 0) GO TO 2080
+      IF(IBN(J2) == 0) GO TO 2080
       J1=NOP(N,M-1)
       J3=NOP(N,M+1)
-      IF( NET .GT. MAXE) GO TO 2500
+      IF( NET > MAXE) GO TO 2500
       NCORN(NET)=8
-      IF(NETYP(N) .EQ. 18) THEN
+      IF(NETYP(N) == 18) THEN
         NETYP(NET)=18
       ELSE
         NETYP(NET)=15
@@ -1032,7 +1032,7 @@ C
       NOP(NET,2)=N1+1
       NOP(NET,3)=N1+2
 cipk jan99
-      IF(JPOINT(J1) .NE. 0) THEN
+      IF(JPOINT(J1) /= 0) THEN
         JJ4=ABS(JPOINT(J1))
         NN4=NREF(JJ4)
         NOP(NET,12)=JJ4
@@ -1046,7 +1046,7 @@ cipk jan99
       NOP(NET,7)=J3
 cipk jan99
 
-      IF(JPOINT(J3) .NE. 0) THEN
+      IF(JPOINT(J3) /= 0) THEN
         JJ4=ABS(JPOINT(J3))
         NN4=NREF(JJ4)
         NOP(NET,18)=JJ4
@@ -1061,7 +1061,7 @@ cipk jan99
       ITT(1)=IS(1)-2
       ITT(2)=IS(2)-1
       ITT(3)=IS(3)-2
-      IF(NETYP(NET) .EQ. 18) THEN
+      IF(NETYP(NET) == 18) THEN
         N4=NREF(J4)
         N5=NREF(J5)
         N6=NREF(J6)
@@ -1082,14 +1082,14 @@ cipk jan99
       ENDIF
       NET=NES
  1975 NET=NET+1
-      IF(NET .GT. MAXE) GO TO 2500
-      IF(ITT(1) .LT. 2) GO TO 1980
-      IF(ITT(3) .LT. 2) GO TO 2000
+      IF(NET > MAXE) GO TO 2500
+      IF(ITT(1) < 2) GO TO 1980
+      IF(ITT(3) < 2) GO TO 2000
 C-
 C......FORM OTHER SIDE RECTANGLE
 C-
       NCORN(NET)=8
-      IF(NETYP(N) .EQ. 18) THEN
+      IF(NETYP(N) == 18) THEN
         NETYP(NET)=18
       ELSE
         NETYP(NET)=15
@@ -1097,7 +1097,7 @@ C-
 C-
 C...... Find a gap in NFIXH and fill it
 C-
- 1977 IF(NFIXH(IHH) .EQ. 0) GO TO 1978
+ 1977 IF(NFIXH(IHH) == 0) GO TO 1978
       IHH=IHH+1
       GO TO 1977
  1978 CONTINUE
@@ -1115,7 +1115,7 @@ C
       NOP(NET,3)=NOP(NET,1)+2
 cipk jan99
 
-      IF(JPOINT(J1) .NE. 0) THEN
+      IF(JPOINT(J1) /= 0) THEN
         NOP(NET,12)=NN4+IS(1)-ITT(1)
         NOP(NET,13)=NOP(NET,12)+1
         NOP(NET,14)=NOP(NET,12)+2
@@ -1128,13 +1128,13 @@ cipk jan99
       NOP(NET,5)=NOP(NET,7)+2
 cipk jan99
 
-      IF(JPOINT(J3) .NE. 0) THEN
+      IF(JPOINT(J3) /= 0) THEN
         NOP(NET,18)=NN4+IS(3)-ITT(3)
         NOP(NET,17)=NOP(NET,18)+1
         NOP(NET,16)=NOP(NET,18)+2
       ENDIF
 
-      IF(NETYP(NET) .EQ. 18) THEN
+      IF(NETYP(NET) == 18) THEN
 C        J4=NOP(N,4)
 C        J5=NOP(N,5)
 C        J6=NOP(N,19)
@@ -1161,13 +1161,13 @@ C-
 C......FORM SIDE TRIANGLE
 C-
  1980 CONTINUE
-      IF(ITT(3) .LT. 2) GO TO 2080
+      IF(ITT(3) < 2) GO TO 2080
       NCORN(NET)=6
       NETYP(NET)=15
 C-
 C...... Find a gap in NFIXH and fill it
 C-
- 1985 IF(NFIXH(IHH) .EQ. 0) GO TO 1987
+ 1985 IF(NFIXH(IHH) == 0) GO TO 1987
       IHH=IHH+1
       GO TO 1985
  1987 CONTINUE
@@ -1188,7 +1188,7 @@ C
       NOP(NET,3)=NOP(NET,5)+2
 cipk jan99
 
-      IF(JPOINT(J3) .NE. 0) THEN
+      IF(JPOINT(J3) /= 0) THEN
         NOP(NET,18)=NN4+IS(3)-ITT(3)
         NOP(NET,17)=NOP(NET,18)+1
         NOP(NET,16)=NOP(NET,18)+2
@@ -1207,7 +1207,7 @@ C-
 C-
 C...... Find a gap in NFIXH and fill it
 C-
- 2020 IF(NFIXH(IHH) .EQ. 0) GO TO 2025
+ 2020 IF(NFIXH(IHH) == 0) GO TO 2025
       IHH=IHH+1
       GO TO 2020
  2025 CONTINUE
@@ -1225,7 +1225,7 @@ C
       NOP(NET,3)=NOP(NET,1)+2
 cipk jan99
 
-      IF(JPOINT(J1) .NE. 0) THEN
+      IF(JPOINT(J1) /= 0) THEN
         NOP(NET,12)=NN4+IS(1)-ITT(1)
         NOP(NET,13)=NOP(NET,12)+1
         NOP(NET,14)=NOP(NET,12)+2
@@ -1246,14 +1246,14 @@ C-
       NED=NOP(N,1)
       NED=NDEP(NED)
       NET=NES+1
-      IF(NED .GT. 2) THEN
+      IF(NED > 2) THEN
         NIND=NCORN(N)
         DO 2130 K=2,NED
-          IF(NET .GT. MAXE) GO TO 2500
+          IF(NET > MAXE) GO TO 2500
 C-
 C...... Find a gap in NFIXH and fill it
 C-
- 2100 IF(NFIXH(IHH) .EQ. 0) GO TO 2110
+ 2100 IF(NFIXH(IHH) == 0) GO TO 2110
       IHH=IHH+1
       GO TO 2100
  2110 CONTINUE
@@ -1277,10 +1277,10 @@ C-
         NETYP(N)=7
       ENDIF
  2150 NET=NES+1
-      IF(NETYP(N) .EQ. 18) NETYP(N)=8
+      IF(NETYP(N) == 18) NETYP(N)=8
  2200 CONTINUE
       NE=NET-1
-      IF(IERR .EQ. 1) STOP
+      IF(IERR == 1) STOP
       RETURN
  2500 WRITE(*,6400) NET,MAXE,N
       WRITE(75,6400) NET,MAXE,N

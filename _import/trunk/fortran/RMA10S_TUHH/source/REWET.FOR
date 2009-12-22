@@ -16,7 +16,7 @@ C     Last change:  WP    5 Jun 2008    3:48 pm
         DREC (N) = VOID
         !cycle, if node is wet
         IF (NDRY (N) == 1) CYCLE InitNodesDry
-        !IF (NDRY (N) .EQ. 1 .and. vel(3, n) /= 0.0) GO TO 200
+        !IF (NDRY (N) == 1 .AND. vel(3, n) /= 0.0) GO TO 200
         !Set node N dry again
         NDRY (N) = 2
         !Set depth of node to 0.0d0
@@ -182,7 +182,7 @@ c  207         HF=1./(VEL(3,KK)-DSET)*ALOG(VEL(3,KK)/DSET)
               !get node
               N = ABS (NOP (NN, M))
               !check whether node is dry but has a depth after rewet run; then set it rewetted (NDRY becomes -1)
-              IF (NDRY (N) == 2 .and. vel (3, n) > 0.0) NDRY (N) = -1
+              IF (NDRY (N) == 2 .AND. vel (3, n) > 0.0) NDRY (N) = -1
             ENDDO
           ENDIF
         ENDDO RewetNodes

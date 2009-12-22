@@ -83,7 +83,7 @@ C
 cipk jan99 initialize AKE
       AKE=1.0
 
-      IF (GRAV .LT. 32.)  THEN
+      IF (GRAV < 32.)  THEN
         FCOEF = GRAV
       ELSE
         FCOEF = GRAV/2.208
@@ -97,7 +97,7 @@ C  Test for width > 0
       N3 = NOP(NN,3)
 
       !check, whether necessary informations are present
-      IF ((WIDTH(N1) .LE. 0.0  .OR.  WIDTH(N3) .LE. 0.0) .and.
+      IF ((WIDTH(N1) <= 0.0 .OR. WIDTH(N3) <= 0.0) .AND. 
      +     imat(nn) < 901)  THEN
 
 CIPK SEP04 CREATE ERROR FILE
@@ -113,16 +113,16 @@ CIPK SEP04 CREATE ERROR FILE
         WRITE(*,*) 'Processing junction element: ', nn
       ENDIF
 C
-      IF(ITEQV(MAXN) .EQ. 5) CALL ARAA(NN)
+      IF(ITEQV(MAXN) == 5) CALL ARAA(NN)
       TEL=AREA(NN)
       AREA(NN)=0.
 cipk nov97
       TVOL(NN)=0.
 
-      IF(ITEQV(MAXN) .EQ. 5) THEN
+      IF(ITEQV(MAXN) == 5) THEN
         DO 61 N=1,8
           NCON(N)=NOPS(NN,N)
-          IF(NCON(N) .NE. 0) NCN=N
+          IF(NCON(N) /= 0) NCN=N
    61   CONTINUE
       ELSE
         NCN=NCORN(NN)
@@ -130,13 +130,13 @@ cipk nov97
           NCON(N)=NOP(NN,N)
    63   CONTINUE
       ENDIF
-      IF(NCN .EQ. 5  .AND.  IMAT(NN) .LT. 900) NCN=3
+      IF(NCN == 5 .AND. IMAT(NN) < 900) NCN=3
 cipk nov97
       ncnx=2
 c
 c     Initialize AME and DAME
 c
-      IF (IDNOPT.LT.0) THEN
+      IF (IDNOPT < 0) THEN
          DO M = 1, NCNX
            MC = 2 * M - 1
            N = NOP(NN,MC)
@@ -147,7 +147,7 @@ c
       ENDIF
 
 CIPK OCT02  add logic to make ice cover functions linear
-      IF(ICESW .GT. 0) THEN
+      IF(ICESW > 0) THEN
         THKI(1)=ICETHK(NOP(NN,1))
         THKI(3)=ICETHK(NOP(NN,3))
         QWLI(1)=QICE(NOP(NN,1))
@@ -177,12 +177,12 @@ C
 
 cipk dec00 allow gate type elements
 
-      IF(MR .GT. 900  .AND. IGTP(NN) .EQ. 0) GO TO 2000
+      IF(MR > 900 .AND. IGTP(NN) == 0) GO TO 2000
 
-      IF(MR .LT. 900) THEN
+      IF(MR < 900) THEN
        
         MR=MOD(IMMT,100)
-c      ELSEIF(IGTP(NN) .GT. 0.) THEN
+c      ELSEIF(IGTP(NN) > 0.) THEN
 c        NGT=MR-900
 c        DO N=1,3
 c          NJ=NOP(NN,N)
@@ -190,23 +190,23 @@ c          ACR=(2.*WIDTH(NJ)+VEL(3,NJ)*(SS1(NJ)+SS2(NJ)))/2.*VEL(3,NJ)
 c          Q1(N)=ACR*SQRT(VEL(1,NJ)**2+VEL(2,NJ)**2)
 c        ENDDO
 c        QFLOW=(Q1(1)+Q1(3)+4.*Q1(2))/6.
-c        IF(QFLOW .GT. AJ(NGT)) THEN
+c        IF(QFLOW > AJ(NGT)) THEN
 c          CJ(NGT)=(QFLOW/AJ(NGT))**4* CJ(NGT)
-c        ELSEIF(CJ(NGT) .GT. 1.) THEN
+c        ELSEIF(CJ(NGT) > 1.) THEN
 c          CJ(NGT)=(QFLOW/AJ(NGT))**4* CJ(NGT)
 c        ENDIF
-c        IF(CJ(NGT) .LT. 1.) CJ(NGT)=1.0
+c        IF(CJ(NGT) < 1.) CJ(NGT)=1.0
 cipk dec00        WRITE(75,*) 'CJ, QFLOW', CJ(NGT),QFLOW, AJ(NGT)
       ENDIF
 
       MAT=MR
 
 cipk dec00 skip out for active gate closure
-      IF(IGTP(NN) .NE. 0) THEN
-        IF(IGTCL(NN) .EQ. 1) THEN
+      IF(IGTP(NN) /= 0) THEN
+        IF(IGTCL(NN) == 1) THEN
 
           NGT=IMAT(NN)-900
-          IF(NTX .EQ. 1) THEN
+          IF(NTX == 1) THEN
             AREA(NN)=TEL
             RETURN
           ENDIF
@@ -215,9 +215,9 @@ cipk dec00 skip out for active gate closure
 
 C
       ROAVG=1.935
-      IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
+      IF (GRAV < 32.)  ROAVG = 516. * 1.935
 C
-      IF(NTX .EQ. 0) THEN
+      IF(NTX == 0) THEN
         N1=NCON(1)
         N2=NCON(3)
         TH(NN)=ATAN2(CORD(N2,2)-CORD(N1,2),CORD(N2,1)-CORD(N1,1))
@@ -239,7 +239,7 @@ c        EPSX = ORT(MR,1)/ROAVG
 
 cipk nov98 adjust for top friction
 cipk apr999 fix nr to MAT
-      IF(ORT(MAT,5) .GT. 1.  .or.  ort(MAT,13) .gt. 1.) then
+      IF(ORT(MAT,5) > 1. .OR. ort(MAT,13) > 1.) then
         FFACT = GRAV/(CHEZ(NN)+ort(MAT,13))**2
       endif
 
@@ -259,7 +259,7 @@ C-
       !nis,oct06,com: angular difference between nodal tangent and element direction
       ANGDIF=TH(NN)-ALFA(N)
       !nis,oct06,com: fixing direction factor in dependency of nodal vector direction compared to element direction
-      IF(ABS(ANGDIF) .GT. 1.5708  .AND.  ABS(ANGDIF) .LT. 4.71779) THEN
+      IF(ABS(ANGDIF) > 1.5708 .AND. ABS(ANGDIF) < 4.71779) THEN
         !nis,oct06,com: flow direction in opposite to element definition direction
         QFACT(K)=-1.0
         QQFACT(K)=-1.0
@@ -285,7 +285,7 @@ CIPK JAN03
 
 !nis,may07: deactivating loop because it doesn't do anything
 !      DO 107 K=1,NCN
-!C     IF(QFACT(K) .LT. 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
+!C     IF(QFACT(K) < 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
 !C4599 FORMAT('FOR ELEMENT NN K NOP  QFACT'/(3I5,F10.2)
 !  107 CONTINUE
 !-
@@ -294,12 +294,12 @@ C-
 C-.....COMPUTE ELEMENT EQUATIONS.....
 C-
       TFR=TEL/ABS(XL(3))
-      IF(NTX .NE. 0) XL(2)=XL(3)/2.
+      IF(NTX /= 0) XL(2)=XL(3)/2.
 
 
 CIPK MAY04 RESET ELEMENT INFLOW
 
-      IF(INOFLOW(NN) .EQ. 0) THEN
+      IF(INOFLOW(NN) == 0) THEN
         SIDFQ=SIDF(NN)
       ELSE
         SIDFQ=0.
@@ -330,7 +330,7 @@ C-
       DNX(1)=(4.*AFACT(I)-3.)/TEMP
       DNX(2)=(4.-8.*AFACT(I))/TEMP
       DNX(3)=(4.*AFACT(I)-1.)/TEMP
-      IF(NTX .EQ. 0) THEN
+      IF(NTX == 0) THEN
         DYDX=YL(2)*DNX(2)+YL(3)*DNX(3)
         ALF=ATAN(DYDX)
         CSALF=COS(ALF)
@@ -338,7 +338,7 @@ C-
       ELSE
         TEMP=TEMP*TFR
       ENDIF
-      IF(NTX .NE. 0) THEN
+      IF(NTX /= 0) THEN
         DO 240 J=1,3
           DNX(J)=DNX(J)/TFR
   240   CONTINUE
@@ -353,7 +353,7 @@ C-
       !nis,oct06,com: TEMP is not yet clear
       DMX(1)=-1./TEMP
       DMX(2)=1./TEMP
-      IF(NSTRT(NCON(2),1) .EQ. 0) THEN
+      IF(NSTRT(NCON(2),1) == 0) THEN
         DO 242 J=1,3
           XO(J)=XN(J)
           DOX(J)=DNX(J)
@@ -396,9 +396,9 @@ CIPK FEB07
       ENDIF
       AMW=ABS(TEMP)*HFACT(I)/2.
       AREA(NN)=AREA(NN)+AMW
-      IF(NTX .EQ. 0) GO TO 500
+      IF(NTX == 0) GO TO 500
 cipk nov97
-      IF(NTX .EQ. 3) GO TO 276
+      IF(NTX == 3) GO TO 276
 C-
 C...... Change to no multiplication by roavg
 C-
@@ -422,7 +422,7 @@ C-
       DO 250 M=1,NCN
         MR=NCON(M)
 
-        !nis,oct06,com: calculate vx and vy; for 1D, udst and vdst are .eq. 1
+        !nis,oct06,com: calculate vx and vy; for 1D, udst and vdst are == 1
         VX(M)=VEL(1,MR)/UDST(MR)
         VY(M)=VEL(2,MR)/VDST(MR)
         ST(M)=VEL(ICK,MR)/SDST(MR)
@@ -431,7 +431,7 @@ C-
         VDX(M)=VDOT(1,MR)/UDST(MR)
         VDY(M)=VDOT(2,MR)/VDST(MR)
         SDT(M)=VDOT(ICK,MR)/SDST(MR)
-        IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
+        IF(ITEQV(MAXN) == 5 .AND. NDEP(MR) > 1) THEN
           NBOT=NREF(MR)+NDEP(MR)-1
           UBFC(M)=UDST(NBOT)
         ELSE
@@ -457,19 +457,19 @@ C-
         DRDX = DRDX + DNX(M) * (VX(M)*CX + VY(M)*SA) * QFACT(M)
 
         !nis,oct06,com: concentration things
-        IF(NSTRT(MR,1) .EQ. 0) THEN
+        IF(NSTRT(MR,1) == 0) THEN
           SALT=SALT+XO(M)*ST(M)
           DSALDT=DSALDT+XO(M)*SDT(M)
           DSALDX=DSALDX+DOX(M)*ST(M)
 CIPK MAY02
         GAIN=GAIN+XO(M)*GAN(MR)
 CIPK FEB07
-          IF(ICK .EQ. 6) THEN
+          IF(ICK == 6) THEN
             EXTL=EXTL+XO(M)*EXTLD(MR)
           ENDIF
         ENDIF
 
-        IF(ICYC.LT.1) GO TO 270
+        IF(ICYC < 1) GO TO 270
 
         !nis,oct06,com: addition of nodal derivative, derivative is in velocity
         BETA1 = BETA1 + XN(M) * (VDX(M)*CX + VDY(M)*SA) * QFACT(M)
@@ -501,7 +501,7 @@ cipk APR99 add for more flexible width term
         BETA3=BETA3+XM(M)*VDOT(3,MR)
         DHDX = DHDX + DMX(M)*VEL(3,MR)
 cipk nov97      DAODX = DAODX + DMX(M)*AO(MR)
-        IF (IDNOPT.GE.0) THEN
+        IF (IDNOPT >= 0) THEN
           DAODX = DAODX + DMX(M)*AO(MR)
           abed=abed+xm(m)*ao(mr)
         ELSE
@@ -514,7 +514,7 @@ cipk apr99 add line for storage sideslope
         wssg=wssg+xm(m)*wss(mr)
         RHO=RHO+XM(M)*DEN(MR)
         DRODX=DRODX+DMX(M)*DEN(MR)
-c      IF(ICYC .LT.1) GO TO 275
+c      IF(ICYC < 1) GO TO 275
 cipk feb05      SIGMAX=SIGMAX+XM(M)*(SIGMA(MR,1)*CXX+SIGMA(MR,2)*SAA)
 CIPK MAY02  ADD STRESS TERM
         SIGMAX = SIGMAX+XM(M)*((SIGMA(MR,1)+STRESS(MR,1))*CXX
@@ -529,20 +529,20 @@ CIPK NOV97
       AMU=AMW*XHT
 
 cipk aug03 ADD TEST TO REOVE STRESSES IF DRY
-      IF(H+ABED .LT. AZER) THEN
-	  SIGMAX=0.
-	ENDIF
+      IF(H+ABED < AZER) THEN
+        SIGMAX=0.
+      ENDIF
 
 cipk apr99 add for sloping storage
 
-      if(h+abed .lt. bsel) then
+      if(h+abed < bsel) then
         widstrt=0.
         astc=0.
-      elseif(bsel .gt. abed+1.e-05) then
+      elseif(bsel > abed+1.e-05) then
         widstrt=(-bsel+h+abed)*wssg
         astc=(h+azer-bsel)*widstrt/2.
-        if(wssg .gt. 0.) then
-          if(widstrt .gt. widstr) then
+        if(wssg > 0.) then
+          if(widstrt > widstr) then
             excesht=(widstrt-widstr)/wssg
             astc=astc-excesht*(widstrt-widstr)/2.
           endif
@@ -551,7 +551,7 @@ cipk apr99 add for sloping storage
         widstrt=widstr
         astc=widstr*h
       endif
-      if(widstrt .lt. widstr) widstr=widstrt
+      if(widstrt < widstr) widstr=widstrt
 
 C-
 C...... Reset momentum coefficient for later use
@@ -563,22 +563,22 @@ C-
       ACR=H*(WSRF+WID)*0.5
 CIPK NOV97
       TVOL(NN)=TVOL(NN)+AMW
-      IF(NTX .EQ. 3) GO TO 500
+      IF(NTX == 3) GO TO 500
 CIPK AUG95 ADD DEFINITION FOR TOTAL AREA INCLUDING STORAGE
 cipk apr99      AST=ACR+H*WIDSTR
       ast=acr+astc
-      IF(ICK .EQ. 4) THEN
+      IF(ICK == 4) THEN
         DRDS=DRODS(SALT,IGF)
 CIPK AUG95 DEFINE RATES
         GRATE=0.
         SRCSNK=0.
-      ELSEIF(ICK .EQ. 5) THEN
+      ELSEIF(ICK == 5) THEN
         DRDS=DRODTM(SALT,IGF)
 CIPK AUG95 GET RATES
         deltt=delt
         CALL MKTEMP(SALT,H,0.,SRCSNK,GRATE,DELTT,MAT,NETYP(NN))
 CIPK MAY02
-      ELSEIF(ICK .EQ. 6) THEN
+      ELSEIF(ICK == 6) THEN
 C
 C     Set up sand transport variables
 C
@@ -592,7 +592,7 @@ C
 
         GRATE=0.
         SRCSNK=0.
-        IF(LSAND .GT. 0) THEN
+        IF(LSAND > 0) THEN
           CALL MKSAND(SALT,H,VSN,SRCSNK,GRATE,NETYP(NN))
       ENDIF
         DRDS=DRODSD(SALT,IGF)
@@ -608,13 +608,13 @@ cipk mar05
       SIGMAX = SIGMAX/RHO
 
 CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
-      IF(H .LT. ZSTDEP) THEN
-	  SIGMAX=0.
-	ENDIF
+      IF(H < ZSTDEP) THEN
+        SIGMAX=0.
+      ENDIF
 
       GHC = GRAV*H
       VECQ = ABS(R)
-      IF(H .LE. 0.) H=0.001
+      IF(H <= 0.) H=0.001
 
 !NiS,apr06: adding possibility of FrictionFactor calculation with
 !           COLEBROOK-WHITE to apply DARCY-WEISBACH equation: Therefore,
@@ -624,46 +624,46 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
 cipk nov98 adjust for surface friction
 CIPK APR99 ADJUST NR TO MAT
   !NiS,apr06: changing test:
-  !    IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
-      IF(ORT(MAT,5) .GT. 0.  .OR.  (ORT(MAT,13) .GT. 0. .and.
+  !    IF(ORT(MAT,5) > 0. .OR. ORT(MAT,13) > 0.) THEN
+      IF(ORT(MAT,5) > 0. .OR. (ORT(MAT,13) > 0. .AND. 
      +   ORT(MAT,5) /= -1.0)) THEN
   !-
-        IF(ORT(MAT,5) .LT. 1.0  .AND.  ORT(MAT,13) .LT. 1.0) then
+        IF(ORT(MAT,5) < 1.0 .AND. ORT(MAT,13) < 1.0) then
 
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
-          IF(MANMIN(MAT) .GT. 0.) THEN
-	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
+          IF(MANMIN(MAT) > 0.) THEN
+            IF(H+ABED < ELMMIN(MAT) ) THEN 
               FFACT=(MANMIN(MAT))**2*FCOEF/(H**0.333)
-	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
+            ELSEIF(H+ABED > ELMMAX(MAT) ) THEN 
               FFACT=(MANMAX(MAT))**2*FCOEF/(H**0.333)
-	      ELSE
-	        FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
+            ELSE
+              FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
               FFACT=(MANMIN(MAT)+FSCL*(MANMAX(MAT)-MANMIN(MAT)))**2
-     +     	       *FCOEF/(H**0.333)
-	      ENDIF
+     +                  *FCOEF/(H**0.333)
+            ENDIF
 CIPK SEP04  ADD MAH OPTION
-          ELSEIF(HMAN(MAT,2) .GT. 0  .OR. HMAN(MAT,3) .GT. 0.) THEN
-	      TEMAN=0.
-            IF(HMAN(MAT,2) .GT. 0) THEN 
-	        TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
-	      ENDIF
-	      TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
+          ELSEIF(HMAN(MAT,2) > 0 .OR. HMAN(MAT,3) > 0.) THEN
+            TEMAN=0.
+            IF(HMAN(MAT,2) > 0) THEN 
+              TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
+            ENDIF
+            TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
             FFACT=TEMAN**2*FCOEF/(H**0.333)
-          ELSEIF(MANTAB(MAT,1,2) .GT. 0.) THEN
-	      DO K=1,4
-	        IF(H .LT. MANTAB(MAT,K,1)) THEN
-	          IF(K .EQ. 1) THEN
-	            TEMAN=MANTAB(MAT,1,2)
-	          ELSE
-	            FACT=(H-MANTAB(MAT,K-1,1))/
+          ELSEIF(MANTAB(MAT,1,2) > 0.) THEN
+            DO K=1,4
+              IF(H < MANTAB(MAT,K,1)) THEN
+                IF(K == 1) THEN
+                  TEMAN=MANTAB(MAT,1,2)
+                ELSE
+                  FACT=(H-MANTAB(MAT,K-1,1))/
      +                  (MANTAB(MAT,K,1)-MANTAB(MAT,K-1,1))
-	            TEMAN=MANTAB(MAT,K-1,2)
+                  TEMAN=MANTAB(MAT,K-1,2)
      +            +FACT*(MANTAB(MAT,K,2)-MANTAB(MAT,K-1,2))
-	          ENDIF
-	          GO TO 280
-	        ENDIF
-	      ENDDO
-	      TEMAN=MANTAB(MAT,4,2)
+                ENDIF
+                GO TO 280
+              ENDIF
+            ENDDO
+            TEMAN=MANTAB(MAT,4,2)
   280       CONTINUE
             FFACT=TEMAN**2*FCOEF/(H**0.333)
           ELSE
@@ -728,26 +728,26 @@ CIPK MAY06  MOVE NR TO MAT
 
 cipk dec00 modify friction for high flow gates
 
-CIPK MAR01      IF(IGTP(NN) .GT. 0.) THEN
+CIPK MAR01      IF(IGTP(NN) > 0.) THEN
 CIPK MAR01        FFACT=FFACT*CJ(NGT)
 CIPK MAR01      ENDIF
 
       TFRIC = 0.0
-      IF( VECQ .GT. 1.0E-6 ) TFRIC = FFACT
+      IF( VECQ > 1.0E-6 ) TFRIC = FFACT
 cipk oct98 update to f90
-      IF(MOD(IMMT,100) .GT. 90) GO TO 291
+      IF(MOD(IMMT,100) > 90) GO TO 291
 cipk mar01 Clean logic abd modify to set side flows zero for dry locations
-      IF( ICYC .GT. 0 ) then
+      IF( ICYC > 0 ) then
         FRN=ACR*BETA1
       ELSE
         FRN = 0.0
       ENDIF
-      IF(H+ABED .GT. AZER) THEN
+      IF(H+ABED > AZER) THEN
 CIPK MAY04
         SIDFT=SIDFQ
       ELSE
-	SIDFT=0.0
-	SIDFQQ=0.0
+      SIDFT=0.0
+      SIDFQQ=0.0
       ENDIF
 C
 C.....EVALUATE THE BASIC EQUATIONS WITH PRESENT VALUES.....
@@ -799,7 +799,7 @@ C.....CONTINUITY EQUATION.....
 C
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
       FRNC=ACR*DRDX+DACR*R-SIDFT
-      IF(ICYC.GT.0) FRNC=FRNC+BETA3*WTOT
+      IF(ICYC > 0) FRNC=FRNC+BETA3*WTOT
       DO 290 M=1,NCNX
         IA = 3 + 2*NDF*(M-1)
         !nis,oct,com: continuity equation, just for the corner nodes
@@ -812,7 +812,7 @@ C-
   291 CONTINUE
 
 CIPK MAY02
-      IF(ICK .EQ. 7) THEN
+      IF(ICK == 7) THEN
         DIFX=0.
 ccc        WRITE(110,'(I8,6F15.6)')NN,DSALDX,DSALDT,GAIN,SALT,DIFX,R
         FRNX=AMU*DIFX*DSALDX*ACR
@@ -820,7 +820,7 @@ ccc        WRITE(110,'(I8,6F15.6)')NN,DSALDX,DSALDT,GAIN,SALT,DIFX,R
         FRN=AMU*(AST*(-GAIN)+ACR*R*DSALDX
      +              -SIDFT*(SIDQ(NN,ICK-4)-SALT)-EXTL)
 CIPK FEB07 ADD EXTL      
-        IF( ICYC .GT. 0) FRN=FRN+AMU*DSALDT*AST
+        IF( ICYC > 0) FRN=FRN+AMU*DSALDT*AST
 
         IA=-4
         DO M=1,NCNX
@@ -844,19 +844,19 @@ cipk nov97     +              -SIDF(NN)*(SIDQ(NN,ICK-3)-SALT)))
 cipk jan97     +    -AMW*DIFX*DSALDX*ACR*DAODX
 CIPK MAY96 ADD SIDF*SALT IN ABOVE
 CIPK AUG95 LINES ABOVE ALTERED FOR SOURCES CHANGE LINE BELOW TO MULT BY AST
-      IF( ICYC .GT. 0) FRN=FRN+AMU*DSALDT*AST
-C      IF( ICYC .GT. 0) FRN=FRN+AMU*DSALDT*ACR
+      IF( ICYC > 0) FRN=FRN+AMU*DSALDT*AST
+C      IF( ICYC > 0) FRN=FRN+AMU*DSALDT*ACR
       IA=0
       DO 295 M=1,NCN
       IA=IA+4
-      IF(NSTRT(NCON(M),1) .EQ. 0) THEN
+      IF(NSTRT(NCON(M),1) == 0) THEN
 cipk aug98
         F(IA)=F(IA)-(XO(M)*FRN+DOX(M)*FRNX)/xht
       ENDIF
   295 CONTINUE
       ENDIF
 cipk oct98 update to f90
-      IF(MOD(IMMT,100) .GT. 90) GO TO 380
+      IF(MOD(IMMT,100) > 90) GO TO 380
 C
 C.....FORM THE X MOTION EQUATIONS.....
 C
@@ -880,7 +880,7 @@ cipk jan97      T2=AMS*(AKE*ACR*R-EPSX*ACR*DAODX/XHT)
 C-
 C-.....FORM THE TIME TERMS.....
 C-
-      IF( ICYC .EQ. 0 ) GO TO 304
+      IF( ICYC == 0 ) GO TO 304
       FEEAN=FEEAN+AMS*XN(N)*ACR*ALTM*QQFACT(N)
   304 CONTINUE
       IA=1-NDF
@@ -918,7 +918,7 @@ CMAY93      T2=AMS*(DRDX*EPSX*WSRF-0.25*GRAV*SSLOP*H**2)
       DO 325 N=1,NCNX
       IB=IB+2*NDF
 cipk nov97      FEEAN=XM(N)*T1+DMX(N)*T2
-      IF (IDNOPT.GE.0) THEN
+      IF (IDNOPT >= 0) THEN
         FEEAN=XM(N)*T1+DMX(N)*T2
       ELSE
         FEEAN=XM(N)*T1+DMX(N)*(T2+AMS*GRAV*ACR*DAME(N))
@@ -927,7 +927,7 @@ cipk nov97      FEEAN=XM(N)*T1+DMX(N)*T2
 C-
 C-.....FORM THE TIME TERMS.....
 C-
-      IF( ICYC .LE. 0 ) GO TO 317
+      IF( ICYC <= 0 ) GO TO 317
       FEEAN=FEEAN+AMS*XM(N)*BETA1*WSRF
   317 CONTINUE
       IA=1-NDF
@@ -942,11 +942,11 @@ C-
       TAB=-AMU*H/2.*DRDS*GRAV*ACR
       TAC=DRDS*AMU*ACR*(R*DRDX+GRAV*DAODX*(1.+H/(2.*XHT)))
      +    -AMU*GRAV*H**2/2.*DRDS*(DWIDX+DSLOX*H/2.+SSLOP*0.5*DHDX)
-      IF(ICYC .GT. 0) TAC=TAC+AMU*ACR*BETA1*DRDS
+      IF(ICYC > 0) TAC=TAC+AMU*ACR*BETA1*DRDS
       IB=4-NDF
       DO 330 N=1,NCN
         IB=IB+NDF
-        IF(NSTRT(NCON(N),1) .EQ. 0) THEN
+        IF(NSTRT(NCON(N),1) == 0) THEN
           FEEAN= XO(N)*TAB
           FEEBN= XO(N)*TAC
           IA=1-NDF
@@ -964,7 +964,7 @@ C
       TX=AMW*DACR
       TB=AMW*(DRDX*(WID+SSLOP*H)+R*(DWIDX+H*DSLOX+SSLOP*DHDX))
       TC=AMW*R*(WID+SSLOP*H)
-      IF(ICYC .NE. 0) TB=TB+AMW*(ALTM*WSRF+BETA3*SSLOP)
+      IF(ICYC /= 0) TB=TB+AMW*(ALTM*WSRF+BETA3*SSLOP)
      .                   +AMW*ALTM*WIDSTR                               APR86
       IA=3-2*NDF
       DO 365 M=1,NCNX
@@ -996,11 +996,11 @@ CMAY93      T5=AMU*(R*DSALDX*WSRF+DIFX*DSALDX*(DWIDX+DSLOX*H+SSLOP*DHDX-DAODX*
 CMAY93     +   WSRF/XHT))
 cipk jan97      T5=AMU*(R*DSALDX*WSRF-DIFX*DSALDX*DAODX*WSRF/XHT)
       T5=AMU*R*DSALDX*WSRF
-      IF(ICYC .GT. 0) T5=T5+AMU*DSALDT*WSRF
+      IF(ICYC > 0) T5=T5+AMU*DSALDT*WSRF
       IA=4-NDF
       DO 400 M=1,NCN
         IA=IA+NDF
-        IF(NSTRT(NCON(M),1) .EQ. 0) THEN
+        IF(NSTRT(NCON(M),1) == 0) THEN
 cipk aug98
           FEEAN=XO(M)*T1/xht
 CMAY93          FEECN=XO(M)*T3
@@ -1022,8 +1022,8 @@ C-
 C......FOR SALINITY TERMS
 C-
 CIPK MAY02
-      IF(ICK .EQ. 7) THEN
-	  T1=-AMU*AST
+      IF(ICK == 7) THEN
+        T1=-AMU*AST
         IA=-4
         DO M=1,NCNX
           IA=IA+8
@@ -1033,16 +1033,16 @@ CIPK MAY02
             IB=IB+8
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XM(N)+FEEBN*DMX(N)
           ENDDO
-  	  ENDDO
-	ELSE
+          ENDDO
+      ELSE
 CIPK AUG95 REPLACE 2 LINES BELOW TO CHANGE TO AST AND ADD GRATE
 CIPK MAY96 ADD SIDF
 CIPK NOV97 CHANGE UNITS FOR SIDF
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT THEN WITH SIDFQQ MAY04
       T1= -AMU*(AST*GRATE-SIDFQQ)
-      IF(ICYC .GT. 0) T1=T1+AMU*ALTM*AST
+      IF(ICYC > 0) T1=T1+AMU*ALTM*AST
 C      T1=0.
-C      IF(ICYC .GT. 0) T1=AMU*ALTM*ACR
+C      IF(ICYC > 0) T1=AMU*ALTM*ACR
       T2=AMU*DIFX*ACR
 CMAY93      T5=AMU*(R*ACR+DIFX*(DACR-ACR*DAODX/XHT))
 cipk jan97      T5=AMU*(R*ACR-DIFX*ACR*DAODX/XHT)
@@ -1050,14 +1050,14 @@ cipk jan97      T5=AMU*(R*ACR-DIFX*ACR*DAODX/XHT)
       IA=0
       DO 420 M=1,NCN
       IA=IA+4
-      IF(NSTRT(NCON(M),1) .EQ. 0) THEN
+      IF(NSTRT(NCON(M),1) == 0) THEN
 cipk aug98
         FEEAN=XO(M)*T1/xht
         FEEBN=(DOX(M)*T2+XO(M)*T5)/xht
         IB=0
         DO 410 N=1,NCN
           IB=IB+4
-          IF(NSTRT(NCON(N),1) .EQ. 0) THEN
+          IF(NSTRT(NCON(N),1) == 0) THEN
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XO(N)+FEEBN*DOX(N)
           ENDIF
   410   CONTINUE
@@ -1068,11 +1068,11 @@ C-
 C......END GAUSS DO LOOP
 C-
   500 CONTINUE
-      IF(NTX .EQ. 0) RETURN
+      IF(NTX == 0) RETURN
 CIPK NOV97
-      IF(NTX .EQ. 3) RETURN
+      IF(NTX == 3) RETURN
 cipk oct98 update to f90
-      IF(MOD(IMMT,100) .GT. 90) GO TO 1305
+      IF(MOD(IMMT,100) > 90) GO TO 1305
 c     WRITE(*,7777) NN,((ESTIFM(I,J),J=1,11,2),I=1,11,2)
 c7777 FORMAT(I12/(1P6E12.4))
 c     WRITE(*,7777) NN,(F(I),I=1,12)
@@ -1081,17 +1081,17 @@ C...... Compute boundary forces
 C-
       DO 650 L=1,NCN,2
       N1=NCON(L)
-      IF(MOD(NFIX(N1)/100,10) .EQ. 2) THEN
+      IF(MOD(NFIX(N1)/100,10) == 2) THEN
         XHT=ELEV-AO(N1)
         NA=(L-1)*NDF+1
         RHO=DEN(N1)
         PPL=RHO*GRAV*(WIDTH(N1)+(SS1(N1)+SS2(N1))*SPEC(N1,3)/2.)*XHT
      +      *QFACT(L)
-        IF(L .EQ. 1) PPL=-PPL
+        IF(L == 1) PPL=-PPL
         F(NA)=F(NA)-PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
         ESTIFM(NA,NA+2)=ESTIFM(NA,NA+2)-PPL*SPEC(N1,3)/2.
-      ELSEIF(IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3) THEN
-        IF(NREF(N1) .EQ. 0) THEN
+      ELSEIF(IBN(N1) == 1 .OR. IBN(N1) >= 3) THEN
+        IF(NREF(N1) == 0) THEN
           NA=(L-1)*NDF+1
 c         WRITE(*,*) 'IBN=',IBN(N1),NN,NA
           DO 6667 KK=1,NEF
@@ -1109,7 +1109,7 @@ C-
 C-
 C...... Test for and then retrieve stage flow constants
 C-
-      IF(ISTLIN(M) .NE. 0) THEN
+      IF(ISTLIN(M) /= 0) THEN
         J=ISTLIN(M)
         AC1=STQ(J)
         AC2=STQA(J)
@@ -1118,7 +1118,7 @@ C-
       ELSE
         AC2=0.
       ENDIF
-      IF(NFIX(M)/1000.LT.13) GO TO 1300
+      IF(NFIX(M)/1000 < 13) GO TO 1300
       IRW=(N-1)*NDF+1
       IRH=IRW+2
       CX=COS(ALFA(M))
@@ -1130,7 +1130,7 @@ C-
       ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)*AWIDT
       ESTIFM(IRW,IRH)=AREA(NN)*VT*(WIDTH(M)+(SS1(M)+SS2(M))*VEL(3,M))
       F(IRW)=AREA(NN)*(SPEC(M,1)-AWIDT*VT*VEL(3,M))
-      IF(AC2 .NE. 0.) THEN
+      IF(AC2 /= 0.) THEN
 cipk nov97        ESTIFM(IRW,IRH)=ESTIFM(IRW,IRH)-AREA(NN)*(AC2
 cipk nov97     +  *CP*(VEL(3,M)+AO(M)-E0)**(CP-1.0))
 cipk nov97        F(IRW)=F(IRW)+AREA(NN)*(AC2        *(VEL(3,M)+AO(M)-E0)**CP)
@@ -1146,8 +1146,8 @@ c lcr eq por
      +                *CP*(WSEL-E0)**(CP-1.0))
         F(IRW)=F(IRW)+AREA(NN)*(AC2*(WSEL-E0)**CP)
       !EFa jul07, stage-flow boundaries (table)
-      ELSEIF (istab(m).gt.0.) then
-        if (spec(m,1).lt.0.) then
+      ELSEIF (istab(m) > 0.) then
+        if (spec(m,1) < 0.) then
           adir = -1.
         else
           adir = 1.
@@ -1208,7 +1208,7 @@ c lcr eq por
       end do CouplingCorrection
       !-
 
-      !nis,Oct,com: Install element residual values into global vector. NCN.eq.3 for 1D-elements and 1D-2D-elements.
+      !nis,Oct,com: Install element residual values into global vector. NCN == 3 for 1D-elements and 1D-2D-elements.
       DO 1050 I=1,NCN
         !nis,Oct06,com: Get actual node number
         J=NCON(I)
@@ -1224,7 +1224,7 @@ c lcr eq por
 
 
           !nis,Oct06,com: Jump over deactivated node-degree-of-freedom
-          IF(JA.EQ.0) GO TO 1050
+          IF(JA == 0) GO TO 1050
           !nis,Oct06,com: Install element residuum F(IA) into global residuum R1(JA)
           R1(JA)=R1(JA)+F(IA)
  1050 CONTINUE
@@ -1239,7 +1239,7 @@ C7778 FORMAT(1P5E12.4)
 !        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1, 4),
 !     +        0, 0, 0, 0, ( nbc (nop(nn,3), j), j=1, 4)
 !        do i = 1,12
-!          if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
+!          if (MOD(i,4) == 1 .OR. MOD(i,4) == 2) then
 !            if (nop(nn, 1+(i-MOD(i,4))/ 4) < 0) then
 !              WRITE(9919, 1234)
 !     +              0, (estifm(i,j), j=1, 12), f(i)
@@ -1281,7 +1281,7 @@ cipk dec00
 C-
 C...... Special cases for control structures or junction sources
 C-
-      IF(IMAT(NN) .GT. 903) THEN
+      IF(IMAT(NN) > 903) THEN
         CALL CSTRC(NN)
         GO TO 1320
       ENDIF
@@ -1297,7 +1297,7 @@ c     WRITE(*,*) NN,NCN
       XHT=1.0
       DO 2010 KK=1,NCN
         N1=NCON(KK)
-        IF(N1 .EQ. 0) GO TO 2010
+        IF(N1 == 0) GO TO 2010
         NA=(KK-1)*NDF+1
         CX = COS (ALFA(N1))
         SA = SIN (ALFA(N1))
@@ -1334,12 +1334,12 @@ c    +  KK,N1,NA,R,ESTIFM(1,NA+2),F(1)
       NRX=NCON(1)
       DO 2020 KK=2,NCN
         N1=NCON(KK)
-        IF(N1 .EQ. 0) GO TO 2020
+        IF(N1 == 0) GO TO 2020
         NA=(KK-1)*NDF+1
         ESTIFM(NA,3)=XHT
         ESTIFM(NA,NA+2)=-XHT
 CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
-        IF (IDNOPT .LT. 0) THEN           
+        IF (IDNOPT < 0) THEN           
           HD1 = VEL(3,N1)
           CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
           WSEL1 = ADO(N1)+HS1

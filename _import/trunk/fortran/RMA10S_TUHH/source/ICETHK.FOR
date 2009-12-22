@@ -5,62 +5,62 @@ CIPK  NEW ROUTINE SEP27 2002
 
       SAVE
 
-	REAL NEWTHK
-	ALLOCATABLE IBNTHER(:)
+      REAL NEWTHK
+      ALLOCATABLE IBNTHER(:)
       DATA ITIMEH/0/
       
-      IF(ITIMEH .EQ. 0) THEN
+      IF(ITIMEH == 0) THEN
         ITIMEH=1
         ALLOCATE (IBNTHER(MAXP))
         IBNTHER=0
       ENDIF
       
-      IF(ICESW .EQ. 0) THEN
+      IF(ICESW == 0) THEN
         DO N=1,NPM
           ICETHK(N)=0.0
         ENDDO
       ELSE
         DO N=1,NPM
-	    IBNTHER(N)=0
+          IBNTHER(N)=0
         ENDDO
 C
 C     Loop on the surface nodes, using the elements
 C       
         DO J=1,NEM
-	    if(imat(j) .gt. 0) then
+          if(imat(j) > 0) then
             nmt=mod(imat(j),100)
-	    endif
-	    DO MM=1,7,2
-	      IF(NOPS(J,MM) .EQ. 0) GO TO 250
-	      NCN=MM+1
+          endif
+          DO MM=1,7,2
+            IF(NOPS(J,MM) == 0) GO TO 250
+            NCN=MM+1
             N=NOPS(J,MM)
-	      IF(IBNTHER(N) .EQ. 1) GO TO 250
-	      IBNTHER(N)=1
+            IF(IBNTHER(N) == 1) GO TO 250
+            IBNTHER(N)=1
 C
 c     First get a simplified average velocity and water temperature
 C       
             VMN=SQRT(VEL(1,N)**2+VEL(2,N)**2)
             TMN=VEL(5,N)
             K=NREF(N)+1
-            IF(K .GT. 1) THEN
+            IF(K > 1) THEN
               L=NREF(N)+NDEP(N)-1
-              IF(K .LE. L) THEN
+              IF(K <= L) THEN
                 DO M=K,L-1,2
-	            IF(M .EQ. K) THEN
-  	              DEP=CORD(N,3)-CORD(M+1,3)
-	              TMN=DEP*((VEL(5,N)+VEL(5,M+1))/6.+0.6666*VEL(5,M))
-	              V2=SQRT(VEL(1,M)**2+VEL(2,M)**2)
-	              V3=SQRT(VEL(1,M+1)**2+VEL(2,M+1)**2)
-	              VMN=DEP*((VMN+V3)/6.+V2*0.6666)
-	            ELSE
-	              DEP=CORD(M-1,3)-CORD(M+1,3)
-	              TMN=TMN+DEP*(VEL(5,M)*0.66666
+                  IF(M == K) THEN
+                      DEP=CORD(N,3)-CORD(M+1,3)
+                    TMN=DEP*((VEL(5,N)+VEL(5,M+1))/6.+0.6666*VEL(5,M))
+                    V2=SQRT(VEL(1,M)**2+VEL(2,M)**2)
+                    V3=SQRT(VEL(1,M+1)**2+VEL(2,M+1)**2)
+                    VMN=DEP*((VMN+V3)/6.+V2*0.6666)
+                  ELSE
+                    DEP=CORD(M-1,3)-CORD(M+1,3)
+                    TMN=TMN+DEP*(VEL(5,M)*0.66666
      +                +(VEL(5,M+1)+VEL(5,M-1))/6.)
-	              V1=SQRT(VEL(1,M-1)**2+VEL(2,M-1)**2)
-	              V2=SQRT(VEL(1,M)**2+VEL(2,M)**2)
-	              V3=SQRT(VEL(1,M+1)**2+VEL(2,M+1)**2)
-	              VMN=VMN+DEP*((V1+V3)/6.+V2*0.6666)
-				ENDIF     
+                    V1=SQRT(VEL(1,M-1)**2+VEL(2,M-1)**2)
+                    V2=SQRT(VEL(1,M)**2+VEL(2,M)**2)
+                    V3=SQRT(VEL(1,M+1)**2+VEL(2,M+1)**2)
+                    VMN=VMN+DEP*((V1+V3)/6.+V2*0.6666)
+                        ENDIF     
                 ENDDO
                 FDIV=CORD(N,3)-CORD(L,3)
               ELSE
@@ -76,32 +76,32 @@ c         test for appropiate equation and solve for QW
 c
 C            write(172,'(i5,f8.2,2i5,4f15.6)') 
 C     +          dayofy,tet,maxn,n,icethk(n),vel(5,n),tmed,tmn
-            if((ICETHK(N) .gt. 0.  .or.  vel(5,n) .le. tmed)
-     +          .and. ndep(n) .gt. 1  .and. icesw .eq. 2) then
-  	        nmid=nref(n)+1
- 	        IF( VEL(5,N) .GT. TMED) THEN
-	          tslop=(-3.*VEL(5,N)+4.*vel(5,nmid)-vel(5,nmid+1))
+            if((ICETHK(N) > 0. .OR. vel(5,n) <= tmed)
+     +         .AND. ndep(n) > 1 .AND. icesw == 2) then
+                nmid=nref(n)+1
+               IF( VEL(5,N) > TMED) THEN
+                tslop=(-3.*VEL(5,N)+4.*vel(5,nmid)-vel(5,nmid+1))
      +          /(cord(n,3)-cord(nmid+1,3))
-c	          tslop=(-VEL(5,N)+vel(5,nmid+1))
+c                tslop=(-VEL(5,N)+vel(5,nmid+1))
 c     +          /(cord(n,3)-cord(nmid+1,3))
-c	          nbot=ndep(n)+nref(n)-1
-c	          tslop=(-VEL(5,N)+vel(5,nbot))
+c                nbot=ndep(n)+nref(n)-1
+c                tslop=(-VEL(5,N)+vel(5,nbot))
 c     +          /(cord(n,3)-cord(nbot,3))
               ELSE
-	          tslop=(-3.*tmed+4.*vel(5,nmid)-vel(5,nmid+1))
+                tslop=(-3.*tmed+4.*vel(5,nmid)-vel(5,nmid+1))
      +          /(cord(n,3)-cord(nmid+1,3))
-c	          tslop=(-tmed+vel(5,nmid+1))
+c                tslop=(-tmed+vel(5,nmid+1))
 c     +          /(cord(n,3)-cord(nmid+1,3))
-c	          nbot=ndep(n)+nref(n)-1
-c	          tslop=(-tmed+vel(5,nbot))
+c                nbot=ndep(n)+nref(n)-1
+c                tslop=(-tmed+vel(5,nbot))
 c     +          /(cord(n,3)-cord(nbot,3))
-	        ENDIF
-	        qw=ort(nmt,10)*vel(3,n)*4.1865*ROW*tslop
+              ENDIF
+              qw=ort(nmt,10)*vel(3,n)*4.1865*ROW*tslop
               qice(n)=-qw/1000.
-	      else
-              IF(VMN .LT. VTR) THEN
+            else
+              IF(VMN < VTR) THEN
                 QW=CAL1*(TMN-TMED)/VEL(3,N)**0.2
-    	          QICE(N)=-QW/1000.
+                    QICE(N)=-QW/1000.
               ELSE
                 QW=CAL2*(TMN-TMED)/VEL(3,N)**0.2*VMN**0.8
                 QICE(N)=-QW/1000.
@@ -109,11 +109,11 @@ C
 C           Note that qice is in units of KJ/m2/sec
 C
               ENDIF
-	      endif
+            endif
 C
 c         thermal conductivity of ice
 c
-            IF(TICE .LE. 0.) THEN
+            IF(TICE <= 0.) THEN
               TTICE=TICE
             ELSE
               TTICE=0.5*(AIRTMP(N)+TMED)
@@ -126,7 +126,7 @@ C
 C
 C         form dhdt
 C
-            IF(HTR .EQ. 0.) THEN
+            IF(HTR == 0.) THEN
               CDHDT=CAL3*(TMED-AIRTMP(N))/
      +          (ICETHK(N)/XKI + CAL4*SNOWD(N)/XKS) - QW
             ELSE
@@ -139,7 +139,7 @@ C
 C            write(174,'(i5,f8.2,2i5,4f15.8)') 
 C     +          dayofy,tet,maxn,n,dhdt*1000000.,newthk,cdhdt,tslop
 
-            IF(HTR .EQ. 0.) THEN
+            IF(HTR == 0.) THEN
               CDHDT0=CAL3*(TMED-AIRTMP(N))/
      +        ((ICETHK(N)+NEWTHK)/2.*XKI + CAL4*SNOWD(N)/XKS) - QW
             ELSE
@@ -153,17 +153,17 @@ C     +          dayofy,tet,maxn,n,dhdt*1000000.,newthk,cdhdt,tslop
 C            write(174,'(i5,f8.2,2i5,3f15.6)') 
 C     +          dayofy,tet,maxn,n,dhdt*1000000.,newthk,cdhdt0
 
-            IF(NEWTHK .GT. 0.) THEN
+            IF(NEWTHK > 0.) THEN
               ICETHK(N)=NEWTHK
             ELSE
               ICETHK(N)=0.
-	        qice(n)=0.
+              qice(n)=0.
             ENDIF
   250       CONTINUE
           ENDDO
-          if(ncn .eq. 4) ncn=2
+          if(ncn == 4) ncn=2
           DO i=2,ncn,2
-            IF(I .LT. NCN  .or. ncn .eq. 2) THEN
+            IF(I < NCN .OR. ncn == 2) THEN
               ICETHK(NOPS(J,I))=
      +         (ICETHK(NOPS(J,I-1))+ICETHK(NOPS(J,I+1)))/2.
             ELSE
@@ -172,9 +172,9 @@ C     +          dayofy,tet,maxn,n,dhdt*1000000.,newthk,cdhdt0
             ENDIF
           ENDDO
 
-cc	n1=nops(j,1)
-cc	n2=nops(j,2)
-cc	n3=nops(j,3)
+cc      n1=nops(j,1)
+cc      n2=nops(j,2)
+cc      n3=nops(j,3)
 cc      WRITE(175,'(''ICETHK'',i5,f7.1,6i5)') 
 cc     +   DAYOFY,TET,maxn,j,n1,n2,n3,itpas
 cc      WRITE(175,'(3f15.8,f8.3,3f15.8,3f8.3)') 

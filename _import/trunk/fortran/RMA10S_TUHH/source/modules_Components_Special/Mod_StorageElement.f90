@@ -59,7 +59,7 @@ module mod_storageElt
     !parameters for the realtionship
     real (kind = 8), intent (in) :: Volume, Waterlevel
     !check for associated discrete function
-    if (.not. (associated (StorageElt.volWlRel))) call ErrorMessageAndStop (1702, StorageElt.ID, 0.0d0, 0.0d0)
+    if ( .NOT. (associated (StorageElt.volWlRel))) call ErrorMessageAndStop (1702, StorageElt.ID, 0.0d0, 0.0d0)
     !add pair to discrete function
     call addPair (StorageElt.volWlRel, Volume, Waterlevel)
   end subroutine

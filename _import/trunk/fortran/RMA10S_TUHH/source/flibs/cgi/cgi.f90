@@ -57,7 +57,7 @@ subroutine cgi_begin( dict )
         if ( k > 0 ) then
             key        = input(1:k-1)
             data%value = input(k+1:)
-            if ( .not. associated( dict ) ) then
+            if ( .NOT. associated( dict ) ) then
                 call dict_create( dict, key, data )
             else
                 call dict_add_key( dict, key, data )
@@ -86,7 +86,7 @@ subroutine cgi_end
 
     do lu = 10,99
         inquire( lu, opened=opend )
-        if ( .not. opend ) then
+        if ( .NOT. opend ) then
             open( lu, file = "cgiready" )
             close( lu )
             exit

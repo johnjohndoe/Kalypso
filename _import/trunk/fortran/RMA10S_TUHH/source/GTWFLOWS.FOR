@@ -17,8 +17,8 @@ c
 c     loop on elements looking for type 998 elements to process
 c
       DO N=1,NE
-        IF(IMAT(N) .EQ. 998) THEN
-          IF(ITIM .EQ. 0) THEN
+        IF(IMAT(N) == 998) THEN
+          IF(ITIM == 0) THEN
             IWFLOW(NOP(N,1))=1
             IWFLOW(NOP(N,2))=1
             IWFLOW(NOP(N,3))=1
@@ -39,7 +39,7 @@ c
           wec= whgt(nop(n,1))
           wln= wlen(nop(n,1))
 CIPK OCT03  ADD WIDEM
-	    WIDEM=SQRT((CORD(NOP(N,1),1)-CORD(NOP(N,7),1))**2+
+          WIDEM=SQRT((CORD(NOP(N,1),1)-CORD(NOP(N,7),1))**2+
      +          (CORD(NOP(N,1),2)-CORD(NOP(N,7),2))**2)
           CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,WIDEM)
           wflolw(nop(n,1))=wflow(nop(n,1))
@@ -55,7 +55,7 @@ CIPK OCT03  ADD WIDEM
           wec= whgt(nop(n,2))
           wln= wlen(nop(n,2))
 CIPK OCT03  ADD WIDEM
-	    WIDEM=SQRT((CORD(NOP(N,1),2)-CORD(NOP(N,6),1))**2+
+          WIDEM=SQRT((CORD(NOP(N,1),2)-CORD(NOP(N,6),1))**2+
      +          (CORD(NOP(N,2),2)-CORD(NOP(N,6),2))**2)
           CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,WIDEM)
           wflolw(nop(n,2))=wflow(nop(n,2))
@@ -71,7 +71,7 @@ CIPK OCT03  ADD WIDEM
           wec= whgt(nop(n,3))
           wln= wlen(nop(n,3))
 CIPK OCT03  ADD WIDEM
-	    WIDEM=SQRT((CORD(NOP(N,3),1)-CORD(NOP(N,5),1))**2+
+          WIDEM=SQRT((CORD(NOP(N,3),1)-CORD(NOP(N,5),1))**2+
      +          (CORD(NOP(N,3),2)-CORD(NOP(N,5),2))**2)
           CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,WIDEM)
           wflolw(nop(n,3))=wflow(nop(n,3))

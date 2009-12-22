@@ -49,12 +49,12 @@ C
       !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
       !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
       ROAVG=1.935
-      IF (GRAV.LT.32.) ROAVG=516.*1.935
+      IF (GRAV < 32.) ROAVG=516.*1.935
 !MD: Basis-Variable: Wasserdichte
 
       DO NN=1,NPM
         N=NN
-        IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+        IF(NDEP(NN) > 1) N=NREF(NN)+NDEP(NN)-1
 CIPKSEP05
         NLAYT=NLAYTND(N)
         DO J=1,NLAYT
@@ -71,7 +71,7 @@ CIPKSEP05
         EDOT(N)=0.
         edot(nn)=0.
 cipk jun06  test for marshing
-        if(wsll(n) .lt. ao(n)) go to 100
+        if(wsll(n) < ao(n)) go to 100
 
 !MD:  Entfernen einer zeitlichen Wichtung an dieser
 !MD:   Stelle! Konzept durchgängig gleich mit einwirkender
@@ -86,24 +86,24 @@ cipk jun06  test for marshing
 C     CHECK IF ANY EROSION WILL OCCUR.
 C     **** TOP LAYER ERODES    ******
 ! ---------------------------------------------
-       IF(BSHEAR(N).GT.SS(1)) THEN
+       IF(BSHEAR(N) > SS(1)) THEN
 crrr aug97  rearrang to loop through layers
 CIPK MAY06  CORRECT TO SETTING OF NL
         NL = NLAYTND(NN)
-        IF (NL .EQ. NLAYT) NL = NLAYT - 1
+        IF (NL == NLAYT) NL = NLAYT - 1
 crrr aug97  loop through all layers
         DO 20 J=1,NL
         
 CIPK MAY06  TEST FOR ZERO THICKNESS
-          IF(THICK(NN,J).EQ.0.) GO TO20
+          IF(THICK(NN,J) == 0.) GO TO20
 C
 crrr aug97  test for shear stress level to skip out
-           IF (BSHEAR(N).LT.SS(J)) GO TO 30
+           IF (BSHEAR(N) < SS(J)) GO TO 30
 CIPK MAY06
-           IF(EROSTM(J) .EQ. 0.) THEN
+           IF(EROSTM(J) == 0.) THEN
              EDOT(N) = EDOT(N) + THICK(NN,J)*GAD(J)
              edot(nn)=edot(n)
-             IF(II .EQ. 2) THEN
+             IF(II == 2) THEN
                BEDEL(NN) = BEDEL(NN)-THICK(NN,J)
                THICK(NN,J)=0.
                SST(NN,J)=0.
@@ -113,9 +113,9 @@ CIPK MAY06
 C   IF IT IS A FULLY CONSOLIDATED BOTTOM LAYER IT WILL UNDERGO SURFACE
 C  EROSION AND IS CONSIDERED IN SUBROUTINE SEROSN,
 C
-c        IF(SST(NN,J) .GT. SS(NLAYT)-0.00001.AND.
-c     .   SST(NN,J) .LT. SS(NLAYT)+0.00001) GO TO 11
-c        IF(SST(NN,J) .GT. ES) GO TO 11
+c        IF(SST(NN,J) > SS(NLAYT)-0.00001 .AND. 
+c     .   SST(NN,J) < SS(NLAYT)+0.00001) GO TO 11
+c        IF(SST(NN,J) > ES) GO TO 11
 
            ELSE
              seratnewl= EROSTM(J)*(BSHEAR(N)/SS(J)-1.)
@@ -127,18 +127,18 @@ CIPK MAY06   EDOT(NN)=SERATNEWL*DELT
 C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED
 !    ---------------------------------------------
              BALAN = THICK(NN,J) - DTHK
-             IF(BALAN .LE. 0) THEN
+             IF(BALAN <= 0) THEN
                AMASER   =THICK(NN,J)*GAD(J)
                SERATNEWL=AMASER/ (DELT*FACT_SPEED_UP)
                DELTREM  =DELT*FACT_SPEED_UP*(1.-THICK(NN,J)/DTHK)
                EDOT(NN) =EDOT(NN)+ SERATNEWL*DELT*FACT_SPEED_UP
-               IF(II .EQ. 2) THEN
+               IF(II == 2) THEN
                  BEDEL(NN) = BEDEL(NN) - THICK(NN,J)
                  THICK(NN,J) = 0.
                Endif
              ELSE
                EDOT(NN) =EDOT(NN)+ SERATNEWL*DELT*FACT_SPEED_UP
-               IF(II .EQ. 2) THEN
+               IF(II == 2) THEN
                  BEDEL(NN) = BEDEL(NN) - DTHK
                  THICK(NN,J) = THICK(NN,J) - DTHK
                ENdif
@@ -151,7 +151,7 @@ C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED
    30   CONTINUE
 
 c   11   NLAY(NN)=J+1
-c        IF(NLAY(NN) .GT. NLAYT) NLAY(NN)=NLAYT
+c        IF(NLAY(NN) > NLAYT) NLAY(NN)=NLAYT
 c        SST(NN,J+1)=SS(1)
 C        EDOT(N)=EDOT(N)/(DELT*WD(N))
 crr aug97 end changes
@@ -165,14 +165,14 @@ cipk jun06
       ENDDO
 
       DO N=1,NPM
-        IF(IMID(N,1) .GT. 0) THEN
+        IF(IMID(N,1) > 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) > 1) NN = NREF(N) + NDEP(N)-1
           EDOT(NN)=(EDOT(IMID(NN,1))+EDOT(IMID(NN,2)))/2.
           BEDEL(NN)=(BEDEL(IMID(NN,1))+BEDEL(IMID(NN,2)))/2.
           NLAY(NN)=MIN(NLAY(IMID(NN,1)),NLAY(IMID(NN,2)))
           NL = NLAY(NN)
-          IF (NL .EQ. NLAYTND(NN)) NL = NLAYTND(NN) - 1
+          IF (NL == NLAYTND(NN)) NL = NLAYTND(NN) - 1
           DO J=1,NL
             THICK(NN,J)=(THICK(IMID(NN,1),J)
      +                    +THICK(IMID(NN,2),J))/2.
@@ -185,28 +185,28 @@ cipk apr00 corect for 3-d using top and bottom element only
       do n=1,ne
 cipk dec04  add ncn=0
         ncn=0
-        if(imat(n) .gt. 0  ) then
-          if(imat(n) .lt. 1000  .and.  ncorn(n) .lt. 9) then
+        if(imat(n) > 0  ) then
+          if(imat(n) < 1000 .AND. ncorn(n) < 9) then
             ncn=ncorn(n)
-cipk dec04          elseif(imat(n)/1000 .eq. 1  .or.  imat(n)/1000 .eq. 2) then
-          elseif(imat(n)/1000 .eq. 1  .or.  imat(n)/1000 .eq. 1) then
+cipk dec04          elseif(imat(n)/1000 == 1 .OR. imat(n)/1000 == 2) then
+          elseif(imat(n)/1000 == 1 .OR. imat(n)/1000 == 1) then
             ncn=ncorn(n)
           endif
-          if(ncn .gt. 0) then
-            if(ncn .eq. 5) ncn=3
+          if(ncn > 0) then
+            if(ncn == 5) ncn=3
             do j=2,ncn,2
               j1=j-1
               j2=mod(j,ncn)+1
               nod=nop(n,j)
               k1=nod
-cipk dec04              if(ndep(n) .gt. 1) k1=nref(nod)+ndep(nod)-1
-              if(ndep(nod) .gt. 1) k1=nref(nod)+ndep(nod)-1
+cipk dec04              if(ndep(n) > 1) k1=nref(nod)+ndep(nod)-1
+              if(ndep(nod) > 1) k1=nref(nod)+ndep(nod)-1
               edot(nod)=(edot(nop(n,j1))+edot(nop(n,j2)))/2.
               bedel(nod)=(bedel(nop(n,j1))+bedel(nop(n,j2)))/2.
-              if(k1 .ne. nod) then
+              if(k1 /= nod) then
                 edot(k1)=edot(nod)
               endif
-              if(nlayt .gt. 0) then
+              if(nlayt > 0) then
                 do k=1,nlayt
                  thick(nod,k)=(thick(nop(n,j1),k)+thick(nop(n,j2),k))/2.
                 enddo

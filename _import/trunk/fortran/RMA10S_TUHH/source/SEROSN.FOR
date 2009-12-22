@@ -50,13 +50,13 @@ crrr aug97 new looping
       !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
       !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
       ROAVG=1.935
-      IF (GRAV.LT.32.) ROAVG=516.*1.935
+      IF (GRAV < 32.) ROAVG=516.*1.935
 !MD: Basis-Variable: Wasserdichte
 
       DO 500 N=1,NPM
-        IF(IMID(N,1) .EQ. 0) THEN
+        IF(IMID(N,1) == 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) > 1) NN = NREF(N) + NDEP(N)-1
 CIPKSEP05
           NLAYT=NLAYTND(N)
           DO J=1,NLAYT
@@ -73,7 +73,7 @@ CIPKSEP05
           !MD: GAB=GABND(N) use per Layer
 
           !MD NEU Berechnung der Suspensionsdichte
-          IF (VEL(6,N).ge.0.) THEN
+          IF (VEL(6,N) >= 0.) THEN
             GAWND(N)=(VEL(6,N)/1000.)*(1.-(ROAVG/GACND(N))) + ROAVG
           Else
             GAWND(N)= ROAVG
@@ -88,7 +88,7 @@ cipk mar00
           serat(n)=0.0
           SERAT(NN) = 0.0
 cipk jun06  test for marshing
-          if(wsll(n) .lt. ao(n)) go to 500
+          if(wsll(n) < ao(n)) go to 500
 
 cipk mar06         
           seratnewl=0.0
@@ -105,14 +105,14 @@ C   check no other layers exist
 !......................................................
          DO L=1,NLAYT-1
 cipk jan99 change thick from nn to n
-            IF (THICK(N,L) .GT. 0.0)  GO TO 500
+            IF (THICK(N,L) > 0.0)  GO TO 500
          ENDDO
 
 C  Errode bottom layer of new deposit
 
 cipk jan99 change thick from nn to n
-         IF (THICK(N,NLAYT) .GT. 0.) THEN
-            IF (BSHEAR(NN) .LT. SS(NLAYT)) GO TO 500
+         IF (THICK(N,NLAYT) > 0.) THEN
+            IF (BSHEAR(NN) < SS(NLAYT)) GO TO 500
 cipk mar06            
             !MD: seratnewl= ERC*(BSHEAR(NN)/SS(NLAYT)-1.)
             !MD: erosionrate per Layer
@@ -124,16 +124,16 @@ cipk mar06
 
 C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED.
             BALAN = THICK(N,NLAYT) - DTHK
-            IF(BALAN .LE. 0) THEN
+            IF(BALAN <= 0) THEN
               AMASER    =THICK(N,NLAYT)*GAD(NLAYT)
               SERATNEWL =AMASER/ (DELT*FACT_SPEED_UP)
               DELTREM   =DELT*FACT_SPEED_UP * (1.-THICK(N,NLAYT)/DTHK)
-              IF(II .EQ. 2) THEN
+              IF(II == 2) THEN
                 BEDEL(N) = BEDEL(N) - THICK(N,NLAYT)
                 THICK(N,NLAYT) = 0.
               Endif
             ELSE
-              IF(II .EQ. 2) THEN
+              IF(II == 2) THEN
                 BEDEL(N) = BEDEL(N) - DTHK
                 THICK(N,NLAYT) = THICK(N,NLAYT) - DTHK
               Endif
@@ -148,12 +148,12 @@ C...
 !   MD: Gleiche Erosionsberechnungen für das INITIAL BED
 !......................................................
 C   CHECK IF ANY MATERIAL ON BED
-         IF (NLAYO(N) .EQ. 0)  GO TO 1
+         IF (NLAYO(N) == 0)  GO TO 1
          SERATOLD=0.
          SERATOLD1=0.
          DO 30 L=1,NLAYO(N)
-            IF (THICKO(N,L) .LE. 0.)  GO TO 30
-            IF (BSHEAR(NN) .LE. SSTO(N,L)) THEN
+            IF (THICKO(N,L) <= 0.)  GO TO 30
+            IF (BSHEAR(NN) <= SSTO(N,L)) THEN
 c  shear stres too small skip to end of loop            
               SERATNEWL=SERATOLD+SERATNEWL
 c             newval=mass from full layers+new layer                
@@ -172,11 +172,11 @@ c             seratold1 is rate for this layer assuming full erosion
               BALOLD  = THICKO(N,L) - DTHKOLD
 c  rates for this layer computed  balold positive means all taken so finalize
 C-    ONLY THIS LAYER ERODED
-              IF (BALOLD .GT. 0.0) THEN
+              IF (BALOLD > 0.0) THEN
 c               new thickness computed add to accumulate more erosion
                 SERATNEWL=SERATOLD + SERATOLD1*DELTREM/DELT + SERATNEWL
 c               new value = mass from full layer+current+new layer
-                IF(II .EQ. 2) THEN
+                IF(II == 2) THEN
                   BEDEL(N) = BEDEL(N) - DTHKOLD
                   THICKO(N,L) = THICKO(N,L) - DTHKOLD
                 Endif
@@ -186,7 +186,7 @@ C-            MORE THAN THIS LAYER MAY BE ERODED.
                 AMASER  =THICKO(N,L)*GADLN
                 DELTREM =DELTREM*FACT_SPEED_UP*(1.-THICKO(N,L)/DTHKOLD)
                 SERATOLD=SERATOLD + AMASER/(DELT*FACT_SPEED_UP)
-                IF(II .EQ. 2) THEN
+                IF(II == 2) THEN
                   BEDEL(N) = BEDEL(N) - THICKO(N,L)
                   THICKO(N,L) = 0.0
                 Endif
@@ -209,16 +209,16 @@ C-            MORE THAN THIS LAYER MAY BE ERODED.
 !MD:    fuer die Ergebnisse an alle Mittseiten-Knoten
 !......................................................
       DO N=1,NPM
-        IF(IMID(N,1) .GT. 0) THEN
+        IF(IMID(N,1) > 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) > 1) NN = NREF(N) + NDEP(N)-1
           SERAT(NN)=(SERAT(IMID(NN,1))+SERAT(IMID(NN,2)))/2.
           BEDEL(NN)=(BEDEL(IMID(NN,1))+BEDEL(IMID(NN,2)))/2.
           NLAYT=NLAYTND(NN)
           THICK(NN,NLAYT)=(THICK(IMID(NN,1),NLAYT)
      +                    +THICK(IMID(NN,2),NLAYT))/2.
           NLAYOT=MIN(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
-          IF(NLAYOT .GT. 0) THEN
+          IF(NLAYOT > 0) THEN
             DO L=1,NLAYO(NN)
               THICKO(NN,L)=(THICKO(IMID(NN,1),L)
      +                     +THICKO(IMID(NN,2),L))/2.
@@ -236,7 +236,7 @@ CIPK AUG06 LOOK FOR OVERLOADING OF ELEMENTS AND ADD DIFFUSION
 cipkexp      IOVLDN=0
 cipkexp      DO N=1,NPM
 cipkexp        PROJCONC=(EDOT(N)+SERAT(N))*DELT/VEL(3,N)
-cipkexp        IF(PROJCONC .GT. 100)THEN
+cipkexp        IF(PROJCONC > 100)THEN
 cipkexp          IOVLDN(N)=1
 cipkexp          WRITE(*,*) IT,N,PROJCONC
 cipkexp          WRITE(215,*) IT,N,PROJCONC
@@ -246,34 +246,34 @@ cipk apr00 corect for 3-d using top and bottom element only
       ncn=0
       do n=1,ne
 cipk dec04
-	  ncn=0
-        if(imat(n) .gt. 0  ) then
-          if(imat(n) .lt. 1000  .and.  ncorn(n) .lt. 9) then
+        ncn=0
+        if(imat(n) > 0  ) then
+          if(imat(n) < 1000 .AND. ncorn(n) < 9) then
             ncn=ncorn(n)
-cipk dec04          elseif(imat(n)/1000 .eq. 1  .or.  imat(n)/1000 .eq. 2) then
-          elseif(imat(n)/1000 .eq. 1  .or.  imat(n)/1000 .eq. 1) then
+cipk dec04          elseif(imat(n)/1000 == 1 .OR. imat(n)/1000 == 2) then
+          elseif(imat(n)/1000 == 1 .OR. imat(n)/1000 == 1) then
             ncn=ncorn(n)
           endif
-          if(ncn .gt. 0) then
-            if(ncn .eq. 5) ncn=3
+          if(ncn > 0) then
+            if(ncn == 5) ncn=3
             do j=2,ncn,2
               j1=j-1
               j2=mod(j,ncn)+1
               nod=nop(n,j)
               k1=nod
-cipk dec04              if(ndep(n) .gt. 1) k1=nref(nod)+ndep(nod)-1
-              if(ndep(nod) .gt. 1) k1=nref(nod)+ndep(nod)-1
+cipk dec04              if(ndep(n) > 1) k1=nref(nod)+ndep(nod)-1
+              if(ndep(nod) > 1) k1=nref(nod)+ndep(nod)-1
               serat(nod)=(serat(nop(n,j1))+serat(nop(n,j2)))/2.
               bedel(nod)=(bedel(nop(n,j1))+bedel(nop(n,j2)))/2.
-              if(k1 .ne. nod) then
+              if(k1 /= nod) then
                 serat(k1)=serat(nod)
               endif
-              if(nlayt .gt. 0) then
+              if(nlayt > 0) then
                do k=1,nlayt
                  thick(nod,k)=(thick(nop(n,j1),k)+thick(nop(n,j2),k))/2.
                enddo
               endif
-              if(nlayo(nod) .gt. 0) then
+              if(nlayo(nod) > 0) then
               do k=1,nlayo(nod)
               thicko(nod,k)=(thicko(nop(n,j1),k)+thicko(nop(n,j2),k))/2.
               enddo

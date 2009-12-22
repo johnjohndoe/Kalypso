@@ -144,7 +144,7 @@ subroutine random_rectangle( x, y, length, width )
         call random_number( y(i) )
         x(i) = range * x(i)
         y(i) = range * y(i)
-        if ( x(i) <= length .and. y(i) <= width ) then
+        if ( x(i) <= length .AND. y(i) <= width ) then
             i = i + 1
         endif
     enddo
@@ -196,7 +196,7 @@ subroutine random_block( x, y, z, length, width, height )
         x(i) = range * x(i)
         y(i) = range * y(i)
         z(i) = range * z(i)
-        if ( x(i) <= length .and. y(i) <= width .and. z(i) <= height ) then
+        if ( x(i) <= length .AND. y(i) <= width .AND. z(i) <= height ) then
             i = i + 1
         endif
     enddo
@@ -252,7 +252,7 @@ subroutine random_rectangle_filter( x, y, length, width, filter, params )
         call random_number( y(i) )
         x(i) = range * x(i)
         y(i) = range * y(i)
-        if ( x(i) <= length .and. y(i) <= width .and. &
+        if ( x(i) <= length .AND. y(i) <= width .AND. &
             filter( x(i), y(i), x(1:i-1), y(1:i-1), params ) ) then
             i = i + 1
         endif

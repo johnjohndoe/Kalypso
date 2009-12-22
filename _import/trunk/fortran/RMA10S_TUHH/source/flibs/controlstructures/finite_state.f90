@@ -200,7 +200,7 @@ subroutine fsm_loop_print_int( state, machine, print_debug )
 !
 ! Enter the loop
 !
-    do while( .not. fsm%finished )
+    do while( .NOT. fsm%finished )
         oldstate = fsm%state_no
         call machine( fsm, state, fsm%state_no )
         call print_debug( fsm%lurep, state, oldstate, fsm%state_no )
@@ -240,7 +240,7 @@ subroutine fsm_loop_print_char( state, machine, print_debug )
 !
 ! Enter the loop
 !
-    do while( .not. fsm%finished )
+    do while( .NOT. fsm%finished )
         oldstate = fsm%state_name
         call machine( fsm, state, fsm%state_name )
         call print_debug( fsm%lurep, state, oldstate, fsm%state_name )

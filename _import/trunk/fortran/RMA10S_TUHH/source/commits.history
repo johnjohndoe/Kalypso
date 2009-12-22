@@ -1637,4 +1637,5 @@ new features introduced/ started to be introduced:
 --- Nico Schrage, 22.12.2009 (version 1.2.0 beta build 2009/12/22)
 
 209.) Refactoring: remove all common blocks
+210.) Refactoring: convert all operators to new form (== /= < <= >= >), enforce space enclosing other operators and capitalize (.NOT. .AND. .OR.)
 --- Stefan Kurzbach, 22.12.2009

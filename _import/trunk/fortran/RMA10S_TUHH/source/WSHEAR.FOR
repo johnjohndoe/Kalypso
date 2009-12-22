@@ -13,7 +13,7 @@ C
 C  Add wind induced shear
 C  By element type
 C
-      IF(IFIRST .EQ. 0) THEN
+      IF(IFIRST == 0) THEN
         ALLOCATE (INODX(MAXP), WSHR(MAXP))
         IFIRST=1      
       ENDIF
@@ -32,10 +32,10 @@ c
 CIPK DEC97 UPDATE TO F90
         MR = IMAT(NN)
         MR = MOD(MR,1000)
-        IF (MR .GT. 0)  THEN
+        IF (MR > 0)  THEN
 C
           WSPD = WNDSPDM(MR)
-          IF (WSPD .GT. 0.01)  THEN
+          IF (WSPD > 0.01)  THEN
 C
             NCN = NCORN(NN)
 C
@@ -43,26 +43,26 @@ C     Work around the nodes
 C
             DO  K=1,NCN
               ND = NOP(NN,K)
-              IF (ND .GT. 0)  THEN
+              IF (ND > 0)  THEN
 
                 DEPJ = VEL(3,ND)
 
-                IF (INODX(ND) .NE. MR  .OR.  DEPJ  .LT. 0.001)  THEN
+                IF (INODX(ND) /= MR .OR. DEPJ < 0.001)  THEN
 C
-                  IF (DEPJ .LT. .1)  DEPJ = .1 
+                  IF (DEPJ < .1)  DEPJ = .1 
 C
                   J = ND
                   WNDSPDJ = WNDSPDM(MR)
                   FETCHJ = FETCHM(MR)
                   XMANNJ = XMANN(MR)
-                     if (nd .eq. 5) then
+                     if (nd == 5) then
                        xxx = 1.
                      endif
 C
                   CALL JONFW(J,WNDSPDJ,FETCHJ,DEPJ,XMANNJ,
      &                           WAVVELJ, FWJ,WAVHITJ,WAVPERJ)
 C
-                  IF (WAVVELJ .GT. WAVVEL(ND))  THEN
+                  IF (WAVVELJ > WAVVEL(ND))  THEN
                     WAVVEL(ND) = WAVVELJ
                     FW(ND) = FWJ
                     WAVHIT(ND) = WAVHITJ
@@ -80,15 +80,15 @@ C
 C  Add in wind shear
 C
       DO  J=1,NP
-crrraug97         IF (WAVVEL(ND) .GT. 0.01)  THEN
-         IF (WAVVEL(J) .GT. 0.001)  THEN
+crrraug97         IF (WAVVEL(ND) > 0.01)  THEN
+         IF (WAVVEL(J) > 0.001)  THEN
 CIPK SEP05       
            GAW=GAWND(J)
            FWC = FW(J)
            WSHR(J) = 0.5*FWC*GAW* 0.5*WAVVEL(J)**2
-           IF (WSHR(J) .GE. 0.6  .AND.  VEL(3,J) .LE. 2.0)  WSHR(J) = .6
+           IF (WSHR(J) >= 0.6 .AND. VEL(3,J) <= 2.0)  WSHR(J) = .6
            fct = 1.
-           if (VEL(3,j) .lt. .1) then
+           if (VEL(3,j) < .1) then
               fct = (VEL(3,j)/.1)
            endif
            BSHEAR(J) = BSHEAR(J) + WSHR(J)*fct
@@ -96,11 +96,11 @@ CIPK SEP05
          ENDIF
       ENDDO
 C
-C     if (nstep .eq. 2)  then
+C     if (nstep == 2)  then
 
 c      WRITE(75,998)
 C      DO 60 J=1,NP
-C        IF (WAVVEL(J) .LT. .01)  GO TO 60
+C        IF (WAVVEL(J) < .01)  GO TO 60
 c        WRITE(75,999) J,WAVHIT(J), WAVPER(J), WAVVEL(J), RYNOLD,
 c     &                        FW(J), WSHR(J), BSHEAR(J), DEP(J)
 C   60 CONTINUE
@@ -173,13 +173,13 @@ C
 *  METERS).
 *
       DTRANJ = 0.11972 * (WNDSPDJ * 0.447222)**2.46
-C      IF (EFDRJ .LE. 0.)  THEN
-      IF(RKS .LE. 0.) THEN
+C      IF (EFDRJ <= 0.)  THEN
+      IF(RKS <= 0.) THEN
 *
 *  COMPUTE THE EFFECTIVE ROUGHNESS FROM THE MANNING'S NUMBER
 *  NOTE THAT XNVALU(I) IS LIMITED TO BE NO GREATER
 *  THAN 0.020, SINCE WE ARE DEALING WITH CLAYS
-         IF (XNVALUJ .GE. 0.020) THEN
+         IF (XNVALUJ >= 0.020) THEN
             DSJ = 0.0220
          ELSE
            DSJ = 3.44E8 * XNVALUJ**6.0
@@ -193,7 +193,7 @@ C         DSJ = 2.5 * EFDRJ * 0.001
           DSJ= RKS
       END IF
 C
-      IF (KSW(14) .GE. 2)  THEN
+      IF (KSW(14) >= 2)  THEN
          WRITE(*,9714)  J,WNDSPDJ,DTRANJ,RKS,XNVALUJ,DSJ
      *        ,FETCHJ
       ENDIF
@@ -205,14 +205,14 @@ C
 ******************************************************************
 *
 C
-c      IF (KSW(14) .NE. 0)  WRITE(*,1180)
+c      IF (KSW(14) /= 0)  WRITE(*,1180)
 C
       PII = 4.*ATAN(1.)
       TP = 2.*PII
 C
 C
-      IF (FETCHJ .GT. 0.)  THEN
-         IF (DEPJ .LT. DTRANJ)  THEN
+      IF (FETCHJ > 0.)  THEN
+         IF (DEPJ < DTRANJ)  THEN
 
 *
 *  USE SHALLOW-TRANSITIONAL WATER EQUATIONS...
@@ -224,7 +224,7 @@ C
             SIGSQ = (TP/PERIOD)**2.
             CCOEF = ACGR*TP/SIGSQ
             CK = H/DEPJ
-            IF (CK .GT. 0.78) H = .78*DEPJ
+            IF (CK > 0.78) H = .78*DEPJ
             CC = TP*DEPJ
 * 
 *   THIS IS THE BEGINNING OF AN ITERATIVE PROCESS TO DETERMINE THE
@@ -232,7 +232,7 @@ C
 *   WL1 = AN APPROXIMATION OF WL (INITIALLY BASED ON SHALLOW WATER)
 *   ACGR = ACCELERATION DUE TO GRAVITY
 *   WL2 IS COMPUTED USING THE EQUATION FOR TRANSITIONAL WATER, I.E.,
-*        DEPTH/WAVELENGTH .GT. 1/25 & .LT. 1/2
+*        DEPTH/WAVELENGTH > 1/25 & < 1/2
 *
 *
             WL1 = SQRT(ACGR*DEPJ) * PERIOD
@@ -241,7 +241,7 @@ C
             CHG = ABS(CHG)
             CHG = CHG/WL2
             WL1 = WL2
-            IF (CHG .GT. 0.05)  GOTO 1040
+            IF (CHG > 0.05)  GOTO 1040
             WL = WL2
 *
 *   AT THIS POINT THE WAVELENGTH HAS BEEN DETERMINED & THE ROUTINE
@@ -269,7 +269,7 @@ C
          ENDIF
       ENDIF
 *
-      IF (FWJ .LT. 0.001) FWJ = 0.001
+      IF (FWJ < 0.001) FWJ = 0.001
 *
 crrr
 c
@@ -278,9 +278,9 @@ C
 *       DEFINED ALREADY IN AN ARRAY!
 *
 C>>>>        DS=EFDR(I) * 0.001
-crrr        IF(DEP(J).LE.0.)THEN
+crrr        IF(DEP(J) <= 0.)THEN
 crrr           FW(J) = -1.0
-      IF (DEPj .LE. 0. )  THEN
+      IF (DEPj <= 0. )  THEN
          FWj = -1.0
          GOTO 1130
       ENDIF
@@ -300,7 +300,7 @@ C        DECIV=VELRB * 0.1
 *   THAN 1.57 - IF SO, THEN SET FW2 = 0.30 AND SKIP OVER THE
 *   ITERATIONS (JONSSON, 1975, 1976a)
 *
-      IF (ORBWAV/DSJ .LT. 1.57)  THEN
+      IF (ORBWAV/DSJ < 1.57)  THEN
           FW2 = 0.30
           GOTO 1110
       END IF
@@ -314,9 +314,9 @@ C        DECIV=VELRB * 0.1
 *
       RE = UWAV*ORBWAV/XNU(J)
 *
-      IF (ORBWAV/DSJ .GT. 100.)  THEN 
+      IF (ORBWAV/DSJ > 100.)  THEN 
 *
-*  TRY AN APPROXIMATION TO FW FOR ORBWAV/DS .GT. 100, AS 
+*  TRY AN APPROXIMATION TO FW FOR ORBWAV/DS > 100, AS 
 *  SUGGESTED BY JONSSON, 1967.
 *
          FW1 = 0.09 / RE**0.2
@@ -334,14 +334,14 @@ C        DECIV=VELRB * 0.1
 *
 * CHECK IF THE BOTTOM IS CONSIDERED 'ROUGH'
 *
-      IF (RE .GT. ROUGH)  GOTO 1080
+      IF (RE > ROUGH)  GOTO 1080
 *
 *  THIS IS NOT ROUGH!
         MSG1 = MSG1 + 1
-        IF (MSG1 .GT. 15)  GOTO 1080
-        IF (KSW(14) .LT. 2)  GOTO 1070
+        IF (MSG1 > 15)  GOTO 1080
+        IF (KSW(14) < 2)  GOTO 1070
         WRITE(*,1150) J,RE
-        IF (MSG1 .EQ. 15)  WRITE(*,1160)
+        IF (MSG1 == 15)  WRITE(*,1160)
  1070   CONTINUE
 *
  1080 K = 0
@@ -353,25 +353,25 @@ C        DECIV=VELRB * 0.1
       K = K + 1
       CHANGE = (FW1-FW2)/FW1
       CHANGA = ABS(CHANGE)
-      IF (CHANGA .LT. CRIT)  GOTO 1110
+      IF (CHANGA < CRIT)  GOTO 1110
       FW1 = FW1*(1.-0.5*CHANGE)
-      IF (K .LT. MAXIT)  GOTO 1090 
+      IF (K < MAXIT)  GOTO 1090 
 
 *   END OF THE ITERATIONS...
 * 
       MSG2 = MSG2 + 1
-      IF (MSG2 .GT. 15)  GOTO 1110
-      IF (KSW(14) .LT. 2)  GOTO 1100
+      IF (MSG2 > 15)  GOTO 1110
+      IF (KSW(14) < 2)  GOTO 1100
       WRITE(*,1170) MAXIT,J
-      IF (MSG2 .EQ. 15) WRITE(*,1160)
+      IF (MSG2 == 15) WRITE(*,1160)
  1100 CONTINUE
 C
  1110 FWJ = FW2
-      IF (KSW(14) .NE. 0) WRITE(*,1190) J,UWAV,ORBWAV,VELRB,RE,FW2
+      IF (KSW(14) /= 0) WRITE(*,1190) J,UWAV,ORBWAV,VELRB,RE,FW2
 C
  1130 CONTINUE
 c      WRITE(*,*) '  >>>>    DEBUG IN JONFW   <<<<'
-      IF (KSW(14) .GE. 2)  THEN 
+      IF (KSW(14) >= 2)  THEN 
          WRITE(*,998) 
   998    FORMAT(//,4(3X,'NODE',1X,'WHITE',2X,'WPER',2X,'WVEL',1X,
      &            'REYNOLD'))
@@ -498,8 +498,8 @@ cccr 1180 FORMAT('1',///,'    *****ENTER SUBROUTINE JONFW*****',//5X,
 *
 *  NOW COMPARE
 *
-      IF(HEIGHT .GT. HMAX)HEIGHT = HMAX
-      IF(PERIOD .GT. PMAX)PERIOD = PMAX
+      IF(HEIGHT > HMAX)HEIGHT = HMAX
+      IF(PERIOD > PMAX)PERIOD = PMAX
 *
       RETURN
       END

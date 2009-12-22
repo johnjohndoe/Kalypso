@@ -423,7 +423,7 @@ reading: do
 
   !reading the mesh dimension or the mesh itself
   !---------------------------------------------
-  kswittest: if (kswit == 0 .or. kswit == 1) then
+  kswittest: if (kswit == 0 .OR. kswit == 1) then
 
     !NODE DEFINITIONS ---
     IF (linie (1:2) =='FP') THEN
@@ -520,7 +520,7 @@ reading: do
         if (PolySplitCountB < j) PolySplitCountB = j
       else
         !nis,aug08: Just read polynomial range of Boussinesq-polynomial, if it's used.
-        if (beient /= 0 .and. beient /= 3) then
+        if (beient /= 0 .AND. beient /= 3) then
           linestat = 0
           read (linie, *, iostat = linestat) id_local, i, polySplitsB(i), hhmin_loc, (polyrangeB(i, k), k=1, polySplitsB(i))
           hhmin(i) = max (hhmin(i), hhmin_loc)
@@ -543,17 +543,17 @@ reading: do
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j, qgef(i), (qpoly(j, i, k), k = 0, 4)
         !remember, that the node is a 1D polynomial approach node
-        if (.not. IsPolynomNode (i)) IsPolynomNode (i) = .true.
+        if ( .NOT. IsPolynomNode (i)) IsPolynomNode (i) = .true.
       endif
     ELSEIF (linie(1:3) == 'ALP') then
-      if (beient /= 0 .and. beient /= 3) then
+      if (beient /= 0 .AND. beient /= 3) then
         IF (KSWIT /= 1) then
           linestat = 0
           read (linie, *, iostat = linestat) id_local, i, j, (alphapoly(j, i, k), k = 0, 4)
         endif
       endif
     ELSEIF (linie(1:3) == 'BEP') then
-      if (beient /= 0 .and. beient /= 3) then
+      if (beient /= 0 .AND. beient /= 3) then
         IF (KSWIT /= 1) then
           linestat = 0
           read (linie, *, iostat = linestat) id_local, i, j, (betapoly(j, i, 0), k = 0, 4)
@@ -572,7 +572,7 @@ reading: do
         READ (linie, '(a2,4i10)') id_local, i, imat (i), imato (i), nfixh (i)
 
         !LF,nov06: Read again the FE line for the starting node of a weir element
-        if (imat(i) > 903 .and. imat(i) < 990) then
+        if (imat(i) > 903 .AND. imat(i) < 990) then
           weircnt = weircnt + 1
           read (linie, '(a2,5i10)') id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
           !ERROR - no starting node for weir element definition was found
@@ -637,9 +637,9 @@ reading: do
         WRITE(*,*) MaxLT
         READ (linie, '(a2,5i10)') id_local, i, (TransLines (i, k), k = 1, 4)
         !Apply default TransLines (i)
-        if (istat /= 0 .and. TransLines(i, 4) == 0 &
-        &   .or. &
-        &   (TransLines (i, 4) /= 1 .and. TransLines (i, 4) /= 2 .and. TransLines (i, 4) /= 3) ) then
+        if (istat /= 0 .AND. TransLines(i, 4) == 0 &
+        &  .OR. &
+        &   (TransLines (i, 4) /= 1 .AND. TransLines (i, 4) /= 2 .AND. TransLines (i, 4) /= 3) ) then
           TransLines (i, 4) = 1
         end if
         TransitionElement (TransLines(i, 1)) = .true.
@@ -706,16 +706,16 @@ reading: do
       READ(linie,'(a2,1x,i9,2f20.14,2f20.13)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
       !nis,aug08: If node number is zero, it has no coordinates; use dummy coordinates 0.0
-      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, 0.0d0, 0.0d0)
+      IF (i > MaxP .OR. i <= 0) call ErrorMessageAndStop (1601, i, 0.0d0, 0.0d0)
     ENDIF
 
     !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP; ONLY FOR INTERPOLATED PROFILES/ NODES ---
     IF (linie (1:2) =='IR') then
       READ(linie,'(a2, i10, 4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
-      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
+      IF (i > MaxP .OR. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
       !ERROR - TRYING TO APPLY RESULT OF INTERPOLATED PROFILE/ NODE TO A REAL NODE
-      if (.not. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
+      if ( .NOT. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
     ENDIF
 
     !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
@@ -723,7 +723,7 @@ reading: do
     IF (linie(1:2) == 'DF') THEN
       READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
-      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
+      IF (i > MaxP .OR. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     END IF
 
     !MD: read flow resistance for Sediment-Transport
@@ -732,7 +732,7 @@ reading: do
       !MD: read flow resistance results for elements
       !ERROR - restart values can't be applied to element out of zero-maxe-Range
       !nis,aug08: Function must be called with the correct number of arguments; use dummy arguments 0.0 as coordinates)
-      IF (i > MaxE .or. i <= 0) call ErrorMessageAndStop (1603, i, 0.0d0, 0.0d0)
+      IF (i > MaxE .OR. i <= 0) call ErrorMessageAndStop (1603, i, 0.0d0, 0.0d0)
     end if
 
     !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
@@ -814,7 +814,7 @@ IF (KSWIT == 1) THEN
 
   REWIND (IFILE)
   DEALLOCATE (localArc)                                                 !the pro forma allocation of arc(i,j) is stopped
-  RETURN                                                    	        !If the dimension reading option is chosen (that means KSWIT=1), this
+  RETURN                                                                  !If the dimension reading option is chosen (that means KSWIT=1), this
                                                                         !subroutine can be returned at this point.
 
 !ENDBLOCK FOR THE CASE OF RESTART INFORMATION READING (KSWIT==2) ------
@@ -837,12 +837,12 @@ ENDIF
 DO i = 1, arccnt
 
   !DEAD ARCS
-  if (localArc (i, 3) == 0 .and. localArc (i, 4) == 0) then
+  if (localArc (i, 3) == 0 .AND. localArc (i, 4) == 0) then
     write (lout, 9003) i
     write (*   , 9003) i
     
   !1D-ELEMENT or 1D-2D-TRANSITION-ELEMENT
-  elseif ((localArc (i, 3) == localArc (i, 4)) .and. localArc (i, 3) /= 0) then
+  elseif ((localArc (i, 3) == localArc (i, 4)) .AND. localArc (i, 3) /= 0) then
     !TODO: these checks are not 100 percent consistent
     j = localArc (i, 3)
     
@@ -922,13 +922,13 @@ all_elem: DO i = 1, maxe
   elkno (5) = 0
 
   !cycle empty elements
-  IF (elem (i, 1) == 0 .and. (imat(i) < 901 .or. imat (i) > 903)) CYCLE all_elem
+  IF (elem (i, 1) == 0 .AND. (imat(i) < 901 .OR. imat (i) > 903)) CYCLE all_elem
 
   !count the number of NOT-empty entries of elcnt
   elzaehl = elzaehl + 1
 
   !normal 1D-elements --------------------
-  dimensionif: if (imat(i) >= 901 .and. imat (i) <= 903) then
+  dimensionif: if (imat(i) >= 901 .AND. imat (i) <= 903) then
     findJunctions: do j = 8, 1, -1
       if (nop(i, j) /= 0) then
         ncorn (i) = j
@@ -969,7 +969,7 @@ all_elem: DO i = 1, maxe
     !IF (jnum<3) THEN
 
     !ERROR - element has less than 3 arcs, which is not possible
-    IF (jnum == 1 .or. jnum == 2) call ErrorMessageAndStop (1203, i, cord(localArc (elem (i, 2), 5), 1) , cord(localArc (elem (i, 2), 5), 2))
+    IF (jnum == 1 .OR. jnum == 2) call ErrorMessageAndStop (1203, i, cord(localArc (elem (i, 2), 5), 1) , cord(localArc (elem (i, 2), 5), 2))
 
     ! erste Kante:                                                  !starting with the first arc, the element's nodes in anticlockwise direction
     l = 1                                                           !will be saved in a temporary array to write them later into the array nop.
@@ -991,9 +991,9 @@ all_elem: DO i = 1, maxe
     ENDIF
 
 !TODO: Introduce modern do-loop
-    ! weitere Kanten:                                       	    !The other two or three arcs defining the actual element i are analysed from
-2222   l = l + 1                                               	    !this point on. The jumpmark 2222 is somthing like a do loop.
-    IF (l>jnum) THEN                                       	    !The first if-case checks whether the actual arc l is the last one to define
+    ! weitere Kanten:                                                 !The other two or three arcs defining the actual element i are analysed from
+2222   l = l + 1                                                         !this point on. The jumpmark 2222 is somthing like a do loop.
+    IF (l>jnum) THEN                                                 !The first if-case checks whether the actual arc l is the last one to define
       IF (elkno (1) /= elkno (l)) call ErrorMessageAndStop (1204, i, 0.0d0, 0.0d0)
 
       GOTO 2444
@@ -1101,12 +1101,12 @@ all_arcs: DO i=1,arccnt
 
   ! Mittseitenknoten vorhanden?
   !NiS,expand test for defined midside nodes in ARC-array but without coordinate-definitions; this was a logical gap
-  IF ((localArc(i,5)>0) .and. (localArc(i,5)<=nodecnt)) THEN
-    IF ((cord (localArc (i, 5), 1) /= 0.0) .and. (cord (localArc (i, 5), 2) /= 0.0)) THEN
+  IF ((localArc(i,5)>0) .AND. (localArc(i,5)<=nodecnt)) THEN
+    IF ((cord (localArc (i, 5), 1) /= 0.0) .AND. (cord (localArc (i, 5), 2) /= 0.0)) THEN
       if (ao (localArc (i, 5)) + 9999.0 < 1.0e-3) then
         WRITE(lout,*) 'recalculating elevation        '
         ao (localArc (i, 5)) = 0.5 * (ao (localArc (i, 1)) + ao (localArc (i, 2)))
-        if (kmx (localArc(i,1)) /= 0.0 .and. kmx (localArc(i, 2)) /= 0.0) then
+        if (kmx (localArc(i,1)) /= 0.0 .AND. kmx (localArc(i, 2)) /= 0.0) then
           kmx (localArc (i, 5)) = 0.5 * (kmx (localArc (i, 1)) + kmx (localArc (i, 2)))
         end if
       end if
@@ -1116,7 +1116,7 @@ all_arcs: DO i=1,arccnt
       a = SQRT ( ( cord (localArc (i,1), 1) - cord ( localArc (i,5), 1) )**2 + ( cord (localArc (i,1), 2) - cord (localArc (i,5), 2) )**2)
       b = SQRT ( ( cord (localArc (i,2), 1) - cord ( localArc (i,5), 1) )**2 + ( cord (localArc (i,2), 2) - cord (localArc (i,5), 2) )**2)
       c = SQRT ( ( cord (localArc (i,1), 1) - cord ( localArc (i,2), 1) )**2 + ( cord (localArc (i,1), 2) - cord (localArc (i,2), 2) )**2)
-      IF (a<c .or. b<c) THEN
+      IF (a<c .OR. b<c) THEN
         WRITE (*,1234) localArc(i,5), i, localArc(i,5)
 1234    FORMAT (' The NODE ', I5,' is defined in ARC ', i5,'. The Coordinates are the origin (0.0/0.0), but this seems '/ &
               & ' not be define but the default initialized value, because the distance between the corner nodes of the '/&
@@ -1126,7 +1126,7 @@ all_arcs: DO i=1,arccnt
         cord (localArc(i,5),1) = 0.5 * (cord (localArc(i,1),1) + cord (localArc(i,2),1) )
         cord (localArc(i,5),2) = 0.5 * (cord (localArc(i,1),2) + cord (localArc(i,2),2) )
         ao (localArc(i,5)  ) = 0.5 * (  ao (localArc(i,1)  ) +   ao (localArc(i,2)  ) )
-        if (kmx (localArc(i,1)) /= 0.0 .and. kmx (localArc(i, 2)) /= 0.0) then
+        if (kmx (localArc(i,1)) /= 0.0 .AND. kmx (localArc(i, 2)) /= 0.0) then
           kmx (localArc (i, 5)) = 0.5 * (kmx (localArc (i, 1)) + kmx (localArc (i, 2)))
         end if
       ENDIF
@@ -1144,7 +1144,7 @@ all_arcs: DO i=1,arccnt
   ilft = localArc (i, 3)
   irgt = localArc (i, 4)
   !NiS,may06: Test for dead arcs, so the DO-LOOP may be cycled:
-  IF (ilft==irgt .and. ilft==0) CYCLE all_arcs
+  IF (ilft==irgt .AND. ilft==0) CYCLE all_arcs
 
   !coordinates of generated midside node
   x = (cord (ibot, 1) + cord (itop, 1) ) / 2.0
@@ -1207,7 +1207,7 @@ WRITE (*   ,106) mittzaehl
 
 !checking/interpolation of cross section informations on 1D elements under geometry approach (trapezoidal)
 do i = 1, arccnt
-  if (localArc(i,3) == localArc(i,4) .and. localArc(i,3) /= 0) then
+  if (localArc(i,3) == localArc(i,4) .AND. localArc(i,3) /= 0) then
     if (imat(localArc(i,3)) < 900) then
 
       if (imat (localArc (i,3)) /= 89) then
@@ -1278,7 +1278,7 @@ END do
 !examine, whether reordering has to be done
 ReorderingNotDone = .true.
 DO i = 1, maxe
-  IF (nfixh (i) <= 0 .or. nfixh (i) > MaxE) then
+  IF (nfixh (i) <= 0 .OR. nfixh (i) > MaxE) then
     !NiS,mar06: unit name changed; changed iout to Lout
     WRITE (Lout,105)
     WRITE ( * , 105)
@@ -1292,7 +1292,7 @@ END DO
 
 if (ReorderingNotDone) then
   DO i = 1, maxe
-    IF ((imat (i) /= 0) .and. (elfix (i) /= 1) ) then
+    IF ((imat (i) /= 0) .AND. (elfix (i) /= 1) ) then
       !NiS,mar06: unit name changed; changed iout to Lout
       WRITE (Lout,105)
       WRITE ( * , 105)
@@ -1378,7 +1378,7 @@ neighbours: do i = 1, MaxE
           if (node1 /= node2) then
             tmpNode => findNodeInMeshByID (m_SimModel.FEmesh, node2)
             newNeighb => makeNodeALinkedNode (tmpNode)
-            if (.not. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
+            if ( .NOT. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
           end if
         end do innerLT
       end do outerLT
@@ -1397,7 +1397,7 @@ neighbours: do i = 1, MaxE
         IF (node1 /= node2) THEN
           tmpNode => findNodeInMeshByID (m_SimModel.FEmesh, node2)
           newNeighb => makeNodeALinkedNode (tmpNode)
-          if (.not. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
+          if ( .NOT. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
         END if
       end do inner
     end do outer
@@ -1481,13 +1481,13 @@ NewElt = statElSz
 !nis,jan08: Interpolate new profiles into mesh
 do i = 1, statElSz
   !here an interpolation should take place
-  if (IntPolNo (i) /= 0 .and. ncorn (i) < 4) then
+  if (IntPolNo (i) /= 0 .AND. ncorn (i) < 4) then
     DX = (cord (nop (i, 3), 1) - cord (nop (i, 1), 1)) / (IntPolNo (i) + 1)
     DY = (cord (nop (i, 3), 2) - cord (nop (i, 1), 2)) / (IntPolNo (i) + 1)
     origx = (cord (nop (i, 1), 1) + cord (nop (i, 3), 1)) / 2.0d0
     origy = (cord (nop (i, 1), 2) + cord (nop (i, 3), 2)) / 2.0d0
     DH = ( ao (nop (i, 3)) - ao (nop (i, 1))) / (IntPolNo (i) + 1)
-    if (kmx (nop(i, 1)) >= 0.0 .and. kmx (nop (i, 3)) >= 0.0) then
+    if (kmx (nop(i, 1)) >= 0.0 .AND. kmx (nop (i, 3)) >= 0.0) then
       DIST = (kmx (nop (i, 3)) - kmx (nop (i, 1))) / (IntPolNo (i) + 1)
     else
       DIST = 0.0D0
@@ -1692,7 +1692,7 @@ NO_GOK = 0
    !exit loop, if reaching end of file condition
    if (istat /= 0) exit bed_reading
 
-   IF (NN.gt.MaxP) THEN
+   IF (NN > MaxP) THEN
      WRITE(*,*) ' Bed-Restart ist nicht kompatibel mit der Modell-Restart Datei.'
      WRITE(*,*) ' >> Programmabbruch da Knotenanzahl nicht uebereinstimmt!'
      WRITE(75,*) ' Bed-Restart ist nicht kompatibel mit der Modell-Restart Datei.'
@@ -1700,7 +1700,7 @@ NO_GOK = 0
      STOP
    END IF
 
-   IF (AO_BED_OLD.ne.AO(NN) .and. NO_GOK==0) THEN
+   IF (AO_BED_OLD /= AO(NN) .AND. NO_GOK==0) THEN
      WRITE(*,*) ' Achtung: Sohlhoehe aus Restart-Bed nicht identisch mit Modell: ',NN,' .'
      WRITE(75,*) ' Achtung: Sohlhoehe aus Restart-Bed nicht identisch mit Modell: ',NN,' .'
      NO_GOK = 1
@@ -1709,55 +1709,55 @@ NO_GOK = 0
 
    ! Check Suspended Layer formation
    ! ---------------------------------
-   IF (NLAY_OLD.ne.NLAYTND(NN)) THEN
+   IF (NLAY_OLD /= NLAYTND(NN)) THEN
      ISUSLAY = 1
      WRITE(*,*) ' Achtung: Anzahl Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist falsch.'
      WRITE(75,*) ' Achtung: Anzahl Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist falsch.'
 
-   ElseIF (NLAY_OLD.eq.NLAYTND(NN)) THEN
+   ElseIF (NLAY_OLD == NLAYTND(NN)) THEN
      ISUSLAY = 0
      IACTIV_SL = 0
      DO L = 1, NLAY_OLD
        ! Change unit
        THICK_OLD(L) = THICK_OLD(L)/1000.0
 
-       IF (THICK_OLD(L).eq.0.0 .and. IACTIV_SL.eq.0) THEN
+       IF (THICK_OLD(L) == 0.0 .AND. IACTIV_SL == 0) THEN
          THICK(NN,L) = THICK_OLD(L)
          ! Layer sind leer
 
-       ElseIF (THICK_OLD(L).gt.0.0 .and. IACTIV_SL.eq.0) THEN
+       ElseIF (THICK_OLD(L) > 0.0 .AND. IACTIV_SL == 0) THEN
          IACTIV_SL = 1
          ! Suspended Layer ab hier voll
-         IF (THICK_OLD(L).gt.TLAYND(NN,L)) THEN
+         IF (THICK_OLD(L) > TLAYND(NN,L)) THEN
            TLAYND(NN,L) = THICK_OLD(L)
            ! Ersetzen mit dickerem Layer
            THICK(NN,L) = THICK_OLD(L)
            ! Auffuellen des Susp. Layers
            WRITE(75,*) ' Achtung: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
-         ElseIF (THICK_OLD(L).lt.TLAYND(NN,L)) THEN
+         ElseIF (THICK_OLD(L) < TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
            ! Neubelegung des Susp. Layers halbvoll
-         ElseIF (THICK_OLD(L).eq.TLAYND(NN,L)) THEN
+         ElseIF (THICK_OLD(L) == TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
            ! Neubelegung des Susp. Layers ganzvoll
          Endif
-       ElseIF (THICK_OLD(L).gt.0.0 .and. IACTIV_SL.eq.1) THEN
+       ElseIF (THICK_OLD(L) > 0.0 .AND. IACTIV_SL == 1) THEN
          IACTIV_SL = 1
          ! Suspended Layer ab hier voll
-         IF (THICK_OLD(L).gt.TLAYND(NN,L)) THEN
+         IF (THICK_OLD(L) > TLAYND(NN,L)) THEN
            TLAYND(NN,L) = THICK_OLD(L)
            ! Ersetzen mit dickerem Layer
            THICK(NN,L) = THICK_OLD(L)
            ! Auffuellen des Susp. Layers
            WRITE(75,*) ' Achtung: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
-         ElseIF (THICK_OLD(L).lt.TLAYND(NN,L)) THEN
+         ElseIF (THICK_OLD(L) < TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
            ! Neubelegung des Susp. Layers halbvoll
-         ElseIF (THICK_OLD(L).eq.TLAYND(NN,L)) THEN
+         ElseIF (THICK_OLD(L) == TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
            ! Neubelegung des Susp. Layers ganzvoll
          Endif
-       ElseIF (THICK_OLD(L).eq.0.0 .and. IACTIV_SL.gt.1) THEN
+       ElseIF (THICK_OLD(L) == 0.0 .AND. IACTIV_SL > 1) THEN
          IACTIV_SL = 2
          ! Layer ab hier leer sind leer
        Else
@@ -1774,54 +1774,54 @@ NO_GOK = 0
 
    ! Check Bed Layer formation
    ! ---------------------------------
-   IF (NLAYO_OLD.ne.NLAYO(NN)) THEN
+   IF (NLAYO_OLD /= NLAYO(NN)) THEN
      IBEDLAY = 1
-   ElseIF (NLAYO_OLD.eq.NLAYO(NN)) THEN
+   ElseIF (NLAYO_OLD == NLAYO(NN)) THEN
      IBEDLAY = 0
      IACTIV_BL = 0
      DO L = 1, NLAYO_OLD
        ! Change unit
        THICKO_OLD(L) = THICKO_OLD(L)/1000.0
 
-       IF (THICKO_OLD(L).eq.0.0 .and. IACTIV_BL.eq.0) THEN
+       IF (THICKO_OLD(L) == 0.0 .AND. IACTIV_BL == 0) THEN
          THICKO(NN,L) = THICKO_OLD(L)
          ! Bed Layer sind leer
 
-       ElseIF (THICKO_OLD(L).gt.0.0 .and. IACTIV_BL.eq.0) THEN
+       ElseIF (THICKO_OLD(L) > 0.0 .AND. IACTIV_BL == 0) THEN
          IACTIV_BL = 1
          ! Suspended Layer ab hier voll
-         IF (THICKO_OLD(L).gt.THICKOND(NN,L)) THEN
+         IF (THICKO_OLD(L) > THICKOND(NN,L)) THEN
            THICKOND(NN,L) = THICKO_OLD(L)
            ! Ersetzen mit dickerem Layer
            THICKO(NN,L) = THICKO_OLD(L)
            ! Auffuellen des Susp. Layers
            WRITE(75,*) ' Achtung: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
-         ElseIF (THICKO_OLD(L).lt.THICKOND(NN,L)) THEN
+         ElseIF (THICKO_OLD(L) < THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
            ! Neubelegung des Susp. Layers halbvoll
-         ElseIF (THICKO_OLD(L).eq.THICKOND(NN,L)) THEN
+         ElseIF (THICKO_OLD(L) == THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
            ! Neubelegung des Susp. Layers ganzvoll
          Endif
-       ElseIF (THICKO_OLD(L).gt.0.0 .and. IACTIV_BL.eq.1) THEN
+       ElseIF (THICKO_OLD(L) > 0.0 .AND. IACTIV_BL == 1) THEN
          IACTIV_BL = 1
          ! Suspended Layer ab hier voll
-         IF (THICKO_OLD(L).gt.THICKOND(NN,L)) THEN
+         IF (THICKO_OLD(L) > THICKOND(NN,L)) THEN
            THICKOND(NN,L) = THICKO_OLD(L)
            ! Ersetzen mit dickerem Layer
            THICKO(NN,L) = THICKO_OLD(L)
            ! Auffuellen des Susp. Layers
            WRITE(75,*) ' Achtung: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
-         ElseIF (THICKO_OLD(L).lt.THICKOND(NN,L)) THEN
+         ElseIF (THICKO_OLD(L) < THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
            ! Neubelegung des Susp. Layers halbvoll
-         ElseIF (THICKO_OLD(L).eq.THICKOND(NN,L)) THEN
+         ElseIF (THICKO_OLD(L) == THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
            ! Neubelegung des Susp. Layers ganzvoll
          Endif
 
   !MD: Dieser Fall noch nicht möglich, aber bald:
-  !MD:     ElseIF (THICKO_OLD(L).eq.0.0 .and. IACTIV_BL.gt.1) THEN
+  !MD:     ElseIF (THICKO_OLD(L) == 0.0 .AND. IACTIV_BL > 1) THEN
   !MD:       IACTIV_BL = 2
   !MD:       ! Layer ab hier leer sind leer
        Else

@@ -1,6 +1,6 @@
 C     Last change:  JAJ  18 May 2006   10:00 pm
       MODULE BLK2
-!NiS,mar06: 	This module replaces common block definitions in the program code of Kalypso2D.
+!NiS,mar06:       This module replaces common block definitions in the program code of Kalypso2D.
 !               The reason is to make the allocatable option for the arrays possible, because the
 !               old way of declaring did not work. This is oriented at future.
 !               This module is used in the subroutines:

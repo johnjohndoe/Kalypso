@@ -155,10 +155,10 @@ if (executionSwitch == 0)  then
 
   !Allocate space for permutation matrix
   if (iparm(5) == 1) then
-    if (.not. (allocated (perm))) allocate (perm (noOfEq))
+    if ( .NOT. (allocated (perm))) allocate (perm (noOfEq))
   else
     !dummy allocation for proper compilation; perm will not be used in PARDISO, if iparm(5) /= 1
-    if (.not. (allocated (perm))) allocate (perm (1))
+    if ( .NOT. (allocated (perm))) allocate (perm (1))
   endif
   
     perm = 0
@@ -216,7 +216,7 @@ enddo
 
 !check for the change of the matrix; if the size of the matrix did not change pardiso can be
 !solved with the same 'Analysis symbolic factorization' settings from the previous execution
-if (nzzold /= nonZeros .or. nszfold /= noOfEq) then
+if (nzzold /= nonZeros .OR. nszfold /= noOfEq) then
   !memory needs to be released
   if (nzzold /= 0) executionSwitch = 2
 endif
@@ -299,7 +299,7 @@ write(*,*) 'factorization and solving of matrix'
 write(*,*) '***********************************'
 call pardiso( ipt, maxfct, mnum, mtype, iphase, noOfEq, da, ia, ja, perm, nrhs, iparm, msglvl, db, dx, ierror )
 
-if ( ierror .ne. 0 ) then
+if ( ierror /= 0 ) then
   call ErrorMessageAndStop (4203, ierror, 0.0d0, 0.0d0)
 endif
 
@@ -360,12 +360,12 @@ VeryOuterSort: Do
   I = INCR + 1
   
   OuterSort: Do
-    IF (I .GT. N) exit OuterSort
+    IF (I > N) exit OuterSort
     ITEMP = IX(I)
     YTEMP = Y(I)
     J = I
     InnerSort: Do
-      IF (IX(J - INCR) .LT. ITEMP) exit InnerSort
+      IF (IX(J - INCR) < ITEMP) exit InnerSort
       IX(J) = IX(J - INCR)
       Y(J) = Y(J - INCR)
       J = J - INCR

@@ -31,7 +31,7 @@ CIPK DEC97 CHANGE LIMITS
       DATA ISTDY/0/
 C
 CIPKFEB94 V4.5
-      IF(ISTDY .EQ. 0) THEN
+      IF(ISTDY == 0) THEN
         ALLOCATE (NEQ(NELDS))
         NEQ=0
         ISTDY=1
@@ -47,32 +47,32 @@ cipk APR96 major changes start here
       IEGEN=0
 CIPK DEC97 CHANGE LIMITS
       DO N=1,NELDS
-        IF(NEQ(N) .NE. 0) THEN
+        IF(NEQ(N) /= 0) THEN
           IEGEN=IEGEN+1
-          IF(IEGEN .EQ. 1) THEN
+          IF(IEGEN == 1) THEN
             WRITE(LOUT,6043)
           ENDIF
           J=NEQ(N)
           TIME=TET
 cipk jan96  add logic for day of year
-          IF(TIME .GT. 24.) THEN
+          IF(TIME > 24.) THEN
             DAYNOW=DAYOFY+1
             TIME=TIME-24.
           ELSE
             DAYNOW=DAYOFY
           ENDIF
-          IF(MOD(IYRR,4) .EQ. 0) THEN
+          IF(MOD(IYRR,4) == 0) THEN
             IYDAYS=366
           ELSE
             IYDAYS=365
           ENDIF
           IYRN=IYRR
-          IF(DAYNOW .GT. IYDAYS) THEN
+          IF(DAYNOW > IYDAYS) THEN
             IYRN=IYRR+1
             DAYNOW=DAYNOW-IYDAYS
           ENDIF
           CALL GETEQ(J,QF,QQAL,IYRN,DAYNOW,TIME,TETH,NEST,LN)
-          IF(J .EQ. -9999) THEN
+          IF(J == -9999) THEN
             WRITE(LOUT,6042) QF,QQAL,EINX(1),EINY(1)
             DO J=1,NE
 CIPK LOGIC FOR LAYERS MOVED TO LNFLO
@@ -85,9 +85,9 @@ CIPK JAN03  ADD MOMENTUM TERMS
 cipk mar01              CALL LNFLO(J,QF,QQAL,NEST,LN)
 CIPK NOV97 END CHANGES
             ENDDO
-          ELSEIF(J .LT. 0) THEN
+          ELSEIF(J < 0) THEN
             DO JJ=1,NE
-              IF(IMAT(JJ) .EQ. -J) THEN
+              IF(IMAT(JJ) == -J) THEN
 CIPK LOGIC FOR LAYERS MOVED TO LNFLO
 cipk mar01  go to LNFLO with NEST increased by 2 (for recognition)
 CIPK JAN03  ADD MOMENTUM TERMS
@@ -102,14 +102,14 @@ CIPK NOV97 END CHANGES
           ELSE
 CIPK LOGIC FOR LAYERS MOVED TO LNFLO
 CIPK JAN03  ADD MOMENTUM TERMS
-            IF(LN .GT. 1) THEN
-	        JJJ=NEREF(J)+LN-1
+            IF(LN > 1) THEN
+              JJJ=NEREF(J)+LN-1
               ELINX=EINX(JJJ)
               ELINY=EINY(JJJ)
-	      ELSE
+            ELSE
               ELINX=EINX(J)
               ELINY=EINY(J)
-	      ENDIF
+            ENDIF
             CALL LNFLO(J,QF,QQAL,NEST,LN,ELINX,ELINY)
 CIPK NOV97 END CHANGES
             WRITE(LOUT,6038) J,QF,QQAL,ELINX,ELINY
@@ -117,7 +117,7 @@ CIPK NOV97 END CHANGES
         ENDIF
       ENDDO
   201 CONTINUE
-      IF(ID(1:3) .EQ. 'EFA') THEN
+      IF(ID(1:3) == 'EFA') THEN
         !counter of elements inflows
         IEGEN = IEGEN + 1
 CIPK DEC97 REFINE TEST FOR TOO MANY ELEMENT FLOWS
@@ -126,10 +126,10 @@ CIPK DEC97 REFINE TEST FOR TOO MANY ELEMENT FLOWS
      +     CALL ErrorMessageAndStop (1007, 0, 0.0D0, 0.0D0)
 
 CIPK DEC97 END ADDITION
-        IF (IEGEN .EQ. 1) THEN
+        IF (IEGEN == 1) THEN
           WRITE (LOUT, 6029)
         ENDIF
-        IF(NEQ (IEGEN) .EQ. 0) THEN
+        IF(NEQ (IEGEN) == 0) THEN
 cipk jan03          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL
           ioerror = 0
           READ (DLIN, 5029, iostat = ioerror)
@@ -140,7 +140,7 @@ cipk jan03          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL
 cipk nov97          READ(IBIN,7000) ID,DLIN
           call ginpt (ibin, id, dlin)
 cipk APR96 save data to a scratch file
-          if(isvs .eq. 1) then
+          if(isvs == 1) then
             write (nscrin, 7000) id, dlin
           endif
 C
@@ -153,7 +153,7 @@ CIPK JAN03            CALL LNFLO(N,SF,QQAL,NEST+2,LN)
             CALL LNFLO (N, SF, QQAL, NEST_Copy, LN, ELINX, ELINY)
 CIPK NOV97 END CHANGES
           ENDDO
-          IF(LABL .EQ. 1) THEN
+          IF(LABL == 1) THEN
             NEQ(IEGEN)=-9999
             WRITE(LOUT,6050)
  6050       FORMAT (/'   GLOBAL ELEMENT INFLOW HYDROGRAPH WILL BE INTERP
@@ -167,7 +167,7 @@ CIPK NOV97 END CHANGES
 
 
       !individual element inflow
-      IF(ID(1:3) .EQ. 'EFE') THEN
+      IF(ID(1:3) == 'EFE') THEN
         IEGEN = IEGEN + 1
 
 CIPK DEC97 REFINE TEST FOR TOO MANY ELEMENT FLOWS
@@ -179,11 +179,11 @@ CIPK DEC97 END ADDITION
         IFPAS = IFPAS + 1
 
         !write header of control output
-        IF(IFPAS .EQ. 1) THEN
+        IF(IFPAS == 1) THEN
           WRITE (LOUT, 6041)
         ENDIF
 
-        IF (NEQ (IEGEN) .EQ. 0) THEN
+        IF (NEQ (IEGEN) == 0) THEN
 
           !get the user's input data with new option for inflow angle if inflow has direction (for momentum equation)
           ioerror = 0
@@ -236,7 +236,7 @@ cipk APR96 save data to a scratch file
             write (nscrin, 7000) id, dlin
           endif
 C          WRITE(LOUT,6038) N,SF,ELINX,ELINY
-          IF(LABL .EQ. 1) THEN
+          IF(LABL == 1) THEN
             NEQ (IEGEN) = N
             WRITE (LOUT, 6051)
  6051       FORMAT (/
@@ -244,7 +244,7 @@ C          WRITE(LOUT,6038) N,SF,ELINX,ELINY
           ENDIF
 CIPK LOGIC FOR LAYERS MOVED TO LNFLO
 CIPK JAN03  ADD MOMENTUM TERMS
-          if (imat (n) == 89 .and. NEST /= 0)
+          if (imat (n) == 89 .AND. NEST /= 0)
      +      SF = SF / (IntPolNo (n) + 1)
 
           CALL LNFLO (N, SF, QQAL, NEST, LN, ELINX, ELINY)

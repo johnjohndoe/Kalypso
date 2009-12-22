@@ -299,7 +299,7 @@ UpdateDOFs: DO KK = 1, NDFM
 
       !UPDATE VELOCITIES WITH FIXED DIRECTION ALFA (J)
       !***********************************************
-      IF (K <= 2 .and. ALFA (j) /= 0.0) then
+      IF (K <= 2 .AND. ALFA (j) /= 0.0) then
 
         !ALFA (J) : fixed direction for flow at node J; that reduces number of degrees of freedom from 2 velocities to 1
         !ADIF (J) : In special cases the flow direction must be different from defined ALFA, this difference angle is called ADIF (J)
@@ -325,7 +325,7 @@ UpdateDOFs: DO KK = 1, NDFM
         !TOASK: What has the no transformation option to do with the effective porosity used in the marsh approach
         !IF (inotr == 1) THEN
         !TOASK: Why should should the changes EX be adapted by the effective porosity, although it is already the change on the calculation depth?
-        if (idnopt < 0 .and. (.not. IsPolynomNode (J))) then
+        if (idnopt < 0 .AND. ( .NOT. IsPolynomNode (J))) then
           !calculate the porosity of the Marsh range; although it should be already remembered
           H1 = VEL (3, J)
           CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
@@ -347,7 +347,7 @@ UpdateDOFs: DO KK = 1, NDFM
         !         not in use
         !nis,may08: Make sure, that the node is not fetched into the Marsh-Algorithm, if it is a 1D node with polnyomial approach
         !IF (AKP (J) > 0.9999) THEN
-        IF (AKP (J) > 0.9999 .or. IsPolynomNode (J)) THEN
+        IF (AKP (J) > 0.9999 .OR. IsPolynomNode (J)) THEN
           VEL (3, J) = VN
 
         !if Marsh option is acitve
@@ -381,7 +381,7 @@ UpdateDOFs: DO KK = 1, NDFM
       !made before the following lines
       horg = hel (j)
       !nis,may08: differ between application of Marsh approach
-      if (idnopt == 0 .or. IsPolynomNode (J)) then
+      if (idnopt == 0 .OR. IsPolynomNode (J)) then
         hel (j) = VEL (3, J)
       else
         vt = vel (3, j)
@@ -417,7 +417,7 @@ UpdateDOFs: DO KK = 1, NDFM
 !IPK APR01 UPDATE WATER SURFACE ELEVATION
 
       !calculate the water stage
-      IF (IDNOPT == 0 .or. IsPolynomNode (J)) THEN
+      IF (IDNOPT == 0 .OR. IsPolynomNode (J)) THEN
         WSLL (J) = VEL (3, J) + AO (J)
       ELSE
         HS = VEL (3, J)
@@ -450,7 +450,7 @@ UpdateDOFs: DO KK = 1, NDFM
 
   !If there is any change above the convergency border, then degree of freedom (NCNV) and full model (NCONV) is not converged
   if (percentCheck == 1) then
-    if (abs (EPercMax (k)) > conv (k) .and. abs(EMAX(k)) > 0.0006) then
+    if (abs (EPercMax (k)) > conv (k) .AND. abs(EMAX(k)) > 0.0006) then
       NCONV = 0
       ncnv (k) = 1
     endif
@@ -489,7 +489,7 @@ WriteDOFOutputs: DO J = 1, 7
     endif
   ENDIF   
 
-  IF (nmx (j) == 0 .or. nRel (j) == 0) THEN
+  IF (nmx (j) == 0 .OR. nRel (j) == 0) THEN
     WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
   ELSEIF (kmx (nmx (j)) /= -1.0) THEN
     WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j), kmx (nmx (J)), EPercMax (J), NRel (J), kmx (nRel (J)), IVAR (J, 1), IVAR (J, 2)
@@ -628,14 +628,14 @@ UpdateMidsides: DO N = 1, NE
 
 !IPK DEC00 ALLOW FOR GATE STRUCTURE
     !Skip all special elements except gate structures
-    IF (IMAT (N) > 900 .and. IGTP (N) == 0) CYCLE UpdateMidsides
+    IF (IMAT (N) > 900 .AND. IGTP (N) == 0) CYCLE UpdateMidsides
   endif
 
   ILK = 1
   NCN = NCORN (N)
 
   IF (NCN == 5) NCN = 3
-  IF (NCN == 15  .OR.  NCN == 6 ) ILK = 2
+  IF (NCN == 15 .OR. NCN == 6 ) ILK = 2
   IF (NCN == 10) ILK = 3
   IF (NCN == 13) ILK = 4
 
@@ -668,7 +668,7 @@ ENDDO UpdateMidsides
 !-
 !......PRINT AND/OR TERMINATE ON LARGE HEAD CHANGES
 !-
-IF (ABS (EMAX (3)) > 100. .OR. ABS (EMAX (1)) .GT. 50. .OR. ABS (EMAX (2)) >  50.) THEN
+IF (ABS (EMAX (3)) > 100. .OR. ABS (EMAX (1)) > 50. .OR. ABS (EMAX (2)) >  50.) THEN
 
   !nis,sep07: Remember problematic node
   IF (ABS (emax (3)) > 100.) THEN

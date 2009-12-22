@@ -26,22 +26,22 @@ CIPK SEP06
       ENDDO
 C
       DO N=1,NPM
-       IF(IMID(N,1) .EQ. 0) THEN
+       IF(IMID(N,1) == 0) THEN
 
          !MD:  kritische Depo-Schubspannung aus SPROP
          TAUCD=TAUCDND(N)
          I=N
-         IF(NDEP(N) .GT. 1) I=NREF(N)+NDEP(N)-1
+         IF(NDEP(N) > 1) I=NREF(N)+NDEP(N)-1
          DEPRAT(I)=0.0
          
 cipk jun06  test for marshing
-         if(wsll(i) .lt. ao(i)) go to 500
+         if(wsll(i) < ao(i)) go to 500
 
-         IF(TAUCD .GT. BSHEAR(I)) THEN
+         IF(TAUCD > BSHEAR(I)) THEN
 C          DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)/WD(I)
            DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)
 CIPK SEP06
-         !MD:  IF(IT .EQ. 1) THEN
+         !MD:  IF(IT == 1) THEN
          !MD:    DEPRATO(I)=DEPRAT(I)
          !MD:  ENDIF
          ENDIF
@@ -51,9 +51,9 @@ CIPK SEP06
 
 CIPK SEP06
       DO N=1,NPM
-        IF(IMID(N,1) .GT. 0) THEN
+        IF(IMID(N,1) > 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) > 1) NN = NREF(N) + NDEP(N)-1
           DEPRAT(NN)=(DEPRAT(IMID(NN,1))+DEPRAT(IMID(NN,2)))/2.
           DEPRATO(NN)=(DEPRATO(IMID(NN,1))+DEPRATO(IMID(NN,2)))/2.
         ENDIF

@@ -32,17 +32,17 @@ C-
       NCN=NCORN(NN)
       CX=COS(TH(NN))
       SAA=SIN(TH(NN))
-      IF(NCN .EQ. 20) THEN
+      IF(NCN == 20) THEN
         ILK=1
         ITYP=1
-      ELSEIF(NCN .EQ. 15) THEN
+      ELSEIF(NCN == 15) THEN
         ILK=2
-        IF(NSURF(NOP(NN,1)) .NE. NSURF(NOP(NN,10))) THEN
+        IF(NSURF(NOP(NN,1)) /= NSURF(NOP(NN,10))) THEN
           ITYP=2
         ELSE
           ITYP=3
         ENDIF
-      ELSEIF(NCN .EQ. 13) THEN
+      ELSEIF(NCN == 13) THEN
         ILK=4
         ITYP=4
       ELSE
@@ -52,7 +52,7 @@ C-
 C-
 C-.....COPY PROPER WEIGHTING FUNCTIONS.....
 C-
-c      IF(NCNO .EQ. NCN) GO TO 95
+c      IF(NCNO == NCN) GO TO 95
       CALL SAN(NCN)
 C-
 C-.....COMPUTE LOCAL CORDS.....
@@ -76,7 +76,7 @@ C- COMPUTE INTERMEDIATE COEFS. AND ELEMENT TRANSPORT MATRIX
 C-
       DO 200 II=1,4
         I=IPNT(II,ITYP)
-        IF(I .EQ. 0) GO TO 200
+        IF(I == 0) GO TO 200
 c      write(75,*) 'da',(da(k,i),k=1,20)
 c      write(75,*) 'db',(db(k,i),k=1,20)
 c      write(75,*) 'dc',(dc(k,i),k=1,20)
@@ -133,7 +133,7 @@ C-
   145 CONTINUE
 C-
       DO 160 J=1,NCN
-        IF(IL(J,ILK) .NE. 0) THEN
+        IF(IL(J,ILK) /= 0) THEN
           ML=IL(J,ILK)
           MH=IH(J,ILK)
           XM(ML)=XM(ML)+XN(J)/2.
@@ -155,8 +155,8 @@ C-
         DRODXN(K)=0.0
         DRODYN(K)=0.0
         DO 180 M=1,NCN
-ccc        IF(IL(J,ILK) .EQ. 0) THEN
-          IF(IL(M,ILK) .EQ. 0) THEN
+ccc        IF(IL(J,ILK) == 0) THEN
+          IF(IL(M,ILK) == 0) THEN
             MR=NOP(NN,M)
             DRODXN(K)=DRODXN(K)+DMX(M)*DEN(MR)
             DRODYN(K)=DRODYN(K)+DMY(M)*DEN(MR)
@@ -171,11 +171,11 @@ C
 C
 C  Calculate DRODXN, DRODYN for Surface nodes
 C
-      IF (NN .LE. NEM)  THEN
+      IF (NN <= NEM)  THEN
 C
         DO 1200 II=1,4
           I=ITOP(II,ITYP)
-          IF(I .EQ. 0) GO TO 1200
+          IF(I == 0) GO TO 1200
 c      write(75,*) 'da',(da(k,i),k=1,20)
 c      write(75,*) 'db',(db(k,i),k=1,20)
 c      write(75,*) 'dc',(dc(k,i),k=1,20)
@@ -232,7 +232,7 @@ C-
  1145   CONTINUE
 C-
         DO 1160 J=1,NCN
-          IF(IL(J,ILK) .NE. 0) THEN
+          IF(IL(J,ILK) /= 0) THEN
             ML=IL(J,ILK)
             MH=IH(J,ILK)
             XM(ML)=XM(ML)+XN(J)/2.
@@ -254,8 +254,8 @@ C-
         DRODXN(K)=0.0
         DRODYN(K)=0.0
         DO 1180 M=1,NCN
-ccc        IF(IL(J,ILK) .EQ. 0) THEN
-          IF(IL(M,ILK) .EQ. 0) THEN
+ccc        IF(IL(J,ILK) == 0) THEN
+          IF(IL(M,ILK) == 0) THEN
             MR=NOP(NN,M)
             DRODXN(K)=DRODXN(K)+DMX(M)*DEN(MR)
             DRODYN(K)=DRODYN(K)+DMY(M)*DEN(MR)
@@ -274,10 +274,10 @@ C ..... INTEGRATE VERTICALLY TO FORM NODAL INT OF DRODX
 C
       DO 300 II=1,4
         I=IPNT(II,ITYP)
-        IF(I .EQ. 0) GO TO 300
+        IF(I == 0) GO TO 300
         ITP=ITOP(II,ITYP)
         NTOP=NOP(NN,ITP)
-        IF(NTOP .LE. NPM) THEN
+        IF(NTOP <= NPM) THEN
           DROXIN(NTOP)=0.
           DROYIN(NTOP)=0.
         ENDIF
@@ -296,7 +296,7 @@ c     +             DROYIN(NOP(NN,I))
 cipk nov96 add loop to store corner node values
       DO II=1,8
         JJ=INSEQ(II,ILK)
-        IF(JJ .GT. 0) THEN
+        IF(JJ > 0) THEN
           DROXINS(NN,II)=DROXIN(NOP(NN,JJ))
           DROYINS(NN,II)=DROYIN(NOP(NN,JJ))
         ENDIF

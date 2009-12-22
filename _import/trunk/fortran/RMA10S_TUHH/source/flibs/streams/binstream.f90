@@ -54,7 +54,7 @@ subroutine binstream_init( lun, ierr )
 
     open( lun, status = 'scratch', access = 'direct', recl = 1 )
     write( lun, rec=1, iostat = ierr ) c(1:1)
-    if ( ierr .ne. 0 ) then
+    if ( ierr /= 0 ) then
         return
     endif
     !
@@ -62,7 +62,7 @@ subroutine binstream_init( lun, ierr )
     ! is 1 byte, otherwise we "know" the length is 4 bytes
     !
     write( lun, rec=1, iostat = ierr ) c(1:4)
-    if ( ierr .ne. 0 ) then
+    if ( ierr /= 0 ) then
         reclen = 4
     else
         reclen = 1
@@ -71,7 +71,7 @@ subroutine binstream_init( lun, ierr )
         ! One last check: it is indeed 4 bytes?
         !
         write( lun, rec=1, iostat = ierr ) c(1:5)
-        if ( ierr .eq. 0 ) then
+        if ( ierr == 0 ) then
             ierr = 1
         endif
     endif
@@ -94,13 +94,13 @@ subroutine binstream_open( stream, lun, filename, error )
 
     integer                      :: ierr
 
-    if ( reclen .eq. 0 ) then
+    if ( reclen == 0 ) then
         call binstream_init( lun, ierr )
     endif
 
     open( lun, file=filename, access='direct', recl=reclen, iostat=ierr )
 
-    if ( ierr .eq. 0 ) then
+    if ( ierr == 0 ) then
         error = .false.
         stream%lun    = lun
         stream%record = 1
@@ -199,14 +199,14 @@ subroutine binstream_read_char( stream, char, error )
     ! record
     !
     read( stream%lun, rec=stream%record, iostat=ierr ) buffer
-    if ( ierr .ne. 0 ) then
+    if ( ierr /= 0 ) then
         error = .true.
         return
     endif
 
     char(1:) = buffer(stream%offset+1:)
 
-    if ( len(char) .gt. lbuf-stream%offset ) then
+    if ( len(char) > lbuf-stream%offset ) then
         p = len(buffer) - stream%offset + 1
         stream%offset = 0
     else
@@ -218,11 +218,11 @@ subroutine binstream_read_char( stream, char, error )
     ! Now read the full records within range
     !
     left = len(char) - p + 1
-    do while ( left .gt. lbuf )
+    do while ( left > lbuf )
         stream%record = stream%record + 1
 
         read( stream%lun, rec=stream%record, iostat=ierr ) buffer
-        if ( ierr .ne. 0 ) then
+        if ( ierr /= 0 ) then
             error = .true.
             return
         endif
@@ -238,9 +238,9 @@ subroutine binstream_read_char( stream, char, error )
     stream%offset = left
     stream%record = stream%record + 1
 
-    if ( left .gt. 0 ) then
+    if ( left > 0 ) then
         read( stream%lun, rec=stream%record, iostat=ierr ) buffer
-        if ( ierr .ne. 0 ) then
+        if ( ierr /= 0 ) then
             error = .true.
             return
         endif
@@ -340,7 +340,7 @@ subroutine binstream_write_char( stream, char, error )
     ! record
     !
     read( stream%lun, rec=stream%record, iostat=ierr ) buffer
-    if ( ierr .ne. 0 ) then
+    if ( ierr /= 0 ) then
         error = .true.
         return
     endif
@@ -348,12 +348,12 @@ subroutine binstream_write_char( stream, char, error )
     buffer(stream%offset+1:) = char(1:)
 
     write( stream%lun, rec=stream%record, iostat=ierr ) buffer
-    if ( ierr .ne. 0 ) then
+    if ( ierr /= 0 ) then
         error = .true.
         return
     endif
 
-    if ( len(char) .gt. lbuf-stream%offset ) then
+    if ( len(char) > lbuf-stream%offset ) then
         p = len(buffer) - stream%offset + 1
         stream%offset = 0
     else
@@ -365,12 +365,12 @@ subroutine binstream_write_char( stream, char, error )
     ! Now write the full records within range
     !
     left = len(char) - p + 1
-    do while ( left .gt. lbuf )
+    do while ( left > lbuf )
         stream%record = stream%record + 1
 
         buffer = char(p:p+lbuf-1)
         write( stream%lun, rec=stream%record, iostat=ierr ) buffer
-        if ( ierr .ne. 0 ) then
+        if ( ierr /= 0 ) then
             error = .true.
             return
         endif
@@ -385,9 +385,9 @@ subroutine binstream_write_char( stream, char, error )
     stream%offset = left
     stream%record = stream%record + 1
 
-    if ( left .gt. 0 ) then
+    if ( left > 0 ) then
         read( stream%lun, rec=stream%record, iostat=ierr ) buffer
-        if ( ierr .ne. 0 ) then
+        if ( ierr /= 0 ) then
             error = .true.
             return
         endif
@@ -395,7 +395,7 @@ subroutine binstream_write_char( stream, char, error )
         buffer(1:left) = char(p:)
 
         write( stream%lun, rec=stream%record, iostat=ierr ) buffer
-        if ( ierr .ne. 0 ) then
+        if ( ierr /= 0 ) then
             error = .true.
             return
         endif

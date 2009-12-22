@@ -145,7 +145,7 @@ MN: DO i  = 1,LR                                                ! loop over two 
  end if
 
 
-  IF (.NOT.PRESENT(Submerged_Overhang)) THEN
+  IF ( .NOT. PRESENT(Submerged_Overhang)) THEN
 
  ! COMPUTATION OF APPARENT COHESION ALONG THE SLIP SURFACE; WHICH IS ASSUMED TO BE ALONG THE EXTRAPOLATION LINE:
  ! LATER A MORE REALISTIC MODEL OF SLIP SURFACE CAN BE ADDED; IN WHICH THIS SLOPE IS DETERMINED BASED ON THE MOST
@@ -159,7 +159,7 @@ MN: DO i  = 1,LR                                                ! loop over two 
 ! IN THE CASE OF LINEAR DISTRIBUTION, ASSUMES A MAXIMUM NEGATIVE PORE PRESSURE
 ! OF -EXPO1 AT ELEVATION OF 1m ABOVE WATER TABLE, BEYOND WHICH IT REMAINS CONSTANT. 
  
- IF( ( EXPO3 == 0.).AND. (EXPO2 == 0.) ) THEN
+ IF( ( EXPO3 == 0.) .AND. (EXPO2 == 0.) ) THEN
  
    BASE_SUCTION    = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
  
@@ -295,20 +295,20 @@ SRT: DO
          
          END IF  
 
-          IF ((CANTI_PR%PRNODE(K - 1)%FE_NODENUMBER /= 0 ).AND. &
+          IF ((CANTI_PR%PRNODE(K - 1)%FE_NODENUMBER /= 0 ) .AND. &
             & (CANTI_PR%PRNODE(K)%FE_NODENUMBER == 0 ) )  THEN
               
               CAll SHIFTNOSE 
               K = K - 1
    
-          ELSEIF ( (CANTI_PR%PRNODE(K)%FE_NODENUMBER /= 0 ).AND. &
+          ELSEIF ( (CANTI_PR%PRNODE(K)%FE_NODENUMBER /= 0 ) .AND. &
            &       (CANTI_PR%PRNODE(K - 1)%FE_NODENUMBER == 0 )) THEN   
    
               CAll SHIFTNOSE
               CANTI_PR%PRNODE(K - 1) = CANTI_PR%PRNODE(K)
               K = K - 1
    
-          ELSEIF ( (CANTI_PR%PRNODE(K)%FE_NODENUMBER /= 0 ).AND. &
+          ELSEIF ( (CANTI_PR%PRNODE(K)%FE_NODENUMBER /= 0 ) .AND. &
            &       (CANTI_PR%PRNODE(K - 1)%FE_NODENUMBER /= 0 ) )THEN  
    
                WRITE (*,*) ' WARNING!!, IN CONTILINE NUMBER ' ,CANTI_PR%CL_NUMBER , & 
@@ -367,7 +367,7 @@ INTEGER        , INTENT (IN)    :: L , M !,N    !30APRIL2009, 12:47
 INTEGER        , INTENT (INOUT) :: N            !30APRIL2009, 12:47
 TYPE (PROFILE) , INTENT (INOUT) :: OUTPROFILE
 ! IN FACT THE FOLLOWING IF - STRUCTURES SEEMS NOT TO BE NECESSARY SINCE; IN THE CASE OF COINCIDENCE, INTSECT-NODE COMPRISES THE PROFILENODE ITSELF.
-  IF ( .NOT.COINCIDE(M) )  THEN                             ! IF THE CURRENT NODE IS THE ONE FOLLOWING INTERSECTION POINT AND THIS POINT DOESNOT COINCIDES WITH A PROFILE NODE:
+  IF ( .NOT. COINCIDE(M) )  THEN                             ! IF THE CURRENT NODE IS THE ONE FOLLOWING INTERSECTION POINT AND THIS POINT DOESNOT COINCIDES WITH A PROFILE NODE:
                                                             ! THEN INCLUDE THIS NODE AS AN EXTRANODE.
    OUTPROFILE%PRNODE(L) = INTSECT_NODE(M)
 
@@ -443,7 +443,7 @@ REAL (KIND = 8)              :: AREA_UNDER_CURVE, REL_HEIGHT_START, REL_HEIGHT_E
 
 SUCTIONHEIGHT = 0.
 
-IF( (EXPO3==0.).and.(EXPO2==0.) )THEN
+IF( (EXPO3==0.) .AND. (EXPO2==0.) )THEN
 
 SUCTIONHEIGHT = (WATER_LEVEL - ELEVATION) * EXPO1
 
@@ -530,8 +530,8 @@ end module cantilever
   ! compute the contributing area of the connected elements to the node n
   DO I=1,12         ! over all neighboured elements I to node N
     S = ELTON(N,I)   !Elton is the element number´connected to node N (I =1,12 elements can be connected to a node)
-    IF(S .GT. 0) THEN
-      IF(NCORN(S) .EQ. 8) THEN    ! for quadrangle elements (NCORN = number of corner nodes including midside nodes)
+    IF(S > 0) THEN
+      IF(NCORN(S) == 8) THEN    ! for quadrangle elements (NCORN = number of corner nodes including midside nodes)
         FACT=4.
       ELSE                        ! for triangle elements
         FACT=3.
@@ -598,7 +598,7 @@ do I = 1,j
 
 call integral_trapz(n1,n2,I,s, a, b, c)
 
-if (s == 0. .and. olds== 0. ) exit
+if (s == 0. .AND. olds== 0. ) exit
 if (ABS(s-olds)<= tolerance) exit
 
 olds=s

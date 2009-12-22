@@ -49,8 +49,8 @@ CIPK JUN06
       ALLOCATABLE TRIBAREA(:),ELTON(:,:),deltab(:),nsrc(:)
      +           ,IEDONE(:),NKEY1(:),EXTLD(:),trslp(:),EXTLDEL(:)
 
-	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_EL    !Friction Factor for each element
-	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_KN    !Friction Factor for each node
+      REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_EL    !Friction Factor for each element
+      REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_KN    !Friction Factor for each node
       ! HN Geothechnical properties of sand
       ! critical_slope    ::   Unsaturated critical slope of consolidated sand
       ! crepose           ::   Saturated critical slope of consolidated sand 

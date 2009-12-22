@@ -227,7 +227,7 @@ init2: do j = 1, 2
 end do init2
 
 !initialize gravitation factor for unit system
-IF (GRAV .LT. 32.)  THEN
+IF (GRAV < 32.)  THEN
   grav = GRAV
 ELSE
   grav = GRAV/2.208
@@ -278,11 +278,11 @@ do i = 1, 3, 2
   ENDDO QCheck
 
   !ERROR - messages for missing polynom data
-  if (PolyTest == 1 .and. (.NOT. IntPolProf(n1))) then
+  if (PolyTest == 1 .AND. ( .NOT. IntPolProf(n1))) then
     call ErrorMessageAndStop (1104, N1, cord (N1, 1), cord (N1, 2))
-  ELSEIF (PolyTest == 2 .and. (.not. IntPolProf (n1))) then
+  ELSEIF (PolyTest == 2 .AND. ( .NOT. IntPolProf (n1))) then
     call ErrorMessageAndStop (1105, N1, cord (N1, 1), cord (N1, 2))
-  ELSEIF (PolyTest == 3 .and. (.not. IntPolProf (n1))) then
+  ELSEIF (PolyTest == 3 .AND. ( .NOT. IntPolProf (n1))) then
     call ErrorMessageAndStop (1106, N1, cord (N1, 1), cord (N1, 2))
   endif
 enddo
@@ -306,7 +306,7 @@ DO N = 1, NCN
 enddo
 
 !for 1D-2D-transition elements
-IF (NCN == 5  .AND.  IMAT (NN) .LT. 900) NCN = 3
+IF (NCN == 5 .AND. IMAT (NN) < 900) NCN = 3
 
 !residual vector and Jacobi-Matrix (derivatives) arrays
 NEF = NCN * NDF
@@ -346,7 +346,7 @@ DO k = 1, ncn
   ANGDIF = TH (NN) - ALFA (N)
 
   !Set a direction factor in dependency of the defintion direction at a node and of an element
-  IF (ABS (ANGDIF) > 1.5708  .AND.  ABS (ANGDIF) < 4.71779) THEN
+  IF (ABS (ANGDIF) > 1.5708 .AND. ABS (ANGDIF) < 4.71779) THEN
     QFACT (K)  = -1.0
     QQFACT (K) = -1.0
   ELSE
@@ -367,7 +367,7 @@ DO k = 1, ncn
   if (icyc > 0) dvel_res_dt (k) = vdot (1, n) * COS (alfa (n)) + vdot (2, n) * SIN (alfa (n))
 
   !updating length, if kilometres are given
-  if (kmx(n) /= -1.0 .and. kmx(nr) /= -1.0 .and. nr /= n) then
+  if (kmx(n) /= -1.0 .AND. kmx(nr) /= -1.0 .AND. nr /= n) then
     !Scaling the element-length
     !write(*,*) nn, k
     xl(3) = xl(k) / ABS (xl(k)) * ABS ((kmx(n3) - kmx(n1)) * 1000)
@@ -391,7 +391,7 @@ EINA = EINX (NN) * CX + EINY (NN) * SA
 TFR=TEL/ABS(XL(3))
 
 !CIPK MAY04 RESET ELEMENT INFLOW
-IF (INOFLOW (NN) .EQ. 0) THEN
+IF (INOFLOW (NN) == 0) THEN
   SIDFQ = SIDF (NN)
 ELSE
   SIDFQ = 0.
@@ -403,7 +403,7 @@ sidft = sidfq
 
 !Question: Shouldn't be the form of the other coefs be used, i.e. the derivative form of the bed coordinates
 !bedslope
-if (kmx(n1) == 0.0 .and. kmx(n3) == 0.0) then
+if (kmx(n1) == 0.0 .AND. kmx(n3) == 0.0) then
   sbot = (ao(n1) - ao(n3)) / (  (cord(n3,1) - cord(n1,1))*COS(th(nn)) + (cord(n3,2) - cord(n1,2))*SIN(th(nn)))
 else
   sbot = (ao(n1) - ao(n3)) / xl(3)
@@ -421,9 +421,9 @@ if (ntx == 1) then
     h = vel(3, n)
 
     !test for valid water depth range
-    if (h < hhmin(n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
+    if (h < hhmin(n) .AND. ntx == 1 .AND. ( .NOT. IntPolProf (n))) then
       WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') less than Hmin', hhmin(n)
-    ELSEIF (h > hhmax (n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
+    ELSEIF (h > hhmax (n) .AND. ntx == 1 .AND. ( .NOT. IntPolProf (n))) then
       WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') greater than Hmax', hhmax(n)
     end if
     
@@ -438,7 +438,7 @@ if (ntx == 1) then
 
     !look for the position of the polynomial
     !TODO: This should be replaced by a binary search
-    if (.NOT. IntPolProf(n)) then
+    if ( .NOT. IntPolProf(n)) then
       PPA(1) = findPolynom (polyRangeA (n, :), vel(3, n), PolySplitsA (n), cord(n,1), cord (n,2), n)
       PPA(2) = PPA(1)
     else
@@ -447,7 +447,7 @@ if (ntx == 1) then
     end if
 
 
-    if (.not. IntPolProf (n)) then
+    if ( .NOT. IntPolProf (n)) then
       !A(h)
       ah(n)    = CalcPolynomial (apoly (PPA (1), n, 0:4), h, ubound (apoly, 3))
     else
@@ -457,7 +457,7 @@ if (ntx == 1) then
     endif
 
     !Check for critical/ subcritical discharge
-    if (vel_res(j) / sqrt (grav * h) .gt. 1) WRITE (*,*) 'Supercritical flow at node ', n, kmx(n)
+    if (vel_res(j) / sqrt (grav * h) > 1) WRITE (*,*) 'Supercritical flow at node ', n, kmx(n)
 
     dahdh(n) = 0.0D0
 
@@ -514,7 +514,7 @@ Gaussloop: DO I = 1, NGP
   DNX(2)=(4.-8.*AFACT(I))/TEMP
   DNX(3)=(4.*AFACT(I)-1.)/TEMP
 
-  IF(NTX .EQ. 0) THEN
+  IF(NTX == 0) THEN
     DYDX=YL(2)*DNX(2)+YL(3)*DNX(3)
     ALF=ATAN(DYDX)
     CSALF=COS(ALF)
@@ -522,7 +522,7 @@ Gaussloop: DO I = 1, NGP
   ELSE
     TEMP=TEMP*TFR
   ENDIF
-  IF(NTX .NE. 0) THEN
+  IF(NTX /= 0) THEN
     DO J=1,3
       DNX(J)=DNX(J)/TFR
     enddo
@@ -534,7 +534,7 @@ Gaussloop: DO I = 1, NGP
   DMX(1) = -1.0 / TEMP
   DMX(2) = 1. / TEMP
 
-  IF(NTX .NE. 0) THEN
+  IF(NTX /= 0) THEN
     !Questionable: Why do we not use just one local variable for the parameters at the Gauss-nodes. They are just used once
     H = VEL (3, N1) * XM (1) + VEL (3, N3) * XM (2)
   ELSE
@@ -548,7 +548,7 @@ Gaussloop: DO I = 1, NGP
   amu = amw
 
 
-  IF (NTX .EQ. 0) CYCLE gaussloop
+  IF (NTX == 0) CYCLE gaussloop
 !cipk nov97
 
   TVOL(NN) = TVOL (NN) + AMW
@@ -950,7 +950,7 @@ Gaussloop: DO I = 1, NGP
 !      &              - dmx(2) * (hhint(i) * aint2(i) * dFintdh2(i) - fint2(i) * aint2(i) + fint2(i) * hhint(i) * daintdh2(i))        &
 !      &                     / (hhint(i) * aint2(i))**2
 !
-!      if (testoutput == 3 .or. testoutput == 1) then
+!      if (testoutput == 3 .OR. testoutput == 1) then
 !        WRITE(*,*) 'Element: ', nn, 'GP: ', i
 !        WRITE(*,*) 'h: ', hhint(i)
 !        WRITE(*,*) 'zS: ', zsint(i)
@@ -1084,7 +1084,7 @@ Gaussloop: DO I = 1, NGP
 
   !Questionable: What is about this here?
   !EFa Nov06, Sprung an den Beginn der Gauss-Schleife für junction-Elemente
-  !IF(MOD(immt,100).gt.90) GO TO 500
+  !IF(MOD(immt,100) > 90) GO TO 500
 
   !*********************************************************************************************************************************
   !MOMENTUM over DEPTH   MOMENTUM over DEPTH   MOMENTUM over DEPTH   MOMENTUM over DEPTH   MOMENTUM over DEPTH   MOMENTUM over DEPTH
@@ -1313,16 +1313,16 @@ Gaussloop: DO I = 1, NGP
 
 ENDDO gaussloop
 
-IF(NTX .EQ. 0) RETURN
-IF(NTX .EQ. 3) RETURN
+IF(NTX == 0) RETURN
+IF(NTX == 3) RETURN
 
-!IF(MOD(IMMT,100) .GT. 90) GO TO 1305
+!IF(MOD(IMMT,100) > 90) GO TO 1305
 
 !Boundary Conditions (Forces) - Waterdepth H
 HBCAssign: DO L=1, NCN, 2
   N1=NCON(L)
 
-  IF(MOD(NFIX(N1)/100,10) .EQ. 2) THEN
+  IF(MOD(NFIX(N1)/100,10) == 2) THEN
 
 
     speclocal = spec(n1, 3)
@@ -1404,8 +1404,8 @@ HBCAssign: DO L=1, NCN, 2
       estifm (na, na + 2) = estifm (na, na + 2) - ppl * dzsistdh
     ENDIF
 
-  ELSEIF (IBN(N1) .GE. 3) THEN
-    IF (NREF(N1) .EQ. 0) THEN
+  ELSEIF (IBN(N1) >= 3) THEN
+    IF (NREF(N1) == 0) THEN
       NA = (L-1) * NDF + 1
       DO KK=1,NEF
         ESTIFM (NA,KK) = 0.
@@ -1490,7 +1490,7 @@ ENDDO QBCAssign
 
 !Correction for Coupling
 TransitionCorrection: do l = 1, ncn, 2
-  if (byparts == 2 .or. byparts == 3) EXIT  TransitionCorrection
+  if (byparts == 2 .OR. byparts == 3) EXIT  TransitionCorrection
   !if (byparts == 1) EXIT couplingcorrection
 
   !get node number
@@ -1552,7 +1552,7 @@ TransitionCorrection: do l = 1, ncn, 2
       !set derivative over depth
       estifm (irw, irh) = - VT * dahdh(m) * areacorrection
     !1D-2D:
-    ELSEIF (TransLines (i, 4) == 2 .or. TransLines (i, 4) == 3) then
+    ELSEIF (TransLines (i, 4) == 2 .OR. TransLines (i, 4) == 3) then
       !set residual entry for 1D-node - water stage restriction
       WRITE(*,*) spec(m, 3), VEL (3, m), ao(m), VEL (3, m) + ao(m)
       f (irw)           = VEL (3, m) - (spec(m, 3) - ao (m))
@@ -1571,7 +1571,7 @@ outer: DO I=1,NCN
   inner: DO K=1,NDF
     IA=IA+1
     JA=NBC(J,K)
-    IF(JA.EQ.0) CYCLE inner
+    IF(JA == 0) CYCLE inner
     R1(JA)=R1(JA)+F(IA)
   ENDDO inner
 enddo outer
@@ -1606,7 +1606,7 @@ enddo outer
 !    writematrix: do i = 1, 11, 2
 !      if (i == 7) CYCLE writematrix
 !
-!      if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
+!      if (MOD(i,4) == 1 .OR. MOD(i,4) == 2) then
 !        IA = nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4))
 !        if (f (i) /= r1(ia)) then
 !          WRITE(9919, 1235) ia, (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i), r1(ia)
@@ -1652,7 +1652,7 @@ RETURN
 !TODO
 !nis,nov07: This code should be for calling the control structure subroutine, but it can never reach this place, because imat can only be 89 in this
 !           subroutine
-IF(IMAT(NN) .GT. 903) THEN
+IF(IMAT(NN) > 903) THEN
 
   !Find position in polynom range definitions
   PP(1) = FindPolynom (PolyrangeA (n1, :), vel(3, n1), PolySplitsA (n1), cord (N1, 1), cord (N1, 2), N1)

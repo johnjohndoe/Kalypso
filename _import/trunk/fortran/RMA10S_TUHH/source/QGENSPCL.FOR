@@ -17,16 +17,16 @@ C-
 c
       DATA VOID/-1.E20/
 C
-      IF (IFIRST .EQ. 0)  THEN
+      IF (IFIRST == 0)  THEN
          ALLOCATE (IQSPCL(MAXP))
          IQSPCL = 0
          IFIRST = 1
       ENDIF
 
-      IF (IKEY .EQ. 1)  GO TO 600
+      IF (IKEY == 1)  GO TO 600
 C
 C
-      IF (IFIRST .EQ. 0)  THEN
+      IF (IFIRST == 0)  THEN
          ALLOCATE (IQSPCL(MAXP))
          IQSPCL = 0
          IFIRST = 1
@@ -36,35 +36,35 @@ C...... Calculate total projected area
 C-
       MAX = LMT(J)
 CIPK FEB01
-	IF(MAX .EQ. 0) THEN
+      IF(MAX == 0) THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
-	  WRITE(75,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
-	  WRITE(75,*) 'EXECUTION TERMINATED'
-	  WRITE(*,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
-	  WRITE(*,*) 'EXECUTION TERMINATED'
-	  stop
-	ENDIF
+        WRITE(75,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
+        WRITE(75,*) 'EXECUTION TERMINATED'
+        WRITE(*,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
+        WRITE(*,*) 'EXECUTION TERMINATED'
+        stop
+      ENDIF
       STQT(J) = THET
-      IF (MAX .EQ. 1) THEN
+      IF (MAX == 1) THEN
 C-
 C...... This is for 1-D element
 C-
          K = 0
          DO 120 M=1,NE
             K = K + 1
-            IF (NOP(K,3) .EQ. LINE(J,1)) THEN
+            IF (NOP(K,3) == LINE(J,1)) THEN
                NA = NOP(K,3)
                NC = NOP(K,1)
-               IF (NC .GT. NPM) GO TO 120
+               IF (NC > NPM) GO TO 120
                GO TO 127
              ENDIF
 C
-             IF (NOP(K,1) .EQ. LINE(J,1)) THEN
+             IF (NOP(K,1) == LINE(J,1)) THEN
                 NA = NOP(K,1)
                 NC = NOP(K,3)
-                IF (NC .GT. NPM) GO TO 120
+                IF (NC > NPM) GO TO 120
                 GO TO 127
              ENDIF
   120    CONTINUE
@@ -74,7 +74,7 @@ C
          NDP = NDEP(NA)
          N1 = NREF(NA) + 1
          NV = NDEP(NA) + N1 - 2
-         IF (N1 .GT. 1)  THEN
+         IF (N1 > 1)  THEN
             IQSPCL(NA) = 0
             DO I=N1,NV
                IQSPCL(I) = 0
@@ -91,7 +91,7 @@ C
 !Add midside node for polynom approach
 !           !EFa Nov06, Sonderfall für Teschke-1D-Elemente
 !           !nis,feb07: Allow for numbered FFF midsides
-!           !if (nm.EQ.-9999) then
+!           !if (nm == -9999) then
 !           if (nm < -1000) then
 !           !-
 !             dx=cord(nc,1)-cord(na,1)
@@ -100,7 +100,7 @@ C
 !Add midside node for polynom approach
 !-
 
-             IF(CORD(NM,1) .GT. VOID) THEN
+             IF(CORD(NM,1) > VOID) THEN
                DX=2.*(CORD(NM,1)-CORD(NA,1))-0.5*(CORD(NC,1)-CORD(NA,1))
                DY=2.*(CORD(NM,2)-CORD(NA,2))-0.5*(CORD(NC,2)-CORD(NA,2))
              ELSE
@@ -109,25 +109,25 @@ C
              ENDIF
          BEETA = ATAN2(DY,DX)
          WRITE(*,*) 'NA,NM,NC,DX,DY,,BEETA',NA,NM,NC,DX,DY,BEETA
-         IF (ABS(BEETA-THET) .GT. 1.570796  .AND.
-     +         ABS(BEETA-THET) .LT. 4.712394) BEETA=BEETA+3.141596
+         IF (ABS(BEETA-THET) > 1.570796 .AND. 
+     +         ABS(BEETA-THET) < 4.712394) BEETA=BEETA+3.141596
          SPEC(NA,1) = QREQ * COS(BEETA)
          SPEC(NA,2) = QREQ * SIN(BEETA)
          NFIX(NA) = 31000
 C
-         IF (QQAL(1) .GE. 0.) THEN
+         IF (QQAL(1) >= 0.) THEN
             NFIX(NA) = NFIX(NA) + 10
             SPEC(NA,4) = QQAL(1)
             VEL(4,NA) = QQAL(1)
          ENDIF
 C
-         IF (QQAL(2) .GE. 0.) THEN
+         IF (QQAL(2) >= 0.) THEN
             NFIX(NA) = NFIX(NA) + 1
             SPEC(NA,5) = QQAL(2)
             VEL(5,NA) = QQAL(2)
          ENDIF
 C
-         IF (QQAL(3) .GE. 0.) THEN
+         IF (QQAL(3) >= 0.) THEN
             NFIX1(NA) = 1
             SPEC(NA,6) = QQAL(3)
             VEL(6,NA) = QQAL(3)
@@ -146,13 +146,13 @@ C-
   103    CONTINUE
 C
          DO 105 N=1,NE
-            IF (IMAT(N) .LT. 1) GO TO 105
+            IF (IMAT(N) < 1) GO TO 105
 cipk oct98 update to f90
             NM = ABS(IMAT(N))
-            IF (NM .GT. 900) GO TO 105
-            IF (ORT(NM,1) .EQ. 0.) GO TO 105
+            IF (NM > 900) GO TO 105
+            IF (ORT(NM,1) == 0.) GO TO 105
             NCN = NCORN(N)
-            IF (NCN .EQ. 5) NCN=3
+            IF (NCN == 5) NCN=3
             DO 104 M=1,NCN
 cipk oct98 update to f90
 
@@ -160,7 +160,7 @@ cipk oct98 update to f90
 !Add midside node for polynom approach
 !              !EFa Nov06, Sonderfall für Teschke-1D-Elemente
 !              !nis,feb07: Allow for numbered FFF midsides
-!              !if (nop(n,2).NE.-9999) then
+!              !if (nop(n,2) /= -9999) then
 !              if (nop(n,2) > -1000) then
 !              !-
               K=ABS(NOP(N,M))
@@ -180,7 +180,7 @@ C
             DX = CORD(NC,1)-CORD(NA,1)
             DY =-(CORD(NC,2)-CORD(NA,2))
             !EFa Nov06, Sonderfall für Teschke-1D-Elemente mit Kilometrierung
-            if (kmx(na).NE.-1.and.kmx(nc).NE.-1) then
+            if (kmx(na) /= -1 .AND. kmx(nc) /= -1) then
               !nis,feb07: Scaling kilometers to meters
               !xl=ABS(kmx(na)-kmx(nc))
               xl=ABS(kmx(na)-kmx(nc)) * 1000
@@ -200,13 +200,13 @@ c
                NDP = NDEP(ND)
                N1 = NREF(ND) + 1
                NV = NDEP(ND) + N1 - 2
-               IF (N1 .GT. 1)  THEN
+               IF (N1 > 1)  THEN
                   IQSPCL(ND) = 0
                   DO I=N1,NV
                      IQSPCL(I) = 0
                   ENDDO
 c
-                  IF (MOD(KK,2) .NE. 0)   THEN
+                  IF (MOD(KK,2) /= 0)   THEN
                      LDX = NREF(ND) + 1 + 2*(nl-1) 
                      IQSPCL(LDX) = 1 
                   ENDIF 
@@ -230,23 +230,23 @@ C-
             D1 = VEL(3,NA)
             SPEC(NA,1) = VEST*D1*COS(THET)
             SPEC(NA,2) = VEST*D1*SIN(THET)
-            IF (SPEC(NA,1) .NE. 0.) THEN
+            IF (SPEC(NA,1) /= 0.) THEN
                NFIX(NA) = 31000
             ELSE
                NFIX(NA) = 13000
             ENDIF
-            IF (QQAL(1) .GE. 0.) THEN
+            IF (QQAL(1) >= 0.) THEN
                NFIX(NA) = NFIX(NA)+10
                SPEC(NA,4) = QQAL(1)
                VEL(4,NA) = QQAL(1)
             ENDIF
-            IF (QQAL(2) .GE. 0.) THEN
+            IF (QQAL(2) >= 0.) THEN
                NFIX(NA) = NFIX(NA)+1
                SPEC(NA,5) = QQAL(2)
                VEL(5,NA) = QQAL(2)
             ENDIF
 C
-            IF (QQAL(3) .GE. 0.) THEN
+            IF (QQAL(3) >= 0.) THEN
                NFIX1(NA) = 1
                SPEC(NA,6) = QQAL(3)
                VEL(6,NA) = QQAL(3)
@@ -261,24 +261,24 @@ C-
 C...... Locate element with this node
 C-
             DO 340 N=1,NE
-               IF (IMAT(N) .EQ. 0) GO TO 340
+               IF (IMAT(N) == 0) GO TO 340
                NCN = NCORN(N)
                DO 310 MM=1,NCN
                   M = MM
 cipk oct98 update to f90
-                  IF (ABS(NOP(N,M)) .EQ. NA) GO TO 315
+                  IF (ABS(NOP(N,M)) == NA) GO TO 315
   310          CONTINUE
                GO TO 340
 C-
 C....... Found a match node. Now determine side for parallel flow
 C-
-  315          IF (K .EQ. 1) THEN
+  315          IF (K == 1) THEN
                   KK = 2
                ELSE
                   KK = MAX-1
                ENDIF
                MLW = M-1
-               IF (MM .EQ. 1) THEN
+               IF (MM == 1) THEN
                   MLW = NCN
                ELSE
                   MLW = M-1
@@ -287,21 +287,21 @@ C
 cipk oct98 update to f90
 cipk oct98               MLX = ABS(NOP(N,MLW))
                MSL = MOD(MLW+2,NCN)
-               IF (MSL .EQ. 0) MSL=NCN
+               IF (MSL == 0) MSL=NCN
                MFR = MOD(MLW+3,NCN)
 cipk oct98 update to f90
                MSL = ABS(NOP(N,MSL))
-               IF (MSL .EQ. LINE(J,KK)) GO TO 317
-               IF (IBN(MSL) .EQ. 1) GO TO 330
+               IF (MSL == LINE(J,KK)) GO TO 317
+               IF (IBN(MSL) == 1) GO TO 330
 C
   317          CONTINUE
 C
                MLW = MOD(M+1,NCN)
-               IF (MLW .EQ. 0) MLW=NCN
+               IF (MLW == 0) MLW=NCN
 cipk oct98 update to f90
 cipk oct98               MLX = ABS(NOP(N,MLW))
 C
-               IF (MLW .GT. 2) THEN
+               IF (MLW > 2) THEN
                   MSL = MLW-2
                   MFR = MLW-3
                ELSE
@@ -310,8 +310,8 @@ C
                ENDIF
 cipk oct98 update to f90
                MSL = ABS(NOP(N,MSL))
-               IF (MSL .EQ. LINE(J,KK)) GO TO 340
-               IF (IBN(MSL) .EQ. 1) GO TO 330
+               IF (MSL == LINE(J,KK)) GO TO 340
+               IF (IBN(MSL) == 1) GO TO 330
 C
                GO TO 340
 C
@@ -330,7 +330,7 @@ C-
 C-
 C...... Find angle of side that flow crosses
 C-
-               IF (K .EQ. 1) THEN
+               IF (K == 1) THEN
                   NAD = LINE(J,3)
                ELSE
                   NAD = LINE(J,MAX-2)
@@ -339,19 +339,19 @@ C-
 C
                DYA =-(CORD(NAD,2)-CORD(NA,2))
                AALFA = ATAN2(DXA,DYA)
-               IF (ABS(AALFA-THET) .GT. 1.570796  .AND.
-     +             ABS(AALFA-THET) .LT. 4.712394) THEN
+               IF (ABS(AALFA-THET) > 1.570796 .AND. 
+     +             ABS(AALFA-THET) < 4.712394) THEN
                       AALFA=AALFA+3.141596
                ENDIF
-               IF (ABS(AALFA-BEETA) .GT. 1.570796  .AND.
-     +             ABS(AALFA-BEETA) .LT. 4.712394) THEN
+               IF (ABS(AALFA-BEETA) > 1.570796 .AND. 
+     +             ABS(AALFA-BEETA) < 4.712394) THEN
                       BEETA=BEETA+3.141596
                ENDIF
             WRITE(*,*) 'ADJUST AALFA BEETA THET', NA,AALFA,BEETA,THET
 C-
 C...... Finally adjust flows
 C-
-               IF (COS(THET) .NE. 0.) THEN
+               IF (COS(THET) /= 0.) THEN
                   QMAG = SPEC(NA,1)*COS(AALFA-THET)
      &                        /(COS(THET)*COS(AALFA-BEETA))
                ELSE
@@ -368,7 +368,7 @@ C
   400    CONTINUE
       ENDIF
 C
-      IF (ICYC .GT. 0) THEN
+      IF (ICYC > 0) THEN
          DO 500 K=1,MAX
             NA = LINE(J,K)
             CALL BFORM(NA)
@@ -382,7 +382,7 @@ C
 C
 C  Assign flow to proper layer
       DO 610 N=1,NPM
-         IF (IQSPCL(N) .EQ. -1  .OR.  IQSPCL(N) .EQ. -2)  THEN
+         IF (IQSPCL(N) == -1 .OR. IQSPCL(N) == -2)  THEN
 C
 
             Q1 = SPEC(N,1)
@@ -393,25 +393,25 @@ C
 cipk dec02 fix NA should be N
             NV = NDEP(N) + N1 - 2
 C
-            IF (N1 .GT. 1)  THEN
+            IF (N1 > 1)  THEN
 C
                SUMZ = 0.
 C
                DO 620 K=N1,NV,2
                   NT = K-1
 cipk dec02 fix NA should be N
-                  IF (K .EQ. N1)  NT = N
+                  IF (K == N1)  NT = N
                   NM = K
                   NB = K+1
                   DZ = CORD(NT,3)-CORD(NB,3)
                   SUMZ = SUMZ + DZ
-                  IF (IQSPCL(K) .EQ. 1) CZ = DZ
+                  IF (IQSPCL(K) == 1) CZ = DZ
   620          CONTINUE
 C
                QFCTR = SUMZ/CZ
-               IF (IQSPCL(N) .EQ. -1)   THEN
+               IF (IQSPCL(N) == -1)   THEN
                   QFCTR = QFCTR * 1.5
-               ELSEIF (IQSPCL(N) .EQ. -2)   THEN
+               ELSEIF (IQSPCL(N) == -2)   THEN
 c                  QFCTR = QFCTR * 1.5/.8777
                   QFCTR = QFCTR * 1.5
                ELSE
@@ -423,35 +423,35 @@ cipk sep04
                ENDIF
                
 CIPK DEC02
-               IF(IQSPCL(N1) .EQ. 1) THEN
-	           SPEC(N,1)=0.
-	           SPEC(N,2)=0.
-	         ELSE
+               IF(IQSPCL(N1) == 1) THEN
+                 SPEC(N,1)=0.
+                 SPEC(N,2)=0.
+               ELSE
                  SPEC(N,1) = 0. 
                  SPEC(N,2) = 0.
                  NFIX(N)=31000
                  NFIX1(N)=0
-	         ENDIF
-	         NSPL(N)=2
+               ENDIF
+               NSPL(N)=2
 C
                DO 630 K=N1,NV
-                  IF (IQSPCL(K) .EQ. 1)  THEN
+                  IF (IQSPCL(K) == 1)  THEN
                      SPEC(K,1) = QFCTR * Q1
 CFES   1/16/95                     SPEC(K,2) = QFCTR * Q2
 CFES   1/16/95 NEXT LINE ADDED AS PER R.RACHIELE RECOMMENDATION
                      SPEC(K,2) =  Q2
 cipk dec02
-                  ELSEIF(IQSPCL(K-1) .EQ. 1) THEN
-	              SPEC(K,1)=0.
-	              SPEC(K,2)=0.
+                  ELSEIF(IQSPCL(K-1) == 1) THEN
+                    SPEC(K,1)=0.
+                    SPEC(K,2)=0.
                   ELSE
                      SPEC(K,1) = 0.0
                      SPEC(K,2) = 0.0
                      NFIX(K)=31000
-	               NFIX1(K)=0
-	               VEL(4,K)=VOLD(4,K)
-	               VEL(5,K)=VOLD(5,K)
-	               VEL(6,K)=VOLD(6,K)
+                     NFIX1(K)=0
+                     VEL(4,K)=VOLD(4,K)
+                     VEL(5,K)=VOLD(5,K)
+                     VEL(6,K)=VOLD(6,K)
                   ENDIF
   630          CONTINUE
 C

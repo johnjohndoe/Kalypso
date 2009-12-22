@@ -6,7 +6,7 @@
 !******************************************************************************************************
 !******************************************************************************************************
 !
-!   	This subroutine computes the sttatistical parameters, used in determination of
+!         This subroutine computes the sttatistical parameters, used in determination of
 !       convergence curve behaviour, which reads as follow :
 !       mean, Standard Devation(sdd), Regression coefficient (R), Coefficient in fitted
 !       equation(A,m),and type of regression (linear) which is either linear or exponential

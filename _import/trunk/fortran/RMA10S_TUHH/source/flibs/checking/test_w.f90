@@ -38,8 +38,8 @@ program test_w
 
  10 continue
     x = 1
-    if ( x .eq. 1 ) call subc( 1 )
-    if ( x .eq. 1 ) &
+    if ( x == 1 ) call subc( 1 )
+    if ( x == 1 ) &
         call subc( 2 )
 
     stop

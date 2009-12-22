@@ -824,7 +824,7 @@ contains
           call vstring_free ( char2 )
           call vstring_free ( char1_case )
           call vstring_free ( char2_case )
-          if (.NOT.equals) then
+          if ( .NOT. equals) then
              exit
           endif
        enddo
@@ -1848,7 +1848,7 @@ contains
     setsize = len ( VSTRING_CHARACTERSET )
     call vstring_new ( characterset , VSTRING_CHARACTERSET )
     call vstring_new ( new_random , length )
-    if ( .NOT.random_process_initialize ) then
+    if ( .NOT. random_process_initialize ) then
        call random_seed()
        random_process_initialize = .true.
     endif
@@ -2504,7 +2504,7 @@ contains
     character ( len = 7 ) :: logicalstring
     call vstring_cast ( this , logicalstring )
     read ( logicalstring , * , err = 100 ) mylogical
-    vstring_isfalse = .NOT.mylogical
+    vstring_isfalse = .NOT. mylogical
     if ( vstring_isfalse ) then
        failindex = VSTRING_INDEX_UNKNOWN
     else
@@ -3120,7 +3120,7 @@ contains
        status = VSTRING_ERROR_OK
     endif
     stringallocated = vstring_exists ( this )
-    if ( .NOT.stringallocated ) then
+    if ( .NOT. stringallocated ) then
        if ( present ( status ) ) then
           status = VSTRING_ERROR_STRINGNOTCREATED
        endif

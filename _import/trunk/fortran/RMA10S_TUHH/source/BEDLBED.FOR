@@ -16,7 +16,7 @@ C***********************************************************************
       USE BLKSEDMOD
       USE BLKSANMOD
 
-	REAL*8 DYBED
+      REAL*8 DYBED
 
 !NiS,jul06: Declaring HTP with consistent data type
       REAL(KIND=8) :: HTP
@@ -25,7 +25,7 @@ C***********************************************************************
 C
 C      WRITE (LOUT,1040)
 C 1040 FORMAT(' ****SUBROUTINE BEDSUR...')
-      IF(MOD(IT,NPRTF) .EQ. 0) THEN
+      IF(MOD(IT,NPRTF) == 0) THEN
        ! WRITE (LOUT, 6000)
         WRITE (LOUT, 6004) TITLE
        ! WRITE (LOUT, 6003) DAYOFY,TET
@@ -47,20 +47,20 @@ CIPK MAR06 MOVED      RHOBS=1000.*CONP*SGSA
       BEDMSG = 0
 *
       DO 3000 NN=1,NPM
-       IF(IBNA(NN) .GT. 0  .AND.  WSLL(NN) .GT. AO(NN)) THEN
+       IF(IBNA(NN) > 0 .AND. WSLL(NN) > AO(NN)) THEN
 
         N=NN
-        IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+        IF(NDEP(NN) > 1) N=NREF(NN)+NDEP(NN)-1
 
         RHOBS=1000.*CONP*SGSAND(N)
 
 
 C        DYBED=DYBE(N)
 cipk jan98 test for missing node number
-        if(VEL(3,N) .eq. 0.) go to 3000
+        if(VEL(3,N) == 0.) go to 3000
 
 cipk apr99
-        if(wsll(n) .lt. ao(n)) then
+        if(wsll(n) < ao(n)) then
           edot(n)=0.
           go to 3000
         endif
@@ -98,17 +98,17 @@ C               CONTROL VOLUME SO EROSION BECOMES (-).
 C
 CIPK APR 2000  COPY TO TOP LAYER
 C
-        IF(N .NE. NN) THEN
+        IF(N /= NN) THEN
           DELBED(NN)=DELBED(N)
         ENDIF
 
-        IF(MOD(IT,NPRTF) .EQ. 0) THEN
+        IF(MOD(IT,NPRTF) == 0) THEN
           WRITE(LOUT,1130) N,GAN(N),VBS,DELBED(N),ELEVB(N),
      +      TTHICK(N),UST(N)
         ENDIF
  1120   CONTINUE
         DGN(N)=(GAN(N)-GAN0(N))*ALPHASN/DELT+(1.-ALPHASN)*DGN(N)
-	  GAN0(N)=GAN(N)
+        GAN0(N)=GAN(N)
  1130   FORMAT(I5,6(1X,G11.5))
        ENDIF
  3000 CONTINUE
@@ -117,14 +117,14 @@ C
 c     set distribution linear
       ncn=0
       do n=1,ne
-        if(imat(n) .gt. 0  ) then
-          if(imat(n) .lt. 1000  .and.  ncorn(n) .lt. 9) then
+        if(imat(n) > 0  ) then
+          if(imat(n) < 1000 .AND. ncorn(n) < 9) then
             ncn=ncorn(n)
-          elseif(imat(n)/1000 .eq. 1  .or.  imat(n)/1000 .eq. 2) then
+          elseif(imat(n)/1000 == 1 .OR. imat(n)/1000 == 2) then
             ncn=ncorn(n)
           endif
-          if(ncn .gt. 0) then
-            if(ncn .eq. 5) ncn=3
+          if(ncn > 0) then
+            if(ncn == 5) ncn=3
             do j=2,ncn,2
               j1=j-1
               j2=mod(j,ncn)+1
@@ -138,21 +138,21 @@ c     set distribution linear
       enddo 
 
 CIPK MAY02 UPDATE BED ELEVATION
-	DO N=1,NP
-	  DEP=VEL(3,N)
-	  DIFF=ELEVB(N)-AO(N)
-	  AO(N)=ELEVB(N)
+      DO N=1,NP
+        DEP=VEL(3,N)
+        DIFF=ELEVB(N)-AO(N)
+        AO(N)=ELEVB(N)
           ADO(N)=ADO(N)+DIFF
           HEL(N)=WSLL(N)-ADO(N)
           CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
 
           VEL(3,N)=HTP
-	  RATIO=VEL(3,N)/DEP
-	  VEL(1,N)=VEL(1,N)/RATIO
-	  VEL(2,N)=VEL(2,N)/RATIO
-	  VDOT(1,N)=VDOT(1,N)/RATIO
-	  VDOT(2,N)=VDOT(2,N)/RATIO
-	ENDDO
+        RATIO=VEL(3,N)/DEP
+        VEL(1,N)=VEL(1,N)/RATIO
+        VEL(2,N)=VEL(2,N)/RATIO
+        VDOT(1,N)=VDOT(1,N)/RATIO
+        VDOT(2,N)=VDOT(2,N)/RATIO
+      ENDDO
 
       RETURN
       END

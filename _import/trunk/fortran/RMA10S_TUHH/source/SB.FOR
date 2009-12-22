@@ -15,19 +15,19 @@ C-
      3 16*2.,16*1.,16*-1.,16*-2./
       DATA ISJ/0/
       DATA ISM/0/
-      IF(NCN .EQ. 15) GO TO 200
+      IF(NCN == 15) GO TO 200
 C-
 C......PROCESS CUBE
 C-
-      IF(ISJ.GT.0) GO TO 100
+      IF(ISJ > 0) GO TO 100
       ISJ=1
       DO 80 I=1,NGP
-      IF(ABS(SI(I,1)).EQ.1.) X=SI(I,1)*0.3399810436
-      IF(ABS(SI(I,2)).EQ.1.) Y=SI(I,2)*0.3399810436
-      IF(ABS(SI(I,3)).EQ.1.) Z=SI(I,3)*0.3399810436
-      IF(ABS(SI(I,1)).EQ.2.) X=SI(I,1)*0.8611363116/2.
-      IF(ABS(SI(I,2)).EQ.2.) Y=SI(I,2)*0.8611363116/2.
-      IF(ABS(SI(I,3)).EQ.2.) Z=SI(I,3)*0.8611363116/2.
+      IF(ABS(SI(I,1)) == 1.) X=SI(I,1)*0.3399810436
+      IF(ABS(SI(I,2)) == 1.) Y=SI(I,2)*0.3399810436
+      IF(ABS(SI(I,3)) == 1.) Z=SI(I,3)*0.3399810436
+      IF(ABS(SI(I,1)) == 2.) X=SI(I,1)*0.8611363116/2.
+      IF(ABS(SI(I,2)) == 2.) Y=SI(I,2)*0.8611363116/2.
+      IF(ABS(SI(I,3)) == 2.) Z=SI(I,3)*0.8611363116/2.
       DO 70 K=1,NCN
       DO 70 L=1,4
       SBS=XN3(3,K,X,Y,Z,L)
@@ -45,7 +45,7 @@ C-
 C-
 C......PROCESS TRIANGULAR PRISM
 C-
-  200 IF( ISM .EQ. 0 ) GO TO 250
+  200 IF( ISM == 0 ) GO TO 250
   210 DO 220 I=1,NGP
       DO 220 K=1,NCN
       XNX(K,I)=SM(K,I,1)

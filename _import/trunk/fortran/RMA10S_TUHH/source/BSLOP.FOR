@@ -30,8 +30,8 @@ CIPK OCT98      NTYPE=IMAT(NN)/1000
 C-
 C......SHIFT IF ONE-D ELEMENT
 C-
-      IF(NCN .EQ. 3) GO TO 600
-      IF(IMAT(NN) .GT. 5000) GO TO 900
+      IF(NCN == 3) GO TO 600
+      IF(IMAT(NN) > 5000) GO TO 900
 C-
 C......SET REFERENCE LENGTH
 C-
@@ -41,11 +41,11 @@ CIPK OCT98 CONVERT TO F90
       N3=ABS(NOP(NN,5))
       XL1=SQRT((CORD(N2,1)-CORD(N1,1))**2+(CORD(N2,2)-CORD(N1,2))**2)
       XL2=SQRT((CORD(N3,1)-CORD(N2,1))**2+(CORD(N3,2)-CORD(N2,2))**2)
-      IF(XL2 .GT. XL1) XL1=XL2
+      IF(XL2 > XL1) XL1=XL2
 C-
 C-.....COPY PROPER WEIGHTING FUNCTIONS.....
 C-
-      IF( NCN .LT. 8 ) THEN
+      IF( NCN < 8 ) THEN
         NGP=7
         KK=1
         DO 80 M = 1, NGP
@@ -70,7 +70,7 @@ C-
       N1=2
       N2=3
       DO 550 NPA=1,NPASS
-      IF(NPA .LT. 3) GO TO 94
+      IF(NPA < 3) GO TO 94
       N1=1
       N2=2
    94 CONTINUE
@@ -110,7 +110,7 @@ C-
       J22 = J22 + DB(K,I) * YL(K)
   130 CONTINUE
       DETJ = J11 * J22 - J12 * J21
-      IF(ABS(DETJ) .LT. 1.E-4*XL1) GO TO 525
+      IF(ABS(DETJ) < 1.E-4*XL1) GO TO 525
       AMW = WAITX(I) * DETJ
       ARA=ARA+AMW
   500 CONTINUE
@@ -127,7 +127,7 @@ C-
       N2=NOP(NN,2)
       XL1=(CORD(N3,1)-CORD(N1,1))*CX+(CORD(N3,2)-CORD(N1,2))*SAN
       XY=CORD(N3,3)-CORD(N1,3)
-c     if(cx .lt. 0.) xy=-xy
+c     if(cx < 0.) xy=-xy
       FC(N1,3)=FC(N1,3)+XL1/6.
       FC(N2,3)=FC(N2,3)+XL1*0.6667
       FC(N3,3)=FC(N3,3)+XL1/6.

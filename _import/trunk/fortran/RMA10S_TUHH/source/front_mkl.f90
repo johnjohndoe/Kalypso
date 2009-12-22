@@ -40,13 +40,13 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
 ! superLU
       REAL(kind = 8), allocatable ::  R1T(:)
-	INTEGER (kind = 8), allocatable :: ichgl(:)
+      INTEGER (kind = 8), allocatable :: ichgl(:)
 
 
-	data itime/0/
-	
-	MFRW = mfwsiz
-	
+      data itime/0/
+      
+      MFRW = mfwsiz
+      
 !some comments
 !NLSTEL(J)  :: NLSTEL (J) is last element, that is necessary to fill the global equation
 !              of degree of freedom J
@@ -54,16 +54,16 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !NBUFFSIZ   :: size of the memory, that can be used from RMA10S (default definition in param.com to 20000000; user definition in control file!)
 !MFWSIZ     :: seems to be the maximum band width of the matrix (default definition in param.com to 2000)
 !MR1SIZ     :: seems to be the maximum number of free degrees
-	
+      
 !
       !allocate locals
       allocate (lrowent(mr1siz), lrpoint(mr1siz))
       allocate (r1t(mr1siz), ichgl(mr1siz))
       !allocate globals, only the first time, this place is reached
-      IF(ITIME .EQ. 0) THEN
+      IF(ITIME == 0) THEN
         ALLOCATE (LCPOINT(MXL,MFWSIZ),eqq(MXL,MFWSIZ))
         ALLOCATE (RR(MR1SIZ),QS1(NBUFFSIZ))
-	  ALLOCATE (IRWEPT(NBUFFSIZ+MR1SIZ+1))
+        ALLOCATE (IRWEPT(NBUFFSIZ+MR1SIZ+1))
         ITIME=1
       ENDIF
       
@@ -92,8 +92,8 @@ SUBROUTINE FRONT_PARDISO(nrx)
       
 !ENe Was missing compared to front.for
       
-      IF(ITEQV(MAXN) .EQ. 2  .OR.  ITEQV(MAXN) .EQ. 8 .OR.  ITEQV(MAXN) .EQ. 9) THEN
-        IF(IDIFSW .EQ. 0) THEN
+      IF(ITEQV(MAXN) == 2 .OR. ITEQV(MAXN) == 8 .OR. ITEQV(MAXN) == 9) THEN
+        IF(IDIFSW == 0) THEN
           ISLP=0
         ELSE
           ISLP=1
@@ -102,21 +102,21 @@ SUBROUTINE FRONT_PARDISO(nrx)
         ISLP=0
       ENDIF
 
-     	IF(IREALLCT .GT. 0) THEN 
-     	  IF(IREALLCT .EQ. 2) THEN
+           IF(IREALLCT > 0) THEN 
+             IF(IREALLCT == 2) THEN
           DEALLOCATE (R1,NLSTEL,rkeep,ekeep,rkeepeq)
         ENDIF
         ALLOCATE (R1(MR1),NLSTEL(0:MR1),rkeep(0:MR1),ekeep(MR1), rkeepeq(MR1))
       ENDIF
 
-      IF(.NOT. ALLOCATED(NLSTEL)) ALLOCATE(NLSTEL(0:MR1))
-      if(maxn .eq. 1  .and. nrx .eq. 1) nszfo=nszf
+      IF( .NOT. ALLOCATED(NLSTEL)) ALLOCATE(NLSTEL(0:MR1))
+      if(maxn == 1 .AND. nrx == 1) nszfo=nszf
       maxl = 0
-	if(nrx .eq. 1) then
-	  NDF=4
-	else
-	  ndf=1
-	endif
+      if(nrx == 1) then
+        NDF=4
+      else
+        ndf=1
+      endif
 !-
 !...... Find last appearance of each node
 !-
@@ -134,18 +134,18 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
         K=K-1
         N=NFIXH(K)
-        IF(N > 0 .and. n <= NE) THEN
-          IF(IMAT(N) .GT. 0) THEN
+        IF(N > 0 .AND. n <= NE) THEN
+          IF(IMAT(N) > 0) THEN
 !ipk NOV99
-            IF(ICOLLAPE(N) .NE. 1  .OR.  IMAT(N)/1000 .EQ. 1) THEN
+            IF(ICOLLAPE(N) /= 1 .OR. IMAT(N)/1000 == 1) THEN
 
 !ipk jan06
               IF(imat (n) > 0) THEN
                 ncn=20
-                IF(ITEQV(MAXN) .EQ. 5) THEN
+                IF(ITEQV(MAXN) == 5) THEN
                   DO I=1,8
                     NCON(I)=NOPS(N,I)
-                    IF(NCON(I) .GT. 0) NCN=I
+                    IF(NCON(I) > 0) NCN=I
                   ENDDO
                 ELSE
                   DO I=1,NCN
@@ -156,11 +156,11 @@ SUBROUTINE FRONT_PARDISO(nrx)
                 DO M=1,NCN
                   L=NCON(M)
 !ipk JAN99 SKIP OUT FOR 2DV
-                  if(l .GT. 0) THEN
+                  if(l > 0) THEN
                     DO I=1,NDF
                       J=NBC(L,I)
-                      IF(J .GT. 0) THEN
-                        IF(NLSTEL(J) .EQ. 0) THEN
+                      IF(J > 0) THEN
+                        IF(NLSTEL(J) == 0) THEN
                           NLSTEL(J)=N
                         ENDIF
                       ENDIF
@@ -175,9 +175,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
    
       icteq = 0
       do nn = 1, nesav
-	    !run through elements due to classical reordering order
-	    n = nfixh (nn)
-	    ncn = ncorn (n)
+          !run through elements due to classical reordering order
+          n = nfixh (nn)
+          ncn = ncorn (n)
         IF (NOP (N, 3) == 0) NCN = 2
         do kc = 1, 80
           nk (kc) = 0
@@ -206,15 +206,15 @@ SUBROUTINE FRONT_PARDISO(nrx)
                 !Check, whether this element is the last occurance of the degree of freedom
                 IF (NLSTEL (LL) == N) NK (KC) = -LL
                 
-                if(nk(kc) .lt. 0) then
+                if(nk(kc) < 0) then
                   DO JJ=1,KC-1
 !ipk feb07 add LLDONE test
-                    IF(LLDONE(JJ) .EQ. ABS(LL)) GO TO 250
+                    IF(LLDONE(JJ) == ABS(LL)) GO TO 250
                   ENDDO
-	              icteq=icteq+1
-	              ichgl(ll)=icteq
-  250             CONTINUE	            
-	            endif
+                    icteq=icteq+1
+                    ichgl(ll)=icteq
+  250             CONTINUE                  
+                  endif
               ENDIF
 
             ENDDO oldDOFs
@@ -225,38 +225,38 @@ SUBROUTINE FRONT_PARDISO(nrx)
       !Reset the number of the global equation; reordering is done in solver
       !---------------------------------------------------------------------
       do n=1,np
-  	    do m=1,ndf
-	      k=nbc(n,m)
-	      if(k .ne. 0) then
-	        nbc(n,m)=ichgl(k)
-	        nbckp(n,m)=ichgl(k)
-	      endif
-	    enddo
-	  enddo
+            do m=1,ndf
+            k=nbc(n,m)
+            if(k /= 0) then
+              nbc(n,m)=ichgl(k)
+              nbckp(n,m)=ichgl(k)
+            endif
+          enddo
+        enddo
 
       DO J=1,NSZF
         NLSTEL(J)=0
         LROWENT(J)=0
-	  LRPOINT(J)=0
-	ENDDO
+        LRPOINT(J)=0
+      ENDDO
       K=NESAV+1
       DO NN=1,NESAV
         K=K-1
         N=NFIXH(K)
-        IF(N .GT. 0.  .AND.  N .LE. NE) THEN
-          IF(IMAT(N) .GT. 0) THEN
+        IF(N > 0. .AND. N <= NE) THEN
+          IF(IMAT(N) > 0) THEN
 !ipk NOV99
-            IF(ICOLLAPE(N) .NE. 1  .OR.  IMAT(N)/1000 .EQ. 1) THEN
+            IF(ICOLLAPE(N) /= 1 .OR. IMAT(N)/1000 == 1) THEN
 
 !ipk jan06
               IF(imat(n) > 0) THEN
 
 !ipk jan99      NCN=NCORN(N)
                 ncn=20
-                IF(ITEQV(MAXN) .EQ. 5) THEN
+                IF(ITEQV(MAXN) == 5) THEN
                   DO I=1,8
                     NCON(I)=NOPS(N,I)
-                    IF(NCON(I) .GT. 0) NCN=I
+                    IF(NCON(I) > 0) NCN=I
                   ENDDO
                 ELSE
                   DO I=1,NCN
@@ -266,11 +266,11 @@ SUBROUTINE FRONT_PARDISO(nrx)
                 DO M=1,NCN
                   L=NCON(M)
 !ipk JAN99 SKIP OUT FOR 2DV
-                  if(l .GT. 0) THEN
+                  if(l > 0) THEN
                     DO I=1,NDF
                       J=NBC(L,I)
-                      IF(J .GT. 0) THEN
-                        IF(NLSTEL(J) .EQ. 0) THEN
+                      IF(J > 0) THEN
+                        IF(NLSTEL(J) == 0) THEN
                           NLSTEL(J)=N
                         ENDIF
                       ENDIF
@@ -316,7 +316,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !c      DO I=1,LCOLM
 !c        DO J=1,lcolm
 !c          EQQ(J,I)=0.
-!c	    LCPOINT(J,I)=0
+!c          LCPOINT(J,I)=0
 !c        ENDDO
 !c      ENDDO
       eqq = 0.
@@ -328,8 +328,8 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !C-
 !C......ESTABLISH DENSITIES AND PRESSURES
 !C-
-      IF(NRX .EQ. 1) THEN
-	CALL PRESR
+      IF(NRX == 1) THEN
+      CALL PRESR
       ENDIF
 
 
@@ -341,164 +341,164 @@ SUBROUTINE FRONT_PARDISO(nrx)
       !-----------------------------      
       
    18 NELL=NELL+1
-      IF(NELL.GT.NE) GO TO 380
+      IF(NELL > NE) GO TO 380
       N=NFIXH(NELL)
       
-      IF(IMAT(N).LE.0) GO TO 18
+      IF(IMAT(N) <= 0) GO TO 18
       NM=mod(IMAT(N),1000)
-      IF(NM .LT. 901) THEN
-        IF(ORT(NM,1) .EQ. 0. .and. nm /= 89) GO TO 18
+      IF(NM < 901) THEN
+        IF(ORT(NM,1) == 0. .AND. nm /= 89) GO TO 18
       ENDIF
 
       NCN = NCORN(N)
-      IF (NCN .EQ. 5  .AND.  IMAT(N) .LT. 901) NCN=3
+      IF (NCN == 5 .AND. IMAT(N) < 901) NCN=3
 !ccc      do n=1,ne
-!ccc        IF ( IMAT(N) .gt. 0 ) then
+!ccc        IF ( IMAT(N) > 0 ) then
 !ccc          NM = IMAT(N)
 
 !ipk DEC03 ADD IEDSW DEPENDENCE
 
           if (imat(n) /= 89) then
             NMATYP=(MOD(IMAT(N),1000))
-	      IEDSW=IEDSW1(NMATYP)
-	      TBFACT=TBFACT1(NMATYP)
-	      TBMIN=TBMIN1(NMATYP)
-	    endif
+            IEDSW=IEDSW1(NMATYP)
+            TBFACT=TBFACT1(NMATYP)
+            TBMIN=TBMIN1(NMATYP)
+          endif
 
-          IF(ITEQV(MAXN) .NE. 5) THEN
+          IF(ITEQV(MAXN) /= 5) THEN
           
-	      IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
-	      
-!ccc              IF(NRX .EQ. 2) GO TO 17
-              IF(NRX .EQ. 2) GO TO 18
+            IF(IMAT(N) > 1000 .AND. IMAT(N) < 5000) THEN
+            
+!ccc              IF(NRX == 2) GO TO 17
+              IF(NRX == 2) GO TO 18
 
 !ipk NOV99     Either process surface integrals or collapse to 2-d
     
-              IF(ICOLLAPE(N) .EQ. 0) THEN
-     	          CALL SURCOF(N,NRX)
-              ELSEIF(IMAT(N) .LT. 2000) THEN
-                IF(NETYP(N)/10 .LT. 1) THEN
+              IF(ICOLLAPE(N) == 0) THEN
+                     CALL SURCOF(N,NRX)
+              ELSEIF(IMAT(N) < 2000) THEN
+                IF(NETYP(N)/10 < 1) THEN
 !ipk MAR05
-                  IF(INOTR .EQ. 0) THEN
+                  IF(INOTR == 0) THEN
                     CALL COEF1(N,NRX)
                   ELSE
                     CALL COEF1NT(N,NRX)
-	            ENDIF
+                  ENDIF
 !ipk MAR07
 !C     Modify tests to allows for IDIFSW
 
-                ELSEIF(IUTUB .EQ. 1  .and.  iedsw .eq. 2 .AND. ISLP .EQ. 0) THEN
+                ELSEIF(IUTUB == 1 .AND. iedsw == 2 .AND. ISLP == 0) THEN
 
-                  IF(INOTR .EQ. 0) THEN
+                  IF(INOTR == 0) THEN
                     CALL COEF2D(N,NRX)
-	            ELSE
+                  ELSE
                     CALL COEF2DNT(N,NRX)
-	            ENDIF
-                ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND. IDIFSW .EQ. 2) THEN
+                  ENDIF
+                ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND. IDIFSW == 2) THEN
 !ipk MAR05
-                  IF(INOTR .EQ. 0) THEN
+                  IF(INOTR == 0) THEN
                     CALL COEF2D(N,NRX)
-	            ELSE
+                  ELSE
                     CALL COEF2DNT(N,NRX)
-	            ENDIF
+                  ENDIF
                 ELSE
-                  IF(INOTR .EQ. 0) THEN
+                  IF(INOTR == 0) THEN
                     CALL COEF2(N,NRX)
-	            ELSE
+                  ELSE
                     CALL COEF2NT(N,NRX)
-	            ENDIF
+                  ENDIF
                 ENDIF
               ELSE
 !ccc                GO TO 17
                 GO TO 18
               ENDIF
 
-	      ELSE
-	        IF(NETYP(N)/10 .EQ. 2) THEN
+            ELSE
+              IF(NETYP(N)/10 == 2) THEN
 
 !ipk nov99 skip if collapsing to 2-d
 
-!ccc                IF(ICOLLAPE(N) .EQ. 1 .AND. NRX .NE. 2) GO TO 17
-                IF(ICOLLAPE(N) .EQ. 1 .AND. NRX .NE. 2) GO TO 18
+!ccc                IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 17
+                IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 18
 
 !C     Process   threed element
 !ipk jan06
                 ntip=abs(mod(imat(n),100))
-!ccc                IF(ORT(ntip,1) .EQ. 0) GO TO 17
-                IF(ORT(ntip,1) .EQ. 0) GO TO 18
+!ccc                IF(ORT(ntip,1) == 0) GO TO 17
+                IF(ORT(ntip,1) == 0) GO TO 18
 !ipk jan97
 !ipk MAR07
-                if(iutub .eq. 1  .AND.  IEDSW .EQ. 2) then
+                if(iutub == 1 .AND. IEDSW == 2) then
                   CALL COEF3D(N,NRX)
                 else
                   call coef3(n,nrx)
                 endif
 !ipk jan97 end changes
-  	        ELSE
-	          IF(NETYP(N)/10 .EQ. 1) THEN
+                ELSE
+                IF(NETYP(N)/10 == 1) THEN
 
 !C     Process   twod elements
 
-	            IF(IMAT(N)  .LT. 900  .OR. NCORN(N) .GT. 5) THEN
+                  IF(IMAT(N) < 900 .OR. NCORN(N) > 5) THEN
 
 !C     Process   horizontal 2d
 
-!ccc                    IF(NRX .EQ. 2) GO TO 17
-                    IF(NRX .EQ. 2) GO TO 18
+!ccc                    IF(NRX == 2) GO TO 17
+                    IF(NRX == 2) GO TO 18
 !ipk jan06
                     ntip=abs(mod(imat(n),100))
-!ccc                    IF(ORT(ntip,1) .EQ. 0) GO TO 17
-                    IF(ORT(ntip,1) .EQ. 0) GO TO 18
+!ccc                    IF(ORT(ntip,1) == 0) GO TO 17
+                    IF(ORT(ntip,1) == 0) GO TO 18
 !ipk jan97
 !ipk MAR07
-                    if(iutub .eq. 1  .AND.  IEDSW .EQ. 2 .AND. ISLP .EQ. 0) THEN
-                      if(nell .eq. 1)  then
+                    if(iutub == 1 .AND. IEDSW == 2 .AND. ISLP == 0) THEN
+                      if(nell == 1)  then
                         write(75,*) 'going to smag'
                       endif
-                      IF(INOTR .EQ. 0) THEN
+                      IF(INOTR == 0) THEN
                         CALL COEF2D(N,NRX)
-  	                ELSE
-	                  CALL COEF2DNT(N,NRX)
-	                ENDIF
-                    ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND. IDIFSW .EQ. 2) THEN
-                      IF(INOTR .EQ. 0) THEN
+                        ELSE
+                        CALL COEF2DNT(N,NRX)
+                      ENDIF
+                    ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND. IDIFSW == 2) THEN
+                      IF(INOTR == 0) THEN
                         CALL COEF2D(N,NRX)
-	                ELSE
-	                  CALL COEF2DNT(N,NRX)
-	                ENDIF
+                      ELSE
+                        CALL COEF2DNT(N,NRX)
+                      ENDIF
                     else
-                      IF(INOTR .EQ. 0) THEN
+                      IF(INOTR == 0) THEN
                         CALL COEF2(N,NRX)
-  	                ELSE
-	                  CALL COEF2NT(N,NRX)
-	                ENDIF
+                        ELSE
+                        CALL COEF2NT(N,NRX)
+                      ENDIF
                     endif
 !ipk jan97 end changes
-        	      ELSE
+                    ELSE
 !ipk JAN99
-!ccc                    IF(IMAT(N) .GT. 900  .AND. IMAT(N) .LT. 1000)GOTO 17
-                    IF(IMAT(N) .GT. 900  .AND. IMAT(N) .LT. 1000)GOTO 18
+!ccc                    IF(IMAT(N) > 900 .AND. IMAT(N) < 1000)GOTO 17
+                    IF(IMAT(N) > 900 .AND. IMAT(N) < 1000)GOTO 18
 
 !C      Process vertical 2d
 
 
 !ipk nov99 skip if collapsing to 2-d
   
-!ccc                    IF(ICOLLAPE(N) .EQ. 1  .AND.  NRX .NE. 2) GO TO 17
-                    IF(ICOLLAPE(N) .EQ. 1  .AND.  NRX .NE. 2) GO TO 18
+!ccc                    IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 17
+                    IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 18
 
-  	  	          CALL COEFV(N,NRX)
-  	            ENDIF
+                          CALL COEFV(N,NRX)
+                    ENDIF
                 ELSE
 
 !C      Process one-d elements
 
-              IF ((imat(n) >= 901 .and. imat(n) <= 903) .and. IGTP(n) == 0) then
+              IF ((imat(n) >= 901 .AND. imat(n) <= 903) .AND. IGTP(n) == 0) then
                 CALL Coef1DJunction (N, NRX)
 
               !material type 89 is used for polynom approach
               ELSEIF (imat(n) /= 89) THEN
-                IF(INOTR .EQ. 0) THEN
+                IF(INOTR == 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
@@ -507,37 +507,37 @@ SUBROUTINE FRONT_PARDISO(nrx)
               ELSEIF (imat(n) == 89) THEN
                 CALL COEF1dPoly(N,NRX)
               ENDIF
-	          ENDIF
-	        ENDIF
-	      ENDIF
+                ENDIF
+              ENDIF
+            ENDIF
           ELSE
 !C-
 !C...... The calls below are for the case of vertical averaging
 !C-
-   19       IF(N .LE. NE) GO TO 20
-	      NELM=NELM+1
-	      N=NFIXH(NELM)
-	      GO TO 19
+   19       IF(N <= NE) GO TO 20
+            NELM=NELM+1
+            N=NFIXH(NELM)
+            GO TO 19
    20       CONTINUE
-	      IF(NOPS(N,6) .GT. 0) THEN
-              IF(INOTR .EQ. 0) THEN
+            IF(NOPS(N,6) > 0) THEN
+              IF(INOTR == 0) THEN
                 CALL COEF2(N,NRX)
               ELSE
                 CALL COEF2NT(N,NRX)
               ENDIF
-	      ELSE
-              IF(INOTR .EQ. 0) THEN
+            ELSE
+              IF(INOTR == 0) THEN
                 CALL COEF1(N,NRX)
               ELSE
                 CALL COEF1NT(N,NRX)
               ENDIF
-	      ENDIF
+            ENDIF
           ENDIF
 !ipk jan99
 
-          IF(NETYP(N) .EQ. 15  .OR.  NETYP(N) .EQ. 16) THEN
-            IF(NOP(N,14) .NE. 0) NCN=14
-            IF(NOP(N,18) .NE. 0) NCN=18  
+          IF(NETYP(N) == 15 .OR. NETYP(N) == 16) THEN
+            IF(NOP(N,14) /= 0) NCN=14
+            IF(NOP(N,18) /= 0) NCN=18  
           ENDIF
 
 !for equation drop out; should not be used, if PARDISO is invoked
@@ -545,9 +545,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !ipk jan01
       do i=1,ncn
         nod=nop(n,i)
-        if(nod .ne. 0) then
+        if(nod /= 0) then
           do j=1,ndf
-            if(iactv(nod,j) .eq. 0  .and. nbc(nod,j) .ne. 0) then
+            if(iactv(nod,j) == 0 .AND. nbc(nod,j) /= 0) then
               irwz=(i-1)*ndf+j
               do ii=1,80
                 estifm(ii,irwz)=0.
@@ -568,7 +568,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
       !RR(JA) :: global residual (degree of freedom) in line JA of the global sparse matrix
     DO I = 1, NCN
       J = NOP (N, I)
-	  !non-zero node
+        !non-zero node
       IF (J > 0) THEN
         !one step before first degree of freedom at local node is calculated
         IA = NDF * (I - 1)
@@ -664,9 +664,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
        !get global equation number LROWT (global row) for local equation nubmer LK
        LROWT = ABS (NK (LK))
 
-	 !if global equation is active (lowrt/=0), store pointer to equation in
-	 !the following control
-	 if (lrowt /= 0) then
+       !if global equation is active (lowrt/=0), store pointer to equation in
+       !the following control
+       if (lrowt /= 0) then
 !c
 !c     lrowt is the equation number for this degree of freedom
 !c          look in pointer matrix for this row if it has been used
@@ -675,19 +675,19 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
         !if the temporary row number lrowt is not counted (pointed) yet, then
         !create an entry
-	  if (lrow == 0) then
+        if (lrow == 0) then
           !run through all memorized rows (lRowMax counts already pointed rows)
           !at startup lRowMax is zero
           do ll = 1, lRowMax
-	      if (lrowent (ll) == 0) then
-	        lrpoint (lrowt) = ll
-	        lrow = ll
-	        go to 50
-	      endif
-	    enddo
+            if (lrowent (ll) == 0) then
+              lrpoint (lrowt) = ll
+              lrow = ll
+              go to 50
+            endif
+          enddo
           !count lrow
           lrow = lRowMax + 1
-	    lRowMax = lRowMax + 1
+          lRowMax = lRowMax + 1
           lrowent (lrow) = 0
 
           !Error if the system becomes too big
@@ -707,7 +707,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
           !store in the corresponding pointer number
           lrpoint (lrowt) = lrow
-	  endif
+        endif
 
    50   continue
 
@@ -734,7 +734,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
                   LCPOINT (L, LL) = NODEC
                   EQQ (L, LL) = EQQ (L, LL) + ESTIFM (LK, KK)
-	            if (L > lrowent (lrow)) lrowent (lrow) = L
+                  if (L > lrowent (lrow)) lrowent (lrow) = L
                   exit AddEstifm
 
                ENDIF
@@ -744,7 +744,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
           IF (l > maxl) maxl = l
    
         ENDDO
-	 ENDIF
+       ENDIF
       ENDDO IntroduceLocalMatrices  
 
 
@@ -766,10 +766,10 @@ SUBROUTINE FRONT_PARDISO(nrx)
       !a new registered equation in it
       LELTM = 0
       AddEquations: DO LL = 1, lRowMax
-	  L = LL + LELIM
-	  if (l > MR1) exit AddEquations
-	  lrow = lrpoint (l)
-	  IF (NLSTEL (L) == N) THEN
+        L = LL + LELIM
+        if (l > MR1) exit AddEquations
+        lrow = lrpoint (l)
+        IF (NLSTEL (L) == N) THEN
           IRWEPT (L) = ICUR - NSZF
           DO J = 1, LROWENT (LROW)
             IF (LCPOINT (J, LROW) /= 0) THEN
@@ -786,10 +786,10 @@ SUBROUTINE FRONT_PARDISO(nrx)
                 !in the sparse matrix format place in qs1
                 !initlialize it again for later use in another
                 !element
-	          EQQ (J, LROW) = 0.
-	          LCPOINT (J, LROW) = 0
-!c 	        ELSE
-!c	          LCPOINT(J,LROW)=0
+                EQQ (J, LROW) = 0.
+                LCPOINT (J, LROW) = 0
+!c               ELSE
+!c                LCPOINT(J,LROW)=0
 !c              ENDIF
             ELSE
               GO TO 70
@@ -800,13 +800,13 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
    70     CONTINUE
           LELTM=LELTM+1
-	  ELSE
-	    GO TO 100
+        ELSE
+          GO TO 100
       ENDIF
 
       ENDDO AddEquations
   100 CONTINUE
-	LELIM=LELIM+LELTM
+      LELIM=LELIM+LELTM
       GO TO 18
   380 CONTINUE
 
@@ -855,7 +855,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
         rkeep(i)=r1t(i)
       ENDDO
 
-      IF(NRX .EQ. 1) NDF=6
+      IF(NRX == 1) NDF=6
 
 
   479   FORMAT( '  UNSATISFIED ELIMINATION ERROR STOP'/ '   LCOL =',I5)
@@ -864,7 +864,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
  9822   FORMAT('  EQ IS'/(1P5E12.4))
 !C      CALL SECOND(SEC2)
 !C      ADTA=SEC2-SEC1
-!C	SECTOT=SEC2-SEC
+!C      SECTOT=SEC2-SEC
 !C      WRITE(*,6199) ADTA,SEC2
 !C      WRITE(75,6040) ADTA,SELT,SECTOT
 !C      WRITE(*,6040) ADTA,SELT,SECTOT

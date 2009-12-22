@@ -27,7 +27,7 @@ subroutine cart_to_spherical( x, y, z, rad, phi, theta )
 
     rad    = sqrt( x ** 2 + y ** 2 + z ** 2 )
     theta  = asin(z/rad)
-    if ( x /= 0.0 .or. y /= 0.0 ) then
+    if ( x /= 0.0 .OR. y /= 0.0 ) then
         phi = atan2(y,x)
     else
         phi = 0.0
@@ -51,7 +51,7 @@ subroutine cart_to_cylindrical( x, y, z, rad, phi, zout )
     real, intent(out)  :: rad, phi, zout
 
     rad    = sqrt( x ** 2 + y ** 2 )
-    if ( x /= 0.0 .or. y /= 0.0 ) then
+    if ( x /= 0.0 .OR. y /= 0.0 ) then
         phi = atan2(y,x)
     else
         phi = 0.0
@@ -75,7 +75,7 @@ subroutine cart_to_polar( x, y, rad, phi )
     real, intent(out) :: rad, phi
 
     rad    = sqrt( x ** 2 + y ** 2 )
-    if ( x /= 0.0 .or. y /= 0.0 ) then
+    if ( x /= 0.0 .OR. y /= 0.0 ) then
         phi = atan2(y,x)
     else
         phi = 0.0

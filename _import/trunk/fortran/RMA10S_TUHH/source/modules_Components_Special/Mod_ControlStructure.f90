@@ -79,7 +79,7 @@ contains
     endif
     !add a new QCurve
     newFun => newLinkedFun (CurveValue=Q)
-    if (.not. (associated (thisCstrc.QCurves.firstFun))) then
+    if ( .NOT. (associated (thisCstrc.QCurves.firstFun))) then
       thisCstrc.QCurves.firstFun => newFun
       thisCstrc.QCurves.lastFun => newFun
     else
@@ -104,7 +104,7 @@ contains
     if (associated (thisCstrc.QCurves.firstFun)) then
       tmpFun => findQCurveByQ (thisCstrc.QCurves, Q)
     endif 
-    if (.not. (associated (tmpFun))) then
+    if ( .NOT. (associated (tmpFun))) then
       call addQCurve (thisCstrc, Q)
       tmpFun => findQCurveByQ (thisCstrc.QCurves, Q)
     endif

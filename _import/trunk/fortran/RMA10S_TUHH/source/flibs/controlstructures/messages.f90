@@ -174,7 +174,7 @@ subroutine msg_loop_print( state, machine, print_debug )
 !
 ! Enter the message loop
 !
-    do while( .not. stop_loop )
+    do while( .NOT. stop_loop )
         !count = count + 1; if ( count > 40 ) stop
         !write(*,*) 'last_msg: ', last_msg
         !write(*,'(f12.4,i5)') (queue(i)%time, queue(i)%type ,i=1,last_msg )
@@ -235,7 +235,7 @@ subroutine msg_put( time, type, data )
     !
     ! Initialise the queue if needed
     !
-    if ( .not. allocated(queue) ) then
+    if ( .NOT. allocated(queue) ) then
         allocate( queue(1:max_queue) )
     endif
 

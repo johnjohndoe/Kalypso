@@ -65,13 +65,13 @@ C
 C..... Clean up scratch files
 C
       WRITE(*,*) 'IN ZVRS MAXFIL =',MAXFIL
-      IF(MAXFIL .EQ. 0) RETURN
+      IF(MAXFIL == 0) RETURN
       ivrsid = 4
-      IF(IVRSID .EQ. 4  .OR.  IVRSID .EQ. 6) THEN
+      IF(IVRSID == 4 .OR. IVRSID == 6) THEN
         DO 800 NRC=1,MAXFIL
           WRITE(TSUB,3000) NRC
  3000     FORMAT(I3.3)
-          IF(IVRSID .EQ. 4) THEN
+          IF(IVRSID == 4) THEN
 CIPKSEP04
             FNAMT=FHED//'.'//TSUB(1:3)
             CLOSE (ND1)

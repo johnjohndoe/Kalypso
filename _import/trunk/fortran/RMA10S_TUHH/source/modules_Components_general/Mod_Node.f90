@@ -68,7 +68,7 @@ contains
     counter = 0
     nextNeighbour => nodeOrigin.neighbourList
     countNodes: do 
-      if (.not. (associated (nextNeighbour))) exit countNodes
+      if ( .NOT. (associated (nextNeighbour))) exit countNodes
       counter = counter + 1
       nextNeighbour => nextNeighbour.next
     end do countNodes
@@ -90,7 +90,7 @@ contains
     isContained = .false.
 
     findNode: do
-      if (.not. (associated (tmpNode))) exit findNode
+      if ( .NOT. (associated (tmpNode))) exit findNode
       
       if (tmpNode.thisNode.ID == node2Check.ID) then
         isContained = .true.
@@ -148,11 +148,11 @@ contains
       tmpNode = newNode (ID, xcord, ycord)
     endif
     
-    if (present (next) .and. present (prev)) then
+    if (present (next) .AND. present (prev)) then
       new => makeNodeALinkedNode (tmpNode, prev, next)
-    elseif (present (next) .and. (.not. (present (prev)))) then
+    elseif (present (next) .AND. ( .NOT. (present (prev)))) then
       new => makeNodeALinkedNode (tmpNode, next = next)
-    elseif (present (prev) .and. (.not. (present (next)))) then
+    elseif (present (prev) .AND. ( .NOT. (present (next)))) then
       new => makeNodeALinkedNode (tmpNode, prev = prev)
     else
       new => makeNodeALinkedNode (tmpNode)

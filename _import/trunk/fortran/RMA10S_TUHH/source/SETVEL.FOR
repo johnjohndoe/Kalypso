@@ -12,19 +12,19 @@ C
       USE BLK10MOD
       USE BLKSEDMOD
 C-
-      IF(ISVL .EQ. 1) THEN
+      IF(ISVL == 1) THEN
         DO I=1,NP
           VS(I)=VSST
         ENDDO
 
-      ELSEIF(ISVL.EQ.2 .or. ISVL.EQ.3) THEN
+      ELSEIF(ISVL == 2 .OR. ISVL == 3) THEN
 C
 C....    THIS IS THE PLACE TO PUT IN SOME GRAND SET. VEL. MODEL
         K=LSS
         DO  I=1,NP
-          IF(VEL(6,I) .LT. CRCON1(I)) THEN
+          IF(VEL(6,I) < CRCON1(I)) THEN
             VS(I)=VSS1(I)
-          ELSEIF(VEL(6,I) .GT. CRCON2(I)) THEN
+          ELSEIF(VEL(6,I) > CRCON2(I)) THEN
             VS(I)=VSS2(I)
           ELSE
             VS(I)=VSK(I)* (VEL(6,I)**EXP2(I))

@@ -16,9 +16,9 @@ C     +     NHDS =5  ,NCHOBS = 3500, NELDS = 40  ,NDPTS = 2600)
       ALLOCATABLE   R1(:),NLSTEL(:),RKEEP(:),
      +              EKEEP(:),RKEEPEQ(:),LCPOINT(:,:),EQQ(:,:)
 
-	ALLOCATABLE   LHS(:),QS(:),LDEST(:),QR(:)
-	
-	ALLOCATABLE   RR(:),QS1(:),IRWEPT(:)
+      ALLOCATABLE   LHS(:),QS(:),LDEST(:),QR(:)
+      
+      ALLOCATABLE   RR(:),QS1(:),IRWEPT(:)
             
       ALLOCATABLE   EQ(:,:),LHED(:),QQ(:),PVKOL(:)
 

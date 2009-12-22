@@ -217,7 +217,7 @@ C
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       BANKEVOLUTION =.FALSE. 
       
-      IF (( IPROFIN == 73).OR.( IPROFIN == 731) ) THEN
+      IF (( IPROFIN == 73) .OR. ( IPROFIN == 731) ) THEN
        ! read profile data from unit 73 and assign BANKPROFILES array
        CALL READPROFILES (IPROFIN,ProfileCounter) 
       
@@ -245,7 +245,7 @@ C
       WRITE(LOUT,6000)
 CIPK NOV97      READ(LIN,7000) ID,DLIN
 CIPK AUG05      call ginpt(lin,id,dlin)
-      IF(ID(1:2) .NE. 'TI') THEN
+      IF(ID(1:2) /= 'TI') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -262,7 +262,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr96 add line type C0
-      IF(ID(1:2) .NE. 'C0') THEN
+      IF(ID(1:2) /= 'C0') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -291,13 +291,13 @@ CIPK FEB04 SAVE TIMES IN CASE IOV ACTIVE
       IYKK=IYRR
       IDTM=DAYOFY
       TTEM=TET
-CIPK DEC03      IF(TBFACT .EQ. 0.) TBFACT=0.2
+CIPK DEC03      IF(TBFACT == 0.) TBFACT=0.2
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 cipk end changes apr 96
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF(ID(1:2) .NE. 'C1') THEN
+      IF(ID(1:2) /= 'C1') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -315,11 +315,11 @@ CIPK MAR05
       READ(DLIN,5010) NDP,IGRV,IZB,IPASS1,IPASS2,IPASS3,IZERS,IDIFSW
      +  ,INOTR
       write(*,*) 'read c1'
-      IF(IGRV .EQ. 0) GRAV=32.2
-      IF(IGRV .EQ. 1) GRAV=9.81
+      IF(IGRV == 0) GRAV=32.2
+      IF(IGRV == 1) GRAV=9.81
       
 cipk jul01  Store info on metric geometry
-      if(grav .lt. 10.) then
+      if(grav < 10.) then
         imgeom=1
       else
         imgeom=0
@@ -330,7 +330,7 @@ CIPK JUL99 reverse tbfact and tbmin order
 
 cipk jan01 add max layer test
 cWP Feb 2006 Change NLAYM to NLAYMX
-      IF(NDP .LT. -1*(NLAYMX+1)) THEN
+      IF(NDP < -1*(NLAYMX+1)) THEN
 c-
 cipk sep04
         CLOSE(75)
@@ -361,7 +361,7 @@ cipk mar03 add diffusion switch ( default of  0 uses old formulations
       WRITE(LOUT,6011) NB, IFILE
       
 C
-      IF( IFILE .GT. 0 ) REWIND IFILE
+      IF( IFILE > 0 ) REWIND IFILE
 
 !REMOVE FOR RMA·KALYPSO
 !nis,nov08: Remove editing obsolete unit nopt
@@ -372,7 +372,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF(ID(1:2) .NE. 'C2') THEN
+      IF(ID(1:2) /= 'C2') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -396,7 +396,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF(ID(1:2) .NE. 'C3') THEN
+      IF(ID(1:2) /= 'C3') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -422,18 +422,18 @@ cipk sep04
       
       write(*,*) 'read c3'
 C      HMIN=VOID
-C      IF(HMNN .NE. 0.) HMIN=HMNN
-      IF(HMNN .EQ. 0.) THEN
+C      IF(HMNN /= 0.) HMIN=HMNN
+      IF(HMNN == 0.) THEN
         HMIN=VOID
       ELSE
         HMIN=HMNN
       ENDIF
       !We don't want any minimum value!
-      !IF(UNOM .EQ. 0.) UNOM=0.25
+      !IF(UNOM == 0.) UNOM=0.25
       UDIR=UDIR/57.3
-      IF( XSCALE .EQ. 0.0 ) XSCALE = 1.0
-      IF( YSCALE .EQ. 0.0) YSCALE =1.0
-      IF( ZSCALE .EQ. 0.0 ) ZSCALE = 1.0
+      IF( XSCALE == 0.0 ) XSCALE = 1.0
+      IF( YSCALE == 0.0) YSCALE =1.0
+      IF( ZSCALE == 0.0 ) ZSCALE = 1.0
       WRITE(LOUT,6020) 
      + OMEGA,ELEV,XSCALE,YSCALE,ZSCALE,CMIN,CPR,UNOM,UDIR,HMNN,IDEBUG
 c
@@ -441,7 +441,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF(ID(1:2) .NE. 'C4') THEN
+      IF(ID(1:2) /= 'C4') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -456,7 +456,7 @@ cipk sep96 add to 3 lines below for ocean exchange percentantage and mixing
       READ(DLIN,5021) SALI,TEMPI,SEDI,UINP,VINP,prcnt,DMIX,beient
       write(*,*) 'read c4'
       !default values; what's that
-      if (beient /= 1 .and. beient /= 2 .and. beient /= 3) then
+      if (beient /= 1 .AND. beient /= 2 .AND. beient /= 3) then
         beient = 0
       end if
       !testoutput
@@ -476,7 +476,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF(ID(1:2) .NE. 'C5') THEN
+      IF(ID(1:2) /= 'C5') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -488,25 +488,25 @@ cipk sep04
       READ(DLIN,5011) NITI,NITN,TSTART,NCYC,IPRT,NPRTF,IRSAV,NPRTI,IDSWT
       !check for maximum values
       if (NITI > 90) call ErrorMessageAndStop (1008, 0, 0.0d0, 0.0d0)
-      if (ncyc > 0 .and. nitn > 90)
+      if (ncyc > 0 .AND. nitn > 90)
      +  call ErrorMessageAndStop (1009, 0, 0.0d0, 0.0d0)
 
 !NiS,may06: In the case of Kalypso-2D format input file for geometry, it is among other things predetermined, from which time step to start.
 !           This timestep is saved in the global variable iaccyc. If the value is (iaccyc > 1), it means, that the beginning time step is not
 !           the over all beginning. For that reason, no steady calculation can be started. This means, that the user has to be informed about
-!           the occuring error, if  (iaccyc > 1) .and. (NITI /= 0)
+!           the occuring error, if  (iaccyc > 1) .AND. (NITI /= 0)
       !EFa jun07, necessary for autoconverge
 
       nitizero = niti
       nitnzero = nitn
-      if (niti.ne.0.) then
+      if (niti /= 0.) then
         nitazero = niti
       ELSE
         nitazero = nitn
       end if
       !-
       !nis,jan09: Use Error Message file
-      IF (iaccyc > 1 .and. NITI /= 0) 
+      IF (iaccyc > 1 .AND. NITI /= 0) 
      + call ErrorMessageAndStop (1604, 0, 0.0d0, 0.0d0)
 
       write(*,*) 'read c5'
@@ -529,7 +529,7 @@ cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
 
 CIPK AUG07  ADD ICPU
       ICPU = 0
-      IF(ID(1:2) .EQ. 'C6') THEN
+      IF(ID(1:2) == 'C6') THEN
 cipk mar06 allow for output file rewind      
 CIPK AUG07  ADD ICPU
         READ(DLIN,'(4I8)') irMiniMaxiSav, nprtmetai, IOUTRWD,ICPU
@@ -543,8 +543,8 @@ CIPK AUG07  ADD ICPU
         
 
         call ginpt(lin,id,dlin)
-	    WRITE(LOUT,6024) IOUTRWD,ICPU
-        IF(IOUTRWD .EQ. 0) IOUTRWD=NCYC+1
+          WRITE(LOUT,6024) IOUTRWD,ICPU
+        IF(IOUTRWD == 0) IOUTRWD=NCYC+1
       ELSE
         IOUTRWD=NCYC+1
       ENDIF
@@ -570,7 +570,7 @@ CIPK ADD ICNSV AND IAVEL AND MAKE ORDER OPTIONAL
 CIPK MAR06 ADD TESTMODE
 
    18 CONTINUE
-      IF(ID(1:4) .EQ. 'TEST') THEN
+      IF(ID(1:4) == 'TEST') THEN
       
         READ(DLIN,'(I8,8F8.0)') ITSTMOD,TSTVAR
         call ginpt(lin,id,dlin)
@@ -578,37 +578,37 @@ CIPK MAR06 ADD TESTMODE
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk dec99 add initial condition
-      IF(ID(1:3) .EQ. 'INI') THEN
+      IF(ID(1:3) == 'INI') THEN
       
         READ(DLIN,'(F8.0)') ELEV1
         call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAY02 add sand data
-      ELSEIF(ID(1:3) .EQ. 'SND') THEN
+      ELSEIF(ID(1:3) == 'SND') THEN
       
         LSAND=6 
         call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk APR05 add CLAY data
-      ELSEIF(ID(1:3) .EQ. 'SED') THEN
+      ELSEIF(ID(1:3) == 'SED') THEN
         READ(DLIN,'(I8)') INEWBED
         LSS=6 
         call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAY02 add BEDLOAD OPTION data
-      ELSEIF(ID(1:3) .EQ. 'BED') THEN
+      ELSEIF(ID(1:3) == 'BED') THEN
       
         LBED=1 
         call ginpt(lin,id,dlin)
 CIPK SEP06
-      ELSEIF(ID(1:5) .EQ. 'CONSV') THEN
+      ELSEIF(ID(1:5) == 'CONSV') THEN
       
         ICNSV=1 
         call ginpt(lin,id,dlin)
-      ELSEIF(ID(1:4) .EQ. 'AVEL') THEN
+      ELSEIF(ID(1:4) == 'AVEL') THEN
       
         IAVEL=1 
         call ginpt(lin,id,dlin)
@@ -621,10 +621,10 @@ CIPK SEP06
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk aug02 add BEDLOAD OPTION data
       ZSTDEP=0.
-      IF(ID(1:3) .EQ. 'ZDP') THEN
+      IF(ID(1:3) == 'ZDP') THEN
       
         READ(DLIN,'(F8.0)') ZSTDEP
-	  WRITE(LOUT,6047) ZSTDEP
+        WRITE(LOUT,6047) ZSTDEP
         call ginpt(lin,id,dlin)
       ENDIF
 
@@ -633,9 +633,9 @@ cipk aug02 add BEDLOAD OPTION data
 !MD:   New Option to Speed-up Morphology for cohesive Sediment
 !MD
       FACT_SPEED_UP=1.0D0
-      IF(ID(1:6) .EQ. 'FACTSU') THEN
+      IF(ID(1:6) == 'FACTSU') THEN
         READ(DLIN,'(F8.1)') FACT_SPEED_UP
-	WRITE(LOUT,'(F8.1)') FACT_SPEED_UP
+      WRITE(LOUT,'(F8.1)') FACT_SPEED_UP
         call ginpt(lin,id,dlin)
       ENDIF
 !
@@ -644,10 +644,10 @@ cipk aug02 add BEDLOAD OPTION data
 !  DJW Dec 2004.  Adding Option to Switch off Morphology
 !
       FACTMORPH=1.
-      IF(ID(1:3) .EQ. 'SMO') THEN
+      IF(ID(1:3) == 'SMO') THEN
       
         READ(DLIN,'(F8.0)') FACTMORPH
-	WRITE(LOUT,'(F8.0)') FACTMORPH
+      WRITE(LOUT,'(F8.0)') FACTMORPH
         call ginpt(lin,id,dlin)
       ENDIF
 !
@@ -657,10 +657,10 @@ cipk aug02 add BEDLOAD OPTION data
 !  DJW Feb 2005.  Adding Option For Scaling Factors to apply to RW
 !
 C      FACTMORPH=1.
-      IF(ID(1:3) .EQ. 'RUF') THEN
+      IF(ID(1:3) == 'RUF') THEN
       
         READ(DLIN,'(2F8.0)') RWFACT, RWMIN
-	  WRITE(LOUT,'(2F8.0)') RWFACT, RWMIN
+        WRITE(LOUT,'(2F8.0)') RWFACT, RWMIN
         call ginpt(lin,id,dlin)
       ENDIF
 !
@@ -672,36 +672,36 @@ C      FACTMORPH=1.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk SEP02 add sand data
    20 CONTINUE
-      IF(ID(1:3) .EQ. 'CRS') THEN
+      IF(ID(1:3) == 'CRS') THEN
       
         READ(DLIN,'(I8,F8.0)') NN, CRSLOP(NN)
         call ginpt(lin,id,dlin)
-	  GO TO 20
+        GO TO 20
       ENDIF
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk may03 add cutout opton for settling/erosion for element types
    22 CONTINUE
-      IF(ID(1:4) .EQ. 'DRP1') THEN
+      IF(ID(1:4) == 'DRP1') THEN
         READ(DLIN,5010) (IEDROP(N),N=1,9)
         call ginpt(lin,id,dlin)
 
         !MD: weniger als 9 Eintrage
         DO N = 1, 9
-          IF (IEDROP(N).gt.0) THEN
+          IF (IEDROP(N) > 0) THEN
             N1=N
             DROPMAX = N1
           END IF
         Enddo
 
-    	GO TO 22
-      ElSEIF(ID(1:4) .EQ. 'DRP2') THEN
+          GO TO 22
+      ElSEIF(ID(1:4) == 'DRP2') THEN
         READ(DLIN,5010) (IEDROP(N),N2=(1+N1),(9+N1))
 
         !MD: weniger als 9 Eintrage
         DO N = (1+N1), (9+N1)
-          IF (IEDROP(N).gt.0) THEN
+          IF (IEDROP(N) > 0) THEN
             N2=N1+N
             DROPMAX = N2
           END IF
@@ -710,7 +710,7 @@ cipk may03 add cutout opton for settling/erosion for element types
         N1 = N2
         DROPMAX = N1
 
-        IF (DROPMAX .gt. 85) THEN
+        IF (DROPMAX > 85) THEN
           WRITE(*,*) ' ERROR in INPUT: '
           WRITE(*,*) ' Maximal Counter for DropOut DRP=85 is reached!!'
           WRITE(75,*) ' ERROR in INPUT: '
@@ -719,21 +719,21 @@ cipk may03 add cutout opton for settling/erosion for element types
         END IF
 
         call ginpt(lin,id,dlin)
-    	GO TO 22
+          GO TO 22
       ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !MD Jun09 add sediment data
 
-      IF(ID(1:6) .EQ. 'MAXSED') THEN
+      IF(ID(1:6) == 'MAXSED') THEN
         READ(DLIN,'(F8.0)') SedHighPerm
-        IF (SedHighPerm .le. 0.0) THEN
+        IF (SedHighPerm <= 0.0) THEN
           WRITE(*,*) ' ERROR in INPUT: '
           WRITE(*,*) ' Maximal Sediment-Concentration MAXSED <= ZERO!!'
           WRITE(75,*) ' ERROR in INPUT: '
           WRITE(75,*) ' Maximal Sediment-Concentration <= ZERO!!'
           STOP
-        ElseIF (SedHighPerm .lt. 1000.0) THEN
+        ElseIF (SedHighPerm < 1000.0) THEN
           WRITE(*,*) ' CAUTION: '
           WRITE(*,*) ' Maximal Sediment-Concentration MAXSED < 1000.0 '
           WRITE(75,*) ' CAUTION: '
@@ -742,14 +742,14 @@ cipk may03 add cutout opton for settling/erosion for element types
         call ginpt(lin,id,dlin)
       ENDIF
 
-      IF(ID(1:6) .EQ. 'MINSED') THEN
+      IF(ID(1:6) == 'MINSED') THEN
         READ(DLIN,'(F8.0)') SedLowPerm
-         IF (SedLowPerm .lt. 0.0) THEN
+         IF (SedLowPerm < 0.0) THEN
           WRITE(*,*) ' CAUTION: '
           WRITE(*,*) ' Minimal Sediment-Concentration < ZERO!!'
           WRITE(75,*) ' CAUTION: '
           WRITE(75,*) ' Minimal Sediment-Concentration < ZERO!!'
-        ElseIF (SedLowPerm .ge. SedHighPerm) THEN
+        ElseIF (SedLowPerm >= SedHighPerm) THEN
           WRITE(*,*) ' ERROR in INPUT: '
           WRITE(*,*) ' Concentration MAXSED <= MINSED --> STOP'
           WRITE(75,*) ' ERROR in INPUT: '
@@ -760,12 +760,12 @@ cipk may03 add cutout opton for settling/erosion for element types
       ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF(ID(1:2) .EQ. 'CV') THEN
+      IF(ID(1:2) == 'CV') THEN
 cipk apr97 add to data read for equation dropout
         READ(DLIN,'(6F8.0,i8,2f8.0)', iostat = iostatus) 
      +   (CONV(J),J=1,6),idrpt,drfact, schwarzConv
      
-      if (iostatus == 0 .and. schwarzConv > 0) then
+      if (iostatus == 0 .AND. schwarzConv > 0) then
         m_SimModel.schwarzConv = schwarzConv
       endif
 CIPK NOV97      READ(LIN,7000) ID,DLIN
@@ -783,7 +783,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
      +                                 '     TEMP      ',1PE19.2/
      +                                 '     SEDIMENT  ',1PE19.2)
 cipk apr97
-      if(idrpt .eq. 1) then
+      if(idrpt == 1) then
         write(lout,6034) drfact
  6034   format(//'  EQUATION DROPOUT ACTIVATED.  FACTOR EQUALS'
      +            ,F8.4)
@@ -796,7 +796,7 @@ cipk apr97
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!EFa jun07, autoconverge option
 !
-!      IF(ID(1:2) .EQ. 'AC') THEN
+!      IF(ID(1:2) == 'AC') THEN
 !        READ(dlin,'(4i8)') beiauto, linlog, nnnst, nnnunst
 !        CALL GINPT(LIN,ID,DLIN)
 !      ENDIF
@@ -808,7 +808,7 @@ cipk apr97
 
 CIPK  FEB04 add IOV option
 
-      IF(ID(1:3) .EQ. 'IOV') THEN
+      IF(ID(1:3) == 'IOV') THEN
         IOV=1
         CALL GINPT(LIN,ID,DLIN)
       ELSE
@@ -820,9 +820,9 @@ cipk FEB04 end addition
 
 !nis,jun07: Deactivated for the moment, has to be reactivated, when everything else is debugged
 !cipk feb97 add line to select optimisation
-!      IF(ID(1:3) .EQ. 'IOP') THEN
+!      IF(ID(1:3) == 'IOP') THEN
 !        READ(DLIN,'(F8.2)') W2FACT
-!        IF(W2FACT .EQ. 0.) THEN
+!        IF(W2FACT == 0.) THEN
 !          W2FACT=4.
 !        ENDIF
 !CIPK NOV97      READ(LIN,7000) ID,DLIN
@@ -837,17 +837,17 @@ cipk FEB04 end addition
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK dec02 add input of data for ice on surface
 
-      IF(ID(1:4) .EQ. 'ICE1') THEN
+      IF(ID(1:4) == 'ICE1') THEN
         READ(DLIN,'(8F8.0,i8)')ROW,CHEAT,TMED,HTR,XLAT,ROSN,ROIC,TICE,
-     +	  ICESW
-	  ICESW=ICESW+1
-        IF(ROW .EQ. 0.) ROW=1000.
-        IF(XLAT .EQ. 0.) XLAT=333.4
-        IF(ROSN .EQ. 0.) ROSN=300.
-        IF(ROIC .EQ. 0.) ROIC=917.
+     +        ICESW
+        ICESW=ICESW+1
+        IF(ROW == 0.) ROW=1000.
+        IF(XLAT == 0.) XLAT=333.4
+        IF(ROSN == 0.) ROSN=300.
+        IF(ROIC == 0.) ROIC=917.
         WRITE(LOUT,6200) ROW,CHEAT,TMED,HTR,XLAT,ROSN,ROIC,TICE
         call ginpt(lin,id,dlin)
-        IF(ID(1:4) .EQ. 'ICE2') THEN
+        IF(ID(1:4) == 'ICE2') THEN
           READ(DLIN,'(5F8.0)') CAL1,CAL2,CAL3,CAL4,VTR
           call ginpt(lin,id,dlin)
         ELSE
@@ -866,11 +866,11 @@ cipk sep04
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK NOV99 ADD DATA LINE FOR 3-D TO 2-D COLLAPSE
       
-      IF(ID(1:3) .EQ. 'COL') THEN
+      IF(ID(1:3) == 'COL') THEN
         READ(DLIN,'(F8.2)') TRANSIT
         ITRANSIT=1
         WRITE(LOUT,6100)
-        IF(TRANSIT .EQ. 0.) THEN
+        IF(TRANSIT == 0.) THEN
           WRITE(LOUT,6101)
         ELSE
           WRITE(LOUT,6102) TRANSIT
@@ -884,7 +884,7 @@ cipk revised unit
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK MAR01 ADD DATA LINE FOR TIME STEP LENGTHENING
       
-      IF(ID(1:3) .EQ. 'TST') THEN
+      IF(ID(1:3) == 'TST') THEN
         READ(DLIN,'(I8,2F8.0)') NODETR,TRELEV,TRFACT
         WRITE(LOUT,6103)
         WRITE(LOUT,6104) NODETR,TRELEV,TRFACT
@@ -895,7 +895,7 @@ CIPK MAR01 ADD DATA LINE FOR TIME STEP LENGTHENING
 CIPK MAR01 ADD DATA LINE FOR RECYCLING FLOW
       
    24 CONTINUE
-      IF(ID(1:3) .EQ. 'PWR') THEN
+      IF(ID(1:3) == 'PWR') THEN
 CIPK OCT01 ADD NADTYP OPTION TO INPUT AND OUTPUT
         READ(DLIN,'(2I8,2F8.0,8X,3F8.0,I8)') NINCC,NOUTCC(NINCC),
      +      ADDSAL(NINCC),ADDTMP(NINCC,1),ADDTMP(NINCC,3),ADDSED(NINCC)
@@ -903,7 +903,7 @@ CIPK OCT01 ADD NADTYP OPTION TO INPUT AND OUTPUT
 CIPK SEP01 ADD ADDMAX
         WRITE(LOUT,6105)
         WRITE(LOUT,6106) NINCC,NOUTCC(NINCC),
-     +	  ADDSAL(NINCC),ADDTMP(NINCC,1),ADDTMP(NINCC,3),ADDSED(NINCC)
+     +      ADDSAL(NINCC),ADDTMP(NINCC,1),ADDTMP(NINCC,3),ADDSED(NINCC)
      +     ,ADDMAX(NINCC),NADTYP(NINCC)
 CIPK SEP01 ADD ADDMAX
         call ginpt(lin,id,dlin)
@@ -915,7 +915,7 @@ cipk aug01 add Multi PWR line option
 CIPK JAN03 ADD DATA LINE FOR EQUILIBRIUM TEMPERATURE FORMULATION
       
       METEQ=0
-      IF(ID(1:3) .EQ. 'EQT') THEN
+      IF(ID(1:3) == 'EQT') THEN
         READ(DLIN,'(3F8.0)') EQTEMP,XKRAT,EXTING
         WRITE(LOUT,6107)
         WRITE(LOUT,6108) EQTEMP,XKRAT,EXTING
@@ -957,40 +957,40 @@ C-
       NMAT=0
 
       ElementCharacteristics: Do
-        IF(ID(1:3) .EQ. 'ED1') THEN
+        IF(ID(1:3) == 'ED1') THEN
           READ(DLIN,5030) J,(ORT(J,K),K=1,7)
           write(*,*) 'read ed1'
 
-          IF(NMAT .LT. J) NMAT=J
+          IF(NMAT < J) NMAT=J
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          IF(ID(1:3) .EQ. 'ED2') THEN
+          IF(ID(1:3) == 'ED2') THEN
 cipk nov97  add extra friction
 CIPK NOV98 ADD SURFACE FICTION
             READ(DLIN,5031) (ORT(J,K),K=8,14)
             write(*,*) 'read ed2'
 cipk mar98 
-            if(ort(j,12) .eq. 0.) ort(j,12)=1.
+            if(ort(j,12) == 0.) ort(j,12)=1.
 CIPK NOV97      READ(LIN,7000) ID,DLIN
             call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk dec03 add element dependence IEDSW
-            IF(ID(1:3) .EQ. 'ED3') THEN
+            IF(ID(1:3) == 'ED3') THEN
               READ(DLIN,5032) IT1,TT1,TT2
               call ginpt(lin,id,dlin)
-              IF(IEDSW .LT. 0) THEN
+              IF(IEDSW < 0) THEN
                 IEDSW1(J)=IT1
               ENDIF
-              IF(TT1 .GT. 0.) THEN
+              IF(TT1 > 0.) THEN
                 TBFACT1(J)=TT1
               ENDIF
-              IF(TT2 .GT. 0.) THEN
+              IF(TT2 > 0.) THEN
                 TBMIN1(J)=TT2
               ENDIF
-            ELSEIF(IEDSW .LT. 0) THEN
+            ELSEIF(IEDSW < 0) THEN
 cipk sep04
               CLOSE(75)
               OPEN(75,FILE='ERROR.OUT')
@@ -1010,7 +1010,7 @@ cipk sep04
               ort (j, 5) = -1.0
               call ginpt(lin,id,dlin)
 
-            ELSEIF (IVEGETATION == 1 .and. ID(1:3) /= 'ED4') THEN
+            ELSEIF (IVEGETATION == 1 .AND. ID(1:3) /= 'ED4') THEN
               CLOSE(75)
               OPEN(75,FILE='ERROR.OUT')
               WRITE(75,*) 'ERROR -- EXPECTED ED4 DATA LINE'
@@ -1029,7 +1029,7 @@ cipk sep04
         ENDIF
       ENDDO ElementCharacteristics
 
-      IF(NMAT .EQ. 0) THEN
+      IF(NMAT == 0) THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -1039,7 +1039,7 @@ cipk sep04
       ENDIF
       WRITE(LOUT,6030)
       DO J=1,NMAT
-        IF(ORT(J,1) .NE. 0.) THEN
+        IF(ORT(J,1) /= 0.) THEN
 cipk mar98 change limit to 12
 cipk nov98 change limit to 13
 
@@ -1051,20 +1051,20 @@ cipk nov98 change limit to 13
       ENDDO
 
 CIPK DEC03 OUTPUT ED3 LINE
-      IF(IEDSW .EQ. -1) THEN
+      IF(IEDSW == -1) THEN
         WRITE(LOUT,6043)
         DO  J=1,NMAT
-          IF(ORT(J,1) .NE. 0) THEN
+          IF(ORT(J,1) /= 0) THEN
             WRITE(LOUT,6044) J,IEDSW1(J),TBFACT1(J),TBMIN1(J)
           ENDIF
         ENDDO 
       ELSE
         IT1=0
         DO J=1,NMAT
-          IF(ORT(J,1) .NE. 0) THEN
-            IF(TBFACT1(J) .NE. 0.  .OR.  TBMIN1(J) .NE. 0.) THEN
-              IF(IT1 .EQ. 0) THEN
-             	  WRITE(LOUT,6045)
+          IF(ORT(J,1) /= 0) THEN
+            IF(TBFACT1(J) /= 0. .OR. TBMIN1(J) /= 0.) THEN
+              IF(IT1 == 0) THEN
+                     WRITE(LOUT,6045)
                 IT1=1 
               ENDIF
               WRITE(LOUT,6046) J,TBFACT1(J),TBMIN1(J)
@@ -1076,15 +1076,15 @@ CIPK DEC03 OUTPUT ED3 LINE
 
 cipk dec03     Copy to all element types
 
-      IF(IEDSW .GE. 0) THEN
+      IF(IEDSW >= 0) THEN
         DO N=1,NMAT
           IEDSW1(N)=IEDSW
-          IF(TBFACT1(N) .EQ. 0.) TBFACT1(N)=TBFACT
-          IF(TBMIN1(N) .EQ. 0.) TBMIN1(N)=TBMIN
-          IF(TBFACT1(N) .EQ. 0.) TBFACT1(N)=0.2
+          IF(TBFACT1(N) == 0.) TBFACT1(N)=TBFACT
+          IF(TBMIN1(N) == 0.) TBMIN1(N)=TBMIN
+          IF(TBFACT1(N) == 0.) TBFACT1(N)=0.2
         ENDDO
       ENDIF
-      	 
+             
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
@@ -1095,9 +1095,9 @@ CIPK SEP04
       NH=0
       NH1=0
    35 CONTINUE
-      IF(id(1:3) .eq. 'MAN') THEN
+      IF(id(1:3) == 'MAN') THEN
        READ(DLIN,'(I8,4F8.0)') J,ELMMIN(J),MANMIN(J),ELMMAX(J),MANMAX(J)
-        IF(N .EQ. 0) THEN
+        IF(N == 0) THEN
           WRITE(LOUT,6032)
           N=1
         ENDIF
@@ -1107,25 +1107,25 @@ CIPK SEP04
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK SEP04  ADD MAH and MAT OPTIONS
-      ELSEIF(id(1:3) .eq. 'MAH') THEN
+      ELSEIF(id(1:3) == 'MAH') THEN
         READ(DLIN,'(2I8,4F8.0)') J,IMAN(J),(HMAN(J,K),K=1,4)
-        IF(IMAN(J) .EQ. 1) THEN
+        IF(IMAN(J) == 1) THEN
           HMAN(J,1)=0.02
           HMAN(J,2)=2.0
           HMAN(J,3)=0.026
           HMAN(J,4)=0.08
-        ELSEIF(IMAN(J) .EQ. 2) THEN
+        ELSEIF(IMAN(J) == 2) THEN
           HMAN(J,1)=0.04
           HMAN(J,2)=4.0
           HMAN(J,3)=0.040
           HMAN(J,4)=0.166667
-        ELSEIF(IMAN(J) .EQ. 3) THEN
+        ELSEIF(IMAN(J) == 3) THEN
           HMAN(J,1)=0.04
           HMAN(J,2)=2.0
           HMAN(J,3)=0.040
           HMAN(J,4)=0.166667
         ENDIF
-        IF(NH .EQ. 0) THEN
+        IF(NH == 0) THEN
           WRITE(LOUT,6052)
           N=1
         ENDIF
@@ -1134,9 +1134,9 @@ CIPK SEP04  ADD MAH and MAT OPTIONS
         GO TO 35
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ELSEIF(id(1:3) .eq. 'MAT') THEN
+      ELSEIF(id(1:3) == 'MAT') THEN
        READ(DLIN,'(I8,8F8.0)') J,(MANTAB(J,K,1),MANTAB(J,K,2),K=1,4)
-        IF(NH1 .EQ. 0) THEN
+        IF(NH1 == 0) THEN
           WRITE(LOUT,6054)
           N=1
         ENDIF
@@ -1149,9 +1149,9 @@ CIPK SEP04  ADD MAH and MAT OPTIONS
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       N=0
    36 CONTINUE
-      IF(id(1:3) .eq. 'DRG') THEN
+      IF(id(1:3) == 'DRG') THEN
         READ(DLIN,'(I8,4F8.0)') J,DRAGX(J),DRAGY(J)
-        IF(N .EQ. 0) THEN
+        IF(N == 0) THEN
           WRITE(LOUT,6041)
           N=1
         ENDIF
@@ -1321,7 +1321,7 @@ C-
       
                    enddo
       
-                ELSEIF ( .NOT.ALLOCATED(BANKPROFILES) ) THEN    ID0 
+                ELSEIF ( .NOT. ALLOCATED(BANKPROFILES) ) THEN    ID0 
                   ProfileCounter = ProfileCounter + 1             ! counting profiles when all PRF = 0,and 
                 END IF   ID0                                      ! there is no profile data file.
       
@@ -1338,7 +1338,7 @@ C-
  
           !The bankprofile allocation is here in the  case of ProfileId= 0 (for all CCL)and bankevolution = .TRUE.
 
-          IF( (BANKEVOLUTION).AND.(.NOT.ALLOCATED(BANKPROFILES) ) )THEN
+       IF( (BANKEVOLUTION) .AND. ( .NOT. ALLOCATED(BANKPROFILES) ) )THEN
               ALLOCATE (BANKPROFILES ( ProfileCounter),stat=ISTAT )
               ProfileCounter = 1                 ! To be used later(after getcoords loop) as counter for profiles with ID=0
               IF (ISTAT/=0) THEN
@@ -1431,10 +1431,10 @@ CIPK SEP96 ADD OCEAN BOUNDARY NODE LIST
       N1=-8
   40  N1=N1+9
       N9=N1+8
-      IF(ID(1:2) .EQ. 'OB') THEN
+      IF(ID(1:2) == 'OB') THEN
         READ(DLIN,'(9I8)') (IRBD(I),I=N1,N9)
         DO I=N1,N9
-          IF(IRBD(I) .EQ. 0) THEN
+          IF(IRBD(I) == 0) THEN
             NRBD=I
             GO TO 45
           ENDIF
@@ -1468,7 +1468,7 @@ C-
               call setCoords (tmpNode.thisNode,
      +          cord (tmpNode.thisNode.ID, 1:2),
      +          ao(tmpNode.thisNode.ID))
-              if (.not. (associated (tmpNode.next))) exit assignCoords
+              if ( .NOT. (associated (tmpNode.next))) exit assignCoords
               tmpNode => tmpNode.next
             enddo assignCoords
             call setChordNormal (tmp_singleCCL)
@@ -1483,7 +1483,7 @@ C-
             arc1D => newArc (node1D_first, node1D_last)
             arcVec = arcVector (arc1D)
             !get direction pointer
-            if (ccls(i).posNormal(1) == 0.0d0 .and.
+            if (ccls(i).posNormal(1) == 0.0d0 .AND. 
      +          ccls(i).posNormal(2) == 0.0d0) then
               dirPointer = 1.0d0
             else
@@ -1499,7 +1499,7 @@ C-
  !-------------------------------------------------------------------------------     
       ! HN JUNE2009. HERE IS THE FIRST PLACE THAT COORDINATES HAVE BEEN ASSIAGNED TO CORNER NODES IN CONTILINES.
  !        IF ( ProfileID == 0 ) THEN
-        IF (( bankevolution ).and.(IPROFIN/= 731) ) THEN
+        IF (( bankevolution ) .AND. (IPROFIN/= 731) ) THEN
 
         inquire (file = 'PROFILE_CONTI.TXT', EXIST= exists)
     
@@ -1516,8 +1516,8 @@ C-
 
           DO n = 1, ncl
          
-           IF( (ccls(n).HasProfile).AND.
-     +          (.NOT. associated( ccls(n).MorphoProfile)) ) THEN
+           IF( (ccls(n).HasProfile) .AND. 
+     +          ( .NOT. associated( ccls(n).MorphoProfile)) ) THEN
              tmp_CCL => ccls(n)
              write (*,*) 'CCL ', n, 'lmt(n) ', lmt(n)
              write (*,*) ' entering into makeprofile subroutine...'
@@ -1558,7 +1558,7 @@ C-
       !NiS,may06: testing
       !OPEN(UNIT=357, FILE='roughnesstest.txt')
       Materialassigning: DO J=1,MaxE
-        if (IMAT(J) == 0 .or. imat (j) == 89) CYCLE Materialassigning
+        if (IMAT(J) == 0 .OR. imat (j) == 89) CYCLE Materialassigning
         CNIKU(J)     = ORT(ABS(IMAT(J)),15)
         ABST(J)      = ORT(ABS(IMAT(J)),16)
         DURCHBAUM(J) = ORT(ABS(IMAT(J)),17)
@@ -1572,8 +1572,8 @@ CIPK JUN02 GET LIST OF ACTIVE NODES INCLUDING NODES WITH ORT NON ZERO
         IBNA(N)=0
       ENDDO
       DO N=1,NE
-        IF(IMAT(N) .GT. 0 .and. imat (n) /= 89) THEN
-          IF(ORT(IMAT(N),1) .NE. 0.) THEN
+        IF(IMAT(N) > 0 .AND. imat (n) /= 89) THEN
+          IF(ORT(IMAT(N),1) /= 0.) THEN
             DO K=1,NCORN(N)
               IBNA(NOP(N,K))=IBNA(NOP(N,K))+1
             ENDDO
@@ -1587,10 +1587,10 @@ C-
 C-..... Read reorder array if there is input
 C-
       tofday=tet
-      IF(ID(1:2) .EQ. 'RO') THEN
+      IF(ID(1:2) == 'RO') THEN
         READ(DLIN,5010) (NFIXH(J),J=1,9)
 CIPK JAN99
-        IF(NE .LE. 9) THEN
+        IF(NE <= 9) THEN
           call ginpt(lin,id,dlin)
           GO TO 71
         ENDIF
@@ -1598,14 +1598,14 @@ CIPK JAN99 END ADDITION
         N1=1
    70   N1=N1+9
         N2=N1+8
-        IF(N2 .GT. NE) N2=NE
+        IF(N2 > NE) N2=NE
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        IF(ID(1:3) .EQ. 'RO ') THEN
+        IF(ID(1:3) == 'RO ') THEN
           READ(DLIN,5010) (NFIXH(J),J=N1,N2)
-          IF(N2 .LT. NE) GO TO 70
+          IF(N2 < NE) GO TO 70
         ELSE
 cipk sep04
           CLOSE(75)
@@ -1623,9 +1623,9 @@ C......FILL REORDERING ARAAY
 C-
 CIPK JAN99 ADD A LINE
    71 CONTINUE
-      IF(NFIXH(1).EQ.0) NFIXH(1)=1
+      IF(NFIXH(1) == 0) NFIXH(1)=1
       DO N=2,NE
-        IF(NFIXH(N).EQ.0) NFIXH(N)=NFIXH(N-1)+1
+        IF(NFIXH(N) == 0) NFIXH(N)=NFIXH(N-1)+1
       ENDDO
 C-
 C...... Preliminary initialisation of VEL(3,  ) for BLINE
@@ -1636,12 +1636,12 @@ CIPK DEC99 CHANGE TO ELEV1
         HEL(J)=ELEV1-ADO(J)
         CALL AMF(HEL(J),HTP,AKP(J),ADT(J),ADB(J),D1,D2,1)
           VEL(3,J)=HTP
-        IF(VEL(3,J) .LT. HMIN) VEL(3,J)=HMIN
+        IF(VEL(3,J) < HMIN) VEL(3,J)=HMIN
         VOLD(3,J)=VEL(3,J)
         HOL(J)=HEL(J)
 CIPK NOV97      VEL(3,J)=ELEV-AO(J)
-CIPK NOV97      IF(VEL(3,J) .LT. HMIN) VEL(3,J)=HMIN
-CIPKNOV97       IF(HMNN .LT. 0.) VEL(3,J)=-HMNN
+CIPK NOV97      IF(VEL(3,J) < HMIN) VEL(3,J)=HMIN
+CIPKNOV97       IF(HMNN < 0.) VEL(3,J)=-HMNN
       ENDDO
    80 CONTINUE
 
@@ -1650,7 +1650,7 @@ C-
 C-.....READ EXTERNAL SLOPE SPECS.....
 C-
    81 CONTINUE
-      IF(ID(1:2) .EQ. 'SL') THEN
+      IF(ID(1:2) == 'SL') THEN
         READ(DLIN,5029) N,ALFAK(N)
         ALFA(N)=ALFAK(N)
         WRITE(LOUT,6035) N,ALFAK(N)
@@ -1666,11 +1666,11 @@ C  Read fixed salinity nodes and values
 C
       NFXSAL = 0
    82 CONTINUE
-      IF (ID(1:2) .EQ. 'SA')  THEN
+      IF (ID(1:2) == 'SA')  THEN
         READ(DLIN,'(3F8.0)') SALBC
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
-        IF(ID(1:3) .EQ. 'SA1') THEN
+        IF(ID(1:3) == 'SA1') THEN
           WRITE(LOUT,6036) SALBC
           READ(DLIN,5010) (IFXSAL(K),K=1,9)
           WRITE(LOUT,5010) (IFXSAL(K),K=1,9)
@@ -1678,7 +1678,7 @@ CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN
           call ginpt(lin,id,dlin)
           DO K = 1, 9
             N = IFXSAL(K)
-            IF (N .EQ. 0  .OR.  N .GT.  9990)  GOTO 82
+            IF (N == 0 .OR. N > 9990)  GOTO 82
             NFIX(N) = (NFIX(N)/100)*100 + 11
             NFIX1(N)=1
             SPEC(N,4) = SALBC(1)
@@ -1699,14 +1699,14 @@ cipk sep04
         N9=N1+8
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        IF(ID(1:3) .EQ. 'SA1') THEN
+        IF(ID(1:3) == 'SA1') THEN
           READ(DLIN,5010) (IFXSAL(K),K=N1,N9)
           WRITE(LOUT,5010) (IFXSAL(K),K=N1,N9)
 CIPK NOV97          READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
             N = IFXSAL(K) 
-            IF (N .EQ. 0  .OR.  N .GT.  9990)  GOTO 82
+            IF (N == 0 .OR. N > 9990)  GOTO 82
             NFIX(N) = (NFIX(N)/100)*100 + 11
             NFIX1(N)=1
             SPEC(N,4) = SALBC(1)
@@ -1723,7 +1723,7 @@ CIPK NOV97          READ(LIN,7000) ID,DLIN
 C
 C  Read straight line mid-side nodes
 C
-      IF(ID(1:3) .EQ. 'ST1') THEN                               !NiS,mar06,comment:
+      IF(ID(1:3) == 'ST1') THEN                               !NiS,mar06,comment:
         READ(DLIN,5010) (IMIDD(K),K=1,9)                        !
         WRITE(LOUT,6037) (IMIDD(K),K=1,9)                       !This part of the code does not do what the handbook says. Therefore see pages
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
@@ -1731,21 +1731,21 @@ CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
 C
         DO  II=1,9
           N=IMIDD(II)
-          IF(N .GT. 0) NSTRT(N,2)=1
+          IF(N > 0) NSTRT(N,2)=1
         ENDDO
         N1=1
   116   N1=N1+9
         N9=N1+8
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        IF(ID(1:3) .EQ. 'ST1') THEN
+        IF(ID(1:3) == 'ST1') THEN
           READ(DLIN,5010) (IMIDD(K),K=N1,N9)
           WRITE(LOUT,5010) (IMIDD(K),K=N1,N9)
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
             N = IMIDD(K) 
-            IF(N .GT. 0) NSTRT(N,2)=1
+            IF(N > 0) NSTRT(N,2)=1
           ENDDO
           GO TO 116
         ENDIF
@@ -1763,7 +1763,7 @@ C
        CPOW(1) = CPR 
 C
   192 CONTINUE
-      IF (ID(1:2) .EQ. 'CP')  THEN
+      IF (ID(1:2) == 'CP')  THEN
         READ(DLIN,'(I8,2F8.0)') J,CINT(J),CPOW(J)
         WRITE(LOUT,6038) CINT(J),CPOW(J)
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
@@ -1773,14 +1773,14 @@ CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
 C
 C  Read list of nodes and associated coefficient number for salinity distr.
 C
-        IF(ID(1:3) .EQ. 'CP1') THEN
+        IF(ID(1:3) == 'CP1') THEN
           READ(DLIN,5010) (IMIDD(K),K=1,9)
           WRITE(LOUT,5010) (IMIDD(K),K=1,9)                                     !NiS,mar06,comment:
 CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN                                !This part of the code does not do, what the handbook says. See
       call ginpt(lin,id,dlin)                                                   !therefore page 42 in the handbook release of September 2005
           DO K = 1, 9
             N = IMIDD(KK)
-            IF(N .GT. 0) ICPON(N)=J
+            IF(N > 0) ICPON(N)=J
           ENDDO
         ELSE
 cipk sep04
@@ -1793,14 +1793,14 @@ cipk sep04
         N1=1
   193   N1=N1+9
         N9=N1+8
-        IF(ID(1:3) .EQ. 'CP1') THEN
+        IF(ID(1:3) == 'CP1') THEN
           READ(DLIN,5010) (IMIDD(K),K=N1,N9)
           WRITE(LOUT,5010) (IMIDD(K),K=N1,N9)
 CIPK NOV97          READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
             N = IMIDD(K) 
-            IF(N .GT. 0) ICPON(N)=J
+            IF(N > 0) ICPON(N)=J
           ENDDO
           GO TO 193
         ENDIF
@@ -1809,7 +1809,7 @@ CIPK NOV97          READ(LIN,7000) ID,DLIN
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
-      IF(ID(1:6) .NE. 'ENDGEO') THEN
+      IF(ID(1:6) /= 'ENDGEO') THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -1825,9 +1825,9 @@ cipk sep04
 
 CIPK MAY01
 
-      IF(LSAND .NE. 0  .OR.  LBED .NE. 0) CALL INSAND
+      IF(LSAND /= 0 .OR. LBED /= 0) CALL INSAND
 
-      IF(LSS .NE. 0) CALL SPROP
+      IF(LSS /= 0) CALL SPROP
 
 
 
@@ -1847,7 +1847,7 @@ C-
 ! MIDSIDE NODES ARE CONSIDERED HERE IN CONSTRUCTING PROFILE NODES.
 ! THEY ARE INCLUDED IN CONTILINE AFTER CALLING SUBROUTINE CHECK.      
        if (middsidd) then
-         if ((ProfileID == 0 ).and.( IPROFIN/=731) ) then
+         if ((ProfileID == 0 ) .AND. ( IPROFIN/=731) ) then
           j = 0
          
           do n = 1, ncl
@@ -1886,16 +1886,16 @@ C-
 
 cipk jan99 set directions
        do n=1,ne
-         if(imat(n) .gt. 900) then
+         if(imat(n) > 900) then
            n1=nop(n,1)
-           if(ndep(n1) .gt. 1) then
+           if(ndep(n1) > 1) then
 
              !get midside node
              n2=nop(n,2)
 
-             if(abs(alfa(n1)-alfa(n2)) .gt. 1.570796  .and.
-     +          abs(alfa(n1)-alfa(n2)) .lt. 4.713388) then
-                if(alfa(n1) .gt. alfa(n2)) then
+             if(abs(alfa(n1)-alfa(n2)) > 1.570796 .AND. 
+     +          abs(alfa(n1)-alfa(n2)) < 4.713388) then
+                if(alfa(n1) > alfa(n2)) then
                   alfa(n2)=alfa(n2)+3.141592
                 else
                   alfa(n2)=alfa(n2)-3.141592
@@ -1911,19 +1911,19 @@ C-
 !REMOVE FOR RMA·KALYPSO
 !nis,nov08: Remove obsolete unit ifit
 !ifit is obsolete
-!      IF(IFIT .GT. 0) GO TO 99
+!      IF(IFIT > 0) GO TO 99
 !-
       DO 86 I=1,NP
    86 IBN(I)=0
       DO 90 J=1,NE
-        IF(IMAT(J) .GT. 0) THEN
-        IF(NETYP(J) .EQ. 17) GO TO 90
+        IF(IMAT(J) > 0) THEN
+        IF(NETYP(J) == 17) GO TO 90
 CIPK OCT98 CONVERT TO F90
           MTYP=IMAT(J)
-          IF(MOD(MTYP,100) .LE. 90) THEN
+          IF(MOD(MTYP,100) <= 90) THEN
             ILK=1
             NCN=NCRN(J)
-            IF(NCN .EQ. 5) NCN=3
+            IF(NCN == 5) NCN=3
             DO 87 K=1,NCN
               N=NOP(J,K)
               IBN(N)=IBN(N)+1
@@ -1935,13 +1935,13 @@ C       REAL BOUNDARY AND ARE SOME KIND OF SPECIFIED HEAD
 C-
 cipk sept 95 add definition for ncn
             NCN=NCRN(J)
-            IF(NCN .GT. 3) THEN
+            IF(NCN > 3) THEN
               DO 881 K=1,NCN,2
                 L=NOP(J,K)
-                IF(MOD(NFIX(L)/100,10) .EQ. 0) GO TO 881
+                IF(MOD(NFIX(L)/100,10) == 0) GO TO 881
                 KL=MOD(K+2,NCN)
                 KL=NOP(J,KL)
-                IF(MOD(NFIX(KL)/100,10) .EQ. 0) GO TO 881
+                IF(MOD(NFIX(KL)/100,10) == 0) GO TO 881
                 KK=K-1
                 GO TO 882
   881         CONTINUE
@@ -1959,7 +1959,7 @@ cipk sep04
               DO 886 K=1,NCN
                 KK=KK+1
                 KL=MOD(KK,NCN)
-                IF(KL .EQ. 0) KL=NCN
+                IF(KL == 0) KL=NCN
                 NOP(J,K)=IM(KL)
                 NOPS(J,K)=IM(KL)
   886         CONTINUE
@@ -1967,10 +1967,10 @@ cipk sep04
             ELSE
               NBL=2
               L=NOP(J,1)
-              IF(MOD(NFIX(L)/100,10) .NE. 0) GO TO 887
+              IF(MOD(NFIX(L)/100,10) /= 0) GO TO 887
               KL=NOP(J,3)
-cbm july95 fix error reference        IF(MOD(NFIX(L)/100,10) .NE. 0) THEN
-              IF(MOD(NFIX(KL)/100,10) .NE. 0) THEN
+cbm july95 fix error reference        IF(MOD(NFIX(L)/100,10) /= 0) THEN
+              IF(MOD(NFIX(KL)/100,10) /= 0) THEN
                 NOP(J,3)=L
                 NOPS(J,3)=L
                 NOP(J,1)=KL
@@ -1996,20 +1996,20 @@ C-
 C...... reset IBN to NETYP=18
 C-
       DO 91 N=1,NE
-        IF(NETYP(N) .EQ. 18) THEN
+        IF(NETYP(N) == 18) THEN
           J=NOP(N,19)
 CZZZ 
-          if (j .gt. 0)  IBN(J)=2
+          if (j > 0)  IBN(J)=2
           J=NOP(N,3)
-          if (j .gt. 0)  IBN(J)=2
+          if (j > 0)  IBN(J)=2
         ENDIF
    91 CONTINUE
       DO  98 I=1,NP
-      IF(IBN(I) .NE. 1) GO TO 95
-      IF(NFIX(I)/ 1000 .EQ. 11) GO TO 95
+      IF(IBN(I) /= 1) GO TO 95
+      IF(NFIX(I)/ 1000 == 11) GO TO 95
       IBN(I)=1
-      IF(MOD(NFIX(I), 1000)/100 .EQ. 2) IBN(I)=2
-      IF(NFIX(I)/ 1000 .EQ. 31) IBN(I)=3
+      IF(MOD(NFIX(I), 1000)/100 == 2) IBN(I)=2
+      IF(NFIX(I)/ 1000 == 31) IBN(I)=3
       GO TO  98
    95 IBN(I)=0
    98 CONTINUE
@@ -2018,8 +2018,8 @@ C  Calculate 2-D Eddy Viscosity Coef
 C  Initialize viscosity array
 C
       DO 141  N=1,NE
-         IF (IMAT(N) .NE. 0 .and. imat(n) /= 89)  THEN
-cipk dec00          IF (IMAT(N) .GE. 900) GO TO 141
+         IF (IMAT(N) /= 0 .AND. imat(n) /= 89)  THEN
+cipk dec00          IF (IMAT(N) >= 900) GO TO 141
             I = abs(IMAT(N))
             EEXXYY(1,N) = ORT(I,1)
             EEXXYY(2,N) = ORT(I,2)
@@ -2061,11 +2061,11 @@ CIPK AUG00 SAVE GENERATED ORDER
       ENDDO
 
 cipk OCT96 add logic to expand ocean boundaries to 3-d
-      IF(NRBD .GT. 0) THEN
+      IF(NRBD > 0) THEN
         NRBDT=NRBD
         DO I=1,NRBD
           N=IRBD(I)
-          IF(NDEP(N) .GT. 1) THEN
+          IF(NDEP(N) > 1) THEN
             NL=NREF(N)+1
             NT=NL+NDEP(N)-2
             DO  M=NL,NT
@@ -2082,22 +2082,22 @@ C-
 C-..... COMPUTE MID-SIDE VALUES.....
 C-
       DO 102 J=1,NE
-        IF(IMAT(J).EQ.0) GO TO 102
-C     IF(IMAT(J) .EQ. 901) GO TO 102
-C     IF(NCORN(J) .EQ. 3  .AND.  IMAT(J) .LT. 1000) NCORN(J)=NCRN(J)
-        IF(NCORN(J) .LT. 6  .AND.  IMAT(J) .LT. 901) NCORN(J)=NCRN(J)
-        IF(IMAT(J) .EQ. 901) GO TO 102
+        IF(IMAT(J) == 0) GO TO 102
+C     IF(IMAT(J) == 901) GO TO 102
+C     IF(NCORN(J) == 3 .AND. IMAT(J) < 1000) NCORN(J)=NCRN(J)
+        IF(NCORN(J) < 6 .AND. IMAT(J) < 901) NCORN(J)=NCRN(J)
+        IF(IMAT(J) == 901) GO TO 102
         NCN=NCORN(J)
-        IF(NCN .LT. 6) THEN    
-          IF(NCN .EQ. 5) NCN=3
+        IF(NCN < 6) THEN    
+          IF(NCN == 5) NCN=3
           ILK=1
-        ELSEIF(NCN .EQ.6) THEN
+        ELSEIF(NCN == 6) THEN
           ILK=2
-        ELSEIF(NCN .EQ.15) THEN
+        ELSEIF(NCN == 15) THEN
           ILK=2
-        ELSEIF(NCN .EQ. 10) THEN
+        ELSEIF(NCN == 10) THEN
           ILK=3
-        ELSEIF(NCN .EQ. 13) THEN
+        ELSEIF(NCN == 13) THEN
           ILK=4
         ELSE
           ILK=1
@@ -2111,22 +2111,22 @@ C     IF(NCORN(J) .EQ. 3  .AND.  IMAT(J) .LT. 1000) NCORN(J)=NCRN(J)
           KL=IL(K,ILK)
 CIPK SEP05
           N2=NOP(J,K)
-          IF(KL .EQ. 0) THEN
-            IF(N2 .GT. 0) IMID(N2,1)=0
+          IF(KL == 0) THEN
+            IF(N2 > 0) IMID(N2,1)=0
             GO TO 101
           ENDIF
           KH=IH(K,ILK)
           N1=NOP(J,KL)
-          IF(N1 .EQ. 0) GO TO 101
+          IF(N1 == 0) GO TO 101
           N3=NOP(J,KH)
           IMID(N2,1)=N1
           IMID(N2,2)=N3
-          IF(WIDTH(N1) .GT. 0.  .AND.  WIDTH(N3) .GT. 0.) THEN
+          IF(WIDTH(N1) > 0. .AND. WIDTH(N3) > 0.) THEN
             WIDTH(N2)=0.5*(WIDTH(N1)+WIDTH(N3))
             SS1(N2)=0.5*(SS1(N1)+SS1(N3))
             SS2(N2)=0.5*(SS2(N1)+SS2(N3))
           ENDIF
-          IF(CORD(N2,1) .LE. VOID) THEN
+          IF(CORD(N2,1) <= VOID) THEN
             CORD(N2,1)=0.5*(CORD(N1,1)+CORD(N3,1))
             CORD(N2,2)=0.5*(CORD(N1,2)+CORD(N3,2))
           ENDIF
@@ -2138,12 +2138,12 @@ CIPK SEP05
           ADT(N2)=0.5*(ADT(N1)+ADT(N3))
           ADB(N2)=0.5*(ADB(N1)+ADB(N3))
 cipk aug98
-            if(ndep(n1) .gt. 0) then 
+            if(ndep(n1) > 0) then 
               akp(n2)=akp(n3)
-              if(ndep(n3) .eq. 0) akp(n1)=akp(n3)
-            elseif(ndep(n3) .gt. 0) then
+              if(ndep(n3) == 0) akp(n1)=akp(n3)
+            elseif(ndep(n3) > 0) then
               akp(n2)=akp(n1)
-              if(ndep(n1) .eq. 0) akp(n3)=akp(n1)
+              if(ndep(n1) == 0) akp(n3)=akp(n1)
             else
             AKP(N2)=0.5*(AKP(N1)+AKP(N3))
             endif
@@ -2153,7 +2153,7 @@ C    Define node connectors to N2 if surface node is defined straight
 C
 CIPK OCT98 CONVERT TO F90
           II=ABS(NSURF(N2))
-          IF(NSTRT(II,2) .NE. 0) THEN
+          IF(NSTRT(II,2) /= 0) THEN
             NSTRT(N2,1)=KL
             NSTRT(N2,2)=KH
           ENDIF
@@ -2163,17 +2163,17 @@ CIPK OCT98 CONVERT TO F90
 
 CIPK SEP04  ENSURE VALUES AT ALL NODES
       DO N=1,NPM
-          IF(NDEP(N) .GT. 1) THEN
+          IF(NDEP(N) > 1) THEN
             N1=NREF(N)+1
             NV=NDEP(N)+N1-2
-	    DO M=N1,NV
+          DO M=N1,NV
           AO(M)=AO(N)
           ADO(M)=ADO(N)
           ADT(M)=ADT(N)
           ADB(M)=ADB(N)
           akp(M)=akp(n)
         ENDDO
-	  ENDIF
+        ENDIF
       ENDDO
 
 
@@ -2186,31 +2186,31 @@ c-
 
 C     HEADER  =   1000 character header with the label RMA103DG in loc 1-8
 
-C	NP		=	I4	Number of nodes
-C	NE		=	I4	Number of elements
-C	NPM		=	I4	Number of surface nodes
-C	NEM		=	I4	Number of surface elements
-C	CORD	=	R8	Array of nodal cordinates 			(NP,3)
-C	SPEC	=	R4	Array of specifie BC's				(NP,3)
-C	ALFA	=	R4	Array of boundary slopes			(NP)
-C	NFIX	=	I4	Array of boundary conditions			(NP)
-C	NFIX1	=	I4	Continuation array of BC's			(NP)
-C	AO		=	R8	Array of bed elevation				(NP)
-C	NSURF	=	I4	Array of surface node number above this node 	(NP)
-C	NDEP	=	I2	Array of number of nodes in vertical line below 	(NPM)
-C	NREF	=	I4	Array showing nodes below a fvien sirface node	(NPM)
-C	NOP		=	I4	Array of nodes forming an element		(NE,20)
-C	NCORN	=	I2	Array of number of nodes around an element	(NE)
-C	IMAT	=	I2	Array of element characteristics number		(NE)
-C	NETYP	=	I2	Array defining element type			(NE)
-C	TH		=	R4	Array of principal direction of element		(NE)
-C	NFIXH	=	I4	Array containing element elimination order	(NE)
-C	WIDTH	=	R4	Array of bed widths for 1-D nodes		(NP)
+C      NP            =      I4      Number of nodes
+C      NE            =      I4      Number of elements
+C      NPM            =      I4      Number of surface nodes
+C      NEM            =      I4      Number of surface elements
+C      CORD      =      R8      Array of nodal cordinates                   (NP,3)
+C      SPEC      =      R4      Array of specifie BC's                        (NP,3)
+C      ALFA      =      R4      Array of boundary slopes                  (NP)
+C      NFIX      =      I4      Array of boundary conditions                  (NP)
+C      NFIX1      =      I4      Continuation array of BC's                  (NP)
+C      AO            =      R8      Array of bed elevation                        (NP)
+C      NSURF      =      I4      Array of surface node number above this node       (NP)
+C      NDEP      =      I2      Array of number of nodes in vertical line below       (NPM)
+C      NREF      =      I4      Array showing nodes below a fvien sirface node      (NPM)
+C      NOP            =      I4      Array of nodes forming an element            (NE,20)
+C      NCORN      =      I2      Array of number of nodes around an element      (NE)
+C      IMAT      =      I2      Array of element characteristics number            (NE)
+C      NETYP      =      I2      Array defining element type                  (NE)
+C      TH            =      R4      Array of principal direction of element            (NE)
+C      NFIXH      =      I4      Array containing element elimination order      (NE)
+C      WIDTH      =      R4      Array of bed widths for 1-D nodes            (NP)
 
 C       Note that the nodel number immediately below the surface node N is given by
-C		ND 	=	NREF(N)+1
+C            ND       =      NREF(N)+1
 C       and that the node at the bed is given by
-C		NDB	=	NREF(N)+NDEP(N)-1
+C            NDB      =      NREF(N)+NDEP(N)-1
 
 C       NETYP is an array that defines the type of each element
 C           = 1   One dimensional  surface element (2d applications)
@@ -2259,20 +2259,20 @@ C                 16----------22----------35----------40----------46
 
 C     IN THIS EXAMPLE
 C     NDEP(1)=7
-C	NDEP(2)=4
-C	NREF(1)=10
-C	NREF(2)=19
-C	NSURF(11)=1
-C	NSURF(20)=2
+C      NDEP(2)=4
+C      NREF(1)=10
+C      NREF(2)=19
+C      NSURF(11)=1
+C      NSURF(20)=2
 
 C-
 C-.....ASSIGN HIGHER ORDER TO CURVED ELEMENTS.....
 C-
       DO 130 J = 1, NE
-        IF( IMAT(J) .EQ. 0 .OR. IMAT(J) .GT. 100 ) GO TO 130
+        IF( IMAT(J) == 0 .OR. IMAT(J) > 100 ) GO TO 130
         NCN = NCORN(J)
-        IF(NCN .EQ. 20) NCN=8
-        IF(NCN .EQ. 6  .OR.  NCN .EQ. 8) THEN
+        IF(NCN == 20) NCN=8
+        IF(NCN == 6 .OR. NCN == 8) THEN
           DO 125 K = 1, NCN, 2
             N1 = NOP(J,K)
             N2 = NOP(J,K+1)
@@ -2282,14 +2282,14 @@ C-
             XD = SQRT((CORD(N1,1)-CORD(N3,1))**2+
      +                (CORD(N1,2)-CORD(N3,2))**2)
 cipk dec99  revise test
-          IF(XD .GT. ABS(XM) ) XM=XD
-            IF( ABS(XM-CORD(N2,1) ) .LT. 0.005*ABS(XM) ) THEN
+          IF(XD > ABS(XM) ) XM=XD
+            IF( ABS(XM-CORD(N2,1) ) < 0.005*ABS(XM) ) THEN
               YM = 0.5*( CORD(N1,2) + CORD(N3,2) )
-              IF(XD .GT. ABS(YM) ) YM=XD
-              IF( ABS(YM-CORD(N2,2) ) .LT. 0.005*ABS(YM) ) GO TO 125
+              IF(XD > ABS(YM) ) YM=XD
+              IF( ABS(YM-CORD(N2,2) ) < 0.005*ABS(YM) ) GO TO 125
             ENDIF
 
-            IF(NCORN(J) .LT. 20) THEN
+            IF(NCORN(J) < 20) THEN
               IMAT(J)=IMAT(J)+IHOE
               GO TO 130
             ENDIF
@@ -2302,7 +2302,7 @@ C-
   118       VDIM(I)=CORD(N2,3)-CORD(N1,3)
             AVG=(VDIM(1)+VDIM(2)+VDIM(3)+VDIM(4))/4.
             DO 120 I=1,4
-              IF(ABS(VDIM(I)-AVG) .LT. 0.005) GO TO 120
+              IF(ABS(VDIM(I)-AVG) < 0.005) GO TO 120
               IMAT(J) = IMAT(J) + IHOE
               GO TO 130
   120       CONTINUE
@@ -2313,7 +2313,7 @@ C
 C..... GET VOLUMES FOR EACH ELEMENT
 C
       DO  N=1,NE
-        IF(IMAT(N) .GT. 0) THEN
+        IF(IMAT(N) > 0) THEN
 
 CIPK DEC03 ADD IEDSW DEPENDENCE
 
@@ -2325,13 +2325,13 @@ CIPK DEC03 ADD IEDSW DEPENDENCE
             TBMIN=TBMIN1(NMATYP)
           end if
 
-          IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
+          IF(IMAT(N) > 1000 .AND. IMAT(N) < 5000) THEN
             CALL SURCOF(N,0)
-          ELSEIF(NETYP(N)/10 .EQ. 2) THEN
+          ELSEIF(NETYP(N)/10 == 2) THEN
             CALL COEF3(N,0)
-          ELSEIF(NETYP(N)/10 .EQ. 1) THEN
-            IF(IMAT(N) .LT. 900  .OR. 
-     +    (IMAT(N) .GT. 903  .AND. IMAT(N) .LT. 1000) ) THEN
+          ELSEIF(NETYP(N)/10 == 1) THEN
+            IF(IMAT(N) < 900 .OR. 
+     +    (IMAT(N) > 903 .AND. IMAT(N) < 1000) ) THEN
 CIPK FEB07  ADD TO TEST
               CALL COEF2(N,0)
             ELSE
@@ -2342,13 +2342,13 @@ CIPKNOV97
 
 cipk dec00 allow for gate option
 
-          ELSEIF((IMAT(N) .LT. 900  .or.
+          ELSEIF((IMAT(N) < 900 .OR. 
 !nis,may07
 !Add midside node for polynom approach
       !nis,feb07: Allow for numbered FFF midsides and documentation, it wasn't documented before. This code is also questionable!
-      !+    IGTP(N) .NE. 0).and.nop(n,2).NE.-9999) THEN
-      !+    IGTP(N) .NE. 0) .and. nop(n,2) > -1000) THEN
-     +    IGTP(N) .NE. 0) .and. imat(n) /= 89) THEN
+      !+    IGTP(N) /= 0) .AND. nop(n,2) /= -9999) THEN
+      !+    IGTP(N) /= 0) .AND. nop(n,2) > -1000) THEN
+     +    IGTP(N) /= 0) .AND. imat(n) /= 89) THEN
       !-
 !add midside node for polynom approach
 !-
@@ -2356,13 +2356,13 @@ cipk dec00 allow for gate option
 CIPK NOV97
             CALL COEF1(N,3)
           !EFa Nov06, Aufruf der coef1dPoly-Subroutine für 1D-Teschke-Elemente
-          ELSEIF((IMAT(N) .LT. 900  .or.
+          ELSEIF((IMAT(N) < 900 .OR. 
 !nis,may07
 !add midside node for polynom approach
       !nis,feb07: Allow for numbered FFF midsides
-      !+    IGTP(N) .NE. 0).and.nop(n,2).eq.-9999) THEN
-      !+    IGTP(N) .NE. 0) .and. nop(n,2) < -1000) THEN
-     +    IGTP(N) .NE. 0) .and. imat(n) == 89) THEN
+      !+    IGTP(N) /= 0) .AND. nop(n,2) == -9999) THEN
+      !+    IGTP(N) /= 0) .AND. nop(n,2) < -1000) THEN
+     +    IGTP(N) /= 0) .AND. imat(n) == 89) THEN
       !-
 !add midside node for polynom approach
 !-
@@ -2378,14 +2378,14 @@ c           elements below each node
       NN=1
  1301 CONTINUE
       N=NFIXH(NN)
-      IF(N .LE. NEM) THEN
+      IF(N <= NEM) THEN
 cipk feb98 update to skip zero
-        IF(N .EQ. 0) THEN
+        IF(N == 0) THEN
 c
 c...... This is a missing element
 c
           NN=NN+1
-          IF(NN .GT. NE) GO TO 132
+          IF(NN > NE) GO TO 132
           GO TO 1301
         ENDIF
 cipk feb98 end changes
@@ -2395,19 +2395,19 @@ C       whether it is 3D
 C
 
 
-CIPK JAN99        IF(NETYP(N) .EQ. 16  .OR. NETYP(N) .EQ. 17  .OR.
-        IF(NETYP(N) .EQ. 16  .OR.
-     +    NETYP(N) .EQ. 6) THEN
-CIPK JAN99     +       NETYP(N) .EQ. 18  .OR. NETYP(N) .EQ. 6) THEN
+CIPK JAN99        IF(NETYP(N) == 16 .OR. NETYP(N) == 17 .OR. 
+        IF(NETYP(N) == 16 .OR. 
+     +    NETYP(N) == 6) THEN
+CIPK JAN99     +       NETYP(N) == 18 .OR. NETYP(N) == 6) THEN
 c
 c...... This is 2-d. so there are no elements below
 c
           NEREF(N)=0
           NEDEP(N)=0
           NN=NN+1
-crrr mar2000          IF(NN .GT. NE) GO TO 131
+crrr mar2000          IF(NN > NE) GO TO 131
 CRRR MAR2000   <---------- changed to this
-          IF(NN .GT. NE) GO TO 132
+          IF(NN > NE) GO TO 132
           GO TO 1301
         ELSE
 c
@@ -2416,9 +2416,9 @@ c
           NCTE=1
  1305     CONTINUE
           NN=NN+1
-          IF(NN .GT. NE) GO TO 131
+          IF(NN > NE) GO TO 131
           N1=NFIXH(NN)
-          IF(N1 .LE. NEM) THEN
+          IF(N1 <= NEM) THEN
 C
 C       we have found another surface layer quit search
 C
@@ -2428,8 +2428,8 @@ C
 C
 C       keep looking  check if it is a side element etc
 C
-            IF(IMAT(N1) .LT. 900 .OR. IMAT(N1) .GT. 5000) THEN
-              IF(NCTE .EQ. 1) THEN
+            IF(IMAT(N1) < 900 .OR. IMAT(N1) > 5000) THEN
+              IF(NCTE == 1) THEN
                 NEREF(N)=N1-1
               ENDIF
               NCTE=NCTE+1
@@ -2443,7 +2443,7 @@ cipk sep04
       OPEN(75,FILE='ERROR.OUT')
       WRITE(*,*) 'ERROR IN ELEMENT LAYER SEARCH'
       WRITE(75,*) 'ERROR IN ELEMENT LAYER SEARCH - ELEMENT ',N
-	WRITE(75,*) 'SEQ=',NN,NEDEP(N),NEREF(N)
+      WRITE(75,*) 'SEQ=',NN,NEDEP(N),NEREF(N)
       STOP
   131 CONTINUE
       NEDEP(N)=NCTE
@@ -2453,10 +2453,10 @@ C..... Get volumes for all vertical columns
 C
       DO N=1,NEM
 CIPK FEB98 ADD TEST TO SKIP ZERO ELEMENT
-        IF(NOP(N,1) .GT. 0) THEN
+        IF(NOP(N,1) > 0) THEN
           TVOLC(N)=TVOL(N)
           K=NEREF(N)+1
-          IF(NEDEP(N) .GT. 1) THEN
+          IF(NEDEP(N) > 1) THEN
             L=K+NEDEP(N)-2
             DO M=K,L
               TVOLC(N)=TVOLC(N)+TVOL(M)
@@ -2468,13 +2468,13 @@ CIPK NOV97 END CHANGES
 
 
       DO 133 N=1,NE
-        IF(IMAT(N)/1000 .NE. 2) GO TO 133
+        IF(IMAT(N)/1000 /= 2) GO TO 133
         CALL BSLOP(N)
   133 CONTINUE
       DO 1331 N=1,NPM
         NBM=NREF(N)+NDEP(N)-1
         NLM=NREF(N)+1
-        IF(NBM .LT. 1) GO TO 1331
+        IF(NBM < 1) GO TO 1331
         DO 1333 M=1,3
           FC(N,M)=FC(NBM,M)
           DO 1332 J=NLM,NBM
@@ -2496,7 +2496,7 @@ C
       CALL HGENSPCL(1,0,0, 0.,QDM)
 C-
 C
-      IF( IPRT .NE. 1 ) GO TO 156
+      IF( IPRT /= 1 ) GO TO 156
 C-
 C-....PRINT ELEMENT AND CORD DATA.....
 C-
@@ -2524,10 +2524,10 @@ CIPK APR06
  ! HN. JUNE 2009: GETINIT INITILIZES THE WSLL VALUES AND NOW FENODES CAN BE BUILT.
  ! IT IS NEEDED FOR BANK EVOLUTION MODELLING.
  
-        IF (( PROFILEID == 0 ).OR. ( IPROFIN == 73).OR. 
+        IF (( PROFILEID == 0 ) .OR. ( IPROFIN == 73) .OR. 
      +                            ( IPROFIN == 731) )THEN
           
-          IF ( .NOT.ALLOCATED (FENODES) ) THEN
+          IF ( .NOT. ALLOCATED (FENODES) ) THEN
           ALLOCATE ( FENODES (MAXP) )
           END IF 
                  
@@ -2538,20 +2538,20 @@ CIPK APR06
 C-
 C-..... Read reorder array if there is input
 C-
-      IF(ID(1:2) .EQ. 'RT') THEN
+      IF(ID(1:2) == 'RT') THEN
         READ(DLIN,5010) (NFIXH(J),J=1,9)
-        IF(NE .LE. 9) THEN
+        IF(NE <= 9) THEN
           call ginpt(lin,id,dlin)
           GO TO 3071
         ENDIF
         N1=1
  3070   N1=N1+9
         N2=N1+8
-        IF(N2 .GT. NE) N2=NE
+        IF(N2 > NE) N2=NE
         call ginpt(lin,id,dlin)
-        IF(ID(1:3) .EQ. 'RT ') THEN
+        IF(ID(1:3) == 'RT ') THEN
           READ(DLIN,5010) (NFIXH(J),J=N1,N2)
-          IF(N2 .LT. NE) GO TO 3070
+          IF(N2 < NE) GO TO 3070
         ELSE
 cipk sep04
           CLOSE(75)
@@ -2564,15 +2564,15 @@ cipk sep04
       ENDIF
  3071 CONTINUE
 
-      IF( IPRT .NE. 1 ) GO TO 500
+      IF( IPRT /= 1 ) GO TO 500
       DO 480 J = 1, NP
-      IF( MOD(J,45) .NE. 1 ) GO TO 470
+      IF( MOD(J,45) /= 1 ) GO TO 470
       WRITE(LOUT,6000)
       WRITE(LOUT,6005) TITLE
       WRITE(LOUT,6080)
       WRITE(LOUT,6081)
   470 CONTINUE
-      IF(J .GT. NPM) GO TO 475
+      IF(J > NPM) GO TO 475
       WRITE(LOUT,6090) J,(CORD(J,K),K=1,3),AO(J),ALFA(J),NFIX(J),
      1  NFIX1(J),(SPEC(J,K),K=1,NDF),(VEL(K,J),K=1,NDF),NDEP(J)
       GO TO 480
@@ -2580,7 +2580,7 @@ cipk sep04
       WRITE(LOUT,6090) J,(CORD(J,K),K=1,3),AO(J),ALFA(J),NFIX(J),
      1  NFIX1(J),(SPEC(J,K),K=1,NDF),(VEL(K,J),K=1,NDF)
   480 CONTINUE
-  500 IF( IPRT .EQ. 2 ) CALL OUTPUT( 0 )
+  500 IF( IPRT == 2 ) CALL OUTPUT( 0 )
       OMEGA = 1.458E-4*SIN( OMEGA/57.3 )
 C-
 C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
@@ -2588,7 +2588,7 @@ C-
 *     CALL BFORM(0)
 C-
 cipk may06
-      IF(LSS .GT. 0) THEN
+      IF(LSS > 0) THEN
         CALL GETMAS
       ENDIF
 
@@ -2847,17 +2847,17 @@ CIPK JAN03
  7000 FORMAT(A8,A72,a8)
 CIPK JAN03 END CHANGES
       do i=1,8
-        if(id(i:i) .eq. char(9)) go to 200
+        if(id(i:i) == char(9)) go to 200
       enddo
       do i=1,72
-        if(dlin(i:i) .eq. char(9)) go to 200
+        if(dlin(i:i) == char(9)) go to 200
       enddo
-      IF(ID(1:3) .EQ. 'com') GO TO 100
-      IF(ID(1:3) .EQ. 'COM') GO TO 100
-      IF(ID(1:3) .EQ. 'Com') GO TO 100
-      IF(ID(1:8) .EQ. '        ') GO TO 100
+      IF(ID(1:3) == 'com') GO TO 100
+      IF(ID(1:3) == 'COM') GO TO 100
+      IF(ID(1:3) == 'Com') GO TO 100
+      IF(ID(1:8) == '        ') GO TO 100
 cipk jan00 add * as a possible label
-      if(id(1:1) .eq. '*') go to 100
+      if(id(1:1) == '*') go to 100
       
       RETURN
   200 continue
@@ -2880,25 +2880,25 @@ CIPK AUG03 EXPAND TO ADD 11TH ITEM
       write(75,7000) id,dlin
  7000 FORMAT(A8,A80)
       do i=1,8
-	  if(id(i:i) .eq. char(9)) go to 200
-	enddo
+        if(id(i:i) == char(9)) go to 200
+      enddo
 CIPK AUG03 EXPAND TO ADD 11TH ITEM
-	do i=1,88
-	  if(dlin(i:i) .eq. char(9)) go to 200
-	enddo
-      IF(ID(1:3) .EQ. 'com') GO TO 100
-      IF(ID(1:3) .EQ. 'COM') GO TO 100
-      IF(ID(1:3) .EQ. 'Com') GO TO 100
-      IF(ID(1:8) .EQ. '        ') GO TO 100
+      do i=1,88
+        if(dlin(i:i) == char(9)) go to 200
+      enddo
+      IF(ID(1:3) == 'com') GO TO 100
+      IF(ID(1:3) == 'COM') GO TO 100
+      IF(ID(1:3) == 'Com') GO TO 100
+      IF(ID(1:8) == '        ') GO TO 100
 cipk jan00 add * as a possible label
-      if(id(1:1) .eq. '*') go to 100
+      if(id(1:1) == '*') go to 100
       RETURN
   200 continue
 cipk sep04
       CLOSE(75)
       OPEN(75,FILE='ERROR.OUT')
-	write(*,*) 'Error Tab character found in the following line'
-	write(75,*) 'Error Tab character found in the following line'
+      write(*,*) 'Error Tab character found in the following line'
+      write(75,*) 'Error Tab character found in the following line'
       write(75,7000) id,dlin
       write(*,7000) id,dlin
       stop

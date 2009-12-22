@@ -32,25 +32,25 @@
 
         do i = 1,ncl
 
-          if (speccc(i,1).eq.1.5) then
+          if (speccc(i,1) == 1.5) then
 
             specccold(i,1) = specccfut(i,1)
             specccold(i,2) = elev
 
-            if (specccfut(i,3).ne.0.) then
+            if (specccfut(i,3) /= 0.) then
 
               specccold(i,3) = specccold(i,2)
 
             end if
 
-            if (lmt(i).eq.1.0) then
+            if (lmt(i) == 1.0) then
 
-              if (width(line(i,1)).eq.0.0) then
+              if (width(line(i,1)) == 0.0) then
 
                 specccold(i,2) = (hhmax(line(i,1))-hhmin(line(i,1)))/2.+ &
     &                            hhmin(line(i,1))
 
-                if (specccfut(i,3).ne.0.0) then
+                if (specccfut(i,3) /= 0.0) then
 
                   specccold(i,3) = specccold(i,2)
 
@@ -66,7 +66,7 @@
 
             end do
 
-          elseif ((speccc(i,1)).eq. 2.5) then
+          elseif ((speccc(i,1)) == 2.5) then
 
             specccold(i,1) = specccfut(i,1)
             specccold(i,2) = 0.0
@@ -107,13 +107,13 @@
         iurvl(maxn) = temp_iurvl
         itlvl(maxn) = temp_itlvl
 
-        if (exterr.eq.1.0) then
+        if (exterr == 1.0) then
 
           do k = 1,np
 
             do i = 1,ndf
 
-              if (deltindex.eq.0.) then
+              if (deltindex == 0.) then
 
                 vel(i,k) = temp_vel(i,k)
                 vdot(i,k) = temp_vdot(i,k)
@@ -137,7 +137,7 @@
 
       ELSEIF (noc==3.) then
 
-        if (temp_iurvl.le.8.0) then
+        if (temp_iurvl <= 8.0) then
 
           temp_iurvl = temp_iurvl + 1.
 
@@ -149,7 +149,7 @@
           deltsum = deltsum - delt + deltn
           delt  = deltn
 
-          if (deltindex.eq.0.) then
+          if (deltindex == 0.) then
 
             deltsum = delt
 
@@ -161,7 +161,7 @@
 
           do i = 1,ncl
 
-            if ((speccc(i,1)).eq. 1.5) then
+            if ((speccc(i,1)) == 1.5) then
 
               call autoboundaryh(specccfut(i,2),specccold(i,2),    &
      &             specccfut(i,3),specccold(i,3),temp_delt,deltsum,&
@@ -181,7 +181,7 @@
 
               WRITE(789,'(60x,i3,2x,2(f7.2,2x))')i,hhh,hhh2
 
-            ELSEIF ((speccc(i,1)).eq.2.5) then
+            ELSEIF ((speccc(i,1)) == 2.5) then
 
               call autoboundaryQ(specccfut(i,2),specccold(i,2),    &
      &             specccfut(i,3),specccold(i,3),temp_delt,deltsum,&
@@ -230,11 +230,11 @@
 
       ELSEIF (noc==4.) then
 
-          if (nconv.eq.0.)then
+          if (nconv == 0.)then
 
             call statistic(maxn,rss,rrr,nitazero,extranita)
 
-            IF(rrr.lt.0.)then
+            IF(rrr < 0.)then
 
               WRITE(*,*)'rrr lower than zero'
 
@@ -259,7 +259,7 @@
 
               WRITE(*,*)'rrr higher than zero'
 
-              if (temp_iurvl.le.8.) then
+              if (temp_iurvl <= 8.) then
 
                 call feldgroesse(6,nita)
 
@@ -287,7 +287,7 @@
                 deltsum = deltsum - delt + deltn
                 delt = deltn
 
-                if (deltindex.eq.0.) then
+                if (deltindex == 0.) then
 
                   deltsum = delt
 
@@ -320,7 +320,7 @@
 
                     WRITE(789,'(60x,i3,2x,2(f7.2,2x))')i,hhh,hhh2
 
-                  ELSEIF ((speccc(i,1)).eq.2.5) then
+                  ELSEIF ((speccc(i,1)) == 2.5) then
 
                     call autoboundaryQ(specccfut(i,2),specccold(i,2),   &
      &                   specccfut(i,3),specccold(i,3),temp_delt,deltsum&
@@ -385,9 +385,9 @@
 
          WRITE(lout,*)'vor zeitschrittberechnung'
 
-           if (deltsum.lt.temp_delt) then
+           if (deltsum < temp_delt) then
 
-             if (deltindex.eq.0.) then
+             if (deltindex == 0.) then
 
                deltsum = delt
 
@@ -425,7 +425,7 @@
 
                  WRITE(789,'(60x,i3,2x,2(f7.2,2x))')i,hhh,hhh2
 
-               ELSEIF ((speccc(i,1)).eq.2.5) then
+               ELSEIF ((speccc(i,1)) == 2.5) then
 
                  call autoboundaryQ(specccfut(i,2),specccold(i,2),   &
      &                specccfut(i,3),specccold(i,3),temp_delt,deltsum&
@@ -507,29 +507,29 @@
 
         nitazero = nitn
 
-        if (niti.eq.0.) then
+        if (niti == 0.) then
 
           do i = 1,ncl
 
-            if (speccc(i,1).eq.1.5) then
+            if (speccc(i,1) == 1.5) then
 
               specccold(i,1) = specccfut(i,1)
               specccold(i,2) = elev
 
-              if (specccfut(i,3).ne.0.0) then
+              if (specccfut(i,3) /= 0.0) then
 
                  specccold(i,3) = specccold(i,2)
 
               end if
 
-              if (lmt(i).eq.1.0) then
+              if (lmt(i) == 1.0) then
 
-                if (width(line(i,1)).eq.0.0) then
+                if (width(line(i,1)) == 0.0) then
 
                   specccold(i,2) = (hhmax(line(i,1))-hhmin(line(i,1)))/&
      &                              2.+hhmin(line(i,1))
 
-                  if (specccfut(i,3).ne.0.0) then
+                  if (specccfut(i,3) /= 0.0) then
 
                     specccold(i,3) = specccold(i,2)
 
@@ -545,7 +545,7 @@
 
               end do
 
-            ELSEIF (speccc(i,1).eq.2.5)then
+            ELSEIF (speccc(i,1) == 2.5)then
 
               specccold(i,1) = specccfut(i,1)
               specccold(i,2) = 0.0
@@ -599,13 +599,13 @@
          iurvl(maxn) = temp_iurvl
          itlvl(maxn) = temp_itlvl
 
-         if (exterr.eq.1.0) then
+         if (exterr == 1.0) then
 
            do k = 1,np
 
              do i = 1,ndf
 
-               if (deltindex.eq.0.and.niti.eq.0.) then
+               if (deltindex == 0 .AND. niti == 0.) then
 
                  vel(i,k) = temp_vel(i,k)
                  vdot(i,k) = temp_vdot(i,k)
@@ -629,7 +629,7 @@
 
       ELSEIF (noc==8.) then
 
-        if (temp_iurvl.le.8.0) then
+        if (temp_iurvl <= 8.0) then
 
           temp_iurvl = iurvl(1) + 1.
 
@@ -641,7 +641,7 @@
           deltsum = deltsum - delt + deltn
           delt  = deltn
 
-          if (deltindex.eq.0.) then
+          if (deltindex == 0.) then
 
             deltsum = delt
 
@@ -654,7 +654,7 @@
 
           do i = 1,ncl
 
-            if ((speccc(i,1)).eq. 1.5) then
+            if ((speccc(i,1)) == 1.5) then
 
               call autoboundaryh(specccfut(i,2),specccold(i,2),&
      &             specccfut(i,3),specccold(i,3),temp_delt,deltsum,&
@@ -674,7 +674,7 @@
 
               WRITE(789,'(60x,i3,2x,2(f7.2,2x))')i,hhh,hhh2
 
-            elseif ((speccc(i,1)).eq. 2.5) then
+            elseif ((speccc(i,1)) == 2.5) then
 
               call autoboundaryQ(specccfut(i,2),specccold(i,2),    &
      &             specccfut(i,3),specccold(i,3),temp_delt,deltsum,&
@@ -719,11 +719,11 @@
 
       ELSEIF (noc==9.) then
 
-          if (nconv.eq.0.)then
+          if (nconv == 0.)then
 
             call statistic(maxn,rss,rrr,nitazero,extranita)
 
-            IF(rrr.lt.0.)then
+            IF(rrr < 0.)then
 
               WRITE(*,*)'rrr lower than zero'
 
@@ -748,7 +748,7 @@
 
               WRITE(*,*)'rrr higher than zero'
 
-              if (temp_iurvl.le.8.) then
+              if (temp_iurvl <= 8.) then
 
                 call feldgroesse(6,nita)
 
@@ -776,7 +776,7 @@
                 deltsum = deltsum - delt + deltn
                 delt = deltn
 
-                if (deltindex.eq.0.) then
+                if (deltindex == 0.) then
 
                   deltsum = delt
 
@@ -871,9 +871,9 @@
 
           else
 
-            if (deltsum.lt.temp_delt) then
+            if (deltsum < temp_delt) then
 
-              if (deltindex.eq.0.) then
+              if (deltindex == 0.) then
 
                 deltsum = delt
 

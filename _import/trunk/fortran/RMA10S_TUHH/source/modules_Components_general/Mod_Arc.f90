@@ -45,7 +45,7 @@ CONTAINS
     type (arc), pointer :: inArc
     type (node), pointer :: midside
     !assign midside node
-    if (.not. (associated (inArc.midside))) inArc.midside => midside
+    if ( .NOT. (associated (inArc.midside))) inArc.midside => midside
   end subroutine
   
   function defaultNormal (inArc, scaling)

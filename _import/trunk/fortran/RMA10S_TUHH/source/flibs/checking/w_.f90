@@ -200,7 +200,7 @@ subroutine w_close( filename, lineno, routine, *, unit, iostat, err, status )
     ! Only use the status keyword, if it is not "keep"
     ! This is due to the restriction on the keyword for scratch files
     !
-    if ( status_ /= 'keep' .and. status_ /= 'KEEP' ) then
+    if ( status_ /= 'keep' .AND. status_ /= 'KEEP' ) then
         close( unit, status = status_, iostat=iostat_ )
     else
         close( unit, iostat=iostat_ )
@@ -209,7 +209,7 @@ subroutine w_close( filename, lineno, routine, *, unit, iostat, err, status )
     if ( present(iostat) ) then
         iostat = iostat_
     endif
-    if ( present(err) .and. iostat_ /= 0 ) then
+    if ( present(err) .AND. iostat_ /= 0 ) then
         return 1
     endif
 
@@ -285,7 +285,7 @@ subroutine w_open( srcname, lineno, routine, *, unit, file, status, err, &
     pad_ = 'yes'
     if ( present(pad) ) pad_ = pad
 
-    if ( access_ == 'direct' .or. access_ == 'DIRECT' ) then
+    if ( access_ == 'direct' .OR. access_ == 'DIRECT' ) then
         open( unit=unit, file=file, form=form_, access=access_, &
               recl=recl_, action=action_, iostat=iostat_ )
     else
@@ -298,7 +298,7 @@ subroutine w_open( srcname, lineno, routine, *, unit, file, status, err, &
         iostat = iostat_
     endif
 
-    if ( present(err) .and. iostat_ /= 0 ) then
+    if ( present(err) .AND. iostat_ /= 0 ) then
         return 1
     endif
 

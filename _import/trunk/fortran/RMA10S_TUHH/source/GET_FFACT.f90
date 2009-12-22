@@ -23,7 +23,7 @@
 !MD:  Preparing Restart FFACT for each Element
 allocate (FFACT_TEMP (1:maxp,1:12), AREA_PART(1:maxp,1:12))
 DO N=1,NE
-  IF (lambdaTot(N).ge.0.0) THEN
+  IF (lambdaTot(N) >= 0.0) THEN
     FFACT_EL(N) = lambdaTot(N)/8.0
   Else
     WRITE(75,*) 'STOP!  NO LambdTot availabe at ELEMENT Nummer',N
@@ -36,14 +36,14 @@ END DO
 !    Routine to get elements connected to nodes and allocate areas
 !MD: Setting ELTON(Node,neighboured element) to Elementnumber
 DO N=1,NE
-  IF (IMAT(N).LT.900 .OR. IMAT(N).GT.999) then
+  IF (IMAT(N) < 900 .OR. IMAT(N) > 999) then
     NCN=NCORN(N)
     DO M=1,NCN
       DO I=1,12
-        IF(ELTON(NOP(N,M),I) .EQ. N) THEN
+        IF(ELTON(NOP(N,M),I) == N) THEN
           GO TO 250
         ENDIF
-        IF(ELTON(NOP(N,M),I) .EQ. 0) THEN
+        IF(ELTON(NOP(N,M),I) == 0) THEN
           ELTON(NOP(N,M),I) = N
           GO TO 250
         ENDIF
@@ -69,14 +69,14 @@ DO N=1,NP         ! over all nodes N
   FFACT_KN(N)=0.0
   DO I=1,12         ! over all neighboured elements I to node N
     M=ELTON(N,I)
-    IF(M .GT. 0) THEN
-      IF(NCORN(M) .EQ. 8) THEN    ! for quadrangle elements
+    IF(M > 0) THEN
+      IF(NCORN(M) == 8) THEN    ! for quadrangle elements
         FACT=4.
       ELSE                        ! for triangle elements
         FACT=3.
       ENDIF
 
-      if((wsll(N) .ge. ao(N)) .and. (AREA(M).gt.0.))then !Nur wenn knoten Nass!
+      if((wsll(N) >= ao(N)) .AND. (AREA(M) > 0.))then !Nur wenn knoten Nass!
         AREA_PART(N,I)=AREA(M)/FACT
         ! Teilflaeche je Element M zum Knoten N
         TRIBAREA(N)=TRIBAREA(N)+AREA(M)/FACT
@@ -89,12 +89,12 @@ DO N=1,NP         ! over all nodes N
     ENDIF
   ENDDO
 
-  IF (TRIBAREA(N).gt.0.) THEN
+  IF (TRIBAREA(N) > 0.) THEN
     FFACT_KN(N)= FFACT_KN(N) / TRIBAREA(N)
   END IF
 
-  IF (TRIBAREA(N).le.0. .and. FFACT_KN(N).gt.0.0) THEN
-    if(wsll(N) .ge. ao(N)) then !Nur wenn knoten nass!
+  IF (TRIBAREA(N) <= 0. .AND. FFACT_KN(N) > 0.0) THEN
+    if(wsll(N) >= ao(N)) then !Nur wenn knoten nass!
       WRITE(*,*) 'STOP!  NO Area was found for NODE: ',N
       STOP
     else !wenn knoten trocken
@@ -102,24 +102,24 @@ DO N=1,NP         ! over all nodes N
     endif
   END IF
 
-  IF (FFACT_KN(N).le.0.0 .and. TRIBAREA(N).gt.0.) THEN
-    if(wsll(N) .ge. ao(N)) then !Nur wenn knoten Nass!
+  IF (FFACT_KN(N) <= 0.0 .AND. TRIBAREA(N) > 0.) THEN
+    if(wsll(N) >= ao(N)) then !Nur wenn knoten Nass!
       WRITE(*,*) 'STOP!  NO friction factor was found for NODE: ',N
       STOP
     endif
   END IF
 
-  IF (FFACT_KN(N).eq.0.0 .and. TRIBAREA(N).eq.0.) THEN
-    if(wsll(N) .ge. ao(N)) then !Nur wenn knoten Nass!
+  IF (FFACT_KN(N) == 0.0 .AND. TRIBAREA(N) == 0.) THEN
+    if(wsll(N) >= ao(N)) then !Nur wenn knoten Nass!
       WRITE(LOUT,*) 'ACHTUNG: NO friction factor and NO Area was found for NODE: ',N
     endif
   END IF
 
-  IF (FFACT_KN(N).lt.0.0) THEN
+  IF (FFACT_KN(N) < 0.0) THEN
     FFACT_KN(N)= 0.00
   END IF
 
-  IF (N.eq.NP) THEN
+  IF (N == NP) THEN
     WRITE(75,*) 'All Friction factors are calculated till NODE ',N
   END IF
   ! WRITE(75,*) ' Friction factor at NODE ',N, ' is:',FFACT_KN(N)

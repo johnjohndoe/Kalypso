@@ -158,10 +158,10 @@ type(DECIMAL) function dec_add( x, y )
         dec_add%int  = dec_add%int  - 1
     endif
 
-    if ( dec_add%int > 0 .and. dec_add%frac < 0 ) then
+    if ( dec_add%int > 0 .AND. dec_add%frac < 0 ) then
         dec_add%frac = dec_add%frac + supfrac
         dec_add%int  = dec_add%int  + 1
-    elseif ( dec_add%int < 0 .and. dec_add%frac > 0 ) then
+    elseif ( dec_add%int < 0 .AND. dec_add%frac > 0 ) then
         dec_add%frac = dec_add%frac - supfrac
         dec_add%int  = dec_add%int  - 1
     endif

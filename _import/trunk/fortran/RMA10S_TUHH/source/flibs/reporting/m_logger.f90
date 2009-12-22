@@ -300,10 +300,10 @@ contains
     unit_found = .false.
     log_get_freeunit = 0
     do iunit = 1, 100
-       if ( iunit /= 5 .and. iunit /= 6 .and. iunit /= 9 ) then
+       if ( iunit /= 5 .AND. iunit /= 6 .AND. iunit /= 9 ) then
           inquire ( UNIT = iunit, opened = lopen, iostat = ios )
           if ( ios == 0 ) then
-             if ( .not. lopen ) then
+             if ( .NOT. lopen ) then
                 log_get_freeunit = iunit
                 unit_found = .true.
                 exit
@@ -311,7 +311,7 @@ contains
           endif
        endif
     enddo
-    if (.NOT.unit_found) then
+    if ( .NOT. unit_found) then
        write(*,*) "Logging: No free logical unit for log file"
     endif
   end function log_get_freeunit

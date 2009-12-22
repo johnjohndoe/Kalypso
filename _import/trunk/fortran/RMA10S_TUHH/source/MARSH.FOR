@@ -27,12 +27,12 @@ C
 
 
       ELSE
-        IF(IDNOPT .EQ. -1) THEN
+        IF(IDNOPT == -1) THEN
 C
 C     IDNOPT = -1  use default
 C
           AC3=0.04
-          IF(GRAV .LT. 10.) THEN
+          IF(GRAV < 10.) THEN
             AC1=1.5
             AC2=0.67
           ELSE
@@ -65,7 +65,7 @@ C
 C       Define baseline defaults for no MP line
 C
             AC3=0.04
-            IF(GRAV .LT. 10.) THEN
+            IF(GRAV < 10.) THEN
               AC1=1.5
               AC2=0.67
             ELSE
@@ -93,7 +93,7 @@ C
             ADB(N)=AO(N)-AC2/2.
             ADT(N)=ADB(N)+AC2
             AKP(N)=AC3
-            IF (AC1 .EQ. 0.0) THEN
+            IF (AC1 == 0.0) THEN
               ADO(N) = AC4
             ELSE
               ADO(N) = ADB(N) - AC1
@@ -154,21 +154,21 @@ C...... Loop around nodes of an element to set ADO so that for an element
 C       that is below adjacent AO
 C
         EqualizeBottomLevel: DO J = 1, NE
-          IF(IMAT(J) .NE. 0) THEN
+          IF(IMAT(J) /= 0) THEN
             NCN=NCORN(J)
-          IF(IMAT(J) .GT. 900) cycle EqualizeBottomLevel
+          IF(IMAT(J) > 900) cycle EqualizeBottomLevel
 
           !nis,may08: nodes of polynomial approach are only in such elements; don't process those elements
           if (IsPolynomNode (nop (J, 1))) CYCLE EqualizeBottomLevel
 
-          IF(NCN .EQ. 5) NCN=3
-          IF(NCN .EQ. 9) NCN=8
+          IF(NCN == 5) NCN=3
+          IF(NCN == 9) NCN=8
             DO K=1,NCN,2
               N=NOP(J,K)
               DO  L=1,NCN,2
                 M=NOP(J,L)
 CIPK MAR05
-                IF(ADO(N) .GT. AO(M)-ACOR(M)) ADO(N)=AO(M)-ACOR(M)
+                IF(ADO(N) > AO(M)-ACOR(M)) ADO(N)=AO(M)-ACOR(M)
               ENDDO
             ENDDO
           ENDIF
@@ -185,7 +185,7 @@ C
           if (IsPolynomNode (N)) CYCLE SetFinalValues
 
           TransitionRange = ADT (N) - ADB (N)
-          IF(AKP(N) .LT. 0.95) THEN
+          IF(AKP(N) < 0.95) THEN
              ADB(N)=ADB(N)+(ADT(N)-ADO(N)
      +             - TransitionRange/ 2.) * AKP(N)/(1.-AKP(N))
 C

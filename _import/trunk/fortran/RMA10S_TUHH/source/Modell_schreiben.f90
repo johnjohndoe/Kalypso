@@ -133,24 +133,24 @@ END DO
 !     an allen Elementen :                                              
       !Run through every element
       prepareArcs: DO nelem = 1, ne
-        if (imat (nelem) >= 901 .and. imat (nelem) <= 903) cycle prepareArcs
+        if (imat (nelem) >= 901 .AND. imat (nelem) <= 903) cycle prepareArcs
         !Initialize nnum for first estimation of quadrilateral element to 8 nodes
         nnum = 8
         !Decrease nnum for triangular to 6 nodes
-        IF (nop (nelem, 7) .eq.0) nnum = 6 
+        IF (nop (nelem, 7) == 0) nnum = 6 
         !NiS,may06: Decrease nnum for 1D-2D-transition elements to 5 nodes
-        IF (nop (nelem, 6) .eq.0) nnum = 5
+        IF (nop (nelem, 6) == 0) nnum = 5
         !NiS,may06: Decrease nnum for normal 1D-elements to 3 nodes
-        IF (nop (nelem, 4) .eq.0) nnum = 3
+        IF (nop (nelem, 4) == 0) nnum = 3
 !       leere Elementnummern uebergehen:
-        IF (nop (nelem, 1) .eq.0) nnum = 0 
-!        if(imat(nelem).le.0)nnum=0                                     
+        IF (nop (nelem, 1) == 0) nnum = 0 
+!        if(imat(nelem) <= 0)nnum=0                                     
 !       Mittseitenknoten durchgehen:
 !NiS,may06: Differ between element types:
 
         !1D-ELEMENTS or 1D-2D-TRANSITION ELEMENTS
-        IF (nnum .eq. 3 .or. nnum .eq. 5) THEN
-          if ( (.not. IntPolProf (nop (nelem, 1))) .and. (.not. IntPolProf (nop (nelem, 3)))) then
+        IF (nnum == 3 .OR. nnum == 5) THEN
+          if ( ( .NOT. IntPolProf (nop (nelem, 1))) .AND. ( .NOT. IntPolProf (nop (nelem, 3)))) then
             !!midside node
             k = nop (nelem, 2)
 
@@ -158,7 +158,7 @@ END DO
             arcmid (k, 2) = nop (nelem, 3)
             arcmid (k, 3) = nelem
             arcmid (k, 4) = nelem
-          elseif ( (.not. IntPolProf (nop (nelem, 1))) .and. (IntPolProf (nop (nelem, 3)))) then
+          elseif ( ( .NOT. IntPolProf (nop (nelem, 1))) .AND. (IntPolProf (nop (nelem, 3)))) then
             k = nop (nelem, 2)
             arcmid (k, 1) = nop (nelem, 1)
             arcmid (k, 2) = nop (IntPolElts (nelem, IntPolNo (nelem)), 3)
@@ -167,12 +167,12 @@ END DO
           end if
 
           !Save informations for 1D-2D-TRANSITION ELEMENTS
-          IF (nnum .eq. 5) THEN
+          IF (nnum == 5) THEN
 
             trans_els = trans_els + 1
 
             !ERROR - too many elements
-            IF (trans_els .gt. maxp) call ErrorMessageAndStop (1206, 0, 0.0D0, 0.0D0)
+            IF (trans_els > maxp) call ErrorMessageAndStop (1206, 0, 0.0D0, 0.0D0)
 
             Trans_nodes(trans_els, 1) = nelem
             DO i = 2,6
@@ -186,13 +186,13 @@ END DO
             !midside node of an arc
             k = nop (nelem, j)
                                                                         
-            IF (arcmid (k, 3) .eq.0) then
+            IF (arcmid (k, 3) == 0) then
 !             neue Kante, aktuelles Element links:
               arcmid (k, 3) = nelem
 !             Knoten unten:
               nbot = nop (nelem, j - 1)
               arcmid (k, 1) = nbot
-              IF (j.eq.nnum) then
+              IF (j == nnum) then
                 ntop = nop (nelem, 1)
               ELSE
                 ntop = nop (nelem, j + 1)
@@ -202,7 +202,7 @@ END DO
                                                                         
             ELSE
 !             Kante vorhanden, zweites Element rechts einfuegen und pruefe
-              IF (arcmid (k, 4) .ne.0) then
+              IF (arcmid (k, 4) /= 0) then
                 PRINT * , ' Am Mittseitenknoten ', k
                 PRINT * , ' mehr als 2 Elemente'
                 PRINT * , ' entdeckt bei Element: ', nelem
@@ -211,12 +211,12 @@ END DO
               arcmid (k, 4) = nelem
 
               ntop = nop (nelem, j - 1)
-              IF (j.eq.nnum) then
+              IF (j == nnum) then
                 nbot = nop (nelem, 1)
               ELSE
                 nbot = nop (nelem, j + 1)
               ENDIF
-              IF ( (arcmid (k, 1) .ne.nbot) .or. (arcmid (k, 2) .ne.ntop) ) then
+              IF ( (arcmid (k, 1) /= nbot) .OR. (arcmid (k, 2) /= ntop) ) then
                 PRINT * , 'Elementverknuepfung ', arcmid (k, 3) , arcmid (k, 4)
                 STOP 'fehlerhaft'
               ENDIF
@@ -232,7 +232,7 @@ arccnt = 0
 
 !nis,may07
 DO i = 1, np
-  IF (arcmid (i, 3) .ne.0) then
+  IF (arcmid (i, 3) /= 0) then
     arccnt = arccnt + 1
     DO j = 1, 4
       !Save 1st and 2nd node as well as elements associated to the arc
@@ -299,16 +299,16 @@ WRITE (IKALYPSOFM, 7012) iyrr, tett
 write_nodes: DO i = 1, np
 
   !NiS,may06: The cord array is initialized with -1.e20, so every node with coordinates less than -1e19 that are skipped for writing
-  IF (cord(i,1) .lt. -1.e19) CYCLE write_nodes
+  IF (cord(i,1) < -1.e19) CYCLE write_nodes
 
-  if (.not. (IntPolProf (i)) .and. kmx (i) /= -1.0) then
+  if ( .NOT. (IntPolProf (i)) .AND. kmx (i) /= -1.0) then
     write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
-  ELSEIF (.not. (IntPolProf (i)) .and. kmx (i) == -1.0) then
+  ELSEIF ( .NOT. (IntPolProf (i)) .AND. kmx (i) == -1.0) then
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), ao(i)
   endif
 
   if (resultType == 'resu') THEN
-    if (.not. (IntPolProf (i)) ) then
+    if ( .NOT. (IntPolProf (i)) ) then
 
       WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , wsll(i)
       !NiS,may06: All degrees of freedom have to be written and read for restart
@@ -326,9 +326,9 @@ write_nodes: DO i = 1, np
 
   !only for real results not for minmax-result-files
   !if (resultType == 'resu') then
-    IF (icyc .ne. 0) then
+    IF (icyc /= 0) then
     
-      if (.not. (intPolProf(i))) then
+      if ( .NOT. (intPolProf(i))) then
         WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
         WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
         WRITE (IKALYPSOFM, 7006) i, (vdoto (j, i), j = 1, 3)
@@ -342,13 +342,13 @@ write_nodes: DO i = 1, np
     WRITE (IKALYPSOFM, 7007) i, ndry (i), hel (i), hol (i), hdet (i), hdot (i)
 
     !NiS,may06: Write cross sectional node information, if present
-    IF (width (i) .ne. 0) THEN
+    IF (width (i) /= 0) THEN
       WRITE (IKALYPSOFM, 7013) i, width(i), ss1(i), ss2(i), wids(i), widbs(i), wss(i)
     END IF
   !end if
 
 
-    if (IsPolynomNode (i) .and. (.not. IntPolProf (i))) then
+    if (IsPolynomNode (i) .AND. ( .NOT. IntPolProf (i))) then
       !WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
       !WRITE (IKALYPSOFM, 7021) i, hbordv(i)
 
@@ -400,7 +400,7 @@ end do write_arcs
 ! Elements:
 write_elements: DO i = 1, ne
   !for weir elements
-  if (imat(i) >= 901 .and. imat(i) <= 903) then
+  if (imat(i) >= 901 .AND. imat(i) <= 903) then
     WRITE (IKALYPSOFM, 7019) i, (nop(i, j), j= 1, ncorn(i))
     WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
   !for 1D or 2D elements; interpolated elements are excluded; no necessary informations
@@ -410,16 +410,16 @@ write_elements: DO i = 1, ne
         WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i), fehler (2, i), epsx_nn(i), epsxz_nn(i), epsz_nn(i), epszx_nn(i) !
 
       !write material types and reordering number
-      if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
+      if (imat(i) > 903 .AND. imat(i) < 990) then
         BACKSPACE(IKALYPSOFM)
         WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
       end if
       !write roughness corrections
-      if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
+      if (CorrectionKS(i) /= 1.0 .OR. CorrectionAxAy(i) /= 1.0 .OR. CorrectionDp(i) /= 1.0) then
         WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
       end if
     !write number of profiles to interpolate in between
-    elseif (imat (i) == 89 .and. (.NOT.(IntPolProf (nop (i, 1))))) then
+    elseif (imat (i) == 89 .AND. ( .NOT. (IntPolProf (nop (i, 1))))) then
 
       WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i)
 
@@ -617,7 +617,7 @@ WRITE(LINE256,'(A)')       '  Node  Bed-Shear   U-STAR   DEPRAT   V-SINK    EDOT
 IDX = MAX(114,47+NLAYT*10) + 3
 
 
-IF (NLAYO(1) .GT. 0) THEN
+IF (NLAYO(1) > 0) THEN
   WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
 ENDIF
 WRITE(IKALYPSOFM,'(A)') LINE256(1:IDX+26)
@@ -639,21 +639,21 @@ DO NN=1,NPM
     SUMTHICK = SUMTHICK + THICK(NN,L)
   ENDDO
 
-  IF(NLAYO(NN) .GT. 0) THEN
+  IF(NLAYO(NN) > 0) THEN
     DO L=1,NLAYO(NN)
       SUMTHICK = SUMTHICK + THICKO(NN,L)
     ENDDO
   ENDIF
 
   !MD: Ausgabe der Layerdicken
-  IF (NLAY(NN).GT.0 .OR. NLAYO(NN).GT.0) THEN
+  IF (NLAY(NN) > 0 .OR. NLAYO(NN) > 0) THEN
     WRITE(IKALYPSOFM,'(I6,1x,F10.4,1x,F8.5,1x,F8.5,1x,F8.5,1x,        &
        &          F12.6,1x,F12.6,1x,F10.6,1x,F10.2,1x,I2,2x,I2,2x,F10.3,1x, 20(F10.3,1x))')  &
        &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*VEL(6,NN)), (VS(NN)*1000.0), &
        &          (EDOT(NN)*1000.0/DELT), SERAT(NN), AO(NN), TMSED(NN), NLAYTND(NN), NLAYO(NN),SUMTHICK*1000.,&
        &          (1000. * THICK(NN,L),L=1,NLAYT),(1000. * THICKO(NN,L),L=1,NLAYO(NN))
 
-  ElseIF (NLAY(NN).eq.0 .and. NLAYO(NN).eq.0) THEN
+  ElseIF (NLAY(NN) == 0 .AND. NLAYO(NN) == 0) THEN
     WRITE(IKALYPSOFM,'(I6,1x,F10.4,1x,F8.5,1x,F8.5,1x,F8.5,1x,        &
        &          F12.6,1x,F12.6,1x,F10.6,1x,F10.2,1x,I2,2x,I2,2x,F10.3,1x)')  &
        &          NN, BSHEAR(NN), UST(NN), (DEPRAT(NN)*VEL(6,NN)), (VS(NN)*1000.0), &
@@ -699,7 +699,7 @@ CHARACTER (LEN = 4), INTENT (IN)   :: sort
 !            because there were some problems with steady state and results after iteration
 !            The old version is completly deleted, it can be read in the code of Kalypso-2D.
       !after solution is converged or maximum number of iterations is reached
-if (sort == 'inst' .or. sort == 'stat') then
+if (sort == 'inst' .OR. sort == 'stat') then
   IF (iteration == 0) THEN
 
     !for steady states
@@ -736,7 +736,7 @@ if (sort == 'inst' .or. sort == 'stat') then
     ENDIF
   ENDIF
 !min-max- of time transient calculation
-ELSEIF (sort == 'mini' .or. sort == 'maxi') then
+ELSEIF (sort == 'mini' .OR. sort == 'maxi') then
   WRITE (resultName, '(a4,a1,a2)') sort, '.', outsuffix
   WRITE (inputName, '(a)') 'min-max-file; no other information'
 ENDIF

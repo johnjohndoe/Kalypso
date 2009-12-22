@@ -7,27 +7,27 @@ C-
 C.......   Subroutine to read data from mass storage
 C-
       DATA  IPASS/0/
-      IF(IPASS .EQ. 0) THEN
+      IF(IPASS == 0) THEN
         MAXFIL=0
         IPASS=1
       ENDIF
 C-
-      IF(IVRSID .EQ. 4  .OR.  IVRSID .EQ. 6) THEN
+      IF(IVRSID == 4 .OR. IVRSID == 6) THEN
 C
 C    Read sequential file
 C
         WRITE(TSUB,3000) NRR
  3000   FORMAT(I3.3)
         CLOSE (ND1)
-        IF(IVRSID .EQ. 4) THEN
+        IF(IVRSID == 4) THEN
 CIPK SEP04
           FNAMT=FHED//'.'//TSUB(1:3)
-          IF(NRR .GT. 1  .OR. IPASS .GT. 0)   CLOSE (ND1)
+          IF(NRR > 1 .OR. IPASS > 0)   CLOSE (ND1)
           OPEN(ND1,FILE=FNAMT,STATUS='UNKNOWN',
      +    FORM='UNFORMATTED')
         ELSE
           FNBM=FHED//TSUB(1:3)
-          IF(NRR .GT. 1  .OR. IPASS .GT. 0)   CLOSE (ND1)
+          IF(NRR > 1 .OR. IPASS > 0)   CLOSE (ND1)
           OPEN(ND1,FILE=FNBM,STATUS='UNKNOWN',
      +    FORM='UNFORMATTED')
         ENDIF

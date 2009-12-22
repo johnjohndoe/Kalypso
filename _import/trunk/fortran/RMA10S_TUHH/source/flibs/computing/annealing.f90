@@ -61,7 +61,7 @@ subroutine set_parameters( params, update, initial_temp, temp_reduction, &
 
     params%state = 0 ! Initialisation
 
-    if ( .not. update ) then
+    if ( .NOT. update ) then
         params%initial_temp       = 1.0
         params%temp_reduction     = 0.95
         params%scale_factor       = 1.0

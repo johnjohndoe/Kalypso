@@ -35,8 +35,8 @@
 !
 !
 SUBROUTINE turbulence(nn, iturb, mineddy, &
-		    & eexxyy1, eexxyy2, eexxyy3, eexxyy4,    &
-                    & epsxx,   epsxz,   epszx,   epszz, 	    &
+                & eexxyy1, eexxyy2, eexxyy3, eexxyy4,    &
+                    & epsxx,   epsxz,   epszx,   epszz,           &
                     & roavg,p_bottom,p_prandtl,ffact,vecq,h, &
                     & drdx, drdz, dsdx, dsdz, gscal)
 !
@@ -61,9 +61,9 @@ SUBROUTINE turbulence(nn, iturb, mineddy, &
 implicit none
 
 ! Calling variables
-INTEGER, INTENT(IN) ::          	nn, iturb
+INTEGER, INTENT(IN) ::                nn, iturb
 REAL, INTENT(IN)    ::                     mineddy
-REAL, INTENT(IN)    ::   			eexxyy1,eexxyy2,eexxyy3,eexxyy4
+REAL, INTENT(IN)    ::                     eexxyy1,eexxyy2,eexxyy3,eexxyy4
 REAL, INTENT(IN)    ::                     roavg, p_bottom, p_prandtl, ffact, vecq
 REAL (KIND = 8), INTENT(IN) ::          h
 REAL, INTENT(IN) ::                     drdx, drdz, dsdx, dsdz
@@ -98,13 +98,13 @@ else if (iturb == 11) then
   
 
 
-ELSE IF(iturb.eq.12.or.iturb.eq.13) then
+ELSE IF(iturb == 12 .OR. iturb == 13) then
 
-  IF(iturb.eq.12) then
+  IF(iturb == 12) then
     layerwidth = p_prandtl
     mixl = 0.090 * layerwidth
   END  if
-  IF(iturb.eq.13) then
+  IF(iturb == 13) then
     cs   = p_prandtl
     mixl = gscal * cs
   END if
@@ -131,7 +131,7 @@ ELSE IF(iturb.eq.12.or.iturb.eq.13) then
   
 
 
-ELSE IF(iturb.eq.14) then
+ELSE IF(iturb == 14) then
 
   col = p_bottom
   cot = p_bottom
@@ -142,7 +142,7 @@ ELSE IF(iturb.eq.14) then
   epsxz  = (BOTTOM_GENERATED(cot, ffact, vecq, h) + PRANDTL_MIXING(drdx, dsdz, drdz, dsdx, mixl))
   epszz  = epsxx
 
-ELSE IF(iturb.eq.15) then
+ELSE IF(iturb == 15) then
 
   col = p_bottom
   cot = p_bottom
@@ -154,7 +154,7 @@ ELSE IF(iturb.eq.15) then
   epszz  = epsxz
 
 
-ELSE IF(iturb.eq.16) then
+ELSE IF(iturb == 16) then
 
   col = p_bottom
   cot = p_bottom
@@ -186,7 +186,7 @@ mined=mineddy
 
 !******************************************************************
 !     DK, 26.02.02.
-!      if (nn.eq.intel) then
+!      if (nn == intel) then
 !         WRITE (iout,*) 'BEFORE COMPARISON TO MINEDDY:'
 !         write (iout,*) '  eexxyy = ',eexxyy(1,nn)
 !         write (iout,*) '  epsxx  = ',epsxx
@@ -195,7 +195,7 @@ mined=mineddy
 !      end if
 !     ******************************************************************
 
-if ((epsxx.lt.mined) .and. (epszx.lt.mined) .and. (epsxz.lt.mined) .and. (epszz.lt.mined)) then
+if ((epsxx < mined) .AND. (epszx < mined) .AND. (epsxz < mined) .AND. (epszz < mined)) then
   epsxx  = mined
   epszx  = mined
   epsxz  = mined
@@ -220,7 +220,7 @@ real function bottom_generated(c, ffact, vecq, h)
 
 implicit none
 
-REAL, INTENT(IN) ::	ffact, vecq, c
+REAL, INTENT(IN) ::      ffact, vecq, c
 REAL (KIND = 8), INTENT(IN) :: h
 
 BOTTOM_GENERATED = c * sqrt(ffact) * vecq * h

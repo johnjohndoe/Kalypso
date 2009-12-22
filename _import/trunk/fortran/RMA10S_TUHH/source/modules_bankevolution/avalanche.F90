@@ -199,7 +199,7 @@ inner: do                           ! if inc=-1, it starts from index_lowest nod
         k = k + 1                                        ! index of temporary left/right profile
         temp_pr(j)%max_nodes = k
 
-main: if ((z1-wsl1)<-0.001.AND.(z2-wsl1)<-0.001) then                   ! In the submerged area, the element is totally submerged
+main: if ((z1-wsl1)<-0.001 .AND. (z2-wsl1)<-0.001) then                   ! In the submerged area, the element is totally submerged
 
             last_submerged_node = i + p
          !   last_submerged_fenode(j) = tens_pr%prnode(i+p)%fe_nodenumber
@@ -241,7 +241,7 @@ slp1:   if (slope>crepose) THEN  ! crepose = critical angle of repose
             
         end if   slp1
 
-      elseif ( (i/=noz(j)).AND.((z1 - wsl1)<-0.001).AND.( ( (z2 - wsl1) >= 0. ).or.(abs(z2 - wsl1) <= 0.001) )  )then    main          ! transition through water
+      elseif ( (i/=noz(j)) .AND. ((z1 - wsl1)<-0.001) .AND. ( ( (z2 - wsl1) >= 0. ) .OR. (abs(z2 - wsl1) <= 0.001) )  )then    main          ! transition through water
 
 !********************************************************************************************************************
 ! The FE element is in transition, partly submerged, therefore the upper node (j+p) is dry or just the last wet.    *
@@ -254,7 +254,7 @@ slp2:    if (slope>crepose) THEN  ! crepose = critical angle of repose
 !****************************************************************
   ! compute the potential noses for left and right banks
 !*****************************************************************
-lrnose:     if (abs (z2-wsl1)<= 0.001) then                      ! the node coincides with water level and can be taken as potential nose      !(tens%lnose ==0).AND.
+lrnose:     if (abs (z2-wsl1)<= 0.001) then                      ! the node coincides with water level and can be taken as potential nose      !(tens%lnose ==0) .AND. 
 
                 nose(j)%node     = i + p                         ! if z2 is equal to water level then i+p is the potential nose.
                 nose(j)%nextnode = -(i + 2*p)
@@ -470,7 +470,7 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
 
                  r = ABS(tens_pr%prnode(i+p)%fe_nodenumber)
 
-                if ((nose(j)%nextnode< 0).AND. (trim(tens_pr%prnode(i+p)%attribute) /='front')) then    ! if the just created (potential) nose coincides with the Profile node (i+p) then:
+                if ((nose(j)%nextnode< 0) .AND. (trim(tens_pr%prnode(i+p)%attribute) /='front')) then    ! if the just created (potential) nose coincides with the Profile node (i+p) then:
                     tens_pr%prnode(i+p)%elevation = z2                  ! the node i+p will be the node i for the next iteration of the loop: inner.
                     tens_pr%prnode(i+p)%attribute = 'profile'
                     temp_pr(j)%prnode(k) = tens_pr%prnode(i+p)          ! the current i + p node is assigned as a normal node with "profile" attribute.
@@ -554,13 +554,13 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
             if (j == 2) then
             
             if( (ava_pr%prnode(n-1)%distance == temp_pr(j)%prnode(p)%distance) &
-   &           .and.(ava_pr%prnode(n-1)%elevation == temp_pr(j)%prnode(p)%elevation)) then
+   &          .AND. (ava_pr%prnode(n-1)%elevation == temp_pr(j)%prnode(p)%elevation)) then
               n = n - 1
               cycle aval
             end if
             end if 
       
-            if (( J == 1).and.( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'front') ) then 
+            if (( J == 1) .AND. ( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'front') ) then 
                ! Exclude front if it is very close (1 mm) to the nose
               if ( ABS(temp_pr(j)%prnode(p)%distance - temp_pr(j)%prnode(p - inc(j) )%distance)<0.001) then
                 
@@ -576,7 +576,7 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
                 ava_pr.Lfront     = n
               end if    
                  
-            else if ( (J == 1).and.( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'nose')) then   
+            else if ( (J == 1) .AND. ( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'nose')) then   
                ! Exclude nose if it is very close (1 mm) to the front
               if ( ABS(temp_pr(j)%prnode(p)%distance - temp_pr(j)%prnode(p + inc(j) )%distance)<0.001) then
                 n = n - 1
@@ -586,7 +586,7 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
                 ava_pr.Lnose     = n
               end if    
 
-            else if ( (J == 2).and.( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'front')) then
+            else if ( (J == 2) .AND. ( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'front')) then
                ! Exclude front if it is very close (1 mm) to the nose
                if ( ABS(temp_pr(j)%prnode(p)%distance - temp_pr(j)%prnode(p + inc(j) )%distance)<0.001) then
                 
@@ -602,7 +602,7 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
                ava_pr.Rfront     = n
               end if    
  
-            else if ( (J == 2).and.( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'nose')) then   
+            else if ( (J == 2) .AND. ( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'nose')) then   
                ! Exclude nose if it is very close (1 mm) to the front
               if ( ABS(temp_pr(j)%prnode(p)%distance - temp_pr(j)%prnode(p - inc(j) )%distance)<0.001) then
                 n = n - 1
@@ -618,14 +618,14 @@ belowabove:          if (wsl1 -z2 >0.001) then                                  
         
         end do aval
 ! include the nodes between the deepest point of left and right bank, before adding the right bank to ava_pr.
-            if ( (j==1).and. (LR == 2) ) then
+            if ( (j==1) .AND. (LR == 2) ) then
               
               do t = index_lowest(1)+1,index_lowest(2)-1
                n = n + 1
                ava_pr%prnode(n) = trans_pr%prnode(t)
               end do
             
-            elseif ( (j==1).and. (LR == 1) ) then      ! the case of only left bank, but with exiting nodes right hand of talweg.
+            elseif ( (j==1) .AND. (LR == 1) ) then      ! the case of only left bank, but with exiting nodes right hand of talweg.
               t = index_lowest(1)
               
               do 
@@ -691,9 +691,9 @@ RHOBS=1000.*(1-porosity)* SGSAND (lowernode)   ! [Kg/m^3]
  end if
   
 ! When mode = 1 then the source term is computed as g/(m^2.s), otherwise only the volume of erosion is computed.
-if (mode == 1) then	 
-	 
-	  if ( (TRIBAREA(Tlowernode)/= 0.).AND.(TRIBAREA(Tuppernode)/=0.) ) then
+if (mode == 1) then       
+       
+        if ( (TRIBAREA(Tlowernode)/= 0.) .AND. (TRIBAREA(Tuppernode)/=0.) ) then
           
          ![g/m^2.s]  =  [m] *  [m^2]           *[kg/m^3]/([s]*[m^2])              * [1000 g/kg]
           sourceterm = delz *TRIBAREA(Tuppernode)*RHOBS /(DELT*TRIBAREA(Tlowernode))*1000.
@@ -706,7 +706,7 @@ if (mode == 1) then
       ! therefore compute its contributing area irrespective of TRIBAREA, which consideres
       ! only active element area.
      
-      elseif ( (TRIBAREA(Tlowernode)/= 0.).AND.(TRIBAREA(Tuppernode)==0.) ) then 
+      elseif ( (TRIBAREA(Tlowernode)/= 0.) .AND. (TRIBAREA(Tuppernode)==0.) ) then 
      
           call EffectiveArea(area1,Tuppernode)
           
@@ -715,7 +715,7 @@ if (mode == 1) then
           EXTLD(Tlowernode)=EXTLD(Tlowernode)+ 0.1* sourceterm
 
       ! if both nodes are in dry area, which will not occur in the computations of Avlanche.
-      elseif ( (TRIBAREA(Tlowernode)== 0.).AND.(TRIBAREA(Tuppernode)==0.) ) then 
+      elseif ( (TRIBAREA(Tlowernode)== 0.) .AND. (TRIBAREA(Tuppernode)==0.) ) then 
      
           call EffectiveArea(area1,Tuppernode)
           call EffectiveArea(area2,Tlowernode)
@@ -736,12 +736,12 @@ if (mode == 1) then
      
       pr_lower.elevation = pr_lower.elevation+ DELTAB
       ELEVB(Tlowernode)  = ELEVB(Tlowernode) + DELTAB
-	  TTHICK(Tlowernode) = TTHICK(Tlowernode)+ DELTAB
-	  DELBED(Tlowernode) = DELBED(Tlowernode)+ DELTAB
+        TTHICK(Tlowernode) = TTHICK(Tlowernode)+ DELTAB
+        DELBED(Tlowernode) = DELBED(Tlowernode)+ DELTAB
 
 ! compute only the volume of erosion
 else
-	  if ( (TRIBAREA(Tlowernode)/= 0.).AND.(TRIBAREA(Tuppernode)/=0.) ) then
+        if ( (TRIBAREA(Tlowernode)/= 0.) .AND. (TRIBAREA(Tuppernode)/=0.) ) then
           
           SourceTerm = delz * TRIBAREA(Tuppernode)
           

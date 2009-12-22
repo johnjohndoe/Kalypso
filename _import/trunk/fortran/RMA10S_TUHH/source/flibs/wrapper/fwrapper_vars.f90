@@ -209,7 +209,7 @@ subroutine find_varname( declarations, varname, start, line_index, decoration_in
             if ( k > 0 ) then
                 j = j + k - 1
                 k = j + len_trim(varname)
-                if ( index( ',:',  declarations(i)(j-1:j-1) ) > 0 .and. &
+                if ( index( ',:',  declarations(i)(j-1:j-1) ) > 0 .AND. &
                      index( ',*( ', declarations(i)(k:k) )    > 0 ) then
                     line_index       = i
                     decoration_index = k
@@ -304,7 +304,7 @@ subroutine get_type( declarations, info )
             endif
         enddo
     endif
-    if ( .not. found ) then
+    if ( .NOT. found ) then
         info%type_name = default_type( info%name )
     endif
 
@@ -575,7 +575,7 @@ find_var: &
         do while ( k > 0 )
             nextpos = start+k+len_trim(varname)
             c = declarations(i)(nextpos:nextpos)
-            if ( c == '(' .or. c == '*' .or. c == ',' .or. c == ' ' ) then
+            if ( c == '(' .OR. c == '*' .OR. c == ',' .OR. c == ' ' ) then
                 if ( index( declarations(i), 'dimension' ) > 0 ) then
                     idx = i
                     exit find_var
@@ -695,7 +695,7 @@ subroutine get_arguments( line, name )
         endc   = -1
     endif
 
-    if ( beginc < 1 .or. endc < beginc ) then
+    if ( beginc < 1 .OR. endc < beginc ) then
         allocate( name(0) )
     else
         beginc = keywordc + beginc - 1

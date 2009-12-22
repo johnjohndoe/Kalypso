@@ -43,7 +43,7 @@ subroutine pool_acquire( pdata )
     integer                  :: j
     integer                  :: id
 
-    if ( .not. init ) then
+    if ( .NOT. init ) then
         init = .true.
         call pool_initialise
     endif
@@ -92,7 +92,7 @@ subroutine pool_release( pdata )
     integer                  :: i
     integer                  :: j
 
-    if ( .not. init ) then
+    if ( .NOT. init ) then
         write(*,*) 'Error in memory pool module: pool_release used before pool_acquire'
         return
     endif
@@ -104,7 +104,7 @@ subroutine pool_release( pdata )
     chunk(i)%available(j) = .true.
     chunk(i)%no_available = chunk(i)%no_available + 1
 
-    if ( release_asap .and. chunk(i)%no_available == chunk_size ) then
+    if ( release_asap .AND. chunk(i)%no_available == chunk_size ) then
         deallocate( chunk(i)%data )
         deallocate( chunk(i)%available )
         chunk(i)%no_available = -1

@@ -341,7 +341,7 @@ FileRead: DO
     !check for 'RESTART' in next line
     READ (fileControl.lin.unit,'(A8,A96)') ID, FNAMIN
     !handle restarting
-    IF (ID(1:7) == 'RESTART' .or. iaccyc > 1) THEN
+    IF (ID(1:7) == 'RESTART' .OR. iaccyc > 1) THEN
       !unit number of restart file is the same as input file
       NB     = ifile       
       !parameters for run time
@@ -351,7 +351,7 @@ FileRead: DO
       FNAM3  = FNAM2    
     endif
     !backspace file, if 'RESTART'-entry was not present, not to jump over any line
-    if (.not. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
+    if ( .NOT. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
 
 
   !Input 'BEDREST' = Bed-RESTART (INPUT-Data)

@@ -131,11 +131,11 @@ function isFileUnitOpen (fileUnit) result (fileIsOpened)
     
       unitIsOpen = isFileUnitOpen (unitNo)
       
-      if (unitIsOpen .and. unitNo == maxUnitTmp) then
+      if (unitIsOpen .AND. unitNo == maxUnitTmp) then
         write(*,*) 'No free unit available!'
         fileUnit = -1
         exit returnFreeUnit
-      elseif (.not. (unitIsOpen)) then
+      elseif ( .NOT. (unitIsOpen)) then
         fileUnit = unitNo
         exit returnFreeUnit
       endif      

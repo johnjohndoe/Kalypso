@@ -29,13 +29,13 @@ C-
       !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
       !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
       ROAVG=1.935
-      IF (GRAV.LT.32.) ROAVG=516.*1.935
+      IF (GRAV < 32.) ROAVG=516.*1.935
 !MD: Basis-Variable: Wasserdichte
 
 C
       DO 75 NN=1,NPM
          N = NN
-         IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+         IF(NDEP(NN) > 1) N=NREF(NN)+NDEP(NN)-1
          NLAYT=NLAYTND(N)
          DO J=1,NLAYT
            !MD: NEUE Berechnung der Trocken-Rohdichte JE Sus.[kg/m3]
@@ -48,7 +48,7 @@ C
          GAC=GACND(N)
          !MD: GAB=GABND(N) use per Layer
          !MD NEU Berechnung der Suspensionsdichte
-         IF (VEL(6,N).ge.0.) THEN
+         IF (VEL(6,N) >= 0.) THEN
            GAWND(N)=(VEL(6,N)/1000.)*(1.-ROAVG/GACND(N)) + ROAVG
          Else
            GAWND(N)= ROAVG
@@ -62,19 +62,19 @@ C Calculate total dry mass of new bed
             TVN = TVN + THICK(NN,L)*GAD(L)
          ENDDO
 cipk jan05
-         IF(NLAYO(NN) .GT. 0) THEN
+         IF(NLAYO(NN) > 0) THEN
            DO L=1,NLAYO(NN)
              !MD: GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
              GADLN=(GBO(NN,L)-ROAVG)*GAC/(GAC-ROAVG)
              !MD:  NEUE Berechnung der Trocken-Rohdichte Bed [kg/m3]
              TVN = TVN + THICKO(NN,L)*GADLN
            ENDDO
-	   ENDIF
+         ENDIF
 cipk may06 get nodal masses for susp sed and bed 
-CIPK SEP06 UPDATE COMPUTATION	   
-	   TMSED(NN)=TVN
-C	   +(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
-	   TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
+CIPK SEP06 UPDATE COMPUTATION         
+         TMSED(NN)=TVN
+C         +(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
+         TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
 
    75 CONTINUE
 cipk may06 put total mass in subscript '0'   
@@ -82,7 +82,7 @@ cipk may06 put total mass in subscript '0'
       TMSSED(0)=0
       DO N=1,NE
         NCN=NCORN(N)
-        IF(NCN .EQ. 6) THEN
+        IF(NCN == 6) THEN
 CIPK AUG06 UPDATE TO ADD CORNERS
         TMSED(0)=TMSED(0)-
      +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5)))*
@@ -94,7 +94,7 @@ CIPK AUG06 UPDATE TO ADD CORNERS
      +           (AREA(N)/6.)+        
      +  (TMSSED(NOP(N,2))+TMSSED(NOP(N,4))+TMSSED(NOP(N,6)))*
      +           (AREA(N)/2.)        
-        ELSEIF(NCN .EQ. 8) THEN
+        ELSEIF(NCN == 8) THEN
         TMSED(0)=TMSED(0)-
      +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5))+
      +            TMSED(NOP(N,7)))*(AREA(N)/12.)+ 
@@ -117,11 +117,11 @@ CIPK AUG06 UPDATE TO ADD CORNERS
         iprtf = nprtf
       endif 
 
-      IF (MOD(IT,iPRTF) .NE. 0  .AND. TET .NE. 0.) go to 76
+      IF (MOD(IT,iPRTF) /= 0 .AND. TET /= 0.) go to 76
 
       WRITE(LOUT,9999) TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
    76 continue
-      if(IMASSOUT .gt. 0) then      
+      if(IMASSOUT > 0) then      
         WRITE(24,9999) TET,TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
       endif
  9999 FORMAT('      TIME    MASS IN SEDIMENT           SUSPENDED',

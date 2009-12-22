@@ -1,35 +1,35 @@
       SUBROUTINE SWITON(K,ISWT,IYRR,DAYOFY,TET,QFACT)
-	USE TSVAR
+      USE TSVAR
       INTEGER DAYOFY
 
-	ISWT=1
+      ISWT=1
 
-      IF(K .EQ. 0) RETURN
+      IF(K == 0) RETURN
 
-	IF(IYRR .EQ. IYTIM) THEN
-	  RTIME=(DAYOFY-1)*24.+TET
+      IF(IYRR == IYTIM) THEN
+        RTIME=(DAYOFY-1)*24.+TET
       ENDIF
-	DO L=1,NTIMEMX
+      DO L=1,NTIMEMX
 
-        IF(CTIMEON(K,L) .LT.  -9000) RETURN 
-        IF(RTIME .GE. CTIMEON(K,L)) THEN
-	    IF(RTIME .LT. CTIMEOF(K,L)) THEN
-	      ISWT=0
+        IF(CTIMEON(K,L) < -9000) RETURN 
+        IF(RTIME >= CTIMEON(K,L)) THEN
+          IF(RTIME < CTIMEOF(K,L)) THEN
+            ISWT=0
 CIPK DEC05
             QFACT=1.
-            IF(RTIME .LT. HTIMEON(K,L))	THEN
-             if(HTIMEON(K,L) .GT. CTIMEON(K,L)) 
+            IF(RTIME < HTIMEON(K,L))      THEN
+             if(HTIMEON(K,L) > CTIMEON(K,L)) 
      +       QFACT=(RTIME- CTIMEON(K,L))/(HTIMEON(K,L)- CTIMEON(K,L))
             ENDIF
-            IF(RTIME .GT. HTIMEOF(K,L))	THEN
-             IF(CTIMEOF(K,L) .GT. HTIMEOF(K,L))
+            IF(RTIME > HTIMEOF(K,L))      THEN
+             IF(CTIMEOF(K,L) > HTIMEOF(K,L))
      +       QFACT=1.-(RTIME- HTIMEOF(K,L))/(CTIMEOF(K,L)- HTIMEOF(K,L))
             ENDIF
-	      RETURN
-	    ENDIF
-	  ELSE
-	    RETURN
-	  ENDIF
-	ENDDO
-	RETURN
-	END
+            RETURN
+          ENDIF
+        ELSE
+          RETURN
+        ENDIF
+      ENDDO
+      RETURN
+      END

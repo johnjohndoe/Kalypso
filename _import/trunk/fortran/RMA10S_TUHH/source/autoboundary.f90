@@ -6,7 +6,7 @@
 !******************************************************************************************************
 !******************************************************************************************************
 !
-!   	These subroutines compute the boundary conditions for new steps for steady and unsteady
+!         These subroutines compute the boundary conditions for new steps for steady and unsteady
 !       flow for autoconverge.
 !
 !******************************************************************************************************
@@ -18,7 +18,7 @@
 
 subroutine autoboundaryh(hfin,hini,h2fin,h2ini,tfin,ttt,curve,hhh,hhh2)
 
-                                               		 ! hfin    : finish waterstage
+                                                            ! hfin    : finish waterstage
                                                          ! hini    : initial waterstage
                                                          ! h2fin   : finish waterstage 2
                                                          ! h2ini   : initial waterstage 2

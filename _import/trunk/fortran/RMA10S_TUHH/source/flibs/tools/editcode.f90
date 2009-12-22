@@ -53,18 +53,18 @@
 !     If a condition is longer than one line, simply use & like any
 !     ordinary continuation line:
 !
-!     assert: x > 0.0 .and. &
+!     assert: x > 0.0 .AND. &
 !             y < 0.0
 !
 !     If the condition type is enabled, the condition is transformed
 !     into code like this:
 !
-!     if ( .not. ( &
-!         x > 0.0 .and. &
+!     if ( .NOT. ( &
+!         x > 0.0 .AND. &
 !         y > 0.0 &
 !     ) then
 !         write(*,*) 'Assertion failed at line 10 in file myprog.f90:'
-!         write(*,*) 'x > 0.0 .and. &'
+!         write(*,*) 'x > 0.0 .AND. &'
 !         write(*,*) 'y > 0.0'
 !     endif
 !

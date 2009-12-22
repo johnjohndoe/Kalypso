@@ -50,16 +50,16 @@ subroutine gauss(N,A,B,X,SING,NDIM)
 implicit none
 
 ! Calling variables
-INTEGER, INTENT(IN)             			:: N    ! Dimension of equation system
-INTEGER, INTENT(IN)             			:: NDIM ! Dimension of A, B and X
-LOGICAL, INTENT(OUT) 					:: SING ! true if singularity appears, otherwise false
-REAL (KIND=8), DIMENSION(1:NDIM,1:NDIM), INTENT(INOUT) 	:: A    ! coefficient matrix
-REAL (KIND=8), DIMENSION(1:NDIM), INTENT(IN)    	:: B    ! right side vector
-REAL (KIND=8), DIMENSION(1:NDIM), INTENT(OUT)   	:: X    ! solution vector
+INTEGER, INTENT(IN)                               :: N    ! Dimension of equation system
+INTEGER, INTENT(IN)                               :: NDIM ! Dimension of A, B and X
+LOGICAL, INTENT(OUT)                               :: SING ! true if singularity appears, otherwise false
+REAL (KIND=8), DIMENSION(1:NDIM,1:NDIM), INTENT(INOUT)       :: A    ! coefficient matrix
+REAL (KIND=8), DIMENSION(1:NDIM), INTENT(IN)          :: B    ! right side vector
+REAL (KIND=8), DIMENSION(1:NDIM), INTENT(OUT)         :: X    ! solution vector
 
 ! Local variables
 REAL (KIND=8), PARAMETER :: epmach = 1.E-15
-REAL (KIND=8)	:: amax
+REAL (KIND=8)      :: amax
 REAL (KIND=8)   :: aij, ajk
 REAL (KIND=8)   :: tol
 REAL (KIND=8)   :: ap, q
@@ -71,7 +71,7 @@ do i = 1, N
   x(i) = b(i)
   do j = 1, n
     aij = ABS(a(i,j))
-    if (aij .gt. amax) amax = aij
+    if (aij > amax) amax = aij
   end do
 end do
 
@@ -87,21 +87,21 @@ triangular: do k = 1, n-1
   pivot: do j = k+1, n
 
     ajk = a(j,k)
-    if (ABS(ajk) .gt. ABS(ap)) then
+    if (ABS(ajk) > ABS(ap)) then
       ap = ajk
       kp = j
     end if
 
   end do pivot
 
-  if (ABS(ap) .lt. tol) then
+  if (ABS(ap) < tol) then
     SING = .true.
     RETURN
   end if
 
   ! Changing lines
   xp = x(kp)
-  if (kp .ne. k) then
+  if (kp /= k) then
     x(kp) = x(k)
     x(k) = xp
     do j = 1, n
@@ -113,7 +113,7 @@ triangular: do k = 1, n-1
 
   sub1: do i = k+1,n
     q= a(i,k)
-    if (q .eq. 0.E0) CYCLE sub1
+    if (q == 0.E0) CYCLE sub1
     q = q/ap
     a(i,k) = q
     x(i) = x(i) - q*xp
@@ -126,7 +126,7 @@ triangular: do k = 1, n-1
 
 end do triangular
 
-if (ABS(a(n,n)) .lt. tol) then
+if (ABS(a(n,n)) < tol) then
   SING = .true.
   RETURN
 end if
@@ -134,7 +134,7 @@ end if
 ! back substitution
 back: do i = n, 1, -1
 
-  if (i .lt. n) then
+  if (i < n) then
     do j = i+1,n
       x(i) = x(i) - a(i,j)*x(j)
     end do

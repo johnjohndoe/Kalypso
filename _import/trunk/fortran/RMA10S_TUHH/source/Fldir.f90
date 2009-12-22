@@ -55,7 +55,7 @@ DO M = 1, NEM
     !  imat < 900  : normal element
     !  imat > 5000 : normal 3D-element
     !  IGTP /= 0   : gate type element
-    IF (IMAT (M) < 900  .OR.  IMAT (M) > 5000  .OR. IGTP (M) /= 0) THEN
+    IF (IMAT (M) < 900 .OR. IMAT (M) > 5000 .OR. IGTP (M) /= 0) THEN
 
       !if the sixth node of the element, which would be the third corner node is 0, then it
       !is a 1D-element and it has to be processed
@@ -76,7 +76,7 @@ enddo
 !run through all elements
 ForAllElts: DO N = 1, NEM
   !consider only control structure elements and junction elements
-  IF (IMAT (N) > 900  .AND.  IMAT(N) < 1000) THEN
+  IF (IMAT (N) > 900 .AND. IMAT(N) < 1000) THEN
 !-
 !...... Select a node to establish direction
 !-
@@ -94,9 +94,9 @@ ForAllElts: DO N = 1, NEM
         M = ITAB (NRF)
 
 !IPK DEC00 ALLOW STRUCTURE ELEMENTS
-        IF (M == 0  .AND. (IMAT(N) > 903  .AND.  IMAT(N) < 1000)) CYCLE forAllIntNodes
+        IF (M == 0 .AND. (IMAT(N) > 903 .AND. IMAT(N) < 1000)) CYCLE forAllIntNodes
 
-          IF (M == 0  .OR.  M > NE) then
+          IF (M == 0 .OR. M > NE) then
 !IPK SEP04 CREATE ERROR FILE
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
@@ -144,7 +144,7 @@ ForAllElts: DO N = 1, NEM
   ENDIF
 enddo ForAllElts
 
-!NiS,may06,com: für jeden 2D-horizontal averaged elements; alle Knoten mit mehr als einem Layer (NDEP(N).gt.1)
+!NiS,may06,com: für jeden 2D-horizontal averaged elements; alle Knoten mit mehr als einem Layer (NDEP(N) > 1)
 DO N = 1, NPM
   IF (NDEP (N) > 1) THEN
     DO K = 2, NDEP (N)

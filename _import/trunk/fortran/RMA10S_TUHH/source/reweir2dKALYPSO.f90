@@ -12,9 +12,9 @@ INTEGER, DIMENSION(8) :: nop_temp
 integer (kind = 4), intent (in) :: reweir (1:*)
 
 !EFa Mar07, weirs in 1d-elements
-if (nop(reweir(2),5) .eq.0) then
+if (nop(reweir(2),5) == 0) then
 
-  if (nop(reweir(2),1) .ne. reweir(1)) then
+  if (nop(reweir(2),1) /= reweir(1)) then
     refnode=nop(reweir(2),1)
     nop(reweir(2),1)=nop(reweir(2),3)
     nop(reweir(2),3)=refnode
@@ -25,7 +25,7 @@ else
 
  do L=1,8
 !   write (*,*) nop(reweir(2),L)
-   if (nop(reweir(2),L) .eq. reweir(1)) then
+   if (nop(reweir(2),L) == reweir(1)) then
      refnode = L
      exit
    endif
@@ -42,9 +42,9 @@ else
    endif
 !   renum = MOD(i+refnode-1,8)
 !-
-   if (renum .eq. 0) renum = 8
+   if (renum == 0) renum = 8
 !   write (*,*) renum
-!   if (nop(reweir(2), i) .eq. 0) cycle
+!   if (nop(reweir(2), i) == 0) cycle
    nop_temp(renum) = nop(reweir(2), i)
 !   write (*,*) nop(reweir(2), i)
  end do

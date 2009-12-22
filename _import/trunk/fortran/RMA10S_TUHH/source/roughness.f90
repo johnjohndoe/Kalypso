@@ -70,15 +70,15 @@ INTEGER                                        :: approxdim
 !-
 
 ! initializations
-lambdasand	  = 0.0
+lambdasand        = 0.0
 lambdawald    = 0.0
 lambdabedform = 0.0
 
 !NiS,may06: testing
- !IF (ks.le.0.0) stop 'ks.le.0'
-IF (ks.le.0.0) then
+ !IF (ks <= 0.0) stop 'ks <= 0'
+IF (ks <= 0.0) then
   WRITE(*,*) nn
-  stop 'ks.le.0'
+  stop 'ks <= 0'
 endif
 !-
 
@@ -94,14 +94,14 @@ lambdasand = cole (vecq, h, ks)
 
 if (approxdim == 2) then
   ! Bedform is not calculated when trees occur!
-  if (nn/=0 .AND. morph /= 0 .and. dp /= 0.0) then
+  if (nn/=0 .AND. morph /= 0 .AND. dp /= 0.0) then
     CALL formrauhheit (lambdabedform, nn, bedform, mel, h)
   else
     lambdabedform = 0.0
   end if
 
 
-  if (dp > 0.0 .and. h > 0.0) then
+  if (dp > 0.0 .AND. h > 0.0) then
     CALL wald (lambdawald, h, a, dp, c_wr)
   else
     lambdawald = 0.0
@@ -138,7 +138,7 @@ REAL, INTENT(IN)             :: vecq   ! velocity
 REAL(KIND=8), INTENT(IN)     :: rhy      ! flow depth, hydraulic radius
 
 !Local variables
-REAL 			                     :: re, lalt, dhy
+REAL                                        :: re, lalt, dhy
 
 ! kinematic viskosity at 10 C
 REAL, PARAMETER :: nue = 1.3e-06
@@ -159,11 +159,11 @@ REAL, PARAMETER :: nue = 1.3e-06
 !REAL, PARAMETER  :: f_r = 3.05
 REAL, PARAMETER  :: f_g = 2.51
 REAL, PARAMETER  :: f_r = 3.71
-INTEGER 	 :: i
+INTEGER        :: i
 
 !initializations
 lambda = 0.0d0
-lalt = 10.0**6  	! initial lambda
+lalt = 10.0**6        ! initial lambda
 dhy  = 4.0 * rhy  ! hydraulic diameter
 
 
@@ -181,12 +181,12 @@ lambda = 1/ ( -2.03 * log10 (ks / (dhy * f_r))) ** 2.0
 !WP (RE < 2000 may lead to inconvergence behaviour!)
 if (vecq > 0.0d0) then 
   re = vecq * dhy / nue
-  IF (re .lt. 2000.0) re = 2000.0
+  IF (re < 2000.0) re = 2000.0
 
 
   iteration_lambda: do i = 1, 30
 
-    if ( ABS((lambda/lalt)-1.0) .LE. 0.0001 ) EXIT iteration_lambda
+    if ( ABS((lambda/lalt)-1.0) <= 0.0001 ) EXIT iteration_lambda
     IF (i == 30) then
       !no convergence after 30 iterations
       lambda = 0.05
@@ -197,7 +197,7 @@ if (vecq > 0.0d0) then
     !formula by COLEBROOK/WHITE under consideratio of the hydraulic smooth term wrt to Reynolds-number
     lambda = ( -2.03 * log10 (f_g / (re * lalt**0.5) + ks / (dhy * f_r) ) ) ** 2.0
 
-    IF (lambda .eq. 0.0) lambda = 0.0001
+    IF (lambda == 0.0) lambda = 0.0001
     lambda = 1.0 / lambda
     !nis,oct08: Restrict lambda to be maximum 1000.0
     if (lambda > 0.0) lambda = min (lambda, 1000.0)
@@ -242,12 +242,12 @@ implicit none
 
 ! Calling variables
 !NiS,jul06: Consistent variable types!
-!REAL, INTENT(IN) 	:: h, a, dp, cwr
-REAL (kind = 8), INTENT(IN) 	:: a, dp
-REAL (kind = 8), INTENT(IN) 	            :: cwr
+!REAL, INTENT(IN)       :: h, a, dp, cwr
+REAL (kind = 8), INTENT(IN)       :: a, dp
+REAL (kind = 8), INTENT(IN)                   :: cwr
 REAL(KIND=8), INTENT(IN)      :: h
 !-
-REAL (kind = 8), INTENT(OUT) 	:: lambda
+REAL (kind = 8), INTENT(OUT)       :: lambda
 
 ! Local variables
 REAL :: ax, ay, dur
@@ -263,7 +263,7 @@ else
   ax = abs (a)
   ay = abs (a)
   dur = abs (dp)
-  IF (dp .gt. ax) then
+  IF (dp > ax) then
     write (*,1000) dp, ax
     stop
   END if
@@ -276,7 +276,7 @@ end if
 if (lambda > 0.0) lambda = min (lambda, 1000.0)
 
 1000 format (1X, 'Diameter of trees is larger than the distance'/ &
-	   & 1X, 'between trees:'/ &
+         & 1X, 'between trees:'/ &
            & 1X, 'D_p = ', F10.4,' > A_x = A_y = ', F10.4/ &
            & 1X, 'ABORTING program!')
 
@@ -298,7 +298,7 @@ subroutine formrauhheit(lambdasohle, nn, bedform, mel, h)
 implicit none
 
 ! Calling variables
-INTEGER, INTENT(IN) 				:: nn, mel
+INTEGER, INTENT(IN)                         :: nn, mel
 !NiS,jul06: Consistent variable types!
 REAL (KIND=8), INTENT(IN)                       :: h
 !-

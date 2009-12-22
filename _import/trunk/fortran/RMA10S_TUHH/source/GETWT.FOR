@@ -8,25 +8,25 @@
       INTEGER NOPEL(3,*)
   
       DIMENSION WGT(*),NDWT(*)
-	CHARACTER*72  IOUTC(10)
+      CHARACTER*72  IOUTC(10)
 
 C     Search for element that has circumcircle around the node
 
-      IF(ISWT .NE. 0) THEN
-        IF(ITIME .EQ. 0) NSTART=1
+      IF(ISWT /= 0) THEN
+        IF(ITIME == 0) NSTART=1
       ELSE
         NSTART=1
       ENDIF
 
       DO N=NSTART,NELTS
-        IF(NOPEL(1,N) .EQ. 0) GO TO 200
-        if(RADS(N) .eq. 0.) then
+        IF(NOPEL(1,N) == 0) GO TO 200
+        if(RADS(N) == 0.) then
          CALL CCENTRE(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N))      
      +     ,YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N))                 
      +     ,XCEN(N),YCEN(N),RADS(N)) 
         endif       
 
-        IF(RADS(N)+XCEN(N) .GE. CORD(M,1)) THEN
+        IF(RADS(N)+XCEN(N) >= CORD(M,1)) THEN
             NSTART=N
             GO TO 210
           ENDIF
@@ -36,8 +36,8 @@ C     Search for element that has circumcircle around the node
 
       IRJT=0
       DO N=NSTART,NELTS
-        IF(NOPEL(1,N) .EQ. 0) GO TO 250
-        if(RADS(N) .eq. 0.) then
+        IF(NOPEL(1,N) == 0) GO TO 250
+        if(RADS(N) == 0.) then
          CALL CCENTRE(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N))      
      +    ,YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N))                 
      +    ,XCEN(N),YCEN(N),RADS(N)) 
@@ -46,44 +46,44 @@ C     Search for element that has circumcircle around the node
         xmaxl=dmax1(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N)))
         yminl=dmin1(YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N)))
         ymaxl=dmax1(YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N)))
-        if(CORD(m,1) .lt. xminl-0.001  .or.  
-     +     CORD(m,1) .gt. xmaxl+0.001) then
+        if(CORD(m,1) < xminl-0.001 .OR. 
+     +     CORD(m,1) > xmaxl+0.001) then
           go to 250
-        elseif(CORD(m,2) .lt. yminl-0.001  .or.
-     +         CORD(m,2) .gt. ymaxl+0.001) then
+        elseif(CORD(m,2) < yminl-0.001 .OR. 
+     +         CORD(m,2) > ymaxl+0.001) then
           go to 250
         endif
 
         DISQ=(CORD(M,1)-XCEN(N))**2+(CORD(M,2)-YCEN(N))**2
 
 C        write(142,*) m,n,disq,rads(n)**2,xusr(m),xcen(n)
-        IF(DISQ .LE. RADS(N)**2*1.0001) THEN
+        IF(DISQ <= RADS(N)**2*1.0001) THEN
 
 C     We have a candidate
 
           CALL GETWT(XUSR,YUSR,N,NOPEL,CORD(M,1),CORD(M,2),WGT,1)
           DO K=1,3
-            IF(WGT(K) .LT. -1E-3  .OR. WGT(K) .GT. 1.001) THEN
-	       irjt=IRJT+1
+            IF(WGT(K) < -1E-3 .OR. WGT(K) > 1.001) THEN
+             irjt=IRJT+1
            WRITE(IOUTC(IRJT),'(''RJCT'',2I6,2F10.2,3F12.5)')m,n,diSQ
-     +	 ,rads(n)**2,wgt(1),wgt(2),wgt(3)
+     +       ,rads(n)**2,wgt(1),wgt(2),wgt(3)
               GO TO 250
             ENDIF
           ENDDO
           NDWT(1)=NOPEL(1,N)
           NDWT(2)=NOPEL(2,N)
           NDWT(3)=NOPEL(3,N)
-          if(irjt .GT. 1) IRJT=0
+          if(irjt > 1) IRJT=0
           GO TO 300
           ENDIF
   250   CONTINUE
       ENDDO
-      IF(IRJT .GT. 0) THEN
-	  DO I=1,IRJT
-	    WRITE(142,*) IOUTC(I)
-	  ENDDO
-	  IRJT=0
-	ENDIF
+      IF(IRJT > 0) THEN
+        DO I=1,IRJT
+          WRITE(142,*) IOUTC(I)
+        ENDDO
+        IRJT=0
+      ENDIF
   300 CONTINUE
       ITIME=1
 
@@ -122,7 +122,7 @@ C-
 C......DETERMINE ELEMENT TYPE                                           
 C-                                                                      
 CIPKOCT93 ADD                                                           
-      if(n .eq. 1910) then
+      if(n == 1910) then
          aaa=0
       endif
       NCN=6 
@@ -156,10 +156,10 @@ C-
       XP=XSW-XUSR(K1) 
       YP=YSW-YUSR(K1) 
 
-      if(xp .lt. xminl-0.0001  .or.  xp  .gt. xmaxl+0.0001) then
+      if(xp < xminl-0.0001 .OR. xp > xmaxl+0.0001) then
           wgt(1)=2.0
         return
-      elseif(yp .lt. yminl-0.0001  .or.  yp  .gt. ymaxl+0.0001) then
+      elseif(yp < yminl-0.0001 .OR. yp > ymaxl+0.0001) then
         wgt(1)=2.0
           return
         endif
@@ -188,7 +188,7 @@ C-
         DY=( DYKDX*XK-DXKDX*YK)/DET 
         XG=XG+DX 
         YG=YG+DY 
-        IF(ABS(DX).LT.TOL .AND. ABS(DY).LT.TOL) GO TO 420 
+        IF(ABS(DX) < TOL .AND. ABS(DY) < TOL) GO TO 420 
   400 END DO 
 C-                                                                      
 C......NOW GET WEIGHTING FUNCTIONS FOR QUAD FUNCTION
@@ -198,13 +198,13 @@ C-
         WGT(K)=XN2(IT,K,XG,YG)
       END DO 
 
-      IF(ISWT .EQ. 1) THEN
+      IF(ISWT == 1) THEN
 C-
 C-     REDUCE TO LINEAR FUNCTION BY ADDING TERMS
 C-
         DO K=2,NCN,2
           WGT(K-1)=WGT(K-1)+WGT(K)/2.
-          IF(K .LT. NCN) THEN
+          IF(K < NCN) THEN
             WGT(K+1)=WGT(K+1)+WGT(K)/2.
           ELSE
             WGT(1)=WGT(1)+WGT(K)/2.
@@ -232,42 +232,42 @@ C-
         DATA PI/3.14159265358979/
 C     Loop around the polygon computing angles
 
-      if(m .eq. 24) then
+      if(m == 24) then
         aaa=0
         endif
       ACCUM=0.
       DO N=1,NPOLY
-  	  IF(IPOL .EQ. 1) THEN
-          IF(ABS(CORD(M,1)-XUSR(IPOLY(N))) .LT. 1.E-5  .AND. 
-     +       ABS(CORD(M,2)-YUSR(IPOLY(N))) .LT. 1.E-5) THEN
+          IF(IPOL == 1) THEN
+          IF(ABS(CORD(M,1)-XUSR(IPOLY(N))) < 1.E-5 .AND. 
+     +       ABS(CORD(M,2)-YUSR(IPOLY(N))) < 1.E-5) THEN
              INDIC=1
              RETURN
           ENDIF
           A2=DATAN2(YUSR(IPOLY(N))-CORD(M,2),XUSR(IPOLY(N))-CORD(M,1))
-	  ELSE
-          IF(ABS(CORD(M,1)-XOUTL(N)) .LT. 1.E-5  .AND. 
-     +       ABS(CORD(M,2)-YOUTL(N)) .LT. 1.E-5) THEN
+        ELSE
+          IF(ABS(CORD(M,1)-XOUTL(N)) < 1.E-5 .AND. 
+     +       ABS(CORD(M,2)-YOUTL(N)) < 1.E-5) THEN
              INDIC=1
              RETURN
           ENDIF
           A2=DATAN2(YOUTL(N)-CORD(M,2),XOUTL(N)-CORD(M,1))
-	  ENDIF
+        ENDIF
 
-        IF(N .EQ. 1) THEN
+        IF(N == 1) THEN
           A1=A2
         ELSE
           INDIC=1
           RETURN
 
           DIFF=A2-A1
-          IF(ABS(ABS(DIFF)-PI) .LT. 0.001) THEN
+          IF(ABS(ABS(DIFF)-PI) < 0.001) THEN
             INDIC=1
             RETURN
           ENDIF
-          IF(DIFF .GT. PI) THEN
+          IF(DIFF > PI) THEN
             A2=A2-2.*PI
             DIFF=A2-A1
-          ELSEIF(DIFF .LT. -PI) THEN
+          ELSEIF(DIFF < -PI) THEN
             A2=A2+2.*PI
             DIFF=A2-A1
           ENDIF
@@ -275,7 +275,7 @@ C     Loop around the polygon computing angles
           A1=A2
         ENDIF
       ENDDO
-        IF(ABS(ACCUM) .LT. 0.1) THEN
+        IF(ABS(ACCUM) < 0.1) THEN
           INDIC=0
         ELSE
           INDIC=1

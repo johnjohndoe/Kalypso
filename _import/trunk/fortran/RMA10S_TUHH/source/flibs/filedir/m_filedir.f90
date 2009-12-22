@@ -299,7 +299,7 @@ contains
   subroutine filedir_init ( )
     integer :: platform
     character (len=200) :: message
-    if (.NOT.filedir_static_initialized) then
+    if ( .NOT. filedir_static_initialized) then
        !
        ! 0. Get the current platform
        !
@@ -370,7 +370,7 @@ contains
     kdot   = scan( filename, '.', .true. )
     kseparator = filedir_last_separator_index ( filename )
     rootname = filename
-    if ( kdot .ne. 0 .and. kdot .gt. kseparator+1 ) then
+    if ( kdot /= 0 .AND. kdot > kseparator+1 ) then
        rootname = filename(1:kdot-1)
     endif
   end function filedir_rootname
@@ -392,7 +392,7 @@ contains
     kdot   = scan( filename, '.', .true. )
     kseparator = filedir_last_separator_index ( filename )
     extension = ''
-    if ( kdot .ne. 0 .and. kdot .gt. kseparator+1 ) then
+    if ( kdot /= 0 .AND. kdot > kseparator+1 ) then
        extension = filename(kdot:)
     endif
   end function filedir_extension
@@ -411,7 +411,7 @@ contains
     integer                      :: kseparator
     kseparator = filedir_last_separator_index ( filename )
     basename = filename
-    if ( kseparator .gt. 1 ) then
+    if ( kseparator > 1 ) then
        basename = filename(kseparator+1:)
     endif
   end function filedir_tail
@@ -429,7 +429,7 @@ contains
     integer                      :: kseparator
     kseparator = filedir_last_separator_index ( filename )
     dirname = ''
-    if ( kseparator .gt. 1 ) then
+    if ( kseparator > 1 ) then
        dirname = filename(1:kseparator)
     endif
   end function filedir_dirname
@@ -766,7 +766,7 @@ contains
     ! TODO : this length is ugly, introduce real dynamic strings in fortran 90 OO
     character ( len = len(filename)+len(command_rmdir)+len(command_rmdir_force)+ 1) :: command
     isdir = filedir_isdirectory ( filename )
-    if (.NOT.isdir) then
+    if ( .NOT. isdir) then
        ! Delete that regular file
        ! One could use the following fortran extension :
        !   call UNLINK ( filename , local_status )
@@ -1038,62 +1038,62 @@ contains
     !
     ! 1. Try TMPDIR environment variable
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        envvar = "TMPDIR"
        call find_tmpdir_in_environment ( envvar , tmpdir , tmpdir_found )
     endif
     !
     ! 2. Try TEMP environment variable
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        envvar = "TEMP"
        call find_tmpdir_in_environment ( envvar , tmpdir , tmpdir_found )
     endif
     !
     ! 3. Try TMP environment variable
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        envvar = "TMP"
        call find_tmpdir_in_environment ( envvar , tmpdir , tmpdir_found )
     endif
     !
     ! 4. Try platform-specific temporary directories
     !
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        platform = platform_get_platform ()
        select case ( platform )
        case ( PLATFORM_PLATFORM_WINDOWS )
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              tmpdir = "C:\TEMP"
              tmpdir_found = filedir_exists ( tmpdir )
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              tmpdir = "C:\TMP"
              tmpdir_found = filedir_exists ( tmpdir )
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              tmpdir = "\TEMP"
              tmpdir_found = filedir_exists ( tmpdir )
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              tmpdir = "\TMP"
              tmpdir_found = filedir_exists ( tmpdir )
           endif
        case ( PLATFORM_PLATFORM_UNIX )
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              tmpdir = "/tmp"
              tmpdir_found = filedir_exists ( tmpdir )
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              tmpdir = "/var/tmp"
              tmpdir_found = filedir_exists ( tmpdir )
           endif
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              tmpdir = "/usr/tmp"
              tmpdir_found = filedir_exists ( tmpdir )
           endif
        case ( PLATFORM_PLATFORM_MAC )
-          if (.NOT.tmpdir_found) then
+          if ( .NOT. tmpdir_found) then
              envvar = "TRASH_FOLDER"
              call find_tmpdir_in_environment ( envvar , tmpdir , tmpdir_found )
           endif
@@ -1102,7 +1102,7 @@ contains
           call filedir_error ( "filedir_tempdir" , message )
        end select
     endif
-    if (.NOT.tmpdir_found) then
+    if ( .NOT. tmpdir_found) then
        write(message,*) "Unable to find a temporary directory for platform :", platform
        call filedir_error ( "filedir_tempdir" , message )
     endif
@@ -1280,13 +1280,13 @@ contains
        ! 1.3 See if the file allready exists
        !
        fexist = filedir_exists ( tempfile )
-       if ( .NOT.fexist ) then
+       if ( .NOT. fexist ) then
           ! If the file does not exist, we have found our temporary file name
           tempfile_done = .true.
           exit
        endif
     end do
-    if (.NOT.tempfile_done) then
+    if ( .NOT. tempfile_done) then
        write(message,*) "Unable to create a temporary file in directory :", tempdir
        call filedir_error ( "filedir_tempfile_name" , message )
     else
@@ -1510,10 +1510,10 @@ contains
     unit_found = .false.
     filedir_get_unit = 0
     do iunit = 1, MAX_UNIT_NUMBER
-       if ( iunit /= 5 .and. iunit /= 6 .and. iunit /= 9 ) then
+       if ( iunit /= 5 .AND. iunit /= 6 .AND. iunit /= 9 ) then
           inquire ( UNIT = iunit, opened = lopen, iostat = ios )
           if ( ios == 0 ) then
-             if ( .not. lopen ) then
+             if ( .NOT. lopen ) then
                 filedir_get_unit = iunit
                 unit_found = .true.
                 exit
@@ -1521,7 +1521,7 @@ contains
           end if
        end if
     end do
-    if (.NOT.unit_found) then
+    if ( .NOT. unit_found) then
        call filedir_error ( "filedir_get_unit" , "No unit free." )
     endif
   end function filedir_get_unit
@@ -1547,7 +1547,7 @@ contains
     do step = 1 , 2
        nbunits = 0
        do iunit = 1, MAX_UNIT_NUMBER
-          if ( iunit /= 5 .and. iunit /= 6 .and. iunit /= 9 ) then
+          if ( iunit /= 5 .AND. iunit /= 6 .AND. iunit /= 9 ) then
              inquire ( UNIT = iunit, opened = lopen )
              if ( lopen ) then
                 if ( step == 1 ) then

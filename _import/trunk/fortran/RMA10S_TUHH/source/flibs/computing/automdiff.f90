@@ -452,7 +452,7 @@ subroutine find_root( f, xinit, tolerance, root, found )
 
         fvalue = f(root)
         call find_root_iter( fvalue, root, tolerance, found )
-        if ( found .or. abs(root%v) > huge(1.0_wp)/10.0 ) exit
+        if ( found .OR. abs(root%v) > huge(1.0_wp)/10.0 ) exit
     enddo
 
 end subroutine find_root

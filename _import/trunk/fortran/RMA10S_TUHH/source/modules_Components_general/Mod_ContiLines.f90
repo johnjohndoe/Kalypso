@@ -90,7 +90,7 @@ CONTAINS
     type (linkedNode), pointer :: temp => null()
     
     !associate the passedNode
-    if (.not. (associated (ccl.firstNode))) then
+    if ( .NOT. (associated (ccl.firstNode))) then
       ccl.firstNode => nextNode
     else
       ccl.lastNode.next => nextNode
@@ -117,15 +117,15 @@ CONTAINS
     nextArc => null()
     currArc => null()
     !check for 1D ccl
-    if (associated (ccl.firstNode.next) .and. (.not. (associated (ccl.lastNode.next)))) then
+    if (associated (ccl.firstNode.next) .AND. ( .NOT. (associated (ccl.lastNode.next)))) then
       calcSegs: do 
         !get ID of previous arc
-        if (.not. (associated (nextArc)))  allocate (nextArc)
-        if (.not. (associated (ccl.firstSegment))) currNode => ccl.firstNode
-        if (.not. (associated (currNode.next))) exit calcSegs
+        if ( .NOT. (associated (nextArc)))  allocate (nextArc)
+        if ( .NOT. (associated (ccl.firstSegment))) currNode => ccl.firstNode
+        if ( .NOT. (associated (currNode.next))) exit calcSegs
         nextArc = newArc (currNode.thisNode, currNode.next.thisNode)
-        if (.not. (associated (ccl.firstSegment))) ccl.firstSegment => nextArc
-        if (.not. (associated (currArc))) then
+        if ( .NOT. (associated (ccl.firstSegment))) ccl.firstSegment => nextArc
+        if ( .NOT. (associated (currArc))) then
           currArc => nextArc
         else
           currArc.nextSeg => nextArc
@@ -169,7 +169,7 @@ CONTAINS
     
       assignSegNormals: do
         tmpSeg.posNormal = defaultNormal (tmpSeg, cclNormalPointer)
-        if (.not. (associated (tmpSeg.nextSeg))) exit assignSegNormals
+        if ( .NOT. (associated (tmpSeg.nextSeg))) exit assignSegNormals
         tmpSeg => tmpSeg.nextSeg
       enddo assignSegNormals
     endif
@@ -216,7 +216,7 @@ CONTAINS
       tmpArc = newArc (ccl.firstNode.thisNode, ccl.lastNode.thisNode)
       
       !calculate the standard positiveNormal, if there's no normal already calculated
-      if (ccl.posNormal(1) == 0.0d0 .and. ccl.posNormal(2) == 0.0d0) then
+      if (ccl.posNormal(1) == 0.0d0 .AND. ccl.posNormal(2) == 0.0d0) then
         ccl.posNormal = defaultNormal (tmpArc)
       !check, whether it is really a normal
       else
@@ -236,8 +236,8 @@ CONTAINS
     integer (kind = 4), optional :: globalID
     integer (kind = 4), optional :: BCtype
     
-    if (.not. (associated (ccl.innerCondition))) then
-      if (present (globalID) .and. present (BCtype)) then
+    if ( .NOT. (associated (ccl.innerCondition))) then
+      if (present (globalID) .AND. present (BCtype)) then
         ccl.innerCondition => newInnerBC (globalID, BCtype)
       elseif (present (globalID)) then
         ccl.innerCondition => newInnerBC (globalID = globalID)
@@ -322,7 +322,7 @@ CONTAINS
       write (BCOutFile.unit,'(a)')  tmpString
       
       !get next node
-      if (.not. (associated (tmpNode.next))) exit forNodes
+      if ( .NOT. (associated (tmpNode.next))) exit forNodes
       tmpNode => tmpNode.next
     end do forNodes
   end subroutine
@@ -391,12 +391,12 @@ CONTAINS
           case (enum_H_BCtype)
             
             if (associated (tmpNode)) lastNode => tmpNode
-            if (.not. (associated (hFunction))) hFunction => newDiscrFun()
+            if ( .NOT. (associated (hFunction))) hFunction => newDiscrFun()
             read (inputLine, *) nodeID, xCord, yCord, tmpWSLL
 
             tmpNode => newNode (nodeID, xCord, yCord)
             
-            if (.not. (associated (hFunction.first))) then
+            if ( .NOT. (associated (hFunction.first))) then
               ordinate = 0.0d0
             else
               ordinate = ordinate + sqrt ((tmpNode.cord(1) - lastNode.cord(1))**2 + (tmpNode.cord(2) - lastNode.cord(2))**2)
@@ -408,7 +408,7 @@ CONTAINS
           
             if (associated (tmpNode)) lastNode => tmpNode
 
-            if (.not. (associated (vxFunction))) then
+            if ( .NOT. (associated (vxFunction))) then
               vxFunction => newDiscrQuadrFun()
               vyFunction => newDiscrQuadrFun()
             endif
@@ -417,13 +417,13 @@ CONTAINS
             tmpNode => newNode (nodeID, xCord, yCord)
             
             !3 cases
-            if (.not. (associated (firstKoteVx))) then
+            if ( .NOT. (associated (firstKoteVx))) then
               firstKoteVx => newValuePair (0.0d0, tmpVx)
               firstKoteVy => newValuePair (0.0d0, tmpVy)
 
             else
               ordinate = ordinate + sqrt ((tmpNode.cord(1) - lastNode.cord(1))**2 + (tmpNode.cord(2) - lastNode.cord(2))**2)
-              if (.not. (associated (MidsideKoteVx))) then
+              if ( .NOT. (associated (MidsideKoteVx))) then
                 MidsideKoteVx => newValuePair (ordinate, tmpVx)
                 MidsideKoteVy => newValuePair (ordinate, tmpVy)
               else
@@ -475,14 +475,14 @@ CONTAINS
       if (associated (hFunction)) then
         spec (tmpNode.thisNode.ID, 3) = functionValue (hFunction, localOrdinate)
         nfix (tmpNode.thisNode.ID) = 00200
-        if (tmpNode.thisNode.ID == tmpCCl.firstNode.thisNode.ID .or. tmpNode.thisNode.ID == tmpCCl.lastNode.thisNode.ID) nfix(tmpNode.thisNode.ID) = nfix(tmpNode.thisNode.ID) + 1000
+        if (tmpNode.thisNode.ID == tmpCCl.firstNode.thisNode.ID .OR. tmpNode.thisNode.ID == tmpCCl.lastNode.thisNode.ID) nfix(tmpNode.thisNode.ID) = nfix(tmpNode.thisNode.ID) + 1000
       elseif (associated (vxFunction)) then
         spec (tmpNode.thisnode.ID, 1) = quadrFunValue (vxFunction, localOrdinate)
         spec (tmpNode.thisnode.ID, 2) = quadrFunValue (vyFunction, localOrdinate)
         !nfix (tmpNode.thisNode.ID) = 11000
         nfix (tmpNode.thisNode.ID) = 31000
       !fix directions of outer nodes first!
-      if (tmpNode == tmpCCL.firstNode .or. tmpNode == tmpCCL.lastNode) then
+      if (tmpNode == tmpCCL.firstNode .OR. tmpNode == tmpCCL.lastNode) then
         if (spec (tmpNode.thisNode.ID, 2) == 0) then
           thet = 0.0
         else
@@ -586,7 +586,7 @@ CONTAINS
             !Check for maximum change in boundary condition
             absChange(3) = abs ((tmpNode.thisNode.currentBC.h - tmpNode.thisNode.previousBC.h)/ (0.5* (tmpNode.thisNode.previousBC.h + tmpNode.thisNode.currentBC.h)))
             if (absChange(3) > maxChange(3)) maxChange(3) = absChange(3)
-            if (maxChange(3) > convBorder .and. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
+            if (maxChange(3) > convBorder .AND. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
           end if
           
         case (enum_V_BCtype)
@@ -595,11 +595,11 @@ CONTAINS
             if (tmpNode.thisNode.previousBC.v(i) /= 0.0) then
               !Check for maximum change in boundary condition
               absChange(i) = abs ((tmpNode.thisNode.currentBC.v(i) - tmpNode.thisNode.previousBC.v(i))/ (0.5 * (tmpNode.thisNode.previousBC.v(i) + tmpNode.thisNode.currentBC.v(i))))
-            elseif (tmpNode.thisNode.previousBC.v(i) == 0.0 .and. tmpNode.thisNode.currentBC.v(i) /= 0.0) then
+            elseif (tmpNode.thisNode.previousBC.v(i) == 0.0 .AND. tmpNode.thisNode.currentBC.v(i) /= 0.0) then
               absChange(i) = 1000.0
             end if
             if (absChange(i) > maxChange(i)) maxChange(i) = absChange(i)
-            if (maxChange(i) > convBorder .and. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
+            if (maxChange(i) > convBorder .AND. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
           enddo
          end select selectConvCheckCase
        if (associated (tmpNode.next)) then

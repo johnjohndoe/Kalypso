@@ -4,7 +4,7 @@
       SAVE
 
       CALL SETUP
-      IF(NSZF .EQ. 0) GO TO 500
+      IF(NSZF == 0) GO TO 500
       CALL FRONT(2)
 C-
 C......INITIALIZE DIVID
@@ -17,7 +17,7 @@ C-
   300 DIVID(N)=0.
 C-
       DO 400 N=1,NE
-      IF(IMAT(N)/1000 .EQ. 2) CALL PLANAR(N)
+      IF(IMAT(N)/1000 == 2) CALL PLANAR(N)
   400 CONTINUE
       CALL VVELF
   500 CONTINUE

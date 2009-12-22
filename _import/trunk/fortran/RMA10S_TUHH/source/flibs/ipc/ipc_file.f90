@@ -196,7 +196,7 @@ subroutine ipc_send_finish( comm )
             read( comm%lun, iostat = ierr ) okay
             close( comm%lun )
             write(*,*) 'Send finishing: ', okay
-            if ( ierr == 0 .and. okay ) exit
+            if ( ierr == 0 .AND. okay ) exit
         endif
         call sleepqq( 1000 )
     enddo
@@ -253,8 +253,8 @@ subroutine ipc_receive_start( comm, src, tag, id )
             write(*,*) 'Receive starting: (read) ', dest_, comm%me
             write(*,*) 'Receive starting: (read) ', tag_, tag
 
-            if ( ierr == 0 .and. &
-                 src_ == src .and. dest_ .eq. comm%me .and. &
+            if ( ierr == 0 .AND. &
+                 src_ == src .AND. dest_ == comm%me .AND. &
                  tag_ == tag ) then
                exit
             endif

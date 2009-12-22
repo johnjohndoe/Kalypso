@@ -177,7 +177,7 @@ subroutine assert_true( cond, text )
     logical, intent(in)          :: cond
     character(len=*), intent(in) :: text
 
-    if ( .not. cond ) then
+    if ( .NOT. cond ) then
         nofails = nofails + 1
         write(*,*) '    Condition "',trim(text), '" failed'
         write(*,*) '    It should have been true'
@@ -358,7 +358,7 @@ subroutine ftnunit_get_lun( lun )
 
     if ( prevlun /= 0 ) then
         inquire( unit = lun, opened = opend )
-        if ( .not. opend ) then
+        if ( .NOT. opend ) then
             lun = prevlun
             return
         endif
@@ -366,7 +366,7 @@ subroutine ftnunit_get_lun( lun )
 
     do prevlun = 10,99
         inquire( unit = prevlun, opened = opend )
-        if ( .not. opend ) then
+        if ( .NOT. opend ) then
             lun = prevlun
             return
         endif

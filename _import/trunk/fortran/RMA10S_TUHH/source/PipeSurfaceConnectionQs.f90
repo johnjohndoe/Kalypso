@@ -34,7 +34,7 @@ subroutine PipeSurfaceConnectionQs
 
     !First Remove old specific flows
     !-------------------------------
-    if (PipeSurfConn(i).SurfFlow /= 0.0d0 .and. maxn /= 1) then
+    if (PipeSurfConn(i).SurfFlow /= 0.0d0 .AND. maxn /= 1) then
       !Calculate the specific outflow/inflow to the surface element
       CALL LNFLO (PipeSurfConn(i).SurfElt, - PipeSurfConn(i).SurfFlow, (/0.0,0.0,0.0/), totalLoad, 0, 0.0d0, 0.0d0)
     

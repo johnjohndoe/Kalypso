@@ -19,7 +19,7 @@ c
 !-
 
 C
-      IF(ISWT .EQ. 0) THEN
+      IF(ISWT == 0) THEN
 C
 C...... Convert HSIG to H
 C
@@ -48,7 +48,7 @@ cipk apr97
 
 !       normal range (h over atm)
 !       waterlevel above the transition range (waterlevel certainly above real bed elevation)
-        ELSEIF( HSIG .GT. ATM-(ABM+ATM)/2.*(1.-AKAPM) ) THEN
+        ELSEIF( HSIG > ATM-(ABM+ATM)/2.*(1.-AKAPM) ) THEN
           H=HSIG+(1.-AKAPM)/2.*(ABM+ATM)
           AM=H-HSIG
           DAMH=0.0
@@ -69,7 +69,7 @@ cipk apr97
 C*******************
 C                         TEST MODIFICATION OF DERIVATIVES
 C*******************
-C       IF (HSIG .LT.  2.+ ATM-(ABM+ATM)/2.*(1.-AKAPM)) THEN
+C       IF (HSIG < 2.+ ATM-(ABM+ATM)/2.*(1.-AKAPM)) THEN
 C         DAMH=AM/HSIG
 C       ENDIF
 C*******************
@@ -83,16 +83,16 @@ C...... Convert H to HSIG
 C
 
 !       Marsh-option not active, because of high permeability of underground???
-        IF(AKAPM .GT. 0.9999) THEN
+        IF(AKAPM > 0.9999) THEN
           HSIG=H
 
 !       minimum range (h beneath abm but above virtual bed elevation)
 !       water level beneath real bed elevation
-        ELSEIF(H .LT. ABM) THEN
+        ELSEIF(H < ABM) THEN
           HSIG=H*AKAPM
 !       normal range (h over atm)
 !       water level certainly above real bed elevation
-        ELSEIF(H .GT. ATM) THEN
+        ELSEIF(H > ATM) THEN
           HSIG=AKAPM*H+(1.-AKAPM)*((ATM-ABM)/2.+(H-ATM))
 !       transition range
 !       water level around the real bed elevation

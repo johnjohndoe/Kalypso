@@ -17,22 +17,22 @@ WRITE(LOUT,6050)
  6050 FORMAT('0   WIND STRESS INFORMATION:')
  
       !EFa aug09, added for external wind graph
-      if (iwindin.eq.71) then
-        if (lablwind.eq.1) then
+      if (iwindin == 71) then
+        if (lablwind == 1) then
           time = tet
-          if (time.gt.24.) then
+          if (time > 24.) then
             daynow = dayofy + 1
             time = time - 24.  
           else  
             daynow = dayofy  
           endif          
-          if (mod(iyrr,4).eq.0) then  
+          if (mod(iyrr,4) == 0) then  
             iydays = 366  
           else  
             iydays = 365  
           endif          
           iyrn = iyrr                    
-          if (daynow.gt.iydays) then
+          if (daynow > iydays) then
             iyrn = iyrr +1
             daynow = daynow - iydays
           endif         
@@ -52,7 +52,7 @@ WRITE(LOUT,6050)
 !    Three options are available for input of wind data
 !
 !IPK AUG98  CHECK AND READ FILE FIRST
-IF (IWINDIN > 0.and.iwindin.ne.71) THEN
+IF (IWINDIN > 0 .AND. iwindin /= 71) THEN
   !read binary wind file
   IF (IWINDIN == 69) THEN
     READ(IWINDIN) NXX,IYFL,DYOFY,TFL,(WNDSP(J),WNDDR(J),J=1,NXX)
@@ -72,7 +72,7 @@ IF (IWINDIN > 0.and.iwindin.ne.71) THEN
   WRITE(75,*) 'WIND',SIGMA(1,1),SIGMA(1,2),WNDSP(1)
 
 !read global wind specification
-ELSEIF(ID(1:3) .EQ. 'WVA') THEN
+ELSEIF(ID(1:3) == 'WVA') THEN
   if (iwindin==71) then
     READ(DLIN,'(I8,2F8.2,i8)') N,TW,TA,lablwind
   else
@@ -81,7 +81,7 @@ ELSEIF(ID(1:3) .EQ. 'WVA') THEN
 !ipk nov97        READ(IBIN,7000) ID,DLIN
   call ginpt(ibin,id,dlin)
 !ipk APR96 save data to a scratch file
-  if(isvs .eq. 1) write(nscrin,7000) id,dlin
+  if(isvs == 1) write(nscrin,7000) id,dlin
 
   WRITE(LOUT,6046) TW,TA
   WRITE(*,6046) TW,TA
@@ -94,13 +94,13 @@ ENDIF
 
 !Read particular nodal wind specification and overwrite global wind specification
 readNodalWind: Do
-  IF(.not.(ID(1:3) .EQ. 'WVN')) exit readNodalWind
+  IF( .NOT. (ID(1:3) == 'WVN')) exit readNodalWind
     
   READ(DLIN,'(I8,2F8.0)') N,TW,TA
 
   call ginpt(ibin,id,dlin)
 
-  if(isvs .eq. 1) write(nscrin,7000) id,dlin
+  if(isvs == 1) write(nscrin,7000) id,dlin
 
   SIGMA(N,1)=CHI*COS(TA/57.3)*TW**2
   SIGMA(N,2)=CHI*SIN(TA/57.3)*TW**2

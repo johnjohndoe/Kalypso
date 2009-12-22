@@ -46,7 +46,7 @@ subroutine ipc_receive_int_scalar( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -105,7 +105,7 @@ subroutine ipc_receive_real_scalar( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -164,7 +164,7 @@ subroutine ipc_receive_dbl_scalar( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -223,7 +223,7 @@ subroutine ipc_receive_log_scalar( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -282,7 +282,7 @@ subroutine ipc_receive_char_scalar( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -341,7 +341,7 @@ subroutine ipc_receive_cmplx_scalar( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -402,7 +402,7 @@ subroutine ipc_receive_int_1d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -463,7 +463,7 @@ subroutine ipc_receive_int_2d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -524,7 +524,7 @@ subroutine ipc_receive_int_3d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -585,7 +585,7 @@ subroutine ipc_receive_real_1d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -646,7 +646,7 @@ subroutine ipc_receive_real_2d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -707,7 +707,7 @@ subroutine ipc_receive_real_3d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -768,7 +768,7 @@ subroutine ipc_receive_dbl_1d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -829,7 +829,7 @@ subroutine ipc_receive_dbl_2d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -890,7 +890,7 @@ subroutine ipc_receive_dbl_3d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -951,7 +951,7 @@ subroutine ipc_receive_log_1d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1012,7 +1012,7 @@ subroutine ipc_receive_log_2d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1073,7 +1073,7 @@ subroutine ipc_receive_log_3d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1134,7 +1134,7 @@ subroutine ipc_receive_char_1d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1195,7 +1195,7 @@ subroutine ipc_receive_char_2d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1256,7 +1256,7 @@ subroutine ipc_receive_char_3d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1317,7 +1317,7 @@ subroutine ipc_receive_cmplx_1d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1378,7 +1378,7 @@ subroutine ipc_receive_cmplx_2d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif
@@ -1439,7 +1439,7 @@ subroutine ipc_receive_cmplx_3d( comm, data, error )
         error = .true.
         return
     endif
-    if ( typeid_ /= typeid .or. any(shape_ /= exp_shape) .or. length_ /= length ) then
+    if ( typeid_ /= typeid .OR. any(shape_ /= exp_shape) .OR. length_ /= length ) then
         error = .true.
         return
     endif

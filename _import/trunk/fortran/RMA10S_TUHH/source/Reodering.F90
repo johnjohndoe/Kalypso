@@ -128,7 +128,7 @@ StoreConnectivity: DO i = 1, MaxE
 
   IF (nop (i, 1) == 0) CYCLE StoreConnectivity
 
-  IF (imat (i) < 901 .or. imat(i) > 903) THEN
+  IF (imat (i) < 901 .OR. imat(i) > 903) THEN
 
     !node number (corner nodes) is 2 for 1D elements
     k = 2
@@ -153,7 +153,7 @@ StoreConnectivity: DO i = 1, MaxE
 
     !TODO: This is not efficient, there must be another way to find out membership in 1D-2D-Transition line
     !if there is a 1D 2D transition line, then save the nodes of the line in the element array kntimel
-    if (maxlt > 0 .and. k == 2) then
+    if (maxlt > 0 .AND. k == 2) then
       !first the correct line has to be found, by running through all possible lines
       FindLine: do j = 1, MaxLT
         !stop, if it is the correct line
@@ -303,7 +303,7 @@ orderloop: DO
 ENDDO orderloop
 
 !ERROR - Reordering could not be fullfilled
-IF (mpp.le.mpq) then
+IF (mpp <= mpq) then
   call ErrorMessageAndStop (3501, 0, 0.0d0, 0.0d0)
 ENDIF
 
@@ -335,7 +335,7 @@ END DO
 
           N2CEltsInner: DO j = 1, maxc
 
-            IF (icon (i, j) .ne.0) cycle N2CEltsInner
+            IF (icon (i, j) /= 0) cycle N2CEltsInner
             icon (i, j) = n 
             cycle N2CEltsOuter
 
@@ -350,11 +350,11 @@ END DO
       k = 0 
       FormList: DO n = 1, nepem
         i = iel (n) 
-        IF (i.eq.0) EXIT FormList
+        IF (i == 0) EXIT FormList
         FormListInner: DO j = 1, maxc
           m = icon (i, j) 
-          IF (m.eq.0) CYCLE FormList
-          IF (list (m) .gt.0) cycle FormListInner
+          IF (m == 0) CYCLE FormList
+          IF (list (m) > 0) cycle FormListInner
           k = k + 1 
           nfixh (k) = m 
           list (m) = k 
@@ -447,7 +447,7 @@ WRITE (*,    6002) n
 
 nprt = 1
 !NiS,mar06: unit name changed; changed iout to Lout
-!      if(nprt.gt.0) write(Lout,6040)
+!      if(nprt > 0) write(Lout,6040)
 ! 6040 format(//10x,'intermediate steps printed below'/                 
 !     *       10x,'node, bandwidth, frontwidth, and connections')       
  6040 FORMAT(//10x,'Zwischenschritt siehe unten:'/  &
@@ -474,7 +474,7 @@ END DO allConnects
 !set values for each new point eliminated
 MainLoop: do
   counter = counter + 1
-  IF (nel /= 1 .or. counter /= 1) then
+  IF (nel /= 1 .OR. counter /= 1) then
 
     !initialization of icol
     DO i = 1, 41
@@ -551,8 +551,8 @@ MainLoop: do
   isum = isum + ia
 
 !NiS,mar06: unit name changed; changed iout to Lout
-!if(nprt.gt.0) write(Lout,'(3i5)') n,ia,mp
-!if(nprt.gt.1) write(Lout,'(20x,25i4)')  (list(j),j=1,mp)
+!if(nprt > 0) write(Lout,'(3i5)') n,ia,mp
+!if(nprt > 1) write(Lout,'(20x,25i4)')  (list(j),j=1,mp)
 
   iconAssignouter: DO i = 1, maxc
     jj = icon (n, i)
@@ -582,8 +582,8 @@ ENDDO MainLoop
 !      write(Lout,6050) mpq,isum
 ! 6050 format(//10x,'reordering sum =',i10,'  band sum =',i8// )        
 ! 6050 format(//10x,'reordering Summe =',i10,'  Band Summe =',i8// )    
-IF (mpq.ge.mpo) mpq = mpo
-IF (mpq.eq.mpo) return
+IF (mpq >= mpo) mpq = mpo
+IF (mpq == mpo) return
 DO n = 1, nepem
   msn (n) = iel (n)
 END DO
@@ -666,7 +666,7 @@ USE BLK10MOD
 INTEGER :: qlist (2, 3535)
 
 
-IF (lmt (1) .gt.0) then
+IF (lmt (1) > 0) then
 
   DO i = 1, lmt (1)
     qlist (1, i) = line (1, i)
@@ -677,7 +677,7 @@ ELSE
   read_totalnr_nodes: do
     write (*,*) 'Wieviele Knoten werden als Startknoten gegeben?'
     read (*,*) k
-    if (k .gt. 0) exit read_totalnr_nodes
+    if (k > 0) exit read_totalnr_nodes
   end do read_totalnr_nodes
 
   all_nodes: DO i = 1, k
@@ -686,7 +686,7 @@ ELSE
 
     read_nr: do
       READ ( * , '(i5)') qlist (1, i)
-      IF ( (qlist (1, i) .le.0) .or. (qlist (1, i) .gt. n) ) then
+      IF ( (qlist (1, i) <= 0) .OR. (qlist (1, i) > n) ) then
         WRITE ( * , * ) 'Knotennummer unzulaessig, Neueingabe:'
         CYCLE read_nr
       else

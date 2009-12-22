@@ -19,14 +19,14 @@ C
 C*******************************************************************
 C-
       DO N=1,NE
-        IF(IMAT(N) .GT. 0) THEN
+        IF(IMAT(N) > 0) THEN
           NCN=NCORN(N)
           DO K=1,NCN
             !MD: Fuer alle Mittseitenknoten (lokal)
             !MD: Teilen der Knotenummer / 2 --> kein Rest
-            IF(MOD(K,2) .EQ. 0) THEN
+            IF(MOD(K,2) == 0) THEN
               IMID(NOP(N,K),1)=NOP(N,K-1)
-              IF(K .EQ. NCN) THEN
+              IF(K == NCN) THEN
                 IMID(NOP(N,K),2)=NOP(N,1)
               ELSE
                 IMID(NOP(N,K),2)=NOP(N,K+1)
@@ -51,11 +51,11 @@ C-
       GBOM=0.
 
 
-      IF(NB .EQ. 0) GO TO 10
+      IF(NB == 0) GO TO 10
       
 cipk aug05 update to allow redefinition of bed
 
-      if(inewbed .eq. 1) go to 10
+      if(inewbed == 1) go to 10
 
       DO N=1,NPM
         TM(N)=0.
@@ -73,10 +73,10 @@ cipk apr06   make a first call to get sed initial conditions
 !MD  End of deactivation 14.08.2008
 
    10 CONTINUE
-CIPK AUG05      IF(NB .EQ. 0) THEN
-CIPK SEP05	  CALL GINPT(LIN,ID,DLIN)
+CIPK AUG05      IF(NB == 0) THEN
+CIPK SEP05        CALL GINPT(LIN,ID,DLIN)
 CIPK AUG05      ENDIF
-        IF(ID(1:3) .EQ. 'CB ') THEN
+        IF(ID(1:3) == 'CB ') THEN
           READ(DLIN,'(2I8)') IBED,IELEV
         ELSE
           WRITE(LOUT,*) ' ERROR -- EXPECTED LINE TYPE CB'
@@ -89,12 +89,12 @@ C     READ INITIAL BED PROFILE DATA
 
 !MD:  Fuer Bed-Layer Parameter an allen Knoten gleich
 !MD:  Kennung IBED = 1
-      IF(IBED .EQ. 1) THEN
-	CALL GINPT(LIN,ID,DLIN)
-        IF(ID(1:3) .EQ. 'CBD') THEN
+      IF(IBED == 1) THEN
+      CALL GINPT(LIN,ID,DLIN)
+        IF(ID(1:3) == 'CBD') THEN
           READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
           WRITE(75,*) 'MD: CBD mit IBED=1 ist gelesen'
-          if (NLA .gt. mxsedlay)  then
+          if (NLA > mxsedlay)  then
             write(*,*) '  lt > mlayer ', N,NLA,TEMP1
             write(75,*) '  lt > mlayer ', N,NLA,TEMP1
             stop 
@@ -107,12 +107,12 @@ C     READ INITIAL BED PROFILE DATA
 C-
         NLAYO(1)=NLA
         NL=NLAYO(1)
-        IF(NL .GT. 0) THEN
+        IF(NL > 0) THEN
           WRITE(LOUT,6014)
           WRITE(LOUT,6015)
           DO I=1,NL
 crrr aug97 update test to 3 characters
-            IF(ID(1:3) .NE. 'CBL') THEN
+            IF(ID(1:3) /= 'CBL') THEN
               WRITE(LOUT,*) ' ERROR -- EXPECTING LINE TYPE CBL'
               STOP
             ENDIF
@@ -120,7 +120,7 @@ crrr aug97 update test to 3 characters
      +                      THICKOND(1,L)
             WRITE(75,*) 'MD: CBL mit IBED=1 ist gelesen'
             CALL GINPT(LIN,ID,DLIN)
-            IF(I .LE. 2) THEN
+            IF(I <= 2) THEN
               WRITE(LOUT,6016) N,L,THICKOND(1,L),GBO(1,L),SSTO(1,L)
      +                         ,SMVAL(1,L)
             ELSE
@@ -129,10 +129,10 @@ crrr aug97 update test to 3 characters
             ENDIF
           ENDDO
         ENDIF
-        IF (TEMP1 .GE. 0.0) TM(1)=TEMP1
+        IF (TEMP1 >= 0.0) TM(1)=TEMP1
         DO N=2,NPM
           NLAYO(N)=NLAYO(1)
-          IF(NL .GT. 0) THEN
+          IF(NL > 0) THEN
             DO L=1,NL
               SSTO(N,L)=SSTO(1,L)
               SMVAL(N,L)=SMVAL(1,L)
@@ -141,23 +141,23 @@ crrr aug97 update test to 3 characters
               THICKO(N,L)=THICKOND(1,L)
             ENDDO
           ENDIF
-          IF(TEMP1 .GE. 0.) TM(N)=TEMP1
+          IF(TEMP1 >= 0.) TM(N)=TEMP1
         ENDDO
-cc	  CALL GINPT(LIN,ID,DLIN)
+cc        CALL GINPT(LIN,ID,DLIN)
 
         CALL FORMBED(1)
 
 !MD:  Fuer Bed-Layer Parameter am Knoten N
 !MD:  Kennung IBED = 2
-      ELSEIF(IBED .EQ. 2) THEN
-	  CALL GINPT(LIN,ID,DLIN)
-        IF(ID(1:3) .NE. 'CBD') THEN
+      ELSEIF(IBED == 2) THEN
+        CALL GINPT(LIN,ID,DLIN)
+        IF(ID(1:3) /= 'CBD') THEN
           WRITE(LOUT,*) ' ERROR -- EXPECTING LINE TYPE CBD'
           STOP
         ENDIF
         READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
         WRITE(75,*) 'MD: CBD mit IBED=2 ist gelesen'
-        if (NLA .gt. mxsedlay)  then
+        if (NLA > mxsedlay)  then
           write(*,*) '  lt > mlayer ', N,NLA,TEMP1
           write(75,*) '  lt > mlayer ', N,NLA,TEMP1
           stop 
@@ -171,14 +171,14 @@ C-
         NL=NLAYO(N)
 
         DO I=1,NL
-  	    CALL GINPT(LIN,ID,DLIN)
-          IF(ID(1:2) .NE. 'CBL') THEN
+            CALL GINPT(LIN,ID,DLIN)
+          IF(ID(1:2) /= 'CBL') THEN
            WRITE(LOUT,*) ' ERROR -- EXPECTING LINE TYPE CBL'
            STOP
           ENDIF
           READ(DLIN,5003) L,SSTO(N,L),SMVAL(N,L),GBO(N,L),THICKOND(N,L)
           WRITE(75,*) 'MD: CBL mit IBED=2 ist gelesen'
-          IF(I .LE. 2) THEN
+          IF(I <= 2) THEN
             WRITE(LOUT,6016) N,I,THICKOND(N,I),GBO(N,I),SSTO(N,I),
      +                       SMVAL(N,I)
           ELSE
@@ -186,15 +186,15 @@ C-
      +                       SMVAL(N,I)
           ENDIF
         ENDDO
-        IF (TEMP1 .GE. 0.0) TM(N)=TEMP1
+        IF (TEMP1 >= 0.0) TM(N)=TEMP1
 
 C..... READ NEXT RECORD
-	  CALL GINPT(LIN,ID,DLIN)
-        IF(ID(1:3) .NE. 'CBD') THEN
+        CALL GINPT(LIN,ID,DLIN)
+        IF(ID(1:3) /= 'CBD') THEN
           GO TO 400
         ENDIF
         READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
-        if (NLA .gt. mxsedlay)  then
+        if (NLA > mxsedlay)  then
           write(*,*) '  lt > mlayer ', N,NLA,TEMP1
           write(75,*) '  lt > mlayer ', N,NLA,TEMP1
           stop 
@@ -207,16 +207,16 @@ C..... READ NEXT RECORD
 
 !MD:  Fuer Bed-Layer Parameter je Material-Klasse CBMT ....
 !MD:  Kennung IBED = 3
-      ELSEIF(IBED .EQ. 3) THEN
+      ELSEIF(IBED == 3) THEN
 C-
-	CALL GINPT(LIN,ID,DLIN)
-	WRITE(LOUT,6014)
-	  
+      CALL GINPT(LIN,ID,DLIN)
+      WRITE(LOUT,6014)
+        
   440   N1=1
         !MD: Einlese-Schleife 450 fuer jeden CBMT bis CBL Block
         !MD: -----------------------------------------------
   450   CONTINUE
-        IF(ID(1:4) .EQ. 'CBMT') THEN
+        IF(ID(1:4) == 'CBMT') THEN
           N9=N1+8
           READ(DLIN,'(9I8)') (IMTREF(I),I=N1,N9)
           WRITE(75,*) 'MD: CBMT mit IBED=3 ist gelesen'
@@ -224,25 +224,25 @@ C-
           CALL GINPT(LIN,ID,DLIN)
           GO TO 450
           ! Weitere Materialklassen einlesen
-        ELSEIF(ID(1:3) .NE. 'CBD') THEN
+        ELSEIF(ID(1:3) /= 'CBD') THEN
           WRITE(LOUT,*) ' ERROR -- EXPECTING LINE TYPE CBD'
           STOP
-        ELSEIF(ID(1:3) .eq. 'CBD') THEN
+        ELSEIF(ID(1:3) == 'CBD') THEN
           READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
           WRITE(75,*) 'MD: CBD mit IBED=3 ist gelesen'
-          if (NLA .gt. mxsedlay)  then
+          if (NLA > mxsedlay)  then
             write(*,*) '  lt > mlayer ', N,NLA,TEMP1
             write(75,*) '  lt > mlayer ', N,NLA,TEMP1
             stop
           endif
           DO K=1,NLMTP
             NTYPS=K-1
-            IF(IMTREF(K).EQ.0) GO TO 460
+            IF(IMTREF(K) == 0) GO TO 460
           ENDDO
         ENDIF
 
   460   CONTINUE      
-        IF(NTYPS .GT. 0) THEN
+        IF(NTYPS > 0) THEN
           WRITE(LOUT,6010) (IMTREF(K),K=1,NTYPS)
           WRITE(LOUT,6015)
         ENDIF
@@ -252,8 +252,8 @@ C-
         NL=NLA
 
         DO I=1,NL
-  	  CALL GINPT(LIN,ID,DLIN)
-          IF(ID(1:3) .NE. 'CBL') THEN
+          CALL GINPT(LIN,ID,DLIN)
+          IF(ID(1:3) /= 'CBL') THEN
             WRITE(LOUT,*) ' ERROR -- EXPECTING LINE TYPE CBL'
             STOP
           ENDIF
@@ -265,12 +265,12 @@ C-
 C..... READ NEXT RECORD
 
         DO N=1,NE
-          !MD:  IF(IMAT(N) .GT. 0) THEN
+          !MD:  IF(IMAT(N) > 0) THEN
           !MD:  Layer auch fuer momentan trockene Elemente und Knoten!!
-          IF(IMAT(N) .NE. 0) THEN
+          IF(IMAT(N) /= 0) THEN
             DO I=1,NLMTP
-              IF(IMTREF(I).EQ.0  .AND.  I.GT.1) GO TO 480
-              IF(IMTREF(I).EQ.ABS(IMAT(N)) .OR.  IMTREF(I).EQ.0) THEN
+              IF(IMTREF(I) == 0 .AND. I > 1) GO TO 480
+              IF(IMTREF(I) == ABS(IMAT(N)) .OR. IMTREF(I) == 0) THEN
                 DO JJ=1,NCORN(N)
                   J=NOP(N,JJ)
                   NLAYO(J)=NLA
@@ -290,8 +290,8 @@ C..... READ NEXT RECORD
           ENDIF
         ENDDO
 
-	CALL GINPT(LIN,ID,DLIN)
-        IF(ID(1:4) .NE. 'CBMT') THEN
+      CALL GINPT(LIN,ID,DLIN)
+        IF(ID(1:4) /= 'CBMT') THEN
           GO TO 500
           !Wenn Ende erreicht
         Else
@@ -305,9 +305,9 @@ C..... READ NEXT RECORD
 !MD: neu fuer alle Mittseiten-Knoten
 !MD--------------------------------------
       DO N=1,NPM
-        IF(IMID(N,1) .GT. 0) THEN
+        IF(IMID(N,1) > 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) > 1) NN = NREF(N) + NDEP(N)-1
           NLAYO(NN)=MIN(NLAYO(IMID(NN,1)),NLAYO(IMID(NN,2)))
           TM(NN)=(TM(IMID(NN,1))+TM(IMID(NN,2)))/2.
          DO K=1,NLAYO(NN)
@@ -331,14 +331,14 @@ C..... READ NEXT RECORD
 C   -------------------------------------------------
 C     READ INITIAL BED ELEVATION DATA
 C   -------------------------------------------------
-      IF (IELEV.EQ.1) THEN
-         IF(IBED.EQ.1 .OR. IBED.EQ.2 .OR. IBED.EQ.3) GO TO 401
- 	   CALL GINPT(LIN,ID,DLIN)
+      IF (IELEV == 1) THEN
+         IF(IBED == 1 .OR. IBED == 2 .OR. IBED == 3) GO TO 401
+          CALL GINPT(LIN,ID,DLIN)
   401    CONTINUE
 
          K1=0
   405    CONTINUE
-         IF(ID(1:3) .NE. 'CBE') THEN
+         IF(ID(1:3) /= 'CBE') THEN
            GO TO 407
          ENDIF
          READ (DLIN,'(I8,F8.0)') I1,ETEMP

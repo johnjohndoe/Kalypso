@@ -7,10 +7,10 @@
 
       ISWT = 0
 
-      IF(ANAM == 'NO' .or. anam == 'no' .or.
-     +   anam == 'NONE' .or. anam == 'none') then
+      IF(ANAM == 'NO' .OR. anam == 'no' .OR. 
+     +   anam == 'NONE' .OR. anam == 'none') then
         ISWT = 1
-      elseif (ANAM == 'NOMORE' .or. ANAM == 'nomore' .or.
+      elseif (ANAM == 'NOMORE' .OR. ANAM == 'nomore' .OR. 
      +        ANAM == ' ') then
         ISWT=2
       endif 
