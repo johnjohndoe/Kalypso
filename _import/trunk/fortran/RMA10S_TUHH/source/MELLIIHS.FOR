@@ -1,6 +1,7 @@
 C     Last change:  IPK   5 Oct 98    3:43 pm
 
       SUBROUTINE MELLII
+      USE IHILMOD
       USE BLK10MOD
       USE BLK11MOD
 C 
@@ -10,18 +11,8 @@ c	version of mellii.  The vertical eddy viscosity for unstratified
 c	conditions is assumed to be parabolic and the co-efficients of 
 c	Henderson-Sellers have been imposed.
 C 
-cipk aug05      INCLUDE 'BLK10.COM'
       real*8 GRI,DENGR,DV2,DUDZ,DVDZ,RHOC,DZPDZ,ZPUP,ZPDN,UUP,VUP,
      &       VDN,UDN,GRI0
-      DIMENSION    IH(20,4),IL(20,4)
-      DATA IH/0,3,0,5,0,7,0,1,13,15,17,19,0,15,0,17,0,19,0,13,
-     1        0,3,0,5,0,1,10,12,14,0,12,0,14,0,10,0,0,0,0,0,
-     2        0,3,0,5,0,1,10,10,10,0,0,0,0,0,0,0,0,0,0,0,
-     3        0,3,0,5,0,1,9,11,0,11,0,11,9,0,0,0,0,0,0,0/
-      DATA IL/0,1,0,3,0,5,0,7,1,3,5,7,0,13,0,15,0,17,0,19,
-     1        0,1,0,3,0,5,1,3,5,0,10,0,12,0,14,0,0,0,0,0,
-     2        0,1,0,3,0,5,1,3,5,0,0,0,0,0,0,0,0,0,0,0,
-     3        0,1,0,3,0,5,1,3,0,9,0,5,5,0,0,0,0,0,0,0/
 
 C 
 C 

@@ -6,8 +6,6 @@
 !     SHELL SORT                                                        
       USE BLK10MOD
       USE BLKSANMOD
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05	INCLUDE 'BLKSAND.COM'
 !                                                                       
       IF(NP.LT.2) RETURN 
       DO 90 J=1,NP

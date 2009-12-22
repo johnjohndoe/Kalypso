@@ -19,8 +19,7 @@ C
 c implemented within RMA-11 by Bill Peirson    31.5.96
 c bug free (I think!) but not very efficient
       USE BLKSANMOD
-CIPK AUG05      include 'PARAM.COM'
-CIPK AUG05      include 'BLKSAND.COM'
+
 	integer i,ie,is,loops,j
         real gravity,xmanning_n,sed_rd,diam,vels,efd
 	real depth,u_bar,tau_crit,fluid_rho

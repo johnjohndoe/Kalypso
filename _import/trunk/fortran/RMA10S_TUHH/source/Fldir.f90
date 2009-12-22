@@ -35,7 +35,6 @@ REAL (KIND = 8) :: DX, DY
 !-
 !...... Routine to establish flow direcions for one- dimensional elements
 !-
-!ipk aug05      INCLUDE 'BLK10.COM'
 !IPK AUG05      DIMENSION ITAB(MNP)
 !-
 !...... Analyse the elements for connections

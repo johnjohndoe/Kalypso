@@ -16,10 +16,6 @@ c     Time = time in (hrs)
 C-
 C...... This routine interpolates met conditions
 C-
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKMET.COM'
       ALLOCATABLE SOLI(:),DIVIDE(:)
 
       DATA ITIMTR/1/

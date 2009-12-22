@@ -7,6 +7,8 @@
 !IPK  LAST UPDATED NOVEMBER 13 1997
 !IPK  LAST UPDATE APR 30 1996
 SUBROUTINE UPDATE (schwarzIt)
+USE IHILMOD
+USE EPORMOD
 USE BLK10
 USE BLK10MOD
 USE BLK11MOD
@@ -16,10 +18,7 @@ USE PARA1DPoly
 USE parakalyps
 !-
 SAVE
-!-
-!IPK AUG05      INCLUDE 'BLK10.COM'
-!IPK AUG05      INCLUDE 'BLK11.COM'
-!IPK AUG05      INCLUDE 'BLKDR.COM'
+
 !NiS,jul06: Consistent data types for passing paramters
 REAL(KIND=8) H, H1, VT, HS
 integer (kind = 4), intent (in) :: schwarzIt
@@ -30,25 +29,13 @@ REAL (KIND=8) :: NodalArea
 character (len = 96) :: outputfilename, inputfilename
 
 INTEGER :: problematicNode
-!IPK apr05
-common /epor/ efpor
 !-
 !IPK MAY02 EXPAND TO 7
 real (kind = 8), dimension (1:7) :: EMAX, EAVG, EPercMax
 integer, dimension (1:7) :: NMX, NRel
 !-
 !nis,apr08: NKCONV is no more used!
-DIMENSION IH(20,4),IL(20,4)
 CHARACTER*4 IVAR(7,2)
-!-
- DATA IH/0,3,0,5,0,7,0,1,13,15,17,19,0,15,0,17,0,19,0,13, &
-&        0,3,0,5,0,1,10,12,14,0,12,0,14,0,10,0,0,0,0,0,   &
-&        0,3,0,5,0,1,10,10,10,0,0,0,0,0,0,0,0,0,0,0,      &
-&        0,3,0,5,0,1,9,11,0,11,0,11,9,0,0,0,0,0,0,0/
- DATA IL/0,1,0,3,0,5,0,7,1,3,5,7,0,13,0,15,0,17,0,19,     &
-&        0,1,0,3,0,5,1,3,5,0,10,0,12,0,14,0,0,0,0,0,      &
-&        0,1,0,3,0,5,1,3,5,0,0,0,0,0,0,0,0,0,0,0,         &
-&        0,1,0,3,0,5,1,3,0,9,0,5,5,0,0,0,0,0,0,0/
 !-
 DATA IVAR/'(X-F','(Y-F','(DEP','(SAL','(TEM','(SED','(BED', 'LOW)','LOW)','TH) ',')   ','P)  ',')   ',')   '/
 

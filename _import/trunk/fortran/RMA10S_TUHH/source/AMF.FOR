@@ -1,6 +1,7 @@
 !nis  Adding some comments to the if-structures of AMF
 cipk  last update April 24 1997
       SUBROUTINE AMF(H,HSIG,AKAPM,ATM,ABM,AM,DAMH,ISWT)
+      USE EPORMOD
 c
 c     H is the true depth
 c     HSIG is the transformed depth in the model (VEL(3,*)
@@ -12,8 +13,6 @@ c     DAMH is the rate of change of the adjustment to the bottom elevation
 c     = 0 to transform HSIG to H
 c     = 1 to transform H to HSIG
 c
-cipk apr97
-      common /epor/ efpor
 
 !NiS,jul06: Declaration of HSIG and H
       REAL(KIND=8) :: hsig, h

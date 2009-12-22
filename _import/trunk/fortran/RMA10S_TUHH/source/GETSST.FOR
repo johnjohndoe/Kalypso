@@ -6,10 +6,6 @@
 C-
 C...... This routine interpolates surface stress data
 C-
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKSST.COM'
 
       CHARACTER*1000 HEDR
 c

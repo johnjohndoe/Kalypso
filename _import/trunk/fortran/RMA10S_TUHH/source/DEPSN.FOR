@@ -9,10 +9,7 @@ C_____________________________________________________________________
       implicit none
       
       integer :: n, i, nn
-C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
-C-
+
 C**********************************************************************
 C
 C       THIS SUBROUTINE COMPUTES THE RATE OF DEPOSITION IF ANY AT

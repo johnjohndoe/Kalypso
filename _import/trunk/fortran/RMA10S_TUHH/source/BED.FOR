@@ -18,10 +18,6 @@ C
 C
 C*******************************************************************
 C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-cipk aug05      INCLUDE 'BLKSED.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-
       DO N=1,NE
         IF(IMAT(N) .GT. 0) THEN
           NCN=NCORN(N)

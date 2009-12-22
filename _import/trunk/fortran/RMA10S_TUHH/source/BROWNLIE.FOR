@@ -15,8 +15,7 @@ C  D90		d90 size (m) of sediment mixture
 C  EXNU		kinematic viscosity (m2/s)
 C
       USE BLKSANMOD
-CIPK AUG05      include 'PARAM.COM'
-CIPK AUG05      include 'BLKSAND.COM'
+      
 	integer i,ie,is,loops,j
         real gravity,xmanning_n,sed_rd,diam,vels,efd
 	real depth,u_bar,cF,fluid_rho,slope

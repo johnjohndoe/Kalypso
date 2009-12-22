@@ -10,10 +10,6 @@ CIPK  LATEST UPDATE NOV 17 1997
       USE BLKDRMOD
       USE PARAMMOD
       SAVE
-C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05        INCLUDE 'BLKDR.COM'
-C-
 C     NETYP is an array the defines the type of each element
 C           = 1   One dimensional  surface element (2d applications)
 C           = 2   One dimensional  bottom  element (2d applications)
@@ -39,7 +35,7 @@ C           = 24   Three dimensional 10 point element
 C-
 C......TEMPORARY COMMON
 C-
-      COMMON IS(8),ITT(8)
+      INTEGER IS(8),ITT(8)
       ALLOCATABLE NSID(:),NSEQ(:,:)
 C-
 C......BUILT IN FUNCTION TO DETERMINE NODE NUMBER ADDED

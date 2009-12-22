@@ -28,11 +28,7 @@ C----------------------------------------------------------------------
       USE BLKDRMOD
       USE BLKSEDMOD
       USE BLKSANMOD
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05	INCLUDE 'BLKDR.COM'
-
+      
 crrr aug97 add character lines
       CHARACTER*256 LINE256
       CHARACTER*80  FMT

@@ -4,9 +4,6 @@
       USE BLKCDMOD
       SAVE
 
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKCD.COM' 
-
       REAL*8 XUSR(*),YUSR(*),xminl,xmaxl,yminl,ymaxl
       INTEGER NOPEL(3,*)
   
@@ -113,9 +110,8 @@ C
       USE BLK10MOD
       REAL*8 XN2,DNX,DNY,XSW,YSW,XUSR(*),YUSR(*) 
       DOUBLE PRECISION XG,YG,XK,YK,XP,YP
-CIPK AUG05      INCLUDE 'BLK10.COM'
-
-        INTEGER NOPEL(3,*)
+      
+      INTEGER NOPEL(3,*)
 C-                                                                      
       DIMENSION X(9),Y(9),WGT(8)
 C-                                                                      
@@ -229,8 +225,6 @@ C-
       SUBROUTINE INPOLY(XUSR,YUSR,M,INDIC,IPOLY,NPOLY,IPOL,XOUTL,YOUTL)
 
       USE BLK10MOD
-
-CIPK AUG05      INCLUDE 'BLK10.COM'
 
       REAL*8 XUSR(*),YUSR(*),ACCUM,A1,A2,DIFF,PI,XOUTL(*),YOUTL(*)
       INTEGER IPOLY(*)

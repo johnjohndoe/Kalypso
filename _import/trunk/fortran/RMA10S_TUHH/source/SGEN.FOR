@@ -6,7 +6,6 @@ cipk  last update feb 09 2001 allow for zero length cc lines
 C-
 C...... Generate specified quality boundary conditions
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
       DIMENSION A1(3)
 C-
 C...... Insert values into SPEC and NFIX arrays

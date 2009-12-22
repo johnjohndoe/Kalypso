@@ -16,11 +16,7 @@ C  evaluate sedimentation or erosion at the bed based upon the
 C  difference between the actual and equilibrium (carrying)
 C  concentrations of sediment.
 C
-C      INCLUDE 'BLK11.COM'
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-C
+
       character*4 KPO(7)
       DATA ITB/3/
       DATA KPO(1)/'NODE'/,KPO(2)/'BED '/,KPO(3)/'ELEV'/,KPO(4)/'ALPH'/,
@@ -292,11 +288,6 @@ C  ismode = 2   use van Rijn (1993) method
 C  ismode = 3   use Brownlie (1981) method
 c  ismode = 4   use updated van Rijn method
 C
-C      INCLUDE 'BLK11.COM'
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
 	!
 	!  DJW 19/01/04 Variable Declarations
 	!
@@ -649,11 +640,8 @@ C  EXNU		kinematic viscosity (m2/s)
 C
       USE BLKSANMOD
 
-CIPK AUG05      INCLUDE 'PARAM.COM'  
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-C        include 'BLK11.COM'
 	integer i,ie,is,loops,j
-        real gravity,sed_rd,root32,diam,vels,efd
+      real gravity,sed_rd,root32,diam,vels,efd
 	real depth,viscosity,ten,u_bar,awa,awn,awm,awc
 	real part_a,part_b,c_bar,exnu,gnsg,clog,dgr,dgrlog
 	real stress_norm,fgr,u_star,gptot,gd35
@@ -850,10 +838,7 @@ C  u* = n g^1/2 u / y^1/6
 C
 C  David Luketina    26/5/96
 C
-C  include 'BLK11.COM'
       USE BLKSANMOD
-CIPK AUG05      INCLUDE 'PARAM.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
 	real gravity,xmanning_n,u_bar,depth,u_star
 C
 	gravity = ACGR
@@ -902,9 +887,6 @@ C  water as a function of temperature (currently at 20
 C  deg C).
 C
 C         KINVIS
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-C      INCLUDE 'BLK11.COM'
 C
 C      DIMENSION WTC(LNP),XNU(LNP)
 C

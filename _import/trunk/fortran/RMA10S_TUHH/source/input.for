@@ -1,4 +1,5 @@
       module mod_input
+      
       contains
 CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
 CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
@@ -69,6 +70,7 @@ CIPK  LAST UPDATED SEP 19 1995
       use mod_getinit
 
       use mod_Model   
+      USE IHILMOD
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
@@ -89,6 +91,8 @@ CIPK  LAST UPDATED SEP 19 1995
       USE make_profile
       USE types
       USE share_profile,only :BANKPROFILES , fenodes, BANKEVOLUTION ! the BANKPROFILES and fenodes array are defined here.
+      
+      use check_mod, only: check
 !-
       SAVE
       type (simulationModel), pointer :: m_SimModel
@@ -142,19 +146,10 @@ C-
       ALLOCATABLE IFXSAL(:)
       DIMENSION SALBC(3),QDM(3)
 C
-      DIMENSION IH(20,4),IL(20,4),VDIM(4),IM(8),IMIDD(16)
+      DIMENSION VDIM(4),IM(8),IMIDD(16)
 cipk jan94 new line below
 C      CHARACTER*80 DLIN
-      CHARACTER*8 DLINEXTRA
-      COMMON /DLINF/ DLINEXTRA
-      DATA IH/0,3,0,5,0,7,0,1,13,15,17,19,0,15,0,17,0,19,0,13,
-     1        0,3,0,5,0,1,10,12,14,0,12,0,14,0,10,0,0,0,0,0,
-     2        0,3,0,5,0,1,10,10,10,0,0,0,0,0,0,0,0,0,0,0,
-     3        0,3,0,5,0,1,9,11,0,11,0,11,9,0,0,0,0,0,0,0/
-      DATA IL/0,1,0,3,0,5,0,7,1,3,5,7,0,13,0,15,0,17,0,19,
-     1        0,1,0,3,0,5,1,3,5,0,10,0,12,0,14,0,0,0,0,0,
-     2        0,1,0,3,0,5,1,3,5,0,0,0,0,0,0,0,0,0,0,0,
-     3        0,1,0,3,0,5,1,3,0,9,0,5,5,0,0,0,0,0,0,0/
+      
       DATA VOID/-1.E20/
       DATA  IHOE/100/
 cipk      CHI = 3.8E-06
@@ -514,20 +509,16 @@ cipk sep04
       IF (iaccyc > 1 .and. NITI /= 0) 
      + call ErrorMessageAndStop (1604, 0, 0.0d0, 0.0d0)
 
-      READ(DLINEXTRA,5011) NBSFRQ
-CIPK AUG02 ADD NBSFRQ ABOVE 
       write(*,*) 'read c5'
 C
       WRITE(LOUT,6025)NITI,NITN,TSTART,NCYC,IPRT,NPRTF,IRSAV,NPRTI,IDSWT
-     +,NBSFRQ,DSET,DSETD
+     +,DSET,DSETD
      
 !parameter meaning
 !nprti      frequency to print results to model output file at the end of time step
 !nprt       frequency to print results to model output file at the end of iteration
 !irsav      time step to start with writing of results
 
-CIPK AUG02 ADD NBSFRQ ABOVE AND BELOW
-      if (nbsfrq == 0) nbsfrq = 1
       if (nprtf == 0) nprtf = 1
 
 CIPK NOV97      READ(LIN,7000) ID,DLIN
@@ -2841,20 +2832,17 @@ c6190 FORMAT(/15X,'TIME IN VOLUME GENERATION',I6)
 
       END subroutine
       
-      end module
-      
+      end module      
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk feb97 new subroutine to process input files
       SUBROUTINE GINPT(IIN,ID,DLIN)
       CHARACTER ID*8,DLIN*72
-cipk jan03  ADD AN EXTRA 8 CHARACTERS
-      CHARACTER*8 DLINEXTRA
       integer (kind = 4) :: iin
-      COMMON /DLINF/ DLINEXTRA
+      
   100 CONTINUE
 CIPK JAN03
-      READ(IIN,7000) ID,DLIN,DLINEXTRA
-      write(75,7000) id,dlin,DLINEXTRA
+      READ(IIN,7000) ID,DLIN
+      write(75,7000) id,dlin
 
  7000 FORMAT(A8,A72,a8)
 CIPK JAN03 END CHANGES
@@ -2864,16 +2852,13 @@ CIPK JAN03 END CHANGES
       do i=1,72
         if(dlin(i:i) .eq. char(9)) go to 200
       enddo
-cipk jan03
-      do i=1,8
-        if(dlinextra(i:i) .eq. char(9)) go to 200
-      enddo
       IF(ID(1:3) .EQ. 'com') GO TO 100
       IF(ID(1:3) .EQ. 'COM') GO TO 100
       IF(ID(1:3) .EQ. 'Com') GO TO 100
       IF(ID(1:8) .EQ. '        ') GO TO 100
 cipk jan00 add * as a possible label
       if(id(1:1) .eq. '*') go to 100
+      
       RETURN
   200 continue
 cipk sep04
@@ -2884,7 +2869,7 @@ cipk sep04
       write(75,7000) id,dlin
       write(*,7000) id,dlin
       stop
-      END
+      END subroutine
 
 CIPK AUG03 EXPAND TO ADD 11TH ITEM
       SUBROUTINE GINPT10(IIN,ID,DLIN)
@@ -2918,4 +2903,3 @@ cipk sep04
       write(*,7000) id,dlin
       stop
       END subroutine
-    

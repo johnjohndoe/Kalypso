@@ -12,9 +12,6 @@ cipk  last update jan 9 1996
       USE PARAMMOD
       use blk_ifu
       SAVE
-cipk jan96 add common
-CIPK AUG05      INCLUDE 'PARAM.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
 cipk nov97 note danger, do not add BLK10.COM
 
 !NiS,jul06: Add IWINDIN for correct memory interpretation

@@ -19,6 +19,8 @@ use mod_fileType
 use mod_fileType_lists
 use SchwarzIterationControl_Helper
 
+use check_mod, only: check
+
 !global definitions (bad and ugly!)
 !----------------------------------
 USE BLK10MOD, only: &

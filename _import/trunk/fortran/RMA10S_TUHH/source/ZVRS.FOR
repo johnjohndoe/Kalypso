@@ -3,17 +3,10 @@ CIPK  LAST UPDATE SEP 6 2004 RENAME character variable FNAM to FNAMT
 cipk  last updated Feb 4 1998
 CIPK  LAST UPDATED SEPT 8 1995
       SUBROUTINE ZVRS(NTIM)
+      USE CHR1MOD
       USE BLK10
       USE BLK10MOD
       SAVE
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK4.COM'
-CIPKSEP04
-      COMMON /CHR1/ FNAMT,FNBM,TNAM,FHED,TSUB,TNUM
-      CHARACTER*8 FNAMT
-      CHARACTER*7 FNBM
-      CHARACTER*4 TNAM,FHED
-      CHARACTER*3 TSUB,TNUM
 C
 C       This routine is used to define the various necessary configurations
 C       based on the type of machine used.

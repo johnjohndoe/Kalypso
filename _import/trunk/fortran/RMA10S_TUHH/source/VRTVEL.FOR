@@ -2,9 +2,7 @@
       SUBROUTINE VRTVEL
       USE BLK10MOD
       SAVE
-C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-C-
+
       CALL SETUP
       IF(NSZF .EQ. 0) GO TO 500
       CALL FRONT(2)

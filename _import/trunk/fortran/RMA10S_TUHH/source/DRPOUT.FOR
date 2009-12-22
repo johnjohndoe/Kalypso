@@ -4,7 +4,6 @@ cipk  last update Mar 21 2001 move logic into DRPOUT
       USE BLK10
       USE BLK10MOD
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
       ALLOCATABLE IFAIL(:,:)
 	DIMENSION IACCES(9),ITRAN(9)
       DATA NLOOP/3/

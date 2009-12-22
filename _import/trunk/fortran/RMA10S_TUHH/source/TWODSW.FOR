@@ -4,6 +4,7 @@ CIPK  LAST UPDATE JAN 15 2002 ALLOW FOR FLOWS INTO COLLAPSING ELEMENTS
 C     New routine November 12 1999
 
       SUBROUTINE TWODSW
+      USE BLKHMOD
       USE BLK10MOD
       USE BLKDRMOD
       !USE blkecom
@@ -11,9 +12,6 @@ C     New routine November 12 1999
 C
 C     Routine to detect threed elements below threshold for wetting/drying
 C
-CIPK AUG05      INCLUDE 'BLK10.COM'
-      INCLUDE 'BLKH.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
 C-
 C     Work through all the surface nodes      
 C-
@@ -165,7 +163,6 @@ cipk sep 03 revise write unit
 
       SUBROUTINE AVEPARAM(N,ICSW)
       USE BLK10MOD
-CIPK AUG05      INCLUDE 'BLK10.COM'
 
       real*8 vintx,vinty,pints,pintt,pintu,DEPSUM,
      +       voldx,voldy,polds,poldt,poldu,vdotx,vdoty,pdots,pdott,pdott,

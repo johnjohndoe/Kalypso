@@ -10,10 +10,6 @@ C-
 C...... This routine extracts surface stress data from a succession of files
 C-
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKSST.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
 
       INTEGER DAYWV
 

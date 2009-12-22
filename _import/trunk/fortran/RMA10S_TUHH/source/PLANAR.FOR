@@ -1,14 +1,10 @@
 C     Last change:  IPK   5 Oct 98    1:42 pm
 
       SUBROUTINE PLANAR(NN)
+      USE COEF2MOD, only: DNX, DNY, XL, YL
+      USE BLKSMOD
       USE BLK10MOD
       SAVE
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-      INCLUDE 'BLKS.COM'
-C-
-      COMMON
-     1 DNX(8),DNY(8),XL(8),YL(8)
 C-
       DIMENSION CNAL(3,3)
 C-

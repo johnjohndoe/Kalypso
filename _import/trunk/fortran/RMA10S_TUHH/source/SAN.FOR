@@ -1,5 +1,6 @@
 
       SUBROUTINE SAN(NCN)
+      USE SACMOD
       SAVE
 C
 C     Subroutine to obtain nodal basis function values
@@ -17,9 +18,7 @@ C                15 = triangular prism
 C                13 = rectangular pyramid
 C                10 = tetrahedron
 C
-      COMMON /SAC/ XNX(20,64),DA(20,64),DB(20,64),DC(20,64)
-C-
-      COMMON /SH3DN/ SJN(20,20,4),SMN(15,15,4),SKN(10,10,4),SSN(13,33,4)
+      REAL SJN(20,20,4),SMN(15,15,4),SKN(10,10,4),SSN(13,33,4)
 C-
       DIMENSION SI(20,3),SL(15,3),SN(10,3),SMULT(3),ST(13,3),ILOKUP(13)
      A  ,SI2(8,3)

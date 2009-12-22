@@ -6,8 +6,6 @@ C     Last change:  MD   12 May 2009    4:12 pm
 C-
 C......SUBROUTINE TO COMPUTE PRESSURE AT EACH NODE
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
-C-
 C......COMPUTE DENSITY AT EACH NODE
 C-
       DO 250 N=1,NP

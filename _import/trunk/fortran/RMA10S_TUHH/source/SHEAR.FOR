@@ -26,9 +26,6 @@ C-
       USE BLKSANMOD
 CIPK MAR06
       USE BLKTSMOD      
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
 C-
 C......................................................................
 C    CHECK TO SEE IF SMOOTH OR ROUGH BED (RKS=0 MEANS SMOOTH)

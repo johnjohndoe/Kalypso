@@ -11,7 +11,6 @@ CIPK DEC97 calling sequence changed
 C-
 C...... Generate specified head boundary conditions
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
       DIMENSION QQAL(3)
 CIPK AUG00
       !function definition to calculate the distance between two nodes N1 and N2

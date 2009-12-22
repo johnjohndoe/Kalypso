@@ -11,8 +11,6 @@ C----------------------------------------------------------------------
 C
       USE BLK10MOD
       USE BLKSEDMOD
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
 C-
       IF(ISVL .EQ. 1) THEN
         DO I=1,NP

@@ -174,7 +174,7 @@
               temp_speccc(2) = speccc(i,7)
               temp_speccc(3) = speccc(i,8)
 
-              call hgen (0, i, hhh, hhh2, 0, temp_speccc)
+              call hgen (0, i, hhh, hhh2, 0, temp_speccc, hfd)
 
               WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                  ' an Kontinuitaetslinie ',i
@@ -313,7 +313,7 @@
                     temp_speccc(2) = speccc(i,7)
                     temp_speccc(3) = speccc(i,8)
 
-                    call hgen (0, i, hhh, hhh2, 0, temp_speccc)
+                    call hgen (0, i, hhh, hhh2, 0, temp_speccc, hfd)
 
                     WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                        ' an Kontinuitaetslinie ',i
@@ -418,7 +418,7 @@
                       temp_speccc(2) = speccc(i,7)
                       temp_speccc(3) = speccc(i,8)
 
-                      call hgen (0, i, hhh, hhh2, 0, temp_speccc)
+                      call hgen (0, i, hhh, hhh2, 0, temp_speccc, hfd)
 
                  WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                     ' an Kontinuitaetslinie ',i
@@ -670,7 +670,7 @@
               WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                  ' an Kontinuitaetslinie ',i
 
-              call hgen (0, i, hhh, hhh2, 0, temp_speccc)
+              call hgen (0, i, hhh, hhh2, 0, temp_speccc, hfd)
 
               WRITE(789,'(60x,i3,2x,2(f7.2,2x))')i,hhh,hhh2
 
@@ -801,7 +801,7 @@
                     temp_speccc(2) = speccc(i,7)
                     temp_speccc(3) = speccc(i,8)
 
-                    call hgen (0, i, hhh, hhh2, 0, temp_speccc)
+                    call hgen (0, i, hhh, hhh2, 0, temp_speccc, hfd)
 
                     WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                        ' an Kontinuitaetslinie ',i
@@ -905,7 +905,7 @@
                   temp_speccc(2) = speccc(i,7)
                   temp_speccc(3) = speccc(i,8)
 
-                  call hgen (0, i, hhh, hhh2, 0, temp_speccc)
+                  call hgen (0, i, hhh, hhh2, 0, temp_speccc, hfd)
 
                   WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                      ' an Kontinuitaetslinie ',i

@@ -9,9 +9,10 @@ cipk  last update Nov 26 1997
 CIPK  LAST UPDATE APRIL 28 1996 MANY CHANGES
       !EFa apr09, added qdir for input of external boundary conditions, again jun09
       SUBROUTINE GETQ(ILAYR,N,QF,IYRR,DAYNOW,TIME,TETH,QQAL,QDIR)
+      USE BLK10MOD, only: AVES,AVET,AVESD,NOUTCC,ADDTMP,ADDSAL,ADDSED,
+     +                    ADDMAX,NADTYP
       USE PARAMMOD
       use blk_ifu
-!      USE BLK10MOD
       SAVE
 CIPK DEC97 MOVE TO PARAM.COM      PARAMETER (NCQBS=20,NCQOBS=200)
 C
@@ -19,15 +20,6 @@ C
 !NiS,jul06: Add IWINDIN for correct memory interpretation
 !      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
 !      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,IWINDIN
-!-
-
-CIPK DEC97 CHANGE NAME OF LIMIT PARAMETER
-CIPK AUG05      INCLUDE 'PARAM.COM'
-
-CIPK MAR01
-!TOASK
-!nis,oct07: replace by using blk10mod
-      INCLUDE 'BLKP.COM'
 !-
 
       ALLOCATABLE  NCLIN(:),NHY(:),TA(:,:),

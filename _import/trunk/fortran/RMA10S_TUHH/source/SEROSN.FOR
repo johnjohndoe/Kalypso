@@ -36,10 +36,7 @@ C
 !MD             Anpassung der Sohle und Layerdicke
 !MD:  Neu Kennung des Aufrufs II:
 C----------------------------------------------------------------------
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPKAUG05	INCLUDE 'BLKSED.COM'
-C-
+
 C...LOOP FOR EACH NODE
 
 

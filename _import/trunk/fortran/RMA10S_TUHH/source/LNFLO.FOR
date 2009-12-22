@@ -26,10 +26,6 @@ CIPK  LAST UPDATE JAN 13 2003 ADD MOMENTUM
 C-
 C...... Input layered inlfows
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-C
-C
 C     Allocate to layers for 3-d
 C                               
 C      WRITE(75,*) 'LNFLO',N,SF,NEST,LN,TVOLC(N),TVOL(N)

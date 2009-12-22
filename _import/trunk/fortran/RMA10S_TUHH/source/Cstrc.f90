@@ -9,13 +9,6 @@ USE BLKECOM
 USE Para1DPoly
 USE parakalyps
 
-!
-!IPK AUG05      INCLUDE 'BLK10.COM'
-!-
-!IPK AUG07      INCLUDE 'BLKE.COM'
-
-!IPK AUG07      COMMON F(80)
-
 DIMENSION U(8)
 
 !NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine

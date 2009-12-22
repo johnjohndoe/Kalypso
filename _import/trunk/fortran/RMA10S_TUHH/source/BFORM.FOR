@@ -11,10 +11,6 @@ CIPK  LAST UPDATE SEPT 26 1996
 C-
 C...... Routine to setup boundary condtions
 C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK JUN05
-CIPK AUG05      INCLUDE 'BLKSUB.COM'
-C-
 !nis,may08: Include locals for boundary conditions regarding Marsh-option
       REAL (KIND = 8) :: RealDepth, VirtDepth
       !two passing dummies

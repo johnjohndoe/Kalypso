@@ -1,3 +1,7 @@
+      module check_mod
+      INTEGER :: NCALL = 0
+      
+      contains
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -12,6 +16,10 @@ cipk  last update Jan 21 1998
       use mod_Arcs
       use mod_Nodes
 
+      USE COEF2MOD, only: XN, WAITX
+      USE BLKHMOD
+      USE BLKSMOD
+      USE WATPMOD
       USE BLK10MOD
       USE BLKDRMOD
       USE BLK11MOD
@@ -30,24 +38,13 @@ cipk  last update Jan 21 1998
       type (LinkedNode), pointer :: nextNode => null()
       real (kind = 8), dimension (1:2) :: tmpVec
       real (kind = 8) :: dirScaling
-C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK JUL01
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-CIPK MAR01
-      INCLUDE 'BLKH.COM'
-      INCLUDE 'BLKS.COM'
+
 C-
 cipk jan98 increment to 200
       DIMENSION ITEMP(3535),FLW(2),AREAC(2),FLX1(2,3),FLX2(2,3),
      +FLX3(2,3),FLX4(2,3),FLX5(2,3),FLX6(2,3),FLX7(2,3),FLX8(2,3)
      +  ,TOTAL(200)
 cipk jul01 add line above
-
-!NiS,jul06: Adding WAITTH and WAITRH for consistency in common block defintion
-!      REAL*8 WAITX,WAITT,WAITR
-      REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
 
       REAL (kind = 8) :: TempArea, calcPolynomial
 !-
@@ -65,12 +62,6 @@ cipk jul01 add line above
 !-
       type (StorageElement), pointer :: SElt => null()
 
-      COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
-C-
-      COMMON 
-     1 XN(8),WAITX(16)
-
-      DATA NCALL/0/
       IF( NCL .LE. 0 ) RETURN
 
       !initializations
@@ -851,4 +842,6 @@ CIPK JUL01
      1         X FLOW         Y FLOW   PERCENT  AVE-SALT  AVE-TEMP   AVE
      +-SED' )
  6035 FORMAT( 10X, I4, 1P3E15.3, 0PF10.1,3F10.2 )
-      END
+      END subroutine
+      
+      end module

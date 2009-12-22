@@ -4,10 +4,7 @@ C     Last change:  WP    5 Jun 2008    3:48 pm
       USE BLK10MOD
       USE BLKDRMOD
       SAVE
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-C-
+
       DATA VOID/1.E20/,VDRY/0./
 
 

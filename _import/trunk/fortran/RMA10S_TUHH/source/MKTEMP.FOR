@@ -10,16 +10,9 @@ C**********************************************************************
       SUBROUTINE MKTEMP(T,D,DGP,SRCSNK,GRATE,DELT,MAT,NETT)
 
 C      Calculate source sink term for Temp
+      USE ICE2MOD
       USE BLK11MOD
       USE BLKMETMOD
-
-CIPK AUG05      INCLUDE 'PARAM.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIK AUG05      INCLUDE 'BLKMET.COM'
-
-CIPK sep02
-
-      COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 
       INTEGER :: NETT
 !NiS,jul06: For calling compatibility D must also be real, kind=8

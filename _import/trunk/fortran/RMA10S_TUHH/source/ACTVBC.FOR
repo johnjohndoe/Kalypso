@@ -17,12 +17,8 @@ C  JBC = +1     -->     IACT = 1   when flow into system
 C  JBC = +2     -->     IACT = 1   when flow into system,  Special BC
 C  JBC = -2     -->     IACT = 1   always,  Special BC
 C
-C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-C-
 C-.....FIND ACTIVE NODES.....
-      DIMENSION  SV(3)
-      DATA   SV /0.02, 0.52, 0.98 /
+      REAL, PARAMETER :: SV(3) = (/0.02, 0.52, 0.98 /)
 C-
       PI2 = 2.*ATAN(1.)
 CIPK JAN04 CHANGE VMIN TO VVMIN

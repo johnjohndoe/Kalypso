@@ -52,8 +52,6 @@ Contains
 !***********************************************************************************************
 SUBROUTINE NewRough(TMANN,NOP,NE, wbm_MANNTRANS,WBM_IT,IT,TSNO,ITNNO,NNOD)
 
-!INCLUDE 'BLK10.COM' ! Gives Access to the MAXN Coordinate
-
 IMPLICIT NONE
 !*************************************************************************************************
 !

@@ -15,11 +15,7 @@ C***********************************************************************
       USE BLKDRMOD
       USE BLKSEDMOD
       USE BLKSANMOD
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
-CIPK AUG05	INCLUDE 'BLKDR.COM'
+
 	REAL*8 DYBED
 
 !NiS,jul06: Declaring HTP with consistent data type

@@ -3,6 +3,7 @@ CIPK DEC02 ADD TEST FOR STRAY DIRECTIONS
 
       SUBROUTINE TRANSPOR(HS,TPS,WDIR,VRR,CDIR,D50MM,D90MM,RNU,SGSA,RHOW
      +                   ,HDS,GP,WS,UST,RC,RW,TRLOC,ISWT,node)
+      USE NIOREZMOD
 C
 C     COMPUTATION OF CONCENTRATION VERTICALS AND SUSPENDED LOAD TRANSPORT
 C     THROUGH NUMERICAL INTEGRATION AND FORMULAE APPROXIMATION
@@ -11,7 +12,6 @@ C
       DIMENSION RMAT(25,6)
       dimension gp(*)
 
-      common/niorez/tp,vr,phi,g,pi,hd
       external fwl,tolx
       logical log
       DATA ITIM/0/
@@ -779,7 +779,7 @@ C END INTERCHANGE
   300 RETURN
       END
       function fwl(rls)
-      common/niorez/tp,vr,phi,g,pi,hd
+      USE NIOREZMOD
       fwl=(rls/tp-vr*cos(phi))**2-g*rls/2./pi*tanh(2.*pi*hd/rls)
       return
       end

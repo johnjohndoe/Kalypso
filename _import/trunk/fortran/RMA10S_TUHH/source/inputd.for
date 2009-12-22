@@ -21,11 +21,7 @@ CIPK  LAST UPDATED SEP 8 1995
       use mod_ContiLines
 
       SAVE
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
+
       DIMENSION QDM(3)
 
 !MD: Local Varaible for checking BC-data

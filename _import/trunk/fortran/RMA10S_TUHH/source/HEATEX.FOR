@@ -17,11 +17,6 @@ C                             RADIATION, CONDUCTION, AND EVAPORATION.
        USE BLK11MOD
 
        SAVE
-CIPK AUG05       INCLUDE 'PARAM.COM'
-CIPK AUG05       INCLUDE 'BLK11.COM'
-CIPK AUG05       INCLUDE 'BLKMET.COM'
-CC
-CCC
 
 CCC             NCASI Commentary, HEATEX Section A. (QUAL2 Step 1-0)
 CCC                     A. Compute and/or define required constants.

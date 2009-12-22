@@ -17,46 +17,31 @@ C     Last change:  WP   29 Aug 2007    3:45 pm
 cipk last update Aug 5 1998 fix heat budget term
 CIPK LAST UPDATED SPE 8 1995
       SUBROUTINE SURCOF(NN,NTX)
+      USE COEF2MOD, only:XN,DNX,DNY,XM,DMX,DMY,XL,YL,WAITX
+      USE BLKHMOD
+      USE BLKSMOD
+      USE WATPMOD
+      USE ICE2MOD
       USE BLK10
       USE BLK10MOD
       USE BLK11MOD
       USE BLKSSTMOD
       USE BLKECOM
       SAVE
-C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG07      INCLUDE 'BLKE.COM'
-      INCLUDE 'BLKS.COM'
-CIPK AUG05      INCLUDE 'BLKSST.COM'
-C      INCLUDE 'RKEP.COM'
-C-
+
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: h
-!-
-
-      REAL (kind = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
-      REAL (kind = 8) ::  xl, yl
-      COMMON/WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
-C-
-      COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2)
-     1     ,AX(3,3),DNAL(3,4),XNAL(3,4)
+      
 C-
 CIPK JUN03
 C	COMMON /STR/
 C     +  STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
-CIPK AUG07
-!      COMMON F(60),
-      COMMON
-     1 XN(8),DNX(8),DNY(8),XM(4),DMX(4),DMY(4),XL(8),YL(8),
-     1  WAITX(16),QFACT(3)
+      REAL QFACT(3)
 C-
       DIMENSION SFACT(4,2),SLOD(2)
 cipk jan99
 C
       DIMENSION  WIDTHZ(8)
-CIPK sep02
-      COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 
       REAL J11,J12,J21,J22
       DATA SFACT/-1.,1.,-1.,-1.,+1.,-1.,+1.,+1./

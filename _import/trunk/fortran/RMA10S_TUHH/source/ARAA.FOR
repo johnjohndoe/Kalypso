@@ -1,11 +1,10 @@
 C     Last change:  WP   29 Apr 2008    3:45 pm
 
       SUBROUTINE ARAA (NN)
+      USE BLKHMOD
       USE BLK10MOD
       SAVE
-C
-CIPK AUG05      INCLUDE 'BLK10.COM'
-      INCLUDE 'BLKH.COM'
+
 !-
       DIMENSION NCON (8), XL (3), YL (3), DNX (3)
 !-

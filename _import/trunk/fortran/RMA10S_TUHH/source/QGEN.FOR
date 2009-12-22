@@ -61,8 +61,6 @@ C-
       real (KIND=8)       :: tmpvx,tmpvy,tmpdepth,tmpwl
 !-
 
-cipk aug05      INCLUDE 'BLK10.COM'
-C-
       DATA VOID/-1.E20/
 
       NullVal = 0.0

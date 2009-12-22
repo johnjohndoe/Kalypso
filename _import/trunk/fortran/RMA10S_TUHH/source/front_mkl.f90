@@ -14,19 +14,15 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
       integer (kind = 8) :: mxl, mfrw
       PARAMETER (MXL=680)
-
-!-
-!ipk feb07 add LLDONE 
-!ipk AUG07
-      COMMON/FNT/ NK(120),LLDONE(80)
-!
+      
+      integer :: NK(120), LLDONE(80)
 
       !local variables
       integer (kind = 2), save :: itime
       real (kind = 8) :: sec, islp, sinc
       integer (kind = 4) :: nszfo, maxl, i, k, nn, n
       integer (kind = 4) :: ntyp, m
-      integer (kind = 4) :: l, j, icteq, kc, nk, lldone
+      integer (kind = 4) :: l, j, icteq, kc
       integer (kind = 4) :: ll, jj, adta, selt, icur, nec, irtc
       integer (kind = 4) :: nrr, lcmax, nmax, ishrk, nell, locl
       integer (kind = 4) :: lrow, lRowMax

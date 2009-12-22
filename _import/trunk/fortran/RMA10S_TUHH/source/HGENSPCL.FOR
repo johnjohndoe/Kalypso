@@ -5,7 +5,6 @@ cipk  last update feb 09 2001 allow for zero length cc lines
 C-
 C...... Generate specified head boundary conditions
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
       DIMENSION QQAL(3)
 C-
       ALLOCATABLE IHSPCL(:), HREQQ(:)

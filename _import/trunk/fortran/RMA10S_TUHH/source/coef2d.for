@@ -34,6 +34,11 @@ C     Last change:  MD    9 Jun 2009    2:05 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
+      USE COEF2MOD
+      USE BLKHMOD
+      USE BLKSMOD
+      USE WATPMOD
+      USE ICE2MOD
       USE BLK10
       USE BLK10MOD
       USE BLK11MOD
@@ -64,20 +69,6 @@ C
 
 cycw aug94 add double precision salt
       REAL*8 SALT
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK SEP02
-CIPK AUG05      INCLUDE 'BLK11.COM'
-      INCLUDE 'BLKH.COM'
-CIPK AUG07      INCLUDE 'BLKE.COM'
-      INCLUDE 'BLKS.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
-CIPK AUG05      INCLUDE 'BLKSST.COM'
-cipk jun05
-CIPK AUG05      INCLUDE 'BLKSUB.COM'
-
-      REAL (kind = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
 
       REAL (kind = 8) :: DHDX,DHDZ,DAODX,DAODZ,H,AZER,XHT
       REAL (kind = 8) :: GHC,FRN,FRNX,FRNZ
@@ -88,33 +79,15 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
       real (kind = 8) :: lambdaP_shore 
       real (kind = 8) :: lambda, lamKS, lamP, lamDunes
 
-
-      COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
-C-
-cipk apr05
-      common /epor/ efpor
-C-
-
 CIPK JUN03
 C	COMMON /STR/
 C     +  STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
 
-CIPK AUG07
-C      COMMON F(80),
-      COMMON 
-     1 XN(8),DNX(8),DNY(8),XM(4),DMX(4),DMY(4),XL(8),YL(8)
-     2,XO(8),DOX(8),DOY(8),
-     3  WAITX(16),DL(2,2)
-     4 ,VXX(8),VY(8),VDX(8),VDY(8),ST(8),SDT(8),UBFC(8),VBFC(8)
-     5,efpornn(4)
 cipk apr05 add line above
 C-
 CIPK AUG07
       DIMENSION FTF(2),PROJL(8)
 CIPK SEP96 ADD PROJL
-C-
-CIPK sep02
-      COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 
       REAL J11,J12,J21,J22
 C-

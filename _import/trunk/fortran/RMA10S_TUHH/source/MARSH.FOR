@@ -8,12 +8,6 @@ CIPK  NEW ROUTINE NOVEMBER 13 1997
       USE BLKDRMOD
       USE ParaKalyps
       SAVE
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK APR96 ADD BLK11
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-
 C
 C     Initialize marsh values
 C

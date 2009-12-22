@@ -6,10 +6,6 @@
 C-
 C...... This routine interpolates wave data
 C-
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
 
       CHARACTER*1000 HEDR
 c

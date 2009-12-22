@@ -28,15 +28,6 @@ USE Para1DPoly
 USE WBMMODS
 !**********************
 SAVE
-!-
-!ipk aug05      INCLUDE 'BLK10.COM'
-!IPK MAR98
-!IPK AUG05      INCLUDE 'BLK11.COM'
-!IPK AUG05      INCLUDE 'BLKDR.COM'
-!IPK AUG05      INCLUDE 'BLKSAND.COM'
-!IPK AUG05      INCLUDE 'BLKSED.COM'
-!-
-!IPK APR06
 
 type (simulationModel), pointer :: m_SimModel
 REAL (kind = 8) :: VDUM

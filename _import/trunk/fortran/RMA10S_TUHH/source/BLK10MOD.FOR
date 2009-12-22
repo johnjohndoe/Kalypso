@@ -506,7 +506,7 @@ C-
      9          ,nrbd,iedsw,istch
      +          ,ioptim,IHGNN,IZERS
      +          ,NODETR
-     +          ,NBSFRQ,IDIFSW
+     +          ,IDIFSW
 !removed: lnnam
 !     +          ,IOV,IYKK,IDTM,TTEM,LNNAM,INOTR
      +          ,IOV,IYKK,IDTM,TTEM,INOTR
@@ -556,10 +556,11 @@ CIPK MAY06 ASS IMASSOUT
      
       INTEGER   NJT(100),NDUPJ(100),NDDNJ(100),NDFLJ(100)
 
+CIPK MAR01 ADD FOR POWER STATION RECYCLING  THIS BLOCK IS ALSO IN "BLK10.COM"
+CIPK MAR01  LINE ABOVE ADD FOR KEEPING TRACK OF AVERAGE CCLINE CONCENTRATIONS
       REAL      AVES(50),AVET(50),AVESD(50)
      +          ,ADDTMP(50,3),ADDSAL(50),ADDSED(50)
      +          ,ADDMAX(50)
-
       INTEGER   NADTYP(50),NOUTCC(50)
 
 

@@ -5,9 +5,6 @@ C     Last change:  WP   25 Oct 2007    9:00 am
 
 C     Routine to get elements connected to nodes and allocate areas
 
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG95      INCLUDE 'BLKSAND.COM'
-
       DO N=1,NE
         IF (IMAT(N) .LT. 900  .OR. IMAT(N) .GT. 999) then
           NCN=NCORN(N)

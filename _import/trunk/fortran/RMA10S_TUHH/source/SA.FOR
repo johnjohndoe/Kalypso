@@ -1,4 +1,5 @@
       SUBROUTINE SA(NCN,NGP)
+      USE SACMOD
       SAVE
 C
 C     Subroutine to obtain 5th order gauss point values
@@ -16,9 +17,7 @@ C                15 = triangular prism
 C                13 = rectangular pyramid
 C                10 = tetrahedron
 C
-      COMMON /SAC/ XNX(20,64),DA(20,64),DB(20,64),DC(20,64)
-C-
-      COMMON /SHP3D/ SJ(20,27,4),SM(15,21,4),SK(10,21,4),SS(13,27,4)
+      REAL SJ(20,27,4),SM(15,21,4),SK(10,21,4),SS(13,27,4)
 C-
       DIMENSION SI(27,3),SL(21,3),SN(7,3),SMULT(3),ST(9,2),ILOKUP(13)
      A  ,SI2(8,3)

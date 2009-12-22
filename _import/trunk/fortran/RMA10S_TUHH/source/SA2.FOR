@@ -1,5 +1,6 @@
 
       SUBROUTINE SA2(NCN)
+      USE BLKSMOD
       SAVE
 *     FUNCTION SA2(K,I,L,NCN)
 C
@@ -12,8 +13,6 @@ C                TYPE 1 = FUNCTION
 C                TYPE 2 = X DERIVATIVE
 C                TYPE 3 = Y DERIVATIVE
 C     NCN IS NUMBER OF CORNER NODES
-C
-      INCLUDE 'BLKS.COM'
 C
       REAL*8 DNX,DNY,SI,SL
       DIMENSION SI(6,2),SJ(6,6,3)

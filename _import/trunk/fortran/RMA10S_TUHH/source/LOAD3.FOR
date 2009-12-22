@@ -33,13 +33,6 @@ CIPK DEC06
       LOGICAL :: NodeIsDry (1:3535)
       integer :: dea_stat
       integer :: nln
-!-
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      include 'BLK4.COM'
-CIPK JUN05
-CIPK AUG05      INCLUDE 'BLKSUB.COM'
 C
 C......DIMENSION STATEMENTS
 C-

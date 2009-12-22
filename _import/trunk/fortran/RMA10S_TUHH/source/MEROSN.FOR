@@ -11,10 +11,7 @@ C----------------------------------------------------------------------
       SUBROUTINE MEROSN(II)
       USE BLK10MOD
       USE BLKSEDMOD
-C-
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05	INCLUDE 'BLKSED.COM'
-C-
+
 C**********************************************************************
 C
 C     THIS SUBROUTINE COMPUTES THE EROSION RATE FOR MASS EROSION

@@ -4,10 +4,7 @@ C     Last change:  WP   20 May 2008    4:53 pm
       USE BLK10MOD
       USE BLKDRMOD
       SAVE
-C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-C-
+
 C     DIMENSION IMATO(MEL),NDRYO(MNP),IPT(MNP)
 C-
        DATA IENT/0/

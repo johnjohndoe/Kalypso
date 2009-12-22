@@ -18,21 +18,18 @@ USE BLK10MOD, only: maxp, np, nfixsav, nfixsv1, nfix1, npm, nfixk, &
 !voutn      vector of outward normal direction [rad] (measured from global x-axis) of the three nodes along an arc of an element
 !
 
+use BLKHMOD
 USE BLKSUBMOD, only: nfctp, whgt, isubm
 use parakalyps
+
 implicit none
 SAVE
-      
-COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2), AX(3,3),DNAL(3,4),XNAL(3,4)
-!is the same as 'include blkh.com'; make a module out of it
-
       real (kind = 8) :: pi2, voidp
       real (kind = 8) :: h1, h3, h, vt
 real (kind = 8), dimension (1:3) :: srt
 real (kind = 8), dimension (1:2, 1:2) :: dl
       real (kind = 8) :: fmt
-      real (kind = 8) :: temp1, temp2, dnal
-      real (kind = 8) :: afact, hfact, xnal, wait, sload, ax
+      real (kind = 8) :: temp1, temp2
       real (kind = 8) :: csx, ssx, alold, csn, ssn, ag1, az, atemp
       integer (kind = 4) :: transnumber, nodeno, lino, lile
       integer (kind = 4) :: itimeh

@@ -16,6 +16,9 @@
 !****************************************************************
 
 SUBROUTINE COEF1dPoly (NN,NTX)
+USE COEF1MOD
+USE BLKHMOD
+USE ICE2MOD
 USE BLK10
 use BLKECOM
 USE BLK10MOD
@@ -138,17 +141,6 @@ INTEGER :: PolyTest
 integer (kind = 4) :: ps, ps_id
 
 INTEGER :: byparts
-!estifm block-definition
-!INCLUDE 'BLKE.COM'
-!weighting function etc. block-definition
-!INCLUDE 'BLKH.COM'
-COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2), AX(3,3),DNAL(3,4),XNAL(3,4)
-
-COMMON XN(3),DNX(3),DNY(3),XM(2),DMX(2),DMY(2),XL(3),YL(3), &
-& VX(3),VY(3),VDX(3),VDY(3),QFACT(3),QQFACT(3),ST(3),SDT(3),UBFC(3),XO(3),DOX(3),Q1(3)
-
-!CIPK oct02
-COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 
 !initializing
 PP(1) = 1

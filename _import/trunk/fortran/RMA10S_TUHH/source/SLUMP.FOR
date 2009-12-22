@@ -9,10 +9,6 @@ C     Routine to get slump from channel sides
       USE BLKDRMOD
       USE BLKSANMOD
       
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: HTP
 !-

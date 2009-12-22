@@ -3,10 +3,6 @@
       USE BLK11MOD
 C      Calculate source sink term for Suspended Solids
 
-CIPK AUG05      INCLUDE 'PARAM.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05	INCLUDE 'BLKSAND.COM'
-C-
       DIMENSION ITINC(24)
       DATA ITINC/1,2,0,0,0,3,3,3,0,0,
      +           1,2,0,0,4,3,0,3,0,0,
@@ -63,10 +59,6 @@ C      Calculate source sink term for Suspended Solids
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLK11MOD
-CIPK AUG05      INCLUDE 'PARAM.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05	INCLUDE 'BLKSED.COM'
-CIPK AUG05	INCLUDE 'BLKSAND.COM'
 
       DIMENSION ITINC(24)
       DATA ITINC/1,2,0,0,0,3,3,3,0,0,

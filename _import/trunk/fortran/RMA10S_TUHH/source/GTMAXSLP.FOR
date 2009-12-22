@@ -1,14 +1,11 @@
       SUBROUTINE GETMAXSLP(NN,bslcrit)
+      USE BLKSMOD
       USE BLK10MOD
       USE BLKSANMOD
 
 C     Routine to get max slop in element NN
 
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-	INCLUDE 'BLKS.COM'
-
-      COMMON XM(4),DMX(4),DMY(4),XL(8),YL(8)
+      USE COEF2MOD, only: XM, DMX, DMY, XL, YL
 
       real*8 elmin,elmax
 

@@ -14,6 +14,7 @@ Cipk  last update Sept 9 1996  fix lhs error for type 4
 cipk  last update Apr 1 1996
 cipk  last update nov 10 1995
       SUBROUTINE CSTRC2D(NN)
+      USE COEF2MOD
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
@@ -21,23 +22,6 @@ cipk  last update nov 10 1995
       USE BLKECOM
       use paraKalyps, only: mcord
       
-C
-
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-CIPK AUG05      INCLUDE 'BLKSUB.COM'
-CIPK AUG07	INCLUDE 'BLKE.COM'
-C-
-!      REAL (KIND = 8) :: F
-      REAL (KIND = 8) :: waitx
-!      COMMON F(80),
-      COMMON
-     1 XN(8),DNX(8),DNY(8),XM(4),DMX(4),DMY(4),XL(8),YL(8)
-     2,XO(8),DOX(8),DOY(8),
-     3  WAITX(16),DL(2,2)
-     4 ,VXX(8),VY(8),VDX(8),VDY(8),ST(8),SDT(8),UBFC(8),VBFC(8)
-
 !NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine
       REAL(KIND=8) :: H, WH1, WH2
       

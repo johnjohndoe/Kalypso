@@ -31,8 +31,6 @@ subroutine autoboundaryh(hfin,hini,h2fin,h2ini,tfin,ttt,curve,hhh,hhh2)
                                                          ! hhh     : calculated waterstage
                                                          ! hhh2    : calculated waterstage 2
 
-! Data block
-
 INTEGER,INTENT(IN) :: curve
 REAL,INTENT(IN)    :: hfin,hini,h2fin,h2ini,tfin
 REAL (KIND = 8)    :: ttt
@@ -106,7 +104,6 @@ subroutine autoboundaryQ(qfin,qini,qdirfin,qdirini,tfin,ttt,curve,qqq,qqqdir)
                                                          !         0 means linear, 1 means logarithmic/power
                                                          ! qqq     : calculated discharge
 
-! Data block
 
 INTEGER,INTENT(IN) :: curve
 REAL,INTENT(IN)    :: qfin,qini,qdirfin,qdirini,tfin

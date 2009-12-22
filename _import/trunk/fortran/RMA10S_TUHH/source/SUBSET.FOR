@@ -10,8 +10,6 @@ C-
 
       USE BLK10MOD
       USE BLKSUBMOD
-CIPK AUG05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKSUB.COM'
 *-
 *...... Test for and set submerged weir elements
 *-

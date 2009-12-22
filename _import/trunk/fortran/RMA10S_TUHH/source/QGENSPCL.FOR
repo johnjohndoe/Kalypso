@@ -11,7 +11,6 @@ C-
 C-..... Generate specified total flow boundary conditions for 3-d layer
 C-
       DIMENSION QQAL(3)
-cipk aug05      INCLUDE 'BLK10.COM'
 C-
       ALLOCATABLE IQSPCL(:)
       DATA   IFIRST /  0 /

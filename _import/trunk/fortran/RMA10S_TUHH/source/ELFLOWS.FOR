@@ -20,11 +20,7 @@ C-
 CIPKJAN94 V4.5
 CIPK DEC97      PARAMETER (NQBS=20)
 CIPKJAN94 V4.5 END CHANGE
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-cipk jan03  ADD AN EXTRA 8 CHARACTERS
-      CHARACTER*8 DLINEXTRA
-      COMMON /DLINF/ DLINEXTRA
+
       DIMENSION QQAL(3)
       
       integer :: ioerror
@@ -138,7 +134,6 @@ cipk jan03          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL
           ioerror = 0
           READ (DLIN, 5029, iostat = ioerror)
      +         N, LN, NEST, SF, QQAL, LABL, ELINR, ELINT
-          !read (dlinextra, 5030) ELINT
           ELINX = ELINR * COS (ELINT)
           ELINY = ELINR * SIN (ELINT)
           WRITE (LOUT, 6019) N, SF, QQAL, ELINX, ELINY
@@ -207,7 +202,6 @@ CIPK DEC97 END ADDITION
      
           write(*,*) ioerror
           write(*,*) n, ln, nest, sf, qqal, labl, elinr, elint
-          !read (dlinextra, 5030) ELINT
 
           !calculate x- and y- inflow
           ELINX = ELINR * COS (ELINT)

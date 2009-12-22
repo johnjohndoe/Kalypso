@@ -7,7 +7,6 @@ cipk  last update feb 09 2001 allow for zero length cc lines
 C-
 C...... Generate specified stage flow boundary conditions
 C-
-CIPK AUG05      INCLUDE 'BLK10.COM'
       DIMENSION QQAL(3)
 C-
 C...... Save pointer to define which nodes are stage flow

@@ -13,7 +13,6 @@ cipk  last update April 26 1996  many changes
       USE BLK11MOD
       use blk_ifu
       SAVE
-CIPK AUG05      INCLUDE 'PARAM.COM'
 cipk nov97  do not include BLK10.COM
 cipk dec97 move to param.com      PARAMETER (NCHBS=10,NCHOBS=200)
 
@@ -22,8 +21,6 @@ cipk dec97 move to param.com      PARAMETER (NCHBS=10,NCHOBS=200)
 !      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,INWINDIN
 !-
 
-CIPK AUG05      INCLUDE 'BLK11.COM'
-C
 CIPK DEC97 CHANGE LIMIT TO NHDS
       ALLOCATABLE NCLIN(:),NHY(:),TA(:,:),
      +          HT(:,:),HD(:,:,:),

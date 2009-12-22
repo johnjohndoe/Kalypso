@@ -10,9 +10,6 @@ cipk  last update Oct 1 1996 Add options for horizontal turbulence
       USE BLK10MOD
       USE BLK11MOD
 C
-CIPK AUG05      INCLUDE 'BLK10.COM'
-cipk dec98 fix lower case
-CIPK AUG05      INCLUDE 'BLK4.COM'
       DIMENSION   DD(4), X(8),Y(8)
 C
       DO 90 LL=1,NE
