@@ -34,8 +34,8 @@ module mod_fileHandler
 !           TODO: examine, how ICFL works      
 !icfl:      unit number definition of the console      
 !LIN        unit of control file (control.r10)      
-!LOUT       after 1st call of file.sub unit of output file (.ech)      
-!           after 2nd call of file.sub LOUT becomes the general output unit (.out-file)      
+!LOUT       after 1st call of file%sub unit of output file (.ech)
+!           after 2nd call of file%sub LOUT becomes the general output unit (.out-file)
 !LITR       unit of iteration file (.itr)      
 !IMESOUT    unit of Message file (MESS.ech)      
 !IKALYPSOFM unit number of the results ouput files      
@@ -115,7 +115,7 @@ end subroutine
     
     readFile: do 
       iostatus = 0
-      read (volWlFile.unit, '(a)', iostat = iostatus) linestring
+      read (volWlFile%unit, '(a)', iostat = iostatus) linestring
 
 !ENDDATA line      
       if (linestring (1:7) == 'ENDDATA') then
@@ -136,7 +136,7 @@ end subroutine
       else
         if ( .NOT. (associated (storElt))) then
           write (*,*) 'data without reference storage element'
-        elseif ( .NOT. (associated (storElt.volWlRel))) then
+        elseif ( .NOT. (associated (storElt%volWlRel))) then
           write (*,*) 'data without reference function relation in storage element'
         else
           read (linestring, *, iostat = iostatus) volume, waterlevel

@@ -275,7 +275,7 @@ type (SimulationModel), pointer :: m_SimModel
 !----------------------------------------------------------------
 
 m_SimModel => newSimulationModel (modelName)
-m_SimModel.FEmesh => newFEMesh ()
+m_SimModel%FEmesh => newFEMesh ()
 
 
       
@@ -354,9 +354,9 @@ call fldir
 
 
 !Check, whether model has inner boundaries, so Schwarz iteration has to be done!
-m_SimModel.hasInnerBoundaries = checkForInnerBCs (ccls(:), ncl)
+m_SimModel%hasInnerBoundaries = checkForInnerBCs (ccls(:), ncl)
 !In the case of distributed calculations, neighbour-IDs need to be read
-if (m_simModel.hasInnerBoundaries) call readDistributedModelIDs (m_simModel)
+if (m_simModel%hasInnerBoundaries) call readDistributedModelIDs (m_simModel)
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -390,8 +390,8 @@ steadyCalculation: if (niti /= 0) then
 !PROCESS SCHWARZ ITERATION FOR DISTRIBUTED CALCULATIONS WITH KALYPSO SERVICE  
 !---------------------------------------------------------------------------  
 !Initialize for the case no Schwarz iteration has to be done  
-  m_SimModel.isSchwarzConv = .true.
-  m_SimModel.isNewtonConv = .false.
+  m_SimModel%isSchwarzConv = .true.
+  m_SimModel%isNewtonConv = .false.
   
   SchwarzIt = 0
   steadySchwarzCycle: Do
@@ -399,7 +399,7 @@ steadyCalculation: if (niti /= 0) then
     
 !if model has inner boundaries, there must be a Schwarz iteration with neighbouring models    
 !-----------------------------------------------------------------------------------------    
-    if (m_SimModel.hasInnerBoundaries) then
+    if (m_SimModel%hasInnerBoundaries) then
 !Get Continue Command      
 !--------------------      
       continueCommand = getSchwarzIterationCommand (schwarzIt, icyc)
@@ -419,7 +419,7 @@ steadyCalculation: if (niti /= 0) then
       call writeInnerBoundaryConditons (m_simModel, schwarzIt, icyc, ccls, ncl, maxp, vel, wsll, cord)
 !Re-Initialize the model convergency status, i.e. assume it is converged and check assumption consecutively      
 !----------------------------------------------------------------------------------------------------------      
-      if (m_SimModel.hasInnerBoundaries) m_SimModel.isSchwarzConv = .true.
+      if (m_SimModel%hasInnerBoundaries) m_SimModel%isSchwarzConv = .true.
 !Generate BC file filenames list      
 !-------------------------------      
       bcFiles => getNeighbourBCFiles (schwarzIt, icyc, m_SimModel)
@@ -439,13 +439,13 @@ steadyCalculation: if (niti /= 0) then
       
 !write header of console output      
 !------------------------------      
-      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', m_SimModel.schwarzConv
+      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', m_SimModel%schwarzConv
       write (*,'(a)') 'CCL    vx-conv max    vy-conv max    h-conv max'
       write (*,'(a)') '----------------------------------------------------'
 !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence      
 !-------------------------------------------------------------------------------------      
-      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel.schwarzConv)
-      if ( .NOT. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+      m_SimModel%isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel%schwarzConv)
+      if ( .NOT. (m_SimModel%isSchwarzConv)) m_SimModel%isNewtonConv = .false.
     endif
 
 !PROCESS TIME STEP (STEADY IN THIS CASE) CALCULATION    
@@ -458,7 +458,7 @@ steadyCalculation: if (niti /= 0) then
     
 !If boundary conditions did not change, model is already Newton converged      
 !------------------------------------------------------------------------      
-      if (m_SimModel.isNewtonConv) then
+      if (m_SimModel%isNewtonConv) then
 !Write out some info        
 !-------------------        
         write(*,*) 'Schwarz iteration cycle: ', SchwarzIt
@@ -466,7 +466,7 @@ steadyCalculation: if (niti /= 0) then
         write(*,*) 'Waiting for next Schwarz Cycle'
 !Announce the Schwarz convergence status (Schwarz Converged)        
 !---------------------------------------        
-        if (m_simModel.hasInnerBoundaries) call writeConvStatus (case_SchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+        if (m_simModel%hasInnerBoundaries) call writeConvStatus (case_SchwarzConv, m_simModel%ID, SchwarzIt, Icyc)
 !nothing to iterate, so end steady calculation cycle        
 !---------------------------------------------------        
         exit steadyCycle
@@ -662,10 +662,10 @@ steadyCalculation: if (niti /= 0) then
   if (nconv == 2) then
 !Set model Newton Converged    
 !--------------------------    
-    m_SimModel.isNewtonConv = .true.
+    m_SimModel%isNewtonConv = .true.
 !Announce the Schwarz convergence status (not Schwarz Converged)    
 !---------------------------------------    
-    if (m_SimModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+    if (m_SimModel%hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel%ID, SchwarzIt, Icyc)
     
 !nothing to iterate any more, so get out of this steady cycle    
 !------------------------------------------------------------    
@@ -700,7 +700,7 @@ steadyCalculation: if (niti /= 0) then
     if (maxn >= nita) then
 !Announce the Schwarz convergence status (Not Schwarz Converged)      
 !---------------------------------------      
-      if (m_SimModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, schwarzIt, icyc)
+      if (m_SimModel%hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel%ID, schwarzIt, icyc)
 !nothing to do any more, so get out of steady cycle      
 !--------------------------------------------------      
       exit steadycycle
@@ -710,7 +710,7 @@ steadyCalculation: if (niti /= 0) then
   end do steadyCycle
 
 !terminate Schwarz iteration, if it doesn't have inner boundaries for Schwarz iteration  
-  if ( .NOT. (m_SimModel.hasInnerBoundaries)) exit steadySchwarzCycle
+  if ( .NOT. (m_SimModel%hasInnerBoundaries)) exit steadySchwarzCycle
 
 !end of Schwarz iteration
 end do steadySchwarzCycle
@@ -1087,8 +1087,8 @@ DynamicTimestepCycle: do n = 1, ncyc
 !PROCESS SCHWARZ ITERATION FOR DISTRIBUTED CALCULATIONS WITH KALYPSO SERVICE  
 !---------------------------------------------------------------------------  
 !Initialize for the case no Schwarz iteration has to be done  
-  m_SimModel.isSchwarzConv = .true.
-  m_SimModel.isNewtonConv = .false.
+  m_SimModel%isSchwarzConv = .true.
+  m_SimModel%isNewtonConv = .false.
 
 
 !Schwarz iteration loop  
@@ -1099,7 +1099,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     
 !if model has inner boundaries, there must be a Schwarz iteration with neighbouring models    
 !-----------------------------------------------------------------------------------------    
-    if (m_SimModel.hasInnerBoundaries) then
+    if (m_SimModel%hasInnerBoundaries) then
 !Get Continue Command      
 !--------------------      
       continueCommand = getSchwarzIterationCommand (schwarzIt, icyc)
@@ -1119,7 +1119,7 @@ DynamicTimestepCycle: do n = 1, ncyc
       call writeInnerBoundaryConditons (m_simModel, schwarzIt, icyc, ccls, ncl, maxp, vel, wsll, cord)
 !Re-Initialize the model convergency status, i.e. assume it is converged and check assumption consecutively      
 !----------------------------------------------------------------------------------------------------------      
-      if (m_SimModel.hasInnerBoundaries) m_SimModel.isSchwarzConv = .true.
+      if (m_SimModel%hasInnerBoundaries) m_SimModel%isSchwarzConv = .true.
 !Generate BC file filenames list      
 !-------------------------------      
       bcFiles => getNeighbourBCFiles (schwarzIt, icyc, m_SimModel)
@@ -1139,13 +1139,13 @@ DynamicTimestepCycle: do n = 1, ncyc
 
 !write header of console output      
 !------------------------------      
-      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', m_SimModel.schwarzConv
+      write (*,'(a15,i4,a14,f8.6)') 'Schwarz-cycle: ', schwarzIt, ' Conv-Border: ', m_SimModel%schwarzConv
       write (*,'(a)') 'CCL    vx-conv max    vy-conv max    h-conv max'
       write (*,'(a)') '----------------------------------------------------'
 !Check for Schwarz convergence and reinitialize under circumstances Newton Convergence      
 !-------------------------------------------------------------------------------------      
-      m_SimModel.isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel.schwarzConv)
-      if ( .NOT. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+      m_SimModel%isSchwarzConv = checkSchwarzConvergence (ccls, ncl, m_SimModel%schwarzConv)
+      if ( .NOT. (m_SimModel%isSchwarzConv)) m_SimModel%isNewtonConv = .false.
     endif
 
 !reinitialise global variables    
@@ -1158,7 +1158,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     DynamicIterationCycle: Do
 
 !Check for convergence status      
-      if (m_SimModel.isNewtonConv) then
+      if (m_SimModel%isNewtonConv) then
 !Write some information output        
 !-----------------------------        
         write(*,*) 'Schwarz iteration cycle: ', SchwarzIt
@@ -1166,7 +1166,7 @@ DynamicTimestepCycle: do n = 1, ncyc
         write(*,*) 'Waiting for next Schwarz Cycle'
 !Announce the convergence status (Schwarz converged)        
 !---------------------------------------------------        
-        call writeConvStatus (case_SchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+        call writeConvStatus (case_SchwarzConv, m_simModel%ID, SchwarzIt, Icyc)
 !nothing to do in this cycle, so get out of here        
 !-----------------------------------------------        
         exit DynamicIterationCycle
@@ -1450,10 +1450,10 @@ DynamicTimestepCycle: do n = 1, ncyc
     if(nconv == 2) then
 !Set Newton convergence status      
 !-----------------------------      
-      m_simModel.isNewtonConv = .true.
+      m_simModel%isNewtonConv = .true.
 !Announce Schwarz Convergence status      
 !-----------------------------------      
-      if (m_simModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+      if (m_simModel%hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel%ID, SchwarzIt, Icyc)
       
 !noting to do here, so get out of here      
 !-------------------------------------      
@@ -1487,7 +1487,7 @@ DynamicTimestepCycle: do n = 1, ncyc
       if (maxn >= nita) then
 !Announce Schwarz Convergence status        
 !-----------------------------------        
-        if (m_SimModel.hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel.ID, SchwarzIt, Icyc)
+        if (m_SimModel%hasInnerBoundaries) call writeConvStatus (case_NotSchwarzConv, m_simModel%ID, SchwarzIt, Icyc)
 !nothing to do anymore, so get out of here        
 !-----------------------------------------        
         exit DynamicIterationCycle
@@ -1498,10 +1498,10 @@ DynamicTimestepCycle: do n = 1, ncyc
     enddo DynamicIterationCycle
     
 !if model is not distributed (DOMAIN PARTITIONING), do not schwarz iterate    
-    if ( .NOT. (m_SimModel.hasInnerBoundaries)) exit SchwarzCycle
+    if ( .NOT. (m_SimModel%hasInnerBoundaries)) exit SchwarzCycle
   
 !If not Schwarz converged it can also not be newton converged    
-    if ( .NOT. (m_SimModel.isSchwarzConv)) m_SimModel.isNewtonConv = .false.
+    if ( .NOT. (m_SimModel%isSchwarzConv)) m_SimModel%isNewtonConv = .false.
     
   enddo SchwarzCycle 
   

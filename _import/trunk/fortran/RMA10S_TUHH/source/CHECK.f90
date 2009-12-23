@@ -119,11 +119,11 @@
         throughLineSegments: DO L = 1, LineLength-2, 2
 !
           if ( .NOT. (associated (tmpSeg))) then
-            tmpSeg => tmpContiLine.firstSegment
-            tmpLinkedNode => tmpContiLine.firstNode
+            tmpSeg => tmpContiLine%firstSegment
+            tmpLinkedNode => tmpContiLine%firstNode
           else
-            tmpSeg => tmpSeg.nextSeg
-            tmpLinkedNode => tmpLinkedNode.next
+            tmpSeg => tmpSeg%nextSeg
+            tmpLinkedNode => tmpLinkedNode%next
           endif
 !
 !nis,sep06,com: Count the number of segments          
@@ -171,7 +171,7 @@
               call addMidside (tmpSeg, tmpNode)
 !TODO: check for association              
               prevNode => tmpLinkedNode
-              nextNode => tmpLinkedNode.next
+              nextNode => tmpLinkedNode%next
 !
               tmpLinkedNode => makeNodeALinkedNode (tmpNode,            &
      &                           prevNode, nextNode)
@@ -358,7 +358,7 @@
 !
               if (vel(1,na) /= 0.0d0 .AND. vel(2,na) /= 0.0d0) then
                 dirScaling = projectionDirPointer                       &
-     &          (tmpContiLine.posNormal, vel(1:2,na))
+     &          (tmpContiLine%posNormal, vel(1:2,na))
               else
                 dirScaling = 1.0d0
               endif
@@ -431,14 +431,14 @@
           if (associated (tmpSeg)) nullify (tmpSeg)
           DO 700 K = 1, MAX, 2
             if ( .NOT. (associated (tmpSeg))) then
-              tmpSeg => tmpContiLine.firstSegment
+              tmpSeg => tmpContiLine%firstSegment
             else
-              tmpSeg => tmpSeg.nextSeg
+              tmpSeg => tmpSeg%nextSeg
             endif
 !
-            NA = tmpSeg.first.ID
-            NB = tmpSeg.midside.ID
-            NC = tmpSeg.last.ID
+            NA = tmpSeg%first%ID
+            NB = tmpSeg%midside%ID
+            NC = tmpSeg%last%ID
 !
             tmpVec = arcVector (tmpSeg)
 !
@@ -756,18 +756,18 @@
         endif
 !
 !Save the water that's going through the line within the current step        
-        if (associated (ccls(j).storageElt)) then
+        if (associated (ccls(j)%storageElt)) then
           if (ncall == 0) then
-            ccls(j).storageElt.currQ = Total (j)
+            ccls(j)%storageElt%currQ = Total (j)
           else
             if (maxn == 1) then
-              ccls(j).storageElt.prevQ = ccls(j).storageElt.currQ 
+              ccls(j)%storageElt%prevQ = ccls(j)%storageElt%currQ
             endif
-            ccls(j).storageElt.currQ = Total (j)
-            ccls(j).storageElt.storageAddition =                        &
-     &        QAverage(ccls(j).storageElt) * delt
+            ccls(j)%storageElt%currQ = Total (j)
+            ccls(j)%storageElt%storageAddition =                        &
+     &        QAverage(ccls(j)%storageElt) * delt
 !
-            SElt => ccls(j).storageElt
+            SElt => ccls(j)%storageElt
             WL = waterlevel (SElt, .true.)
           endif
         endif        

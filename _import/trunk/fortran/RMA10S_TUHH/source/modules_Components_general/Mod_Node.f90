@@ -47,11 +47,11 @@ contains
     type (node), pointer :: nodeOrigin
     type (LinkedNode), pointer :: newNeighb
     
-    if (associated (nodeOrigin.neighbourList)) then
-      newNeighb.next => nodeOrigin.neighbourList
-      newNeighb.prev => newNeighb
+    if (associated (nodeOrigin%neighbourList)) then
+      newNeighb%next => nodeOrigin%neighbourList
+      newNeighb%prev => newNeighb
     end if
-    nodeOrigin.neighbourList => newNeighb
+    nodeOrigin%neighbourList => newNeighb
   end subroutine
   
 !count the neighbours of a node  
@@ -66,11 +66,11 @@ contains
     type (LinkedNode), pointer :: nextNeighbour => null()
     
     counter = 0
-    nextNeighbour => nodeOrigin.neighbourList
+    nextNeighbour => nodeOrigin%neighbourList
     countNodes: do 
       if ( .NOT. (associated (nextNeighbour))) exit countNodes
       counter = counter + 1
-      nextNeighbour => nextNeighbour.next
+      nextNeighbour => nextNeighbour%next
     end do countNodes
     noOfNeighbours = counter
     return
@@ -86,18 +86,18 @@ contains
     type (LinkedNode), pointer :: tmpNode
     logical :: isContained
     
-    tmpNode => nodeOrigin.neighbourList
+    tmpNode => nodeOrigin%neighbourList
     isContained = .false.
 
     findNode: do
       if ( .NOT. (associated (tmpNode))) exit findNode
       
-      if (tmpNode.thisNode.ID == node2Check.ID) then
+      if (tmpNode%thisNode%ID == node2Check%ID) then
         isContained = .true.
         exit findNode
       endif
       
-      tmpNode => tmpNode.next
+      tmpNode => tmpNode%next
     end do findNode
     isContainedInList = isContained
     return
@@ -117,7 +117,7 @@ contains
 !allocate new node    
     allocate (new)
     
-    new.ID = ID
+    new%ID = ID
     if (present (zcord)) then
       call setCoords (new, (/xcord, ycord/), zcord)
     else
@@ -175,17 +175,17 @@ contains
 !allocate new linked node    
     allocate (new)
 !assign parameters    
-    new.thisNode => node2link
+    new%thisNode => node2link
     if (present (prev) ) then
       if (associated (prev)) then
-        new.prev => prev
-        new.prev.next => new
+        new%prev => prev
+        new%prev%next => new
       endif
     endif
     if (present (next)) then
       if (associated (next)) then
-        new.next => next
-        new.next.prev => new
+        new%next => next
+        new%next%prev => new
       endif
     endif
 !overgive new linked node    
@@ -200,9 +200,9 @@ contains
     real (kind = 8), dimension (1:2) :: cord
     real (kind = 8), optional :: cordz
     
-    emptyNode.cord(1) = cord (1)
-    emptyNode.cord(2) = cord (2)
-    if (present (cordz)) emptyNode.ao = cordz
+    emptyNode%cord(1) = cord (1)
+    emptyNode%cord(2) = cord (2)
+    if (present (cordz)) emptyNode%ao = cordz
   end subroutine
   
   function newBC (bc_type, bc_value)
@@ -217,7 +217,7 @@ contains
 !allocate boundary condition memory    
     allocate (tmp_bc)
 !generate BC, by type    
-    tmp_bc.bctype = bc_type
+    tmp_bc%bctype = bc_type
 !set value if present    
     if (present (bc_value)) call setBC (tmp_bc, bc_value)
 !overgive boundary condition and leave function    
@@ -230,12 +230,12 @@ contains
     type (boundaryCondition), pointer :: bc
     real (kind = 8) :: bc_value (*)
     
-    switch: select case (bc.bctype)
+    switch: select case (bc%bctype)
       case (enum_H_BCtype)
-        bc.h = bc_value (3)
+        bc%h = bc_value (3)
       case (enum_V_BCtype)
-        bc.v(1) = bc_value (1)
-        bc.v(2) = bc_value (2)
+        bc%v(1) = bc_value (1)
+        bc%v(2) = bc_value (2)
     end select switch
   end subroutine
   
@@ -250,7 +250,7 @@ contains
     type (linkedNode), pointer, intent (in) :: node1, node2
     
     linkedNodeCompare = .false.
-    if (node1.thisNode.ID == node2.thisNode.ID) linkedNodeCompare = .true.
+    if (node1%thisNode%ID == node2%thisNode%ID) linkedNodeCompare = .true.
     return
   end function
   

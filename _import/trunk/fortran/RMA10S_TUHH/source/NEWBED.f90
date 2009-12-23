@@ -267,7 +267,7 @@
   400 CONTINUE
       INEWBED=0
 !
-      WRITE(LOUT,77)
+      WRITE(LOUT,*) '..........BED SHEARS AND BED PROFILE.............'
 !
 !*********************************************************************
 !     PRINT THE BED SHEAR ,ER/DEP RATES AND ELEVATIONS.
@@ -669,7 +669,6 @@
 !      ENDDO
 !rrr aug97 end changes to output
 !
-   77 FORMAT(////11X,40HBED SHEARS AND BED PROFILE .............//)
    80 FORMAT(1X,'NODE',5X,'BED SHEAR',5X,'BOT.ELEV',5X,'BED CHANGE',4X  &
      &,'MASS ER. RATE',3X,'SURF. ER. ',3X,'DEP. RATE',4X,'ER/DEP MASS')
    82 FORMAT(I5,1P7E14.3)

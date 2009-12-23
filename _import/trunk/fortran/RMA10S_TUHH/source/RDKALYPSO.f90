@@ -446,7 +446,7 @@ reading: do
         nodecnt = max (i, nodecnt)
 !add new node to model        
         newFENode => newNode (i, cord (i,1), cord (i,2), ao(i))
-        call addNodeToMesh (m_SimModel.FEmesh, newFENode)
+        call addNodeToMesh (m_SimModel%FEmesh, newFENode)
 
         IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0d0, 0.0d0)
       ENDIF
@@ -657,25 +657,25 @@ reading: do
         if (i > psConn) psConn = i
       else
         write(*,*) psconn
-        read (linie, '(a2,3i10)') id_local, i, PipeSurfConn(i).SurfElt, PipeSurfConn(i).pipeElt
-        ConnectedElt (PipeSurfConn(i).SurfElt) = PipeSurfConn(i).pipeElt
-        ConnectedElt (PipeSurfConn(i).pipeElt) = PipeSurfConn(i)%SurfElt
+        read (linie, '(a2,3i10)') id_local, i, PipeSurfConn(i)%SurfElt, PipeSurfConn(i)%pipeElt
+        ConnectedElt (PipeSurfConn(i)%SurfElt) = PipeSurfConn(i)%pipeElt
+        ConnectedElt (PipeSurfConn(i)%pipeElt) = PipeSurfConn(i)%SurfElt
       endif
       
 !PIPE SURFACE CONNECTION GEOMETRY    
     elseif (linie(1:4) == 'PP_G') then
       if (kswit /= 1) then
-        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.ks, PipeSurfConn(i).manholeDef.diameter
+        read (linie, *) id_local, i, PipeSurfConn(i)%manholeDef%ks, PipeSurfConn(i)%manholeDef%diameter
       endif
 !PIPE SURFACE CONNECTION LOSS COEFFICIENTS    
     elseif (linie(1:4) == 'PP_L') then
       if (kswit /= 1) then
-        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.zetaInflowUpper, PipeSurfConn(i).manholeDef.zetaOutflowUpper,&
-        & PipeSurfConn(i).manholeDef.zetaInflowLower, PipeSurfConn(i).manholeDef.zetaOutflowLower
+        read (linie, *) id_local, i, PipeSurfConn(i)%manholeDef%zetaInflowUpper, PipeSurfConn(i)%manholeDef%zetaOutflowUpper,&
+        & PipeSurfConn(i)%manholeDef%zetaInflowLower, PipeSurfConn(i)%manholeDef%zetaOutflowLower
       endif
     elseif (linie(1:4) == 'PP_M') then
       if (kswit /= 1) then
-        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.mue
+        read (linie, *) id_local, i, PipeSurfConn(i)%manholeDef%mue
       endif
     
 !STORAGE ELEMENT    
@@ -684,9 +684,9 @@ reading: do
         read (linie, *) id_local, i
         if (i > maxSE) maxSE= i
       else
-        read (linie, *) id_local, i, CCLID, StorageElts(i).storageContent
-        StorageElts(i).ID = i
-        ccls(CCLID).storageElt => StorageElts(i)
+        read (linie, *) id_local, i, CCLID, StorageElts(i)%storageContent
+        StorageElts(i)%ID = i
+        ccls(CCLID)%storageElt => StorageElts(i)
       endif
     endif
     
@@ -1182,7 +1182,7 @@ all_arcs: DO i=1,arccnt
   
 !add new node to model  
   newFENode => newNode (nodecnt, x, y, z)
-  call addNodeToMesh (m_SimModel.FEmesh, newFENode)
+  call addNodeToMesh (m_SimModel%FEmesh, newFENode)
 
 !NiS,may06: test for 1D- or 2D-ARC  
 !1D-ELEMENT ARC or 1D-2D-TRANSITION ELEMENT ARC:  
@@ -1256,7 +1256,7 @@ enddo
 
 
 !TODO: This should call either with alphapoly or betapoly depending on what is used!
-call InterpolateProfs (m_SimModel.femesh, statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
+call InterpolateProfs (m_SimModel%femesh, statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
                     & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, &
                     & MaxLT, TransLines, IsPolynomNode)
 
@@ -1396,12 +1396,12 @@ neighbours: do i = 1, MaxE
         node1 = nop_temp (j)
 
 !linear search; really to slow        
-        nodeOrigin => findNodeInMeshByID (m_SimModel.FEmesh, node1)
+        nodeOrigin => findNodeInMeshByID (m_SimModel%FEmesh, node1)
 
         innerLT: do l = 1, ncorn_temp
           node2 = nop_temp (l)
           if (node1 /= node2) then
-            tmpNode => findNodeInMeshByID (m_SimModel.FEmesh, node2)
+            tmpNode => findNodeInMeshByID (m_SimModel%FEmesh, node2)
             newNeighb => makeNodeALinkedNode (tmpNode)
             if ( .NOT. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
           end if
@@ -1415,12 +1415,12 @@ neighbours: do i = 1, MaxE
 !For increasing speed of program, bring line to outside of loop      
       node1 = nop (i, j)
 !linear search; really to slow      
-      nodeOrigin => findNodeInMeshByID (m_SimModel.FEmesh, node1)
+      nodeOrigin => findNodeInMeshByID (m_SimModel%FEmesh, node1)
 
       inner: do l = 1, ncorn (i)
         node2 = nop (i, l)
         IF (node1 /= node2) THEN
-          tmpNode => findNodeInMeshByID (m_SimModel.FEmesh, node2)
+          tmpNode => findNodeInMeshByID (m_SimModel%FEmesh, node2)
           newNeighb => makeNodeALinkedNode (tmpNode)
           if ( .NOT. (isContainedInList (nodeOrigin, tmpNode))) call addNeighbour (nodeOrigin, newNeighb)
         END if

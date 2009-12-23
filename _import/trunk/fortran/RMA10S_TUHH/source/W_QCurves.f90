@@ -62,13 +62,13 @@ huw = huwin
 
   
 !generate the QFunction according 'vertical line' from picture above  
-  tmpFun => cstrc.QCurves.firstFun
+  tmpFun => cstrc%QCurves%firstFun
   generateQFunction: do
-    absz = functionValue (tmpFun.this, huw)
-    ord = tmpFun.CurveValue
+    absz = functionValue (tmpFun%this, huw)
+    ord = tmpFun%CurveValue
     call addPair (QFunction, absz, ord)
-    if (associated (tmpFun.next)) then
-      tmpFun => tmpFun.next
+    if (associated (tmpFun%next)) then
+      tmpFun => tmpFun%next
     else
       exit generateQFunction
     endif

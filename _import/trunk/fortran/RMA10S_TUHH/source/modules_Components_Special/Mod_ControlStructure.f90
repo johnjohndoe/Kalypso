@@ -29,9 +29,9 @@ contains
 !generate a new control structure instance    
     allocate (tmpCstrc)
 !assign values to control structure, if given    
-    if (present (ID)) tmpCstrc.ID = ID
-    if (present (TypeID)) tmpCstrc.TypeID = TypeID
-    if (present (posFlowDir)) tmpCstrc.posFlowDir = posFlowDir
+    if (present (ID)) tmpCstrc%ID = ID
+    if (present (TypeID)) tmpCstrc%TypeID = TypeID
+    if (present (posFlowDir)) tmpCstrc%posFlowDir = posFlowDir
 !overgive created control structure and leave creation routine    
     newCstrc => tmpCstrc
     return 
@@ -46,15 +46,15 @@ contains
 !generate new Q Curves group        
     allocate (newQCurvesGroup)
 !add optional parameters    
-    if (present (QGroupID)) newQCurvesGroup.ID = QGroupID
+    if (present (QGroupID)) newQCurvesGroup%ID = QGroupID
 !assign the group    
-    thisCstrc.QCurves => newQCurvesGroup
+    thisCstrc%QCurves => newQCurvesGroup
 !initialize with 0.0-flow line: Borders -500 mNN; +8900 mNN: Has to be changed when Mt. Everst rises higher :)    
     call addQCurve (thisCstrc, 0.0d0)
     call addValueTriple (thisCstrc, 0.0d0, -500.0d0, -500.0d0)
     call addValueTriple (thisCstrc, 0.0d0, 8900.0d0, 8900.0d0)
 !tell control structure that it has a type    
-    thisCstrc.hasType = .true.
+    thisCstrc%hasType = .true.
   end subroutine
   
   subroutine addQCurve (thisCstrc, Q, ID)
@@ -68,10 +68,10 @@ contains
     
 
 !Check, if cstrc has Q Group already available    
-    if (associated (thisCstrc.QCurves)) then
+    if (associated (thisCstrc%QCurves)) then
 !Check, if Curve with Curve value does already exist      
-      if (associated (thisCstrc.QCurves.firstFun)) then
-        tmpFun => findQCurveByQ (thisCstrc.QCurves, Q)
+      if (associated (thisCstrc%QCurves%firstFun)) then
+        tmpFun => findQCurveByQ (thisCstrc%QCurves, Q)
         if (associated (tmpFun)) return
       endif
     else
@@ -79,14 +79,14 @@ contains
     endif
 !add a new QCurve    
     newFun => newLinkedFun (CurveValue=Q)
-    if ( .NOT. (associated (thisCstrc.QCurves.firstFun))) then
-      thisCstrc.QCurves.firstFun => newFun
-      thisCstrc.QCurves.lastFun => newFun
+    if ( .NOT. (associated (thisCstrc%QCurves%firstFun))) then
+      thisCstrc%QCurves%firstFun => newFun
+      thisCstrc%QCurves%lastFun => newFun
     else
-      tmpFun => thisCstrc.QCurves.lastFun
-      tmpFun.next => newFun
-      newFun.prev => tmpFun
-      thisCstrc.QCurves.lastFun => newFun
+      tmpFun => thisCstrc%QCurves%lastFun
+      tmpFun%next => newFun
+      newFun%prev => tmpFun
+      thisCstrc%QCurves%lastFun => newFun
     endif
   end subroutine
   
@@ -101,14 +101,14 @@ contains
 !local variables    
     type (linkedDiscreteFunction), pointer :: tmpFun => null()
     
-    if (associated (thisCstrc.QCurves.firstFun)) then
-      tmpFun => findQCurveByQ (thisCstrc.QCurves, Q)
+    if (associated (thisCstrc%QCurves%firstFun)) then
+      tmpFun => findQCurveByQ (thisCstrc%QCurves, Q)
     endif 
     if ( .NOT. (associated (tmpFun))) then
       call addQCurve (thisCstrc, Q)
-      tmpFun => findQCurveByQ (thisCstrc.QCurves, Q)
+      tmpFun => findQCurveByQ (thisCstrc%QCurves, Q)
     endif
-    call addPair (tmpFun.this, huw, how)
+    call addPair (tmpFun%this, huw, how)
   end subroutine
 
   function findQCurveByQ (QCurves, Q)
@@ -124,16 +124,16 @@ contains
 !initialize    
     findQCurveByQ => null()
 !find corresponding value    
-    if (associated (QCurves.firstFun)) then
-      tmpFun => QCurves.firstFun
+    if (associated (QCurves%firstFun)) then
+      tmpFun => QCurves%firstFun
       checkForExisting: do
-        if (tmpFun.CurveValue == Q) then
+        if (tmpFun%CurveValue == Q) then
           findQCurveByQ => tmpFun
           exit checkForExisting
         endif
 !take the next function        
-        if (associated (tmpFun.next)) then
-          tmpFun => tmpFun.next
+        if (associated (tmpFun%next)) then
+          tmpFun => tmpFun%next
         else
           findQCurveByQ => null()
           exit checkForExisting

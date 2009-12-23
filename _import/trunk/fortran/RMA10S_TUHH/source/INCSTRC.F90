@@ -109,7 +109,7 @@ readCstrcData: do
 !Read data line      
       read (lineToEval, *) lineID, Qinner, EUW, EOW
 !Add Q-Curves data set to cstrc      
-      if ( .NOT. (associated (tmpCstrc.QCurves))) call addQCurveGroup (tmpCstrc)
+      if ( .NOT. (associated (tmpCstrc%QCurves))) call addQCurveGroup (tmpCstrc)
 !Add Q-Curve to Q-Curves data set of cstrc      
       call addQCurve (tmpCstrc, Qinner)
 !Add Triple of Q-Eow-Euw      

@@ -28,8 +28,8 @@ module mod_storageElt
     type (StorageElement), pointer :: new
 !allocate new node    
     allocate (new)
-    new.ID = ID
-    if (present(storageContent)) new.storageContent = storageContent
+    new%ID = ID
+    if (present(storageContent)) new%storageContent = storageContent
 !overgive the new storage element    
     newStorElt => new
     return
@@ -44,12 +44,12 @@ module mod_storageElt
     type (discreteFunction), pointer :: new
     
 !check for already existing relationship    
-    if (associated (StorageElt.volWlRel)) call ErrorMessageAndStop (1701, StorageElt.ID, 0.0d0, 0.0d0)
+    if (associated (StorageElt%volWlRel)) call ErrorMessageAndStop (1701, StorageElt%ID, 0.0d0, 0.0d0)
     
 !generate a new Volume Waterlevel Relationship    
     allocate (new)
 !Assign the Relationship to the Storage Element    
-    StorageElt.volWlRel => new
+    StorageElt%volWlRel => new
   end subroutine
   
 !add value pair  
@@ -59,9 +59,9 @@ module mod_storageElt
 !parameters for the realtionship    
     real (kind = 8), intent (in) :: Volume, Waterlevel
 !check for associated discrete function    
-    if ( .NOT. (associated (StorageElt.volWlRel))) call ErrorMessageAndStop (1702, StorageElt.ID, 0.0d0, 0.0d0)
+    if ( .NOT. (associated (StorageElt%volWlRel))) call ErrorMessageAndStop (1702, StorageElt%ID, 0.0d0, 0.0d0)
 !add pair to discrete function    
-    call addPair (StorageElt.volWlRel, Volume, Waterlevel)
+    call addPair (StorageElt%volWlRel, Volume, Waterlevel)
   end subroutine
   
 !get the water level of a storage element  
@@ -75,21 +75,21 @@ module mod_storageElt
     real (kind = 8) :: volume
 
 !get water level    
-    if (associated (StorageElt.volWlRel)) then
+    if (associated (StorageElt%volWlRel)) then
 !get the water level during time step, that means the addition/ subtraction within the current      
 !time step is already considered      
       if (present (currentWaterlevel)) then
         if (currentWaterlevel) then
           volume = VolumeContained(StorageElt)
         else
-          volume = StorageElt.storageContent
+          volume = StorageElt%storageContent
         endif
       else
-        volume = StorageElt.storageContent
+        volume = StorageElt%storageContent
       endif
-      waterlevel = functionValue (StorageElt.volWlRel, volume)
+      waterlevel = functionValue (StorageElt%volWlRel, volume)
     else
-      waterlevel = StorageElt.minWaterLevel
+      waterlevel = StorageElt%minWaterLevel
     endif
     return
   end function
@@ -114,7 +114,7 @@ module mod_storageElt
     implicit none
     real (kind = 8) :: VolumeContained
     type (StorageElement) :: StorageElt
-    VolumeContained = StorageElt.StorageContent + StorageElt.StorageAddition
+    VolumeContained = StorageElt%StorageContent + StorageElt%StorageAddition
     return
   end function
   
@@ -123,7 +123,7 @@ module mod_storageElt
     implicit none
     real (kind = 8) :: QAverage
     type (StorageElement) :: StorageElt
-    QAverage = 0.5 * (StorageElt.prevQ + StorageElt.currQ)
+    QAverage = 0.5 * (StorageElt%prevQ + StorageElt%currQ)
     return
   end function
 
@@ -132,7 +132,7 @@ module mod_storageElt
 !private    
     implicit none
     type (StorageElement) :: StorageElt
-    StorageElt.StorageContent = VolumeContained (StorageElt)
+    StorageElt%StorageContent = VolumeContained (StorageElt)
   end subroutine
 
 !run through all Storage Elements and get their storage content  

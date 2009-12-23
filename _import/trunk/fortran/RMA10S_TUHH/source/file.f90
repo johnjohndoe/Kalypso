@@ -1,5 +1,5 @@
 !******************************************************************************************
-!  subroutine file.sub opens the proper input files and assigns constant unit numbers to 
+!  subroutine file%sub opens the proper input files and assigns constant unit numbers to
 !    the files. In advance it reads the control file. The subroutine is called twice.
 !    During the first call:
 !     - opening the main control file
@@ -292,11 +292,11 @@ ITIMFL = 0
 insfl = 0      
 
 
-fileControl.lin => newFile (2, fnam0, 'old')
+fileControl%lin => newFile (2, fnam0, 'old')
 
 !Open the main control file of the execution
 !-------------------------------------------
-call openFileObject (fileControl.lin)
+call openFileObject (fileControl%lin)
 
 WRITE(*,*) 'Inputstatus control-file: ', ioerr
 !check for errors
@@ -312,7 +312,7 @@ ENDIF
 FileRead: DO
 
 !read the next line from the control file  
-  READ (fileControl.lin.unit, '(A8, A96)') ID, FNAMIN
+  READ (fileControl%lin%unit, '(A8, A96)') ID, FNAMIN
 !write out the read line from the control file to the console  
   WRITE(*,*) ' id: ', ID, ' file name: ', FNAMIN
 !trim the read file name from control file, to leave outer blanks aside  
@@ -349,7 +349,7 @@ FileRead: DO
     iaccyc = 1
 
 !Read additional informations; THEY HAVE TO BE THERE!!!    
-    READ (fileControl.lin.unit,'(A8,A96)') ID, FNAMIN
+    READ (fileControl%lin%unit,'(A8,A96)') ID, FNAMIN
 
 !Error, if the additional control informations were not entered    
     IF (ID(1:7) /= 'CONTROL') call ErrorMessageAndStop (1010, 0, 0.0d0, 0.0d0)
@@ -369,7 +369,7 @@ FileRead: DO
 !In both cases the geometry file (line INKALYPS) contains the result to restart with, too.    
 
 !check for 'RESTART' in next line    
-    READ (fileControl.lin.unit,'(A8,A96)') ID, FNAMIN
+    READ (fileControl%lin%unit,'(A8,A96)') ID, FNAMIN
 !handle restarting    
     IF (ID(1:7) == 'RESTART' .OR. iaccyc > 1) THEN
 !unit number of restart file is the same as input file      
@@ -381,7 +381,7 @@ FileRead: DO
       FNAM3  = FNAM2    
     endif
 !backspace file, if 'RESTART'-entry was not present, not to jump over any line    
-    if ( .NOT. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
+    if ( .NOT. (ID(1:7) == 'RESTART')) backspace (fileControl%lin%unit)
 
 
 !Input 'BEDREST' = Bed-RESTART (INPUT-Data)  
@@ -498,8 +498,8 @@ FileRead: DO
 !volume - waterlevel relationship of storage elements definitino (input)  
 !-----------------------------------------------------------------------  
   ELSEIF (ID == 'VOLWLFIL') THEN
-    fileControl.volWlFil => newFile (41, trim(fname), 'old')
-    call openFileObject (fileControl.volWlFil)
+    fileControl%volWlFil => newFile (41, trim(fname), 'old')
+    call openFileObject (fileControl%volWlFil)
 
 !external grid data (INPUT)  
 !--------------------------  
@@ -811,7 +811,7 @@ end subroutine
 !  subroutine for opening purpose and error checks. Opens the file >fileName< with the unit
 !    number assignment >unitNo<. It considers the passed status (>statusString<) and the 
 !    passed form (>formString<). >localFileName< is just a copy of the name, but it saves
-!    a lot of lines in file.sub. >globalErrorStatus< gives back the opening status. The
+!    a lot of lines in file%sub. >globalErrorStatus< gives back the opening status. The
 !    appearing value, when calling should be zero.
 !******************************************************************************************
 !***

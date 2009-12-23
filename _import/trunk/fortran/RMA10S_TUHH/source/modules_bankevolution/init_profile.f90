@@ -49,13 +49,13 @@ ELSEIF (PRESENT ( PNODE )) THEN
 
 ELSEIF (PRESENT ( fenode )) THEN
   
-  fenode(i).Node_Number = 0
-  fenode(i).Profile_Number = 0
-  fenode(i).elevation = 0.
-  fenode(i).water_level = 0.          
-  fenode(i).sed_source = 0.
-  fenode(i).typ ='' 
-  fenode(i).statuss =''
+  fenode(i)%Node_Number = 0
+  fenode(i)%Profile_Number = 0
+  fenode(i)%elevation = 0.
+  fenode(i)%water_level = 0.
+  fenode(i)%sed_source = 0.
+  fenode(i)%typ =''
+  fenode(i)%statuss =''
 
 END IF
 

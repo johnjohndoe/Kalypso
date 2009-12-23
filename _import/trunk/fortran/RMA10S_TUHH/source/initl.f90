@@ -150,7 +150,7 @@
       mfwsiz = mfww
       NBS=NBSS
 !
-      call setUpNodes (m_SimModel.femesh, maxp)
+      call setUpNodes (m_SimModel%femesh, maxp)
 !
 !viscosities and residual for element output purposes      
       allocate (epsx_nn (1:maxe), epsz_nn(1:maxe))

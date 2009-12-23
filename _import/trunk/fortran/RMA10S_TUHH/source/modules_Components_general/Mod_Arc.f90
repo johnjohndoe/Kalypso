@@ -21,8 +21,8 @@ CONTAINS
 !allocate new node    
     allocate (new)
 !set parameters    
-    new.first => first
-    new.last => last
+    new%first => first
+    new%last => last
 !overgive new arc    
     newArc => new
     return
@@ -35,8 +35,8 @@ CONTAINS
 !arguments    
     type (arc), pointer :: inArc
 !get Arc vector    
-    arcVector (1) = inArc.last.cord(1) - inArc.first.cord(1)
-    arcVector (2) = inArc.last.cord(2) - inArc.first.cord(2)
+    arcVector (1) = inArc%last%cord(1) - inArc%first%cord(1)
+    arcVector (2) = inArc%last%cord(2) - inArc%first%cord(2)
     return
   end function
   
@@ -45,7 +45,7 @@ CONTAINS
     type (arc), pointer :: inArc
     type (node), pointer :: midside
 !assign midside node    
-    if ( .NOT. (associated (inArc.midside))) inArc.midside => midside
+    if ( .NOT. (associated (inArc%midside))) inArc%midside => midside
   end subroutine
   
   function defaultNormal (inArc, scaling)
@@ -101,7 +101,7 @@ CONTAINS
     
 !assign vectors    
     vecBase = arcVector (inArc)
-    vec2Proj = inArc.posNormal
+    vec2Proj = inArc%posNormal
 !calculate vector products v1*v1 and v2*v1    
     do i = 1, 2
       vecBaseBaseProd = vecBaseBaseProd + vecBase (i)**2
@@ -128,7 +128,7 @@ CONTAINS
     real (kind = 8), dimension (1:2) :: arcVec
     
     arcVec = arcVector (inArc)
-    normalDirPointer = inArc.posNormal(1) * arcVec(2) - arcVec(1) * inArc.posNormal(2)
+    normalDirPointer = inArc%posNormal(1) * arcVec(2) - arcVec(1) * inArc%posNormal(2)
     if (normalDirPointer < 0.0) then
       normalDirPointer = -1.0d0
     elseif (normalDirPointer > 0.0) then

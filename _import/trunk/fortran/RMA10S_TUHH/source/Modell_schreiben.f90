@@ -463,11 +463,11 @@ write_trans_lines: do i = 1, MaxLT
 end do write_trans_lines
 
 write_PipeSurfConn: do i = 1, MaxPS
-  write(IKALYPSOFM, 7049) i, PipeSurfConn(i).SurfElt, PipeSurfConn(i).PipeElt
+  write(IKALYPSOFM, 7049) i, PipeSurfConn(i)%SurfElt, PipeSurfConn(i)%PipeElt
 enddo write_PipeSurfConn
 
 write_StorageElts: do i = 1, MaxSE
-  write(IKALYPSOFM, 7050) i, StorageElts(i).CCLID, StorageElts(i).storageContent, StorageElts(i).storageAddition
+  write(IKALYPSOFM, 7050) i, StorageElts(i)%CCLID, StorageElts(i)%storageContent, StorageElts(i)%storageAddition
 enddo write_StorageElts
 
 ! Roughness classes:

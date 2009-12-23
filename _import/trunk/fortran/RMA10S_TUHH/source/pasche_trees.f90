@@ -303,7 +303,7 @@ end do
 
 outer: do i = 1, nodecnt
 
-  tmpNode => findNodeInMeshByID (m_SimModel.femesh, i)
+  tmpNode => findNodeInMeshByID (m_SimModel%femesh, i)
   nconnect = noOfNeighbours (tmpNode)
 
   if (nconnect == 0) CYCLE outer
@@ -327,16 +327,16 @@ outer: do i = 1, nodecnt
 ! For each neighbour node the angle between the velocity  
 ! vector and the vector from point i to neighbour j is  
 ! determined  
-  neighbNode => tmpNode.neighbourList
+  neighbNode => tmpNode%neighbourList
   inner: do j = 1, nconnect
 !generate vector    
     do m = 1,2
-      vector_to_point(m) = cord(neighbNode.thisNode.ID, m) - cord(tmpNode.ID,m)
+      vector_to_point(m) = cord(neighbNode%thisNode%ID, m) - cord(tmpNode%ID,m)
     end do
 ! Angle between the two vectors    
     call GET_ANGLE(angle_v, vector_to_point, angle_delt(j) )
 !next node of neighbours    
-    neighbNode => neighbNode.next
+    neighbNode => neighbNode%next
   end do inner
 
 ! Detecting the neighbour with the smallest angle (FIRST_LOC) and the neighbour  
@@ -345,7 +345,7 @@ outer: do i = 1, nodecnt
 ! boundary of the mesh) the SECOND_LOC is set to 0.  
 ! The slope of this point will not be calculated!  
   nullify (firstNeighb, secondNeighb)
-  call GET_MIN_ANGLE_POINTS(angle_delt, nconnect, tmpNode.NeighbourList, firstNeighb, secondNeighb)
+  call GET_MIN_ANGLE_POINTS(angle_delt, nconnect, tmpNode%NeighbourList, firstNeighb, secondNeighb)
 
   if (associated (secondNeighb)) then
 !nis,dec06: Only the marker_slope of the passed node i is wanted!!!
@@ -378,7 +378,7 @@ outer1D: do i = 1, elcnt
     do j = 1,3
 !node, whose slopes shall be calculated      
       node2=nop(i,j)
-      tmpNode => findNodeInMeshByID (m_SimModel.femesh, node2)
+      tmpNode => findNodeInMeshByID (m_SimModel%femesh, node2)
       nconnect = noOfNeighbours (tmpNode)
 
       if (nconnect > 5) CYCLE outer1D
@@ -404,7 +404,7 @@ end do outer1D
 ! All point that have been marked as not detected (MARKER_SLOPE = .false.)
 ! the slope will be interpolated from the neighbouring points.
 !nis,dec06: Correction of line, replacing mnd with MaxP
-call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, m_SimModel.femesh)
+call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, m_SimModel%femesh)
 
 
 deallocate (marker_slope)
@@ -490,7 +490,7 @@ implicit none
 REAL(kind=8), DIMENSION(1:100), INTENT(IN)      :: angle_delt
 INTEGER, INTENT(IN)                             :: anz
 type (linkedNode), pointer :: neighbourList
-! node no.ID of nearest neighbour
+! node no%ID of nearest neighbour
 type (node), pointer :: firstNode    
 ! node no ID of second nearest neighbour
 type (node), pointer :: secondNode   
@@ -521,18 +521,18 @@ do i = 1, anz
   if (angle_delt(i) < 0.0) then
     if (ABS (angle_delt (i)) < ABS (min_angle_neg) ) then
       min_angle_neg = angle_delt(i)
-      negNode => tmpNode.thisNode
+      negNode => tmpNode%thisNode
       min_nr_neg = i
     end if
 ! angle_delt(i) => 0.0
   else 
     if (angle_delt(i) < min_angle_pos) then
       min_angle_pos = angle_delt(i)
-      posNode => tmpNode.thisNode
+      posNode => tmpNode%thisNode
       min_nr_pos = i
     end if
   end if
-  tmpNode => tmpNode.next
+  tmpNode => tmpNode%next
 end do
 
 !Turn around the order of the first and the second node, depending on the minimum absolute angle
@@ -656,15 +656,15 @@ eliminate: do
      temp_slope = 0.0
      temp_eslope= 0.0
 
-     neighbourNode => tmpNode.neighbourList
+     neighbourNode => tmpNode%neighbourList
      all_neighb: do j = 1, nconnect
-       if ( marker_slope(NeighbourNode.thisNode.ID) .AND. ( .NOT. IsPolynomNode (NeighbourNode.thisNode.ID))) then
+       if ( marker_slope(NeighbourNode%thisNode%ID) .AND. ( .NOT. IsPolynomNode (NeighbourNode%thisNode%ID))) then
          temp_anz   = temp_anz + 1
-         temp_slope = temp_slope + slope(NeighbourNode.thisNode.ID)
-         temp_eslope = temp_eslope + eslope(NeighbourNode.thisNode.ID)
+         temp_slope = temp_slope + slope(NeighbourNode%thisNode%ID)
+         temp_eslope = temp_eslope + eslope(NeighbourNode%thisNode%ID)
        end if
 
-       neighbourNode => neighbourNode.next
+       neighbourNode => neighbourNode%next
      end do all_neighb
 
 ! Interpolated value will only be applied     
@@ -765,11 +765,11 @@ he_pn = rausv(3,pn) + ((v_pn**2)/(2*9.81))
 ! -------
 ! The vector is heading exactly towards point FIRST_NEIGHB
 ! SECOND_NEIGHB is set to 0 in subroutine GET_MIN_ANGLE_POINTS.
-if (second_neighb.ID == 0) then
-  cross_v    = SQRT(rausv(1,first_neighb.ID)**2 + rausv(2,first_neighb.ID)**2)
-  d_cross_pn = SQRT( (cord(first_neighb.ID,1) - cord(pn,1))**2 + (cord(first_neighb.ID,2) - cord(pn,2))**2 )
-  slope(pn)  = ABS( (rausv(3,first_neighb.ID) - rausv(3,pn)) / d_cross_pn )
-  he_cross   = rausv(3,first_neighb.ID) + ((cross_v**2)/(2*9.81))
+if (second_neighb%ID == 0) then
+  cross_v    = SQRT(rausv(1,first_neighb%ID)**2 + rausv(2,first_neighb%ID)**2)
+  d_cross_pn = SQRT( (cord(first_neighb%ID,1) - cord(pn,1))**2 + (cord(first_neighb%ID,2) - cord(pn,2))**2 )
+  slope(pn)  = ABS( (rausv(3,first_neighb%ID) - rausv(3,pn)) / d_cross_pn )
+  he_cross   = rausv(3,first_neighb%ID) + ((cross_v**2)/(2*9.81))
   eslope(pn) = ABS( (he_pn - he_cross) / d_cross_pn )
 !nis,dec06: Detected error, because line just counts for one node, by the way: only one value is needed in this subroutine
 !  marker_slope = .true.
@@ -784,7 +784,7 @@ end if
 ! Flow depth of at point FIRST_NEIGHB or SECOND_NEIGHB is very small
 ! e.g. the node is about to fall dry or rewet or the node is dry.
 ! => No slope will be calculated.
-if (vel(3,first_neighb.ID) < 0.01 .OR. vel(3,second_neighb.ID) < 0.01) then
+if (vel(3,first_neighb%ID) < 0.01 .OR. vel(3,second_neighb%ID) < 0.01) then
   slope(pn) = 0.0
   eslope(pn)= 0.0
 !nis,dec06: Only one value is needed in this subroutine
@@ -832,10 +832,10 @@ ax = cord(pn,1)
 ay = cord(pn,2)
 bx = angle_v(1)
 by = angle_v(2)
-cx = cord(first_neighb.ID,1)
-cy = cord(first_neighb.ID,2)
-dx = cord(second_neighb.ID,1) - cord(first_neighb.ID,1)
-dy = cord(second_neighb.ID,2) - cord(first_neighb.ID,2)
+cx = cord(first_neighb%ID,1)
+cy = cord(first_neighb%ID,2)
+dx = cord(second_neighb%ID,1) - cord(first_neighb%ID,1)
+dy = cord(second_neighb%ID,2) - cord(first_neighb%ID,2)
 
 a(1,1) = bx
 a(1,2) = -dx
@@ -868,25 +868,25 @@ cross_y = ay + X(1) * by
 ! -------------------------------------------
 
 ! Difference of water-level elevation between first- and second_neighb.
-h_1_2 = rausv(3,first_neighb.ID) - rausv(3,second_neighb.ID)
+h_1_2 = rausv(3,first_neighb%ID) - rausv(3,second_neighb%ID)
 
 ! Difference of velocity between first- and second_neighb.
-v_1   = SQRT(rausv(1, first_neighb.ID)**2 + rausv(2,first_neighb.ID)**2)
-v_2   = SQRT(rausv(1, second_neighb.ID)**2 + rausv(2,second_neighb.ID)**2)
+v_1   = SQRT(rausv(1, first_neighb%ID)**2 + rausv(2,first_neighb%ID)**2)
+v_2   = SQRT(rausv(1, second_neighb%ID)**2 + rausv(2,second_neighb%ID)**2)
 v_1_2 = v_1 - v_2
 
 ! Distance between first- and second_neighb.
-temp1 = (cord(second_neighb.ID,1) - cord(first_neighb.ID,1))**2
-temp2 = (cord(second_neighb.ID,2) - cord(first_neighb.ID,2))**2
+temp1 = (cord(second_neighb%ID,1) - cord(first_neighb%ID,1))**2
+temp2 = (cord(second_neighb%ID,2) - cord(first_neighb%ID,2))**2
 d_1_2 = SQRT(temp1 + temp2)
 
 ! Distance between cross point and second_neighb.
-temp1 = (cross_x - cord(second_neighb.ID,1))**2
-temp2 = (cross_y - cord(second_neighb.ID,2))**2
+temp1 = (cross_x - cord(second_neighb%ID,1))**2
+temp2 = (cross_y - cord(second_neighb%ID,2))**2
 d_cross_2 = SQRT(temp1 + temp2)
 
 ! Elevation at cross point
-cross_h = h_1_2 * (d_cross_2/d_1_2) + rausv(3,second_neighb.ID)
+cross_h = h_1_2 * (d_cross_2/d_1_2) + rausv(3,second_neighb%ID)
 
 ! Velocity at cross point
 cross_v = v_1_2 * (d_cross_2/d_1_2) + v_2

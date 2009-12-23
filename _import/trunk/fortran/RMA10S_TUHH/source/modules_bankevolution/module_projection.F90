@@ -306,7 +306,7 @@ prs:       if ((PRESENT(oldpr_index)) .AND. (rel_d-rel_dd>0.001))  then
              
                if ( .NOT. intsec) then
                 oldprofile%prnode(i)%fe_nodenumber = -ABS(u)
-                oldprofile.prnode(i).attribute = 'overhang'
+                oldprofile%prnode(i)%attribute = 'overhang'
 
 ! to make sure that a positive value is assaigned to new profile's Fe-nodenumber.
                 newprofile%prnode(current_index + j)%fe_nodenumber = ABS(u)               
@@ -325,7 +325,7 @@ prs:       if ((PRESENT(oldpr_index)) .AND. (rel_d-rel_dd>0.001))  then
              
              elseif (u == 0 .AND. .NOT. intsec ) then
              
-              oldprofile.prnode(i).attribute = 'overhang'
+              oldprofile%prnode(i)%attribute = 'overhang'
              
              end if
 
@@ -345,7 +345,7 @@ prs:       if ((PRESENT(oldpr_index)) .AND. (rel_d-rel_dd>0.001))  then
              else             sec
    
               oldprofile%prnode(i)%fe_nodenumber = -ABS(u)
-              oldprofile.prnode(i).attribute = 'overhang'
+              oldprofile%prnode(i)%attribute = 'overhang'
 
 ! to make sure that a positive value is assaigned to new profile's Fe-nodenumber.
               newprofile%prnode(current_index + j)%fe_nodenumber = ABS(u)                 

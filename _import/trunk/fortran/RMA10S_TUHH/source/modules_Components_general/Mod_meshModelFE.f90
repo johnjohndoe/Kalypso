@@ -22,9 +22,9 @@ contains
     
     allocate (newMesh)
     if (present (ID)) then
-      newMesh.ID = ID
+      newMesh%ID = ID
     else
-      newMesh.ID = 1
+      newMesh%ID = 1
     endif
     newFEMesh => newMesh
     return
@@ -37,7 +37,7 @@ contains
 !arguments    
     type (FEmesh), pointer :: mesh
     integer (kind = 4), intent (in) :: size
-    mesh.nodes => newBaseDTree (size)
+    mesh%nodes => newBaseDTree (size)
   end subroutine
 
 !add a new node to the mesh; it will be sorted to the proper locatin by the decimal tree  
@@ -46,7 +46,7 @@ contains
 !arguments    
     type (FEmesh), pointer :: mesh
     type (node), pointer :: node2Add
-    call addElement2Tree (mesh.nodes, node2Add.ID, node2Add)
+    call addElement2Tree (mesh%nodes, node2Add%ID, node2Add)
   end subroutine
   
   
@@ -58,7 +58,7 @@ contains
     type (FEmesh), pointer :: mesh
     integer (kind = 4) :: nodeID
 !get the node; it will be searched by the decimal tree    
-    node => getElementByID (mesh.nodes, nodeID)
+    node => getElementByID (mesh%nodes, nodeID)
     return
   end function
   

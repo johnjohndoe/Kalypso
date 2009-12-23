@@ -386,9 +386,9 @@ nodisnose:        if ( nose(j)%nextnode< 0) then
                     tens_pr%prnode(i+p)%attribute     = 'nose'
                      
                      if (j==1) then 
-                       tens_pr.Lnose = i+p
+                       tens_pr%Lnose = i+p
                      else
-                       tens_pr.Rnose = i+p
+                       tens_pr%Rnose = i+p
                      end if
                     
                     if (r1 /= 0) then
@@ -647,7 +647,7 @@ belowabove:          if (wsl1 -z2 >0.001) then
                 
               else 
                 temp_pr(j)%Lfront = n
-                ava_pr.Lfront     = n
+                ava_pr%Lfront     = n
               end if    
                  
             else if ( (J == 1) .AND. ( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'nose')) then   
@@ -657,7 +657,7 @@ belowabove:          if (wsl1 -z2 >0.001) then
                 cycle
               else 
                 temp_pr(j)%Lnose = n
-                ava_pr.Lnose     = n
+                ava_pr%Lnose     = n
               end if    
 
             else if ( (J == 2) .AND. ( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'front')) then
@@ -673,7 +673,7 @@ belowabove:          if (wsl1 -z2 >0.001) then
                 
               else 
                temp_pr(j)%Rfront = n
-               ava_pr.Rfront     = n
+               ava_pr%Rfront     = n
               end if    
  
             else if ( (J == 2) .AND. ( trim(AdjustL(temp_pr(j)%prnode(p)%attribute)) == 'nose')) then   
@@ -683,7 +683,7 @@ belowabove:          if (wsl1 -z2 >0.001) then
                 cycle
               else 
                temp_pr(j)%Rnose = n
-               ava_pr.Rnose     = n
+               ava_pr%Rnose     = n
               end if    
           
             end if   
@@ -715,10 +715,10 @@ belowabove:          if (wsl1 -z2 >0.001) then
 
 end do  outer
 
-!if ( ava_pr.Lfront/= 0) then
-!  EffectiveWidth_Overhang (1)= (ava_pr.Prnode(ava_pr.Lnose).distance - ava_pr.Prnode(ava_pr.Lfront).distance)*1.2
-!elseif ( ava_pr.Rfront/= 0) then
-!  EffectiveWidth_Overhang (2)= ABS(ava_pr.Prnode(ava_pr.Rnose).distance - ava_pr.Prnode(ava_pr.Rfront).distance)*1.2
+!if ( ava_pr%Lfront/= 0) then
+!  EffectiveWidth_Overhang (1)= (ava_pr%Prnode(ava_pr%Lnose).distance - ava_pr%Prnode(ava_pr%Lfront).distance)*1.2
+!elseif ( ava_pr%Rfront/= 0) then
+!  EffectiveWidth_Overhang (2)= ABS(ava_pr%Prnode(ava_pr%Rnose).distance - ava_pr%Prnode(ava_pr%Rfront).distance)*1.2
 !end if
 
    ava_pr%max_nodes = n
@@ -809,9 +809,9 @@ if (mode == 1) then
 ! currently fenode deactivated (since only mode=2 is used),otherwise fenode should be defined     
 ! as argument of the subroutine     
       
-!    fenode(Tlowernode).elevation   = fenode(Tlowernode).elevation  + DELTAB  
+!    fenode(Tlowernode)%elevation   = fenode(Tlowernode)%elevation  + DELTAB
      
-      pr_lower.elevation = pr_lower.elevation+ DELTAB
+      pr_lower%elevation = pr_lower%elevation+ DELTAB
       ELEVB(Tlowernode)  = ELEVB(Tlowernode) + DELTAB
         TTHICK(Tlowernode) = TTHICK(Tlowernode)+ DELTAB
         DELBED(Tlowernode) = DELBED(Tlowernode)+ DELTAB

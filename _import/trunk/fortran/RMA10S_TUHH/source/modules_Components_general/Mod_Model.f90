@@ -42,7 +42,7 @@ contains
     
     allocate (newModel)
     newSimulationModel => newModel
-    if (present (modelID)) newSimulationModel.ID = modelID
+    if (present (modelID)) newSimulationModel%ID = modelID
     return
   end function
   
@@ -58,7 +58,7 @@ contains
 
     checkForInnerBCs = .false.
     checkBoundaries: do i = 1, ncl
-      if (ccls(i).isInnerBoundary) then
+      if (ccls(i)%isInnerBoundary) then
         checkForInnerBCs = .true.
         exit checkBoundaries
       endif
@@ -79,8 +79,8 @@ contains
     
     checkForSchwarzConvergence = .false.
     checkSchwarzConv: do i = 1, ncl
-      if (ccls(i).isInnerBoundary) then
-        if (ccls(i).innerCondition.isSchwarzConv) then
+      if (ccls(i)%isInnerBoundary) then
+        if (ccls(i)%innerCondition%isSchwarzConv) then
           checkForSchwarzConvergence = .true.
           exit checkSchwarzConv
         endif
@@ -148,13 +148,13 @@ contains
     call openFileObject (modIDsFile)
     
 !read the model's ID    
-    read (modIDsFile.unit, *) simModel.ID
+    read (modIDsFile%unit, *) simModel%ID
     
     ioStatus = 0
 !read the neighbour IDs    
     readNeighb: do 
 !read the next data line to find a new neighbour      
-      read (modIDsFile.unit, *, iostat = ioStatus) tempID
+      read (modIDsFile%unit, *, iostat = ioStatus) tempID
 
 !get out of here, if file is at the end      
       if (ioStatus /= 0) then
@@ -179,7 +179,7 @@ contains
     type (linkedSimModel), pointer :: newLnkdMod => null()
     
     allocate (newLnkdMod)
-    newLnkdMod.m_SimModel => simModel
+    newLnkdMod%m_SimModel => simModel
     newLinkedModel => newLnkdMod
     return
   end function
@@ -193,21 +193,21 @@ contains
 !local variables    
     type (linkedSimModel), pointer :: last
     
-    if (associated (simModel.modelNeighb)) then
-      last => simModel.modelNeighb
+    if (associated (simModel%modelNeighb)) then
+      last => simModel%modelNeighb
 
       findLast: do
-        if (associated (last.next)) then
-          last => last.next
+        if (associated (last%next)) then
+          last => last%next
         else
           exit findLast
         endif
       end do findLast
       
-      last.next => newLinkedModel (simModel2Add)
+      last%next => newLinkedModel (simModel2Add)
     else
       last => newLinkedModel (simModel2Add)
-      simModel.modelNeighb => last
+      simModel%modelNeighb => last
     endif
   end subroutine
 

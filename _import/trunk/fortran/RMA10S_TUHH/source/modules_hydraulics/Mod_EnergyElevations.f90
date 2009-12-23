@@ -20,11 +20,11 @@ subroutine AvgElementEnergyLevels (energyLevelValue, Element, ElementType)
   integer (kind = 4), intent (in) :: Element
   integer (kind = 4), intent (in) :: ElementType
   
-  energyLevelValue.bedLevel = AvgBottomLevelElt (Element, ElementType)
-  energyLevelValue.veloHead = AvgKinEnergyLevelElt (Element, ElementType)
-  energyLevelValue.pressHead = max (AvgPiezoLevelElt (Element, ElementType) - energyLevelValue.bedLevel, 0.0d0)
-  energyLevelValue.total = energyLevelValue.veloHead + energyLevelValue.bedLevel + energyLevelValue.pressHead
-  energyLevelValue.specific = energyLevelValue.veloHead + energyLevelValue.pressHead
+  energyLevelValue%bedLevel = AvgBottomLevelElt (Element, ElementType)
+  energyLevelValue%veloHead = AvgKinEnergyLevelElt (Element, ElementType)
+  energyLevelValue%pressHead = max (AvgPiezoLevelElt (Element, ElementType) - energyLevelValue%bedLevel, 0.0d0)
+  energyLevelValue%total = energyLevelValue%veloHead + energyLevelValue%bedLevel + energyLevelValue%pressHead
+  energyLevelValue%specific = energyLevelValue%veloHead + energyLevelValue%pressHead
 end subroutine
 
 function AvgBottomLevelElt (FEElt, Elttype)

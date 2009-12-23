@@ -88,7 +88,7 @@ subroutine writeInnerBoundaryConditons (m_simModel, schwarzIt, calcStep, ccls, n
   integer (kind = 4) :: i
 
 !Generate and open BC output file  
-  write (BCOutFilename, '(a3,a,a1,i5.5,a1,i3.3)') 'BC_', trim(m_SimModel.ID), '_', calcStep, '_',schwarzIt 
+  write (BCOutFilename, '(a3,a,a1,i5.5,a1,i3.3)') 'BC_', trim(m_SimModel%ID), '_', calcStep, '_',schwarzIt
   BCOutFile => newFile (fileName = BCOutFilename, fileStatus = 'REPLACE')
   call openFileObject (BCOutFile, .true.)
 
@@ -97,11 +97,11 @@ subroutine writeInnerBoundaryConditons (m_simModel, schwarzIt, calcStep, ccls, n
 !1. line ID and BC type classification  
 !2. values for each node inside the line  
   writeInnerConditions: do i = 1, ncl
-    if (ccls(i).isInnerBoundary) then
+    if (ccls(i)%isInnerBoundary) then
       tmpCCL => ccls(i)
       call write_innerBC (BCOutFile, tmpCCL, vel(1:3, 1:maxp), wsll(1:maxp), cord(1:maxp, 1:2))
 !unassign read in boundary conditions      
-      tmpCCL.innerCondition.isAssigned = .false.
+      tmpCCL%innerCondition%isAssigned = .false.
     endif 
   enddo writeInnerConditions
 !close the BC file  
@@ -126,10 +126,10 @@ function getNeighbourBCFiles (schwarzIt, calcStep, m_SimModel) result (bcFiles)
   
 !initializations  
   bcFiles => null()
-  tmpNeighbour => m_simModel.modelNeighb
+  tmpNeighbour => m_simModel%modelNeighb
 
   generateFileNames: do
-    write(bcFileName, '(a3,a,a1,i5.5,a1,i3.3)') 'BC_',trim(tmpNeighbour.m_simModel.ID), '_', calcStep, '_', schwarzIt
+    write(bcFileName, '(a3,a,a1,i5.5,a1,i3.3)') 'BC_',trim(tmpNeighbour%m_simModel%ID), '_', calcStep, '_', schwarzIt
     bcFile => newFile (fileName = bcFileName, fileStatus = 'OLD')
 !Add file to the list    
     if (associated (bcFiles)) then
@@ -139,8 +139,8 @@ function getNeighbourBCFiles (schwarzIt, calcStep, m_SimModel) result (bcFiles)
     endif
 !prepare for next file or leave loop    
     nullify (bcFile)
-    if ( .NOT. (associated (tmpNeighbour.next))) exit generateFileNames
-    tmpNeighbour => tmpNeighbour.next
+    if ( .NOT. (associated (tmpNeighbour%next))) exit generateFileNames
+    tmpNeighbour => tmpNeighbour%next
   end do generateFileNames
   
   return
@@ -188,7 +188,7 @@ subroutine getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
     if ( .NOT. (associated (currentFile))) exit waitLoop
 
     checkFiles: do
-      bcFile => currentFile.data
+      bcFile => currentFile%data
 !open the found file      
       if (FileExists(bcFile)) then
         call openFileObject (bcFile)
@@ -196,7 +196,7 @@ subroutine getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
 !read the file until new boundary line is found with the file        
         findBCLine: do
           istat = 0
-          read (bcFile.unit, '(a)', iostat = istat) readInLine
+          read (bcFile%unit, '(a)', iostat = istat) readInLine
           read (readInLine,*) lineString
           if (istat /= 0) exit findBCLine
 
@@ -207,10 +207,10 @@ subroutine getNeighbourBCs (bcFiles, ccls, ncl, maxp, spec, nfix)
             findProperCCL: do i =1, ncl
               tmpCCL => ccls(i)
 !Don't care about outer boundary lines              
-              if ( .NOT. (tmpCCL.isInnerBoundary)) cycle findProperCCL
-              if (tmpCCL.InnerCondition.IsAssigned) cycle findProperCCL
+              if ( .NOT. (tmpCCL%isInnerBoundary)) cycle findProperCCL
+              if (tmpCCL%InnerCondition%IsAssigned) cycle findProperCCL
   
-                if (tmpCCL.innerCondition.globalID == tmpBCLineID) then
+                if (tmpCCL%innerCondition%globalID == tmpBCLineID) then
                 call createInnerBCFunction (tmpBCLineType, bcFile, hFunction, vxFunction, vyFunction)
                 call getBCValues (tmpCCL, hFunction, vxFunction, vyFunction, spec(1:maxp,1:3), nfix(1:maxp))
               end if
@@ -254,8 +254,8 @@ subroutine improveBCs (improveAlgo, ccls, ncl, spec, maxp)
   
   do i = 1, ncl
     tmpCCL => ccls (i)
-    if (tmpCCL.isInnerBoundary .AND. associated (tmpCCL.firstNode.thisNode.previousBC)) then
-      if (tmpCCL.innerCondition.BCtype == enum_H_BCtype) call improveNodalBC (improveAlgo, tmpCCL, spec (1:maxp, 1:3))
+    if (tmpCCL%isInnerBoundary .AND. associated (tmpCCL%firstNode%thisNode%previousBC)) then
+      if (tmpCCL%innerCondition%BCtype == enum_H_BCtype) call improveNodalBC (improveAlgo, tmpCCL, spec (1:maxp, 1:3))
     end if
   end do
 end subroutine
@@ -277,7 +277,7 @@ subroutine storeOldInnerBoundaryConditions (ccls, spec, ncl, maxp)
 !Store old BCs  
   do i = 1, ncl
     tmpCCL => ccls(i)
-    if (tmpCCL.isInnerBoundary .AND. associated (tmpCCL.firstNode.thisNode.currentBC)) call storeOldBCs (tmpCCL, spec(1:maxp, 1:3))
+    if (tmpCCL%isInnerBoundary .AND. associated (tmpCCL%firstNode%thisNode%currentBC)) call storeOldBCs (tmpCCL, spec(1:maxp, 1:3))
   end do
 end subroutine
 
@@ -303,10 +303,10 @@ function checkSchwarzConvergence (ccls, ncl, schwarzConv) result (schwarzConvSta
 !Check, if assumption is true  
   checkSchwarzConv: do i = 1, ncl
     tmpCCL => ccls (i)
-    if ( .NOT. (tmpCCL.isInnerBoundary)) cycle checkSchwarzConv
-    if (associated (tmpCCL.firstNode.thisNode.previousBC)) then
+    if ( .NOT. (tmpCCL%isInnerBoundary)) cycle checkSchwarzConv
+    if (associated (tmpCCL%firstNode%thisNode%previousBC)) then
       call checkBoundaryConv (tmpCCL, schwarzConv)
-      if ( .NOT. (tmpCCL.innerCondition.isSchwarzConv)) schwarzConvStatus = .false.
+      if ( .NOT. (tmpCCL%innerCondition%isSchwarzConv)) schwarzConvStatus = .false.
     else
       schwarzConvStatus = .false.
     endif
@@ -338,13 +338,13 @@ subroutine nullifyInnerBCstatus (ccls, nfix, nfixp, alfa, ncl)
   
   do i = 1, ncl
     tmpCCL => ccls(i)
-    if (tmpCCL.isInnerBoundary) then
-      currNode => tmpCCL.firstNode
+    if (tmpCCL%isInnerBoundary) then
+      currNode => tmpCCL%firstNode
       resetBCStatus: do 
-        nfix (currNode.thisNode.ID) = -1
-        nfixp(currNode.thisNode.ID) = -1
-        if ( .NOT. (associated (currNode.next))) exit resetBCStatus
-        currNode => currNode.next
+        nfix (currNode%thisNode%ID) = -1
+        nfixp(currNode%thisNode%ID) = -1
+        if ( .NOT. (associated (currNode%next))) exit resetBCStatus
+        currNode => currNode%next
       end do resetBCStatus
     end if
   end do
@@ -362,7 +362,7 @@ subroutine setInnerBC_NFIX (ccls, ncl, nfix)
   
   do i = 1, ncl
     tmpCCL => ccls(i)
-    if (tmpCCL.isInnerBoundary) call innerType_NFIX (tmpCCL, nfix)
+    if (tmpCCL%isInnerBoundary) call innerType_NFIX (tmpCCL, nfix)
   enddo
   
 end subroutine

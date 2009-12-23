@@ -166,7 +166,7 @@ call UpdateFenodes (FENODES , numberofnodes)
 ! old_pr and fenode are local variables in bank evolution PACKAGE, shared within its modules.
 ! old_pr is a global variable defined in share_profile module.
 old_pr = BANKPROFILES        
-FENODES.sed_source =0.0
+FENODES%sed_source =0.0
 ! FENODES IS DEFINED IN MODULE SHARE_PROFILE AND ASSIGNED IN SUBROUTINE INPUT.FOR
 fenode = FENODES             
 
@@ -376,7 +376,7 @@ profnod: do j=1, old_pr(i)%max_nodes-1
                END if
         end if
 ! transfer source term to global variable EXTLD, which is global external source term for sand computation in total load trasport.
-!      EXTLD = fenode.Sed_source 
+!      EXTLD = fenode%Sed_source
 
 ! If either of the overhang's noses is submerged then the following block is executed
       
@@ -680,7 +680,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then
 ! in the following the application of (-) sign will reverse their sign  
 ! for updating bed features.  
   
-    DiffBed = FENODES.elevation - fenode.elevation         
+    DiffBed = FENODES%elevation - fenode%elevation
      
       ELEVB  = ELEVB  - DiffBed
       TTHICK = TTHICK - DiffBed
@@ -723,7 +723,7 @@ rightbank:      if (pr%prnode(g)%fe_nodenumber > 0) then
           HEL(N)=WSLL(N)-ADO(N)
           CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
         VEL(3,N)=HTP
-        fenode(N).elevation = ao(N)
+        fenode(N)%elevation = ao(N)
       ENDIF
 
       ENDDO
@@ -937,10 +937,10 @@ end if
  LeftRightBank: do  j = 1, LR
  
   if ( j == 1) then
-  origin = CurrentProfile.Prnode(1).Distance
+  origin = CurrentProfile%Prnode(1)%Distance
   Increment(1) = 1
   elseif (j == 2) then
-  origin = CurrentProfile.Prnode(CurrentProfile.max_nodes).Distance
+  origin = CurrentProfile%Prnode(CurrentProfile%max_nodes)%Distance
   Increment(2) = -1
   endif 
   
@@ -957,8 +957,8 @@ end if
 
 ! in the case that no bank erosion has occured on either of bank side cycle to the next one. 
  if( (FirstNode == 0) .OR. (LastNode == 0) ) cycle  LeftRightBank     
- StartDistance = ABS (CurrentProfile.Prnode(FirstNode).Distance - origin)
- EndDistance   = ABS (CurrentProfile.Prnode(LastNode).Distance  - origin)
+ StartDistance = ABS (CurrentProfile%Prnode(FirstNode)%Distance - origin)
+ EndDistance   = ABS (CurrentProfile%Prnode(LastNode)%Distance  - origin)
  
  EffectiveBanktoeWidth = EndDistance - StartDistance
  
@@ -972,7 +972,7 @@ end if
 NodDistr: do i = FirstNode, LastNode , Increment(j)
  
 ! relative distance to the origin
-           RelativeDistance = ABS (CurrentProfile.Prnode(i).Distance - origin )   
+           RelativeDistance = ABS (CurrentProfile%Prnode(i)%Distance - origin )
 ! relative distance to the starting point of distribution (first wet node from each bank)
            RelativeDistance = ABS (RelativeDistance - StartDistance )   
  
@@ -989,7 +989,7 @@ NodDistr: do i = FirstNode, LastNode , Increment(j)
            TrapezoidRule    = 0.5 * (DistributingRate + PreviousDistributingRate)* &
            &                        ( RelativeDistance - PreviousDistance )  
          
-           m                = CurrentProfile.Prnode(i).Fe_NodeNumber
+           m                = CurrentProfile%Prnode(i)%Fe_NodeNumber
            k                = i
            
 mass:     IF (MassMethod) Then
@@ -998,7 +998,7 @@ mass:     IF (MassMethod) Then
            
             call HasPrnodeFenode (CurrentProfile, k , Increment(j))
           
-            m = CurrentProfile.Prnode(k).Fe_NodeNumber
+            m = CurrentProfile%Prnode(k)%Fe_NodeNumber
           
 ! wasted source term in m^3 x kg/m^3            
             WastedSourceTerm = TrapezoidRule * WastedVolume(j) *(1- POROSITY)* SGSAND(m)* 1000.  
@@ -1028,8 +1028,8 @@ mass:     IF (MassMethod) Then
 !18.08.09   DELTAB = 0.9 * TrapezoidRule * WastedVolume(j)/ TRIBAREA (m) 
 !24.09.09   DELTAB =  TrapezoidRule * WastedVolume(j)/ (RelativeDistance - PreviousDistance) 
 
-             fenode(m).Sed_source = fenode(m).Sed_source +  NodalSource 
-             EXTLD (m)            = EXTLD (m)            +  fenode(m).Sed_source
+             fenode(m)%Sed_source = fenode(m)%Sed_source +  NodalSource
+             EXTLD (m)            = EXTLD (m)            +  fenode(m)%Sed_source
      
     
            else 
@@ -1044,19 +1044,19 @@ mass:     IF (MassMethod) Then
 
 ! compute the nodal source terms            
 
-              fenode(m).Sed_source = fenode(m).Sed_source + NodalSource 
-              EXTLD (m)            = EXTLD (m)            + fenode(m).Sed_source
+              fenode(m)%Sed_source = fenode(m)%Sed_source + NodalSource
+              EXTLD (m)            = EXTLD (m)            + fenode(m)%Sed_source
 
-!18.08.09     fenode(m).Sed_source = fenode(m).Sed_source +  NodalSource  
+!18.08.09     fenode(m)%Sed_source = fenode(m)%Sed_source +  NodalSource
 !18.08.09    EXTLD (m)            = EXTLD (m) + NodalSource        !   The fe_node_sed_source is totally identical to the EXTLD. 
-! EXTLD (m)            = EXTLD (m) + fenode(m).Sed_source            
+! EXTLD (m)            = EXTLD (m) + fenode(m)%Sed_source
 
            end if
            
            IF (k /= i) THEN
-             CurrentProfile.Prnode(k).elevation = CurrentProfile.Prnode(k).elevation + DELTAB
+             CurrentProfile%Prnode(k)%elevation = CurrentProfile%Prnode(k)%elevation + DELTAB
            ELSE
-             CurrentProfile.Prnode(i).elevation = CurrentProfile.Prnode(i).elevation + DELTAB
+             CurrentProfile%Prnode(i)%elevation = CurrentProfile%Prnode(i)%elevation + DELTAB
            END IF
            
           ELSE  mass
@@ -1064,8 +1064,8 @@ mass:     IF (MassMethod) Then
               DELTAB = 2.* TrapezoidRule * WastedVolume(j)/(RelativeDistance - PreviousDistance)- DELTAB_OLD 
    
 ! update the nodal elevations          
-              IF (m > 0 ) fenode(m).elevation    = fenode(m).elevation                + DELTAB
-              CurrentProfile.Prnode(i).elevation = CurrentProfile.Prnode(i).elevation + DELTAB
+              IF (m > 0 ) fenode(m)%elevation    = fenode(m)%elevation                + DELTAB
+              CurrentProfile%Prnode(i)%elevation = CurrentProfile%Prnode(i)%elevation + DELTAB
         
           END IF mass
           
@@ -1101,12 +1101,12 @@ subroutine HasPrnodeFenode (ThisProfile, ProfileNode , increment)
 !mutiplication factor to find the next profile node with conjugated Fe node in finding bank-toe.
  nxt = 1                
 
-    if (ThisProfile.Prnode(ProfileNode).fe_nodenumber == 0) then     
+    if (ThisProfile%Prnode(ProfileNode)%fe_nodenumber == 0) then
     temp = ProfileNode
   
   ffn:do 
      
-       if (ThisProfile.prnode(temp + increment*nxt).fe_nodenumber /= 0 )then 
+       if (ThisProfile%prnode(temp + increment*nxt)%fe_nodenumber /= 0 )then
        ProfileNode = temp + increment*nxt
        exit ffn
        end if
@@ -1145,33 +1145,33 @@ SELECT CASE ( callcount)
 ! initialize the fenode array with the model data of input.for
  CASE (2)        
 
-fenod.typ ='corner'
-fenod.sed_source = 0.0
-fenod.Profile_Number = 0
-fenod.statuss ='deactivate'
+fenod%typ ='corner'
+fenod%sed_source = 0.0
+fenod%Profile_Number = 0
+fenod%statuss ='deactivate'
   
   do i = 1,no
-     fenod(i).Node_Number = 0
-     fenod(i).elevation = ao(i)
-     fenod(i).water_level = wsll(i)          
+     fenod(i)%Node_Number = 0
+     fenod(i)%elevation = ao(i)
+     fenod(i)%water_level = wsll(i)
     
   end do
    
 ! Assign profileID of each fenode.   
      do j = 1,SIZ
-      do k = 1,BANKPROFILES (j).max_nodes
-        nn = abs(BANKPROFILES (j).Prnode(k).fe_nodenumber)
+      do k = 1,BANKPROFILES (j)%max_nodes
+        nn = abs(BANKPROFILES (j)%Prnode(k)%fe_nodenumber)
         if (nn /= 0) then
-         fenod(nn).Node_Number = k
-         fenod(nn).Profile_Number = j
-         BANKPROFILES (j).Prnode(k).Water_elev = fenod(nn).water_level
+         fenod(nn)%Node_Number = k
+         fenod(nn)%Profile_Number = j
+         BANKPROFILES (j)%Prnode(k)%Water_elev = fenod(nn)%water_level
         end if
       end do   
      end do
 ! find the midside nodes  
   DO i = 1, maxe
    DO j =  2,ncorn(i),2
-     fenod ( NOP(i,j) ).typ='midside'
+     fenod ( NOP(i,j) )%typ='midside'
    end do
   end do   
  
@@ -1202,16 +1202,16 @@ implicit none
 ! check if the node elevation has changed, activate the stattus of fenode and activate the corresponding bankprofile.
   DO I = 1, NO
   
-  fenod(i).water_level = wsll(i)
-  Diff = abs (fenod(i).elevation - ao(i) )
-  fenod(i).elevation = ao(i)
+  fenod(i)%water_level = wsll(i)
+  Diff = abs (fenod(i)%elevation - ao(i) )
+  fenod(i)%elevation = ao(i)
   
    if (diff >= 1.E-5) then
-     fenod(i).statuss ='activate'
+     fenod(i)%statuss ='activate'
      
-    if ( fenod(i).Profile_Number /= 0) then
-     nn = fenod(i).Profile_Number
-     BankProfiles(nn).Activation = .TRUE.
+    if ( fenod(i)%Profile_Number /= 0) then
+     nn = fenod(i)%Profile_Number
+     BankProfiles(nn)%Activation = .TRUE.
     end if
   
    end if

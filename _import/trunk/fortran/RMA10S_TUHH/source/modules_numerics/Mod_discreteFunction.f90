@@ -63,9 +63,9 @@ module mod_discreteFunction
     type (discrQuadrFunSeg), pointer :: new => null()
     
     allocate (new)
-    if (present (firstPair)) new.first => firstPair
-    if (present (firstPair)) new.middle => middlePair
-    if (present (firstPair)) new.last => lastPair
+    if (present (firstPair)) new%first => firstPair
+    if (present (firstPair)) new%middle => middlePair
+    if (present (firstPair)) new%last => lastPair
     
     newDiscrQuadrFunSeg => new
     return
@@ -85,9 +85,9 @@ module mod_discreteFunction
     type (linkedDiscrQuadrFunSeg), pointer, optional :: prev
     
     allocate (linkedFun)
-    linkedFun.this => QuadrFunSeg
-    if (present (next)) linkedFun.nextSeg => next
-    if (present (prev)) linkedFun.prevSeg => prev
+    linkedFun%this => QuadrFunSeg
+    if (present (next)) linkedFun%nextSeg => next
+    if (present (prev)) linkedFun%prevSeg => prev
     
     return
   end function
@@ -104,25 +104,25 @@ module mod_discreteFunction
     real (kind = 8) :: x1, x2, x3, y1, y2, y3
     
 !Assignments for shorter code    
-    x1 = quadrFun.first.abszissa
-    x2 = quadrFun.middle.abszissa
-    x3 = quadrFun.last.abszissa
-    y1 = quadrFun.first.ordinate
-    y2 = quadrFun.middle.ordinate
-    y3 = quadrFun.last.ordinate
+    x1 = quadrFun%first%abszissa
+    x2 = quadrFun%middle%abszissa
+    x3 = quadrFun%last%abszissa
+    y1 = quadrFun%first%ordinate
+    y2 = quadrFun%middle%ordinate
+    y3 = quadrFun%last%ordinate
     
 !calculate quadratic coefficient    
     zaehler = (y1 - y2) * (x1 - x3) - (y1 - y3) * (x1 - x2)
     nenner = (x1**2 - x2**2) * (x1 - x3) - (x1**2 - x3**2) * (x1 - x2)
-    quadrFun.coefs(2) = zaehler / nenner
+    quadrFun%coefs(2) = zaehler / nenner
     
 !calculate linear coefficient    
-    zaehler = ((y1 - y2) - quadrFun.coefs(2) * (x1**2 - x2**2))
+    zaehler = ((y1 - y2) - quadrFun%coefs(2) * (x1**2 - x2**2))
     nenner = (x1 - x2)
-    quadrFun.coefs(1) = zaehler/ nenner
+    quadrFun%coefs(1) = zaehler/ nenner
     
 !calculate constant    
-    quadrFun.coefs(0) = y1 - quadrFun.coefs(1) * x1 - quadrFun.coefs(2) * x1**2
+    quadrFun%coefs(0) = y1 - quadrFun%coefs(1) * x1 - quadrFun%coefs(2) * x1**2
 
   end subroutine
 
@@ -152,15 +152,15 @@ module mod_discreteFunction
 !discrete function to put the pair to    
     type (discrQuadrFun), pointer :: relationship
     
-    if ( .NOT. (associated (relationship.first))) then
-      relationship.first => Segment
+    if ( .NOT. (associated (relationship%first))) then
+      relationship%first => Segment
     else
-      if ( .NOT. (associated (relationship.first.nextSeg))) relationship.first.nextSeg => Segment
-      relationship.last.nextSeg => Segment
-      relationship.last.nextSeg.prevSeg => relationship.last
+      if ( .NOT. (associated (relationship%first%nextSeg))) relationship%first%nextSeg => Segment
+      relationship%last%nextSeg => Segment
+      relationship%last%nextSeg%prevSeg => relationship%last
     endif
 
-    relationship.last => Segment
+    relationship%last => Segment
   end subroutine
 
 !---------------------------------------------------------------------------------
@@ -177,9 +177,9 @@ module mod_discreteFunction
     type (linkedDiscreteFunction), pointer :: tmpFun => null()
     
     allocate (tmpFun)
-    tmpFun.this => newDiscrFun ()
-    if (present (ID)) tmpFun.ID = ID
-    if (present (CurveValue)) tmpFun.CurveValue = CurveValue
+    tmpFun%this => newDiscrFun ()
+    if (present (ID)) tmpFun%ID = ID
+    if (present (CurveValue)) tmpFun%CurveValue = CurveValue
     
     newLinkedFun => tmpFun
     return
@@ -199,17 +199,17 @@ module mod_discreteFunction
     type (valuePair), pointer :: new, temp
     
     allocate (new)
-    new.abszissa = absz
-    new.ordinate = ordin
+    new%abszissa = absz
+    new%ordinate = ordin
     
-    if ( .NOT. (associated (relationship.first))) then
-      relationship.first => new
+    if ( .NOT. (associated (relationship%first))) then
+      relationship%first => new
     else
-      if ( .NOT. (associated (relationship.first.nextPair))) relationship.first.nextPair => new
-      relationship.last.nextPair => new
-      relationship.last.nextPair.prevPair => relationship.last
+      if ( .NOT. (associated (relationship%first%nextPair))) relationship%first%nextPair => new
+      relationship%last%nextPair => new
+      relationship%last%nextPair%prevPair => relationship%last
     endif
-    relationship.last => new
+    relationship%last => new
   end subroutine
   
 !---------------------------------------------------------------------------------
@@ -225,8 +225,8 @@ module mod_discreteFunction
     real (kind = 8), intent (in) :: absz, ordin
 
     allocate (newValuePair)
-    newValuePair.abszissa = absz
-    newValuePair.ordinate = ordin
+    newValuePair%abszissa = absz
+    newValuePair%ordinate = ordin
     
     return
   end function
@@ -263,25 +263,25 @@ module mod_discreteFunction
 !allocate local pointer variables    
     allocate (lb)
 !check for position below first entry    
-    if (xValue <= relationship.first.abszissa) then
-      functionValue = relationship.first.ordinate
+    if (xValue <= relationship%first%abszissa) then
+      functionValue = relationship%first%ordinate
     
     else
 !find lower Bound      
       lB = lowerBoundPair (relationship, xValue)
       
 !linear extrapolation beyond upper border by given slope or slopeextrapolation f      
-      if ( .NOT. (associated (lB.nextPair))) then
-        functionValue = lB.prevPair.ordinate + difference (lB.prevPair, xValue) * derivative(relationship, xValue)
+      if ( .NOT. (associated (lB%nextPair))) then
+        functionValue = lB%prevPair%ordinate + difference (lB%prevPair, xValue) * derivative(relationship, xValue)
       
 !normal situation      
       else
 !calculate function value        
-        if (xValue == lB.abszissa) then
+        if (xValue == lB%abszissa) then
 !if it is exactly the same as the sampling point of the function          
-          functionValue = lB.ordinate
+          functionValue = lB%ordinate
         else
-          functionValue = lB.ordinate + difference (lB, xValue)* derivative (relationship, xValue)
+          functionValue = lB%ordinate + difference (lB, xValue)* derivative (relationship, xValue)
         endif
       endif
     endif
@@ -303,14 +303,14 @@ module mod_discreteFunction
     type (linkedDiscrQuadrFunSeg), pointer :: funSeg
     real (kind = 8) :: calcPolynomial
     
-    funSeg => relationship.first
+    funSeg => relationship%first
     
     calcValue: do
-      if ((associated (funSeg.nextSeg) .AND. xValue <= funSeg.this.last.abszissa) .OR. ( .NOT. (associated (funSeg.nextSeg)))) then
-        quadrFunValue = calcPolynomial(funSeg.this.coefs(0:2), xValue, 2)
+      if ((associated (funSeg%nextSeg) .AND. xValue <= funSeg%this%last%abszissa) .OR. ( .NOT. (associated (funSeg%nextSeg)))) then
+        quadrFunValue = calcPolynomial(funSeg%this%coefs(0:2), xValue, 2)
         return
       endif
-      funSeg => funSeg.nextSeg
+      funSeg => funSeg%nextSeg
     end do calcValue
 
   end function      
@@ -333,7 +333,7 @@ module mod_discreteFunction
     allocate (lB)
     
 !check for position below first entry    
-    if (xValue < relationship.first.abszissa) then
+    if (xValue < relationship%first%abszissa) then
 !send derivative of constant function      
       derivative = 0.0d0
       
@@ -342,13 +342,13 @@ module mod_discreteFunction
       lB = lowerBoundPair (relationship, xValue)
       
 !extrapolate derivative, if beyond upper border      
-      if ( .NOT. (associated (lB.nextPair))) then
-        derivative = (lB.ordinate - lB.prevPair.ordinate) / interval(lB.prevPair)
+      if ( .NOT. (associated (lB%nextPair))) then
+        derivative = (lB%ordinate - lB%prevPair%ordinate) / interval(lB%prevPair)
         
 !normal situation      
       else
 !calculate segments numerical derivative (chord)        
-        derivative = lB.nextPair.ordinate - lB.ordinate
+        derivative = lB%nextPair%ordinate - lB%ordinate
         derivative = derivative / interval (lB)
       endif
     endif
@@ -368,18 +368,18 @@ module mod_discreteFunction
     type (discreteFunction), pointer :: relationship
     real (kind = 8) :: xValue
     
-    lowerBoundPair = relationship.first
+    lowerBoundPair = relationship%first
     
 !if value below lower border    
-    if (xValue < relationship.first.abszissa) return
+    if (xValue < relationship%first%abszissa) return
 
     findBound: do
 !no higher abszissa value available, so finished      
-      if ( .NOT. (associated (lowerBoundPair.nextPair))) exit findBound
+      if ( .NOT. (associated (lowerBoundPair%nextPair))) exit findBound
 !exit on x-Value in between to discrete points      
-      if (lowerBoundPair.abszissa <= xValue .AND. xValue < lowerBoundPair.nextPair.abszissa) exit findBound
+      if (lowerBoundPair%abszissa <= xValue .AND. xValue < lowerBoundPair%nextPair%abszissa) exit findBound
 !take next Pair      
-      lowerBoundPair = lowerBoundPair.nextPair
+      lowerBoundPair = lowerBoundPair%nextPair
     enddo findBound
 
     return
@@ -395,8 +395,8 @@ module mod_discreteFunction
 !arguments    
     type (valuePair), pointer :: lowerBound
     
-    if (associated (lowerBound.nextPair)) then
-      interval = lowerBound.nextPair.abszissa - lowerBound.abszissa
+    if (associated (lowerBound%nextPair)) then
+      interval = lowerBound%nextPair%abszissa - lowerBound%abszissa
     else
       interval = 0.0d0
     endif
@@ -415,7 +415,7 @@ module mod_discreteFunction
     real (kind = 8) :: xValue
 
 
-    difference = xValue - lowerBound.abszissa
+    difference = xValue - lowerBound%abszissa
     return
   end function
     

@@ -53,8 +53,8 @@ CONTAINS
 !allocate new contiLine    
     allocate (new)
 !set parameters    
-    new.ID = ID
-    if (present (km)) new.km = km
+    new%ID = ID
+    if (present (km)) new%km = km
 !overgive the new contiLine    
     newContiLine => new
     return
@@ -71,8 +71,8 @@ CONTAINS
     type (innerBC), pointer :: newBC
     
     allocate (newBC)
-    if (present (globalID)) newBC.globalID = globalID
-    if (present (BCtype))newBC.BCtype = BCtype
+    if (present (globalID)) newBC%globalID = globalID
+    if (present (BCtype))newBC%BCtype = BCtype
     
     newInnerBC => newBC
     return
@@ -90,14 +90,14 @@ CONTAINS
     type (linkedNode), pointer :: temp => null()
     
 !associate the passedNode    
-    if ( .NOT. (associated (ccl.firstNode))) then
-      ccl.firstNode => nextNode
+    if ( .NOT. (associated (ccl%firstNode))) then
+      ccl%firstNode => nextNode
     else
-      ccl.lastNode.next => nextNode
-      ccl.lastNode.next.prev => ccl.lastNode
+      ccl%lastNode%next => nextNode
+      ccl%lastNode%next%prev => ccl%lastNode
     endif 
 !change last node    
-    ccl.lastNode => nextNode
+    ccl%lastNode => nextNode
   end subroutine
   
 !-----------------------------------------------------------------------------------------------
@@ -117,21 +117,21 @@ CONTAINS
     nextArc => null()
     currArc => null()
 !check for 1D ccl    
-    if (associated (ccl.firstNode.next) .AND. ( .NOT. (associated (ccl.lastNode.next)))) then
+    if (associated (ccl%firstNode%next) .AND. ( .NOT. (associated (ccl%lastNode%next)))) then
       calcSegs: do 
 !get ID of previous arc        
         if ( .NOT. (associated (nextArc)))  allocate (nextArc)
-        if ( .NOT. (associated (ccl.firstSegment))) currNode => ccl.firstNode
-        if ( .NOT. (associated (currNode.next))) exit calcSegs
-        nextArc = newArc (currNode.thisNode, currNode.next.thisNode)
-        if ( .NOT. (associated (ccl.firstSegment))) ccl.firstSegment => nextArc
+        if ( .NOT. (associated (ccl%firstSegment))) currNode => ccl%firstNode
+        if ( .NOT. (associated (currNode%next))) exit calcSegs
+        nextArc = newArc (currNode%thisNode, currNode%next%thisNode)
+        if ( .NOT. (associated (ccl%firstSegment))) ccl%firstSegment => nextArc
         if ( .NOT. (associated (currArc))) then
           currArc => nextArc
         else
-          currArc.nextSeg => nextArc
+          currArc%nextSeg => nextArc
           currArc => nextArc
         endif
-        currNode => currNode.next
+        currNode => currNode%next
         nullify (nextArc)
       enddo calcSegs
     endif 
@@ -149,12 +149,12 @@ CONTAINS
     real (kind = 8), dimension (1:2) :: cclVec
     real (kind = 8) :: cclNormalPointer
     
-    if (associated (ccl.firstSegment)) then
+    if (associated (ccl%firstSegment)) then
       allocate (tmpSeg)
-      tmpSeg = newArc (ccl.firstNode.thisNode, ccl.lastNode.thisNode)
+      tmpSeg = newArc (ccl%firstNode%thisNode, ccl%lastNode%thisNode)
       cclVec = arcVector (tmpSeg)
 !z-component of vector cross product      
-      cclNormalPointer = ccl.posNormal(1) * cclVec (2) - ccl.posNormal(2) * cclVec (1)
+      cclNormalPointer = ccl%posNormal(1) * cclVec (2) - ccl%posNormal(2) * cclVec (1)
       if (cclNormalPointer < 0.0d0) then
         cclNormalPointer = -1.0d0
       elseif (cclNormalPointer > 0.0d0) then
@@ -165,12 +165,12 @@ CONTAINS
       endif
       deallocate (tmpSeg)
    
-      tmpSeg => ccl.firstSegment
+      tmpSeg => ccl%firstSegment
     
       assignSegNormals: do
-        tmpSeg.posNormal = defaultNormal (tmpSeg, cclNormalPointer)
-        if ( .NOT. (associated (tmpSeg.nextSeg))) exit assignSegNormals
-        tmpSeg => tmpSeg.nextSeg
+        tmpSeg%posNormal = defaultNormal (tmpSeg, cclNormalPointer)
+        if ( .NOT. (associated (tmpSeg%nextSeg))) exit assignSegNormals
+        tmpSeg => tmpSeg%nextSeg
       enddo assignSegNormals
     endif
   end subroutine
@@ -184,7 +184,7 @@ CONTAINS
 !arguments    
     type (contiLine), pointer :: ccl
     integer (kind = 4), intent (in) :: ID
-    ccl.ID = ID
+    ccl%ID = ID
   end subroutine
   
 !-----------------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ CONTAINS
 !arguments    
     type (contiLine), pointer :: ccl
     real (kind = 8), intent (in) :: km
-    ccl.km = km
+    ccl%km = km
   end subroutine
   
 !-----------------------------------------------------------------------------------------------
@@ -209,19 +209,19 @@ CONTAINS
     type (arc), pointer :: tmpArc
     
 !check for 1D ccls (on 2D ccls, the first node always has a following one)    
-    if (associated (ccl.firstNode.next)) then
+    if (associated (ccl%firstNode%next)) then
 !if to process allocate new arc      
       allocate (tmpArc)
 !create temporary arc out of ccl's chord      
-      tmpArc = newArc (ccl.firstNode.thisNode, ccl.lastNode.thisNode)
+      tmpArc = newArc (ccl%firstNode%thisNode, ccl%lastNode%thisNode)
       
 !calculate the standard positiveNormal, if there's no normal already calculated      
-      if (ccl.posNormal(1) == 0.0d0 .AND. ccl.posNormal(2) == 0.0d0) then
-        ccl.posNormal = defaultNormal (tmpArc)
+      if (ccl%posNormal(1) == 0.0d0 .AND. ccl%posNormal(2) == 0.0d0) then
+        ccl%posNormal = defaultNormal (tmpArc)
 !check, whether it is really a normal      
       else
-        tmpArc.posNormal = ccl.posNormal
-        ccl.posNormal = gramSchmidtUnitNormal (tmpArc)
+        tmpArc%posNormal = ccl%posNormal
+        ccl%posNormal = gramSchmidtUnitNormal (tmpArc)
       endif
     endif 
   end subroutine
@@ -236,15 +236,15 @@ CONTAINS
     integer (kind = 4), optional :: globalID
     integer (kind = 4), optional :: BCtype
     
-    if ( .NOT. (associated (ccl.innerCondition))) then
+    if ( .NOT. (associated (ccl%innerCondition))) then
       if (present (globalID) .AND. present (BCtype)) then
-        ccl.innerCondition => newInnerBC (globalID, BCtype)
+        ccl%innerCondition => newInnerBC (globalID, BCtype)
       elseif (present (globalID)) then
-        ccl.innerCondition => newInnerBC (globalID = globalID)
+        ccl%innerCondition => newInnerBC (globalID = globalID)
       elseif (present (BCtype)) then
-        ccl.innerCondition => newInnerBC (BCtype = BCtype)
+        ccl%innerCondition => newInnerBC (BCtype = BCtype)
       else
-        ccl.innerCondition => newInnerBC ()
+        ccl%innerCondition => newInnerBC ()
       endif
     endif
   end subroutine
@@ -271,59 +271,59 @@ CONTAINS
     
 
 !Write header of boundary condition block, containing the line ID and the boundary condition type to be written    
-    setFileName: select case (ccl.InnerCondition.BCtype)
+    setFileName: select case (ccl%InnerCondition%BCtype)
       case (enum_H_BCtype)
-        write (BCOutFile.unit, *) 'Line: ', ccl.innerCondition.globalID, 'Type: ', enum_V_BCtype
+        write (BCOutFile%unit, *) 'Line: ', ccl%innerCondition%globalID, 'Type: ', enum_V_BCtype
       case (enum_V_BCtype)
-        write (BCOutFile.unit, *) 'Line: ', ccl.innerCondition.globalID, 'Type: ', enum_H_BCtype
+        write (BCOutFile%unit, *) 'Line: ', ccl%innerCondition%globalID, 'Type: ', enum_H_BCtype
     end select setFileName
     
 !get first node    
-    tmpNode => ccl.firstNode
+    tmpNode => ccl%firstNode
     ndCnter = 0
 
 !just for a testing case with constant water level at transition    
-    call getLineAverageWaterLevel (ccl.ID, waspi)
+    call getLineAverageWaterLevel (ccl%ID, waspi)
     
     forNodes: do
       ndCnter = ndCnter + 1
 !write values      
-      switch: select case (ccl.InnerCondition.BCtype)
+      switch: select case (ccl%InnerCondition%BCtype)
 
 !H-Boundary condition has to hand out velocity boundary conditions        
         case (enum_H_BCtype)
-          nodeID = tmpNode.thisNode.ID
+          nodeID = tmpNode%thisNode%ID
           qx = vel (1, nodeID) * vel (3, nodeID)
           qy = vel (2, nodeID) * vel (3, nodeID)
-!write (tmpString, *)  tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), vel(1,tmpNode.thisNode.ID), vel (2, tmpNode.thisNode.ID)          
-          write (tmpString, *)  tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), qx, qy
+!write (tmpString, *)  tmpNode%thisNode%ID, tmpNode%thisNode%cord(1), tmpNode%thisNode%cord(2), vel(1,tmpNode%thisNode%ID), vel (2, tmpNode%thisNode%ID)
+          write (tmpString, *)  tmpNode%thisNode%ID, tmpNode%thisNode%cord(1), tmpNode%thisNode%cord(2), qx, qy
 
 !V-boundary conditions has to hand out water level boundary conditions        
         case (enum_V_BCtype)
-!            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), waspi
+!            write (tmpString, *) tmpNode%thisNode%ID, tmpNode%thisNode%cord(1), tmpNode%thisNode%cord(2), waspi
 
 
 !midside node          
           if (mod(ndCnter, 2) == 0) then
-            write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.thisNode.ID)
+            write (tmpString, *) tmpNode%thisNode%ID, tmpNode%thisNode%cord(1), tmpNode%thisNode%cord(2), wsll(tmpNode%thisNode%ID)
           else
 !first corner node            
-            if (tmpNode.thisNode.ID == ccl.firstNode.thisNode.ID) then
-              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.next.thisNode.ID)
+            if (tmpNode%thisNode%ID == ccl%firstNode%thisNode%ID) then
+              write (tmpString, *) tmpNode%thisNode%ID, tmpNode%thisNode%cord(1), tmpNode%thisNode%cord(2), wsll(tmpNode%next%thisNode%ID)
 !last corner node            
-            elseif (tmpNode.thisNode.ID == ccl.lastNode.thisNode.ID) then
-              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), wsll(tmpNode.prev.thisNode.ID)
+            elseif (tmpNode%thisNode%ID == ccl%lastNode%thisNode%ID) then
+              write (tmpString, *) tmpNode%thisNode%ID, tmpNode%thisNode%cord(1), tmpNode%thisNode%cord(2), wsll(tmpNode%prev%thisNode%ID)
 !any corner node in between            
             else 
-              write (tmpString, *) tmpNode.thisNode.ID, tmpNode.thisNode.cord(1), tmpNode.thisNode.cord(2), 0.5 * (wsll(tmpNode.prev.thisNode.ID) + wsll(tmpNode.next.thisNode.ID))
+              write (tmpString, *) tmpNode%thisNode%ID, tmpNode%thisNode%cord(1), tmpNode%thisNode%cord(2), 0.5 * (wsll(tmpNode%prev%thisNode%ID) + wsll(tmpNode%next%thisNode%ID))
             endif
           endif
       end select switch
-      write (BCOutFile.unit,'(a)')  tmpString
+      write (BCOutFile%unit,'(a)')  tmpString
       
 !get next node      
-      if ( .NOT. (associated (tmpNode.next))) exit forNodes
-      tmpNode => tmpNode.next
+      if ( .NOT. (associated (tmpNode%next))) exit forNodes
+      tmpNode => tmpNode%next
     end do forNodes
   end subroutine
 
@@ -376,12 +376,12 @@ CONTAINS
     
     readCCLData: do
 !Read the data lines      
-      read (inputFile.unit, '(a)', iostat = istat) inputLine
+      read (inputFile%unit, '(a)', iostat = istat) inputLine
       if (istat /= 0) exit readCCLData
       read (inputLine, *) LineString
       
       if (lineString == 'Line:') then
-        backspace (inputFile.unit)
+        backspace (inputFile%unit)
         exit readCCLData
       else
         
@@ -396,10 +396,10 @@ CONTAINS
 
             tmpNode => newNode (nodeID, xCord, yCord)
             
-            if ( .NOT. (associated (hFunction.first))) then
+            if ( .NOT. (associated (hFunction%first))) then
               ordinate = 0.0d0
             else
-              ordinate = ordinate + sqrt ((tmpNode.cord(1) - lastNode.cord(1))**2 + (tmpNode.cord(2) - lastNode.cord(2))**2)
+              ordinate = ordinate + sqrt ((tmpNode%cord(1) - lastNode%cord(1))**2 + (tmpNode%cord(2) - lastNode%cord(2))**2)
             endif
             call addPair (hFunction, ordinate, tmpWSLL)
 
@@ -422,7 +422,7 @@ CONTAINS
               firstKoteVy => newValuePair (0.0d0, tmpVy)
 
             else
-              ordinate = ordinate + sqrt ((tmpNode.cord(1) - lastNode.cord(1))**2 + (tmpNode.cord(2) - lastNode.cord(2))**2)
+              ordinate = ordinate + sqrt ((tmpNode%cord(1) - lastNode%cord(1))**2 + (tmpNode%cord(2) - lastNode%cord(2))**2)
               if ( .NOT. (associated (MidsideKoteVx))) then
                 MidsideKoteVx => newValuePair (ordinate, tmpVx)
                 MidsideKoteVy => newValuePair (ordinate, tmpVy)
@@ -466,66 +466,69 @@ CONTAINS
     real (kind = 8) :: thet
     real (kind = 8) :: a(1:2), b(1:2)
     
-    tmpNode => tmpCCL.firstNode
+    tmpNode => tmpCCL%firstNode
     localOrdinate = 0.0d0
-    throughNodes: do
+
+    throughNodes : do
 !re-initializations      
-      nfix (tmpNode.thisNode.ID) = 0
-      spec (tmpNode.thisNode.ID, :) = 0.0d0
+      nfix (tmpNode%thisNode%ID) = 0
+      spec (tmpNode%thisNode%ID, :) = 0.0d0
       if (associated (hFunction)) then
-        spec (tmpNode.thisNode.ID, 3) = functionValue (hFunction, localOrdinate)
-        nfix (tmpNode.thisNode.ID) = 00200
-        if (tmpNode.thisNode.ID == tmpCCl.firstNode.thisNode.ID .OR. tmpNode.thisNode.ID == tmpCCl.lastNode.thisNode.ID) nfix(tmpNode.thisNode.ID) = nfix(tmpNode.thisNode.ID) + 1000
+        spec (tmpNode%thisNode%ID, 3) = functionValue (hFunction, localOrdinate)
+        nfix (tmpNode%thisNode%ID) = 00200
+        if (tmpNode%thisNode%ID == tmpCCl%firstNode%thisNode%ID .OR. tmpNode%thisNode%ID == tmpCCl%lastNode%thisNode%ID) then
+        	nfix(tmpNode%thisNode%ID) = nfix(tmpNode%thisNode%ID) + 1000
+        end if
       elseif (associated (vxFunction)) then
-        spec (tmpNode.thisnode.ID, 1) = quadrFunValue (vxFunction, localOrdinate)
-        spec (tmpNode.thisnode.ID, 2) = quadrFunValue (vyFunction, localOrdinate)
-!nfix (tmpNode.thisNode.ID) = 11000        
-        nfix (tmpNode.thisNode.ID) = 31000
+        spec (tmpNode%thisnode%ID, 1) = quadrFunValue (vxFunction, localOrdinate)
+        spec (tmpNode%thisnode%ID, 2) = quadrFunValue (vyFunction, localOrdinate)
+!nfix (tmpNode%thisNode%ID) = 11000
+        nfix (tmpNode%thisNode%ID) = 31000
 !fix directions of outer nodes first!      
-      if (tmpNode == tmpCCL.firstNode .OR. tmpNode == tmpCCL.lastNode) then
-        if (spec (tmpNode.thisNode.ID, 2) == 0) then
+      if (tmpNode == tmpCCL%firstNode .OR. tmpNode == tmpCCL%lastNode) then
+        if (spec (tmpNode%thisNode%ID, 2) == 0) then
           thet = 0.0
         else
 !scalar product of spec-vector with (1 0) vector to find angle between global direction          
 !                 a * b          
 !thet = arccos -----------          
 !               |a| * |b|          
-          a = [spec(tmpNode.thisNode.ID, 1), spec (tmpNode.thisNode.ID, 2)]
+          a = [spec(tmpNode%thisNode%ID, 1), spec (tmpNode%thisNode%ID, 2)]
           b = [1.0d0, 0.0d0]
           thet = acos ((a(1) * b(1) + a(2) * b(2))/ (sqrt (a(1)**2 + a(2)**2) * sqrt (b(1)**2 + b(2)**2)))
-          thet = thet * (spec (tmpNode.thisNode.ID, 2)/ abs (spec (tmpNode.thisNode.ID, 2)))
+          thet = thet * (spec (tmpNode%thisNode%ID, 2)/ abs (spec (tmpNode%thisNode%ID, 2)))
           if (thet < 0) thet = thet + 2* ConstPI
         endif
       endif
-      if (tmpNode == tmpCCL.firstNode) then
-        call fixDirection (tmpNode.thisNode.ID, tmpNode.next.thisNode.ID, tmpNode.next.next.thisNode.ID, thet)
-      elseif (tmpNode == tmpCCL.lastNode) then
-        call fixDirection (tmpNode.thisNode.ID, tmpNode.prev.thisNode.ID, tmpNode.prev.prev.thisNode.ID, thet)
+      if (tmpNode == tmpCCL%firstNode) then
+        call fixDirection (tmpNode%thisNode%ID, tmpNode%next%thisNode%ID, tmpNode%next%next%thisNode%ID, thet)
+      elseif (tmpNode == tmpCCL%lastNode) then
+        call fixDirection (tmpNode%thisNode%ID, tmpNode%prev%thisNode%ID, tmpNode%prev%prev%thisNode%ID, thet)
       endif
       end if
         
 !update boundary condition to the model      
-      call bform (tmpNode.thisNode.ID)
+      call bform (tmpNode%thisNode%ID)
       
 !Write them to the node      
-      if (associated (tmpNode.thisNode.currentBC)) then
+      if (associated (tmpNode%thisNode%currentBC)) then
 !set new value        
-        call setBC (tmpNode.thisNode.currentBC, spec (tmpNode.thisNode.id, 1:3))
+        call setBC (tmpNode%thisNode%currentBC, spec (tmpNode%thisNode%id, 1:3))
 !assign new boundary condition, if not existent yet and set values      
       else
-        tmpNode.thisNode.currentBC => newBC (bc_type = tmpccl.innerCondition.bctype, bc_value = spec (tmpNode.thisNode.id, 1:3))
+        tmpNode%thisNode%currentBC => newBC (bc_type = tmpccl%innerCondition%bctype, bc_value = spec (tmpNode%thisNode%id, 1:3))
       endif
 
-      if (associated (tmpNode.next)) then
-        tmpNode => tmpNode.next
-        localOrdinate = localOrdinate + sqrt ((tmpNode.thisNode.cord(1) - tmpNode.prev.thisNode.cord(1))**2 + (tmpNode.thisNode.cord(2) - tmpNode.prev.thisNode.cord(2))**2)
+      if (associated (tmpNode%next)) then
+        tmpNode => tmpNode%next
+        localOrdinate = localOrdinate + sqrt ((tmpNode%thisNode%cord(1) - tmpNode%prev%thisNode%cord(1))**2 + (tmpNode%thisNode%cord(2) - tmpNode%prev%thisNode%cord(2))**2)
       else
         exit throughNodes
       endif
 
     end do throughNodes
   
-  end subroutine       
+  end subroutine
 
   
   subroutine storeOldBCs (ccl, spec)
@@ -537,23 +540,23 @@ CONTAINS
     type (linkedNode), pointer :: tmpNode => null()
     real (kind = 8) :: local_spec(1:3)
     
-    tmpNode => ccl.firstNode
+    tmpNode => ccl%firstNode
     
     storeBCs: do
-      local_spec (1:2) = tmpNode.thisNode.currentBC.v(1:2)
-      local_spec (3)   = tmpNode.thisNode.currentBC.h
+      local_spec (1:2) = tmpNode%thisNode%currentBC%v(1:2)
+      local_spec (3)   = tmpNode%thisNode%currentBC%h
 !assign boundary condition, if not existent yet      
-      if (associated (tmpNode.thisNode.previousBC)) then
+      if (associated (tmpNode%thisNode%previousBC)) then
 !set old value        
-        call setBC (tmpNode.thisNode.previousBC, local_spec (1:3))
+        call setBC (tmpNode%thisNode%previousBC, local_spec (1:3))
 !assign new boundary condition, if not existent yet and set values      
       else
-        tmpNode.thisNode.previousBC => newBC (bc_type = ccl.innerCondition.bctype, bc_value = local_spec (1:3))
+        tmpNode%thisNode%previousBC => newBC (bc_type = ccl%innerCondition%bctype, bc_value = local_spec (1:3))
       endif
 
 !go to next node of line or leave loop      
-      if (associated (tmpNode.next)) then
-        tmpNode => tmpNode.next
+      if (associated (tmpNode%next)) then
+        tmpNode => tmpNode%next
       else
         exit storeBCs
       endif
@@ -570,40 +573,40 @@ CONTAINS
     real (kind = 8) :: maxChange(1:3) = [0.0d0, 0.0d0, 0.0d0]
     integer (kind = 4) :: i
     
-    tmpNode => ccl.firstNode
-    ccl.innerCondition.isSchwarzConv = .true.
+    tmpNode => ccl%firstNode
+    ccl%innerCondition%isSchwarzConv = .true.
     
 !initializations    
     maxChange (1:3) = [0.0d0, 0.0d0, 0.0d0]
     absChange (1:3) = [0.0d0, 0.0d0, 0.0d0]
     
     convCheck: do
-      selectConvCheckCase: select case (ccl.innerCondition.BCtype)
+      selectConvCheckCase: select case (ccl%innerCondition%BCtype)
         case (enum_H_BCtype)
 
-          if (tmpNode.thisNode.previousBC.h /= 0.0) then
+          if (tmpNode%thisNode%previousBC%h /= 0.0) then
 
 !Check for maximum change in boundary condition            
-            absChange(3) = abs ((tmpNode.thisNode.currentBC.h - tmpNode.thisNode.previousBC.h)/ (0.5* (tmpNode.thisNode.previousBC.h + tmpNode.thisNode.currentBC.h)))
+            absChange(3) = abs ((tmpNode%thisNode%currentBC%h - tmpNode%thisNode%previousBC%h)/ (0.5* (tmpNode%thisNode%previousBC%h + tmpNode%thisNode%currentBC%h)))
             if (absChange(3) > maxChange(3)) maxChange(3) = absChange(3)
-            if (maxChange(3) > convBorder .AND. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
+            if (maxChange(3) > convBorder .AND. ccl%innerCondition%isSchwarzConv) ccl%innerCondition%isSchwarzConv = .false.
           end if
           
         case (enum_V_BCtype)
         
           do i = 1, 2
-            if (tmpNode.thisNode.previousBC.v(i) /= 0.0) then
+            if (tmpNode%thisNode%previousBC%v(i) /= 0.0) then
 !Check for maximum change in boundary condition              
-              absChange(i) = abs ((tmpNode.thisNode.currentBC.v(i) - tmpNode.thisNode.previousBC.v(i))/ (0.5 * (tmpNode.thisNode.previousBC.v(i) + tmpNode.thisNode.currentBC.v(i))))
-            elseif (tmpNode.thisNode.previousBC.v(i) == 0.0 .AND. tmpNode.thisNode.currentBC.v(i) /= 0.0) then
+              absChange(i) = abs ((tmpNode%thisNode%currentBC%v(i) - tmpNode%thisNode%previousBC%v(i))/ (0.5 * (tmpNode%thisNode%previousBC%v(i) + tmpNode%thisNode%currentBC%v(i))))
+            elseif (tmpNode%thisNode%previousBC%v(i) == 0.0 .AND. tmpNode%thisNode%currentBC%v(i) /= 0.0) then
               absChange(i) = 1000.0
             end if
             if (absChange(i) > maxChange(i)) maxChange(i) = absChange(i)
-            if (maxChange(i) > convBorder .AND. ccl.innerCondition.isSchwarzConv) ccl.innerCondition.isSchwarzConv = .false.
+            if (maxChange(i) > convBorder .AND. ccl%innerCondition%isSchwarzConv) ccl%innerCondition%isSchwarzConv = .false.
           enddo
          end select selectConvCheckCase
-       if (associated (tmpNode.next)) then
-         tmpNode => tmpNode.next
+       if (associated (tmpNode%next)) then
+         tmpNode => tmpNode%next
        else
          exit convCheck
        endif
@@ -612,7 +615,7 @@ CONTAINS
 !write output to console    
 !-----------------------    
 !CCL    vx-conv max    vy-conv max    h-conv max'    
-    write (*,'(i5,3(2x,f13.6))') ccl.ID, (maxChange(i), i = 1, 3)
+    write (*,'(i5,3(2x,f13.6))') ccl%ID, (maxChange(i), i = 1, 3)
     
   end subroutine
   
@@ -626,25 +629,25 @@ CONTAINS
     type (linkedNode), pointer :: tmpNode => null()
     real (kind = 8) :: newh, newqx, newqy
     
-    tmpNode => ccl.firstNode
-    if (associated (tmpNode.thisNode.previousBC)) then
+    tmpNode => ccl%firstNode
+    if (associated (tmpNode%thisNode%previousBC)) then
       improveBCs: do
-        improvement: select case (ccl.InnerCondition.BCtype)
+        improvement: select case (ccl%InnerCondition%BCtype)
           case (enum_H_BCtype)
             himprove: select case (improveAlgo)
               case (enum_nestedIntervals)
-                tmpNode.thisNode.currentBC.H = 0.5 * (tmpNode.thisNode.currentBC.H + tmpNode.thisNode.previousBC.H)
-                spec (tmpNode.thisNode.ID, 3) = tmpNode.thisNode.currentBC.H
+                tmpNode%thisNode%currentBC%H = 0.5 * (tmpNode%thisNode%currentBC%H + tmpNode%thisNode%previousBC%H)
+                spec (tmpNode%thisNode%ID, 3) = tmpNode%thisNode%currentBC%H
             end select himprove
           case (enum_V_BCtype)
             qimprove: select case (improveAlgo)
               case (enum_nestedIntervals)
-                tmpNode.thisNode.currentBC.V = 0.5 * (tmpNode.thisNode.currentBC.V + tmpNode.thisNode.previousBC.V)
-                spec (tmpNode.thisNode.ID, 1:2) = tmpNode.thisNode.currentBC.V(1:2)
+                tmpNode%thisNode%currentBC%V = 0.5 * (tmpNode%thisNode%currentBC%V + tmpNode%thisNode%previousBC%V)
+                spec (tmpNode%thisNode%ID, 1:2) = tmpNode%thisNode%currentBC%V(1:2)
               end select qimprove
         end select improvement
-        if (associated (tmpNode.next)) then
-          tmpNode => tmpNode.next
+        if (associated (tmpNode%next)) then
+          tmpNode => tmpNode%next
         else
           exit improveBCs
         endif
@@ -660,18 +663,18 @@ CONTAINS
 !local variables    
     type (linkedNode), pointer :: tmpNode => null()
     
-    tmpNode => tmpCCL.firstNode
+    tmpNode => tmpCCL%firstNode
     
     setNFIX: do
-      select case (tmpCCL.innerCondition.BCType)
+      select case (tmpCCL%innerCondition%BCType)
         case (enum_H_BCtype)
-          nfix (tmpNode.thisNode.ID) = 0200
+          nfix (tmpNode%thisNode%ID) = 0200
         case (enum_V_BCtype)
-          nfix (tmpNode.thisNode.ID) = 31000
+          nfix (tmpNode%thisNode%ID) = 31000
        end select
        
-       if (associated (tmpNode.next)) then
-         tmpNode => tmpNode.next
+       if (associated (tmpNode%next)) then
+         tmpNode => tmpNode%next
        else
          exit setNFIX
        endif

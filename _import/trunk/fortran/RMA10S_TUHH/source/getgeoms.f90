@@ -458,9 +458,9 @@ enddo Weirdata
 !Read Volume Waterlevel Relationships of Storage Elements
 !--------------------------------------------------------
 
-if (associated (fileControl.volWlFil)) then
+if (associated (fileControl%volWlFil)) then
   localStorElt => StorageElts
-  call readVolumeWaterlevelFile (fileControl.volWlFil, localStorElt)
+  call readVolumeWaterlevelFile (fileControl%volWlFil, localStorElt)
 endif 
 
 

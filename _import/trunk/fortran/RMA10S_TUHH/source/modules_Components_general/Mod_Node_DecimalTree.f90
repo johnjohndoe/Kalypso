@@ -36,8 +36,8 @@ function newBaseDTree (noOfTotalEntries) result (baseTree)
   end do findLevel
 !set up tree and assign base level  
   allocate (baseTree)
-  baseTree.level = level
-  baseTree.ID = 0
+  baseTree%level = level
+  baseTree%ID = 0
   return
 end function
 
@@ -51,8 +51,8 @@ function newTree (level, ID)
   integer (kind = 4) :: ID
 !generate the tree  
   allocate (newTree)
-  newTree.level = level
-  newTree.ID = ID
+  newTree%level = level
+  newTree%ID = ID
   return
 end function
 
@@ -63,7 +63,7 @@ subroutine addElement2Subtree (tree, dataElement)
   type (decimalTree_Nodes), pointer :: tree
   type (node), pointer :: dataElement
 !add dataset to tree  
-  tree.nodeData => dataElement
+  tree%nodeData => dataElement
 end subroutine
 
 subroutine addElement2Tree (baseTree, elementID, dataElement)
@@ -92,7 +92,7 @@ function getElementByID (baseTree, ID) result (dataElement)
   type (decimalTree_Nodes), pointer :: subTree => null()
   
   subTree => getSubtreeFromBaseTreeByID (baseTree, ID)
-  dataElement => subTree.nodeData
+  dataElement => subTree%nodeData
   return
 end function
 
@@ -110,7 +110,7 @@ subroutine generateTreeForID (baseTree, ID)
   integer (kind = 4) :: level, i, startLevel
   
 !get the level IDs by the element ID  
-  startLevel = baseTree.level - 1
+  startLevel = baseTree%level - 1
   allocate (levelID (1:startLevel))
 !get level IDs  
   localID = ID
@@ -148,7 +148,7 @@ function getSubtreeFromBaseTreeByID (baseTree, ID) result (subTree)
   type (decimalTree_Nodes), pointer :: tmpTree
   
 !get the level IDs by the element ID  
-  startLevel = baseTree.level - 1
+  startLevel = baseTree%level - 1
   allocate (levelID (1:startLevel))
 !get level IDs  
   localID = ID
@@ -175,10 +175,10 @@ subroutine addTree (baseTree, tree2Add)
 !arguments  
   type (decimalTree_Nodes), pointer :: baseTree, tree2Add
   
-  if (associated (baseTree.subTree)) then
-    tree2Add.nextTree => baseTree.subTree
+  if (associated (baseTree%subTree)) then
+    tree2Add%nextTree => baseTree%subTree
   endif
-  baseTree.subTree => tree2Add
+  baseTree%subTree => tree2Add
 end subroutine
 
 
@@ -192,17 +192,17 @@ function hasSubtreeWithID (baseTree, ID)
 !local variables  
   type (decimalTree_Nodes), pointer :: tmpTree => null()
 !check for tree occurance  
-  if ( .NOT. (associated (baseTree.subtree))) then
+  if ( .NOT. (associated (baseTree%subtree))) then
     hasSubtreeWithID = .false.
   else
-    tmpTree => baseTree.subTree
+    tmpTree => baseTree%subTree
     findTree: do
-      if (tmpTree.ID == ID) then
+      if (tmpTree%ID == ID) then
         hasSubtreeWithID = .true.
         exit findTree
       end if
-      if (associated (tmpTree.nextTree)) then
-        tmpTree => tmpTree.nextTree
+      if (associated (tmpTree%nextTree)) then
+        tmpTree => tmpTree%nextTree
       else
         hasSubtreeWithID = .false.
         exit findTree
@@ -223,13 +223,13 @@ function getSubtreeFromCurrTreeByID (baseTree, ID) result (tree)
 !local variables  
   type (decimalTree_Nodes), pointer :: tmpTree => null()
   
-  tmpTree => baseTree.subtree
+  tmpTree => baseTree%subtree
   findTree: do
-    if (tmpTree.ID == ID) then
+    if (tmpTree%ID == ID) then
       tree => tmpTree
       exit findTree
     else
-      tmpTree => tmpTree.nextTree
+      tmpTree => tmpTree%nextTree
     endif
   enddo findTree
   return

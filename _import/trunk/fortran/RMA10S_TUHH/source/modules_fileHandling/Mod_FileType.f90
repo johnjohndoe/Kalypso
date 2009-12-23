@@ -27,9 +27,9 @@ contains
     
 !create the file    
     allocate (new) 
-    if (present (unitNo)) new.unit = unitNo
-    if (present (fileName)) new.name = fileName
-    if (present (fileStatus)) new.status = fileStatus
+    if (present (unitNo)) new%unit = unitNo
+    if (present (fileName)) new%name = fileName
+    if (present (fileStatus)) new%status = fileStatus
     
     newFile => new
     return
@@ -47,16 +47,16 @@ contains
     integer (kind = 4) :: ioerror = 0
     
     if (present (searchUnit)) then
-      if (searchUnit) File2Open.unit = findFreeUnit()
+      if (searchUnit) File2Open%unit = findFreeUnit()
     endif
     
 !open the file    
-    OPEN (unit = File2Open.unit, file = File2Open.name, IOSTAT = ioerror, status = File2Open.status)
+    OPEN (unit = File2Open%unit, file = File2Open%name, IOSTAT = ioerror, status = File2Open%status)
 !check for errors    
     if (ioerror /= 0) then
       call ErrorMessageAndStop (1013, 0, 0.0d0, 0.0d0)
     else
-      file2Open.IsOpen = .true.
+      file2Open%IsOpen = .true.
     endif
   end subroutine
   
@@ -68,8 +68,8 @@ contains
 !arguments    
     type (file), pointer :: file2Close
     
-    close (file2Close.unit)
-    file2Close.isOpen = .false.
+    close (file2Close%unit)
+    file2Close%isOpen = .false.
   
   end subroutine
   
@@ -85,7 +85,7 @@ contains
 !local variables    
     logical :: ex
     
-    inquire (file=inputFile.name, exist=ex)
+    inquire (file=inputFile%name, exist=ex)
     fileExists = ex
     
     return

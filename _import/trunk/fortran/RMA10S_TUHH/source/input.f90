@@ -771,7 +771,7 @@
      &   (CONV(J),J=1,6),idrpt,drfact, schwarzConv
 !
       if (iostatus == 0 .AND. schwarzConv > 0) then
-        m_SimModel.schwarzConv = schwarzConv
+        m_SimModel%schwarzConv = schwarzConv
       endif
 !IPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
@@ -1216,7 +1216,7 @@
 !if there is at least one continuity line          
           IF (NCL > 0) THEN
 !read on input file            
-            read (filecontrol.lin.unit, '(a)') inputline
+            read (filecontrol%lin%unit, '(a)') inputline
 !READ(lin,'(A3,A5,A72)') ID, IDString ,DLIN            
             all_CL: do k = 1, ncl
               nl = 1
@@ -1239,7 +1239,7 @@
 !
 !Read in the following nodes (CC2 lines)              
               endless: do
-                read(filecontrol.lin.unit,'(a)') inputline
+                read(filecontrol%lin%unit,'(a)') inputline
                 if (inputline(1:3) /= 'CC2') exit endless
                 nl = nl + 9
                 read (inputline(9:),'(9i8)') (line (i, j), j = nl, nl+8)
@@ -1247,21 +1247,21 @@
 !
 !look for positive normal side definition              
               if (inputLine(1:3) == 'CPN') then
-                read (inputLine(4:), *) tmp_singleCCL.posNormal(1),     &
-     &                                  tmp_singleCCL.posNormal(2)
+                read (inputLine(4:), *) tmp_singleCCL%posNormal(1),     &
+     &                                  tmp_singleCCL%posNormal(2)
 !read next line                
-                read (filecontrol.lin.unit, '(a)') inputLine
+                read (filecontrol%lin%unit, '(a)') inputLine
               endif
 !
 !Settle continuity line to be an inner boundary              
               if (inputLine(1:3) == 'ICL') then
-                tmp_singleCCL.isInnerBoundary = .true.
+                tmp_singleCCL%isInnerBoundary = .true.
                 call addInnerBC (ccl = tmp_singleCCL)
                 read (inputLine (4:), *)                                &
-     &                            tmp_singleCCL.innerCondition.globalID,&
-     &                            tmp_singleCCL.innerCondition.BCtype
+     &                            tmp_singleCCL%innerCondition%globalID,&
+     &                            tmp_singleCCL%innerCondition%BCtype
 !read next line                
-                read (filecontrol.lin.unit, '(a)') inputLine
+                read (filecontrol%lin%unit, '(a)') inputLine
               endif
 !
               lmt_loop: do j = min (nl + 9, 3535), 1, -1
@@ -1289,40 +1289,40 @@
 ! BANK PROFILES.               
 !
                read (inputLine(4:), *)ProfileID
-! tmp_singleCCL.ProifileID => ProfileIDD               
+! tmp_singleCCL%ProifileID => ProfileIDD
 ! case of restart profiles               
        IF731:  IF ( IPROFIN /= 731) THEN
 !
                BANKEVOLUTION = .TRUE.
-               tmp_singleCCL.HasProfile = .TRUE.
+               tmp_singleCCL%HasProfile = .TRUE.
 !
             ID0:IF ( ProfileID > 0 ) THEN
 !
-                 tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileID)
-                 BANKPROFILES(ProfileID).CL_NUMBER = i
+                 tmp_singleCCL%MorphoProfile =>BANKPROFILES(ProfileID)
+                 BANKPROFILES(ProfileID)%CL_NUMBER = i
 !
-                 WRITE (276,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID, &
-     &                  tmp_singleCCL.MorphoProfile.cl_number,          &
-     &                  tmp_singleCCL.MorphoProfile.max_nodes,          &
-     &                  tmp_singleCCL.HasProfile
-                 WRITE (*,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL.ID,   &
-     &                  tmp_singleCCL.MorphoProfile.cl_number,          &
-     &                  tmp_singleCCL.MorphoProfile.max_nodes,          &
-     &                  tmp_singleCCL.HasProfile
+                 WRITE (276,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL%ID, &
+     &                  tmp_singleCCL%MorphoProfile%cl_number,          &
+     &                  tmp_singleCCL%MorphoProfile%max_nodes,          &
+     &                  tmp_singleCCL%HasProfile
+                 WRITE (*,'(2(2x,i2),2x,I4,2x,L3)') tmp_singleCCL%ID,   &
+     &                  tmp_singleCCL%MorphoProfile%cl_number,          &
+     &                  tmp_singleCCL%MorphoProfile%max_nodes,          &
+     &                  tmp_singleCCL%HasProfile
 !
 !    do j =1,lmt(i)               
-                   do j =1,BANKPROFILES(ProfileID).max_nodes
+                   do j =1,BANKPROFILES(ProfileID)%max_nodes
                     WRITE (276,1013)                                    &
-     &              tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,&
-     &              tmp_singleCCL.MorphoProfile.prnode(j).distance,     &
-     &              tmp_singleCCL.MorphoProfile.prnode(j).elevation,    &
-     &              tmp_singleCCL.MorphoProfile.prnode(j).attribute
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%fe_nodenumber,&
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%distance,     &
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%elevation,    &
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%attribute
  1013               format (1X,I6,3X, 2(F8.4,3X), A9) 
                     WRITE (*,1013)                                      &
-     &              tmp_singleCCL.MorphoProfile.prnode(j).fe_nodenumber,&
-     &              tmp_singleCCL.MorphoProfile.prnode(j).distance,     &
-     &              tmp_singleCCL.MorphoProfile.prnode(j).elevation,    &
-     &              tmp_singleCCL.MorphoProfile.prnode(j).attribute
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%fe_nodenumber,&
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%distance,     &
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%elevation,    &
+     &              tmp_singleCCL%MorphoProfile%prnode(j)%attribute
 !
                    enddo
 !
@@ -1334,7 +1334,7 @@
 !
                ENDIF   IF731
 !
-               read (filecontrol.lin.unit, '(a)') inputLine
+               read (filecontrol%lin%unit, '(a)') inputLine
 !
             END IF PRFID
 !
@@ -1470,21 +1470,21 @@
       getCoords: do i = 1, ncl
 !get contiLine        
         tmp_singleCCL => ccls(i)
-        if (associated (tmp_singleCCL.firstNode)) then
-          tmpNode => tmp_singleCCL.firstNode
-          if (associated (tmpNode.next)) then
+        if (associated (tmp_singleCCL%firstNode)) then
+          tmpNode => tmp_singleCCL%firstNode
+          if (associated (tmpNode%next)) then
             assignCoords: do 
-              call setCoords (tmpNode.thisNode,                         &
-     &          cord (tmpNode.thisNode.ID, 1:2),                        &
-     &          ao(tmpNode.thisNode.ID))
-              if ( .NOT. (associated (tmpNode.next))) exit assignCoords
-              tmpNode => tmpNode.next
+              call setCoords (tmpNode%thisNode,                         &
+     &          cord (tmpNode%thisNode%ID, 1:2),                        &
+     &          ao(tmpNode%thisNode%ID))
+              if ( .NOT. (associated (tmpNode%next))) exit assignCoords
+              tmpNode => tmpNode%next
             enddo assignCoords
             call setChordNormal (tmp_singleCCL)
             call calcSegments (tmp_singleCCL)
             call assignSegPosNormals (tmp_singleCCL)
           else
-            elt = isNodeOfElement (tmpNode.thisNode.ID, 1)
+            elt = isNodeOfElement (tmpNode%thisNode%ID, 1)
             node1D_first => newNode (nop (elt,1), cord (nop (elt,1), 1),&
      &                             cord (nop (elt, 1), 2))
             node1D_last => newNode (nop (elt,3), cord (nop (elt,3), 1), &
@@ -1492,15 +1492,15 @@
             arc1D => newArc (node1D_first, node1D_last)
             arcVec = arcVector (arc1D)
 !get direction pointer            
-            if (ccls(i).posNormal(1) == 0.0d0 .AND.                     &
-     &          ccls(i).posNormal(2) == 0.0d0) then
+            if (ccls(i)%posNormal(1) == 0.0d0 .AND.                     &
+     &          ccls(i)%posNormal(2) == 0.0d0) then
               dirPointer = 1.0d0
             else
               dirPointer = projectionDirPointer                         &
-     &                     (arcVec, ccls(i).posNormal)
+     &                     (arcVec, ccls(i)%posNormal)
             endif 
-            ccls(i).posNormal = arcVec
-            call scaleToUnitVector (ccls(i).posNormal, dirPointer)
+            ccls(i)%posNormal = arcVec
+            call scaleToUnitVector (ccls(i)%posNormal, dirPointer)
           endif
         endif
 !
@@ -1525,32 +1525,32 @@
 !
           DO n = 1, ncl
 !
-           IF( (ccls(n).HasProfile) .AND.                               &
-     &          ( .NOT. associated( ccls(n).MorphoProfile)) ) THEN
+           IF( (ccls(n)%HasProfile) .AND.                               &
+     &          ( .NOT. associated( ccls(n)%MorphoProfile)) ) THEN
              tmp_CCL => ccls(n)
              write (*,*) 'CCL ', n, 'lmt(n) ', lmt(n)
              write (*,*) ' entering into makeprofile subroutine...'
              CALL MAKEPROFILE (tmp_CCL,lmt(n),                          &
      &                          BANKPROFILES( ProfileCounter ),.FALSE. )
-!          tmp_singleCCL.MorphoProfile =>BANKPROFILES(ProfileCounter)   
-             tmp_CCL.MorphoProfile =>BANKPROFILES(ProfileCounter)
-             BANKPROFILES(ProfileCounter).CL_number = n
+!          tmp_singleCCL%MorphoProfile =>BANKPROFILES(ProfileCounter)
+             tmp_CCL%MorphoProfile =>BANKPROFILES(ProfileCounter)
+             BANKPROFILES(ProfileCounter)%CL_number = n
              ProfileCounter = ProfileCounter + 1
            END IF
 !
-           nextnode => CCLs(n).firstnode
+           nextnode => CCLs(n)%firstnode
            do j =1,lmt(n)
-            if (ccls(n).HasProfile) then
-             distt = sqrt( ( NextNode.ThisNode.cord (1) -               &
-     &                       CCLs(n).FirstNode.ThisNode.cord (1) ) **2  &
-     &                        +  ( NextNode.ThisNode.cord (2) -         &
-     &                        CCLs(n).FirstNode.ThisNode.cord (2) )**2 )
+            if (ccls(n)%HasProfile) then
+             distt = sqrt( ( NextNode%ThisNode%cord (1) -               &
+     &                       CCLs(n)%FirstNode%ThisNode%cord (1) ) **2  &
+     &                        +  ( NextNode%ThisNode%cord (2) -         &
+     &                        CCLs(n)%FirstNode%ThisNode%cord (2) )**2 )
 !
-             write (276,5999) nextnode.thisnode.ID,                     &
-     &        NextNode.ThisNode.cord (1)                                &
-     &       ,NextNode.ThisNode.cord (2), distt, Nextnode.thisnode.ao
+             write (276,5999) nextnode%thisnode%ID,                     &
+     &        NextNode%ThisNode%cord (1)                                &
+     &       ,NextNode%ThisNode%cord (2), distt, Nextnode%thisnode%ao
 5999         Format (I5,2(2x,F12.4),2(2x,F7.4)) 
-             nextnode =>nextnode.next
+             nextnode =>nextnode%next
             end if 
            end do
 !
@@ -1867,7 +1867,7 @@
 !
           do n = 1, ncl
 !
-           if (ccls(n).HasProfile ) then
+           if (ccls(n)%HasProfile ) then
 !
                tmp_singleCCL => ccls(n)
                j = j + 1
@@ -1877,7 +1877,7 @@
                CALL MAKEPROFILE (tmp_singleCCL,LMT(n),                  &
      &                           BANKPROFILES( j ), .TRUE. )
 !
-               tmp_singleCCL.MorphoProfile =>BANKPROFILES(j)
+               tmp_singleCCL%MorphoProfile =>BANKPROFILES(j)
 !
            end if
           end do
