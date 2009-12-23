@@ -1,84 +1,84 @@
-C     Last change:  MD   20 Aug 2008   10:11 am
-cipk  last update feb 09 2001 allow for zero length cc lines
-CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
-CIPK  LAST UPDATE DEC 16 1997 
-      !EFa oct09, testing hfd
+!     Last change:  MD   20 Aug 2008   10:11 am
+!ipk  last update feb 09 2001 allow for zero length cc lines
+!IPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
+!IPK  LAST UPDATE DEC 16 1997 
+!EFa oct09, testing hfd      
       SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL,hfd)      
-
+!
       USE BLK10MOD
-CIPK DEC97 calling sequence changed
+!IPK DEC97 calling sequence changed
       SAVE
-C-
-C...... Generate specified head boundary conditions
-C-
+!-
+!...... Generate specified head boundary conditions
+!-
       DIMENSION QQAL(3)
-CIPK AUG00
-      !function definition to calculate the distance between two nodes N1 and N2
-      DISTS(N1,N2)=SQRT((CORD(N2,1)-CORD(N1,1))**2
-     +                 +(CORD(N2,2)-CORD(N1,2))**2)
-
+!IPK AUG00
+!function definition to calculate the distance between two nodes N1 and N2      
+      DISTS(N1,N2)=SQRT((CORD(N2,1)-CORD(N1,1))**2                      &
+     &                 +(CORD(N2,2)-CORD(N1,2))**2)
+!
       REAL,ALLOCATABLE :: wts(:)
-      !allocate with the maximal size of a continuity line
+!allocate with the maximal size of a continuity line      
       ALLOCATE (wts(3535))
-
-CIPK DEC97 ADD TO DIMENSION
-C-
-C...... Insert values into SPEC  and  NFIX arrays
-C-
-cipk dec97
-      !number and length of continuity line
+!
+!IPK DEC97 ADD TO DIMENSION
+!-
+!...... Insert values into SPEC  and  NFIX arrays
+!-
+!ipk dec97
+!number and length of continuity line      
       jj = abs (j)
       MAX = LMT (JJ)
-
-      !check for continuity line of zero-length
+!
+!check for continuity line of zero-length      
       IF(MAX == 0) THEN
         WRITE(75,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',JJ
         WRITE(75,*) 'EXECUTION TERMINATED'
         WRITE(*,*) 'ATTEMPT TO SET ELEVATION FOR NON-EXISTENT LINE',JJ
         WRITE(*,*) 'EXECUTION TERMINATED'
       ENDIF
-
-      !2D boundary: Get first and last definition node and calculate direct distance in between
+!
+!2D boundary: Get first and last definition node and calculate direct distance in between      
       IF (MAX > 1) THEN
         NST = LINE (JJ, 1)
         NFN = LINE (JJ, MAX)
         CONLEN = DISTS (NST,NFN)
       ENDIF
-
-      !run through all nodes 
+!
+!run through all nodes       
       DO 300 K = 1, MAX
-        !get current node
+!get current node        
         NA = LINE (JJ, K)
-        
-        !for the application of direct values without involing the interpolation of values between
-        !first node and final node or for 1D applications directly apply the boundary conditions
+!
+!for the application of direct values without involing the interpolation of values between        
+!first node and final node or for 1D applications directly apply the boundary conditions        
         IF (ISWTH == 0 .OR. MAX == 1) THEN
           SPEC (NA, 3) = HREQ
-        !interpolate water stage boundary conditions for nodes in boundary lines with a varying water
-        !level distribution
+!interpolate water stage boundary conditions for nodes in boundary lines with a varying water        
+!level distribution        
         elseif (iswth == 1 .OR. iswth == 2) then
           FACT = DISTS (NA, NST)/ CONLEN
           SPEC (NA, 3) = HREQ + FACT * (HREQ2 - HREQ)
-        !do nothing for volume-waterlevel boundary conditions
+!do nothing for volume-waterlevel boundary conditions        
         elseif (iswth == 3) then
-          
+!
         endif
-
-        !Add boundary condition switch for water level BCs
+!
+!Add boundary condition switch for water level BCs        
         IF (MOD (NFIX (NA), 1000) < 200) THEN
           NFIX (NA) = NFIX (NA) + 200
         ENDIF
-        !EFa oct09, hfd
+!EFa oct09, hfd        
         if(hfd /= 0.0)then
           spec(na,8) = hfd  
         elseif(hfd == 0.0 .AND. spec(na,8) /= 0.0)then
           spec(na,8) = 0.0     
         endif
-        !-
-
+!-        
+!
         NFIX1 (NA) = 0
-        !constituent boundary conditions
-        !salinity
+!constituent boundary conditions        
+!salinity        
         IF(QQAL(1) >= 0.) THEN
           SPEC (NA, 4) = QQAL (1)
           IF (MOD (NFIX (NA), 100)/ 10 == 0) NFIX (NA) = NFIX (NA) + 10
@@ -86,7 +86,7 @@ cipk dec97
           SPEC (NA, 4) = QQAL (1)
           NFIX (NA) = NFIX (NA) + 20
         ENDIF
-        !temperature
+!temperature        
         IF (QQAL (2) >= 0.) THEN
           SPEC (NA, 5) = QQAL (2)
           IF (MOD (NFIX (NA), 10) == 0) NFIX (NA) = NFIX (NA) + 1
@@ -94,7 +94,7 @@ cipk dec97
           SPEC (NA, 5) = QQAL (2)
           NFIX (NA) = NFIX (NA) + 2
         ENDIF
-        !concentrations
+!concentrations        
         IF (QQAL (3) >= 0.) THEN
           SPEC (NA, 6) = QQAL (3)
           IF (NFIX1 (NA) == 0) NFIX1 (NA) = 1
@@ -102,24 +102,24 @@ cipk dec97
           SPEC (NA, 6) = QQAL (3)
           NFIX1 (NA) = NFIX1 (NA) + 2
         ENDIF
-        !form boundary conditions for node na, means fix the direction slopes
+!form boundary conditions for node na, means fix the direction slopes        
         IF (ICYC > 0) CALL BFORM(NA)
   300 CONTINUE
-
-c
-cipk dec97 add logic for HCN
-c
-
+!
+!
+!ipk dec97 add logic for HCN
+!
+!
       N1=1
       N9=9
   305 CONTINUE
-      !This is for the distribution of the velocities at water level boundary conditions
+!This is for the distribution of the velocities at water level boundary conditions      
       IF (ID (1:3) == 'HCN') THEN
         IF (MAX < N9) N9 = MAX
         READ (DLIN, 5010) (WTS (I), I = N1, N9)
  5010   FORMAT (9F8.0)
         call ginpt(ibin,id,dlin)
-cipk jan96 save data to a scratch file
+!ipk jan96 save data to a scratch file
         if(isvs == 1) then
           write(nscrin,7000) id,dlin
         endif
@@ -136,9 +136,9 @@ cipk jan96 save data to a scratch file
           IF(VSCALE(NN) == 1.0) VSCALE(NN)=0.0
   400   CONTINUE         
       ENDIF
-cipk dec97 end changes
-      !EFa jun07
+!ipk dec97 end changes
+!EFa jun07      
       deallocate (wts)
-      !-
+!-      
       RETURN
       END

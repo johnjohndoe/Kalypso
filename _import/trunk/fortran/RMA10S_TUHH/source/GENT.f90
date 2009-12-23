@@ -1,16 +1,16 @@
-C     Last change:  WP   29 Apr 2008   12:46 pm
-CIPK  LAST UPDATE AUG 09 2005 MAJOR REVISION TO ADD XOUTL,YOUTL
-CIPK  LAST UPDATE NOV 17 2004 ADD INITIAL VALUE FOR INDIC
+!     Last change:  WP   29 Apr 2008   12:46 pm
+!IPK  LAST UPDATE AUG 09 2005 MAJOR REVISION TO ADD XOUTL,YOUTL
+!IPK  LAST UPDATE NOV 17 2004 ADD INITIAL VALUE FOR INDIC
       SUBROUTINE GENT
       USE BLK10MOD
       USE BLKABMOD
-      
+!
       REAL WGT(8)
       CHARACTER FMT*24,BLANK*24,DLIN80*80
       DATA BLANK/'                        '/
-
-C     Read locations
-
+!
+!     Read locations
+!
       READ(ICORDIN,'(8X,I8,A24)') NVERT,FMT
       IF(FMT == BLANK) THEN
         DO N=1,NVERT
@@ -21,7 +21,7 @@ C     Read locations
           READ(ICORDIN,FMT) J,XUSR(J),YUSR(J)
         ENDDO
       ENDIF
-
+!
       N1=1
       NPOLY=0
       DO N=1,NVERT
@@ -30,10 +30,10 @@ C     Read locations
   250 CONTINUE
       READ(ICORDIN,'(A80)') DLIN80
       IF(DLIN80(1:6) /= 'ENDDAT') THEN
-
-C     Read data for outline
-cipk aug05 add COUT option
-      
+!
+!     Read data for outline
+!ipk aug05 add COUT option
+!
       IF (DLIN80(1:3) == 'OUT') THEN
         IPOL=1
           N2=N1+8
@@ -48,8 +48,8 @@ cipk aug05 add COUT option
         GO TO 250
       ENDIF
       IF(N1 > 1) THEN
-
-C     Determine number of points read
+!
+!     Determine number of points read
         IF(IPOL == 1) THEN
           DO N=1,NVERT
             IF(IPOLY(N) /= 0) THEN
@@ -60,51 +60,51 @@ C     Determine number of points read
           ENDDO
       ELSE
         NPOLY=N1-1
-        IF(XOUTL(NPOLY) /= XOUTL(1) .OR. 
-     +       YOUTL(NPOLY) /= YOUTL(1)) THEN
+        IF(XOUTL(NPOLY) /= XOUTL(1) .OR.                                &
+     &       YOUTL(NPOLY) /= YOUTL(1)) THEN
           NPOLY=NPOLY+1
           XOUTL(NPOLY) =XOUTL(1)
           YOUTL(NPOLY) =YOUTL(1)
         ENDIF
         GO TO 320
       ENDIF
-
+!
   300   CONTINUE
         IF(IPOLY(NPOLY) /= IPOLY(1)) THEN
           NPOLY=NPOLY+1
           IPOLY(NPOLY)=IPOLY(1)
         ENDIF
       ENDIF
-
+!
   320 CONTINUE
-
-C     Triangulate locations
-      !REMOVE FOR RMA·KALYPSO
-      !nis,nov08: Remove writing to obsolete unit imeshout
-      !imeshout is obsolete
-      !CALL DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT) 
+!
+!     Triangulate locations
+!REMOVE FOR RMA·KALYPSO      
+!nis,nov08: Remove writing to obsolete unit imeshout      
+!imeshout is obsolete      
+!CALL DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT)       
       CALL DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT) 
-      !-
-
-C     Interpolate to get weighting factors
-
+!-      
+!
+!     Interpolate to get weighting factors
+!
       ISWT=-1
       ISWT=0
         ITIME=0
       DO M=1,NP
-      
+!
        if(m == 8798) then
          aaa=0
        endif      
         DO J=1,3
             NDWT(J)=0
           ENDDO
-
-C       If there is polygon test if point is inside
-
-CIPK NOV04 ADD INITIAL VALUE FOR INDIC
+!
+!       If there is polygon test if point is inside
+!
+!IPK NOV04 ADD INITIAL VALUE FOR INDIC
         INDIC=1
-C        NPOLY=0
+!        NPOLY=0
         IF(NPOLY > 0) THEN
             CALL INPOLY(XUSR,YUSR,M,INDIC,IPOLY,NPOLY,IPOL,XOUTL,YOUTL)
           ENDIF
@@ -116,68 +116,68 @@ C        NPOLY=0
           ENDDO
   350   CONTINUE
       ENDDO
-
-C     Save weigthing factors
-
+!
+!     Save weigthing factors
+!
       HEADER(1:10)='WEIGHT    ' 
         IF(IOWGT > 0) THEN
           WRITE(IOWGT,'(A1000)') HEADER
           DO M=1,NP
-         WRITE(IOWGT,'(8X,4I8,3F8.5)') 
-     +   M,(NODWT(M,J),J=1,3),(WAT(M,J),J=1,3)
+         WRITE(IOWGT,'(8X,4I8,3F8.5)')                                  &
+     &   M,(NODWT(M,J),J=1,3),(WAT(M,J),J=1,3)
           ENDDO
       ENDIF
-      !REMOVE FOR RMA·KALYPSO
-      !nis,nov08: Remove writing to obsolete unit iobnwgt
-      !iobnwgt is obsolete
+!REMOVE FOR RMA·KALYPSO      
+!nis,nov08: Remove writing to obsolete unit iobnwgt      
+!iobnwgt is obsolete      
       RETURN
       END
-
-      !REMOVE FOR RMA·KALYPSO
-      !nis,nov08: Remove writing to obsolete unit imeshout
-      !imeshout is obsolete
-      !SUBROUTINE DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT) 
+!
+!REMOVE FOR RMA·KALYPSO      
+!nis,nov08: Remove writing to obsolete unit imeshout      
+!imeshout is obsolete      
+!SUBROUTINE DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT)       
       SUBROUTINE DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT) 
-      !-
-
+!-      
+!
       USE BLKCDMOD
-
+!
       REAL*8 XUSR(*),YUSR(*)
       INTEGER NOPEL(3,*)
       CHARACTER*7 ENDDATA
       INTEGER NEDGE,NGAP
       DATA NEDGE/0/,NGAP/0/
       VOID = -1.E10
-
-
-c     Sort points into ascending x order
-
+!
+!
+!     Sort points into ascending x order
+!
       CALL SORTDB(XUSR,NKEY,NVERT) 
-
-
-c     Get location of supertriangle                                     
-                                                                        
+!
+!
+!     Get location of supertriangle                                     
+!
       iprt=0
-                                                                        
+!
       call supert(XUSR,YUSR,NOPEL,XCEN,YCEN,RADS,NVERT) 
-
+!
       NELTS=1 
-                                                                        
+!
       NVERTM=NVERT-3 
-
-c     Loop on the vertices                                              
-                                                                        
+!
+!     Loop on the vertices                                              
+!
       DO NN=1,NVERT-3 
-
-c     process next point                                                                        
-
+!
+!     process next point                                                                        
+!
       IF(NN == 3003) THEN
         AAA=0
         ENDIF
          N=NKEY(NN) 
-
-c     Skip out if inactive point
-
+!
+!     Skip out if inactive point
+!
          IF(N == 0) GO TO 500
          IF(NN < NVERTM) THEN 
            DO KK=NN+1,NVERTM 
@@ -194,9 +194,9 @@ c     Skip out if inactive point
   200        CONTINUE 
            ENDDO 
          ENDIF 
-                                                                        
-c     Set edge buffers to zero                                          
-                                                                        
+!
+!     Set edge buffers to zero                                          
+!
          IF(NEDGE > 0) THEN 
            DO J=1,NEDGE 
              IEDGE(1,J)=0 
@@ -209,61 +209,61 @@ c     Set edge buffers to zero
            END DO 
          ENDIF 
          NEDGE=0 
-                                                                        
-c     test for point in circumcircle                                    
-                                                                        
+!
+!     test for point in circumcircle                                    
+!
          DO J=1,NELTS 
            CALL INSIDCIRC(XUSR,YUSR,XCEN,YCEN,RADS,J,N,ISWT) 
-                                                                        
-c     If inside process edges                                           
-                                                                        
+!
+!     If inside process edges                                           
+!
            IF(ISWT == 1) THEN 
              CALL PROCESS(J,IEDGE,NEDGE,NOPEL,IGAP,NGAP)                                 
            ENDIF 
          END DO 
-                                                                        
-c     Setup to form new triangles                                       
-
+!
+!     Setup to form new triangles                                       
+!
          CALL SETEDG(IEDGE,NEDGE)
-                                                              
-c     Now form triangles as needed                                      
-                                                                        
-
+!
+!     Now form triangles as needed                                      
+!
+!
          DO J=1,NEDGE 
            IF(IEDGE(1,J) /= 0) THEN 
-             CALL FORMT(XUSR,YUSR,XCEN,YCEN,RADS,J,N,NOPEL,IEDGE
-     +             ,IGAP,NGAP,NELTS)                           
+             CALL FORMT(XUSR,YUSR,XCEN,YCEN,RADS,J,N,NOPEL,IEDGE        &
+     &             ,IGAP,NGAP,NELTS)                           
            ENDIF 
          END DO 
-
+!
          NEDGE=0 
   500    continue 
       END DO 
-                                                                        
-c     Get rid of elements from super point                              
-                                                                        
+!
+!     Get rid of elements from super point                              
+!
       CALL RIDPOINT(XCEN,YCEN,RADS,NVERT,NOPEL,NELTS) 
-c 
+! 
 !REMOVE FOR RMA·KALYPSO
 !nis,nov08: Remove writing to obsolete unit imeshout
 !imeshout is obsolete
 !-
-
+!
       RETURN 
       END SUBROUTINE 
-
-C************************************************************************************************
-
+!
+!************************************************************************************************
+!
       SUBROUTINE SUPERT(XPT,YPT,NOPEL,XCEN,YCEN,RADS,NVERT) 
-                                                                        
+!
       INTEGER NOPEL(3,*)
       REAL*8 XPT(*),YPT(*),XCEN(*),YCEN(*),RADS(*)
-
+!
       REAL*8 XMINM,YMINM,X45 
       DATA VDX9/-9.E9/
-
-c     Find minimum x and y                                              
-
+!
+!     Find minimum x and y                                              
+!
       xminm=1.e20 
       yminm=1.e20 
       x45=-1.e20 
@@ -277,9 +277,9 @@ c     Find minimum x and y
           endif 
         ENDIF
       ENDDO 
-
-c     Find max at 45 degrees                                            
-
+!
+!     Find max at 45 degrees                                            
+!
       DO J=1,NVERT 
         IF(XPT(J) > VDX9) THEN
           X45T=((XPT(J)-XMINM)+(YPT(J)-YMINM))/1.414 
@@ -299,27 +299,27 @@ c     Find max at 45 degrees
       NOPEL(2,1)=NVERT+2 
       NOPEL(3,1)=NVERT+3 
       NVERT=NVERT+3 
-      CALL CCENTRE(XPT(NOPEL(1,1)),XPT(NOPEL(2,1)),XPT(NOPEL(3,1))      
-     +,YPT(NOPEL(1,1)),YPT(NOPEL(2,1)),YPT(NOPEL(3,1))                  
-     +,XCEN(1),YCEN(1),RADS(1))                                         
+      CALL CCENTRE(XPT(NOPEL(1,1)),XPT(NOPEL(2,1)),XPT(NOPEL(3,1))      &
+     &,YPT(NOPEL(1,1)),YPT(NOPEL(2,1)),YPT(NOPEL(3,1))                  &
+     &,XCEN(1),YCEN(1),RADS(1))                                         
       RETURN 
       END SUBROUTINE 
-                                                                        
-C*********************************************************************************************
-
+!
+!*********************************************************************************************
+!
       SUBROUTINE INSIDCIRC(XPT,YPT,XCEN,YCEN,RADS,J,N,ISWT) 
-                                                                        
-c     Test for point inside circumcircle                                
-                                                                                   
+!
+!     Test for point inside circumcircle                                
+!
       REAL*8 XPT(*),YPT(*),XCEN(*),YCEN(*),RADS(*)
       REAL*8 DISQ 
-                                                                        
-c     Get the distance for this element                                 
-                                                                        
+!
+!     Get the distance for this element                                 
+!
       DISQ=(XCEN(J)-XPT(N))**2+(YCEN(J)-YPT(N))**2 
-                                                                        
-c     Test against the radius                                           
-                                                                        
+!
+!     Test against the radius                                           
+!
       IF(DISQ > RADS(J)*RADS(J)) THEN 
         ISWT=0 
       ELSE 
@@ -327,15 +327,15 @@ c     Test against the radius
       ENDIF 
       RETURN 
       END SUBROUTINE 
-
-C*********************************************************************************************
-                                                                        
+!
+!*********************************************************************************************
+!
       SUBROUTINE PROCESS(J,IEDGE,NEDGE,NOPEL,IGAP,NGAP)
-                                                                        
-c     Drop triangle and form edge buffers                               
-                                                                        
+!
+!     Drop triangle and form edge buffers                               
+!
       INTEGER IEDGE(2,*),NOPEL(3,*),IGAP(*)
-                                                                                  
+!
       NEDGE=NEDGE+3 
       IEDGE(1,NEDGE-2)=NOPEL(1,J) 
       IEDGE(1,NEDGE-1)=NOPEL(2,J) 
@@ -350,17 +350,17 @@ c     Drop triangle and form edge buffers
       IGAP(NGAP)=J 
       RETURN 
       END SUBROUTINE 
-                                                                        
-C********************************************************************************************
-
-      SUBROUTINE FORMT(XPT,YPT,XCEN,YCEN,RADS,J,N,NOPEL,IEDGE
-     +,IGAP,NGAP,NELTS)                                   
-                                                                        
-c     Form the triangle                                                 
-                          
+!
+!********************************************************************************************
+!
+      SUBROUTINE FORMT(XPT,YPT,XCEN,YCEN,RADS,J,N,NOPEL,IEDGE           &
+     &,IGAP,NGAP,NELTS)                                   
+!
+!     Form the triangle                                                 
+!
       INTEGER IGAP(*),NOPEL(3,*),IEDGE(2,*)
       REAL*8 XPT(*),YPT(*),XCEN(*),YCEN(*),RADS(*)
-
+!
       IF(NGAP > 0) THEN 
         K=IGAP(NGAP) 
         NGAP=NGAP-1 
@@ -371,20 +371,20 @@ c     Form the triangle
       NOPEL(1,K)=IEDGE(1,J) 
       NOPEL(2,K)=IEDGE(2,J) 
       NOPEL(3,K)=N 
-                                                                        
-c    Now get circumcircle data                                          
-      CALL CCENTRE(XPT(NOPEL(1,K)),XPT(NOPEL(2,K)),XPT(NOPEL(3,K))      
-     +,YPT(NOPEL(1,K)),YPT(NOPEL(2,K)),YPT(NOPEL(3,K))                  
-     +,XCEN(K),YCEN(K),RADS(K))                                         
+!
+!    Now get circumcircle data                                          
+      CALL CCENTRE(XPT(NOPEL(1,K)),XPT(NOPEL(2,K)),XPT(NOPEL(3,K))      &
+     &,YPT(NOPEL(1,K)),YPT(NOPEL(2,K)),YPT(NOPEL(3,K))                  &
+     &,XCEN(K),YCEN(K),RADS(K))                                         
       RETURN 
       END SUBROUTINE 
-                                                                        
-C***********************************************************************************************
-
+!
+!***********************************************************************************************
+!
       SUBROUTINE CCENTRE(X1,X2,X3,Y1,Y2,Y3,XC,YC,RC) 
-                                                                        
-c     get circumcentre and radius                                       
-                                                                        
+!
+!     get circumcentre and radius                                       
+!
       REAL*8 X1,Y1,X2,Y2,X3,Y3,A,B,C,D,AF,R1,R2,RC,XC,YC 
       A=X2-X1 
       B=Y2-Y1 
@@ -398,14 +398,14 @@ c     get circumcentre and radius
       YC=Y1+R2 
       RETURN 
       END SUBROUTINE 
-                                                                        
-C**********************************************************************************************
-
+!
+!**********************************************************************************************
+!
       SUBROUTINE RIDPOINT(XCEN,YCEN,RADS,NVERT,NOPEL,NELTS) 
-                                                                        
+!
       INTEGER NOPEL(3,*)
       REAL*8 XCEN(*),YCEN(*),RADS(*)
-                                                                       
+!
       NCOUNT=0
       DO N=1,NELTS 
         DO K=1,3 
@@ -428,21 +428,21 @@ C*******************************************************************************
       NELTS=NCOUNT
       RETURN 
       END                                           
-    
-C*****************************************************************************************
-                                                                    
+!
+!*****************************************************************************************
+!
       SUBROUTINE SORTDB(A,NKEY,N) 
-c*********************************** .....SORT.....                     
-c-                                                                      
-c......SORT IS A SIMPLE SHELL SORT ROUTINE  IN DOUBLE PRECISION         
-c-                                                                      
-c     SHELL SORT                                                        
+!*********************************** .....SORT.....                     
+!-                                                                      
+!......SORT IS A SIMPLE SHELL SORT ROUTINE  IN DOUBLE PRECISION         
+!-                                                                      
+!     SHELL SORT                                                        
       SAVE 
-c                                                                       
-cIPK JAN94      INTEGER*2 NKEY                                          
+!                                                                       
+!IPK JAN94      INTEGER*2 NKEY                                          
       REAL*8 A(*) 
       INTEGER NKEY(*) 
-                                                                        
+!
       IF(N < 2) RETURN 
       DO 90 J=1,N 
         NKEY(J)=J 
@@ -472,14 +472,14 @@ cIPK JAN94      INTEGER*2 NKEY
       IF( I + ID <= N ) GO TO 210 
       GO TO 130 
       END                                           
-
-C******************************************************************************************
-
+!
+!******************************************************************************************
+!
       SUBROUTINE SETEDG(IEDGE,NEDGE)
- 
+!
       INTEGER IEDGE(2,*)                                                                             
-c     Setup to form new triangles                                       
-
+!     Setup to form new triangles                                       
+!
       DO J=1,NEDGE 
         IF(J < NEDGE) THEN 
           DO K=J+1,NEDGE 
@@ -501,6 +501,6 @@ c     Setup to form new triangles
           ENDDO 
         ENDIF 
       ENDDO
-       
+!
       RETURN
       END                                                                        

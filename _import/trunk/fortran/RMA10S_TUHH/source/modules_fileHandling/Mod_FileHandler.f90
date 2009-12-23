@@ -1,7 +1,7 @@
 module mod_fileHandler
-  !fileHandlingModules
+!fileHandlingModules  
   use mod_fileType
-  !specific modules
+!specific modules  
   use mod_storageElt
   
   type FileCtrl
@@ -29,35 +29,35 @@ module mod_fileHandler
 !    type (file), pointer :: itimfl => null()
 !    type (file), pointer :: nscr => null()
 !    type (file), pointer :: nd1 => null()
-      !meaning of the variables
-      !------------------------
-      !           TODO: examine, how ICFL works
-      !icfl:      unit number definition of the console
-      !LIN        unit of control file (control.r10)
-      !LOUT       after 1st call of file.sub unit of output file (.ech)
-      !           after 2nd call of file.sub LOUT becomes the general output unit (.out-file)
-      !LITR       unit of iteration file (.itr)
-      !IMESOUT    unit of Message file (MESS.ech)
-      !IKALYPSOFM unit number of the results ouput files
-      !IFILE      model geometry (in *.2d-format)
-      !NB         restart input file (binary or ASCII)
-      !ibup       external boundary condition file
-      !INCSTR     control structure data
-      !insfl      input control stage flow relationship file
-      !IWVFC      input surface stress data file
-      !INSTR      surface traction from external grid
-      !IOWGT      Mesh weighting output
-      !ICORDIN    external grid data
-      !IOCON      continuity line hydrograph file
-      !IWVIN      input wave data file
-      !INTIMS     on/off controlling of constrol structure time series
-      !INWGT      external inpolation weighting data file
-      !IMASSOUT   ???
-      !ITIMFL     processing time data
-      !           TODO: Make one unit number from nscr and nd1
-      !nscr       scratch file unit for solver purposes
-      !nd1        copy of scratch file unit nscr
-      !IRPOFIN   INPUT PROFILE DATA FILE FOR SIMULATION OF BANK EVOLUTION 
+!meaning of the variables      
+!------------------------      
+!           TODO: examine, how ICFL works      
+!icfl:      unit number definition of the console      
+!LIN        unit of control file (control.r10)      
+!LOUT       after 1st call of file.sub unit of output file (.ech)      
+!           after 2nd call of file.sub LOUT becomes the general output unit (.out-file)      
+!LITR       unit of iteration file (.itr)      
+!IMESOUT    unit of Message file (MESS.ech)      
+!IKALYPSOFM unit number of the results ouput files      
+!IFILE      model geometry (in *.2d-format)      
+!NB         restart input file (binary or ASCII)      
+!ibup       external boundary condition file      
+!INCSTR     control structure data      
+!insfl      input control stage flow relationship file      
+!IWVFC      input surface stress data file      
+!INSTR      surface traction from external grid      
+!IOWGT      Mesh weighting output      
+!ICORDIN    external grid data      
+!IOCON      continuity line hydrograph file      
+!IWVIN      input wave data file      
+!INTIMS     on/off controlling of constrol structure time series      
+!INWGT      external inpolation weighting data file      
+!IMASSOUT   ???      
+!ITIMFL     processing time data      
+!           TODO: Make one unit number from nscr and nd1      
+!nscr       scratch file unit for solver purposes      
+!nd1        copy of scratch file unit nscr      
+!IRPOFIN   INPUT PROFILE DATA FILE FOR SIMULATION OF BANK EVOLUTION       
 
   end type
 
@@ -68,16 +68,16 @@ module mod_fileHandler
 !---------
 subroutine fileOpen (unitNo, fileName, statusString, formString, localFileName, globalErrorStatus)
   implicit none
-  !passed input variables
+!passed input variables  
   integer (kind = 4), intent (in)  :: unitNo
   character (len = *), intent (in) :: fileName
   character (len = *), intent (in) :: statusString, formString
-  !passed output variables
+!passed output variables  
   integer (kind = 4), intent (out) :: globalErrorStatus
   character (len = *), intent (out) :: localFileName
-  !local variables
+!local variables  
   integer (kind = 4) :: ioStatus = 0
-  !meaning of the variables
+!meaning of the variables  
 !------------------------
 !unitNo        : unit number during runtim for the file that shall be openend
 !fileName      : name of the file that shall be opened
@@ -89,23 +89,23 @@ subroutine fileOpen (unitNo, fileName, statusString, formString, localFileName, 
 !localFileName : copy of the input file name
 !ioStatus      : gives back the system error ID, if any problems occur during opening process
 
-  !open the file
+!open the file  
   OPEN (UNIT = unitNo, FILE = fileName, STATUS = statusString, FORM = formString, IOSTAT = ioStatus)
-  !check for status and - on demand - write problem message and get global error status
+!check for status and - on demand - write problem message and get global error status  
   IF(ioStatus /= 0) CALL iosmsg (iostatus, trim (fileName), globalErrorStatus)
-  !copy the file name
+!copy the file name  
   localFileName = fileName
 end subroutine
   
-  !reading the volume waterlevel relation file
-  !-------------------------------------------
+!reading the volume waterlevel relation file  
+!-------------------------------------------  
   subroutine readVolumeWaterlevelFile (volWlFile, storageElt)
     implicit none
-    !input parameters
+!input parameters    
     type (file), pointer :: volWlFile
     type (StorageElement), pointer :: storageElt(:)
   
-    !local variables
+!local variables    
     type (StorageElement), pointer :: storElt => null()
     integer (kind = 4) :: iostatus = 0
     integer (kind = 4) :: storEltID    
@@ -117,22 +117,22 @@ end subroutine
       iostatus = 0
       read (volWlFile.unit, '(a)', iostat = iostatus) linestring
 
-      !ENDDATA line
+!ENDDATA line      
       if (linestring (1:7) == 'ENDDATA') then
         exit readFile
 
-      !TIT line
+!TIT line      
       elseif (linestring (1:3) == 'TIT') then
         cycle readFile
 
-      !POL line
+!POL line      
       elseif (linestring (1:3) == 'POL') then
         storEltID = 0
         read (linestring(4:), *) storEltID
         storElt => storageElt (storEltID)
         call addVolWaterlevelRel (storElt)
 
-      !DATA line
+!DATA line      
       else
         if ( .NOT. (associated (storElt))) then
           write (*,*) 'data without reference storage element'

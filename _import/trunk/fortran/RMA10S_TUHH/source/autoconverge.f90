@@ -1,4 +1,4 @@
- !     Last change:  WP   22 Nov 2007    7:56 pm
+!     Last change:  WP   22 Nov 2007    7:56 pm 
  SUBROUTINE autoconverge(noc)
 
  USE blk10
@@ -13,7 +13,7 @@
  USE Para1DPoly
 
  REAL,INTENT(IN)  :: noc
- !DIMENSION temp_speccc(3)
+!DIMENSION temp_speccc(3) 
 
        if (noc==-1.) then
 
@@ -564,7 +564,7 @@
 
         end if
 
-      !end if
+!end if      
 
       ELSEIF (noc==6.) then
 

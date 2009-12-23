@@ -49,25 +49,27 @@ DO N=1,NPM
   END IF
 
   K1=N
-  !MD: Deactivate 3d option!
-  !MD:  IF(NDEP(N) > 1) K1=NREF(N)+NDEP(N)-1
+!MD: Deactivate 3d option!  
+!MD:  IF(NDEP(N) > 1) K1=NREF(N)+NDEP(N)-1  
 
-  if(wsll(N) >= ao(N)) then !Nur wenn knoten nass!
+!Nur wenn knoten nass!
+  if(wsll(N) >= ao(N)) then 
     VELS=SQRT(VEL(1,K1)**2.0 + VEL(2,K1)**2.0)
     UST(K1)=SQRT(FFACT_KN(N)) * VELS
 
     IF(VELS == 0. .OR. VEL(3,K1) < 0.01) THEN
       UST(K1)=0.0
     ENDIF
-  else !Wenn knoten trocken!
+!Wenn knoten trocken!
+  else 
     UST(K1)=0.0
   endif
 
   BSHEAR(K1)=UST(K1)*UST(K1)*GAW
 
-  !MD: IF(IT == 1) THEN
-  !MD:  ESRO(K1)=BSHEAR(K1)
-  !MD: ENDIF
+!MD: IF(IT == 1) THEN  
+!MD:  ESRO(K1)=BSHEAR(K1)  
+!MD: ENDIF  
 
   IF (N == NPM) THEN
     WRITE(75,*) 'All BedShears are calculated till NODE ',N

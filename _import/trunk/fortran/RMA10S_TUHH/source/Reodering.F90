@@ -66,19 +66,19 @@ integer (kind = 8) :: mpp
 !           connected to a Transition line
 !test for all possible line transitions
 if (MaxLT /= 0) then
-  !get the maximum element size. The maximum size is obtained by the longest 1D 2D transitioning number + 2 for the number of nodes of the
-  !transitioning 1D part
+!get the maximum element size. The maximum size is obtained by the longest 1D 2D transitioning number + 2 for the number of nodes of the  
+!transitioning 1D part  
   maxsize = 0
-  !the longest continuity line is taken into account
+!the longest continuity line is taken into account  
   do i = 1, 50
     if (lmt(i) + 2 > maxsize) maxsize = lmt(i) + 2
   end do
 else
   if (maxps == 0) then
-  !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
+!if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.  
     maxsize = 8
   else
-    !might be a doubled dependency
+!might be a doubled dependency    
     maxsize = 16
   endif
 endif
@@ -130,13 +130,13 @@ StoreConnectivity: DO i = 1, MaxE
 
   IF (imat (i) < 901 .OR. imat(i) > 903) THEN
 
-    !node number (corner nodes) is 2 for 1D elements
+!node number (corner nodes) is 2 for 1D elements    
     k = 2
-    !if it is a triangular element increase number of corner nodes to 3
+!if it is a triangular element increase number of corner nodes to 3    
     IF (nop (i, 5) > 0) k = 3
-    !if it is a quadrilateral element increase number of corner nodes to 4
+!if it is a quadrilateral element increase number of corner nodes to 4    
     IF (nop (i, 7) > 0) k = 4
-    !save the node numbers
+!save the node numbers    
     lastentry = 0
     DO j = 1, k
       l = 2 * j - 1
@@ -151,16 +151,16 @@ StoreConnectivity: DO i = 1, MaxE
       endif
     endif
 
-    !TODO: This is not efficient, there must be another way to find out membership in 1D-2D-Transition line
-    !if there is a 1D 2D transition line, then save the nodes of the line in the element array kntimel
+!TODO: This is not efficient, there must be another way to find out membership in 1D-2D-Transition line    
+!if there is a 1D 2D transition line, then save the nodes of the line in the element array kntimel    
     if (maxlt > 0 .AND. k == 2) then
-      !first the correct line has to be found, by running through all possible lines
+!first the correct line has to be found, by running through all possible lines      
       FindLine: do j = 1, MaxLT
-        !stop, if it is the correct line
+!stop, if it is the correct line        
         IF (TransLines (j, 1) == i) then
-          !run through line defintion and transfer nodes to kntimel
+!run through line defintion and transfer nodes to kntimel          
           do l = 1, lmt( TransLines (j,2))
-            !copy line node into kntimel. If it is the connecting node, jump over, because it is only allowed to occur once
+!copy line node into kntimel. If it is the connecting node, jump over, because it is only allowed to occur once            
             IF (line (TransLines (j,2), l) /= nop (i, 3)) kntimel (i, l+2) = line( TransLines (j,2), l)
           ENDDO
           EXIT FindLine
@@ -213,27 +213,27 @@ enddo
 ConnectsOuter: DO n = 1, MaxE
 
   DO m = 1, ncn
-    !Get the reference node
+!Get the reference node    
     i = kntimel (n, m)
 
-    !if node is zero go to next element
+!if node is zero go to next element    
     IF (i == 0) CYCLE ConnectsOuter
-    !run through all nodes of the actual element
+!run through all nodes of the actual element    
     ConnectsInner: DO k = 1, ncn
 
-      !get a node of the element's definition list
+!get a node of the element's definition list      
       l = kntimel (n, k)
 
-      !cycle process if the the second node choice is the same as the first one. They don't need to be connected
+!cycle process if the the second node choice is the same as the first one. They don't need to be connected      
       IF (l == i) CYCLE ConnectsInner
 
-      !Check, whether node is neither zero nor the same as already inserted in the connection matrix (icon); if not fill in the actual node
-      !number connection
+!Check, whether node is neither zero nor the same as already inserted in the connection matrix (icon); if not fill in the actual node      
+!number connection      
       GetConnection: DO j = 1, maxc
         IF (icon (i, j) == 0) exit GetConnection
         IF (icon (i, j) == l) CYCLE ConnectsInner
 
-        !ERROR
+!ERROR        
         if (j == maxc) call ErrorMessageAndStop (1501, i, cord (l, 1), cord (l, 2))
 
       END DO GetConnection
@@ -270,8 +270,8 @@ allnodes: DO n = 1, MaxP
       IF (i == list (m) ) CYCLE allconnects
     ENDDO     
 
-    !only if every node is not in list(m)
-    !NiS,mar06: name of variable changed; changed mnd to MaxP
+!only if every node is not in list(m)    
+!NiS,mar06: name of variable changed; changed mnd to MaxP    
     IF (mp == MaxP) mp = mp - 1
     mp = mp + 1
     list (mp) = i
@@ -463,7 +463,7 @@ allConnects: DO i = 1, maxc
   jj = icon (n, i)
   IF (jj == 0) CYCLE allConnects
   DO m = 1, maxc
-    !if active, then already processed, so set following reference negative
+!if active, then already processed, so set following reference negative    
     IF (icon (jj, m) == n) then
       icon (jj, m) = - icon (jj, m)
       CYCLE allConnects
@@ -476,7 +476,7 @@ MainLoop: do
   counter = counter + 1
   IF (nel /= 1 .OR. counter /= 1) then
 
-    !initialization of icol
+!initialization of icol    
     DO i = 1, 41
       DO j = 1, 40
         icol (i, j) = 0
@@ -484,7 +484,7 @@ MainLoop: do
     ENDDO
 
     nod = nod + 1
-    !TODO: mist and nr are always of the same value; therefore nadm(nr) can be used as a single value, because only nadm(1) is used
+!TODO: mist and nr are always of the same value; therefore nadm(nr) can be used as a single value, because only nadm(1) is used    
     mist = 0
     nr = 1
     nadm (nr) = 100
@@ -538,7 +538,7 @@ MainLoop: do
     ENDIF
   ENDIF
 
-  !add to column adjacent point of eliminated point
+!add to column adjacent point of eliminated point  
   addColumn: DO j = 1, maxc
     ii = icon (n, j)
     IF (ii <= 0) CYCLE addColumn
@@ -624,15 +624,15 @@ nad  = 0
                                                                         
 !through all possible connections
 countloop: DO i = 1, maxc
-  !get connected node number
+!get connected node number  
   jj = icon (ii, i)
-  !jump over negative node references (they are deactivated!)
+!jump over negative node references (they are deactivated!)  
   IF (jj <= 0) cycle countloop
 
-  !?What is mist?
+!?What is mist?  
   IF (jj == mist) cycle countloop
 
-  !increase number of adject nodes
+!increase number of adject nodes  
   nad = nad+1
 END DO countloop
                                                                         

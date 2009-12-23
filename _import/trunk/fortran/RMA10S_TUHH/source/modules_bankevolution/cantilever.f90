@@ -25,13 +25,15 @@ implicit none
 
 TYPE (finite_element_node), DIMENSION (:), INTENT (IN)   :: fenode   
 TYPE(profile)                            , INTENT (INOUT):: CANTI_PR
-REAL (KIND = 8)           , DIMENSION (2), INTENT (OUT)  :: EffectVolume ,SAFTEYFACTOR           ! the effective volume of collapsed overhang
+! the effective volume of collapsed overhang
+REAL (KIND = 8)           , DIMENSION (2), INTENT (OUT)  :: EffectVolume ,SAFTEYFACTOR           
 TYPE (profile) , INTENT (INOUT)   :: aval_pr
 REAL (KIND = 8), INTENT (IN)      :: waterelev
 REAL           , INTENT (IN)      :: unsaturated_slope
 LOGICAL   , INTENT (IN), OPTIONAL :: Submerged_Overhang            
 
-REAL (KIND = 8)    ,DIMENSION (2) ::  source !,SAFTEYFACTOR                              ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
+!,SAFTEYFACTOR                              ! source is the old method of computation of source term based on the total area of of each overhang in cross section. Now the EffectiveVolume is computed instead:
+REAL (KIND = 8)    ,DIMENSION (2) ::  source 
 INTEGER            ,DIMENSION (2) :: INTSECT_NO 
 TYPE (profile_node),DIMENSION (2) :: INTSECT_NODE
 TYPE (profile)     ,DIMENSION (1) :: INITIATE_PROFILE
@@ -60,7 +62,8 @@ CALL INIT_PROFILE ( PROFIL= INITIATE_PROFILE , SIZE = 1 )
 CANTI_PR     = INITIATE_PROFILE(1)
 TEMP_PROFILE = INITIATE_PROFILE(1)
 
-COINCIDE = .FALSE.                                            ! COINCIDENCE OF INTERSECTION POINT OF EXTRAPOLATION LINE WITH A PROFILE NODE.
+! COINCIDENCE OF INTERSECTION POINT OF EXTRAPOLATION LINE WITH A PROFILE NODE.
+COINCIDE = .FALSE.                                            
 
 if(PRESENT(Submerged_Overhang) ) then
   ypsilon = 0.001
@@ -73,12 +76,15 @@ end if
 ! meant.
 
 if (aval_pr%water_elev > aval_pr%prnode(aval_pr%max_nodes)%elevation ) then
-   LR = 1                  ! only left bank is available.
+! only left bank is available.
+   LR = 1                  
 else 
-   LR = 2                  ! Left and rigtht banks area available.
+! Left and rigtht banks area available.
+   LR = 2                  
 end if      
 
-MN: DO i  = 1,LR                                                ! loop over two possible overhangs.
+! loop over two possible overhangs.
+MN: DO i  = 1,LR                                                
 
 
  SELECT CASE (i)
@@ -113,22 +119,28 @@ MN: DO i  = 1,LR                                                ! loop over two 
  INTSECT_NODE(I)%DISTANCE      = DIST
  INTSECT_NODE(I)%ELEVATION     = ELEV
  INTSECT_NODE(I)%FE_NODENUMBER = 0
- INTSECT_NODE(I)%WATER_ELEV    = 0.                                   !SINCE, IT HAS NO CONJUGATED FE NODE TO ASSIGN A COMPUTED WATER ELEVATION TO IT.
+!SINCE, IT HAS NO CONJUGATED FE NODE TO ASSIGN A COMPUTED WATER ELEVATION TO IT.
+ INTSECT_NODE(I)%WATER_ELEV    = 0.                                   
  INTSECT_NODE(I)%ATTRIBUTE     = 'profile'
 
- INTSECT_NO (I) = INDEKS                                              ! the profile node number of intersecting point OR the node before intersection, when it
-                                                                      ! doesn't coincide with an already existing profile node.
+! the profile node number of intersecting point OR the node before intersection, when it
+ INTSECT_NO (I) = INDEKS                                              
+! doesn't coincide with an already existing profile node.                                                                      
  N              = INDEKS
 
- IF ( ABS ( AVAL_PR%PRNODE(N)%DISTANCE - DIST ) <= ypsilon ) THEN                     ! therefore, the intersection point concides with a profile node.
+! therefore, the intersection point concides with a profile node.
+ IF ( ABS ( AVAL_PR%PRNODE(N)%DISTANCE - DIST ) <= ypsilon ) THEN                     
 !---------------------------------------------------------------------------------------------------
 
- SOURCE(I)  = POLYGON_AREA ( START, N , R , aval_pr )                      ! ASSIGNMENT OF THE LOST AREA/ VOLUME AS SOURCE TERM.
+! ASSIGNMENT OF THE LOST AREA/ VOLUME AS SOURCE TERM.
+ SOURCE(I)  = POLYGON_AREA ( START, N , R , aval_pr )                      
  WEIGHT     = SOURCE (I) * RHOS * GRAVITY
  COINCIDE(I)= .TRUE.
  
- INTSECT_NODE(I)               =     AVAL_PR%PRNODE(N)                         ! 30 APRIL2009, 11:50 ; WHEN THE INTERSECTION IS EQUAL TO A PROFILE NODE , THEN THE PROFILENODE SHOULD BE ASSIAGNED TO INTERSECTION POINT.
- INTSECT_NODE(I)%FE_NODENUMBER = abs(AVAL_PR%PRNODE(N)%FE_NODENUMBER)           ! ASSIGNMENT OF THE FE NODE NUMBER TO THE INTERSECTION POINT.
+! 30 APRIL2009, 11:50 ; WHEN THE INTERSECTION IS EQUAL TO A PROFILE NODE , THEN THE PROFILENODE SHOULD BE ASSIAGNED TO INTERSECTION POINT.
+ INTSECT_NODE(I)               =     AVAL_PR%PRNODE(N)                         
+! ASSIGNMENT OF THE FE NODE NUMBER TO THE INTERSECTION POINT.
+ INTSECT_NODE(I)%FE_NODENUMBER = abs(AVAL_PR%PRNODE(N)%FE_NODENUMBER)           
 
  ELSE
 
@@ -137,19 +149,22 @@ MN: DO i  = 1,LR                                                ! loop over two 
  TEMP_PROFILE%PRNODE(3)%DISTANCE  = DIST
  TEMP_PROFILE%PRNODE(3)%ELEVATION = ELEV
 
- AREA       = POLYGON_AREA ( 1, 3 , 1 , TEMP_PROFILE )                  ! THE AREA BETWEEN THE INTERSECTION POINT, FRONT AND LAST PROFILE NODE
- AREA       = AREA + POLYGON_AREA ( START, N , R , AVAL_PR )            ! THE AREA OF THE WHOLE OVERHANG.
+! THE AREA BETWEEN THE INTERSECTION POINT, FRONT AND LAST PROFILE NODE
+ AREA       = POLYGON_AREA ( 1, 3 , 1 , TEMP_PROFILE )                  
+! THE AREA OF THE WHOLE OVERHANG.
+ AREA       = AREA + POLYGON_AREA ( START, N , R , AVAL_PR )            
 
  SOURCE (I) = AREA
- WEIGHT     = AREA * RHOS * GRAVITY                                      ! RHOS CAN BE LATER COMPUTED BASED ON THE PROSITY OF THE SOIL AND WATER CONTENT.
+! RHOS CAN BE LATER COMPUTED BASED ON THE PROSITY OF THE SOIL AND WATER CONTENT.
+ WEIGHT     = AREA * RHOS * GRAVITY                                      
  end if
 
 
   IF ( .NOT. PRESENT(Submerged_Overhang)) THEN
 
- ! COMPUTATION OF APPARENT COHESION ALONG THE SLIP SURFACE; WHICH IS ASSUMED TO BE ALONG THE EXTRAPOLATION LINE:
- ! LATER A MORE REALISTIC MODEL OF SLIP SURFACE CAN BE ADDED; IN WHICH THIS SLOPE IS DETERMINED BASED ON THE MOST
- ! CRITICAL PLANE.
+! COMPUTATION OF APPARENT COHESION ALONG THE SLIP SURFACE; WHICH IS ASSUMED TO BE ALONG THE EXTRAPOLATION LINE: 
+! LATER A MORE REALISTIC MODEL OF SLIP SURFACE CAN BE ADDED; IN WHICH THIS SLOPE IS DETERMINED BASED ON THE MOST 
+! CRITICAL PLANE. 
 
  SLIP_LENGTH     = ( ( DIST - FRONT%DISTANCE ) ** 2 + ( ELEV - FRONT%ELEVATION ) ** 2 ) ** 0.5
 
@@ -179,20 +194,22 @@ MN: DO i  = 1,LR                                                ! loop over two 
  
  ELSE
 
- ! BASE_SUCTION = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION )
-  ! Here matric head is not as usual pressure over specifc weight, but force over specific weight.
+! BASE_SUCTION = SUCTIONHEIGHT (WATERELEV , FRONT%ELEVATION ) 
+! Here matric head is not as usual pressure over specifc weight, but force over specific weight.  
   MATRICHEAD   = SUCTIONHEIGHT ( FRONT%ELEVATION-WATERELEV , ELEV-WATERELEV )
-  !MATRICHEAD   = MATRICHEAD - BASE_SUCTION
+!MATRICHEAD   = MATRICHEAD - BASE_SUCTION  
 !  MATRICHEAD   = func(ELEV- WATERELEV, EXPO3,EXPO2,EXPO1) * (ELEV - FRONT%ELEVATION)- MATRICHEAD
   MATRICHEAD   = -1.0 * MATRICHEAD
   
  ENDIF
- ROOT = 1.2 * ROOT * 0.1 / SLIP_LENGTH           ! 0.1 is the common depth(m) of thiny vegetation root. TODO: defined by the user. 
+! 0.1 is the common depth(m) of thiny vegetation root. TODO: defined by the user. 
+ ROOT = 1.2 * ROOT * 0.1 / SLIP_LENGTH           
 !matric_suction is in unit of force (per meter of width).
  MATRIC_SUCTION = RHO * GRAVITY * MATRICHEAD
  MATRIC_FORCE             = - MATRIC_SUCTION * TAN( MATRIC_ANGLE * PI / 180.)
  EFFECTIVE_COHESION_FORCE = (EFFECTIVE_COHESION + ROOT )* SLIP_LENGTH
- SHEAR_STRENGTH           = EFFECTIVE_COHESION_FORCE + MATRIC_FORCE + TAN ( FRICTION_ANGLE * PI /180. ) * ( WEIGHT * COS ( UNSATURATED_SLOPE * PI /180.) )       ! AIR PRESSURE IS EQUAL TO ZERO.
+! AIR PRESSURE IS EQUAL TO ZERO.
+ SHEAR_STRENGTH           = EFFECTIVE_COHESION_FORCE + MATRIC_FORCE + TAN ( FRICTION_ANGLE * PI /180. ) * ( WEIGHT * COS ( UNSATURATED_SLOPE * PI /180.) )       
 
  SAFTEYFACTOR (I) = SHEAR_STRENGTH / ( WEIGHT * SIN ( UNSATURATED_SLOPE * PI /180. ) )
 
@@ -226,19 +243,25 @@ SRT: DO
 
   IF ( ( J == INTSECT_NO (1) ) .AND. ( SAFTEYFACTOR (1) < 1.0 ) ) THEN
 
-    CALL COINCID           ( K , J , 1 , CANTI_PR)                                      ! INCLUDE THE INTERSECTION POINT OF EXTRAPOLATION LINE WITH TOP OF THE PROFILE IN CANTI_PR.
-    K = K + 1                                            !30APRIL2009, 12:12
-    CALL SIMPLE_PROJECTION ( J  , AVAL_PR%PRNODE(AVAL_PR%LFRONT)%DISTANCE , 1 , K )                                ! include the fe_nodes on the extrapolation line as new profile nodes.
-    K = K - 1 !30APRIL2009, 16:29
+! INCLUDE THE INTERSECTION POINT OF EXTRAPOLATION LINE WITH TOP OF THE PROFILE IN CANTI_PR.
+    CALL COINCID           ( K , J , 1 , CANTI_PR)                                      
+!30APRIL2009, 12:12
+    K = K + 1                                            
+! include the fe_nodes on the extrapolation line as new profile nodes.
+    CALL SIMPLE_PROJECTION ( J  , AVAL_PR%PRNODE(AVAL_PR%LFRONT)%DISTANCE , 1 , K )                                
+!30APRIL2009, 16:29
+    K = K - 1 
    
- !  call EffectiveVolume (J ,AVAL_PR%LFRONT,1, AVAL_PR%PRNODE(1)%DISTANCE, EffectVolume(1)) 
+!  call EffectiveVolume (J ,AVAL_PR%LFRONT,1, AVAL_PR%PRNODE(1)%DISTANCE, EffectVolume(1))  
     EffectVolume(1) = source(1)
     J = AVAL_PR%LFRONT
 
     IF ( AVAL_PR%PRNODE(J)%FE_NODENUMBER /= 0 ) THEN
     K = K + 1
-    CANTI_PR%PRNODE(K) = AVAL_PR%PRNODE(J)                                               ! THE NEXT NODE AFTER INTERSECTION POINT IS THE OLD FRONT; SINCE THE OVERHANG HAS COLLAPSED SF<1.0
-    CANTI_PR%PRNODE(K)%ATTRIBUTE = 'profile'                                             ! OMIT THE ATTRIBUTE FRONT ; SINCE IT EXISTS NO MORE DUE TO THE FAILURE.
+! THE NEXT NODE AFTER INTERSECTION POINT IS THE OLD FRONT; SINCE THE OVERHANG HAS COLLAPSED SF<1.0
+    CANTI_PR%PRNODE(K) = AVAL_PR%PRNODE(J)                                               
+! OMIT THE ATTRIBUTE FRONT ; SINCE IT EXISTS NO MORE DUE TO THE FAILURE.
+    CANTI_PR%PRNODE(K)%ATTRIBUTE = 'profile'                                             
     ENDIF
     
     CANTI_PR%LFRONT = 0
@@ -256,9 +279,10 @@ SRT: DO
 
     CALL COINCID ( K , J , 2 , CANTI_PR)
     
-    IF ( JTEMP < J ) J = J - 1    !30APRIL2009, 16:03     ; BECAUSE IN COINCID IN THE CASE THAT THE INTERSECTION POINT COINCIDES WITH A PROFILE NODE, J IS INCREASED BY 1; HOWEVER THE CONTROL AT THE BEGINING OF THE CURRENT LOOP WILL DO THIS INCREMENT AGAIN.
+!30APRIL2009, 16:03     ; BECAUSE IN COINCID IN THE CASE THAT THE INTERSECTION POINT COINCIDES WITH A PROFILE NODE, J IS INCREASED BY 1; HOWEVER THE CONTROL AT THE BEGINING OF THE CURRENT LOOP WILL DO THIS INCREMENT AGAIN.
+    IF ( JTEMP < J ) J = J - 1    
     
- !   call EffectiveVolume (J, AVAL_PR%RFRONT,-1, AVAL_PR%PRNODE(AVAL_PR%MAX_NODES)%DISTANCE, EffectVolume(2)) 
+!   call EffectiveVolume (J, AVAL_PR%RFRONT,-1, AVAL_PR%PRNODE(AVAL_PR%MAX_NODES)%DISTANCE, EffectVolume(2))  
    EffectVolume(2) = source(2) 
   ELSE
 
@@ -363,19 +387,23 @@ END SUBROUTINE SHIFTNOSE
 
 SUBROUTINE COINCID (L, N , M , OUTPROFILE )
 
-INTEGER        , INTENT (IN)    :: L , M !,N    !30APRIL2009, 12:47
-INTEGER        , INTENT (INOUT) :: N            !30APRIL2009, 12:47
+!,N    !30APRIL2009, 12:47
+INTEGER        , INTENT (IN)    :: L , M 
+!30APRIL2009, 12:47
+INTEGER        , INTENT (INOUT) :: N            
 TYPE (PROFILE) , INTENT (INOUT) :: OUTPROFILE
 ! IN FACT THE FOLLOWING IF - STRUCTURES SEEMS NOT TO BE NECESSARY SINCE; IN THE CASE OF COINCIDENCE, INTSECT-NODE COMPRISES THE PROFILENODE ITSELF.
-  IF ( .NOT. COINCIDE(M) )  THEN                             ! IF THE CURRENT NODE IS THE ONE FOLLOWING INTERSECTION POINT AND THIS POINT DOESNOT COINCIDES WITH A PROFILE NODE:
-                                                            ! THEN INCLUDE THIS NODE AS AN EXTRANODE.
+! IF THE CURRENT NODE IS THE ONE FOLLOWING INTERSECTION POINT AND THIS POINT DOESNOT COINCIDES WITH A PROFILE NODE:
+  IF ( .NOT. COINCIDE(M) )  THEN                             
+! THEN INCLUDE THIS NODE AS AN EXTRANODE.                                                            
    OUTPROFILE%PRNODE(L) = INTSECT_NODE(M)
 
   ELSEIF ( COINCIDE(M) )  THEN
 
    OUTPROFILE%PRNODE(L) = AVAL_PR%PRNODE(N)
    OUTPROFILE%PRNODE(L)%FE_NODENUMBER = ABS (AVAL_PR%PRNODE(N)%FE_NODENUMBER)
-   N = N + 1                                                                !30APRIL2009, 12:47  
+!30APRIL2009, 12:47  
+   N = N + 1                                                                
 
   END IF
  
@@ -396,16 +424,17 @@ INTEGER         , INTENT (INOUT) :: CURRENT_CANTI_INDEX
 REAL ( KIND = 8)                 :: RELATIVE_DISTANCE , LOWERBOUND  
 INTEGER                          :: O , Q , ENDINDEX
 
-  LOWERBOUND           = AVAL_PR%PRNODE(BEGIN)%DISTANCE  !- AVAL_PR%PRNODE(1)%DISTANCE
+!- AVAL_PR%PRNODE(1)%DISTANCE
+  LOWERBOUND           = AVAL_PR%PRNODE(BEGIN)%DISTANCE  
   
   
- ! IF ( PRESENT (FINISH) ) THEN 
-  !ENDINDEX  = FINISH
-  !UPPERBAND = AVAL_PR%PRNODE(FINISH)%DISTANCE !- AVAL_PR%PRNODE(1)%DISTANCE          
-  !ELSE
+! IF ( PRESENT (FINISH) ) THEN  
+!ENDINDEX  = FINISH  
+!UPPERBAND = AVAL_PR%PRNODE(FINISH)%DISTANCE !- AVAL_PR%PRNODE(1)%DISTANCE            
+!ELSE  
   ENDINDEX  = AVAL_PR%MAX_NODES
-  !UPPERBAND = INTERSECTION_POINT%DISTANCE
-  !END IF
+!UPPERBAND = INTERSECTION_POINT%DISTANCE  
+!END IF  
   
   DO O = BEGIN , ENDINDEX , INCREMENT
    
@@ -417,15 +446,19 @@ INTEGER                          :: O , Q , ENDINDEX
     RELATIVE_DISTANCE   =  AVAL_PR%PRNODE(O)%DISTANCE - UPPERBOUND
     IF ( ( RELATIVE_DISTANCE  > 0.01  ) .OR. ( ABS (RELATIVE_DISTANCE) <= 0.01  ) ) EXIT 
     if (AVAL_PR%RFRONT /=0) then
-    IF ( ( ABS(AVAL_PR%PRNODE(O)%DISTANCE - AVAL_PR%PRNODE(AVAL_PR%RFRONT)%DISTANCE)  <= 0.01  ) .AND. ( ABS(AVAL_PR%PRNODE(O)%ELEVATION - AVAL_PR%PRNODE(BEGIN)%ELEVATION)  <= 0.01 ) ) CYCLE !02MAY2009, 13:37,  IN THE CASE THAT A PROFILE NODE IN TH EOVERHANG LOCATES OVER THE RIGHT FRONT, CYCLE THE LOOP, SINCE THE STARTING POINT HAS BEEN ALREADY INCLUDED.
+!02MAY2009, 13:37,  IN THE CASE THAT A PROFILE NODE IN TH EOVERHANG LOCATES OVER THE RIGHT FRONT, CYCLE THE LOOP, SINCE THE STARTING POINT HAS BEEN ALREADY INCLUDED.
+    IF ( ( ABS(AVAL_PR%PRNODE(O)%DISTANCE - AVAL_PR%PRNODE(AVAL_PR%RFRONT)%DISTANCE)  <= 0.01  ) .AND. ( ABS(AVAL_PR%PRNODE(O)%ELEVATION - AVAL_PR%PRNODE(BEGIN)%ELEVATION)  <= 0.01 ) ) CYCLE 
     end if
 
   IF (  AVAL_PR%PRNODE(O)%DISTANCE  >= LOWERBOUND  )  THEN 
     CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)               = AVAL_PR%PRNODE(O)      
 
-    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ELEVATION     = fenode( Q )%ELEVATION   ! SINCE THE ELEVATION OF THE fenode ON EXTRAPOLATION LINE HAS BEEN ALREADY CALCULATED IN SUBROUTINE PROJECTION, THEY ARE USED AS PROJECTED ELEVATION OF AVAL_PR NODE.
-    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ATTRIBUTE     = 'profile'               ! CORRECT THE ATTRIBUTE OF PROFIEL NODE ON THE EXTRAPOLATION LINE AS ' PROFILE' , NOMORE OVERHANG.
-    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%FE_NODENUMBER = Q                       ! ASSIGN THE POSITIVE FENODE NUMBER TO THE PROJECTED NODE ON THE FORMER EXTRAPOLATION LINE.
+! SINCE THE ELEVATION OF THE fenode ON EXTRAPOLATION LINE HAS BEEN ALREADY CALCULATED IN SUBROUTINE PROJECTION, THEY ARE USED AS PROJECTED ELEVATION OF AVAL_PR NODE.
+    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ELEVATION     = fenode( Q )%ELEVATION   
+! CORRECT THE ATTRIBUTE OF PROFIEL NODE ON THE EXTRAPOLATION LINE AS ' PROFILE' , NOMORE OVERHANG.
+    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%ATTRIBUTE     = 'profile'               
+! ASSIGN THE POSITIVE FENODE NUMBER TO THE PROJECTED NODE ON THE FORMER EXTRAPOLATION LINE.
+    CANTI_PR%PRNODE(CURRENT_CANTI_INDEX)%FE_NODENUMBER = Q                       
     CURRENT_CANTI_INDEX = CURRENT_CANTI_INDEX + 1            
   END IF
   END DO
@@ -484,23 +517,27 @@ integer                     :: p ,i
 OverhangVolume = 0.
 do i = start,endd, inc
 
- ! relative distance to the origin
+! relative distance to the origin 
    RelDist = ABS (AVAL_PR%PRNODE(i)%DISTANCE - origin)
    
    P = ABS(AVAL_PR%PRNODE(i)%FE_NODENUMBER)    
      
    if (p ==0 ) cycle 
-   ! compute the effective area.
+! compute the effective area.   
       call EffectiveArea (ContributeArea,P)
       
-      if ( RelDist <= AVAL_PR%PRNODE(ENDD)%DISTANCE) then                    ! if the node has not reached front (left or right)
+! if the node has not reached front (left or right)
+      if ( RelDist <= AVAL_PR%PRNODE(ENDD)%DISTANCE) then                    
        DelatZ = AVAL_PR%PRnode(i)%ELEVATION - fenode( P )%ELEVATION
-      else                                                                   ! if the node is beyond front (left or right)
-       DelatZ = AVAL_PR%PRnode(i)%ELEVATION - AVAL_PR%PRNODE(ENDD)%ELEVATION ! The overhang thickness between the profile node and lower edge of the overhang 
-      end if                                                                 ! which is equal to the elevation of front (Prnode(ENDD)).
+! if the node is beyond front (left or right)
+      else                                                                   
+! The overhang thickness between the profile node and lower edge of the overhang 
+       DelatZ = AVAL_PR%PRnode(i)%ELEVATION - AVAL_PR%PRNODE(ENDD)%ELEVATION 
+! which is equal to the elevation of front (Prnode(ENDD)).
+      end if                                                                 
  
-   ! now compute the volume of mass waste according to the contrbutin area area (a part of area of each element connencted
-  ! to a node , which may influence that node).
+! now compute the volume of mass waste according to the contrbutin area area (a part of area of each element connencted   
+! to a node , which may influence that node).  
      
       OverhangVolume = OverhangVolume + DelatZ * ContributeArea               
 
@@ -514,26 +551,32 @@ end subroutine cantilever_failure
 end module cantilever
 !-----------------------------------------------------------------
  subroutine EffectiveArea (NEWTRIBAREA,N)
- ! computes the contributing area of elemnts connecting to a Node.
+! computes the contributing area of elemnts connecting to a Node. 
  
  USE BLK10MOD  , ONLY : NCORN, AREA
  USE BLKSANMOD , ONLY : ELTON
  
- !Real (kind = 8)  , DIMENSION(NP), INTENT (out) :: NEWTRIBAREA
- INTEGER          , INTENT (in)  :: N               ! the node number to which the contributing area is going to be computed.
- REAL (kind = 8)  , INTENT (out) :: NEWTRIBAREA     ! the contributing area of the all connected elements to node N.
+!Real (kind = 8)  , DIMENSION(NP), INTENT (out) :: NEWTRIBAREA 
+! the node number to which the contributing area is going to be computed.
+ INTEGER          , INTENT (in)  :: N               
+! the contributing area of the all connected elements to node N.
+ REAL (kind = 8)  , INTENT (out) :: NEWTRIBAREA     
  
  Real    :: FACT
  INTEGER :: I ,S
  
  NEWTRIBAREA =0.
-  ! compute the contributing area of the connected elements to the node n
-  DO I=1,12         ! over all neighboured elements I to node N
-    S = ELTON(N,I)   !Elton is the element number´connected to node N (I =1,12 elements can be connected to a node)
+! compute the contributing area of the connected elements to the node n  
+! over all neighboured elements I to node N
+  DO I=1,12         
+!Elton is the element number´connected to node N (I =1,12 elements can be connected to a node)
+    S = ELTON(N,I)   
     IF(S > 0) THEN
-      IF(NCORN(S) == 8) THEN    ! for quadrangle elements (NCORN = number of corner nodes including midside nodes)
+! for quadrangle elements (NCORN = number of corner nodes including midside nodes)
+      IF(NCORN(S) == 8) THEN    
         FACT=4.
-      ELSE                        ! for triangle elements
+! for triangle elements
+      ELSE                        
         FACT=3.
       ENDIF
 
@@ -558,7 +601,8 @@ INTEGER                        :: J
 ! Area = 0.5 * Sigma(Xi.Yi+1 -Xi+1.Yi)
   POLYGON_AREA = 0.
 
-  DO J = START , N , R         ! change starting and ending indeces from 1 (front) to the last (intersection)
+! change starting and ending indeces from 1 (front) to the last (intersection)
+  DO J = START , N , R         
 
    IF ( ABS (J - START) < ABS ( N - START ) ) THEN
 
@@ -636,7 +680,8 @@ IMPLICIT NONE
     x=x+del
    end do
 
-    s = 0.5*(s+(n2-n1)*summ/tnm)       ! It replces s with its refined value
+! It replces s with its refined value
+    s = 0.5*(s+(n2-n1)*summ/tnm)       
  end if
  
  return

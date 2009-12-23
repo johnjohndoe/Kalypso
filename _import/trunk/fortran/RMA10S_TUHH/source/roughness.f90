@@ -75,7 +75,7 @@ lambdawald    = 0.0
 lambdabedform = 0.0
 
 !NiS,may06: testing
- !IF (ks <= 0.0) stop 'ks <= 0'
+!IF (ks <= 0.0) stop 'ks <= 0' 
 IF (ks <= 0.0) then
   WRITE(*,*) nn
   stop 'ks <= 0'
@@ -93,7 +93,7 @@ lambdasand = cole (vecq, h, ks)
 !hint: h is in case of 1D used as the hydraulic radius
 
 if (approxdim == 2) then
-  ! Bedform is not calculated when trees occur!
+! Bedform is not calculated when trees occur!  
   if (nn/=0 .AND. morph /= 0 .AND. dp /= 0.0) then
     CALL formrauhheit (lambdabedform, nn, bedform, mel, h)
   else
@@ -133,9 +133,12 @@ implicit none
 REAL (kind = 8) :: lambda
 
 !input parameters
-REAL (kind = 8), INTENT(IN)  :: ks     ! ks-value
-REAL, INTENT(IN)             :: vecq   ! velocity
-REAL(KIND=8), INTENT(IN)     :: rhy      ! flow depth, hydraulic radius
+! ks-value
+REAL (kind = 8), INTENT(IN)  :: ks     
+! velocity
+REAL, INTENT(IN)             :: vecq   
+! flow depth, hydraulic radius
+REAL(KIND=8), INTENT(IN)     :: rhy      
 
 !Local variables
 REAL                                        :: re, lalt, dhy
@@ -163,8 +166,10 @@ INTEGER        :: i
 
 !initializations
 lambda = 0.0d0
-lalt = 10.0**6        ! initial lambda
-dhy  = 4.0 * rhy  ! hydraulic diameter
+! initial lambda
+lalt = 10.0**6        
+! hydraulic diameter
+dhy  = 4.0 * rhy  
 
 
 !prevent division by zero
@@ -188,18 +193,18 @@ if (vecq > 0.0d0) then
 
     if ( ABS((lambda/lalt)-1.0) <= 0.0001 ) EXIT iteration_lambda
     IF (i == 30) then
-      !no convergence after 30 iterations
+!no convergence after 30 iterations      
       lambda = 0.05
       EXIT iteration_lambda
     ENDIF
 
     lalt = lambda
-    !formula by COLEBROOK/WHITE under consideratio of the hydraulic smooth term wrt to Reynolds-number
+!formula by COLEBROOK/WHITE under consideratio of the hydraulic smooth term wrt to Reynolds-number    
     lambda = ( -2.03 * log10 (f_g / (re * lalt**0.5) + ks / (dhy * f_r) ) ) ** 2.0
 
     IF (lambda == 0.0) lambda = 0.0001
     lambda = 1.0 / lambda
-    !nis,oct08: Restrict lambda to be maximum 1000.0
+!nis,oct08: Restrict lambda to be maximum 1000.0    
     if (lambda > 0.0) lambda = min (lambda, 1000.0)
 
   end do iteration_lambda
@@ -254,7 +259,7 @@ REAL :: ax, ay, dur
                                                                         
 if (dp < 0.001) then
 
-  ! No plants/trees
+! No plants/trees  
   lambda = 0.0
   return
 

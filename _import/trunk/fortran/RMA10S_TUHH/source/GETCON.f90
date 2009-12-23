@@ -1,10 +1,10 @@
-C     Last change:  WP   25 Oct 2007    9:00 am
+!     Last change:  WP   25 Oct 2007    9:00 am
       SUBROUTINE GETCON
       USE BLK10MOD
       USE BLKSANMOD
-
-C     Routine to get elements connected to nodes and allocate areas
-
+!
+!     Routine to get elements connected to nodes and allocate areas
+!
       DO N=1,NE
         IF (IMAT(N) < 900 .OR. IMAT(N) > 999) then
           NCN=NCORN(N)
@@ -18,19 +18,19 @@ C     Routine to get elements connected to nodes and allocate areas
                 GO TO 250
               ENDIF
             ENDDO
-              WRITE(75,*) 
-     +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
+              WRITE(75,*)                                               &
+     &      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
             WRITE(75,*) (ELTON(NOP(N,M),I),I=1,12)
-            WRITE(*,*)
-     +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
+            WRITE(*,*)                                                  &
+     &      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
             STOP
   250       CONTINUE
           ENDDO
       ENDIF
       ENDDO
-
-C     Next assign areas based on straight side assumption
-
+!
+!     Next assign areas based on straight side assumption
+!
       DO N=1,NP
         TRIBAREA(N)=0.
         DO I=1,12
@@ -45,9 +45,9 @@ C     Next assign areas based on straight side assumption
           ENDIF
         ENDDO
       ENDDO
-
-C     Finally work up average manning 'n' at nodes
-
+!
+!     Finally work up average manning 'n' at nodes
+!
       DO N=1,NP
         DIVIDE=0.
         DO J=1,12
@@ -61,7 +61,7 @@ C     Finally work up average manning 'n' at nodes
               xnmann(n)=xnmann(n)/divide
         ENDIF
       enddo
-
-
+!
+!
       RETURN
       END

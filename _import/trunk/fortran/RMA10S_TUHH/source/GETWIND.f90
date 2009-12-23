@@ -3,11 +3,11 @@
       USE BLK11MOD
       use blk_ifu
       SAVE
-
-      ALLOCATABLE NCLIN(:),nhy(:),tatime(:,:),
-     +          twin(:,:),tain(:,:),
-     +          DYQ(:,:),IYDAT(:)
-
+!
+      ALLOCATABLE NCLIN(:),nhy(:),tatime(:,:),                          &
+     &          twin(:,:),tain(:,:),                                    &
+     &          DYQ(:,:),IYDAT(:)
+!
       CHARACTER*32 FNAMT
       CHARACTER*80 HTITLE
       CHARACTER*72 DLIN
@@ -15,7 +15,7 @@
       integer (kind = 4) :: daynow
       DATA NHYD/0/,ITIMEH/0/
       integer :: ioError
-      
+!
       IF(iwindin == 0) THEN
         WRITE(*,*) 'Filename for wind graph not defined'
         WRITE(*,*) 'Enter filename for wind graph'
@@ -24,9 +24,9 @@
         OPEN(UNIT=71,FILE=FNAMT,STATUS='OLD')
       ENDIF
       IF(ITIMEH == 0) THEN
-        ALLOCATE (NCLIN(NHDS),nhy(nhds),tatime(NCHOBS,NHDS),
-     +          twin(NCHOBS,NHDS),tain(nchobs,nhds),
-     +          DYQ(NCHOBS,NHDS),IYDAT(NHDS))
+        ALLOCATE (NCLIN(NHDS),nhy(nhds),tatime(NCHOBS,NHDS),            &
+     &          twin(NCHOBS,NHDS),tain(nchobs,nhds),                    &
+     &          DYQ(NCHOBS,NHDS),IYDAT(NHDS))
         ITIMEH=1
         NCLIN=0
         nhy = 0
@@ -36,7 +36,7 @@
         DYQ=0.
         IYDAT=0
       ENDIF
-      
+!
       if (nhyd == 0) then
         TSTARTS=(DAYNOW-1)*24.+TIME-TETH      
   100   READ(iwindin,'(A8,A72)',iostat = ioerror) ID,HTITLE
@@ -49,13 +49,13 @@
             call ginpt(iwindin,id,dlin)           
             IF(ID(1:2) == 'WI') THEN
               READ(ID(5:8),'(F4.0)') DYQ(I,NHYD)
-              READ(DLIN,'(3F8.0)')              
-     +        tatime(i,nhyd),twin(I,NHYD),tain(i,nhyd)     
+              READ(DLIN,'(3F8.0)')                                      &
+     &        tatime(i,nhyd),twin(I,NHYD),tain(i,nhyd)     
               nhy(nhyd) = nhy(nhyd)+1
               IF(I == 1) THEN
-C
-C      reduce input time to time since that set to start simulation
-C
+!
+!      reduce input time to time since that set to start simulation
+!
   110           CONTINUE
                 IF(MOD(IYD,4) == 0) THEN
                   ILP=1
@@ -63,13 +63,13 @@ C
                   ILP=0
                 ENDIF
                 IF(IYD == IYRR) THEN
-C
-C      If now for for the same year
-C
+!
+!      If now for for the same year
+!
                   TCUR1=(DYQ(I,NHYD)-1.)*24.+tatime(I,NHYD)
-C
-C      set time as the difference
-C
+!
+!      set time as the difference
+!
                   tatime(I,NHYD)=TCUR1-TPRVH-TSTARTS  
                 ELSEIF(IYD < IYRR) THEN
                   IF(MOD(IYD,4) == 0) THEN
@@ -122,22 +122,22 @@ C
         endif
       endif
   200 continue
-  
+!
       CLOSE (iwindin)
-C
-C     INTERPOLATE TO OBTAIN HYDROGRAPH
-C
+!
+!     INTERPOLATE TO OBTAIN HYDROGRAPH
+!
       CTIM=TETH      
       DO 300 J=1,NHYD
           DO 260 I=2,NHY(J)
             TIM=tatime(I-1,J)
             TIN=tatime(I,J)       
             IF(CTIM < TIN) THEN
-             tw=twin(I-1,J)+(twin(I,J)-twin(I-1,J))*
-     +        (CTIM-TIM)/(TIN-TIM)  
-             !EFa oct09, testing for winddirections  
-              !ta=tain(I-1,J)+(tain(I,J)-tain(I-1,J))*
-      !+        (CTIM-TIM)/(TIN-TIM)                       
+             tw=twin(I-1,J)+(twin(I,J)-twin(I-1,J))*                    &
+     &        (CTIM-TIM)/(TIN-TIM)  
+!EFa oct09, testing for winddirections               
+!ta=tain(I-1,J)+(tain(I,J)-tain(I-1,J))*              
+!+        (CTIM-TIM)/(TIN-TIM)                             
              if (abs(tain(i-1,j))+abs(tain(i,j)) >= 180.0)then
                ta = -(abs(tain(i,j))+abs(tain(i-1,j)))+360.
                if (tain(i-1,j) < 0.0) then
@@ -151,12 +151,12 @@ C
                  ta = ta - 360
                endif               
              else                          
-               ta=tain(I-1,J)+(tain(I,J)-tain(I-1,J))*
-     +         (CTIM-TIM)/(TIN-TIM)
+               ta=tain(I-1,J)+(tain(I,J)-tain(I-1,J))*                  &
+     &         (CTIM-TIM)/(TIN-TIM)
              endif    
-             !-         
+!-                      
               RETURN
-              !-
+!-              
             ENDIF
   260     CONTINUE
   300 CONTINUE
@@ -165,4 +165,4 @@ C
       write(75,*) 'Unable to interpolate data value from wind graph'
       STOP
       END
-
+!

@@ -1,18 +1,18 @@
-cipk  last update feb 09 2001 allow for zero length cc lines
-
+!ipk  last update feb 09 2001 allow for zero length cc lines
+!
       SUBROUTINE SGEN(J,A1)
       USE BLK10MOD
       SAVE
-C-
-C...... Generate specified quality boundary conditions
-C-
+!-
+!...... Generate specified quality boundary conditions
+!-
       DIMENSION A1(3)
-C-
-C...... Insert values into SPEC and NFIX arrays
-C-
+!-
+!...... Insert values into SPEC and NFIX arrays
+!-
       IF(J < 1) RETURN
       MAX=LMT(J)
-CIPK FEB01
+!IPK FEB01
       IF(MAX == 0) THEN
         WRITE(75,*) 'ATTEMPT TO SET QUALITY FOR NON-EXISTENT LINE',J
         WRITE(75,*) 'EXECUTION TERMINATED'

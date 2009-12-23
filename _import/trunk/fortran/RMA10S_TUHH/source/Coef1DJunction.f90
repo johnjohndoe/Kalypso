@@ -83,40 +83,40 @@ MR=MOD(IMMT,1000)
 !1st condition is continuity at the junction; time dependency is neglected here!
 checknodes: DO KK = 1, NCN
 
-  !get current node
+!get current node  
   N1 = NCON (KK)
-  !cycle for zero-nodes
+!cycle for zero-nodes  
   IF (N1 == 0) CYCLE checknodes
-  !get local equation number of current node
+!get local equation number of current node  
   NA = (KK - 1) * NDF + 1
-  !calculate global angle relations
+!calculate global angle relations  
   CX = COS (ALFA(N1))
   SA = SIN (ALFA(N1))
-  !calculate resulting 1D-velocity of current node
+!calculate resulting 1D-velocity of current node  
   R  = VEL(1, N1) * CX + VEL(2, N1) * SA
 
-  !using geometry-approach (means trapezoidal channel)
+!using geometry-approach (means trapezoidal channel)  
   IF (width(n1) /= 0.0) THEN
-    !derivative over velocity
+!derivative over velocity    
     ESTIFM(1, NA) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) / 2. * VEL(3, N1)) * VEL(3,N1)
-    !derivative over depth
+!derivative over depth    
     ESTIFM(1, NA+2) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) * VEL(3,N1)) * R
 
-  !using polynom approach
+!using polynom approach  
   ELSE
-    !get position in polynomial for current node with present water stage
+!get position in polynomial for current node with present water stage    
     PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1), PolySplitsA (n1), cord(n1, 1), cord (n1, 2), n1)
-    !calculate the cross sectional area
+!calculate the cross sectional area    
     ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:4), vel (3, n1), ubound (apoly, 3))
-    !install derivative of discharge over velocity at current node into local equation 1
+!install derivative of discharge over velocity at current node into local equation 1    
     ESTIFM(1, NA) = DIR(N1) * ah(n1)
-    !calculate the derivative of the cross sectional area of current node over depth
+!calculate the derivative of the cross sectional area of current node over depth    
     dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:4), vel(3, n1), ubound (apoly, 3))
-    !install derivative of discharge over depth at current node into local equation 1
+!install derivative of discharge over depth at current node into local equation 1    
     ESTIFM(1, NA+2) = DIR(N1) * dahdh (n1) * R
 
   ENDIF
-  !install direction dependent discharge of current node into residual error vector; the sum of the in-/outflows must be zero!
+!install direction dependent discharge of current node into residual error vector; the sum of the in-/outflows must be zero!  
   F(1) = F(1) - ESTIFM(1, NA) * R
 
 ENDDO checknodes
@@ -124,36 +124,36 @@ ENDDO checknodes
 
 if (imat (NN) == 901) then
 
-  !1st node (definition by accident)
+!1st node (definition by accident)  
   NRX = NCON (1)
-  !run through rest of nodes of junction
+!run through rest of nodes of junction  
   checkNodes901: DO KK = 2, NCN
-    !get node number
+!get node number    
     N1 = NCON (KK)
-    !check for zero-node number
+!check for zero-node number    
     IF (N1 == 0) CYCLE checkNodes901
-    !get local equation number
+!get local equation number    
     NA = (KK - 1) * NDF + 1
-    !instal derivatives with respect to (WRT) water depth of reference node and
+!instal derivatives with respect to (WRT) water depth of reference node and    
     ESTIFM (NA, 3) = 1.0
     ESTIFM (NA, NA + 2) = - 1.0
 
 !FOR MARSH ALGORITHM, NOT OPERATIVE AT THE MOMENT
-  !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
-  !  IF (IDNOPT < 0) THEN
-  !    HD1 = VEL(3,N1)
-  !    CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
-  !    WSEL1 = ADO(N1)+HS1
-  !    HDX = VEL(3,NRX)
-  !    CALL AMF(HSX,HDX,AKP(NRX),ADT(NRX),ADB(NRX),AML,DUM2,0)
-  !    WSELX = ADO(NRX)+HSX
-  !  ELSE
-  !    WSEL1=AO(N1)+VEL(3,N1)
-  !    WSELX=AO(NRX)+VEL(3,NRX)
-  !  ENDIF
+!CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))  
+!  IF (IDNOPT < 0) THEN  
+!    HD1 = VEL(3,N1)  
+!    CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)  
+!    WSEL1 = ADO(N1)+HS1  
+!    HDX = VEL(3,NRX)  
+!    CALL AMF(HSX,HDX,AKP(NRX),ADT(NRX),ADB(NRX),AML,DUM2,0)  
+!    WSELX = ADO(NRX)+HSX  
+!  ELSE  
+!    WSEL1=AO(N1)+VEL(3,N1)  
+!    WSELX=AO(NRX)+VEL(3,NRX)  
+!  ENDIF  
 !FOR MARSH ALGORITHM, NOT OPERATIVE AT THE MOMENT
 
-    !for polynomial approach no marsh-option for the moment!
+!for polynomial approach no marsh-option for the moment!    
     WSEL1 = AO (N1) + VEL (3, N1)
     WSELX = AO (NRX) + VEL (3, NRX)
 
@@ -217,21 +217,21 @@ end if
 !nis,Oct,com: Install element residual values into global vector. NCN == 3 for 1D-elements and 1D-2D-elements.
 FindNodesToInstall: DO I = 1, NCN
 
-  !get degree of freedom IA from node J to install equations to
+!get degree of freedom IA from node J to install equations to  
   J = NCON (I)
   IA = NDF * (I - 1)
 
-  !for every nodal degree of freedom
+!for every nodal degree of freedom  
   InstallResiduals: DO K = 1, NDF
 
-    !find equation number JA by local number IA
+!find equation number JA by local number IA    
     IA = IA + 1
     JA = NBC (J, K)
 
-    !Jump over deactivated nodal degree of freedom
+!Jump over deactivated nodal degree of freedom    
     IF (JA == 0) CYCLE InstallResiduals
 
-    !Install element residuum F(IA) into global residuum R1(JA)
+!Install element residuum F(IA) into global residuum R1(JA)    
     R1(JA)=R1(JA)+F(IA)
 
   ENDDO InstallResiduals

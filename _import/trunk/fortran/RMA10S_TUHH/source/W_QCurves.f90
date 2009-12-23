@@ -27,10 +27,10 @@ QFunction => newDiscrFun ()
 how = howin
 huw = huwin
 
-  !initialize with standard positive flow direction
+!initialize with standard positive flow direction  
   QDir = 1.0
-  !if flow is turning around: introduce direction factor and switch water stages
-  !this does not change the original data!
+!if flow is turning around: introduce direction factor and switch water stages  
+!this does not change the original data!  
   if (how < huw) then
     QDir = -1.0
     huw_tmp = huw
@@ -38,30 +38,30 @@ huw = huwin
     how = huw_tmp
   end if
   
-  !find the corresponding weir definition
+!find the corresponding weir definition  
   do i = 1, maxWeir
     if (weirImat == contrStructures(i).typeID) cstrc => contrStructures (i)
   enddo
 
-  !Calculate Q at the weir
-  !-----------------------
-  !
-  !  how
-  !  |
-  !  |    |    Q1  Q2
-  !  |    |    /   /
-  !  |        /   /
-  !  | ------/   /
-  !  | ---------/
-  !  |
-  !  |    |
-  !  |    | (Q on that vertical line, interpolated between single Q-curves)
-  !  |    |
-  !  |
-  !  |-------------------->huw
+!Calculate Q at the weir  
+!-----------------------  
+!  
+!  how  
+!  |  
+!  |    |    Q1  Q2  
+!  |    |    /   /  
+!  |        /   /  
+!  | ------/   /  
+!  | ---------/  
+!  |  
+!  |    |  
+!  |    | (Q on that vertical line, interpolated between single Q-curves)  
+!  |    |  
+!  |  
+!  |-------------------->huw  
 
   
-  !generate the QFunction according 'vertical line' from picture above
+!generate the QFunction according 'vertical line' from picture above  
   tmpFun => cstrc.QCurves.firstFun
   generateQFunction: do
     absz = functionValue (tmpFun.this, huw)
@@ -74,7 +74,7 @@ huw = huwin
     endif
   enddo generateQFunction
 
-  !calculate flow over weir, taking account the direction fix
+!calculate flow over weir, taking account the direction fix  
   Q = QDir * functionValue (QFunction, how)
   cstrcQ_fromQCurves = Q
   return

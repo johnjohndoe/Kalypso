@@ -1,46 +1,46 @@
-C     Last change:  IPK   5 Oct 98    3:43 pm
-
+!     Last change:  IPK   5 Oct 98    3:43 pm
+!
       SUBROUTINE MELLII
       USE IHILMOD
       USE BLK10MOD
       USE BLK11MOD
-C 
-c      This routine has been modified by WLP for use on the EMP.
-c      I was unable to understand the methodology behind the original
-c      version of mellii.  The vertical eddy viscosity for unstratified
-c      conditions is assumed to be parabolic and the co-efficients of 
-c      Henderson-Sellers have been imposed.
-C 
-      real*8 GRI,DENGR,DV2,DUDZ,DVDZ,RHOC,DZPDZ,ZPUP,ZPDN,UUP,VUP,
+! 
+!      This routine has been modified by WLP for use on the EMP.
+!      I was unable to understand the methodology behind the original
+!      version of mellii.  The vertical eddy viscosity for unstratified
+!      conditions is assumed to be parabolic and the co-efficients of 
+!      Henderson-Sellers have been imposed.
+! 
+      real*8 GRI,DENGR,DV2,DUDZ,DVDZ,RHOC,DZPDZ,ZPUP,ZPDN,UUP,VUP,      &
      &       VDN,UDN,GRI0
-
-C 
-C 
-C      LOOP THROUGH ALL THE SURFACE NODES
-C 
+!
+! 
+! 
+!      LOOP THROUGH ALL THE SURFACE NODES
+! 
       DO 110 N = 1, NPM
-cipk oct96
+!ipk oct96
         if(nsurf(n) < 0) go to 110
-        
-C           K IS THE GLOBAL NODE NUM. JUST BELOW SUR, N IS SUR
-C           GL. NODE NUM., L IS THE BOTTOM GL. NODE NUM.
+!
+!           K IS THE GLOBAL NODE NUM. JUST BELOW SUR, N IS SUR
+!           GL. NODE NUM., L IS THE BOTTOM GL. NODE NUM.
         K = NREF(N) + 1
-C         IF K=1 THEN THIS IS 2-D DEPTH INTEGRATED SO SKIP
+!         IF K=1 THEN THIS IS 2-D DEPTH INTEGRATED SO SKIP
         IF (K == 1) GO TO 110
         L = K + NDEP(N) - 2
-CIPK OCT98        L1 = L - 1
-c       write(*,*)'n,k,l,l1',n,k,l,l1
-C 
-C           LOOP THROUGH ALL THE NODES BETWEEN THE SURFACE AND
-C           BOTTOM CALCULATING VISCOSITIES
-C
+!IPK OCT98        L1 = L - 1
+!       write(*,*)'n,k,l,l1',n,k,l,l1
+! 
+!           LOOP THROUGH ALL THE NODES BETWEEN THE SURFACE AND
+!           BOTTOM CALCULATING VISCOSITIES
+!
         HTEMP=VEL(3,N)
         AOTEMP=AO(N)
         CONVER=(ELEV-AOTEMP)/HTEMP
-CIPK OCT98        DEPEL=1.10*HTEMP
-CIPK OCT98        DELH=0.05*HTEMP
+!IPK OCT98        DEPEL=1.10*HTEMP
+!IPK OCT98        DELH=0.05*HTEMP
         NRF=NREF(N)
-c        WRITE(*,*) 'AT DO 100',CONVER,AOTEMP,ELEV,HTEMP
+!        WRITE(*,*) 'AT DO 100',CONVER,AOTEMP,ELEV,HTEMP
         DO 100 J = NRF, L
           JC=J
           IF(J == NRF)THEN
@@ -64,20 +64,20 @@ c        WRITE(*,*) 'AT DO 100',CONVER,AOTEMP,ELEV,HTEMP
           VUP=VEL(2,JUP)
           RHOUP=DEN(JUP)
           ZPC = CORD(JC,3)
-CIPK OCT98          UC = VEL(1,JC)
-CIPK OCT98          VC = VEL(2,JC)
+!IPK OCT98          UC = VEL(1,JC)
+!IPK OCT98          VC = VEL(2,JC)
           RHOC = DEN(JC)
           ZPDN=CORD(JDN,3)
           UDN=VEL(1,JDN)
           VDN=VEL(2,JDN)
           RHODN=DEN(JDN)
-
-
-
-C                CALCULATE RICHARDSON NUMBER RI, AND THE FLUX
-C                RICHARDSON NUMBER RF
-C                DERIVATIVES ARE CALCULATED HERE AS CENTERED
-C                DIFFERENCES
+!
+!
+!
+!                CALCULATE RICHARDSON NUMBER RI, AND THE FLUX
+!                RICHARDSON NUMBER RF
+!                DERIVATIVES ARE CALCULATED HERE AS CENTERED
+!                DIFFERENCES
           DZPDZ = ZPUP - ZPDN
           DUDZ = ((UUP-UDN) / DZPDZ) * CONVER
           DVDZ = ((VUP-VDN) / DZPDZ) * CONVER
@@ -86,22 +86,22 @@ C                DIFFERENCES
           DENGR =  - GRAV * DRHODZ /( RHOC + 1.E-5)
          GRI = DENGR / DV2
          GRI0 = GRI
-
-
-
-C        RICHARDSON NUMBER ADJUSTMENT OF HENDERSON-SELLORS.
-C        1982. A SIMPLE FORMULA FOR VERTICAL DIFFUSION COEFFICIENTS UNDER
-C        CONDITIONS OF NONNEUTRAL STABILITY. J. GEOPHY. RES 87 (C8) 5860-5864
-c         write(76,*) n,gri,dengr,dv2,dudz,drhodz,rhoup,rhodn,conver
+!
+!
+!
+!        RICHARDSON NUMBER ADJUSTMENT OF HENDERSON-SELLORS.
+!        1982. A SIMPLE FORMULA FOR VERTICAL DIFFUSION COEFFICIENTS UNDER
+!        CONDITIONS OF NONNEUTRAL STABILITY. J. GEOPHY. RES 87 (C8) 5860-5864
+!         write(76,*) n,gri,dengr,dv2,dudz,drhodz,rhoup,rhodn,conver
           IF (GRI < 0.) GRI = 0.
-
-
-
-C        CALCULATE EDDY VISCOSITY AND VERTICAL DIFFUSION
-C   **** HENDERSON-SELLERS ADJUSTMENT
+!
+!
+!
+!        CALCULATE EDDY VISCOSITY AND VERTICAL DIFFUSION
+!   **** HENDERSON-SELLERS ADJUSTMENT
        xht=elev-aotemp
          ZIN=(Zpc-Aotemp)/XHT
-cipk oct98 update to f90
+!ipk oct98 update to f90
          IMMT=IMAT(1)
        nr=mod(IMMT,100)
        EPSXZ=ORT(nr,6)*(EDD1(nr)+ZIN*(EDD2(nr)+ZIN*EDD3(nr)))*XHT
@@ -120,14 +120,14 @@ cipk oct98 update to f90
        if (n == 705) then
            write(*,*) 'jc=',jc,evisxz(jc),DVISZ(JC)
        endif
-c      write(*,*) edd1,edd2,edd3,ort(nr,6),nr
-c      WRITE(*,*) jc,GRI,epsxz,zin,xht,EVISXZ(jc)
-c       if ((jc <= 21) .AND. (jc >= 19)) 
-c     + WRITE(*,*) 'evisxz dvisz ',jc,EVISXZ(jc),dvisz(jc),
-c     + xht,zin,aotemp,zpc,edd1,edd2,edd3
+!      write(*,*) edd1,edd2,edd3,ort(nr,6),nr
+!      WRITE(*,*) jc,GRI,epsxz,zin,xht,EVISXZ(jc)
+!       if ((jc <= 21) .AND. (jc >= 19)) 
+!     + WRITE(*,*) 'evisxz dvisz ',jc,EVISXZ(jc),dvisz(jc),
+!     + xht,zin,aotemp,zpc,edd1,edd2,edd3
   100   CONTINUE
   110 CONTINUE
-cipk oct96
+!ipk oct96
       do n=1,ne
         if(imat(n) < 900) then
           if(ncorn(n) > 8) then

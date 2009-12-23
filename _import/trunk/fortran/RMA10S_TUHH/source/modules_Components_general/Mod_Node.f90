@@ -1,5 +1,5 @@
 module mod_Nodes
-  !linked types
+!linked types  
   use mod_BCs
   
   integer (kind = 4), parameter :: enum_empty_BCtype = 0
@@ -11,9 +11,9 @@ module mod_Nodes
     integer (kind = 4) :: ID = 0
     real (kind = 8) :: cord (1:2) = (/0.0d0, 0.0d0/)
     real (kind = 8) :: ao = 0.0d0    
-    !neighbour relations
+!neighbour relations    
     type (linkedNode), pointer :: neighbourList => null()
-    !boundary conditions for Schwarz Iteration
+!boundary conditions for Schwarz Iteration    
     type (boundaryCondition), pointer :: currentBC => null()
     type (boundaryCondition), pointer :: previousBC => null()
   end type
@@ -41,7 +41,7 @@ module mod_Nodes
   
 contains
 
-  !add a new Neighbour to the List
+!add a new Neighbour to the List  
   subroutine addNeighbour (nodeOrigin, newNeighb)
     implicit none
     type (node), pointer :: nodeOrigin
@@ -54,14 +54,14 @@ contains
     nodeOrigin.neighbourList => newNeighb
   end subroutine
   
-  !count the neighbours of a node
+!count the neighbours of a node  
   function noOfNeighbours (nodeOrigin)
     implicit none
-    !function definition
+!function definition    
     integer (kind = 4) :: noOfNeighbours 
-    !arguments
+!arguments    
     type (node), pointer :: nodeOrigin
-    !local variables
+!local variables    
     integer (kind = 4) :: counter
     type (LinkedNode), pointer :: nextNeighbour => null()
     
@@ -78,11 +78,11 @@ contains
   
   function isContainedInList (nodeOrigin, node2Check)
     implicit none
-    !function definition
+!function definition    
     logical :: isContainedInList
-    !arguments
+!arguments    
     type (node), pointer :: nodeOrigin, node2Check
-    !local variables
+!local variables    
     type (LinkedNode), pointer :: tmpNode
     logical :: isContained
     
@@ -105,16 +105,16 @@ contains
 
   function newNode (ID, xcord, ycord, zcord)
     implicit none
-    !function name
+!function name    
     type (node), pointer :: newNode
-    !arguments
+!arguments    
     integer (kind = 4) :: ID
     real (kind = 8), intent (in) :: xcord, ycord
     real (kind = 8), intent (in), optional :: zcord
-    !local variables
+!local variables    
     type (node), pointer :: new
     
-    !allocate new node
+!allocate new node    
     allocate (new)
     
     new.ID = ID
@@ -123,21 +123,21 @@ contains
     else
       call setCoords (new, (/xcord, ycord/))
     endif
-    !overgive the new node
+!overgive the new node    
     newNode => new
     return
   end function
   
   function newLinkedNode (ID, xcord, ycord, prev, next, zcord)
     implicit none
-    !function name
+!function name    
     type (linkedNode), pointer :: newLinkedNode
-    !arguments
+!arguments    
     integer (kind = 4) :: ID
     real (kind = 8), intent (in) :: xcord, ycord
     type (linkedNode), pointer, optional :: prev, next
     real (kind = 8), intent (in), optional :: zcord
-    !local variables
+!local variables    
     type (linkedNode), pointer :: new => null()
     type (Node), pointer :: tmpNode => null()
     
@@ -157,24 +157,24 @@ contains
     else
       new => makeNodeALinkedNode (tmpNode)
     endif
-    !overgive the new linked node
+!overgive the new linked node    
     newLinkedNode => new
     return
   end function
   
-  !create a linked node from an existing node
+!create a linked node from an existing node  
   function makeNodeALinkedNode (node2link, prev, next)
     implicit none
-    !function name
+!function name    
     type (linkedNode), pointer :: makeNodeALinkedNode
-    !arguments
+!arguments    
     type (node), pointer :: node2link
     type (linkedNode), pointer, optional :: prev, next
-    !local arguments
+!local arguments    
     type (linkedNode), pointer :: new
-    !allocate new linked node
+!allocate new linked node    
     allocate (new)
-    !assign parameters
+!assign parameters    
     new.thisNode => node2link
     if (present (prev) ) then
       if (associated (prev)) then
@@ -188,14 +188,14 @@ contains
         new.next.prev => new
       endif
     endif
-    !overgive new linked node
+!overgive new linked node    
     makeNodeALinkedNode => new
     return
   end function
   
-  !set coordinates of a node
+!set coordinates of a node  
   subroutine setCoords (emptyNode, cord, cordz)
-    !arguments
+!arguments    
     type (node), pointer :: emptyNode
     real (kind = 8), dimension (1:2) :: cord
     real (kind = 8), optional :: cordz
@@ -206,27 +206,27 @@ contains
   end subroutine
   
   function newBC (bc_type, bc_value)
-    !function name
+!function name    
     type (boundaryCondition), pointer :: newBC
-    !arguments
+!arguments    
     integer (kind = 4) :: bc_type
     real (kind = 8), optional :: bc_value (*)
-    !local variables
+!local variables    
     type (boundaryCondition), pointer :: tmp_bc => null()
     
-    !allocate boundary condition memory
+!allocate boundary condition memory    
     allocate (tmp_bc)
-    !generate BC, by type
+!generate BC, by type    
     tmp_bc.bctype = bc_type
-    !set value if present
+!set value if present    
     if (present (bc_value)) call setBC (tmp_bc, bc_value)
-    !overgive boundary condition and leave function
+!overgive boundary condition and leave function    
     newBC => tmp_bc
     return
   end function
   
   subroutine setBC (bc, bc_value)
-    !arguments
+!arguments    
     type (boundaryCondition), pointer :: bc
     real (kind = 8) :: bc_value (*)
     
@@ -239,14 +239,14 @@ contains
     end select switch
   end subroutine
   
-  !node operator functions
-  !-----------------------
-  !'==' for 'linkedNodes'
+!node operator functions  
+!-----------------------  
+!'==' for 'linkedNodes'  
   function linkedNodeCompare (node1, node2)
     implicit none
-    !function definition
+!function definition    
     logical :: linkedNodeCompare
-    !arguments
+!arguments    
     type (linkedNode), pointer, intent (in) :: node1, node2
     
     linkedNodeCompare = .false.

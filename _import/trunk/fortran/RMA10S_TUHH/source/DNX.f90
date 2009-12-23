@@ -1,24 +1,24 @@
-
+!
       FUNCTION DNX (IT, K, X, Y)
       SAVE
-C-
-      !Declarations
-      !Function type defintion
+!-
+!Declarations      
+!Function type defintion      
       real (kind = 8) :: dnx
-      
-      !variables
+!
+!variables      
       REAL(kind = 8) ::X, Y
       integer :: it, k
-     
-
-
-
-C......FUNCTION TO DETERMINE X-DERIVATIVE OF SHAPE FUNCTION
-C-
+!
+!
+!
+!
+!......FUNCTION TO DETERMINE X-DERIVATIVE OF SHAPE FUNCTION
+!-
       IF(IT == 1) GO TO 500
-C-
-C......TRIANGULAR ELEMENT
-C-
+!-
+!......TRIANGULAR ELEMENT
+!-
       GO TO (110,120,130,140,150,160),K
   110 DNX=-3.D0 +4.D0*X+4.D0*Y
       RETURN
@@ -32,9 +32,9 @@ C-
       RETURN
   160 DNX=-4.D0*Y
       RETURN
-C-
-C......QUADRILATERAL ELEMENT
-C-
+!-
+!......QUADRILATERAL ELEMENT
+!-
   500 CONTINUE
       GO TO (510,520,530,540,550,560,570,580),K
   510 DNX=-(1.D0-Y)*(-2.D0*X-Y)/4.D0

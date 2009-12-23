@@ -89,7 +89,7 @@ PROGRAM RMAKalypso
 
 
 
-  !control file name is fixed for RMA·KALYPSO
+!control file name is fixed for RMA·KALYPSO  
   fnam0 = 'control.r10'
 
   do i = 1, 8
@@ -97,11 +97,11 @@ PROGRAM RMAKalypso
   enddo
   WRITE (*,'(A)') 'The name of the control file is: ', FNAM0
 
-  !open the input files
+!open the input files  
   call filehandling (1, fnam0)
-  !read size of the model geometry
+!read size of the model geometry  
   call getgeo1
-  !start main execution of the simulation model
+!start main execution of the simulation model  
   call rma_kalypso (defaultModelName)
 
 !end execution of RMA·Kalypso

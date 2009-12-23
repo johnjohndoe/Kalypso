@@ -1,6 +1,6 @@
-C     Last change:  MD   10 Jun 2009    3:11 pm
-CIPK  LAST UPDATE SEP 05 2006 ADD TMSADD, TMASSLEFT AND TMSDEP
-CIPK  LAST UPDATE MAY 30 2006 ADD TOTAL MASS DEFINTIONS
+!     Last change:  MD   10 Jun 2009    3:11 pm
+!IPK  LAST UPDATE SEP 05 2006 ADD TMSADD, TMASSLEFT AND TMSDEP
+!IPK  LAST UPDATE MAY 30 2006 ADD TOTAL MASS DEFINTIONS
       SUBROUTINE INITSED(IBIN)
       USE BLK10MOD
       USE BLK11MOD
@@ -9,20 +9,20 @@ CIPK  LAST UPDATE MAY 30 2006 ADD TOTAL MASS DEFINTIONS
       USE BLKSANMOD
       USE BLKFTMOD
       SAVE
-C-
+!-
       IF(LSS > 0) THEN
-      ALLOCATE
-     &        (FETCHM(MAXE), WNDSPDM(MAXE),
-     &        XMANN(MAXE),
-     &        WAVVEL(MAXP), FW(MAXP), WAVHIT(MAXP),
+      ALLOCATE                                                          &
+     &        (FETCHM(MAXE), WNDSPDM(MAXE),                             &
+     &        XMANN(MAXE),                                              &
+     &        WAVVEL(MAXP), FW(MAXP), WAVHIT(MAXP),                     &
      &        WAVPER(MAXP))
-
-
-
-      ALLOCATE (CRCON1(MAXP),CRCON2(MAXP),VSS1(MAXP),VSS2(MAXP),
-     +          VSK(MAXP),EXP2(MAXP))
-      ALLOCATE (CRC_1(85),CRC_2(85),VS_1(85),VS_2(85),
-     +          VS_K(85),EX_2(85))
+!
+!
+!
+      ALLOCATE (CRCON1(MAXP),CRCON2(MAXP),VSS1(MAXP),VSS2(MAXP),        &
+     &          VSK(MAXP),EXP2(MAXP))
+      ALLOCATE (CRC_1(85),CRC_2(85),VS_1(85),VS_2(85),                  &
+     &          VS_K(85),EX_2(85))
       VSST=0.
       UN=0.
       CRCON1=0.
@@ -38,12 +38,12 @@ C-
       EX_2=0.
       VS_K=0.
       VS_2=0.
-
-
-
-      ALLOCATE (GBM(MXSEDLAY),SSM(MXSEDLAY),GADM(MXSEDLAY)
-     +         ,TLAYM(MXSEDLAY),EROSTM(MXSEDLAY))
-
+!
+!
+!
+      ALLOCATE (GBM(MXSEDLAY),SSM(MXSEDLAY),GADM(MXSEDLAY)              &
+     &         ,TLAYM(MXSEDLAY),EROSTM(MXSEDLAY))
+!
       NLAYTM=0
       GAWM=0
       UNM=0
@@ -55,20 +55,20 @@ C-
       SSM=0
       GBM=0      
       EROSTM=0.
-      
-      ALLOCATE  (TLAY(MXSEDLAY),GAD(MXSEDLAY),SS(MXSEDLAY),
-     +          GB(MXSEDLAY))
+!
+      ALLOCATE  (TLAY(MXSEDLAY),GAD(MXSEDLAY),SS(MXSEDLAY),             &
+     &          GB(MXSEDLAY))
       TLAY=0.
       GAD=0.
       SS=0.
       GB=0.
-     
-      ALLOCATE  (NLAYTND(MAXP),GAWND(MAXP),UNND(MAXP),GABND(MAXP)
-     +          ,TTLAYND(MAXP),GACND(MAXP),WEGTND(MAXP),TAUCDND(MAXP)
-     +          ,ERCND(MAXP),SSND(MAXP,MXSEDLAY),GBND(MAXP,MXSEDLAY)
-     +          ,TLAYND(MAXP,MXSEDLAY),GADND(MAXP,MXSEDLAY)
-     +          ,EROST(MAXP,MXSEDLAY))
-
+!
+      ALLOCATE  (NLAYTND(MAXP),GAWND(MAXP),UNND(MAXP),GABND(MAXP)       &
+     &          ,TTLAYND(MAXP),GACND(MAXP),WEGTND(MAXP),TAUCDND(MAXP)   &
+     &          ,ERCND(MAXP),SSND(MAXP,MXSEDLAY),GBND(MAXP,MXSEDLAY)    &
+     &          ,TLAYND(MAXP,MXSEDLAY),GADND(MAXP,MXSEDLAY)             &
+     &          ,EROST(MAXP,MXSEDLAY))
+!
       NLAYTND=0
       GAWND=0.
       UNND=0.
@@ -83,12 +83,12 @@ C-
       TLAYND=0.
       GADND=0.
       EROST=0.
-
-      ALLOCATE  (SSTO(MAXP,MXSEDLAY),SMVAL(MAXP,MXSEDLAY),
-     +          GBO(MAXP,MXSEDLAY),THICKO(MAXP,MXSEDLAY),
-     +          THICK(MAXP,MXSEDLAY),SST(MAXP,MXSEDLAY),
-     +          THICKOND(MAXP,MXSEDLAY))
-
+!
+      ALLOCATE  (SSTO(MAXP,MXSEDLAY),SMVAL(MAXP,MXSEDLAY),              &
+     &          GBO(MAXP,MXSEDLAY),THICKO(MAXP,MXSEDLAY),               &
+     &          THICK(MAXP,MXSEDLAY),SST(MAXP,MXSEDLAY),                &
+     &          THICKOND(MAXP,MXSEDLAY))
+!
       SSTO=0.
       SMVAL=0.
       GBO=0.
@@ -96,11 +96,11 @@ C-
       THICK=0.
       SST=0.
       THICKOND=0.
-
-CIPK MAY06
-      ALLOCATE (TMSED(0:MAXP),TMSSED(0:MAXP),TMSADD(0:MAXP)
-     +         ,TMASSLEFT(0:MAXP),TMSDEP(0:MAXP))
-CIPK  ADD TMSADD, TMASSLEFT AND TMSDEP
+!
+!IPK MAY06
+      ALLOCATE (TMSED(0:MAXP),TMSSED(0:MAXP),TMSADD(0:MAXP)             &
+     &         ,TMASSLEFT(0:MAXP),TMSDEP(0:MAXP))
+!IPK  ADD TMSADD, TMASSLEFT AND TMSDEP
       TMSED=0
       TMSSED=0
       TMSADD=0

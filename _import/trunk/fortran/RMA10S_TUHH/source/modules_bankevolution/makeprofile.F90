@@ -72,7 +72,7 @@ if ( .NOT. associated (CCLine.firstSegment)) then
 
  nextarc => CCLine.firstsegment
  
- !!!!!!!!!  FIRST NODE OF THE SEGMENT  
+!!!!!!!!!  FIRST NODE OF THE SEGMENT   
   j = 1
   
   BankProfile.prnode(j).fe_nodenumber = NextArc.first.ID
@@ -97,14 +97,14 @@ if ( .NOT. associated (CCLine.firstSegment)) then
  midside: IF ( WithMideSide ) then 
  j = j + 1
  
- !!!!!!!!!  MIDSIDE NODE OF THE SEGMENT 
+!!!!!!!!!  MIDSIDE NODE OF THE SEGMENT  
  
   BankProfile.prnode(j).fe_nodenumber = NextArc.midside.ID
   BankProfile.prnode(j).distance = sqrt( ( NextArc.midside.cord (1) -           &
 &                                          CCLine.FirstNode.ThisNode.cord (1) ) **2 &
 &                                       +  ( NextArc.midside.cord (2) -           &
 &                                          CCLine.FirstNode.ThisNode.cord (2) )**2 )
-  !BankProfile.prnode(j).elevation = NextArc.midside.ao
+!BankProfile.prnode(j).elevation = NextArc.midside.ao  
   BankProfile.prnode(j).elevation = ao (NextArc.midside.ID)
   BankProfile.prnode(j).attribute = 'profile'
  
@@ -116,7 +116,7 @@ if ( .NOT. associated (CCLine.firstSegment)) then
  end if midside
  j = j + 1
 
-  !!!!!!!!!  LAST NODE OF THE SEGMENT 
+!!!!!!!!!  LAST NODE OF THE SEGMENT   
 
   BankProfile.prnode(j).fe_nodenumber = NextArc.last.ID
   BankProfile.prnode(j).distance = sqrt( ( NextArc.last.cord (1) -           &

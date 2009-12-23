@@ -1,32 +1,32 @@
-CIPK DEC02 FIX TO TRAP NEGATIVE WAVEDR1 COMING FROM ERROR IN SWAN
-
+!IPK DEC02 FIX TO TRAP NEGATIVE WAVEDR1 COMING FROM ERROR IN SWAN
+!
       SUBROUTINE GETDRSST
       USE BLK10MOD
       USE BLK11MOD
       USE BLKSSTMOD
       USE BLKSANMOD
       SAVE
-C-
-C...... This routine extracts surface stress data from a succession of files
-C-
-C-
-
+!-
+!...... This routine extracts surface stress data from a succession of files
+!-
+!-
+!
       INTEGER DAYWV
-
+!
       CHARACTER*8 IDWV
       CHARACTER*72 DLINWV
       CHARACTER*1002 HEDR
       CHARACTER*64 FNAMEWV,FNAMEWVNX
-c
+!
       data hrinc/0./,IENT/0/,TFORMER/0/
-C-
-C...... Initialize
-C-
+!-
+!...... Initialize
+!-
       IF(IENT == 0) THEN
-cipk jan98
+!ipk jan98
         iyrwv=iyrr
         iyrd=iyrr
-c
+!
         REWIND IWVFC
         CALL GINPT(IWVFC,IDWV,DLINWV)
         IF(IDWV(1:3) == 'WVD') THEN
@@ -61,27 +61,27 @@ c
         IENT=1
         OPEN(105,FILE=FNAMEWV,STATUS='OLD',FORM='BINARY')
         READ(105) HEDR
-C
-C               Reading Binary Data
-C
+!
+!               Reading Binary Data
+!
         READ(105)INODESIN
         DO J = 1, INODESIN
-          READ(105) I, STR11(I),STR21(I),
-     +               WAVEHT1(I),PEAKPRD1(I),WAVEDR1(I)
+          READ(105) I, STR11(I),STR21(I),                               &
+     &               WAVEHT1(I),PEAKPRD1(I),WAVEDR1(I)
         ENDDO
         CLOSE(105)
         GO TO 200
       ENDIF
-C-
-
-c     logic to pass end of year
-
+!-
+!
+!     logic to pass end of year
+!
       GO TO 250
   200 CONTINUE
-
-C-
-C...... First pass or TNEXT now not large enough read another and use that
-C-
+!
+!-
+!...... First pass or TNEXT now not large enough read another and use that
+!-
       TCUR=TNEXT
       CALL GINPT(IWVFC,IDWV,DLINWV)
       IF(IDWV(1:2) == 'WV') THEN
@@ -100,10 +100,10 @@ C-
           HRINC=HRINC+365.*24.
         ENDIF
       ENDIF
-
+!
       WRITE(75,*) 'Simulation time,file time,year correction'
       WRITE(75,*) TET+(DAYOFY-1.)*24.,TNEXT,HRINC,IYRWV,IYRR
-
+!
       WRITE(75,*) 'READING A NEW FILE', FNAMEWVNX
       DO N=1,NP
         STR10(N)=STR11(N)
@@ -114,16 +114,16 @@ C-
       ENDDO
       OPEN(105,FILE=FNAMEWVNX,STATUS='OLD',FORM='BINARY')
       READ(105) HEDR
-C
-C               Reading Binary Data
-C
+!
+!               Reading Binary Data
+!
       READ(105)INODESIN
       DO J = 1, INODESIN
-        READ(105) I, STR11(I),STR21(I),
-     +               WAVEHT1(I),PEAKPRD1(I),WAVEDR1(I)
-
-CIPK DEC02 FIX TO TRAP NEGATIVE WAVEDR1 COMING FROM ERROR IN SWAN
-
+        READ(105) I, STR11(I),STR21(I),                                 &
+     &               WAVEHT1(I),PEAKPRD1(I),WAVEDR1(I)
+!
+!IPK DEC02 FIX TO TRAP NEGATIVE WAVEDR1 COMING FROM ERROR IN SWAN
+!
         IF(WAVEDR1(I) < 0.) THEN
           WAVEHT1(I)=0.
           PEAKPRD1(I)=0.
@@ -131,27 +131,27 @@ CIPK DEC02 FIX TO TRAP NEGATIVE WAVEDR1 COMING FROM ERROR IN SWAN
           STR11(I)=0.
           STR21(I)=0.
         ENDIF
-
+!
       ENDDO
       CLOSE(105)
-
-C    Test for data year less than current
-
+!
+!    Test for data year less than current
+!
       IF(IYRWV < IYRR) THEN
         GO TO 200
       ENDIF
-
+!
   250 CONTINUE
       TMODEL=TET+(DAYOFY-1.)*24.
       IF(TMODEL > TNEXT+HRINC) THEN
-C
-C     Cannot use this file get another file          
-C
+!
+!     Cannot use this file get another file          
+!
         go to 200
       ENDIF
-
+!
       FCTI=(TMODEL-TCUR)/(TNEXT-TCUR)
-
+!
       write(75,*) 'fcti',fcti,tmodel,tcur,tnext
       DO K=1,NP
         STRESS(K,1)=STR10(K)+FCTI*(STR11(K)-STR10(K))
@@ -159,13 +159,13 @@ C
         WAVEHT(K)=WAVEHT0(K)+FCTI*(WAVEHT1(K)-WAVEHT0(K))
         PEAKPRD(K)=PEAKPRD0(K)+FCTI*(PEAKPRD1(K)-PEAKPRD0(K))
         WAVEDR(K)=WAVEDR0(K)+FCTI*(WAVEDR1(K)-WAVEDR0(K))
-
-c        write(75,6566) k,waveht(k),peakprd(k),wavedr(k),
-c     +   wAVEDR1(K),wAVEDR0(K)
-c 6566 format('wavedr',i5,5f11.4)
+!
+!        write(75,6566) k,waveht(k),peakprd(k),wavedr(k),
+!     +   wAVEDR1(K),wAVEDR0(K)
+! 6566 format('wavedr',i5,5f11.4)
       ENDDO
-
+!
       RETURN
-
+!
       END
-C
+!

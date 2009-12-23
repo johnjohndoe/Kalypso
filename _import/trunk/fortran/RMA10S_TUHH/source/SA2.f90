@@ -1,25 +1,25 @@
-
+!
       SUBROUTINE SA2(NCN)
       USE BLKSMOD
       SAVE
-*     FUNCTION SA2(K,I,L,NCN)
-C
-C     FUNCTION TO OBTAIN NODAL POINT VALUES
-C
-C     K IS SHAPE FUNCTION NUMBER
-C     I IS NODAL POINT NUMBER
-C     L IS SHAPE FUNCTION DESIRED
-C                TYPE 1 = FUNCTION
-C                TYPE 2 = X DERIVATIVE
-C                TYPE 3 = Y DERIVATIVE
-C     NCN IS NUMBER OF CORNER NODES
-C
+!     FUNCTION SA2(K,I,L,NCN)
+!
+!     FUNCTION TO OBTAIN NODAL POINT VALUES
+!
+!     K IS SHAPE FUNCTION NUMBER
+!     I IS NODAL POINT NUMBER
+!     L IS SHAPE FUNCTION DESIRED
+!                TYPE 1 = FUNCTION
+!                TYPE 2 = X DERIVATIVE
+!                TYPE 3 = Y DERIVATIVE
+!     NCN IS NUMBER OF CORNER NODES
+!
       REAL*8 DNX,DNY,SI,SL
       DIMENSION SI(6,2),SJ(6,6,3)
       DIMENSION SL(8,2),SM(8,8,3)
       DATA SI /0.,0.5,1.0,0.5,0.,0.,0.,0.,0.,0.5,1.0,0.5/
-      DATA SL/
-     A -1.,0.,1.0,1.0,1.0,0.,-1.,-1.,-1.,-1.,-1.,0.,1.,1.,1.,0./
+      DATA SL/                                                          &
+     & -1.,0.,1.0,1.0,1.0,0.,-1.,-1.,-1.,-1.,-1.,0.,1.,1.,1.,0./
       DATA IP1/0/,IP2/0/
       IF( NCN == 8 ) GO TO 200
       IF(IP1 == 0) THEN
@@ -50,9 +50,9 @@ C
           DA(K,I)=SM(K,I,2)
           DB(K,I)=SM(K,I,3)
   280 CONTINUE
-C
-C              CREATE LINEAR FUNCTIONS
-C
+!
+!              CREATE LINEAR FUNCTIONS
+!
   400 CONTINUE
       DO 500 I=1,NCN
         J=0

@@ -35,12 +35,15 @@ Inn:do i = start,endd,increment
    if (prof%prnode(i)%elevation< temp) then
 
     temp= prof%prnode(i)%elevation
-    DeepestNode = i                             ! local minima, bank-toe
+! local minima, bank-toe
+    DeepestNode = i                             
  
    ELSE IF(prof%prnode(i)%elevation>= temp) then
 
-     if (temp > prof%water_elev) then             !HN20April09 if the found local minima is greater than water elevation then it still locates on bank or top of the bank.
-       cycle inn                                      ! it is for the case that a deep point is on the top of the bank and create an unwanted local minima.
+!HN20April09 if the found local minima is greater than water elevation then it still locates on bank or top of the bank.
+     if (temp > prof%water_elev) then             
+! it is for the case that a deep point is on the top of the bank and create an unwanted local minima.
+       cycle inn                                      
      else
          EXIT inn
      end if
@@ -56,7 +59,8 @@ Inn:do i = start,endd,increment
 
 
         if ( (prof%prnode(i)%elevation  - prof%water_elev)<-0.001 .AND. &
-   &         (prof%prnode(i+p)%elevation - prof%water_elev)<-0.001 )then                   ! In the submerged area, the element is totally submerged
+! In the submerged area, the element is totally submerged
+   &         (prof%prnode(i+p)%elevation - prof%water_elev)<-0.001 )then                   
 
               LastSubmergedNode = i + p
         else

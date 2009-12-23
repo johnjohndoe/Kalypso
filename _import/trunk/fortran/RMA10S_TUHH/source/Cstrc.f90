@@ -38,23 +38,23 @@ NCN=NCORN(NN)
 !parameters for polynomial approach
 if (width(nop(nn,1)) == 0.0) then
 
-  !Polnyomial positions
+!Polnyomial positions  
   PolyPos(1) = findPolynom (PolyRangeA (nop (nn, 1), :), vel (3, nop(nn, 1)), PolySplitsA (nop (nn, 1)), cord (nop (nn,1), 1), cord (nop (nn,1), 2), nop (nn, 1))
   PolyPos(2) = findPolynom (PolyRangeA (nop (nn, 3), :), vel (3, nop(nn, 3)), PolySplitsA (nop (nn, 3)), cord (nop (nn,3), 1), cord (nop (nn,3), 2), nop (nn, 3))
 
-  !A(h)
+!A(h)  
   ah (nop (nn, 1)) = calcPolynomial (apoly (PolyPos (1), nop (nn, 1), 0:4), vel (3, nop (nn, 1)), ubound (apoly, 3))
   ah (nop (nn, 3)) = calcPolynomial (apoly (PolyPos (2), nop (nn, 3), 0:4), vel (3, nop (nn, 3)), ubound (apoly, 3))
 
-  !dA(h)/dh
+!dA(h)/dh  
   dahdh (nop (nn, 1)) = calcPolynomial1stDerivative (apoly (PolyPos (1), nop (nn, 1), 0:4), vel (3, nop (nn, 1)), ubound (apoly, 3))
   dahdh (nop (nn, 3)) = calcPolynomial1stDerivative (apoly (PolyPos (2), nop (nn, 3), 0:4), vel (3, nop (nn, 3)), ubound (apoly, 3))
 else
   
-  !A(h)
+!A(h)  
   ah (nop (nn,1)) = (width (nop (nn,1)) + (ss1 (nop (nn,1)) + ss2 (nop (nn,1))) / 2. * vel (3, nop (nn,1))) * vel (3, nop (nn,1))
   ah (nop (nn,3)) = (width (nop (nn,3)) + (ss1 (nop (nn,3)) + ss2 (nop (nn,3))) / 2. * vel (3, nop (nn,3))) * vel (3, nop (nn,3))
-  !dA(h)/dh
+!dA(h)/dh  
   dahdh(nop (nn,1)) = (width (nop (nn,1)) + (ss1 (nop (nn,1)) + ss2 (nop (nn,1))) * vel (3, nop (nn,1)))
   dahdh(nop (nn,3)) = (width (nop (nn,3)) + (ss1 (nop (nn,3)) + ss2 (nop (nn,3))) * vel (3, nop (nn,3)))
 endif
@@ -73,39 +73,39 @@ ENDDO
 !Don't consider midside nodes
 FlowBalance: do cornerNode_index = 1, ncn, 2
 
-  !get current node in element
+!get current node in element  
   cornerNode = NOP (NN, cornerNode_index)
   
-  !Residual vector
-  !---------------
-  !
-  ! F = dir   * v   * A(h)    - dir   * v   * A(h)
-  !        OW    OW    OW          UW    UW    UW
-  !
+!Residual vector  
+!---------------  
+!  
+! F = dir   * v   * A(h)    - dir   * v   * A(h)  
+!        OW    OW    OW          UW    UW    UW  
+!  
   F (1) = F (1) + dir(cornerNode) * u (cornerNode_index) * ah (cornerNode)
 
-  !Derivative with respect to velocities
-  !-------------------------------------
-  !  dF      |-            -|
-  ! ---- = - |  dir  * A(h) |
-  !  dv      |_    i    i  _|
-  !    i
-  !Find the column to place derivative with respect to velocity in local Jacobian (estifm)
+!Derivative with respect to velocities  
+!-------------------------------------  
+!  dF      |-            -|  
+! ---- = - |  dir  * A(h) |  
+!  dv      |_    i    i  _|  
+!    i  
+!Find the column to place derivative with respect to velocity in local Jacobian (estifm)  
   column = (cornerNode_index - 1) * NDF + 1
-  !Set derivative dF/dv
+!Set derivative dF/dv  
   estifm (1, column) = - dir (cornerNode) * ah (cornerNode)
 
-  !Derivative with respect to velocities
-  !-------------------------------------
-  !          |-         dA (h)     -|
-  !  dF      |            i         |  
-  ! ---- = - |  dir  * ------- * v  |
-  !  dh      |     i     dh       i |
-  !    i     |_            i       _|
-  !
-  !Find the column to place derivative with respect to velocity in local Jacobian (estifm)
+!Derivative with respect to velocities  
+!-------------------------------------  
+!          |-         dA (h)     -|  
+!  dF      |            i         |    
+! ---- = - |  dir  * ------- * v  |  
+!  dh      |     i     dh       i |  
+!    i     |_            i       _|  
+!  
+!Find the column to place derivative with respect to velocity in local Jacobian (estifm)  
   column = column + 2
-  !Set derivative dF/dh
+!Set derivative dF/dh  
   estifm (1, column) = - dir(cornerNode) * dahdh (cornerNode) * u (cornerNode_index)
 
 enddo FlowBalance
@@ -142,43 +142,43 @@ estifm (5, 5) = -1.0
 
   if (njt(nm) == 10 .OR. njt(nm) == 11 .OR. njt(nm) == 12) then
 
-    !njt defines type of flow controller
-    ! 10 - Q-curve group
-    ! 11 - tabular data
-    ! 12 - weir formula
+!njt defines type of flow controller    
+! 10 - Q-curve group    
+! 11 - tabular data    
+! 12 - weir formula    
 
-    !Residual function works like this
-    !---------------------------------
-    ! F = (u1*h1+u2*h2) - f(u1,h1,h2) = 0
+!Residual function works like this    
+!---------------------------------    
+! F = (u1*h1+u2*h2) - f(u1,h1,h2) = 0    
 
-    !ITP displays weir crest structure
-    !1 - paved
-    !0 - gravel
+!ITP displays weir crest structure    
+!1 - paved    
+!0 - gravel    
     ITP=1
 
-    !get nodal locations
+!get nodal locations    
     N1 = NOP (NN, 1)
     N2 = NOP (NN, 3)
 
-    !ipk oct03  calculate overall embankment width
+!ipk oct03  calculate overall embankment width    
     widem = sqrt ((cord (n2, 2) - cord (n1, 2))**2 + (cord (n2, 1) - cord (n1, 1))**2)
     NodA = 1
     NodB = 9
 
-    !if weir is submerged, then leave subroutine: Can only be used with njt(nm) == 12
-    !if(isubm(n1) == 2) return
+!if weir is submerged, then leave subroutine: Can only be used with njt(nm) == 12    
+!if(isubm(n1) == 2) return    
 
-    !set increments for numerical derivatives
+!set increments for numerical derivatives    
     DH = 0.002
     DV = 0.01
 
-    !Check, if node is submerged
-    !IF(WSLL(N1) < TRANSEL(N1)) return
+!Check, if node is submerged    
+!IF(WSLL(N1) < TRANSEL(N1)) return    
 
-    !Calculate the discharge based on the present values of both nodes
+!Calculate the discharge based on the present values of both nodes    
     Q = (U(1) * ah(n1) + U(3) * ah(N2)) / 2.
      
-    !Direction fix of flow over/ through control structure
+!Direction fix of flow over/ through control structure    
     QFACT1 = 1.0
     DX = cord (nop (nn, 3), 1) - cord (nop (nn, 1), 1)
     DY = cord (nop (nn, 3), 2) - cord (nop (nn, 1), 1)
@@ -186,7 +186,7 @@ estifm (5, 5) = -1.0
     if (CosinusAlpha < 0.0d0) QFACT1 = -1.0
 
     
-    !Check if control structure is controlled time dependently; means cstrc might be inoperative
+!Check if control structure is controlled time dependently; means cstrc might be inoperative    
     IF(NTMREF(IMAT(NN)) /= 0) THEN
       CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET,QFACT1)
       IF(ISWTOF == 1) THEN
@@ -200,12 +200,12 @@ estifm (5, 5) = -1.0
         VEL(2,NOP(NN,3))=0.
         ESTIFM(1,1)=1.E6
         ESTIFM(9,9)=1.E6
-        !leave routine, if control structure is not operative in this time step
+!leave routine, if control structure is not operative in this time step        
         return
       ENDIF
     ENDIF
 
-    !Factorization for using metric or SI units
+!Factorization for using metric or SI units    
     unitFac1 = 1.0d0
     unitFac2 = 1.0d0
     if (grav > 30.0 .AND. nctref (nn) == 0) then
@@ -213,10 +213,10 @@ estifm (5, 5) = -1.0
       unitFac2 = 10.7636
     endif
 
-    !Prepare for call to get function
+!Prepare for call to get function    
     WH1 = unitFac1 * VEL(3,N1)
     WH2 = unitFac1 * VEL(3,N2)
-    !This might be problematic for polynom approach
+!This might be problematic for polynom approach    
     WS1 = unitFac1 * WSLL(N1)
     WS2 = unitFac1 * WSLL(N2)
     WV1 = unitFac1 * SQRT(VEL(1,N1)**2+VEL(2,N1)**2)
@@ -227,20 +227,20 @@ estifm (5, 5) = -1.0
 
 !RESIDUAL equation of flow condition
 !-----------------------------------
-    !weir formula
+!weir formula    
     if (njt (nm) == 12) then
       CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,widem)
       Q1T = Q1T * unitFac2
-      !QFunction relationship
+!QFunction relationship      
     elseif (njt (nm) == 10) then
       q1t = cstrcQ_fromQCurves (imat (nn), ws1 + wv1**2/(2.0*grav), ws2 + wv2**2/(2.0*grav))
-    !Q tabular relationship
+!Q tabular relationship    
     elseif (njt (nm) == 11) then
       call wtform(q1t,nctref(imat(nn)),ws1,ws2, mcord(nn,1),mcord(nn,2))
       endif
-      !Factorize discharge by direction fix
+!Factorize discharge by direction fix      
       Q1T = Q1T * QFACT1
-    !Form residual
+!Form residual    
     F (nodB) = Q - Q1T
 
 !Derivative with respect to h
@@ -279,16 +279,16 @@ estifm (5, 5) = -1.0
           endif
         qDh(i) = qDh(i) * QFACT1
 
-        !after looping up and down
+!after looping up and down        
         if (i == 2) then
-          !total
+!total          
           dqdh = (qdh(1) - qdh(2)) / dh
-          !upstream
+!upstream          
           if (j == 1) then
             estifm (NodB, NodA + 2) = - 0.5 * U(1) * dahdh (n1) + dqdh
-          !downstream
+!downstream          
           else
-            !reset water levels and water depths
+!reset water levels and water depths            
             wh2 = wh2 + 0.5 * dh
             ws2 = ws2 + 0.5 * dh
             estifm (NodB, NodB + 2) = - 0.5 * u(3) * dahdh (n2) + dqdh
@@ -331,16 +331,16 @@ estifm (5, 5) = -1.0
 
         qDh(i) = qDh(i) * QFACT1
 
-        !after looping up and down
+!after looping up and down        
         if (i == 2) then
-          !total
+!total          
           dqdh = (qdh(1) - qdh(2)) / dh
-          !upstream
+!upstream          
           if (j == 1) then
             estifm (NodB, NodA) = estifm (NodB, NodA) + dqdh
-          !downstream
+!downstream          
           else
-            !reset water levels and water depths
+!reset water levels and water depths            
             wv2 = wv2 + 0.5 * dv
             estifm (NodB, NodB) = estifm (NodB, NodB)+dqdh
           endif
@@ -391,23 +391,23 @@ estifm (5, 5) = -1.0
         ENDIF
 !ipk nov06 revise
         NodA=2*NDF+1
-        !dA/dh = average width
+!dA/dh = average width        
         AWD1=WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1)
         AWD2=WIDTH(N2)+(SS1(N2)+SS2(N2))/2.*VEL(3,N2)
-        !A
+!A        
         ACR1=AWD1*VEL(3,N1)
         ACR2=AWD2*VEL(3,N2)
-        !average current discharge in element
+!average current discharge in element        
         Q=(ACR1*RX1*RSWT1+ACR2*RX2*RSWT2)/2.
-        !water surface elevations up- and downstream
+!water surface elevations up- and downstream        
         WS1=HEL(N1)+AO(N1)
         WS2=HEL(N2)+AO(N2)
-        !elevation loss between upstream and downstream
+!elevation loss between upstream and downstream        
         HLOS=ABS(WS1-WS2)
-        !constant energy loss parameterized in element characteristic CJ
+!constant energy loss parameterized in element characteristic CJ        
         HLOS=HLOS-CJ(NM)
         HLD=SIGN(1.,WS1-WS2)
-        !residual  equation
+!residual  equation        
         F(NodA)=Q-AJ(NM)-BJ(NM)*HLD*HLOS**GAMJ(NM)
         IF(HLOS < HCUT)   HLOS=HCUT
         ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.

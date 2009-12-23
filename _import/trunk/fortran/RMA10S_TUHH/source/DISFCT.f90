@@ -1,27 +1,27 @@
-
+!
       SUBROUTINE DISFCT
       USE IHILMOD
       USE BLKHMOD
       USE BLK10MOD
       SAVE
-C-
-C......SUBROUTINE TO COMPUTE FACTORS AT EACH NODE
-C-
+!-
+!......SUBROUTINE TO COMPUTE FACTORS AT EACH NODE
+!-
       DIMENSION XN1(4),XN2(4),XN3(4)
-C-
+!-
       DATA THRESH/1.0E-3/
       DIST(N1,N2)=(CORD(N1,1)-CORD(N2,1))**2+(CORD(N1,2)-CORD(N2,2))**2
-C-
-C....... Shape functions along a line at Gauss points
-C-
+!-
+!....... Shape functions along a line at Gauss points
+!-
       DO 200 INT=1,4
         XN1(INT)=(1.-AFACT(INT))*(1.-2.*AFACT(INT))
         XN2(INT)=4.*(1.-AFACT(INT))*AFACT(INT)
         XN3(INT)=(2.*AFACT(INT)-1.)*AFACT(INT)
   200 CONTINUE
-C-
-C...... Set distribution factors to initial value of 1.0
-C-
+!-
+!...... Set distribution factors to initial value of 1.0
+!-
       DO 210 N=1,NPSAV
         UDST(N)=FCTV(N)
         VDST(N)=FCTV(N)
@@ -32,20 +32,20 @@ C-
         TDST(N)=1.0
         SEDST(N)=1.0
   210  CONTINUE
-C-
-C...... Develop distribution factors for each node
-C-
-C...... Loop on all surface nodes
-C-
+!-
+!...... Develop distribution factors for each node
+!-
+!...... Loop on all surface nodes
+!-
       DO 350 N=1,NPM
         K=NREF(N)+1
         IF(K == 1) GO TO 350
         L=K+NDEP(N)-2
         IF( L < K) GO TO 350
         MO=N
-C-
-C......LOOP DOWNWARDS AT THIS SURFACE POINT
-C-
+!-
+!......LOOP DOWNWARDS AT THIS SURFACE POINT
+!-
         USUM=0.
         VSUM=0.
         SSUM=0.
@@ -82,9 +82,9 @@ C-
         IF(ABS(USUM) > THRESH) UUDST(N)=UUSUM/USUM**2
         IF(ABS(USUM*VSUM) > THRESH) UVDST(N)=UVSUM/USUM*VSUM
         IF(ABS(VSUM) > THRESH) VVDST(N)=VVSUM/VSUM**2
-C-
-C...... Loop down through nodes to setup coefficients
-C-
+!-
+!...... Loop down through nodes to setup coefficients
+!-
         K=NREF(N)
         L=K+NDEP(N)-1
         MO=N
@@ -107,12 +107,12 @@ C-
           IF(ABS(SESUM) > THRESH) SEDST(M1)=VEL(6,M1)/SSUM
   325   CONTINUE
   350 CONTINUE
-C-
-C....... Distribute to mid side nodes
-C-
+!-
+!....... Distribute to mid side nodes
+!-
       DO 480 N=1,NESAV
-        IF(IMAT(N) > 0 .AND. IMAT(N) < 1000
-     1 .OR. IMAT(N) > 5000) THEN
+        IF(IMAT(N) > 0 .AND. IMAT(N) < 1000                             &
+     & .OR. IMAT(N) > 5000) THEN
           NCN=NCORN(N)
           IK=1
           IF(NCN == 15) IK=2

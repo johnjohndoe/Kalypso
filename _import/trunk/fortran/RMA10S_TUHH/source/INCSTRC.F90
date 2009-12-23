@@ -41,9 +41,9 @@ nrowm=0
 ncolm=0
 
 readWeirSize: do
-  !read new line
+!read new line  
   call ginpt (incstr,idc,dlinc)
-  !check for type of control structure and count
+!check for type of control structure and count  
   if (idc(1:2) == 'TI') then
     cycle readWeirSize
   elseif (idc(1:7) == 'ENDDATA') then
@@ -66,11 +66,11 @@ if (maxweir > 0) allocate (ContrStructures (1: MaxWeir))
 
 !prepare control structure arrays using tabular data
 if (nrowm /= 0) then
-  !NROWCS :: number data lines (number of downstream water levels)
-  !NCOLCS :: number of data columns (number of upstream water levels)
-  !HRW    :: interpolated water stage in line (downstream)
-  !HCL    :: interpolated water stage in column (upstream)
-  !FLWCS  :: 3D-discharge table array (weir number, line number, column number)
+!NROWCS :: number data lines (number of downstream water levels)  
+!NCOLCS :: number of data columns (number of upstream water levels)  
+!HRW    :: interpolated water stage in line (downstream)  
+!HCL    :: interpolated water stage in column (upstream)  
+!FLWCS  :: 3D-discharge table array (weir number, line number, column number)  
   allocate (nrowcs (nrowm), ncolcs (ncolm), hrw (nsets, nrowm), hcl (nsets, ncolm), flwcs (nsets, nrowm, ncolm))
 endif
 
@@ -82,20 +82,20 @@ nsetsCounter = 0
 readCstrcData: do
   read (INCSTR, '(a)', iostat = iostatvar) lineToEval
 
-  !end of file reached
+!end of file reached  
   if (iostatvar /= 0) EXIT readCstrcData
 
   if (lineToEval(1:7) == 'ENDDATA') then
     EXIT readCstrcData
 
-  !file headline; nothing happens
+!file headline; nothing happens  
   elseif (lineToEval (1:2) == 'TI') then
     cycle readCstrcData
 
-  !new cstrc with QCurve definition data block
+!new cstrc with QCurve definition data block  
   elseif (lineToEval(1:3) == 'DLI') then
     read (lineToEval, *) lineID, weirTypeID
-    !create new weir
+!create new weir    
     weirCounter = weirCounter + 1
     ContrStructures (weirCounter) = newCstrc (ID = weirCounter, TypeID = weirTypeID)
     tmpCstrc => ContrStructures (weirCounter)
@@ -104,19 +104,19 @@ readCstrcData: do
 
     readCstrc_QCurve: do 
       read (INCSTR, '(a)', iostat = iostatvar) lineToEval
-      !end of data block
+!end of data block      
       if (lineToEval (1:7) == 'ENDBLOC') exit readCstrc_QCurve
-      !Read data line
+!Read data line      
       read (lineToEval, *) lineID, Qinner, EUW, EOW
-      !Add Q-Curves data set to cstrc
+!Add Q-Curves data set to cstrc      
       if ( .NOT. (associated (tmpCstrc.QCurves))) call addQCurveGroup (tmpCstrc)
-      !Add Q-Curve to Q-Curves data set of cstrc
+!Add Q-Curve to Q-Curves data set of cstrc      
       call addQCurve (tmpCstrc, Qinner)
-      !Add Triple of Q-Eow-Euw
+!Add Triple of Q-Eow-Euw      
       call addValueTriple (tmpCstrc, Qinner, EOW, EUW)
     enddo readCstrc_QCurve
   
-  !new cstrc tabular data block
+!new cstrc tabular data block  
   elseif (lineToEval (1:2) == 'IDC') then
     backspace (incstr)
     call ginpt(incstr,idc,dlinc)

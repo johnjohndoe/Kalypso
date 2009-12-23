@@ -18,18 +18,18 @@
 
 subroutine autoboundaryh(hfin,hini,h2fin,h2ini,tfin,ttt,curve,hhh,hhh2)
 
-                                                            ! hfin    : finish waterstage
-                                                         ! hini    : initial waterstage
-                                                         ! h2fin   : finish waterstage 2
-                                                         ! h2ini   : initial waterstage 2
-                                                         ! tfin    : finish step /time
-                                                         ! tini    : initial step / time  (is set to zero)
-                                                         ! ttt     : step width (for unsteady: time step), for which the
-                                                         !           boundary conditions will be calculatde
-                                                         ! curve  : option for the calculation of discharge and waterstage
-                                                         !          0 means linear, 1 means logarithmic/power
-                                                         ! hhh     : calculated waterstage
-                                                         ! hhh2    : calculated waterstage 2
+! hfin    : finish waterstage                                                            
+! hini    : initial waterstage                                                         
+! h2fin   : finish waterstage 2                                                         
+! h2ini   : initial waterstage 2                                                         
+! tfin    : finish step /time                                                         
+! tini    : initial step / time  (is set to zero)                                                         
+! ttt     : step width (for unsteady: time step), for which the                                                         
+!           boundary conditions will be calculatde                                                         
+! curve  : option for the calculation of discharge and waterstage                                                         
+!          0 means linear, 1 means logarithmic/power                                                         
+! hhh     : calculated waterstage                                                         
+! hhh2    : calculated waterstage 2                                                         
 
 INTEGER,INTENT(IN) :: curve
 REAL,INTENT(IN)    :: hfin,hini,h2fin,h2ini,tfin
@@ -48,7 +48,7 @@ h2fini = h2fin + 100.0
 
 if (curve == 0.) then
 
-  !y = a * x + b
+!y = a * x + b  
 
   a = (hfini - hinii) / (tfin-tini)
 
@@ -70,7 +70,7 @@ else
 
   tttn = ttt +100.
 
-  !y=a * x **  b
+!y=a * x **  b  
 
   b = LOG(hinii / hfini) / LOG(tini / tfinn)
 
@@ -92,17 +92,17 @@ END subroutine
 
 subroutine autoboundaryQ(qfin,qini,qdirfin,qdirini,tfin,ttt,curve,qqq,qqqdir)
 
-                                                         ! qfin    : finish discharge
-                                                         ! qini    : initial discharge
-                                                         ! qdirfin : finish direction of boundary discharge
-                                                         ! qdirini : initial direction of boundary discharge
-                                                         ! tfin    : finish step /time
-                                                         ! tini    : initial step / time
-                                                         ! ttt     : step width (for unsteady: time step), for which the
-                                                         !         boundary conditions will be calculatde
-                                                         ! curve  : option for the calculation of discharge and waterstage
-                                                         !         0 means linear, 1 means logarithmic/power
-                                                         ! qqq     : calculated discharge
+! qfin    : finish discharge                                                         
+! qini    : initial discharge                                                         
+! qdirfin : finish direction of boundary discharge                                                         
+! qdirini : initial direction of boundary discharge                                                         
+! tfin    : finish step /time                                                         
+! tini    : initial step / time                                                         
+! ttt     : step width (for unsteady: time step), for which the                                                         
+!         boundary conditions will be calculatde                                                         
+! curve  : option for the calculation of discharge and waterstage                                                         
+!         0 means linear, 1 means logarithmic/power                                                         
+! qqq     : calculated discharge                                                         
 
 
 INTEGER,INTENT(IN) :: curve
@@ -114,7 +114,7 @@ REAL :: a,b,tini,tttn
 
 if (curve == 0.) then
 
-  !y = a * x + b
+!y = a * x + b  
 
   a = (qfin - qini) / (tfin)
 
@@ -136,7 +136,7 @@ tfinn = tfin + 100.
 
 tttn = ttt +100.
 
-  !y = a * log(x) + b
+!y = a * log(x) + b  
 
   a = (qfin - qini) / (LOG(tfinn / tini))
 

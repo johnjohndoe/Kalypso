@@ -1,26 +1,26 @@
       SUBROUTINE MKSAND(T,D,VSET,SRCSNK,GRATE,NETT)
       USE BLKSANMOD
       USE BLK11MOD
-C      Calculate source sink term for Suspended Solids
-
+!      Calculate source sink term for Suspended Solids
+!
       DIMENSION ITINC(24)
-      DATA ITINC/1,2,0,0,0,3,3,3,0,0,
-     +           1,2,0,0,4,3,0,3,0,0,
-     +           4,4,4,4/
-
+      DATA ITINC/1,2,0,0,0,3,3,3,0,0,                                   &
+     &           1,2,0,0,4,3,0,3,0,0,                                   &
+     &           4,4,4,4/
+!
       INTEGER (kind = 4) :: NETT
 !NiS,jul06: For calling compatibility D must also be real, kind=8
       REAL(KIND=8) :: D
       REAL*8 T
-C
-C     USE NETYP TO DETERMINE OUR ELEMENT TYPE
-C
+!
+!     USE NETYP TO DETERMINE OUR ELEMENT TYPE
+!
       IETP=ITINC(NETT)
       IF(IETP == 0) RETURN
-C
-C     ALP1 AND ALP2 ARE IS DELIVERED TO MKSS AS A GAUSS POINT VALUES
-C     IN COMMON
-C
+!
+!     ALP1 AND ALP2 ARE IS DELIVERED TO MKSS AS A GAUSS POINT VALUES
+!     IN COMMON
+!
       IF(IETP == 4) THEN
         VSET = -ALP1
         SET=0.
@@ -43,39 +43,39 @@ C
         VSET = 0.
         GRW= 0.
       ENDIF        
-C
+!
       GRATE = GRATE  - SET
       SRCSNK = SRCSNK + GRW
-
+!
       RETURN
       END
-
-
-C**********************************************************************
-
+!
+!
+!**********************************************************************
+!
       SUBROUTINE MKSSED(T,D,VSET,SRCSNK,GRATE,NETT)
-C      Calculate source sink term for Suspended Solids
-
+!      Calculate source sink term for Suspended Solids
+!
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLK11MOD
-
+!
       DIMENSION ITINC(24)
-      DATA ITINC/1,2,0,0,0,3,3,3,0,0,
-     +           1,2,0,0,4,3,0,3,0,0,
-     +           4,4,4,4/
-
+      DATA ITINC/1,2,0,0,0,3,3,3,0,0,                                   &
+     &           1,2,0,0,4,3,0,3,0,0,                                   &
+     &           4,4,4,4/
+!
       INTEGER (kind = 4) ::  NETT
 !NiS,jul06: For calling compatibility D must also be real, kind=8
       REAL(KIND=8) :: D
       REAL*8 T
-C
-C     USE NETYP TO DETERMINE OUR ELEMENT TYPE
-C
+!
+!     USE NETYP TO DETERMINE OUR ELEMENT TYPE
+!
       IETP=ITINC(NETT)
-C
-C     VSET IS DELIVERED TO MKSS AS A GAUSS POINT VALUE
-C     Contribution due to settling (positive rate removes mass)
+!
+!     VSET IS DELIVERED TO MKSS AS A GAUSS POINT VALUE
+!     Contribution due to settling (positive rate removes mass)
       IF(IETP == 4) THEN
         VSET= ALP1
         SRC = 0.
@@ -85,8 +85,8 @@ C     Contribution due to settling (positive rate removes mass)
         SRC = ALP2/D
         SET = ALP1/D
       ELSEIF(IETP == 2) THEN
-
-      !MD: NEU NEU
+!
+!MD: NEU NEU      
         IF(ALP1*T+ALP2 <= 0) THEN
           SET=0.
           VSET=ALP1
@@ -95,23 +95,23 @@ C     Contribution due to settling (positive rate removes mass)
           VSET = 0.
         ENDIF
         SRC = ALP2
-      !MD: NEU NEU
-      !MD:  VSET= ALP1
-      !MD:  SRC = ALP2
-      !MD:  SET = 0.
+!MD: NEU NEU      
+!MD:  VSET= ALP1      
+!MD:  SRC = ALP2      
+!MD:  SET = 0.      
       ELSE
         VSET = 0.
         SRC = 0.
-        !MD wrong!! GRW = 0.
+!MD wrong!! GRW = 0.        
         SET = 0.
       ENDIF
-C
+!
       GRATE = GRATE - SET
       SRCSNK = SRCSNK + SRC
 !MD: ALP1 = Deposition --> SRC --> SRCSNK (+)
 !MD: ALP2 = Erosion --> SET --> GRATE (-)
-
+!
       RETURN
       END
-C**********************************************************************
-
+!**********************************************************************
+!

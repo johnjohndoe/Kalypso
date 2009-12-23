@@ -55,12 +55,12 @@ huw = huwin
 
   FileExists = .false.
 
-  !find position in table
+!find position in table  
 
   FindRow: DO K=1, NROWCS (NCTR)
     NRHI = K
     IF(HOW < HRW (NCTR, K)) EXIT FindRow
-    !nis,aug08: If no entry found, value range too small, stop!
+!nis,aug08: If no entry found, value range too small, stop!    
     if (k == nrowcs (nctr)) then
       call errormessageandstop (4004, 0, xcord, ycord)
     endif  
@@ -70,7 +70,7 @@ huw = huwin
   FindColumn: DO K = 1, NCOLCS (NCTR)
     NCHI = K
     IF (HUW < HCL (NCTR, K)) EXIT FindColumn
-    !nis,aug08: If no entry found, value range too small, stop!
+!nis,aug08: If no entry found, value range too small, stop!    
     if (k == ncolcs (nctr)) then
       call errormessageandstop (4004, 0, xcord, ycord)
     endif  
@@ -81,20 +81,20 @@ huw = huwin
   WTR = (HOW - HRW (NCTR, NRHI - 1))/ (HRW (NCTR, NRHI) - HRW (NCTR, NRHI - 1))
   WTC = (HUW - HCL (NCTR, NCHI - 1))/ (HCL (NCTR, NCHI) - HCL (NCTR, NCHI - 1))
 
-  !nis,jan08: Calculate the single values and interpolate later
-  !      |  HCL-1  HUW  HCL
-  !-------------------------------
-  !      |
-  !HRW-1 |   Q11       Q12
-  !      | (1)|   (3)   |(2)
-  !HOW   |   QRL - Q - QRH
-  !      | (1)|         |(2)
-  !HRW   |   Q21       Q22
-  !      |
+!nis,jan08: Calculate the single values and interpolate later  
+!      |  HCL-1  HUW  HCL  
+!-------------------------------  
+!      |  
+!HRW-1 |   Q11       Q12  
+!      | (1)|   (3)   |(2)  
+!HOW   |   QRL - Q - QRH  
+!      | (1)|         |(2)  
+!HRW   |   Q21       Q22  
+!      |  
 
-  !get tabular values
+!get tabular values  
 
-  !The following values shouldn't be problematic, otherwise the calculation will not work
+!The following values shouldn't be problematic, otherwise the calculation will not work  
   Q11 = FLWCS (NCTR, NRHI - 1, NCHI - 1)
   Q22 = FLWCS (NCTR, NRHI, NCHI)
 
@@ -108,13 +108,13 @@ huw = huwin
   if (Q12 < -999.0) Q12 = 0
 
 
-  !interpolate between the rows
+!interpolate between the rows  
   QRL = (Q21 - Q11) * WTR + Q11
   QRH = (Q22 - Q12) * WTR + Q12
 
-  !TODO: catch problems
+!TODO: catch problems  
 
-  !interpolate in general
+!interpolate in general  
   Q = (QRH - QRL) * WTC + QRL
 
 

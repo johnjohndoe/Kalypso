@@ -223,43 +223,73 @@ IOERR = 0
 
 !active unit initialisations connected to variable file names
 !--------------------------------------------------------
-ikalypsofm = 0 !geometry and results output file (in *.2d-format)
+!geometry and results output file (in *.2d-format)
+ikalypsofm = 0 
 
 !active unit initialisations connected to constant file names
 !------------------------------------------------------------
 !named
-IMESOUT = 75   !unit of Message file (MESS.ech)                    (FNAMMES)
+!unit of Message file (MESS.ech)                    (FNAMMES)
+IMESOUT = 75   
 !numbered and always present
-LIN = 2        !unit of control file (control.r10)                 (FNAM0)
-LITR = 1234    !unit of iteration file (.itr)                      (FNAM1)
-LOUT = 3       !after 1st call unit of output file (.ech)          (FNAM6)/
-               !after 2nd call LOUT becomes the general output unit (.out-file)
+!unit of control file (control.r10)                 (FNAM0)
+LIN = 2        
+!unit of iteration file (.itr)                      (FNAM1)
+LITR = 1234    
+!after 1st call unit of output file (.ech)          (FNAM6)/
+LOUT = 3       
+!after 2nd call LOUT becomes the general output unit (.out-file)               
 !numbered and present, if the unit number becomes unequal zero during runtime!
-IFILE = 0      !model geometry (in *.2d-format)                    (FNAM2)
-NB = 0         !restart input file (ASCII)                         (FNAM3)
-IREBED = 0     !Bed-restart input file (ASCII)                     (FNAM4)
-ibup = 0       !external boundary condition file                   (FNAM11)
-IIQ = 0        !input meteorological data file                     (FNAM12)
-IQEUNIT = 0    !Q-graph for element inflow                         (FNAM13)
-IHUNIT = 0     !tidalgraph                                         (FNAM14)
-IQUNIT = 0     !Q-graph for continuity line                        (FNAM15)
-KEY = 0        !tidal coefficient graph                            (FNAM16)
-IWINDIN = 0    !wind data graph                                    (FNAM17)
-IPROFIN = 0      ! INPUT UNIT FOR PROFILE DATA                     (FNAM18)
-IOMET = 0      !output meteorological data file                    (FNAM19)
-IOCON = 0      !continuity line hydrograph file                    (FNAM20)
-IWVIN = 0      !input wave data file                               (FNAM21)
-IWVFC = 0      !input surface stress data file                     (FNAM22)
-unitSWAN = 0   !SWAN control file                                  (FNAM26)
-INSTR = 0      !surface traction from external grid                (FNAM27)
-IOWGT = 0      !Mesh weighting output                              (FNAM30)
-ICORDIN = 0    !external grid data                                 (FNAM32)
-INCSTR = 0     !control structure data                             (FNAM33)
-INTIMS = 0     !on/off controlling of constrol structure time series(FNAM34)
-INWGT = 0      !external inpolation weighting data file            (FNAM36)
-IMASSOUT = 0   !???                                                (FNAM38)
-ITIMFL = 0     !processing time data                               (FNAM39)
-insfl = 0      !input control stage flow relationship file         (FNAM40)
+!model geometry (in *.2d-format)                    (FNAM2)
+IFILE = 0      
+!restart input file (ASCII)                         (FNAM3)
+NB = 0         
+!Bed-restart input file (ASCII)                     (FNAM4)
+IREBED = 0     
+!external boundary condition file                   (FNAM11)
+ibup = 0       
+!input meteorological data file                     (FNAM12)
+IIQ = 0        
+!Q-graph for element inflow                         (FNAM13)
+IQEUNIT = 0    
+!tidalgraph                                         (FNAM14)
+IHUNIT = 0     
+!Q-graph for continuity line                        (FNAM15)
+IQUNIT = 0     
+!tidal coefficient graph                            (FNAM16)
+KEY = 0        
+!wind data graph                                    (FNAM17)
+IWINDIN = 0    
+! INPUT UNIT FOR PROFILE DATA                     (FNAM18)
+IPROFIN = 0      
+!output meteorological data file                    (FNAM19)
+IOMET = 0      
+!continuity line hydrograph file                    (FNAM20)
+IOCON = 0      
+!input wave data file                               (FNAM21)
+IWVIN = 0      
+!input surface stress data file                     (FNAM22)
+IWVFC = 0      
+!SWAN control file                                  (FNAM26)
+unitSWAN = 0   
+!surface traction from external grid                (FNAM27)
+INSTR = 0      
+!Mesh weighting output                              (FNAM30)
+IOWGT = 0      
+!external grid data                                 (FNAM32)
+ICORDIN = 0    
+!control structure data                             (FNAM33)
+INCSTR = 0     
+!on/off controlling of constrol structure time series(FNAM34)
+INTIMS = 0     
+!external inpolation weighting data file            (FNAM36)
+INWGT = 0      
+!???                                                (FNAM38)
+IMASSOUT = 0   
+!processing time data                               (FNAM39)
+ITIMFL = 0     
+!input control stage flow relationship file         (FNAM40)
+insfl = 0      
 
 
 fileControl.lin => newFile (2, fnam0, 'old')
@@ -281,23 +311,23 @@ ENDIF
 !-------------------------------------------
 FileRead: DO
 
-  !read the next line from the control file
+!read the next line from the control file  
   READ (fileControl.lin.unit, '(A8, A96)') ID, FNAMIN
-  !write out the read line from the control file to the console
+!write out the read line from the control file to the console  
   WRITE(*,*) ' id: ', ID, ' file name: ', FNAMIN
-  !trim the read file name from control file, to leave outer blanks aside
+!trim the read file name from control file, to leave outer blanks aside  
   fname = adjustl (fnamin)
   fname = trim (fname)
 
 
   IF (ID == 'OUTFIL  ') THEN
-    !assign to global name space for output (FNAM is defined in BLK10MOD)
+!assign to global name space for output (FNAM is defined in BLK10MOD)    
     FNAM = FNAME
-    !assign local file names
+!assign local file names    
     FNAM1 = trim (FNAME) // '.itr'
     FNAM6 = trim (FNAME) // '.ech'
     FNAMMES = trim (FNAME) // 'MESS.OUT'
-    !open the files
+!open the files    
     OPEN (LITR, FILE = FNAM1, STATUS = 'UNKNOWN')
     OPEN (LOUT, FILE = FNAM6, STATUS = 'UNKNOWN')
     OPEN (IMESOUT, FILE = FNAMMES, STATUS = 'UNKNOWN')
@@ -310,224 +340,224 @@ FileRead: DO
 !           format, then it is considered in the case of starting time step == 1. The user has no option, for writing result file. If he is
 !           working with Kalyso-2D geometry input, at least a Kalypso-2D format output and restartable file will be generated.
 
-  !Input geometry (and optionally restart results file)
+!Input geometry (and optionally restart results file)  
   ELSEIF(ID == 'INKALYPS') THEN
-    !unit of the geometry file
+!unit of the geometry file    
     IFILE = 60
     call fileOpen (IFILE, trim(FNAME), 'OLD', 'FORMATTED', FNAM2, IERMSG)
-    !initialise: The first time step is by default the first one in the list
+!initialise: The first time step is by default the first one in the list    
     iaccyc = 1
 
-    !Read additional informations; THEY HAVE TO BE THERE!!!
+!Read additional informations; THEY HAVE TO BE THERE!!!    
     READ (fileControl.lin.unit,'(A8,A96)') ID, FNAMIN
 
-    !Error, if the additional control informations were not entered
+!Error, if the additional control informations were not entered    
     IF (ID(1:7) /= 'CONTROL') call ErrorMessageAndStop (1010, 0, 0.0d0, 0.0d0)
 
-    !If additional CONTROL-line, read data
+!If additional CONTROL-line, read data    
     READ (FNAMIN, *, iostat = ioerr) ct, iaccyc, modellaus
     IF (ioerr /= 0) call ErrorMessageAndStop (1010, 0, 0.0d0, 0.0d0)
-    !unit number for the output files in Kalypso format; only set ir
+!unit number for the output files in Kalypso format; only set ir    
     IKALYPSOFM = 77
 
-    !Now get the Restart informations
-    !There can be 2 cases for restarting:
-    !  - iaccyc > 1: It means, that not the first, but a later time step should be used to start with the
-    !                calculation. For this reason, a result from before must be present
-    !  - RESTART   : The optional line RESTART is given, that implies not to use the initial guess, but the 
-    !                result informations from the given model.
-    !In both cases the geometry file (line INKALYPS) contains the result to restart with, too.
+!Now get the Restart informations    
+!There can be 2 cases for restarting:    
+!  - iaccyc > 1: It means, that not the first, but a later time step should be used to start with the    
+!                calculation. For this reason, a result from before must be present    
+!  - RESTART   : The optional line RESTART is given, that implies not to use the initial guess, but the     
+!                result informations from the given model.    
+!In both cases the geometry file (line INKALYPS) contains the result to restart with, too.    
 
-    !check for 'RESTART' in next line
+!check for 'RESTART' in next line    
     READ (fileControl.lin.unit,'(A8,A96)') ID, FNAMIN
-    !handle restarting
+!handle restarting    
     IF (ID(1:7) == 'RESTART' .OR. iaccyc > 1) THEN
-      !unit number of restart file is the same as input file
+!unit number of restart file is the same as input file      
       NB     = ifile       
-      !parameters for run time
+!parameters for run time      
       KRESTF = 1
       iutub  = 1
-      !name of restart file is in Kalypso-2D case the same as geometry-file
+!name of restart file is in Kalypso-2D case the same as geometry-file      
       FNAM3  = FNAM2    
     endif
-    !backspace file, if 'RESTART'-entry was not present, not to jump over any line
+!backspace file, if 'RESTART'-entry was not present, not to jump over any line    
     if ( .NOT. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
 
 
-  !Input 'BEDREST' = Bed-RESTART (INPUT-Data)
-  !-----------------------------------------
+!Input 'BEDREST' = Bed-RESTART (INPUT-Data)  
+!-----------------------------------------  
   ELSEIF(ID(1:7) == 'BEDREST') THEN
-    !unit of the Bed-Restart file
+!unit of the Bed-Restart file    
     IREBED = 50
-    !name of bed restart file = FNAM4
+!name of bed restart file = FNAM4    
     call fileOpen (IREBED, trim(FNAME), 'OLD', 'FORMATTED', FNAM4, IERMSG)
-    ! Restart bed need not be combined with Restart-Hydrodynamic File.
-    ! Restart bed can also be loaded for starting from Lake-Solution as well
-    !       as starting from a real Restart-Case
+! Restart bed need not be combined with Restart-Hydrodynamic File.    
+! Restart bed can also be loaded for starting from Lake-Solution as well    
+!       as starting from a real Restart-Case    
 
 
-  !meteorological data time series (INPUT)
-  !---------------------------------------
+!meteorological data time series (INPUT)  
+!---------------------------------------  
   ELSEIF(ID == 'METFIL  ') THEN
-    !unit number
+!unit number    
     IIQ = 30
     call fileOpen (IIQ, trim(FNAME), 'OLD', 'FORMATTED', FNAM12, IERMSG)
-    !additional parameters to be set
+!additional parameters to be set    
     MMET=1
 
-  !external boundary condition file (INPUT)
-  !----------------------------------------
+!external boundary condition file (INPUT)  
+!----------------------------------------  
   ELSEIF (ID == 'BCFIL   ') THEN
     IBUP=61
     call fileOpen (ibup, trim (fname), 'OLD', 'FORMATTED', fnam11, iermsg)
 
-  !element inflow hydrograph data (INPUT)
-  !--------------------------------------
+!element inflow hydrograph data (INPUT)  
+!--------------------------------------  
   ELSEIF (ID == 'INELTFL ') THEN
-    !unit number
+!unit number    
     IQEUNIT=14
     call fileOpen (IQEUNIT, trim(FNAME), 'OLD', 'FORMATTED', FNAM13, IERMSG)
 
-  !tidalgraph data file (INPUT)
-  !----------------------------
+!tidalgraph data file (INPUT)  
+!----------------------------  
   ELSEIF (ID == 'INELEV  ') THEN
-    !unit number
+!unit number    
     IHUNIT=12
     call fileOpen (IHUNIT, trim(FNAME),'OLD','FORMATTED',FNAM14,IERMSG)
 
-  !hydrograph data file (INPUT)
-  !----------------------------
+!hydrograph data file (INPUT)  
+!----------------------------  
   ELSEIF(ID == 'INHYD   ') THEN
-    !unit number
+!unit number    
     IQUNIT=11
     call fileOpen (IQUNIT, trim(FNAME), 'OLD', 'FORMATTED', FNAM15, IERMSG)
 
-  !tidal harmonic data file (INPUT)
-  !--------------------------------
+!tidal harmonic data file (INPUT)  
+!--------------------------------  
   ELSEIF(ID == 'INHARM  ') THEN
-    !unit number
+!unit number    
     key=13
     call fileOpen (key, trim(FNAME), 'OLD', 'FORMATTED', FNAM16, IERMSG)
 
-  !wind data file (INPUT)
-  !----------------------
+!wind data file (INPUT)  
+!----------------------  
   ELSEIF(ID == 'AWINDIN ') THEN
     IWINDIN=70
     call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM17, IERMSG)
 
-  !EFa aug09, adding external wind data (constant over the model area)
-  !wind data file (INPUT)
-  !----------------------
+!EFa aug09, adding external wind data (constant over the model area)  
+!wind data file (INPUT)  
+!----------------------  
   ELSEIF(ID == 'AWINDIN2') THEN
     IWINDIN=71
     call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM23, IERMSG)
-  !-
-  !
-  !--------------------------------
+!-  
+!  
+!--------------------------------  
   ELSEIF(ID == 'OUTMET  ') THEN
     IOMET=72
     call fileOpen (IOMET, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM19, IERMSG)
 
-  !continuity line hydrograph result data (output)
-  !-----------------------------------------------
+!continuity line hydrograph result data (output)  
+!-----------------------------------------------  
   ELSEIF(ID == 'OUTCON  ') THEN
-    !unit number
+!unit number    
     IOCON=21
     call fileOpen (IOCON, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM20, IERMSG)
 
-  !wave data (INPUT)
-  !-----------------
+!wave data (INPUT)  
+!-----------------  
   ELSEIF(ID == 'INWAVE  ') THEN
     IWVIN=101
     call fileOpen (IWVIN, trim(FNAME), 'OLD', 'UNFORMATTED', FNAM21, IERMSG)
 
-  !surface stress data (INPUT) (unformatted file)
-  !-----------------------------------------------
+!surface stress data (INPUT) (unformatted file)  
+!-----------------------------------------------  
   ELSEIF(ID == 'INSSTR  ') THEN
     IWVFC=102
     call fileOpen (IWVFC, trim(FNAME), 'OLD', 'UNFORMATTED', FNAM22, IERMSG)
 
-  !surface stress data (INPUT) (formatted file)
-  !-----------------------------------------------
+!surface stress data (INPUT) (formatted file)  
+!-----------------------------------------------  
   ELSEIF(ID == 'INDFSSTR') THEN
     IWVFC=104
     call fileOpen (IWVFC, trim(FNAME), 'OLD', 'FORMATTED', FNAM22, IERMSG)
 
-  !SWAN control file (INPUT)
-  !-------------------------
+!SWAN control file (INPUT)  
+!-------------------------  
   ELSEIF(ID == 'SWANFL  ') THEN
     unitSwan = 106
     call fileOpen (unitSwan, trim(FNAME), 'OLD', 'FORMATTED', FNAM26, IERMSG)
 
-  !stage flow table (h/q - relationship definition (INPUT)
-  !-------------------------------------------------------
+!stage flow table (h/q - relationship definition (INPUT)  
+!-------------------------------------------------------  
   ELSEIF(ID == 'STFLFIL ') THEN
     INSFL=40
     call fileOpen (INSFL, trim(FNAME), 'OLD', 'FORMATTED', FNAM40, IERMSG)
     
-  !volume - waterlevel relationship of storage elements definitino (input)
-  !-----------------------------------------------------------------------
+!volume - waterlevel relationship of storage elements definitino (input)  
+!-----------------------------------------------------------------------  
   ELSEIF (ID == 'VOLWLFIL') THEN
     fileControl.volWlFil => newFile (41, trim(fname), 'old')
     call openFileObject (fileControl.volWlFil)
 
-  !external grid data (INPUT)
-  !--------------------------
+!external grid data (INPUT)  
+!--------------------------  
   ELSEIF(ID == 'INSRCORD') THEN
     ICORDIN=19
     call fileOpen (ICORDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM32, IERMSG)
 
-  !weighting factors for interpolation from external grid (INPUT)
-  !--------------------------------------------------------------
+!weighting factors for interpolation from external grid (INPUT)  
+!--------------------------------------------------------------  
   ELSEIF(ID == 'INWGT   ') THEN
     INWGT=10
     call fileOpen (INWGT, trim(FNAME), 'OLD', 'FORMATTED', FNAM36, IERMSG)
 
-  !surface traction from external grid (INPUT)
-  !-------------------------------------------
+!surface traction from external grid (INPUT)  
+!-------------------------------------------  
   ELSEIF(ID == 'INSTRESS') THEN
     INSTR=15
     call fileOpen (INSTR, trim(FNAME), 'OLD', 'FORMATTED', FNAM27, IERMSG)
 
-  !wind data file (INPUT)
-  !----------------------
+!wind data file (INPUT)  
+!----------------------  
   ELSEIF(ID == 'AWINDIN ') THEN
     IWINDIN=70
     call fileOpen (IWINDIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM17, IERMSG)
 
-  !control structure data (INPUT)
-  !------------------------------
+!control structure data (INPUT)  
+!------------------------------  
   ELSEIF(ID(1:6) == 'INCSTR') THEN
     INCSTR=20
     call fileOpen (INCSTR, trim(FNAME), 'OLD', 'FORMATTED', FNAM33, IERMSG)
  
-  !on/off controlling of constrol structure time series (INPUT)
-  !------------------------------------------------------------
+!on/off controlling of constrol structure time series (INPUT)  
+!------------------------------------------------------------  
   ELSEIF(ID(1:6) == 'INTIMS') THEN
     INTIMS=22
     call fileOpen (INTIMS, trim(FNAME), 'OLD', 'FORMATTED', FNAM34, IERMSG)
 
-   !HN052009: PROFILE DATA FILE FOR BANK EVOLUTION MODELLING.
-  !-------------------------------------
+!HN052009: PROFILE DATA FILE FOR BANK EVOLUTION MODELLING.   
+!-------------------------------------  
   ELSEIF ( ID(1:7) == 'PROFILE' ) THEN
-    ! UNIT NUMBER
+! UNIT NUMBER    
     IPROFIN = 73
     call fileOpen (IPROFIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM18, IERMSG)
 
- !HN082009: "RESTART" PROFILE DATA FILE FOR BANK EVOLUTION MODELLING.
- ! It must be available for restarting a morphological timestep with bank evolution.
-  !---------------------------------------------------------------------------------
+!HN082009: "RESTART" PROFILE DATA FILE FOR BANK EVOLUTION MODELLING. 
+! It must be available for restarting a morphological timestep with bank evolution. 
+!---------------------------------------------------------------------------------  
   ELSEIF ( ID(1:7) == 'PRFREST' ) THEN
-    ! UNIT NUMBER
+! UNIT NUMBER    
     IPROFIN = 731
     call fileOpen (IPROFIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM18, IERMSG)
-  !--------------------------------
+!--------------------------------  
   ELSEIF(ID == 'OUTMET  ') THEN
     IOMET=72
     call fileOpen (IOMET, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM19, IERMSG)
 
-  !Mesh weighting output            (OUTPUT)
-  !-----------------------------------------
+!Mesh weighting output            (OUTPUT)  
+!-----------------------------------------  
   ELSEIF(ID == 'OUTWGT  ') THEN
     IOWGT=16
     call fileOpen (IOWGT, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM30, IERMSG)
@@ -551,21 +581,21 @@ FileRead: DO
 !********************************************************
 !cipk MAY06
 
-  !
-  !-----------------------------------------------
+!  
+!-----------------------------------------------  
   ELSEIF(ID == 'AMASSOUT') THEN
     IMASSOUT=24
     call fileOpen (IMASSOUT, trim(FNAME), 'OLD', 'FORMATTED', FNAM38, IERMSG)
 
-  !processing time output file (OUTPUT)
-  !------------------------------------
+!processing time output file (OUTPUT)  
+!------------------------------------  
   ELSEIF(ID(1:7) == 'TIMFIL') THEN
     ITIMFL=25
     call fileOpen (ITIMFL, trim(FNAME), 'REPLACE', 'FORMATTED', FNAM39, IERMSG)
     CALL SECOND(ATIM(1))
 
-  !not longer used line types for input definition in RMA-Kalypso
-  !--------------------------------------------------------------
+!not longer used line types for input definition in RMA-Kalypso  
+!--------------------------------------------------------------  
   ELSEIF(ID == 'INRST   ') THEN
     call notSupportedLine (ID)
   ELSEIF(ID == 'INBNRST ') THEN
@@ -603,8 +633,8 @@ FileRead: DO
   ELSEIF(ID == 'INBNWGT ') THEN
     call notSupportedLine (ID)
 
-  !end of files input block
-  !------------------------
+!end of files input block  
+!------------------------  
   ELSEIF(ID == 'ENDFIL  ') THEN
     exit FileRead
   ENDIF
@@ -648,7 +678,8 @@ modellrst = FNAM3
 !--------------------
 WRITE (LOUT, 6010) trim (FNAM0)
  6010 FORMAT (' RMA-10 INPUT FILE NAME:         ', A)
-IF (MMET > 0) WRITE (LOUT, 6016) trim (FNAM12) !auxiliary parameter used
+!auxiliary parameter used
+IF (MMET > 0) WRITE (LOUT, 6016) trim (FNAM12) 
  6016 FORMAT (' INPUT MET FILE NAME:            ', A)
 IF(IFILE > 0) WRITE(LOUT, 6012) trim (FNAM2)
  6012 FORMAT (' INPUT GEOMETRY FILE NAME:       ', A)

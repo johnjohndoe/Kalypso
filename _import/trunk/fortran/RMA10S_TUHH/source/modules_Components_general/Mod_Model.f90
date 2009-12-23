@@ -1,26 +1,26 @@
 !data type definition
 module mod_Model
-  !use global constants
+!use global constants  
   use const_modelConvConstants
-  !use type modules
+!use type modules  
   use mod_ContiLines
   use mod_fileType
   use mod_meshModelFE
   
-  !type definition for global simulation model
-  !-------------------------------------------
+!type definition for global simulation model  
+!-------------------------------------------  
   type simulationModel
     character (len = 1000) :: ID = 'defaultID'
     logical :: hasInnerBoundaries = .false.
     logical :: isSchwarzConv = .false.
     logical :: isNewtonConv = .false.
-    !convergence borders
+!convergence borders    
     real (kind = 8) :: schwarzConv = 0.01 
 
-    !neighbouring models
+!neighbouring models    
     type (linkedSimModel), pointer :: modelNeighb => null()
     
-    !topography model
+!topography model    
     type (FEmesh), pointer :: FEmesh => null()
   end type
   
@@ -34,10 +34,10 @@ contains
 
   function newSimulationModel (ModelID)
     implicit none
-    !function name
+!function name    
     type (SimulationModel), pointer :: newSimulationModel
     character (1000), optional :: modelID
-    !local variables
+!local variables    
     type (SimulationModel), pointer :: newModel
     
     allocate (newModel)
@@ -48,12 +48,12 @@ contains
   
   function checkForInnerBCs (ccls, ncl)
     implicit none
-    !function name
+!function name    
     logical :: checkForInnerBCs
-    !arguments
+!arguments    
     type (contiLine), intent (in) :: ccls (*)
     integer (kind = 4), intent (in) :: ncl
-    !local variables
+!local variables    
     integer (kind = 4) :: i
 
     checkForInnerBCs = .false.
@@ -69,12 +69,12 @@ contains
   
   function checkForSchwarzConvergence (ccls, ncl)
     implicit none
-    !function name
+!function name    
     logical :: checkForSchwarzConvergence
-    !arguments
+!arguments    
     type (contiLine), intent (in) :: ccls (*)
     integer (kind = 4), intent (in) :: ncl
-    !local variables
+!local variables    
     integer (kind = 4) :: i
     
     checkForSchwarzConvergence = .false.
@@ -93,16 +93,16 @@ contains
   
     implicit none
     
-    !arguments
+!arguments    
     integer (kind = 4), intent (in) :: convStatus
     integer (kind = 4), intent (in) :: schwarzIt, icyc
     character (len = *), intent (in) ::simModelIDString
-    !local variables
+!local variables    
     type (file), pointer :: convStatusFile => null()
     character (len = 1000) :: convStatusFileName
     logical :: fileWithUnitExisting = .false.
     
-    !write filename based on the global Schwarz Conv status
+!write filename based on the global Schwarz Conv status    
     switch: select case (convStatus)
       case (case_SchwarzConv)
         write (convStatusFileName, '(a10,a,a1,i5.5,a1,i3.3)')  'Converged_', trim(simModelIDString),'_', icyc, '_', schwarzIt
@@ -112,11 +112,11 @@ contains
         write (convStatusFileName, '(a8)')  'Diverged'
      end select switch
      
-     !generate file object and check before, whether unit no. is existing
+!generate file object and check before, whether unit no. is existing     
      inquire (unit = 1212, exist = fileWithUnitExisting)
      if (fileWithUnitExisting) close (1212)
 
-     !create status file
+!create status file     
      convStatusFile => newFile (1212, convStatusFileName, 'replace')
      call openFileObject (convStatusFile)
      call closeFileObject (convStatusFile)
@@ -125,44 +125,44 @@ contains
   
   subroutine readDistributedModelIDs (simModel)
   
-    !arguments
+!arguments    
     type (simulationModel), pointer :: simModel
-    !local variables
+!local variables    
     type (file), pointer :: modIDsFile => null()
     type (simulationModel), pointer :: neighbModel2Add => null()
     integer :: fileUnit
     character (len = 1000) :: tempID
     integer :: ioStatus
         
-    !find a free unit and open the file
+!find a free unit and open the file    
     fileUnit = findFreeUnit()
     modIDsFile => newFile (unitNo = fileUnit, fileName = 'neighbours', fileStatus = 'OLD')
     
-    !wait until file is there
+!wait until file is there    
     waitForNeighbInfo: do
       if (fileExists (modIDsFile)) exit waitForNeighbInfo
       call sleep (1)
     end do waitForNeighbInfo
     
-    !open the info file
+!open the info file    
     call openFileObject (modIDsFile)
     
-    !read the model's ID
+!read the model's ID    
     read (modIDsFile.unit, *) simModel.ID
     
     ioStatus = 0
-    !read the neighbour IDs
+!read the neighbour IDs    
     readNeighb: do 
-      !read the next data line to find a new neighbour
+!read the next data line to find a new neighbour      
       read (modIDsFile.unit, *, iostat = ioStatus) tempID
 
-      !get out of here, if file is at the end
+!get out of here, if file is at the end      
       if (ioStatus /= 0) then
         call closeFileObject (modIDsFile)
         exit readNeighb
 
       else
-        !else read the new element and store it to the list
+!else read the new element and store it to the list        
         neighbModel2Add => newSimulationModel (tempID)
         call addNeighbourModel (simModel, neighbModel2Add)
       endif 
@@ -171,11 +171,11 @@ contains
   
   function newLinkedModel (simModel)
     implicit none
-    !type definition
+!type definition    
     type (linkedSimModel), pointer :: newLinkedModel
-    !arguments
+!arguments    
     type (simulationModel), pointer :: simModel
-    !local variables
+!local variables    
     type (linkedSimModel), pointer :: newLnkdMod => null()
     
     allocate (newLnkdMod)
@@ -186,11 +186,11 @@ contains
   
   subroutine addNeighbourModel (simModel, simModel2Add)
   
-    !arguments
+!arguments    
     type (simulationModel), pointer :: simModel
     type (simulationModel), pointer :: simModel2Add
     
-    !local variables
+!local variables    
     type (linkedSimModel), pointer :: last
     
     if (associated (simModel.modelNeighb)) then

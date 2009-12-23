@@ -23,13 +23,13 @@ findit: DO i = 1, entries
     FindPolynom = i
     RETURN
   elseif (depth > rangearray (i) .AND. i == entries) then
-    !nis,aug08: If no entry found, value range too small, stop!
-    !weirs and bridges
+!nis,aug08: If no entry found, value range too small, stop!    
+!weirs and bridges    
     if (node == 0) then
       call errormessageandstop (4004, 0, xcord, ycord)
     else
-      !no error at the moment, but there will be a warning
-      !call errormessageandstop (4005, node, xcord, ycord)
+!no error at the moment, but there will be a warning      
+!call errormessageandstop (4005, node, xcord, ycord)      
       findPolynom = i
       return
     endif

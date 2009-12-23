@@ -89,8 +89,8 @@ else if (iturb == 11) then
 
   col = p_bottom
   cot = p_bottom
-  ! col - dispersion coefficient in flow direction (longitudinal);
-  ! cot - dispersion coefficient in cross-flow dir. (transversal).
+! col - dispersion coefficient in flow direction (longitudinal);  
+! cot - dispersion coefficient in cross-flow dir. (transversal).  
   epsxx  =  BOTTOM_GENERATED(col, ffact, vecq, h)
   epszx  =  epsxx
   epsxz  =  BOTTOM_GENERATED(cot, ffact, vecq, h)
@@ -109,20 +109,20 @@ ELSE IF(iturb == 12 .OR. iturb == 13) then
     mixl = gscal * cs
   END if
 
-  ! cs - parameter of the Smagorinsky model,
-  !      having one of the following values:
-  ! -----------------------------------
-  !           Author         |    cs
-  ! -----------------------------------
-  !        Smagorinsky       |  0.197
-  !       Lilly (1965)       |  0.230
-  !       Lilly (1967)       |  0.170
-  !     Deardorff (1970)     |  0.100
-  !     Deardorff (1971)     |  0.130
-  !   Mansour et al. (1979)  |  0.210
-  !  Manson & Callen (1986)  |  0.200
-  !  Piomelli et al. (1987)  |  0.065
-  ! -----------------------------------     
+! cs - parameter of the Smagorinsky model,  
+!      having one of the following values:  
+! -----------------------------------  
+!           Author         |    cs  
+! -----------------------------------  
+!        Smagorinsky       |  0.197  
+!       Lilly (1965)       |  0.230  
+!       Lilly (1967)       |  0.170  
+!     Deardorff (1970)     |  0.100  
+!     Deardorff (1971)     |  0.130  
+!   Mansour et al. (1979)  |  0.210  
+!  Manson & Callen (1986)  |  0.200  
+!  Piomelli et al. (1987)  |  0.065  
+! -----------------------------------       
 
   epsxx  = PRANDTL_MIXING(drdx, dsdz, drdz, dsdx, mixl)
   epszx  = epsxx
@@ -159,7 +159,7 @@ ELSE IF(iturb == 16) then
   col = p_bottom
   cot = p_bottom
 
-  ! Prandtl-mixing length
+! Prandtl-mixing length  
   layerwidth = 23.0
   mixl = 0.090 * layerwidth
   temp_prandtl     = PRANDTL_MIXING(drdx, dsdz, drdz, dsdx, mixl)

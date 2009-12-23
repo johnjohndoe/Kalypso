@@ -1,16 +1,16 @@
-CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
+!IPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
       SUBROUTINE GETSTRESS
       USE BLK10MOD
       USE BLK11MOD
       USE BLKSSTMOD
       USE BLKABMOD
       SAVE
-
+!
       DATA ITIME/0/,HRINC/0/
       CHARACTER*1000 HEADWT,HEDR
-C      COMMON /STR/
-C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
-
+!      COMMON /STR/
+!     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
+!
       IF(ITIME == 0) THEN
         IF(INWGT /= 0) THEN
           READ(INWGT,'(A1000)') HEADWT
@@ -25,10 +25,10 @@ C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
 !-
         ELSEIF(ICORDIN == 0) THEN
           RETURN
-        !EFa aug08, added if-clause for external coordinates for wave data
+!EFa aug08, added if-clause for external coordinates for wave data        
         ELSEIF(INSTR == 0 .AND. INBNSTR == 0) THEN
           RETURN
-        !-
+!-        
         ENDIF
         iydd=iyrr
         iyrd=iyrr
@@ -42,18 +42,18 @@ C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
             READ(INSTR,5001,ERR=145,END=145) IDYY,TTTV,NV,IYDD
             go to 150
  145        CONTINUE
-cipk sep04
+!ipk sep04
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
             write(75,*) 'ERROR IN SURFACE STRESS DATA'
             STOP 'ERROR IN SURFACE STRESS DATA 111'
-            !EFa jul08, changed do-loop of the read-statement
+!EFa jul08, changed do-loop of the read-statement            
   150       do l=1,nv
               READ(INSTR,'(8X,I8,2F16.0,4F8.0)')K, (str2(k,j),j=1,6)             
             end do
-           ! READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
-      !+      (K,(STR2(K,J),J=1,6),L=1,NV)
-           !-
+! READ(INSTR,'(8X,I8,2F16.0,4F8.0)')           
+!+      (K,(STR2(K,J),J=1,6),L=1,NV)      
+!-           
           ELSE
             MBND=1
           ENDIF
@@ -73,32 +73,32 @@ cipk sep04
       IF(MBND == 1) THEN
         IF(ITIME == 1) THEN
           ITIME=2
-C
-C      SURFACE STRESS DATA READ
-C
-
+!
+!      SURFACE STRESS DATA READ
+!
+!
             READ(INSTR,5001,ERR=165) IDYY,TTT,NV,IYDD
  5001       FORMAT(8X,I8,F8.0,I8,I8)
-            !EFa jul08, changed do-loop of the read-statement
+!EFa jul08, changed do-loop of the read-statement            
             do l=1,nv
               READ(INSTR,'(8X,I8,2F16.0,4F8.0)')K, (str2(k,j),j=1,6)              
             end do
-            !READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
-      !+      ((K,STR2(K,J),J=1,6),L=1,NV)
-            !-
+!READ(INSTR,'(8X,I8,2F16.0,4F8.0)')            
+!+      ((K,STR2(K,J),J=1,6),L=1,NV)      
+!-            
             GO TO 166
   165     CONTINUE
-cipk sep04
+!ipk sep04
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
           STOP 'ERROR IN SURFACE STRESS DATA'
   166     CONTINUE 
         ENDIF
-
-c       Check for zero values on input file
-
+!
+!       Check for zero values on input file
+!
         IF(NV == 0) THEN
-cipk sep04
+!ipk sep04
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
           WRITE(75,*) 'Error!! total values = 0 on surface stress file'
@@ -108,9 +108,9 @@ cipk sep04
           STOP
         ENDIF
         WRITE(75,*) 'Time ONLY file =',ttt,'current time =',TET
-
-c       Now interpolate to get stress values
-
+!
+!       Now interpolate to get stress values
+!
         DO N=1,NP
             STRESS(N,1)=0.
             STRESS(N,2)=0.
@@ -132,15 +132,15 @@ c       Now interpolate to get stress values
           ENDDO
         GO TO 600
         ELSE
-C-
-C..... MBND = 0 is the case of multiple files to be interpolated
-C-
+!-
+!..... MBND = 0 is the case of multiple files to be interpolated
+!-
   250   CONTINUE
-
+!
         IYDD=IYRD
-
-c     logic to pass end of year
-
+!
+!     logic to pass end of year
+!
         IF(IYDD > IYRR) THEN
           IF(MOD(IYRR,4) == 0) THEN 
             HRINC=HRINC+366.*24.
@@ -148,9 +148,9 @@ c     logic to pass end of year
             HRINC=HRINC+365.*24.
           ENDIF
         ENDIF
-
-C    Test for data year less than current
-
+!
+!    Test for data year less than current
+!
         IF(IYDD < IYRR) THEN
           IF(MOD(IYDD,4) == 0) THEN 
             HRINC=HRINC-366.*24.
@@ -159,18 +159,18 @@ C    Test for data year less than current
           ENDIF
           IYDD=IYDD+1   
         ENDIF
-
+!
         WRITE(75,*) 'Simulation time,file time,year correction'
         WRITE(75,*) TET+(DAYOFY-1.)*24.,TTT,HRINC,IYDD,IYRR
         WRITE(75,*) 'tet,dayofy',tet,dayofy
-
+!
         IF(TET+(DAYOFY-1.)*24. > TTT+HRINC) THEN
-cipk  reset hrinc
+!ipk  reset hrinc
           HRINC=0.
-
-C-
-C...... TTT not yet large enough  move 1 to 0 and read another
-C-
+!
+!-
+!...... TTT not yet large enough  move 1 to 0 and read another
+!-
           DO K=1,NV
             DO L=1,6
               STR1(K,L) = STR2(K,L)
@@ -178,18 +178,18 @@ C-
             ENDDO
           ENDDO
           T0=TTT
-C
-C      SURFACE STRESS DATA  read
-C
-
+!
+!      SURFACE STRESS DATA  read
+!
+!
            READ(INSTR,5001,ERR=286,END=285) IDYY,TTTV,NV,IYDD
-            !EFa jul08, changed do-loop of the read-statement
+!EFa jul08, changed do-loop of the read-statement            
             do l=1,nv
               READ(INSTR,'(8X,I8,2F16.0,4F8.0)')K, (str2(k,j),j=1,6)
             end do
-              !READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
-      !+      (K,(STR2(K,J),J=1,6),L=1,NV)
-            !-
+!READ(INSTR,'(8X,I8,2F16.0,4F8.0)')              
+!+      (K,(STR2(K,J),J=1,6),L=1,NV)      
+!-            
 !REMOVE FOR RMA·KALYPSO
 !nis,nov08: Remove reading from obsolete binary file inbnstr
 !inbnstr is obsolete
@@ -208,21 +208,21 @@ C
           IYDD=IYRD+1
           GO TO 287
   286     CONTINUE
-cipk sep04
+!ipk sep04
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
           write(75,*) 'ERROR IN SURFACE STRESS DATA'
           STOP 'ERROR IN SURFACE STRESS DATA'
-
+!
   287     CONTINUE 
-c            write(75,*) 'tttv,nv,iydd,irma2,tetadd'
-c            write(75,*)  tttv,nv,iydd,irma2,tetadd
-cipk jan98 add to preserve iydd
+!            write(75,*) 'tttv,nv,iydd,irma2,tetadd'
+!            write(75,*)  tttv,nv,iydd,irma2,tetadd
+!ipk jan98 add to preserve iydd
           IYRD=IYDD
-c     check for zero nodes on input file
-
+!     check for zero nodes on input file
+!
           if(nv == 0) then
-cipk sep04
+!ipk sep04
            CLOSE(75)
            OPEN(75,FILE='ERROR.OUT')
            write(75,*) 'Error!! total values = 0 on surface stress file'
@@ -231,15 +231,15 @@ cipk sep04
            Write(*,*) 'Header contains time',tttv,' Year',iydd
            stop
           endif
-cipk jun02          TTT=TTTV+TETADD
-
+!ipk jun02          TTT=TTTV+TETADD
+!
   288     CONTINUE
           IF(MOD(IYDD,4) == 0) THEN
             HYR=366.*24.
           ELSE
             HYR=365.*24.
           ENDIF
-
+!
           IF(TTT > HYR) THEN
             TTT=TTT-HYR
             IYDD=IYDD+1
@@ -249,26 +249,26 @@ cipk jun02          TTT=TTTV+TETADD
           GO TO 288
   289     CONTINUE
           IYRD=IYDD
-
+!
           WRITE(75,6225) TTTV,TTT,iydd,iyrr
- 6225     FORMAT( /5X, 'SURFACE STRESS DATA FILE READ AT TIME =', F10.2,
-     +    '  CORRECTED TIME = ',F10.2/'YEARS',2I8 )
-cipk            write(75,*) 'Time from file =',ttt,'current time =',TET
+ 6225     FORMAT( /5X, 'SURFACE STRESS DATA FILE READ AT TIME =', F10.2,&
+     &    '  CORRECTED TIME = ',F10.2/'YEARS',2I8 )
+!ipk            write(75,*) 'Time from file =',ttt,'current time =',TET
           GO TO 250
         ELSE
-C-
-C...... We have now spanned across the time for interpolation
-C-
+!-
+!...... We have now spanned across the time for interpolation
+!-
           write(75,*) 'time,t0,ttt',tET,t0,ttt
           FCTI=(TET+(DAYOFY-1)*24.-T0)/(TTT+HRINC-T0)
           TTTC=TTT+HRINC
           HRINC=0.
           WRITE(75,*) 'GETSST-169  FCTI',FCTI
-
+!
             if(idebug == 1) then
-            !EFa jul08, testing
+!EFa jul08, testing            
             OPEN(234,FILE='STRESSFUL.TXT')
-            !-
+!-            
             DO K=1,100
              WRITE(234,'(I8,6F15.3)')K,XUSR(K),YUSR(K),(STR2(K,J),J=3,6)
             ENDDO
@@ -283,35 +283,36 @@ C-
               DO M=1,3
                 K=NODWT(N,M)
                 IF(K > 0) THEN
-                STRESS(N,1)=STRESS(N,1)
-     +              +(STR1(K,1)+FCTI*(STR2(K,1)-STR1(K,1)))*WAT(N,M)
-                STRESS(N,2)=STRESS(N,2)
-     +              +(STR1(K,2)+FCTI*(STR2(K,2)-STR1(K,2)))*WAT(N,M)
-                SPWP(N)=SPWP(N)
-     +              +(STR1(K,3)+FCTI*(STR2(K,3)-STR1(K,3)))*WAT(N,M)
-                AWL(N)=AWL(N)
-     +              +(STR1(K,4)+FCTI*(STR2(K,4)-STR1(K,4)))*WAT(N,M)
-                SWH(N)=SWH(N)
-     +              +(STR1(K,5)+FCTI*(STR2(K,5)-STR1(K,5)))*WAT(N,M)
-                WVDR(N)=WVDR(N)
-     +              +(STR1(K,6)+FCTI*(STR2(K,6)-STR1(K,6)))*WAT(N,M)
+                STRESS(N,1)=STRESS(N,1)                                 &
+     &              +(STR1(K,1)+FCTI*(STR2(K,1)-STR1(K,1)))*WAT(N,M)
+                STRESS(N,2)=STRESS(N,2)                                 &
+     &              +(STR1(K,2)+FCTI*(STR2(K,2)-STR1(K,2)))*WAT(N,M)
+                SPWP(N)=SPWP(N)                                         &
+     &              +(STR1(K,3)+FCTI*(STR2(K,3)-STR1(K,3)))*WAT(N,M)
+                AWL(N)=AWL(N)                                           &
+     &              +(STR1(K,4)+FCTI*(STR2(K,4)-STR1(K,4)))*WAT(N,M)
+                SWH(N)=SWH(N)                                           &
+     &              +(STR1(K,5)+FCTI*(STR2(K,5)-STR1(K,5)))*WAT(N,M)
+                WVDR(N)=WVDR(N)                                         &
+     &              +(STR1(K,6)+FCTI*(STR2(K,6)-STR1(K,6)))*WAT(N,M)
                 ENDIF 
               ENDDO
-              !EFa jul08, testing
-              WRITE(234,*)n,'awl(n): ',awl(n),wat(n,1),wat(n,2),wat(n,3) !(Achtung: interne Knoten!)
-              !-
+!EFa jul08, testing              
+!(Achtung: interne Knoten!)
+              WRITE(234,*)n,'awl(n): ',awl(n),wat(n,1),wat(n,2),wat(n,3) 
+!-              
           ENDDO
-
+!
         ENDIF
-
+!
       ENDIF
   600 CONTINUE
-C      DO N=1,NP
-C        WRITE(135,'(I5,7F9.3,3I6)') N,SPWP(N),AWL(N),SWH(N),WVDR(N),
-C     +  WAT(N,1),WAT(N,2),WAT(N,3),NODWT(N,1),NODWT(N,2),NODWT(N,3)
-C      ENDDO
-C      DO N=1,NV
-C        WRITE(136,*) N,STR1(N,4),STR2(N,4)
-C      ENDDO
+!      DO N=1,NP
+!        WRITE(135,'(I5,7F9.3,3I6)') N,SPWP(N),AWL(N),SWH(N),WVDR(N),
+!     +  WAT(N,1),WAT(N,2),WAT(N,3),NODWT(N,1),NODWT(N,2),NODWT(N,3)
+!      ENDDO
+!      DO N=1,NV
+!        WRITE(136,*) N,STR1(N,4),STR2(N,4)
+!      ENDDO
       RETURN
       END

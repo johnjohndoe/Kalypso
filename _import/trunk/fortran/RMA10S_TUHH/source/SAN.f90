@@ -1,61 +1,61 @@
-
+!
       SUBROUTINE SAN(NCN)
       USE SACMOD
       SAVE
-C
-C     Subroutine to obtain nodal basis function values
-C
-C     K is shape function number
-C     I is gauss point number
-C     L is shape function desired
-C                type 1 = function
-C                type 2 = x derivative
-C                type 3 = y derivative
-C                type 4 = z derivative
-C     NCN is number of corner nodes, this determines element type.
-C                20 = cube
-C                15 = triangular prism
-C                13 = rectangular pyramid
-C                10 = tetrahedron
-C
+!
+!     Subroutine to obtain nodal basis function values
+!
+!     K is shape function number
+!     I is gauss point number
+!     L is shape function desired
+!                type 1 = function
+!                type 2 = x derivative
+!                type 3 = y derivative
+!                type 4 = z derivative
+!     NCN is number of corner nodes, this determines element type.
+!                20 = cube
+!                15 = triangular prism
+!                13 = rectangular pyramid
+!                10 = tetrahedron
+!
       REAL SJN(20,20,4),SMN(15,15,4),SKN(10,10,4),SSN(13,33,4)
-C-
-      DIMENSION SI(20,3),SL(15,3),SN(10,3),SMULT(3),ST(13,3),ILOKUP(13)
-     A  ,SI2(8,3)
-C-
-      DATA SI /-1., 0., 1., 1., 1., 0.,-1.,-1.,-1., 1.,1.,-1.,
-     1         -1., 0., 1., 1. ,1., 0.,-1.,-1.,
-     2         -1.,-1.,-1., 0., 1., 1., 1., 0.,-1.,-1.,1., 1.,
-     3         -1.,-1.,-1. ,0., 1., 1., 1., 0.,
-     4         -1.,-1.,-1.,-1.,-1.,-1.,-1.,-1., 0., 0.,0., 0.,
-     5          1., 1., 1., 1., 1., 1., 1. ,1./
-C-
-      DATA SI2/  1.,-1.,-1., 1., 1.,-1.,-1., 1.,
-     1           1., 1.,-1.,-1., 1., 1.,-1.,-1.,
-     2          -1.,-1.,-1.,-1., 1., 1., 1., 1./
-C-
-      DATA SL/
-     + 0.0,0.5,1.0,0.5,0.0,0.0,0.0,1.0,0.0,0.0,0.5,1.0,0.5,0.0,0.0,
-     + -1.,-.5,0.0, .5, 1.,0.0,-1.,0.0, 1.,-1.,-.5,0.0, .5, 1.,0.0,
-     + 6*-1.,3*0.0,6*1./
-C-
-      DATA SN/ 0.,0.5,1.0,0.5,0.0,0.0,0.0,0.5,0.0,0.0,
-     +         0.,0.0,0.0,0.5,1.0,0.5,0.0,0.0,0.5,0.0,
-     +         0.,0.0,0.0,0.0,0.0,0.0,0.5,0.5,0.5,1.0/
-C-
+!-
+      DIMENSION SI(20,3),SL(15,3),SN(10,3),SMULT(3),ST(13,3),ILOKUP(13) &
+     &  ,SI2(8,3)
+!-
+      DATA SI /-1., 0., 1., 1., 1., 0.,-1.,-1.,-1., 1.,1.,-1.,          &
+     &         -1., 0., 1., 1. ,1., 0.,-1.,-1.,                         &
+     &         -1.,-1.,-1., 0., 1., 1., 1., 0.,-1.,-1.,1., 1.,          &
+     &         -1.,-1.,-1. ,0., 1., 1., 1., 0.,                         &
+     &         -1.,-1.,-1.,-1.,-1.,-1.,-1.,-1., 0., 0.,0., 0.,          &
+     &          1., 1., 1., 1., 1., 1., 1. ,1./
+!-
+      DATA SI2/  1.,-1.,-1., 1., 1.,-1.,-1., 1.,                        &
+     &           1., 1.,-1.,-1., 1., 1.,-1.,-1.,                        &
+     &          -1.,-1.,-1.,-1., 1., 1., 1., 1./
+!-
+      DATA SL/                                                          &
+     & 0.0,0.5,1.0,0.5,0.0,0.0,0.0,1.0,0.0,0.0,0.5,1.0,0.5,0.0,0.0,     &
+     & -1.,-.5,0.0, .5, 1.,0.0,-1.,0.0, 1.,-1.,-.5,0.0, .5, 1.,0.0,     &
+     & 6*-1.,3*0.0,6*1./
+!-
+      DATA SN/ 0.,0.5,1.0,0.5,0.0,0.0,0.0,0.5,0.0,0.0,                  &
+     &         0.,0.0,0.0,0.5,1.0,0.5,0.0,0.0,0.5,0.0,                  &
+     &         0.,0.0,0.0,0.0,0.0,0.0,0.5,0.5,0.5,1.0/
+!-
       DATA SMULT/.2949977901,0.6529962340,0.9270059758/,SFCT/0.77459666/
-      DATA ST/ 0., 0., 0., 0.5,1., 0.5, 0., 0., 0.0, 0.0, 0.0, 0.5,0.5,
-     +         1., 0.,-1.,-0.5,0., 0.5, 1.,-1., 1.0, 0.0,-1.0,-0.5,0.5,
-     +        -1.,-1.,-1.,-0.5,0.,-0.5, 0., 0., 1.0, 1.0, 1.0, 0.5,0.5/
+      DATA ST/ 0., 0., 0., 0.5,1., 0.5, 0., 0., 0.0, 0.0, 0.0, 0.5,0.5, &
+     &         1., 0.,-1.,-0.5,0., 0.5, 1.,-1., 1.0, 0.0,-1.0,-0.5,0.5, &
+     &        -1.,-1.,-1.,-0.5,0.,-0.5, 0., 0., 1.0, 1.0, 1.0, 0.5,0.5/
       DATA ILOKUP/5,6,1,2,3,4,9,7,14,15,10,11,13/
       DATA ITIMJ,ITIMM,ITIMK,ITIMS/4*0/
       IF( NCN == 20 ) GO TO 50
       IF( NCN == 15 ) GO TO 200
       IF( NCN == 10 ) GO TO 300
       GO TO 400
-C-
-C......PROCESS CUBE
-C-
+!-
+!......PROCESS CUBE
+!-
    50 CONTINUE
       IF(ITIMJ == 0) THEN
         DO 150 I=1,NCN
@@ -78,9 +78,9 @@ C-
           DC(K,I)=SJN(K,I,4)
    70 CONTINUE
       RETURN
-C-
-C......PROCESS TRIANGULAR PRISM
-C-
+!-
+!......PROCESS TRIANGULAR PRISM
+!-
   200 IF(ITIMM == 0) THEN
         DO 280 L=1,4
           DO 275 I=1,NCN
@@ -99,9 +99,9 @@ C-
           DC(K,I)=SMN(K,I,4)
   220 CONTINUE
       RETURN
-C
-C......PROCESS GAUSS POINTS FOR TETRAHEDRA
-C
+!
+!......PROCESS GAUSS POINTS FOR TETRAHEDRA
+!
   300 IF(ITIMK == 0) THEN
         DO 380 I=1,NCN
           DO 375 L=1,4
@@ -120,9 +120,9 @@ C
           DC(K,I)=SKN(K,I,4)
   320 CONTINUE
       RETURN
-C-
-C......PROCESS RECTANGULAR PYRAMID
-C-
+!-
+!......PROCESS RECTANGULAR PYRAMID
+!-
   400 IF(ITIMS == 0) THEN
         DO 480 I=1,NCN
           DO 475 K=1,NCN

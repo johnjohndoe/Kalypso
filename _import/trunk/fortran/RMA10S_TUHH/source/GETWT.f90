@@ -1,31 +1,31 @@
-      SUBROUTINE TRIANINT(XUSR,YUSR,NOPEL,NVERT,NELTS,M,ISWT,ITIME,WGT
-     +,NDWT)
+      SUBROUTINE TRIANINT(XUSR,YUSR,NOPEL,NVERT,NELTS,M,ISWT,ITIME,WGT  &
+     &,NDWT)
       USE BLK10MOD
       USE BLKCDMOD
       SAVE
-
+!
       REAL*8 XUSR(*),YUSR(*),xminl,xmaxl,yminl,ymaxl
       INTEGER NOPEL(3,*)
-  
+!
       DIMENSION WGT(*),NDWT(*)
       CHARACTER*72  IOUTC(10)
-
-C     Search for element that has circumcircle around the node
-
+!
+!     Search for element that has circumcircle around the node
+!
       IF(ISWT /= 0) THEN
         IF(ITIME == 0) NSTART=1
       ELSE
         NSTART=1
       ENDIF
-
+!
       DO N=NSTART,NELTS
         IF(NOPEL(1,N) == 0) GO TO 200
         if(RADS(N) == 0.) then
-         CALL CCENTRE(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N))      
-     +     ,YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N))                 
-     +     ,XCEN(N),YCEN(N),RADS(N)) 
+         CALL CCENTRE(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N))&
+     &     ,YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N))          &
+     &     ,XCEN(N),YCEN(N),RADS(N)) 
         endif       
-
+!
         IF(RADS(N)+XCEN(N) >= CORD(M,1)) THEN
             NSTART=N
             GO TO 210
@@ -33,40 +33,40 @@ C     Search for element that has circumcircle around the node
   200   CONTINUE
       ENDDO
   210 CONTINUE
-
+!
       IRJT=0
       DO N=NSTART,NELTS
         IF(NOPEL(1,N) == 0) GO TO 250
         if(RADS(N) == 0.) then
-         CALL CCENTRE(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N))      
-     +    ,YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N))                 
-     +    ,XCEN(N),YCEN(N),RADS(N)) 
+         CALL CCENTRE(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N))&
+     &    ,YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N))           &
+     &    ,XCEN(N),YCEN(N),RADS(N)) 
         endif       
         xminl=dmin1(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N)))
         xmaxl=dmax1(XUSR(NOPEL(1,N)),XUSR(NOPEL(2,N)),XUSR(NOPEL(3,N)))
         yminl=dmin1(YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N)))
         ymaxl=dmax1(YUSR(NOPEL(1,N)),YUSR(NOPEL(2,N)),YUSR(NOPEL(3,N)))
-        if(CORD(m,1) < xminl-0.001 .OR. 
-     +     CORD(m,1) > xmaxl+0.001) then
+        if(CORD(m,1) < xminl-0.001 .OR.                                 &
+     &     CORD(m,1) > xmaxl+0.001) then
           go to 250
-        elseif(CORD(m,2) < yminl-0.001 .OR. 
-     +         CORD(m,2) > ymaxl+0.001) then
+        elseif(CORD(m,2) < yminl-0.001 .OR.                             &
+     &         CORD(m,2) > ymaxl+0.001) then
           go to 250
         endif
-
+!
         DISQ=(CORD(M,1)-XCEN(N))**2+(CORD(M,2)-YCEN(N))**2
-
-C        write(142,*) m,n,disq,rads(n)**2,xusr(m),xcen(n)
+!
+!        write(142,*) m,n,disq,rads(n)**2,xusr(m),xcen(n)
         IF(DISQ <= RADS(N)**2*1.0001) THEN
-
-C     We have a candidate
-
+!
+!     We have a candidate
+!
           CALL GETWT(XUSR,YUSR,N,NOPEL,CORD(M,1),CORD(M,2),WGT,1)
           DO K=1,3
             IF(WGT(K) < -1E-3 .OR. WGT(K) > 1.001) THEN
              irjt=IRJT+1
-           WRITE(IOUTC(IRJT),'(''RJCT'',2I6,2F10.2,3F12.5)')m,n,diSQ
-     +       ,rads(n)**2,wgt(1),wgt(2),wgt(3)
+           WRITE(IOUTC(IRJT),'(''RJCT'',2I6,2F10.2,3F12.5)')m,n,diSQ    &
+     &       ,rads(n)**2,wgt(1),wgt(2),wgt(3)
               GO TO 250
             ENDIF
           ENDDO
@@ -86,50 +86,50 @@ C     We have a candidate
       ENDIF
   300 CONTINUE
       ITIME=1
-
+!
       RETURN
         END
-
-
+!
+!
       SUBROUTINE GETWT(XUSR,YUSR,N,NOPEL,XSW,YSW,WGT,ISWT)
-
-C-                                                                      
-C......SUBROUTINE TO EVALUATE FUNCTION AT GRID POINTS                   
-C-                                                                      
-C-    N = ELEMENT NUMBER        
-C_    XSW = X COORDINATE OF DESIRED POINT
-C_    YSW = Y COORDINATE OF DESIRED POINT
-C     WGT(8) = ARRAY OF WEIGHTING FUNCTIONS
-C     ISWT   = SWITCH FOR CHOICE BETWEEN LINEAR AND QUADRATIC WEIGHTING
-C            = 1 FOR LINEAR
-C            = 2 FOR QUADRATIC
-C     FROM COMMON
-C     NOP = LIST OF NODAL CONNECTIONS AROUND AN ELEMET
-C     CORD = REAL*8 ARRAY OF NODAL COORDINATES
-C                                                                       
+!
+!-                                                                      
+!......SUBROUTINE TO EVALUATE FUNCTION AT GRID POINTS                   
+!-                                                                      
+!-    N = ELEMENT NUMBER        
+!_    XSW = X COORDINATE OF DESIRED POINT
+!_    YSW = Y COORDINATE OF DESIRED POINT
+!     WGT(8) = ARRAY OF WEIGHTING FUNCTIONS
+!     ISWT   = SWITCH FOR CHOICE BETWEEN LINEAR AND QUADRATIC WEIGHTING
+!            = 1 FOR LINEAR
+!            = 2 FOR QUADRATIC
+!     FROM COMMON
+!     NOP = LIST OF NODAL CONNECTIONS AROUND AN ELEMET
+!     CORD = REAL*8 ARRAY OF NODAL COORDINATES
+!                                                                       
       USE BLK10MOD
       REAL*8 XN2,DNX,DNY,XSW,YSW,XUSR(*),YUSR(*) 
       DOUBLE PRECISION XG,YG,XK,YK,XP,YP
-      
+!
       INTEGER NOPEL(3,*)
-C-                                                                      
+!-                                                                      
       DIMENSION X(9),Y(9),WGT(8)
-C-                                                                      
+!-                                                                      
       DATA TOL/0.01/ 
-C-                                                                      
-
-C-                                                                      
-C......DETERMINE ELEMENT TYPE                                           
-C-                                                                      
-CIPKOCT93 ADD                                                           
+!-                                                                      
+!
+!-                                                                      
+!......DETERMINE ELEMENT TYPE                                           
+!-                                                                      
+!IPKOCT93 ADD                                                           
       if(n == 1910) then
          aaa=0
       endif
       NCN=6 
       IT=2 
-C-                                                                      
-C......ESTABLISH LOCAL COORDINATES FOR EACH NODE POINT OF ELEMENT                 
-C-                                                                      
+!-                                                                      
+!......ESTABLISH LOCAL COORDINATES FOR EACH NODE POINT OF ELEMENT                 
+!-                                                                      
       K1=NOPEL(1,N) 
       X(1)=0. 
       Y(1)=0. 
@@ -148,14 +148,14 @@ C-
         yminl=min(y(1),y(3),y(5))
         xmaxl=max(x(1),x(3),x(5))
         ymaxl=max(y(1),y(3),y(5))
-
-
-C-                                                                      
-C......ESTABLISH LOCAL COORDINATES OF DESIRED POINT                     
-C-                                                                      
+!
+!
+!-                                                                      
+!......ESTABLISH LOCAL COORDINATES OF DESIRED POINT                     
+!-                                                                      
       XP=XSW-XUSR(K1) 
       YP=YSW-YUSR(K1) 
-
+!
       if(xp < xminl-0.0001 .OR. xp > xmaxl+0.0001) then
           wgt(1)=2.0
         return
@@ -165,9 +165,9 @@ C-
         endif
       XG=0. 
       YG=0. 
-C-                                                                      
-C......ITERATE TO FIND LOCAL COORDINATE                                 
-C-                                                                      
+!-                                                                      
+!......ITERATE TO FIND LOCAL COORDINATE                                 
+!-                                                                      
       DO 400 ITER=1,10 
         DXKDX=0. 
         DXKDY=0. 
@@ -190,18 +190,18 @@ C-
         YG=YG+DY 
         IF(ABS(DX) < TOL .AND. ABS(DY) < TOL) GO TO 420 
   400 END DO 
-C-                                                                      
-C......NOW GET WEIGHTING FUNCTIONS FOR QUAD FUNCTION
-C-                                                                      
+!-                                                                      
+!......NOW GET WEIGHTING FUNCTIONS FOR QUAD FUNCTION
+!-                                                                      
   420 CONTINUE 
       DO  K=1,NCN 
         WGT(K)=XN2(IT,K,XG,YG)
       END DO 
-
+!
       IF(ISWT == 1) THEN
-C-
-C-     REDUCE TO LINEAR FUNCTION BY ADDING TERMS
-C-
+!-
+!-     REDUCE TO LINEAR FUNCTION BY ADDING TERMS
+!-
         DO K=2,NCN,2
           WGT(K-1)=WGT(K-1)+WGT(K)/2.
           IF(K < NCN) THEN
@@ -210,55 +210,55 @@ C-
             WGT(1)=WGT(1)+WGT(K)/2.
           ENDIF
         ENDDO
-C-    
-C-     THEN COMPACT ARRAY
-C-
+!-    
+!-     THEN COMPACT ARRAY
+!-
         DO K=1,NCN/2
           WGT(K)=WGT(2*K-1)
         ENDDO
-
+!
       ENDIF
-
+!
       RETURN 
       END                                           
-
+!
       SUBROUTINE INPOLY(XUSR,YUSR,M,INDIC,IPOLY,NPOLY,IPOL,XOUTL,YOUTL)
-
+!
       USE BLK10MOD
-
+!
       REAL*8 XUSR(*),YUSR(*),ACCUM,A1,A2,DIFF,PI,XOUTL(*),YOUTL(*)
       INTEGER IPOLY(*)
-
+!
         DATA PI/3.14159265358979/
-C     Loop around the polygon computing angles
-
+!     Loop around the polygon computing angles
+!
       if(m == 24) then
         aaa=0
         endif
       ACCUM=0.
       DO N=1,NPOLY
           IF(IPOL == 1) THEN
-          IF(ABS(CORD(M,1)-XUSR(IPOLY(N))) < 1.E-5 .AND. 
-     +       ABS(CORD(M,2)-YUSR(IPOLY(N))) < 1.E-5) THEN
+          IF(ABS(CORD(M,1)-XUSR(IPOLY(N))) < 1.E-5 .AND.                &
+     &       ABS(CORD(M,2)-YUSR(IPOLY(N))) < 1.E-5) THEN
              INDIC=1
              RETURN
           ENDIF
           A2=DATAN2(YUSR(IPOLY(N))-CORD(M,2),XUSR(IPOLY(N))-CORD(M,1))
         ELSE
-          IF(ABS(CORD(M,1)-XOUTL(N)) < 1.E-5 .AND. 
-     +       ABS(CORD(M,2)-YOUTL(N)) < 1.E-5) THEN
+          IF(ABS(CORD(M,1)-XOUTL(N)) < 1.E-5 .AND.                      &
+     &       ABS(CORD(M,2)-YOUTL(N)) < 1.E-5) THEN
              INDIC=1
              RETURN
           ENDIF
           A2=DATAN2(YOUTL(N)-CORD(M,2),XOUTL(N)-CORD(M,1))
         ENDIF
-
+!
         IF(N == 1) THEN
           A1=A2
         ELSE
           INDIC=1
           RETURN
-
+!
           DIFF=A2-A1
           IF(ABS(ABS(DIFF)-PI) < 0.001) THEN
             INDIC=1

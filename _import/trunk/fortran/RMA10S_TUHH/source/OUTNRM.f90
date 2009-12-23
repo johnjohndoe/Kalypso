@@ -15,11 +15,11 @@ data sv/ 0.02, 0.52, 0.98/
 
 do j = 1, 3
   s = sv (j)
-  !these are the quadratic approximation functions
+!these are the quadratic approximation functions  
   xn1 = 1.0 - 3.0 * s + 2.0 * s**2
   xn2 = 4.0 * s * (1.0 - s)
   xn3 = s * (2.0 * s - 1.0)
-  !get the coordinates of the auxiliary points
+!get the coordinates of the auxiliary points  
   x = xn1 * x1 + xn2 * x2 + xn3 * x3
   y = xn1 * y1 + xn2 * y2 + xn3 * y3
   if (ntp == 1) then

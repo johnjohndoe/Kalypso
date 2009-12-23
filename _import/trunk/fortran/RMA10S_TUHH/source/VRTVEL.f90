@@ -1,29 +1,29 @@
-
+!
       SUBROUTINE VRTVEL
       USE BLK10MOD
       SAVE
-
+!
       CALL SETUP
       IF(NSZF == 0) GO TO 500
       CALL FRONT(2)
-C-
-C......INITIALIZE DIVID
-C-
+!-
+!......INITIALIZE DIVID
+!-
       DO 300 N=1,NP
       DDHDX(N)=0.
       DDHDY(N)=0.
       DDAODX(N)=0.
       DDAODY(N)=0.
   300 DIVID(N)=0.
-C-
+!-
       DO 400 N=1,NE
       IF(IMAT(N)/1000 == 2) CALL PLANAR(N)
   400 CONTINUE
       CALL VVELF
   500 CONTINUE
-C-
-C......RESTORE NDF FOR FUTURE ANALYSIS
-C-
+!-
+!......RESTORE NDF FOR FUTURE ANALYSIS
+!-
       NDF=6
       RETURN
       END

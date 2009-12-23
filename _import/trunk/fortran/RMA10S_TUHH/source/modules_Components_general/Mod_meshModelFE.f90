@@ -13,11 +13,11 @@ contains
 
   function newFEMesh (ID)
     implicit none
-    !function name
+!function name    
     type (FEMesh), pointer :: newFEMesh
-    !arguments
+!arguments    
     integer (kind = 4), optional :: ID
-    !local variables
+!local variables    
     type (FEMesh), pointer :: newMesh
     
     allocate (newMesh)
@@ -31,19 +31,19 @@ contains
   end function
 
 
-  !generate the base tree for the node's tree structure
+!generate the base tree for the node's tree structure  
   subroutine setUpNodes (mesh, size)
     implicit none
-    !arguments
+!arguments    
     type (FEmesh), pointer :: mesh
     integer (kind = 4), intent (in) :: size
     mesh.nodes => newBaseDTree (size)
   end subroutine
 
-  !add a new node to the mesh; it will be sorted to the proper locatin by the decimal tree
+!add a new node to the mesh; it will be sorted to the proper locatin by the decimal tree  
   subroutine addNodeToMesh (mesh, node2Add)
     implicit none
-    !arguments
+!arguments    
     type (FEmesh), pointer :: mesh
     type (node), pointer :: node2Add
     call addElement2Tree (mesh.nodes, node2Add.ID, node2Add)
@@ -52,12 +52,12 @@ contains
   
   function findNodeInMeshByID (mesh, nodeID) result (node)
     implicit none
-    !function definition
+!function definition    
     type (node), pointer :: node
-    !arguments
+!arguments    
     type (FEmesh), pointer :: mesh
     integer (kind = 4) :: nodeID
-    !get the node; it will be searched by the decimal tree
+!get the node; it will be searched by the decimal tree    
     node => getElementByID (mesh.nodes, nodeID)
     return
   end function

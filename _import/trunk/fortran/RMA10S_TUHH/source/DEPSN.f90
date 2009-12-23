@@ -1,55 +1,55 @@
-CIPK LAST UPDATE SEP 05 2006  ADD DEPRATO
-cipk last update JUNE 5 2006  add test marshing
-CIPK  LAST UPDATE SEP 29 2005 MAKE DEPRAT LINEAR
-C_____________________________________________________________________
+!IPK LAST UPDATE SEP 05 2006  ADD DEPRATO
+!ipk last update JUNE 5 2006  add test marshing
+!IPK  LAST UPDATE SEP 29 2005 MAKE DEPRAT LINEAR
+!_____________________________________________________________________
       SUBROUTINE DEPSN
       USE BLK10MOD, only: np, npm, imid, ndep, nref, wsll, ao, it
       USE BLKSEDMOD, only: deprato, deprat, vs, taucd, taucdnd, bshear
-      
+!
       implicit none
-      
+!
       integer :: n, i, nn
-
-C**********************************************************************
-C
-C       THIS SUBROUTINE COMPUTES THE RATE OF DEPOSITION IF ANY AT
-C     EACH NODE POINT FOR THE TIME STEP.  THE COEFFICIENT DEPRAT
-C     IS RETURNED.
-C
-C  *********************************************************************
-C
+!
+!**********************************************************************
+!
+!       THIS SUBROUTINE COMPUTES THE RATE OF DEPOSITION IF ANY AT
+!     EACH NODE POINT FOR THE TIME STEP.  THE COEFFICIENT DEPRAT
+!     IS RETURNED.
+!
+!  *********************************************************************
+!
       DO N=1,NP
-CIPK SEP06
+!IPK SEP06
         DEPRATO(N)=DEPRAT(N)
-        !MD: change: DEPRAT(N)=VS(N)
+!MD: change: DEPRAT(N)=VS(N)        
         DEPRAT(N)=0.0
       ENDDO
-C
+!
       DO N=1,NPM
        IF(IMID(N,1) == 0) THEN
-
-         !MD:  kritische Depo-Schubspannung aus SPROP
+!
+!MD:  kritische Depo-Schubspannung aus SPROP         
          TAUCD=TAUCDND(N)
          I=N
          IF(NDEP(N) > 1) I=NREF(N)+NDEP(N)-1
          DEPRAT(I)=0.0
-         
-cipk jun06  test for marshing
+!
+!ipk jun06  test for marshing
          if(wsll(i) < ao(i)) go to 500
-
+!
          IF(TAUCD > BSHEAR(I)) THEN
-C          DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)/WD(I)
+!          DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)/WD(I)
            DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)
-CIPK SEP06
-         !MD:  IF(IT == 1) THEN
-         !MD:    DEPRATO(I)=DEPRAT(I)
-         !MD:  ENDIF
+!IPK SEP06
+!MD:  IF(IT == 1) THEN         
+!MD:    DEPRATO(I)=DEPRAT(I)         
+!MD:  ENDIF         
          ENDIF
        ENDIF
   500  continue       
       ENDDO
-
-CIPK SEP06
+!
+!IPK SEP06
       DO N=1,NPM
         IF(IMID(N,1) > 0) THEN
           NN = N
@@ -58,6 +58,6 @@ CIPK SEP06
           DEPRATO(NN)=(DEPRATO(IMID(NN,1))+DEPRATO(IMID(NN,2)))/2.
         ENDIF
       ENDDO
-
+!
       RETURN
       END

@@ -16,7 +16,7 @@ integer (kind = 4) :: lablwind
 WRITE(LOUT,6050)
  6050 FORMAT('0   WIND STRESS INFORMATION:')
  
-      !EFa aug09, added for external wind graph
+!EFa aug09, added for external wind graph      
       if (iwindin == 71) then
         if (lablwind == 1) then
           time = tet
@@ -53,12 +53,12 @@ WRITE(LOUT,6050)
 !
 !IPK AUG98  CHECK AND READ FILE FIRST
 IF (IWINDIN > 0 .AND. iwindin /= 71) THEN
-  !read binary wind file
+!read binary wind file  
   IF (IWINDIN == 69) THEN
     READ(IWINDIN) NXX,IYFL,DYOFY,TFL,(WNDSP(J),WNDDR(J),J=1,NXX)
-    !Read ASCII wind file
+!Read ASCII wind file    
   ELSE
-    !here it should be unit no. 70
+!here it should be unit no. 70    
     READ(IWINDIN,5400) NXX,IYFL,DYOFY,TFL
     READ(IWINDIN,5401) (WNDSP(J),WNDDR(J),J=1,NXX)
   ENDIF

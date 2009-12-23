@@ -46,26 +46,26 @@ enddo
 
 !run through all elements to remember the 1D elements, a node is connected to
 DO M = 1, NEM
-  !if element is not deactivated
+!if element is not deactivated  
   IF (IMAT (M) > 0) THEN
 
 !IPK DEC00 ALLOW FOR GATE STRUCTURE
 
-    !if element is either
-    !  imat < 900  : normal element
-    !  imat > 5000 : normal 3D-element
-    !  IGTP /= 0   : gate type element
+!if element is either    
+!  imat < 900  : normal element    
+!  imat > 5000 : normal 3D-element    
+!  IGTP /= 0   : gate type element    
     IF (IMAT (M) < 900 .OR. IMAT (M) > 5000 .OR. IGTP (M) /= 0) THEN
 
-      !if the sixth node of the element, which would be the third corner node is 0, then it
-      !is a 1D-element and it has to be processed
+!if the sixth node of the element, which would be the third corner node is 0, then it      
+!is a 1D-element and it has to be processed      
       IF (NOPS (M, 6) == 0) THEN
 
-        !check only for the two corner nodes of the 1D element
+!check only for the two corner nodes of the 1D element        
         DO K = 1, 3, 2
-          !get the node number
+!get the node number          
           N1 = NOPS (M, K)
-          !remember for the node N1 the element it is connected with
+!remember for the node N1 the element it is connected with          
           ITAB (N1) = M
         ENDDO
       ENDIF
@@ -75,17 +75,17 @@ enddo
 
 !run through all elements
 ForAllElts: DO N = 1, NEM
-  !consider only control structure elements and junction elements
+!consider only control structure elements and junction elements  
   IF (IMAT (N) > 900 .AND. IMAT(N) < 1000) THEN
 !-
 !...... Select a node to establish direction
 !-
     forAllIntNodes: DO K = 1, 8
 
-      !get node K in element N
+!get node K in element N      
       NRF = NOPS (N, K)
 
-      !if node is defined (NRF == 0) then cycle the loop to get the next node
+!if node is defined (NRF == 0) then cycle the loop to get the next node      
       IF (NRF == 0) exit forAllIntNodes
 
 !-
@@ -134,7 +134,7 @@ ForAllElts: DO N = 1, NEM
               ELSE
                 DIR (NRF) = 1.
               ENDIF
-              !What is TF (ALFA (NRF))???
+!What is TF (ALFA (NRF))???              
               IF (TF (ALFA (NRF)) < 0.) DIR (NRF) = -DIR (NRF)
             ENDIF
           ENDIF

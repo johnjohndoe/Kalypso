@@ -70,26 +70,26 @@ function AvgPiezoLevelElt (FEElt, Elttype)
     if (mod (i,2) /= 0) then
       if (idnopt < 0) then
         call amf (RealDepth, vel (3, node), akp (node), adt (node), adb (node), dummy1, dummy2, 0)
-        !TODO: use the linear function instead of hard coded weighting 1/3 or 1/4
+!TODO: use the linear function instead of hard coded weighting 1/3 or 1/4        
         if (Elttype == 0) then
           AvgPiezoLevelElt = AvgPiezoLevelElt + (vel (3, node) + ao (node)) * 1/2
         elseif (Elttype == 1) then
           AvgPiezoLevelElt = AvgPiezoLevelElt + (RealDepth + ado(node)) * 1/4
         elseif (Elttype == 2) then
           AvgPiezoLevelElt = AvgPiezoLevelElt + (RealDepth + ado(node)) * 1/3
-        !TODO: 1D elements
-        !else 
+!TODO: 1D elements        
+!else         
         endif 
       else
-        !TODO: use the linear function instead of hard coded weighting 1/3
+!TODO: use the linear function instead of hard coded weighting 1/3        
         if (Elttype == 0) then
           AvgPiezoLevelElt = AvgPiezoLevelElt + (vel (3, node) + ao (node)) * 1/2
         elseif (Elttype == 1) then
           AvgPiezoLevelElt = AvgPiezoLevelElt + (vel (3, node) + ao(node)) * 1/4
         elseif (Elttype == 2) then
           AvgPiezoLevelElt = AvgPiezoLevelElt + (vel (3, node) + ao(node)) * 1/3
-        !TODO: 1D elements
-        !else 
+!TODO: 1D elements        
+!else         
         endif 
       endif
     endif
@@ -119,10 +119,10 @@ function AvgKinEnergyLevelElt (FEElt, Elttype)
     if (Elttype == 0) then
       velo = velo + sqrt(velox**2 + veloy**2) * xn1D (i, 0.5d0)
     elseif (Elttype == 1) then
-      !for a quadrilateral elt the center point is at (0.0,0.0)
+!for a quadrilateral elt the center point is at (0.0,0.0)      
       velo  = velo + sqrt(velox**2 + veloy**2) * xn2(Elttype, i, 0.0d0, 0.0d0)
     elseif (Elttype == 2) then
-      !for a triangle the center point is at (0.333,0.333)
+!for a triangle the center point is at (0.333,0.333)      
       velo  = velo + sqrt(velox**2 + veloy**2) * xn2(Elttype, i, 1.0/3.0, 1.0/3.0)
     endif
 

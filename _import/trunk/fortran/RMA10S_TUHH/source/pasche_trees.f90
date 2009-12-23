@@ -61,9 +61,12 @@ USE Blk10mod
 type (simulationModel), pointer :: m_SimModel
 
 ! Local variables
-REAL(kind=8), allocatable :: slope (:)  ! Slope of watersurface at node
-REAL(kind=8), allocatable :: eslope (:) ! Slope of energy level at node
-REAL(KIND=8)              :: lambda_s   ! Mean roughness coefficient at element
+! Slope of watersurface at node
+REAL(kind=8), allocatable :: slope (:)  
+! Slope of energy level at node
+REAL(kind=8), allocatable :: eslope (:) 
+! Mean roughness coefficient at element
+REAL(KIND=8)              :: lambda_s   
 
 REAL(KIND=8) :: sumvx = 0.0
 REAL(KIND=8) :: sumvy = 0.0
@@ -71,8 +74,10 @@ REAL(KIND=8) :: sumh = 0.0
 REAL(kind=8) :: sumslope = 0.0
 REAL(kind=8) :: sumeslope = 0.0
 REAL (KIND = 8) :: NikuradseRoughness
-REAL(kind=8), allocatable :: mslope (:)  ! Mean slope of water surface at element
-REAL(kind=8), allocatable :: meslope (:) ! Mean slope of energy level at element
+! Mean slope of water surface at element
+REAL(kind=8), allocatable :: mslope (:)  
+! Mean slope of energy level at element
+REAL(kind=8), allocatable :: meslope (:) 
 INTEGER :: i, cycle_number
 character (len = 96) :: inputFileName
 
@@ -103,13 +108,13 @@ do i=1,ne
   sumslope   = 0.0
   sumeslope  = 0.0
 
-  ! Loop over all nodes of the element (also including the mid-side nodes).
-  ! The mean velocity in x- and y-direction and the mean waterdepth in
-  ! each element is calculated.
-  ! (nop:   Node numbers of element)
-  ! (ncorn: Number of nodes of the element)
-  ! (cord:  coordinates of node)
-  ! vel(3,...): degrees of freedom at node)
+! Loop over all nodes of the element (also including the mid-side nodes).  
+! The mean velocity in x- and y-direction and the mean waterdepth in  
+! each element is calculated.  
+! (nop:   Node numbers of element)  
+! (ncorn: Number of nodes of the element)  
+! (cord:  coordinates of node)  
+! vel(3,...): degrees of freedom at node)  
 
   do j = 1,ncorn(i)
     sumvx       = sumvx + vel(1,nop(i,j))
@@ -120,7 +125,7 @@ do i=1,ne
   end do
 
 
-  ! Average of values for one element
+! Average of values for one element  
   mvx(i)     = sumvx/ncorn(i)
   mvy(i)     = sumvy/ncorn(i)
   mh(i)      = sumh/ncorn(i)
@@ -135,7 +140,7 @@ all_elements: do i = 1, ne
 
   if (imat(i) <= 0 .OR. abst(i) < 0.0001 .OR. imat(i) == 89) then
 
-    ! Deactivated element or element without trees
+! Deactivated element or element without trees    
     c_wr(i) = 1.30
     CYCLE all_elements
 
@@ -151,11 +156,11 @@ all_elements: do i = 1, ne
 
     if (mslope(i) > 0.000001) then
 
-    ! Main subroutine to calculate the parameter C_WR for the
-    ! element i
+! Main subroutine to calculate the parameter C_WR for the    
+! element i    
 
-    !WP Now changing slope from water surface slope to
-    !WP energy slope.  ( mslope(i) -> meslope(i) )
+!WP Now changing slope from water surface slope to    
+!WP energy slope.  ( mslope(i) -> meslope(i) )    
 
       call get_cwr(meslope(i), &
                & mh(i),        &
@@ -192,7 +197,7 @@ elseif (nprti /= 0) then
     ENDIF
   endif
 endif
-  !-
+!-  
 
 ! Writing detailled information of the calculated values
 ! for the friction due to trees.
@@ -238,16 +243,20 @@ implicit none
 
 
 !arguments
-REAL (kind=8) :: slope (1:*)   ! Calculated slope of water surface
-REAL (kind=8) :: eslope (1:*)  ! Calculated slope of energy curve/surface
+! Calculated slope of water surface
+REAL (kind=8) :: slope (1:*)   
+! Calculated slope of energy curve/surface
+REAL (kind=8) :: eslope (1:*)  
 type (simulationModel), pointer :: m_SimModel
 
 ! Local variables
 integer (kind = 4) :: nconnect
 
 
-INTEGER :: first_loc            ! Neighbour nodes of the flow vector
-INTEGER :: second_loc            ! Neighbour nodes of the flow vector
+! Neighbour nodes of the flow vector
+INTEGER :: first_loc            
+! Neighbour nodes of the flow vector
+INTEGER :: second_loc            
 
 !nis,sep06: Declaring missing variable and overgiving the proper value
 INTEGER                         :: nodecnt
@@ -255,16 +264,21 @@ INTEGER                         :: elcnt
 integer :: node1, node2, node3
 integer (kind = 4) :: length, length2
 
-REAL(kind=8), DIMENSION(1:2)    :: angle_v              ! direction of the actual flow vector
-REAL(kind=8), DIMENSION(1:2)    :: vector_to_point      ! direction from actual point to the neighbour points
-REAL(kind=8), DIMENSION(1:100)  :: angle_delt = 0.0     ! angle between the flow vector and the vector to the
-                                                        ! neighbour points
-REAL(kind=8)                    :: vecq                 ! absolut value of velocity
+! direction of the actual flow vector
+REAL(kind=8), DIMENSION(1:2)    :: angle_v              
+! direction from actual point to the neighbour points
+REAL(kind=8), DIMENSION(1:2)    :: vector_to_point      
+! angle between the flow vector and the vector to the
+REAL(kind=8), DIMENSION(1:100)  :: angle_delt = 0.0     
+! neighbour points                                                        
+! absolut value of velocity
+REAL(kind=8)                    :: vecq                 
 
 !NiS,apr06: changing mnd to MaxP
-LOGICAL, allocatable :: marker_slope (:) ! Marker if slope has been calculated (true) or not(false).
-                                         ! The slope of all nodes with MARKER_SLOPE=.false. will be interpolated
-                                         ! from the neighbouring points in subroutine FILL_SLOPES
+! Marker if slope has been calculated (true) or not(false).
+LOGICAL, allocatable :: marker_slope (:) 
+! The slope of all nodes with MARKER_SLOPE=.false. will be interpolated                                         
+! from the neighbouring points in subroutine FILL_SLOPES                                         
 
 INTEGER                     :: i,j,m
 type (node), pointer :: tmpNode => null()
@@ -277,7 +291,7 @@ allocate (marker_slope (1: MaxP))
 
 !nis,sep06: nodecnt value must be specified, it is not global
 nodecnt = np
- !nis,dec06: adding element number
+!nis,dec06: adding element number 
  elcnt   = ne
 !-
 !nis,dec06: Initializing the marker_slope Vector
@@ -300,36 +314,36 @@ outer: do i = 1, nodecnt
   angle_v(2) = vel(2,i)
   vecq = SQRT(vel(1,i)**2 + vel(2,i)**2)
 
-  !nis,jul08: Test for smaller velocity (original value: 0.001). Problems are very low flow areas, where trees are present. If values are too small,
-  !           they will become better and better with each iteration, because the calculation of the cwr-values takes place every iteration. This
-  !           is the opposite to BCE-2D (old RMA2-adaptation), where this comes from
+!nis,jul08: Test for smaller velocity (original value: 0.001). Problems are very low flow areas, where trees are present. If values are too small,  
+!           they will become better and better with each iteration, because the calculation of the cwr-values takes place every iteration. This  
+!           is the opposite to BCE-2D (old RMA2-adaptation), where this comes from  
   if (vecq < 0.001 .OR. rausv(3,i) < ao(i)) then
-    ! If velocity is very small or water surface is below node,
-    ! no slope can be calculated.
+! If velocity is very small or water surface is below node,    
+! no slope can be calculated.    
     marker_slope(i) = .false.
     CYCLE outer
   end if
 
-  ! For each neighbour node the angle between the velocity
-  ! vector and the vector from point i to neighbour j is
-  ! determined
+! For each neighbour node the angle between the velocity  
+! vector and the vector from point i to neighbour j is  
+! determined  
   neighbNode => tmpNode.neighbourList
   inner: do j = 1, nconnect
-    !generate vector
+!generate vector    
     do m = 1,2
       vector_to_point(m) = cord(neighbNode.thisNode.ID, m) - cord(tmpNode.ID,m)
     end do
-    ! Angle between the two vectors
+! Angle between the two vectors    
     call GET_ANGLE(angle_v, vector_to_point, angle_delt(j) )
-    !next node of neighbours
+!next node of neighbours    
     neighbNode => neighbNode.next
   end do inner
 
-  ! Detecting the neighbour with the smallest angle (FIRST_LOC) and the neighbour
-  ! with the smallest angle with the other sign (SECOND_LOC).
-  ! If there is no neighbour with an angle with the other sign (e.g. at the
-  ! boundary of the mesh) the SECOND_LOC is set to 0.
-  ! The slope of this point will not be calculated!
+! Detecting the neighbour with the smallest angle (FIRST_LOC) and the neighbour  
+! with the smallest angle with the other sign (SECOND_LOC).  
+! If there is no neighbour with an angle with the other sign (e.g. at the  
+! boundary of the mesh) the SECOND_LOC is set to 0.  
+! The slope of this point will not be calculated!  
   nullify (firstNeighb, secondNeighb)
   call GET_MIN_ANGLE_POINTS(angle_delt, nconnect, tmpNode.NeighbourList, firstNeighb, secondNeighb)
 
@@ -345,9 +359,9 @@ end do outer
 !for 1D-elts, the slopes have to be resetted
 resetslopes: do i = 1,elcnt
   if (ncorn(i) == 3) then
-    !nis,dec06,testing
-    !WRITE(*,*) '1D-Elemente:',i
-    !-
+!nis,dec06,testing    
+!WRITE(*,*) '1D-Elemente:',i    
+!-    
     slope(nop(i,1)) = 0
     eslope(nop(i,1))= 0
     slope(nop(i,2)) = 0
@@ -362,7 +376,7 @@ end do resetslopes
 outer1D: do i = 1, elcnt
   if (ncorn(i) == 3) then
     do j = 1,3
-      !node, whose slopes shall be calculated
+!node, whose slopes shall be calculated      
       node2=nop(i,j)
       tmpNode => findNodeInMeshByID (m_SimModel.femesh, node2)
       nconnect = noOfNeighbours (tmpNode)
@@ -370,11 +384,11 @@ outer1D: do i = 1, elcnt
       if (nconnect > 5) CYCLE outer1D
 
       if (j == 2) then
-        !if midside node get the two corner nodes
+!if midside node get the two corner nodes        
         node1=nop(i,1)
         node3=nop(i,3)
       ELSE
-        !if corner node, get the midside node
+!if corner node, get the midside node        
         node1=nop(i,2)
         node3=0
       endif
@@ -429,7 +443,8 @@ subroutine GET_1D_SLOPE(node1,node2,node3,slope_temp, eslope_temp)
     dz2 = ao(node3) - ao(node2)
     n = 2
   else
-    dl2 = 1 !dividing by zero is not good
+!dividing by zero is not good
+    dl2 = 1 
     dh2 = 0
     dz2 = 0
     n = 1
@@ -475,8 +490,10 @@ implicit none
 REAL(kind=8), DIMENSION(1:100), INTENT(IN)      :: angle_delt
 INTEGER, INTENT(IN)                             :: anz
 type (linkedNode), pointer :: neighbourList
-type (node), pointer :: firstNode    ! node no.ID of nearest neighbour
-type (node), pointer :: secondNode   ! node no ID of second nearest neighbour
+! node no.ID of nearest neighbour
+type (node), pointer :: firstNode    
+! node no ID of second nearest neighbour
+type (node), pointer :: secondNode   
 
 !local variables
 type (linkedNode), pointer :: tmpNode
@@ -507,7 +524,8 @@ do i = 1, anz
       negNode => tmpNode.thisNode
       min_nr_neg = i
     end if
-  else ! angle_delt(i) => 0.0
+! angle_delt(i) => 0.0
+  else 
     if (angle_delt(i) < min_angle_pos) then
       min_angle_pos = angle_delt(i)
       posNode => tmpNode.thisNode
@@ -579,14 +597,14 @@ anz = 0
 !do i = 1, nodecnt
 numbertest: do i = 1, nodecnt
 
-  !dead nodes within the network (their coordinates are initialized by -1e20) have to be ignored
+!dead nodes within the network (their coordinates are initialized by -1e20) have to be ignored  
   if (cord(i,1) < (-0.5E20) .AND. cord(i,2) < (-0.5E20)) then
-    !mark dead nodes as processed
+!mark dead nodes as processed    
     marker_slope(i) = .True.
     cycle numbertest
   end if
 
-  !mark 1D nodes as having a slope
+!mark 1D nodes as having a slope  
   if (IsPolynomNode (i)) then
     marker_slope (i) = .true.
     CYCLE numbertest
@@ -595,7 +613,7 @@ numbertest: do i = 1, nodecnt
   tmpNode => findNodeInMeshByID (fe_mesh, i)
   nconnect = noOfNeighbours (tmpNode)
 
-  !all other nodes, that have no slope yet and have a number of neighbours are counted
+!all other nodes, that have no slope yet and have a number of neighbours are counted  
   if ( .NOT. marker_slope(i) .AND. nconnect /= 0) then
   
           anz = anz + 1
@@ -623,7 +641,7 @@ endif
 ! It has to be iterative!
 eliminate: do
 
-  !nis,dec06: modelerror causes this temporary change
+!nis,dec06: modelerror causes this temporary change  
   if (anz == 0) exit eliminate
 
   all_nodes: do i = 1, nodecnt
@@ -633,7 +651,7 @@ eliminate: do
 
     if (marker_slope(i)) CYCLE all_nodes
 
-     !initialize local counters
+!initialize local counters     
      temp_anz = 0
      temp_slope = 0.0
      temp_eslope= 0.0
@@ -649,8 +667,8 @@ eliminate: do
        neighbourNode => neighbourNode.next
      end do all_neighb
 
-     ! Interpolated value will only be applied
-     ! if more than 2 neighbours have valid values!
+! Interpolated value will only be applied     
+! if more than 2 neighbours have valid values!     
      if (temp_anz >= 2) then
        slope(i) = temp_slope/temp_anz
        eslope(i) = temp_eslope/temp_anz
@@ -696,15 +714,22 @@ use mod_Nodes
 !-
 
 ! Calling variables
-REAL(kind=8), DIMENSION(1:2), INTENT(IN)       :: angle_v      ! Velocity vector
-INTEGER, INTENT(IN) :: pn            ! Point of velocity vector
-type (node), pointer :: first_neighb      ! First neighbour to calculated cross-point.
-type (node), pointer :: second_neighb   ! Second neighbour to calculated cross-point.
+! Velocity vector
+REAL(kind=8), DIMENSION(1:2), INTENT(IN)       :: angle_v      
+! Point of velocity vector
+INTEGER, INTENT(IN) :: pn            
+! First neighbour to calculated cross-point.
+type (node), pointer :: first_neighb      
+! Second neighbour to calculated cross-point.
+type (node), pointer :: second_neighb   
 !NiS,apr06: changing mnd to MaxP
-REAL(kind=8), INTENT(OUT) :: slope (1:*)       ! Slope to be calculated
-REAL(kind=8), INTENT(OUT) :: eslope (1:*)      ! Energy-Slope to be calculated
+! Slope to be calculated
+REAL(kind=8), INTENT(OUT) :: slope (1:*)       
+! Energy-Slope to be calculated
+REAL(kind=8), INTENT(OUT) :: eslope (1:*)      
 !nis,dec06, just one value is needed here
-LOGICAL,INTENT(OUT)                             :: marker_slope_pn ! Marker if slope could be determined
+! Marker if slope could be determined
+LOGICAL,INTENT(OUT)                             :: marker_slope_pn 
 !-
 ! Local variables
 REAL(KIND=8)       :: ax,ay,bx,by,cx,cy,dx,dy, he_pn, he_cross
@@ -825,7 +850,7 @@ b(2) = (cy - ay)
 call gauss( N, A, B, X, SING, N)
 
 if (SING) then
-  ! No success for solving equations (singularity)
+! No success for solving equations (singularity)  
   slope(pn) = 0.0
   eslope(pn)= 0.0
 !nis,dec06: Only one value is needed in this subroutine
@@ -908,9 +933,12 @@ subroutine GET_ANGLE(vec1, vec2, delt_angle)
 implicit none
 
 ! Calling variables
-REAL(kind=8), DIMENSION(1:2), INTENT(IN)       :: vec1       ! Flow direction
-REAL(kind=8), DIMENSION(1:2), INTENT(IN)      :: vec2       ! Direction between points
-REAL(kind=8), INTENT(OUT)                   :: delt_angle       ! angle difference
+! Flow direction
+REAL(kind=8), DIMENSION(1:2), INTENT(IN)       :: vec1       
+! Direction between points
+REAL(kind=8), DIMENSION(1:2), INTENT(IN)      :: vec2       
+! angle difference
+REAL(kind=8), INTENT(OUT)                   :: delt_angle       
 
 ! Local variables
 REAL(kind=8)                    :: alpha1, alpha2
@@ -932,14 +960,14 @@ if (alpha1 < 0.0) then
     delt_angle = alpha2 - alpha1
 
   else
-    ! Alpha1 < 0.0 .AND. alpha2 >= 0.0
+! Alpha1 < 0.0 .AND. alpha2 >= 0.0    
 
     if ((alpha1 + pi) > alpha2) then
 
       delt_angle = ABS(alpha1) + alpha2
 
     else
-      ! alpha1 < 0.0, alpha2 >= 0.0
+! alpha1 < 0.0, alpha2 >= 0.0      
       delt_angle = -(2.0 * pi) + ( ABS(alpha1) + alpha2)
 
     end if
@@ -947,13 +975,13 @@ if (alpha1 < 0.0) then
   end if
 
 else
-  ! Alpha1 >= 0.0
+! Alpha1 >= 0.0  
   if (alpha2 >= 0.0) then
 
     delt_angle = alpha2 - alpha1
 
   else
-    ! Alpha1 >= 0.0 .AND. alpha2 < 0.0
+! Alpha1 >= 0.0 .AND. alpha2 < 0.0    
     if ((alpha1 - pi) < alpha2) then
 
       delt_angle = - ( ABS(alpha2) + alpha1)
@@ -998,31 +1026,52 @@ subroutine GET_CWR(I_R,      h_m, a_x, d_p, lambda_s, c_wr)
 implicit none
 
 ! calling variables
-REAL, INTENT(IN) :: I_R          ! Slope
-REAL (KIND = 8), INTENT(IN) :: h_m ! Mean flow depth
+! Slope
+REAL, INTENT(IN) :: I_R          
+! Mean flow depth
+REAL (KIND = 8), INTENT(IN) :: h_m 
 !-
-REAL, INTENT(IN)            :: a_x      ! distance of trees/branches
-REAL, INTENT(IN)            :: d_p      ! diameter of trees/branches
-REAL (KIND = 8), INTENT(IN) :: lambda_s ! friction factor by COLBROOK/WHITE
-REAL, INTENT(OUT)           :: c_wr          ! Drag coefficient for the vegetation
+! distance of trees/branches
+REAL, INTENT(IN)            :: a_x      
+! diameter of trees/branches
+REAL, INTENT(IN)            :: d_p      
+! friction factor by COLBROOK/WHITE
+REAL (KIND = 8), INTENT(IN) :: lambda_s 
+! Drag coefficient for the vegetation
+REAL, INTENT(OUT)           :: c_wr          
 
 ! Local variables
 REAL :: a_y
-REAL :: c_wr2   = 0.0          ! temp c_wr for iteration
-REAL :: v_vor   = 0.0          ! mean flow velocity
-REAL :: c_wr_un = 0.0          ! drag coefficient for a single cylinder
-REAL :: a_NL    = 0.0          ! wake length
-REAL :: a_NL_anf= 0.0          ! temp wake length
-REAL :: a_NB    = 0.0          ! wake width
-REAL :: vn_vvor2= 0.0          ! velocity ratio
-REAL :: y_stern = 0.0          ! water depth ratio
-REAL :: c_temp  = 0.0          ! c_temp = a_y / (a_y -d_p)
-REAL :: lambda_g= 0.0          ! temporary total lambda
-REAL :: lambda_p= 0.0          ! temporary vegeation lambda
-REAL :: Fr1     = 0.0          ! Froudenumber 1
-REAL :: Fr2     = 0.0          ! Froudenumber 2
-REAL :: delta_cw= 0.0          ! Delta C_W
-REAL :: nu_10       = 0.0          ! viscosity of water for 10 degrees.
+! temp c_wr for iteration
+REAL :: c_wr2   = 0.0          
+! mean flow velocity
+REAL :: v_vor   = 0.0          
+! drag coefficient for a single cylinder
+REAL :: c_wr_un = 0.0          
+! wake length
+REAL :: a_NL    = 0.0          
+! temp wake length
+REAL :: a_NL_anf= 0.0          
+! wake width
+REAL :: a_NB    = 0.0          
+! velocity ratio
+REAL :: vn_vvor2= 0.0          
+! water depth ratio
+REAL :: y_stern = 0.0          
+! c_temp = a_y / (a_y -d_p)
+REAL :: c_temp  = 0.0          
+! temporary total lambda
+REAL :: lambda_g= 0.0          
+! temporary vegeation lambda
+REAL :: lambda_p= 0.0          
+! Froudenumber 1
+REAL :: Fr1     = 0.0          
+! Froudenumber 2
+REAL :: Fr2     = 0.0          
+! Delta C_W
+REAL :: delta_cw= 0.0          
+! viscosity of water for 10 degrees.
+REAL :: nu_10       = 0.0          
 
 !REAL :: GET_CW_UN
 !REAL :: GET_A_NL
@@ -1035,27 +1084,36 @@ nu_10 =  1.e-06
 ! Symetrical arangement of plants
 a_y = a_x
 
-c_wr  = 1.0                             ! Schätzung von C_WR = 1.0
-c_wr2 = 1.5                             ! Schätzung von C_WR2 = 1.5 (nur am Anfang, damit
-                                        ! CW_R und CW_R2 unterschiedliche Startwerte haben)
+! Schätzung von C_WR = 1.0
+c_wr  = 1.0                             
+! Schätzung von C_WR2 = 1.5 (nur am Anfang, damit
+c_wr2 = 1.5                             
+! CW_R und CW_R2 unterschiedliche Startwerte haben)                                        
 
-a_NL_anf  = 2 * a_x                     ! Schätzung von a_NL_anf = 2 * ax (Für Funktion GET_A_NL)
+! Schätzung von a_NL_anf = 2 * ax (Für Funktion GET_A_NL)
+a_NL_anf  = 2 * a_x                     
 
-c_temp = a_y / (a_y -d_p)               ! Temporäre Variable, nur zur Vereinfachung der
-                                        ! folgenden Berechnungen
+! Temporäre Variable, nur zur Vereinfachung der
+c_temp = a_y / (a_y -d_p)               
+! folgenden Berechnungen                                        
 
-j = 0                                   ! Zähler der äußeren Iteration von C_WR
+! Zähler der äußeren Iteration von C_WR
+j = 0                                   
 
-iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für C_WR erfüllt ist
+! -------------------   Iteration bis Konvergenzkriterium für C_WR erfüllt ist
+iteration_cwr: do 
 
-      Fr1 = 0.0                       ! Bei jeder neuen Iteration müssen die beiden Froudezahlen
-        Fr2 = 0.0                       ! neu bestimmt werden -> Y_STERN
+! Bei jeder neuen Iteration müssen die beiden Froudezahlen
+      Fr1 = 0.0                       
+! neu bestimmt werden -> Y_STERN
+        Fr2 = 0.0                       
 
-        j = j + 1                       ! Inkrementieren des Schleifenzählers
+! Inkrementieren des Schleifenzählers
+        j = j + 1                       
 
-                                        ! Abbruchkriterium für die Konvergenz, ist jetzt willkürlich
-                                        ! auf 0.01 gesetzt, kann auch erhöht oder verringert werden.
-                                        ! (Komprimiss Geschwindigkeit <-> Genauigkeit)
+! Abbruchkriterium für die Konvergenz, ist jetzt willkürlich                                        
+! auf 0.01 gesetzt, kann auch erhöht oder verringert werden.                                        
+! (Komprimiss Geschwindigkeit <-> Genauigkeit)                                        
 
 
         if ( ABS(1-(c_wr/c_wr2)) < 0.002 ) exit iteration_cwr
@@ -1067,21 +1125,23 @@ iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für 
 
         c_wr = c_wr2
 
-        !WP
-        ! Mit Hilfe von LAMBDA_SO wird ein neuer Gesamtwiderstandsbeiwert
-        ! durch lineare Überlagerung berechnet. Damit wird eine neue
-        ! Fließgeschwindigkeit auf dem Vorland V_VOR ermittelt.
-        ! -> Nötig für Berechnung von C_WR_UN und a_NL!
-        !WP
+!WP        
+! Mit Hilfe von LAMBDA_SO wird ein neuer Gesamtwiderstandsbeiwert        
+! durch lineare Überlagerung berechnet. Damit wird eine neue        
+! Fließgeschwindigkeit auf dem Vorland V_VOR ermittelt.        
+! -> Nötig für Berechnung von C_WR_UN und a_NL!        
+!WP        
 
         lambda_p = (4 * c_wr * h_m * d_p)/(a_x * a_y)
         lambda_g = lambda_p + lambda_s
 
         v_vor = 1/SQRT(lambda_g) * SQRT(8 * 9.81 * I_R * h_m)
 
-        c_wr_un = GET_CW_UN(v_vor, d_p, nu_10)  ! Bestimmung von C_WR_UN
+! Bestimmung von C_WR_UN
+        c_wr_un = GET_CW_UN(v_vor, d_p, nu_10)  
 
-        a_NL = GET_A_NL(c_wr_un, d_p, I_R, &    ! Bestimmung von a_NL, gibt 0.0 zurueck, falls Fehler aufgetreten ist.
+! Bestimmung von a_NL, gibt 0.0 zurueck, falls Fehler aufgetreten ist.
+        a_NL = GET_A_NL(c_wr_un, d_p, I_R, &    
                  & v_vor, a_NL_anf)
 
         if (a_NL == 0.0) then
@@ -1089,31 +1149,34 @@ iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für 
           stop
         end if
 
-      a_NB = GET_A_NB(c_wr_un, d_p, a_NL)     ! Nachlaufbreite
+! Nachlaufbreite
+      a_NB = GET_A_NB(c_wr_un, d_p, a_NL)     
 
-        ! WP 19.10.2004: Der Faktor 0.5 vor dem zweiten Term fehlte!
+! WP 19.10.2004: Der Faktor 0.5 vor dem zweiten Term fehlte!        
         vn_vvor2 = 1.15 * (a_NL/a_x) ** (-0.48) + 0.5 * (a_NB/a_y) ** 1.1
 
-        Fr1 = v_vor / SQRT(9.81 * h_m)             ! Bestimmung der Froudezahl der Strömung
+! Bestimmung der Froudezahl der Strömung
+        Fr1 = v_vor / SQRT(9.81 * h_m)             
 
         y_stern = 1.00
 
         i = 0
 
-        iteration_y_stern: do !--------      Iteration für Fr2 über y_stern-----------------------
+!--------      Iteration für Fr2 über y_stern-----------------------
+        iteration_y_stern: do 
 
                 i = i+1
 
-                !WP
-                ! Mehrere Versuche haben gezeigt, dass sich bei der
-                ! Iteration von Fr nach y_stern Problemem bei sehr
-                ! niederigen Froudzahlen einstellen! Da die zu lösende
-                ! Gleichung quadratisch ist, und der Wert von y_stern
-                ! nahe 1 liegen muss, ist gerade am Anfang in sehr
-                ! kleinen Schritten vorzugehen!
-                ! Bei Werten von Fr1 < 0.1 wird zur Erhöhung der
-                ! Stabilität von einem konstanten y_stern = 0.999 ausgegangen.
-                !WP
+!WP                
+! Mehrere Versuche haben gezeigt, dass sich bei der                
+! Iteration von Fr nach y_stern Problemem bei sehr                
+! niederigen Froudzahlen einstellen! Da die zu lösende                
+! Gleichung quadratisch ist, und der Wert von y_stern                
+! nahe 1 liegen muss, ist gerade am Anfang in sehr                
+! kleinen Schritten vorzugehen!                
+! Bei Werten von Fr1 < 0.1 wird zur Erhöhung der                
+! Stabilität von einem konstanten y_stern = 0.999 ausgegangen.                
+!WP                
 
                 if (Fr1 < 0.1 ) then
                     y_stern = 0.9999
@@ -1140,18 +1203,19 @@ iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für 
                     exit iteration_y_stern
                 END if
 
-        end do iteration_y_stern !-------- Iteration für Fr2 über y_stern-----------------------
+!-------- Iteration für Fr2 über y_stern-----------------------
+        end do iteration_y_stern 
 
-        !WP
-        ! Während der ersten fünf Iterationszyclen wird zunächst
-        ! "ungebremst" iteriert, um eine möglichst schnelle
-        ! Annäherung an den Zielwert zu erreichen.
-        ! Es hat sich gezeigt, dass sich die Iteration kurz
-        ! vor Erreichen des Zielwertes manchmal in einer stabilen
-        ! Schwingung "verfängt". Deshalb wird ab der fünften
-        ! Iteration eine Begrenzung des Iterationsschrittes
-        ! eingebaut.
-        !WP
+!WP        
+! Während der ersten fünf Iterationszyclen wird zunächst        
+! "ungebremst" iteriert, um eine möglichst schnelle        
+! Annäherung an den Zielwert zu erreichen.        
+! Es hat sich gezeigt, dass sich die Iteration kurz        
+! vor Erreichen des Zielwertes manchmal in einer stabilen        
+! Schwingung "verfängt". Deshalb wird ab der fünften        
+! Iteration eine Begrenzung des Iterationsschrittes        
+! eingebaut.        
+!WP        
 
         if (j < 5) then
             delta_cw = 2 * (1-y_stern) / (Fr1**2)
@@ -1161,16 +1225,18 @@ iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für 
             delta_cw = (2*delta_cw + (2 * (1-y_stern) / (Fr1**2))) / 3
         end if
 
-        ! Auch hier wird die Veränderung des Iterationsparameters durch Einbeziehung
-        ! des vorherigen Wertes abgebremst!
+! Auch hier wird die Veränderung des Iterationsparameters durch Einbeziehung        
+! des vorherigen Wertes abgebremst!        
         c_wr2 = (c_wr + (1.3124 * c_wr_un * vn_vvor2 + delta_cw)) / 2
 
-        if (j > 50) then               ! Keine Konvergenz nach 100 Iterationen
+! Keine Konvergenz nach 100 Iterationen
+        if (j > 50) then               
             c_wr = 1.30
             EXIT iteration_cwr
         END if
 
-end do iteration_cwr ! -----------------  Iteration bis Konvergenzkriterium für C_WR erfüllt ist
+! -----------------  Iteration bis Konvergenzkriterium für C_WR erfüllt ist
+end do iteration_cwr 
 
 end subroutine GET_CWR
 
@@ -1188,12 +1254,16 @@ REAL function GET_CW_UN(v, d_p, nu)
 
 implicit none
 ! calling variables
-REAL, INTENT(IN) :: v            ! Fließgeschwindigkeit
-REAL, INTENT(IN) :: d_p        ! Durchmesser des Bewuchselementes
-REAL, INTENT(IN) :: nu         ! kinematische Viskosität
+! Fließgeschwindigkeit
+REAL, INTENT(IN) :: v            
+! Durchmesser des Bewuchselementes
+REAL, INTENT(IN) :: d_p        
+! kinematische Viskosität
+REAL, INTENT(IN) :: nu         
 
 ! Local variables
-REAL :: Re_p                  ! Reynolds-Zahl, bezogen auf den Bewuchs
+! Reynolds-Zahl, bezogen auf den Bewuchs
+REAL :: Re_p                  
 
 Re_p = (v * d_p) / nu
 
@@ -1219,11 +1289,16 @@ REAL function GET_A_NL(c_wr_un, d_p, I_R, v, anf)
 
 implicit none
 ! calling variables
-REAL, INTENT(IN) :: c_wr_un    ! Widerstandsbeiwert
-REAL, INTENT(IN) :: d_p        ! Durchmesser des Bewuchselementes
-REAL, INTENT(IN) :: I_R        ! Stationäres Gefälle
-REAL, INTENT(IN) :: v            ! Maßgebende Fließgeschwindigkeit
-REAL, INTENT(IN) :: anf            ! Anfangswert für Iteration ( = 2 * ax )
+! Widerstandsbeiwert
+REAL, INTENT(IN) :: c_wr_un    
+! Durchmesser des Bewuchselementes
+REAL, INTENT(IN) :: d_p        
+! Stationäres Gefälle
+REAL, INTENT(IN) :: I_R        
+! Maßgebende Fließgeschwindigkeit
+REAL, INTENT(IN) :: v            
+! Anfangswert für Iteration ( = 2 * ax )
+REAL, INTENT(IN) :: anf            
 
 ! Local variables
 INTEGER :: i
@@ -1236,26 +1311,34 @@ g = 9.81
 a_NL  = anf
 a_NL2 = 2 * anf
 
-i = 0                                 ! Zähler der Iteration von a_NL
+! Zähler der Iteration von a_NL
+i = 0                                 
 
-iteration_a_NL: do                  ! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
+! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
+iteration_a_NL: do                  
 
   if ( ABS(1-(a_NL/a_NL2)) < 0.001 ) exit iteration_a_NL
-  i = i + 1                           ! Inkrementieren des Schleifenzählers
+! Inkrementieren des Schleifenzählers
+  i = i + 1                           
   a_NL  = a_NL2
   a_NL2 = (a_NL + 128.9 * c_wr_un * d_p * &
      & (1 + (g * a_NL * I_R)/((v**2)/2))**(-2.14)) / 2
 
-  if (i > 50) then                   ! Keine Konvergenz nach 100 Iterationen
+! Keine Konvergenz nach 100 Iterationen
+  if (i > 50) then                   
     WRITE(*,*) 'Fehlerhaftes Element ist: '
     WRITE(*,*) 'anl = ', a_nl
-    GET_A_NL = 0.0                      ! Der Wert 0.0 zeigt dem aufrufenden Programm
-    GOTO 100                            ! an, dass die Iteration NICHT erfolgreich war!
+! Der Wert 0.0 zeigt dem aufrufenden Programm
+    GET_A_NL = 0.0                      
+! an, dass die Iteration NICHT erfolgreich war!
+    GOTO 100                            
   END if
 
-end do iteration_a_NL                  ! Iteration von a_NL erfolgreich!
+! Iteration von a_NL erfolgreich!
+end do iteration_a_NL                  
 
-GET_A_NL = a_NL                         ! Zuweisung des endgültigen Wertes
+! Zuweisung des endgültigen Wertes
+GET_A_NL = a_NL                         
 
 100 continue
 
@@ -1274,9 +1357,12 @@ REAL function GET_A_NB(c_wr_un, d_p, a_NL)
 
 implicit none
 ! calling variables
-REAL, INTENT(IN) :: c_wr_un    ! Widerstandsbeiwert
-REAL, INTENT(IN) :: d_p        ! Durchmesser des Bewuchselementes
-REAL, INTENT(IN) :: a_NL            ! Nachlauflänge
+! Widerstandsbeiwert
+REAL, INTENT(IN) :: c_wr_un    
+! Durchmesser des Bewuchselementes
+REAL, INTENT(IN) :: d_p        
+! Nachlauflänge
+REAL, INTENT(IN) :: a_NL            
 
 GET_A_NB = 0.24 * (a_NL ** 0.59) * (c_wr_un * d_p) ** 0.41
 
@@ -1328,8 +1414,8 @@ write (14,1000) 'Element', 'X-Coord', 'Y-Coord', 'C_wr', 'Slope','E-Slope', 'MH'
 
 write_elements: do i = 1, ne
 
-  ! This check is necessary, if there are elements defined, that have no connection
-  ! to the mesh and are not calculated. Then for example mcord(i,1) = -NaN.
+! This check is necessary, if there are elements defined, that have no connection  
+! to the mesh and are not calculated. Then for example mcord(i,1) = -NaN.  
   if (mcord(i,2) > 0.0 .AND. mcord(i,2) > 0.0) then
     write (14,1001) i, mcord(i,1), mcord(i,2), c_wr(i), mslope(i), meslope(i), mh(i), mvxvy(i)
   end if
@@ -1407,29 +1493,29 @@ if (lexist) then
   write (*   , 1010)
 !-
   1010 format (1X, 'Die entsprechende C_WR Datei existiert bereits!')
-  !NiS,apr06: name of variable changed; changed mel to MaxE
+!NiS,apr06: name of variable changed; changed mel to MaxE  
   call cwr_read(name_cwr, c_wr, MaxE)
-  !-
+!-  
 else
-  !NiS,apr06: unit name changed; changed iout to Lout
+!NiS,apr06: unit name changed; changed iout to Lout  
   write (Lout, 1011)
   write (*   , 1011)
-  !-
+!-  
   1011 format (1X, 'Es muessen neue C_WR Werte erzeugt werden...')
 
-  !Initialisierung der Parameter
-  !NiS,apr06: name of variable changed; why is there sometimes ne and sometimes
-  !           mel, used for the number of elements; this is irritating!
-  !do i=1,ne
+!Initialisierung der Parameter  
+!NiS,apr06: name of variable changed; why is there sometimes ne and sometimes  
+!           mel, used for the number of elements; this is irritating!  
+!do i=1,ne  
   do i=1,MaxE
-  !-
+!-  
     c_wr(i) = 1.30
   end do
 
-  !NiS,apr06: unit name changed; changed iout to Lout
+!NiS,apr06: unit name changed; changed iout to Lout  
   write (Lout, 1012)
   write (*   , 1012)
-  !-
+!-  
   1012 format (1X, '...fertig!')
 
 end if
@@ -1462,9 +1548,12 @@ SUBROUTINE cwr_read(name_cwr, c_wr, mel)
 implicit none
 
 ! Calling variables
-CHARACTER(LEN=32), INTENT(IN)               :: name_cwr  !name of cwr initial input data file
-INTEGER, INTENT(IN)                         :: mel       !local copy of variable for maximum number of elements
-REAL(KIND=8), DIMENSION(1:mel), INTENT(OUT) :: c_wr      !array for saving all the initial c_wr-values for every element
+!name of cwr initial input data file
+CHARACTER(LEN=32), INTENT(IN)               :: name_cwr  
+!local copy of variable for maximum number of elements
+INTEGER, INTENT(IN)                         :: mel       
+!array for saving all the initial c_wr-values for every element
+REAL(KIND=8), DIMENSION(1:mel), INTENT(OUT) :: c_wr      
 
 ! Local variables
 INTEGER :: istat
@@ -1492,7 +1581,8 @@ do
     close (13)
     stop
   end if
-  c_wr(temp_nr) = temp_cwr            ! temp - Elementnummer
+! temp - Elementnummer
+  c_wr(temp_nr) = temp_cwr            
 
 end do
 

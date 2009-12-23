@@ -60,7 +60,7 @@ IF (NB > 0 .AND. NB < 100) then
   NXX = NB
   NB = IABS(NB)
 
-  !NiS,apr06: Making an INQUIRE-test for finding the format of restarting; Restarting from Kalypso-2D-file means FORMATTED file
+!NiS,apr06: Making an INQUIRE-test for finding the format of restarting; Restarting from Kalypso-2D-file means FORMATTED file  
   INQUIRE (nb, FORM = inquiretest)
 
   RESTARTTEST: IF (inquiretest == 'FORMATTED' .AND. nb < 100) THEN
@@ -143,7 +143,7 @@ IF (NB > 0 .AND. NB < 100) then
     ENDIF
   ENDIF RESTARTTEST
 
-  !introducing the restart values for interpolated profiles
+!introducing the restart values for interpolated profiles  
   do i = 1, maxp
     if (IntPolProf (i) .AND. vel (1, i) == 0.0D0) then
       do j = 1, 3
@@ -155,7 +155,7 @@ IF (NB > 0 .AND. NB < 100) then
     end if
   end do
 
-  !Interpolate variables at midside nodes, if they were not present
+!Interpolate variables at midside nodes, if they were not present  
   Assign1DMidsidesValues: DO i = 1, MaxE
     IF (nop (i, 1) == 0) CYCLE Assign1DMidsidesValues
     IF (IsPolynomNode (nop (i, 1))) THEN
@@ -167,54 +167,54 @@ IF (NB > 0 .AND. NB < 100) then
     ENDIF
   ENDDO Assign1DMidsidesValues
 
-  !ipk FEB04  add IOV option
-  !nis,may08: IOV is option to overwrite date of result, that has been read in before
+!ipk FEB04  add IOV option  
+!nis,may08: IOV is option to overwrite date of result, that has been read in before  
   IF (IOV == 1) THEN
     IYRR = IYKK
     DAYOFY = IDTM
     TET = TTEM
   ELSE
-  !ipk MAY96 decode TET
-  !        IDAY=TETT/24.
-  !        DAYOFY=IDAY
-  !        TET=TETT-DAYOFY*24.
-  !        DAYOFY=DAYOFY+1
+!ipk MAY96 decode TET  
+!        IDAY=TETT/24.  
+!        DAYOFY=IDAY  
+!        TET=TETT-DAYOFY*24.  
+!        DAYOFY=DAYOFY+1  
   ENDIF
 
-      !control output into outfile
+!control output into outfile      
   write (LOUT, 6240) iyrr, dayofy, tet
  6240 FORMAT(//' RESTART FOR YEAR', I6,'  DAY', I5,'  HOUR', F8.2)
 
 
-  !ipk nov02 set bed to input level
+!ipk nov02 set bed to input level  
   do N = 1, npx
-  !IPK APR03
-    !nis,may08,com
-    !HEL (N)    = 'real' depth over slot elevation ADO at node N
-    !VEL (3, N) = 'virtual' depth over slot elevation ADO at node N (flow active region)
-    !VAAA       = VEL (3, N)
-    !AKP (N)    = porosity
-    !ADT (N)    = upper border depth of transition range
-    !ADB (N)    = lower border depth of transition range
-    !ADO (N)    = slot bottom elevation, where HEL (N) is measured above
-    !D1, D2     = dummies to fill dummy list; no meaning here
+!IPK APR03  
+!nis,may08,com    
+!HEL (N)    = 'real' depth over slot elevation ADO at node N    
+!VEL (3, N) = 'virtual' depth over slot elevation ADO at node N (flow active region)    
+!VAAA       = VEL (3, N)    
+!AKP (N)    = porosity    
+!ADT (N)    = upper border depth of transition range    
+!ADB (N)    = lower border depth of transition range    
+!ADO (N)    = slot bottom elevation, where HEL (N) is measured above    
+!D1, D2     = dummies to fill dummy list; no meaning here    
 
     VAAA = VEL (3, N)
-    !calculate the real water depth over ADO (hsig > h; switch = 0)
+!calculate the real water depth over ADO (hsig > h; switch = 0)    
     CALL AMF (HEL (N), VAAA, AKP (N), ADT (N), ADB (N), D1, D2, 0)
 
 !IPK JUN05
-    !corrections (probably, if sediment layer is used)
+!corrections (probably, if sediment layer is used)    
     IF (LSAND > 0) THEN
       DIFF = ELEVB (N) - AO (N)
       AO (N) = ELEVB (N)
       ADO (N) = ADO (N) + DIFF
     ENDIF
 
-    !current water surface elevation
+!current water surface elevation    
     WSLL (N) = HEL (N) + ADO (N)
-    !HEL(N)=WSLL(N)-ADO(N)
-    !calculate back the virtual water depth (h > hsig; switch = 1)
+!HEL(N)=WSLL(N)-ADO(N)    
+!calculate back the virtual water depth (h > hsig; switch = 1)    
     CALL AMF (HEL (N), VAAA, AKP (N), ADT (N), ADB (N), D1, D2, 1)
     VEL (3, N) = VAAA
   enddo
@@ -227,7 +227,7 @@ IF (NB > 0 .AND. NB < 100) then
 !ipk aug98        CALL AMF(HEL(J),HTP,AKP(J),ADT(J),ADB(J),D1,D2,0)
 !ipk aug98      ENDDO
 
-  !  *** CALL PRESR TO HAVE DENSITIES FOR MELLII FIRST HOT START ITER
+!  *** CALL PRESR TO HAVE DENSITIES FOR MELLII FIRST HOT START ITER  
   CALL PRESR
 
   DO N = 1, NP
@@ -279,9 +279,9 @@ ELSEIF (NXX > 100) then
 
   ReadControlRestarts: do
     READ (IBIN, 5032) M, TV, TVD
-    !end data line reached?
+!end data line reached?    
     IF (M >= 9999) EXIT ReadControlRestarts
-    !assign values
+!assign values    
     DO K = 1, NDF
       VEL (K, M) = TV (K)
       VDOT (K, M) = TVD (K)
@@ -312,27 +312,27 @@ ELSEIF (NB == 0) then
 !WSLL (J)   = water surface elevation at node J; sum of ADO and HEL or given value ELEV1
 
   AssignInitialValues: DO J = 1, NP
-    !initializing the velocities at every node
+!initializing the velocities at every node    
     VEL (1, J) = 0.00
     VEL (2, J) = 0.00
 !IPK NOV9T      VEL(3,J) = ELEV - AO(J)
 !IPK NOV97      IF(VEL(3,J) < HMIN) VEL(3,J)=HMIN
 !IPK DEC99 CHANGE TP ELEV1
-    !calculating the real water depth over ADO
+!calculating the real water depth over ADO    
     HEL (J) = ELEV1 - ADO (J)
-    !calculating the virtual water depth over ADO
+!calculating the virtual water depth over ADO    
     CALL AMF (HEL (J), HTP, AKP (J), ADT (J), ADB (J), D1, D2, 1)
     VEL (3, J) = HTP
-    !checking whether virtual water depth is above given lower bound of minimum water depth for calcualtion (given by the user)
+!checking whether virtual water depth is above given lower bound of minimum water depth for calcualtion (given by the user)    
     IF (VEL (3, J) < HMIN) VEL (3, J) = HMIN
-    !copying the current real water depth over ADO to the HOL-field; that means old value from previous time step is the same as current one
+!copying the current real water depth over ADO to the HOL-field; that means old value from previous time step is the same as current one    
     HOL (J) = HEL (J)
-    !TOASK; Why should one give -HMNN (which is just the original to HMIN in the input subroutine?)
+!TOASK; Why should one give -HMNN (which is just the original to HMIN in the input subroutine?)    
     IF (HMNN < 0.) VEL (3, J) = -HMNN
-    !copying the current virtual water depth over ADO to the VOLD-field; that means old value from previous time step is the same as current one
+!copying the current virtual water depth over ADO to the VOLD-field; that means old value from previous time step is the same as current one    
     VOLD (3, J) = VEL (3, J)
 !ipk mar05
-        !remember the water surface elevation (at the beginning, it comes from the user's input value ELEV1)
+!remember the water surface elevation (at the beginning, it comes from the user's input value ELEV1)        
     WSLL (J) = ELEV1
 !     VEL(4,J)=0.
 !     IF(ICK == 1) VEL(4,J)=TEMP
@@ -382,12 +382,12 @@ ELSEIF (NB == 0) then
 !-
   Assign1DVelos: DO N = 1, NE
     IF (IMAT (N) == 0) CYCLE Assign1DVelos
-    !TODO: How to handle weir elements and junction elements
+!TODO: How to handle weir elements and junction elements    
     IF (IMAT (N) > 900) CYCLE Assign1DVelos
     IF (NOP (N, 6) > 0) CYCLE Assign1DVelos
     IF (IMAT (N) > 900 .AND. IMAT (N) < 904) CYCLE Assign1DVelos
 
-    !for transitions only the first (corner node) and the second (midside) node must get a velocity; the rest is set up by 2D-part of transition
+!for transitions only the first (corner node) and the second (midside) node must get a velocity; the rest is set up by 2D-part of transition    
     IF (NCRN (N) == 5) THEN
       NLM = 2
     ELSE
@@ -396,26 +396,26 @@ ELSEIF (NB == 0) then
 
     Get1DInits: DO M = 1, NLM
 
-      !get node and set initial velocity
+!get node and set initial velocity      
       NA = NOP (N, M)
       VEL (1, NA) = UNOM
 
 !***************************************************
 !nis,may08: Restructuring of this code is necessary!
-      !skip midsides of polynomial approach
+!skip midsides of polynomial approach      
       if (m == 2 .AND. imat (n) == 89) CYCLE Get1DInits
 
-      !testing for polynomial nodes
+!testing for polynomial nodes      
       if (imat (n) == 89 .AND. ( .NOT. IntPolProf(na))) then
         vel (3, na) = 0.5 * (hhmin (na) + hhmax (na))
 
       ELSEIF (imat(n) == 89 .AND. IntPolProf (na)) then
         VEL (3, na) = kmWeight (na)             * 0.5 *(hhmin (NeighProf (na, 1)) + hhmax (NeighProf (na, 1))) &
         &             + (1.0D0 - kmWeight (na)) * 0.5 *(hhmin (NeighProf (na, 2)) + hhmax (NeighProf (na, 2)))
-      !fill vel(3,*) midsides for polynomial approach
+!fill vel(3,*) midsides for polynomial approach      
       ENDIF
 
-      !get the midside value
+!get the midside value      
       if (m == 3) then
         vel(3, NOP(n, 2)) = (vel (3, nop(n, 1)) + VEL (3, nop(n, 3))) / 2.0d0
       end if
@@ -459,19 +459,19 @@ CALL BFORM(0)
 
 !ipk dec00 set water surface elevation
 DO  J = 1, NPM
-  !if MARSH-option is active
+!if MARSH-option is active  
   IF (IDNOPT /= 0) THEN
     HS = VEL (3, J)
     ISWT = 0
 !ipk jan01  change AME to AME1
     CALL AMF (H, HS, AKP (J), ADT (J), ADB (J), AME1, D2, ISWT)
     WSLL (J) = H + ADO(J)
-  !MARSH-option not active
+!MARSH-option not active  
   ELSE
     WSLL (J) = VEL(3,J) + AO(J)
   ENDIF
 
-  !try, if there are some referenced nodes, that means 3D-application; for the referenced nodes, the WSLL becomes the same value
+!try, if there are some referenced nodes, that means 3D-application; for the referenced nodes, the WSLL becomes the same value  
   K = NREF (J) + 1
   IF (K /= 1) THEN
     L = NREF (J) + NDEP (J) - 1
@@ -517,7 +517,7 @@ ENDDO
 !nis,may08: update transition line initial depths
 TransitionDepths: do j = 1, MaxLT
 
-  !get transitioning 1D-node; it shows whether transition is operative in this run
+!get transitioning 1D-node; it shows whether transition is operative in this run  
   TNode = TransLines (j, 3)
   if (TNode == 0) CYCLE TransitionDepths
 
@@ -525,10 +525,10 @@ TransitionDepths: do j = 1, MaxLT
   LiLe  = lmt (LiNo)
   waspi = 0.0
 
-  !calculate 2D's line average water level into waspi
+!calculate 2D's line average water level into waspi  
   call getLineAverageWaterLevel (LiNo, waspi)
 
-  !Assign water depth to nodes of transition
+!Assign water depth to nodes of transition  
   if (idnopt == 0) then
     do k = 1, LiLe
       na = line(LiNo, k)
@@ -539,15 +539,15 @@ TransitionDepths: do j = 1, MaxLT
     end do
   else
     do k = 1, LiLe
-      !get node
+!get node      
       na = line(LiNo, k)
-      !if node is not deactivated
+!if node is not deactivated      
       if (vel(3,na) > 0.0) then
-        !get virtual depth
+!get virtual depth        
         tmpdepth = waspi - ado(na)
-        !calculate Calculation depth
+!calculate Calculation depth        
         CALL amf (tmpdepth, vel(3,na), akp(na), adt (na), adb (na), dum1, dum2, 1)
-        !take water surface elevation
+!take water surface elevation        
         WSLL(na) = waspi
       endif
     end do

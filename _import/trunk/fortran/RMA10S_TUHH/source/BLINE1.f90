@@ -64,7 +64,7 @@ real (kind = 8), dimension (1:2, 1:2) :: dl
 !--------------------
 if (itimeh == 0) then
   itimeh = 1
-  !allocation and initialization
+!allocation and initialization  
   allocate (iform (maxp), iod (maxp), ion (maxp))
   iform = 0
   iod = 0
@@ -104,36 +104,36 @@ enddo
 !------------------------------------
 !objectives: ibn, nfixk, iod
 elements: do n = 1, nem
-  !material type
+!material type  
   mtyp = imat (n)
-  !cycle on deactive elements
+!cycle on deactive elements  
   if(mtyp < 1) cycle elements
-  !cycle what ever type of elements
-  !TODO: What is imat type 90+?
+!cycle what ever type of elements  
+!TODO: What is imat type 90+?  
   if (mod (mtyp, 100) > 90) cycle elements
-  !cycle 3D elements
+!cycle 3D elements  
   if (mtyp > 1000 .AND. mtyp < 5000) cycle elements
   ncn = ncrn (n)
-  !prevent special treatment of 1D/2D element-2-element transition
+!prevent special treatment of 1D/2D element-2-element transition  
   if (ncn == 5 .AND. mtyp < 900) ncn = 3
-  !for 1D elements and control structure elements
+!for 1D elements and control structure elements  
   if (ncn == 3 .OR. mtyp > 900) then
     mcl = 1
-  !other elements
+!other elements  
   else
     mcl = 2
   endif
-  !set up ibn and define partly nfixk
+!set up ibn and define partly nfixk  
   do m = mcl, ncn, mcl
     k = nops (n, m)
-    !If the node exists
+!If the node exists    
     if (k > 0) then
-      !This happens for
-      !  junction elements: [901,...,903]
-      !  control structures: [904,...,989]
-      !  3D elements: [1001,...]
+!This happens for      
+!  junction elements: [901,...,903]      
+!  control structures: [904,...,989]      
+!  3D elements: [1001,...]      
       if (mtyp > 900 .AND. mtyp < 5000) then
-        !TODO: Test, what happens with junction elements and what with control structure elements!
+!TODO: Test, what happens with junction elements and what with control structure elements!        
         if (igtp (n) == 0 .AND. nfctp (n) == 0) then
           ibn (k) = 3
         else
@@ -141,25 +141,25 @@ elements: do n = 1, nem
           nfixk (k) = 01000
         endif
 
-      !Following happens for
-      !  1D elements, 2D elements and 1D-2D transition elements
-      !    Last are numerically treated almost as a 1D element. Thus there is no
-      !    reason to distinguish
-      !mcl became:
-      !    1 - for 1D elements [1,...,89]; [101,...,188]
-      !    2 - for 2D elements [1,...,89]; [101,...,188]
-      !    1 - for control structure elements (no meaning at all)
-      !    1 - for junction elements (no meaning at all)
-      !    Reason: Running through midside nodes for 2D elements; running through
-      !      corner nodes for 1D elements; those nodes are the connecting nodes to
-      !      neighbours and are meaningful counters thus!
+!Following happens for      
+!  1D elements, 2D elements and 1D-2D transition elements      
+!    Last are numerically treated almost as a 1D element. Thus there is no      
+!    reason to distinguish      
+!mcl became:      
+!    1 - for 1D elements [1,...,89]; [101,...,188]      
+!    2 - for 2D elements [1,...,89]; [101,...,188]      
+!    1 - for control structure elements (no meaning at all)      
+!    1 - for junction elements (no meaning at all)      
+!    Reason: Running through midside nodes for 2D elements; running through      
+!      corner nodes for 1D elements; those nodes are the connecting nodes to      
+!      neighbours and are meaningful counters thus!      
       else
-        !set iod-flag for 1D elements
+!set iod-flag for 1D elements        
         if (mcl == 1) iod (k) = 1
-        !increase midside nodes' connections
+!increase midside nodes' connections        
         ibn (k) = ibn (k) + 1
-        !ibn: Counting the occurance of a node in all active elements, i.e. 
-        !     in all 1D elements, 1D-2D transition elements, junction element
+!ibn: Counting the occurance of a node in all active elements, i.e.         
+!     in all 1D elements, 1D-2D transition elements, junction element        
       endif
     endif
   enddo
@@ -198,58 +198,58 @@ enddo
 
 !For every element
 elements2: do n = 1, nem
-  !get material type
+!get material type  
   mtyp = imat (n)
-  !cycle deactivated elements
+!cycle deactivated elements  
   if (mtyp < 1) cycle elements2
-  !cycle what ever elements ???
-  !TODO: What is imat type 90+?
+!cycle what ever elements ???  
+!TODO: What is imat type 90+?  
   if (mod (mtyp, 100) > 90) cycle elements2
-  !cycle gates and NFCTP-s ???
+!cycle gates and NFCTP-s ???  
   if (mtyp > 900 .AND. mtyp < 5000 .AND. igtp (n) == 0 .AND. nfctp (n) == 0) cycle elements2
-  !get number of corner nodes
+!get number of corner nodes  
   ncn = ncrn (n)
-  !treat 1D/2D element-2-element transitions as 1D elements
+!treat 1D/2D element-2-element transitions as 1D elements  
   if (ncn == 5) ncn = 3
 
   midsides: do m = 2, ncn, 2
-    !midside
+!midside    
     n2 = nops (n, m)
-    !fore midside node
+!fore midside node    
     n1 = nops (n, m - 1)
-    !after midside node
+!after midside node    
     n3 = nops (n, 1)
     if (m < ncn) n3 = nops (n, m + 1)
 
-    !Checking ibn of midsides to find outer 2D-elements; midside nodes of 1D elements have ibn==0
+!Checking ibn of midsides to find outer 2D-elements; midside nodes of 1D elements have ibn==0    
     if (ibn (n2) == 1) then
 
-      !Get direction of outward normal for 2-d plan elements
+!Get direction of outward normal for 2-d plan elements      
       if (ncn > 3) then
         call outnrm (cord (n1, 1), cord (n1, 2), cord (n2, 1), cord (n2, 2), cord (n3, 1), cord (n3, 2), srt, 1)
-      !Get direction for 1D elements and 1D/2D elt-2-elt transition elements
+!Get direction for 1D elements and 1D/2D elt-2-elt transition elements      
       else
         call outnrm (cord (n1, 1), cord (n1, 2), cord (n2, 1), cord (n2, 2), cord (n3, 1), cord (n3, 2), srt, 2)
       endif
 
-      !store outward normals into global arrays
+!store outward normals into global arrays      
       voutn (n1) = srt (1)
       voutn (n2) = srt (2)
       voutn (n3) = srt (3)
       
-      !get the boundary condition type of the midside node's arc
-      !nfk = 310 -> q-boundary condition
-      !nfk = 130 -> qx-boundary condition
-      !nfk =   2 -> water level condition
-      !nfk = 110 -> v-condition
+!get the boundary condition type of the midside node's arc      
+!nfk = 310 -> q-boundary condition      
+!nfk = 130 -> qx-boundary condition      
+!nfk =   2 -> water level condition      
+!nfk = 110 -> v-condition      
       nfk = nfixk (n2)/ 100
 
-      !if not any q- or h-condition, then the boundary slope has to be calculated
+!if not any q- or h-condition, then the boundary slope has to be calculated      
       if(nfk < 113 .AND. nfk /= 2) then
 
-        !TODO: When does this happen? It seems as it is connected to junctions or 1D elements, that are
-        !      control structures
-        !reset ibn-values for passive boundaries (implicit boundary conditions)
+!TODO: When does this happen? It seems as it is connected to junctions or 1D elements, that are        
+!      control structures        
+!reset ibn-values for passive boundaries (implicit boundary conditions)        
         if (ncn < 6) then
           if (ibn (n1) >= 10) ibn (n1) = 15
           if (ibn (n3) >= 10) ibn (n3) = 15
@@ -258,18 +258,18 @@ elements2: do n = 1, nem
           if (ibn (n3) == 10) ibn (n3) = 15
         endif
 
-        !get the water depths at the corners of the arc
+!get the water depths at the corners of the arc        
         h1 = vel (3, n1)
         h3 = vel (3, n3)
-        !calculate the length of the arc between corner nodes
+!calculate the length of the arc between corner nodes        
         dl (2, 2) = cord (n3, 1) - cord (n1, 1)
         dl (2, 1) = cord (n3, 2) - cord (n1, 2)
 
-        !for 2D elements calculate the distance between the midside node and the first node of the arc
+!for 2D elements calculate the distance between the midside node and the first node of the arc        
         if (cord (n2, 1) > voidp .AND. ncn /= 3) then
           dl (1, 2) = cord (n2, 1) - cord (n1, 1)
           dl (1, 1) = cord (n2, 2) - cord (n1, 2)
-        !for 1D elements, just half the element length
+!for 1D elements, just half the element length        
         else
           dl (1, 2) = dl (2, 2) / 2.
           dl (1, 1) = dl (2, 1) / 2.
@@ -306,26 +306,26 @@ elements2: do n = 1, nem
 enddo elements2
 
 !CIPK JUN05  SETUP FOR SUBMERGENGE
-      !NiS,may06: NTR is again the calling position of BLINE
+!NiS,may06: NTR is again the calling position of BLINE      
       IF(NTR > 0) THEN
         CALL SUBSET
       ENDIF
 
 !C-
       DO 701 N=1,NPM
-        !FIXME: This is just for showing, that inner boundary condition nodes shall not be touched;
-        !  If such nodes are not ignored here, the values of the inner boundaries will totally be changed
-        !  by this subroutine. Thus after each successful calculation step, the boundary condition status
-        !  of all nodes is nullified to be resetted during the preperation phase of the Schwarz-Iteration
+!FIXME: This is just for showing, that inner boundary condition nodes shall not be touched;        
+!  If such nodes are not ignored here, the values of the inner boundaries will totally be changed        
+!  by this subroutine. Thus after each successful calculation step, the boundary condition status        
+!  of all nodes is nullified to be resetted during the preperation phase of the Schwarz-Iteration        
         if (nfix(n) == -1) go to 701
-        !-
+!-        
 
         NFIX(N)=NFIXK(N)
-        !nis,jul07 (work around): iteqv(0) is not defined. This happens, when BLINE(NTR==1) ist called, the beginning of a dynamic time step
+!nis,jul07 (work around): iteqv(0) is not defined. This happens, when BLINE(NTR==1) ist called, the beginning of a dynamic time step        
         if (maxn > 0) then
           IF (ITEQV(MAXN) == 2)  GOTO 701
         end if
-        !-
+!-        
 
 !CIPK OCT98  CONVERT TO F90
         NFTYP=NFIXK(N)
@@ -435,11 +435,11 @@ enddo elements2
   610     CONTINUE
 
 !CIPK JUN05
-          !nis,nov06: This must be the point for 1D-2D-transition-elements to assign angle ALFA=ALFAK. ALFAK is set in GETGEO!
-          !nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range
-          !IF(ALFAK(N) /= 0. .AND. IBN(N) /= 15) THEN
+!nis,nov06: This must be the point for 1D-2D-transition-elements to assign angle ALFA=ALFAK. ALFAK is set in GETGEO!          
+!nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range          
+!IF(ALFAK(N) /= 0. .AND. IBN(N) /= 15) THEN          
           IF(ABS(ALFAK(N)) > 0.00001 .AND. IBN(N) /= 15) THEN
-          !-
+!-          
             ALFA(N)=ALFAK(N)
           ELSEIF(XSLP(N) /= 0.) THEN
             ALFA(N)=ATAN(YSLP(N)/XSLP(N))
@@ -628,9 +628,9 @@ enddo elements2
       DO 730 N=1,NP
         ADIF(N)=0.
 !CIPK JUN05
-        !TOASK
-        !nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range
-        !IF(ALFAK(N) /= 0. .AND. 
+!TOASK        
+!nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range        
+!IF(ALFAK(N) /= 0. .AND.         
         IF(ABS(ALFAK(N)) > 0.00001 .AND. (IBN(N) /= 15 .AND. IBN(N) /= 10)) ALFA(N)=ALFAK(N)
   730 CONTINUE
 !C-
@@ -686,11 +686,11 @@ enddo elements2
 !C-
 !nis,nov06: Enlarge computation of angular differences for 1D-2D-line-transitions
 
-      !nis,nov06: Change way of do loop
-      !DO 800 N=1,NEM
+!nis,nov06: Change way of do loop      
+!DO 800 N=1,NEM      
       angulardiffs: DO N=1,NEM
-      !-
-      !nis,jan07: Check, whether element is part of line transition
+!-      
+!nis,jan07: Check, whether element is part of line transition      
         IF(NCRN(N) == 5) THEN
           IF(IMAT(N) < 901 .OR. IMAT(N) > 5000) THEN
             N1=NOPS(N,3)
@@ -731,62 +731,62 @@ enddo elements2
               ENDIF
             ENDIF
           ENDIF
-        !nis,nov06: Test for 1D-2D-line-transitions
+!nis,nov06: Test for 1D-2D-line-transitions        
         ELSEIF (ncrn(n) == 3) then
 
-          !if there is no line transition cycle
+!if there is no line transition cycle          
           if (MaxLT == 0) CYCLE angulardiffs
 
-          !find the correct line transition number
+!find the correct line transition number          
           findtranselt: do j = 1, MaxLT
-            !if the element n is part of any transition go on with the dirAdjustment-loop
+!if the element n is part of any transition go on with the dirAdjustment-loop            
             if (TransLines(j,1) == n) then
               TransNumber = J
               EXIT findtranselt
             ENDIF
-            !if the last line still shows no consistency with the active element n, this is no transition element then and the main loop has to cycle
+!if the last line still shows no consistency with the active element n, this is no transition element then and the main loop has to cycle            
             if (j == MaxLT) CYCLE angulardiffs
           end do findtranselt
 
-          !get local copy of line no.
+!get local copy of line no.          
           LiNo = TransLines (TransNumber, 2)
 
-          !Reset angular difference vector, because elements might have become dry/wet
+!Reset angular difference vector, because elements might have become dry/wet          
           do nodeno = 1, lmt (lino)
             n1 = line (lino, nodeno)
             adif (n1) = 0.0
           enddo
 
           do i = 1, 2
-            !first wet node
+!first wet node            
             if (i == 1) then 
-              !Find first wet node in 1D-2D-line-transition
+!Find first wet node in 1D-2D-line-transition              
               SetFirstAdif: do nodeno = 1, lmt (lino)-2, 2
                 n1 = line (lino, nodeno)
-                !find dry/wet status of node:
+!find dry/wet status of node:                
                 if (imat (lineelement (lino,nodeno+1)) > 0) then
-                  !set direction reference node
+!set direction reference node                  
                   n2 = line (lino, nodeno + 2)
                   exit SetFirstAdif
                 endif
               enddo SetFirstAdif
-            !last wet node
+!last wet node            
             else
-              !Find last wet node in 1D-2D-line-transition
+!Find last wet node in 1D-2D-line-transition              
               SetLastAdif: do nodeno = lmt (lino), 3, -2
                 n1 = line (lino, nodeno)
-                !find dry/wet status of node:
+!find dry/wet status of node:                
                 if (imat (lineelement (lino,nodeno-1)) > 0)  exit SetLastAdif
               enddo SetLastAdif
             endif
-            !TODO: Support dry gaps in the 1D-2D-line-transition
-            !TODO: Check for the distance between the two wet border nodes: There must be at least
-            !      one node in between so minimum 2 elements within the line transition.
+!TODO: Support dry gaps in the 1D-2D-line-transition            
+!TODO: Check for the distance between the two wet border nodes: There must be at least            
+!      one node in between so minimum 2 elements within the line transition.            
             
-            !Fix adif for wet nodes
-            !Calculate angular difference of first and third node that has for shure the line's directio fix
+!Fix adif for wet nodes            
+!Calculate angular difference of first and third node that has for shure the line's directio fix            
             ADIF(n1) = ALFA(n1) - ALFA(N2)
-            !Correct direction, so that the vectors points into quadrant 1 or 4
+!Correct direction, so that the vectors points into quadrant 1 or 4            
             IF(ADIF(n1) > PI2) THEN
               ALFA(n1)=ALFA(n1)-2.*PI2
               ADIF(n1)=ALFA(n1)-ALFA(N2)

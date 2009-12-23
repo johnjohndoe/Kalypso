@@ -65,7 +65,8 @@ MN: Do
 ! READ THE CURRENT NUMBER OF PROFILE.
 I = I + 1
 IF (I > siz) exit MN
-IF ( PROFILEUNIT == 731) THEN                                 ! if a restart file should be read.
+! if a restart file should be read.
+IF ( PROFILEUNIT == 731) THEN                                 
 
   READ (PROFILEUNIT,FMT = 121,IOSTAT = ISTAT)TEMPCHAR, I
 
@@ -93,7 +94,8 @@ ELSEIF (ISTAT == -1 ) THEN
   EXIT MN
 END IF
 
-IF ( PROFILEUNIT == 731) THEN                                 ! if a restart file should be read.
+! if a restart file should be read.
+IF ( PROFILEUNIT == 731) THEN                                 
 
   READ (PROFILEUNIT,FMT = *)TEMPCHAR
 

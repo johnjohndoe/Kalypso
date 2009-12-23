@@ -1,42 +1,42 @@
-C     Last change:  MD   20 May 2009    6:16 pm
-CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
-CIPK  LAST UPDATE MAR 25 2005
-CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
-CIPK  LAST UPDATE FEB 10 2004 IMPROVE DIAGNOSTIC
-CIPK  LAST UPDATE DEC 16 2003 ADD IEDSW DEPENDENCE
-CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
-cipk  last update Mar 22 2001 revise to keep solution and NBC for equation dropout
-CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
-cipk  last update Nov 18 1999 add capability to collapse elements to 2-D
-cipk  last update Feb 4 1998 reduce output
-cipk  last update Jan 21 97  add option for Smagorinksy in 2-D
+!     Last change:  MD   20 May 2009    6:16 pm
+!IPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
+!IPK  LAST UPDATE MAR 25 2005
+!IPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
+!IPK  LAST UPDATE FEB 10 2004 IMPROVE DIAGNOSTIC
+!IPK  LAST UPDATE DEC 16 2003 ADD IEDSW DEPENDENCE
+!IPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
+!ipk  last update Mar 22 2001 revise to keep solution and NBC for equation dropout
+!IPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
+!ipk  last update Nov 18 1999 add capability to collapse elements to 2-D
+!ipk  last update Feb 4 1998 reduce output
+!ipk  last update Jan 21 97  add option for Smagorinksy in 2-D
       SUBROUTINE FRONT(NRX)
       USE BLK10
       USE BLK10MOD
       USE BLKSANMOD
       USE BLKECOM
-      !nis,feb07,testing
+!nis,feb07,testing      
       USE ParaKalyps
       USE Para1DPoly
-      !-
+!-      
       SAVE
-C
-C
-C     FRONTAL ELIMINATION ROUTINE USING FULL PIVOTING
-C
+!
+!
+!     FRONTAL ELIMINATION ROUTINE USING FULL PIVOTING
+!
       INTEGER NK(120)
-
-CIPK AUG05       DIMENSION QR(MFW),NCON(20)
-CIPK AUG07      DIMENSION NCON(20)
-C-
-CIPK AUG05      COMMON/BIGONE/ EQ(MFW,MFW),LHED(MFW),QQ(MFW),PVKOL(MFW)
-C-
-c     LBMAX=MBUF
-
-      !local copy of the actual nbn of the element
+!
+!IPK AUG05       DIMENSION QR(MFW),NCON(20)
+!IPK AUG07      DIMENSION NCON(20)
+!-
+!IPK AUG05      COMMON/BIGONE/ EQ(MFW,MFW),LHED(MFW),QQ(MFW),PVKOL(MFW)
+!-
+!     LBMAX=MBUF
+!
+!local copy of the actual nbn of the element      
       INTEGER                       :: temp_nbn
       INTEGER                       :: nod, degree
-
+!
       NMAX = MFW
       CALL SECOND(ASEC)
       ISHRK=0
@@ -44,11 +44,11 @@ c     LBMAX=MBUF
       TCOEFS=0
       TCOEF2=0
       TCOEF1=0
-
-CIPK MAR0 setup switch that says salinity is active
-
-      IF(ITEQV(MAXN) == 2 .OR. ITEQV(MAXN) == 8
-     +                      .OR. ITEQV(MAXN) == 9) THEN
+!
+!IPK MAR0 setup switch that says salinity is active
+!
+      IF(ITEQV(MAXN) == 2 .OR. ITEQV(MAXN) == 8                         &
+     &                      .OR. ITEQV(MAXN) == 9) THEN
         IF(IDIFSW == 0) THEN
           ISLP=0
         ELSE
@@ -57,40 +57,40 @@ CIPK MAR0 setup switch that says salinity is active
       ELSE
         ISLP=0
       ENDIF
-
+!
       WRITE(ICFL,6198) ASEC
  6198 FORMAT(/10X,' TIME STARTING FRONT =',F10.3)
  6199 FORMAT( /10X,'DELTA T =',F10.3, '  TOTAL T =',F10.3)
-      WRITE(*,*)
-     +'ELEMENTS-PROCESSED EQNS-PROCESSED CURRENT-FRONT MAX-FRONT'
-     +,' PRESENT-BUFFER'
+      WRITE(*,*)                                                        &
+     &'ELEMENTS-PROCESSED EQNS-PROCESSED CURRENT-FRONT MAX-FRONT'       &
+     &,' PRESENT-BUFFER'
       NEC=0
       IRTC=0
       LQ=0
       LCMAX=0
-C
-C     PREFRONT
-C
-C
-C...... Find last appeareance of each node moved from LOAD3
-C
-      !nis,jun07: Initializing it from the beginning of the array
-      !DO J=1,NSZF
+!
+!     PREFRONT
+!
+!
+!...... Find last appeareance of each node moved from LOAD3
+!
+!nis,jun07: Initializing it from the beginning of the array      
+!DO J=1,NSZF      
       DO J = 0, NSZF
         NLSTEL (J) = 0
       ENDDO
-
+!
       K = NESAV + 1
-
+!
       AssignNLSTEL: DO NN = 1, NESAV
-        !run through all elements, using the reordering number and starting with the highest. Purpose is to get the element, that is solved
-        !as the last of all the elements, a degree of freedom is connected to.
+!run through all elements, using the reordering number and starting with the highest. Purpose is to get the element, that is solved        
+!as the last of all the elements, a degree of freedom is connected to.        
         K = K - 1
         N = NFIXH (K)
         IF (N > 0 .AND. n <= NE) THEN
-          IF (ICOLLAPE (N) == 1 .AND. IMAT (N)/1000 /= 1)
-     +      CYCLE AssignNLSTEL
-
+          IF (ICOLLAPE (N) == 1 .AND. IMAT (N)/1000 /= 1)               &
+     &      CYCLE AssignNLSTEL
+!
           IF (IMAT (N) > 0) THEN
             ncn = 20
             IF (ITEQV (MAXN) == 5) THEN
@@ -104,11 +104,11 @@ C
               ENDDO
             ENDIF
             MRC = N
-
-
+!
+!
             DO M = 1, NCN
               L = NCON (M)
-CIPK JAN99 SKIP OUT FOR 2DV
+!IPK JAN99 SKIP OUT FOR 2DV
               if (l > 0) THEN
                 DO I = 1, 7
                   J = NBC (L, I)
@@ -123,76 +123,79 @@ CIPK JAN99 SKIP OUT FOR 2DV
           ENDIF
         ENDIF
       ENDDO AssignNLSTEL
-      !NLSTEL (J) : Stores the nfixh-number of the element with the highest nfixh-number, where the degree of freedom J is connected to.
-
+!NLSTEL (J) : Stores the nfixh-number of the element with the highest nfixh-number, where the degree of freedom J is connected to.      
+!
       NELL=0
       NELM=0
-C
-C     ASSEMBLY
-C
-      !Initializations
-      !---------------
+!
+!     ASSEMBLY
+!
+!Initializations      
+!---------------      
       init: DO N = 1, NSZF
         IPOINT (N) = 0
         R1 (N) = 0.
       end do init
-C-
-C......ESTABLISH DENSITIES AND PRESSURES
-C-
+!-
+!......ESTABLISH DENSITIES AND PRESSURES
+!-
       IF (NRX == 1) THEN
         CALL PRESR
         NDF = 4
       ENDIF
       LCOL = 0
-
-
-      !Starting the assembly of the equations
-      !--------------------------------------
-
+!
+!
+!Starting the assembly of the equations      
+!--------------------------------------      
+!
    18 NELL=NELL+1
       NELM=NELM+1
-
-      !jump out, if maximum element number is reached
-      IF (NELL > NE) GO TO 380    !exit
-      !get element ID to process
+!
+!jump out, if maximum element number is reached      
+!exit
+      IF (NELL > NE) GO TO 380    
+!get element ID to process      
       N = NFIXH(NELM)
-      !special cases to cycle or to exit
-      IF (N == 0)  GO TO 380      !exit
-      IF(IMAT(N) < 1) GO TO 18 !cycle
-      !monitor time consumption
+!special cases to cycle or to exit      
+!exit
+      IF (N == 0)  GO TO 380      
+!cycle
+      IF(IMAT(N) < 1) GO TO 18 
+!monitor time consumption      
       CALL SECOND(SINC)
-
-CIPK DEC03 ADD IEDSW DEPENDENCE
-      !get material dependent behaviour; due to turbulence model
+!
+!IPK DEC03 ADD IEDSW DEPENDENCE
+!get material dependent behaviour; due to turbulence model      
       if (imat (n) /= 89) then
         NMATYP = (MOD (IMAT (N), 1000))
         IEDSW = IEDSW1 (NMATYP)
         TBFACT = TBFACT1 (NMATYP)
         TBMIN = TBMIN1 (NMATYP)
       endif
-
-
+!
+!
 !---------------------------
 !Calling proper coef routine
 !---------------------------
-      !collapse from 3D to 2D
+!collapse from 3D to 2D      
       IF(ITEQV(MAXN) /= 5) THEN
         IF(IMAT(N) > 1000 .AND. IMAT(N) < 5000) THEN
           IF(NRX == 2) GO TO 18
-CIPK NOV99     Either process surface integrals or collapse to 2-d
+!IPK NOV99     Either process surface integrals or collapse to 2-d
         IF(ICOLLAPE(N) == 0) THEN
           CALL SURCOF(N,NRX)
         ELSEIF(IMAT(N) < 2000) THEN
           IF(NETYP(N)/10 < 1) THEN
-CIPK MAR05
+!IPK MAR05
             IF(INOTR == 0) THEN
               CALL COEF1(N,NRX)
             ELSE
               CALL COEF1NT(N,NRX)
             endif
-C     Modify tests to allows for IDIFSW
+!     Modify tests to allows for IDIFSW
           ELSEIF(IUTUB == 1 .AND. iedsw == 2 .AND. ISLP == 0) THEN
-CIPK MAR05
+!IPK MAR05
             IF(INOTR == 0) THEN
               CALL COEF2D(N,NRX)
             ELSE
@@ -201,13 +204,13 @@ CIPK MAR05
               endif
               CALL COEF2DNT(N,NRX)
             ENDIF
-
-          !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
-          !MD:  combined with Dispersion enclosure 2. Reason for this change
-          !MD:  to avoid a switch between different COEF-Routines for one model
-          ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND. IDIFSW == 2 
-     +             .AND. IEDSW == 2) THEN
-CIPK MAR05
+!
+!MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)          
+!MD:  combined with Dispersion enclosure 2. Reason for this change          
+!MD:  to avoid a switch between different COEF-Routines for one model          
+          ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND. IDIFSW == 2           &
+     &             .AND. IEDSW == 2) THEN
+!IPK MAR05
             IF(INOTR == 0) THEN
               CALL COEF2D(N,NRX)
             ELSE
@@ -217,7 +220,7 @@ CIPK MAR05
               CALL COEF2DNT(N,NRX)
             ENDIF
               ELSE
-CIPK MAR05
+!IPK MAR05
             IF(INOTR == 0) THEN
               CALL COEF2(N,NRX)
             ELSE
@@ -232,42 +235,42 @@ CIPK MAR05
           ENDIF
           CALL SECOND(SOUC)
           TSURC=SOUC-SINC+TSURC
-
+!
         ELSE
           IF(NETYP(N)/10 == 2) THEN
-
-cipk nov99 skip if collapsing to 2-d
-
+!
+!ipk nov99 skip if collapsing to 2-d
+!
             IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 18
-
-C     Process   threed element
-cipk jan97
+!
+!     Process   threed element
+!ipk jan97
             if(iutub == 1 .AND. IEDSW == 2) then
               CALL COEF3D(N,NRX)
             else
               call coef3(n,nrx)
             endif
-cipk jan97 end changes
+!ipk jan97 end changes
             CALL SECOND(SOUC)
             TCOEFS=TCOEFS+SOUC-SINC
           ELSE
             IF(NETYP(N)/10 == 1) THEN
-
-C     Process   twod elements
-
-CIPK JUN05
+!
+!     Process   twod elements
+!
+!IPK JUN05
               IF(IMAT(N) < 900 .OR. NCORN(N) > 5) THEN
-
-C     Process   horizontal 2d
-
+!
+!     Process   horizontal 2d
+!
                 IF(NRX == 2) GO TO 18
-cipk jan97
-                if(iutub == 1 .AND. IEDSW == 2 .AND. ISLP == 0)
-     +            then
+!ipk jan97
+                if(iutub == 1 .AND. IEDSW == 2 .AND. ISLP == 0)         &
+     &            then
                   if(nell == 1) then
                     write(75,*) 'going to smag'
                   endif
-CIPK MAR05
+!IPK MAR05
                   IF(INOTR == 0) THEN
                     CALL COEF2D(N,NRX)
                   ELSE
@@ -275,15 +278,15 @@ CIPK MAR05
                       write(*,*) ' entering COEF2DNT'
                     endif
                     CALL COEF2DNT(N,NRX)
-
+!
                   ENDIF
-
-                !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
-                !MD:  combined with Dispersion enclosure 2. Reason for this change
-                !MD:  to avoid a switch between different COEF-Routines for one model
-                ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND. 
-     +                 IDIFSW == 2. .AND. IEDSW == 2) THEN
-CIPK MAR05
+!
+!MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)                
+!MD:  combined with Dispersion enclosure 2. Reason for this change                
+!MD:  to avoid a switch between different COEF-Routines for one model                
+                ELSEIF(ISLP == 1 .AND. IUTUB == 1 .AND.                 &
+     &                 IDIFSW == 2. .AND. IEDSW == 2) THEN
+!IPK MAR05
                   IF(INOTR == 0) THEN
                     CALL COEF2D(N,NRX)
                   ELSE
@@ -293,7 +296,7 @@ CIPK MAR05
                     CALL COEF2DNT(N,NRX)
                   ENDIF
                 else
-CIPK MAR05
+!IPK MAR05
                   IF(INOTR == 0) THEN
                     CALL COEF2(N,NRX)
                   ELSE
@@ -303,61 +306,61 @@ CIPK MAR05
                     CALL COEF2NT(N,NRX)
                   ENDIF
                 endif
-cipk jan97 end changes
+!ipk jan97 end changes
               ELSE
-CIPK JAN99
+!IPK JAN99
                 IF(IMAT(N) > 900 .AND. IMAT(N) < 1000) GO TO 18
-
-C      Process vertical 2d
-
-cipk nov99 skip if collapsing to 2-d
+!
+!      Process vertical 2d
+!
+!ipk nov99 skip if collapsing to 2-d
                 IF(ICOLLAPE(N) == 1 .AND. NRX /= 2) GO TO 18
-
+!
                 CALL COEFV(N,NRX)
               ENDIF
               CALL SECOND(SOUC)
               TCOEF2=SOUC-SINC+TCOEF2
             ELSE
-
-C      Process one-d elements
-
+!
+!      Process one-d elements
+!
               IF(NRX == 2) GO TO 18
-CIPK MAR05
+!IPK MAR05
 !nis,may07
-
-              IF ((imat(n) >= 901 .AND. imat(n) <= 903)
-     +            .AND. IGTP(n) == 0) then
+!
+              IF ((imat(n) >= 901 .AND. imat(n) <= 903)                 &
+     &            .AND. IGTP(n) == 0) then
                 CALL Coef1DJunction (N, NRX)
-
-              !material type 89 is used for polynom approach
+!
+!material type 89 is used for polynom approach              
               ELSEIF (imat(n) /= 89) THEN
                 IF(INOTR == 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
                 ENDIF
-              !use polynom approach
+!use polynom approach              
               ELSEIF (imat(n) == 89) THEN
                 CALL COEF1dPoly(N,NRX)
               ENDIF
-
-
+!
+!
               CALL SECOND(SOUC)
               TCOEF1=SOUC-SINC+TCOEF1
             ENDIF
           ENDIF
         ENDIF
       ELSE
-C-
-C...... The calls below are for the case of vertical averaging
-C-
+!-
+!...... The calls below are for the case of vertical averaging
+!-
    19   IF(N <= NE) GO TO 20
         NELM=NELM+1
         N=NFIXH(NELM)
         GO TO 19
    20   CONTINUE
         IF(NOPS(N,6) > 0) THEN
-CIPK MAR05
+!IPK MAR05
           IF(INOTR == 0) THEN
             CALL COEF2(N,NRX)
           ELSE
@@ -369,7 +372,7 @@ CIPK MAR05
           CALL SECOND(SOUC)
           TCOEF2=TCOEF2+SOUC-SINC
         ELSE
-CIPK MAR05
+!IPK MAR05
           IF(INOTR == 0) THEN
             CALL COEF1(N,NRX)
           ELSE
@@ -379,61 +382,75 @@ CIPK MAR05
           TCOEF1=TCOEF1+SOUC-SINC
         ENDIF
       ENDIF
-cipk jan99
+!ipk jan99
 !-----------------------------------
 !End of calling proper coef routines
 !-----------------------------------
-
+!
       IF(NETYP(N) == 15 .OR. NETYP(N) == 16) THEN
         IF(NOP(N,14) /= 0) NCN=14
         IF(NOP(N,18) /= 0) NCN=18
       ENDIF
-
+!
       NBN = NCN*NDF
       DO 21 LK=1,NBN
-        LDEST(LK)=0 !NiS,may06: position of special degree of freedom (lk) in equation solution window
-        NK(LK)=0 !???
+!NiS,may06: position of special degree of freedom (lk) in equation solution window
+        LDEST(LK)=0 
+!???
+        NK(LK)=0 
    21 CONTINUE
-
-
+!
+!
       KC=0
       DO J=1,NCN
         IF(ITEQV(MAXN) == 5) THEN
           I=NOPS(N,J)
         ELSE
-          I=NOP(N,J) !NiS,may06: i becomes node number
+!NiS,may06: i becomes node number
+          I=NOP(N,J) 
         ENDIF
-        inner: DO L=1,NDF !NiS,may06: for every degree of freedom
-          KC=KC+1     !NiS,may06: count loop
-CIPK JAN99
-          if(i == 0) cycle inner !NiS,may06: loop cycle, if node is zero
-
-          LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I
-          NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
+!NiS,may06: for every degree of freedom
+        inner: DO L=1,NDF 
+!NiS,may06: count loop
+          KC=KC+1     
+!IPK JAN99
+!NiS,may06: loop cycle, if node is zero
+          if(i == 0) cycle inner 
+!
+!NiS,may06: LL becomes global equation number of the degree of freedom L at node I
+          LL=NBC(I,L) 
+!NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
+          NK(KC)=LL   
           IF(LL /= 0) THEN
-            IF(NLSTEL(LL) == N) NK(KC)=-LL !If the current element is the last one of the equation (NLSTEL), then make
-                                             !           NK(KC) negative as pointer, that degree of freedom can be taken out
+!If the current element is the last one of the equation (NLSTEL), then make
+            IF(NLSTEL(LL) == N) NK(KC)=-LL 
+!           NK(KC) negative as pointer, that degree of freedom can be taken out                                             
           ENDIF
          end do inner
        end do
-
-
-C-
-C...... Set up heading vectors
-C-
+!
+!
+!-
+!...... Set up heading vectors
+!-
       LFZ=1
-      DO 52 LK=1,NBN !NiS,may06: do for every node-degree-of-freedom; nbn=ndf*ncn
-        nod=NK(LK)  !NiS,may06: get equation number of node-degree-of-freedom
-        IF(nod == 0) GO TO 52 !NiS,may06: if equation number is deactivated, switch
-        LM=IABS(nod) !NiS,may06: get absolute number
-        LL=IPOINT(LM) !NiS,may06: IPOINT is always zero at the first call
+!NiS,may06: do for every node-degree-of-freedom; nbn=ndf*ncn
+      DO 52 LK=1,NBN 
+!NiS,may06: get equation number of node-degree-of-freedom
+        nod=NK(LK)  
+!NiS,may06: if equation number is deactivated, switch
+        IF(nod == 0) GO TO 52 
+!NiS,may06: get absolute number
+        LM=IABS(nod) 
+!NiS,may06: IPOINT is always zero at the first call
+        LL=IPOINT(LM) 
         IF(LL /= 0) THEN
           LDEST(LK)=LL
           IF(nod < 0) LHED(LL)=nod
         ELSE
-C
-C     Look for vacant slot
-C
+!
+!     Look for vacant slot
+!
           DO 35 L=LFZ,LCOL
             IF(LHED(L) == 0) THEN
               IPOINT(LM)=L
@@ -456,31 +473,32 @@ C
    40     LFZ=LFZZ
         ENDIF
    52 CONTINUE
-
-
-CIPK FEB04
-      !nis,dec06: if LHED(L) == 0, the loop should be cycled because of assignment problems
+!
+!
+!IPK FEB04
+!nis,dec06: if LHED(L) == 0, the loop should be cycled because of assignment problems      
       DO L=1,LCOL
-      !columnassigning: DO L=1,LCOL
+!columnassigning: DO L=1,LCOL      
           LEQ=ABS(LHED(L))
-          !nis,dec06: see above
-          !if (LEQ == 0) CYCLE columnassigning
-          !-
+!nis,dec06: see above          
+!if (LEQ == 0) CYCLE columnassigning          
+!-          
           IF(NLSTEL(LEQ) == N) LHED(L)=-ABS(LHED(L))
-      ENDDO !columnassigning
-
+!columnassigning
+      ENDDO 
+!
       IF(LCOL > LCMAX) LCMAX=LCOL
-
-      !Write out console output during processing of elements (every 1000 elements)
-      !----------------------------------------------------------------------------
+!
+!Write out console output during processing of elements (every 1000 elements)      
+!----------------------------------------------------------------------------      
       IF (MOD (NELL, 1000) == 0) THEN
         WRITE(*,'(I18,I15,I14,I10,I15)') NELL, NEC, LCOL, LCMAX, LQ
       ENDIF
-
-
+!
+!
       IF(LCOL <= NMAX) GO TO 54
       NERROR=2
-CIPK SEP04 CREATE ERROR FILE
+!IPK SEP04 CREATE ERROR FILE
       CLOSE(75)
       OPEN(75,FILE='ERROR.OUT')
       WRITE(*,417)NERROR
@@ -490,7 +508,7 @@ CIPK SEP04 CREATE ERROR FILE
  6008 FORMAT( // 10X, '..STOP AT ELEMENT', I10 )
       WRITE(75,9820) (LHED(L),L=1,LCOL)
       WRITE(75,9822) (EQ(L,L),L=1,LCOL)
-CIPK FEB04
+!IPK FEB04
  9823   FORMAT('  OFFENDING EQN      NODE   DEG OF FR')
  9824   FORMAT(I15,I10,I12)
         WRITE(75,9823)
@@ -511,15 +529,15 @@ CIPK FEB04
       WRITE(75,9821) (N,(NBC(N,M),M=1,4),N=1,NP)
       STOP
    54 CONTINUE
-
-      !NiS,jun06,com: Assembly of global matrix within the solution window
-      !nis,jun06,com: for every nodal degree of freedom (row of element matrix)
+!
+!NiS,jun06,com: Assembly of global matrix within the solution window      
+!nis,jun06,com: for every nodal degree of freedom (row of element matrix)      
       DO 57 L=1,NBN
-        !nis,jun06,com: if equation is present
+!nis,jun06,com: if equation is present        
         IF(NK(L) /= 0) THEN
-          !nis,jun06,com: take the solution window slot
+!nis,jun06,com: take the solution window slot          
           LL=LDEST(L)
-          !nis,jun06,com: then take again every nodal degree of freedom (column of element matrix)
+!nis,jun06,com: then take again every nodal degree of freedom (column of element matrix)          
           DO 56 K=1,NBN
             IF(NK(K) /= 0) THEN
             KK=LDEST(K)
@@ -528,45 +546,45 @@ CIPK FEB04
    56     CONTINUE
         ENDIF
    57 CONTINUE
-      !nis,feb07,testing (stop for eq-output)
-      !pause
-      !-
-C
-C     FIND OUT WHICH MATRIX ELEMENTS ARE FULLY SUMMED
-C
+!nis,feb07,testing (stop for eq-output)      
+!pause      
+!-      
+!
+!     FIND OUT WHICH MATRIX ELEMENTS ARE FULLY SUMMED
+!
    60 LPIVCO=0
       PIVOT=0.
       DO 64 L=1,LCOL
         IF(LHED(L) > -1) GO TO 64
-C     WRITE(*,*) 'NELL,LHED,EQ',NELL,LHED(L),EQ(L,L)
+!     WRITE(*,*) 'NELL,LHED,EQ',NELL,LHED(L),EQ(L,L)
         PIVA=EQ(L,L)
         IF(ABS(PIVA) < ABS(PIVOT)) GO TO 64
         PIVOT=PIVA
         LPIVCO=L
    64 CONTINUE
       IF(LPIVCO == 0) GO TO 18
-C     WRITE(*,*) 'LPIVCO,PIVOT',LPIVCO,PIVOT
+!     WRITE(*,*) 'LPIVCO,PIVOT',LPIVCO,PIVOT
       IF( ABS(PIVOT) < 1.0E-8 .AND. NELL <= NE ) GO TO 18
-C
-C     NORMALISE PIVOTAL ROW
-C
+!
+!     NORMALISE PIVOTAL ROW
+!
       LCO=IABS(LHED(LPIVCO))
-C     IF(ABS(PIVOT) < 1E-08)WRITE(ICFL,476)
-CTEMP     pivtin=1.0/pivot
+!     IF(ABS(PIVOT) < 1E-08)WRITE(ICFL,476)
+!TEMP     pivtin=1.0/pivot
       DO 80 L=1,LCOL
         QQ(L)=EQ(L,LPIVCO)/PIVOT
-CTEMP        QQ(L)=EQ(L,LPIVCO)*pivtin
+!TEMP        QQ(L)=EQ(L,LPIVCO)*pivtin
         QR(L)=EQ(LPIVCO,L)
    80 CONTINUE
       QR(LPIVCO)=0.0
       QQ(LPIVCO)=0.0
       RHS=R1(LCO)/PIVOT
-CTEMP      RHS=R1(LCO)*pivtin
+!TEMP      RHS=R1(LCO)*pivtin
       R1(LCO)=RHS
       PVKOL(LPIVCO)=PIVOT
-C
-C     ELIMINATE THEN DELETE PIVOTAL ROW AND COLUMN
-C
+!
+!     ELIMINATE THEN DELETE PIVOTAL ROW AND COLUMN
+!
       DO 100 K=1,LCOL
         IF(QR(K) == 0.) GO TO 100
         KRW=IABS(LHED(K))
@@ -575,9 +593,9 @@ C
           EQ(L,K)=EQ(L,K)-QR(K)*QQ(L)
    90   CONTINUE
   100 CONTINUE  
-C
-C     WRITE PIVOTAL EQUATION ON DISC
-C
+!
+!     WRITE PIVOTAL EQUATION ON DISC
+!
       NEC=NEC+1
       LCS(NEC)=LCOL
       LPS(NEC)=LPIVCO
@@ -596,36 +614,36 @@ C
         EQ(LPIVCO,L)=0.
   109 CONTINUE
       LHED(LPIVCO)=0
-C
-C     REARRANGE HEADING VECTORS
-C
-C      IF(ISHRK > LCOL/10+4) THEN
+!
+!     REARRANGE HEADING VECTORS
+!
+!      IF(ISHRK > LCOL/10+4) THEN
        IF(ISHRK >= 40) THEN
-C
-CAUG93  Changes start here
-c       KM=0
-c       DO 120 K=1,LCOL
-c         IF(LHED(K) /= 0) THEN
-c           KM=KM+1
-c           LM=0
-c           DO 110 L=1,LCOL
-c             IF(LHED(L) /= 0) THEN
-c               LM=LM+1
-c               EQ(LM,KM)=EQ(L,K)
-c             ENDIF
-c 110       CONTINUE
-c         ENDIF
-c 120   CONTINUE
-c       KM=0
-c       DO 125 K=1,LCOL
-c         IF(LHED(K) /= 0) THEN
-c           KM=KM+1
-c           LHED(KM)=LHED(K)
-c           IPOINT(ABS(LHED(K)))=KM
-c         ENDIF
-c 125   CONTINUE
-c       ISHRK=0
-c       LCOL=KM
+!
+!AUG93  Changes start here
+!       KM=0
+!       DO 120 K=1,LCOL
+!         IF(LHED(K) /= 0) THEN
+!           KM=KM+1
+!           LM=0
+!           DO 110 L=1,LCOL
+!             IF(LHED(L) /= 0) THEN
+!               LM=LM+1
+!               EQ(LM,KM)=EQ(L,K)
+!             ENDIF
+! 110       CONTINUE
+!         ENDIF
+! 120   CONTINUE
+!       KM=0
+!       DO 125 K=1,LCOL
+!         IF(LHED(K) /= 0) THEN
+!           KM=KM+1
+!           LHED(KM)=LHED(K)
+!           IPOINT(ABS(LHED(K)))=KM
+!         ENDIF
+! 125   CONTINUE
+!       ISHRK=0
+!       LCOL=KM
         KM=0
         DO 110 K=1,LCOL
           IF(LHED(K) /= 0) THEN
@@ -636,7 +654,7 @@ c       LCOL=KM
           ENDIF
   110   CONTINUE
         LCOL=KM
-C
+!
         DO 120 K=1,LCOL
             KM=LDEST(K)
             DO 115 L=1,LCOL
@@ -645,14 +663,14 @@ C
   115       CONTINUE
   120   CONTINUE
         ISHRK=0
-C
-CAUG93 changes end here
+!
+!AUG93 changes end here
       ELSE
         ISHRK=ISHRK+1
       ENDIF
-C
-C     DETERMINE WHETHER TO ASSEMBLE,ELIMINATE,OR BACKSUBSTITUTE
-C
+!
+!     DETERMINE WHETHER TO ASSEMBLE,ELIMINATE,OR BACKSUBSTITUTE
+!
       IF( LCOL > 0) GO TO 60
       IF( NELL < NE) GO TO 18
   380 CONTINUE
@@ -662,14 +680,14 @@ C
   400   CONTINUE
         GO TO 420
   405   CONTINUE
-CIPK SEP04 CREATE ERROR FILE
+!IPK SEP04 CREATE ERROR FILE
       CLOSE(75)
       OPEN(75,FILE='ERROR.OUT')
-
+!
         WRITE(75,479) LCOL,ISHRK
         WRITE(*,479) LCOL,ISHRK
-  479   FORMAT( '  UNSATISFIED ELIMINATION ERROR STOP'/
-     1  '   LCOL =',I5,' ISHRK =',I5)
+  479   FORMAT( '  UNSATISFIED ELIMINATION ERROR STOP'/                 &
+     &  '   LCOL =',I5,' ISHRK =',I5)
         WRITE(75,9820) (LHED(L),L=1,LCOL)
         WRITE(75,9822) (EQ(L,L),L=1,LCOL)
  9820   FORMAT('  CONTENTS OF LHED ARE'/(5I8))
@@ -683,28 +701,28 @@ CIPK SEP04 CREATE ERROR FILE
       TTOTA=TSURC+TCOEF2+TCOEFS+TCOEF1
       WRITE(*,7804) TCOEF1,TSURC,TCOEF2,TCOEFS,TTOTA,LCMAX,IRTC,LQ
       WRITE(75,7804) TCOEF1,TSURC,TCOEF2,TCOEFS,TTOTA,LCMAX,IRTC,LQ
- 7804 FORMAT(20X,'TIME IN 1-DIM   ELEMENTS',F10.3/
-     +       20X,'TIME IN SURFACE ELEMENTS',F10.3/
-     1       20X,'TIME IN 2-DIM   ELEMENTS',F10.3/
-     2       20X,'TIME IN 3-DIM   ELEMENTS',F10.3/
-     3       20X,'TOTAL TIME IN   ELEMENTS',F10.3/
-     4       20X,'MAXIMUM FRONT WIDTH     ',I10/
-     5       20X,'BUFFER BLOCKS WRITTEN   ',I10/
-     6       20x,'FINAL LQ SIZE           ',I10)
+ 7804 FORMAT(20X,'TIME IN 1-DIM   ELEMENTS',F10.3/                      &
+     &       20X,'TIME IN SURFACE ELEMENTS',F10.3/                      &
+     &       20X,'TIME IN 2-DIM   ELEMENTS',F10.3/                      &
+     &       20X,'TIME IN 3-DIM   ELEMENTS',F10.3/                      &
+     &       20X,'TOTAL TIME IN   ELEMENTS',F10.3/                      &
+     &       20X,'MAXIMUM FRONT WIDTH     ',I10/                        &
+     &       20X,'BUFFER BLOCKS WRITTEN   ',I10/                        &
+     &       20x,'FINAL LQ SIZE           ',I10)
       CALL SECOND(TA)
       ADT=TA-ASEC
       WRITE(75,6199) ADT,TA
       WRITE(*,6199) ADT,TA
-C      WRITE(LOUT,7805) ADT,TTOTA,LCMAX,IRTC
-C 7805 FORMAT(20X,'TIME IN FORWARD SECTION OF FRONT',F10.3/
-C     3       20X,'TOTAL TIME IN   ELEMENTS        ',F10.3/
-C     4       20X,'MAXIMUM FRONT WIDTH             ',I10/
-C     5       20X,'BUFFER BLOCKS WRITTEN           ',I10)
-C
-C     BACK SUBSTITUTION
-C
+!      WRITE(LOUT,7805) ADT,TTOTA,LCMAX,IRTC
+! 7805 FORMAT(20X,'TIME IN FORWARD SECTION OF FRONT',F10.3/
+!     3       20X,'TOTAL TIME IN   ELEMENTS        ',F10.3/
+!     4       20X,'MAXIMUM FRONT WIDTH             ',I10/
+!     5       20X,'BUFFER BLOCKS WRITTEN           ',I10)
+!
+!     BACK SUBSTITUTION
+!
       NEC=NSZF+1
-
+!
       DO 600 IV=1,NSZF
         NEC=NEC-1
         LCOL=LCS(NEC)
@@ -712,7 +730,7 @@ C
         LQ=LQ-LCOL
         IF(LQ > -1) GO TO 450
         CALL XRED(ND1,IRTC,NRR)
-C       CALL RED(ND1,-1)
+!       CALL RED(ND1,-1)
         LQ=LQ-LCOL
   450 DO 460 L=1,LCOL
       LQ=LQ+1
@@ -733,8 +751,8 @@ C       CALL RED(ND1,-1)
       CALL SECOND(TAA)
       ADT=TAA-TA
       WRITE(ICFL,6199) ADT,TAA
-
-cipk mar01  Save results and NBC for equation dropout
+!
+!ipk mar01  Save results and NBC for equation dropout
       IF(IDRPT > 0 .AND. NRX == 1) THEN
         do j=1,nszf
           RKEEP(J)=R1(J)
@@ -745,19 +763,19 @@ cipk mar01  Save results and NBC for equation dropout
             ENDDO
           ENDDO
         ENDIF
-
-C      do n=1,np
-C        do m=1,ndf
-C          if(nbc(n,m) > 0) then
-C            write(73,*) n,m,nbc(n,m),rkeepeq(nbc(n,m))
-C          endif
-C        enddo
-C      enddo
-
-  417 FORMAT(/' NERROR =',I5//
-     1 'MFW IS NOT LARGE ENOUGH TO PERMIT ASSEMBLY OF THE NEXT EL'
-     2,'EMENT'/'  INCREASE MFW IN PARAM.COM OR LOOK FOR ERROR IN'
-     3,' ELEMENT ELIMINATION ORDER')
+!
+!      do n=1,np
+!        do m=1,ndf
+!          if(nbc(n,m) > 0) then
+!            write(73,*) n,m,nbc(n,m),rkeepeq(nbc(n,m))
+!          endif
+!        enddo
+!      enddo
+!
+  417 FORMAT(/' NERROR =',I5//                                          &
+     & 'MFW IS NOT LARGE ENOUGH TO PERMIT ASSEMBLY OF THE NEXT EL'      &
+     &,'EMENT'/'  INCREASE MFW IN PARAM.COM OR LOOK FOR ERROR IN'       &
+     &,' ELEMENT ELIMINATION ORDER')
   476 FORMAT(' WARNING-MATRIX SINGULAR OR ILL CONDITIONED')
       IF(NRX == 1) NDF=6
       RETURN

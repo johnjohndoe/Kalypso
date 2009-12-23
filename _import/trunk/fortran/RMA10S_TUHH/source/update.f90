@@ -67,88 +67,88 @@ IF (MAXN == 1) THEN
     NCNV (K) = 9999
   ENDDO Initalize0
 
-  !TOASK
-  !nis,jan07: NITN is always the number of iterations in unsteady state. For steady state this would be NITI. The generalization for this
-  !           loop would be using the NITA which is always a copy of the actual number
-  !DO I=1,NITN
+!TOASK  
+!nis,jan07: NITN is always the number of iterations in unsteady state. For steady state this would be NITI. The generalization for this  
+!           loop would be using the NITA which is always a copy of the actual number  
+!DO I=1,NITN  
   DO I=1,NITA
 
-    !hydrodynamic calculation and considering the salinity (vx, vy, h, csal)
+!hydrodynamic calculation and considering the salinity (vx, vy, h, csal)    
     IF (ITEQV (I) == 0) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (3) = 1
       NCNV (4) = 1
 
-    !classical hydrodynamic calculation (vx, vy, h)
+!classical hydrodynamic calculation (vx, vy, h)    
     ELSEIF (ITEQV (I) == 1) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (3) = 1
 
-    !only calculate the salinity concentration (csal)
+!only calculate the salinity concentration (csal)    
     ELSEIF (ITEQV (I) == 2) THEN
       NCNV (4) = 1
 
-    !don't consider the water depth to be changed (vx, vy, csal)
+!don't consider the water depth to be changed (vx, vy, csal)    
     ELSEIF (ITEQV (I) == 3) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (4) = 1
 
-    !only hydrodynamics, without water depth to be changed (vx, vy)
+!only hydrodynamics, without water depth to be changed (vx, vy)    
     ELSEIF (ITEQV (I) == 4) THEN
       NCNV (1) = 1
       NCNV (2) = 1
 
-    !hydrodynamics with temperature to be considered (vx, vy, h, T)
+!hydrodynamics with temperature to be considered (vx, vy, h, T)    
     ELSEIF (ITEQV (I) == 6) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (3) = 1
       NCNV (5) = 1
 
-    !hydrodynamics with sediment concentration to be considered (vx, vy, h, csed)
+!hydrodynamics with sediment concentration to be considered (vx, vy, h, csed)    
     ELSEIF (ITEQV (I) == 7) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (3) = 1
       NCNV (6) = 1
-    !  NCNV (7) = 1  !MD!MD!MD neu
+!  NCNV (7) = 1  !MD!MD!MD neu    
 
-    !only temperature to be considered (T)
+!only temperature to be considered (T)    
     ELSEIF (ITEQV (I) == 8) THEN
       NCNV (5) = 1
 
-    !only sediment concentration to be considered (csed)
+!only sediment concentration to be considered (csed)    
     ELSEIF (ITEQV (I) == 9) THEN
       NCNV (6) = 1
-    !  NCNV (7) = 1  !MD!MD!MD neu
+!  NCNV (7) = 1  !MD!MD!MD neu    
 
 !IPK MAY02
-    !TOASK
-    !nis,com: Is this 3D?
+!TOASK    
+!nis,com: Is this 3D?    
     ELSEIF (ITEQV (I) == 10) THEN
-    !  NCNV (7) = 1
+!  NCNV (7) = 1    
 
 !IPK MAY02     ELSEIF (ITEQV (I) == 10) THEN
-    !don't consider water depth to be changed for temperature calculations (vx, vy, T)
+!don't consider water depth to be changed for temperature calculations (vx, vy, T)    
     ELSEIF (ITEQV (I) == 11) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (5) = 1
 
 !IPK MAY02     ELSEIF (ITEQV (I) == 11) THEN
-    !don't consider water depth to be changed for sediment concentration calculations (vx, vy, csed)
+!don't consider water depth to be changed for sediment concentration calculations (vx, vy, csed)    
     ELSEIF (ITEQV (I) == 12) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (6) = 1
-     ! NCNV (7) = 1  !MD!MD!MD neu
+! NCNV (7) = 1  !MD!MD!MD neu     
     ENDIF
   ENDDO
 
-  !testoutput into output.out
+!testoutput into output.out  
   WRITE (75, *) 'NCNV', MAXN, (NCNV (I), I = 1, 7)
 !IPK AUG01 END UPDATE
 
@@ -167,11 +167,11 @@ URFC = 1.0 - FLOAT (IURVL (MAXN)) * 0.1
 !NMX (J)  : node, where maximum absolute changes of degree of freedom J occurs
 !NRel (J) : node, where maximum relative changes of degree of freedom J occurs
 Initialize2: DO J = 1, 7
-  !initialize fields for maximum and average changes calculated in present iteration
+!initialize fields for maximum and average changes calculated in present iteration  
   EAVG (J) = 0.0
   EMAX (J) = 0.0
   EPercMax(J) = 0.0
-  !initialize node of maximum changes
+!initialize node of maximum changes  
   NMX (J)  = 0
   NRel (J) = 0
 ENDDO Initialize2
@@ -198,27 +198,27 @@ UpdateDOFs: DO KK = 1, NDFM
 !URFCC : correction of the under relaxation factor depending on the variable sclae VSCALE (J) of the degree of freedom J
   URFCC = 1.0
 
-  !Itest shows later in the loop the first occuring node of the current degree of freedom K
+!Itest shows later in the loop the first occuring node of the current degree of freedom K  
   ITEST = 0
 
-  !run through all the nodes an update them for the current degree of freedom K
+!run through all the nodes an update them for the current degree of freedom K  
   UpdateNodes: DO J = 1, NP
 
-    !TOASK
-    !nis,sep07: If node is deactivated because element is deactivated, it might still have invalid WSLL, therefore refresh that WSLL
+!TOASK    
+!nis,sep07: If node is deactivated because element is deactivated, it might still have invalid WSLL, therefore refresh that WSLL    
     IF (NDRY (J) == 2) then
       WSLL (J) = ado(j) + 0.0
     endif
 
-    !don't work on deactivated degrees of freedom
+!don't work on deactivated degrees of freedom    
     IF (NBC (J, KK) <= 0) CYCLE UpdateNodes
 
-      !get the number of the equation/ global degree of freedom
+!get the number of the equation/ global degree of freedom      
       I = NBC (J, KK)
 
-      !at the first occurence of the degree of freedom K it is assumed as being converged; this will change later, if it was not like this
-      !ITEST : switch for showing, that it is the first node, where current degree of freedom K occurs
-      !NCNV (K) : switch that shows, whether degree of freedom K is converged or not
+!at the first occurence of the degree of freedom K it is assumed as being converged; this will change later, if it was not like this      
+!ITEST : switch for showing, that it is the first node, where current degree of freedom K occurs      
+!NCNV (K) : switch that shows, whether degree of freedom K is converged or not      
       IF (ITEST == 0) THEN
 !IPK AUG01 WE HAVE A NEW ACTIVE CONSTITUENT ASSUME ITS CONVERGED
         NCNV (K) = 0
@@ -237,25 +237,25 @@ UpdateDOFs: DO KK = 1, NDFM
         ENDIF
       ENDIF
 
-      !get the changes at the global degree of freedom I
-      !EX     : local variable for changes at global degree of freedom I
-      !R1 (I) : global residual vector, which shows the changes at global degree of freedom I
-      !urfc   : under relaxation factor given by the user
-      !urfcc  : under relaxation factor correction given by the scaling of the model
+!get the changes at the global degree of freedom I      
+!EX     : local variable for changes at global degree of freedom I      
+!R1 (I) : global residual vector, which shows the changes at global degree of freedom I      
+!urfc   : under relaxation factor given by the user      
+!urfcc  : under relaxation factor correction given by the scaling of the model      
       EX = R1 (I) * URFC * urfcc
 
 !IPK dec97 end changes
-      !for converging check purposes the absolute change is measured
-      !AEX : absolute change of current degree of freedom K
-      !EAVG (K): cummulation of the absolute changes of the degree of freedom K; will be divided by the count later, to get the average changes
+!for converging check purposes the absolute change is measured      
+!AEX : absolute change of current degree of freedom K      
+!EAVG (K): cummulation of the absolute changes of the degree of freedom K; will be divided by the count later, to get the average changes      
       AEX = ABS (EX)
       EAVG (K) = EAVG (K) + AEX
 
 !IPK jun05
-      !the maximum changes are stored, as well as the location, where it applies; the sign of the maximum change is always kept by not using aex
-      !for the depth degree of freedom (K = 3), this can't be easily done, because marsh algorithm has to be considered
+!the maximum changes are stored, as well as the location, where it applies; the sign of the maximum change is always kept by not using aex      
+!for the depth degree of freedom (K = 3), this can't be easily done, because marsh algorithm has to be considered      
       if (k /= 3) then
-        !this happens at reacitvated nodes
+!this happens at reacitvated nodes        
         if (abs(vel (k, j)) <= 1.0e-7) then
           EPercMax (k) = 5.0
           NRel (k) = j
@@ -264,47 +264,47 @@ UpdateDOFs: DO KK = 1, NDFM
           NRel (k) = j
         endif
 
-        !store maximum absolute changes
+!store maximum absolute changes        
         IF (AEX >= ABS (EMAX (K))) then
           EMAX (K) = EX
           NMX  (K) = J
         ENDIF
       endif
 
-      !special case for ITEQV == 5, which means ...
+!special case for ITEQV == 5, which means ...      
       IF (ITEQV (MAXN) == 5) THEN
         IF (K == 1) FCA = UDST (J)
         IF (K == 2) FCA = VDST (J)
         IF (K == 3) FCA = 1.0
         IF (K >= 4) FCA = SDST (J)
 
-      !for normal hydrodynamics (ITEQV (MAXN) /= 5) ...
+!for normal hydrodynamics (ITEQV (MAXN) /= 5) ...      
 
-      !scale the change value EX by factor FCTV (J) of FCTS (J) for velocities or constituents; nothing for depth
-      !FCTV (J) : ???
-      !FCTS (J) : ???
+!scale the change value EX by factor FCTV (J) of FCTS (J) for velocities or constituents; nothing for depth      
+!FCTV (J) : ???      
+!FCTS (J) : ???      
 
-      !for velocities (K = 1 or K = 2)
+!for velocities (K = 1 or K = 2)      
       ELSEIF (K < 3) THEN
         FCA = FCTV (J)
-      !for constituents (K > 4)
+!for constituents (K > 4)      
       ELSEIF (K >= 4) THEN
         FCA = FCTS (J)
-      !for depth (K = 3)
+!for depth (K = 3)      
       ELSE
         FCA = 1.0
       ENDIF
       EX = EX * FCA
 
 
-      !UPDATE VELOCITIES WITH FIXED DIRECTION ALFA (J)
-      !***********************************************
+!UPDATE VELOCITIES WITH FIXED DIRECTION ALFA (J)      
+!***********************************************      
       IF (K <= 2 .AND. ALFA (j) /= 0.0) then
 
-        !ALFA (J) : fixed direction for flow at node J; that reduces number of degrees of freedom from 2 velocities to 1
-        !ADIF (J) : In special cases the flow direction must be different from defined ALFA, this difference angle is called ADIF (J)
+!ALFA (J) : fixed direction for flow at node J; that reduces number of degrees of freedom from 2 velocities to 1        
+!ADIF (J) : In special cases the flow direction must be different from defined ALFA, this difference angle is called ADIF (J)        
 
-        !TOASK: Can there be any node, that has ADIF /= 0 and ALFA == 0; probably not, because ADIF implies difference to angle ALFA
+!TOASK: Can there be any node, that has ADIF /= 0 and ALFA == 0; probably not, because ADIF implies difference to angle ALFA        
         IF (ADIF (J) /= 0.) EX = EX / COS (ADIF (J))
 
         IF (K == 1) THEN
@@ -315,42 +315,42 @@ UpdateDOFs: DO KK = 1, NDFM
           VEL (K,     J) = VEL (K, J)     + EX * COS (ALFA (J))
         ENDIF
 
-      !UPDATE WATER DEPTH CONSIDERING UNDER CIRCUMSTANCES OF THE MARSH ALGORITHM
-      !*************************************************************************
+!UPDATE WATER DEPTH CONSIDERING UNDER CIRCUMSTANCES OF THE MARSH ALGORITHM      
+!*************************************************************************      
       ELSEIF (K == 3) then
 
 !IPK APR05
 
 
-        !TOASK: What has the no transformation option to do with the effective porosity used in the marsh approach
-        !IF (inotr == 1) THEN
-        !TOASK: Why should should the changes EX be adapted by the effective porosity, although it is already the change on the calculation depth?
+!TOASK: What has the no transformation option to do with the effective porosity used in the marsh approach        
+!IF (inotr == 1) THEN        
+!TOASK: Why should should the changes EX be adapted by the effective porosity, although it is already the change on the calculation depth?        
         if (idnopt < 0 .AND. ( .NOT. IsPolynomNode (J))) then
-          !calculate the porosity of the Marsh range; although it should be already remembered
+!calculate the porosity of the Marsh range; although it should be already remembered          
           H1 = VEL (3, J)
           CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
 
-          !nis,jan09: After lots of test, it seems as the scaling with the effective porosity is the correct one;
-          !           It's not totally clear, because the equations are partly set up with the transformed depth
-          !           and partly with the real depth.
+!nis,jan09: After lots of test, it seems as the scaling with the effective porosity is the correct one;          
+!           It's not totally clear, because the equations are partly set up with the transformed depth          
+!           and partly with the real depth.          
           EX = EX * EFPOR
         ENDIF
 
-        !calculate the changes to be applied on the water stage
+!calculate the changes to be applied on the water stage        
         VN = VEL (3, J) + EX
 
 
 !
 !.......Check sign of depth change
 !
-        !nis,com: akp is the effective porosity; this value is set to 1.0 in Marsh.subroutine, if Marsh option is
-        !         not in use
-        !nis,may08: Make sure, that the node is not fetched into the Marsh-Algorithm, if it is a 1D node with polnyomial approach
-        !IF (AKP (J) > 0.9999) THEN
+!nis,com: akp is the effective porosity; this value is set to 1.0 in Marsh.subroutine, if Marsh option is        
+!         not in use        
+!nis,may08: Make sure, that the node is not fetched into the Marsh-Algorithm, if it is a 1D node with polnyomial approach        
+!IF (AKP (J) > 0.9999) THEN        
         IF (AKP (J) > 0.9999 .OR. IsPolynomNode (J)) THEN
           VEL (3, J) = VN
 
-        !if Marsh option is acitve
+!if Marsh option is acitve        
         ELSE
 !
 !.......Test for results passing through transition points
@@ -377,10 +377,10 @@ UpdateDOFs: DO KK = 1, NDFM
         ENDIF
 
 !IPK jun05
-      !calculate the changes for the water depths, average as well as maximum changes, considering the transformations from the marsh algorithm
-      !made before the following lines
+!calculate the changes for the water depths, average as well as maximum changes, considering the transformations from the marsh algorithm      
+!made before the following lines      
       horg = hel (j)
-      !nis,may08: differ between application of Marsh approach
+!nis,may08: differ between application of Marsh approach      
       if (idnopt == 0 .OR. IsPolynomNode (J)) then
         hel (j) = VEL (3, J)
       else
@@ -388,13 +388,13 @@ UpdateDOFs: DO KK = 1, NDFM
         CALL AMF (HEL (J), VT, AKP (J), ADT (J), ADB (J), D1, D2, 0)
       end if
 
-      !calculate the changes in water depth
+!calculate the changes in water depth      
       aex = hel (j) - horg
 
 
-      !check, whether changes are more than current maximum changes until now
+!check, whether changes are more than current maximum changes until now      
       
-      !store relative nodal water depth changes 
+!store relative nodal water depth changes       
       if (horg == 0.0) then
         if (5.0 > EPercMax (k)) then
           EPercMax (k) = 5.0
@@ -407,16 +407,16 @@ UpdateDOFs: DO KK = 1, NDFM
         endif
       endif 
 
-      !store absolute maximum water depth changes
+!store absolute maximum water depth changes      
       IF (ABS(AEX) > ABS (EMAX (K))) THEN
-        !remember the maximum depth changes and the node where it applies
+!remember the maximum depth changes and the node where it applies        
         emax (k) = aex
         NMX (K) = J
       ENDIF
 
 !IPK APR01 UPDATE WATER SURFACE ELEVATION
 
-      !calculate the water stage
+!calculate the water stage      
       IF (IDNOPT == 0 .OR. IsPolynomNode (J)) THEN
         WSLL (J) = VEL (3, J) + AO (J)
       ELSE
@@ -428,15 +428,15 @@ UpdateDOFs: DO KK = 1, NDFM
 
 !IPK MAY02 ALLOW FOR ICK=7
 
-    !UPDATE VELOCITIES WITHOUT FIXED DIRECTION (ALFA == 0) AND ALL THE OTHER CONSTITUENTS
-    !************************************************************************************
+!UPDATE VELOCITIES WITHOUT FIXED DIRECTION (ALFA == 0) AND ALL THE OTHER CONSTITUENTS    
+!************************************************************************************    
     ELSE
 
-      !update variable 7 (???)
+!update variable 7 (???)      
       IF (K == 7) THEN
         GAN (J) = GAN (J) + EX
 
-      !update variables 1 and 2 (without direction restriction) and 4 to 6
+!update variables 1 and 2 (without direction restriction) and 4 to 6      
       ELSE
         VEL (K, J) = VEL (K, J) + EX
       ENDIF
@@ -444,11 +444,11 @@ UpdateDOFs: DO KK = 1, NDFM
   ENDDO UpdateNodes
 
 
-  !calculate the average changes, if there was no active node, then average changes are forced to be very small
+!calculate the average changes, if there was no active node, then average changes are forced to be very small  
   IF (COUNT == 0.) COUNT = 1.E20
   EAVG (K) = EAVG (K) / COUNT
 
-  !If there is any change above the convergency border, then degree of freedom (NCNV) and full model (NCONV) is not converged
+!If there is any change above the convergency border, then degree of freedom (NCNV) and full model (NCONV) is not converged  
   if (percentCheck == 1) then
     if (abs (EPercMax (k)) > conv (k) .AND. abs(EMAX(k)) > 0.0006) then
       NCONV = 0
@@ -477,9 +477,9 @@ if (beiauto > 0.) rss (maxn) = SQRT (eavg (1)**2 + eavg (2)**2)
 !IPK MAY02 EXPAND TO 7
 WriteDOFOutputs: DO J = 1, 7
 
-  !write first line including informations about time step and iteration cycle
+!write first line including informations about time step and iteration cycle  
   IF (J == 1) THEN
-    !write header of output block in console
+!write header of output block in console    
     write (*, 6011) schwarzIt, icyc, maxn
     write (*, 6012)
     if (percentCheck == 1) then
@@ -543,18 +543,18 @@ call FLUSH (LITR)
 IF (NCONV == 1) THEN
 
 !IPK MAY02 EXPAND TO 7
-  !run through all degrees of freedom
+!run through all degrees of freedom  
   DOFs: DO MB = 1, 7
 
-    !if degree of freedom is not converged (NCNV (J) == 1), then look for
+!if degree of freedom is not converged (NCNV (J) == 1), then look for    
     IF (NCNV (MB) == 1) THEN
       AllPossIterations: DO
-        !if last possible iteration is reached and no settings showing other variable is active,
-        !that is not converged, is reached, exit the loop
+!if last possible iteration is reached and no settings showing other variable is active,        
+!that is not converged, is reached, exit the loop        
         IF(MAXN >= NITA) EXIT DOFs
 
-        !look whether there is any iteration in the time step, where another variable is active for the calcualtion; if so, then of course
-        !the time step is not converged
+!look whether there is any iteration in the time step, where another variable is active for the calcualtion; if so, then of course        
+!the time step is not converged        
         IF (ITEQV (MAXN + 1) == ITEQV (MAXN) .AND. ITEQS (MAXN + 1) == ITEQS (MAXN)) THEN
           MAXN=MAXN+1
         ELSE
@@ -564,7 +564,7 @@ IF (NCONV == 1) THEN
       END DO AllPossIterations
     ENDIF
 
-    !only if this place is reached in the last run, then the model is fully converged for the current time step
+!only if this place is reached in the last run, then the model is fully converged for the current time step    
     IF (MB == 7) NCONV=2
 
   ENDDO DOFs
@@ -592,17 +592,17 @@ IF (NCONV /= 1) THEN
     IF (Vel (4, J) < SalLowPerm) THEN
       Vel (4, J) = SalLowPerm
     ENDIF
-    !djw Salinity High Overide can be commented out if a crash is to be forced to
+!djw Salinity High Overide can be commented out if a crash is to be forced to    
     IF (Vel (4, J) > SalHighPerm) THEN
-      !Enable debugging
+!Enable debugging      
       Vel (4, J) = SalHighPerm
     ENDIF
 
-    !MD neu:  Abfangen von Konzentration kleiner Null
+!MD neu:  Abfangen von Konzentration kleiner Null    
     IF (Vel (6,J) < SedLowPerm) THEN
       Vel (6,J) = SedLowPerm
     ENDIF
-    !MD neu:  Abfangen von Konzentration groesser MAXSED [mg/l]
+!MD neu:  Abfangen von Konzentration groesser MAXSED [mg/l]    
     IF (Vel (6,J) > SedHighPerm) THEN
       Vel (6,J) = SedHighPerm
     ENDIF
@@ -623,11 +623,11 @@ write (*, *) nconv, conv (1), conv (2), conv (3)
 !-
 UpdateMidsides: DO N = 1, NE
 
-  !check for elements in 3D-approach
+!check for elements in 3D-approach  
   IF (IMAT (N) <= 5000) then
 
 !IPK DEC00 ALLOW FOR GATE STRUCTURE
-    !Skip all special elements except gate structures
+!Skip all special elements except gate structures    
     IF (IMAT (N) > 900 .AND. IGTP (N) == 0) CYCLE UpdateMidsides
   endif
 
@@ -647,16 +647,16 @@ UpdateMidsides: DO N = 1, NE
     N1 = NOP (N, N1)
     N2 = IH (M, ILK)
     N2 = NOP (N, N2)
-    !interpolate the midside node's depth of the M-th arc of the element by using the corner nodes of that arc
+!interpolate the midside node's depth of the M-th arc of the element by using the corner nodes of that arc    
     VEL (3, MM) = (VEL (3, N1) + VEL (3, N2)) / 2.
 !IPK MAY02
-    !also interpolate the 7-th constituent
+!also interpolate the 7-th constituent    
     GAN (MM) = (GAN (N1) + GAN (N2)) / 2.
 
 !IPK APR01 ADD WATER SURFACE ELEVATION UPDATE
     WSLL (MM) = (WSLL (N1) + WSLL (N2)) / 2.
 
-    !update, if wanted by the user (nstrt == 1), the constituents
+!update, if wanted by the user (nstrt == 1), the constituents    
     IF (NSTRT (MM, 1) /= 0) THEN
       VEL (4, MM) = (VEL (4, N1) + VEL (4, N2)) / 2.
       VEL (5, MM) = (VEL (5, N1) + VEL (5, N2)) / 2.
@@ -670,7 +670,7 @@ ENDDO UpdateMidsides
 !-
 IF (ABS (EMAX (3)) > 100. .OR. ABS (EMAX (1)) > 50. .OR. ABS (EMAX (2)) >  50.) THEN
 
-  !nis,sep07: Remember problematic node
+!nis,sep07: Remember problematic node  
   IF (ABS (emax (3)) > 100.) THEN
     problematicNode = nmx (3)
   elseif (ABS (emax (2)) >  50.) THEN
@@ -679,14 +679,14 @@ IF (ABS (EMAX (3)) > 100. .OR. ABS (EMAX (1)) > 50. .OR. ABS (EMAX (2)) >  50.) 
     problematicNode = nmx (1)
   ENDIF
 
-  !nis,feb08: big changes cause parsing errors in KALYPSO-GUI
+!nis,feb08: big changes cause parsing errors in KALYPSO-GUI  
   do i = 1, 3
     if (emax (i) > 999.9) then
       emax (i) = 999.9
     end if
   end do
 
-  !EFa jun07, necessary for autoconverge
+!EFa jun07, necessary for autoconverge  
   if (beiauto > 0.) then
     exterr = 1.
     return
@@ -695,21 +695,21 @@ IF (ABS (EMAX (3)) > 100. .OR. ABS (EMAX (1)) > 50. .OR. ABS (EMAX (2)) >  50.) 
   CALL OUTPUT (2)
   
   
-  !generate file name for minimum values 
+!generate file name for minimum values   
   call generateOutputFileName ('mini', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-  !write minimum values file
+!write minimum values file  
   call write_Kalypso (outputFileName, 'mini')
-  !generate file name for maximum values 
+!generate file name for maximum values   
   call generateOutputFileName ('maxi', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-  !write maximum values file
+!write maximum values file  
   call write_Kalypso (outputFileName, 'maxi')
 
 !IPK sep04
 
-  !TOASK
-  !nis,sep07
-  !ERROR MESSAGE
-  !EXECUTION TERMINATED BY EXCESS CHANGES
+!TOASK  
+!nis,sep07  
+!ERROR MESSAGE  
+!EXECUTION TERMINATED BY EXCESS CHANGES  
   if (IntPolProf (problematicNode)) then
     cord (ProblematicNode, 1) = (1.0 - kmWeight (problematicNode)) * cord (NeighProf (problematicNode, 1), 1) &
     &                         +        kmWeight (problematicNode)  * cord (NeighProf (problematicNode, 2), 1)

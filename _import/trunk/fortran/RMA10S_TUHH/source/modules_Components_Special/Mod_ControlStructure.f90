@@ -6,70 +6,70 @@ module mod_ControlStructure
     integer (kind = 4) :: ID
     integer (kind = 4) :: TypeID
     real (kind = 8) :: posFlowDir = 0.0d0
-    !type of control structure (different types are possible like QCurves, weir formula, tabular data etc.;
-    !                           has to be implemented!)
+!type of control structure (different types are possible like QCurves, weir formula, tabular data etc.;    
+!                           has to be implemented!)    
     logical :: hasType = .false.
     type (discreteFunctionGroup), pointer :: QCurves
-    !type ...
+!type ...    
   endtype
   
 contains
 
-  !GENERATE A NEW CONTROL STRUCTURE
-  !--------------------------------
+!GENERATE A NEW CONTROL STRUCTURE  
+!--------------------------------  
   function newCstrc (ID, TypeID, posFlowDir)
-    !function definition
+!function definition    
     type (ControlStructure), pointer :: newCstrc
-    !arguments
+!arguments    
     integer (kind = 4), optional :: ID
     integer (kind = 4), optional :: TypeID
     real (kind = 8), optional :: posFlowDir
-    !local variables
+!local variables    
     type (ControlStructure), pointer :: tmpCstrc => null()
-    !generate a new control structure instance
+!generate a new control structure instance    
     allocate (tmpCstrc)
-    !assign values to control structure, if given
+!assign values to control structure, if given    
     if (present (ID)) tmpCstrc.ID = ID
     if (present (TypeID)) tmpCstrc.TypeID = TypeID
     if (present (posFlowDir)) tmpCstrc.posFlowDir = posFlowDir
-    !overgive created control structure and leave creation routine
+!overgive created control structure and leave creation routine    
     newCstrc => tmpCstrc
     return 
   end function
   
   subroutine addQCurveGroup (thisCstrc, QGroupID)
-    !arguments
+!arguments    
     type (ControlStructure), pointer :: thisCstrc
     integer (kind = 4), optional :: QGroupID
-    !local Variables
+!local Variables    
     type (discreteFunctionGroup), pointer :: newQCurvesGroup => null()
-    !generate new Q Curves group    
+!generate new Q Curves group        
     allocate (newQCurvesGroup)
-    !add optional parameters
+!add optional parameters    
     if (present (QGroupID)) newQCurvesGroup.ID = QGroupID
-    !assign the group
+!assign the group    
     thisCstrc.QCurves => newQCurvesGroup
-    !initialize with 0.0-flow line: Borders -500 mNN; +8900 mNN: Has to be changed when Mt. Everst rises higher :)
+!initialize with 0.0-flow line: Borders -500 mNN; +8900 mNN: Has to be changed when Mt. Everst rises higher :)    
     call addQCurve (thisCstrc, 0.0d0)
     call addValueTriple (thisCstrc, 0.0d0, -500.0d0, -500.0d0)
     call addValueTriple (thisCstrc, 0.0d0, 8900.0d0, 8900.0d0)
-    !tell control structure that it has a type
+!tell control structure that it has a type    
     thisCstrc.hasType = .true.
   end subroutine
   
   subroutine addQCurve (thisCstrc, Q, ID)
-    !arguments
+!arguments    
     type (ControlStructure), pointer :: thisCstrc
     real (kind = 8) :: Q
     integer (kind = 4), optional :: ID
-    !local variables
+!local variables    
     type (linkedDiscreteFunction), pointer :: tmpFun => null()
     type (linkedDiscreteFunction), pointer :: newFun => null()
     
 
-    !Check, if cstrc has Q Group already available
+!Check, if cstrc has Q Group already available    
     if (associated (thisCstrc.QCurves)) then
-      !Check, if Curve with Curve value does already exist
+!Check, if Curve with Curve value does already exist      
       if (associated (thisCstrc.QCurves.firstFun)) then
         tmpFun => findQCurveByQ (thisCstrc.QCurves, Q)
         if (associated (tmpFun)) return
@@ -77,7 +77,7 @@ contains
     else
       call addQCurveGroup (thisCstrc = thisCstrc)
     endif
-    !add a new QCurve
+!add a new QCurve    
     newFun => newLinkedFun (CurveValue=Q)
     if ( .NOT. (associated (thisCstrc.QCurves.firstFun))) then
       thisCstrc.QCurves.firstFun => newFun
@@ -92,13 +92,13 @@ contains
   
   
   subroutine addValueTriple (thisCstrc, Q, how, huw)
-    !arguments
+!arguments    
     type (controlStructure), pointer :: thisCstrc
     real (kind = 8) :: Q
     real (kind = 8) :: how
     real (kind = 8) :: huw
     
-    !local variables
+!local variables    
     type (linkedDiscreteFunction), pointer :: tmpFun => null()
     
     if (associated (thisCstrc.QCurves.firstFun)) then
@@ -113,17 +113,17 @@ contains
 
   function findQCurveByQ (QCurves, Q)
     implicit none
-    !function type
+!function type    
     type (linkedDiscreteFunction), pointer :: findQCurveByQ
-    !arguments
+!arguments    
     type (discreteFunctionGroup), pointer :: QCurves
     real (kind = 8), intent (in) :: Q
-    !local variables
+!local variables    
     type (linkedDiscreteFunction), pointer :: tmpFun => null()
     
-    !initialize
+!initialize    
     findQCurveByQ => null()
-    !find corresponding value
+!find corresponding value    
     if (associated (QCurves.firstFun)) then
       tmpFun => QCurves.firstFun
       checkForExisting: do
@@ -131,7 +131,7 @@ contains
           findQCurveByQ => tmpFun
           exit checkForExisting
         endif
-        !take the next function
+!take the next function        
         if (associated (tmpFun.next)) then
           tmpFun => tmpFun.next
         else

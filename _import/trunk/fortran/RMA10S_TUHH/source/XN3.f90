@@ -1,53 +1,53 @@
-
+!
       FUNCTION XN3(IT,I,X,Y,Z,LT)
       SAVE
-C
-C
-C
-C     function to evaluate shape function for three dimensions
-C
-C      IT is element type 1 10 point tetrahedron
-C                    type 2 15 point prism
-C                    type 3 20 point parallelipiped
-C                    type 4 13 point rectangular base pyramid
-C      I  is shape function number
-C      X, Y, Z  are cordinates of point to be evaluated in local coord
-C      LT identifies shape function
-C                    type 1 is function itself
-C                    type 2 is x derivative
-C                    type 3 is y derivative
-C                    type 4 is z derivative
-C
-C-
-C-
+!
+!
+!
+!     function to evaluate shape function for three dimensions
+!
+!      IT is element type 1 10 point tetrahedron
+!                    type 2 15 point prism
+!                    type 3 20 point parallelipiped
+!                    type 4 13 point rectangular base pyramid
+!      I  is shape function number
+!      X, Y, Z  are cordinates of point to be evaluated in local coord
+!      LT identifies shape function
+!                    type 1 is function itself
+!                    type 2 is x derivative
+!                    type 3 is y derivative
+!                    type 4 is z derivative
+!
+!-
+!-
       DIMENSION ITM(20),SI(20,3),IRF(10,2)
-      DIMENSION A(5),B(5),C(5),XT(3),YT(3),JX(3),KX(3),XM(5)
-     1         ,SN(2),SNX(2),SNY(2),SNZ(2),SHPP(15,4)
-C-
+      DIMENSION A(5),B(5),C(5),XT(3),YT(3),JX(3),KX(3),XM(5)            &
+     &         ,SN(2),SNX(2),SNY(2),SNZ(2),SHPP(15,4)
+!-
       DATA ITM/ 1,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0/
-      DATA SI/-1.,0.,1.,1.,1.,0.,-1.,-1.,-1.,1.,1.,-1.,
-     1        -1.,0.0,1.0,1.0,1.0,0.0,-1.,-1.,
-     2        -1.,-1.,-1.,0.0,1.0,1.0,1.0,0.0,-1.,-1.,1.0,1.0,
-     3        -1.,-1.,-1.,0.0,1.0,1.0,1.0,0.0,
-     4        8*-1.0,4*0.0,8*1.0/
-      DATA IRF/1,1,2,2,3,3,1,2,3,4
-     1        ,1,2,2,3,3,1,4,4,4,4/
+      DATA SI/-1.,0.,1.,1.,1.,0.,-1.,-1.,-1.,1.,1.,-1.,                 &
+     &        -1.,0.0,1.0,1.0,1.0,0.0,-1.,-1.,                          &
+     &        -1.,-1.,-1.,0.0,1.0,1.0,1.0,0.0,-1.,-1.,1.0,1.0,          &
+     &        -1.,-1.,-1.,0.0,1.0,1.0,1.0,0.0,                          &
+     &        8*-1.0,4*0.0,8*1.0/
+      DATA IRF/1,1,2,2,3,3,1,2,3,4                                      &
+     &        ,1,2,2,3,3,1,4,4,4,4/
       DATA XT/0.0,1.0,0.0/,YT/-1.0,0.0,1.0/,JX/2,3,1/,KX/3,1,2/
-      DATA SHPP/0.0,0.0,1.0,12*0.0,
-     +      0.25,-1.0,3.0,-1.0,0.25,4*0.0,0.25,-1.0,0.0,-1.0,0.25,0.0,
-     +      0.25,-1.0,0.0,1.0,-0.25,4*0.0,0.25,-1.0,0.0,1.0,-0.25,0.0,
-     +      0.25,-1.0,0.0,-1.0,0.25,4*0.0,-0.25,1.0,0.0,1.0,-0.25,0.0/
+      DATA SHPP/0.0,0.0,1.0,12*0.0,                                     &
+     &      0.25,-1.0,3.0,-1.0,0.25,4*0.0,0.25,-1.0,0.0,-1.0,0.25,0.0,  &
+     &      0.25,-1.0,0.0,1.0,-0.25,4*0.0,0.25,-1.0,0.0,1.0,-0.25,0.0,  &
+     &      0.25,-1.0,0.0,-1.0,0.25,4*0.0,-0.25,1.0,0.0,1.0,-0.25,0.0/
       DATA NCALL/0/
       IF(IT == 4) GO TO 80
       IF( IT - 2 ) 500,80,300
-C-
-C-.....SHAPE FUNCTIONS FOR RIGHT PRISM AND PYRAMID.....
-C-
+!-
+!-.....SHAPE FUNCTIONS FOR RIGHT PRISM AND PYRAMID.....
+!-
    80 NCALL = NCALL + 1
       IF( NCALL > 1 ) GO TO 125
-C-
-C-.....CALCULATE INVARIENT TRIANGULAR FUNCTIONS.....
-C-
+!-
+!-.....CALCULATE INVARIENT TRIANGULAR FUNCTIONS.....
+!-
       N = 0
       DO 100 J = 1,5,2
       N = N + 1
@@ -57,20 +57,20 @@ C-
       B(J) = YT(JJ) - YT(KK)
       C(J) = XT(KK) - XT(JJ)
   100 CONTINUE
-C-
-C-.....SHAPE FUNCTION CALCULATIONS.....
-C-
+!-
+!-.....SHAPE FUNCTION CALCULATIONS.....
+!-
   125 DO 130 K = 1, 5, 2
       XM(K) = 0.5*(A(K)+B(K)*X+C(K)*Y)
   130 CONTINUE
-C-
-C-.....SET INDEXES AND NORMALIZE COORDINATES.....
-C-
+!-
+!-.....SET INDEXES AND NORMALIZE COORDINATES.....
+!-
       ZOOO = Z
       IF( I <= 6 ) ZOOO = -Z
       IF(IT == 2) GO TO 132
       if(x == 1.0) go to 250
-C      IF(X == 1.0) X=0.999
+!      IF(X == 1.0) X=0.999
       IF(X /= 1.) ZOOO=ZOOO/(1.-X)
       IF(X == 1.) ZOOO=SIGN(X,ZOOO)
       IF(I == 3) GO TO 200
@@ -78,9 +78,9 @@ C      IF(X == 1.0) X=0.999
       L = I
       IF( I > 9 ) L = I - 9
       IF( MOD(L,2) == 0 ) GO TO 150
-C-
-C-.....CORNER NODES.....
-C-
+!-
+!-.....CORNER NODES.....
+!-
       GO TO (142,144,146,148),LT
   142 SF =  XM(L)*((2.0*XM(L)-1.0)*(1.0+ZOOO)-(1.0-ZOOO**2))/2.0
       IF(IT == 4) SF=SF+XM(L)/2.0*X*(1.-ZOOO**2)
@@ -100,9 +100,9 @@ C-
       ENDIF
       IF(I <= 6) SF = -SF
       GO TO 180
-C-
-C-.....MID SIDE NODE.....
-C-
+!-
+!-.....MID SIDE NODE.....
+!-
   150 N1 = L - 1
       N2 = MOD(L+1,6)
       GO TO(152,154,156,158),LT
@@ -120,9 +120,9 @@ C-
       IF(IT == 2) GO TO 180
       SF=SF/(1.-X)
       GO TO 180
-C-
-C-.....MID SIDE RECTANGLE.....
-C-
+!-
+!-.....MID SIDE RECTANGLE.....
+!-
   170 N1 = 1
       IF( I == 8 ) N1 = 3
       IF( I == 9 ) N1 = 5
@@ -131,8 +131,8 @@ C-
       IF(IT == 4) SF=SF*(1.-X)
       GO TO 180
   174 SF = 0.5*(1.0-ZOOO**2)*B(N1)
-      IF(IT == 4)
-     1 SF=SF*(1.-X)-XM(N1)*(ZOOO**2+1.)
+      IF(IT == 4)                                                       &
+     & SF=SF*(1.-X)-XM(N1)*(ZOOO**2+1.)
       GO TO 180
   176 SF = 0.5*(1.0-ZOOO**2)*C(N1)
       IF(IT == 4) SF=SF*(1.-X)
@@ -140,9 +140,9 @@ C-
   178 SF = -2.0*XM(N1)*ZOOO
   180 XN3 = SF
       RETURN
-C-
-C......SPECIAL CASE FOR NO 3 SHAPE FUNCTION OF PYRAMID
-C-
+!-
+!......SPECIAL CASE FOR NO 3 SHAPE FUNCTION OF PYRAMID
+!-
   200 L=I
       GO TO (220,224,228,232),LT
   220 SF=XM(L)*(2.*XM(L)-1.0)
@@ -154,23 +154,23 @@ C-
   232 SF=0.0
   240 XN3=SF
       RETURN
-C
-C     Special case when x exactly equals 1.0
-C
+!
+!     Special case when x exactly equals 1.0
+!
   250 CONTINUE
       XN3=SHPP(I,LT)
       RETURN
-C-
-C-.....SHAPE FUNCTIONS FOR CUBE.....
-C-
+!-
+!-.....SHAPE FUNCTIONS FOR CUBE.....
+!-
   300 CONTINUE
       SX=SI(I,1)*X
       SY=SI(I,2)*Y
       SZ=SI(I,3)*Z
       IF(ITM(I) == 0) GO TO 350
-C-
-C......CORNER NODES
-C-
+!-
+!......CORNER NODES
+!-
       GO TO (310,320,330,340),LT
   310 XN3=(1.+SX)*(1.+SY)*(1.+SZ)*(SX+SY+SZ-2.)/8.
       RETURN
@@ -180,9 +180,9 @@ C-
       RETURN
   340 XN3=(1.+SX)*(1.+SY)*(2.*SZ+SX+SY-1.)/8.*SI(I,3)
       RETURN
-C-
-C......MID-SIDE NODES
-C-
+!-
+!......MID-SIDE NODES
+!-
   350 IF(SI(I,1) == 0.) SX=-(X*X)
       IF(SI(I,2) == 0.) SY=-(Y*Y)
       IF(SI(I,3) == 0.) SZ=-(Z*Z)
@@ -202,9 +202,9 @@ C-
       XN3=SZ*(1.+SX)*(1.+SY)/4.
       RETURN
   500 CONTINUE
-C-
-C......SECTION FOR TETRAHEDRON
-C-
+!-
+!......SECTION FOR TETRAHEDRON
+!-
       I1=IRF(I,1)
       I2=IRF(I,2)
       IA=I1
@@ -230,13 +230,13 @@ C-
       SNY(K)=1.
       SNZ(K)=0.
   550 IA=I2
-C-
-C......TEST FOR CORNER NODES
-C-
+!-
+!......TEST FOR CORNER NODES
+!-
       IF(I1 == I2) GO TO 650
-C-
-C......FOR MIDSIDES EVALUATE FUNCTION ETC
-C-
+!-
+!......FOR MIDSIDES EVALUATE FUNCTION ETC
+!-
       GO TO (560,570,580,590),LT
   560 SF=4.*SN(1)*SN(2)
       GO TO 750
@@ -247,9 +247,9 @@ C-
   590 SF=4.*(SNZ(1)*SN(2)+SN(1)*SNZ(2))
       GO TO 750
   650 CONTINUE
-C-
-C......CORNER NODE EVALUATION
-C-
+!-
+!......CORNER NODE EVALUATION
+!-
       GO TO (660,670,680,690),LT
   660 SF=SN(1)*(2.*SN(1)-1.)
       GO TO 750
@@ -258,9 +258,9 @@ C-
   680 SF=SNY(1)*(4.*SN(1)-1.)
       GO TO 750
   690 SF=SNZ(1)*(4.*SN(1)-1.)
-C-
-C......FINAL STEP
-C-
+!-
+!......FINAL STEP
+!-
   750 XN3=SF
       RETURN
       END

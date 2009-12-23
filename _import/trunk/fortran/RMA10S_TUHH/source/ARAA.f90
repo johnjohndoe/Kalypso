@@ -1,19 +1,19 @@
-C     Last change:  WP   29 Apr 2008    3:45 pm
-
+!     Last change:  WP   29 Apr 2008    3:45 pm
+!
       SUBROUTINE ARAA (NN)
       USE BLKHMOD
       USE BLK10MOD
       SAVE
-
+!
 !-
       DIMENSION NCON (8), XL (3), YL (3), DNX (3)
 !-
 !-.....ASSIGN PROPER COEFS.....
 !-
-
-      !AREA (NN) : plan view area of an element NN, i.e. Length in 1D-case and area in 2D-case
-
-      !initialize the area
+!
+!AREA (NN) : plan view area of an element NN, i.e. Length in 1D-case and area in 2D-case      
+!
+!initialize the area      
       AREA (NN) = 0.
       IF (ITEQV (MAXN) == 5) THEN
         DO N = 1, 8
@@ -27,14 +27,14 @@ C     Last change:  WP   29 Apr 2008    3:45 pm
         ENDDO
       ENDIF
       IF (NCN == 5 .AND. IMAT (NN) /= 901) NCN = 3
-
+!
 !-
 !- INITIALIZE MATRICES AND VARIABLES
 !-
       CXX = COS (TH (NN))
       SAA = SIN (TH (NN))
       NGP = 4
-
+!
 !-
 !-.....COMPUTE LOCAL CORDS.....
 !-
@@ -46,7 +46,7 @@ C     Last change:  WP   29 Apr 2008    3:45 pm
         XL (K) = DX * CXX + DY * SAA
         YL (K) = - DX * SAA + DY * CXX
       ENDDO
-
+!
 !-
 !-.....COMPUTE ELEMENT EQUATIONS.....
 !-
@@ -64,6 +64,6 @@ C     Last change:  WP   29 Apr 2008    3:45 pm
 !...... END GAUSS DO LOOP
 !-
       ENDDO
-
+!
       RETURN
       END

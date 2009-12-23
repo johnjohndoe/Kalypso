@@ -1,5 +1,5 @@
-C     Last change:  WP   22 Jul 2008    5:01 pm
-
+!     Last change:  WP   22 Jul 2008    5:01 pm
+!
       SUBROUTINE BSLOP(NN)
       USE COEF2MOD
       USE BLKSMOD
@@ -7,44 +7,44 @@ C     Last change:  WP   22 Jul 2008    5:01 pm
       USE BLK10MOD
       USE blkecom
       SAVE
-C-
+!-
       DIMENSION ASWT(8,2)
-C-
+!-
       REAL :: J11,J12,J21,J22
-C-
-      DATA ASWT/1.,3.,1.,3.,1.,3.,0.,0.,
-     +          1.,2.,1.,2.,1.,2.,1.,2./
-C-
-
-C-.....ASSIGN PROPER COEFS.....
-C-
+!-
+      DATA ASWT/1.,3.,1.,3.,1.,3.,0.,0.,                                &
+     &          1.,2.,1.,2.,1.,2.,1.,2./
+!-
+!
+!-.....ASSIGN PROPER COEFS.....
+!-
       NCN=NCORN(NN)
-CIPK OCT98      NCNX=NCN/2
-C
-CIPK OCT98 CONVERT TO LF90
+!IPK OCT98      NCNX=NCN/2
+!
+!IPK OCT98 CONVERT TO LF90
       NMTYP=IMAT(NN)
       NM=MOD(NMTYP,100)
       CX=COS(TH(NN))
       SAN=SIN(TH(NN))
-CIPK OCT98      NTYPE=IMAT(NN)/1000
-C-
-C......SHIFT IF ONE-D ELEMENT
-C-
+!IPK OCT98      NTYPE=IMAT(NN)/1000
+!-
+!......SHIFT IF ONE-D ELEMENT
+!-
       IF(NCN == 3) GO TO 600
       IF(IMAT(NN) > 5000) GO TO 900
-C-
-C......SET REFERENCE LENGTH
-C-
-CIPK OCT98 CONVERT TO F90
+!-
+!......SET REFERENCE LENGTH
+!-
+!IPK OCT98 CONVERT TO F90
       N1=ABS(NOP(NN,1))
       N2=ABS(NOP(NN,3))
       N3=ABS(NOP(NN,5))
       XL1=SQRT((CORD(N2,1)-CORD(N1,1))**2+(CORD(N2,2)-CORD(N1,2))**2)
       XL2=SQRT((CORD(N3,1)-CORD(N2,1))**2+(CORD(N3,2)-CORD(N2,2))**2)
       IF(XL2 > XL1) XL1=XL2
-C-
-C-.....COPY PROPER WEIGHTING FUNCTIONS.....
-C-
+!-
+!-.....COPY PROPER WEIGHTING FUNCTIONS.....
+!-
       IF( NCN < 8 ) THEN
         NGP=7
         KK=1
@@ -58,14 +58,14 @@ C-
           WAITX(M) = WAITR(M)
    85   CONTINUE
       ENDIF
-C-
-C-.....COPY SHAPE FUNCTIONS
-C-
+!-
+!-.....COPY SHAPE FUNCTIONS
+!-
       CALL SB2(NCN,NGP)
-C-
-C-
-C......SET UP PASS LIMIT DEPENDING ON ELEMENT TYPE
-C-
+!-
+!-
+!......SET UP PASS LIMIT DEPENDING ON ELEMENT TYPE
+!-
       NPASS=3
       N1=2
       N2=3
@@ -74,15 +74,15 @@ C-
       N1=1
       N2=2
    94 CONTINUE
-C-
-C-.....COMPUTE LOCAL CORDS.....
-C-
-CIPK OCT98 CONVERT TO F90
+!-
+!-.....COMPUTE LOCAL CORDS.....
+!-
+!IPK OCT98 CONVERT TO F90
       NR=ABS(NOP(NN,1))
       DXS=0.
       DYS=0.
       DO 100 K = 2, NCN
-CIPK OCT98 CONVERT TO F90
+!IPK OCT98 CONVERT TO F90
       N=ABS(NOP(NN,K))
       DX=CORD(N,N1)-CORD(NR,N1)
       DY=CORD(N,N2)-CORD(NR,N2)
@@ -91,14 +91,14 @@ CIPK OCT98 CONVERT TO F90
       XL(K)=DX
       YL(K)=DY
   100 CONTINUE
-C-
-C-.....COMPUTE ELEMENT AREA...
-C-
+!-
+!-.....COMPUTE ELEMENT AREA...
+!-
       ARA=0.
       DO 500 I = 1, NGP
-C-
-C-..... FORM THE JACOBIAN FOR QUADRATIC FUNCTIONS.....
-C-
+!-
+!-..... FORM THE JACOBIAN FOR QUADRATIC FUNCTIONS.....
+!-
       J11 = 0.0
       J12 = 0.0
       J21 = 0.0
@@ -127,7 +127,7 @@ C-
       N2=NOP(NN,2)
       XL1=(CORD(N3,1)-CORD(N1,1))*CX+(CORD(N3,2)-CORD(N1,2))*SAN
       XY=CORD(N3,3)-CORD(N1,3)
-c     if(cx < 0.) xy=-xy
+!     if(cx < 0.) xy=-xy
       FC(N1,3)=FC(N1,3)+XL1/6.
       FC(N2,3)=FC(N2,3)+XL1*0.6667
       FC(N3,3)=FC(N3,3)+XL1/6.

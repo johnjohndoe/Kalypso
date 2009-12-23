@@ -76,7 +76,7 @@ character (len = 96) :: name_cwr
 !meaning of the variables
 !------------------------
 !name_cwr         name string of the cwr-data input file, if restarting
-                  !TODO: Probably not needed this way any longer
+!TODO: Probably not needed this way any longer                  
 
 !average element values
 !----------------------
@@ -159,7 +159,8 @@ REAL (KIND = 8), DIMENSION (1:50, 1:3535) :: LineCorrectionKS, LineCorrectionAxA
 
 
 !nis,jan08: New output control paramters
-INTEGER :: WriteNodeBlock     ! (==1: Writes the nodal values into output.out file; ==0: Writes no nodal values into output.out)
+! (==1: Writes the nodal values into output.out file; ==0: Writes no nodal values into output.out)
+INTEGER :: WriteNodeBlock     
 
 !nis,jan08: new variables for profile interpolation
 

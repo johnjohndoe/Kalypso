@@ -1,21 +1,21 @@
-CIPK LAST UPDATE MAR 05 2006 REMOVE PRIBT STATEMENTS
-CIPK DEC02 ADD TEST FOR STRAY DIRECTIONS
-
-      SUBROUTINE TRANSPOR(HS,TPS,WDIR,VRR,CDIR,D50MM,D90MM,RNU,SGSA,RHOW
-     +                   ,HDS,GP,WS,UST,RC,RW,TRLOC,ISWT,node)
+!IPK LAST UPDATE MAR 05 2006 REMOVE PRIBT STATEMENTS
+!IPK DEC02 ADD TEST FOR STRAY DIRECTIONS
+!
+      SUBROUTINE TRANSPOR(HS,TPS,WDIR,VRR,CDIR,D50MM,D90MM,RNU,SGSA,RHOW&
+     &                   ,HDS,GP,WS,UST,RC,RW,TRLOC,ISWT,node)
       USE NIOREZMOD
-C
-C     COMPUTATION OF CONCENTRATION VERTICALS AND SUSPENDED LOAD TRANSPORT
-C     THROUGH NUMERICAL INTEGRATION AND FORMULAE APPROXIMATION
-C
+!
+!     COMPUTATION OF CONCENTRATION VERTICALS AND SUSPENDED LOAD TRANSPORT
+!     THROUGH NUMERICAL INTEGRATION AND FORMULAE APPROXIMATION
+!
       LOGICAL BO
       DIMENSION RMAT(25,6)
       dimension gp(*)
-
+!
       external fwl,tolx
       logical log
       DATA ITIM/0/
-
+!
       TP=TPS
       HD=HDS
       VR=VRR
@@ -26,14 +26,14 @@ C
         ub=0.
       endif
       if(tp > 0. .AND. tp < 1.)tp=1.
-CIPK JUN02
+!IPK JUN02
       PI     = 4.*ATAN(1.)
       CANG=180./PI*CDIR
-cipk jan02 reverse wave diretion
-c      WANG=180./PI*WDIR-180.
+!ipk jan02 reverse wave diretion
+!      WANG=180./PI*WDIR-180.
       WANG=180./PI*WDIR
-
-CIPK DEC02 ADD TEST FOR STRAY DIRECTIONS
+!
+!IPK DEC02 ADD TEST FOR STRAY DIRECTIONS
    50 IF(WANG < 0.) THEN
         WANG=WANG+360.
         GO TO 50
@@ -50,51 +50,51 @@ CIPK DEC02 ADD TEST FOR STRAY DIRECTIONS
         CANG=CANG-360.
         GO TO 65
       ENDIF
-
+!
       if(cang == 0.) cang=0.000001
       IF(WANG < 0.) WANG=WANG+360
-CIPK JUN02      PHI = ABS((180.-CANG) + WANG)
-CIPK JUN02      IF(PHI >= 180.) PHI = 360. - PHI         
+!IPK JUN02      PHI = ABS((180.-CANG) + WANG)
+!IPK JUN02      IF(PHI >= 180.) PHI = 360. - PHI         
       PHI=WANG-CANG
       IF(ABS(PHI) < 0.001) PHI=0.
       IF(PHI < 0.) PHI=PHI+360.
       if(phi == 0.)phi=0.1
       if(phi == 180.)phi=179.9
       if(phi == 360.)phi=359.9
-CIPK MAR06
-C      write(108,'(i5,5f10.2)') 
-C     +   node,cdir/pi*180.,wdir/pi*180.,cang,wang,phi
+!IPK MAR06
+!      write(108,'(i5,5f10.2)') 
+!     +   node,cdir/pi*180.,wdir/pi*180.,cang,wang,phi
       NN     = 12
       G      = 9.81
       phi    = phi/180.*pi
-CIPK JUN02      cl=(sa-0.03)/1.805
-CIPK JUN02      rhow=1000.+1.455*cl-0.0065*(te-4.+0.4*cl)**2.
-CIPK JUN02      rhos=2650.
-CIPK JUN02      rnu=(4.e-5)/(20.+te)
+!IPK JUN02      cl=(sa-0.03)/1.805
+!IPK JUN02      rhow=1000.+1.455*cl-0.0065*(te-4.+0.4*cl)**2.
+!IPK JUN02      rhos=2650.
+!IPK JUN02      rnu=(4.e-5)/(20.+te)
       RHOS=SGSA*RHOW
       DEL=(RHOS-RHOW)/RHOW
-CIPK JUN02      dsh=0.01*g*del*dss**3./rnu/rnu
+!IPK JUN02      dsh=0.01*g*del*dss**3./rnu/rnu
       d50h=0.01*g*del*d50**3./rnu/rnu
-CIPK JUN02      if(dss < 0.0001)ws=(del*g*dss*dss)/(18.*rnu)
+!IPK JUN02      if(dss < 0.0001)ws=(del*g*dss*dss)/(18.*rnu)
       if(d50 < 0.0001)wsb=(del*g*d50*d50)/(18.*rnu)
-CIPK JUN02      if(dss >= 0.0001 .AND. dss < 0.001)
-CIPK JUN02     * ws=(10.*rnu/dss)*((1.+dsh)**0.5-1.)
-      if(d50 >= 0.0001 .AND. d50 < 0.001)
-     * wsb=(10.*rnu/d50)*((1.+d50h)**0.5-1.)
-CIPK JUN02      if(dss >= 0.001)ws=1.1*(del*g*dss)**0.5
+!IPK JUN02      if(dss >= 0.0001 .AND. dss < 0.001)
+!IPK JUN02     * ws=(10.*rnu/dss)*((1.+dsh)**0.5-1.)
+      if(d50 >= 0.0001 .AND. d50 < 0.001)                               &
+     & wsb=(10.*rnu/d50)*((1.+d50h)**0.5-1.)
+!IPK JUN02      if(dss >= 0.001)ws=1.1*(del*g*dss)**0.5
       if(d50 >= 0.001)wsb=1.1*(del*g*d50)**0.5
       RKAP=.4
-CIPK JUN02      if(rc < 0.01)rc=0.01
-CIPK JUN02      if(rw < 0.01)rw=0.01
+!IPK JUN02      if(rc < 0.01)rc=0.01
+!IPK JUN02      if(rw < 0.01)rw=0.01
       DSTER=D50*(DEL*G/RNU**2)**(1./3.)
-C
-C   COMPUTATION OF WAVE PARAMETERS
-C
+!
+!   COMPUTATION OF WAVE PARAMETERS
+!
       IF(HD <= 0.)STOP 'WATER DEPTH <= 0'
-
-cipk dec02 add test for wave height
+!
+!ipk dec02 add test for wave height
       IF (TP >= 1. .AND. hs > 0.1) THEN
-
+!
         xx=.1
         yy=1.8*tp*tp
         uugg=VR
@@ -108,12 +108,12 @@ cipk dec02 add test for wave height
           VR=uugg
           call zeroin(xx,yy,log,fwl,tolx)
           if( .NOT. log)then
-CIPK DEC02             stop 'zeroin no wave length'
-
-CIPK DEC02
+!IPK DEC02             stop 'zeroin no wave length'
+!
+!IPK DEC02
              Y=4.02*HD/TP/TP
-             POL=1.+
-     +           Y*(.666+Y*(.355+Y*(.161+Y*(.0632+Y*(.0218+.00654*Y)))))
+             POL=1.+                                                    &
+     &           Y*(.666+Y*(.355+Y*(.161+Y*(.0632+Y*(.0218+.00654*Y)))))
              WAVENR=SQRT(Y**2+Y/POL)/HD
              RLS=2.*PI/WAVENR
              ARG=WAVENR*HD
@@ -123,7 +123,7 @@ CIPK DEC02
           endif
         endif
         arg=2.*pi*hd/rls
-
+!
 200     CONTINUE
         tp1=tp/(1.-(VR*tp*cos(phi))/rls)
         IF (ARG > 50.) THEN
@@ -136,11 +136,11 @@ CIPK DEC02
           IF(RC == 0. .OR. RW == 0.) THEN
             PSI = 4.02 * (ABW / TP) ** 2 / ((RHOS/RHOW -1) * D50)
             ATEST1 = (21. * PSI ** (-1.85) * ABW)
-
-* For high wave energy conditions with a flat bed :
-
+!
+! For high wave energy conditions with a flat bed :
+!
             ATEST2 = 0.072 * ABW * (ABW / (3. * D90)) ** (-0.25)*2.
- 
+!
             IF(PSI <= 12) THEN
               A = (0.275 - 0.022 * SQRT(PSI)) * ABW
             ELSE 
@@ -150,20 +150,20 @@ CIPK DEC02
                 A = ATEST2
               ENDIF
             ENDIF
-
-c              A  = ripple height
-c              ABW = peak value of the near bed wave orbital excursion
-
-CIPK JUN02           DS = 6. * A
+!
+!              A  = ripple height
+!              ABW = peak value of the near bed wave orbital excursion
+!
+!IPK JUN02           DS = 6. * A
             RC = 6. * A
             RW = 6. * A
-
-c              RW = effective wave related bed roughness 
-c              RC = effective current related bed roughness 
-c              DS = mixing layer thickness
-
+!
+!              RW = effective wave related bed roughness 
+!              RC = effective current related bed roughness 
+!              DS = mixing layer thickness
+!
           ENDIF
- 
+!
           FW=0.
           FW1=0.
           IF(ABW > 0.)FW=EXP(-6.+5.2*(ABW/RW)**(-0.19))
@@ -179,14 +179,14 @@ c              DS = mixing layer thickness
         FW1=0.
         UBW=0.
         tp1=tp
-CIPK JUN02
+!IPK JUN02
         if(rc < 0.01)rc=0.01
         if(rw < 0.01)rw=0.01
-
+!
       ENDIF
       ubw1=0.
-      if(rls > 0.)
-     *  ubw1=(3.*pi*pi*hs*hs)/(4.*tp1*rls*(sinh(arg)**4.))
+      if(rls > 0.)                                                      &
+     &  ubw1=(3.*pi*pi*hs*hs)/(4.*tp1*rls*(sinh(arg)**4.))
       rhs=hs/hd
       h1=1.+0.3*rhs
       hlimit=0.01*g*tp1*tp1
@@ -205,13 +205,13 @@ CIPK JUN02
       asym=0.
       if(abw > 0.)asym=ubwfor/(ubwfor+ubwback)
       htrough=hd*(0.95-0.35*(hs/hd))
-CIPK JUN02      if(ur == 9.)ur=-0.125*g**0.5*hs**2./(hd**0.5*htrough)
-CIPK JUN02      if(ub == 9.)ub=(0.05-(asym-0.5))*ubw
+!IPK JUN02      if(ur == 9.)ur=-0.125*g**0.5*hs**2./(hd**0.5*htrough)
+!IPK JUN02      if(ub == 9.)ub=(0.05-(asym-0.5))*ubw
       ur=-0.125*g**0.5*hs**2./(hd**0.5*htrough)
       ub=(0.05-(asym-0.5))*ubw
-C
-C  CRITICAL SHEAR STRESS SHIELDS
-C
+!
+!  CRITICAL SHEAR STRESS SHIELDS
+!
       IF(DSTER <= 4.)THETCR=.24/DSTER
       IF(4. < DSTER .AND. DSTER <= 10.)THETCR=.14*DSTER**(-.64)
       IF(10. < DSTER .AND. DSTER <= 20.)THETCR=.04*DSTER**(-.1 )
@@ -227,9 +227,9 @@ C
              ubwcr=(1.09*del*g*d50**0.75*tp**0.25)**0.57
        endif
       endif
-C
-C  COMPUTATION OF REFERENCE CONCENTRATION CA
-C
+!
+!  COMPUTATION OF REFERENCE CONCENTRATION CA
+!
       a=max(rc,rw)
       CC=18.*ALOG10(12.*HD/RC)
       CC1=18.*ALOG10(12.*HD/3./D90)
@@ -285,11 +285,11 @@ C
       if(taub <= tauce)taub=tauce
       t=(taub-taucr)/taucr
       t=max(0.0001,t)
-C
-C SUSPENDED LOAD TRANSPORT IN CURRENT DIRECTION
-C
-C COMPUTATION OF NUMERICAL PARAMETERS AT Z=A
-C
+!
+! SUSPENDED LOAD TRANSPORT IN CURRENT DIRECTION
+!
+! COMPUTATION OF NUMERICAL PARAMETERS AT Z=A
+!
       JTAL= 8
       NN  = JTAL*NN
       DYM = CA/NN
@@ -300,9 +300,9 @@ C
       IF(DELM > 0.)THEN
          UDEL=VR*ALOG(30.*DELM/RA)/HULP30
       ENDIF
-C
-C  COMPUTATION OF DERIVATIVE DC/DY OR DC/DX
-C
+!
+!  COMPUTATION OF DERIVATIVE DC/DY OR DC/DX
+!
       beta=1.+2.*(ws/ust)**2.
       if(beta >= 1.5)beta=1.5
       ds=0.3*hd*(hs/hd)**0.5
@@ -319,8 +319,8 @@ C
       C=CA
       Z=A
       IF(Z <= DS)ESW=EBW
-      IF(Z > DS .AND. Z <= 0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
-     *(0.5*HD-DS))
+      IF(Z > DS .AND. Z <= 0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/          &
+     &(0.5*HD-DS))
       IF(Z >= 0.5*HD)ESW=EMAXW
       IF(Z >= 0.5*HD)ESC=EMAXC
       IF(Z < 0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
@@ -340,23 +340,23 @@ C
       ENDIF
       IF(A >= DELM)UC=VR*ALOG(30.*A/RA)/HULP30
       if(a <= rc/30.)uc=0.
-C
-C  STORAGE OF RESULTS IN MATRIX RMAT
-C
+!
+!  STORAGE OF RESULTS IN MATRIX RMAT
+!
       RMAT(1,1)=Z
       RMAT(1,2)=CA*RHOS
       RMAT(1,3)=UC
       RMAT(1,4)=0.
-C
-C INTEGRATION FROM Z=A TO SURFACE
-C
+!
+! INTEGRATION FROM Z=A TO SURFACE
+!
       Y = CA
       TERM1=UC*Y
       XEND=A
       SSC=0.
       NTEL = 0
       IT   = 2
-C
+!
   100 CONTINUE
       NTEL = NTEL+1
       XOLD = XEND
@@ -376,8 +376,8 @@ C
       C=Y
       Z=XEND
       IF(Z <= DS)ESW=EBW
-      IF(Z > DS .AND. Z <= 0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/
-     *(0.5*HD-DS))
+      IF(Z > DS .AND. Z <= 0.5*HD)ESW=EBW+(EMAXW-EBW)*((Z-DS)/          &
+     &(0.5*HD-DS))
       IF(Z >= 0.5*HD)ESW=EMAXW
       IF(Z >= 0.5*HD)ESC=EMAXC
       IF(Z < 0.5*HD)ESC=EMAXC-EMAXC*(1.-2.*Z/HD)**2
@@ -398,9 +398,9 @@ C
       if(xend <= rc/30.)uc=0.
       TERM2=UC*Y
       TERM1=TERM2
-C
-C  STORAGE OF RESULTS IN MATRIX RMAT
-C
+!
+!  STORAGE OF RESULTS IN MATRIX RMAT
+!
       IF (NTEL == NN/JTAL .OR. BO) THEN
          RMAT(IT,1)=Z
          dz=rmat(it,1)-rmat(it-1,1)
@@ -412,9 +412,9 @@ C
          NTEL      = 0
       ENDIF
       IF ( .NOT. BO) GOTO 100
-c
-c  SUSPENDED LOAD TRANSPORT IN WAVE DIRECTION
-c
+!
+!  SUSPENDED LOAD TRANSPORT IN WAVE DIRECTION
+!
        ssw=0.
        const=(ur/VR)
        uz1=const*rmat(1,3)
@@ -429,9 +429,9 @@ c
            rmat(i,6)=ssw
            uz1=uz2
   250 continue
-c
-c  INSTANTANEOUS BED LOAD TRANSPORT 
-c
+!
+!  INSTANTANEOUS BED LOAD TRANSPORT 
+!
       vrdelm=vr*alog(30.*delm/ra)/(-1.+alog(30.*hd/ra))
       if(abs(vr) > 0.0001) then
         urdelm=(ur/vr)*vrdelm
@@ -509,41 +509,41 @@ c
       if(tau1y /= 0. .AND. tau1x == 0) then
         phi1t=0.
       else
-cipk jun02        phi1t=(180./pi)*atan(tau1y/tau1x)
+!ipk jun02        phi1t=(180./pi)*atan(tau1y/tau1x)
         phi1t=(180./pi)*atan2(tau1y,tau1x)
       endif
       sbx=sbx/(ntime-1)
       sby=sby/(ntime-1)
-c
-c   TRANSPORT VECTORS
-c
-c   SUSPENDED LOAD TRANSPORT
-c
+!
+!   TRANSPORT VECTORS
+!
+!   SUSPENDED LOAD TRANSPORT
+!
       ssx=ssw*cos(phi)+ssc
       ssy=ssw*sin(phi)
       ssvec=(ssx**2.+ssy**2.)**0.5
       phis1=(180./pi)*atan(ssy/ssx)
       phis2=(180./pi)*phi-phis1
-c
-c   BED LOAD TRANSPORT
-c
+!
+!   BED LOAD TRANSPORT
+!
       sbvec=(sbx**2.+sby**2.)**0.5
       sbc=sbx-sby/tan(phi)
       sbw=sby/sin(phi)
-cipk jun02      phib1=(180./pi)*atan(sby/sbx)
+!ipk jun02      phib1=(180./pi)*atan(sby/sbx)
       if(sbx == 0. .AND. sby == 0.) then
         phib1=0.
       else
         phib1=(180./pi)*atan2(sby,sbx)
       endif
       phib2=(180./pi)*phi-phib1
-c
-c   TOTAL LOAD TRANSPORT
-c
+!
+!   TOTAL LOAD TRANSPORT
+!
       stx=ssx+sbx
       sty=ssy+sby
       stvec=(stx**2.+sty**2.)**0.5
-cipk jun02      phit1=(180./pi)*atan(sty/stx)
+!ipk jun02      phit1=(180./pi)*atan(sty/stx)
       if(stx == 0. .AND. sty == 0.) then
         phit1=0.
       else
@@ -557,172 +557,172 @@ cipk jun02      phit1=(180./pi)*atan(sty/stx)
       else
         stcc=0.
       endif
-c           HDTM=0.5
-c            IF(HDS < HDTM) HDTM=HDS
-c           GP(1)=STVEC/(HDTM*VRR*1000./5.)
-
-ccc      GP(1)=STVEC/(HDS*VRR*1000.)
-
+!           HDTM=0.5
+!            IF(HDS < HDTM) HDTM=HDS
+!           GP(1)=STVEC/(HDTM*VRR*1000./5.)
+!
+!cc      GP(1)=STVEC/(HDS*VRR*1000.)
+!
       GP(1)=STCC/(HDS*VRR*1000.)
       TRLOC=STCC
-
-
-CIPK JUN02
+!
+!
+!IPK JUN02
       IF(abs(ISWT) /= 1) RETURN
-
+!
       if(iswt == 1) then
-      WRITE(75,'('' DSTER = PARTICLE PARAMETER               [   -  ] ''
-     *,E10.4)')DSTER
-      WRITE(75,'('' L     = WAVE LENGTH                      [  M   ] ''
-     *,E10.4)')RLS
-      WRITE(75,'('' TR    = RELATIVE WAVE PERIOD             [  S   ] ''
-     *,E10.4)')TP1
-      WRITE(75,'('' UBW   = PEAK ORBITAL VELOCITY            [ M/S  ] ''
-     *,E10.4)')UBW
-      WRITE(75,'('' UBWF  = PEAK ORBITAL VELOCITY FORWARD    [ M/S  ] ''
-     *,E10.4)')UBWFOR
-      WRITE(75,'('' UBWB  = PEAK ORBITAL VELOCITY BACKWARD   [ M/S  ] ''
-     *,E10.4)')UBWBACK
-      WRITE(75,'('' ASYM  = ASYMMETRY FACTOR PEAK ORB. VEL.  [  -   ] ''
-     *,E10.4)')ASYM
-      WRITE(75,'('' ABW   = PEAK ORBITAL EXCURSION AT BED    [  M   ] ''
-     *,E10.4)')ABW
-      WRITE(75,'('' DELW  = THICKNESS WAVE BOUNDARY LAYER    [  M   ] ''
-     *,E10.4)')DELW
-      WRITE(75,'('' DELM  = THICKNESS WAVE MIXING LAYER      [  M   ] ''
-     *,E10.4)')DELM
-      WRITE(75,'('' DS    = THICKNESS SEDIMENT MIXING LAYER  [  M   ] ''
-     *,E10.4)')DS
-      WRITE(75,'('' TAUW  = WAVE-RELATED BED-SHEAR STRESS    [ N/M2 ] ''
-     *,E10.4)')TAUW
-      WRITE(75,'('' TAUC  = CURRENT-RELATED BED-SHEAR STRESS [ N/M2 ] ''
-     *,E10.4)')TAUC
-      WRITE(75,'('' FW    = WAVE-RELATED FRICTION COEFFICIENT[  -   ] ''
-     *,E10.4)')FW
-      WRITE(75,'('' FW1   = WAVE-RELATED GRAIN FRIC. COEFF.  [  -   ] ''
-     *,E10.4)')FW1 
-      WRITE(75,'('' FC    = CURR-RELATED FRICTION COEFFICIENT[  -   ] ''
-     *,E10.4)')FC
-      WRITE(75,'('' FC1   = CURR-RELATED GRAIN FRIC.COEFF.   [  -   ] ''
-     *,E10.4)')FC1
-      WRITE(75,'('' C     = CHEZY COEFFICIENT                [M0.5/S] ''
-     *,E10.4)')CC
-      WRITE(75,'('' C1    = CHEZY GRAIN COEFFICIENT          [M0.5/S] ''
-     *,E10.4)')CC1
-      WRITE(75,'('' RA    = APPARENT ROUGHNESS               [  M   ] ''
-     *,E10.4)')RA
-      WRITE(75,'('' ALFAW = WAVE-CURRENT COEFFICIENT         [  -   ] ''
-     *,E10.4)')ALFAW
-      WRITE(75,'('' RHOW  = FLUID DENSITY                    [KG/M3 ] ''
-     *,E10.4)')RHOW
-      WRITE(75,'('' RHOS  = DENSITY SEDIMENT MATERIAL        [KG/M3 ] ''
-     *,E10.4)')RHOS
-      WRITE(75,'('' WS    = FALL VELOCITY SUSP. MATERIAL     [ M/S  ] ''
-     *,E10.4)')WS
-      WRITE(75,'('' WSB   = FALL VELOCITY BED MATERIAL       [ M/S  ] ''
-     *,E10.4)')WSB
-      WRITE(75,'('' TAUCR = CRITICAL BED-SHEAR STRESS        [ N/M2 ] ''
-     *,E10.4)')TAUCR
-      WRITE(75,'('' UCR   = CRITICAL DEPTH-AVERAGED VELOCITY [ M/S  ] ''
-     *,E10.4)')UMCR
-      WRITE(75,'('' UBWCR = CRITICAL PEAK ORBITAL VELOCITY   [ M/S  ] ''
-     *,E10.4)')UBWCR
-      WRITE(75,'('' UC    = C-RELATED EFFICIENCY FACTOR      [  -   ] ''
-     *,E10.4)')RMUC
-      WRITE(75,'('' UWA   = W-RELATED EFF.FAC. CONCENTRATION [  -   ] ''
-     *,E10.4)')RMUWA
-      WRITE(75,'('' UW    = W-RELATED EFF.FAC. BED LOAD TR.  [  -   ] ''
-     *,E10.4)')RMUW
-      WRITE(75,'('' TA    = BED-SHEAR STRESS PAR.CONCENTR.   [  -   ] ''
-     *,E10.4)')TA
-      WRITE(75,'('' T     = BED-SHEAR STRESS PAR.BED LOAD TR [  -   ] ''
-     *,E10.4)')T
-      WRITE(75,'('' MFOR  = MOBILITY NUMBER FORWARD          [  -   ] ''
-     *,E10.4)')RMFOR
-      WRITE(75,'('' MBACK = MOBILITY NUMBER BACKWARD         [  -   ] ''
-     *,E10.4)')RMBACK
-      WRITE(75,'('' UR    = RETURN VELOCITY IN WAVE DIR.      [ M/S ] ''
-     *,E10.4)')UR
-      WRITE(75,'('' UB    = NEAR-BED VELOCITY IN WAVE DIR.    [ M/S ] ''
-     *,E10.4)')UB
-      WRITE(75,'('' VRDELM= VEL.AT EDGE W.MIX.LAYER, CURR DIR [ M/S ] ''
-     *,E10.4)')VRDELM
-      WRITE(75,'('' URDELM= VEL.AT EDGE W.MIX.LAYER, WAVE DIR [ M/S ] ''
-     *,E10.4)')URDELM
-      WRITE(75,'('' UBTOT = UB+URDELM=TOTAL VEL. AT EDGE W.M.L[ M/S ] ''
-     *,E10.4)')UBTOT
+      WRITE(75,'('' DSTER = PARTICLE PARAMETER               [   -  ] ''&
+     &,E10.4)')DSTER
+      WRITE(75,'('' L     = WAVE LENGTH                      [  M   ] ''&
+     &,E10.4)')RLS
+      WRITE(75,'('' TR    = RELATIVE WAVE PERIOD             [  S   ] ''&
+     &,E10.4)')TP1
+      WRITE(75,'('' UBW   = PEAK ORBITAL VELOCITY            [ M/S  ] ''&
+     &,E10.4)')UBW
+      WRITE(75,'('' UBWF  = PEAK ORBITAL VELOCITY FORWARD    [ M/S  ] ''&
+     &,E10.4)')UBWFOR
+      WRITE(75,'('' UBWB  = PEAK ORBITAL VELOCITY BACKWARD   [ M/S  ] ''&
+     &,E10.4)')UBWBACK
+      WRITE(75,'('' ASYM  = ASYMMETRY FACTOR PEAK ORB. VEL.  [  -   ] ''&
+     &,E10.4)')ASYM
+      WRITE(75,'('' ABW   = PEAK ORBITAL EXCURSION AT BED    [  M   ] ''&
+     &,E10.4)')ABW
+      WRITE(75,'('' DELW  = THICKNESS WAVE BOUNDARY LAYER    [  M   ] ''&
+     &,E10.4)')DELW
+      WRITE(75,'('' DELM  = THICKNESS WAVE MIXING LAYER      [  M   ] ''&
+     &,E10.4)')DELM
+      WRITE(75,'('' DS    = THICKNESS SEDIMENT MIXING LAYER  [  M   ] ''&
+     &,E10.4)')DS
+      WRITE(75,'('' TAUW  = WAVE-RELATED BED-SHEAR STRESS    [ N/M2 ] ''&
+     &,E10.4)')TAUW
+      WRITE(75,'('' TAUC  = CURRENT-RELATED BED-SHEAR STRESS [ N/M2 ] ''&
+     &,E10.4)')TAUC
+      WRITE(75,'('' FW    = WAVE-RELATED FRICTION COEFFICIENT[  -   ] ''&
+     &,E10.4)')FW
+      WRITE(75,'('' FW1   = WAVE-RELATED GRAIN FRIC. COEFF.  [  -   ] ''&
+     &,E10.4)')FW1 
+      WRITE(75,'('' FC    = CURR-RELATED FRICTION COEFFICIENT[  -   ] ''&
+     &,E10.4)')FC
+      WRITE(75,'('' FC1   = CURR-RELATED GRAIN FRIC.COEFF.   [  -   ] ''&
+     &,E10.4)')FC1
+      WRITE(75,'('' C     = CHEZY COEFFICIENT                [M0.5/S] ''&
+     &,E10.4)')CC
+      WRITE(75,'('' C1    = CHEZY GRAIN COEFFICIENT          [M0.5/S] ''&
+     &,E10.4)')CC1
+      WRITE(75,'('' RA    = APPARENT ROUGHNESS               [  M   ] ''&
+     &,E10.4)')RA
+      WRITE(75,'('' ALFAW = WAVE-CURRENT COEFFICIENT         [  -   ] ''&
+     &,E10.4)')ALFAW
+      WRITE(75,'('' RHOW  = FLUID DENSITY                    [KG/M3 ] ''&
+     &,E10.4)')RHOW
+      WRITE(75,'('' RHOS  = DENSITY SEDIMENT MATERIAL        [KG/M3 ] ''&
+     &,E10.4)')RHOS
+      WRITE(75,'('' WS    = FALL VELOCITY SUSP. MATERIAL     [ M/S  ] ''&
+     &,E10.4)')WS
+      WRITE(75,'('' WSB   = FALL VELOCITY BED MATERIAL       [ M/S  ] ''&
+     &,E10.4)')WSB
+      WRITE(75,'('' TAUCR = CRITICAL BED-SHEAR STRESS        [ N/M2 ] ''&
+     &,E10.4)')TAUCR
+      WRITE(75,'('' UCR   = CRITICAL DEPTH-AVERAGED VELOCITY [ M/S  ] ''&
+     &,E10.4)')UMCR
+      WRITE(75,'('' UBWCR = CRITICAL PEAK ORBITAL VELOCITY   [ M/S  ] ''&
+     &,E10.4)')UBWCR
+      WRITE(75,'('' UC    = C-RELATED EFFICIENCY FACTOR      [  -   ] ''&
+     &,E10.4)')RMUC
+      WRITE(75,'('' UWA   = W-RELATED EFF.FAC. CONCENTRATION [  -   ] ''&
+     &,E10.4)')RMUWA
+      WRITE(75,'('' UW    = W-RELATED EFF.FAC. BED LOAD TR.  [  -   ] ''&
+     &,E10.4)')RMUW
+      WRITE(75,'('' TA    = BED-SHEAR STRESS PAR.CONCENTR.   [  -   ] ''&
+     &,E10.4)')TA
+      WRITE(75,'('' T     = BED-SHEAR STRESS PAR.BED LOAD TR [  -   ] ''&
+     &,E10.4)')T
+      WRITE(75,'('' MFOR  = MOBILITY NUMBER FORWARD          [  -   ] ''&
+     &,E10.4)')RMFOR
+      WRITE(75,'('' MBACK = MOBILITY NUMBER BACKWARD         [  -   ] ''&
+     &,E10.4)')RMBACK
+      WRITE(75,'('' UR    = RETURN VELOCITY IN WAVE DIR.      [ M/S ] ''&
+     &,E10.4)')UR
+      WRITE(75,'('' UB    = NEAR-BED VELOCITY IN WAVE DIR.    [ M/S ] ''&
+     &,E10.4)')UB
+      WRITE(75,'('' VRDELM= VEL.AT EDGE W.MIX.LAYER, CURR DIR [ M/S ] ''&
+     &,E10.4)')VRDELM
+      WRITE(75,'('' URDELM= VEL.AT EDGE W.MIX.LAYER, WAVE DIR [ M/S ] ''&
+     &,E10.4)')URDELM
+      WRITE(75,'('' UBTOT = UB+URDELM=TOTAL VEL. AT EDGE W.M.L[ M/S ] ''&
+     &,E10.4)')UBTOT
       WRITE(75,'(///)')
       WRITE(75,'(''1. BED LOAD TRANSPORT '')')
       WRITE(75,'(/)')
-      WRITE(75,'(''   NET GRAIN BED SHEAR STRESS VECTOR    (N/M2)   ='',
-     *E10.4)')TAU1NET
-      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND STRESS VECTOR  ='',
-     *E10.4)')PHI1T
-      WRITE(75,'(''   BED LOAD TRANSPORT VECTOR            (KG/SM)  ='',
-     *E10.4)')SBVEC
-      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND B.L.TR. VECTOR ='',
-     *E10.4)')PHIB1
-      WRITE(75,'(''   ANGLE BETWEEN B.L.TR.VECTOR AND WAVE DIRECTION='',
-     *E10.4)')PHIB2
-      WRITE(75,'(''   BED L. TRANSP.COMPONENT IN CURR. DIR.(KG/SM)  ='',
-     *E10.4)')SBC
-      WRITE(75,'(''   BED L. TRANSP.COMPONENT IN WAVE DIR. (KG/SM)  ='',
-     *E10.4)')SBW
+      WRITE(75,'(''   NET GRAIN BED SHEAR STRESS VECTOR    (N/M2)   ='',&
+     &E10.4)')TAU1NET
+      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND STRESS VECTOR  ='',&
+     &E10.4)')PHI1T
+      WRITE(75,'(''   BED LOAD TRANSPORT VECTOR            (KG/SM)  ='',&
+     &E10.4)')SBVEC
+      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND B.L.TR. VECTOR ='',&
+     &E10.4)')PHIB1
+      WRITE(75,'(''   ANGLE BETWEEN B.L.TR.VECTOR AND WAVE DIRECTION='',&
+     &E10.4)')PHIB2
+      WRITE(75,'(''   BED L. TRANSP.COMPONENT IN CURR. DIR.(KG/SM)  ='',&
+     &E10.4)')SBC
+      WRITE(75,'(''   BED L. TRANSP.COMPONENT IN WAVE DIR. (KG/SM)  ='',&
+     &E10.4)')SBW
       WRITE(75,'('' ( POS. ANGLE = ANTI-CLOCKWISE,NEG.=CLOCKWISE ) '')')
       WRITE(75,'(//)')
       WRITE(75,'(''2. SUSPENDED LOAD TRANSPORT '')')
       WRITE(75,'(/)')
-      WRITE(75,'(''   SUSPENDED LOAD TRANSPORT VECTOR      (KG/SM)  ='',
-     *E10.4)')SSVEC
-      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND S.L.TR. VECTOR ='',
-     *E10.4)')PHIS1
-      WRITE(75,'(''   ANGLE BETWEEN S.L.TR.VECTOR AND WAVE DIRECTION='',
-     *E10.4)')PHIS2
-      WRITE(75,'(''   SUSP. L. TR. COMPONENT IN CURR. DIR. (KG/SM)  ='',
-     *E10.4)')SSC
-      WRITE(75,'(''   SUSP. L. TR. COMPONENT IN WAVE DIR.  (KG/SM)  ='',
-     *E10.4)')SSW
+      WRITE(75,'(''   SUSPENDED LOAD TRANSPORT VECTOR      (KG/SM)  ='',&
+     &E10.4)')SSVEC
+      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND S.L.TR. VECTOR ='',&
+     &E10.4)')PHIS1
+      WRITE(75,'(''   ANGLE BETWEEN S.L.TR.VECTOR AND WAVE DIRECTION='',&
+     &E10.4)')PHIS2
+      WRITE(75,'(''   SUSP. L. TR. COMPONENT IN CURR. DIR. (KG/SM)  ='',&
+     &E10.4)')SSC
+      WRITE(75,'(''   SUSP. L. TR. COMPONENT IN WAVE DIR.  (KG/SM)  ='',&
+     &E10.4)')SSW
       WRITE(75,'(//)')
       WRITE(75,'(''3. TOTAL LOAD TRANSPORT '')')
       WRITE(75,'(/)')
-      WRITE(75,'(''   TOTAL LOAD TRANSPORT VECTOR           (KG/SM) ='',
-     *E10.4)')STVEC
-      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND T.L.TR.VECTOR  ='',
-     *E10.4)')PHIT1
-      WRITE(75,'(''   ANGLE BETWEEN T.L.TR.VECTOR AND WAVE DIRECTION='',
-     *E10.4)')PHIT2
-      WRITE(75,'(''   TOTAL L. TR. COMPONENT IN CURRENT DIR.(KG/SM) ='',
-     *E10.4)')STC
-      WRITE(75,'(''   TOTAL L. TR. COMPONENT IN WAVE DIR.   (KG/SM) ='',
-     *E10.4)')STW
+      WRITE(75,'(''   TOTAL LOAD TRANSPORT VECTOR           (KG/SM) ='',&
+     &E10.4)')STVEC
+      WRITE(75,'(''   ANGLE BETWEEN CURRENT DIR. AND T.L.TR.VECTOR  ='',&
+     &E10.4)')PHIT1
+      WRITE(75,'(''   ANGLE BETWEEN T.L.TR.VECTOR AND WAVE DIRECTION='',&
+     &E10.4)')PHIT2
+      WRITE(75,'(''   TOTAL L. TR. COMPONENT IN CURRENT DIR.(KG/SM) ='',&
+     &E10.4)')STC
+      WRITE(75,'(''   TOTAL L. TR. COMPONENT IN WAVE DIR.   (KG/SM) ='',&
+     &E10.4)')STW
       else
-CIPK MAR06
-C        write(108,'(i5,4f10.3,3f10.2)') 
-C     +   node,stvec,stx,sty,stc,stw,STCC/(HDS*VRR)*1000.,rmat(1,2)
+!IPK MAR06
+!        write(108,'(i5,4f10.3,3f10.2)') 
+!     +   node,stvec,stx,sty,stc,stw,STCC/(HDS*VRR)*1000.,rmat(1,2)
       endif
       RETURN
       END
-
+!
       SUBROUTINE ZEROIN(X,Y,LOG,F,TOLX)
-C***********************************************************************
-C
-C     ZEROIN LEVERT IN X DE BESTE BENADER ING VAN DE WORTEL VAN
-C     DE VERGELIJKING F(X)=0. OP HET INTERVAL (X,Y) GEGEVEN IN DE BEGIN
-C     WAARDEN VAN X ENY.
-C     INDIEN ER GEEN WORTEL IS LOG=.FALSE.
-C     ZEROIN ROEPT FLAMBDA EN TOLLD
-C
-C***********************************************************************
+!***********************************************************************
+!
+!     ZEROIN LEVERT IN X DE BESTE BENADER ING VAN DE WORTEL VAN
+!     DE VERGELIJKING F(X)=0. OP HET INTERVAL (X,Y) GEGEVEN IN DE BEGIN
+!     WAARDEN VAN X ENY.
+!     INDIEN ER GEEN WORTEL IS LOG=.FALSE.
+!     ZEROIN ROEPT FLAMBDA EN TOLLD
+!
+!***********************************************************************
       LOGICAL LOG
       A=X
       FA=F(X)
       B=Y
       X=Y
       FB=F(X)
-C INTERPOLATE
+! INTERPOLATE
     1 C=A
       FC=FA
-C EXTRAPOLATE:
+! EXTRAPOLATE:
     2 IF(ABS(FC) >= ABS(FB))GOTO 19
       A=B
       FA=FB
@@ -731,7 +731,7 @@ C EXTRAPOLATE:
       FB=FC
       C=A
       FC=FA
-C END INTERCHANGE
+! END INTERCHANGE
    19 TOL=TOLX(X)
       RM=(C+B)*.5
       IF(ABS(RM-B) <= TOL)GOTO 200

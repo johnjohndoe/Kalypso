@@ -16,16 +16,16 @@ contains
   function newFile (unitNo, fileName, fileStatus)
     implicit none
   
-    !function name
+!function name    
     type (file), pointer :: newFile
-    !arguments
+!arguments    
     integer (kind = 4), optional :: unitNo
     character (len = *), optional :: fileName
     character (len = *), optional :: fileStatus
-    !file
+!file    
     type (file), pointer :: new
     
-    !create the file
+!create the file    
     allocate (new) 
     if (present (unitNo)) new.unit = unitNo
     if (present (fileName)) new.name = fileName
@@ -40,19 +40,19 @@ contains
 !--------------------------------------------------------------------------
   subroutine openFileObject (file2Open, searchUnit)
     implicit none
-    !input arguments
+!input arguments    
     type (file), pointer :: File2Open
     logical, intent (in), optional :: searchUnit
-    !local variables
+!local variables    
     integer (kind = 4) :: ioerror = 0
     
     if (present (searchUnit)) then
       if (searchUnit) File2Open.unit = findFreeUnit()
     endif
     
-    !open the file
+!open the file    
     OPEN (unit = File2Open.unit, file = File2Open.name, IOSTAT = ioerror, status = File2Open.status)
-    !check for errors
+!check for errors    
     if (ioerror /= 0) then
       call ErrorMessageAndStop (1013, 0, 0.0d0, 0.0d0)
     else
@@ -65,7 +65,7 @@ contains
 !--------------------------------------------------------------------------
   subroutine closeFileObject (file2Close)
     implicit none
-    !arguments
+!arguments    
     type (file), pointer :: file2Close
     
     close (file2Close.unit)
@@ -78,11 +78,11 @@ contains
 !--------------------------------------------------------------------------
   function fileExists (inputFile)
     implicit none
-    !function name
+!function name    
     logical :: fileExists
-    !arguments
+!arguments    
     type (file), pointer :: inputFile
-    !local variables
+!local variables    
     logical :: ex
     
     inquire (file=inputFile.name, exist=ex)
@@ -96,9 +96,9 @@ contains
 !--------------------------------------------------------------------------
 function isFileUnitOpen (fileUnit) result (fileIsOpened)
     implicit none
-    !function name
+!function name    
     logical :: fileIsOpened
-    !arguments
+!arguments    
     integer :: fileUnit
 
     inquire (unit = fileUnit, opened = fileIsOpened)
@@ -110,11 +110,11 @@ function isFileUnitOpen (fileUnit) result (fileIsOpened)
 !--------------------------------------------------------------------------
   function findFreeUnit (minUnit, maxUnit) result (fileUnit)
     implicit none
-    !function definition
+!function definition    
     integer (kind = 4) :: fileUnit
-    !arguments
+!arguments    
     integer (kind = 4), optional :: minUnit, maxUnit
-    !local variables
+!local variables    
     logical :: unitIsOpen
     integer (kind = 4) :: unitNo
     integer (kind = 4) :: minUnitTmp = 1

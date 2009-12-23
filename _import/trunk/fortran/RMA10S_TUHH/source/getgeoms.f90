@@ -72,7 +72,7 @@ USE BLK10MOD, only: &
 !netyp   determines the sort of an element (1D-type, 2D-type, 3D-type, transition-type)
 !jpoint  determines connections of nodes in 1D/2D and 2D/3D-vertical elements
 !nop     nodes of an element, anticlockwise (corner - midside - sequence)
-         !TODO:  Are nops and nop both necessary?
+!TODO:  Are nops and nop both necessary?         
 !nops    the same as nop
 !imat    material type of an element
 !        TODO: What is the main axis?
@@ -229,17 +229,17 @@ if (ifile /= 0) call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, dummy4, dumm
 !reading of continuity line block is positioned before geometry is read, because lines are needed
 !for the geometry, if there was any line transition
 IF (NCL > 0) THEN
-  !header
+!header  
   WRITE (LOUT, 6120)
-  !the lines
+!the lines  
   throughLines: DO J = 1, NCL
-    !number of nodes within line j
+!number of nodes within line j    
     NA = LMT (J)
-    !write out line's nodes
+!write out line's nodes    
     IF (NA > 0) WRITE (LOUT, *) J, (LINE (J, K), K = 1, NA)
   enddo throughLines
 ELSE
-  !write information, there is no CCL
+!write information, there is no CCL  
   WRITE(LOUT,6115)
 ENDIF
 
@@ -247,13 +247,13 @@ ENDIF
 !read element data from the input file
 !-------------------------------------
 readELdata: do
-  !if there is data, read and evaluate it
+!if there is data, read and evaluate it  
   if(ID(1:2) == 'EL') then
-    !read data for the element
+!read data for the element    
     read(DLIN,5040) J,(NOP(J,K),K=1,8),IMAT(J),TH(J)
-    !read next input file line
+!read next input file line    
     call ginpt(lin,id,dlin)
-  !otherwise leave the loop
+!otherwise leave the loop  
   else
     exit readELdata
   endif
@@ -262,37 +262,37 @@ enddo readELdata
 !Assign roughness parameters to elements
 !---------------------------------------
 AssignRoughnesses: DO I = 1, MAXE
-  !nis,nov08: bugfix - elements with negative material types are just dry and not
-  !           inoperative. They should be considered at roughness type assignment.
-  !           So changed imat(i)>0 into imat(i)/=0.
+!nis,nov08: bugfix - elements with negative material types are just dry and not  
+!           inoperative. They should be considered at roughness type assignment.  
+!           So changed imat(i)>0 into imat(i)/=0.  
   IF (IMAT (I) /= 0) THEN
-    !copy the nodes
+!copy the nodes    
     DO J = 1, 8
       NOPS (I, J) = NOP (I, J)
     ENDDO
 
-    !local copy of the (dry) material type
+!local copy of the (dry) material type    
     IMMT = abs (IMAT (I))
-    !get the last 2 digits to obtain the raw material type 
+!get the last 2 digits to obtain the raw material type     
     J = MOD (IMMT, 100)
-    !control structures: overgive the original type again with its own roughness
+!control structures: overgive the original type again with its own roughness    
     IF (IMMT > 903) J = imat (i)
-    !1D/2D element-2-element transitions: overgive the original type again with its own roughness
+!1D/2D element-2-element transitions: overgive the original type again with its own roughness    
     if (NOP (i, 6) == 0) J = imat (i)
 
-    !skip polynomial approach elements (immt = 89)
+!skip polynomial approach elements (immt = 89)    
     if (immt /= 89 .AND. immt < 900) then
-      !assign Chezy-coefficient, if the parameter > 1.0
+!assign Chezy-coefficient, if the parameter > 1.0      
       if (ORT (J, 5) > 1.) then
         CHEZ (I) = ORT (J, 5)
-      !assign Manning's N, if the parameter is between 0.0 and 1.0
+!assign Manning's N, if the parameter is between 0.0 and 1.0      
       elseif (0.0 < ORT (J, 5) .AND. ORT (j, 5) <= 1.0) then
         ZMANN (I) = ORT (J, 5)
-      !continue on Darcy-Weisbach equation utilisation
+!continue on Darcy-Weisbach equation utilisation      
       elseif (ort (j, 5) == -1.0) then
         continue
-      !if parameter was defined wrong, stop on ERROR
-      !reading of data block should control, that it doesn't happen like this
+!if parameter was defined wrong, stop on ERROR      
+!reading of data block should control, that it doesn't happen like this      
       else
         call ErrorMessageAndStop (1209, i, mcord(i,1), mcord(i,2))
       ENDIF
@@ -309,29 +309,29 @@ ENDDO AssignRoughnesses
 ! - number of corner nodes per element (ncorn, ncrn)
 NP = 0
 FindMaxEltNumbers: do J = 1, MAXE
-  !nis,sep07: bugfix - elements with negative material types are just dry and not
-  !           inoperative. They should be considered at roughness type assignment.
-  !           So changed imat(i)>0 into imat(i)/=0.
+!nis,sep07: bugfix - elements with negative material types are just dry and not  
+!           inoperative. They should be considered at roughness type assignment.  
+!           So changed imat(i)>0 into imat(i)/=0.  
   if (imat (j) /= 0) then
-    !remember highest element number occuring
+!remember highest element number occuring    
     NE = J
-    !remember lowest element number occuring
+!remember lowest element number occuring    
     if (J < LE) LE = J
     
     NCORN (J) = 0
-    !remember the number of corner nodes of the element j
+!remember the number of corner nodes of the element j    
     ExamineElements: do K = 1, 20
-      !stop evaluating the 
+!stop evaluating the       
       if (NOP (J, K) == 0) exit ExamineElements
-      !remember the highest node number
+!remember the highest node number      
       if (NOP (J, K) > NP ) NP = NOP(J,K)
-      !remember the lowest node number
+!remember the lowest node number      
       if (NOP (J, K) < LP ) LP = NOP(J,K)
       NCORN (J) = k
     enddo ExamineElements
-    !count occurances of element-2-element transitions
+!count occurances of element-2-element transitions    
     if (ncorn(j) == 5) MaxT = MaxT + 1
-    !copy number of corner nodes
+!copy number of corner nodes    
     NCRN (J) = NCORN (J)
   endif
 enddo FindMaxEltNumbers
@@ -341,29 +341,29 @@ enddo FindMaxEltNumbers
 !Establish preliminary element types
 !-----------------------------------
 EstablishPreliminaryEltType: DO J = 1, MAXE
-  !for operative elements (dry or wet)
+!for operative elements (dry or wet)  
   if (imat (j) /= 0) then
-    !covers all 2D elements
-    !covers junction elements, if more than 5 strands come together
+!covers all 2D elements    
+!covers junction elements, if more than 5 strands come together    
     IF (NCORN (J) > 5) THEN
       NETYP (J) = 16
-    !covers junction elements (901, 902, 903) with less or equal 5 strands coming together
-    !  can't reach junctions with more than 5 strands coming together, because
-    !  they're catched above
-    !covers control structure elements (904+)
+!covers junction elements (901, 902, 903) with less or equal 5 strands coming together    
+!  can't reach junctions with more than 5 strands coming together, because    
+!  they're catched above    
+!covers control structure elements (904+)    
     ELSEIF (IMAT (J) > 900) THEN
       NETYP (J) = 17
-    !Insert pointers to inform about junction elements
-    !reference 3rd node at 1st one
+!Insert pointers to inform about junction elements    
+!reference 3rd node at 1st one    
     JPOINT (NOP (J, 1)) = NOP (J, 3)
-    !reference 1st node at 3rd one
+!reference 1st node at 3rd one    
     JPOINT (NOP (J, 3)) = NOP (J, 1)
-    !reference 3rd node at 2nd one
+!reference 3rd node at 2nd one    
     JPOINT (NOP (J, 2)) = NOP (J, 3)
-    !covers 1D/2D element-2-element transition element
+!covers 1D/2D element-2-element transition element    
     ELSEIF (NCORN (J) > 3) THEN
       NETYP(J)=18
-    !covers all normal 1D flow elements
+!covers all normal 1D flow elements    
     ELSE
       NETYP(J)=6
     ENDIF
@@ -384,9 +384,9 @@ WRITE (icfl, 6210) NE, LE, NP, LP
 !----------------------------------------
 readNDdata: do
   IF (ID (1:2) == 'ND') THEN
-    !evaluate line        
+!evaluate line            
     READ (DLIN, 5035) J, (CORD (J, K), K = 1, 2), AO (J)
-    !read next input file line
+!read next input file line    
     call ginpt(lin,id,dlin)
   else
     exit readNDdata
@@ -398,17 +398,17 @@ enddo readNDdata
 !-------------------------------------------------
 !TODO: Calculation of preliminary water depth is very unprecise
 PrelimVel3Init: DO J = 1, NPM
-  !calculation of water depth as difference between initial water elevation and bed elevation
+!calculation of water depth as difference between initial water elevation and bed elevation  
   VEL (3, J) = ELEV - AO (J)
-  !if water depth is less than given minimum water depth, then adapt the water depth
-  !hmin = 0.0 is not considered; in advance changed to -1.0e+20
+!if water depth is less than given minimum water depth, then adapt the water depth  
+!hmin = 0.0 is not considered; in advance changed to -1.0e+20  
   IF (VEL (3, J) < HMIN) VEL (3, J) = HMIN
-  !if user gives hmin less then zero, all water depth will be overwritten with the absolute value of that
+!if user gives hmin less then zero, all water depth will be overwritten with the absolute value of that  
   IF (HMNN < 0.) VEL (3, J) = -HMNN
-  !TODO: Because of adaptation, there need to be 2 variables for hmin in following constellations:
-  !      hmin > 0.0; hmnn = hmin
-  !      hmin = -1.0e+20; hmnn = 0.0
-  !      hmin < 0.0; hmnn = hmin
+!TODO: Because of adaptation, there need to be 2 variables for hmin in following constellations:  
+!      hmin > 0.0; hmnn = hmin  
+!      hmin = -1.0e+20; hmnn = 0.0  
+!      hmin < 0.0; hmnn = hmin  
 enddo PrelimVel3Init
 
 
@@ -421,7 +421,7 @@ Profile1Ddata: do
   WIDS (J) = WS
   SS1 (J) = SL
   SS2 (J) = SR
-  !read next input file line
+!read next input file line  
   call ginpt(lin,id,dlin)
 else
   exit Profile1Ddata
@@ -434,22 +434,22 @@ enddo Profile1Ddata
 Weirdata: do
   IF (ID (1:3) == 'WDT') THEN
     READ (DLIN, 5044) J, TWHT, TWLN, TRAEL
-    !read data, if element number is correct
+!read data, if element number is correct    
     IF (J > 0) THEN
       WHGT (J) = TWHT
       WLEN (J) = TWLN
       TRANSEL (J) = TRAEL
-    !give ERROR on wrong weir element number
+!give ERROR on wrong weir element number    
     ELSE
       call ErrorMessageAndStop (1210, 0, 0.0d0, 0.0d0)
     ENDIF
-    !control output to console and control file
+!control output to console and control file    
     WRITE (LOUT, 6150) J, WHGT (J), WLEN (J), TRANSEL (J)
     WRITE (  75, 6150) J, WHGT (J), WLEN (J), TRANSEL(J)
  6150   FORMAT(/'WEIR ELEVATION, SECTION LENGTH AND TRANSEL FOR NODE',I6,' =',3F12.3)
-    !read next input file line
+!read next input file line    
     call ginpt(lin,id,dlin)
-    !increase counter
+!increase counter    
   else
     exit Weirdata
   ENDIF
@@ -468,32 +468,32 @@ endif
 !Adapt position of transitioning nodes at 1D/2D element-2-element transitions
 !-------------------------------------------------------------------------
 DO J = 1, NE
-  !nis,nov08: bugfix - use abs(imat) to check for special elements and use imat(j)/=0
-  !           instead of imat(j)>0, because dry elements should be also considered.
+!nis,nov08: bugfix - use abs(imat) to check for special elements and use imat(j)/=0  
+!           instead of imat(j)>0, because dry elements should be also considered.  
   IF (IMAT (J) /= 0 .AND. abs (IMAT (J)) < 901) THEN
-    !copy corner nodes
+!copy corner nodes    
     NCN = NCORN (J)
-    !Test for 1d - 2d transition
+!Test for 1d - 2d transition    
     IF (NCN == 5) THEN
-      !left 2D-arc's node
+!left 2D-arc's node      
       N1 = NOP (J, 4)
-      !transitioning node
+!transitioning node      
       N2 = NOP (J, 3)
-      !right 2D-arc's node
+!right 2D-arc's node      
       N3 = NOP (J, 5)
-      !recalculate the be elevation, because it must be a linear bed shape
+!recalculate the be elevation, because it must be a linear bed shape      
       AO (N2) = 0.5 * (AO (N1) + AO (N3))
-      !move the coordinates into the middle of the transitioning arc, if there were no coordinates yet.
+!move the coordinates into the middle of the transitioning arc, if there were no coordinates yet.      
       IF (CORD (N2, 1) <= VOID) THEN
-        !x-coordinate
+!x-coordinate        
         CORD (N2, 1) = 0.5 * (CORD (N1, 1) + CORD (N3, 1))
-        !y-coordinate
+!y-coordinate        
         CORD (N2, 2) = 0.5 * (CORD (N1, 2) + CORD (N3, 2))
-        !x-distance of arc
+!x-distance of arc        
         dx = CORD (N1, 1) - CORD (N3, 1)
-        !y-distance of arc
+!y-distance of arc        
         dy = CORD (N1, 2) - CORD (N3, 2)
-        !length of arc
+!length of arc        
         WIDTH (N2) = SQRT (dx**2 + dy**2)
       ENDIF
     ENDIF
@@ -952,108 +952,108 @@ TransitionsDirections: DO N = 1, NE
 !3D-source-code: Just activate, adapt for allocatables, debug and run!
 !---------------------------------------------------------------------
 
-  !1D/2D element-2-element transitions
-  !-----------------------------------
-  ! - direction fix for transitioning node
-  ! - adjust position
-  ! - adjust width
-  ! - adjust side slope
-  !
-  ! - reactivate elseif, if 3D option is switched on again (upper control flow)
-  !ELSEIF (NCRN(N) == 5 .AND. IMAT(N) < 901) THEN
+!1D/2D element-2-element transitions  
+!-----------------------------------  
+! - direction fix for transitioning node  
+! - adjust position  
+! - adjust width  
+! - adjust side slope  
+!  
+! - reactivate elseif, if 3D option is switched on again (upper control flow)  
+!ELSEIF (NCRN(N) == 5 .AND. IMAT(N) < 901) THEN  
   IF (NCRN (N) == 5 .AND. IMAT (N) < 901) THEN
-    !left 2D-arc's node
+!left 2D-arc's node    
     N1 = NOP (n, 4)
-    !transitioning node
+!transitioning node    
     N2 = NOP (n, 3)
-    !right 2D-arc's node
+!right 2D-arc's node    
     N3 = NOP (n, 5)
 
-    !x-distance of transitioning arc
+!x-distance of transitioning arc    
     dx = CORD (N1, 1) - CORD (N3, 1)
-    !y-distance of transitioning arc
+!y-distance of transitioning arc    
     dy = CORD (N1, 2) - CORD (N3, 2)
-    !angle of the flow direction
+!angle of the flow direction    
     ANG = ATAN2 (DX, -DY)
-    !Turn vector-direction into 1. or 4. quadrant of Cartesian coordinate system
+!Turn vector-direction into 1. or 4. quadrant of Cartesian coordinate system    
     IF (ANG > 1.5707963) ANG = ANG - 3.1415926
     IF (ANG < -1.5707963) ANG = ANG + 3.1415926
 
-    !Set midside at halfway point
-    !----------------------------
-    !recalculate the be elevation, because it must be a linear bed shape
+!Set midside at halfway point    
+!----------------------------    
+!recalculate the be elevation, because it must be a linear bed shape    
     AO (N2) = 0.5 * (AO (N1) + AO (N3))
-    !x-coordinate
+!x-coordinate    
     CORD (N2, 1) = 0.5 * (CORD (N1, 1) + CORD (N3, 1))
-    !y-coordinate
+!y-coordinate    
     CORD (N2, 2) = 0.5 * (CORD (N1, 2) + CORD (N3, 2))
 
-    !only for geometry approach
+!only for geometry approach    
     if (imat (n) /= 89) then
-      !original length, given by the input
+!original length, given by the input      
       widto = width (n2)
-      !length of the transitioning arc
+!length of the transitioning arc      
       width (n2) = SQRT (DX**2 + DY**2)
-      !control output
+!control output      
       WRITE(*,*) ' SETTING WIDTH, OLD WIDTH',N3, WIDTH(N3), WIDTO
-      !force to be a rectangular cross section
+!force to be a rectangular cross section      
       IF (SS1 (N3) /= 0. .OR. SS2 (N3) /= 0.) THEN
-        !warning output
+!warning output        
         WRITE(*,*)' ATTENTION - SIDE SLOPES AT NODE ', N3
         write(*,*)' OR ', n1, 'NON-ZERO - VALUES FORCED TO ZERO'
-        !force them to be zero
+!force them to be zero        
         SS1 (N3) = 0.0
         SS2 (N3) = 0.0
       ENDIF
     end if
 
-    !set angle for fixed flow direction of transition;
+!set angle for fixed flow direction of transition;    
     IF (ANG /= 0.) THEN
       ALFAK (N3) = ANG
     ELSE
-      !if angle is by accident exactly zero, the model wouldn't recognize a reduction
-      !  of the degree of freedoms. Thus the direction is turned at a minimum (it is
-      !  measured in RAD, so 0.0001 is nothing!)
+!if angle is by accident exactly zero, the model wouldn't recognize a reduction      
+!  of the degree of freedoms. Thus the direction is turned at a minimum (it is      
+!  measured in RAD, so 0.0001 is nothing!)      
       ALFAK(N3)=0.0001
     ENDIF
-    !control output
+!control output    
     WRITE(*,*) ' SETTING ALFAK',N3, alfak(n3)
     
-  !1D/2D line-2-element transitions
-  !--------------------------------
+!1D/2D line-2-element transitions  
+!--------------------------------  
   ELSEIF (MaxLT /= 0) then
 
     Transitiontest: do i = 1, MaxLT
-      !n is the actual element number in loop
+!n is the actual element number in loop      
       if (n == TransLines (i, 1)) then
-        !look, whether length is non-zero
+!look, whether length is non-zero        
         if (lmt (TransLines (i,2)) <= 1) CALL errorMessageAndStop (1211, lmt (TransLines (i, 2)), 0.0d0, 0.0d0)
-        !start- and ending-node of coupling
+!start- and ending-node of coupling        
         N1 = Line ( TransLines (i, 2) , 1)
         N2 = Line ( TransLines (i, 2) , LMT (TransLines (i, 2)) )
-        !x- and y-distances
+!x- and y-distances        
         DX = cord (n1, 1) - cord (n2, 1)
         DY = cord (n1, 2) - cord (n2, 2)
-        !chord-length
+!chord-length        
         translength = sqrt (DX**2 + DY**2)
-        !velocity-direction of the nodes in between
+!velocity-direction of the nodes in between        
         alfak_temp = atan2 (Dx, -DY)
-        !correction to bring it into quadrants 1 or 4
+!correction to bring it into quadrants 1 or 4        
         if (alfak_temp > 1.5707963) then
           alfak_temp = alfak_temp - 3.1415926
         elseif (alfak_temp < -1.5707963) then
           alfak_temp = alfak_temp + 3.1415926
         endif
-        !assign the value to the nodes of the line-coupling, the midside nodes will be filled in check.subroutine
+!assign the value to the nodes of the line-coupling, the midside nodes will be filled in check.subroutine        
         assigningAlfaK: do j = 2, lmt (Translines (i, 2)) - 1
           alfak (Line (Translines (i, 2), j)) = alfak_temp
         enddo assigningAlfaK
-        !jump out of loop over all transitions
+!jump out of loop over all transitions        
         exit Transitiontest
       endif
-      !Assigning the directions to the CORNER-nodes of the coupling. Problem: This is in getgeo. The line-construct still consists only of
-      !corner nodes of connected 2D-elements. In the subroutine check it is widened to the midside node. So the assignment changes to that
-      !subroutine: CHECK.subroutine
+!Assigning the directions to the CORNER-nodes of the coupling. Problem: This is in getgeo. The line-construct still consists only of      
+!corner nodes of connected 2D-elements. In the subroutine check it is widened to the midside node. So the assignment changes to that      
+!subroutine: CHECK.subroutine      
     enddo Transitiontest
   endif
 enddo TransitionsDirections

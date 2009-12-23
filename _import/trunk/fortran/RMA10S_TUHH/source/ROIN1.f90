@@ -1,34 +1,34 @@
-cipk  last update Oct 31 1996 Revised version to precompute values    
-
+!ipk  last update Oct 31 1996 Revised version to precompute values    
+!
       SUBROUTINE ROIN(NN)
       USE IHILMOD
       USE SACMOD
       USE BLK10MOD
       SAVE
-C-
+!-
       REAL J11,J12,J13,J21,J22,J23,J31,J32,J33
-C-
-      REAL XM(20),DMX(20),DMY(20),DMZ(20)
-     2      ,XN(20),DNX(20),DNY(20),DNZ(20)
-     3      ,XL(20),YL(20),ZL(20)
-C-
-      DIMENSION
-     1        IPNT(4,6),ITOP(4,6)
-     +        ,INSEQ(8,4)
+!-
+      REAL XM(20),DMX(20),DMY(20),DMZ(20)                               &
+     &      ,XN(20),DNX(20),DNY(20),DNZ(20)                             &
+     &      ,XL(20),YL(20),ZL(20)
+!-
+      DIMENSION                                                         &
+     &        IPNT(4,6),ITOP(4,6)                                       &
+     &        ,INSEQ(8,4)
       DATA NCNO/0/
-
+!
       DATA IPNT/ 1, 3, 5, 7,5,14,0,0, 1, 3, 5,0,1,3,0,0,4*0,1,0,0,0/
       DATA ITOP/13,15,17,19,3,12,0,0,10,12,14,0,9,11,0,0,4*0,10,0,0,0/
-cipk oct96
-      DATA INSEQ/1,3,5,7,13,15,17,19,
-     +           1,3,5,10,12,14,2*0,
-     +           1,3,5,10,4*0,
-     +           1,3,5,9,11,3*0/
-C-
+!ipk oct96
+      DATA INSEQ/1,3,5,7,13,15,17,19,                                   &
+     &           1,3,5,10,12,14,2*0,                                    &
+     &           1,3,5,10,4*0,                                          &
+     &           1,3,5,9,11,3*0/
+!-
       DATA IPASS/0/
-C-
-C-.....ASSIGN PROPER COEFS.....
-C-
+!-
+!-.....ASSIGN PROPER COEFS.....
+!-
       NCN=NCORN(NN)
       CX=COS(TH(NN))
       SAA=SIN(TH(NN))
@@ -49,14 +49,14 @@ C-
         ILK=3
         ITYP=6
       ENDIF
-C-
-C-.....COPY PROPER WEIGHTING FUNCTIONS.....
-C-
-c      IF(NCNO == NCN) GO TO 95
+!-
+!-.....COPY PROPER WEIGHTING FUNCTIONS.....
+!-
+!      IF(NCNO == NCN) GO TO 95
       CALL SAN(NCN)
-C-
-C-.....COMPUTE LOCAL CORDS.....
-C-
+!-
+!-.....COMPUTE LOCAL CORDS.....
+!-
    95 NR=NOP(NN,1)
       XL(1)=0.
       YL(1)=0.
@@ -65,24 +65,24 @@ C-
       N=NOP(NN,K)
       DX=CORD(N,1)-CORD(NR,1)
       DY=CORD(N,2)-CORD(NR,2)
-cipk nov96      XL(K)=DX*CX+DY*SAA
-cipk nov 96      YL(K)=-DX*SAA+DY*CX
+!ipk nov96      XL(K)=DX*CX+DY*SAA
+!ipk nov 96      YL(K)=-DX*SAA+DY*CX
       XL(K)=DX
       YL(K)=DY
       ZL(K)=CORD(N,3)-CORD(NR,3)
   100 CONTINUE
-C-
-C- COMPUTE INTERMEDIATE COEFS. AND ELEMENT TRANSPORT MATRIX
-C-
+!-
+!- COMPUTE INTERMEDIATE COEFS. AND ELEMENT TRANSPORT MATRIX
+!-
       DO 200 II=1,4
         I=IPNT(II,ITYP)
         IF(I == 0) GO TO 200
-c      write(75,*) 'da',(da(k,i),k=1,20)
-c      write(75,*) 'db',(db(k,i),k=1,20)
-c      write(75,*) 'dc',(dc(k,i),k=1,20)
-C-
-C-.....FORM THE JACOBIAN.....
-C-
+!      write(75,*) 'da',(da(k,i),k=1,20)
+!      write(75,*) 'db',(db(k,i),k=1,20)
+!      write(75,*) 'dc',(dc(k,i),k=1,20)
+!-
+!-.....FORM THE JACOBIAN.....
+!-
       J11 = 0.0
       J12 = 0.0
       J13=0.
@@ -103,7 +103,7 @@ C-
       J32=J32+DC(K,I)*YL(K)
       J33=J33+DC(K,I)*ZL(K)
   130 CONTINUE
-c      write(75,*) j11,j12,j13,j21,j22,j23,j31,j32,j33
+!      write(75,*) j11,j12,j13,j21,j22,j23,j31,j32,j33
       A11= J22*J33-J23*J32
       A12=-J12*J33+J13*J32
       A13=J12*J23-J13*J22
@@ -113,25 +113,25 @@ c      write(75,*) j11,j12,j13,j21,j22,j23,j31,j32,j33
       A31=J21*J32-J22*J31
       A32=-J11*J32+J12*J31
       A33=J11*J22-J12*J21
-c      write(75,*) nn,a11,a12,a13,a21,a22,a23,a31,a32,a33
+!      write(75,*) nn,a11,a12,a13,a21,a22,a23,a31,a32,a33
       DETJ=J11*A11+J12*A21+J13*A31
-c      write(75,*) nn,i,detj
+!      write(75,*) nn,i,detj
       DO 135 J = 1, NCN
       XN(J) = XNX(J,I)
       DNX(J)=(A11*DA(J,I)+A12*DB(J,I)+A13*DC(J,I))/DETJ
       DNY(J)=(A21*DA(J,I)+A22*DB(J,I)+A23*DC(J,I))/DETJ
       DNZ(J)=(A31*DA(J,I)+A32*DB(J,I)+A33*DC(J,I))/DETJ
   135 CONTINUE
-C-
-C-     REPEAT FOR LINEAR FUNCTION
-C-
+!-
+!-     REPEAT FOR LINEAR FUNCTION
+!-
       DO 145 J=1,NCN
         XM(J)=0.
         DMX(J)=0.
         DMY(J)=0.
         DMZ(J)=0.
   145 CONTINUE
-C-
+!-
       DO 160 J=1,NCN
         IF(IL(J,ILK) /= 0) THEN
           ML=IL(J,ILK)
@@ -155,33 +155,33 @@ C-
         DRODXN(K)=0.0
         DRODYN(K)=0.0
         DO 180 M=1,NCN
-ccc        IF(IL(J,ILK) == 0) THEN
+!cc        IF(IL(J,ILK) == 0) THEN
           IF(IL(M,ILK) == 0) THEN
             MR=NOP(NN,M)
             DRODXN(K)=DRODXN(K)+DMX(M)*DEN(MR)
             DRODYN(K)=DRODYN(K)+DMY(M)*DEN(MR)
           ENDIF
-c            DRODXN(K)=DRODXN(K)+DNX(M)*DEN(MR)
-c            DRODYN(K)=DRODYN(K)+DNY(M)*DEN(MR)
+!            DRODXN(K)=DRODXN(K)+DNX(M)*DEN(MR)
+!            DRODYN(K)=DRODYN(K)+DNY(M)*DEN(MR)
   180   CONTINUE
-c        write(76,*) 'drodxn',NN,k,drodxn(k),drodyn(k)
+!        write(76,*) 'drodxn',NN,k,drodxn(k),drodyn(k)
   200 CONTINUE
-C
-C
-C
-C  Calculate DRODXN, DRODYN for Surface nodes
-C
+!
+!
+!
+!  Calculate DRODXN, DRODYN for Surface nodes
+!
       IF (NN <= NEM)  THEN
-C
+!
         DO 1200 II=1,4
           I=ITOP(II,ITYP)
           IF(I == 0) GO TO 1200
-c      write(75,*) 'da',(da(k,i),k=1,20)
-c      write(75,*) 'db',(db(k,i),k=1,20)
-c      write(75,*) 'dc',(dc(k,i),k=1,20)
-C-
-C-.....FORM THE JACOBIAN.....
-C-
+!      write(75,*) 'da',(da(k,i),k=1,20)
+!      write(75,*) 'db',(db(k,i),k=1,20)
+!      write(75,*) 'dc',(dc(k,i),k=1,20)
+!-
+!-.....FORM THE JACOBIAN.....
+!-
         J11 = 0.0
         J12 = 0.0
         J13=0.
@@ -202,7 +202,7 @@ C-
           J32=J32+DC(K,I)*YL(K)
           J33=J33+DC(K,I)*ZL(K)
  1130   CONTINUE
-c      write(75,*) j11,j12,j13,j21,j22,j23,j31,j32,j33
+!      write(75,*) j11,j12,j13,j21,j22,j23,j31,j32,j33
         A11= J22*J33-J23*J32
         A12=-J12*J33+J13*J32
         A13=J12*J23-J13*J22
@@ -212,25 +212,25 @@ c      write(75,*) j11,j12,j13,j21,j22,j23,j31,j32,j33
         A31=J21*J32-J22*J31
         A32=-J11*J32+J12*J31
         A33=J11*J22-J12*J21
-c      write(75,*) nn,a11,a12,a13,a21,a22,a23,a31,a32,a33
+!      write(75,*) nn,a11,a12,a13,a21,a22,a23,a31,a32,a33
         DETJ=J11*A11+J12*A21+J13*A31
-c      write(75,*) nn,i,detj
+!      write(75,*) nn,i,detj
         DO 1135 J = 1, NCN
           XN(J) = XNX(J,I)
           DNX(J)=(A11*DA(J,I)+A12*DB(J,I)+A13*DC(J,I))/DETJ
           DNY(J)=(A21*DA(J,I)+A22*DB(J,I)+A23*DC(J,I))/DETJ
           DNZ(J)=(A31*DA(J,I)+A32*DB(J,I)+A33*DC(J,I))/DETJ
  1135   CONTINUE
-C-
-C-     REPEAT FOR LINEAR FUNCTION
-C-
+!-
+!-     REPEAT FOR LINEAR FUNCTION
+!-
         DO 1145 J=1,NCN
           XM(J)=0.
           DMX(J)=0.
           DMY(J)=0.
           DMZ(J)=0.
  1145   CONTINUE
-C-
+!-
         DO 1160 J=1,NCN
           IF(IL(J,ILK) /= 0) THEN
             ML=IL(J,ILK)
@@ -254,24 +254,24 @@ C-
         DRODXN(K)=0.0
         DRODYN(K)=0.0
         DO 1180 M=1,NCN
-ccc        IF(IL(J,ILK) == 0) THEN
+!cc        IF(IL(J,ILK) == 0) THEN
           IF(IL(M,ILK) == 0) THEN
             MR=NOP(NN,M)
             DRODXN(K)=DRODXN(K)+DMX(M)*DEN(MR)
             DRODYN(K)=DRODYN(K)+DMY(M)*DEN(MR)
           ENDIF
-c            DRODXN(K)=DRODXN(K)+DNX(M)*DEN(MR)
-c            DRODYN(K)=DRODYN(K)+DNY(M)*DEN(MR)
+!            DRODXN(K)=DRODXN(K)+DNX(M)*DEN(MR)
+!            DRODYN(K)=DRODYN(K)+DNY(M)*DEN(MR)
  1180   CONTINUE
-c        write(76,*) 'drodxn',NN,k,drodxn(k),drodyn(k)
-C
+!        write(76,*) 'drodxn',NN,k,drodxn(k),drodyn(k)
+!
  1200   CONTINUE
-C
+!
       ENDIF
-C
-C
-C ..... INTEGRATE VERTICALLY TO FORM NODAL INT OF DRODX
-C
+!
+!
+! ..... INTEGRATE VERTICALLY TO FORM NODAL INT OF DRODX
+!
       DO 300 II=1,4
         I=IPNT(II,ITYP)
         IF(I == 0) GO TO 300
@@ -281,19 +281,19 @@ C
           DROXIN(NTOP)=0.
           DROYIN(NTOP)=0.
         ENDIF
-C
-C     INTEGRATE FOR NODAL VALUE
-C
+!
+!     INTEGRATE FOR NODAL VALUE
+!
         SCL= VEL(3,NOP(NN,I))/(ELEV-AO(NOP(NN,I)))*(ZL(ITP)-ZL(I))
-        DROXIN(NOP(NN,I))=DROXIN(NTOP)+
-     +   (DRODXN(NOP(NN,I))+DRODXN(NTOP))/2.*SCL
-        DROYIN(NOP(NN,I))=DROYIN(NTOP)+
-     +   (DRODYN(NOP(NN,I))+DRODYN(NTOP))/2.*SCL
-c        WRITE(75,*) 'droxin',NN,NOP(NN,I),DROXIN(NOP(NN,I)),
-c     +             DROYIN(NOP(NN,I))
+        DROXIN(NOP(NN,I))=DROXIN(NTOP)+                                 &
+     &   (DRODXN(NOP(NN,I))+DRODXN(NTOP))/2.*SCL
+        DROYIN(NOP(NN,I))=DROYIN(NTOP)+                                 &
+     &   (DRODYN(NOP(NN,I))+DRODYN(NTOP))/2.*SCL
+!        WRITE(75,*) 'droxin',NN,NOP(NN,I),DROXIN(NOP(NN,I)),
+!     +             DROYIN(NOP(NN,I))
   300 CONTINUE
       NCNO=NCN
-cipk nov96 add loop to store corner node values
+!ipk nov96 add loop to store corner node values
       DO II=1,8
         JJ=INSEQ(II,ILK)
         IF(JJ > 0) THEN
@@ -301,6 +301,6 @@ cipk nov96 add loop to store corner node values
           DROYINS(NN,II)=DROYIN(NOP(NN,JJ))
         ENDIF
       ENDDO
-cipk nov96 end changes
+!ipk nov96 end changes
       RETURN
       END

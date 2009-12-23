@@ -40,27 +40,27 @@ AddNodeWSLL: DO k = 1, lmt (CCL)
     CYCLE AddNodeWSLL
 
   ELSE
-    !Initialize temporary flow depth for node k
+!Initialize temporary flow depth for node k    
     fliesstiefe = 0.0
 
-    !Get node k
+!Get node k    
     na = line (CCL, k)
 
-    !Test whether node exists, if so get the flow depth
+!Test whether node exists, if so get the flow depth    
     IF (na > 0) fliesstiefe = vel (3, na)
 
 
     IF (fliesstiefe <= 0.001) THEN
-      !nis,sep06,com: Decrease the number of wetted nodes (lump) and overgive estimated 0.0 depth to the temporary depth d3
+!nis,sep06,com: Decrease the number of wetted nodes (lump) and overgive estimated 0.0 depth to the temporary depth d3      
       lump = lump - 1
       d3 = 0.0
 
-    !nis,sep06,com: If flow depth is not small
+!nis,sep06,com: If flow depth is not small    
     ELSE
       IF (idnopt == 0) THEN
-        !nis,sep06,com: Very small flow depth
+!nis,sep06,com: Very small flow depth        
         d3 = ao(na) + vel(3,na)
-        !nis,sep06,com: Summed waterlevel elevation over all not drown nodes
+!nis,sep06,com: Summed waterlevel elevation over all not drown nodes        
         waspi = waspi + d3
       ELSE
         CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na), amec (k), d2, 0)

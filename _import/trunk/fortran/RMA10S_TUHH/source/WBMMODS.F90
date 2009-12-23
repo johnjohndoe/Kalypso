@@ -58,15 +58,24 @@ IMPLICIT NONE
 !     VARIABLE DECLARATIONS - INPUTS
 !
 !*************************************************************************************************
-real(8), INTENT(INOUT), ALLOCATABLE   ::  wbm_MANNTRANS(:)   !Nodal Roughnesses
-real(8), INTENT(INOUT), ALLOCATABLE   ::  TMANN(:)           !Elemental Roughnesses
-integer (kind = 4), INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           !Element Nodal Connections
-integer, INTENT(IN)                ::  NE                 !Number of Elements
-integer, INTENT(IN)                ::  TSNO               !Time Step Number
-integer, INTENT(IN)                ::  ITNNO              !Iteration Number
-integer, INTENT(INOUT)             ::  wbm_IT             !Number of Elements
-integer, INTENT(IN)                ::  IT                 !CurrentIteration
-integer, INTENT(IN)                ::  NNOD               !NumberofNodes
+!Nodal Roughnesses
+real(8), INTENT(INOUT), ALLOCATABLE   ::  wbm_MANNTRANS(:)   
+!Elemental Roughnesses
+real(8), INTENT(INOUT), ALLOCATABLE   ::  TMANN(:)           
+!Element Nodal Connections
+integer (kind = 4), INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           
+!Number of Elements
+integer, INTENT(IN)                ::  NE                 
+!Time Step Number
+integer, INTENT(IN)                ::  TSNO               
+!Iteration Number
+integer, INTENT(IN)                ::  ITNNO              
+!Number of Elements
+integer, INTENT(INOUT)             ::  wbm_IT             
+!CurrentIteration
+integer, INTENT(IN)                ::  IT                 
+!NumberofNodes
+integer, INTENT(IN)                ::  NNOD               
 !*************************************************************************************************
 !
 !     VARIABLE DECLARATIONS - INTERIM
@@ -147,22 +156,22 @@ DO I = 1,NE
   IF (Divider /= 0) Then
     TMANN(I) = TMANN(I)/Divider
   END IF
-  !
-  !  Checks for remaining Zero Values and resets them to previous value 
-  !
+!  
+!  Checks for remaining Zero Values and resets them to previous value   
+!  
   IF (TMANN(I) == 0.0) TMANN(I) = TMANNB(I)
-  !
-  !  Check to Ensure Mannings Value is Not too small or too big
-  !
+!  
+!  Check to Ensure Mannings Value is Not too small or too big  
+!  
   IF (TMANN(I) > 0.036) TMANN(I) = 0.036
   IF (TMANN(I) < 0.015) TMANN(I) = 0.015
-  !
-  !  Check to Ensure Mannings Value has not changed too significantly this time step
-  !
+!  
+!  Check to Ensure Mannings Value has not changed too significantly this time step  
+!  
   
-  !?
-  !?  Needs to be done on a step by step basis, not on an iteration basis : complete later if required
-  !?
+!?  
+!?  Needs to be done on a step by step basis, not on an iteration basis : complete later if required  
+!?  
 
 END DO
 !*************************************************************************************************
@@ -179,31 +188,31 @@ END DO
    Check = 0
 
       IF (ABS(CHECK) < 0.0001) THEN
-        !
-     !  Works Out if TS File is Connected To
-     !
+!        
+!  Works Out if TS File is Connected To     
+!     
      INQUIRE (FILE='RoughTS.txt', OPENED=mylog)
-     !
-     ! Opens TS file if it doesn't exist
-     !
+!     
+! Opens TS file if it doesn't exist     
+!     
      If ( .NOT. mylog) Then
        INQUIRE (FILE='RoughTS.txt', EXIST=EXT)
        If ( .NOT. EXT) THEN
          OPEN(8867,FILE='RoughTS.txt')    
        End If
      End If
-     !
-     !  Time series output for given Locations : Based on the Murray Model  
-     !
+!     
+!  Time series output for given Locations : Based on the Murray Model       
+!     
 !     IF (I == 1512) Then
      WRITE(8867,*) wbm_IT,TSNO,ITNNO, "GoolwaChannel",TMANN(430)
      WRITE(8867,*) wbm_IT,TSNO,ITNNO, "EntranceThroat",TMANN(1701)
      WRITE(8867,*) wbm_IT,TSNO,ITNNO, "TauwitchereChannel(DS)",TMANN(1007)
      WRITE(8867,*) wbm_IT,TSNO,ITNNO, "TauwitchereChannel(US)",TMANN(1436)
 !     End If
-     !
-     !
-     !
+!     
+!     
+!     
 !     Write(Filename,'(I5,a10)')wbm_IT,"roughs.txt"
 !        OPEN(8866,FILE=Filename)
 !        DO I= 1, UPPERBOUND
@@ -215,7 +224,8 @@ END DO
 !*************************************************************************************************
 DO I = 1, NNOD
   IF (wbm_MANNTRANS(I) /= 0.0) THEN
-    wbm_MANNTRANSOLD(I) = wbm_MANNTRANS(I)  ! keeps a value ofzero if the mannings hasn't been changed
+! keeps a value ofzero if the mannings hasn't been changed
+    wbm_MANNTRANSOLD(I) = wbm_MANNTRANS(I)  
     IF (wbm_MANNTRANSOLD(I) > 0.036) wbm_MANNTRANSOLD(I) = 0.036
     IF (wbm_MANNTRANSOLD(I) < 0.015) wbm_MANNTRANSOLD(I) = 0.015
   END IF
@@ -250,28 +260,45 @@ IMPLICIT NONE
 !     VARIABLE DECLARATIONS - INPUTS
 !
 !*************************************************************************************************
-real(8), INTENT(IN)                   ::  TAUCR          ! Critical Bed Shear Stress
-real(8), INTENT(IN)                   ::  hd             ! Depth
-real(8), INTENT(IN)                   ::  d90mm          ! 90 percentile Grain Size
-real(8), INTENT(IN)                   ::  d50mm          ! Median Grain Size
-real(8), INTENT(IN)                   ::  ugv            ! Median Grain Size
-INTEGER, INTENT(IN)                   ::  NodeNo         ! Current Node for which roughness is being calculated
-real(8), INTENT(INOUT)                ::  NodeRough      !Nodal Roughnesses
-real(8), INTENT(INOUT)                ::  KSC            ! Ripple Height
+! Critical Bed Shear Stress
+real(8), INTENT(IN)                   ::  TAUCR          
+! Depth
+real(8), INTENT(IN)                   ::  hd             
+! 90 percentile Grain Size
+real(8), INTENT(IN)                   ::  d90mm          
+! Median Grain Size
+real(8), INTENT(IN)                   ::  d50mm          
+! Median Grain Size
+real(8), INTENT(IN)                   ::  ugv            
+! Current Node for which roughness is being calculated
+INTEGER, INTENT(IN)                   ::  NodeNo         
+!Nodal Roughnesses
+real(8), INTENT(INOUT)                ::  NodeRough      
+! Ripple Height
+real(8), INTENT(INOUT)                ::  KSC            
 !*************************************************************************************************
 !
 !     VARIABLE DECLARATIONS - INTERIM
 !
 !*************************************************************************************************
-real(8)                               ::  TAUGR          ! Grain Related Shear Stress?
-real(8)                               ::  CHEZYGR        ! Grain Related Chezy Constant
-real(8)                               ::  T              ! Bed Shear Stress Parameter
-real(8)                               ::  DD             ! Dune Height
-real(8)                               ::  RD             ! Ripple Height
-real(8)                               ::  CC             ! Chezy Coefficient
-real(8)                               ::  LMANN          ! Local Mannings Coefficient
-real (KIND = 8)                               ::  D90M           ! D90 in m
-real(8)                               ::  D50M           ! D50 in m
+! Grain Related Shear Stress?
+real(8)                               ::  TAUGR          
+! Grain Related Chezy Constant
+real(8)                               ::  CHEZYGR        
+! Bed Shear Stress Parameter
+real(8)                               ::  T              
+! Dune Height
+real(8)                               ::  DD             
+! Ripple Height
+real(8)                               ::  RD             
+! Chezy Coefficient
+real(8)                               ::  CC             
+! Local Mannings Coefficient
+real(8)                               ::  LMANN          
+! D90 in m
+real (KIND = 8)                               ::  D90M           
+! D50 in m
+real(8)                               ::  D50M           
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -304,8 +331,9 @@ IF (T > 0.01) THEN
    LMANN = (hd**(0.16666666667))/CC
    NodeRough=LMANN
 ELSE 
-   NodeRough=0                   ! A Value of Zero later on is used as a flag to indicate that 
-                                  ! No Change should be made in subroutine new Rough
+! A Value of Zero later on is used as a flag to indicate that 
+   NodeRough=0                   
+! No Change should be made in subroutine new Rough                                  
 END IF
 !*************************************************************************************************
 !
@@ -433,9 +461,9 @@ reading: Do
      Do i = 1, 8
        EndPos = INDEX(Line,',')-1
        LineParts(i) = Line(StartPos:EndPos)
-       !
-       !  Trims Line Down
-       !
+!       
+!  Trims Line Down       
+!       
        Line = Line(EndPos+2:500)
      End Do
      LineParts(i-1) = Line
@@ -543,16 +571,17 @@ reading: Do
      Do i = 1, 6
        EndPos = INDEX(Line,',')-1
        LineParts(i) = Line(StartPos:EndPos)
-       !
-       !  Trims Line Down
-       !
+!       
+!  Trims Line Down       
+!       
        Line = Line(EndPos+2:500)
      End Do
      LineParts(i-1) = Line
      Read(LineParts(2),*) CurrentNode
      Read(LineParts(5),*) CurrentBedLevel
      Read(LineParts(6),*) wbm_ScourLims(CurrentNode)
-     wbm_ScourLims(CurrentNode)  = CurrentBedLevel - wbm_ScourLims(CurrentNode) ! converts to an available thickness
+! converts to an available thickness
+     wbm_ScourLims(CurrentNode)  = CurrentBedLevel - wbm_ScourLims(CurrentNode) 
   End If
 !NiS,jun06: Changes for usage with Lahey
 End Do reading

@@ -78,7 +78,7 @@ use blk10mod , only: &
 !id         character variable into which the first 8 digits of any input line from a file are read
 !title      title entry
 !nop        nodes of an element, anticlockwise (corner - midside - sequence)
-            !TODO: Are nops and nop both necessary?
+!TODO: Are nops and nop both necessary?            
 !nops       the same as nop
 !ncorn      number of corner nodes per element
 !imat       material type of an element
@@ -103,7 +103,7 @@ use blk10mod , only: &
 !           4 - salinity
 !           5 - temperature
 !           6 - suspended sediment
-            !TODO: what is vel(7,x)
+!TODO: what is vel(7,x)            
 !           7 - ??? perhaps water column potential by element
 
 use blkdrmod, only: imato, ndry
@@ -154,7 +154,7 @@ use parakalyps , only: &
 !isnodeofelement  stores all element IDs, where a node is inside; restriction is that nodes are having maximum 12 elements, where they are part of
 !name_cwr         name string of the cwr-data input file, if restarting
 !mcord            centre coordinates of an element
-                  !TODO: Probably not needed this way any longer
+!TODO: Probably not needed this way any longer                  
 !rausv            is the water surface elevation at startup
 !
 
@@ -250,7 +250,7 @@ integer (kind = 4)                              :: CCLID
 type (simulationModel), pointer :: m_SimModel
 !meaning of the variables
 !------------------------
-                        !TODO: geometry and restart file become one
+!TODO: geometry and restart file become one                        
 !unit_nr                unit number to read from; it can be either the geometry or the restart file
 !istat                  i/o status specifier
 !linestat               i/o status specifier
@@ -326,11 +326,16 @@ sumx = 0.0d0
 sumy = 0.0d0
   
 
-if (kswit == 1) then        !in the first case the value maxa has to be found, the allocation of
-  maxa = 0                  !arc(i,j) is not necessary for the first run, so that it is allocated
-  maxe = 0                  !efa nov06
-endif                     !nis,mar06
-allocate (localArc (maxa, 5))   !just pro forma, it is deallocated at the end of this run.
+!in the first case the value maxa has to be found, the allocation of
+if (kswit == 1) then        
+!arc(i,j) is not necessary for the first run, so that it is allocated
+  maxa = 0                  
+!efa nov06
+  maxe = 0                  
+!nis,mar06
+endif                     
+!just pro forma, it is deallocated at the end of this run.
+allocate (localArc (maxa, 5))   
 
 arcs_without_midside = 0
 midsidenode_max = 0
@@ -382,7 +387,7 @@ IF (KSWIT == 0) THEN
       localArc (i, j) = 0
     ENDDO inner1
   ENDDO outer1
-  !NiS,mar06: variable name changed; changed mel to MaxE
+!NiS,mar06: variable name changed; changed mel to MaxE  
   outer2: DO i = 1, MaxE
     DO j = 1, 6
       elem (i, j) = 0
@@ -406,73 +411,73 @@ if (kswit == 2) unit_nr = nb
 !-----------------------------------------------------------
 reading: do
 
-  !read next line from model/restart file
+!read next line from model/restart file  
   read (unit_nr, '(a)', iostat = istat) linie
 
-  !exit loop, if reaching end of file condition
+!exit loop, if reaching end of file condition  
   if (istat == -1) exit reading
 
-  !ERROR - reading error
+!ERROR - reading error  
   if (istat /= 0) call errormessageandstop (1001, unit_nr, 0.0d0, 0.0d0)
 
-  !title informations
-  !------------------
+!title informations  
+!------------------  
   if (linie (1:2) == '00') then
     read (linie, '(a2,a80)') id_local, title 
   endif
 
-  !reading the mesh dimension or the mesh itself
-  !---------------------------------------------
+!reading the mesh dimension or the mesh itself  
+!---------------------------------------------  
   kswittest: if (kswit == 0 .OR. kswit == 1) then
 
-    !NODE DEFINITIONS ---
+!NODE DEFINITIONS ---    
     IF (linie (1:2) =='FP') THEN
-      !mesh dimension
+!mesh dimension      
       IF (KSWIT == 1) then
         read (linie, '(a2,i10)') id_local, i
         nodecnt = max (i, nodecnt)
-      !mesh geometry read
+!mesh geometry read      
       ELSE
         istat=0
-        !TODO: Format differentiation
+!TODO: Format differentiation        
         READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
-        !check for kilometer
+!check for kilometer        
         if (istat == 0) WRITE (lout, *) 'Die Kilometrierung von Knoten', i, 'wurde eingelesen:', kmx (i)
         nodecnt = max (i, nodecnt)
-        !add new node to model
+!add new node to model        
         newFENode => newNode (i, cord (i,1), cord (i,2), ao(i))
         call addNodeToMesh (m_SimModel.FEmesh, newFENode)
 
         IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0d0, 0.0d0)
       ENDIF
 
-    !ARC DEFINITIONS ---
+!ARC DEFINITIONS ---    
     ELSEIF (linie (1:2) =='AR') then
-      !Find out maximum ARC number
+!Find out maximum ARC number      
       IF (KSWIT == 1) then
-        !NiS,mar06: changed id to id_local; global conflict
+!NiS,mar06: changed id to id_local; global conflict        
         READ (linie, '(a2,6i10)') id_local,i, (temparc(j),j=1,5)
         IF (i  > arccnt) arccnt = i
-        !Remember, whether ARC has no midside node
+!Remember, whether ARC has no midside node        
         IF (temparc(5) == 0) then
           arcs_without_midside = arcs_without_midside + 1
-        !Remember the maximum midside ID-number, if midside is defined
+!Remember the maximum midside ID-number, if midside is defined        
         ELSEIF (temparc(5) > 0) then
           midsidenode_max = MAX (midsidenode_max,temparc(5))
         else
-          !ERROR
+!ERROR          
           call ErrorMessageAndStop (1101, temparc(5), cord(temparc(1), 1), cord(temparc(1), 2))
         ENDIF
-      !Read ARC geometry informations
+!Read ARC geometry informations      
       ELSE
         READ (linie,'(a2,6i10)') id_local, i, (localArc(i,j), j=1, 5)
-        !Look for errors in enumeration
+!Look for errors in enumeration        
         IF (i > arccnt) arccnt = i
-        !ERROR - negative arc number
+!ERROR - negative arc number        
         IF (i <= 0) call ErrorMessageAndStop (1301, i, 0.0d0, 0.0d0)
       ENDIF
 
-    !INTERPOLATION PROFILE informations
+!INTERPOLATION PROFILE informations    
     ELSEIF (linie(1:2) == 'IP') THEN
       IF (kswit == 1) THEN
         READ (linie, '(a2, i10, i10)') id_local, i, j
@@ -482,11 +487,11 @@ reading: do
         READ (linie, '(a2, i10, i10)') id_local, i, IntPolNo(i)
       ENDIF
 
-    !POLYNOMIAL RANGE CROSS SECTIONAL AREA
-    !id_local  = 'PR'
-    !       i  = node-ID
-    !       j  = number of polynom splitting parts
-    !polyrange = maximum values
+!POLYNOMIAL RANGE CROSS SECTIONAL AREA    
+!id_local  = 'PR'    
+!       i  = node-ID    
+!       j  = number of polynom splitting parts    
+!polyrange = maximum values    
     elseif (linie(1:3) == 'PRA') then
       IF (KSWIT == 1) then
         linestat = 0
@@ -499,7 +504,7 @@ reading: do
         hhmax(i) = min (hhmax(i), polyrangeA (i, polySplitsA(i)))
       endif
 
-    !POLYNOMIAL RANGE Q (SCHLUESSELKURVE)
+!POLYNOMIAL RANGE Q (SCHLUESSELKURVE)    
     ELSEIF (linie(1:3) == 'PRQ') then
       IF (KSWIT == 1) then
         linestat = 0
@@ -512,14 +517,14 @@ reading: do
         hhmax(i) = min (hhmax (i), polyrangeQ (i, polySplitsQ(i)))
       endif
 
-    !POLYNOMIAL RANGE BOUSSINESQ COEFFICIENT
+!POLYNOMIAL RANGE BOUSSINESQ COEFFICIENT    
     ELSEIF (linie(1:3) == 'PRB') then
       IF (KSWIT == 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j
         if (PolySplitCountB < j) PolySplitCountB = j
       else
-        !nis,aug08: Just read polynomial range of Boussinesq-polynomial, if it's used.
+!nis,aug08: Just read polynomial range of Boussinesq-polynomial, if it's used.        
         if (beient /= 0 .AND. beient /= 3) then
           linestat = 0
           read (linie, *, iostat = linestat) id_local, i, polySplitsB(i), hhmin_loc, (polyrangeB(i, k), k=1, polySplitsB(i))
@@ -529,10 +534,10 @@ reading: do
         endif
       endif
 
-    !nis,nov07: new range line ID (polynom range PR)
-    !id_local  = 'AP '
-    !       i  = node-ID
-    !       j  = number of polynom splitting parts
+!nis,nov07: new range line ID (polynom range PR)    
+!id_local  = 'AP '    
+!       i  = node-ID    
+!       j  = number of polynom splitting parts    
     ELSEIF (linie(1:3) == 'AP ') then
       IF (KSWIT /= 1) then
         linestat = 0
@@ -542,7 +547,7 @@ reading: do
       IF (KSWIT /= 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j, qgef(i), (qpoly(j, i, k), k = 0, 4)
-        !remember, that the node is a 1D polynomial approach node
+!remember, that the node is a 1D polynomial approach node        
         if ( .NOT. IsPolynomNode (i)) IsPolynomNode (i) = .true.
       endif
     ELSEIF (linie(1:3) == 'ALP') then
@@ -560,22 +565,22 @@ reading: do
         endif
       endif
 
-    !FINITE ELEMENT DEFINITIONS ---
+!FINITE ELEMENT DEFINITIONS ---    
     ELSEIF (linie (1:2) =='FE') then
-      !NiS,mar06: Find out maximum ELEMENT number
+!NiS,mar06: Find out maximum ELEMENT number      
       IF (KSWIT == 1) THEN
         READ (linie, '(a2,i10)') id_local, i
         IF (i > elcnt) elcnt = i
-      !Read geometry into arrays
+!Read geometry into arrays      
       ELSE
-        !NiS,mar06: changed id to id_local; global conflict
+!NiS,mar06: changed id to id_local; global conflict        
         READ (linie, '(a2,4i10)') id_local, i, imat (i), imato (i), nfixh (i)
 
-        !LF,nov06: Read again the FE line for the starting node of a weir element
+!LF,nov06: Read again the FE line for the starting node of a weir element        
         if (imat(i) > 903 .AND. imat(i) < 990) then
           weircnt = weircnt + 1
           read (linie, '(a2,5i10)') id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
-          !ERROR - no starting node for weir element definition was found
+!ERROR - no starting node for weir element definition was found          
           if (reweir (weircnt, 1) <= 0) call ErrorMessageAndStop (1003, i, 0.0d0, 0.0d0)
           reweir (weircnt, 2) = i
         end if
@@ -583,52 +588,52 @@ reading: do
         IF (i <= 0) call ErrorMessageAndStop (1004, i, 0.0d0, 0.0d0)
       ENDIF
 
-    !1D JUNCTION ELEMENT DEFINITIONS ---
+!1D JUNCTION ELEMENT DEFINITIONS ---    
     ELSEIF (linie (1:2) =='JE') then
-      !NiS,mar06: Find out maximum ELEMENT number
+!NiS,mar06: Find out maximum ELEMENT number      
       IF (KSWIT == 1) THEN
         READ (linie, '(a2,i10)') id_local,i
         elcnt = max (i, elcnt)
       ELSE
-        !NiS,mar06: changed id to id_local; global conflict
+!NiS,mar06: changed id to id_local; global conflict        
         READ (linie, '(a2,9i10)') id_local, i, (nop(i, j), j=1, 8)
         elcnt = max (i, elcnt)
         IF (i <= 0) call ErrorMessageAndStop (1005, i, 0.0d0, 0.0d0)
       ENDIF
 
-    !ROUGHNESS CORRECTION LAYER ---
+!ROUGHNESS CORRECTION LAYER ---    
     ELSEIF (linie (1:2) == 'RC') then
       if (KSWIT == 1) CYCLE reading
       read (linie, '(a2, i10, 3(f10.6))') id_local, i, correctionKS(i), correctionAxAy(i), correctionDp(i)
 
-    !NiS,may06: cross section reading for 1D-ELEMENTS
-    !CROSS SECTIONAL INFORMATIONS FOR 1D-NODES ---
+!NiS,may06: cross section reading for 1D-ELEMENTS    
+!CROSS SECTIONAL INFORMATIONS FOR 1D-NODES ---    
     ELSEIF (linie (1:2) =='CS') THEN
-      !Only interesting for geometry reading run
+!Only interesting for geometry reading run      
       IF (KSWIT==1) CYCLE reading
-      !read informations into proper arrays
+!read informations into proper arrays      
       READ (linie, '(a2,i10,6F10.0)') id_local, i, width(i), ss1(i), ss2(i), wids(i), widbs(i), wss(i)
-    !-
+!-    
 
-    !NiS,may06: Transition elements between 1D- and 2D- network parts
-    !1D-2D-TRANSITION ELEMENTS ---
+!NiS,may06: Transition elements between 1D- and 2D- network parts    
+!1D-2D-TRANSITION ELEMENTS ---    
     ELSEIF (linie (1:2) =='TE') THEN
       IF (KSWIT==1) THEN
         READ (linie, '(a2,i10)') id_local, i
         elcnt = max (i, elcnt)
       ELSE
         READ (linie, *) id_local, i, (nop(i,k),k=1,5)
-        !Increase number of 1D-2D-TRANSITION ELEMENTS
+!Increase number of 1D-2D-TRANSITION ELEMENTS        
         MaxT = MaxT + 1
       END IF
-    !-
+!-    
 
-    !TRANSITION LINE ---
-    !NiS,nov06: Transition line elements between 1D- and 2D-networks with an element to line connection
-    !           TransLines(i,1): transitioning element
-    !           TransLines(i,2): transitioning line
-    !           TransLines(i,3): node, which is connected on the 1D side of the transition element
-    !           TransLines(i,4):
+!TRANSITION LINE ---    
+!NiS,nov06: Transition line elements between 1D- and 2D-networks with an element to line connection    
+!           TransLines(i,1): transitioning element    
+!           TransLines(i,2): transitioning line    
+!           TransLines(i,3): node, which is connected on the 1D side of the transition element    
+!           TransLines(i,4):    
     ELSEIF (linie(1:2)=='TL') then
       IF (KSWIT==1) THEN
         READ (linie,'(a2,i10)') id_local, i
@@ -636,7 +641,7 @@ reading: do
       ELSE
         WRITE(*,*) MaxLT
         READ (linie, '(a2,5i10)') id_local, i, (TransLines (i, k), k = 1, 4)
-        !Apply default TransLines (i)
+!Apply default TransLines (i)        
         if (istat /= 0 .AND. TransLines(i, 4) == 0 &
         &  .OR. &
         &   (TransLines (i, 4) /= 1 .AND. TransLines (i, 4) /= 2 .AND. TransLines (i, 4) /= 3) ) then
@@ -645,7 +650,7 @@ reading: do
         TransitionElement (TransLines(i, 1)) = .true.
       END IF
     
-    !PIPE SURFACE CONNECTION (PIPE)
+!PIPE SURFACE CONNECTION (PIPE)    
     ELSEIF (linie(1:2) == 'PS') then
       if (kswit == 1) then
         read (linie, '(a2,i10)') id_local, i
@@ -657,12 +662,12 @@ reading: do
         ConnectedElt (PipeSurfConn(i).pipeElt) = PipeSurfConn(i)%SurfElt
       endif
       
-    !PIPE SURFACE CONNECTION GEOMETRY
+!PIPE SURFACE CONNECTION GEOMETRY    
     elseif (linie(1:4) == 'PP_G') then
       if (kswit /= 1) then
         read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.ks, PipeSurfConn(i).manholeDef.diameter
       endif
-    !PIPE SURFACE CONNECTION LOSS COEFFICIENTS
+!PIPE SURFACE CONNECTION LOSS COEFFICIENTS    
     elseif (linie(1:4) == 'PP_L') then
       if (kswit /= 1) then
         read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.zetaInflowUpper, PipeSurfConn(i).manholeDef.zetaOutflowUpper,&
@@ -673,7 +678,7 @@ reading: do
         read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.mue
       endif
     
-    !STORAGE ELEMENT
+!STORAGE ELEMENT    
     elseif (linie(1:2) == 'SE') then
       if (kswit == 1) then
         read (linie, *) id_local, i
@@ -691,103 +696,106 @@ reading: do
 
 ! RESTART INFORMATIONS ----------------------------------------------
 
-    !INITIAL CWR-VALUES ---
+!INITIAL CWR-VALUES ---    
     IF (linie (1:2) == 'CW') THEN
       READ (linie, '(a2,1x,a32)') id_local, name_cwr
     ENDIF
 
-    !DATE INFORMATIONS IN RMA10S FORMAT ---
+!DATE INFORMATIONS IN RMA10S FORMAT ---    
     IF (linie (1:2) == 'DA') THEN
       READ (linie, '(a2,i10,f20.7)') id_local, iyrr, tett
     ENDIF
 
-    !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
+!INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---    
     IF (linie (1:2) =='VA') then
       READ(linie,'(a2,1x,i9,2f20.14,2f20.13)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
-      !ERROR - restart values can't be applied to node out of zero-maxp-Range
-      !nis,aug08: If node number is zero, it has no coordinates; use dummy coordinates 0.0
+!ERROR - restart values can't be applied to node out of zero-maxp-Range      
+!nis,aug08: If node number is zero, it has no coordinates; use dummy coordinates 0.0      
       IF (i > MaxP .OR. i <= 0) call ErrorMessageAndStop (1601, i, 0.0d0, 0.0d0)
     ENDIF
 
-    !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP; ONLY FOR INTERPOLATED PROFILES/ NODES ---
+!INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP; ONLY FOR INTERPOLATED PROFILES/ NODES ---    
     IF (linie (1:2) =='IR') then
       READ(linie,'(a2, i10, 4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
-      !ERROR - restart values can't be applied to node out of zero-maxp-Range
+!ERROR - restart values can't be applied to node out of zero-maxp-Range      
       IF (i > MaxP .OR. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
-      !ERROR - TRYING TO APPLY RESULT OF INTERPOLATED PROFILE/ NODE TO A REAL NODE
+!ERROR - TRYING TO APPLY RESULT OF INTERPOLATED PROFILE/ NODE TO A REAL NODE      
       if ( .NOT. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
     ENDIF
 
-    !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
-    !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
+!NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S    
+!INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---    
     IF (linie(1:2) == 'DF') THEN
       READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
-      !ERROR - restart values can't be applied to node out of zero-maxp-Range
+!ERROR - restart values can't be applied to node out of zero-maxp-Range      
       IF (i > MaxP .OR. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     END IF
 
-    !MD: read flow resistance for Sediment-Transport
+!MD: read flow resistance for Sediment-Transport    
     IF (linie(1:2) == 'FR') THEN
       READ(linie,'(a2,i10,4f15.7)') id_local, i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
-      !MD: read flow resistance results for elements
-      !ERROR - restart values can't be applied to element out of zero-maxe-Range
-      !nis,aug08: Function must be called with the correct number of arguments; use dummy arguments 0.0 as coordinates)
+!MD: read flow resistance results for elements      
+!ERROR - restart values can't be applied to element out of zero-maxe-Range      
+!nis,aug08: Function must be called with the correct number of arguments; use dummy arguments 0.0 as coordinates)      
       IF (i > MaxE .OR. i <= 0) call ErrorMessageAndStop (1603, i, 0.0d0, 0.0d0)
     end if
 
-    !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
+!INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---    
     IF (linie (1:2) == 'GA') then
       READ (linie, '(a2,1x,i9,3f20.7)') id_local, i, (vdot(j,i),j=1,3)
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!NiS,mar06: name of variable changed; changed mnd to MaxP      
+!Stop program execution on nodenumber higher than MaxP; could normally not happen      
       IF (i>MaxP) stop 'i>MaxP'
-      !Stop program execution on negative NODE number
+!Stop program execution on negative NODE number      
       IF (i<=0) stop 'Knotennummer<=0'
     ENDIF
 
-    !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+!VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---    
     IF (linie (1:2) == 'VO') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      READ (linie, '(a2,1x,i9,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!NiS,apr06: variables deactivated for RMA10S      
+!cvvo = 1      
+!vold muss NICHT gelesen werden
+      READ (linie, '(a2,1x,i9,3f20.7)') id, i, (vold (j, i) , j=1,3)             
+!NiS,mar06: name of variable changed; changed mnd to MaxP      
+!Stop program execution on nodenumber higher than MaxP; could normally not happen      
       IF (i > MaxP) stop 'i > MaxP'
-      !Stop program execution on negative NODE number
+!Stop program execution on negative NODE number      
       IF (i <= 0) stop 'Knotennummer <= 0'
     ENDIF
 
-    !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+!GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---    
     IF (linie (1:2) == 'GO') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      READ (linie, '(a2,1x,i9,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!NiS,apr06: variables deactivated for RMA10S      
+!cvvo = 1      
+!vdoto muss NICHT gelesen werden
+      READ (linie, '(a2,1x,i9,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            
+!NiS,mar06: name of variable changed; changed mnd to MaxP      
+!Stop program execution on nodenumber higher than MaxP; could normally not happen      
       IF (i>MaxP) stop 'i>MaxP'
-      !Stop program execution on negative NODE number
+!Stop program execution on negative NODE number      
       IF (i<=0) stop 'Knotennummer<=0'
     ENDIF
 
 !    !ADDITIONAL INFORMATIONS FOR EVERY NODE ---
     IF (linie (1:2) =='ZU') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvzu = 1
-      !NiS,apr06: only hel(i) and hdet(i) have to be read; changing read command
-      !READ (linie, '(a2,i10,i6,4f15.7)') id, i, ndry(i), hel(i), hol(i), hdet(i), hdot(i)
-      !READ(linie,'(a2,i10,6x,2(f15.7,15x))')id_local,i,hel(i),hdet(i)
+!NiS,apr06: variables deactivated for RMA10S      
+!cvzu = 1      
+!NiS,apr06: only hel(i) and hdet(i) have to be read; changing read command      
+!READ (linie, '(a2,i10,i6,4f15.7)') id, i, ndry(i), hel(i), hol(i), hdet(i), hdot(i)      
+!READ(linie,'(a2,i10,6x,2(f15.7,15x))')id_local,i,hel(i),hdet(i)      
       READ (linie, '(a2,i10,i6)') id, i, ndry(i)
 
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!NiS,mar06: name of variable changed; changed mnd to MaxP      
+!Stop program execution on nodenumber higher than MaxP; could normally not happen      
       IF (i>MaxP) stop 'i>MaxP'
-      !Stop program execution on negative NODE number
+!Stop program execution on negative NODE number      
       IF (i<=0) stop 'Knotennummer<=0'
     ENDIF
 
 ! TEST BLOCK FOR ERRORS ------------------------------------------------------------------------
 
-  ELSE !other values of KSWIT will generate an error, this can't happen normally
+!other values of KSWIT will generate an error, this can't happen normally
+  ELSE 
 
     call ErrorMessageAndStop (1006, kswit, 0.0d0, 0.0d0)
 
@@ -801,10 +809,10 @@ WRITE(*,*) ' Schaffe die Leseschleife'
 !NiS,mar06: leave subroutine, if FE-net dimensions are ascertained
 IF (KSWIT == 1) THEN
 
-  !ERROR - midside node ID was defined but it has no coordinates-definition. This is a problem, because the count of the nodes is then wrong
+!ERROR - midside node ID was defined but it has no coordinates-definition. This is a problem, because the count of the nodes is then wrong  
   IF (midsidenode_max > nodecnt) call ErrorMessageAndStop (1108, midsidenode_max, 0.0d0, 0.0d0)
 
-  !INFORMATIONS
+!INFORMATIONS  
   WRITE(*,*) '          In RDKALYPS.Info '
   WRITE(*,*) '          **************** '
   WRITE(*,*) '            number of arcs: ', arccnt
@@ -813,14 +821,16 @@ IF (KSWIT == 1) THEN
   nodecnt = nodecnt + arcs_without_midside
 
   REWIND (IFILE)
-  DEALLOCATE (localArc)                                                 !the pro forma allocation of arc(i,j) is stopped
-  RETURN                                                                  !If the dimension reading option is chosen (that means KSWIT=1), this
-                                                                        !subroutine can be returned at this point.
+!the pro forma allocation of arc(i,j) is stopped
+  DEALLOCATE (localArc)                                                 
+!If the dimension reading option is chosen (that means KSWIT=1), this
+  RETURN                                                                  
+!subroutine can be returned at this point.                                                                        
 
 !ENDBLOCK FOR THE CASE OF RESTART INFORMATION READING (KSWIT==2) ------
 !NiS,apr06: leave subroutine, if restart inforamtions are read
 ELSEIF (KSWIT == 2) THEN
-  !NiS,may06: REWINDING might be needful; at the moment not necessary
+!NiS,may06: REWINDING might be needful; at the moment not necessary  
   REWIND (NB)
   WRITE(*,*)' Leaving the KALYPSO-2D restart file.'
   RETURN
@@ -836,59 +846,59 @@ ENDIF
 !           Changed the if-clauses in the way that, 1D, 1D-2D-transitions and 2D-elements can be recognized
 DO i = 1, arccnt
 
-  !DEAD ARCS
+!DEAD ARCS  
   if (localArc (i, 3) == 0 .AND. localArc (i, 4) == 0) then
     write (lout, 9003) i
     write (*   , 9003) i
     
-  !1D-ELEMENT or 1D-2D-TRANSITION-ELEMENT
+!1D-ELEMENT or 1D-2D-TRANSITION-ELEMENT  
   elseif ((localArc (i, 3) == localArc (i, 4)) .AND. localArc (i, 3) /= 0) then
-    !TODO: these checks are not 100 percent consistent
+!TODO: these checks are not 100 percent consistent    
     j = localArc (i, 3)
     
-    !ERROR, if 1D-node is already in use
+!ERROR, if 1D-node is already in use    
     if (elem (j, 1) /= 0) then
       call errormessageandstop (1302, j, 0.5 * (cord (localArc (i,1), 1) + cord (localArc (i, 2), 1)), &
                                 &          0.5 * (cord (localArc (i,1), 2) + cord (localArc (i, 2), 2)))
 
-    !assign identification for 1D-nodes
-    !  elem (j, 1) == -1) - normal 1D-elements
-    !  elem (j, 1) == -2) - 1D/2D transition elements
-    !remember the arc, that defines the 1D-element for later node extraction
+!assign identification for 1D-nodes    
+!  elem (j, 1) == -1) - normal 1D-elements    
+!  elem (j, 1) == -2) - 1D/2D transition elements    
+!remember the arc, that defines the 1D-element for later node extraction    
     else
-      !no 4th node at normal 1d-elements
+!no 4th node at normal 1d-elements      
       if (nop (j, 4) == 0) then
         elem (j, 1) = -1
-      !4th node at 1d-2d-transition elements; nodes for 1d-2d-transition elements were already assigned in the reading section
+!4th node at 1d-2d-transition elements; nodes for 1d-2d-transition elements were already assigned in the reading section      
       else
         elem (j, 1) = -2
       endif
-      !remember the arc of the 1d-element
+!remember the arc of the 1d-element      
       elem (j, 2) = i
     endif
 
-  !2D-ELEMENTS
+!2D-ELEMENTS  
   else
-    !left element k = 3
-    !right element k = 4
+!left element k = 3    
+!right element k = 4    
     DO k = 3, 4
-      !get element number
+!get element number      
       j = localArc (i, k)
-      !Testing for the existance of the element
+!Testing for the existance of the element      
       IF (j > 0) then
-        !ERROR - element is used twice
+!ERROR - element is used twice        
         IF (elem (j, 1) == -1) call ErrorMessageAndStop (1302, j,                  &
                              & 0.5 * (cord (localArc (i,1), 1) + cord (localArc (i, 2), 1)), &
                              & 0.5 * (cord (localArc (i,1), 2) + cord (localArc (i, 2), 2)))
-        !Testing, whether it is the first defining arc
+!Testing, whether it is the first defining arc        
         IF (elem (j, 1) == 0) elem (j, 1) = 1
-        !Increase number of assigned ARCS to ELEMENT by increment =1
+!Increase number of assigned ARCS to ELEMENT by increment =1        
         elem (j, 1) = elem (j, 1) + 1
-        !ERROR - Element is defined with more than 4 arcs (only 3 or 4 is possible)
+!ERROR - Element is defined with more than 4 arcs (only 3 or 4 is possible)        
         IF (elem (j, 1) > 5) call ErrorMessageAndStop (1202, j,                      &
                                & 0.5 * (cord (localArc (i,1), 1) + cord (localArc (i, 2), 1)), &
                                & 0.5 * (cord (localArc (i,1), 2) + cord (localArc (i, 2), 2)))
-        ! Dem Feld ELEM(j,2...5) wird die Nummer der Kante zugewiesen. (z.B.) ELEM(1000,2)=45
+! Dem Feld ELEM(j,2...5) wird die Nummer der Kante zugewiesen. (z.B.) ELEM(1000,2)=45        
         elem (j, elem (j, 1) ) = i
       ENDIF
     ENDDO
@@ -914,20 +924,20 @@ elzaehl = 0
 !loop over all elements
 all_elem: DO i = 1, maxe
 
-  !WP Initialisieren des Elementes
+!WP Initialisieren des Elementes  
   kno: DO j = 1, 4
     elkno (j) = 0
     mikno (j) = 0
   END DO kno
   elkno (5) = 0
 
-  !cycle empty elements
+!cycle empty elements  
   IF (elem (i, 1) == 0 .AND. (imat(i) < 901 .OR. imat (i) > 903)) CYCLE all_elem
 
-  !count the number of NOT-empty entries of elcnt
+!count the number of NOT-empty entries of elcnt  
   elzaehl = elzaehl + 1
 
-  !normal 1D-elements --------------------
+!normal 1D-elements --------------------  
   dimensionif: if (imat(i) >= 901 .AND. imat (i) <= 903) then
     findJunctions: do j = 8, 1, -1
       if (nop(i, j) /= 0) then
@@ -937,51 +947,58 @@ all_elem: DO i = 1, maxe
     end do findJunctions
   
   ELSEIF (elem (i, 1) == -1) THEN
-    !for normal 1D-elements, the number of nodes is 3 and the number of corner nodes is 2
+!for normal 1D-elements, the number of nodes is 3 and the number of corner nodes is 2    
     jnum = 2
     ncorn(i) = 3
 
-    !Passing corner nodes to node array
+!Passing corner nodes to node array    
     nop (i, 1) = localArc (elem (i, 2), 1)
     nop (i, 3) = localArc (elem (i, 2), 2)
 
-    !giving over midsidenode, if present, to temporary node array
+!giving over midsidenode, if present, to temporary node array    
     IF (localArc(elem(i,2),5) > 0) THEN
       nop(i,2) = localArc(elem(i,2),5)
     ENDIF
 
-  !1D-2D-transition elements -------------
+!1D-2D-transition elements -------------  
   ELSEIF (elem(i,1) == -2) THEN
-    !for transition elements, the corner nodes were defined, with an eventual exception of the midside node
+!for transition elements, the corner nodes were defined, with an eventual exception of the midside node    
     jnum = 2
     ncorn(i) = 5
 
-  !2D-elements ---------------------------
+!2D-elements ---------------------------  
   ELSE
-    ! Anzahl Elementkanten => jnum
-    !WP Entspricht nicht ELEM(i,1), sondern ELEM(i,1)-1 (siehe oben)
-    jnum = elem (i, 1) - 1                                          !jnum = 3 for triangle; jnum = 4 for quadrilateral; other values are errors
-    !WP Anzahl der Knoten im Element (inklusive Mittseitenknoten)   !(=number of corner nodes; midside nodes or arcs as the user wants)
-    ncorn (i) = jnum * 2                                            !ncorn = 6 for triangle and ncorn = 8 for quadrilateral; other values are errors
-                                                                    !(=number of nodes, midsides and corners, within the actual elements)
+! Anzahl Elementkanten => jnum    
+!WP Entspricht nicht ELEM(i,1), sondern ELEM(i,1)-1 (siehe oben)    
+!jnum = 3 for triangle; jnum = 4 for quadrilateral; other values are errors
+    jnum = elem (i, 1) - 1                                          
+!WP Anzahl der Knoten im Element (inklusive Mittseitenknoten)   !(=number of corner nodes; midside nodes or arcs as the user wants)    
+!ncorn = 6 for triangle and ncorn = 8 for quadrilateral; other values are errors
+    ncorn (i) = jnum * 2                                            
+!(=number of nodes, midsides and corners, within the actual elements)                                                                    
 
-    !NiS,may06: With 1D-ELEMENTS error only occurs, if (jnum==1 or ==2), because if (jnum<0), it's an 1D-ELEMENT and (jnum==0) was cycled.
-    !IF (jnum<3) THEN
+!NiS,may06: With 1D-ELEMENTS error only occurs, if (jnum==1 or ==2), because if (jnum<0), it's an 1D-ELEMENT and (jnum==0) was cycled.    
+!IF (jnum<3) THEN    
 
-    !ERROR - element has less than 3 arcs, which is not possible
+!ERROR - element has less than 3 arcs, which is not possible    
     IF (jnum == 1 .OR. jnum == 2) call ErrorMessageAndStop (1203, i, cord(localArc (elem (i, 2), 5), 1) , cord(localArc (elem (i, 2), 5), 2))
 
-    ! erste Kante:                                                  !starting with the first arc, the element's nodes in anticlockwise direction
-    l = 1                                                           !will be saved in a temporary array to write them later into the array nop.
+! erste Kante:                                                  !starting with the first arc, the element's nodes in anticlockwise direction    
+!will be saved in a temporary array to write them later into the array nop.
+    l = 1                                                           
 
-    ! akt. Element links der Kante .und. unten-Knoten beginnt:      !the two arrays for temporary saving are:
-    IF (localArc (elem (i, 2), 3) ==i) THEN                            !       elkno(1...5)    =       corner nodes of element
-      elkno (1) = localArc (elem (i, 2), 1)                              !       mikno(1...4)    =       midside nodes of element, if defined
+! akt. Element links der Kante .und. unten-Knoten beginnt:      !the two arrays for temporary saving are:    
+!       elkno(1...5)    =       corner nodes of element
+    IF (localArc (elem (i, 2), 3) ==i) THEN                            
+!       mikno(1...4)    =       midside nodes of element, if defined
+      elkno (1) = localArc (elem (i, 2), 1)                              
       elkno (2) = localArc (elem (i, 2), 2)
-      IF (localArc (elem (i, 2), 5) > 0) THEN                         !In dependency of the side the actual element is positioned in relation to
-        mikno (1) = localArc (elem (i, 2), 5)                            !the first arc, the nodes are saved in elkno(1) and elkno(2)
+!In dependency of the side the actual element is positioned in relation to
+      IF (localArc (elem (i, 2), 5) > 0) THEN                         
+!the first arc, the nodes are saved in elkno(1) and elkno(2)
+        mikno (1) = localArc (elem (i, 2), 5)                            
       ENDIF
-    ! akt. Element rechts der Kante .und. oben-Knoten beginnt:
+! akt. Element rechts der Kante .und. oben-Knoten beginnt:    
     ELSE
       elkno (1) = localArc (elem (i, 2), 2)
       elkno (2) = localArc (elem (i, 2), 1)
@@ -991,23 +1008,30 @@ all_elem: DO i = 1, maxe
     ENDIF
 
 !TODO: Introduce modern do-loop
-    ! weitere Kanten:                                                 !The other two or three arcs defining the actual element i are analysed from
-2222   l = l + 1                                                         !this point on. The jumpmark 2222 is somthing like a do loop.
-    IF (l>jnum) THEN                                                 !The first if-case checks whether the actual arc l is the last one to define
+! weitere Kanten:                                                 !The other two or three arcs defining the actual element i are analysed from    
+!this point on. The jumpmark 2222 is somthing like a do loop.
+2222   l = l + 1                                                         
+!The first if-case checks whether the actual arc l is the last one to define
+    IF (l>jnum) THEN                                                 
       IF (elkno (1) /= elkno (l)) call ErrorMessageAndStop (1204, i, 0.0d0, 0.0d0)
 
       GOTO 2444
     END IF
-    elem_arc: DO j = 2, jnum                                        !For every left arc with exception of the first, dealt with above, it is checked,
-      ! Element links der Kante .und. unten-Knoten knuepft an?      !whether it is the one that is connected to the last node of the last arc.
+!For every left arc with exception of the first, dealt with above, it is checked,
+    elem_arc: DO j = 2, jnum                                        
+! Element links der Kante .und. unten-Knoten knuepft an?      !whether it is the one that is connected to the last node of the last arc.      
       left: IF ((localArc (elem (i,j+1),3) == i) .AND. (localArc (elem (i,j+1),1) == elkno(l))) then
-        elkno (l + 1) = localArc (elem (i, j + 1), 2)                    !In dependency of the side the actual element is positioned in relation
-        IF (localArc (elem (i, j + 1), 5) >0) then                    !to the arc j, the node that could be connected with the last one of the last
-          mikno (l) = localArc (elem (i, j + 1), 5)                      !arc is checked, whether it is connected. If so the procedure jumps to the
-        END if                                                      !next arc and increases the number of l
+!In dependency of the side the actual element is positioned in relation
+        elkno (l + 1) = localArc (elem (i, j + 1), 2)                    
+!to the arc j, the node that could be connected with the last one of the last
+        IF (localArc (elem (i, j + 1), 5) >0) then                    
+!arc is checked, whether it is connected. If so the procedure jumps to the
+          mikno (l) = localArc (elem (i, j + 1), 5)                      
+!next arc and increases the number of l
+        END if                                                      
         GOTO 2222
       END IF left
-      ! Element rechts der Kante .und. oben-Knoten knuepft an?
+! Element rechts der Kante .und. oben-Knoten knuepft an?      
       right: IF ((localArc (elem (i,j+1),4) == i) .AND. (localArc (elem (i,j+1),2) == elkno(l))) then
         elkno (l + 1) = localArc (elem (i, j + 1), 1)
         IF (localArc (elem (i, j + 1), 5) >0) then
@@ -1018,45 +1042,45 @@ all_elem: DO i = 1, maxe
     END DO elem_arc
 
 
-    !ERROR - Element is not forming a linear ring
+!ERROR - Element is not forming a linear ring    
     call errorMessageAndStop (1204, i, 0.0d0, 0.0d0)
 
-  ! Element O.K.
+! Element O.K.  
 2444 CONTINUE
 
-    !set up nop-field
-    !----------------
-    !enter corner nodes
+!set up nop-field    
+!----------------    
+!enter corner nodes    
     DO j = 1, jnum
       nop (i, j * 2 - 1) = elkno (j)
     END DO
-    !enter midside nodes
+!enter midside nodes    
     DO j = 1, jnum
       IF (mikno (j) >0) then
-        !ERROR - midside node ID is higher than maximum node ID; that doesn't work
+!ERROR - midside node ID is higher than maximum node ID; that doesn't work        
         IF (mikno (j) > maxp) call errorMessageAndStop (1109, mikno (j), 0.0d0, 0.0d0)
         nop (i, j * 2) = mikno (j)
       ENDIF
     END DO
     
-    !copy nop to nops
-    !----------------
+!copy nop to nops    
+!----------------    
     do j = 1, 8
       nops (i, j) = nop (i, j)
     enddo
 
-    !check mesh for twisted elements
-    !-------------------------------
+!check mesh for twisted elements    
+!-------------------------------    
     crossing_outer: do j = 1, jnum - 2
-      !get reference vector to check twisting
+!get reference vector to check twisting      
       vekkant (1) = cord (nop (i, (j + 1) * 2 - 1), 1) - cord (nop (i, j * 2 - 1), 1)
       vekkant (2) = cord (nop (i, (j + 1) * 2 - 1), 2) - cord (nop (i, j * 2 - 1), 2)
-      !run through connected arcs
+!run through connected arcs      
       crossing_inner: do k = j + 2, jnum
-        !get vector to check for
+!get vector to check for        
         vekpu1 (1) = cord (nop (i, k * 2 - 1), 1) - cord (nop (i, j * 2 - 1), 1)
         vekpu1 (2) = cord (nop (i, k * 2 - 1), 2) - cord (nop (i, j * 2 - 1), 2)
-        !generate cross product
+!generate cross product        
         kreuz = vekkant (1) * vekpu1 (2) - vekkant (2) * vekpu1 (1)
         if (kreuz <= 0.0) call errormessageandstop (1205, i, 0.5 * (cord (nop (i, 1), 1) + cord (nop (i, 3), 1)), &
                                                            & 0.5 * (cord (nop (i, 1), 2) + cord (nop (i, 3), 2)))
@@ -1096,11 +1120,11 @@ mittzaehl = 0
 
 all_arcs: DO i=1,arccnt
 
-  !dead arcs have to be skipped
+!dead arcs have to be skipped  
   if (localArc(i,1)==0) CYCLE all_arcs
 
-  ! Mittseitenknoten vorhanden?
-  !NiS,expand test for defined midside nodes in ARC-array but without coordinate-definitions; this was a logical gap
+! Mittseitenknoten vorhanden?  
+!NiS,expand test for defined midside nodes in ARC-array but without coordinate-definitions; this was a logical gap  
   IF ((localArc(i,5)>0) .AND. (localArc(i,5)<=nodecnt)) THEN
     IF ((cord (localArc (i, 5), 1) /= 0.0) .AND. (cord (localArc (i, 5), 2) /= 0.0)) THEN
       if (ao (localArc (i, 5)) + 9999.0 < 1.0e-3) then
@@ -1112,7 +1136,7 @@ all_arcs: DO i=1,arccnt
       end if
       CYCLE all_arcs
     ELSE
-      !Test for distances
+!Test for distances      
       a = SQRT ( ( cord (localArc (i,1), 1) - cord ( localArc (i,5), 1) )**2 + ( cord (localArc (i,1), 2) - cord (localArc (i,5), 2) )**2)
       b = SQRT ( ( cord (localArc (i,2), 1) - cord ( localArc (i,5), 1) )**2 + ( cord (localArc (i,2), 2) - cord (localArc (i,5), 2) )**2)
       c = SQRT ( ( cord (localArc (i,1), 1) - cord ( localArc (i,2), 1) )**2 + ( cord (localArc (i,1), 2) - cord (localArc (i,2), 2) )**2)
@@ -1122,7 +1146,7 @@ all_arcs: DO i=1,arccnt
               & ' not be define but the default initialized value, because the distance between the corner nodes of the '/&
               & ' arc is shorter than one of the distances between the midside node and the corner nodes! Therefore the '/&
               & ' coordinates of the node ', I56, ' are recalculated.')
-        !Recalculation with Linear interpolation of coordinates for nodes, that were not logical before
+!Recalculation with Linear interpolation of coordinates for nodes, that were not logical before        
         cord (localArc(i,5),1) = 0.5 * (cord (localArc(i,1),1) + cord (localArc(i,2),1) )
         cord (localArc(i,5),2) = 0.5 * (cord (localArc(i,1),2) + cord (localArc(i,2),2) )
         ao (localArc(i,5)  ) = 0.5 * (  ao (localArc(i,1)  ) +   ao (localArc(i,2)  ) )
@@ -1132,43 +1156,43 @@ all_arcs: DO i=1,arccnt
       ENDIF
     ENDIF
   ELSE
-  !If a new midside node is generated, the program is told which ID to take for that midsidenode; the ID
-  !is the result of increasing the actual maximum active node number by 1.
+!If a new midside node is generated, the program is told which ID to take for that midsidenode; the ID  
+!is the result of increasing the actual maximum active node number by 1.  
   nodecnt = nodecnt + 1          
-  !Increase the counter for added new midside nodes
+!Increase the counter for added new midside nodes  
   mittzaehl = mittzaehl + 1
 
-  !These lines could be economized with using the arc-array directly, where it is needed; WHY COPY?
+!These lines could be economized with using the arc-array directly, where it is needed; WHY COPY?  
   ibot = localArc (i, 1)
   itop = localArc (i, 2)
   ilft = localArc (i, 3)
   irgt = localArc (i, 4)
-  !NiS,may06: Test for dead arcs, so the DO-LOOP may be cycled:
+!NiS,may06: Test for dead arcs, so the DO-LOOP may be cycled:  
   IF (ilft==irgt .AND. ilft==0) CYCLE all_arcs
 
-  !coordinates of generated midside node
+!coordinates of generated midside node  
   x = (cord (ibot, 1) + cord (itop, 1) ) / 2.0
   y = (cord (ibot, 2) + cord (itop, 2) ) / 2.0
   z = (ao (ibot) + ao (itop) ) / 2.0
                                                                         
-  !Install the temporary values in the proper global array lines; these lines could be economized with calculating directly without locals
+!Install the temporary values in the proper global array lines; these lines could be economized with calculating directly without locals  
   cord (nodecnt, 1) = x
   cord (nodecnt, 2) = y
   ao   (nodecnt)    = z
   
-  !add new node to model
+!add new node to model  
   newFENode => newNode (nodecnt, x, y, z)
   call addNodeToMesh (m_SimModel.FEmesh, newFENode)
 
-  !NiS,may06: test for 1D- or 2D-ARC
-  !1D-ELEMENT ARC or 1D-2D-TRANSITION ELEMENT ARC:
+!NiS,may06: test for 1D- or 2D-ARC  
+!1D-ELEMENT ARC or 1D-2D-TRANSITION ELEMENT ARC:  
   IF (ilft == irgt) THEN
-    !1D-2D-TRANSITION-ELEMENTS may have a midside node already
+!1D-2D-TRANSITION-ELEMENTS may have a midside node already    
     IF (nop(ilft,2) /= 0) CYCLE all_arcs
-    !all other normal 1D-ELEMENTS or 1D-2D-TRANSITION-ELEMENTS get a midside node
+!all other normal 1D-ELEMENTS or 1D-2D-TRANSITION-ELEMENTS get a midside node    
     nop(ilft, 2) = nodecnt
 
-  !2D-ELEMENT ARC:
+!2D-ELEMENT ARC:  
   ELSE
     IF (ilft > 0) THEN
       jnum = elem (ilft, 1) - 1
@@ -1181,8 +1205,8 @@ all_arcs: DO i=1,arccnt
     ENDIF
 
     IF (irgt > 0) THEN
-    !changes see above
-    !jnum = elem (irgt, 1)
+!changes see above    
+!jnum = elem (irgt, 1)    
         jnum = elem (irgt, 1) - 1
         DO j = 1, jnum
           IF (nop (irgt, 2 * j - 1) == itop) THEN
@@ -1192,7 +1216,7 @@ all_arcs: DO i=1,arccnt
         ENDDO
       ENDIF
     ENDIF
-  !NiS,may06: IF clause for coordinate test
+!NiS,may06: IF clause for coordinate test  
   ENDIF
 END DO all_arcs
 
@@ -1213,7 +1237,7 @@ do i = 1, arccnt
       if (imat (localArc (i,3)) /= 89) then
         checkwidths: do j = 1, 3, 2
           nd = nop (localArc (i, 3), j)
-          !error -  if one of the two corner nodes does not have cross sectional informations
+!error -  if one of the two corner nodes does not have cross sectional informations          
           if (width (nd) == 0.0) call errormessageandstop (1112, nd, cord (nd, 1), cord (nd, 2))
         end do checkwidths
   
@@ -1255,15 +1279,16 @@ call InterpolateProfs (m_SimModel.femesh, statElSz, statNoSz, MaxP, MaxE, maxInt
 !---------------------------------------------------------------------------------------------------------------------------------------------
 !Turning the transitioning elements, if necessary; while doing this: Testing, whether transition is properly defined
 if (maxlt /= 0) then
-  !run through all possible transitionings
+!run through all possible transitionings  
   elementturning: do i = 1, maxlt
-    !if transition is dead, go to next one
+!if transition is dead, go to next one    
     if (TransLines (i, 1) == 0) CYCLE elementturning
-    !test for correct order of nodes in transitioning element
+!test for correct order of nodes in transitioning element    
     if (nop (TransLines (i, 1), 3) /= TransLines (i, 3)) then
-      !nis,jan07: Checking, whether node is defined in element on the other slot (slot 1)
-      if (nop (TransLines (i, 1), 1) /= TransLines (i, 3)) then!&
-     !&  call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
+!nis,jan07: Checking, whether node is defined in element on the other slot (slot 1)      
+!&
+      if (nop (TransLines (i, 1), 1) /= TransLines (i, 3)) then
+!&  call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))     
       call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
       endif
     end if
@@ -1279,10 +1304,10 @@ END do
 ReorderingNotDone = .true.
 DO i = 1, maxe
   IF (nfixh (i) <= 0 .OR. nfixh (i) > MaxE) then
-    !NiS,mar06: unit name changed; changed iout to Lout
+!NiS,mar06: unit name changed; changed iout to Lout    
     WRITE (Lout,105)
     WRITE ( * , 105)
-    !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
+!NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps    
     CALL start_node (qlist, k, MaxP)
     call reord_Kalyps (qlist)
     ReorderingNotDone = .false.
@@ -1293,10 +1318,10 @@ END DO
 if (ReorderingNotDone) then
   DO i = 1, maxe
     IF ((imat (i) /= 0) .AND. (elfix (i) /= 1) ) then
-      !NiS,mar06: unit name changed; changed iout to Lout
+!NiS,mar06: unit name changed; changed iout to Lout      
       WRITE (Lout,105)
       WRITE ( * , 105)
-      !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
+!NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps      
       CALL start_node (qlist, k, MaxP)
       call reord_Kalyps (qlist)
     endif
@@ -1316,13 +1341,13 @@ GetMiddleCoord: do i = 1, maxe
   if (imat (i) == 0) cycle getMiddleCoord
   sumx  = 0.0
   sumy  = 0.0
-  !loop over all nodes, including midside nodes of an all elements
-  !to determine the coordinates of the geometrical center of the element
+!loop over all nodes, including midside nodes of an all elements  
+!to determine the coordinates of the geometrical center of the element  
   do j = 1, ncorn(i)
     sumx = sumx + cord(nop(i,j),1)
     sumy = sumy + cord(nop(i,j),2)
   end do
-  !averaging of the values
+!averaging of the values  
   mcord(i,1) = sumx/ncorn(i)
   mcord(i,2) = sumy/ncorn(i)
 END do GetMiddleCoord
@@ -1333,12 +1358,12 @@ END do GetMiddleCoord
 
 !run through all elements
 neighbours: do i = 1, MaxE
-  !Skip empty elements
+!Skip empty elements  
   if (elem (i, 1) /= 0) then
-    !Check for 1D-elements that are connecting to a 2D-model part
-    !Initializing ConnNumber
+!Check for 1D-elements that are connecting to a 2D-model part    
+!Initializing ConnNumber    
     ConnNumber = 0
-    !Look, whether element is part of any transition
+!Look, whether element is part of any transition    
     findconnection: do j = 1, MaxLT
       if (TransLines (j, 1) == i) then
         ConnNumber = j
@@ -1348,29 +1373,29 @@ neighbours: do i = 1, MaxE
     end do findconnection
 
 
-    !If there is a connection assigned to that element process, store the 2D-neighbours
+!If there is a connection assigned to that element process, store the 2D-neighbours    
     if (ConnNumber /= 0) then
-      !number of connections at this special element (including all 2D-transitioning nodes and the 1D-element's node)
+!number of connections at this special element (including all 2D-transitioning nodes and the 1D-element's node)      
       ncorn_temp = lmt (ConnLine) + 3
-      !this is the temporary nop-array for the '1D-2D-transitionline-element'
+!this is the temporary nop-array for the '1D-2D-transitionline-element'      
       ALLOCATE (nop_temp (1 : ncorn_temp))
-      !overgive the three nodes of the 1D-part; they are already sorted:
-      !1: connection to next 1D-element
-      !2: midside node
-      !3: connection to transition line
+!overgive the three nodes of the 1D-part; they are already sorted:      
+!1: connection to next 1D-element      
+!2: midside node      
+!3: connection to transition line      
       do k = 1, 3
         nop_temp(k) = nop(i,k)
       end do
-      !overgiving the nodes into the temporary array nop_temp
+!overgiving the nodes into the temporary array nop_temp      
       nodeassigning: do j = 1, lmt (ConnLine)
-        !Add 3, because they are reserved for the 1D-element
+!Add 3, because they are reserved for the 1D-element        
         nop_temp (j + 3) = line (ConnLine, j)
       end do nodeassigning
-      !store neighbourhood relations, it's nearly the same loop as in the original loop, shown below
+!store neighbourhood relations, it's nearly the same loop as in the original loop, shown below      
       outerLT: do j = 1, ncorn_temp
         node1 = nop_temp (j)
 
-        !linear search; really to slow
+!linear search; really to slow        
         nodeOrigin => findNodeInMeshByID (m_SimModel.FEmesh, node1)
 
         innerLT: do l = 1, ncorn_temp
@@ -1382,14 +1407,14 @@ neighbours: do i = 1, MaxE
           end if
         end do innerLT
       end do outerLT
-      !array resetting for next transition, that is probably be from other size
+!array resetting for next transition, that is probably be from other size      
       DEALLOCATE(nop_temp)
     endif
-    !Read all node numbers of adjacent element
+!Read all node numbers of adjacent element    
     outer: do j = 1, ncorn (i)
-      !For increasing speed of program, bring line to outside of loop
+!For increasing speed of program, bring line to outside of loop      
       node1 = nop (i, j)
-      !linear search; really to slow
+!linear search; really to slow      
       nodeOrigin => findNodeInMeshByID (m_SimModel.FEmesh, node1)
 
       inner: do l = 1, ncorn (i)
@@ -1406,20 +1431,20 @@ end do neighbours
 
 !generate upward knowledge, store elements connected to nodes
 BelongingElement: do i = 1, MaxE
-  !Skip emtpy elements
+!Skip emtpy elements  
   if (ncorn(i) == 0) CYCLE belongingElement
-  !run through corner nodes
+!run through corner nodes  
   throughNodes: do j = 1, ncorn(i)
     throughPossibleEntries: do k = 1, 12
       if (IsNodeOfElement(nop(i, j), k) == i) EXIT throughPossibleEntries
       if (IsNodeOfElement(nop(i, j), k) == 0) then
         IsNodeOfElement(nop(i, j), k) = i
-        !first column is counter
+!first column is counter        
         IsNodeOfElement(nop(i, j), 0) = isNodeOfElement(nop(i, j), 0) + 1
         CYCLE throughNodes
       end if
     enddo throughPossibleEntries
-    !ERROR - There are too many elements connected to one node
+!ERROR - There are too many elements connected to one node    
     call ErrorMessageAndStop (1110, nop (i, j), cord (nop (i, j), 1), cord (nop (i, j), 2))
   end do throughNodes
 ENDDO BelongingElement
@@ -1480,7 +1505,7 @@ NewElt = statElSz
 
 !nis,jan08: Interpolate new profiles into mesh
 do i = 1, statElSz
-  !here an interpolation should take place
+!here an interpolation should take place  
   if (IntPolNo (i) /= 0 .AND. ncorn (i) < 4) then
     DX = (cord (nop (i, 3), 1) - cord (nop (i, 1), 1)) / (IntPolNo (i) + 1)
     DY = (cord (nop (i, 3), 2) - cord (nop (i, 1), 2)) / (IntPolNo (i) + 1)
@@ -1494,7 +1519,7 @@ do i = 1, statElSz
     end if
 
     do j = 1, IntPolNo (i)
-      !transform the first intersection element
+!transform the first intersection element      
       if (j == 1) then
         nop (i, 4) = nop (i, 3)
         NewNodeID = NewNodeID + 1
@@ -1515,7 +1540,7 @@ do i = 1, statElSz
         call addNodeToMesh (FE_Mesh, newFENode)
 
 
-        !recalculate the position of the midside node at first element
+!recalculate the position of the midside node at first element        
         call GenNewNode (nop (i, 2), i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (nop (i, 2), :), IntPolProf (nop (i, 2)), &
                       &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (nop (i, 2)), IsPolynomNode (nop (i, 2)))
         cord (nop (i, 2), 1) = 0.5 * (cord (nop (i, 1), 1) + cord (nop (i, 3), 1))
@@ -1529,7 +1554,7 @@ do i = 1, statElSz
         newFENode => NewNode (nop(i,2), cord (nop(i,2),1), cord (nop(i,2),2), ao(nop(i,2)))
         call addNodeToMesh (FE_Mesh, newFENode)
 
-      !generate the middle elements of interpolation, it's first interesting, if there are more than 2 intersections
+!generate the middle elements of interpolation, it's first interesting, if there are more than 2 intersections      
       elseif (j > 1) then
         NewElt = NewElt + 1
         IntPolElts (i, j - 1) = NewElt
@@ -1556,7 +1581,7 @@ do i = 1, statElSz
         newFENode => NewNode (NewNodeID, cord (NewNodeID,1), cord (NewNodeID,2), ao(NewNodeID))
         call addNodeToMesh (FE_Mesh, newFENode)
 
-        !generate midside node
+!generate midside node        
         NewNodeID = NewNodeID + 1
         nop (NewElt, 2) = NewNodeID
         call GenNewNode (NewNodeID, i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (NewNodeID, :), IntPolProf (NewNodeID), &
@@ -1572,7 +1597,7 @@ do i = 1, statElSz
         call addNodeToMesh (FE_Mesh, newFENode)
       end if
 
-      !Generate the last element
+!Generate the last element      
       if (j == IntPolNo (i) ) then
         NewElt = NewElt + 1
         ncorn(NewElt) = 3
@@ -1597,7 +1622,7 @@ do i = 1, statElSz
         end if
         nop (NewElt, 3) = nop (i, 4)
         nop (i, 4) = 0
-        !generate midside
+!generate midside        
         NewNodeID = NewNodeID + 1
         nop (NewElt, 2) = NewNodeID
         call GenNewNode (NewNodeID, i, origx, origy, nop (i, 1), nop (NewElt, 3), NeighProf (NewNodeID, :), IntPolProf (NewNodeID), &
@@ -1664,7 +1689,8 @@ USE BLKSANMOD
 INTEGER:: NO_GOK
 INTEGER:: ISUSLAY, IACTIV_SL
 INTEGER:: IBEDLAY, IACTIV_BL
-INTEGER:: istat          !Variable for I/O errors
+!Variable for I/O errors
+INTEGER:: istat          
 
 INTEGER:: NLAY_OLD, NLAYO_OLD
 REAL(KIND=8):: BSHEAR_OLD, UST_OLD, DEPRAT_OLD, VS_OLD, EDOT_OLD, SERAT_OLD
@@ -1683,13 +1709,13 @@ NO_GOK = 0
 ! endless reading loop until end of file condition is reached
 !-----------------------------------------------------------
  Bed_reading: do
-   !read next line from bed-restart file
+!read next line from bed-restart file   
    read (IREBED, * , iostat = istat)  &
                   NN, BSHEAR_OLD, UST_OLD, DEPRAT_OLD, VS_OLD, &
        &          EDOT_OLD, SERAT_OLD, AO_BED_OLD, TMSED_OLD, NLAY_OLD, NLAYO_OLD,SUMTHICK_OLD,&
        &          (THICK_OLD(L),L=1,NLAY_OLD),(THICKO_OLD(L),L=1,NLAYO_OLD)
 
-   !exit loop, if reaching end of file condition
+!exit loop, if reaching end of file condition   
    if (istat /= 0) exit bed_reading
 
    IF (NN > MaxP) THEN
@@ -1704,11 +1730,11 @@ NO_GOK = 0
      WRITE(*,*) ' Achtung: Sohlhoehe aus Restart-Bed nicht identisch mit Modell: ',NN,' .'
      WRITE(75,*) ' Achtung: Sohlhoehe aus Restart-Bed nicht identisch mit Modell: ',NN,' .'
      NO_GOK = 1
-     ! Vorbereitung fuer einlesen neuer Sohlgeometrie (jetzt aber noch nicht verfuegbar)
+! Vorbereitung fuer einlesen neuer Sohlgeometrie (jetzt aber noch nicht verfuegbar)     
    END IF
 
-   ! Check Suspended Layer formation
-   ! ---------------------------------
+! Check Suspended Layer formation   
+! ---------------------------------   
    IF (NLAY_OLD /= NLAYTND(NN)) THEN
      ISUSLAY = 1
      WRITE(*,*) ' Achtung: Anzahl Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist falsch.'
@@ -1718,48 +1744,48 @@ NO_GOK = 0
      ISUSLAY = 0
      IACTIV_SL = 0
      DO L = 1, NLAY_OLD
-       ! Change unit
+! Change unit       
        THICK_OLD(L) = THICK_OLD(L)/1000.0
 
        IF (THICK_OLD(L) == 0.0 .AND. IACTIV_SL == 0) THEN
          THICK(NN,L) = THICK_OLD(L)
-         ! Layer sind leer
+! Layer sind leer         
 
        ElseIF (THICK_OLD(L) > 0.0 .AND. IACTIV_SL == 0) THEN
          IACTIV_SL = 1
-         ! Suspended Layer ab hier voll
+! Suspended Layer ab hier voll         
          IF (THICK_OLD(L) > TLAYND(NN,L)) THEN
            TLAYND(NN,L) = THICK_OLD(L)
-           ! Ersetzen mit dickerem Layer
+! Ersetzen mit dickerem Layer           
            THICK(NN,L) = THICK_OLD(L)
-           ! Auffuellen des Susp. Layers
+! Auffuellen des Susp. Layers           
            WRITE(75,*) ' Achtung: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
          ElseIF (THICK_OLD(L) < TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
-           ! Neubelegung des Susp. Layers halbvoll
+! Neubelegung des Susp. Layers halbvoll           
          ElseIF (THICK_OLD(L) == TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
-           ! Neubelegung des Susp. Layers ganzvoll
+! Neubelegung des Susp. Layers ganzvoll           
          Endif
        ElseIF (THICK_OLD(L) > 0.0 .AND. IACTIV_SL == 1) THEN
          IACTIV_SL = 1
-         ! Suspended Layer ab hier voll
+! Suspended Layer ab hier voll         
          IF (THICK_OLD(L) > TLAYND(NN,L)) THEN
            TLAYND(NN,L) = THICK_OLD(L)
-           ! Ersetzen mit dickerem Layer
+! Ersetzen mit dickerem Layer           
            THICK(NN,L) = THICK_OLD(L)
-           ! Auffuellen des Susp. Layers
+! Auffuellen des Susp. Layers           
            WRITE(75,*) ' Achtung: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
          ElseIF (THICK_OLD(L) < TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
-           ! Neubelegung des Susp. Layers halbvoll
+! Neubelegung des Susp. Layers halbvoll           
          ElseIF (THICK_OLD(L) == TLAYND(NN,L)) THEN
            THICK(NN,L) = THICK_OLD(L)
-           ! Neubelegung des Susp. Layers ganzvoll
+! Neubelegung des Susp. Layers ganzvoll           
          Endif
        ElseIF (THICK_OLD(L) == 0.0 .AND. IACTIV_SL > 1) THEN
          IACTIV_SL = 2
-         ! Layer ab hier leer sind leer
+! Layer ab hier leer sind leer         
        Else
          WRITE(*,*) ' Error: Sus-Layer ', L ,' am Knoten',NN,' aus Restart-Bed fehlerhaft.'
          WRITE(*,*) ' >> Programmabbruch'
@@ -1772,58 +1798,58 @@ NO_GOK = 0
 
 
 
-   ! Check Bed Layer formation
-   ! ---------------------------------
+! Check Bed Layer formation   
+! ---------------------------------   
    IF (NLAYO_OLD /= NLAYO(NN)) THEN
      IBEDLAY = 1
    ElseIF (NLAYO_OLD == NLAYO(NN)) THEN
      IBEDLAY = 0
      IACTIV_BL = 0
      DO L = 1, NLAYO_OLD
-       ! Change unit
+! Change unit       
        THICKO_OLD(L) = THICKO_OLD(L)/1000.0
 
        IF (THICKO_OLD(L) == 0.0 .AND. IACTIV_BL == 0) THEN
          THICKO(NN,L) = THICKO_OLD(L)
-         ! Bed Layer sind leer
+! Bed Layer sind leer         
 
        ElseIF (THICKO_OLD(L) > 0.0 .AND. IACTIV_BL == 0) THEN
          IACTIV_BL = 1
-         ! Suspended Layer ab hier voll
+! Suspended Layer ab hier voll         
          IF (THICKO_OLD(L) > THICKOND(NN,L)) THEN
            THICKOND(NN,L) = THICKO_OLD(L)
-           ! Ersetzen mit dickerem Layer
+! Ersetzen mit dickerem Layer           
            THICKO(NN,L) = THICKO_OLD(L)
-           ! Auffuellen des Susp. Layers
+! Auffuellen des Susp. Layers           
            WRITE(75,*) ' Achtung: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
          ElseIF (THICKO_OLD(L) < THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
-           ! Neubelegung des Susp. Layers halbvoll
+! Neubelegung des Susp. Layers halbvoll           
          ElseIF (THICKO_OLD(L) == THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
-           ! Neubelegung des Susp. Layers ganzvoll
+! Neubelegung des Susp. Layers ganzvoll           
          Endif
        ElseIF (THICKO_OLD(L) > 0.0 .AND. IACTIV_BL == 1) THEN
          IACTIV_BL = 1
-         ! Suspended Layer ab hier voll
+! Suspended Layer ab hier voll         
          IF (THICKO_OLD(L) > THICKOND(NN,L)) THEN
            THICKOND(NN,L) = THICKO_OLD(L)
-           ! Ersetzen mit dickerem Layer
+! Ersetzen mit dickerem Layer           
            THICKO(NN,L) = THICKO_OLD(L)
-           ! Auffuellen des Susp. Layers
+! Auffuellen des Susp. Layers           
            WRITE(75,*) ' Achtung: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed ist groesser.'
          ElseIF (THICKO_OLD(L) < THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
-           ! Neubelegung des Susp. Layers halbvoll
+! Neubelegung des Susp. Layers halbvoll           
          ElseIF (THICKO_OLD(L) == THICKOND(NN,L)) THEN
            THICKO(NN,L) = THICKO_OLD(L)
-           ! Neubelegung des Susp. Layers ganzvoll
+! Neubelegung des Susp. Layers ganzvoll           
          Endif
 
-  !MD: Dieser Fall noch nicht möglich, aber bald:
-  !MD:     ElseIF (THICKO_OLD(L) == 0.0 .AND. IACTIV_BL > 1) THEN
-  !MD:       IACTIV_BL = 2
-  !MD:       ! Layer ab hier leer sind leer
+!MD: Dieser Fall noch nicht möglich, aber bald:  
+!MD:     ElseIF (THICKO_OLD(L) == 0.0 .AND. IACTIV_BL > 1) THEN  
+!MD:       IACTIV_BL = 2  
+!MD:       ! Layer ab hier leer sind leer  
        Else
          WRITE(*,*) ' Error: Bed-Layer ', L ,' am Knoten',NN,' aus Restart-Bed fehlerhaft.'
          WRITE(*,*) ' >> Programmabbruch'

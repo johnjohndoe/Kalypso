@@ -1,23 +1,23 @@
       module mod_initl
-      
+!
        contains
-CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
-CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
-CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
-cipk  last update mar 07 2006 add call to ginpt for limits option
-CIPK  LAST UPDATE MAR 05 2006 ADD ALLOCATION TO USE NODAL PROPS
-CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
-CIPK  LAST UPDATE SEP 04 2002 ADD WAVE DATA INITIALIZATION
-CIPK  LAST UPDATE MAY 28 2002 ADD STRESS INITIALIZATION
-CIPK  LAST UPDATE SEP 30 2002 ADD ICETHK,ICETHKOL
-CIPK  LAST UPDATE JAN 22 2002  ADD SIDFF TO INITIALIZATION
-CIPK  LAST UPDATE MAR 18 2001   ADD FOR POWER STATION RECYCLING
-CIPK  LAST UPDATE MAR 13 2001 ADD TIME STEP TRANSITION OPTION
-CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
+!IPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
+!IPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
+!IPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
+!ipk  last update mar 07 2006 add call to ginpt for limits option
+!IPK  LAST UPDATE MAR 05 2006 ADD ALLOCATION TO USE NODAL PROPS
+!IPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
+!IPK  LAST UPDATE SEP 04 2002 ADD WAVE DATA INITIALIZATION
+!IPK  LAST UPDATE MAY 28 2002 ADD STRESS INITIALIZATION
+!IPK  LAST UPDATE SEP 30 2002 ADD ICETHK,ICETHKOL
+!IPK  LAST UPDATE JAN 22 2002  ADD SIDFF TO INITIALIZATION
+!IPK  LAST UPDATE MAR 18 2001   ADD FOR POWER STATION RECYCLING
+!IPK  LAST UPDATE MAR 13 2001 ADD TIME STEP TRANSITION OPTION
+!IPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       SUBROUTINE INITL (m_SimModel)
-      
+!
       use mod_Model
-      
+!
       USE BLK10
       USE BLK10MOD
       USE BLK11MOD
@@ -32,32 +32,32 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE PARAMMOD
 !NiS,apr06: add module for Kalypso-specific calculations
       USE PARAKalyps
-      !EFa Nov06, neues Modul für Teschke-1D-Elemente
+!EFa Nov06, neues Modul für Teschke-1D-Elemente      
       USE PARA1DPoly
       use PardisoParams
 !-
-
+!
       DATA VOID/-1.E20/
-      
+!
       integer (kind = 4) :: mfww
       type (simulationModel), pointer :: m_SimModel
-
-c     Initialisation of values
-
-      !NBS = 5000000
+!
+!     Initialisation of values
+!
+!NBS = 5000000      
       NBS = 20000000
       MFW=1000
       NBSS=NBS
       LBMAX=NBSS
       MFWW=MFW
-      !Band width of the system
+!Band width of the system      
       MFWSIZ    =5000
-      !size of the right-hand-side vector, i.e. the number of active equations
+!size of the right-hand-side vector, i.e. the number of active equations      
       MR1SIZ   = 2000000
-      !number of entries in the Jacobian Matrix, i.e. all non-zero derivatives of the Jacobian
+!number of entries in the Jacobian Matrix, i.e. all non-zero derivatives of the Jacobian      
       NBUFFSIZ = 20000000
-
-
+!
+!
       MNPP=MAXP
       NLAYMX=1
       MXSEDLAY=10
@@ -72,7 +72,7 @@ c     Initialisation of values
   200 CONTINUE
       call ginpt(Lin,id,dlin)
       IF(ID(1:8) == 'ENDLIMIT') THEN
-cipk mar06  add call for ENDLIMIT case
+!ipk mar06  add call for ENDLIMIT case
       call ginpt(Lin,id,dlin)
         GO TO 250
       ELSEIF(ID(1:2) == 'TI') THEN
@@ -98,7 +98,7 @@ cipk mar06  add call for ENDLIMIT case
       ELSEIF(ID(1:8) == 'MAXR1   ') then
         read (dlin, *) mr1siz
       ELSEIF(ID(1:8) == 'MAXQPTS ') THEN
-CIPK MAR06
+!IPK MAR06
         READ(DLIN,'(I8)') NCQOBS
       ELSEIF(ID(1:8) == 'MAXQINPT') THEN
         READ(DLIN,'(I8)') NQLDS
@@ -110,10 +110,10 @@ CIPK MAR06
         READ(DLIN,'(I8)') NDPTS
       ELSEIF(ID(1:8) == 'MAXEINPT') THEN
         READ(DLIN,'(I8)') NELDS
-C      ELSEIF(ID(1:8) == 'MAXPBUFR') THEN
-C        READ(DLIN,'(I8)') MPB
-C      ELSEIF(ID(1:8) == 'MAXSTEPS') THEN
-C        READ(DLIN,'(I8)') MAXSTP
+!      ELSEIF(ID(1:8) == 'MAXPBUFR') THEN
+!        READ(DLIN,'(I8)') MPB
+!      ELSEIF(ID(1:8) == 'MAXSTEPS') THEN
+!        READ(DLIN,'(I8)') MAXSTP
       ENDIF
       GO TO 200
   250 CONTINUE
@@ -123,15 +123,15 @@ C        READ(DLIN,'(I8)') MAXSTP
       WRITE(LOUT,6001) NBSS
       WRITE(LOUT,6014) NLAYMX
       WRITE(LOUT,6015) MXSEDLAY
-CIPKMAR06
+!IPKMAR06
       WRITE(LOUT,6004) NCQOBS
       WRITE(LOUT,6005) NQLDS
       WRITE(LOUT,6006) NCHOBS
       WRITE(LOUT,6007) NHDS
       WRITE(LOUT,6008) NDPTS
       WRITE(LOUT,6009) NELDS
-C      WRITE(LOUT,6010) MPB
-C      WRITE(LOUT,6011) MAXSTP
+!      WRITE(LOUT,6010) MPB
+!      WRITE(LOUT,6011) MAXSTP
  6000 FORMAT(' MAXIMUM FRONT WIDTH SET TO                    ',I8)
  6001 FORMAT(' MAXIMUM BUFFER SIZE SET TO            ',I16)
  6004 FORMAT(' MAXIMUM POINTS PER INFLOW HYDROGRAPH SET TO   ',I8)
@@ -140,8 +140,8 @@ C      WRITE(LOUT,6011) MAXSTP
  6007 FORMAT(' MAXIMUM INFLOW TIDALGRAPHS SET TO             ',I8)
  6008 FORMAT(' MAXIMUM POINTS PER ELEMENT INFLOW GRAPH SET TO',I8)
  6009 FORMAT(' MAXIMUM INFLOW ELEMENT GRAPHS SET TO          ',I8)
-C 6010 FORMAT(' MAXIMUM PRINT BUFFER SET TO                   ',I8)
-C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
+! 6010 FORMAT(' MAXIMUM PRINT BUFFER SET TO                   ',I8)
+! 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
  6012 FORMAT(/' MAXIMUM NUMBER OF NODES SET TO                ',I8)
  6013 FORMAT(' MAXIMUM NUMBER OF ELEMENTS SET TO             ',I8)
  6014 FORMAT(' MAXIMUM NUMBER OF LAYERS   SET TO             ',I8)
@@ -149,10 +149,10 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
       MFW=MFWW
       mfwsiz = mfww
       NBS=NBSS
-
+!
       call setUpNodes (m_SimModel.femesh, maxp)
-      
-      !viscosities and residual for element output purposes
+!
+!viscosities and residual for element output purposes      
       allocate (epsx_nn (1:maxe), epsz_nn(1:maxe))
       allocate (epsxz_nn (1:maxe), epszx_nn(1:maxe))
       allocate (fehler (1:6, 1:maxe))
@@ -167,169 +167,169 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
           fehler (j, i) = 0.0d0
         enddo
       enddo
-      
-      ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)
-     + ,LDEST(MFWW),QR(MFWW))
-
-
+!
+      ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)           &
+     & ,LDEST(MFWW),QR(MFWW))
+!
+!
       ALLOCATE (LHS(NBS),QS(NBS))
-
+!
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
-      
-      !EFa oct09, testing hfd
-      ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,8),ITAB(MAXP),
-
-     1              ALFA(MAXP),VOLD(7,MAXP),
-     2              VDOT(7,MAXP),VDOTO(7,MAXP),
-     3              NFIX(MAXP),NLOC(MAXP),NDEP(MAXP),
-     4             NSURF(MAXP),NBTN(MAXP),IBN(MAXP),NFIX1(MAXP)
-     5             ,FCTV(MAXP),FCTS(MAXP),NREF(MAXP),NTHREE(MAXP)
-     6             ,VVEL(MAXP),FC(MAXP,3)
+!
+!EFa oct09, testing hfd      
+      ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,8),ITAB(MAXP),      &
+!
+     &              ALFA(MAXP),VOLD(7,MAXP),                            &
+     &              VDOT(7,MAXP),VDOTO(7,MAXP),                         &
+     &              NFIX(MAXP),NLOC(MAXP),NDEP(MAXP),                   &
+     &             NSURF(MAXP),NBTN(MAXP),IBN(MAXP),NFIX1(MAXP)         &
+     &             ,FCTV(MAXP),FCTS(MAXP),NREF(MAXP),NTHREE(MAXP)       &
+     &             ,VVEL(MAXP),FC(MAXP,3)                               &
 !nis,may07
 !Add midside node for polynom approach
 !!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
-     7             ,ADIF(MAXP),XSLP(MAXP),YSLP(MAXP),NFIXK(MAXP)
+     &             ,ADIF(MAXP),XSLP(MAXP),YSLP(MAXP),NFIXK(MAXP)        &
 !!     7             ,ADIF(MAXP), XSLP(minNoNu:MAXP)
 !!     +             ,YSLP(minNoNu:MAXP),NFIXK(minNoNu:MAXP)
 !!-
-     8             ,WIDTH(MAXP),SS1(MAXP),SS2(MAXP),NFIXP(MAXP)
+     &             ,WIDTH(MAXP),SS1(MAXP),SS2(MAXP),NFIXP(MAXP)         &
 !!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
-     +             ,ALFAK(MAXP),VOUTN(MAXP),WIDS(MAXP)
+     &             ,ALFAK(MAXP),VOUTN(MAXP),WIDS(MAXP)                  &
 !!     +             ,ALFAK(MAXP),VOUTN(minNoNu:MAXP),WIDS(MAXP)
 !!-
 !Add midside node for polynom approach
 !-
-     +             ,DIR(MAXP)
-     +             ,PRESS(MAXP),DEN(MAXP),NODC(MAXP),NSTRT(MAXP,2)
-     +           ,NDROP(MAXP,4),ICPON(MAXP),NSPL(MAXP)
-     +           ,DROXIN(MAXP),DRODXN(MAXP),DROYIN(MAXP),DRODYN(MAXP)
-     +           ,irbd(MAXP),nfixsav(MAXP)
-     +           ,IESPC(7,MAXP)
-     +           ,iactv(MAXP,7),HEL(MAXP),HOL(MAXP),HDET(MAXP)
-     +           ,HDOT(MAXP)
-     +           ,jpoint(MAXP),SIDN(MAXP),XTLN(MAXP)
-     +           ,widbs(MAXP),wss(MAXP),ICOLLAP(MAXP),WSLL(MAXP)
-     +           ,V2OL(7,MAXP),H2OL(MAXP),NBCKP(MAXP,7),NFIXSV1(MAXP)
-     +           ,WAT(MAXP,3),NODWT(MAXP,3)
-     +           ,GAN(MAXP),GAN0(MAXP),DGN(MAXP),IBNA(MAXP)
-     +           ,XNU(MAXP),XNMANN(MAXP),ISTLIN(MAXP)
-     +           ,VSCALE(MAXP),DDHDX(MAXP),DDHDY(MAXP),DDAODX(MAXP)
-     1           ,DDAODY(MAXP),DIVID(MAXP),XVEL(10,MAXP),LAB(MAXP)
-     +           ,EVISXZ(MAXP),EVISYZ(MAXP),DVISZ(MAXP)
-     +           ,UDST(MAXP),VDST(MAXP),UUDST(MAXP),UVDST(MAXP)
-     +           ,VVDST(MAXP),SDST(MAXP),TDST(MAXP),SEDST(MAXP)
-     +           ,IMID(MAXP,2),IPASST(MAXP),IOVLDN(MAXP))
-CIPK sep06 ADD IOVLDN (currently not used)
-CIPK APR06
-
-      ALLOCATE   (NDRY(MAXP),NDRYO(MAXP),IPT(MAXP),DREC(MAXP),
-     +               IMATO(MAXE),LISTEL(MAXE)
-     +               ,ADB(MAXP),ADT(MAXP),ADO(MAXP),AKP(MAXP)
-     +               ,DAME(MAXP),AME(MAXP),ACOR(MAXP),ADOKP(MAXP)
-     +               ,AOKP(MAXP))
-
-      ALLOCATE   (IWFLOW(MAXP),WFLOW(MAXP),WHGT(MAXP),WLEN(MAXP)
-     +             ,wflolw(MAXP),TRANSEL(MAXP),ISUBM(MAXP),ISUBMEL(MAXE)
-     +             ,NFCTP(MAXE))
-
-      ALLOCATE   (STRESS(MAXP,2),SPWP(MAXP),AWL(MAXP),SWH(MAXP)
-     +                ,WVDR(MAXP),STR1(MAXP,6),STR2(MAXP,6)
-     +                ,STR10(MAXP),STR20(MAXP)
-     +                ,STR11(MAXP),STR21(MAXP))
-
+     &             ,DIR(MAXP)                                           &
+     &             ,PRESS(MAXP),DEN(MAXP),NODC(MAXP),NSTRT(MAXP,2)      &
+     &           ,NDROP(MAXP,4),ICPON(MAXP),NSPL(MAXP)                  &
+     &           ,DROXIN(MAXP),DRODXN(MAXP),DROYIN(MAXP),DRODYN(MAXP)   &
+     &           ,irbd(MAXP),nfixsav(MAXP)                              &
+     &           ,IESPC(7,MAXP)                                         &
+     &           ,iactv(MAXP,7),HEL(MAXP),HOL(MAXP),HDET(MAXP)          &
+     &           ,HDOT(MAXP)                                            &
+     &           ,jpoint(MAXP),SIDN(MAXP),XTLN(MAXP)                    &
+     &           ,widbs(MAXP),wss(MAXP),ICOLLAP(MAXP),WSLL(MAXP)        &
+     &           ,V2OL(7,MAXP),H2OL(MAXP),NBCKP(MAXP,7),NFIXSV1(MAXP)   &
+     &           ,WAT(MAXP,3),NODWT(MAXP,3)                             &
+     &           ,GAN(MAXP),GAN0(MAXP),DGN(MAXP),IBNA(MAXP)             &
+     &           ,XNU(MAXP),XNMANN(MAXP),ISTLIN(MAXP)                   &
+     &           ,VSCALE(MAXP),DDHDX(MAXP),DDHDY(MAXP),DDAODX(MAXP)     &
+     &           ,DDAODY(MAXP),DIVID(MAXP),XVEL(10,MAXP),LAB(MAXP)      &
+     &           ,EVISXZ(MAXP),EVISYZ(MAXP),DVISZ(MAXP)                 &
+     &           ,UDST(MAXP),VDST(MAXP),UUDST(MAXP),UVDST(MAXP)         &
+     &           ,VVDST(MAXP),SDST(MAXP),TDST(MAXP),SEDST(MAXP)         &
+     &           ,IMID(MAXP,2),IPASST(MAXP),IOVLDN(MAXP))
+!IPK sep06 ADD IOVLDN (currently not used)
+!IPK APR06
+!
+      ALLOCATE   (NDRY(MAXP),NDRYO(MAXP),IPT(MAXP),DREC(MAXP),          &
+     &               IMATO(MAXE),LISTEL(MAXE)                           &
+     &               ,ADB(MAXP),ADT(MAXP),ADO(MAXP),AKP(MAXP)           &
+     &               ,DAME(MAXP),AME(MAXP),ACOR(MAXP),ADOKP(MAXP)       &
+     &               ,AOKP(MAXP))
+!
+      ALLOCATE   (IWFLOW(MAXP),WFLOW(MAXP),WHGT(MAXP),WLEN(MAXP)        &
+     &             ,wflolw(MAXP),TRANSEL(MAXP),ISUBM(MAXP),ISUBMEL(MAXE)&
+     &             ,NFCTP(MAXE))
+!
+      ALLOCATE   (STRESS(MAXP,2),SPWP(MAXP),AWL(MAXP),SWH(MAXP)         &
+     &                ,WVDR(MAXP),STR1(MAXP,6),STR2(MAXP,6)             &
+     &                ,STR10(MAXP),STR20(MAXP)                          &
+     &                ,STR11(MAXP),STR21(MAXP))
+!
 !NiS,apr06: increase the number of element characteristics array ORT(:,:)
 !      ALLOCATE   (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,14),NFIXH(MAXE)
 !      ALLOCATE    (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,17),NFIXH(MAXE)
-      ALLOCATE    (NOP (MAXE, 20), IMAT (MAXE), NFIXH (MAXE)
+      ALLOCATE    (NOP (MAXE, 20), IMAT (MAXE), NFIXH (MAXE)            &
 !-
-     3             ,TH(MAXE),AREA(MAXE),NCORN(MAXE),IMATL(MAXE)
-     7             ,NOPS(MAXE,8),NCRN(MAXE),LNO(MAXE),SIDF(MAXE)
-     +             ,SIDQ(MAXE,3),ZMANN(MAXE),CHEZ(MAXE),NETYP(MAXE)
-     +             ,DFCT(MAXE)
-     +             ,EDD1(MAXE),EDD2(MAXE),EDD3(MAXE),nelord(MAXE)
-     +             ,DROXINS(MAXE,8),DROYINS(MAXE,8)
-     +             ,ELAREA(MAXE),neref(MAXE),nedep(MAXE),TVOLC(MAXE)
-     +             ,TVOL(MAXE),ICOLLAPE(MAXE),NRELSF(MAXE),SIDFF(MAXE)
-     +             ,NOPSS(MAXE,20),NFIXHS(MAXE),EINX(MAXE),EINY(MAXE)
+     &             ,TH(MAXE),AREA(MAXE),NCORN(MAXE),IMATL(MAXE)         &
+     &             ,NOPS(MAXE,8),NCRN(MAXE),LNO(MAXE),SIDF(MAXE)        &
+     &             ,SIDQ(MAXE,3),ZMANN(MAXE),CHEZ(MAXE),NETYP(MAXE)     &
+     &             ,DFCT(MAXE)                                          &
+     &             ,EDD1(MAXE),EDD2(MAXE),EDD3(MAXE),nelord(MAXE)       &
+     &             ,DROXINS(MAXE,8),DROYINS(MAXE,8)                     &
+     &             ,ELAREA(MAXE),neref(MAXE),nedep(MAXE),TVOLC(MAXE)    &
+     &             ,TVOL(MAXE),ICOLLAPE(MAXE),NRELSF(MAXE),SIDFF(MAXE)  &
+     &             ,NOPSS(MAXE,20),NFIXHS(MAXE),EINX(MAXE),EINY(MAXE)   &
 !     +             ,IEDSW1(MAXE),TBFACT1(MAXE),TBMIN1(MAXE)
 !     +             ,INOFLOW(MAXE),NCTREF(MAXE),NTMREF(MAXE)
-     +             ,INOFLOW(MAXE)
-     +             ,NREORD(MAXE),EEXXYY(6,MAXE)
-     +             ,IGTP(MAXE),igtcl(MAXE)
-     +             ,ELMMIN(MAXE),MANMIN(MAXE),ELMMAX(MAXE),MANMAX(MAXE) 
-     +             ,DRAGX(MAXE),DRAGY(MAXE),IMAN(MAXE),HMAN(MAXE,4)
-     +             ,MANTAB(MAXE,4,2))
-
-      !nis,jan08: All the following variables are referring to the number of material types (NMAT), which is not known here
+     &             ,INOFLOW(MAXE)                                       &
+     &             ,NREORD(MAXE),EEXXYY(6,MAXE)                         &
+     &             ,IGTP(MAXE),igtcl(MAXE)                              &
+     &             ,ELMMIN(MAXE),MANMIN(MAXE),ELMMAX(MAXE),MANMAX(MAXE) &
+     &             ,DRAGX(MAXE),DRAGY(MAXE),IMAN(MAXE),HMAN(MAXE,4)     &
+     &             ,MANTAB(MAXE,4,2))
+!
+!nis,jan08: All the following variables are referring to the number of material types (NMAT), which is not known here      
       ALLOCATE (NCTREF (1: 1000), IEDSW1 (1: 1000), ort (1: 1000, 17))
       ALLOCATE (TBFACT1 (1: 1000), TBMIN1 (1: 1000), NTMREF (1: 1000))
-
-
-
-C     LAYER VARIABLE
+!
+!
+!
+!     LAYER VARIABLE
       ALLOCATE  (THL(MNPP),THLAY(MNPP,NLAYMX))
-
-      ALLOCATE  (DEPRAT(MAXP),BSHEAR(MAXP),VS(MAXP),
-     +           EDOT(MAXP),UST(MAXP),SERAT(MAXP),ESRO(MAXP)
-     +          ,NLAYO(MAXP),NLAY(MAXP),BEDEL(MAXP),TM(MAXP),TMD(0:MAXP) 
-     +          ,BEDORIG(MAXP),DEPINCR(MAXP),BEDELO(MAXP),DEPRATO(MAXP))
-cipk sep06  add  DEPRAT0 and to TMD
-
-
-      ALLOCATE      (CRSLOP(MAXE),TRSLOP(MAXP),srate(MAXP),gpbsav(MAXP)   
-     +              ,RCAE(MAXE),RWAE(MAXE),RCAN(MAXP),RWAN(MAXP)
-     +              ,TRRAT(MAXP),CAI(MAXP))
-
+!
+      ALLOCATE  (DEPRAT(MAXP),BSHEAR(MAXP),VS(MAXP),                    &
+     &           EDOT(MAXP),UST(MAXP),SERAT(MAXP),ESRO(MAXP)            &
+     &          ,NLAYO(MAXP),NLAY(MAXP),BEDEL(MAXP),TM(MAXP),TMD(0:MAXP)&
+     &          ,BEDORIG(MAXP),DEPINCR(MAXP),BEDELO(MAXP),DEPRATO(MAXP))
+!ipk sep06  add  DEPRAT0 and to TMD
+!
+!
+      ALLOCATE      (CRSLOP(MAXE),TRSLOP(MAXP),srate(MAXP),gpbsav(MAXP) &
+     &              ,RCAE(MAXE),RWAE(MAXE),RCAN(MAXP),RWAN(MAXP)        &
+     &              ,TRRAT(MAXP),CAI(MAXP))
+!
       ALLOCATE    (ELEVB(MAXP))
-
-      ALLOCATE  (SD(MAXP),GPB(MAXP,MSAND)
-     +             ,TTHICK(MAXP),ALPHA1(MAXP),ALPHA2(MAXP),IDONE(MAXP)
-     +             ,DELBED(MAXP),GP(MSAND))
-
-CIPK MAR06
-      ALLOCATE
-     +           (SGSAND(MAXP),CLDEND(MAXP),CLERND(MAXP),AMANNND(MAXP)
-     
-     +           ,D35ND(MAXP),D50ND(MAXP),D90ND(MAXP),GPMAXND(MAXP)
-     +           ,VSANDND(MAXP),ISMODEND(MAXP)
-     +           ,SDND(1,MAXP))
-
-      ALLOCATE   (WAVEHT(MAXP),PEAKPRD(MAXP),WAVEDR(MAXP)
-     +                ,WAVEHT0(MAXP),PEAKPRD0(MAXP),WAVEDR0(MAXP)
-     +                ,WAVEHT1(MAXP),PEAKPRD1(MAXP),WAVEDR1(MAXP)
-     +                ,WVH0(MAXP),WVA0(MAXP),WVT0(MAXP)
-     +                ,WVH1(MAXP),WVA1(MAXP),WVT1(MAXP))
-
-      ALLOCATE  (TRIBAREA(MAXP),ELTON(MAXP,12),deltab(MAXP),nsrc(MAXP)
-     +              ,IEDONE(MAXE),NKEY1(MAXP),EXTLD(MAXP),trslp(MAXP)
-     +              ,EXTLDEL(MAXE))
-
-      ALLOCATE  (WDT1(11,MMAT1),WDT0(11,MMAT1),IYS(MMAT1)
-     +       ,METID(MMAT1,9),DA(MMAT1),TTM(MMAT1),AETMP(MMAT1)
-     +       ,BETMP(MMAT1),ISOL(MMAT1)
-     +       ,DSOL(MMAT1),SOLIN0(MMAT1),SOLIN1(MMAT1),IDPT(MMAT1))
-
-      ALLOCATE  (XCEN(MAXP*2),YCEN(MAXP*2),RADS(MAXP*2), 
-     +           NKEY(MAXP*2),IGAP(MAXP*2))
-
-      ALLOCATE   (XUSR(MAXP),YUSR(MAXP),XOUTL(MAXP),YOUTL(MAXP)
-     +           ,NOPEL(3,MAXP*2),IPOLY(MAXP))
-
-      ALLOCATE   (TSOLHR(MMAT1),HA(MMAT1),DRYBLB(MMAT1),WETBLB(MMAT1),
-     +        CLOUD(MMAT1),WIND(MMAT1),AE(MMAT1),BE(MMAT1),SNOWMT(MMAT1)
-     +   ,WDIRT(MMAT1),DAT(MMAT1),ATMPR(MMAT1))
-      
-      ALLOCATE (ICETHK(MAXP),QICE(MAXP),WNDSP(MAXP),WNDDR(MAXP)
-     +,SNOWD(MAXP),AIRTMP(MAXP),ICETHKOL(MAXP),SIGMA(MAXP,2))
-
-CIPK MAY06
+!
+      ALLOCATE  (SD(MAXP),GPB(MAXP,MSAND)                               &
+     &             ,TTHICK(MAXP),ALPHA1(MAXP),ALPHA2(MAXP),IDONE(MAXP)  &
+     &             ,DELBED(MAXP),GP(MSAND))
+!
+!IPK MAR06
+      ALLOCATE                                                          &
+     &           (SGSAND(MAXP),CLDEND(MAXP),CLERND(MAXP),AMANNND(MAXP)  &
+!
+     &           ,D35ND(MAXP),D50ND(MAXP),D90ND(MAXP),GPMAXND(MAXP)     &
+     &           ,VSANDND(MAXP),ISMODEND(MAXP)                          &
+     &           ,SDND(1,MAXP))
+!
+      ALLOCATE   (WAVEHT(MAXP),PEAKPRD(MAXP),WAVEDR(MAXP)               &
+     &                ,WAVEHT0(MAXP),PEAKPRD0(MAXP),WAVEDR0(MAXP)       &
+     &                ,WAVEHT1(MAXP),PEAKPRD1(MAXP),WAVEDR1(MAXP)       &
+     &                ,WVH0(MAXP),WVA0(MAXP),WVT0(MAXP)                 &
+     &                ,WVH1(MAXP),WVA1(MAXP),WVT1(MAXP))
+!
+      ALLOCATE  (TRIBAREA(MAXP),ELTON(MAXP,12),deltab(MAXP),nsrc(MAXP)  &
+     &              ,IEDONE(MAXE),NKEY1(MAXP),EXTLD(MAXP),trslp(MAXP)   &
+     &              ,EXTLDEL(MAXE))
+!
+      ALLOCATE  (WDT1(11,MMAT1),WDT0(11,MMAT1),IYS(MMAT1)               &
+     &       ,METID(MMAT1,9),DA(MMAT1),TTM(MMAT1),AETMP(MMAT1)          &
+     &       ,BETMP(MMAT1),ISOL(MMAT1)                                  &
+     &       ,DSOL(MMAT1),SOLIN0(MMAT1),SOLIN1(MMAT1),IDPT(MMAT1))
+!
+      ALLOCATE  (XCEN(MAXP*2),YCEN(MAXP*2),RADS(MAXP*2),                &
+     &           NKEY(MAXP*2),IGAP(MAXP*2))
+!
+      ALLOCATE   (XUSR(MAXP),YUSR(MAXP),XOUTL(MAXP),YOUTL(MAXP)         &
+     &           ,NOPEL(3,MAXP*2),IPOLY(MAXP))
+!
+      ALLOCATE   (TSOLHR(MMAT1),HA(MMAT1),DRYBLB(MMAT1),WETBLB(MMAT1),  &
+     &        CLOUD(MMAT1),WIND(MMAT1),AE(MMAT1),BE(MMAT1),SNOWMT(MMAT1)&
+     &   ,WDIRT(MMAT1),DAT(MMAT1),ATMPR(MMAT1))
+!
+      ALLOCATE (ICETHK(MAXP),QICE(MAXP),WNDSP(MAXP),WNDDR(MAXP)         &
+     &,SNOWD(MAXP),AIRTMP(MAXP),ICETHKOL(MAXP),SIGMA(MAXP,2))
+!
+!IPK MAY06
       ALLOCATE (TMSAND(0:MAXP),TMSSAND(0:MAXP))
-      
-       
+!
+!
       TMSAND=0
       TMSSAND=0
-
-CIPK AUG05 ZERO ARRAYS
+!
+!IPK AUG05 ZERO ARRAYS
       ITAB=0
       CRSLOP=0.
       TRSLOP=0.
@@ -341,9 +341,9 @@ CIPK AUG05 ZERO ARRAYS
       RWAN=0.
       TRRAT=0.
       CAI=0.
-
+!
       ELEVB=0.
-      
+!
       SD=0.
       GPB=0.
       TTHICK=0.
@@ -352,8 +352,8 @@ CIPK AUG05 ZERO ARRAYS
       IDONE=0
       DELBED=0.
       GP=0.
-
-CIPK MAR06
+!
+!IPK MAR06
       SGSAND=0.
       CLDEND=0.
       CLERND=0.
@@ -365,8 +365,8 @@ CIPK MAR06
       VSANDND=0.
       ISMODEND=0
       SDND=0.
-
-
+!
+!
       WAVEHT=0.
       PEAKPRD=0.
       WAVEDR=0.
@@ -382,7 +382,7 @@ CIPK MAR06
       WVH1=0.
       WVA1=0.
       WVT1=0.
-
+!
       TRIBAREA=0.
       ELTON=0.
       deltab=0.
@@ -391,7 +391,7 @@ CIPK MAR06
       NKEY1=0
       EXTLD=0.
       trslp=0.
-      
+!
       WDT1=0.
       WDT0=0.
       IYS=0
@@ -436,9 +436,9 @@ CIPK MAR06
       AIRTMP=0.
       ICETHKOL=0
       SIGMA=0.
-CIPK MAR01
+!IPK MAR01
       NODETR=0
-
+!
       DO J=1,MNPP
         THL(J)=0.
         DO K=1,NLAYMX
@@ -530,7 +530,7 @@ CIPK MAR01
           STR1(J,K)=0.
           STR2(J,K)=0.
         ENDDO
-cipk sep06
+!ipk sep06
         DEPRATO(J)=0
         DEPRAT(J)=0.
         BSHEAR(J)=0.
@@ -546,11 +546,11 @@ cipk sep06
         TMD(J)=0.
         BEDORIG(J)=0.
         DEPINCR(J)=0.
-CIPK JUN05
-        !nis,com: transition elevation and submerging water stage initialized to unrealistic low values
+!IPK JUN05
+!nis,com: transition elevation and submerging water stage initialized to unrealistic low values        
         WHGT(J)=-10000.
         TRANSEL(J)=-10000.
-
+!
         NSPL(J)=0
         NSTRT(J,1)=0
         NSTRT(J,2)=0
@@ -588,17 +588,17 @@ CIPK JUN05
         NFIX(J) = 0
         NLOC(J)=0
         NDEP(J)=0
-CIPK SEP02
+!IPK SEP02
         ICETHK(J)=0.
         ICETHKOL(J)=0.
-CIPK MAY02
+!IPK MAY02
         STRESS(J,1)=0.
         STRESS(J,2)=0.
         STR10(J)=0.
         STR11(J)=0.
         STR20(J)=0.
         STR21(J)=0.
-CIPK SEP02
+!IPK SEP02
         WAVEHT(J)=0.
         WAVEDR(J)=0.
         PEAKPRD(J)=0.
@@ -620,14 +620,14 @@ CIPK SEP02
           V2OL(K,J)=0.0
           NBCKP(J,K)=0
         ENDDO
-        !EFa oct09, testing hfd
+!EFa oct09, testing hfd        
         spec(j,8) = 0.0
-        !-
-CIPK NOV97
+!-        
+!IPK NOV97
         HDET(J)=0.
         HDOT(J)=0.
       ENDDO
-
+!
       DO J=1,MAXE
         DO K=1,20
           NOP(J,K)=0
@@ -711,23 +711,23 @@ CIPK NOV97
         NFIXH(J)=0
         NCORN(J)=0
         IMAT(J)=0
-
-cipk nov99
+!
+!ipk nov99
         DFCT(J)=0.0
-CIPK MAR01
+!IPK MAR01
         ELMMIN(J)=0.0
         MANMIN(J)=0.0
         ELMMAX(J)=0.0
         MANMAX(J)=0.0
         DRAGX(J)=0.0
         DRAGY(J)=0.
-cipk jan02
+!ipk jan02
         SIDFF(J)=0.0
-
+!
       ENDDO
-
-      !nis,jan08: nctref is for the material types, especially for the weir structures
-      !nis,jan08: ort-variable is according to the material types
+!
+!nis,jan08: nctref is for the material types, especially for the weir structures      
+!nis,jan08: ort-variable is according to the material types      
       do j = 1, 1000
         NCTREF (J) = 0
         NTMREF (J) = 0
@@ -738,7 +738,7 @@ cipk jan02
           ORT(J,K)=0.
         ENDDO
       end do
-
+!
       DO I=1,MAXP
         ISTLIN(I)=0.
       ENDDO
@@ -748,34 +748,34 @@ cipk jan02
         STQ(I)=0.
         STQE(I)=0.
       ENDDO
-
+!
       DO I=1,MAXE
         SIDF(I)=0.
         IGTP(I)=0
-CIPK JUN05
+!IPK JUN05
         NFCTP(I)=0
         DO J=1,8
           NOPS(I,J)=0
         ENDDO
       ENDDO
-
+!
       DO J=1,100
         NDUPJ(J)=0
-        !nis,oct07: Needs to be initialized, if it should stand some tests
+!nis,oct07: Needs to be initialized, if it should stand some tests        
         ndflj(j) = 0
-        !-
+!-        
         NDDNJ(J)=0
         cj(j)=1.0
       ENDDO
-
-CIPK MAR01
+!
+!IPK MAR01
       DO J=1,50
         NOUTCC(J)=0
         ADDSAL(J)=-9999.
         ADDTMP(J,1)=-9999.
         ADDSED(J)=-9999.
       ENDDO
-
+!
 !NiS,apr06: allocating arrays for roughness calculation in DARCY-WEISBACH-equation
       ALLOCATE (CNIKU(MaxE), DURCHBAUM(MaxE), ABST(MaxE))
       ALLOCATE (C_WR(MaxE))
@@ -789,7 +789,7 @@ CIPK MAR01
 !-
 !NiS,apr06: allocating arrays for neighbourhood relations
       allocate (mcord(1:MaxE,1:2))
-
+!
 !NiS,jul06: allocating the (for the moment) dummy gl_bedform array to pass variables correctly to the subroutine 
 !           formrauheit
       allocate (gl_bedform(1:MaxE,1:4))
@@ -798,7 +798,7 @@ CIPK MAR01
           gl_bedform(i,j) = 0
         enddo
       enddo
-
+!
 !nis,jun07: Add initializaton of membership of nodes in a transition
       ALLOCATE (TransitionMember (1: MaxP))
       ALLOCATE (TransitionElement (1: MaxE), TransLinePart (1: MaxE))
@@ -812,7 +812,7 @@ CIPK MAR01
         TransitionElement (i) = .false.
         TransLinePart (i) = 0
       end do
-
+!
 !nis,nov06: allocating Transition lines for 1D 2D line transition;
 !           1. 1D element number of the coupling
 !           2. continuity line number of the transtion
@@ -823,7 +823,7 @@ CIPK MAR01
           TransLines (i,j) = 0
         ENDDO
       ENDDO
-      
+!
       allocate (PipeSurfConn(1:maxps))
       do i = 1, maxps
         PipeSurfConn(i)%SurfElt = 0
@@ -839,32 +839,32 @@ CIPK MAR01
       do i = 1, maxe
         ConnectedElt(i) = 0
       enddo
-      
+!
       allocate (StorageElts (1: maxSE))
-      
-
+!
+!
 !nis,nov06: allocating the 1D-2D-Transition-line-Factor array and initialization of that (at the beginning no scaling)
 !           in the coefs subroutines this factor is generally applied!
 !           If later this approach is expanded also to calculate the concentrations, this EqScale array was initialized
 !           for all degrees of freedom
       ALLOCATE (EqScale (1:MaxP,1:7))
-      !for all nodes (in general only nodes at line-transition, but differing use is also possible)
+!for all nodes (in general only nodes at line-transition, but differing use is also possible)      
       do i = 1, MaxP
-        !for all degrees of freedom
+!for all degrees of freedom        
         do j = 1, 7
           EqScale (i,j) = 1.0
         end do
       end do
 !-
-
+!
 !nis,dec06: Initializing problematic array here
       do i = 1,MaxE
         EXTLDEL(i) = 0
       end do
 !-
-
-      !EFa Nov06, allocating für Teschke-1D-Elemente
-      !polynom coefficients
+!
+!EFa Nov06, allocating für Teschke-1D-Elemente      
+!polynom coefficients      
       ALLOCATE (apoly      (1: MaxPolyA, 1: maxp, 0:4))
       ALLOCATE (qpoly      (1: MaxPolyQ, 1: maxp, 0:4))
       ALLOCATE (alphapoly  (1: MaxPolyB, 1: maxp, 0:4))
@@ -876,23 +876,23 @@ CIPK MAR01
       ALLOCATE (polysplitsA (1: maxp))
       ALLOCATE (polysplitsQ (1: maxp))
       ALLOCATE (polysplitsB (1: maxp))
-      !intersecting water depth for flow coefficient (e.g. Boussinesq)
+!intersecting water depth for flow coefficient (e.g. Boussinesq)      
       ALLOCATE (hbordv(maxp))
-      !validity range for polynoms
+!validity range for polynoms      
       ALLOCATE (hhmin(maxp))
       ALLOCATE (hhmax(maxp))
-      !reference friction slope
+!reference friction slope      
       ALLOCATE (qgef(maxp))
-      !flow kilometer of node
+!flow kilometer of node      
       ALLOCATE (kmx(1:maxp))
-
-      !cross sectional area
+!
+!cross sectional area      
       ALLOCATE (ah(1:maxp))
       ALLOCATE (dahdh(1:maxp))
-
-
+!
+!
       DO i = 1, MaxP
-        !polynom coefficients
+!polynom coefficients        
         do p = 1, MaxPolyA
           polyrangeA (i, p) = 0.0
           DO j = 0, 4
@@ -913,31 +913,31 @@ CIPK MAR01
           enddo
         enddo
       enddo
-
+!
       do i = 1, MaxP
         polySplitsA (i) = 0
         polySplitsQ (i) = 0
         polySplitsB (i) = 0
-        !validity range for polynoms
+!validity range for polynoms        
         hhmin(i)      = 0.0
         hhmax(i)      = 10.0e3
-        !flow kilometer of node
+!flow kilometer of node        
         kmx(i)        = -1.0
-        !reference friction slope
+!reference friction slope        
         qgef(i)       = 0.0
-        !intersecting water depth for flow coefficient (e.g. Boussinesq)
+!intersecting water depth for flow coefficient (e.g. Boussinesq)        
         hbordv(i)     = 0.0
-        !cross sectional areas, derivative of areas and discharge
+!cross sectional areas, derivative of areas and discharge        
         ah(i)         = 0.0
         dahdh(i)      = 0.0
       ENDDO
-
-      !nis,jun07: Proforma initialization
-      !roughness class
+!
+!nis,jun07: Proforma initialization      
+!roughness class      
       irk = 0
-      !-
-      !nis,jun07: iedrop is used as a source/sink for sediment or something. It needs to be initialized; there might be up to 9 scrs/snks
-      !MD:  do i = 1, 9 : New: more than 9 Mat-Types >> now limited to 85
+!-      
+!nis,jun07: iedrop is used as a source/sink for sediment or something. It needs to be initialized; there might be up to 9 scrs/snks      
+!MD:  do i = 1, 9 : New: more than 9 Mat-Types >> now limited to 85      
       DROPMAX = 0
       do i = 1, 85
         iedrop (i) = 0
@@ -947,45 +947,45 @@ CIPK MAR01
         q2D(i) = 0.0
         dq2ddh(i) = 0.0
       end do
-
+!
 !MD: Maximal and Minimal Sediment-Concentration
 !MD: can be changed by user by Maxsed and MinSed in CONTROL
       SedHighPerm = 100000.0
       SedLowPerm = 0.0
-
-      !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
+!
+!nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS      
       MAXFIL = 0
-      !-
-      !nis,jul07: following values are causing problems somewhere, therefore initialize them
+!-      
+!nis,jul07: following values are causing problems somewhere, therefore initialize them      
       TETH = 0.0
-
+!
       iwndmet = 0
       ihtmet = 0
-      !-
-
-
-      !nis,aug07: Introducing correction factors for elements roughness, only used for Darcy-approach
-      ALLOCATE (correctionKS(1: maxe), correctionAxAy(1: maxe),
-     +          correctionDp(1: maxe))
+!-      
+!
+!
+!nis,aug07: Introducing correction factors for elements roughness, only used for Darcy-approach      
+      ALLOCATE (correctionKS(1: maxe), correctionAxAy(1: maxe),         &
+     &          correctionDp(1: maxe))
       do i = 1, maxe
         correctionAxAy(i) = 1.0
         correctionDp(i)   = 1.0
         correctionKS(i)   = 1.0
       end do
-      !-
-
-      !nis,aug07: Introducing flow resistance storage for every element
-      ALLOCATE (lambdaKS(1:maxe), lambdaP(1:maxe), lambdaDunes(1:maxe),
-     +          lambdaTot(1:maxe))
+!-      
+!
+!nis,aug07: Introducing flow resistance storage for every element      
+      ALLOCATE (lambdaKS(1:maxe), lambdaP(1:maxe), lambdaDunes(1:maxe), &
+     &          lambdaTot(1:maxe))
       do i = 1, maxe
         lambdaKS(i) = 0.0
         lambdaP(i) = 0.0
         lambdaDunes(i)  = 0.0
         lambdaTot(i) = 0.0
       end do
-      !-
-
-      !MD Introducing friction factor storage for every node
+!-      
+!
+!MD Introducing friction factor storage for every node      
       ALLOCATE (FFACT_KN(1:maxp),FFACT_EL(1:maxe))
       do i = 1, MaxP
         FFACT_KN(i) = 0.0
@@ -993,21 +993,21 @@ CIPK MAR01
       do i = 1, maxe
         FFACT_EL(i) = 0.0
       end do
-      !-
-
-      !nis,aug07: number of 12 elements maximum at a node is because of reducing the inside element angle to
-      !           20 degrees in average (360°/12)
-      !TODO: make second entry dynamical
+!-      
+!
+!nis,aug07: number of 12 elements maximum at a node is because of reducing the inside element angle to      
+!           20 degrees in average (360°/12)      
+!TODO: make second entry dynamical      
       ALLOCATE (IsNodeOfElement(1:maxp, 0:12))
       do i = 1, maxp
         do j = 0, 12
-          !0: counter
-          !1-12: element numbers
+!0: counter          
+!1-12: element numbers          
           IsNodeOfElement(i, j) = 0
         end do
       end do
-
-      !initializations for lines
+!
+!initializations for lines      
       do i = 1, 50
         do j = 1, 3535
           lineimat(i, j) = 0
@@ -1017,9 +1017,9 @@ CIPK MAR01
           LineCorrectionDp (i, j)   = 1.0
         end do
       end do
-      !-
-
-      !EFa jun07, necessary for autoconverge
+!-      
+!
+!EFa jun07, necessary for autoconverge      
       beiauto = 0.0
       nnnunst = 0.0
       nnnst = 0.0
@@ -1029,9 +1029,9 @@ CIPK MAR01
       qqq = 0.0
       qqqdir = 0.0
       exterr = 0.0
-      !EFa aug07
+!EFa aug07      
       autoindex = 0.0
-      !-
+!-      
       ALLOCATE(temp_vel(7,maxp))
       ALLOCATE(temp_vdot(7,maxp))
       ALLOCATE(temp_vdoto(7,maxp))
@@ -1042,8 +1042,8 @@ CIPK MAR01
           temp_vdoto(k,i) = 0
         end do
       end do
-      !-
-
+!-      
+!
       ALLOCATE (minvel (1:3, 1:maxp), maxvel (1:3, 1:maxp))
       ALLOCATE (rausv(1:4, MaxP))
       allocate (minrausv (1:MaxP), maxrausv (1:MaxP))
@@ -1058,21 +1058,21 @@ CIPK MAR01
           rausv (j, i) = 0.0d0
         end do
       end do
-
-      !EFa jul07, added istab for stage-flow boundaries (table)
+!
+!EFa jul07, added istab for stage-flow boundaries (table)      
       ALLOCATE(istab(maxp))
       do i = 1,maxp
         istab(i) = 0.
       end do
-      !-
-
-      !EFa aug07, necessary for autoconverge
+!-      
+!
+!EFa aug07, necessary for autoconverge      
       ALLOCATE(temp_speccc(3))
       do i = 1,3
         temp_speccc(i) = 0.0
       end do
-      !-
-
+!-      
+!
       ALLOCATE (IntPolNo (1: MaxE), NeighProf (1: MaxP, 1: 2))
       ALLOCATE (IntPolProf (1: MaxP), kmWeight (1: MaxP))
       allocate (IsPolynomNode (1: MaxP))
@@ -1090,8 +1090,8 @@ CIPK MAR01
         NeighProf (i, 2) = 0
         kmWeight (i) = 1.0D0
       end do
-
+!
       RETURN
       END subroutine
-      
+!
       end module

@@ -21,28 +21,28 @@ subroutine PipeSurfaceConnectionQs
 
   do i = 1, maxps
   
-    !get the average energy elevations in the middle of an element
+!get the average energy elevations in the middle of an element    
     EltType = LocalElementType (ncorn (PipeSurfConn(i).SurfElt))
     call AvgElementEnergyLevels (heSurface, PipeSurfConn(i).SurfElt, EltType)
 
-    !get the average energy elevations in the middle of the pipe element
+!get the average energy elevations in the middle of the pipe element    
     EltType = LocalElementType (ncorn (PipeSurfConn(i).PipeElt))
     call AvgElementEnergyLevels (hePipe, PipeSurfConn(i).PipeElt, EltType)
     
-    !total load
+!total load    
     totalLoad = 1
 
-    !First Remove old specific flows
-    !-------------------------------
+!First Remove old specific flows    
+!-------------------------------    
     if (PipeSurfConn(i).SurfFlow /= 0.0d0 .AND. maxn /= 1) then
-      !Calculate the specific outflow/inflow to the surface element
+!Calculate the specific outflow/inflow to the surface element      
       CALL LNFLO (PipeSurfConn(i).SurfElt, - PipeSurfConn(i).SurfFlow, (/0.0,0.0,0.0/), totalLoad, 0, 0.0d0, 0.0d0)
     
-      !Calculate the specific outflow/inflow for original element
+!Calculate the specific outflow/inflow for original element      
       CALL LNFLO (PipeSurfConn(i).PipeElt, - PipeSurfConn(i).PipeFlow, (/0.0,0.0,0.0/), totalLoad, 0, 0.0d0, 0.0d0)
-      !Do the same for the interpolated elements
+!Do the same for the interpolated elements      
       if (IntPolNo (PipeSurfConn(i).PipeElt) /= 0) then
-        !for interpolated elements
+!for interpolated elements        
         ForInterpolated1: do j = 1, IntPolNo (PipeSurfConn(i).PipeElt)
           if (IntPolElts (PipeSurfConn(i).PipeElt, j) == 0) EXIT ForInterpolated1
           call LNFLO (IntPolElts (PipeSurfConn(i).PipeElt, j), - PipeSurfConn(i).PipeFlow, (/0.0,0.0,0.0/), totalLoad, 0, 0.0d0, 0.0d0)
@@ -50,13 +50,13 @@ subroutine PipeSurfaceConnectionQs
       end if
     endif
 
-    !Calculate flow from surface to pipe
+!Calculate flow from surface to pipe    
     PipeSurfConn(i).PipeFlow = PipeSurfConnFlow (heSurface, hePipe, PipeSurfConn(i).manholeDef)
     PipeSurfConn(i).SurfFlow = - PipeSurfConn(i).PipeFlow
     
     write(*,*) 'Surf outflow: ', PipeSurfConn(i).SurfFlow
     write(*,*) 'Pipe  inflow: ', PipeSurfConn(i).PipeFlow
-    !pause
+!pause    
     
 !    PipeSurfConn(i).DflowWRTv_upper = (PipeSurfConn(i).flow - PipeSurfConnFlow (heSurface - 0.01**2/(2*grav), hePipe, PipeSurfConn(i).manholeDef))/ 0.01
 !    PipeSurfConn(i).DflowWRTh_upper = (PipeSurfConn(i).flow - PipeSurfConnFlow (heSurface - 0.01, hePipe, PipeSurfConn(i).manholeDef))/ 0.01
@@ -64,19 +64,19 @@ subroutine PipeSurfaceConnectionQs
 !    PipeSurfConn(i).DflowWRTh_lower = (PipeSurfConn(i).flow - PipeSurfConnFlow (heSurface, hePipe - 0.01, PipeSurfConn(i).manholeDef))/ 0.01
     
     
-    !Now settle the new flow exchanges
-    !---------------------------------
-    !Calculate the specific outflow/inflow to the surface element
+!Now settle the new flow exchanges    
+!---------------------------------    
+!Calculate the specific outflow/inflow to the surface element    
     CALL LNFLO (PipeSurfConn(i).SurfElt, PipeSurfConn(i).SurfFlow, (/0.0,0.0,0.0/), totalLoad, 0, 0.0d0, 0.0d0)
     
-    !distribute total discharge over all interpolated elements.
-    !If no interpolated elements are present, this command doesn't fail!
+!distribute total discharge over all interpolated elements.    
+!If no interpolated elements are present, this command doesn't fail!    
     PipeSurfConn(i).PipeFlow = PipeSurfConn(i).PipeFlow/ (IntPolNo (PipeSurfConn(i).PipeElt) + 1)
-    !Calculate the specific outflow/inflow for original element
+!Calculate the specific outflow/inflow for original element    
     CALL LNFLO (PipeSurfConn(i).PipeElt, PipeSurfConn(i).PipeFlow, (/0.0,0.0,0.0/), totalLoad, 0, 0.0d0, 0.0d0)
-    !Do the same for the interpolated elements
+!Do the same for the interpolated elements    
     if (IntPolNo (PipeSurfConn(i).PipeElt) /= 0) then
-      !for interpolated elements
+!for interpolated elements      
       ForInterpolated2: do j = 1, IntPolNo (PipeSurfConn(i).PipeElt)
         if (IntPolElts (PipeSurfConn(i).PipeElt, j) == 0) EXIT ForInterpolated2
         call LNFLO (IntPolElts (PipeSurfConn(i).PipeElt, j), PipeSurfConn(i).PipeFlow, (/0.0,0.0,0.0/), totalLoad, 0, 0.0d0, 0.0d0)
@@ -100,31 +100,31 @@ function PipeSurfConnFlow (he_upper, he_lower, manh) result (flow)
   real (kind = 8) :: mueCorr
 
   type (energyLevel), intent (in) :: he_upper, he_lower
-  !manhole
+!manhole  
   type (pipeManhole), intent (in) :: manh
-  !locals
+!locals  
   real (kind = 8) :: lambda, cole
   
-  !cycle on equal energy elevations
-  !--------------------------------
+!cycle on equal energy elevations  
+!--------------------------------  
   if (he_upper.total == he_lower.total) then
     flow = 0.0d0
     return
   endif
   
-  !initializations
-  !---------------
+!initializations  
+!---------------  
   flow = 0.0d0
   InflowLoss = 0.0d0
   OutflowLoss = 0.0d0
   mueCorr = 0.0d0
   
-  !get pipe's flow resistance lambda
-  !---------------------------------
+!get pipe's flow resistance lambda  
+!---------------------------------  
   lambda = cole (0.0d0, manh.diameter / 4, manh.ks)
   
-  !determine loss direction
-  !------------------------
+!determine loss direction  
+!------------------------  
   if (he_upper.total > he_lower.total) then
     InflowLoss = manh.ZetaInflowUpper
     OutflowLoss = manh.ZetaOutflowLower
@@ -134,24 +134,24 @@ function PipeSurfConnFlow (he_upper, he_lower, manh) result (flow)
   endif
   
   
-  !determinie maximum discharge through manhole via energy balance
-  !---------------------------------------------------------------
+!determinie maximum discharge through manhole via energy balance  
+!---------------------------------------------------------------  
   PS1 = pipeMaximum (he_upper.total, he_lower.total, he_upper.bedLevel, manh.length, lambda, manh.diameter, InflowLoss, OutflowLoss)
   
   if (he_upper.total < he_lower.total) then
     flow = PS1 * (-1.0)
   else
   
-    !Calculate mue correction
-    !------------------------
+!Calculate mue correction    
+!------------------------    
     if (he_lower.total >= he_upper.bedLevel) then
       mueCorr = sqrt (1-((he_lower.total - he_upper.bedLevel)/ he_upper.specific)**16)
     else
       mueCorr = 1.0d0
     endif
   
-    !get theoretical flow from surface to pipe
-    !-----------------------------------------  
+!get theoretical flow from surface to pipe    
+!-----------------------------------------      
     PS2 = weirDuBuat (manh.mue, mueCorr, he_upper.specific, manh.diameter*pi/4)
     flow = min (PS1, PS2)
   endif
@@ -207,17 +207,17 @@ end function
 !local Element Type Definition
 !Normally a global type specifier should be invoked!
 function LocalElementType(numberOfCornerNodes) result (Elttype)
-  !function definition
+!function definition  
   integer (kind = 4) :: Elttype
-  !dummy arguments
+!dummy arguments  
   integer (kind = 4), intent (in) :: numberOfCornerNodes
   
-  !Define the element type for the proper weighting function assessment
+!Define the element type for the proper weighting function assessment  
   if (numberOfCornerNodes > 6) then
     Elttype = 1
   elseif (numberOfCornerNodes > 5) then
     Elttype = 2
-  !1D
+!1D  
   else
     Elttype = 0
   endif

@@ -1,44 +1,44 @@
-C     Last change:  IPK   5 Oct 98    1:42 pm
-
+!     Last change:  IPK   5 Oct 98    1:42 pm
+!
       SUBROUTINE PLANAR(NN)
       USE COEF2MOD, only: DNX, DNY, XL, YL
       USE BLKSMOD
       USE BLK10MOD
       SAVE
-C-
+!-
       DIMENSION CNAL(3,3)
-C-
+!-
       REAL J11,J12,J21,J22
-C-
+!-
       DATA CNAL/-3.,4.,-1.,-1.,0.,1.,1.,-4.,3./
-C-
+!-
       NCN=NCORN(NN)
       IF(NCN == 3) GO TO 600
-C-
-C......SET REFERENCE LENGTH
-C-
-cipk oct98 update to f90
+!-
+!......SET REFERENCE LENGTH
+!-
+!ipk oct98 update to f90
       N1=ABS(NOP(NN,1))
       N2=ABS(NOP(NN,3))
       N3=ABS(NOP(NN,5))
       XL1=SQRT((CORD(N2,1)-CORD(N1,1))**2+(CORD(N2,2)-CORD(N1,2))**2)
       XL2=SQRT((CORD(N3,1)-CORD(N2,1))**2+(CORD(N3,2)-CORD(N2,2))**2)
       IF(XL2 > XL1) XL1=XL2
-C-
-C-.....COPY PROPER WEIGHTING FUNCTIONS.....
-C-
+!-
+!-.....COPY PROPER WEIGHTING FUNCTIONS.....
+!-
       CALL SA2(NCN)
       N1=1
       N2=2
-C-
-C-.....COMPUTE LOCAL CORDS.....
-C-
-cipk oct98 update to f90
+!-
+!-.....COMPUTE LOCAL CORDS.....
+!-
+!ipk oct98 update to f90
       NR=ABS(NOP(NN,1))
       DXS=0.
       DYS=0.
       DO 100 K = 2, NCN
-cipk oct98 update to f90
+!ipk oct98 update to f90
       N=ABS(NOP(NN,K))
       DX=CORD(N,N1)-CORD(NR,N1)
       DY=CORD(N,N2)-CORD(NR,N2)
@@ -47,14 +47,14 @@ cipk oct98 update to f90
       XL(K)=DX
       YL(K)=DY
   100 CONTINUE
-C-
-C-.....COMPUTE ELEMENT EQUATIONS.....
-C-
+!-
+!-.....COMPUTE ELEMENT EQUATIONS.....
+!-
       DO 500 I = 1, NCN
       MN=NOP(NN,I)
-C-
-C-..... FORM THE JACOBIAN FOR QUADRATIC FUNCTIONS.....
-C-
+!-
+!-..... FORM THE JACOBIAN FOR QUADRATIC FUNCTIONS.....
+!-
       J11 = 0.0
       J12 = 0.0
       J21 = 0.0
@@ -71,11 +71,11 @@ C-
       DNX(J) = ( J22 * DA(J,I) - J12 * DB(J,I) ) / DETJ
       DNY(J) = ( J11 * DB(J,I) - J21 * DA(J,I) ) / DETJ
   135 CONTINUE
-C-
-C.....COMPUTE THE DERIVATIVES OF A AND H .....
- 
+!-
+!.....COMPUTE THE DERIVATIVES OF A AND H .....
+!
       DO 275 M=1,NCN
-cipk oct98 update to f90
+!ipk oct98 update to f90
       MR=ABS(NOP(NN,M))
       DDHDX(MN) = DDHDX(MN) + DNX(M)*(VEL(3,MR)+AO(MR))
       DDHDY(MN) = DDHDY(MN) + DNY(M)*(VEL(3,MR)+AO(MR))
@@ -86,9 +86,9 @@ cipk oct98 update to f90
   500 CONTINUE
   550 CONTINUE
       RETURN
-C-
-C......PROCESS ONE-D ELEMENT
-C-
+!-
+!......PROCESS ONE-D ELEMENT
+!-
   600 N1=NOP(NN,1)
       N2=NOP(NN,2)
       N3=NOP(NN,3)
@@ -105,7 +105,7 @@ C-
       DNX(2)=CNAL(2,N)/TEMP
       DNX(3)=CNAL(3,N)/TEMP
       DO 640 M=1,NCN
-cipk oct98 update to f90
+!ipk oct98 update to f90
       MR=ABS(NOP(NN,M))
       DDHDX(MN)=DDHDX(MN)+DNX(M)*(VEL(3,MR)+AO(MR))
       DDAODX(MN)=DDAODX(MN)+DNX(M)*AO(MR)

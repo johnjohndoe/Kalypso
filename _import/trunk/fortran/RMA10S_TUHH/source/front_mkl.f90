@@ -17,7 +17,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
       
       integer :: NK(120), LLDONE(80)
 
-      !local variables
+!local variables      
       integer (kind = 2), save :: itime
       real (kind = 8) :: sec, islp, sinc
       integer (kind = 4) :: nszfo, maxl, i, k, nn, n
@@ -26,8 +26,8 @@ SUBROUTINE FRONT_PARDISO(nrx)
       integer (kind = 4) :: ll, jj, adta, selt, icur, nec, irtc
       integer (kind = 4) :: nrr, lcmax, nmax, ishrk, nell, locl
       integer (kind = 4) :: lrow, lRowMax
-      !lrow    : current front width, means number of active equations
-      !lrowmax : maximum front width (during processing: so far)
+!lrow    : current front width, means number of active equations      
+!lrowmax : maximum front width (during processing: so far)      
       integer (kind = 4) :: lcolm, lcol, lelim, nm
       integer (kind = 4) :: nmatyp, nrx, ntip, nelm, nod, irwz, ii, ia
       integer (kind = 4) :: ja, dum, nbn, lk, lrowt, nerror, kk, leltm
@@ -56,10 +56,10 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !MR1SIZ     :: seems to be the maximum number of free degrees
       
 !
-      !allocate locals
+!allocate locals      
       allocate (lrowent(mr1siz), lrpoint(mr1siz))
       allocate (r1t(mr1siz), ichgl(mr1siz))
-      !allocate globals, only the first time, this place is reached
+!allocate globals, only the first time, this place is reached      
       IF(ITIME == 0) THEN
         ALLOCATE (LCPOINT(MXL,MFWSIZ),eqq(MXL,MFWSIZ))
         ALLOCATE (RR(MR1SIZ),QS1(NBUFFSIZ))
@@ -67,19 +67,19 @@ SUBROUTINE FRONT_PARDISO(nrx)
         ITIME=1
       ENDIF
       
-      !following arrays are in use:
-      !
-      !lrowent (mr1siz)
-      !lrpoint (mr1siz)
-      !r1t     (mr1siz)
-      !rr      (mr1siz)
+!following arrays are in use:      
+!      
+!lrowent (mr1siz)      
+!lrpoint (mr1siz)      
+!r1t     (mr1siz)      
+!rr      (mr1siz)      
 
-      !lcpoint (mxl, mfwsiz)
-      !eqq     (mxl, mfwsiz)
+!lcpoint (mxl, mfwsiz)      
+!eqq     (mxl, mfwsiz)      
 
-      !qs1     (nbuffsiz)
+!qs1     (nbuffsiz)      
 
-      !irwept  (nbuffsiz + mr1siz + 1)
+!irwept  (nbuffsiz + mr1siz + 1)      
 
       LCPOINT=0
       EQQ=0.
@@ -175,7 +175,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
    
       icteq = 0
       do nn = 1, nesav
-          !run through elements due to classical reordering order
+!run through elements due to classical reordering order          
           n = nfixh (nn)
           ncn = ncorn (n)
         IF (NOP (N, 3) == 0) NCN = 2
@@ -193,17 +193,17 @@ SUBROUTINE FRONT_PARDISO(nrx)
             KC = KC + NDF
           ELSE
             oldDOFs: DO L = 1, NDF
-              !old global number of DOF
+!old global number of DOF              
               LL = NBC (I, L)
-              !count global ordinal number
+!count global ordinal number              
               KC = KC + 1
 !ipk feb07 add LLDONE 
-              !lldone shows, whether old number of DOF is already processed
+!lldone shows, whether old number of DOF is already processed              
               LLDONE (KC) = LL
               NK (KC) = LL
 
               IF (LL /= 0) THEN
-                !Check, whether this element is the last occurance of the degree of freedom
+!Check, whether this element is the last occurance of the degree of freedom                
                 IF (NLSTEL (LL) == N) NK (KC) = -LL
                 
                 if(nk(kc) < 0) then
@@ -222,8 +222,8 @@ SUBROUTINE FRONT_PARDISO(nrx)
         enddo
       ENDDO
       
-      !Reset the number of the global equation; reordering is done in solver
-      !---------------------------------------------------------------------
+!Reset the number of the global equation; reordering is done in solver      
+!---------------------------------------------------------------------      
       do n=1,np
             do m=1,ndf
             k=nbc(n,m)
@@ -336,9 +336,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
       CALL SECOND(SINC)
 
 
-      !-----------------------------
-      !START CYCLE OVER ALL ELEMENTS
-      !-----------------------------      
+!-----------------------------      
+!START CYCLE OVER ALL ELEMENTS      
+!-----------------------------            
       
    18 NELL=NELL+1
       IF(NELL > NE) GO TO 380
@@ -496,14 +496,14 @@ SUBROUTINE FRONT_PARDISO(nrx)
               IF ((imat(n) >= 901 .AND. imat(n) <= 903) .AND. IGTP(n) == 0) then
                 CALL Coef1DJunction (N, NRX)
 
-              !material type 89 is used for polynom approach
+!material type 89 is used for polynom approach              
               ELSEIF (imat(n) /= 89) THEN
                 IF(INOTR == 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
                 ENDIF
-              !use polynom approach
+!use polynom approach              
               ELSEIF (imat(n) == 89) THEN
                 CALL COEF1dPoly(N,NRX)
               ENDIF
@@ -561,24 +561,24 @@ SUBROUTINE FRONT_PARDISO(nrx)
       enddo
 
 
-      !-----------------------------------------------------------
-      !Bring the element residuals into the global residual vector
-      !-----------------------------------------------------------
-      !F(IA)  :: local residual (local degree of freedom) in line IA of element matrix
-      !RR(JA) :: global residual (degree of freedom) in line JA of the global sparse matrix
+!-----------------------------------------------------------      
+!Bring the element residuals into the global residual vector      
+!-----------------------------------------------------------      
+!F(IA)  :: local residual (local degree of freedom) in line IA of element matrix      
+!RR(JA) :: global residual (degree of freedom) in line JA of the global sparse matrix      
     DO I = 1, NCN
       J = NOP (N, I)
-        !non-zero node
+!non-zero node        
       IF (J > 0) THEN
-        !one step before first degree of freedom at local node is calculated
+!one step before first degree of freedom at local node is calculated        
         IA = NDF * (I - 1)
-        !k runs through the degrees of freedom of the certain local node
+!k runs through the degrees of freedom of the certain local node        
         DO K = 1, NDF
-          !get the local equation number of degree k at local node I
+!get the local equation number of degree k at local node I          
           IA = IA + 1
-          !get the global equation number of global degree k at global node J
+!get the global equation number of global degree k at global node J          
           JA = NBC (J, K)
-          !If JA is an active degree; means JA /= 0, fill in local residual in global one!
+!If JA is an active degree; means JA /= 0, fill in local residual in global one!          
           IF (JA /= 0) THEN
             if (ja < 0 )  then
               dum = 0
@@ -591,9 +591,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
     
     
 
-      !---------------------------------------------------
-      !reset the NK-array for each local degree of freedom
-      !---------------------------------------------------
+!---------------------------------------------------      
+!reset the NK-array for each local degree of freedom      
+!---------------------------------------------------      
       NBN = NCN * NDF
       DO LK = 1, NBN
         NK (LK) = 0
@@ -602,32 +602,32 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
 !C     SETUP DESTINATION LOCATION
       
-      !--------------------------------------------------------------
-      !store a linear array holding for the local degrees of freedom,
-      !linearily counted in the NK-array the global equation number
-      !--------------------------------------------------------------
-      !run through nodes of element
+!--------------------------------------------------------------      
+!store a linear array holding for the local degrees of freedom,      
+!linearily counted in the NK-array the global equation number      
+!--------------------------------------------------------------      
+!run through nodes of element      
       DO J = 1, NCN
-        !get global node number
+!get global node number        
         I = NOP (N, J)
-        !increase equation counter by number of degree of freedoms, if global node is not existing at that position
-        !ndf-shift
+!increase equation counter by number of degree of freedoms, if global node is not existing at that position        
+!ndf-shift        
         IF (I == 0) THEN
           KC = KC + NDF
-        !if node is existing (i/=0); store the destination location in global matrix
+!if node is existing (i/=0); store the destination location in global matrix        
         ELSE
-          !for all degrees of freedom
+!for all degrees of freedom          
           DO L = 1, NDF
-            !global equation number of nodal degree of freedom at node I
+!global equation number of nodal degree of freedom at node I            
             LL = NBC (I, L)
-            !increase linear local equation counter
+!increase linear local equation counter            
             KC = KC + 1
-            !store global equation number in linearized matrix for global equation numbers
-            !of local equation numbers
+!store global equation number in linearized matrix for global equation numbers            
+!of local equation numbers            
             NK (KC) = LL
-            !set the global equation number in linearized matrix to negative value,
-            !if the current element is the last one to be processed for the solution
-            !of the degree of freedom LL
+!set the global equation number in linearized matrix to negative value,            
+!if the current element is the last one to be processed for the solution            
+!of the degree of freedom LL            
             IF (LL /= 0) THEN
               IF (NLSTEL (LL) == N) NK (KC) = -LL
             ENDIF
@@ -640,32 +640,32 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !C     SET UP HEADING VECTORS IF NEEDED
 !C
     
-      !--------------------------------------------------------------------------------------------
-      !Include the local ESTIFMS into the global matrix EQQ; before the global numbering is handled
-      !--------------------------------------------------------------------------------------------
-      !lrowt           = stands for the original global degree of freedom number
-      !                  (which is in the frontal scheme the global equation number)
-      !NK (LK)         = NK is a vector, that stores for the current element's equations
-      !                  the global equation number lrowt
-      !LK              = local degree of freedom counter
-      !lRowMax         = maximum number of registered (in the end: active) equations
-      !                  meanse: maximum front width
-      !lrow            = local counter index, which is always in the range of1 ... lRowMax
-      !lrowent (lrow)  = counts the number of entries in the line lrow of EQQ
-      !lrpoint (lrowt) = Points to the equation number lrow, that is used for the global
-      !                  degree of freedom lrwot
-      !
-      !description
-      !During the execution of the following control, the active global degrees are counted.
-      !The maximum number is always stored in lRowMax. Within the range 1...lRowMax, from time
-      !to time the counter index lrow is used to identify any already registered location
-      !in the global matrix.
+!--------------------------------------------------------------------------------------------      
+!Include the local ESTIFMS into the global matrix EQQ; before the global numbering is handled      
+!--------------------------------------------------------------------------------------------      
+!lrowt           = stands for the original global degree of freedom number      
+!                  (which is in the frontal scheme the global equation number)      
+!NK (LK)         = NK is a vector, that stores for the current element's equations      
+!                  the global equation number lrowt      
+!LK              = local degree of freedom counter      
+!lRowMax         = maximum number of registered (in the end: active) equations      
+!                  meanse: maximum front width      
+!lrow            = local counter index, which is always in the range of1 ... lRowMax      
+!lrowent (lrow)  = counts the number of entries in the line lrow of EQQ      
+!lrpoint (lrowt) = Points to the equation number lrow, that is used for the global      
+!                  degree of freedom lrwot      
+!      
+!description      
+!During the execution of the following control, the active global degrees are counted.      
+!The maximum number is always stored in lRowMax. Within the range 1...lRowMax, from time      
+!to time the counter index lrow is used to identify any already registered location      
+!in the global matrix.      
       IntroduceLocalMatrices: DO LK = 1, NBN
-       !get global equation number LROWT (global row) for local equation nubmer LK
+!get global equation number LROWT (global row) for local equation nubmer LK       
        LROWT = ABS (NK (LK))
 
-       !if global equation is active (lowrt/=0), store pointer to equation in
-       !the following control
+!if global equation is active (lowrt/=0), store pointer to equation in       
+!the following control       
        if (lrowt /= 0) then
 !c
 !c     lrowt is the equation number for this degree of freedom
@@ -673,11 +673,11 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !c          before
         lrow = lrpoint(lrowt)
 
-        !if the temporary row number lrowt is not counted (pointed) yet, then
-        !create an entry
+!if the temporary row number lrowt is not counted (pointed) yet, then        
+!create an entry        
         if (lrow == 0) then
-          !run through all memorized rows (lRowMax counts already pointed rows)
-          !at startup lRowMax is zero
+!run through all memorized rows (lRowMax counts already pointed rows)          
+!at startup lRowMax is zero          
           do ll = 1, lRowMax
             if (lrowent (ll) == 0) then
               lrpoint (lrowt) = ll
@@ -685,12 +685,12 @@ SUBROUTINE FRONT_PARDISO(nrx)
               go to 50
             endif
           enddo
-          !count lrow
+!count lrow          
           lrow = lRowMax + 1
           lRowMax = lRowMax + 1
           lrowent (lrow) = 0
 
-          !Error if the system becomes too big
+!Error if the system becomes too big          
           IF (lRowMax > MFRW) THEN
             NERROR=2
             WRITE(*,*) '  MFRW not large enough'
@@ -703,9 +703,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
             CALL ZVRS(1)
             STOP
           ENDIF
-          !End of Error Message and program execution termination
+!End of Error Message and program execution termination          
 
-          !store in the corresponding pointer number
+!store in the corresponding pointer number          
           lrpoint (lrowt) = lrow
         endif
 
@@ -715,21 +715,21 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
         DO KK = 1, NBN
 
-          !now work along the columns hoping storing values
+!now work along the columns hoping storing values          
           IF (NK (KK) /= 0) then
             
-            !get global equation number
+!get global equation number            
             NODEC = ABS (NK (KK))
           
             AddEstifm: DO L = 1, lrowent (lrow) + 1
 
-              !we have a match - store the entry
+!we have a match - store the entry              
               IF (LCPOINT (L, LL) == NODEC) THEN
 
                  EQQ (L, LL) = EQQ (L, LL) + ESTIFM (LK, KK)
                  exit AddEstifm
 
-               !no match so add to last column and store
+!no match so add to last column and store               
                ELSEIF (LCPOINT (L, LL) == 0) THEN
 
                   LCPOINT (L, LL) = NODEC
@@ -751,8 +751,8 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
 !C     SET LHED NEGATIVE FOR ENTRIES THAT ARE FULLY SUMMED
 
-      !Write out console output during processing of elements (every 1000 elements)
-      !----------------------------------------------------------------------------
+!Write out console output during processing of elements (every 1000 elements)      
+!----------------------------------------------------------------------------      
       IF (MOD (NELL, 10000) == 0) then
         WRITE (*, '(I13,3I15)') NELL, lRow, lRowMax, LELIM
         WRITE (75,'(I13,3I15)') NELL, lRow, lRowMax, LELIM
@@ -761,9 +761,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !C
 !C     DETERMINE WHETHER TO COMPACT OR ADD A NEW ELEMENT
 !C
-      !Following control compacts an equation line, that is completly set up
-      !additionally it gives free that certain line again, to store
-      !a new registered equation in it
+!Following control compacts an equation line, that is completly set up      
+!additionally it gives free that certain line again, to store      
+!a new registered equation in it      
       LELTM = 0
       AddEquations: DO LL = 1, lRowMax
         L = LL + LELIM
@@ -775,17 +775,17 @@ SUBROUTINE FRONT_PARDISO(nrx)
             IF (LCPOINT (J, LROW) /= 0) THEN
 
 
-                !TODO: Normally pardiso works with a sparse matrix storage format,
-                !      that has no zero entries. If here only non-zero entries are
-                !      considered, the matrix can not be solved any more 
+!TODO: Normally pardiso works with a sparse matrix storage format,                
+!      that has no zero entries. If here only non-zero entries are                
+!      considered, the matrix can not be solved any more                 
                 ICUR = ICUR + 1
                 qs1 (ICUR - NSZF - 1) = EQQ (J, LROW)
                 IRWEPT (ICUR) = LCPOINT (J, LROW)
 
-                !after storing the value of the global matrix
-                !in the sparse matrix format place in qs1
-                !initlialize it again for later use in another
-                !element
+!after storing the value of the global matrix                
+!in the sparse matrix format place in qs1                
+!initlialize it again for later use in another                
+!element                
                 EQQ (J, LROW) = 0.
                 LCPOINT (J, LROW) = 0
 !c               ELSE
@@ -837,9 +837,9 @@ SUBROUTINE FRONT_PARDISO(nrx)
 
       CALL mkl_solver(NPROCS,NSZF, IRWEPT(1),IRWEPT(NSZF+2),qs1, RR, R1T)
      
-      !nis,aug08
-      !NPROCS :: number of processors (user entry)
-      !NSZF   :: number of equations
+!nis,aug08      
+!NPROCS :: number of processors (user entry)      
+!NSZF   :: number of equations      
       
 
       call second(sutim2)
@@ -875,7 +875,7 @@ SUBROUTINE FRONT_PARDISO(nrx)
 !C      WRITE(*,6199) ADTA,SEC3
   417 FORMAT(/' NERROR =',I5// 'MFW IS NOT LARGE ENOUGH TO PERMIT ASSEMBLY OF THE NEXT ELEMENT'/'  INCREASE MFW IN PARAM.COM OR LOOK FOR ERROR IN ELEMENT ELIMINATION ORDER')
      
-      !deallocate local arrays
+!deallocate local arrays      
       deallocate (lrowent, lrpoint, r1t, ichgl)
       RETURN
   476 FORMAT(' WARNING-MATRIX SINGULAR OR ILL CONDITIONED')

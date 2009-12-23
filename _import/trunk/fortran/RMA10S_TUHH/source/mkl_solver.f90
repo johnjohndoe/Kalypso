@@ -19,7 +19,8 @@ integer (kind = 8) :: nonZeros
 !Parameters passed to PARDISO
 !- - - - - - - - - - - - - - -
 !integer (kind = 4), save :: ipt (64)!32 bit OS
-integer (kind = 8), save :: ipt (64)!32 or 64 bit OS
+!32 or 64 bit OS
+integer (kind = 8), save :: ipt (64)
 integer (kind = 4), allocatable :: ia(:), ja(:)
 integer (kind = 4) :: ierror = 0
 !a, b and x are matrix, right-side vector and result vector
@@ -93,9 +94,9 @@ allocate (ja (nonZeros), da(nonZeros))
 !at first call the parameters need to be settled
 if (executionSwitch == 0)  then
 
-  !input parameters for PARDISO
-  !----------------------------
-  !Initialize parameter array to use default values of PARDISO
+!input parameters for PARDISO  
+!----------------------------  
+!Initialize parameter array to use default values of PARDISO  
   iparm = 0
   
 !  !individual parameters; only for very advanced users of PARDISO
@@ -104,8 +105,9 @@ if (executionSwitch == 0)  then
 !        iparm(1) = 1 !no solver default
 !        !default iparm (2) = 2: Reordering algorithm
 !        iparm(2) = 2 !fill-in reordering from METIS
-        !default iparm (3) = no default: Reordering method
-        iparm(3) = omp_get_max_threads() ! numbers of processors
+!default iparm (3) = no default: Reordering method        
+! numbers of processors
+        iparm(3) = omp_get_max_threads() 
 !        !default iparm (4) = 0: Preconditioned CGS
 !        iparm(4) = 0 ! no iterative-direct algorithm
 !        !default iparm (5) = 0: Permutation
@@ -153,33 +155,33 @@ if (executionSwitch == 0)  then
 !          
 !          !iparm (24) through iparm (26) and iparm (29) through iparm (64) are reserved for further settings
 
-  !Allocate space for permutation matrix
+!Allocate space for permutation matrix  
   if (iparm(5) == 1) then
     if ( .NOT. (allocated (perm))) allocate (perm (noOfEq))
   else
-    !dummy allocation for proper compilation; perm will not be used in PARDISO, if iparm(5) /= 1
+!dummy allocation for proper compilation; perm will not be used in PARDISO, if iparm(5) /= 1    
     if ( .NOT. (allocated (perm))) allocate (perm (1))
   endif
   
     perm = 0
   
-  !execution and equation system shape
-  !-----------------------------------
-  !indicate that initializations are done; factorization and solv
+!execution and equation system shape  
+!-----------------------------------  
+!indicate that initializations are done; factorization and solv  
   executionSwitch = 1
-  !Following parameters are just giving the shape of the equation system; they are used to compare
-  !the system between to executions. If the model does not change in between, the system can be
-  !directly solved, otherwise memory has to be released and factorizations have to be done again
-  !initialize the parameters here:
+!Following parameters are just giving the shape of the equation system; they are used to compare  
+!the system between to executions. If the model does not change in between, the system can be  
+!directly solved, otherwise memory has to be released and factorizations have to be done again  
+!initialize the parameters here:  
   nzzold = 0
   nszfold = 0
 endif
       
 !copy non-Zeros of Matrix A and their row position within Matrix to local array
 do i = 1, nonZeros
-  !copy matrix-vector to local da-array
+!copy matrix-vector to local da-array  
   da (i) = a (i)
-  !copy the initial non zero-entry of the row i in the global matrix; see MKL (PARDISO) documenation for details
+!copy the initial non zero-entry of the row i in the global matrix; see MKL (PARDISO) documenation for details  
   ja (i) = irow (i)
 enddo
       
@@ -187,11 +189,11 @@ enddo
 !copy right hand side vector db
 !initialize solution vector dx
 do i=1,noOfEq
-  !ia holds the column of the non-zero entry in the matrix row; see documentation of MKL (PARDISO) for details
+!ia holds the column of the non-zero entry in the matrix row; see documentation of MKL (PARDISO) for details  
   ia(i) = icol(i)
-  !copy right side vector to local db-array
+!copy right side vector to local db-array  
   db(i) = b(i)
-  !dx will become the result vector
+!dx will become the result vector  
   dx(i) = 0.
 enddo
 !Overgive the theoretical start of the equation after the last one, to make the system no, where Matrix ends
@@ -200,11 +202,11 @@ ia (noOfEq + 1) =  nonZeros
 !Need to sort ja so that for the row, the column indices are in increasing order; with the sorting of ja, da 
 !  also has to be changed in parallel
 do i = 1, noOfEq
-  !Error, because equation i is not properly defined
+!Error, because equation i is not properly defined  
   if (ia(i) == 0) call ErrorMessageAndStop (4204, 0, 0.0d0, 0.0d0)
   
-  !Get the entry indices of equation i within the Matrix A and sort them in ascending order with respect to
-  !  their occurance in ja-index; da has to be changed simultanously
+!Get the entry indices of equation i within the Matrix A and sort them in ascending order with respect to  
+!  their occurance in ja-index; da has to be changed simultanously  
   nsort = ia(i+1) - ia(i)
   call mysort (ja (ia (i)), da (ia (i)), nsort)
 enddo         
@@ -217,7 +219,7 @@ enddo
 !check for the change of the matrix; if the size of the matrix did not change pardiso can be
 !solved with the same 'Analysis symbolic factorization' settings from the previous execution
 if (nzzold /= nonZeros .OR. nszfold /= noOfEq) then
-  !memory needs to be released
+!memory needs to be released  
   if (nzzold /= 0) executionSwitch = 2
 endif
 
@@ -234,21 +236,21 @@ call second(sutim1)
 ! executionSwitch == 2: Release memory and factorize afterwards
 if (executionSwitch < 3 ) then
 
-  !Release PARDISO used memory
-  !---------------------------
+!Release PARDISO used memory  
+!---------------------------  
   if (executionSwitch == 2) then
-    !indicate releasing phase
+!indicate releasing phase    
     iphase = -1
-    !write about status
+!write about status    
     write(*,*) '*****************'
     write(*,*) 'Releasing memory'
     write(*,*) '*****************'
 
-    !call PARDISO for releasing memory
+!call PARDISO for releasing memory    
     call pardiso (ipt, maxfct, mnum, mtype, iphase, noOfEq, da, ia, ja, perm, nrhs, iparm, msglvl, ddum, ddum, ierror)
     
     
-    !Reset permutation matrix
+!Reset permutation matrix    
     if (iparm(5) == 1) then
       if (allocated (perm)) deallocate (perm)
       allocate (perm (noOfEq))
@@ -256,27 +258,27 @@ if (executionSwitch < 3 ) then
     endif
   endif
 
-  !Analysis and symbolic factorization
-  !-----------------------------------
-  !indicate ANALYSIS phase
-  !-----------------------
+!Analysis and symbolic factorization  
+!-----------------------------------  
+!indicate ANALYSIS phase  
+!-----------------------  
   iphase = 11
-  !initialize memory pointer array
+!initialize memory pointer array  
   ipt = 0
-  !write about status
+!write about status  
   write(*,*) '********************'
   write(*,*) 'reordering of matrix'
   write(*,*) '********************'
   
-  !call PARDISO for ANALYSIS and SYMBOLIC FACTORIZATION
+!call PARDISO for ANALYSIS and SYMBOLIC FACTORIZATION  
   call pardiso(ipt, maxfct, mnum, mtype, iphase, noOfEq, da, ia, ja, perm, nrhs, iparm, msglvl, ddum, ddum, ierror )
      
-  !if Error occured: Error message and stop
+!if Error occured: Error message and stop  
   if (ierror /= 0) then
     call ErrorMessageAndStop (4202, ierror, 0.0d0, 0.0d0)
   endif
 
-  !Indicate that calculation can be done
+!Indicate that calculation can be done  
   executionSwitch = 3
 endif
 

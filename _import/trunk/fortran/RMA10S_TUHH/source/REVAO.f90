@@ -1,21 +1,21 @@
-CIPK  NEW ROUTINE FEB 27 2004
-
+!IPK  NEW ROUTINE FEB 27 2004
+!
       SUBROUTINE REVAO
       USE BLK10MOD
       USE BLKDRMOD
-      
+!
 !NiS,jul06: Consistent data type for passing parameters
       REAL(KIND=8) :: VTEMP
 !-
-
+!
       DATA ITIME/0/
-
+!
       IF(ITIME == 0) THEN
-
-cipk sep04 skip lowest point if rederence is defined
+!
+!ipk sep04 skip lowest point if rederence is defined
        IF(SADEL == 0.) THEN    
-C     Find lowest bed point for reference
-
+!     Find lowest bed point for reference
+!
         AOMIN=1.E+10
         DO M=1,NE
           IF(IMAT(M) /= 0) THEN
@@ -35,7 +35,7 @@ C     Find lowest bed point for reference
         ENDDO 
        ENDIF
       ENDIF
-
+!
       DO J=1,NP
         AO(J)=AOMIN+(AOKP(J)-AOMIN)*SADX
         ADO(J)=AO(J)+ADOKP(J)-AOKP(J)
@@ -54,5 +54,5 @@ C     Find lowest bed point for reference
         ENDIF
       ENDDO
       RETURN
-
+!
       END

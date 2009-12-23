@@ -1,33 +1,33 @@
 !     Last change:  WP   26 Feb 2008    3:53 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, waspi)
 
-      !nis,jan07: Overgiven variables
-      ! J    = number of CCL
-      ! QREQ = total discharge across the CCL J
-      ! THET = direction of total discharge crossing the CCL; measured from the principal x-axis in ANTICLOCKWISE RADIANS)
+!nis,jan07: Overgiven variables      
+! J    = number of CCL      
+! QREQ = total discharge across the CCL J      
+! THET = direction of total discharge crossing the CCL; measured from the principal x-axis in ANTICLOCKWISE RADIANS)      
 
-      !modules
+!modules      
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
       USE ParaKalyps
 
-      !every variable should be defined
+!every variable should be defined      
       implicit none
 
       SAVE
 
-      !real onedimensional arrays
+!real onedimensional arrays      
       REAL          :: amec (3535), Conveyance (3535), dxl (3535), specdischarge(3535)
 
-      !real variables 
+!real variables       
       REAL          :: cwr_line
       REAL (KIND=8) :: lambda, NikuradseRoughness
       real (kind=8) :: porosity, slotDepth
       REAL (KIND=8) :: tmpvx,tmpvy,tmpdepth,tmpwl
       REAL (KIND=8) :: fliesstiefe, waspi
       REAL (KIND=8) :: d1,d3,d1v,d3v,d2_kind8
-      !nis,aug07: dummy parameters for passing
+!nis,aug07: dummy parameters for passing      
       REAL (KIND=8), DIMENSION(1:3) :: dummy
       REAL (KIND = 8) :: NullVal
       REAL          :: d2
@@ -39,7 +39,7 @@
       REAL (KIND=8) :: TDep, TDepv
       REAL          :: DUM1, DUM2
 
-      !integer variables
+!integer variables      
       INTEGER       :: maxL, mel
 !      INTEGER       :: iostaterror
       INTEGER       :: no, k, l, i, Comp
@@ -49,7 +49,7 @@
       REAL (KIND=8) :: weight(0:2), di(0:2)
       REAL (KIND=8) :: dxline, dyline
 
-      !character variables
+!character variables      
       CHARACTER (LEN=27)  :: filename
 
 !nis,jan07,test output file handling
@@ -64,9 +64,9 @@ NullVal = 0.0
 
 !initializing for every possible node of transition line
 DO k = 1, lmt (TLine)
-  !Conveyance factor
+!Conveyance factor  
   Conveyance (k) = 0.0
-  !segment length
+!segment length  
   dxl (k) = 0.0
 END DO
 
@@ -103,64 +103,64 @@ maxL = lmt (TLine) - 2
 
 !nis,sep06,com: Loop over all corner nodes till the last one of CCL to get the Conveyance factor of the single parts of line.
 ThroughNodesOfLine: DO k = 1, maxL, 2
-  !nis,sep06,com: Get the first (na), midside (ncc), and endnode (nc) of the actual line segment
+!nis,sep06,com: Get the first (na), midside (ncc), and endnode (nc) of the actual line segment  
   na  = line (TLine, k)
   ncc = line (TLine, k + 1)
   nc  = line (TLine, k + 2)
 
-  !nis,sep06,com: Calculate the x- and y- length of the actual CCL-segment
+!nis,sep06,com: Calculate the x- and y- length of the actual CCL-segment  
   dx = cord (nc, 1) - cord (na, 1)
   dy = cord (nc, 2) - cord (na, 2)
 
-  !counting sixth length of segment projected on the chord of the transition length (it's vector product for angle calculation)
+!counting sixth length of segment projected on the chord of the transition length (it's vector product for angle calculation)  
   xl = ABS((dx * dxline + dy * dyline) / (6 * SQRT (dxline**2 + dyline**2)))
 
-  !nis,jun07: switched off Marsh-Algorithm:
+!nis,jun07: switched off Marsh-Algorithm:  
   IF (idnopt == 0) then
-    !waterdepth
+!waterdepth    
     di(0) = waspi - ao (na)
     di(2) = waspi - ao (nc)
 
-  !nis,jun07: Marsh-Algorithm:
+!nis,jun07: Marsh-Algorithm:  
   ELSE
-    !waterdepth
+!waterdepth    
     d1v = waspi - ado (na)
     d3v = waspi - ado (nc)
 
-    !Transform to Marsh-depth
+!Transform to Marsh-depth    
     CALL amf (d1v, di(0), akp (na), adt (na), adb (na), amec (k), dum1, 1)
     CALL amf (d3v, di(2), akp (nc), adt (nc), adb (nc), amec (k), dum1, 1)
   ENDIF
-  !-
+!-  
 
-  !Set depth to 0.0, if it was smaller zero
+!Set depth to 0.0, if it was smaller zero  
   IF (di(0) <= 0.0) di(0) = 0.0
   IF (di(2) <= 0.0) di(2) = 0.0
 
-  !Average the water depth for the midside node
+!Average the water depth for the midside node  
   di(1) = (di(0) + di(2)) / 2.0
 
   do no = 0, 2
-    !Darcy-Weisbach:
+!Darcy-Weisbach:    
     IF (ort (lineimat (TLine, k + 1), 15) > 0.) then
 
-      !actual node
+!actual node      
       nod = line (TLine, k+no)
 
-      !calculate the absolute flow-velocity of beginning corner node of the actual CCL-segment
+!calculate the absolute flow-velocity of beginning corner node of the actual CCL-segment      
       vecq = sqrt (vel (1, nod)**2 + vel (2, nod) **2)
 
-      !default vegetation cwr-value
+!default vegetation cwr-value      
       cwr_line = 1.0
 
-      !get lambda
+!get lambda      
       NikuradseRoughness = ort(lineimat(TLine, k+1), 15)
       CALL darcy (lambda, vecq, di(no), NikuradseRoughness, NullVal, NullVal, 0,  0, gl_bedform, mel, cwr_line, 2, &
      &            dummy(1), dummy(2), dummy(3),dset)
 
-      !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
+!Correct roughness, if there is a material (imat) factor (when marsh-option is active)      
       if (idnopt /= 0) then
-        !corner nodes
+!corner nodes        
         if (no == 0 .OR. no == 2) then
           porosity = akp (nod)
           slotDepth = adb (nod)
@@ -174,16 +174,16 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
         endif
       end if
 
-      !Conveyance represents the Conveyance factor of the element part.
+!Conveyance represents the Conveyance factor of the element part.      
       Conveyance(k + no) = Conveyance(k + no) + xl * weight(no) * di(no)**(3./2.) * ((78.48/lambda)**0.5)
 
-      !Calculate the influence width of the nodes of the segment. Corner nodes are a combination of the two adjacent elemtns
+!Calculate the influence width of the nodes of the segment. Corner nodes are a combination of the two adjacent elemtns      
       dxl (k + no) = dxl (k + no) + xl * weight(no)
 
-    !Manning-Strickler:
+!Manning-Strickler:    
     ELSE
 
-      !Calculating the Conveyance factors with the law of Manning Strickler
+!Calculating the Conveyance factors with the law of Manning Strickler      
       Conveyance (k+no) = Conveyance (k+no) + xl * weight(no) * (di(no)** (5. / 3.) ) * ( - 1. * ort (lineimat (TLine, k + 1), 5))
 
     ENDIF
@@ -214,23 +214,23 @@ vest = qreq / suma
 !Run through every node of the CCL for applying the specified discharge
 AssignVelocities: DO k = 1, maxL
 
-  !Get the actual node number
+!Get the actual node number  
   na = line (TLine, k)
-  !Skip non existing point
+!Skip non existing point  
   IF (na <= 0) cycle AssignVelocities
 
-  !Process on midsidenodes to get their depths
+!Process on midsidenodes to get their depths  
   IF (mod (k, 2) == 0) then
-    !Get the adjacent corner nodes
+!Get the adjacent corner nodes    
     na1 = line (TLine, k - 1)
     na2 = line (TLine, k + 1)
 
-    !If wetting/drying is activated, just calculate the waterdepths of the two adjacent corner nodes of the actual midside node
+!If wetting/drying is activated, just calculate the waterdepths of the two adjacent corner nodes of the actual midside node    
     IF (idnopt == 0) then
       d1 = waspi - ao (na1)
       d3 = waspi - ao (na2)
-    !If marsh-algorithm is applied, calculate the waterdepths of the two adjacent corner nodes of the actual midsied node and
-    !  transform them afterwards
+!If marsh-algorithm is applied, calculate the waterdepths of the two adjacent corner nodes of the actual midsied node and    
+!  transform them afterwards    
     ELSE
       d1v = waspi - ado (na1)
       d3v = waspi - ado (na2)
@@ -239,30 +239,30 @@ AssignVelocities: DO k = 1, maxL
       CALL amf (d3v, d3, akp (na2), adt (na2), adb (na2), amec (k + 1), d2, 1)
     ENDIF
 
-    !Set to 0, if neglectable depth
+!Set to 0, if neglectable depth    
     IF (d1 <= 0.0) d1 = 0.0
     IF (d3 <= 0.0) d3 = 0.0
-    !Average the values (question remark: Shouldn't that be the waterdepth of the midside node? e.g. d2)
+!Average the values (question remark: Shouldn't that be the waterdepth of the midside node? e.g. d2)    
     d1 = (d1 + d3) / 2.0
 
-  !Process on corner nodes to get their flow depth
+!Process on corner nodes to get their flow depth  
   ELSE
-    !no special drying/wetting algorithm
+!no special drying/wetting algorithm    
     IF (idnopt == 0) then
       d1  = waspi - ao (na)
-    !marsh active
+!marsh active    
     ELSE
       d1v = waspi - ado (na)
       CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1)
     ENDIF
   ENDIF
 
-  !Set depth 0, if ngelectable
+!Set depth 0, if ngelectable  
   IF (d1 <= 0.0) d1 = 0.0
 
   specdischarge (k) = vest * Conveyance (k) / dxl (k)
 
-  !Set the absolute velocities at 2D transition nodes and copy specific discharges to global arrays
+!Set the absolute velocities at 2D transition nodes and copy specific discharges to global arrays  
   if (d1 > 0.0) then
     TransSpec(k) = specdischarge(k)
   else

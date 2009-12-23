@@ -15,7 +15,7 @@
  USE ParaKalyps, only : lambdatot
  implicit none
  
- ! REAL(KIND=8) :: FACT
+! REAL(KIND=8) :: FACT 
  REAL(KIND=8), allocatable :: FFACT_TEMP(:,:)
  REAL(KIND=8), allocatable :: AREA_PART(:,:)
  INTEGER (KIND=4) :: I,N,M
@@ -50,7 +50,7 @@ DO N=1,NE
       ENDDO
       WRITE(75,*) 'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
       WRITE(75,*) (ELTON(NOP(N,M),I),I=1,12)
-      WRITE(*,*) 'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
+      WRITE(*,*) 'STO!!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
       STOP
       250  CONTINUE
     ENDDO
@@ -64,27 +64,32 @@ ENDDO
 !    Summ over all area-weighted the friction factors is diveded by
 !    whole area TRIBAREA(N)
 FACT=0.0
-DO N=1,NP         ! over all nodes N
+! over all nodes N
+DO N=1,NP         
   TRIBAREA(N)=0.
   FFACT_KN(N)=0.0
-  DO I=1,12         ! over all neighboured elements I to node N
+! over all neighboured elements I to node N
+  DO I=1,12         
     M=ELTON(N,I)
     IF(M > 0) THEN
-      IF(NCORN(M) == 8) THEN    ! for quadrangle elements
+! for quadrangle elements
+      IF(NCORN(M) == 8) THEN    
         FACT=4.
-      ELSE                        ! for triangle elements
+! for triangle elements
+      ELSE                        
         FACT=3.
       ENDIF
 
-      if((wsll(N) >= ao(N)) .AND. (AREA(M) > 0.))then !Nur wenn knoten Nass!
+!Nur wenn knoten Nass!
+      if((wsll(N) >= ao(N)) .AND. (AREA(M) > 0.))then 
         AREA_PART(N,I)=AREA(M)/FACT
-        ! Teilflaeche je Element M zum Knoten N
+! Teilflaeche je Element M zum Knoten N        
         TRIBAREA(N)=TRIBAREA(N)+AREA(M)/FACT
-        ! Gesamte-Einflussflaeche je Knoten N
+! Gesamte-Einflussflaeche je Knoten N        
         FFACT_TEMP(N,I)=FFACT_EL(M)
-        ! Lambda-Wert je Element M
+! Lambda-Wert je Element M        
         FFACT_KN(N)= FFACT_KN(N) + (FFACT_TEMP(N,I)*AREA_PART(N,I))
-        ! Summation der Teilwerte lambda * Teilfläche
+! Summation der Teilwerte lambda * Teilfläche        
       endif
     ENDIF
   ENDDO
@@ -94,23 +99,27 @@ DO N=1,NP         ! over all nodes N
   END IF
 
   IF (TRIBAREA(N) <= 0. .AND. FFACT_KN(N) > 0.0) THEN
-    if(wsll(N) >= ao(N)) then !Nur wenn knoten nass!
+!Nur wenn knoten nass!
+    if(wsll(N) >= ao(N)) then 
       WRITE(*,*) 'STOP!  NO Area was found for NODE: ',N
       STOP
-    else !wenn knoten trocken
+!wenn knoten trocken
+    else 
       FFACT_KN(N)= 0.00
     endif
   END IF
 
   IF (FFACT_KN(N) <= 0.0 .AND. TRIBAREA(N) > 0.) THEN
-    if(wsll(N) >= ao(N)) then !Nur wenn knoten Nass!
+!Nur wenn knoten Nass!
+    if(wsll(N) >= ao(N)) then 
       WRITE(*,*) 'STOP!  NO friction factor was found for NODE: ',N
       STOP
     endif
   END IF
 
   IF (FFACT_KN(N) == 0.0 .AND. TRIBAREA(N) == 0.) THEN
-    if(wsll(N) >= ao(N)) then !Nur wenn knoten Nass!
+!Nur wenn knoten Nass!
+    if(wsll(N) >= ao(N)) then 
       WRITE(LOUT,*) 'ACHTUNG: NO friction factor and NO Area was found for NODE: ',N
     endif
   END IF
@@ -122,7 +131,7 @@ DO N=1,NP         ! over all nodes N
   IF (N == NP) THEN
     WRITE(75,*) 'All Friction factors are calculated till NODE ',N
   END IF
-  ! WRITE(75,*) ' Friction factor at NODE ',N, ' is:',FFACT_KN(N)
+! WRITE(75,*) ' Friction factor at NODE ',N, ' is:',FFACT_KN(N)  
 ENDDO
 
 deallocate (FFACT_TEMP , AREA_PART)

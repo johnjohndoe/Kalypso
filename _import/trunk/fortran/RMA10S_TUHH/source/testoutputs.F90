@@ -241,9 +241,9 @@ CHARACTER (LEN =  1) :: sort(1:32)
 CHARACTER (LEN = 16) :: FMT1
 CHARACTER (LEN = 42) :: FMT2
 
-  !active degreecount
+!active degreecount  
   dca = 0
-  !active positions
+!active positions  
   do i = 1, 32
     nbct(i,1) = 0
     nbct(i,2) = 0

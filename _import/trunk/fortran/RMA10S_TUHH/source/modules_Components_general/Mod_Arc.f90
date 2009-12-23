@@ -12,29 +12,29 @@ CONTAINS
   
   function newArc (first, last)
     implicit none
-    !function name
+!function name    
     type (arc), pointer :: newArc
-    !arguments
+!arguments    
     type (node), pointer :: first, last
-    !local variables
+!local variables    
     type (arc), pointer :: new
-    !allocate new node
+!allocate new node    
     allocate (new)
-    !set parameters
+!set parameters    
     new.first => first
     new.last => last
-    !overgive new arc
+!overgive new arc    
     newArc => new
     return
   end function
   
   function arcVector (inArc)
     implicit none
-    !function name
+!function name    
     real (kind = 8), dimension (1:2) :: arcVector
-    !arguments
+!arguments    
     type (arc), pointer :: inArc
-    !get Arc vector
+!get Arc vector    
     arcVector (1) = inArc.last.cord(1) - inArc.first.cord(1)
     arcVector (2) = inArc.last.cord(2) - inArc.first.cord(2)
     return
@@ -44,26 +44,26 @@ CONTAINS
     implicit none
     type (arc), pointer :: inArc
     type (node), pointer :: midside
-    !assign midside node
+!assign midside node    
     if ( .NOT. (associated (inArc.midside))) inArc.midside => midside
   end subroutine
   
   function defaultNormal (inArc, scaling)
     implicit none
-    !function name
+!function name    
     real (kind = 8), dimension (1:2) :: defaultNormal
-    !arguments
+!arguments    
     type (arc), pointer :: inArc
     real (kind = 8), optional, intent (in) ::scaling
-    !local variables
+!local variables    
     real (kind = 8), dimension (1:2) :: arcVec
     real (kind = 8) :: vecNorm
     
-    !get Arc vector
+!get Arc vector    
     arcVec = arcVector (inArc)
-    !get vector norm (length)
+!get vector norm (length)    
     vecNorm = sqrt (arcVec(1)**2 + arcVec(2)**2)
-    !calculate default normal
+!calculate default normal    
     if (arcVec(1) == 0.0d0) then
       defaultNormal (1) = 1.0d0 * arcVec(2)/ vecNorm
       defaultNormal (2) = 0.0d0
@@ -83,31 +83,31 @@ CONTAINS
     
   function gramSchmidtUnitNormal (inArc)
     implicit none
-    !function name
+!function name    
     real (kind = 8), dimension (1:2) :: gramSchmidtUnitNormal
-    !arguments
+!arguments    
     type (arc), pointer :: inArc
-    !local variables
+!local variables    
     real (kind = 8), dimension (1:2) :: vecBase
     real (kind = 8), dimension (1:2)  :: vec2Proj
     real (kind = 8) :: vecBaseBaseProd
     real (kind = 8) :: vecProjBaseProd
     real (kind = 8) :: gramSchmidtUnitNormalNorm
     integer (kind = 2) :: i
-    !initializations
+!initializations    
     vecBaseBaseProd = 0.0d0
     vecProjBaseProd = 0.0d0
     gramSchmidtUnitNormalNorm = 0.0d0
     
-    !assign vectors
+!assign vectors    
     vecBase = arcVector (inArc)
     vec2Proj = inArc.posNormal
-    !calculate vector products v1*v1 and v2*v1
+!calculate vector products v1*v1 and v2*v1    
     do i = 1, 2
       vecBaseBaseProd = vecBaseBaseProd + vecBase (i)**2
       vecProjBaseProd = vecProjBaseProd + vec2Proj (i) * vecBase (i)
     end do
-    !calculate the gramSchmidtNormal
+!calculate the gramSchmidtNormal    
     do i = 1, 2
       gramSchmidtUnitNormal (i) = vec2Proj(i) - vecProjBaseProd/ vecBaseBaseProd * vecBase (i) 
     end do
@@ -120,11 +120,11 @@ CONTAINS
   
   function normalDirPointer (inArc)
     implicit none
-    !function name
+!function name    
     real (kind = 8) :: normalDirPointer
-    !arguments
+!arguments    
     type (arc), pointer :: inArc
-    !local variables
+!local variables    
     real (kind = 8), dimension (1:2) :: arcVec
     
     arcVec = arcVector (inArc)
@@ -135,28 +135,28 @@ CONTAINS
       normalDirPointer = 1.0d0
     else
       continue
-      !TODO: Error message
+!TODO: Error message      
     endif
     return
   endfunction
   
   function projectionDirPointer (Vector1, Vector2)
     implicit none
-    !function name
+!function name    
     real (kind = 8) :: projectionDirPointer
-    !arguments
+!arguments    
     real (kind = 8), dimension (1:2), intent(in) :: Vector1, Vector2
-    !local variables
+!local variables    
     real (kind = 8), dimension (1:2) :: vecOne, vecTwo
     real (kind = 8) :: normVecOne, normVecTwo, dotproduct
-    !local changeable copy of Vectors
+!local changeable copy of Vectors    
     vecOne = Vector1
     vecTwo = Vector2
-    !scale both vectors to unit vectors
+!scale both vectors to unit vectors    
     call scaleToUnitVector (vecOne)
     call scaleToUnitVector (vecTwo)
-    !compare vector directions
-    !Because both vectors are of unit length, the dot-product gives the angle between them!
+!compare vector directions    
+!Because both vectors are of unit length, the dot-product gives the angle between them!    
     dotproduct = vecOne(1) * vecTwo(1) + vecOne(2) * vecTwo(2)
     if (dotproduct >= 0) then
       projectionDirPointer = 1.0
@@ -168,10 +168,10 @@ CONTAINS
   
   subroutine scaleToUnitVector (Vector, direction)
     implicit none
-    !arguments
+!arguments    
     real (kind = 8), intent (inout), dimension (1:2) :: Vector
     real (kind = 8), optional :: direction
-    !local variables
+!local variables    
     real (kind = 8) :: normOfVector
     integer (kind = 2) :: i
     

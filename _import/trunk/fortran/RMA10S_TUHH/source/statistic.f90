@@ -64,21 +64,21 @@ if (dimn == nita_stat) then
 
    do i = 1,dimn
 
-   !EFa jun07, deactivated LOG, because it is wrong and not working
+!EFa jun07, deactivated LOG, because it is wrong and not working   
 
-     !if (linear == 1) then
+!if (linear == 1) then     
 
       y(i) = var(i)
       xy(i) = x(i) * y(i)
 
-    ! else
+! else    
 
-     ! y(i) = LOG (var(i))
-     ! xy(i) = x(i) * y(i)
+! y(i) = LOG (var(i))     
+! xy(i) = x(i) * y(i)     
 
-    ! end if
+! end if    
 
-  !-
+!-  
 
    end do
 
@@ -87,7 +87,7 @@ if (dimn == nita_stat) then
    sigmaxy = sigma(dimn,xy)
    sigmax2 = isigma(dimn,x2)
 
-   ! Correlation coefficient
+! Correlation coefficient   
 
    do i=1,dimn
 
@@ -135,7 +135,7 @@ else
    sigmaxy = sigmaa(dimn,xy,extra)
    sigmax2 = isigmaa(dimn,x2,extra)
 
-   ! Correlation coefficient
+! Correlation coefficient   
 
   do i = dimn - extra+1, dimn
 

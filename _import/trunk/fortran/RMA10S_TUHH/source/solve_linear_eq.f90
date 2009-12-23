@@ -50,12 +50,18 @@ subroutine gauss(N,A,B,X,SING,NDIM)
 implicit none
 
 ! Calling variables
-INTEGER, INTENT(IN)                               :: N    ! Dimension of equation system
-INTEGER, INTENT(IN)                               :: NDIM ! Dimension of A, B and X
-LOGICAL, INTENT(OUT)                               :: SING ! true if singularity appears, otherwise false
-REAL (KIND=8), DIMENSION(1:NDIM,1:NDIM), INTENT(INOUT)       :: A    ! coefficient matrix
-REAL (KIND=8), DIMENSION(1:NDIM), INTENT(IN)          :: B    ! right side vector
-REAL (KIND=8), DIMENSION(1:NDIM), INTENT(OUT)         :: X    ! solution vector
+! Dimension of equation system
+INTEGER, INTENT(IN)                               :: N    
+! Dimension of A, B and X
+INTEGER, INTENT(IN)                               :: NDIM 
+! true if singularity appears, otherwise false
+LOGICAL, INTENT(OUT)                               :: SING 
+! coefficient matrix
+REAL (KIND=8), DIMENSION(1:NDIM,1:NDIM), INTENT(INOUT)       :: A    
+! right side vector
+REAL (KIND=8), DIMENSION(1:NDIM), INTENT(IN)          :: B    
+! solution vector
+REAL (KIND=8), DIMENSION(1:NDIM), INTENT(OUT)         :: X    
 
 ! Local variables
 REAL (KIND=8), PARAMETER :: epmach = 1.E-15
@@ -80,7 +86,7 @@ tol = amax * epmach
 ! triangular decomposition
 triangular: do k = 1, n-1
 
-  ! Choice of pivot
+! Choice of pivot  
   ap = a(k,k)
   kp = k
 
@@ -99,7 +105,7 @@ triangular: do k = 1, n-1
     RETURN
   end if
 
-  ! Changing lines
+! Changing lines  
   xp = x(kp)
   if (kp /= k) then
     x(kp) = x(k)

@@ -1,23 +1,23 @@
-
+!
       REAL*8 FUNCTION XN2(IT,K,X,Y)
       SAVE
-C-
-      !definitions
+!-
+!definitions      
       real (kind = 8) :: x, y
       integer (kind = 4) :: k
       integer (kind = 4) :: it
-      !it     type of element
-      !       = 1 => quadrilateral element
-      !      /= 1 => triangular element
-      !k      ordinal number of the node in the master element to get the function value for
-      !x, y   xi and eta for as local coordinates to get the function values for
-      
-C......FUNCTION TO DEFINE SHAPE FUNCTION VALUES
-C-
+!it     type of element      
+!       = 1 => quadrilateral element      
+!      /= 1 => triangular element      
+!k      ordinal number of the node in the master element to get the function value for      
+!x, y   xi and eta for as local coordinates to get the function values for      
+!
+!......FUNCTION TO DEFINE SHAPE FUNCTION VALUES
+!-
       IF(IT == 1) GO TO 500
-C-
-C......TRIANGULAR ELEMENT
-C-
+!-
+!......TRIANGULAR ELEMENT
+!-
       GO  TO ( 110,120,130,140,150,160),K
   110 XN2=(1.D0-2.D0*X-2.D0*Y)*(1.D0-X-Y)
       GOTO 600
@@ -31,9 +31,9 @@ C-
       GOTO 600
   160 XN2=4.D0*Y*(1.D0-X-Y)
       GOTO 600
-C-
-C......QUADRILATERAL ELEMENT
-C-
+!-
+!......QUADRILATERAL ELEMENT
+!-
   500 CONTINUE
       GO TO (510,520,530,540,550,560,570,580),K
   510 XN2=(1.D0-X)*(1.D0-Y)*(-X-Y-1.D0)/4.D0
