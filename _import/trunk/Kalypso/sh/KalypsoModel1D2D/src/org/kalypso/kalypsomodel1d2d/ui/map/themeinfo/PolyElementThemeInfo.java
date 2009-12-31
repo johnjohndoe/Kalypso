@@ -20,7 +20,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
    * @see org.kalypso.ogc.gml.FeatureThemeInfo#formatInfo(java.util.Formatter, org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  protected void formatInfo( final Formatter formatter, final Feature feature )
+  public void formatInfo( final Formatter formatter, final Feature feature )
   {
     final IPolyElement polyElement = feature == null ? null : (IPolyElement) feature.getAdapter( IPolyElement.class );
     if( polyElement == null )
