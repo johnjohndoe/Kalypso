@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -78,8 +78,12 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Thomas Jung
  */
-public class Gml2SMSConv implements INativeIDProvider
+public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 {
+  public static final boolean SUPPORT_MIDSIDE_NODES = false;
+  
+  public static final boolean SUPPORT_FLOW_RESISTANCE_CLASSES = false;
+  
   private final IdMap m_roughnessIDProvider;
 
   private final IdMap m_nodesIDProvider = new IdMap();
@@ -163,7 +167,7 @@ public class Gml2SMSConv implements INativeIDProvider
     return 0;
   }
 
-  public void writeRMA10sModel( final File outputFile ) throws CoreException, IOException
+  public void writeMesh( final File outputFile ) throws CoreException, IOException
   {
     Formatter formatter = null;
     try
@@ -250,7 +254,7 @@ public class Gml2SMSConv implements INativeIDProvider
       final double x = node.getPoint().getX();
       final double y = node.getPoint().getY();
 
-      final String msg = String.format( "Keine Höhendaten: [%.3f, %.3f]", x, y ); //$NON-NLS-1$
+      final String msg = String.format( "Keine Hï¿½hendaten: [%.3f, %.3f]", x, y ); //$NON-NLS-1$
       // TODO: georefed error msg
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
@@ -262,7 +266,7 @@ public class Gml2SMSConv implements INativeIDProvider
     final double x = point.getX();
     final double y = point.getY();
     double z = point.getZ();
-
+    
     /*
      * Card Type ND Description: Defines the ID and location for each node of the mesh. Required: NO Format: ND id x y z
      * Sample: ND 1 7.75e+005 1.10e+005 5.00e-001 id (The ID of the node), x,y,z (the x, y, and z coordinates of the
@@ -365,9 +369,8 @@ public class Gml2SMSConv implements INativeIDProvider
     final int nodeID2 = getConversionID( nodes.get( 1 ) );
     final int nodeID3 = getConversionID( nodes.get( 2 ) );
     final int nodeID4 = getConversionID( nodes.get( 3 ) );
-
+    
     formatter.format( "E4Q%10d%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, nodeID4, roughnessID ); //$NON-NLS-1$
-
   }
 
   /**
@@ -407,6 +410,25 @@ public class Gml2SMSConv implements INativeIDProvider
     final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.5", roughnessClsID, element ); //$NON-NLS-1$
     // TODO: use default zone instead
     throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportFlowResistanceClasses()
+   */
+  @Override
+  public boolean supportFlowResistanceClasses( )
+  {
+    return SUPPORT_FLOW_RESISTANCE_CLASSES;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportMidsideNodes()
+   */
+  @Override
+  public boolean supportMidsideNodes( )
+  {
+    // TODO Auto-generated method stub
+    return SUPPORT_MIDSIDE_NODES;
   }
 
 }
