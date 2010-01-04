@@ -122,13 +122,13 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                    */
                   final SwaleInfiltrationDitch suds = (SwaleInfiltrationDitch) f;
                   key = suds.getElementType();
-                  final Object landuseClassLink = landuse.getLanduse();
-                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N"; //$NON-NLS-1$
+// final Object landuseClassLink = landuse.getLanduse();
+//                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "MRS_N"; //$NON-NLS-1$
 
                   Double maxPercRate = m_config.getSudsAverageMaxPercRate( suds.getId() );
                   if( Double.isNaN( maxPercRate ) )
                     maxPercRate = suds.getMaxPercRate();
-                  value.add( String.format( Locale.US, "%s %s %.4g %.4g", m_config.getLanduseFeatureShortedName( landuseClassName ), BodentypManager.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypManager.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
                   value.add( String.format( Locale.US, "%.1f %.1f %.1f %.4g %.4g 0", (double) suds.getPipeDiameter(), (double) suds.getPipeKfValue(), suds.getPipeSlope() / 1000.0, suds.getPipeRoughness(), suds.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Swale )
@@ -138,20 +138,20 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                    */
                   final Swale suds = (Swale) f;
                   key = suds.getElementType();
-                  final Object landuseClassLink = landuse.getLanduse();
-                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "Mulde_N"; //$NON-NLS-1$
+// final Object landuseClassLink = landuse.getLanduse();
+//                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "Mulde_N"; //$NON-NLS-1$
 
-                  value.add( String.format( Locale.US, "%s %s 2.5E-8 1.0", m_config.getLanduseFeatureShortedName( landuseClassName ), BodentypManager.getSwaleSoiltypeName( suds ) ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s %s 2.5E-8 1.0", suds.getIdealLanduseName(), BodentypManager.getSwaleSoiltypeName( suds ) ) ); //$NON-NLS-1$
                   value.add( String.format( Locale.US, "%.3f 0", suds.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Greenroof )
                 {
                   final Greenroof suds = (Greenroof) f;
                   key = suds.getElementType();
-                  final Object landuseClassLink = landuse.getLanduse();
-                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "GRext_N"; //$NON-NLS-1$
+//                  final Object landuseClassLink = landuse.getLanduse();
+//                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "GRext_N"; //$NON-NLS-1$
 
-                  value.add( String.format( Locale.US, "%s grs 2.8E-10 1.0", m_config.getLanduseFeatureShortedName( landuseClassName ) ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s grs 2.8E-10 1.0", suds.getIdealLanduseName() ) ); //$NON-NLS-1$
 
                   // second line params:
                   // 1. Drainage pipe diameter [mm]

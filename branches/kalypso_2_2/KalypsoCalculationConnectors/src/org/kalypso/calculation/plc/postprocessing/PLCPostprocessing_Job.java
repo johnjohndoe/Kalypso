@@ -153,11 +153,13 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       file.createNewFile();
       GmlSerializer.serializeWorkspace( file, resultsWorkspace, "UTF-8" );
 
+      final File controlModelFile = new File( riskFolder, "RasterizationControlModel.gml" );
       final File sldFile = new File( riskFolder, "RiskZonesCoverage.sld" );
       try
       {
+        FileUtils.copyURLToFile( (URL) inputProvider.getInputForID( "riskRasterizationControlModel" ), controlModelFile );
         FileUtils.copyURLToFile( getSLD(), sldFile );
-        FileUtils.copyFileToDirectory( sldFile, riskFolder );
+        // FileUtils.copyFileToDirectory( sldFile, riskFolder );
       }
       catch( final Exception e )
       {

@@ -3,6 +3,7 @@
 	typeID="KalypsoPLC_Postprocessing">
 	
 	<input id="naResultsFolder" />
+	<input id="riskRasterizationControlModel" />
 	<input id="riskStatusQuoRasterDataModel" />
 	<input id="riskStatusQuoRasterFolderInput" />
 	<input id="riskStatusQuoRasterFolderOutput" />

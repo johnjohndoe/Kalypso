@@ -50,13 +50,29 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IGreenRoof extends Feature
 {
+  public static final String IDEAL_LANDUSE_EXTENSIVE = "GRext_N"; //$NON-NLS-1$
+
+  public static final String IDEAL_LANDUSE_INTENSIVE = "GRint_N"; //$NON-NLS-1$
+
+  public static enum EUsageType
+  {
+
+    EXTENSIVE,
+    INTENSIVE;
+
+    public String value( )
+    {
+      return name();
+    }
+  }
+
   public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // suds:EnumGreenRoofType //$NON-NLS-1$
 
   public QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double //$NON-NLS-1$
 
   public QName QN_PROPERTY_SLOPE = new QName( NaModelConstants.NS_NASUDS, "slope" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_LANDUSE_FILE_NAME = new QName( NaModelConstants.NS_NASUDS, "landuseFileName" ); // suds:EnumGreenRoofLanduseType //$NON-NLS-1$
+  public QName QN_PROPERTY_USAGE_TYPE = new QName( NaModelConstants.NS_NASUDS, "usageType" ); // suds:EnumGreenRoofLanduseType //$NON-NLS-1$
 
   public QName QN_PROPERTY_RAINWATER_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
 
@@ -76,7 +92,9 @@ public interface IGreenRoof extends Feature
 
   public Double getSlope( );
 
-  public Object getLanduseFileName( );
+  public EUsageType getUsageType( );
+
+  public String getIdealLanduseName( );
 
   public Object getRainwaterPipeDiameter( );
 
@@ -89,5 +107,5 @@ public interface IGreenRoof extends Feature
   public Double getEmergencySpillPipeRoughness( );
 
   public Double getEmergencySpillHeight( );
-  
+
 }
