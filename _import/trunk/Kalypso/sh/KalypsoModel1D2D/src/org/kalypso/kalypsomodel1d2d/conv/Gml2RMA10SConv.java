@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -100,13 +102,13 @@ import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Converts discretisation model to RMA·Kalypso model
+ * Converts discretisation model to RMAï¿½Kalypso model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author ig
  */
 @SuppressWarnings("unchecked")
-public class Gml2RMA10SConv implements INativeIDProvider
+public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 {
   private static enum LINE_CASES
   {
@@ -115,7 +117,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
     VO,
     GO
   }
-
+  
+  public static final boolean SUPPORT_MIDSIDE_NODES = true;
+  
+  public static final boolean SUPPORT_FLOW_RESISTANCE_CLASSES = true;
+  
   private static String WEIR2D_CONST_ID = "_2D_WEIR2RMA10_ID_"; //$NON-NLS-1$
 
   private final IdMap m_roughnessIDProvider;
@@ -261,11 +267,29 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return 0;
   }
 
-  public void writeRMA10sModel( final OutputStream outputStream ) throws CoreException, IOException
+  public void writeMesh( final File file ) throws CoreException, IOException
+  {
+    OutputStream outputStream = null;
+    try
+    {
+      outputStream = new FileOutputStream( file );
+      writeRMA10sModel( outputStream );
+    }
+    finally
+    {
+      if( outputStream != null )
+      {
+        // REMARK: do not check io-exception here, else other exception would be hidden by this on
+        outputStream.close();
+      }
+    }
+  }
+  
+  public void writeRMA10sModel( final OutputStream outputStream) throws CoreException, IOException
   {
     Formatter formatter = null;
     try
-    {
+    { 
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
       // so no locale parameter for each format is needed any more .
       formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
@@ -281,6 +305,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
     }
   }
+  
 
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
@@ -1396,5 +1421,23 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return "First node: " + getFirstNode() + ", second node: " + getSecondNode() + ", gml parent id: " + getStrGMLParentId() + ", created parent id: " + getIntParentId() + ", is real edge: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
           + isBoolRealExistingEdge() + "\n"; //$NON-NLS-1$
     }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportFlowResistanceClasses()
+   */
+  @Override
+  public boolean supportFlowResistanceClasses( )
+  { 
+    return SUPPORT_FLOW_RESISTANCE_CLASSES;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportMidsideNodes()
+   */
+  @Override
+  public boolean supportMidsideNodes( )
+  {
+    return SUPPORT_MIDSIDE_NODES;
   }
 }
