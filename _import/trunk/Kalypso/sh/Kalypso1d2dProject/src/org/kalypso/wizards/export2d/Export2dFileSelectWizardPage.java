@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.kalypsomodel1d2d.conv.MeshConverterFactory;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.wizards.i18n.Messages;
 
@@ -159,6 +160,10 @@ public class Export2dFileSelectWizardPage extends WizardPage
         m_selectedExtension = m_filenameExtensions[i];
         break;
       }
+    
+    m_btnExportRoughness.setEnabled( MeshConverterFactory.supportFlowResistanceClasses( m_selectedExtension ) );
+    m_btnExportMiddleNodes.setEnabled( MeshConverterFactory.supportMidSideNodes( m_selectedExtension ) );
+        
     if( !regularExtension )
     {
       setMessage( null );
@@ -219,5 +224,15 @@ public class Export2dFileSelectWizardPage extends WizardPage
   public String getSelectedExtension( )
   {
     return m_selectedExtension;
+  }
+  
+  public void setEnabledExportMiddleNodes( boolean enable )
+  {
+    m_btnExportMiddleNodes.setEnabled( enable );
+  }
+  
+  public void setEnabledExportRoughessData( boolean enable )
+  {
+    m_btnExportRoughness.setEnabled( enable );
   }
 }

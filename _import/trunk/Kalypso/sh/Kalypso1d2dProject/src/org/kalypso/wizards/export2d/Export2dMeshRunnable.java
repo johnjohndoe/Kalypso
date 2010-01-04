@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -41,9 +41,6 @@
 package org.kalypso.wizards.export2d;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -53,8 +50,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
-import org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv;
+import org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter;
+import org.kalypso.kalypsomodel1d2d.conv.MeshConverterFactory;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -91,40 +88,20 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
     final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
     final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
     final IRoughnessClsCollection roughnessModel = m_exportRoughness ? dataProvider.getModel( IRoughnessClsCollection.class ) : null;
-
-    // TODO: check which format has been chosen.
-
-    if( m_selectedExtension == "*.2d" ) //$NON-NLS-1$
-    {
-      final Gml2RMA10SConv converter = new Gml2RMA10SConv( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ) );
-
-      try
-      {
-        final OutputStream outputStream = new FileOutputStream( m_exportFile );
-        converter.writeRMA10sModel( outputStream );
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-        throw new InvocationTargetException( e );
-      }
+     
+    try
+    {      
+      final I2DMeshConverter converter = ( new MeshConverterFactory()) .getConverter( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ), m_selectedExtension );      
+      converter.writeMesh( m_exportFile );
     }
-    else if( m_selectedExtension == "*.2dm" ) //$NON-NLS-1$
+    catch( Exception e )
     {
-      final Gml2SMSConv converter = new Gml2SMSConv( discretisationModel, roughnessModel );
-
-      try
-      {
-        converter.writeRMA10sModel( m_exportFile );
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-        throw new InvocationTargetException( e );
-      }
-
-    }
-
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }   
+    
+    monitor.done();
+    
     return Status.OK_STATUS;
   }
 }
