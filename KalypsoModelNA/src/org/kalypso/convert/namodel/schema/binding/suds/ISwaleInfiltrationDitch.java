@@ -49,17 +49,15 @@ import org.kalypso.convert.namodel.NaModelConstants;
  */
 public interface ISwaleInfiltrationDitch extends IAbstractSwale
 {
-  public static QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // suds:EnumSwaleInfiltrationDitchType //$NON-NLS-1$
+  public static final String IDEAL_LANDUSE = "MRS_N"; //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_LANDUSE_FILE_NAME = new QName( NaModelConstants.NS_NASUDS, "landuseFileName" ); // string //$NON-NLS-1$
+  public static QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // suds:EnumSwaleInfiltrationDitchType //$NON-NLS-1$
 
   public static QName QN_PROPERTY_MAX_PERC_RATE = new QName( NaModelConstants.NS_NASUDS, "maxPercRate" ); // double //$NON-NLS-1$
 
   public static QName QN_PROPERTY_PERCENT_TO_GROUNDWATER = new QName( NaModelConstants.NS_NASUDS, "percentToGroundwater" ); // double //$NON-NLS-1$
 
   public String getElementType( );
-
-  public String getLanduseFileName( );
 
   public double getMaxPercRate( );
 

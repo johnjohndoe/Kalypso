@@ -258,28 +258,33 @@ public class HydrotopManager extends AbstractManager
                 final Feature feature = (sudsFeature instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) sudsFeature).getFeature() : sudsFeature;
                 if( feature instanceof ISwaleInfiltrationDitch )
                 {
+                  
+//                  aaaaaaaaaaaaaaaaaaa
+                  
                   final ISwaleInfiltrationDitch suds = (ISwaleInfiltrationDitch) feature;
-                  final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double naturalAreaPart = hydrotopNaturalArea * areaRate;
-                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPart, sealedAreaPart );
-                  hydrotopNaturalArea -= naturalAreaPart;
-                  hydrotopSealedArea -= sealedAreaPart;
-                  totalSudsNaturalArea += naturalAreaPart;
-                  totalSudsSealedArea += sealedAreaPart;
+                  final double naturalAreaRate = suds.getNaturalAreaPercentage() / 100.0;
+                  final double drainingRateOfSealedArea = suds.getDrainedPercentageOfSealedArea() / 100.0;
+                  final double sudsNaturalAreaPart = hydrotopArea * naturalAreaRate;
+                  final double sudsDrainedSealedAreaPart = hydrotopSealedArea * drainingRateOfSealedArea;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sudsNaturalAreaPart, sudsDrainedSealedAreaPart );
+                  hydrotopNaturalArea -= sudsNaturalAreaPart;
+                  hydrotopSealedArea -= sudsDrainedSealedAreaPart;
+                  totalSudsNaturalArea += sudsNaturalAreaPart;
+                  totalSudsSealedArea += sudsDrainedSealedAreaPart;
                   m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
                 }
                 else if( feature instanceof ISwale )
                 {
                   final ISwale suds = (ISwale) feature;
-                  final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double naturalAreaPart = hydrotopNaturalArea * areaRate;
-                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPart, sealedAreaPart );
-                  hydrotopNaturalArea -= naturalAreaPart;
-                  hydrotopSealedArea -= sealedAreaPart;
-                  totalSudsNaturalArea += naturalAreaPart;
-                  totalSudsSealedArea += sealedAreaPart;
+                  final double naturalAreaRate = suds.getNaturalAreaPercentage() / 100.0;
+                  final double drainingRateOfSealedArea = suds.getDrainedPercentageOfSealedArea() / 100.0;
+                  final double sudsNaturalAreaPart = hydrotopArea * naturalAreaRate;
+                  final double sudsDrainedSealedAreaPart = hydrotopSealedArea * drainingRateOfSealedArea;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sudsNaturalAreaPart, sudsDrainedSealedAreaPart );
+                  hydrotopNaturalArea -= sudsNaturalAreaPart;
+                  hydrotopSealedArea -= sudsDrainedSealedAreaPart;
+                  totalSudsNaturalArea += sudsNaturalAreaPart;
+                  totalSudsSealedArea += sudsDrainedSealedAreaPart;
                   m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
                 }
                 else if( feature instanceof IGreenRoof )
@@ -295,6 +300,7 @@ public class HydrotopManager extends AbstractManager
               }
               anySuds = true;
             }
+//            final double sealingRate = hydrotopSealedArea / (hydrotopArea - );
             hydrotopOutputList.add( String.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f %-1d %s", hydrotopNaturalArea, m_conf.getLanduseFeatureShortedName( hydrotop.getLanduse() ), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingRate, (sudsCollection.size() > 0) ? 1 : 0, hydrotopSudsAsciiDescriptor.getAscii() ) ); //$NON-NLS-1$
             totalHydrotopArea += hydrotopArea;
             totalHydrotopSealedArea += hydrotopSealedArea;

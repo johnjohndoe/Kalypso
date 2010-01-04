@@ -125,15 +125,6 @@ public class Greenroof extends AbstractSud implements IGreenRoof
   }
 
   /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof#getLanduseFileName()
-   */
-  @Override
-  public Object getLanduseFileName( )
-  {
-    return getProperty( QN_PROPERTY_LANDUSE_FILE_NAME );
-  }
-
-  /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof#getRainwaterPipeDiameter()
    */
   @Override
@@ -166,6 +157,32 @@ public class Greenroof extends AbstractSud implements IGreenRoof
       return (Double) property;
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof#getUsageType()
+   */
+  @Override
+  public EUsageType getUsageType( )
+  {
+    final String property = getProperty( QN_PROPERTY_SLOPE ).toString();
+    if( EUsageType.INTENSIVE.value().equals( property ) )
+      return EUsageType.INTENSIVE;
+    return EUsageType.EXTENSIVE;
+  }
+
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof#getIdealLanduseName()
+   */
+  @Override
+  public String getIdealLanduseName( )
+  {
+    return isExtensiveUsageType() ? IDEAL_LANDUSE_EXTENSIVE : IDEAL_LANDUSE_INTENSIVE;
+  }
+
+  public boolean isExtensiveUsageType( )
+  {
+    return EUsageType.EXTENSIVE == getUsageType();
   }
 
 }

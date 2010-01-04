@@ -84,8 +84,8 @@
 		<complexContent>
 			<extension base="suds:AbstractSudType">
 				<sequence>
-					<element name="width" type="double"/>
-					<element name="areaPercentage" type="double"/>
+					<element name="naturalAreaPercentage" type="double"/>
+					<element name="drainedSealedAreaPercentage" type="double"/>
 					<element name="drainageNode">
 						<!-- Only downstream nodes are acceptable; node offered by default should be the drainage node of this subcatchment -->
 						<complexType>
@@ -111,7 +111,6 @@
 			<extension base="suds:AbstractSwaleType">
 				<sequence>
 					<element name="elementType" type="suds:EnumSwaleType" default="20"/>
-					<element name="landuseFileName" type="string" default="swale.nutz"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -122,7 +121,6 @@
 			<extension base="suds:AbstractSwaleType">
 				<sequence>
 					<element name="elementType" type="suds:EnumSwaleInfiltrationDitchType" default="30"/>
-					<element name="landuseFileName" type="string" default="mrs_N.nutz"/>
 					<element name="maxPercRate" type="double" default="2.8E-15"/>
 					<element name="percentToGroundwater" type="double" default="1.0"/>
 				</sequence>
@@ -144,7 +142,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="landuseFileName" type="suds:EnumGreenRoofLanduseType" default="extensive.nutz"/>
+					<element name="usageType" type="suds:EnumGreenRoofUsageType" default="EXTENSIVE"/>
 					<element name="rainwaterPipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
 					<element name="rainwaterPipeRoughness" type="double" default="2.0" />
 					<element name="drainageLayerPorosity" default="0.2" >
@@ -155,7 +153,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="20"/>
+					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
 					<element name="emergencySpillPipeRoughness" type="double" default="2.0" />
 					<element name="emergencySpillHeight" default="100">
 						<simpleType>
@@ -187,7 +185,7 @@
 	<simpleType name="EnumSwaleType">
 		<restriction base="string">
 			<enumeration value="20"/>
-			<!-- obsolete, see trac ticket #419 
+			<!-- different types not implemented yet, see trac ticket #419 
 			<enumeration value="21"/>
 			 -->
 		</restriction>
@@ -196,25 +194,27 @@
 	<simpleType name="EnumSwaleInfiltrationDitchType">
 		<restriction base="string">
 			<enumeration value="30"/>
-			<enumeration value="31"/>
+			<!-- different types not implemented yet, see trac ticket #419
+				<enumeration value="31"/>
+			 -->
 		</restriction>
 	</simpleType>
 
 	<simpleType name="EnumGreenRoofType">
 		<restriction base="string">
 			<enumeration value="10"/>
-			<enumeration value="11"/>
-			<enumeration value="12"/>
-			<!-- obsolete, see trac ticket #419
+			<!-- different types not implemented yet, see trac ticket #419
+				<enumeration value="11"/>
+				<enumeration value="12"/>
 				<enumeration value="13"/>
 			 -->
 		</restriction>
 	</simpleType>
 
-	<simpleType name="EnumGreenRoofLanduseType">
+	<simpleType name="EnumGreenRoofUsageType">
 		<restriction base="string">
-			<enumeration value="extensive.nutz"/>
-			<enumeration value="intensive.nutz"/>
+			<enumeration value="EXTENSIVE"/>
+			<enumeration value="INTENSIVE"/>
 		</restriction>
 	</simpleType>
 

@@ -66,16 +66,12 @@ public class Swale extends AbstractSwale implements ISwale
   }
 
   /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwale#getLanduseFilename()
+   * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getIdealLanduseName()
    */
   @Override
-  public String getLanduseFilename( )
+  public String getIdealLanduseName( )
   {
-    final Object property = getProperty( QN_PROPERTY_LANDUSE_FILENAME );
-    if( property instanceof String )
-      return (String) property;
-
-    return "swale.nutz"; //$NON-NLS-1$
+    return IDEAL_LANDUSE;
   }
 
 }

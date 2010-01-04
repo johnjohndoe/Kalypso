@@ -138,9 +138,9 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       try
       {
         final GMLWorkspace sudsWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "sudsModel" ), null ); //$NON-NLS-1$
-        final PlaningArea planingArea = (PlaningArea) sudsWorkspace.getRootFeature().getProperty( PlaningArea.QNAME );
-        final Geometry planingAreaGeometry = JTSAdapter.export( planingArea.getGeometry() );
-
+        final PlaningArea planingArea = (PlaningArea) sudsWorkspace.getRootFeature().getProperty( PlaningArea.QNAME_PROP_PLANING_AREA_MEMBER );
+        final Geometry planingAreaGeometry = JTSAdapter.export( planingArea.getDefaultGeometryProperty() );
+        
         /* read statistics: max discharge / date of max discharge */
         final Map<String, String> izNodesPath = new HashMap<String, String>();
         final Map<String, String> calculatedNodesPath = new HashMap<String, String>();
