@@ -27,6 +27,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -48,12 +49,14 @@ import org.kalypso.template.obstableview.Obstableview;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * This class is the post processor for standard rainfall-runoff calculation. The behaviour of it depends on the
@@ -138,9 +141,25 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       try
       {
         final GMLWorkspace sudsWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "sudsModel" ), null ); //$NON-NLS-1$
+        final Geometry planingAreaGeometry;
+        final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null ); //$NON-NLS-1$
         final PlaningArea planingArea = (PlaningArea) sudsWorkspace.getRootFeature().getProperty( PlaningArea.QNAME_PROP_PLANING_AREA_MEMBER );
-        final Geometry planingAreaGeometry = JTSAdapter.export( planingArea.getDefaultGeometryProperty() );
-        
+        if( planingArea != null )
+        {
+          planingAreaGeometry = JTSAdapter.export( planingArea.getDefaultGeometryProperty() );
+        }
+        else
+        {
+          /*
+           * TODO: This should happen only if the calculation is started by PLC Manager application. Implement such
+           * check.
+           */
+          final Feature catchmentCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+          final FeatureList catchmentList = (FeatureList) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+          final GM_Envelope envelope = catchmentList.getBoundingBox();
+          planingAreaGeometry = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
+        }
+
         /* read statistics: max discharge / date of max discharge */
         final Map<String, String> izNodesPath = new HashMap<String, String>();
         final Map<String, String> calculatedNodesPath = new HashMap<String, String>();
@@ -201,7 +220,6 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           }
         }
 
-        final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null ); //$NON-NLS-1$
         final Feature nodeCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
         final FeatureList nodeList = (FeatureList) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
 
