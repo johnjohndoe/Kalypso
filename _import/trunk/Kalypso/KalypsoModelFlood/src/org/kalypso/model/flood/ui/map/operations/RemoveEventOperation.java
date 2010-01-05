@@ -21,10 +21,10 @@ import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -113,12 +113,12 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
-        final UserStyle[] styles = featureTheme.getStyles();
-        for( final UserStyle userStyle : styles )
+        final IKalypsoStyle[] styles = featureTheme.getStyles();
+        for( final IKalypsoStyle style : styles )
         {
-          if( userStyle instanceof GisTemplateUserStyle )
+          if( style instanceof GisTemplateUserStyle )
           {
-            final GisTemplateUserStyle pooledUserStyle = (GisTemplateUserStyle) userStyle;
+            final GisTemplateUserStyle pooledUserStyle = (GisTemplateUserStyle) style;
             final PoolableObjectType poolKey = pooledUserStyle.getPoolKey();
 
             final String styleLocationForEventWsp = AddEventOperation.styleLocationForEventWsp( event );

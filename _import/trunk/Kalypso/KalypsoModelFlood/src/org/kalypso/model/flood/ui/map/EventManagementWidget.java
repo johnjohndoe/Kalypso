@@ -132,7 +132,9 @@ import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -150,7 +152,6 @@ import org.kalypso.ui.editor.sldEditor.PolygonColorMapLabelProvider;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -506,17 +507,11 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         try
         {
           final IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
-          final UserStyle[] styles = runoffEventTheme.getStyles();
-          for( final UserStyle userStyle : styles )
+          final IKalypsoStyle[] styles = runoffEventTheme.getStyles();
+          for( final IKalypsoStyle style : styles )
           {
-
-            if( userStyle instanceof GisTemplateUserStyle )
-            {
-              final GisTemplateUserStyle gtus = (GisTemplateUserStyle) userStyle;
-              gtus.fireStyleChanged();
-              gtus.save( new NullProgressMonitor() );
-            }
-
+            style.fireStyleChanged();
+            style.save( new NullProgressMonitor() );
           }
         }
         catch( final CoreException e )
@@ -553,11 +548,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     try
     {
-      final UserStyle[] styles = runoffEventTheme.getStyles();
-      final UserStyle style = findUserStyle( styles, "wspUserStyle") ; //$NON-NLS-1$
+      final IKalypsoStyle[] styles = runoffEventTheme.getStyles();
+      final IKalypsoUserStyle style = findUserStyle( styles, "wspUserStyle" ); //$NON-NLS-1$
       if( style != null )
       {
-
         final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" ); //$NON-NLS-1$
         final Rule wspRule = wspFts.getRule( "wspRule" ); //$NON-NLS-1$
         final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
@@ -573,14 +567,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     return null;
   }
 
-  private UserStyle findUserStyle( final UserStyle[] styles, final String name )
+  private IKalypsoUserStyle findUserStyle( final IKalypsoStyle[] styles, final String name )
   {
-    for( final UserStyle userStyle : styles )
+    for( final IKalypsoStyle style : styles )
     {
-
-      if( userStyle.getName().equals( name ) )
-        return userStyle;
-
+      if( (style instanceof IKalypsoUserStyle) && ((IKalypsoUserStyle) style).getName().equals( name ) )
+        return (IKalypsoUserStyle) style;
     }
 
     return null;
@@ -973,8 +965,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private IKalypsoCascadingTheme findWspTheme( )
   {
     final IMapModell mapModell = getMapPanel().getMapModell();
-    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.64"), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
-    Assert.isNotNull( wspThemes, Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.6") ); //$NON-NLS-1$
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.64" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
+    Assert.isNotNull( wspThemes, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.6" ) ); //$NON-NLS-1$
     return wspThemes;
   }
 
@@ -1227,12 +1219,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
-        final UserStyle[] styles = featureTheme.getStyles();
-        for( final UserStyle userStyle : styles )
+        final IKalypsoStyle[] styles = featureTheme.getStyles();
+        for( final IKalypsoStyle style : styles )
         {
-          if( userStyle instanceof GisTemplateUserStyle )
+          if( style instanceof GisTemplateUserStyle )
           {
-            final GisTemplateUserStyle pooledUserStyle = (GisTemplateUserStyle) userStyle;
+            final GisTemplateUserStyle pooledUserStyle = (GisTemplateUserStyle) style;
             final PoolableObjectType poolKey = pooledUserStyle.getPoolKey();
 
             final String styleLocationForEventWsp = AddEventOperation.styleLocationForEventWsp( event );
@@ -1245,24 +1237,24 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.61" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.62" , event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.62", event.getName() ) ) ); //$NON-NLS-1$ 
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() //$NON-NLS-1$
                     + ") %.2f NN+m" ); //$NON-NLS-1$
               }
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.66" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.67" , event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.67", event.getName() ) ) ); //$NON-NLS-1$ 
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
               }
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.71" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString(  Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.72" , event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.72", event.getName() ) ) ); //$NON-NLS-1$ 
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
               }
 
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.76" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString(  Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.77" , event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.77", event.getName() ) ) ); //$NON-NLS-1$ 
               }
 
             }
@@ -1289,12 +1281,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
                   // HACK!
                   if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.79" ) ) ) //$NON-NLS-1$
                   {
-                    kalypsoTheme.setName( new I10nString(  Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.80" , event.getName() ) ) ); //$NON-NLS-1$ 
+                    kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.80", event.getName() ) ) ); //$NON-NLS-1$ 
                     kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
                   if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.84" ) ) ) //$NON-NLS-1$
                   {
-                    kalypsoTheme.setName( new I10nString(  Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.85" , event.getName() ) ) ); //$NON-NLS-1$ 
+                    kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.85", event.getName() ) ) ); //$NON-NLS-1$ 
                     kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
                 }
