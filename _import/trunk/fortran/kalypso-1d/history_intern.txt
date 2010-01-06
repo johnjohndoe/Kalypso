@@ -1687,8 +1687,7 @@ Kalypso 2.1.4.1      07. November 2008
 									Monika Donner, 07.11.2008
 
 
-
-   
+  
 Kalypso 2.1.5.0      20. August 2009
 -------------------------------------    
 1) BUGFIX fuer negative Wasserspiegellagen bzw. negative GOK im Profil
@@ -1701,18 +1700,51 @@ Kalypso 2.1.5.0      20. August 2009
    Betroffene Routinen:
      - wspanf, eb2ks, newton, normber, uf
 
-
    Anmerkung: Negativer WSP geht nach wie vor nicht reibungslos in Wehren und Brücken! Eine negative
               Geometrie bei positivem Wasserspigel funktioniert jedoch. --> TODO
 
 									Monika Donner, 20.08.2009
 
 
+   
+Kalypso 2.1.5.1      08. Oktober 2009
+-------------------------------------    
+1) BUGFIX fuer Längsschnittes bei Fließgesetz nach G. Manning-Strickler (kst-Werte)
+  
+   Die UNIT des Längsschnittes wurde bislang nicht für Manning-Berechnungen erzeugt und somit 
+   in Kalypso-WSPM aber auch in WspWin die Laegsschnitt.txt nicht generiert, sondern ins 
+   DOS-Fenster geschrieben. 
+   Nun gilt das nur noch für die Bordvoll-Berechnung, bei der kein Laengsschnitt erzeugt werden soll.
+  
+   Betroffene Routinen:
+     - zeila 
+									Monika Donner, 08.10.2009
 
 
 
 
+Kalypso 2.1.5.2      09. Januar 2010
+-------------------------------------    
+1) BUGFIX fuer Längsschnitte bei Fließgesetz nach G. Manning-Strickler (kst-Werte)
+  
+   Die Berechnung der Schubspannung "Tau" fuer die Ausgabe in der Laegsschnitt.txt wurde 
+   fuer Manning-Kst-Berechnungen deaktiviert. Grund ist, dass erforderliche Daten zur Berechnung
+   der Schubspannung für das Fließgesetz nach G. Manning-Strickler nicht gespeichert werden und
+   somit eine Berechnung nach Abschluss der Berechnung über alle Profile nicht mehr (bzw. nur unter
+   größerem Aufwand) möglich ist.
+   --> Für Manning-Kst-Berechnungen steht in allen Laengsschnitten nun 0.000
+   
+   Hinweis: der Eintrag in der Laegsschnitt.txt unter Lambda entspricht der Kst-Rauheit
+   
+2) BUGFIX fuer Längsschnitte bei Fließgesetz nach Darcy (ks-Werte)
+  
+   Die berechnete Schubspannung "Tau" fuer die Ausgabe in der Laegsschnitt.txt wurde 
+   fuer Darcy-WB-Berechnungen auf maximal 999.99 begrenzt, um Probleme bei der Ausgabe
+   zu vermeiden.
 
+   Betroffene Routinen:
+     - zeila 
+									Monika Donner, 09.01.2009
 
 
 
