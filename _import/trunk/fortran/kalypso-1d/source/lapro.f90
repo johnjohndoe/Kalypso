@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    3:10 pm
+!     Last change:  MD    6 Jan 2010   12:42 pm
 !--------------------------------------------------------------------------
 ! This code, lapro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -161,7 +161,6 @@ DO i = 1, nprof
 
   !write (*,1001) i, gef1(i)
   !1001 format (1X, 'Profil ', I3, ' Gefaelle = ', F12.9)
-
 
 END DO
 
