@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Aug 2007    1:20 pm
+!     Last change:  MD    6 Jan 2010    2:43 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -124,7 +124,8 @@ weins = 1
 !MD  if (mark == 1) then
 !MD  Laengsschnitt wird auch fuer mark = 2 (stat. ungleichf. Berechnung) erzeugt
 !MD  if (mark.eq.1 .or. mark.eq.2) then
-If (BERECHNUNGSMODUS /= 'BF_UNIFORM' .AND. FLIESSGESETZ /= 'MANNING_STR') then
+!MD:  If (BERECHNUNGSMODUS /= 'BF_UNIFORM' .AND. FLIESSGESETZ /= 'MANNING_STR') then
+If (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   UNIT_OUT_LAENGS = ju0gfu ()  ! Holen einer neuen Dateinummer
 
@@ -586,6 +587,18 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
           out_IND(i,j,k)%lambda = 99.9999
         end if
       end do
+
+      IF (FLIESSGESETZ == 'MANNING_STR') THEN
+        out_PROF(i,nr_q)%tau = 0.0         ! Keine Berechnung des Sohlschubspannung da kein Lambda vorhanden [N/m2]
+        IF (i .eq. 1) THEN
+          WRITE (*,*) 'DRUCKTAB: Tau wird zu Null gesetzt fuer Manning_Str. '
+        END IF
+      END IF
+
+      if (out_PROF(i,j)%tau > 999.9999) then
+        out_PROF(i,j)%tau = 999.9999
+      end if
+
       write (UNIT_OUT_QLAENGS, 91) out_PROF(i,j)%stat, out_PROF(i,j)%chr_kenn, out_PROF(i,j)%qges, &
                              & out_PROF(i,j)%sohle, out_PROF(i,j)%wsp, &
                              & out_PROF(i,j)%hen, out_PROF(i,j)%hbv, out_PROF(i,j)%boeli, out_PROF(i,j)%boere, &
@@ -607,6 +620,18 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
         out_IND(i,1,k)%lambda = 99.9999
       end if
     end do
+
+    IF (FLIESSGESETZ == 'MANNING_STR') THEN
+      out_PROF(i,1)%tau = 0.0         ! Keine Berechnung des Sohlschubspannung da kein Lambda vorhanden [N/m2]
+      IF (i .eq. 1) THEN
+        WRITE (*,*) 'DRUCKTAB: Tau wird zu Null gesetzt fuer Manning_Str. '
+      END IF
+    END IF
+
+    if (out_PROF(i,1)%tau > 999.9999) then
+      out_PROF(i,1)%tau = 999.9999
+    end if
+
     write (UNIT_OUT_LAENGS, 91) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%qges, &
                              & out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
                              & out_PROF(i,1)%hen, out_PROF(i,1)%hbv, out_PROF(i,1)%boeli, out_PROF(i,1)%boere, &
