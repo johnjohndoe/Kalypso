@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Aug 2007    5:04 pm
+!     Last change:  MD    6 Jan 2010    2:15 pm
 !--------------------------------------------------------------------------
 ! This code, drucktab.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -200,7 +200,7 @@ IF (Q_Abfrage.eq.'IN_SCHLEIFE') then
   out_PROF(i,nr_q)%boere  = borep(i)            	! Bordvollhoehe rechts [mNN]
   out_PROF(i,nr_q)%hbv    = MIN(bolip(i), borep(i)) 	! minimale Bordvollhoehe [mNN]
   out_PROF(i,nr_q)%vm     = vmp(i)              	! mittlere Fliessgeschwindigkeit [m/s]
-  out_PROF(i,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2 ! Sohlschubspannung im Flussschlauch [N/m2]
+  out_PROF(i,nr_q)%tau = (rkp(i,2)/8)*rho*vp(i,2)**2    ! Sohlschubspannung im Flussschlauch [N/m2]
   out_PROF(i,nr_q)%alphaIW  = Alpha_IW(i)               ! Impulsstrombeiwert aus eb2ks [-]
   out_PROF(i,nr_q)%alphaEW  = Alpha_EW(i)               ! Energiestrombeiwert aus eb2ks [-]
   out_PROF(i,nr_q)%gefaelle = ABS(g_sohl)          ! Reibungsgefaelle [-]
