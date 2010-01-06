@@ -704,4 +704,25 @@ Kalypso 2.1.5.0      20. August 2009
    bei positivem Wasserspigel funktioniert jedoch.
 
 									Monika Donner, 20.08.2009
+
+Kalypso 2.1.5.1      08. Oktober 2009
+-------------------------------------    
+1) BUGFIX fuer Längsschnitte bei Fließgesetz nach G. Manning-Strickler (kst-Werte)
+  
+   Bislang wurde die Laegsschnitt.txt für Manning-Berechnungen in Kalypso-WSPM, aber
+   auch in WspWin nicht generiert, sondern in das DOS-Fenster geschrieben. 
+   Nun gilt das nur noch für die Bordvoll-Berechnung, bei der kein Laengsschnitt erzeugt werden soll.
+
+									Monika Donner, 08.10.2009
+
+
+Kalypso 2.1.5.2      09. Januar 2010
+-------------------------------------    
+1) BUGFIX fuer Längsschnitte bei Fließgesetz nach G. Manning-Strickler (kst-Werte)
+  
+   Die Berechnung der Schubspannung "Tau" fuer die Ausgabe in der Laegsschnitt.txt wurde 
+   fuer Manning-Kst-Berechnungen deaktiviert. 
+   --> Für Manning-Kst-Berechnungen steht in allen Laegsschnitten nun 0.000
+
+									Monika Donner, 09.01.2009
  
