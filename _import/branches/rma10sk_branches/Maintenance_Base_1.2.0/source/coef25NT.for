@@ -2655,8 +2655,7 @@ C-
                 end if
 
                 !get water stage at midside node
-                hm1 = (hel (n1) + hel (n3)) / 2.
-                srfel = hm1 + ao(m)
+                srfel = 0.5 * (wsll(n1) + wsll(n2))
 
                 !calculate flow and derivative of flow over h from tabular data
                 call stfltab (m, srfel, dfdh, ff, 1)
