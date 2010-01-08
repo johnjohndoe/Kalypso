@@ -1574,7 +1574,7 @@ C      ENDDO
       WRITE(*,6007) NSZF
       WRITE(75,6007) NSZF
  6007 FORMAT( // 20X, '.....TOTAL NUMBER OF ACTIVE SYSTEM EQUATIONS =',
-     1  I6 )
+     1  I10 )
       IF( NSZF .LE. IR1MAX ) RETURN
 cipk sep04
       CLOSE(75)
