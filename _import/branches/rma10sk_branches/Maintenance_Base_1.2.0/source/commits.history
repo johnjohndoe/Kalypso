@@ -1636,3 +1636,14 @@ new features introduced/ started to be introduced:
 version information
 
 --- Nico Schrage, 22.12.2009 (version 1.2.0 beta build 2009/12/22)
+
+209.) Increase number of digits for number of active equations in console
+      (affects load3.for)
+210.) Correct calculation of water level at midside nodes for purpose of w-q-relationships
+      (affects coef25nt.for)
+211.) Increase number of entries in w-q-relationship tables
+      (affects stfltab.for)
+212.) Add some line read checks
+      (affects RDKalypso.f90)
+
+--- Nico Schrage, 08.01.2010
