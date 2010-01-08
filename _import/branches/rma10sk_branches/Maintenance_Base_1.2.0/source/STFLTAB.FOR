@@ -12,7 +12,7 @@ CIPK FEB05
       CHARACTER*8 IDT
       CHARACTER*72 DLINT
 
-      COMMON /SFLTB/ ITBL(5),IDTBL(5),ELEVTBL(5,40),FLOWTBL(5,40)
+      COMMON /SFLTB/ ITBL(5),IDTBL(5),ELEVTBL(5,100),FLOWTBL(5,100)
 
 C     FOR ISWTB = 0 SET NODAL SWITCH FOR APPRORIATE CONTINUITY LINE
 
@@ -100,22 +100,6 @@ C     PROCESS CASE
       DO I=1,ITBL(ILINTB)
         IF(SRFEL .LT. ELEVTBL(ILINTB,I)) THEN
           IF(I .EQ. 1) THEN
-            !IF(JRED .EQ. 0) THEN
-CIPK SEP04
-             !CLOSE(75)
-             !OPEN(75,file='ERROR.OUT')
-             !ENDIF
-!           WRITE(75,*)'WATER SURFACE ELEVATION BELOW LOWEST TABLE ENTRY'
-!           WRITE(75,*)'ILINTB,SRFEL,ELEVTBL(ILINTB,1)',ILINTB,SRFEL
-!     +                 ,ELEVTBL(ILINTB,1)
-!           WRITE(*,*)'WATER SURFACE ELEVATION BELOW LOWEST TABLE ENTRY'
-CIPK AUG04
-           !IF(JRED .GT.0) THEN
-           !  JREDERR=1
-           !  RETURN
-           !ENDIF
-!           WRITE(*,*)'EXECUTION TERMINATED'
-!           STOP
             call ErrorMessageAndStop (4002, 0, 0.0d0, 0.0d0)
           ELSE
            FACT=(SRFEL-ELEVTBL(ILINTB,I-1))/
@@ -129,22 +113,9 @@ CIPK AUG04
           ENDIF
         ENDIF
       ENDDO
-      !IF(JRED .EQ. 0) THEN
-CIPK SEP04
-      !  CLOSE(75)
-      !  OPEN(75,file='ERROR.OUT')
-      !ENDIF
-!      WRITE(75,*)'WATER SURFACE ELEVATION ABOVE HIGHEST TABLE ENTRY'
-!      WRITE(75,*)'ILINTB,SRFEL,ELEVTBL(ILINTB,1)',ILINTB,SRFEL
-!     +                 ,ELEVTBL(ILINTB,1)
-!      WRITE(*,*)'WATER SURFACE ELEVATION ABOVE HIGHEST TABLE ENTRY'
-CIPK AUG04
-      !IF(JRED .GT.0) THEN
-      !  JREDERR=1
-      !  RETURN
-      !ENDIF
-!      WRITE(*,*)'EXECUTION TERMINATED'
-!      STOP
+
+      !This position is first reached, if the highest entry is below current water stage value
+      !ERROR, if value is above highest entry in stage-discharge relationship
       call ErrorMessageAndStop (4003, 0, 0.0d0, 0.0d0)
 
       END
