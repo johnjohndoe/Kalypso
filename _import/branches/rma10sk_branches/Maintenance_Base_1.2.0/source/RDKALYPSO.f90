@@ -248,6 +248,7 @@ type (node), pointer                            :: tmpNode, newFENode, nodeOrigi
 type (linkedNode), pointer                      :: newNeighb
 integer (kind = 4)                              :: CCLID
 type (simulationModel), pointer :: m_SimModel
+integer (kind = 4) :: ioerror
 !meaning of the variables
 !------------------------
                         !TODO: geometry and restart file become one
@@ -721,7 +722,9 @@ reading: do
     !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
     !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
     IF (linie(1:2) == 'DF') THEN
-      READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
+      ioerror = 0
+      READ(linie,'(a2,i10,4f20.7)', iostat = ioerror) id_local, i, (vel(j,i), j=4,7)
+      if (ioerror /= 0) write (*,*) 'fehlerhafte Zeile: ', linie
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
       IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     END IF
@@ -737,7 +740,9 @@ reading: do
 
     !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
     IF (linie (1:2) == 'GA') then
-      READ (linie, '(a2,1x,i9,3f20.7)') id_local, i, (vdot(j,i),j=1,3)
+      ioerror = 0
+      READ (linie, '(a2,1x,i9,3f20.7)', iostat = ioerror) id_local, i, (vdot(j,i),j=1,3)
+      if (ioerror /= 0) write (*,*) 'fehlerhafte Zeile: ', linie
       !NiS,mar06: name of variable changed; changed mnd to MaxP
       !Stop program execution on nodenumber higher than MaxP; could normally not happen
       IF (i>MaxP) stop 'i>MaxP'
@@ -747,9 +752,9 @@ reading: do
 
     !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
     IF (linie (1:2) == 'VO') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      READ (linie, '(a2,1x,i9,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
+      ioerror = 0
+      READ (linie, '(a2,1x,i9,3f20.7)', iostat = ioerror) id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
+      if (ioerror /= 0) write (*,*) 'fehlerhafte Zeile: ', linie
       !NiS,mar06: name of variable changed; changed mnd to MaxP
       !Stop program execution on nodenumber higher than MaxP; could normally not happen
       IF (i > MaxP) stop 'i > MaxP'
@@ -760,8 +765,9 @@ reading: do
     !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
     IF (linie (1:2) == 'GO') then
       !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      READ (linie, '(a2,1x,i9,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
+      ioerror = 0
+      READ (linie, '(a2,1x,i9,3f20.7)', iostat = ioerror) id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
+      if (ioerror /= 0) write (*,*) 'fehlerhafte Zeile: ', linie
       !NiS,mar06: name of variable changed; changed mnd to MaxP
       !Stop program execution on nodenumber higher than MaxP; could normally not happen
       IF (i>MaxP) stop 'i>MaxP'
