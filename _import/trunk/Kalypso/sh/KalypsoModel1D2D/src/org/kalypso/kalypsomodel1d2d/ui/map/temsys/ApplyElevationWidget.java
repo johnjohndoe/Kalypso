@@ -263,6 +263,9 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
       // find node
       final GM_Point point = MapUtilities.transform( mapPanel, p );
+      if( point == null )
+        return;
+
       final double DELTA = MapUtilities.calculateWorldDistance( mapPanel, point, 10 );
       final IFE1D2DNode node = m_dataModel.getDiscretisationModel().findNode( point, DELTA );
       GM_Point nodePoint = null;
