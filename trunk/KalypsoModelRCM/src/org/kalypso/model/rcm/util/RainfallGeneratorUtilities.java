@@ -182,7 +182,8 @@ public class RainfallGeneratorUtilities
     final TuppleModelsLinearAdd linearAdd = new TuppleModelsLinearAdd( firstValueAxis.getType(), firstDateAxis, firstValueAxis, firstStatusAxis );
     final ITuppleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
-    final SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), firstAxisList, combinedTuppleModel );
+    /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tupple model. */
+    final SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), combinedTuppleModel.getAxisList(), combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
     if( firstStart != null )
       combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_START, firstStart );
