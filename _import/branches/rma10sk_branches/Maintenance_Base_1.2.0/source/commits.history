@@ -1647,3 +1647,9 @@ version information
       (affects RDKalypso.f90)
 
 --- Nico Schrage, 08.01.2010
+
+213.) Start modernization of element inflow handling
+      (affects lnflo.sub, elflows.sub)
+214.) Add some documentation concerning element inflow definitions
+
+--- Nico Schrage, 12.01.2010
