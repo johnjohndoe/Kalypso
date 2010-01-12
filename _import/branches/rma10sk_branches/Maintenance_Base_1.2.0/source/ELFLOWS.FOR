@@ -9,53 +9,90 @@ cipk  last update Feb 4 1998 Fix format
 CIPK  LAST UPDATE DEC 16 1997 TEST FOR LIMITS
 cipk  last update Dec 9 1997  initialize SIDF correctly
       SUBROUTINE ELFLOWS(IBIN)
-      USE BLK10MOD
-      USE BLK11MOD
-      USE PARAMMOD
-      USE ParaKalyps
+      USE BLK10MOD, only: ne, sidf, lout, tet, iyrr, teth, einx, einy,
+     +                    imat, neref, id, dlin, isvs, nscrin, inoflow
+      USE BLK11MOD,  only: dayofy
+      USE PARAMMOD, only: nelds
+      USE ParaKalyps, only: intpolno, intpolelts
+      
+      !meaning of the variables
+      !nelds    : maximum number of element inflow condition definitions
+
+      implicit none
+
       SAVE
+      
+      integer (kind = 4) :: istdy, ifpas
+      integer (kind = 4), allocatable :: neq (:)
+      integer (kind = 4) :: i, j, n
+      integer (kind = 4) :: jj, jjj, nnn
+      character (len = 8) :: dlinextra
+      integer (kind = 4) :: iegen
+      integer (kind = 4) :: iydays, iyrn
+      integer (kind = 4) :: ioerror
+      integer (kind = 4) :: nest
+      integer (kind = 4) ::nest_copy, nestcopy
+
+      real (kind = 8) :: time, daynow
+      real (kind = 8) :: QQAL(3), QF, sf, elinx, eliny, elinr, elint
+      integer (kind = 4) :: labl, ln
+      integer (kind = 4) :: ibin
+      
+      !meaning of the variables
+      !iegen     :: counter of the element inflow conditions
+      !istdy     :: switch
+      !             0 - it is the steady run;
+      !             1 - steady run is passed, i.e. it is an unsteady run
+                  
 C-
 C...... Input special boundary conditions
 C-
-CIPKJAN94 V4.5
-CIPK DEC97      PARAMETER (NQBS=20)
-CIPKJAN94 V4.5 END CHANGE
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-cipk jan03  ADD AN EXTRA 8 CHARACTERS
-      CHARACTER*8 DLINEXTRA
+
       COMMON /DLINF/ DLINEXTRA
-      DIMENSION QQAL(3)
       
-      integer :: ioerror
-CIPKFEB94 V4.5
-      ALLOCATABLE
-     +          NEQ(:)
+
 CIPK DEC97 CHANGE LIMITS
       DATA ISTDY/0/
-C
-CIPKFEB94 V4.5
-      IF(ISTDY .EQ. 0) THEN
-        ALLOCATE (NEQ(NELDS))
-        NEQ=0
-        ISTDY=1
-      ENDIF
-cipk dec97
+
+
+      !First call of the subroutine to allocate NEQ, giving the list of elements with
+      !  inflow by tidal graph
+      !It is set up in the steady cycle
+      if (istdy == 0) then
+        allocate (neq(nelds))
+        !initialize neq
+        neq=0
+        !show that neq is allocated
+        istdy=1
+      endif
+
       do n=1,ne
         sidf(n)=0.
       enddo
 C-
 C...... Input element inflows
 C-
-cipk APR96 major changes start here
+      !initialize counter of inflow elements
       IEGEN=0
-CIPK DEC97 CHANGE LIMITS
+
+      !go through all possible element inflows and check for interpolation from
+      !  tidal graph file
+      !In any step that defines a tidal graph in flow, the tidal graph is not directly applied!
+      !  It will be first applied in the following step. So, best practice is to define the 
+      !  time series interpolation already in the steady step, where an individual value
+      !  definitely has to be given, as there is no time in steady case.
+      
+      !nelds    maximum number of element inflow definitions
+      !neq      list of elements, that have an element inflow
+      !iegen    counter of element inflows
       DO N=1,NELDS
         IF(NEQ(N) .NE. 0) THEN
           IEGEN=IEGEN+1
-          IF(IEGEN .EQ. 1) THEN
-            WRITE(LOUT,6043)
-          ENDIF
+
+          !write header of output block for element inflows
+          ! - only for interpolated time series
+          IF(IEGEN .EQ. 1) WRITE(LOUT,6043)
+
           J=NEQ(N)
           TIME=TET
 cipk jan96  add logic for day of year
@@ -85,7 +122,7 @@ CIPK JAN03  ADD MOMENTUM TERMS
               ELINX=EINX(J)
               ELINY=EINY(J)
               NEST_Copy = Nest + 2
-              CALL LNFLO(J,QF,QQAL,NestCopy,LN,ELINX,ELINY)
+              CALL LNFLO(J,QF,QQAL,Nest_Copy,LN,ELINX,ELINY)
 cipk mar01              CALL LNFLO(J,QF,QQAL,NEST,LN)
 CIPK NOV97 END CHANGES
             ENDDO
@@ -121,6 +158,10 @@ CIPK NOV97 END CHANGES
         ENDIF
       ENDDO
   201 CONTINUE
+
+
+
+
       IF(ID(1:3) .EQ. 'EFA') THEN
         !counter of elements inflows
         IEGEN = IEGEN + 1
