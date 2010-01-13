@@ -43,6 +43,7 @@ package org.kalypso.model.rcm.binding;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -54,5 +55,13 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IRainfallGenerator extends Feature
 {
-  IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final IProgressMonitor monitor ) throws CoreException;
+  /**
+   * This function could be used to provide a log, the generator can write messages to. This is fully optional though.
+   * 
+   * @param log
+   *          The log.
+   */
+  public void setLog( final ILog log );
+
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final IProgressMonitor monitor ) throws CoreException;
 }

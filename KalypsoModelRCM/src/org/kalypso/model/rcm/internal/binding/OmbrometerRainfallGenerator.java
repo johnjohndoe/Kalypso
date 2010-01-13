@@ -47,18 +47,22 @@ import java.util.Date;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.rcm.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.utils.log.LogUtilities;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -95,9 +99,39 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
   public static final QName QNAME_PROP_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
 
+  /**
+   * The log.
+   */
+  private ILog m_log;
+
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent.
+   * @param parentRelation
+   *          The parent relation.
+   * @param featureType
+   *          The feature type.
+   * @param id
+   *          The feature id.
+   * @param propValues
+   *          The property values.
+   */
   public OmbrometerRainfallGenerator( Object parent, IRelationType parentRelation, IFeatureType featureType, String id, Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
+
+    m_log = null;
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#setLog(org.eclipse.core.runtime.ILog)
+   */
+  @Override
+  public void setLog( ILog log )
+  {
+    m_log = log;
   }
 
   /**
@@ -106,6 +140,9 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
    */
   public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
   {
+    /* Update the log. */
+    LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
+
     /* Get the needed properties. */
     Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
     String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
@@ -166,25 +203,37 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
         result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights );
       }
 
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde erfolgreich beendet.", null ) );
+
       return result;
     }
     catch( GM_Exception e )
     {
-      IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert Geometrie: " + e.toString(), e );
-      throw new CoreException( status );
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet.", e ) );
+
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert Geometrie: " + e.toString(), e ) );
     }
     catch( SensorException e )
     {
-      IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine Observations: " + e.toString(), e );
-      throw new CoreException( status );
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet.", e ) );
+
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine Observations: " + e.toString(), e ) );
     }
     catch( MalformedURLException e )
     {
-      IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e );
-      throw new CoreException( status );
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet.", e ) );
+
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e ) );
     }
     catch( Exception e )
     {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet.", e ) );
+
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
     }
   }

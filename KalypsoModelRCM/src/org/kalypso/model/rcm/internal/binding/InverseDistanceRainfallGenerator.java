@@ -51,11 +51,14 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.rcm.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
@@ -63,6 +66,7 @@ import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.utils.log.LogUtilities;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -103,6 +107,11 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
   public static final QName QNAME_PROP_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
 
   /**
+   * The log.
+   */
+  private ILog m_log;
+
+  /**
    * The constructor.
    * 
    * @param parent
@@ -119,6 +128,17 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
   public InverseDistanceRainfallGenerator( Object parent, IRelationType parentRelation, IFeatureType featureType, String id, Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
+
+    m_log = null;
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#setLog(org.eclipse.core.runtime.ILog)
+   */
+  @Override
+  public void setLog( ILog log )
+  {
+    m_log = log;
   }
 
   /**
@@ -128,6 +148,9 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
   @Override
   public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, IProgressMonitor monitor ) throws CoreException
   {
+    /* Update the log. */
+    LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde gestartet.", null ) );
+
     /* Get the needed properties. */
     Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
     String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
@@ -205,22 +228,37 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
         result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights );
       }
 
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde erfolgreich beendet.", null ) );
+
       return result;
     }
     catch( GM_Exception e )
     {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet.", e ) );
+
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert Geometrie: " + e.toString(), e ) );
     }
     catch( SensorException e )
     {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet.", e ) );
+
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine Observations: " + e.toString(), e ) );
     }
     catch( MalformedURLException e )
     {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) Distanz-Verfahren wurde mit einem Fehler beendet.", e ) );
+
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e ) );
     }
     catch( Exception e )
     {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet.", e ) );
+
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
     }
   }
