@@ -29,6 +29,7 @@
  */
 package org.kalypso.model.rcm.ant;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +51,7 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.model.rcm.util.RainfallGenerationOp;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.utils.log.GeoStatusLog;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -116,6 +118,8 @@ public class RainfallGenerationTask extends Task
 
   private Date m_targetTo;
 
+  private File m_logFile;
+
   public void addConfiguredGenerator( final Generator generator )
   {
     m_generators.add( generator );
@@ -154,6 +158,11 @@ public class RainfallGenerationTask extends Task
   public void setTargetTo( final String targetTo )
   {
     m_targetTo = DateUtilities.parseDateTime( targetTo );
+  }
+
+  public void setLogFile( final File logFile )
+  {
+    m_logFile = logFile;
   }
 
   /**
@@ -203,7 +212,12 @@ public class RainfallGenerationTask extends Task
 
       ProgressUtilities.worked( progress, 4 );
 
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo );
+      /* Create a log, if a log file was provided. */
+      GeoStatusLog log = null;
+      if( m_logFile != null )
+        log = new GeoStatusLog( m_logFile );
+
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo, log );
       for( final Generator generator : m_generators )
       {
         final String id = generator.getRcmId();
@@ -224,6 +238,10 @@ public class RainfallGenerationTask extends Task
         final IStatus status = ce.getStatus();
         antProject.log( this, status.getMessage(), status.getException(), Project.MSG_ERR );
       }
+
+      /* Write the log, if one was created. */
+      if( log != null )
+        log.serialize();
     }
     catch( final Throwable e )
     {

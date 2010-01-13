@@ -51,6 +51,7 @@ import java.util.logging.Level;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
@@ -126,7 +127,23 @@ public class RainfallGenerationOp
 
   private final GMLWorkspace m_catchmentWorkspace;
 
-  public RainfallGenerationOp( final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo )
+  private final ILog m_log;
+
+  /**
+   * The constructor.
+   * 
+   * @param rcmGmlLocation
+   * @param catchmentWorkspace
+   * @param catchmentFeaturePath
+   * @param catchmentObservationPath
+   * @param catchmentMetadata
+   * @param targetFilter
+   * @param targetFrom
+   * @param targetTo
+   * @param log
+   *          If provided, the generators will write messages to this log.
+   */
+  public RainfallGenerationOp( final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo, final ILog log )
   {
     m_rcmGmlLocation = rcmGmlLocation;
     m_catchmentWorkspace = catchmentWorkspace;
@@ -136,6 +153,7 @@ public class RainfallGenerationOp
     m_targetFilter = targetFilter;
     m_targetFrom = targetFrom;
     m_targetTo = targetTo;
+    m_log = log;
   }
 
   public void addGenerator( final String gmlId, final Date from, final Date to )
@@ -164,7 +182,7 @@ public class RainfallGenerationOp
       {
         final Date from = generatorDesc.m_from;
         final Date to = generatorDesc.m_to;
-        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentFeatureArray, from, to, logger, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
+        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentFeatureArray, from, to, logger, m_log, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
         if( obses == null )
         {
           final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorDesc.m_gmlId );
@@ -317,7 +335,19 @@ public class RainfallGenerationOp
     }
   }
 
-  private IObservation[] generate( final Generator generatorDesc, final GMLWorkspace rcmWorkspace, final Feature[] catchmentFeatures, final Date from, final Date to, final ILogger logger, final IProgressMonitor monitor ) throws CoreException
+  /**
+   * @param generatorDesc
+   * @param rcmWorkspace
+   * @param catchmentFeatures
+   * @param from
+   * @param to
+   * @param logger
+   *          To this log, the function will write its messages.
+   * @param log
+   *          If provided, the generators will write messages to this log.
+   * @param monitor
+   */
+  private IObservation[] generate( final Generator generatorDesc, final GMLWorkspace rcmWorkspace, final Feature[] catchmentFeatures, final Date from, final Date to, final ILogger logger, final ILog log, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
@@ -328,6 +358,7 @@ public class RainfallGenerationOp
       return null;
     }
 
+    /* Get the rainfall generator. */
     final Feature feature = rcmWorkspace.getFeature( generatorId );
     if( feature == null )
     {
@@ -343,6 +374,9 @@ public class RainfallGenerationOp
       logger.log( Level.SEVERE, -1, msg );
       return null;
     }
+
+    /* Update the generator with the log, he should use. */
+    rainGen.setLog( log );
 
     final String generatorName = rainGen.getName();
     progress.subTask( generatorName );
