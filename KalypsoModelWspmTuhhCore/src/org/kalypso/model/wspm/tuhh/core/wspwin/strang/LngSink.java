@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.strang;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -56,6 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.schemaeditor.SortedProperties;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.LengthSectionDataBlock;
@@ -68,85 +70,148 @@ import au.com.bytecode.opencsv.CSVReader;
 public class LngSink implements IProfilSink
 {
 
-  private final HashMap<String, String[]> m_idMap = new HashMap<String, String[]>();
+  private final HashMap<String, String[]> m_PropertyMap = new HashMap<String, String[]>();
 
-  private final String blanc200 = "                                                                                                                                                                                                        ";
+  private final HashMap<String, Object[]> m_StrangTable = new HashMap<String, Object[]>();
+
+  private String[] m_columns = null;
+
+  private String m_sourceDir = null;
+
+  private int m_colStation = -1;
+
+  private final String[] m_propertyKeys;
+
+  private HashMap<String, DataBlockHeader> m_dataBlockHeader = new HashMap<String, DataBlockHeader>();
+
+  private final String blanc200;
 
   public LngSink( )
   {
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, new String[] { "STATION" } ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, new String[] { "SOHLHOEHE" } ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, new String[] { "BOESCHUNG-LI" } ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, new String[] { "BOESCHUNG-RE" } ); //$NON-NLS-1$
-    // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, "WEIR_OK" );
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, new String[] { "DECKENOBERK" } ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, new String[] { "DECKENUNTERK" } ); //$NON-NLS-1$
-    // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
-    // m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
-    m_idMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
-    m_idMap.put( "TEXT", new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
-    m_idMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, new String[] { "Wasserspiegel NN+m"});//$NON-NLS-1$
+    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, new String[] { "STATION" } ); //$NON-NLS-1$
+    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, new String[] { "SOHLHOEHE" } ); //$NON-NLS-1$
+    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, new String[] { "BOESCHUNG-LI" } ); //$NON-NLS-1$
+    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, new String[] { "BOESCHUNG-RE" } ); //$NON-NLS-1$
+    // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, "WEIR_OK" );
+    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, new String[] { "DECKENOBERK" } ); //$NON-NLS-1$
+    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, new String[] { "DECKENUNTERK" } ); //$NON-NLS-1$
+    // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
+    // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
+    m_PropertyMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
+    m_PropertyMap.put( "TEXT", new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
+    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, new String[] { "Wasserspiegel NN+m" } );//$NON-NLS-1$
+
+    final char[] space = new char[200];
+    Arrays.fill( space, ' ' );//$NON-NLS-1$
+    blanc200 = new String(space);
+
+    m_propertyKeys = new String[] {"Zeile1_unbekannt",//$NON-NLS-1$
+        "Auftraggeber_1",//$NON-NLS-1$
+        "Auftraggeber_2",//$NON-NLS-1$
+        "Projektbezeichnung_1",//$NON-NLS-1$
+        "Projektbezeichnung_2",//$NON-NLS-1$
+        "Projektbezeichnung_3",//$NON-NLS-1$
+        "Blattbezeichnung_1",//$NON-NLS-1$
+        "Blattbezeichnung_2",//$NON-NLS-1$
+        "Blattbezeichnung_3",//$NON-NLS-1$
+        "Projektnummer",//$NON-NLS-1$
+        "Zeile11_unbekannt",//$NON-NLS-1$
+        "Blattnummer",//$NON-NLS-1$
+        "Zeichnungsueberschrift" };//$NON-NLS-1$
   }
 
   final DataBlockHeader createHeader( final String id )
   {
     final DataBlockHeader dbh = new DataBlockHeader();
-    final String[] fl = m_idMap.get( id );
+    final String[] fl = m_PropertyMap.get( id );
     if( fl == null )
       return null;
 
     dbh.setFirstLine( fl.length > 0 ? fl[0] : id );
-    dbh.setSecondLine( fl.length > 1 ? blanc200+ fl[1]+"@"  : "" );
-    dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );
+    dbh.setSecondLine( fl.length > 1 ? blanc200 + fl[1] + "@" : "" );//$NON-NLS-1$
+    dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );//$NON-NLS-1$
     return dbh;
   }
 
-  @SuppressWarnings("unchecked")
-  private DataBlockWriter extractDataBlocks( final Reader reader, final int colStation, final char separator ) throws IOException
+  private Object[] getStrangTable( final String id )
   {
-    final DataBlockWriter prfwriter = new DataBlockWriter();
-    final CSVReader tableReader = new CSVReader( reader, separator );
-    String[] line = tableReader.readNext();
-
-    // Get MetaData
-    int nbr = 0;
-    while( line != null && line[0].startsWith( "#" ) ) //$NON-NLS-1$
+    if( m_StrangTable.containsKey( id ) )
+      return m_StrangTable.get( id );
+    final Object[] table = new Object[m_columns.length];
+    for( int i = 0; i < m_columns.length; i++ )
     {
-      line[0] = line[0].substring( 1 );
-      prfwriter.addKeyValue( nbr++, line );
-      line = tableReader.readNext();
+      table[i] = new ArrayList<Object>();
     }
-    // Get ColumnData
-    final String[] col1 = line;
-    final String[] col2 = tableReader.readNext();
-    int colStat = colStation;
-    if( colStat < 0 )
+    m_StrangTable.put( id, table );
+    return table;
+  }
+
+  private final void addMetaData( final DataBlockWriter dbw, final String key ) throws IOException
+  {
+    final File f = new File( m_sourceDir + key + ".properties" );//$NON-NLS-1$
+    if( !f.exists() )
+      return;
+
+    final SortedProperties props = new SortedProperties();
+    props.load( new FileReader( f ) );
+
+    for( int i = 0; i < m_propertyKeys.length; i++ )
     {
-      for( int i = 0; i < col1.length; i++ )
+      dbw.addKeyValue( i+1, new String[] { props.getProperty( m_propertyKeys[i], "" ), "" } );//$NON-NLS-1$ //$NON-NLS-2$
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private void extractDataBlocks( final String sourcePath, final int colStation, final int colStrang, final char separator ) throws IOException
+  {
+    m_sourceDir = sourcePath.substring( 0, sourcePath.lastIndexOf( File.separatorChar )+1 );
+    final CSVReader tableReader = new CSVReader( new FileReader( sourcePath ), separator );
+
+    // Get ColumnData
+    m_columns = tableReader.readNext();// line;
+
+    final String[] col2 = tableReader.readNext();
+    m_colStation = colStation;
+    if( colStation < 0 )
+    {
+      for( int i = 0; i < m_columns.length; i++ )
       {
         {
-          if( "STATION".equalsIgnoreCase( col1[i] ) ) //$NON-NLS-1$
+          if( "STATION".equalsIgnoreCase( m_columns[i] ) ) //$NON-NLS-1$
           {
-            colStat = i;
+            m_colStation = i;
             break;
           }
         }
       }
     }
-    if( colStat < 0 )
+    int colStra = colStrang;
+    if( colStra < 0 )
+    {
+      for( int i = 0; i < m_columns.length; i++ )
+      {
+        {
+          if( "ID".equalsIgnoreCase( m_columns[i] ) ) //$NON-NLS-1$
+          {
+            colStra = i;
+            break;
+          }
+        }
+      }
+    }
+    if( m_colStation < 0 )
       throw new IOException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink_0" ) ); //$NON-NLS-1$
 
     // Get TableData
-    final Object[] table = new Object[col1.length];
-    for( int i = 0; i < col1.length; i++ )
-    {
-      table[i] = new ArrayList<Object>();
-    }
+
     String[] values = tableReader.readNext();
     while( values != null )
     {
-      if( values.length == col1.length )
+      if( values.length == m_columns.length )
       {
+        final String key = colStra < 0 ? "-" : values[colStra];
+        final Object[] table = getStrangTable( key );
+
         for( int i = 0; i < values.length; i++ )
         {
           final Double dbl = NumberUtils.parseQuietDouble( values[i].toString() );
@@ -159,23 +224,26 @@ public class LngSink implements IProfilSink
       values = tableReader.readNext();
     }
 
-    // Add DataBlocks
-    for( int i = 0; i < col1.length; i++ )
+    // Add DataBlockHeader
+
+    for( int i = 0; i < m_columns.length; i++ )
     {
-      if( i != colStat )
+      if( i != m_colStation )
       {
-
-        final DataBlockHeader dbh = m_idMap.get( col1[i] ) == null ? new DataBlockHeader( col1[i] ) : createHeader( col1[i] );
-
+        final DataBlockHeader dbh = m_PropertyMap.get( m_columns[i] ) == null ? new DataBlockHeader( m_columns[i] ) : createHeader( m_columns[i] );
         if( i < col2.length )
-          dbh.setSecondLine(blanc200+ col2[i] );
-
-        final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
-        block.setCoords( ((ArrayList<Double>) table[colStat]).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
-        prfwriter.addDataBlock( block );
+        {
+          dbh.setSecondLine( blanc200 + col2[i] );
+        }
+        m_dataBlockHeader.put( m_columns[i], dbh );
+//
+// final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
+// block.setCoords( ((ArrayList<Double>) table[colStat]).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
+// prfwriter.addDataBlock( block );
+// }
+// }
       }
     }
-    return prfwriter;
   }
 
   @SuppressWarnings("unchecked")
@@ -224,21 +292,48 @@ public class LngSink implements IProfilSink
   @Override
   public boolean write( Object source, Writer writer )
   {
-
-    DataBlockWriter dataBlockWriter = null;
     try
     {
       if( source instanceof IObservation< ? > )
-        dataBlockWriter = extractDataBlocks( (IObservation<TupleResult>) source );
-      else if( source instanceof String )
-        dataBlockWriter = extractDataBlocks( new FileReader( source.toString() ), -1, ';' );
-      else if( source instanceof FileReader )
-        dataBlockWriter = extractDataBlocks( (FileReader) source, -1, ';' );
-      dataBlockWriter.store( new PrintWriter( writer ) );
+      {
+        extractDataBlocks( (IObservation<TupleResult>) source ).store( new PrintWriter( writer ) );
+        return true;
+      }
+
+      extractDataBlocks( source.toString(), -1, -1, ';' );
+
+      for( final String key : m_StrangTable.keySet() )
+      {
+        final Object[] table = getStrangTable( key );
+        final DataBlockWriter dbw = new DataBlockWriter();
+
+        // add Zeile 1-14
+
+        addMetaData( dbw, key  );
+
+// // Add DataBlocks
+        for( int i = 0; i < m_columns.length; i++ )
+        {
+          if( i != m_colStation )
+          {
+            final LengthSectionDataBlock block = new LengthSectionDataBlock( m_dataBlockHeader.get( m_columns[i] ) );
+            block.setCoords( ((ArrayList<Double>) table[m_colStation]).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
+            dbw.addDataBlock( block );
+          }
+        }
+
+        if( writer != null )
+          dbw.store( new PrintWriter( writer ) );
+        else
+        {
+          dbw.store( new PrintWriter( m_sourceDir + key + ".lng" ) );
+        }
+      }
       return true;
     }
-    catch( IOException e )
+    catch(Exception e )
     {
+      e.printStackTrace();
       return false;
     }
   }
