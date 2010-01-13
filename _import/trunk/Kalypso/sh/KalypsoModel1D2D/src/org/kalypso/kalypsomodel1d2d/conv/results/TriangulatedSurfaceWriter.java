@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -58,7 +58,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceMarshaller;
+import org.kalypsodeegree_impl.io.sax.marshaller.TriangulatedSurfaceMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -122,7 +122,9 @@ public class TriangulatedSurfaceWriter
 
     final GM_Triangle_Impl triangle = new GM_Triangle_Impl( nodes[0], nodes[1], nodes[2], m_crs );
     if( triangle != null )
-      m_marshaller.marshalTriangle( triangle, m_crs );
+    {
+      m_marshaller.marshallTriangle( triangle, m_crs );
+    }
   }
 
   /**
@@ -192,6 +194,7 @@ public class TriangulatedSurfaceWriter
       }
 
       m_marshaller.startSurface( atts );
+      m_marshaller.marshall( );
     }
     catch( final Exception e )
     {
