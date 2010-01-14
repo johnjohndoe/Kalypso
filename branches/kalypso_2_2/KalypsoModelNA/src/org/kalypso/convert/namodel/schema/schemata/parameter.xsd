@@ -293,7 +293,7 @@
 					<element name="soilLayerLink" type="par:SoilLayerAssociationType"/>
 					<!--TODO: Link prüfen-->
 					<element name="xtief" type="double"/>
-					<element name="xret" type="boolean"/>
+					<element name="xret" type="boolean" default="false"/>
 				</sequence>
 			</extension>
 		</complexContent>
