@@ -39,6 +39,8 @@
 
 	<element name="_Sud" abstract="true" type="suds:AbstractSudType" substitutionGroup="gml:_Feature" />
 
+	<element name="Sealing" type="suds:SealingType" substitutionGroup="suds:_Sud"/>
+
 	<element name="Swale" type="suds:SwaleType" substitutionGroup="suds:_Sud"/>
 
 	<element name="SwaleInfiltrationDitch" type="suds:SwaleInfiltrationDitchType" substitutionGroup="suds:_Sud"/>
@@ -111,6 +113,16 @@
 			<extension base="suds:AbstractSwaleType">
 				<sequence>
 					<element name="elementType" type="suds:EnumSwaleType" default="20"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SealingType">
+		<complexContent>
+			<extension base="suds:AbstractSudType">
+				<sequence>
+					<element name="sealingFactor" type="double" default="1.0"/>
 				</sequence>
 			</extension>
 		</complexContent>

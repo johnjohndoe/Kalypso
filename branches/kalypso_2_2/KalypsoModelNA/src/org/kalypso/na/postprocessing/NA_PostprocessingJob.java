@@ -264,6 +264,12 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
             TableViewUtils.saveTableTemplateXML( table, outTable );
           }
         }
+        if( affectedNodes.size() == 0 )
+        {
+          final String message = "No NA node is affected. Please redefine the model/planing area.";
+          setStatus( STATUS.ERROR, message );
+          throw new SimulationException( message );
+        }
 
         /*
          * Create feature type which describes what data the shape file contains
@@ -348,12 +354,11 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         }
         final File shapeFile = new File( tmpdir, "difference" ); //$NON-NLS-1$
         ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
-
       }
       catch( final Exception e )
       {
-        e.printStackTrace();
         setStatus( STATUS.ERROR, e.getLocalizedMessage() );
+        throw new SimulationException( e.getLocalizedMessage() );
       }
       resultEater.addResult( "OutputFolder", tmpdir );
     }
