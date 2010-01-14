@@ -204,9 +204,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
       }
 
       /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde erfolgreich beendet.", null ) );
-
-      // TODO Gebe OK Meldung...
+      LogUtilities.logQuietly( m_log, new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, "Berechnet", null ) );
 
       return result;
     }
@@ -237,6 +235,11 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
+    }
+    finally
+    {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde beendet.", null ) );
     }
   }
 }

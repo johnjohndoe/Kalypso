@@ -229,9 +229,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
       }
 
       /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde erfolgreich beendet.", null ) );
-
-      // TODO Gebe OK Meldung...
+      LogUtilities.logQuietly( m_log, new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, "Berechnet", null ) );
 
       return result;
     }
@@ -262,6 +260,11 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
+    }
+    finally
+    {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde beendet.", null ) );
     }
   }
 
