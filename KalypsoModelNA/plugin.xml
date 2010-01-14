@@ -188,6 +188,10 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}GreenRoof">
         </feature>
         <feature
+              class="org.kalypso.convert.namodel.schema.binding.suds.Sealing"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}Sealing">
+        </feature>
+        <feature
               class="org.kalypso.convert.namodel.schema.binding.suds.PlaningArea"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}PlaningArea">
         </feature>
