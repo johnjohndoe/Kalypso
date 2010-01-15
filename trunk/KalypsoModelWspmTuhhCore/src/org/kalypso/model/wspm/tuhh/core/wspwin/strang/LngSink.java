@@ -66,6 +66,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author kimwerner
+ * TODO: split in two classes: Observation <-> file
  */
 public class LngSink implements IProfilSink
 {
