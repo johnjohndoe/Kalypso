@@ -47,9 +47,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -69,13 +69,13 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   private final Polygon polygon;
 
-//  private final double[] planeEquation;
+  //  private final double[] planeEquation;
   private final double[] relativePlaneEquation;
-  
+
 
   private final double centerElevation;
 
-  private GM_Triangle_Impl m_trianglePath;
+  private GM_Triangle m_trianglePath;
 
   public TriangleData( final LinearRing ring, final String crs )
   {
@@ -87,7 +87,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
     this.ring = ring;
     polygon = new Polygon( ring, null, ring.getFactory() );
     final Coordinate[] coords = ring.getCoordinates();
-//    planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
+    //    planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
     relativePlaneEquation = JTSUtilities.calculateRelativeTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
 

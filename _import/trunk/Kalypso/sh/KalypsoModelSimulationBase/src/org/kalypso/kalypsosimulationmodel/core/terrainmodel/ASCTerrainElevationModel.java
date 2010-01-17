@@ -57,9 +57,9 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -241,8 +241,8 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
           final GM_Position pos2 = GeometryFactory.createGM_Position( xPlusCellSize, yPlusCellSize, z );
           final GM_Position pos3 = GeometryFactory.createGM_Position( x, yPlusCellSize, z );
 
-          final GM_Triangle_Impl patch1 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos0, pos1, pos3 }, crs );
-          final GM_Triangle_Impl patch2 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos1, pos2, pos3 }, crs );
+          final GM_Triangle patch1 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos0, pos1, pos3 }, crs );
+          final GM_Triangle patch2 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos1, pos2, pos3 }, crs );
           surfacePatchVisitor.visit( patch1, z );
           surfacePatchVisitor.visit( patch2, z );
         }
