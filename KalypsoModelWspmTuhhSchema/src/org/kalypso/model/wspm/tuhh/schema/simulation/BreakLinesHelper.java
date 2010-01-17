@@ -81,11 +81,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -125,7 +125,7 @@ public class BreakLinesHelper implements IWspmConstants
       // debug
 // final SimpleShapeWriter writer = new SimpleShapeWriter( new File( "c://test.shp" ), GeometryUtilities.QN_POINT,
       // XmlTypes.XS_DOUBLE, XmlTypes.XS_DOUBLE );
-      
+
       GM_Curve lastProfile = null;
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
@@ -133,8 +133,8 @@ public class BreakLinesHelper implements IWspmConstants
         final BigDecimal station = reach.getStation();
         if( geometry == null ) // ignore profiles without geometry
           continue;
-        
-        
+
+
 
         final Double wsp = wspMap.get( station.doubleValue() );
         final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
@@ -161,9 +161,9 @@ public class BreakLinesHelper implements IWspmConstants
             final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPosesOpen );
             for( final GM_Position[] triangle : triangles )
             {
-              final GM_Triangle_Impl gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
+              final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
               surface.add( gmTriangle );
-              
+
               try
               {
                 final GM_TriangulatedSurface mySurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
@@ -265,7 +265,7 @@ public class BreakLinesHelper implements IWspmConstants
         if( useWsp )
         {
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
-          // simulation does not concern the whole reach.
+            // simulation does not concern the whole reach.
           {
             points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue(), null );
           }
