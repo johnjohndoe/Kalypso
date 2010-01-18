@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -54,7 +55,6 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -352,7 +352,7 @@ public abstract class ZmlChooserControl
             dateRange = new DateRange( new Date( 1, 1, 1 ), null );
           }
           m_subTitle.setText( getDateRangeAsString( dateRange ) );
-          m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( dateRange ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+          m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( dateRange ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
 
           m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom ) );
           m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo ) );
@@ -384,7 +384,7 @@ public abstract class ZmlChooserControl
     m_diagView.removeAllItems();
     final DateRange range = new DateRange( m_dateFrom, m_dateTo );
     m_subTitle.setText( getDateRangeAsString( range ) );
-    m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( range ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+    m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( range ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
   }
 
   /**
