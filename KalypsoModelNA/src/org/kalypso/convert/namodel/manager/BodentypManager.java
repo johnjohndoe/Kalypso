@@ -65,7 +65,6 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -81,7 +80,38 @@ public class BodentypManager extends AbstractManager
 
   private final IFeatureType m_bodenartFT;
 
-  private final Map<String, Map<String, Double[]>> m_soilTypes = new LinkedHashMap<String, Map<String, Double[]>>();
+  private final Map<String, List<Layer>> m_soilTypes = new LinkedHashMap<String, List<Layer>>();
+
+  private final class Layer
+  {
+    private final String m_name;
+
+    private final double m_thickness;
+
+    private final boolean m_interflow;
+
+    public Layer( final String name, final double thickness, final boolean interflow )
+    {
+      m_name = name;
+      m_thickness = thickness;
+      m_interflow = interflow;
+    }
+
+    public final String getName( )
+    {
+      return m_name;
+    }
+
+    public final double getThickness( )
+    {
+      return m_thickness;
+    }
+
+    public final boolean interflow( )
+    {
+      return m_interflow;
+    }
+  }
 
   // private static final String BodArtParameterPropName = "soilLayerParameterMember";
 
@@ -178,7 +208,7 @@ public class BodentypManager extends AbstractManager
     for( final Feature paramSoiltypeLayer : paramSoiltypeLayers )
     {
       final List<Feature> bodartList = (List<Feature>) paramSoiltypeLayer.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
-      final Map<String, Double[]> layers = new LinkedHashMap<String, Double[]>();
+      final List<Layer> layers = new ArrayList<Layer>();
       for( final Feature fe : bodartList )
       {
         final Feature bodArtLink = paraWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) );
@@ -187,8 +217,9 @@ public class BodentypManager extends AbstractManager
           Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
           if( xretProp == null )
             xretProp = Boolean.FALSE;
-//            throw new SimulationException( "Parameter WS: Property xretProp is null for feature " + paramSoiltypeLayer.getId() );
-          layers.put( bodArtLink.getName(), new Double[] { Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ), xretProp ? 1.0 : 0.0 } );
+// throw new SimulationException( "Parameter WS: Property xretProp is null for feature " + paramSoiltypeLayer.getId() );
+          final Layer layer = new Layer( bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ), xretProp );
+          layers.add( layer );
         }
         else
           Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", paramSoiltypeLayer.getId(), fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) ) ); //$NON-NLS-1$
@@ -206,14 +237,11 @@ public class BodentypManager extends AbstractManager
     while( soilTypesIterator.hasNext() )
     {
       final String soilType = soilTypesIterator.next();
-      final Map<String, Double[]> layers = m_soilTypes.get( soilType );
+      final List<Layer> layers = m_soilTypes.get( soilType );
       buffer.append( String.format( Locale.US, "%-10s%4d\n", soilType, layers.size() ) ); //$NON-NLS-1$
-      final Iterator<String> layersIterator = layers.keySet().iterator();
-      while( layersIterator.hasNext() )
+      for( final Layer layer : layers )
       {
-        final String layer = layersIterator.next();
-        final Double[] values = layers.get( layer );
-        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", layer, values[0], values[1] ) ); //$NON-NLS-1$
+        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", layer.getName(), layer.getThickness(), layer.interflow() ? 1.0 : 0.0 ) ); //$NON-NLS-1$
       }
     }
   }
@@ -225,10 +253,10 @@ public class BodentypManager extends AbstractManager
   private final void addSudsSoilLayers( )
   {
     // add Greenroof type
-    final Map<String, Double[]> grsLayers = new LinkedHashMap<String, Double[]>();
-    grsLayers.put( "GR-stau", new Double[] { 2.0, 0.0 } ); //$NON-NLS-1$
-    grsLayers.put( "Substr", new Double[] { 2.0, 0.0 } ); //$NON-NLS-1$
-    grsLayers.put( "Drain", new Double[] { 1.0, 0.0 } ); //$NON-NLS-1$
+    final List<Layer> grsLayers = new ArrayList<Layer>();
+    grsLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
+    grsLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
+    grsLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
     m_soilTypes.put( "grs", grsLayers ); //$NON-NLS-1$
 
     final Map<String, Double> mrsTypes = new LinkedHashMap<String, Double>();
@@ -248,20 +276,20 @@ public class BodentypManager extends AbstractManager
     // add Mulde-Rigole types
     for( final String typeName : mrsTypes.keySet() )
     {
-      final Map<String, Double[]> layers = new LinkedHashMap<String, Double[]>();
-      layers.put( "mulde", new Double[] { mrsTypes.get( typeName ), 0.0 } ); //$NON-NLS-1$
-      layers.put( "rein", new Double[] { 3.0, 0.0 } ); //$NON-NLS-1$
-      layers.put( "filter", new Double[] { 7.0, 0.0 } ); //$NON-NLS-1$
-      layers.put( "base", new Double[] { 1.0, 0.0 } ); //$NON-NLS-1$
+      final List<Layer> layers = new ArrayList<Layer>();
+      layers.add( new Layer( "mulde", mrsTypes.get( typeName ), false ) ); //$NON-NLS-1$
+      layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
+      layers.add( new Layer( "filter", 7.0, false ) ); //$NON-NLS-1$
+      layers.add( new Layer( "base", 1.0, false ) ); //$NON-NLS-1$
       m_soilTypes.put( typeName, layers );
     }
 
     // add Mulde types
     for( final String typeName : muldeTypes.keySet() )
     {
-      final Map<String, Double[]> layers = new LinkedHashMap<String, Double[]>();
-      layers.put( "mulde", new Double[] { muldeTypes.get( typeName ), 0.0 } ); //$NON-NLS-1$
-      layers.put( "rein", new Double[] { 3.0, 0.0 } ); //$NON-NLS-1$
+      final List<Layer> layers = new ArrayList<Layer>();
+      layers.add( new Layer( "mulde", muldeTypes.get( typeName ), false ) ); //$NON-NLS-1$
+      layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
       m_soilTypes.put( typeName, layers );
     }
   }
@@ -276,11 +304,11 @@ public class BodentypManager extends AbstractManager
     {
       if( profileThickness == null )
         return "mulde_b";
-      if( profileThickness == 3.0 )
+      if( profileThickness == 0.3 )
         return "mulde_30";
-      if( profileThickness == 6.0 )
+      if( profileThickness == 0.6 )
         return "mulde_60";
-      if( profileThickness == 8.0 )
+      if( profileThickness == 0.8 )
         return "mulde_80";
       return "mulde_b";
     }
@@ -288,11 +316,11 @@ public class BodentypManager extends AbstractManager
     {
       if( profileThickness == null )
         return "mrs";
-      if( profileThickness == 3.0 )
+      if( profileThickness == 0.3 )
         return "mrs_30";
-      if( profileThickness == 6.0 )
+      if( profileThickness == 0.6 )
         return "mrs_60";
-      if( profileThickness == 8.0 )
+      if( profileThickness == 0.8 )
         return "mrs_80";
       return "mrs";
     }
