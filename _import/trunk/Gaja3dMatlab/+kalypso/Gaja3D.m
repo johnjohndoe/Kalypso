@@ -89,8 +89,15 @@ classdef Gaja3D < handle
             end
             if(nargin >= 2)
                 points = varargin{1};
+                
                 if(~iscell(points))
-                    points = {points};
+                    warning('Using the same points for all boundaries');
+                    pointcell = cell(size(this.boundaries));
+                    for i=this.tiles
+                        pointcell{i} = points;
+                    end
+                    this.setElevationPoints(pointcell);
+                    return;
                 end
                 
                 if(~all(size(points)==size(this.boundaries)))
@@ -101,6 +108,8 @@ classdef Gaja3D < handle
                 for i=this.tiles
                     if(ischar(points{i}))
                         tilePoints = loadPointData(points{i},0);
+                    else
+                        tilePoints = points{i};
                     end
                     
                     % discard duplicate points and NaN elevations and sort
@@ -177,10 +186,6 @@ classdef Gaja3D < handle
             if(isempty(this.tiles))
                 error('No tiles to process!');
             end
-            noTin = isempty(this.demTin(this.tiles));
-            if(any(noTin(:)))
-                error('For tile(s) %s elevation points need to be set first.', mat2str(this.tiles(noTin)));
-            end        
             
             % parse inputs
             p = inputParser;
@@ -195,6 +200,9 @@ classdef Gaja3D < handle
             % create grid for all tins
             for i=this.tiles
                 tin = this.demTin(i);
+                if(isempty(tin))
+                    error('For tile %d elevation points need to be set first.', i);
+                end
                 
                 %buffer boundary for grid creation
                 bufdist = this.bufferGrid;

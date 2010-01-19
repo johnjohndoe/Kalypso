@@ -57,6 +57,9 @@ classdef TriangulatedSurface < handle
                             this.points = [Xtri Ytri Ztri];
                             this.elements = l_elements;
                     end
+                else
+                    this.points = varargin{1};
+                    this.initializeTin();
                 end
             elseif(nargin == 2)
                 this.points = varargin{1};

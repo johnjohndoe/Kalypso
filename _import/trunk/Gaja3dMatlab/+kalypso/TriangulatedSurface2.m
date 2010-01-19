@@ -20,7 +20,7 @@ classdef TriangulatedSurface2 < handle
         % initialize interpolation and min/max
         function setPoints(this, points)
             pointSize = size(points);
-            if(pointSize(1) >= 3 && pointSize(2) == 3)
+            if(pointSize(1) >= 3 && pointSize(2) >= 3)
                 XY = points(:,1:2);
                 Z = points(:,3);
                 this.triangulation = TriScatteredInterp(XY, Z, 'linear');
@@ -58,7 +58,7 @@ classdef TriangulatedSurface2 < handle
                             B = subsref(inner, S(2:end));
                         else
                             B = inner;
-                        end                            
+                        end
                     else
                         B = subsref(this.triangulation, S);
                     end

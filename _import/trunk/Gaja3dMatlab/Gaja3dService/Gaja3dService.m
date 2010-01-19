@@ -12,11 +12,9 @@ function Gaja3dService(varargin)
     % call Gaja3D in batch mode
     gaja3d = kalypso.Gaja3D();
     
-    % convert from strings to doubles if deployed
-    if(isdeployed)
-        disp(strvcat('Gaja3d command line arguments:', char(varargin))); %#ok<VCAT>
-        varargin = convertArguments(varargin{:});
-    end
+    % convert from strings to doubles
+    disp(strvcat('Gaja3d command line arguments:', char(varargin))); %#ok<VCAT>
+    varargin = convertArguments(varargin{:});
     
     % parse inputs, keep defaults where unspecified
     p = inputParser;
@@ -141,7 +139,7 @@ function Gaja3dService(varargin)
             for i=gaja3d.tiles
                 tin = gaja3d.demTin(i);
                 pointCount = size(tin.X,1);
-                fprintf(1, 'Tin %d has %d points.\n', i, pointCount);
+                fprintf(1, 'Tile %d has %d points.\n', i, pointCount);
             end
         end
     end
