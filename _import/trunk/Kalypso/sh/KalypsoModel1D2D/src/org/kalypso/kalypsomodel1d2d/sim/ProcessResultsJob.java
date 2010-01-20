@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -79,7 +79,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter.QNameAndString;
+import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler1d;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -259,14 +259,14 @@ public class ProcessResultsJob extends Job
 
     try
     {
-      /* GMLWorkspace für Ergebnisse anlegen */
+      /* GMLWorkspace fï¿½r Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlZipResultFile.toURI().toURL(), null );
       final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
 
       final String componentID = IWspmDictionaryConstants.LS_COMPONENT_STATION;
       final LengthSectionHandler1d lsHandler = new LengthSectionHandler1d( componentID, lsObsUrl );
 
-      /* .2d Datei lesen und GML füllen */
+      /* .2d Datei lesen und GML fï¿½llen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
 
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -479,12 +479,12 @@ public class ProcessResultsJob extends Job
         break;
 
       case WATERLEVEL:
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "müNN" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "mï¿½NN" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.49" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
 
       case SHEARSTRESS:
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m²" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/mï¿½" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.53" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
 
