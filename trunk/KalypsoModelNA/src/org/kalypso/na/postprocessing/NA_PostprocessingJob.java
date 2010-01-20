@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * This class is the post processor for standard rainfall-runoff calculation. The behaviour of it depends on the
@@ -208,7 +208,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
          * Create feature type which describes what data the shape file contains
          */
         final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-        final IMarshallingTypeHandler typeHandlerGeometry = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT );
+        final IMarshallingTypeHandler typeHandlerGeometry = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POINT );
         final IMarshallingTypeHandler typeHandlerString = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
         final IMarshallingTypeHandler typeHandlerInt = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
         final IMarshallingTypeHandler typeHandlerLong = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_LONG );
