@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -50,7 +50,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter.QNameAndString;
+import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;

@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -61,7 +61,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter.QNameAndString;
+import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -82,7 +82,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
   private final File m_tinResultFile;
 
-  private final TriangulatedSurfaceWriter m_writer;
+  private final TinResultWriter m_writer;
 
   private final String m_crs;
 
@@ -240,7 +240,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
   /**
    * Returns the marshaller used to write the triangle, initialises it (and hence opens the file), if not yet done
    */
-  private TriangulatedSurfaceWriter initMarshaller( final QNameAndString[] props ) throws CoreException
+  private TinResultWriter initMarshaller( final QNameAndString[] props ) throws CoreException
   {
     try
     {
@@ -260,7 +260,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
       else
         m_os = new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gml" ) ) ); //$NON-NLS-1$
 
-      return new TriangulatedSurfaceWriter( m_os, m_crs, props );
+      return new TinResultWriter( m_os, m_crs, props );
     }
     catch( final Exception e )
     {
