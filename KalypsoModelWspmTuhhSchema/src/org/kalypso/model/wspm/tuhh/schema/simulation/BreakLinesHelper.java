@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -87,10 +87,11 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * @author Monika Thül
+ * @author Monika Thï¿½l
  */
 public class BreakLinesHelper implements IWspmConstants
 {
@@ -211,12 +212,12 @@ public class BreakLinesHelper implements IWspmConstants
     {
       if( epsThinning > 0.0 )
       {
-        // TODO thin out: sollten "Zwangspunkte" wie Marker für Trennflächen / durchströmte Bereiche erhalten bleiben?
+        // TODO thin out: sollten "Zwangspunkte" wie Marker fï¿½r Trennflï¿½chen / durchstrï¿½mte Bereiche erhalten bleiben?
         return GeometryUtilities.getThinnedCurve( curve, epsThinning );
       }
       else
       {
-        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING );
+        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
         final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
         return (GM_Curve) cloneObject;
       }
