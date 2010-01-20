@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -57,7 +57,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter;
+import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -105,7 +105,7 @@ public class ModelTinExporter implements ICoreRunnableWithProgress
       os = new GZIPOutputStream( new FileOutputStream( dtmJavaFile ) );
 
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      final TriangulatedSurfaceWriter triangleWriter = new TriangulatedSurfaceWriter( os, crs, null );
+      final TinResultWriter triangleWriter = new TinResultWriter( os, crs, null );
 
       int cnt = 0;
       for( final IFE1D2DElement element : elements )
