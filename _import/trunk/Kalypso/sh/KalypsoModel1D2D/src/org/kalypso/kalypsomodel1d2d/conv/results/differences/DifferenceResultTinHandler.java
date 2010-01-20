@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -55,7 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceWriter;
+import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher;
@@ -94,7 +94,7 @@ public class DifferenceResultTinHandler
       final GM_TriangulatedSurface masterSurface = surfaces[0];
       final GM_TriangulatedSurface slaveSurface = surfaces[1];
 
-      final TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE, new TriangulatedSurfaceWriter.QNameAndString[] {} );
+      final TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE, new TinResultWriter.QNameAndString[] {} );
 
       // monitor:
       // 70% available
