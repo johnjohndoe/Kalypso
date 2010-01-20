@@ -49,8 +49,7 @@ import java.util.TreeMap;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.manager.BodentypManager;
-import org.kalypso.convert.namodel.schema.binding.Landuse;
-import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
+import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.convert.namodel.schema.binding.suds.Greenroof;
 import org.kalypso.convert.namodel.schema.binding.suds.Swale;
 import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
@@ -81,23 +80,26 @@ public class SudsFileWriter extends AbstractCoreFileWriter
   @Override
   protected void createContent( ) throws Exception
   {
-    if( m_config.getModelWorkspace() != null && m_config.getLanduseWorkspace() != null && m_config.getSudsWorkspace() != null )
+    if( m_config.getModelWorkspace() != null && m_config.getHydrotopeWorkspace() != null && m_config.getSudsWorkspace() != null )
     {
       final TreeMap<String, TreeMap<String, List<String>>> sudsMap = new TreeMap<String, TreeMap<String, List<String>>>();
       final Feature catchmentCollection = (Feature) m_config.getModelWorkspace().getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
       final FeatureList catchmentList = (FeatureList) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
 
-      final LanduseCollection landuseCollection = (LanduseCollection) m_config.getLanduseWorkspace().getRootFeature();
-      for( final Landuse landuse : landuseCollection.getLanduses() )
+      m_config.getHydrotopeWorkspace().getRootFeature();
+      final FeatureList hydrotopFeatureList = (FeatureList) m_config.getHydrotopeWorkspace().getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
+
+      for( final Object o : hydrotopFeatureList )
       {
-        if( landuse.getSudCollection().size() > 0 )
+        final Hydrotop hydrotop = (Hydrotop) o;
+        if( hydrotop.getSudCollection().size() > 0 )
         {
-          final GM_Object landuseGeometryProperty = landuse.getGeometry();
-          final Geometry landuseGeometry = JTSAdapter.export( landuseGeometryProperty );
-          final GM_Object landuseInteriorPoint = JTSAdapter.wrap( landuseGeometry.getInteriorPoint() );
-          final List<Feature> list = catchmentList.query( landuseGeometryProperty.getEnvelope(), null );
+          final GM_Object hydrotopGeometryProperty = hydrotop.getDefaultGeometryPropertyValue();
+          final Geometry hydrotopGeometry = JTSAdapter.export( hydrotopGeometryProperty );
+          final GM_Object hydrotopInteriorPoint = JTSAdapter.wrap( hydrotopGeometry.getInteriorPoint() );
+          final List<Feature> list = catchmentList.query( hydrotopGeometryProperty.getEnvelope(), null );
           for( final Feature catchment : list )
-            if( catchment.getDefaultGeometryPropertyValue().contains( landuseInteriorPoint ) )
+            if( catchment.getDefaultGeometryPropertyValue().contains( hydrotopInteriorPoint ) )
             {
 // final Feature strang = (Feature) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
 // final String drainageNodeName = (String) strang.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
@@ -105,7 +107,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
               final String catchmentName = catchment.getName();
               if( !sudsMap.containsKey( catchmentName ) )
                 sudsMap.put( catchmentName, new TreeMap<String, List<String>>() );
-              final Feature[] sudsArray = landuse.getSuds();
+              final Feature[] sudsArray = hydrotop.getSuds();
               for( final Feature s : sudsArray )
               {
                 final Feature f = s instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) s).getFeature() : s;
