@@ -4,7 +4,7 @@
 <product name="Kalypso Planer Client Manager" id="org.kalypso.planer.client.manager.product" application="org.kalypso.model.product.kalypsomodelapplication" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="etc/aboutKalypso.gif"/>
+      <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
       <text>
          %aboutText
       </text>
@@ -20,7 +20,7 @@ de_DE</programArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="etc/applicationicons/icon_16.gif" i32="etc/applicationicons/icon_32.gif" i48="etc/applicationicons/icon_48.gif" i64="etc/applicationicons/icon_64.gif" i128="etc/applicationicons/icon_128.gif"/>
+   <windowImages i16="/KalypsoModelProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoModelProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoModelProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoModelProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoModelProduct/etc/applicationicons/icon_128.gif"/>
 
    <splash
       location="org.kalypso.planer.client.manager"
@@ -236,6 +236,8 @@ de_DE</programArgs>
       <plugin id="org.eclipse.ui.navigator.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
       <plugin id="org.eclipse.ui.navigator.resources.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.ui.net"/>
+      <plugin id="org.eclipse.ui.net.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.views"/>
       <plugin id="org.eclipse.ui.views.nl_de" fragment="true"/>
