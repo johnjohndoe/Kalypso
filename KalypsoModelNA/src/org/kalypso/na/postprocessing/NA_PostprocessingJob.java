@@ -5,12 +5,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.binding.suds.PlaningArea;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -46,12 +50,15 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -83,7 +90,11 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class NA_PostprocessingJob extends AbstractInternalStatusJob implements ISimulation
 {
-
+  /**
+   * Helper class for preparing the discharge info for writing to report shape file.
+   * 
+   * @author Dejan Antanaskovic
+   */
   private class DischargeData
   {
     private final double m_value;
@@ -96,14 +107,25 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       m_date = date;
     }
 
-    public Date getDate( )
+    public final Double getValue( )
+    {
+      return m_value;
+    }
+
+    public final Date getDate( )
     {
       return m_date;
     }
 
-    public double getValue( )
+    /**
+     * Returns the date formated with "yyyyMMddHHmmssZ" format. The result is converted to Kalypso time zone.
+     */
+    public String getDateFormatted( )
     {
-      return m_value;
+      final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+      final DateFormat dfm = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss Z" );
+      dfm.setTimeZone( timeZone );
+      return dfm.format( m_date );
     }
   }
 
@@ -116,6 +138,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final TransformVisitor transformVisitor = new TransformVisitor( targetCRS );
     final boolean hasCalculationNature = inputProvider.hasID( "CalculationNature" ); //$NON-NLS-1$
     if( !hasCalculationNature )
     {
@@ -141,10 +165,15 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       try
       {
         final GMLWorkspace sudsWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "sudsModel" ), null ); //$NON-NLS-1$
+        sudsWorkspace.accept( transformVisitor, sudsWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
         final Geometry planingAreaGeometry;
         final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null ); //$NON-NLS-1$
+        modelWorkspace.accept( transformVisitor, modelWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+        final Feature catchmentCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+        final FeatureList catchmentList = (FeatureList) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
         final PlaningArea planingArea = (PlaningArea) sudsWorkspace.getRootFeature().getProperty( PlaningArea.QNAME_PROP_PLANING_AREA_MEMBER );
-        if( planingArea != null )
+        final boolean planningAreaDefined = planingArea != null;
+        if( planningAreaDefined )
         {
           planingAreaGeometry = JTSAdapter.export( planingArea.getDefaultGeometryProperty() );
         }
@@ -154,8 +183,6 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
            * TODO: This should happen only if the calculation is started by PLC Manager application. Implement such
            * check.
            */
-          final Feature catchmentCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-          final FeatureList catchmentList = (FeatureList) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
           final GM_Envelope envelope = catchmentList.getBoundingBox();
           planingAreaGeometry = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
         }
@@ -230,45 +257,89 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
         final List<Feature> affectedNodes = new ArrayList<Feature>();
 
-        for( final Object n : nodeList )
+        if( !planningAreaDefined )
         {
-          final Feature node = (Feature) n;
-          final Geometry geometry = JTSAdapter.export( node.getDefaultGeometryPropertyValue() );
-          if( planingAreaGeometry.intersects( geometry ) )
+          affectedNodes.addAll( nodeList );
+        }
+        else
+        {
+
+          for( final Object o : catchmentList )
           {
-            String name = node.getName();
-            if( name == null || name.length() == 0 )
-              name = node.getId();
-            final String izNodePath = izNodesPath.get( name );
-            final String calculatedNodePath = calculatedNodesPath.get( name );
-            if( izNodePath == null || calculatedNodePath == null )
-              continue;
-            affectedNodes.add( node );
-            final File izFile = new File( statusQuoResultsFolder, izNodePath );
-            final File calcFile = new File( calculatedResultsFolder, calculatedNodePath );
-            final File izFolder = new File( outputSubfolderSteady, name );
-            final File calcFolder = new File( outputSubfolderCalculated, name );
-            izFolder.mkdirs();
-            calcFolder.mkdirs();
-            FileUtils.copyFileToDirectory( izFile, izFolder );
-            FileUtils.copyFileToDirectory( calcFile, calcFolder );
-            final String izPath = String.format( Locale.US, "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
-            final String calcPath = String.format( Locale.US, "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
-            final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name );
-            final Obstableview table = NodeResultsComparisonViewCreator.createTableView( izPath, calcPath );
-            final File odtFile = new File( tmpdir, name + ".odt" );
-            final File ottFile = new File( tmpdir, name + ".ott" );
-            final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) ); //$NON-NLS-1$
-            final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) ); //$NON-NLS-1$
-            DiagViewUtils.saveDiagramTemplateXML( view, outDiag );
-            TableViewUtils.saveTableTemplateXML( table, outTable );
+            final Feature catchment = (Feature) o;
+            final Geometry geometry = JTSAdapter.export( catchment.getDefaultGeometryPropertyValue() );
+            if( planingAreaGeometry.intersects( geometry ) )
+            {
+              // resolve downstream channel and node, and add node to the affected nodes list
+              final IRelationType downstreamChannelRT = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
+              final Feature downstreamChannel = modelWorkspace.resolveLink( catchment, downstreamChannelRT );
+              if( downstreamChannel != null )
+              {
+                final IRelationType downstreamNodeRT = (IRelationType) downstreamChannel.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+                final Feature downstreamNode = modelWorkspace.resolveLink( downstreamChannel, downstreamNodeRT );
+                if( downstreamNode != null )
+                  affectedNodes.add( downstreamNode );
+              }
+            }
+          }
+          // resolve all downstream nodes (from those who are the direct downstream nodes for the affected catchments)
+          final List<Feature> additionalDownstreamNodes = new ArrayList<Feature>();
+          for( final Feature node : affectedNodes )
+          {
+            // resolve downstream channel and node, and add node to the affected nodes list (if not already there)
+            final IRelationType downstreamChannelRT = (IRelationType) node.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
+            final Feature downstreamChannel = modelWorkspace.resolveLink( node, downstreamChannelRT );
+            if( downstreamChannel != null )
+            {
+              final IRelationType downstreamNodeRT = (IRelationType) downstreamChannel.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+              final Feature downstreamNode = modelWorkspace.resolveLink( downstreamChannel, downstreamNodeRT );
+              if( downstreamNode != null && !additionalDownstreamNodes.contains( downstreamNode ) )
+                additionalDownstreamNodes.add( downstreamNode );
+            }
+          }
+          // additional list is the easiest way to avoid concurrent modification exception...
+          for( final Feature node : additionalDownstreamNodes )
+          {
+            if( !affectedNodes.contains( node ) )
+              affectedNodes.add( node );
           }
         }
+
         if( affectedNodes.size() == 0 )
         {
-          final String message = "No NA node is affected. Please redefine the model/planing area.";
+          final String message = "No catchment is affected. Please redefine the model/planing area.";
+          // Logger.getAnonymousLogger().log( Level.WARNING, message );
           setStatus( STATUS.ERROR, message );
           throw new SimulationException( message );
+        }
+
+        for( final Feature node : affectedNodes )
+        {
+          String name = node.getName();
+          if( name == null || name.length() == 0 )
+            name = node.getId();
+          final String izNodePath = izNodesPath.get( name );
+          final String calculatedNodePath = calculatedNodesPath.get( name );
+          if( izNodePath == null || calculatedNodePath == null )
+            continue;
+          final File izFile = new File( statusQuoResultsFolder, izNodePath );
+          final File calcFile = new File( calculatedResultsFolder, calculatedNodePath );
+          final File izFolder = new File( outputSubfolderSteady, name );
+          final File calcFolder = new File( outputSubfolderCalculated, name );
+          izFolder.mkdirs();
+          calcFolder.mkdirs();
+          FileUtils.copyFileToDirectory( izFile, izFolder );
+          FileUtils.copyFileToDirectory( calcFile, calcFolder );
+          final String izPath = String.format( Locale.US, "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
+          final String calcPath = String.format( Locale.US, "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
+          final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name );
+          final Obstableview table = NodeResultsComparisonViewCreator.createTableView( izPath, calcPath );
+          final File odtFile = new File( tmpdir, name + ".odt" );
+          final File ottFile = new File( tmpdir, name + ".ott" );
+          final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) ); //$NON-NLS-1$
+          final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) ); //$NON-NLS-1$
+          DiagViewUtils.saveDiagramTemplateXML( view, outDiag );
+          TableViewUtils.saveTableTemplateXML( table, outTable );
         }
 
         /*
@@ -278,7 +349,6 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         final IMarshallingTypeHandler typeHandlerGeometry = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT );
         final IMarshallingTypeHandler typeHandlerString = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
         final IMarshallingTypeHandler typeHandlerInt = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
-        final IMarshallingTypeHandler typeHandlerLong = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_LONG );
         final IMarshallingTypeHandler typeHandlerDouble = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
 
         final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -289,11 +359,9 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "GW_ID" ), typeHandlerString, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
         propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "GW_KM" ), typeHandlerDouble, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
         propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "VALUE_IZ" ), typeHandlerDouble, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "TIME_IZ" ), typeHandlerLong, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "TIME_IZ" ), typeHandlerString, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
         propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "VALUE_AW" ), typeHandlerDouble, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "TIME_AW" ), typeHandlerLong, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "VALUE_DIF" ), typeHandlerDouble, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "TIME_DIF" ), typeHandlerLong, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "TIME_AW" ), typeHandlerString, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
         propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "VALUE_INF" ), typeHandlerInt, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
         propertyTypeList.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "TIME_INF" ), typeHandlerInt, 1, 1, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -332,22 +400,13 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           final DischargeData calcMax = calcNodesMaxData.get( name );
           if( izMax == null || calcMax == null )
             continue;
+
           dataList.add( izMax.getValue() );
-          dataList.add( izMax.getDate().getTime() );
+          dataList.add( izMax.getDateFormatted() );
           dataList.add( calcMax.getValue() );
-          dataList.add( calcMax.getDate().getTime() );
-          final double valueDifference = izMax.getValue() - calcMax.getValue();
-          long timeDifference = izMax.getDate().getTime() - calcMax.getDate().getTime();
-          dataList.add( valueDifference );
-          dataList.add( timeDifference );
-          if( valueDifference == 0.0 )
-            dataList.add( 0 );
-          else
-            dataList.add( valueDifference > 0.0 ? 1 : -1 );
-          if( timeDifference == 0 )
-            dataList.add( 0 );
-          else
-            dataList.add( timeDifference < 0 ? 1 : -1 );
+          dataList.add( calcMax.getDateFormatted() );
+          dataList.add( izMax.getValue().compareTo( calcMax.getValue() ) );
+          dataList.add( calcMax.getDate().compareTo( izMax.getDate() ) );
 
           final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + fid++, shapeFT, dataList.toArray() ); //$NON-NLS-1$
           workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
