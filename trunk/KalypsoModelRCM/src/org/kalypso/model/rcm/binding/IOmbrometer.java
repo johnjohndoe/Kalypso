@@ -45,6 +45,7 @@ import java.net.MalformedURLException;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -71,6 +72,8 @@ public interface IOmbrometer extends Feature
 
   final static QName QNAME_PROP_AFFECTEDAREA = new QName( UrlCatalogRcm.NS_OMBROMETER, "affectedArea" );
 
+  static final QName QNAME_PROP_PRECIPITATION1 = new QName( UrlCatalogRcm.NS_OMBROMETER, "precipitationLink1" );
+
   String getShortName( );
 
   void setShortName( String shortName );
@@ -83,6 +86,8 @@ public interface IOmbrometer extends Feature
 
   void setUsed( boolean used );
 
+  FeatureChange changeIsUsed( Boolean isUsed );
+
   GM_Point getStationLocation( );
 
   void setStationLocation( GM_Point location );
@@ -91,5 +96,5 @@ public interface IOmbrometer extends Feature
 
   void setAffectedArea( GM_Surface<GM_SurfacePatch> area );
 
-  IObservation getTimeserie( String string ) throws MalformedURLException, SensorException;
+  IObservation getTimeserie( ) throws MalformedURLException, SensorException;
 }

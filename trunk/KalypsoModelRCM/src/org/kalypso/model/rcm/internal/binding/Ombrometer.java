@@ -43,13 +43,13 @@ package org.kalypso.model.rcm.internal.binding;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.xml.namespace.QName;
-
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IOmbrometer;
-import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -134,6 +134,22 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
     setProperty( QNAME_PROP_ISUSED, used );
   }
 
+  public FeatureChange changeIsUsed( final Boolean isUsed )
+  {
+    /* If geometry is not set, never activate this ombro. */
+    final GM_Point geom = getStationLocation();
+    if( geom == null )
+      return null;
+
+    final IPropertyType isUsedPt = getFeatureType().getProperty( QNAME_PROP_ISUSED );
+
+    final Boolean oldIsUsed = getProperty( QNAME_PROP_ISUSED, Boolean.class );
+    if( ObjectUtils.equals( oldIsUsed, isUsed ) )
+      return null;
+
+    return new FeatureChange( this, isUsedPt, isUsed );
+  }
+
   /**
    * @see org.kalypso.model.rcm.binding.IOmbrometer#setExternalId(java.lang.String)
    */
@@ -165,13 +181,18 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
    * @see org.kalypso.model.rcm.binding.IOmbrometer#getTimeserie(java.lang.String)
    */
   @Override
-  public IObservation getTimeserie( final String property ) throws MalformedURLException, SensorException
+  public IObservation getTimeserie( ) throws MalformedURLException, SensorException
   {
+    final TimeseriesLinkType link = getTimeserieLink();
     final URL context = getWorkspace().getContext();
-    final TimeseriesLinkType link = getProperty( new QName( UrlCatalogRcm.NS_OMBROMETER, property ), TimeseriesLinkType.class );
     final String href = link.getHref();
     final URL linkUrl = UrlResolverSingleton.resolveUrl( context, href );
 
     return ZmlFactory.parseXML( linkUrl, link.toString() );
+  }
+
+  private TimeseriesLinkType getTimeserieLink( )
+  {
+    return getProperty( IOmbrometer.QNAME_PROP_PRECIPITATION1, TimeseriesLinkType.class );
   }
 }
