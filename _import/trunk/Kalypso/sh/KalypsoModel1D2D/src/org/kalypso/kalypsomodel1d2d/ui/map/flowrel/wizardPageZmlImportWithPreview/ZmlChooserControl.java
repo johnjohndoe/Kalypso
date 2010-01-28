@@ -352,7 +352,7 @@ public abstract class ZmlChooserControl
             dateRange = new DateRange( new Date( 1, 1, 1 ), null );
           }
           m_subTitle.setText( getDateRangeAsString( dateRange ) );
-          m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( dateRange ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+          m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( dateRange ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null, true ) );
 
           m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom ) );
           m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo ) );
@@ -384,7 +384,7 @@ public abstract class ZmlChooserControl
     m_diagView.removeAllItems();
     final DateRange range = new DateRange( m_dateFrom, m_dateTo );
     m_subTitle.setText( getDateRangeAsString( range ) );
-    m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( range ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+    m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( range ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null, true ) );
   }
 
   /**
