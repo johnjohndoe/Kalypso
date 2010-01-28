@@ -122,7 +122,11 @@
   <Node gml:id="Node2">
    <gml:pointProperty>
     <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," cs=" " decimal=".">0.0 1.0 1.0</gml:coordinates>
+     <gml:coord>
+     	<gml:X>0.0</gml:X>
+     	<gml:Y>1.0</gml:Y>
+     	<gml:Z>1.0</gml:Z>
+     </gml:coord>
     </gml:Point>
 
    </gml:pointProperty>

@@ -57,10 +57,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class DiscretizetionParsingTest extends GmlParsingTester
 {
-  private static final double DELTA = 0.00001;
+  private static final double DELTA = 0.01;
   
-  private static final GM_Point point1 = GeometryFactory.createGM_Point( 0.0, 0.0, 0.0, " " );
-  private static final GM_Point point2 = GeometryFactory.createGM_Point( 0.0, 1.0, 1.0, " " );
+  private static final GM_Point point1 = GeometryFactory.createGM_Point( 0.0, 0.0, 0.0, "EPSG:31467" );
+  private static final GM_Point point2 = GeometryFactory.createGM_Point( 0.0, 1.0, 1.0, "EPSG:31467" );
   
   @SuppressWarnings("unchecked")
   public void testTinyDiscretization() throws Exception 
@@ -81,11 +81,13 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     
     //assert one node
     IFE1D2DNode node = discrModel.getNodes().get( 0 );
+    assertNotNull( node );
     assertTrue( node.getPoint().distance( point1 ) < DELTA );
     
     //getAdjacentNode
     IFE1D2DNode adjacentNode = (IFE1D2DNode) node.getNeighbours().get( 0 );
-    assertTrue( adjacentNode.getPoint().distance( point2) < DELTA );
+    assertNotNull( adjacentNode );
+    assertTrue( adjacentNode.getPoint().distance( point2 ) < DELTA );
     
     IFE1D2DEdge edge1 = discrModel.getEdges().get( 0 );
     assertNotNull( edge1 );
@@ -101,6 +103,6 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     //assert complex Element
     IFE1D2DComplexElement complexEl1 = discrModel.getComplexElements().get( 0 );
     assertNotNull( complexEl1 );
-    assertTrue( complexEl1.getElements().get(0).equals( polyEl1 ) );    
+    assertTrue( complexEl1.getElements().get(0).equals( polyEl1 ) );
   }
 }
