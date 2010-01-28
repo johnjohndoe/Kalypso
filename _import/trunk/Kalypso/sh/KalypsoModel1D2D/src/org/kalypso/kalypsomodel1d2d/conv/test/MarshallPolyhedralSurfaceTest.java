@@ -54,7 +54,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.io.sax.marshaller.PolyhedralSurfaceMarshallerMy;
+import org.kalypsodeegree_impl.io.sax.marshaller.PolyhedralSurfaceMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.XMLReader;
@@ -107,7 +107,7 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
   
       xmlStream.startDocument();
       
-      PolyhedralSurfaceMarshallerMy marshaller = new PolyhedralSurfaceMarshallerMy( xmlReader, surface );
+      PolyhedralSurfaceMarshaller marshaller = new PolyhedralSurfaceMarshaller( xmlReader, surface );
       marshaller.marshall();
       
       xmlStream.endDocument();
