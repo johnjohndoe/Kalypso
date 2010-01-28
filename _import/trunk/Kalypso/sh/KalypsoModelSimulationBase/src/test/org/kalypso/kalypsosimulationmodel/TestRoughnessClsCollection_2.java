@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -64,7 +64,7 @@ public class TestRoughnessClsCollection_2 extends TestCase
 
     try
     {
-      workspace = GmlSerializer.createGMLWorkspace( new URL( "file:/F:/_ECLIPSE/roughness.gml" ), null ); //$NON-NLS-1$
+      workspace = GmlSerializer.createGMLWorkspace( new URL( "data/roughness.gml" ), null ); //$NON-NLS-1$
     }
     catch( Throwable th )
     {
