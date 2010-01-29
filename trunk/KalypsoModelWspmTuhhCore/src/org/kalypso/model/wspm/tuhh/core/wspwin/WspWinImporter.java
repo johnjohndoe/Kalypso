@@ -324,9 +324,9 @@ public class WspWinImporter
       profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
 
     final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
-    final IProfil profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
+    final IProfil[] profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
 
-    ProfileFeatureFactory.toFeature( profile, prof );
+    ProfileFeatureFactory.toFeature( profile[0], prof );
     /* Set state as default name for profile. */
     prof.setName( bean.getStateName() );
 

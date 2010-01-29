@@ -47,15 +47,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
 public class DataBlockWriter
 {
-  private final Logger m_logger = Logger.getLogger( DataBlockWriter.class.getName() );
-
   private final ArrayList<IDataBlock> m_dbs = new ArrayList<IDataBlock>();
 
   private final Map<Integer, String[]> m_metaMap = new HashMap<Integer, String[]>();
@@ -70,25 +66,32 @@ public class DataBlockWriter
     m_dbs.add( dataBlock );
   }
 
-  public void store( final PrintWriter pw )
+  public void addDataBlock( final int index, final IDataBlock dataBlock )
+  {
+    m_dbs.add( index, dataBlock );
+  }
+
+  public void store( final PrintWriter pw ) throws IOException
   {
     writeMetadata( pw );
     writeZeile14( m_dbs, pw );
     pw.println( "0.0000  0.0000  0.0000  0.0000  0.0000  0.0000   0 0 0" );// Plotvorgaben //$NON-NLS-1$
-    try
-    {
-      for( final IDataBlock db : m_dbs )
+
+    for( final IDataBlock db : m_dbs )
+      try
+      {
         db.printToPrinter( pw );
-    }
-    catch( final IOException e )
-    {
-      m_logger.log( Level.SEVERE, e.getMessage() );
-      e.printStackTrace();
-    }
-    finally
-    {
-      pw.close();
-    }
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+        throw new IOException( "error while writing: " + db.getFirstLine(), e );
+
+      }
+      finally
+      {
+        pw.close();
+      }
   }
 
   /**

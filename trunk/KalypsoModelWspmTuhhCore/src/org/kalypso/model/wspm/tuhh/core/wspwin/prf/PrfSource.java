@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -611,20 +612,30 @@ public class PrfSource implements IProfilSource
   /**
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSource#read(org.kalypso.model.wspm.core.profil.IProfil)
    */
-  public boolean read( final IProfil profil, final Reader reader )
+  public IProfil[] read( final String profileTyp, final Reader reader ) throws IOException
   {
-    final PrfReader prfReader = new PrfReader();
-    try
-    {
-      prfReader.readFromReader( new BufferedReader( reader ) );
-      readSource( prfReader, profil );
+// IProfil profil = null;
+// if( profiles instanceof ArrayList< ? > )
+// {
+// final ArrayList< ? > al = (ArrayList< ? >) profiles;
+// final Object oProf = al.size() > 0 ? al.get( 0 ) : null;
+// profil = oProf instanceof IProfil ? (IProfil) oProf : null;
+// }
+// else if( profiles instanceof IProfil[] )
+// {
+// final IProfil[] profs = (IProfil[]) profiles;
+// profil = profs.length > 0 ? profs[0] : null;
+// }
+// else
+    final IProfil profil = ProfilFactory.createProfil( profileTyp );
 
-      return true;
-    }
-    catch( final IOException e )
-    {
-      // TODO: handle exception
-      return false;
-    }
+    if( profil == null )
+      throw new IOException( "unknown Profile Typ: " + profileTyp );
+
+    final PrfReader prfReader = new PrfReader();
+    prfReader.readFromReader( new BufferedReader( reader ) );
+    readSource( prfReader, profil );
+    return new IProfil[] { profil };
+
   }
 }
