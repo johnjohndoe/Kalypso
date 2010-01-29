@@ -99,7 +99,7 @@ public class WspmTuhhProfileHelper
     return value instanceof Double ? new BigDecimal( (Double) value ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP ) : new BigDecimal( Double.NaN );
   }
 
-  public static final IObservation<TupleResult> profilesToLengthSection( final Object[] profilFeatures )
+  public static final IObservation<TupleResult> profilesToLengthSection( final IProfil[] profiles )
   {
     TupleResult lsResult = new TupleResult();
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) );
@@ -115,20 +115,16 @@ public class WspmTuhhProfileHelper
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_H_BV ) );
 
-    for( Object objProfileFeature : profilFeatures )
+    for( IProfil profil : profiles )
     {
-      if( !(objProfileFeature instanceof IProfileFeature) )
-        continue;
 
-      final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
-      final IProfil profil = profileFeature.getProfil();
       final IComponent profHei = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       final int indHei = profil.indexOfProperty( profHei );
 
       IRecord station = lsResult.createRecord();
-      final String desc = profileFeature.getDescription();
+      final String desc = profil.getDescription();
       station.setValue( 10, "".equals( desc ) ? null : desc );
-      station.setValue( 0, profileFeature.getBigStation(), true );// Station
+      station.setValue( 0, valueToBigDecimal( profil.getStation()), true );// Station
       // Kennung
       // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
       station.setValue( 2, ProfilUtil.stationToBigDecimal( ProfilUtil.getMinValueFor( profil, profHei ) ), true ); // Ground

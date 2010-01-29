@@ -12,12 +12,18 @@
             class="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
             extension="prf"
             id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
-            name="PrfSink"/>
+            name="%org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"/>
       <sink
             class="org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink"
             extension="lng"
             id="org.kalypso.model.wspm.tuhh.core.wspwin.lng.LngSink"
-            name="LngSink">
+            name="%org.kalypso.model.wspm.tuhh.core.wspwin.lng.LngSink">
+      </sink>
+      <sink
+            class="org.kalypso.model.wspm.tuhh.core.profile.CsvSink"
+            extension="csv"
+            id="org.kalypso.model.wspm.tuhh.core.profile.CsvSink"
+            name="%org.kalypso.model.wspm.tuhh.core.profile.CsvSink">
       </sink>
    </extension>
    <extension

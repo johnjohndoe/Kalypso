@@ -642,18 +642,27 @@ public class PrfSink implements IProfilSink
   /**
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(org.kalypso.model.wspm.core.profil.IProfil)
    */
-  public boolean write( final Object source, final Writer writer )
+  private boolean internalWrite( final IProfil profil, final Writer writer ) throws IOException
   {
-    final PrintWriter pw = new PrintWriter( writer );
-    final IProfil profil = source instanceof IProfil ? (IProfil) source : null;
-    if( profil == null )
-      return false;
+
     final DataBlockWriter prfwriter = new DataBlockWriter();
     extractMetaData( prfwriter, profil );
     if( profil.getPoints().length > 0 )
       extractDataBlocks( prfwriter, profil );
-    prfwriter.store( pw );
+    prfwriter.store( new PrintWriter( writer ) );
     return true;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
+   */
+  @Override
+  public boolean write( Object source, Writer writer ) throws IOException
+  {
+    if( source instanceof IProfil )
+      return internalWrite( (IProfil) source, writer );
+
+    throw new IOException( "illegal Argument",new IllegalArgumentException(source.toString()) );
   }
 
 }

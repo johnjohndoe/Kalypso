@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.wizards;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -56,7 +57,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
@@ -65,11 +65,11 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -116,6 +116,19 @@ public class CreateLengthSectionWizard extends Wizard
     addPage( m_profileChooserPage );
   }
 
+  private final IProfil[] extractProfiles( final Object[] profilFeatures )
+  {
+    final ArrayList<IProfil> profiles = new ArrayList<IProfil>();
+    for( final Object objProfileFeature : profilFeatures )
+    {
+      if( !(objProfileFeature instanceof IProfileFeature) )
+        continue;
+      final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
+      profiles.add( profileFeature.getProfil() );
+    }
+    return profiles.toArray( new IProfil[] {} );
+  }
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
@@ -138,15 +151,15 @@ public class CreateLengthSectionWizard extends Wizard
 
       final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) ); //$NON-NLS-1$
       final File targetJavaFile = targetFile.getLocation().toFile();
-     
+
       final String gmlVersion = null;
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final IGMLSchema schema = schemaCatalog.getSchema(new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(),gmlVersion);
+      final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion );
       final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) );
-      final Feature rootFeature = FeatureFactory.createFeature( null, null,  "LengthSectionResult" , rootFeatureType, true );
-      final GMLWorkspace lsWorkspace =  FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null,  new GmlSerializerFeatureProviderFactory(), null );
-      final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( profilFeatures );
-      ObservationFeatureFactory.toFeature( lengthSection,rootFeature );
+      final Feature rootFeature = FeatureFactory.createFeature( null, null, "LengthSectionResult", rootFeatureType, true );
+      final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null, new GmlSerializerFeatureProviderFactory(), null );
+      final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( extractProfiles( profilFeatures ) );
+      ObservationFeatureFactory.toFeature( lengthSection, rootFeature );
       GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" ); //$NON-NLS-1$
 
       final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) ); //$NON-NLS-1$
