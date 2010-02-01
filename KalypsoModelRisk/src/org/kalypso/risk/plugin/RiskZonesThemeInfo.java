@@ -13,7 +13,11 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -35,7 +39,15 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
 {
-  private final SortedMap<Double, String> m_riskZonesMap = new TreeMap<Double, String>();
+  protected static final SortedMap<Double, String> m_riskZonesMap = new TreeMap<Double, String>();
+
+  protected static boolean m_definitionsLoaded = false;
+
+  public RiskZonesThemeInfo( )
+  {
+    if( !m_definitionsLoaded )
+      loadDefinitions( true );
+  }
 
   /**
    * @see org.kalypso.gml.ui.map.CoverageThemeInfo#initFormatString(java.util.Properties)
@@ -60,7 +72,6 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
       final Double value = getValue( pos );
       if( value == null )
         return;
-      loadDefinitions();
       if( m_riskZonesMap.size() == 0 )
       {
         formatter.format( getDefaultFormatString(), value );
@@ -69,71 +80,106 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
       final Double key = value < 0.0 ? m_riskZonesMap.tailMap( value ).firstKey() : m_riskZonesMap.headMap( value ).lastKey();
       formatter.format( getFormatString(), Math.abs( value ), m_riskZonesMap.get( key ) );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      e.printStackTrace();
-      formatter.format( Messages.getString( "org.kalypso.risk.plugin.RiskZonesThemeInfo.1" ), e.toString() ); //$NON-NLS-1$
+      formatter.format( Messages.getString( "org.kalypso.risk.plugin.RiskZonesThemeInfo.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 
+  public static final void reloadDefinitions( )
+  {
+    m_definitionsLoaded = false;
+    loadDefinitions( false );
+  }
+
   /**
-   * Risk user have the possibility to rename the risk zones (boundaries, descriptions). On landuse import, risk zone
-   * definitions are updated as well. If that happen, the update should be reflected here.
-   * 
+   * High priority definition load is called directly from the map, i.e. definitions should be loaded ASAP. Reload calls
+   * from the listeners (on model change) have less priority.
    */
-  private void loadDefinitions( )
+  private static synchronized final void loadDefinitions( final boolean highPriority )
+  {
+    if( m_definitionsLoaded )
+      return;
+    final SortedMap<Double, String> map = RiskZonesThemeInfo.m_riskZonesMap;
+    final Job job = new Job( "Risikozonen info laden" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        final IFolder scenarioFolder = getScenarioFolder();
+        if( scenarioFolder == null )
+          return Status.OK_STATUS;
+        try
+        {
+          final String resourcePath = getResourcePath( scenarioFolder );
+          if( resourcePath == null )
+            return Status.OK_STATUS;
+          map.clear();
+
+          final IFile riskControlModelFile = scenarioFolder.getFile( resourcePath );
+
+          final URL databaseUrl = ResourceUtilities.createURL( riskControlModelFile );
+          final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl ); //$NON-NLS-1$
+
+          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+          final GMLWorkspace workspace = (GMLWorkspace) pool.getObject( poolKey );
+          if( workspace == null )
+            return Status.OK_STATUS;
+          final IRasterizationControlModel model = (IRasterizationControlModel) workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
+          final List<IRiskZoneDefinition> riskZonesList = model.getRiskZoneDefinitionsList();
+          for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
+          {
+            final Double key = new Double( riskZoneDefinition.getLowerBoundary() );
+            if( riskZoneDefinition.isUrbanLanduseType() )
+              map.put( key, riskZoneDefinition.getName() );
+            else
+              map.put( -key, riskZoneDefinition.getName() );
+          }
+        }
+        catch( final Exception e )
+        {
+          Logger.getAnonymousLogger().log( Level.WARNING, e.getLocalizedMessage() );
+        }
+        finally
+        {
+          m_definitionsLoaded = true;
+        }
+        return Status.OK_STATUS;
+      }
+    };
+    job.setUser( false );
+    job.setRule( null );
+    if( highPriority )
+    {
+      job.setPriority( Job.INTERACTIVE );
+      job.schedule( 1 );
+    }
+    else
+    {
+      job.setPriority( Job.LONG );
+      job.schedule( 500 );
+    }
+  }
+
+  protected static final IFolder getScenarioFolder( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    // if no scenario is active, just return
-    if( scenarioFolder == null )
-      return;
-
-    m_riskZonesMap.clear();
-    final IProject project = scenarioFolder.getProject();
-    try
-    {
-
-      // //////////////////////////////////////////
-
-      final String resourcePath;
-      if( project.getNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) != null ) { //$NON-NLS-1$
-        resourcePath = "/models/RasterizationControlModel.gml"; //$NON-NLS-1$
-      }
-      else if( project.getNature( "org.kalypso.planer.client.base.project.PlanerClientProjectNature" ) != null ) { //$NON-NLS-1$
-        resourcePath = "/results/risk/RasterizationControlModel.gml"; //$NON-NLS-1$
-      }
-      else
-        return;
-
-      // //////////////////////////////////////////
-
-      final IFile riskControlModelFile = scenarioFolder.getFile( resourcePath );
-
-      final URL databaseUrl = ResourceUtilities.createURL( riskControlModelFile );
-      final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl ); //$NON-NLS-1$
-
-      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-      final GMLWorkspace workspace = (GMLWorkspace) pool.getObject( poolKey );
-      if( workspace == null )
-        return;
-      final IRasterizationControlModel model = (IRasterizationControlModel) workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
-      final List<IRiskZoneDefinition> riskZonesList = model.getRiskZoneDefinitionsList();
-      for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
-      {
-        final Double key = new Double( riskZoneDefinition.getLowerBoundary() );
-        if( riskZoneDefinition.isUrbanLanduseType() )
-          m_riskZonesMap.put( key, riskZoneDefinition.getName() );
-        else
-          m_riskZonesMap.put( -key, riskZoneDefinition.getName() );
-      }
-    }
-    catch( final Exception e )
-    {
-      Logger.getAnonymousLogger().log( Level.WARNING, e.getLocalizedMessage() );
-    }
+    return scenarioFolder;
   }
 
+  protected static final String getResourcePath( final IFolder scenarioFolder ) throws CoreException
+  {
+    if( scenarioFolder == null )
+      return null;
+    final IProject project = scenarioFolder.getProject();
+    if( project.getNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) != null ) //$NON-NLS-1$
+      return "/models/RasterizationControlModel.gml"; //$NON-NLS-1$
+    else if( project.getNature( "org.kalypso.planer.client.base.project.PlanerClientProjectNature" ) != null ) //$NON-NLS-1$
+      return "/results/risk/RasterizationControlModel.gml"; //$NON-NLS-1$
+    else
+      return null;
+  }
 }

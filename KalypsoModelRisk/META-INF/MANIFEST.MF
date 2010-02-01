@@ -22,5 +22,6 @@ Export-Package: org.kalypso.risk.extension,
  org.kalypso.risk.model.schema,
  org.kalypso.risk.model.schema.binding,
  org.kalypso.risk.model.utils,
+ org.kalypso.risk.plugin,
  org.kalypso.risk.widget
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
