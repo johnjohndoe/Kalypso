@@ -51,18 +51,22 @@ import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.services.LanduseStyleUpdateListener;
+import org.kalypso.risk.plugin.RiskZonesChangeListener;
+import org.kalypso.risk.plugin.RiskZonesThemeInfo;
 
 /**
  * A central place for controlling scenario specific stuff for Kalypso1d2d.
  * <p>
  * Get informed when models are loaded and/or scenario is changed.
- *
+ * 
  * @author Dejan Antanaskovic
  * @author Gernot Belger
  */
 public class SzenarioController implements IScenarioDataListener
 {
   private final LanduseStyleUpdateListener m_landuseStyleUpdateListener = new LanduseStyleUpdateListener();
+
+  private final RiskZonesChangeListener m_riskZonesChangeListener = new RiskZonesChangeListener();
 
   private IScenario m_scenario = null;
 
@@ -83,6 +87,7 @@ public class SzenarioController implements IScenarioDataListener
         final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
         final IFile file = m_scenario.getFolder().getFile( path );
         m_landuseStyleUpdateListener.startStyleUpdateJob( file );
+        RiskZonesThemeInfo.reloadDefinitions();
       }
       catch( final CoreException e )
       {
@@ -97,10 +102,12 @@ public class SzenarioController implements IScenarioDataListener
   {
     // unregister any listeners
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_landuseStyleUpdateListener );
+    ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_riskZonesChangeListener );
     m_scenario = scenario;
     if( scenario != null )
     {
       ResourcesPlugin.getWorkspace().addResourceChangeListener( m_landuseStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
+      ResourcesPlugin.getWorkspace().addResourceChangeListener( m_riskZonesChangeListener, IResourceChangeEvent.POST_CHANGE );
     }
 
     // maybe save status into dstatus model
