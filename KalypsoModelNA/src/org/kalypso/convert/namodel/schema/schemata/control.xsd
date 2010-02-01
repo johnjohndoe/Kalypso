@@ -60,6 +60,7 @@
 			<enumeration value="v2.1.1" />
 			<enumeration value="v2.1.3" />
 			<enumeration value="v2.1.4.1" />
+			<enumeration value="v2.1.5" />
 			<enumeration value="neueste" />
 			<!-- 
 			<enumeration value="latest" />

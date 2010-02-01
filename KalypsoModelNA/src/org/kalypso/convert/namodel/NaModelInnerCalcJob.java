@@ -163,6 +163,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_141 = "start/update_bodenhorizonte_10_11_09.exe"; //$NON-NLS-1$
 
+  private final String EXE_FILE_2_15 = "start/kalypso_2.1.5.exe"; //$NON-NLS-1$
+
   private final String EXE_FILE_TEST = "start/kalypso_test.exe"; //$NON-NLS-1$
 
   private boolean m_succeeded = false;
@@ -962,13 +964,14 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_13;
     else if( kalypsoNAVersion.equals( "v2.1.4.1" ) ) //$NON-NLS-1$
       m_kalypsoKernelPath = EXE_FILE_2_141;
-    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) ) // latest stable is 2.1.3 //$NON-NLS-1$ //$NON-NLS-2$
-      m_kalypsoKernelPath = EXE_FILE_2_141;
+    else if( kalypsoNAVersion.equals( "v2.1.5" ) ) //$NON-NLS-1$
+      m_kalypsoKernelPath = EXE_FILE_2_15;
+    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) ) // latest stable is 2.1.5 //$NON-NLS-1$ //$NON-NLS-2$
+      m_kalypsoKernelPath = EXE_FILE_2_15;
     else
     {
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) + Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.70" ) //$NON-NLS-1$ //$NON-NLS-2$
-          + Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.71" ) ); //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_11;
+      Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) );
+      m_kalypsoKernelPath = EXE_FILE_2_15;
     }
   }
 

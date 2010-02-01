@@ -405,7 +405,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           dataList.add( izMax.getDateFormatted() );
           dataList.add( calcMax.getValue() );
           dataList.add( calcMax.getDateFormatted() );
-          dataList.add( calcMax.getValue().compareTo( izMax.getValue() ) );
+          dataList.add( izMax.getValue().compareTo( calcMax.getValue() ) );
           dataList.add( calcMax.getDate().compareTo( izMax.getDate() ) );
 
           final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + fid++, shapeFT, dataList.toArray() ); //$NON-NLS-1$
