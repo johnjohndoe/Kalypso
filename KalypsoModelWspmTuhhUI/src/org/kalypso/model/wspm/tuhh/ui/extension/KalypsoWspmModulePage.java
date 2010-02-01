@@ -97,7 +97,10 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
   @Override
   public INewProjectWizard getProjectWizard( )
   {
-    return new NewProjectWizard();
+    final NewProjectWizard wizard = new NewProjectWizard();
+    wizard.init( PlatformUI.getWorkbench(), null );
+
+    return wizard;
   }
 
   /**
