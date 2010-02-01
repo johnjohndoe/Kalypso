@@ -84,7 +84,7 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  * Wizard to create a new wspm tuhh project.<br>
  * Overwrite for special purposes, like create new project and import data from an existing datasource.<br>
  * If overwritten, also {@link #doFinish(IProject, IProgressMonitor)} should be overwritten<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class NewProjectWizard extends Wizard implements INewWizard, IExecutableExtension, INewProjectWizard
@@ -102,7 +102,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     }
   }
 
-  private static final String STR_WINDOW_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.0"); //$NON-NLS-1$
+  private static final String STR_WINDOW_TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.0" ); //$NON-NLS-1$
 
   private final WizardNewProjectCreationPage m_createProjectPage;
 
@@ -145,8 +145,8 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
       addPage( m_demoProjectPage );
 
     m_createProjectPage = new WizardNewProjectCreationPage( "newProjectPage" ); //$NON-NLS-1$
-    m_createProjectPage.setTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.4") ); //$NON-NLS-1$
-    m_createProjectPage.setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.5") ); //$NON-NLS-1$
+    m_createProjectPage.setTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.4" ) ); //$NON-NLS-1$
+    m_createProjectPage.setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.5" ) ); //$NON-NLS-1$
     m_createProjectPage.setImageDescriptor( KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.NEWPROJECT_PROJECT_PAGE_WIZBAN ) );
 
     addPage( m_createProjectPage );
@@ -215,7 +215,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( status.matches( IStatus.ERROR ) )
     {
-      ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.6"), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.6" ), status ); //$NON-NLS-1$
       KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
       deleteProject( m_project );
     }
@@ -226,13 +226,16 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     else
     {
       if( !status.isOK() )
-        ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.7"), status ); //$NON-NLS-1$
+        ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.7" ), status ); //$NON-NLS-1$
 
       BasicNewProjectResourceWizard.updatePerspective( m_config );
-      BasicNewResourceWizard.selectAndReveal( m_project, m_workbench.getActiveWorkbenchWindow() );
+      if( m_workbench != null )
+      {
+        BasicNewResourceWizard.selectAndReveal( m_project, m_workbench.getActiveWorkbenchWindow() );
 
-      final IFile fileToOpen = m_project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
-      openTreeView( fileToOpen );
+        final IFile fileToOpen = m_project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
+        openTreeView( fileToOpen );
+      }
       return true;
     }
 
@@ -241,7 +244,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
   private void openTreeView( final IFile file )
   {
-    final UIJob job = new UIJob( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.9") ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.9" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -278,13 +281,13 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
       };
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.11"), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.11" ), status ); //$NON-NLS-1$
     }
   }
 
   /**
    * Overwritten to remember configuration element.
-   *
+   * 
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
@@ -301,7 +304,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
    */
   protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.12"), 4 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.12" ), 4 ); //$NON-NLS-1$
 
     final ProjectTemplate demoProject = m_demoProjectPage.getSelectedProject();
 

@@ -661,7 +661,8 @@ public class PrfSink implements IProfilSink
   {
     if( source instanceof IProfil )
       return internalWrite( (IProfil) source, writer );
-
+    if( source instanceof IProfil[] )
+      return internalWrite( ((IProfil[])source)[0], writer );
     throw new IOException( "illegal Argument",new IllegalArgumentException(source.toString()) );
   }
 

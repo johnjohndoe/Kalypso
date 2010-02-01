@@ -88,10 +88,10 @@ public class DataBlockWriter
         throw new IOException( "error while writing: " + db.getFirstLine(), e );
 
       }
-      finally
-      {
-        pw.close();
-      }
+//      finally
+//      {
+//        pw.close();
+//      }
   }
 
   /**
