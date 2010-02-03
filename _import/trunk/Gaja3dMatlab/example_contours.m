@@ -33,16 +33,14 @@ clinesimp = clineclip.simplify(tolerance);
 snapDist = 2;
 [clinesnap, boundsnap] = clinesimp.snap(bound, snapDist);
 
-% save contours to file
-saveContoursAsShape('clinesnap',clinesnap);
-
-%% in ArcGIS integrate clinessnap into DEM and export TIN nodes
-% ArcToolbox > 3D Analyst Tools > Conversion > From TIN > TIN Nodes
+% optionally save contours to file
+% saveContoursAsShape('clinesnap',clinesnap);
 
 %% tin creation based on contours and snapped boundary
 gaja3d2 = kalypso.Gaja3D();
 gaja3d2.setBoundaries(boundsnap);
-% here use exported TIN nodes
-gaja3d2.setElevationPoints('D:\temp\tin_nodes.shp');
+gaja3d2.setElevationPoints('P:\transfer\stefan\TIN-Punkte-HH-Hafen\NEU\tin_solltiefen_linien_bk_wei.shp');
 gaja3d2.setBreaklines({clinesnap});
 gaja3d2.createTin('minAngle',15,'maxArea',1000);
+% use contour elevations in model tin
+gaja3d2.assignElevations('source','tin','useContour','true');
