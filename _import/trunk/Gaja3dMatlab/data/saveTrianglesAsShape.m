@@ -11,12 +11,12 @@ function saveTrianglesAsShape( filename, elements, Xtri, Ytri)
     
     for t=1:totalTriCount
         % make last coordinates equal to first
-        X{t} = Xtri(elements(t,:)); % x coordinates of triangle t
-        X{t} = [ X{t}; X{t}(1) ];
-        Y{t} = Ytri(elements(t,:)); % y coordinates of triangle t
-        Y{t} = [ Y{t}; Y{t}(1) ];
+        X{t} = Xtri(elements(t,[1 2 3 1])); % x coordinates of triangle t
+        %X{t} = [ X{t}; X{t}(1) ];
+        Y{t} = Ytri(elements(t,[1 2 3 1])); % y coordinates of triangle t
+        %Y{t} = [ Y{t}; Y{t}(1) ];
         % convert to clockwise ordering
-        [X{t}, Y{t}] = poly2cw(X{t}, Y{t});
+        [X(t), Y(t)] = poly2cw(X(t), Y(t));
         % calculate bounding box
         B{t} = [min(X{t}), min(Y{t}); max(X{t}), max(Y{t})];
         % set consecutive id

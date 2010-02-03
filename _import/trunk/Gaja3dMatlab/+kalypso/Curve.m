@@ -5,6 +5,10 @@ classdef Curve < kalypso.Shape
        EMPTY = kalypso.Curve.empty();
    end
    
+   properties (GetAccess = public, SetAccess = public)
+       contour 
+   end
+   
    methods (Static = true)
        function geom = getGeometry()
            geom = 'Line';
@@ -111,9 +115,62 @@ classdef Curve < kalypso.Shape
                    %[linesX, linesZ] = polysplit(linesXNaN, linesZNaN);
                    newCurves = kalypso.Curve(linesX, linesY);%, linesZ);
                    c = numel(newCurves);
+                   for j=1:c
+                       newCurves(j).contour = this(i).contour;
+                   end
                    allCurves(end+1:end+c) = newCurves;
                end
            end
+       end
+       
+       function this = simplify(this, tolerance)
+           count = numel(this);
+           %multigeom = this(1).jtsGeometry;
+           for i=1:count
+               %multigeom = multigeom.union(this(i).jtsGeometry);
+               this(i).jtsGeometry = com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier.simplify(this(i).jtsGeometry, tolerance);
+           end
+           %result = com.vividsolutions.jts.simplify.TopologyPreservingSimplifier.simplify(multigeom, tolerance);
+           %geomCount = result.getNumGeometries();
+           %if(geomCount ~= count)
+           %    this(geomCount+1:end) = [];
+           %    %error('Number of curves changed');
+           %end
+           %for i=1:geomCount
+           %    this(i).jtsGeometry = result.getGeometryN(i - 1);
+           %end
+       end
+       
+       function [this, polygon] = snap(this, polygon, tolerance)
+           count = numel(this);
+           %multigeom = this(1).jtsGeometry;
+           %for i=2:count
+           %    multigeom = multigeom.union(this(i).jtsGeometry);
+           %end
+           %result = com.vividsolutions.jts.operation.overlay.snap.GeometrySnapper.snap(multigeom, polygon.jtsGeometry, tolerance);
+           
+           polyGeom = polygon.jtsGeometry;
+           for i=1:count
+               result = com.vividsolutions.jts.operation.overlay.snap.GeometrySnapper.snap(this(i).jtsGeometry, polyGeom, tolerance);
+               thisGeom = result(1);
+               geomCount = thisGeom.getNumGeometries();
+               if(geomCount ~= 1)
+                   error('Number of curves has changed');
+               end
+               this(i).jtsGeometry = thisGeom.getGeometryN(0);
+               
+               polyGeom = result(2);
+           end
+           polygon.jtsGeometry = polyGeom;
+           
+           %thisGeom = result(1);
+           %geomCount = thisGeom.getNumGeometries();
+           %for i=1:geomCount
+           %    this(i).jtsGeometry = thisGeom.getGeometryN(i - 1);
+           %end
+           
+           %polyGeom = result(2);
+           %polygon.jtsGeometry = polyGeom;
        end
        
        function shp = asDeegreeShape(this)

@@ -1,5 +1,5 @@
 function [ points ] = loadHmo( hmofile )
-    %% read hmo
+    %% read hmo, currently only reads P: entries
     [fid, message] = fopen(hmofile, 'r');
     if(fid == -1)
         error('Could not open hmo-file %s: %s', hmofile, message);

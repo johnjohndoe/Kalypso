@@ -462,13 +462,17 @@ classdef Gaja3D < handle
    
 	methods (Access = private)
          function exportForTriangle(this, filename)
+            % merge one boundary from all tiles
             l_boundaries = this.boundaries(this.tiles);
             boundariesMerged = l_boundaries(1);
-            
             for i=2:numel(l_boundaries)
                 boundariesMerged = boundariesMerged.union(l_boundaries(i));
             end
 
+            % get merged breaklines of all tiles
+            l_breaklines = this.breaklinesMerged;
+            
+            % save boundary
             polyX = boundariesMerged.getX();
             polyY = boundariesMerged.getY();
             
@@ -498,7 +502,7 @@ classdef Gaja3D < handle
             end
             nodesMatrixFinal = [polyX polyY];
             
-            l_breaklines = this.breaklinesMerged;
+            % save breaklines
             nodeCount = numel(polyX);
             nodeCount = nodeCount + 1;
             
@@ -515,7 +519,7 @@ classdef Gaja3D < handle
                 nodeCount = nodeCount + 1;
             end
 
-            % roundedNodes = round(nodesMatrixFinal(segmentsMatrixFinal(:),:) * 1000);
+            %roundedNodes = round(nodesMatrixFinal(segmentsMatrixFinal(:),:) * 1000);
             [uniqueNodes, m, n] = unique(nodesMatrixFinal(segmentsMatrixFinal(:),:), 'rows');
             index = (1:size(uniqueNodes,1))';
             nodesMatrixFinal = [index uniqueNodes];
@@ -537,7 +541,7 @@ classdef Gaja3D < handle
 
             % write nodes
             fprintf(fid,'%s\n',output12_head); % number of nodes
-            fprintf(fid,'%d %20.7f%20.7f\n',nodesMatrixFinal');
+            fprintf(fid,'%d %20.2f%20.2f\n',nodesMatrixFinal');
 
             % write segments
             fprintf(fid,'%s\n',output22_head); % number of segments
@@ -546,7 +550,7 @@ classdef Gaja3D < handle
             % write holes
             output3 = num2str(holeCount);
             fprintf(fid,'%s\n',output3); % number of holes
-            fprintf(fid,'%d %20.7f%20.7f\n',holesMatrix');
+            fprintf(fid,'%d %20.2f%20.2f\n',holesMatrix');
 
             %close the handle of the file
             fclose(fid);

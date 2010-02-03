@@ -209,13 +209,21 @@ classdef RectifiedGridCoverage < handle
             else
                 l_Z = this.Z;
             end
-            [rows, cols] = size(l_Z);
+            [X, Y] = getXY(this);
+            zi = interp2(X, Y, l_Z, xi, yi, p.Results.interp);
+        end
+        
+        function [X,Y] = getXY(this)
+            [rangex, rangey] = getRangeXY(this);
+            [X, Y] = meshgrid(rangex, rangey);
+        end
+        
+        function [rangex, rangey] = getRangeXY(this)
+            [rows, cols] = size(this.Z);
             maxx = this.minx + this.dx * (cols - 1);
             maxy = this.miny + this.dy * (rows - 1);
             rangex = this.minx:this.dx:maxx;
             rangey = this.miny:this.dy:maxy;
-            [X, Y] = meshgrid(rangex, rangey);
-            zi = interp2(X, Y, l_Z, xi, yi, p.Results.interp);
         end
         
         % Warning: this method changes the underlying grid data!
