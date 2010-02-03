@@ -426,18 +426,25 @@ classdef Gaja3D < handle
             
             if(strcmpi(p.Results.useContour, 'true'))
                 l_breaklines = this.breaklinesMerged;
+                geomFactory = com.vividsolutions.jts.geom.GeometryFactory();
                 quadtree = com.vividsolutions.jts.index.quadtree.Quadtree();
                 for j=1:numel(l_breaklines)
                     l_line = l_breaklines(j);
-                    item = javaArray('java.lang.Object',2);
-                    item(1) = l_line.jtsGeometry;
-                    item(2) = java.lang.Double(l_line.contour);
-                    envelope = l_line.jtsGeometry.getEnvelopeInternal();
-                    quadtree.insert(envelope,item);
+                    coordCount = l_line.jtsGeometry.getNumPoints;
+                    % insert all segments into quadtree
+                    for k=0:coordCount-2;
+                        coords = javaArray('com.vividsolutions.jts.geom.Coordinate',2);
+                        coords(1) = l_line.jtsGeometry.getCoordinateN(k);
+                        coords(2) = l_line.jtsGeometry.getCoordinateN(k+1);
+                        item = javaArray('java.lang.Object',2);
+                        item(1) = geomFactory.createLineString(coords);
+                        item(2) = java.lang.Double(l_line.contour);
+                        envelope = item(1).getEnvelopeInternal();
+                        quadtree.insert(envelope,item);
+                    end
                 end
 
                 % for each point of the tin
-                geomFactory = com.vividsolutions.jts.geom.GeometryFactory();
                 for i=1:size(Xtri,1)
                     coord = com.vividsolutions.jts.geom.Coordinate(Xtri(i),Ytri(i));
                     envelope = com.vividsolutions.jts.geom.Envelope(coord, coord);
@@ -448,10 +455,8 @@ classdef Gaja3D < handle
                         point = geomFactory.createPoint(coord);
                         for j=0:bcount-1
                             item = list.get(j);
-                            bgeom = item(1);
-                            if(point.isWithinDistance(bgeom,0.01))
-                                cvalue = item(2);
-                                Ztri(i) = cvalue;
+                            if(item(1).isWithinDistance(point,0.01))
+                                Ztri(i) = item(2);
                                 break;
                             end
                         end
