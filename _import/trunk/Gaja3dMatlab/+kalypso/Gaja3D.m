@@ -393,6 +393,7 @@ classdef Gaja3D < handle
             p = inputParser;
             p.KeepUnmatched = true;
             p.addParamValue('source', 'grid'); % tin or grid
+            p.addParamValue('useContour', 'false'); % use contour values
             p.parse(varargin{:});
             
             tin = this.modelTin;
@@ -412,7 +413,7 @@ classdef Gaja3D < handle
                     l_demGrid = this.demGrid(i);
                     Zi = l_demGrid.interpolateZ(Xtri, Ytri, varargin{:});
                 elseif(strcmpi(p.Results.source, 'tin'))
-                		l_demTin = this.demTin(i);
+                	l_demTin = this.demTin(i);
                     Zi = l_demTin(Xtri, Ytri);
                 end
                 Zmatched = ~isnan(Zi);
@@ -421,6 +422,41 @@ classdef Gaja3D < handle
                 ZmatchedAndHasZ = Zmatched & hasZ;
                 Ztri(ZmatchedAndNotHasZ) = Zi(ZmatchedAndNotHasZ);
                 Ztri(ZmatchedAndHasZ) = (Zi(ZmatchedAndHasZ) + Ztri(ZmatchedAndHasZ)) / 2;
+            end
+            
+            if(strcmpi(p.Results.useContour, 'true'))
+                l_breaklines = this.breaklinesMerged;
+                quadtree = com.vividsolutions.jts.index.quadtree.Quadtree();
+                for j=1:numel(l_breaklines)
+                    l_line = l_breaklines(j);
+                    item = javaArray('java.lang.Object',2);
+                    item(1) = l_line.jtsGeometry;
+                    item(2) = java.lang.Double(l_line.contour);
+                    envelope = l_line.jtsGeometry.getEnvelopeInternal();
+                    quadtree.insert(envelope,item);
+                end
+
+                % for each point of the tin
+                geomFactory = com.vividsolutions.jts.geom.GeometryFactory();
+                for i=1:size(Xtri,1)
+                    coord = com.vividsolutions.jts.geom.Coordinate(Xtri(i),Ytri(i));
+                    envelope = com.vividsolutions.jts.geom.Envelope(coord, coord);
+                    list = quadtree.query(envelope);
+                    if(~list.isEmpty)
+                        % loop over breaklines for this point
+                        bcount = list.size();
+                        point = geomFactory.createPoint(coord);
+                        for j=0:bcount-1
+                            item = list.get(j);
+                            bgeom = item(1);
+                            if(point.isWithinDistance(bgeom,0.01))
+                                cvalue = item(2);
+                                Ztri(i) = cvalue;
+                                break;
+                            end
+                        end
+                    end
+                end
             end
             this.modelTin = kalypso.TriangulatedSurface([Xtri Ytri Ztri], elements);
             

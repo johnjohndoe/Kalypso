@@ -4,7 +4,7 @@ classdef Shape
         geomFactory = com.vividsolutions.jts.geom.GeometryFactory();
     end
     
-    properties (GetAccess = protected, SetAccess = protected)
+    properties (GetAccess = public, SetAccess = protected)
         % Java Topology Suite 1.8 geometry object
         jtsGeometry
     end
@@ -134,9 +134,9 @@ classdef Shape
             shapewrite(gs, filename, 'DbfSpec', makedbfspec(gs));
         end
         
-        function show(this)
+        function show(this, varargin)
             gs = this.asGeostruct();
-            mapshow(gs);
+            mapshow(gs, varargin{:});
         end
     end
     
