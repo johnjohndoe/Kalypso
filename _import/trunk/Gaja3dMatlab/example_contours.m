@@ -37,6 +37,7 @@ snapDist = 2;
 saveContoursAsShape('clinesnap',clinesnap);
 
 %% in ArcGIS integrate clinessnap into DEM and export TIN nodes
+% ArcToolbox > 3D Analyst Tools > Conversion > From TIN > TIN Nodes
 
 %% tin creation based on contours and snapped boundary
 gaja3d2 = kalypso.Gaja3D();
