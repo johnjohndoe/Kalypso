@@ -425,44 +425,54 @@ classdef Gaja3D < handle
             end
             
             if(strcmpi(p.Results.useContour, 'true'))
-                l_breaklines = this.breaklinesMerged;
-                geomFactory = com.vividsolutions.jts.geom.GeometryFactory();
+                % insert points into quadtree
+                pointCount = size(Xtri,1);
                 quadtree = com.vividsolutions.jts.index.quadtree.Quadtree();
+                for i=1:pointCount
+                    p0 = [i Xtri(i) Ytri(i)];
+                    envelope = com.vividsolutions.jts.geom.Envelope(p0(2), p0(2), p0(3), p0(3));
+                    quadtree.insert(envelope, p0);
+                end
+                
+                l_breaklines = this.breaklinesMerged;
                 for j=1:numel(l_breaklines)
                     l_line = l_breaklines(j);
-                    coordCount = l_line.jtsGeometry.getNumPoints;
-                    % insert all segments into quadtree
-                    for k=0:coordCount-2;
-                        coords = javaArray('com.vividsolutions.jts.geom.Coordinate',2);
-                        coords(1) = l_line.jtsGeometry.getCoordinateN(k);
-                        coords(2) = l_line.jtsGeometry.getCoordinateN(k+1);
-                        item = javaArray('java.lang.Object',2);
-                        item(1) = geomFactory.createLineString(coords);
-                        item(2) = java.lang.Double(l_line.contour);
-                        envelope = item(1).getEnvelopeInternal();
-                        quadtree.insert(envelope,item);
+                    cvalue = l_line.contour;
+                    if(isempty(cvalue))
+                        continue;
                     end
-                end
-
-                % for each point of the tin
-                for i=1:size(Xtri,1)
-                    coord = com.vividsolutions.jts.geom.Coordinate(Xtri(i),Ytri(i));
-                    envelope = com.vividsolutions.jts.geom.Envelope(coord, coord);
-                    list = quadtree.query(envelope);
-                    if(~list.isEmpty)
-                        % loop over breaklines for this point
-                        bcount = list.size();
-                        point = geomFactory.createPoint(coord);
-                        for j=0:bcount-1
-                            item = list.get(j);
-                            if(item(1).isWithinDistance(point,0.01))
-                                Ztri(i) = item(2);
-                                break;
+                    l_geom = l_line.jtsGeometry;
+                    for k=0:l_geom.getNumPoints-2
+                        p1 = l_geom.getCoordinateN(k);
+                        p2 = l_geom.getCoordinateN(k+1);
+                        p1 = [p1.x; p1.y];
+                        p2 = [p2.x; p2.y];
+                        p1p2 = p2 - p1;
+                        plength = norm(p1p2);
+                        segcount = ceil(plength / 1000);
+                        offsetvector = p1p2 / segcount;
+                        p2 = p1 + offsetvector;
+                        for m=1:segcount
+                            minp = min(p1,p2);
+                            maxp = max(p1,p2);
+                            envelope = com.vividsolutions.jts.geom.Envelope(minp(1), maxp(1), minp(2), maxp(2));
+                            l_points = quadtree.query(envelope);
+                            pCount = l_points.size;
+                            for l=0:pCount-1
+                                p0 = l_points.get(l);
+                                p0p1 = p1 - p0(2:3);
+                                dist = abs(det([p1p2 p0p1]))/norm(p1p2);
+                                if(dist < 0.01)
+                                    Ztri(p0(1)) = cvalue;
+                                end
                             end
+                            p1 = p1 + offsetvector;
+                            p2 = p2 + offsetvector;
                         end
                     end
                 end
             end
+            
             this.modelTin = kalypso.TriangulatedSurface([Xtri Ytri Ztri], elements);
             
             if(this.refineCount == 0)
