@@ -76,7 +76,6 @@
 					<!-- 
 					<element minOccurs="1" maxOccurs="1" name="SudType" type="suds:EnumSudType" />
 					 -->
-					<element name="soilLayerParametersFileName" type="string" default="boden_art.dat"/>
 				</sequence>
 			</extension>
 		</complexContent>
