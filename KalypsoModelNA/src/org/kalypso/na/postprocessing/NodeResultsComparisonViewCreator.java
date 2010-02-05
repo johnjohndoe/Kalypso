@@ -38,8 +38,8 @@ public final class NodeResultsComparisonViewCreator
     mappingsMap.put( "date", "Datum" );
     mappingsMap.put( "Q", "Abfluss" );
     final List<TypeObservation> observationList = view.getObservation();
-    observationList.add( createDiagObservation( izPath, "Q - " + nodeID + " - Gesamtabfluss ohne AW-Massnahmen", "C1", OBS_COLOR[0], mappingsMap ) );
-    observationList.add( createDiagObservation( calculatePath, "Q - " + nodeID + " - Gesamtabfluss mit AW-Massnahmen", "C2", OBS_COLOR[1], mappingsMap ) );
+    observationList.add( createDiagObservation( izPath, "Q - " + nodeID + " - Ist Zustand", "C1", OBS_COLOR[0], mappingsMap ) );
+    observationList.add( createDiagObservation( calculatePath, "Q - " + nodeID + " - Szenario", "C2", OBS_COLOR[1], mappingsMap ) );
     return view;
   }
 
@@ -48,8 +48,8 @@ public final class NodeResultsComparisonViewCreator
     final Obstableview view = new Obstableview();
     view.setFeatures( "Vorhersage;Alarmstufen" );
     final List<org.kalypso.template.obstableview.TypeObservation> observationList = view.getObservation();
-    observationList.add( createTableObservation( izPath, "Gesamtabfluss ohne AW-Massnahmen", "C1", "Abfluss" ) );
-    observationList.add( createTableObservation( calculatedPath, "Gesamtabfluss mit AW-Massnahmen", "C2", "Abfluss" ) );
+    observationList.add( createTableObservation( izPath, "Ist Zustand", "C1", "Abfluss" ) );
+    observationList.add( createTableObservation( calculatedPath, "Szenario", "C2", "Abfluss" ) );
     view.setAlphaSort( false );
     final TypeRenderingRule rule1 = new TypeRenderingRule();
     rule1.setMask( 16 );
