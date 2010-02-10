@@ -188,9 +188,14 @@ classdef Shape
                    end
                case '.shp'
                    shpfile = ShapeFile([pathstr filesep name]);
+                   propNames = cell(shpfile.getProperties);
                    shpCount = shpfile.getRecordNum;
                    shapeCount = 0;
                    for i=1:shpCount;
+                       feature = shpfile.getFeatureByRecNo(i);
+                       props = cell(feature.getProperties());
+                       propValues = cellfun(@(p)(p.getValue()), props, 'UniformOutput', false);
+                       propValues(end)  = [];
                        deegreeGeom = shpfile.getGeometryByRecNo(i);
                        if(~isempty(deegreeGeom))
                            jtsGeom = org.deegree.model.spatialschema.JTSAdapter.export(deegreeGeom);
@@ -209,7 +214,7 @@ classdef Shape
                                            error('Unknown Shape geometry %s', geomClass);
                                    end
                                else
-                                   this(shapeCount) = constructorCallback(geomN);
+                                   this(shapeCount) = constructorCallback(geomN, propNames, propValues);
                                end
                            end
                        end

@@ -18,7 +18,7 @@ classdef Polygon < kalypso.Shape
            
            if(nargin == 0)
                this.jtsGeometry = Shape.geomFactory.createPolygon([], []);
-           elseif(nargin == 1)
+           elseif(nargin == 1 || nargin == 3)
                switch class(varargin{1})
                    case 'com.vividsolutions.jts.geom.Polygon'
                        polygon = varargin{1};

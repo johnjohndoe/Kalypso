@@ -154,7 +154,11 @@ classdef Gaja3D < handle
             if(isempty(breaklines))
                 this.breaklinesMerged = kalypso.Curve.empty();
             elseif(~iscell(breaklines))
-                this.breaklinesMerged = kalypso.Curve(breaklines);
+                if(isa(breaklines, 'kalypso.Curve'))
+                    this.breaklinesMerged = breaklines;
+                else
+                    this.breaklinesMerged = kalypso.Curve(breaklines);
+                end
             elseif(~all(size(breaklines)==size(this.breaklines)))
                 error('Number of breaklines sets does not match number of grids');
             else
@@ -389,6 +393,14 @@ classdef Gaja3D < handle
             this.refineCount = 0;
         end
         
+        function setTin(this, modelTin)
+            if(isa(modelTin, 'kalypso.TriangulatedSurface'))
+                this.modelTin = modelTin;
+            else
+                error('Tin must be a kalypso.TriangulatedSurface');
+            end
+        end
+            
         function assignElevations(this, varargin)
             p = inputParser;
             p.KeepUnmatched = true;
@@ -404,7 +416,7 @@ classdef Gaja3D < handle
             Xtri = tin.points(:,1);
             Ytri = tin.points(:,2);
             % initialize to NaN elevations
-            Ztri = zeros(size(Xtri)) * NaN;
+            Ztri = Xtri * NaN;
             for i=this.tiles
                 % use tin as elevation source
                 if(strcmpi(p.Results.source, 'grid'))
