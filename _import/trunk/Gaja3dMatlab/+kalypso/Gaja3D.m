@@ -449,7 +449,7 @@ classdef Gaja3D < handle
                 l_breaklines = this.breaklinesMerged;
                 for j=1:numel(l_breaklines)
                     l_line = l_breaklines(j);
-                    cvalue = l_line.contour;
+                    cvalue = l_line.CONTOUR;
                     if(isempty(cvalue))
                         continue;
                     end
