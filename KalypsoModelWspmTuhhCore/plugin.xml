@@ -25,6 +25,12 @@
             id="org.kalypso.model.wspm.tuhh.core.profile.CsvSink"
             name="%org.kalypso.model.wspm.tuhh.core.profile.CsvSink">
       </sink>
+      <sink
+            class="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
+            extension="DIRECTORY_FILTER_SUFFIX"
+            id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.MultiPrfSink"
+            name="%org.kalypso.model.wspm.tuhh.core.wspwin.prf.MultiPrfSink">
+      </sink>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profilePointFilter">
