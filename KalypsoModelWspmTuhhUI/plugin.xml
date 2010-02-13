@@ -63,6 +63,23 @@
                      value="org.kalypso.model.wspmprofile#Profile">
                </filter>
             </objectContribution>
+            <objectContribution
+                  adaptable="false"
+                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.imports"
+                  objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+               <filter
+                     name="featureAssociationQname"
+                     value="org.kalypso.model.wspmprofile#Profile;org.kalypso.model.wspm#WaterBody">
+               </filter>
+               <action
+                     class="org.kalypso.model.wspm.tuhh.ui.actions.ImportWProfAction"
+                     id="org.kalypso.model.wspm.tuhh.ui.actions.ImportWProfAction"
+                     label="WProf"
+                     menubarPath="additions"
+                     style="push"
+                     tooltip="Import WProf-Shape">
+               </action>
+            </objectContribution>
    </extension>
 
 	<extension point="org.eclipse.ui.handlers">
