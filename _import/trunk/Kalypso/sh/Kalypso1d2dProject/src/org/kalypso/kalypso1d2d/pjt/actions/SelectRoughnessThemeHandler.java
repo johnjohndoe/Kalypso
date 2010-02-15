@@ -16,7 +16,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -40,7 +40,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.0" ) ); //$NON-NLS-1$
 
     final IMapPanel mapPanel = mapView.getMapPanel();
     IMapModell orgMapModell = mapPanel.getMapModell();
@@ -62,7 +62,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     }
 
     if( !(orgMapModell instanceof GisTemplateMapModell) )
-      throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.1" ) ); //$NON-NLS-1$
 
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) orgMapModell;
 
@@ -78,7 +78,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
 
     /* Check if this theme is already present, if true, just activate it */
 
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.2") ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.2" ) ); //$NON-NLS-1$
     compositeCommand.addCommand( new EnableThemeCommand( choosenTheme, true ) );
     compositeCommand.addCommand( new ActivateThemeCommand( mapModell, choosenTheme ) );
     final ICommand command = compositeCommand;
@@ -90,8 +90,8 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
   private IKalypsoTheme showNetworksDialog( final Shell shell, final IKalypsoTheme[] roughnessThemes )
   {
     final ListDialog dialog = new ListDialog( shell );
-    dialog.setTitle( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.3") ); //$NON-NLS-1$
-    dialog.setMessage( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.4") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.3" ) ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.4" ) ); //$NON-NLS-1$
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {
@@ -134,7 +134,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
         final IFeatureType featureType = ((IKalypsoFeatureTheme) theme).getFeatureType();
         if( featureType == null )
           return false;
-        boolean equals = featureType.getQName().equals( KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
+        boolean equals = featureType.getQName().equals( RoughnessPolygon.SIM_BASE_F_ROUGHNESS_POLYGON );
         return equals;
       }
     };

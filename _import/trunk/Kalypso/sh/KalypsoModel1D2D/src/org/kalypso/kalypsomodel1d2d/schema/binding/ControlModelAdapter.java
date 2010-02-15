@@ -16,7 +16,7 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -28,7 +28,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Adapter from original 1d2d control model without ordinal number column and wrong sorting to version 1.0.
- *
+ * 
  */
 public class ControlModelAdapter implements IModelAdaptor
 {
@@ -38,7 +38,7 @@ public class ControlModelAdapter implements IModelAdaptor
 
   public GMLWorkspace adapt( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
-    final Object property = workspace.getRootFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
+    final Object property = workspace.getRootFeature().getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
     if( property != null && property.equals( VERSION_1_0 ) )
     {
       // no need to adapt any other models than those without the version property
@@ -69,7 +69,7 @@ public class ControlModelAdapter implements IModelAdaptor
       return Status.OK_STATUS;
 
     // set version
-    final IPropertyType versionProperty = controlModelGroup.getFeatureType().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
+    final IPropertyType versionProperty = controlModelGroup.getFeatureType().getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
     controlModelGroup.setProperty( versionProperty, VERSION_1_0 );
 
     final IRelationType controlModelPropertyType = (IRelationType) controlModelCollection.getFeatureType().getProperty( qnameProp2 );
@@ -79,7 +79,7 @@ public class ControlModelAdapter implements IModelAdaptor
     {
       final int numberOfChanges = controlModels.size();
       final int amountOfWork = numberOfChanges * 10;
-      monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.3"), amountOfWork ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.3" ), amountOfWork ); //$NON-NLS-1$
 
       for( final Object modelObject : controlModels )
       {
@@ -108,8 +108,8 @@ public class ControlModelAdapter implements IModelAdaptor
     }
 
     if( statusList.size() > 0 )
-      return StatusUtilities.createStatus( statusList, Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.4") ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.4" ) ); //$NON-NLS-1$
 
-    return StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.5") ); //$NON-NLS-1$
+    return StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.5" ) ); //$NON-NLS-1$
   }
 }

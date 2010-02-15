@@ -43,8 +43,10 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -54,6 +56,9 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public class TerrainModel extends VersionedModel implements ITerrainModel
 {
+
+  public static final QName SIM_BASE_PROP_TERRAIN_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModelSystem" ); //$NON-NLS-1$
+
   private final IFeatureWrapperCollection<IRoughnessLayer> m_roughnessLayers = new FeatureWrapperCollection<IRoughnessLayer>( getFeature(), IRoughnessLayer.class, QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
 
   public TerrainModel( final Feature featureToBind )
@@ -95,7 +100,7 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
 
   public ITerrainElevationModelSystem getTerrainElevationModelSystem( )
   {
-    final Feature feature = (Feature) getFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS );
+    final Feature feature = (Feature) getFeature().getProperty( SIM_BASE_PROP_TERRAIN_ELE_SYS );
 
     if( feature == null )
     {

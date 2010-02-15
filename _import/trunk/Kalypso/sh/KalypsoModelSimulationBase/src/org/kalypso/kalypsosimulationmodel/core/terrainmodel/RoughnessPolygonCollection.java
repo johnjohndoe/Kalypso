@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -25,10 +25,11 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughnessPolygon> implements IRoughnessPolygonCollection
 {
+  public static final QName SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" ); //$NON-NLS-1$
 
   public RoughnessPolygonCollection( Feature featureToBind )
   {
-    this( featureToBind, IRoughnessPolygon.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
+    this( featureToBind, IRoughnessPolygon.class, SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
   }
 
   public RoughnessPolygonCollection( Feature featureCol, Class<IRoughnessPolygon> fwClass, QName featureMemberProp )
@@ -44,7 +45,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#checkOverlapping()
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public boolean checkOverlapping( )
   {
     List<Feature> srcPolygonsList = getWrappedList();
@@ -75,7 +76,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return false;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public List<IRoughnessPolygon> getOverlappedPolygons( )
   {
     List<Feature> srcPolygonsList = getWrappedList();
@@ -120,7 +121,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return dstPolygonsList;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
     // List<Feature> srcPolygonsList = getWrappedList();
@@ -135,7 +136,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return dstPolygonsList;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position location )
   {
     return query( location );

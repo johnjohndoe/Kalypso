@@ -42,7 +42,7 @@ package org.kalypso.kalypsosimulationmodel.core;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
@@ -53,6 +53,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public class VersionedModel extends AbstractFeatureBinder implements IFeatureWrapper2
 {
+  public static final QName SIM_BASE_PROP_VERSION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "version" ); //$NON-NLS-1$
+
   private static final String VERSION_0_0 = "0.0"; //$NON-NLS-1$
 
   private String m_version;
@@ -63,7 +65,7 @@ public class VersionedModel extends AbstractFeatureBinder implements IFeatureWra
     String property = null;
     try
     {
-      property = (String) featureToBind.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
+      property = (String) featureToBind.getProperty( SIM_BASE_PROP_VERSION );
     }
     catch( final Exception e )
     {
@@ -90,7 +92,7 @@ public class VersionedModel extends AbstractFeatureBinder implements IFeatureWra
   public void setVersion( final String version )
   {
     m_version = version;
-    setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION, version );
+    setProperty( SIM_BASE_PROP_VERSION, version );
   }
 
 }

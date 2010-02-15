@@ -15,7 +15,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.views.map.MapView;
@@ -122,7 +122,7 @@ public class Transformer implements ICoreRunnableWithProgress
     }
     final GMLWorkspace shapeWorkSpace = ShapeSerializer.deserialize( FileUtilities.nameWithoutExtension( m_data.getInputFile() ), m_data.getCoordinateSystem( true ) );
     final String customNamespace = shapeWorkSpace.getGMLSchema().getTargetNamespace();
-    final QName shpGeomName = new QName( customNamespace, ShapeFile.GEOM);
+    final QName shpGeomName = new QName( customNamespace, ShapeFile.GEOM );
     final QName shpCustomPropertyName = new QName( customNamespace, m_data.getShapeProperty() );
     final Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
     final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
@@ -156,10 +156,10 @@ public class Transformer implements ICoreRunnableWithProgress
           m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
         }
         else
-          throw new ClassCastException( Messages.getString("org.kalypso.ui.wizards.imports.roughness.Transformer.2") + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
+          throw new ClassCastException( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.2" ) + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
       }
       else
-        throw new ClassCastException( Messages.getString("org.kalypso.ui.wizards.imports.roughness.Transformer.2") + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
+        throw new ClassCastException( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.2" ) + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
     }
 
     m_isDataPrepared = true;
@@ -190,7 +190,7 @@ public class Transformer implements ICoreRunnableWithProgress
         final StringBuffer xlinkBuffer = new StringBuffer( 50 );
         xlinkBuffer.append( "project:" ).append( m_data.getRoughnessDatabaseLocation() ).append( "#" ).append( linkedFeature.getId() ).trimToSize(); //$NON-NLS-1$ //$NON-NLS-2$
         final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
+        feature.setProperty( RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }
     // use (dummy) command to make workspace dirty

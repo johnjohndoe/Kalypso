@@ -53,7 +53,7 @@ import org.kalypso.afgui.model.Util;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -61,13 +61,19 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * Provide the implementaion of {@link ITerrainElevationModel} for simBase:NativeTerrainElevationModelWrapper model.
  * This class colaboratewith ...
- *
+ * 
  * @author Madanagopal
  * @author Patrice Congo
- *
+ * 
  */
 public class NativeTerrainElevationModelWrapper extends TerrainElevationModel implements INativeTerrainElevationModelWrapper
 {
+  public static final QName SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "NativeTerrainElevationModelWrapper" ); //$NON-NLS-1$
+
+  public static final QName SIM_BASE_F_BASE_TERRAIN_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "_TerrainElevationModel" ); //$NON-NLS-1$
+
+  public static final QName SIM_BASE_PROP_FILE_NAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "fileName" ); //$NON-NLS-1$
+
   private final IElevationProvider m_elevationProvider;
 
   private final IFile m_file;
@@ -82,7 +88,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
     Assert.throwIAEOnNullParam( propQName, "propQName" ); //$NON-NLS-1$
     sourceName = Assert.throwIAEOnNullOrEmpty( sourceName );
 
-    final Feature newFeature = Util.createFeatureAsProperty( parentFeature, propQName, KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER, new Object[] { sourceName }, new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME } );
+    final Feature newFeature = Util.createFeatureAsProperty( parentFeature, propQName, SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER, new Object[] { sourceName }, new QName[] { SIM_BASE_PROP_FILE_NAME } );
 
     // newFeature.setProperty(
     // KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, sourceName );
@@ -97,14 +103,14 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
 
   private static final Feature createFeatureForTEMSystem( final ITerrainElevationModelSystem terrainElevationModelSystem, final String sourceName )
   {
-    return createFeature( terrainElevationModelSystem.getFeature(), KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL, sourceName );
+    return createFeature( terrainElevationModelSystem.getFeature(), TerrainElevationModelSystem.SIM_BASE_PROP_TERRAIN_ELE_MODEL, sourceName );
   }
 
   public NativeTerrainElevationModelWrapper( final Feature featureToBind ) throws IllegalArgumentException, IOException, URISyntaxException
   {
-    super( featureToBind, KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
+    super( featureToBind, SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
 
-    final String sourceName = (String) featureToBind.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME );
+    final String sourceName = (String) featureToBind.getProperty( SIM_BASE_PROP_FILE_NAME );
     if( sourceName == null )
     {
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper.2" ) ); //$NON-NLS-1$

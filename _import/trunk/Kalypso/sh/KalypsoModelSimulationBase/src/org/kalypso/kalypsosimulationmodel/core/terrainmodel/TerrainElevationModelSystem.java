@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -54,26 +56,29 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Default {@link AbstractFeatureBinder} based implementation of {@link ITerrainElevationModelSystem}
- *
+ * 
  * @author Patrice Congo
  * @author Madanagopal
  */
 public class TerrainElevationModelSystem extends AbstractFeatureBinder implements ITerrainElevationModelSystem
 {
+  public static final QName SIM_BASE_F_TERRAIN_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainElevationModelSystem" ); //$NON-NLS-1$
+
+  public static final QName SIM_BASE_PROP_TERRAIN_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModel" ); //$NON-NLS-1$
 
   private final IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels;
 
   /**
    * Creates a {@link TerrainElevationModelSystem} object binding the given feature. the given feature must be
    * substitutable to simBase:TerrainelevationModel
-   *
+   * 
    * @throws IllegalArgumentException
-   *             if featureToBind is null or not substitutable to simBase:TerrainElevationModel
+   *           if featureToBind is null or not substitutable to simBase:TerrainElevationModel
    */
   public TerrainElevationModelSystem( final Feature featureToBind ) throws IllegalArgumentException
   {
-    super( featureToBind, KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS );
-    terrainElevationModels = new FeatureWrapperCollection<ITerrainElevationModel>( featureToBind, ITerrainElevationModel.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL );
+    super( featureToBind, SIM_BASE_F_TERRAIN_ELE_SYS );
+    terrainElevationModels = new FeatureWrapperCollection<ITerrainElevationModel>( featureToBind, ITerrainElevationModel.class, SIM_BASE_PROP_TERRAIN_ELE_MODEL );
 
   }
 
@@ -96,7 +101,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
     else
     {
       final Feature parentFeature = terrainModel.getFeature();
-      final Feature newFeature = Util.createFeatureAsProperty( parentFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS );
+      final Feature newFeature = Util.createFeatureAsProperty( parentFeature, TerrainModel.SIM_BASE_PROP_TERRAIN_ELE_SYS, SIM_BASE_F_TERRAIN_ELE_SYS );
 
       return newFeature;
     }

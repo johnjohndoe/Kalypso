@@ -34,7 +34,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonColl
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -55,10 +54,11 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
      * @param cls
      * @return
      * @throws IllegalArgumentException
-     *             if
-     *             <ul>
-     *             <li/>feature or cls is null <li/>feature cannot be converted
-     *             </ul>
+     *           if
+     *           <ul>
+     *           <li/>feature or cls is null
+     *           <li/>feature cannot be converted
+     *           </ul>
      */
     public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException;
   }
@@ -77,7 +77,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
   {
     if( !(adaptableObject instanceof Feature) )
     {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.3") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.4") + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.3" ) + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.4" ) + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     AdapterConstructor ctor = constructors.get( adapterType );
@@ -205,7 +205,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
       public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
       {
         // TODO provide adapaterfac method for the elevation model
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER ) )
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER ) )
         {
           try
           {
@@ -213,11 +213,11 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
           }
           catch( Throwable th )
           {
-            throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.6") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.7") + feature + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.10") + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.6" ) + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.7" ) + feature + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.10" ) + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           }
 
         }
-        else if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS ) )
+        else if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), TerrainElevationModelSystem.SIM_BASE_F_TERRAIN_ELE_SYS ) )
         {
           try
           {
@@ -225,7 +225,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
           }
           catch( Throwable th )
           {
-            throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.11") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.12") + feature + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.13") + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.11" ) + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.12" ) + feature + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.13" ) + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           }
 
         }

@@ -41,11 +41,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-//import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElementWithWeir;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
-//import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElementWithWeir;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.TransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BridgeFlowRelation;
@@ -95,9 +93,9 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -453,7 +451,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         final QName name = feature.getFeatureType().getQName();
         // if(GMLSchemaUtilities.substitutes( feature.getFeatureType(),
         // KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER ))
-        if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
+        if( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
         {
           return ElevationModelDisplayElementFactory.createDisplayElement( feature );
         }

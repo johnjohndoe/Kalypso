@@ -63,7 +63,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -137,7 +137,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final IFeatureType ftp = ft.getFeatureType();
         final QName qName = ftp == null ? null : ftp.getQName();
-        if( IFE1D2DNode.QNAME.equals( qName ) ) 
+        if( IFE1D2DNode.QNAME.equals( qName ) )
         {
           final IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
           fts[0] = ft;
@@ -147,7 +147,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     }
 
     // find and set Elevation model system
-    final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapPanel, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
+    final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapPanel, NativeTerrainElevationModelWrapper.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
     if( terrainElevationTheme != null )
     {
       final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getParentFeature();
@@ -156,7 +156,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       m_dataModel.setElevationModelSystem( system );
       m_dataModel.setElevationTheme( terrainElevationTheme );
     }
-    final IKalypsoFeatureTheme elevationTheme = UtilMap.findEditableTheme( mapPanel, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
+    final IKalypsoFeatureTheme elevationTheme = UtilMap.findEditableTheme( mapPanel, NativeTerrainElevationModelWrapper.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
     if( elevationTheme != null )
       m_dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, elevationTheme );
   }

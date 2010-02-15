@@ -29,7 +29,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.functions.GeometryCalcControl;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.command.FeatureListChange;
@@ -40,7 +40,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Adapter from original 1d2d discretization model (containing inverted edges) to version 1.0 without.
- *
+ * 
  * @author kurzbach
  */
 public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
@@ -51,7 +51,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
   public GMLWorkspace adapt( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
-    final Object property = workspace.getRootFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
+    final Object property = workspace.getRootFeature().getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
     if( property != null )
     {
       // no need to adapt any other models than those without the version property
@@ -94,9 +94,9 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       final int numberOfChanges = complexElements.size() + elements.size() + continuityLines.size() + nodes.size();
       final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>( numberOfChanges );
       final int amountOfWork = numberOfChanges * 10;
-      monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.1"), amountOfWork ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.1" ), amountOfWork ); //$NON-NLS-1$
 
-      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.2") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.2" ) ); //$NON-NLS-1$
       final Map<String, Feature> allNodes = new HashMap<String, Feature>( nodes.size() );
       final Map<String, Feature> allEdges = new HashMap<String, Feature>( edges.size() );
       final Map<String, Feature> allElements = new HashMap<String, Feature>( elements.size() );
@@ -127,7 +127,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             allElements.put( id, element );
         }
         else
-          throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.3") + elementQName ); //$NON-NLS-1$
+          throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.3" ) + elementQName ); //$NON-NLS-1$
         monitor.worked( 10 );
       }
 
@@ -149,7 +149,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         monitor.worked( 10 );
       }
 
-      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.4" ) ); //$NON-NLS-1$
       for( final Object continuityLineOrLink : continuityLines )
       {
         final Feature continuityLine = FeatureHelper.getFeature( workspace, continuityLineOrLink );
@@ -174,7 +174,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         }
         else
         {
-          throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.5") + continuityLineQName ); //$NON-NLS-1$
+          throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.5" ) + continuityLineQName ); //$NON-NLS-1$
         }
         monitor.worked( 10 );
       }
@@ -201,7 +201,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             // Edge
             if( !allEdges.containsKey( nodeContainer.getId() ) )
             {
-              statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.6", nodeContainer, node ) ) ); //$NON-NLS-1$
+              statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.6", nodeContainer, node ) ) ); //$NON-NLS-1$
               continue nextNode;
             }
 
@@ -212,7 +212,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             final int nodeCount = myNodes.length;
             if( nodeCount != 2 )
             {
-              statusList.add( StatusUtilities.createWarningStatus(  Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.7", nodeContainer, nodeCount ) ) ); //$NON-NLS-1$
+              statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.7", nodeContainer, nodeCount ) ) ); //$NON-NLS-1$
               continue nextNode;
             }
 
@@ -233,7 +233,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
               if( (p0.equals( op0 ) && p1.equals( op1 )) || (p0.equals( op1 ) && p1.equals( op0 )) )
               {
-                statusList.add( StatusUtilities.createWarningStatus(Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.8", otherEdge, nodeContainer ) ) ); //$NON-NLS-1$
+                statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.8", otherEdge, nodeContainer ) ) ); //$NON-NLS-1$
                 continue nextNode;
               }
             }
@@ -244,7 +244,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
           }
           else
           {
-            throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.9") + nodeContainerQName ); //$NON-NLS-1$
+            throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.9" ) + nodeContainerQName ); //$NON-NLS-1$
           }
 
           newContainers.add( nodeContainer.getId() );
@@ -255,21 +255,21 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       }
 
       // set newly calculated elements, edges, nodes and continuity lines
-      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.10") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.10" ) ); //$NON-NLS-1$
       featureChanges.add( 0, new FeatureListChange( model, nodesProperty, new ArrayList<Feature>( allNodes.values() ) ) );
       featureChanges.add( 0, new FeatureListChange( model, elementsProperty, new ArrayList<Feature>( allElements.values() ) ) );
       featureChanges.add( 0, new FeatureListChange( model, edgesProperty, new ArrayList<Feature>( allEdges.values() ) ) );
       featureChanges.add( 0, new FeatureListChange( model, continuityLinesProperty, new ArrayList<Feature>( allContinuityLines.values() ) ) );
 
       // set version
-      final IPropertyType versionProperty = modelFeatureType.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
+      final IPropertyType versionProperty = modelFeatureType.getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
       featureChanges.add( new FeatureChange( model, versionProperty, VERSION_1_0 ) );
 
       // create command
       final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[featureChanges.size()] ) );
       changeFeaturesCommand.process();
 
-      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.11") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.11" ) ); //$NON-NLS-1$
 
       GeometryCalcControl.setDoCalcElement( false );
       GeometryCalcControl.setDoCalcEdge( false );
@@ -287,9 +287,9 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     }
     final IStatus resultStatus;
     if( statusList.size() > 0 )
-      resultStatus = StatusUtilities.createStatus( statusList, Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.12") ); //$NON-NLS-1$
+      resultStatus = StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.12" ) ); //$NON-NLS-1$
     else
-      resultStatus = StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.13") ); //$NON-NLS-1$
+      resultStatus = StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.13" ) ); //$NON-NLS-1$
     return resultStatus;
   }
 
@@ -307,7 +307,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       if( elementFeature == null )
       {
         // feature does not exist
-        statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.14", elementOrId, complexElement ) ) ); //$NON-NLS-1$
+        statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.14", elementOrId, complexElement ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -348,7 +348,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       final String id = node.getId();
       if( !collectNodes.containsKey( id ) )
       {
-        throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.15") + node ); //$NON-NLS-1$
+        throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.15" ) + node ); //$NON-NLS-1$
       }
     }
     return true;
@@ -390,12 +390,12 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     final int numberOfEdges = edgesInElement.size();
     if( numberOfEdges < 3 )
     {
-      statusList.add( StatusUtilities.createWarningStatus(  Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.16", element ) ) ); //$NON-NLS-1$
+      statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.16", element ) ) ); //$NON-NLS-1$
       return false;
     }
     if( numberOfEdges > 4 )
     {
-      statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.17", element ) ) ); //$NON-NLS-1$
+      statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.17", element ) ) ); //$NON-NLS-1$
       return false;
     }
 
@@ -413,13 +413,13 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         // remove edgeInv property
         edgeOrInvEdge.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV, null );
       else
-        throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.18") + edgeQName ); //$NON-NLS-1$
+        throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.18" ) + edgeQName ); //$NON-NLS-1$
 
       final String id = edgeOrInvEdge.getId();
       if( !newEdges.contains( id ) )
         newEdges.add( id );
       else
-        statusList.add( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19", id, element ) ) ); //$NON-NLS-1$
+        statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19", id, element ) ) ); //$NON-NLS-1$
       System.out.println();
       if( !collectEdges.containsKey( id ) )
         collectEdges.put( id, edgeOrInvEdge );
@@ -433,7 +433,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
   }
 
   // Ignore deprecation, we are using this stuff for backwards compability
-  @SuppressWarnings( { "unchecked", "deprecation" })
+  @SuppressWarnings({ "unchecked", "deprecation" })
   private Feature checkInvEdge( final Feature edge, final Collection<FeatureChange> collectChanges )
   {
     final IFeatureType edgeFeatureType = edge.getFeatureType();

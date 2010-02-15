@@ -10,7 +10,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -25,6 +25,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnessPolygon
 {
+  public static final QName SIM_BASE_F_ROUGHNESS_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" ); //$NON-NLS-1$
+
+  public static final QName SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" ); //$NON-NLS-1$
+
   /**
    * Create a RoughnessPolygon object base on an existing feature
    * 
@@ -34,7 +38,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    */
   public RoughnessPolygon( final Feature featureToBind )
   {
-    super( featureToBind, KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
+    super( featureToBind, SIM_BASE_F_ROUGHNESS_POLYGON );
   }
 
   /**
@@ -46,7 +50,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    */
   public RoughnessPolygon( final Feature parentFeature, final QName linkPropQName )
   {
-    super( FeatureHelper.resolveLink( parentFeature, linkPropQName ), KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
+    super( FeatureHelper.resolveLink( parentFeature, linkPropQName ), SIM_BASE_F_ROUGHNESS_POLYGON );
   }
 
   /*
@@ -119,7 +123,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   public void setRoughnessClassMember( final Feature linkedFeature ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
-    feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
+    feature.setProperty( SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
   }
 
   @Override
