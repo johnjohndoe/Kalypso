@@ -338,6 +338,7 @@ classdef Gaja3D < handle
             p.addParamValue('minAngle', []); % maximum angle in degrees
             p.addParamValue('maxArea', []); % maximum area
             p.addParamValue('fixBoundary', 0); % if insertion of points on boundary is prohibited
+            p.addParamValue('maxSteiner', []); % maximum angle in degrees
             p.parse(varargin{:});
 
             tempfile = 'ModelTin';
@@ -364,8 +365,13 @@ classdef Gaja3D < handle
             else
                 restrictSteinerPointsString = '';
             end
+            if(~isempty(p.Results.maxSteiner))
+                maxSteinerPointsString = sprintf('S%d', p.Results.maxSteiner);
+            else
+                maxSteinerPointsString = '';
+            end
             
-            cmd = sprintf('! %s -p%s%s%s %s', tricommand, restrictSteinerPointsString, angleString, maxAreaString, tempfile);
+            cmd = sprintf('! %s -p%s%s%s%s %s', tricommand, restrictSteinerPointsString, angleString, maxAreaString, maxSteinerPointsString, tempfile);
             eval(cmd);
             outputPrefix = [tempfile '.1'];
 
