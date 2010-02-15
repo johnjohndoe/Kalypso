@@ -71,15 +71,15 @@ public interface Kalypso1D2DDictConstants
 
   public static final String DICT_COMPONENT_MAX_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityY"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_MAX_VELOCITY_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityNode"; //$NON-NLS-1$
+  public static final String DICT_COMPONENT_MAX_VELOCITY_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityNode"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_MAX_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepth"; //$NON-NLS-1$
+  public static final String DICT_COMPONENT_MAX_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepth"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_MAX_DEPTH_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepthNode"; //$NON-NLS-1$
+  public static final String DICT_COMPONENT_MAX_DEPTH_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepthNode"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_AVERAGE_VELOCITY_X = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityX"; //$NON-NLS-1$
+  public static final String DICT_COMPONENT_AVERAGE_VELOCITY_X = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityX"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_AVERAGE_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityY"; //$NON-NLS-1$
+  public static final String DICT_COMPONENT_AVERAGE_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityY"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_AVERAGE_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageDepth"; //$NON-NLS-1$
+  public static final String DICT_COMPONENT_AVERAGE_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageDepth"; //$NON-NLS-1$
 }
