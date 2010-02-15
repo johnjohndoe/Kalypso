@@ -29,7 +29,7 @@
     <gft:label text="Profile" visible="true" tooltip="Liste der im Strang referenzierten Profile" style="SWT.NONE">
         <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
-    <gft:extensioncontrol property="tuhh:reachSegmentMember" extension-id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory" style="SWT.BORDER">
+    <gft:extensioncontrol property="tuhh:reachSegmentMember" extension-id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory" style="SWT.BORDER | SWT.V_SCROLL">
         <gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
     	<gft:param name="hallo" value="gernot"/>
     </gft:extensioncontrol>
