@@ -18,7 +18,7 @@ classdef Contour < kalypso.Curve
                        curves = varargin{1};
                        numcurves = numel(curves);
                        for i=1:numcurves
-                           lineString = curves.jtsGeometry;
+                           lineString = curves(i).jtsGeometry;
                            this(i).jtsGeometry = lineString;
                        end
                    case 'com.vividsolutions.jts.geom.LineString'
