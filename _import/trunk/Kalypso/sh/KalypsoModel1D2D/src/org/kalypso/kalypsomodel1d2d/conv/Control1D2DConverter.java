@@ -130,9 +130,12 @@ public class Control1D2DConverter
 
   private final IGeoLog m_log;
 
-  public Control1D2DConverter( final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log )
+  private final ICalculationUnit m_calculationUnit;
+
+  public Control1D2DConverter( final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log )
   {
     m_controlModel = controlModel;
+    m_calculationUnit = calculationUnit;
     m_roughnessModel = roughnessMmodel;
     m_nativeIDProvider = idProvider;
     m_buildingProvider = buildingProvider;
@@ -143,13 +146,13 @@ public class Control1D2DConverter
       m_staticInnerLinesIDProvider = new IdMap();
 
     /* Initialize boundary conditions */
-    final String calculationUnit = controlModel.getCalculationUnit().getGmlID();
+    final String calculationUnitID = m_calculationUnit.getGmlID();
     for( final IFlowRelationship relationship : flowModel )
     {
       if( relationship instanceof IBoundaryCondition )
       {
         final IBoundaryCondition boundaryCondition = (IBoundaryCondition) relationship;
-        if( boundaryCondition.isMemberOf( calculationUnit ) )
+        if( boundaryCondition.isMemberOf( calculationUnitID ) )
           m_unitBoundaryConditions.add( boundaryCondition );
       }
     }
@@ -341,8 +344,7 @@ public class Control1D2DConverter
   @SuppressWarnings("unchecked")
   private void writeR10ContinuityLineDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
-    final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
-    final List<IFELine> continuityLines = calculationUnit.getContinuityLines();
+    final List<IFELine> continuityLines = m_calculationUnit.getContinuityLines();
     formatter.format( "SCL%9d%n", continuityLines.size() ); //$NON-NLS-1$
     for( final IFELine line : continuityLines )
     {
@@ -376,9 +378,10 @@ public class Control1D2DConverter
 
       // check if line is an inner boundary line (only for coupled 1d2d units and enabled coupled simulation)
       // this is the case if it is contained in two 2d calculation units of this coupled unit
-      if( calculationUnit.getType() == TYPE.TYPE1D2D && ((ICalculationUnit1D2D) calculationUnit).isCoupledSimulation() )
+      final ICalculationUnit parentCalculationUnit = m_controlModel.getCalculationUnit();
+      if( parentCalculationUnit.getType() == TYPE.TYPE1D2D && ((ICalculationUnit1D2D) parentCalculationUnit).isCoupledSimulation() )
       {
-        final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) calculationUnit;
+        final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) parentCalculationUnit;
         final IFeatureWrapperCollection<ICalculationUnit> changedSubUnits = calculationUnit1D2D.getChangedSubUnits();
         int in2DCalcUnitCount = 0;
         final IFeatureWrapperCollection<IFeatureWrapper2> containers = line.getContainers();

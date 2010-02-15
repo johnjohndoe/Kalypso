@@ -142,21 +142,21 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
   final Modeldata getModeldata( final List<IRestartInfo> restartInfos )
   {
     final Map<String, String> inputs = new HashMap<String, String>();
-    inputs.put( "control", "models/control.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-    inputs.put( "mesh", "models/discretisation.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-    inputs.put( "flowRelationships", "models/flowrelations.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-    inputs.put( "roughness", "../.metadata/roughness.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
+    inputs.put( PreRMAKalypso.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
+    inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
+    inputs.put( PreRMAKalypso.INPUT_ROUGHNESS, "../.metadata/roughness.gml" ); //$NON-NLS-1$
 
     int restartCount = 0;
     for( final IRestartInfo restartInfo : restartInfos )
     {
       final IPath restartFilePath = restartInfo.getRestartFilePath();
       if( restartFilePath != null )
-        inputs.put( "restartFile" + restartCount++, restartFilePath.toString() );
+        inputs.put( PreRMAKalypso.INPUT_RESTART_FILE_PREFIX + restartCount++, restartFilePath.toString() );
     }
 
     final Map<String, String> outputs = new HashMap<String, String>();
-    outputs.put( "results", "rma_results" ); //$NON-NLS-1$ //$NON-NLS-2$
+    outputs.put( RMAKalypsoSimulation.OUTPUT_RESULTS, "rma_results" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return SimulationUtilitites.createModelData( RMAKalypsoSimulation.ID, inputs, true, outputs, true );
   }
@@ -234,7 +234,7 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
     }
 
     final Map<String, ComplexValueReference> references = getReferences();
-    final ComplexValueReference complexValueReference = references.get( "results" ); //$NON-NLS-1$
+    final ComplexValueReference complexValueReference = references.get( RMAKalypsoSimulation.OUTPUT_RESULTS );
     if( complexValueReference == null )
     {
       return;

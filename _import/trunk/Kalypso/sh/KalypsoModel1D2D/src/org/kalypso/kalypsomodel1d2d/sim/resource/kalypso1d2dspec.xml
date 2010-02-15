@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model1d2d">
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model1d2d">
 	<input id="control" type="xs:anyURI" description="control gml-file"/>
 	<input id="mesh" type="xs:anyURI" description="mesh gml-file"/>
-	<input id="flowRelationships" type="xs:anyURI" description="flow relationships gml-file"/>
-	<input id="roughness" type="xs:anyURI" description="roughness model gml-file"/>
+	<input id="flowRelationships" type="xs:anyURI" description="flow relationships gml-file" />
+	<input id="roughness" type="xs:anyURI" description="roughness model gml-file" />
 	<input id="restartFile0" type="xs:anyURI" description="restart results file 0" optional="true"/>
 	<input id="restartFile1" type="xs:anyURI" description="restart results file 1" optional="true"/>
-	<input id="restartFile2" type="xs:anyURI" description="restart results file 2" optional="true"/>		
+	<input id="restartFile2" type="xs:anyURI" description="restart results file 2" optional="true"/>
 
-	<output id="results" type="xs:anyURI" description="2d-result directory"/>
+	<input id="calculationUnitID" type="xs:string" description="ID of the (sub)-calculation unit to calculate" optional="true"/>
+	<input id="workingDirectory" type="xs:string"
+		description="the working directory of the simulation" optional="true" />
+
+	<output id="results" type="xs:anyURI" description="2d-result directory" />
 </modelspec>
