@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.featureview;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,8 +71,6 @@ import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author belger
@@ -78,49 +78,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public class ReachSegmentFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
-  private final class ChangeListSelectionCommand implements ICommand
-  {
-    private final TuhhReach m_reach;
-
-    private final Feature m_feature;
-
-    private final IProfileFeature m_changedProfile;
-
-    private final GMLWorkspace m_workspace;
-
-    public ChangeListSelectionCommand( final TuhhReach reach, final Feature feature, final IProfileFeature changedProfile, final GMLWorkspace workspace )
-    {
-      m_reach = reach;
-      m_feature = feature;
-      m_changedProfile = changedProfile;
-      m_workspace = workspace;
-    }
-
-    public String getDescription( )
-    {
-      return null;
-    }
-
-    public boolean isUndoable( )
-    {
-      return false;
-    }
-
-    public void process( ) throws Exception
-    {
-      final TuhhReachProfileSegment segment = m_reach.createProfileSegment( m_changedProfile, m_changedProfile.getStation() );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_feature, segment.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    }
-
-    public void redo( ) throws Exception
-    {
-    }
-
-    public void undo( ) throws Exception
-    {
-    }
-  }
-
   protected final class ChangeCheckstateAction extends Action
   {
     private final boolean m_checkState;
@@ -187,13 +144,13 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
       {
         final IProfileFeature profileFeature = (IProfileFeature) event.getElement();
         final boolean checked = event.getChecked();
-        handleCheckStateChanged( profileFeature, checked );
+        handleCheckStateChanged( new IProfileFeature[] { profileFeature }, checked );
       }
     } );
 
     final MenuManager manager = new MenuManager();
-    manager.add( new ChangeCheckstateAction( Messages.getString("org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.0"), true ) ); //$NON-NLS-1$
-    manager.add( new ChangeCheckstateAction( Messages.getString("org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.1"), false ) ); //$NON-NLS-1$
+    manager.add( new ChangeCheckstateAction( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.0" ), true ) ); //$NON-NLS-1$
+    manager.add( new ChangeCheckstateAction( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.1" ), false ) ); //$NON-NLS-1$
 
     final Table table = m_viewer.getTable();
     table.setMenu( manager.createContextMenu( table ) );
@@ -205,14 +162,18 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
 
   protected void changeCheckState( final Object[] objects, final boolean check )
   {
+    final Collection<IProfileFeature> toToggle = new ArrayList<IProfileFeature>();
+
     for( final Object object : objects )
     {
-      if( m_viewer.getChecked( object ) != check )
-      {
-        m_viewer.setChecked( object, check );
-        handleCheckStateChanged( (IProfileFeature) object, check );
-      }
+      boolean checked = m_viewer.getChecked( object );
+      if( checked != check )
+        toToggle.add( (IProfileFeature) object );
     }
+
+    final IProfileFeature[] profilesToCheck = toToggle.toArray( new IProfileFeature[toToggle.size()] );
+    if( profilesToCheck.length > 0 )
+      handleCheckStateChanged( profilesToCheck, check );
   }
 
   /**
@@ -230,62 +191,81 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
   {
     final Feature feature = getFeature();
     if( feature == null )
+    {
+      m_viewer.setCheckStateProvider( null );
       m_viewer.setInput( null );
+    }
     else
     {
       final TuhhReach reach = new TuhhReach( feature );
-      final WspmWaterBody waterBody = reach.getWaterBody();
+      m_viewer.setCheckStateProvider( new ReachSegmentCheckStateProvider( reach ) );
 
-      if( waterBody != null )
+      final WspmWaterBody waterBody = reach.getWaterBody();
+      if( waterBody == null )
+        m_viewer.setInput( new Object[] {} );
+      else
       {
         final List< ? > profiles = (List< ? >) waterBody.getFeature().getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
         m_viewer.setInput( profiles );
       }
 
-      final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-      for( final TuhhReachProfileSegment segment : reachProfileSegments )
-      {
-        final IProfileFeature profileMember = segment.getProfileMember();
-        if( profileMember != null )
-          m_viewer.setChecked( profileMember, true );
-      }
+// final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+// for( final TuhhReachProfileSegment segment : reachProfileSegments )
+// {
+// final IProfileFeature profileMember = segment.getProfileMember();
+// if( profileMember != null )
+// m_viewer.setChecked( profileMember, true );
+// }
     }
   }
 
-  protected void handleCheckStateChanged( final IProfileFeature profileFeature, final boolean checked )
+  protected void handleCheckStateChanged( final IProfileFeature[] profileFeatures, final boolean checked )
   {
-    final GMLWorkspace workspace = profileFeature.getWorkspace();
-
     // add or remove profile segment according to new check-state
     final TuhhReach reach = new TuhhReach( getFeature() );
+    ICommand changeCommand = createCommand( reach, profileFeatures, checked );
+    fireFeatureChange( changeCommand );
+  }
 
-    final Feature feature = reach.getFeature();
+  private ICommand createCommand( final TuhhReach reach, final IProfileFeature[] profileFeatures, final boolean checked )
+  {
     if( checked )
-    {
-      // post via command...
-
-      final ICommand changeCommand = new ChangeListSelectionCommand( reach, feature, profileFeature, workspace );
-      fireFeatureChange( changeCommand );
-    }
+      return new AddReachSegementCommand( reach, profileFeatures );
     else
     {
-      final FeatureList segments = (FeatureList) feature.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+      final TuhhReachProfileSegment[] segmentsToRemove = findSegments( reach, profileFeatures );
+      return new RemoveReachSegmentCommand( reach, segmentsToRemove );
+    }
+  }
 
-      // CAUTION: this is a linear search through a list, and so a potential performance problem
-      for( final Object segmentFeature : segments )
-      {
-        final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( (Feature) segmentFeature );
-        final IProfileFeature profileMember = segment.getProfileMember();
-        if( profileMember != null && profileMember.equals( profileFeature ) )
-        {
-          // TODO: post via command
-          segments.remove( segmentFeature );
-          workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature, (Feature) segmentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+  private TuhhReachProfileSegment[] findSegments( final TuhhReach reach, final IProfileFeature[] profileFeatures )
+  {
+    final Collection<TuhhReachProfileSegment> segments = new ArrayList<TuhhReachProfileSegment>( profileFeatures.length );
 
-          break;
-        }
-      }
+    final Feature reachFeature = reach.getFeature();
+    final FeatureList segmentList = (FeatureList) reachFeature.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+
+    for( IProfileFeature profileFeature : profileFeatures )
+    {
+      TuhhReachProfileSegment segment = findSegment( segmentList, profileFeature );
+      if( segment != null )
+        segments.add( segment );
     }
 
+    return segments.toArray( new TuhhReachProfileSegment[segments.size()] );
+  }
+
+  private TuhhReachProfileSegment findSegment( final FeatureList segmentList, final IProfileFeature profileFeature )
+  {
+    // CAUTION: this is a linear search through a list, and so a potential performance problem
+    for( final Object segmentFeature : segmentList )
+    {
+      final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( (Feature) segmentFeature );
+      final IProfileFeature profileMember = segment.getProfileMember();
+      if( profileMember != null && profileMember.equals( profileFeature ) )
+        return segment;
+    }
+
+    return null;
   }
 }
