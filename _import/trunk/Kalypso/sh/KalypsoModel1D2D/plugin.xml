@@ -804,6 +804,10 @@
 
   <extension point="org.kalypso.simulation.core.simulation">
     <simulation simulationClass="org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation" typeID="org.kalypso.model1d2d" />
+    <simulation
+          simulationClass="org.kalypso.kalypsomodel1d2d.sim.PreRMAKalypso"
+          typeID="org.kalypso.simulation.rma.preRMAKalypso">
+    </simulation>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
