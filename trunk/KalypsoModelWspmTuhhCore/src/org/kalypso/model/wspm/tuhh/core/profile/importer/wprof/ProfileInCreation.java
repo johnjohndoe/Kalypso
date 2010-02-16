@@ -40,26 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * @author belger
- *
+ * @author Gernot Belger
  */
 public class ProfileInCreation implements IWspmTuhhConstants
 {
   private final IProfileFeature m_profileFeature;
+
   private IProfil m_profile;
 
   public ProfileInCreation( final IProfileFeature profileFeature )
@@ -70,48 +69,60 @@ public class ProfileInCreation implements IWspmTuhhConstants
   public void cleanupProfile( )
   {
     final IProfil profil = getProfil();
-    // final int heightIndex = profil.indexOfProperty( POINT_PROPERTY_HOEHE );
 
-    final List<Integer> indicesToCheck = new ArrayList<Integer>();
-    indicesToCheck.add( profil.indexOfProperty( POINT_PROPERTY_HOEHE ) );
-    // indicesToCheck.add( profil.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE ) );
-    // indicesToCheck.add( profil.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE ) );
+    cleanupHeights( profil );
 
-    if( profil.hasPointProperty( POINT_PROPERTY_OBERKANTEBRUECKE ) != null || profil.hasPointProperty( POINT_PROPERTY_UNTERKANTEBRUECKE ) != null )
-      profil.addProfileObjects( new IProfileObject[] { new BuildingBruecke( profil ) } );
+    cleanupBridges( profil );
 
-    final IRecord[] points = profil.getPoints();
+    createDurchstroemteBereiche( profil );
+  }
+
+  private void cleanupHeights( final IProfil profil )
+  {
+    final int heightComponent = profil.indexOfProperty( POINT_PROPERTY_HOEHE );
+    ProfilUtil.interpolateProperty( profil, heightComponent );
+  }
+
+  private void cleanupBridges( final IProfil profil )
+  {
+    final boolean hasUK = profil.hasPointProperty( POINT_PROPERTY_UNTERKANTEBRUECKE ) != null;
+    final boolean hasOK = profil.hasPointProperty( POINT_PROPERTY_OBERKANTEBRUECKE ) != null;
+
+    if( !hasUK && !hasOK )
+      return;
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
-    // Set missing UK and OK points to normal height
-    for( final int compIndex : indicesToCheck )
+    final IComponent heightComponent = provider.getPointProperty( POINT_PROPERTY_HOEHE );
+    final IComponent ukComponent = provider.getPointProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
+    final IComponent okComponent = provider.getPointProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
+    if( hasUK )
     {
-      if( compIndex != -1 )
-      {
-        // /* Set head to height */
-        // for( final IRecord record : points )
-        // {
-        // final Double height = (Double) record.getValue( heightIndex );
-        // if( record.getValue( compIndex ) == null )
-        // record.setValue( compIndex, height );
-        // else
-        // break;
-        // }
-        //
-        // /* Set tail to height */
-        // for( int i = points.length; i > 0; i-- )
-        // {
-        // final IRecord record = points[i - 1];
-        // final Double height = (Double) record.getValue( heightIndex );
-        // if( record.getValue( compIndex ) == null )
-        // record.setValue( compIndex, height );
-        // else
-        // break;
-        // }
-        // ProfilUtil.interpolateProperty( profil, compIndex );
-      }
+      final int ukIndex = profil.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
+      ProfilUtil.interpolateProperty( profil, ukIndex );
     }
+    else
+      profil.addPointProperty( ukComponent, heightComponent );
+
+    if( hasOK )
+    {
+      final int okIndex = profil.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
+      ProfilUtil.interpolateProperty( profil, okIndex );
+    }
+    else
+      profil.addPointProperty( okComponent, ukComponent );
+
+    // FIXME: remove bv-höhe?
+    // FIXME: auto-adjust trennflächen?
+
+    profil.addProfileObjects( new IProfileObject[] { new BuildingBruecke( profil ) } );
+  }
+
+  private void createDurchstroemteBereiche( final IProfil profil )
+  {
+    final IRecord[] points = profil.getPoints();
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
     if( points.length > 1 )
     {

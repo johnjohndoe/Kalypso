@@ -43,25 +43,19 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
+import org.kalypso.model.wspm.tuhh.core.wprof.IWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPointFactory;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfImporter;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Gernot Belger
@@ -72,17 +66,13 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
 
   private String m_shapeDefaultSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  private final TuhhWspmProject m_targetProject;
+  private final IWProfContentHandler m_handler;
 
-  private URL m_photoContext;
-
-  private final CommandableWorkspace m_workspace;
-
-  public WProfImportOperation( final File wprofShape, final CommandableWorkspace workspace, final TuhhWspmProject targetProject )
+  public WProfImportOperation( final File wprofShape, final IWProfContentHandler handler )
   {
     m_wprofShape = wprofShape;
-    m_workspace = workspace;
-    m_targetProject = targetProject;
+
+    m_handler = handler;
   }
 
   public void setShapeDefaultSrs( final String shapeDefaultSrs )
@@ -108,6 +98,10 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
     {
       throw new InvocationTargetException( e );
     }
+    finally
+    {
+      monitor.done();
+    }
 
     return Status.OK_STATUS;
   }
@@ -123,38 +117,8 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
     wProfImporter.setShapeDefaultSrs( m_shapeDefaultSrs );
 
     /* Create Empty WSPM-Workspace */
-    final String targetSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_targetProject, targetSrs, m_photoContext );
-
-    wProfImporter.addHandler( handler );
+    wProfImporter.addHandler( m_handler );
 
     wProfImporter.importW80Shape( monitor );
-
-    fireChangeEvents();
   }
-
-  private void fireChangeEvents( )
-  {
-    final WspmWaterBody[] waterBodies = m_targetProject.getWaterBodies();
-    final Feature[] changedFeatures = new Feature[waterBodies.length];
-    for( int i = 0; i < waterBodies.length; i++ )
-      changedFeatures[i] = waterBodies[i].getFeature();
-
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_targetProject.getFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    try
-    {
-      m_workspace.postCommand( new EmptyCommand( "", false ) );
-    }
-    catch( final Exception e )
-    {
-      // does not happen
-      e.printStackTrace();
-    }
-  }
-
-  public void setPhotoContext( final URL photoContext )
-  {
-    m_photoContext = photoContext;
-  }
-
 }

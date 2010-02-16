@@ -41,15 +41,21 @@
 package org.kalypso.model.wspm.tuhh.ui.actions;
 
 import java.io.File;
+import java.net.URL;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Gernot Belger
@@ -62,6 +68,8 @@ public class WProfImportWizard extends Wizard
 
   private final CommandableWorkspace m_workspace;
 
+  private final WProfImportMarkerPage m_wprofMarkerPage;
+
   public WProfImportWizard( final CommandableWorkspace workspace, final TuhhWspmProject targetProject )
   {
     m_workspace = workspace;
@@ -69,10 +77,24 @@ public class WProfImportWizard extends Wizard
 
     m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", "WProf File Selection", null ); //$NON-NLS-1$
     m_wprofFilePage.setDescription( "Select a file to import WProf data from." );
-    addPage( m_wprofFilePage );
+
+    m_wprofMarkerPage = new WProfImportMarkerPage( "wprofMarkerPage", "WProf Profile Segmentation", null ); //$NON-NLS-1$
+    m_wprofMarkerPage.setDescription( "Choose which Point-Atributes to use (',' to spearate multiple values)." );
+    m_wprofMarkerPage.setDefaultValues( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new int[] { 3, 10 } );
+    m_wprofMarkerPage.setDefaultValues( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new int[] { 3, 10 } );
 
     setWindowTitle( "WProf Import" );
     setNeedsProgressMonitor( true );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
+  @Override
+  public void addPages( )
+  {
+    addPage( m_wprofFilePage );
+    addPage( m_wprofMarkerPage );
   }
 
   /**
@@ -82,8 +104,22 @@ public class WProfImportWizard extends Wizard
   public boolean performFinish( )
   {
     final File shapeFile = m_wprofFilePage.getWProfFile();
-    final WProfImportOperation op = new WProfImportOperation( shapeFile, m_workspace, m_targetProject );
-    op.setPhotoContext( m_wprofFilePage.getPhotoContext() );
+
+    final String targetSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final URL photoContext = m_wprofFilePage.getPhotoContext();
+
+    final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_workspace, m_targetProject, targetSrs, photoContext );
+
+    final Map<String, int[]> markerMappings = m_wprofMarkerPage.getMarkerMappings();
+    for( final Entry<String, int[]> mappingEntry : markerMappings.entrySet() )
+    {
+      final String markerID = mappingEntry.getKey();
+      final int[] types = mappingEntry.getValue();
+      for( final int type : types )
+        handler.addMarkerMapping( markerID, type );
+    }
+
+    final WProfImportOperation op = new WProfImportOperation( shapeFile, handler );
     op.setShapeDefaultSrs( m_wprofFilePage.getShapeDefaultSrs() );
 
     final IWizardContainer container = getContainer();
