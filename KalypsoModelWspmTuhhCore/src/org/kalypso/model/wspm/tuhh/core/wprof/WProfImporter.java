@@ -47,6 +47,8 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -84,21 +86,27 @@ public class WProfImporter
 
   public void importW80Shape( final IProgressMonitor monitor ) throws GmlSerializeException, CoreException, MalformedURLException
   {
+    monitor.beginTask( String.format( "Importing %s", m_shapePath ), 1000 );
+
     /* Load Shape */
     final File prjFile = new File( m_shapePath + ".prj" );
     final String shapeSrs = ShapeSerializer.loadCrs( prjFile.toURI().toURL(), m_shapeDefaultSrs );
 
-    final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( m_shapePath, shapeSrs, monitor );
+    monitor.subTask( "reading shape file..." );
+    final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( m_shapePath, shapeSrs, new SubProgressMonitor( monitor, 500 ) );
 
     final FeatureList w80features = (FeatureList) w80shapeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     System.out.println( String.format( "Read %d points", w80features.size() ) );
 
     /* Data */
-    importW80Data( w80features );
+    monitor.subTask( "converting data..." );
+    importW80Data( w80features, new SubProgressMonitor( monitor, 500 ) );
   }
 
-  private void importW80Data( final FeatureList w80features ) throws CoreException
+  private void importW80Data( final FeatureList w80features, final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( m_shapeDefaultSrs, w80features.size() + w80features.size() * m_handlers.size() );
+
     for( final Object object : w80features )
     {
       final Feature feature = (Feature) object;
@@ -107,10 +115,15 @@ public class WProfImporter
 
       for( final IWProfContentHandler creator : m_handlers )
         creator.newPoint( point );
+
+      ProgressUtilities.worked( monitor, 1 );
     }
 
     for( final IWProfContentHandler creator : m_handlers )
+    {
       creator.finished();
+      ProgressUtilities.worked( monitor, w80features.size() );
+    }
   }
 
 }

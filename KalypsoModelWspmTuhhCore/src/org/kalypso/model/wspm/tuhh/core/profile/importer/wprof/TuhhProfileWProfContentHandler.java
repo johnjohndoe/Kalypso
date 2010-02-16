@@ -42,16 +42,20 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -62,7 +66,10 @@ import org.kalypso.model.wspm.tuhh.core.wprof.IWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -78,11 +85,28 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
 
   private final URL m_photoContext;
 
-  public TuhhProfileWProfContentHandler( final TuhhWspmProject project, final String targetSrs, final URL photoContext )
+  private final Map<Integer, String[]> m_markerMap = new HashMap<Integer, String[]>();
+
+  private final CommandableWorkspace m_workspace;
+
+  public TuhhProfileWProfContentHandler( final CommandableWorkspace workspace, final TuhhWspmProject project, final String targetSrs, final URL photoContext )
   {
+    m_workspace = workspace;
     m_project = project;
     m_photoContext = photoContext;
     m_transformer = new GeoTransformer( targetSrs );
+  }
+
+  public void addMarkerMapping( final String markerID, final int type )
+  {
+    if( m_markerMap.containsKey( type ) )
+    {
+      final String[] markerIDs = m_markerMap.get( type );
+      final String[] newMarkerIDs = (String[]) ArrayUtils.add( markerIDs, markerID );
+      m_markerMap.put( type, newMarkerIDs );
+    }
+    else
+      m_markerMap.put( type, new String[] { markerID } );
   }
 
   public void finished( )
@@ -93,7 +117,29 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
       pic.cleanupProfile();
       pic.finish();
     }
+
+    fireChangeEvents();
   }
+
+  private void fireChangeEvents( )
+  {
+    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
+    final Feature[] changedFeatures = new Feature[waterBodies.length];
+    for( int i = 0; i < waterBodies.length; i++ )
+      changedFeatures[i] = waterBodies[i].getFeature();
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project.getFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    try
+    {
+      m_workspace.postCommand( new EmptyCommand( "", false ) );
+    }
+    catch( final Exception e )
+    {
+      // does not happen
+      e.printStackTrace();
+    }
+  }
+
 
   /**
    * @see org.kalypso.gernot.tools.wprof.IWProfContentHandler#newPoint(org.kalypso.gernot.tools.wprof.IWProfPoint)
@@ -120,7 +166,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
       final int attributeType = wprofPoint.getType();
 
       final String componentId = getComponent( objectType, attributeType );
-      final String markerID = getMarker( attributeType );
+      final String[] markerIDs = getMarker( attributeType );
       final IProfil profil = findProfil( station, riverId, profileName, profileComment, photoURL );
       if( profil == null )
         throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Unable to create profile at %s", station ), null ) ); //$NON-NLS-1$
@@ -146,7 +192,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
           point.setValue( hwIndex, transformedLocation.getY() );
         }
 
-        if( markerID != null && !markerID.isEmpty() )
+        for( final String markerID : markerIDs )
         {
           final IProfilPointMarker marker = profil.createPointMarker( markerID, point );
           final Object defaultValue = provider.getDefaultValue( markerID );
@@ -259,24 +305,12 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
     return null;
   }
 
-  private String getMarker( final int type )
+  private String[] getMarker( final int type )
   {
-    switch( type )
-    {
-      case 1:
-      case 3:
-      case 10:
-      case 12:
-        return MARKER_TYP_BORDVOLL;
-      case 2:
-      case 5:
-      case 8:
-      case 11:
-        return MARKER_TYP_TRENNFLAECHE;
+    if( m_markerMap.containsKey( type ) )
+      return m_markerMap.get( type );
 
-      default:
-        return null;
-    }
+    return new String[] {};
   }
 
 }

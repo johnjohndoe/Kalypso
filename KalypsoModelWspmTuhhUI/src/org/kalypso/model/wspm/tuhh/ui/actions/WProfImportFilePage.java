@@ -49,20 +49,32 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
  * @author Gernot Belger
  */
 public class WProfImportFilePage extends WizardPage
 {
+  static final String SETTINGS_CRS = "wprofShapeCrs";
+
   private FileChooserGroup m_shapeChooser;
+
+  private FileChooserGroup m_imageChooser;
+
+  private CRSSelectionPanel m_crsPanel;
 
   public WProfImportFilePage( final String pageName )
   {
@@ -80,11 +92,89 @@ public class WProfImportFilePage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    final GridLayout panelLayout = new GridLayout();
+    panelLayout.marginWidth = 0;
+    panelLayout.marginHeight = 0;
+    panel.setLayout( panelLayout );
+
+
+    final Control fileControl = createFileControl( panel );
+    fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final Control srsControl = createSrsControl( panel );
+    srsControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final Control imageContextControl = createImageContextControl( panel );
+    imageContextControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    setControl( panel );
+    setMessage( null, IMessageProvider.NONE );
+  }
+
+  private Control createSrsControl( final Composite parent )
+  {
+    m_crsPanel = new CRSSelectionPanel( parent, SWT.NONE );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+
+    if( dialogSettings != null )
+    {
+      final String lastCrs = dialogSettings.get( SETTINGS_CRS );
+      m_crsPanel.setSelectedCRS( lastCrs );
+    }
+
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      /**
+       * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
+       */
+      @Override
+      protected void selectionChanged( final String selectedCRS )
+      {
+        if( dialogSettings != null )
+          dialogSettings.put( SETTINGS_CRS, selectedCRS );
+
+        inputChanged();
+      }
+    } );
+
+    return m_crsPanel;
+  }
+
+  private Control createImageContextControl( final Composite panel )
+  {
+    final FileChooserDelegateDirectory directoryDelegate = new FileChooserDelegateDirectory();
+    m_imageChooser = new FileChooserGroup( directoryDelegate );
+    m_imageChooser.setShowLabel( false );
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, "imageContext" );
+    m_imageChooser.setDialogSettings( shapeSection );
+    m_imageChooser.addFileChangedListener( new FileChangedListener()
+    {
+      @Override
+      public void fileChanged( final File file )
+      {
+        inputChanged();
+      }
+    } );
+
+    final Group chooserGroup = m_imageChooser.createControl( panel, SWT.NONE );
+    chooserGroup.setText( "Image Folder (Optional)" );
+    return chooserGroup;
+  }
+
+  private Control createFileControl( final Composite panel )
+  {
     final FileChooserDelegateOpen openDelegate = new FileChooserDelegateOpen();
     openDelegate.addFilter( "All Files (*.*)", "*.*" );
     openDelegate.addFilter( "ESRI Shape File (*.shp)", "*.shp" );
 
     m_shapeChooser = new FileChooserGroup( openDelegate );
+    m_shapeChooser.setShowLabel( false );
+
     final IDialogSettings dialogSettings = getDialogSettings();
     final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, "shapeFile" );
     m_shapeChooser.setDialogSettings( shapeSection );
@@ -97,8 +187,9 @@ public class WProfImportFilePage extends WizardPage
       }
     } );
 
-    final Control control = m_shapeChooser.createControl( parent, SWT.NONE );
-    setControl( control );
+    final Group chooserGroup = m_shapeChooser.createControl( panel, SWT.NONE );
+    chooserGroup.setText( "WProf Import File" );
+    return chooserGroup;
   }
 
   protected void inputChanged( )
@@ -111,9 +202,26 @@ public class WProfImportFilePage extends WizardPage
 
   private IMessageProvider checkInput( )
   {
-    final File file = m_shapeChooser.getFile();
-    if( !file.exists() )
-      return new MessageProvider( "File does not exist", IMessageProvider.ERROR );
+    final File wprofFile = m_shapeChooser.getFile();
+    if( wprofFile == null )
+      return new MessageProvider( "Please choose a WProf file", IMessageProvider.ERROR );
+
+    if( !wprofFile.exists() )
+      return new MessageProvider( "WProf file does not exist", IMessageProvider.ERROR );
+
+    final String selectedCRS = m_crsPanel == null ? null : m_crsPanel.getSelectedCRS();
+    if( selectedCRS == null )
+      return new MessageProvider( "Pleae choose the coordinate system of the WProf file", IMessageProvider.ERROR );
+
+    final File imageDir = m_imageChooser.getFile();
+    if( imageDir != null )
+    {
+      if( !imageDir.exists() )
+        return new MessageProvider( "Image folder does not exist", IMessageProvider.ERROR );
+
+      if( !imageDir.isDirectory() )
+        return new MessageProvider( "Image folder is not a directory", IMessageProvider.ERROR );
+    }
 
     return new MessageProvider( null, IMessageProvider.NONE );
   }
@@ -125,16 +233,18 @@ public class WProfImportFilePage extends WizardPage
 
   public String getShapeDefaultSrs( )
   {
-    // FIXME
-    return "EPSG:31467";
+    return m_crsPanel.getSelectedCRS();
   }
 
   public URL getPhotoContext( )
   {
-    // FIXME
     try
     {
-      return new URL( "file:///P:\\bwg0715223\\HWGK_471_5_Hydraulik_work\\Vermessung\\" );
+      final File imageDir = m_imageChooser.getFile();
+      if( imageDir == null )
+        return null;
+
+      return imageDir.toURI().toURL();
     }
     catch( final MalformedURLException e )
     {
