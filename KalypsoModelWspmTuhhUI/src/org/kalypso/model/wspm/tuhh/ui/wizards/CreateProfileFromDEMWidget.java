@@ -1,12 +1,10 @@
-
-
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import org.eclipse.core.runtime.CoreException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -17,7 +15,6 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
@@ -63,44 +60,42 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   private Point m_currentPoint;
 
   private GisMapEditor m_gisMapEditor;
-  
+
   private ICoverageCollection m_coverages;
 
-//  private TuhhReach m_reach;
   private WspmWaterBody m_reach;
-  
-  /**
-   * The constructor.
-   * 
-   * @throws CoreException
-   */
-  public CreateProfileFromDEMWidget( ) throws CoreException
+
+  public CreateProfileFromDEMWidget( )
   {
     super( "", "" );
 
-    try {
+    try
+    {
       m_gisMapEditor = (GisMapEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-    } 
-    catch (Exception e) {
-      System.out.println("Failed to acquire GisMapEditor.");
+    }
+    catch( final Exception e )
+    {
+      System.out.println( "Failed to acquire GisMapEditor." );
       e.printStackTrace();
     }
 
-    try {
+    try
+    {
       final IMapModell model = m_gisMapEditor.getMapPanel().getMapModell();
 
       final FeatureList themeFeatureList = ((IKalypsoFeatureTheme) model.getActiveTheme()).getFeatureList();
       final Feature reachFeature = (Feature) themeFeatureList.first();
-    
+
       m_reach = new WspmWaterBody( reachFeature.getOwner() );
-      
+
       /* locate grid data - coverages feature */
-      for (IKalypsoTheme theme : model.getAllThemes()) {
-        String name = theme.getName().getValue();
-        
-        if ( "GridCoverage".equals( name ) == false || (theme instanceof IKalypsoFeatureTheme) == false) 
+      for( final IKalypsoTheme theme : model.getAllThemes() )
+      {
+        final String name = theme.getName().getValue();
+
+        if( "GridCoverage".equals( name ) == false || (theme instanceof IKalypsoFeatureTheme) == false )
           continue;
-        
+
         final FeatureList featureList = ((IKalypsoFeatureTheme) theme).getFeatureList();
         final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
 
@@ -109,8 +104,9 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       }
 
     }
-    catch (Exception e) {
-      System.out.println("Failed to gather required data.");
+    catch( final Exception e )
+    {
+      System.out.println( "Failed to gather required data." );
       e.printStackTrace();
     }
 
@@ -119,12 +115,11 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
     /* No current point so far. */
     m_currentPoint = null;
-    
+
   }
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
@@ -137,7 +132,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
       /* Trasform to a GM_Point. */
       final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
-      
+
       /* Add the point to the builder. */
       m_geoBuilder.addPoint( pos );
 
@@ -151,12 +146,10 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       /* It should be a GM_Curve. */
       final GM_Curve curve = (GM_Curve) finish;
 
-      
       /* The builder for a profile from a DEM. */
-      final CoverageProfile cProfile = new CoverageProfile(  m_coverages.get( 0 ), TuhhProfil.PROFIL_TYPE);
-      
+      final CoverageProfile cProfile = new CoverageProfile( m_coverages.get( 0 ), TuhhProfil.PROFIL_TYPE );
+
       /* building new profile. */
-      @SuppressWarnings("unused")//$NON-NLS-1$
       final IProfil profile = cProfile.createProfile( curve );
 
       /* update profile: add durchstroemte bereiche, trennflaechen, rauheiten */
@@ -169,11 +162,10 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
         profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[0] ).setValue( defaultValue );
         profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[points.length - 1] ).setValue( defaultValue );
       }
-      
-    
+
       final WspmWaterBody lWaterBodyReach = m_reach;
 
-      new UIJob( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3") )
+      new UIJob( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) )
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor arg0 )
@@ -181,34 +173,35 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
           final IWorkbenchWizard wizard = new WizardAddProfileFromDEM( profile );
           wizard.init( PlatformUI.getWorkbench(), null );
           final WizardDialog dialog = new WizardDialog( PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard );
-          if (dialog.open() == Status.OK) {
+          if( dialog.open() == Status.OK )
+          {
             // final step, profile to the feature
             IProfileFeature profileFeature;
             try
             {
               profileFeature = lWaterBodyReach.createNewProfile();
               ProfileFeatureFactory.toFeature( profile, profileFeature );
-              
-              GMLWorkspace workspace = profileFeature.getWorkspace();
-              
-              Feature[] changed_features = new Feature[1];
+
+              final GMLWorkspace workspace = profileFeature.getWorkspace();
+
+              final Feature[] changed_features = new Feature[1];
               changed_features[0] = profileFeature;
               final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, lWaterBodyReach.getFeature(), changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
               workspace.fireModellEvent( event );
             }
-            catch( GMLSchemaException e )
+            catch( final GMLSchemaException e )
             {
               e.printStackTrace();
             }
           }
-          
+
           return Status.OK_STATUS;
         }
 
       }.schedule();
 
       reset();
-    } 
+    }
     catch( final Exception e )
     {
       /* Error. */
@@ -219,10 +212,8 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     }
   }
 
-
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
   @Override
@@ -254,11 +245,10 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
   @Override
-  public void leftClicked( final Point p ) 
+  public void leftClicked( final Point p )
   {
     try
     {
@@ -267,7 +257,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
       /* Trasform to a GM_Point. */
       final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
-      
+
       /* Add the point to the builder. */
       m_geoBuilder.addPoint( pos );
     }
@@ -283,7 +273,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
@@ -303,7 +292,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
   @Override
@@ -318,7 +306,8 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
    */
   private void reset( )
   {
-    if( m_geoBuilder != null ) {
+    if( m_geoBuilder != null )
+    {
       m_geoBuilder.reset();
       m_geoBuilder = null;
     }
@@ -328,13 +317,13 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   }
 
   @Override
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
     m_geoBuilder.removeLastPoint();
   }
 
   @Override
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     final int keyCode = e.getKeyCode();
     if( KeyEvent.VK_ESCAPE == keyCode )
