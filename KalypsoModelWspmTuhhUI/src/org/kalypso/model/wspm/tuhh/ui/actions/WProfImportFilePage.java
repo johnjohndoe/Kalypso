@@ -52,10 +52,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 
 /**
@@ -81,26 +80,9 @@ public class WProfImportFilePage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    final FileChooserDelegate openDelegate = new FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eOpen )
-    {
-      /**
-       * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#getFilterNames()
-       */
-      @Override
-      public String[] getFilterNames( )
-      {
-        return new String[] { "All Files (*.*)", "ESRI Shape File (*.shp)" };
-      }
-
-      /**
-       * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#getFilterExtensions()
-       */
-      @Override
-      public String[] getFilterExtensions( )
-      {
-        return new String[] { "*.*", "*.shp" };
-      }
-    };
+    final FileChooserDelegateOpen openDelegate = new FileChooserDelegateOpen();
+    openDelegate.addFilter( "All Files (*.*)", "*.*" );
+    openDelegate.addFilter( "ESRI Shape File (*.shp)", "*.shp" );
 
     m_shapeChooser = new FileChooserGroup( openDelegate );
     final IDialogSettings dialogSettings = getDialogSettings();
