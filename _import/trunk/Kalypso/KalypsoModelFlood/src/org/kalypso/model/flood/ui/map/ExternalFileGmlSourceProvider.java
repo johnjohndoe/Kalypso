@@ -58,9 +58,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
 import org.kalypso.core.gml.provider.GmlSource;
 import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceProvider;
@@ -77,26 +77,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
 {
   private static final Object THE_ELEMENT = Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.0"); //$NON-NLS-1$
 
-  private final FileChooserDelegate m_fileDelegate = new FileChooserDelegate( FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE.eOpen )
-  {
-    /**
-     * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#getFilterNames()
-     */
-    @Override
-    public String[] getFilterNames( )
-    {
-      return new String[] { Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.1"), Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.2"), Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.3"), Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.4") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    }
-
-    /**
-     * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#getFilterExtensions()
-     */
-    @Override
-    public String[] getFilterExtensions( )
-    {
-      return new String[] { "*.*", "*.hmo", "*.shp", "*.gml" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    }
-  };
+  private final FileChooserDelegateOpen m_fileDelegate = new FileChooserDelegateOpen();
 
   private FileChooserGroup m_fileChooserGroup;
 
@@ -111,6 +92,14 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
   private File m_file;
 
   private CRSSelectionPanel m_crsPanel;
+
+  public ExternalFileGmlSourceProvider( )
+  {
+    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.1" ), "*.*" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.2" ), "*.hmo" );//$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.3" ), "*.shp" );//$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.4" ), "*.gml" );//$NON-NLS-1$ //$NON-NLS-2$
+  }
 
   /**
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createContentProvider()
