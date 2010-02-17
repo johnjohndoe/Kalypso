@@ -89,7 +89,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
 
     String getLanduseclass( int index ) throws CoreException;
 
-    double getCorrSealing( int index ) throws CoreException;
+    double getSealingCorrectionFactor( int index ) throws CoreException;
 
     String getDrainageType( int index ) throws CoreException;
 
@@ -151,13 +151,13 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         final String landuseRef = m_landuseClasses.getReference( landuseclass );
         if( landuseRef == null )
         {
-          final String message =  Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2" , landuseclass, i + 1 ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
         if( geometry == null )
         {
-          final String message =  Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
@@ -165,7 +165,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         if( landuse != null )
         {
           final String desc = m_inputDescriptor.getDescription( i );
-          final double corrSealing = m_inputDescriptor.getCorrSealing( i );
+          final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
           final String drainageType = m_inputDescriptor.getDrainageType( i );
           final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
 

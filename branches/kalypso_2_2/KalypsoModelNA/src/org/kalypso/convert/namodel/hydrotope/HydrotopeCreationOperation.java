@@ -263,10 +263,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 //          }
 //          else
 //          {
-            final Double corrSealing = landuse.getCorrSealing();
-            hydrotop.setCorrSealing( corrSealing );
+//            final Double corrSealing = landuse.getCorrSealing();
+//            hydrotop.setCorrSealing( corrSealing );
 //          }
-//          hydrotop.setCorrSealing( 0.381 );
+          hydrotop.setCorrSealing( 0.381 );
           final IFeatureBindingCollection<Feature> landuseSudsCollection = landuse.getSudCollection();
           final IFeatureBindingCollection<Feature> hydrotopeSudsCollection = hydrotop.getSudCollection();
           for( final Feature feature : landuseSudsCollection )
