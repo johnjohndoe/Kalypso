@@ -124,16 +124,16 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
   }
 
   /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getCorrSealing(long)
+   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getSealingCorrectionFactor(int)
    */
   @Override
-  public double getCorrSealing( final int index ) throws CoreException
+  public double getSealingCorrectionFactor( final int index ) throws CoreException
   {
     final Object property = getProperty( index, m_corrSealingColumn );
     if( property instanceof Number )
       return ((Number) property).doubleValue();
-    
-    final String message =  Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.4", m_corrSealingColumn ); //$NON-NLS-1$
+
+    final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.4", m_corrSealingColumn ); //$NON-NLS-1$
     throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
   }
 
@@ -230,4 +230,5 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
     // nothing to do
     return new AbstractSud[] {};
   }
+
 }

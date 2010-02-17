@@ -228,7 +228,7 @@ public class HydrotopManager extends AbstractManager
             final Double landuseSealing = m_landuseSealingRateMap.get( m_conf.getLanduseFeatureShortedName( landuseName ) );
             if( landuseSealing == null )
             {
-              final String msg = ""; //$NON-NLS-1$
+              final String msg = "Unknown landuse found. Please re=create hydrotop file!"; //$NON-NLS-1$
               m_conf.getLogger().severe( msg );
               throw new SimulationException( msg );
             }
