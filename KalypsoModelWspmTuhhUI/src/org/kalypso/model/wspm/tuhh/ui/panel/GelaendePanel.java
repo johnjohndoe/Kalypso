@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -50,7 +51,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -71,7 +71,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public class GelaendePanel extends AbstractProfilView
 {
-  protected Text m_comment;
+  protected StyledText m_comment;
 
   final private IChartLayer m_layer;
 
@@ -129,8 +129,18 @@ public class GelaendePanel extends AbstractProfilView
     cg.setLayout( new GridLayout() );
 
     toolkit.adapt( cg );
-    m_comment = toolkit.createText( cg, getProfil().getComment(), SWT.MULTI );
+
+    createComment( cg, toolkit );
+
+    return panel;
+  }
+
+  private void createComment( final Group cg, final FormToolkit toolkit )
+  {
+    final HyperlinkStyledText hyperlinkStyledText = new HyperlinkStyledText( getProfil().getComment() );
+    m_comment = hyperlinkStyledText.createControl( cg, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL );
     m_comment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    toolkit.adapt( m_comment, true, true );
 
     m_comment.addFocusListener( new FocusAdapter()
     {
@@ -140,7 +150,6 @@ public class GelaendePanel extends AbstractProfilView
       @Override
       public void focusLost( final FocusEvent e )
       {
-
         final String comment = m_comment.getText();
         if( comment != null && !comment.equals( getProfil().getComment() ) )
         {
@@ -153,8 +162,6 @@ public class GelaendePanel extends AbstractProfilView
         }
       }
     } );
-
-    return panel;
   }
 
   protected final void setLayerData( final boolean horz, final boolean vert )
