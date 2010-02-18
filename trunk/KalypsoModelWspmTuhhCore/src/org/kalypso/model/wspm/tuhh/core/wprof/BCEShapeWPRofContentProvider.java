@@ -41,6 +41,12 @@
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -49,16 +55,19 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This importer knows how to interpret the BCE-W80 Shape format.
- *
+ * 
  * @author Gernot Belger
  */
 public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConstants
 {
   private final Feature m_feature;
 
-  public BCEShapeWPRofContentProvider( final Feature feature )
+  private final URL m_photoContext;
+
+  public BCEShapeWPRofContentProvider( final Feature feature, final URL photoContext )
   {
     m_feature = feature;
+    m_photoContext = photoContext;
   }
 
   @Override
@@ -129,18 +138,48 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   }
 
   @Override
-  public String[] getPhotoPathes( )
+  public URL[] getPhotos( )
   {
-    final String riverId = getRiverId();
+    try
+    {
+      final String[] photoPathes = getPhotoPathes();
+      return createPhotoUrls( photoPathes );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+//      final String message = String.format( "Unable to create profile at %s", getStation() ); //$NON-NLS-1$
+// final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), message, e );
+// throw new CoreException( status );
+      return new URL[] {};
+    }
+  }
+
+  private String[] getPhotoPathes( )
+  {
     final String[] imageNames = getImageNames();
     if( imageNames == null || imageNames.length == 0 )
       return new String[] {};
 
+    final String riverId = getRiverId();
     final String[] pathes = new String[imageNames.length];
     for( int i = 0; i < pathes.length; i++ )
-      pathes[i] = String.format( "%5s\\Bilder\\%s", riverId, imageNames[i] ).toString(); //$NON-NLS-1$
+      pathes[i] = String.format( "%5s\\Bilder\\%s", riverId, imageNames[i] ); //$NON-NLS-1$
 
     return pathes;
+  }
+
+  private URL[] createPhotoUrls( final String[] photoPathes ) throws MalformedURLException
+  {
+    final Collection<URL> urls = new ArrayList<URL>( photoPathes.length );
+
+    for( final String photoPathe : photoPathes )
+    {
+      final URL photoURL = new URL( m_photoContext, photoPathe );
+      urls.add( photoURL );
+    }
+
+    return urls.toArray( new URL[urls.size()] );
   }
 
   private String[] getImageNames( )
@@ -152,15 +191,43 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getProfileComment( )
   {
+    final Date date = (Date) m_feature.getProperty( "P_AUFNDATU" );
+
     final String profileName = getProfileName();
-    final String date = (String) m_feature.getProperty( "P_AUFNDATU" );
-    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s", getRiverId(), profileName, getComment(), getObjectType(), date ); //$NON-NLS-1$
+    final String dateText = DateFormat.getDateInstance( DateFormat.MEDIUM ).format( date );
+    
+    final String pdfUrl = getPdfUrl();
+
+    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s%nPDF: %s", getRiverId(), profileName, getComment(), getObjectType(), dateText, pdfUrl ); //$NON-NLS-1$
   }
 
+  private String getPdfUrl( )
+  {
+    final String riverId = getRiverId();
+    final String pNam = getPNam();
+    final String pdfPath = String.format( "%5s\\Querprofile\\%s.pdf", riverId, pNam ); //$NON-NLS-1$
+    
+    try
+    {
+      final URL pdfURL = new URL( m_photoContext, pdfPath );
+      return pdfURL.toExternalForm();
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return "";
+    }
+  }
+
+  private String getPNam()
+  {
+    return ObjectUtils.toString( m_feature.getProperty( "P_NAM" ), "-999999.9999" ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+  
   @Override
   public String getProfileName( )
   {
-    final String pNam = ObjectUtils.toString( m_feature.getProperty( "P_NAM" ), "-999999.9999" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String pNam = getPNam();
     final String pNamString = pNam.substring( pNam.indexOf( '-' ) + 1 );
     final String profileName = pNamString.replaceAll( "\"", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     return profileName;

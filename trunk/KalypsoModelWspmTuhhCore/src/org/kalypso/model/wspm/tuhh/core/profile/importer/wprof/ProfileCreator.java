@@ -41,10 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -76,18 +73,15 @@ class ProfileCreator implements IWspmTuhhConstants
 
   private final GeoTransformer m_transformer;
 
-  private final URL m_photoContext;
-
   private final ProfileDataAdderFactory m_dataAdderFactory;
 
   private final ProfileMarkers m_markers;
 
-  public ProfileCreator( final ProfilePolygones polygones, final ProfileMarkers markers, final GeoTransformer transformer, final URL photoContext )
+  public ProfileCreator( final ProfilePolygones polygones, final ProfileMarkers markers, final GeoTransformer transformer )
   {
     m_polygones = polygones;
     m_markers = markers;
     m_transformer = transformer;
-    m_photoContext = photoContext;
     m_dataAdderFactory = new ProfileDataAdderFactory( polygones );
   }
 
@@ -158,8 +152,7 @@ class ProfileCreator implements IWspmTuhhConstants
     try
     {
       final String riverId = anyPoint.getRiverId();
-      final String[] photoPathes = anyPoint.getPhotoPathes();
-      final URL[] photoUrls = createPhotoUrls( photoPathes );
+      final URL[] photoUrls = anyPoint.getPhotos();
 
       final IProfileFeature profileFeature = project.createNewProfile( riverId, true );
       profileFeature.setSrsName( m_transformer.getTarget() );
@@ -173,31 +166,12 @@ class ProfileCreator implements IWspmTuhhConstants
 
       return profileFeature;
     }
-    catch( final MalformedURLException e )
-    {
-      final String message = String.format( "Unable to create profile at %s", station ); //$NON-NLS-1$
-      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), message, e );
-      throw new CoreException( status );
-    }
     catch( final GMLSchemaException e )
     {
       final String message = String.format( "Unable to create profile at %s", station ); //$NON-NLS-1$
       final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
-  }
-
-  private URL[] createPhotoUrls( final String[] photoPathes ) throws MalformedURLException
-  {
-    final Collection<URL> urls = new ArrayList<URL>( photoPathes.length );
-
-    for( final String photoPathe : photoPathes )
-    {
-      final URL photoURL = new URL( m_photoContext, photoPathe );
-      urls.add( photoURL );
-    }
-
-    return urls.toArray( new URL[urls.size()] );
   }
 
   private void addMarker( final IProfil profile )

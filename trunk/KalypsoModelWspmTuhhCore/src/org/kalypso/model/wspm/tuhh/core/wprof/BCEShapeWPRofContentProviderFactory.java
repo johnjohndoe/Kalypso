@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
+import java.net.URL;
+
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -47,13 +49,17 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class BCEShapeWPRofContentProviderFactory implements IWProfPointFactory
 {
-  /**
-   * @see org.kalypso.gernot.tools.wprof.IWProfPointFactory#newPoint(org.kalypsodeegree.model.feature.Feature)
-   */
+  private final URL m_photoContext;
+
+  public BCEShapeWPRofContentProviderFactory( final URL photoContext )
+  {
+    m_photoContext = photoContext;
+  }
+
   @Override
   public IWProfPoint newPoint( final Feature feature )
   {
-    return new BCEShapeWPRofContentProvider( feature );
+    return new BCEShapeWPRofContentProvider( feature, m_photoContext );
   }
 
 }
