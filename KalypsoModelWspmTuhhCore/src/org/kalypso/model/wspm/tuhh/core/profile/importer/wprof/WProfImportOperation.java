@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPointFactory;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfImporter;
@@ -68,11 +67,14 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
 
   private final IWProfContentHandler m_handler;
 
-  public WProfImportOperation( final File wprofShape, final IWProfContentHandler handler )
+  private final IWProfPointFactory m_factory;
+
+  public WProfImportOperation( final File wprofShape, final IWProfContentHandler handler, final IWProfPointFactory factory )
   {
     m_wprofShape = wprofShape;
 
     m_handler = handler;
+    m_factory = factory;
   }
 
   public void setShapeDefaultSrs( final String shapeDefaultSrs )
@@ -111,9 +113,7 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
     final String shapeFilePath = m_wprofShape.getAbsolutePath();
     final String shapeFileBase = FilenameUtils.removeExtension( shapeFilePath );
 
-    final IWProfPointFactory pointFactory = new BCEShapeWPRofContentProviderFactory();
-
-    final WProfImporter wProfImporter = new WProfImporter( shapeFileBase, pointFactory );
+    final WProfImporter wProfImporter = new WProfImporter( shapeFileBase, m_factory );
     wProfImporter.setShapeDefaultSrs( m_shapeDefaultSrs );
 
     /* Create Empty WSPM-Workspace */

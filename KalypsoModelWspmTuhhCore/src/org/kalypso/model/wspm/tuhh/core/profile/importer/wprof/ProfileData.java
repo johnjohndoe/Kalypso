@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import java.net.URL;
-
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
@@ -59,17 +57,14 @@ class ProfileData
 
   private final GeoTransformer m_transformer;
 
-  private final URL m_photoContext;
-
   private final TuhhWspmProject m_project;
 
   private final ProfileMarkers m_markers;
 
-  public ProfileData( final TuhhWspmProject project, final GeoTransformer transformer, final URL photoContext, final PunktattributMapping punktattribute )
+  public ProfileData( final TuhhWspmProject project, final GeoTransformer transformer, final PunktattributMapping punktattribute )
   {
     m_project = project;
     m_transformer = transformer;
-    m_photoContext = photoContext;
     m_markers = new ProfileMarkers( punktattribute );
   }
 
@@ -84,7 +79,7 @@ class ProfileData
 
   public void addProfileToProject( ) throws CoreException
   {
-    final ProfileCreator profileCreator = new ProfileCreator( m_profilePolygones, m_markers, m_transformer, m_photoContext );
+    final ProfileCreator profileCreator = new ProfileCreator( m_profilePolygones, m_markers, m_transformer );
     profileCreator.createProfile( m_project );
   }
 

@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -72,15 +71,12 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   private final GeoTransformer m_transformer;
 
-  private final URL m_photoContext;
-
   private final CommandableWorkspace m_workspace;
 
-  public TuhhProfileWProfContentHandler( final CommandableWorkspace workspace, final TuhhWspmProject project, final String targetSrs, final URL photoContext )
+  public TuhhProfileWProfContentHandler( final CommandableWorkspace workspace, final TuhhWspmProject project, final String targetSrs )
   {
     m_workspace = workspace;
     m_project = project;
-    m_photoContext = photoContext;
     m_transformer = new GeoTransformer( targetSrs );
   }
 
@@ -149,7 +145,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     final String key = String.format( "%s - %s - %s", riverId, station, profileName ); //$NON-NLS-1$
 
     if( !m_data.containsKey( key ) )
-      m_data.put( key, new ProfileData( m_project, m_transformer, m_photoContext, m_punktattribute ) );
+      m_data.put( key, new ProfileData( m_project, m_transformer, m_punktattribute ) );
 
     return m_data.get( key );
   }
