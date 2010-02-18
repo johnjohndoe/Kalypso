@@ -54,6 +54,8 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
+import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
+import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPointFactory;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -108,7 +110,7 @@ public class WProfImportWizard extends Wizard
     final String targetSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final URL photoContext = m_wprofFilePage.getPhotoContext();
 
-    final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_workspace, m_targetProject, targetSrs, photoContext );
+    final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_workspace, m_targetProject, targetSrs );
 
     final Map<String, int[]> markerMappings = m_wprofMarkerPage.getMarkerMappings();
     for( final Entry<String, int[]> mappingEntry : markerMappings.entrySet() )
@@ -119,7 +121,9 @@ public class WProfImportWizard extends Wizard
         handler.addMarkerMapping( markerID, type );
     }
 
-    final WProfImportOperation op = new WProfImportOperation( shapeFile, handler );
+    final IWProfPointFactory pointFactory = new BCEShapeWPRofContentProviderFactory( photoContext );
+
+    final WProfImportOperation op = new WProfImportOperation( shapeFile, handler, pointFactory );
     op.setShapeDefaultSrs( m_wprofFilePage.getShapeDefaultSrs() );
 
     final IWizardContainer container = getContainer();
