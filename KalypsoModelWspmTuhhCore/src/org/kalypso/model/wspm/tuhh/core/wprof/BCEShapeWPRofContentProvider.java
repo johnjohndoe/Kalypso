@@ -115,7 +115,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   }
 
   @Override
-  public int getType( )
+  public int getPunktattribut( )
   {
     final String typeString = ObjectUtils.toString( m_feature.getProperty( "PUNKTATTRI" ), "-1" ); //$NON-NLS-1$ //$NON-NLS-2$
     return Integer.parseInt( typeString );
@@ -129,29 +129,32 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   }
 
   @Override
-  public String getPhotoPath( )
+  public String[] getPhotoPathes( )
   {
     final String riverId = getRiverId();
     final String[] imageNames = getImageNames();
     if( imageNames == null || imageNames.length == 0 )
-      return null;
+      return new String[] {};
 
-    final String format = String.format( "%5s\\Bilder\\%s", riverId, imageNames[0] ).toString(); //$NON-NLS-1$
-    return format.replaceAll( " ", "0" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String[] pathes = new String[imageNames.length];
+    for( int i = 0; i < pathes.length; i++ )
+      pathes[i] = String.format( "%5s\\Bilder\\%s", riverId, imageNames[i] ).toString(); //$NON-NLS-1$
+
+    return pathes;
   }
 
   private String[] getImageNames( )
   {
     final String imagesString = ObjectUtils.toString( m_feature.getProperty( "P_FOTO" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
     return imagesString.split( ";" ); //$NON-NLS-1$
-// return null;
   }
 
   @Override
   public String getProfileComment( )
   {
     final String profileName = getProfileName();
-    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%n", getRiverId(), profileName, getComment(), getObjectType() ); //$NON-NLS-1$
+    final String date = (String) m_feature.getProperty( "P_AUFNDATU" );
+    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s", getRiverId(), profileName, getComment(), getObjectType(), date ); //$NON-NLS-1$
   }
 
   @Override
