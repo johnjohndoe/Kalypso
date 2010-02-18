@@ -44,13 +44,13 @@ import java.util.Properties;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
+import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dejan Antanaskovic
  */
-public class TimestepFillerControlFactory implements IFeatureviewControlFactory
+public class TimestepFillerControlFactory implements IExtensionsFeatureControlFactory
 {
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
