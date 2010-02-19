@@ -51,15 +51,29 @@ import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 
 import com.vividsolutions.jts.geom.Envelope;
 
-class KreisAdder extends BridgeAdder
+class KreisProfileCreator extends BridgeProfileCreator
 {
-  public KreisAdder( final IWProfPoint[] soilPoints, final IWProfPoint[] kreisPoints, final IWProfPoint[] okPoints, final IWProfPoint[] bridgeWidthPoints )
+  private final String m_kreisPoints;
+
+  public KreisProfileCreator( final ProfileData data, final String soilPoints, final String kreisPoints, final String okPoints, final String bridgeWidthPoints )
   {
-    super( createSoil( soilPoints, kreisPoints ), createUK( kreisPoints ), okPoints, bridgeWidthPoints );
+    super( data, soilPoints, null, okPoints, bridgeWidthPoints, "Kreisdurchlass" );
+
+    m_kreisPoints = kreisPoints;
   }
 
-  private static IWProfPoint[] createSoil( final IWProfPoint[] soilPoints, final IWProfPoint[] kreisPoints )
+  private IWProfPoint[] getKreisPoints( )
   {
+    final IWProfPoint[] kreisPoints = getPoints( m_kreisPoints );
+    return kreisPoints;
+  }
+
+  @Override
+  protected IWProfPoint[] getSoilPoints( )
+  {
+    final IWProfPoint[] soilPoints = super.getSoilPoints();
+    final IWProfPoint[] kreisPoints = getKreisPoints();
+
     final Envelope envelope = calculateEnvelope( kreisPoints );
     final double yHalf = getYHalf( envelope );
 
@@ -71,9 +85,9 @@ class KreisAdder extends BridgeAdder
     newPointsList.addAll( Arrays.asList( upperHalf ) );
     addSmaller( newPointsList, envelope.getMaxX(), soilPoints, false );
 
-    final IWProfPoint[] newPoints = newPointsList.toArray( new IWProfPoint[newPointsList.size()] );
-    return newPoints;
+    return newPointsList.toArray( new IWProfPoint[newPointsList.size()] );
   }
+
 
   private static void addSmaller( final Collection<IWProfPoint> listToAdd, final double x, final IWProfPoint[] input, final boolean smaller )
   {
@@ -85,14 +99,17 @@ class KreisAdder extends BridgeAdder
     }
   }
 
-  private static IWProfPoint[] createUK( final IWProfPoint[] kreisPoints )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.BridgeProfileCreator#getUkPoints()
+   */
+  @Override
+  protected IWProfPoint[] getUkPoints( )
   {
+    final IWProfPoint[] kreisPoints = getKreisPoints();
     final Envelope envelope = calculateEnvelope( kreisPoints );
     final double yHalf = getYHalf( envelope );
 
-    final IWProfPoint[] upperHalf = getHalfPoints( kreisPoints, yHalf, true );
-
-    return upperHalf;
+    return getHalfPoints( kreisPoints, yHalf, true );
   }
 
   private static double getYHalf( final Envelope envelope )

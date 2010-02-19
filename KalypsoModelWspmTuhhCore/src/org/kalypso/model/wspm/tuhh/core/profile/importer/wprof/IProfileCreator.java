@@ -40,48 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import java.util.HashMap;
-
-import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 
 /**
  * @author Gernot Belger
  */
-class ProfilePolygones extends HashMap<String, ProfilePolygon>
+interface IProfileCreator
 {
-  public ProfilePolygon getPolygon( final String objectType )
-  {
-    if( !containsKey( objectType ) )
-    {
-      final ProfilePolygon polygon = new ProfilePolygon( objectType );
-      put( objectType, polygon );
-    }
-
-    return get( objectType );
-  }
-
-  public boolean hasPoints( final String... keys )
-  {
-    for( final String key : keys )
-    {
-      final ProfilePolygon foundPolygon = get( key );
-      if( foundPolygon == null )
-        return false;
-    }
-
-    return true;
-  }
-
-  public IWProfPoint getAnyPoint( )
-  {
-    for( final ProfilePolygon polygon : values() )
-    {
-      final IWProfPoint point = polygon.getFirstPoint();
-      if( point != null )
-        return point;
-    }
-
-    return null;
-  }
-
+  IProfil addProfile( TuhhWspmProject project ) throws CoreException;
 }
