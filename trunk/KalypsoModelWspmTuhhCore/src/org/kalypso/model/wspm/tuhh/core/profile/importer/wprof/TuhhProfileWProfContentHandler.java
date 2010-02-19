@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -87,9 +86,9 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   public void finished( ) throws CoreException
   {
-    for( final ProfileData pic : m_data.values() )
-      pic.addProfileToProject();
-
+    final ProfileData[] data = m_data.values().toArray( new ProfileData[m_data.size()] );
+    final ProfileCreatorStrategy strategy = new ProfileCreatorStrategy( data, m_project );
+    strategy.addProfiles();
     fireChangeEvents();
   }
 
@@ -138,16 +137,12 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   private ProfileData getProfileData( final IWProfPoint wprofPoint )
   {
-    final String riverId = wprofPoint.getRiverId();
-    final BigDecimal station = wprofPoint.getStation();
-    final String profileName = wprofPoint.getProfileName();
+    final String pNam = wprofPoint.getPNam();
 
-    final String key = String.format( "%s - %s - %s", riverId, station, profileName ); //$NON-NLS-1$
+    if( !m_data.containsKey( pNam ) )
+      m_data.put( pNam, new ProfileData( m_transformer, m_punktattribute ) );
 
-    if( !m_data.containsKey( key ) )
-      m_data.put( key, new ProfileData( m_project, m_transformer, m_punktattribute ) );
-
-    return m_data.get( key );
+    return m_data.get( pNam );
   }
 
 }

@@ -72,6 +72,8 @@ public interface IWProfPoint
 
   String getProfileComment( );
 
+  String getPNam( );
+
   String getProfileName( );
 
   /**
@@ -80,4 +82,6 @@ public interface IWProfPoint
   int getNumber( );
 
   int getPartNumber( );
+
+  String getRiverName( );
 }

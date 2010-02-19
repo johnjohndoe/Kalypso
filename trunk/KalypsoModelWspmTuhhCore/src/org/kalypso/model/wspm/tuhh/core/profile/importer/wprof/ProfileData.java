@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.transformation.GeoTransformer;
@@ -57,13 +58,14 @@ class ProfileData
 
   private final GeoTransformer m_transformer;
 
-  private final TuhhWspmProject m_project;
-
   private final ProfileMarkers m_markers;
 
-  public ProfileData( final TuhhWspmProject project, final GeoTransformer transformer, final PunktattributMapping punktattribute )
+  private IProfileCreator m_profileCreator;
+
+  private IProfil m_profile;
+
+  public ProfileData( final GeoTransformer transformer, final PunktattributMapping punktattribute )
   {
-    m_project = project;
     m_transformer = transformer;
     m_markers = new ProfileMarkers( punktattribute );
   }
@@ -77,10 +79,43 @@ class ProfileData
     m_markers.addWProfPoint( wprofPoint );
   }
 
-  public void addProfileToProject( ) throws CoreException
+  public ProfileMarkers getMarkers( )
   {
-    final ProfileCreator profileCreator = new ProfileCreator( m_profilePolygones, m_markers, m_transformer );
-    profileCreator.createProfile( m_project );
+    return m_markers;
   }
 
+  public ProfilePolygones getProfilePolygones( )
+  {
+    return m_profilePolygones;
+  }
+
+  public GeoTransformer getTransformer( )
+  {
+    return m_transformer;
+  }
+
+  public void createProfile( final TuhhWspmProject project, final IProfileCreator profileCreator ) throws CoreException
+  {
+    m_profileCreator = profileCreator;
+    m_profile = profileCreator.addProfile( project );
+  }
+
+  public IProfil getProfile( )
+  {
+    return m_profile;
+  }
+
+  public IProfileCreator getProfileCreator( )
+  {
+    return m_profileCreator;
+  }
+
+  public String getRiverId( )
+  {
+    final IWProfPoint anyPoint = m_profilePolygones.getAnyPoint();
+    if( anyPoint == null )
+      return null;
+
+    return anyPoint.getRiverId();
+  }
 }

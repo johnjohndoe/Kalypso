@@ -40,14 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.transformation.GeoTransformer;
 
 /**
  * @author Gernot Belger
  */
-interface IProfileDataAdder
+public class EmptyProfileCreator extends AbstractProfileCreator
 {
-  void configure( IProfil profile, GeoTransformer transformer ) throws CoreException;
+  public EmptyProfileCreator( final ProfileData data )
+  {
+    super( "Keine Daten", data );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.AbstractProfileCreator#configure(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  @Override
+  protected void configure( final IProfil profile )
+  {
+    // nothing to do...
+  }
+
 }
