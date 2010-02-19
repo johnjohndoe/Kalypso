@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 public class RiverChannelLayer extends PointMarkerLayer
 {
 
-  public RiverChannelLayer( IProfil profil, String targetRangeProperty, ILayerStyleProvider styleProvider, int offset, boolean close )
+  public RiverChannelLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
     super( profil, targetRangeProperty, styleProvider, offset, close );
   }
@@ -71,7 +71,7 @@ public class RiverChannelLayer extends PointMarkerLayer
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void executeDrop( Point point, EditInfo dragStartData )
+  public void executeDrop( final Point point, final EditInfo dragStartData )
   {
     final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
     if( pos > -1 )
@@ -126,7 +126,7 @@ public class RiverChannelLayer extends PointMarkerLayer
          // if (change instanceof PointMarkerSetPoint )
          // {
          //   final IProfilPointMarker marker = (IProfilPointMarker)(change.getObjects()[0]);
-            final IRecord[] points = (IRecord[])(change.getObjects());
+// final IRecord[] points = (IRecord[])(change.getObjects());
          // }
         }
       }
