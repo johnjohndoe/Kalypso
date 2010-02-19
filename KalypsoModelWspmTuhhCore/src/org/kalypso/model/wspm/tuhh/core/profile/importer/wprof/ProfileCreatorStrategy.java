@@ -85,13 +85,13 @@ public class ProfileCreatorStrategy
       return new BridgeProfileCreator( data, "D01", "D02", "D03", "V99", "Verdohlung Einlauf" );
 
     if( polygones.hasPoints( "D01", "D02", "D05" ) )
-      return new BridgeProfileCreator( data, "D01", "D02", "D05", null, "Verdohlung Einlauf - Geländer als Oberkante" );
+      return new BridgeProfileCreator( data, "D01", "D02", "D05", "V99", "Verdohlung Einlauf - Geländer als Oberkante" );
 
     if( polygones.hasPoints( "D91", "D92", "D93" ) )
-      return new BridgeProfileCreator( data, "D91", "D92", "D93", null, "Verdohlung Auslauf" );
+      return new BridgeProfileCreator( data, "D91", "D92", "D93", "V99", "Verdohlung Auslauf" );
 
     if( polygones.hasPoints( "D91", "D92", "D95" ) )
-      return new BridgeProfileCreator( data, "D91", "D92", "D95", null, "Verdohlung Auslauf - Geländer als Oberkante" );
+      return new BridgeProfileCreator( data, "D91", "D92", "D95", "V99", "Verdohlung Auslauf - Geländer als Oberkante" );
 
     if( polygones.hasPoints( "V01", "K1" ) )
       return new KreisProfileCreator( data, "V01", "K1", "V03", "V99" );
