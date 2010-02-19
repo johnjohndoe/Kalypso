@@ -210,7 +210,12 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     try
     {
       final String[] photoPathes = getPhotoPathes();
-      return createPhotoUrls( photoPathes );
+      final String riverId = getRiverId();
+      final String[] pathes = new String[photoPathes.length];
+      for( int i = 0; i < pathes.length; i++ )
+        pathes[i] = String.format( "%5s\\Bilder\\%s", riverId, photoPathes[i] ); //$NON-NLS-1$
+
+      return createPhotoUrls( pathes );
     }
     catch( final MalformedURLException e )
     {
@@ -228,12 +233,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     if( imageNames == null || imageNames.length == 0 )
       return searchImages();
 
-    final String riverId = getRiverId();
-    final String[] pathes = new String[imageNames.length];
-    for( int i = 0; i < pathes.length; i++ )
-      pathes[i] = String.format( "%5s\\Bilder\\%s", riverId, imageNames[i] ); //$NON-NLS-1$
-
-    return pathes;
+    return imageNames;
   }
 
   private String[] searchImages( )
@@ -255,8 +255,8 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
       return new String[] {};
     
     final String pNam = getPNam();
-    final FilenameFilter photoFiler = new PrefixSuffixFilter( pNam, "" );
-    return photoDir.list( photoFiler );
+    final FilenameFilter photoFilter = new PrefixSuffixFilter( pNam, "" );
+    return photoDir.list( photoFilter );
   }
 
   private URL[] createPhotoUrls( final String[] photoPathes ) throws MalformedURLException
@@ -275,6 +275,9 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   private String[] getImageNames( )
   {
     final String imagesString = getProperty( "P_FOTO", String.class, "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( imagesString.trim().isEmpty() )
+      return new String[0];
+
     return imagesString.split( ";", -1 ); //$NON-NLS-1$
   }
 
