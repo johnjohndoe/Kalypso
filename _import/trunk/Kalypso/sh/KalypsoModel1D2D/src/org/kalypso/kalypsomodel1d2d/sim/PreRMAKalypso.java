@@ -71,6 +71,8 @@ public class PreRMAKalypso implements ISimulation
 
   public static final String OUTPUT_CONTROL = ISimulation1D2DConstants.R10_File;
 
+  public static final String OUTPUT_RMA_VERSION = "rmaVersion"; //$NON-NLS-1$
+
   private static final String MODEL_SPEC = "resource/preRMAKalypso.xml"; //$NON-NLS-1$
 
   public static final String ID = "org.kalypso.simulation.rma.preRMAKalypso"; //$NON-NLS-1$
@@ -158,7 +160,7 @@ public class PreRMAKalypso implements ISimulation
 
       final FileObject workingDir = manager.toFileObject( tmpdir );
       writeRma10Files( workingDir, progressMonitor, discretisationModel, flowRelationshipModel, roughnessModel, restartNodes, controlModel, calculationUnit );
-      
+
       resultEater.addResult( OUTPUT_MESH, new File( tmpdir, OUTPUT_MESH ) );
       resultEater.addResult( OUTPUT_CONTROL, new File( tmpdir, OUTPUT_CONTROL ) );
       resultEater.addResult( OUTPUT_BUILDINGS, new File( tmpdir, OUTPUT_BUILDINGS ) );
@@ -175,6 +177,8 @@ public class PreRMAKalypso implements ISimulation
 
       if( manager != null )
         manager.close();
+      
+      progressMonitor.done();
     }
   }
 
@@ -234,10 +238,6 @@ public class PreRMAKalypso implements ISimulation
     {
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.14", e.getLocalizedMessage() ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, e ) );
-    }
-    finally
-    {
-      progress.done();
     }
   }
 

@@ -327,7 +327,15 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
-        return m_calculation.runCalculation( monitor );
+        monitor.beginTask( "", 1 );
+        try
+        {
+          return m_calculation.runCalculation( monitor );
+        }
+        finally
+        {
+          monitor.done();
+        }
       }
     };
 

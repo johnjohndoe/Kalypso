@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 
 /**
@@ -64,14 +63,13 @@ public class IterationInfoJob extends Job
 
   private final IProgressMonitor m_monitor;
 
-  private final IControlModel1D2D m_controlModel;
+  private final int m_numberOfSteps;
 
-  public IterationInfoJob( final IterationInfo info, final IControlModel1D2D model, final IProgressMonitor monitor )
+  public IterationInfoJob( final IterationInfo info, final int numberOfSteps, final IProgressMonitor monitor )
   {
     super( "IterationInfoJob" ); //$NON-NLS-1$
-
-    m_monitor = SubMonitor.convert( monitor );
-    m_controlModel = model;
+    m_numberOfSteps = numberOfSteps;
+    m_monitor = SubMonitor.convert( monitor, numberOfSteps );
     m_iterationInfo = info;
   }
 
@@ -112,11 +110,11 @@ public class IterationInfoJob extends Job
     {
       String msg = ""; //$NON-NLS-1$
       if( stepNr == 0 )
-        msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.2"  ); //$NON-NLS-1$
+        msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.2" ); //$NON-NLS-1$
       else
-        msg =  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.3" , stepNr, m_controlModel.getNCYC() ); //$NON-NLS-1$
+        msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.3", stepNr, m_numberOfSteps ); //$NON-NLS-1$
 
-      m_monitor.subTask( msg );
+      m_monitor.setTaskName( msg );
       m_monitor.worked( stepNr - oldStepNr );
     }
   }

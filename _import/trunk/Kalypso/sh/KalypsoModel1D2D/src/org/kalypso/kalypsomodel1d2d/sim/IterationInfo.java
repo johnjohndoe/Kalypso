@@ -64,7 +64,6 @@ import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -108,13 +107,16 @@ public class IterationInfo
     }
   }
 
-  private final Map<String, IComponent> m_components = new HashMap<String, IComponent>();
-
-  private final List<IterationBean> m_iterations = new ArrayList<IterationBean>();
-
   private final FileObject m_itrFile;
 
   private final File m_outputDir;
+
+  /** The observations of time steps */
+  private final IObservation<TupleResult> m_timeSteps;
+
+  private final Map<String, IComponent> m_components = new HashMap<String, IComponent>();
+
+  private final List<IterationBean> m_iterations = new ArrayList<IterationBean>();
 
   /** The underlying workspace of the current observation */
   private GMLWorkspace m_workspace;
@@ -126,13 +128,11 @@ public class IterationInfo
 
   private int m_lastLineNumber;
 
-  private final IControlModel1D2D m_controlModel;
-
-  public IterationInfo( final FileObject iterObsFile, final File outputDir, final IControlModel1D2D controlModel )
+  public IterationInfo( final FileObject iterObsFile, final File outputDir, final IObservation<TupleResult> timeSteps )
   {
     m_itrFile = iterObsFile;
     m_outputDir = outputDir;
-    m_controlModel = controlModel;
+    m_timeSteps = timeSteps;
 
     /* Create observation from template */
     final URL obsTemplate = getClass().getResource( "resource/template/iterObs.gml" ); //$NON-NLS-1$
@@ -217,7 +217,7 @@ public class IterationInfo
     for( int i = 0; i < strings.length; i++ )
     {
       String lStrActSub = strings[i].trim();
-      
+
       if( "nan".equalsIgnoreCase( lStrActSub ) )
       {
         values[i] = new BigDecimal( -9999.0 );
@@ -281,9 +281,7 @@ public class IterationInfo
     if( stepNr == 0 )
       return ISimulation1D2DConstants.STEADY_DATE;
 
-    final IObservation<TupleResult> timeStepsObs = m_controlModel.getTimeSteps();
-    final TupleResult result = timeStepsObs.getResult();
-
+    final TupleResult result = m_timeSteps.getResult();
     if( m_stepNr >= result.size() )
       return null;
 

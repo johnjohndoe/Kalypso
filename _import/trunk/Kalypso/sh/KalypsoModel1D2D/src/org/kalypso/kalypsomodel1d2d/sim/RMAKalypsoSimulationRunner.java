@@ -44,41 +44,29 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.ows.ExceptionType;
 import net.opengeospatial.wps.ExecuteResponseType;
-import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManagerWrapper;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
-import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.exceptions.WPSException;
-import org.kalypso.service.wps.client.simulation.SimulationDelegate;
-import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.core.util.SimulationUtilitites;
+import org.kalypso.service.wps.refactoring.DefaultWpsObserver;
+import org.kalypso.service.wps.refactoring.IWPSObserver;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
@@ -87,7 +75,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * Represents a calculation with a rma10s.exe. Helps generation of the ASCII input files and to start the process.
  */
-public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulation1D2DConstants
+public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements ISimulation1D2DConstants, IWPSObserver
 {
   private final IControlModel1D2D m_controlModel;
 
@@ -99,15 +87,17 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
 
   private IterationInfoJob m_iterationJob;
 
-  private FileObject m_resultsDir;
+  private FileObject m_resultsDir = null;
 
-  private FileSystemManagerWrapper m_manager;
+  private final String m_serviceEndpoint;
+
+  private ExecuteRMAKalypsoSimulation m_executeRMAKalypsoSimulation;
 
   public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final IControlModel1D2D controlModel, final String serviceEndpoint )
   {
-    super( RMAKalypsoSimulation.ID, serviceEndpoint, -1 );
     m_log = geoLog;
     m_controlModel = controlModel;
+    m_serviceEndpoint = serviceEndpoint;
   }
 
   public IControlModel1D2D getControlModel( )
@@ -131,7 +121,7 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
     final IStatus simulationStatus = doRunCalculation( monitor );
     m_simulationStatus = evaluateSimulationResult( simulationStatus );
 
-    // check if status is allready in collection
+    // check if status is already in collection
     final IStatusCollection statusCollection = m_log.getStatusCollection();
     if( !statusCollection.contains( simulationStatus ) )
       m_log.log( m_simulationStatus );
@@ -139,64 +129,43 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
     return m_simulationStatus;
   }
 
-  final Modeldata getModeldata( final List<IRestartInfo> restartInfos )
+  private IStatus doRunCalculation( final IProgressMonitor progressMonitor )
   {
-    final Map<String, String> inputs = new HashMap<String, String>();
-    inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_ROUGHNESS, "../.metadata/roughness.gml" ); //$NON-NLS-1$
-
-    int restartCount = 0;
-    for( final IRestartInfo restartInfo : restartInfos )
-    {
-      final IPath restartFilePath = restartInfo.getRestartFilePath();
-      if( restartFilePath != null )
-        inputs.put( PreRMAKalypso.INPUT_RESTART_FILE_PREFIX + restartCount++, restartFilePath.toString() );
-    }
-
-    final Map<String, String> outputs = new HashMap<String, String>();
-    outputs.put( RMAKalypsoSimulation.OUTPUT_RESULTS, "rma_results" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return SimulationUtilitites.createModelData( RMAKalypsoSimulation.ID, inputs, true, outputs, true );
-  }
-
-  @SuppressWarnings("deprecation")
-  private IStatus doRunCalculation( final IProgressMonitor monitor )
-  {
-    final SubMonitor progress = SubMonitor.convert( monitor, "", 1000 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( progressMonitor, 1000 );
 
     try
     {
-      final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
+      final List<IRestartInfo> restartInfos;
+      if( m_controlModel.getRestart() )
+        restartInfos = m_controlModel.getRestartInfos();
+      else
+        restartInfos = Collections.emptyList();
 
-      @SuppressWarnings("unchecked")
-      final List<IRestartInfo> restartInfos = m_controlModel.getRestart() ? m_controlModel.getRestartInfos() : Collections.EMPTY_LIST;
-      final Modeldata modeldata = getModeldata( restartInfos );
+      // generate input files
+      final ExecutePreRMAKalypso executePreRMAKalypso = new ExecutePreRMAKalypso( m_serviceEndpoint, restartInfos );
+      final IStatus preStatus = executePreRMAKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
 
-      final SimulationDelegate delegate = new SimulationDelegate( RMAKalypsoSimulation.ID, scenarioFolder, modeldata );
-      delegate.init();
+      // abort on error
+      if( !preStatus.isOK() )
+        return preStatus;
 
-      final ProcessDescriptionType processDescription = this.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-      final Map<String, Object> inputs = delegate.createInputs( processDescription, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-      final List<String> outputs = delegate.createOutputs();
+      // gather inputs for simulation
+      final String rmaVersion = m_controlModel.getVersion();
+      final URI modelFile = new URI( executePreRMAKalypso.getModelFileUrl() );
+      final URI controlFile = new URI( executePreRMAKalypso.getControlFileUrl() );
+      final URI buildingFile = new URI( executePreRMAKalypso.getBuildingFileUrl() );
+      final URI bcwqFile = new URI( executePreRMAKalypso.getBcwqFileUrl() );
 
-      final IStatus status = this.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
-
-      // in case of a very short simulation, update at least once
-      updateIterationInfo( monitor );
-
-      delegate.finish();
-      return status;
-
-      // TODO: read other outputs
-      // - error-log
-      // - border conditions-log
+      m_executeRMAKalypsoSimulation = new ExecuteRMAKalypsoSimulation( m_serviceEndpoint, this, rmaVersion, modelFile, controlFile, buildingFile, bcwqFile );
+      final IStatus simulationStatus = m_executeRMAKalypsoSimulation.run( progress.newChild( 900, SubMonitor.SUPPRESS_NONE ) );
+      
+      // at least once update
+      handleStarted(progress, null);
+      return simulationStatus;
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.22" ), e ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.22" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -213,109 +182,6 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
         }
       }
     }
-  }
-
-  /**
-   * @see org.kalypso.service.wps.client.WPSRequest#doProcessStarted(org.eclipse.core.runtime.IProgressMonitor,
-   *      net.opengeospatial.wps.ExecuteResponseType)
-   */
-  @Override
-  protected void doProcessStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
-  {
-    super.doProcessStarted( monitor, exState );
-    updateIterationInfo( monitor );
-  }
-
-  private void updateIterationInfo( final IProgressMonitor monitor ) throws WPSException
-  {
-    if( m_iterationJob != null )
-    {
-      return;
-    }
-
-    final Map<String, ComplexValueReference> references = getReferences();
-    final ComplexValueReference complexValueReference = references.get( RMAKalypsoSimulation.OUTPUT_RESULTS );
-    if( complexValueReference == null )
-    {
-      return;
-    }
-
-    final String resultsDirReference = complexValueReference.getReference();
-    try
-    {
-      // this manager is closed when the results dir is not needed anymore
-      m_manager = VFSUtilities.getNewManager();
-      m_resultsDir = m_manager.resolveFile( resultsDirReference );
-
-      // The iteration job (and its info) monitor the content of the "Output.itr" file
-      // and inform the user about the current progress of the process.
-      // watch iteration observation directly in temp dir (only possible for local simulation)
-      final FileObject iterObsFile = m_resultsDir.resolveFile( OUTPUT_ITR );
-      // and put processed iterations GML into folder "iterObs" in result temp dir
-      //      final File iterObsDir = new File( m_resultTmpDir, "iterObs" ); //$NON-NLS-1$
-      final File iterObsDir = FileUtilities.TMP_DIR;
-      iterObsDir.mkdirs();
-
-      m_iterationInfo = new IterationInfo( iterObsFile, iterObsDir, m_controlModel );
-      m_iterationJob = new IterationInfoJob( m_iterationInfo, m_controlModel, monitor );
-      m_iterationJob.setSystem( true );
-      m_iterationJob.schedule();
-    }
-    catch( final IOException e )
-    {
-      throw new WPSException( e );
-    }
-  }
-
-  /**
-   * @see org.kalypso.service.wps.client.WPSRequest#doProcessFailed(net.opengeospatial.wps.ExecuteResponseType)
-   */
-  @Override
-  protected IStatus doProcessFailed( final ExecuteResponseType exState )
-  {
-
-    final StatusType exStatus = exState.getStatus();
-    final ProcessFailedType processFailed = exStatus.getProcessFailed();
-    final ExceptionReport exceptionReport = processFailed.getExceptionReport();
-    final List<ExceptionType> exceptions = exceptionReport.getException();
-    String messages = ""; //$NON-NLS-1$
-    for( final ExceptionType exception : exceptions )
-    {
-      final List<String> exceptionList = exception.getExceptionText();
-      final String exceptionText = Arrays.toString( exceptionList.toArray( new String[exceptionList.size()] ), "\n" ); //$NON-NLS-1$
-      messages = messages + exceptionText;
-    }
-    return errorToStatus( messages );
-  }
-
-  private IStatus errorToStatus( final String errorMessage )
-  {
-    // TODO: error or warning depends, if any steps where calculated; the rma10s should determine if result processing
-    // makes sense
-
-    final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
-    if( lines.length != 7 )
-    {
-      return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, errorMessage, null );
-    }
-
-    final int severity = IStatus.WARNING;
-    final String message = lines[0];
-
-    final GM_Object location;
-    if( lines[5].length() < 51 )
-    {
-      location = null;
-    }
-    else
-    {
-      final BigDecimal rw = new BigDecimal( lines[5].substring( 13, 26 ).trim() );
-      final BigDecimal hw = new BigDecimal( lines[5].substring( 38, 51 ).trim() );
-
-      location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-    }
-
-    return m_log.log( severity, CODE_RMA10S, message, location, null );
   }
 
   private IStatus evaluateSimulationResult( final IStatus simulationStatus )
@@ -357,5 +223,94 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
   public FileObject getTempDir( )
   {
     return m_resultsDir;
+  }
+
+  /**
+   * @see org.kalypso.service.wps.refactoring.DefaultWpsObserver#handleStarted(org.eclipse.core.runtime.IProgressMonitor,
+   *      net.opengeospatial.wps.ExecuteResponseType)
+   */
+  @Override
+  public void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
+  {
+    if( m_iterationJob != null )
+    {
+      return;
+    }
+
+    try
+    {
+      m_resultsDir = m_executeRMAKalypsoSimulation.getResultsDir();
+      if( m_resultsDir == null )
+        return;
+
+      // The iteration job (and its info) monitor the content of the "Output.itr" file
+      // and inform the user about the current progress of the process.
+      // watch iteration observation directly in temp dir (only possible for local simulation)
+      final FileObject iterObsFile = m_resultsDir.resolveFile( OUTPUT_ITR );
+      // and put processed iterations GML into folder "iterObs" in result temp dir
+      //      final File iterObsDir = new File( m_resultTmpDir, "iterObs" ); //$NON-NLS-1$
+      final File iterObsDir = FileUtilities.TMP_DIR;
+      iterObsDir.mkdirs();
+
+      m_iterationInfo = new IterationInfo( iterObsFile, iterObsDir, m_controlModel.getTimeSteps() );
+      m_iterationJob = new IterationInfoJob( m_iterationInfo, m_controlModel.getNCYC(), monitor );
+      m_iterationJob.setSystem( true );
+      m_iterationJob.schedule();
+    }
+    catch( final Exception e )
+    {
+      throw new WPSException( e );
+    }
+  }
+
+  /**
+   * @see org.kalypso.service.wps.client.WPSRequest#doProcessFailed(net.opengeospatial.wps.ExecuteResponseType)
+   */
+  @Override
+  public IStatus handleFailed( final ExecuteResponseType exState )
+  {
+
+    final StatusType exStatus = exState.getStatus();
+    final ProcessFailedType processFailed = exStatus.getProcessFailed();
+    final ExceptionReport exceptionReport = processFailed.getExceptionReport();
+    final List<ExceptionType> exceptions = exceptionReport.getException();
+    String messages = ""; //$NON-NLS-1$
+    for( final ExceptionType exception : exceptions )
+    {
+      final List<String> exceptionList = exception.getExceptionText();
+      final String exceptionText = org.kalypso.contribs.java.util.Arrays.toString( exceptionList.toArray( new String[exceptionList.size()] ), "\n" ); //$NON-NLS-1$
+      messages = messages + exceptionText;
+    }
+    return errorToStatus( messages );
+  }
+
+  private IStatus errorToStatus( final String errorMessage )
+  {
+    // TODO: error or warning depends, if any steps where calculated; the rma10s should determine if result processing
+    // makes sense
+
+    final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
+    if( lines.length != 7 )
+    {
+      return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, errorMessage, null );
+    }
+
+    final int severity = IStatus.WARNING;
+    final String message = lines[0];
+
+    final GM_Object location;
+    if( lines[5].length() < 51 )
+    {
+      location = null;
+    }
+    else
+    {
+      final BigDecimal rw = new BigDecimal( lines[5].substring( 13, 26 ).trim() );
+      final BigDecimal hw = new BigDecimal( lines[5].substring( 38, 51 ).trim() );
+
+      location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    }
+
+    return m_log.log( severity, CODE_RMA10S, message, location, null );
   }
 }

@@ -50,12 +50,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -63,6 +57,7 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
@@ -77,20 +72,15 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kurzbach
@@ -98,11 +88,21 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class RMAKalypsoSimulation implements ISimulation
 {
+  public static final String ID = "org.kalypso.model1d2d"; //$NON-NLS-1$
+
+  public static final String INPUT_RMA_VERSION = PreRMAKalypso.OUTPUT_RMA_VERSION;
+
+  public static final String INPUT_MESH = PreRMAKalypso.OUTPUT_MESH;
+
+  public static final String INPUT_BC_WQ = PreRMAKalypso.OUTPUT_BC_WQ;
+
+  public static final String INPUT_BUILDINGS = PreRMAKalypso.OUTPUT_BUILDINGS;
+
+  public static final String INPUT_CONTROL = PreRMAKalypso.OUTPUT_CONTROL;
+
   public static final String INPUT_WORKING_DIR = "workingDirectory"; //$NON-NLS-1$
 
   public static final String OUTPUT_RESULTS = "results"; //$NON-NLS-1$
-
-  public static final String ID = "org.kalypso.model1d2d"; //$NON-NLS-1$
 
   private IGeoLog m_log;
 
@@ -130,7 +130,8 @@ public class RMAKalypsoSimulation implements ISimulation
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final SimulationMonitorAdaptor progressMonitor = new SimulationMonitorAdaptor( monitor );
+    final SimulationMonitorAdaptor adapter = new SimulationMonitorAdaptor( monitor );
+    final IProgressMonitor progressMonitor = SubMonitor.convert( adapter );
     final ICancelable progressCancelable = new ProgressCancelable( progressMonitor );
 
     try
@@ -147,78 +148,21 @@ public class RMAKalypsoSimulation implements ISimulation
     FileSystemManagerWrapper manager = null;
     try
     {
-      final Map<String, Object> inputs = new HashMap<String, Object>();
-
-      final URL controlUrl = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_CONTROL );
-      inputs.put( PreRMAKalypso.INPUT_CONTROL, controlUrl.toURI() );
-
-      final URL meshUrl = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_MESH );
-      inputs.put( PreRMAKalypso.INPUT_MESH, meshUrl.toURI() );
-
-      if( inputProvider.hasID( PreRMAKalypso.INPUT_CALCULATION_UNIT_ID ) )
-      {
-        final String calcUnitID = (String) inputProvider.getInputForID( PreRMAKalypso.INPUT_CALCULATION_UNIT_ID );
-        inputs.put( PreRMAKalypso.INPUT_CALCULATION_UNIT_ID, calcUnitID );
-      }
-
-      final URL flowRelURL = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS );
-      inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, flowRelURL.toURI() );
-
-      final URL roughnessURL = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_ROUGHNESS );
-      inputs.put( PreRMAKalypso.INPUT_ROUGHNESS, roughnessURL.toURI() );
-
-      // deserialize control model for version checking
-      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlUrl, null );
-      final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
-      final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
-
-      if( controlModel.getRestart() )
-      {
-        for( int i = 0; i < 3; i++ )
-        {
-          final String restartFileInputName = PreRMAKalypso.INPUT_RESTART_FILE_PREFIX + i;
-          if( inputProvider.hasID( restartFileInputName ) )
-          {
-            final URL restartURL = (URL) inputProvider.getInputForID( restartFileInputName );
-            inputs.put( restartFileInputName, restartURL.toURI() );
-          }
-        }
-      }
-
-      final List<String> outputs = new ArrayList<String>();
-      outputs.add( ISimulation1D2DConstants.MODEL_2D );
-      outputs.add( ISimulation1D2DConstants.R10_File );
-      outputs.add( ISimulation1D2DConstants.BUILDING_File );
-      outputs.add( ISimulation1D2DConstants.BC_WQ_File );
-
-      final WPSRequest wpsRequest = new WPSRequest( PreRMAKalypso.ID, WPSRequest.SERVICE_LOCAL, 60 * 60 * 1000 );
-      final IStatus statusPreRMAKalypso = wpsRequest.run( inputs, outputs, progressMonitor );
-      if( !statusPreRMAKalypso.isOK() )
-      {
-        throw new CoreException( statusPreRMAKalypso );
-      }
+      // TODO: use URI instead of URL
+      final String version = (String) inputProvider.getInputForID( INPUT_RMA_VERSION );
+      final URL modelFileUrl = (URL) inputProvider.getInputForID( INPUT_MESH );
+      final URL controlFileUrl = (URL) inputProvider.getInputForID( INPUT_CONTROL );
+      final URL buildingFileUrl = (URL) inputProvider.getInputForID( INPUT_BUILDINGS );
+      final URL bcwqFileUrl = (URL) inputProvider.getInputForID( INPUT_BC_WQ );
 
       manager = VFSUtilities.getNewManager();
+      final FileObject modelFile = manager.resolveFile( modelFileUrl.toString() );
+      final FileObject controlFile = manager.resolveFile( controlFileUrl.toString() );
+      final FileObject buildingFile = manager.resolveFile( buildingFileUrl.toString() );
+      final FileObject bcwqFile = manager.resolveFile( bcwqFileUrl.toString() );
 
-      final Map<String, ComplexValueReference> references = wpsRequest.getReferences();
-      final ComplexValueReference modelFileReference = references.get( ISimulation1D2DConstants.MODEL_2D );
-      final String modelFileUrl = modelFileReference.getReference();
-      final FileObject modelFile = manager.resolveFile( modelFileUrl );
-
-      final ComplexValueReference controlFileReference = references.get( ISimulation1D2DConstants.R10_File );
-      final String controlFileUrl = controlFileReference.getReference();
-      final FileObject controlFile = manager.resolveFile( controlFileUrl );
-
-      final ComplexValueReference buildingFileReference = references.get( ISimulation1D2DConstants.BUILDING_File );
-      final String buildingFileUrl = buildingFileReference.getReference();
-      final FileObject buildingFile = manager.resolveFile( buildingFileUrl );
-
-      final ComplexValueReference bcwqFileReference = references.get( ISimulation1D2DConstants.BC_WQ_File );
-      final String bcwqFileUrl = bcwqFileReference.getReference();
-      final FileObject bcwqFile = manager.resolveFile( bcwqFileUrl );
-
-      // TODO: specific error message if exe was not found
-      final File exeFile = findRma10skExe( controlModel );
+      // find executable for version
+      final File exeFile = findRma10skExe( version );
       final FileObject executableFile = manager.toFileObject( exeFile );
       final String executableName = exeFile.getName();
 
@@ -254,7 +198,7 @@ public class RMAKalypsoSimulation implements ISimulation
       }
 
       // check if user cancelled
-      if( progressMonitor.isCanceled() )
+      if( progressCancelable.isCanceled() )
       {
         throw new OperationCanceledException();
       }
@@ -274,15 +218,12 @@ public class RMAKalypsoSimulation implements ISimulation
       errorOS = new BufferedOutputStream( new FileOutputStream( stderrFile ) );
 
       // check if user cancelled
-      if( monitor.isCanceled() )
+      if( progressCancelable.isCanceled() )
       {
         throw new OperationCanceledException();
       }
 
       // Run the Calculation
-      final int ncyc = controlModel.getNCYC();
-      final SubMonitor progress = SubMonitor.convert( progressMonitor, ncyc );
-      progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.15" ) ); //$NON-NLS-1$
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.0" ) + ": " + executableName ); //$NON-NLS-1$ //$NON-NLS-2$
       process.startProcess( logOS, errorOS, null, progressCancelable );
 
@@ -291,7 +232,8 @@ public class RMAKalypsoSimulation implements ISimulation
       if( errorFile == null || !errorFile.exists() || errorFile.getContent().getSize() == 0 )
       {
         /* Successfully finished simulation */
-        progressMonitor.done( StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20" ) ) ); //$NON-NLS-1$
+        monitor.setFinishInfo( IStatus.OK, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20" ) ); //$NON-NLS-1$ 
+        progressMonitor.done();
       }
       else
       {
@@ -299,9 +241,10 @@ public class RMAKalypsoSimulation implements ISimulation
         final byte[] content = FileUtil.getContent( errorFile );
         final String charset = Charset.defaultCharset().name();
         final String errorMessage = new String( content, charset );
-        final IStatus status = StatusUtilities.createErrorStatus( errorMessage );
-        progressMonitor.done( status );
+        monitor.setFinishInfo( IStatus.ERROR, errorMessage );
+        progressMonitor.done();
       }
+
     }
     catch( final ProcessTimeoutException e )
     {
@@ -332,9 +275,8 @@ public class RMAKalypsoSimulation implements ISimulation
     }
   }
 
-  private File findRma10skExe( final IControlModel1D2D controlModel ) throws CoreException
+  private File findRma10skExe( final String version ) throws CoreException
   {
-    final String version = controlModel.getVersion();
     if( version == null || version.length() == 0 )
       // REMARK: maybe could instead use a default or the one with the biggest version number?
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.23" ) ) ); //$NON-NLS-1$
