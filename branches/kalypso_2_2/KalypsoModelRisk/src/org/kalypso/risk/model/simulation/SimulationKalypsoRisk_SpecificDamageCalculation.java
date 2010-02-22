@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -55,6 +57,7 @@ import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
@@ -64,6 +67,7 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.risk.model.utils.RiskModelHelper.LAYER_TYPE;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -71,6 +75,10 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -110,13 +118,13 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     {
       final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
       simulationMonitorAdaptor.beginTask( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.1" ), 100 ); //$NON-NLS-1$
-      final GMLWorkspace controlModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.CONTROL_MODEL.name() ), null );
+      final GMLWorkspace controlModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.CONTROL_MODEL.toString() ), null );
       final IRasterizationControlModel controlModel = (IRasterizationControlModel) controlModelWorkspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
 
-      final GMLWorkspace rasterModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.RASTER_MODEL.name() ), null );
+      final GMLWorkspace rasterModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.RASTER_MODEL.toString() ), null );
       final IRasterDataModel rasterModel = (IRasterDataModel) rasterModelWorkspace.getRootFeature().getAdapter( IRasterDataModel.class );
 
-      final GMLWorkspace vectorModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.VECTOR_MODEL.name() ), null );
+      final GMLWorkspace vectorModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.VECTOR_MODEL.toString() ), null );
       final IVectorDataModel vectorModel = (IVectorDataModel) vectorModelWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
 
       final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
@@ -124,8 +132,32 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, importantDigits, simulationMonitorAdaptor );
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" ); //$NON-NLS-1$
-      resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
-      resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.name(), outputRasterTmpDir );
+      resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.toString(), tmpRasterModel );
+      resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.toString(), outputRasterTmpDir );
+
+      final boolean updateMap = inputProvider.hasID( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString() );
+      if( updateMap )
+      {
+        final URL mapURL = (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString() );
+        final File mapFile = new File( mapURL.getPath() );
+
+        /* Load the map template. */
+        final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
+        final Layers layers = gisview.getLayers();
+        final List<JAXBElement< ? extends StyledLayerType>> layersList = layers.getLayer();
+        layersList.clear();
+
+        final ObjectFactory layerObjectFactory = new ObjectFactory();
+        for( final IAnnualCoverageCollection annualCoverageCollection : rasterModel.getSpecificDamageCoverageCollection() )
+        {
+          final StyledLayerType layer = RiskModelHelper.createMapLayer( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, annualCoverageCollection );
+          final JAXBElement<StyledLayerType> jaxbLayer = layerObjectFactory.createLayer( layer );
+          layersList.add( jaxbLayer );
+        }
+        final File outMap = File.createTempFile( "tempMap", ".gml", tmpdir ); //$NON-NLS-1$
+        GisTemplateHelper.saveGisMapView( gisview, outMap, "UTF-8" );
+        resultEater.addResult( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString(), outMap );
+      }
     }
     catch( final Exception e )
     {

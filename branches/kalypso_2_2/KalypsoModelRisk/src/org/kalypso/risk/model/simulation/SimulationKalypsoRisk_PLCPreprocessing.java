@@ -61,8 +61,6 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
 {
-  private final static String INPUT_CALCULATION_NATURE = "CalculationNature";
-
   private final static String INPUT_RASTERMODEL = "RasterModel";
 
   private final static String INPUT_RASTERFOLDERSOURCEINPUT = "RasterFolderSourceInput";
@@ -89,81 +87,70 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final boolean hasCalculationNature = inputProvider.hasID( INPUT_CALCULATION_NATURE );
-    if( !hasCalculationNature )
-      return;
-    // TODO: Workaround for PLC Ticket #374, switch after fixing to the commented line
-    // final String calculationNature = (String) inputProvider.getInputForID( "CalculationNature" );
-    String calculationNature = (String) inputProvider.getInputForID( INPUT_CALCULATION_NATURE );
-    calculationNature = calculationNature.substring( calculationNature.lastIndexOf( "/" ) + 1 );
-
-    if( "PLC".equals( calculationNature ) )
+    try
     {
-      try
+      if( inputProvider.hasID( INPUT_STATUSQUO_RASTERMODEL ) )
       {
-        if( inputProvider.hasID( INPUT_STATUSQUO_RASTERMODEL ) )
+        final File actualRasterModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERMODEL ) );
+        final File actualRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEINPUT ) );
+        final File actualRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEOUTPUT ) );
+        final List<String> folders = new ArrayList<String>();
+        folders.add( "PLC" );
+        folders.add( "PLC/statusQuo" );
+        folders.add( "PLC/statusQuo/raster" );
+        folders.add( "PLC/statusQuo/raster/input" );
+        folders.add( "PLC/statusQuo/raster/output" );
+        folders.add( "PLC/difference" );
+        folders.add( "PLC/difference/raster" );
+        folders.add( "PLC/difference/raster/output" );
+        folders.add( "PLC/final" );
+        folders.add( "PLC/final/rrm" );
+        folders.add( "PLC/final/risk" );
+        folders.add( "PLC/final/risk/raster" );
+        folders.add( "PLC/final/risk/raster/output" );
+        for( final String folder : folders )
         {
-          final File actualRasterModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERMODEL ) );
-          final File actualRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEINPUT ) );
-          final File actualRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEOUTPUT ) );
-          final List<String> folders = new ArrayList<String>();
-          folders.add( "PLC" );
-          folders.add( "PLC/statusQuo" );
-          folders.add( "PLC/statusQuo/raster" );
-          folders.add( "PLC/statusQuo/raster/input" );
-          folders.add( "PLC/statusQuo/raster/output" );
-          folders.add( "PLC/difference" );
-          folders.add( "PLC/difference/raster" );
-          folders.add( "PLC/difference/raster/output" );
-          folders.add( "PLC/final" );
-          folders.add( "PLC/final/rrm" );
-          folders.add( "PLC/final/risk" );
-          folders.add( "PLC/final/risk/raster" );
-          folders.add( "PLC/final/risk/raster/output" );
-          for( final String folder : folders )
-          {
-            final File f = new File( tmpdir, folder );
-            f.mkdirs();
-            final File d = new File( f, "control.ctl" );
-            d.createNewFile();
-          }
-          final File differenceModelFolder = new File( tmpdir, "PLC/difference" );
-          final File statusQuoModelFolder = new File( tmpdir, "PLC/statusQuo" );
-          final File statusQuoRasterFolderInput = new File( tmpdir, "PLC/statusQuo/raster/input" );
-          final File statusQuoRasterFolderOutput = new File( tmpdir, "PLC/statusQuo/raster/output" );
-          if( actualRasterFolderInput.exists() )
-          {
-            FileUtils.copyDirectory( actualRasterFolderInput, statusQuoRasterFolderInput );
-          }
-          else
-          {
-            Logger.getAnonymousLogger().log( Level.WARNING, "Calculated coverages folder 'input' does not exist. Data not copied to PLC status quo folder." );
-          }
-          if( actualRasterFolderOutput.exists() )
-          {
-            FileUtils.copyDirectory( actualRasterFolderOutput, statusQuoRasterFolderOutput );
-          }
-          else
-          {
-            Logger.getAnonymousLogger().log( Level.WARNING, "Calculated coverages folder 'output' does not exist. Data not copied to PLC status quo folder." );
-          }
-          if( actualRasterModel.exists() )
-          {
-            FileUtils.copyFileToDirectory( actualRasterModel, statusQuoModelFolder );
-            FileUtils.copyFileToDirectory( actualRasterModel, differenceModelFolder );
-          }
-          else
-          {
-            Logger.getAnonymousLogger().log( Level.WARNING, "Raster model does not exist. Model not copied to PLC status quo folder." );
-          }
+          final File f = new File( tmpdir, folder );
+          f.mkdirs();
+          final File d = new File( f, "control.ctl" );
+          d.createNewFile();
+        }
+        final File differenceModelFolder = new File( tmpdir, "PLC/difference" );
+        final File statusQuoModelFolder = new File( tmpdir, "PLC/statusQuo" );
+        final File statusQuoRasterFolderInput = new File( tmpdir, "PLC/statusQuo/raster/input" );
+        final File statusQuoRasterFolderOutput = new File( tmpdir, "PLC/statusQuo/raster/output" );
+        if( actualRasterFolderInput.exists() )
+        {
+          FileUtils.copyDirectory( actualRasterFolderInput, statusQuoRasterFolderInput );
+        }
+        else
+        {
+          Logger.getAnonymousLogger().log( Level.WARNING, "Calculated coverages folder 'input' does not exist. Data not copied to PLC status quo folder." );
+        }
+        if( actualRasterFolderOutput.exists() )
+        {
+          FileUtils.copyDirectory( actualRasterFolderOutput, statusQuoRasterFolderOutput );
+        }
+        else
+        {
+          Logger.getAnonymousLogger().log( Level.WARNING, "Calculated coverages folder 'output' does not exist. Data not copied to PLC status quo folder." );
+        }
+        if( actualRasterModel.exists() )
+        {
+          FileUtils.copyFileToDirectory( actualRasterModel, statusQuoModelFolder );
+          FileUtils.copyFileToDirectory( actualRasterModel, differenceModelFolder );
+        }
+        else
+        {
+          Logger.getAnonymousLogger().log( Level.WARNING, "Raster model does not exist. Model not copied to PLC status quo folder." );
         }
       }
-      catch( final IOException e )
-      {
-        throw new SimulationException( e.getLocalizedMessage() );
-      }
-      resultEater.addResult( OUTPUT_FOLDER, tmpdir );
     }
+    catch( final IOException e )
+    {
+      throw new SimulationException( e.getLocalizedMessage() );
+    }
+    resultEater.addResult( OUTPUT_FOLDER, tmpdir );
   }
 
 }

@@ -63,6 +63,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -1332,8 +1333,8 @@ public class NaModelInnerCalcJob implements ISimulation
   {
     final IFeatureType FT_NODE = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
 
-    final String reportPathZML = "Ergebnisse/Aktuell/Report/nodesMax.zml"; //$NON-NLS-1$
-    final String reportPathCSV = "Ergebnisse/Aktuell/Report/nodesMax.csv"; //$NON-NLS-1$
+    final String reportPathZML = "Ergebnisse/Aktuell/Report/statistics.zml"; //$NON-NLS-1$
+    final String reportPathCSV = "Ergebnisse/Aktuell/Report/statistics.csv"; //$NON-NLS-1$
     final String separatorCSV = ","; //$NON-NLS-1$
 //    final Pattern stationNodePattern = Pattern.compile( "([0-9]+).*" ); //$NON-NLS-1$
 //    final Pattern stationNamePattern = Pattern.compile( ".+_(.+)\\.zml" ); //$NON-NLS-1$
@@ -1343,11 +1344,12 @@ public class NaModelInnerCalcJob implements ISimulation
     reportFileZML.getParentFile().mkdirs();
     final List<Object[]> resultValuesList = new ArrayList<Object[]>();
     final List<IAxis> resultAxisList = new ArrayList<IAxis>();
-    resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.149" ), TimeserieConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.151" ), TimeserieConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.153" ), TimeserieConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.155" ), TimeserieConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( TimeserieConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
-    resultAxisList.add( new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.159" ), TimeserieConstants.TYPE_PATH, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "NODE_ID", TimeserieConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "STATION", TimeserieConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DATE", TimeserieConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DISCHARGE", TimeserieConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( TimeserieConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( "PATH", TimeserieConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "VOLUME", TimeserieConstants.TYPE_VOLUME, TimeserieUtils.getUnit( TimeserieConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
 
     for( final Feature feature : m_resultMap.keySet() )
     {
@@ -1375,10 +1377,27 @@ public class NaModelInnerCalcJob implements ISimulation
       if( dateAxis == null || valueAxis == null )
         continue;
       double maxValue = -Double.MAX_VALUE;
+      double volume = 0.0;
       Date maxValueDate = null;
+
+      double timestepSeconds = 0.0;
+      // here we assume constant timestep in the whole timeseries data
+      if( tuppleModel.getCount() > 1 )
+      {
+        final Date date0 = (Date) tuppleModel.getElement( 0, dateAxis );
+        final Date date1 = (Date) tuppleModel.getElement( 1, dateAxis );
+        if( date0 != null && date1 != null && date1.after( date0 ) )
+        {
+          final double millisDifference = date1.getTime() - date0.getTime();
+          timestepSeconds = millisDifference / 1000.0;
+        }
+      }
+
       for( int i = 0; i < tuppleModel.getCount(); i++ )
       {
         final double value = (Double) tuppleModel.getElement( i, valueAxis );
+        volume += value * timestepSeconds;
+
         if( maxValue < value )
         {
           maxValue = value;
@@ -1390,31 +1409,11 @@ public class NaModelInnerCalcJob implements ISimulation
         logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.157", resultFileRelativePath ) ); //$NON-NLS-1$ //$NON-NLS-2$
         continue;
       }
-
-      resultValuesList.add( new Object[] { nodeTitle, nodeDescription, maxValueDate, maxValue, resultFileRelativePath } );
-
-// if( isNodeResult )
-// {
-// final Matcher nodeMatcher = stationNodePattern.matcher( observation.getName() );
-// if( nodeMatcher.matches() )
-//          resultValuesList.add( new Object[] { nodeMatcher.group( 1 ), " ", maxValueDate, maxValue } ); //$NON-NLS-1$
-// else
-//          logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.160", observation.getName(), resultFileRelativePath ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-// }
-// else
-// {
-// final Matcher stationNodeMatcher = stationNodePattern.matcher( observation.getName() );
-// final Matcher stationNameMatcher = stationNamePattern.matcher( resultFileRelativePath );
-// if( stationNodeMatcher.matches() && stationNameMatcher.matches() )
-// resultValuesList.add( new Object[] { stationNodeMatcher.group( 1 ), stationNameMatcher.group( 1 ), maxValueDate,
-      // maxValue } );
-// else
-//          logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.160", observation.getName(), resultFileRelativePath ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-// }
+      resultValuesList.add( new Object[] { nodeTitle, nodeDescription, maxValueDate, maxValue, resultFileRelativePath, volume } );
     }
-    final IAxis[] axis = resultAxisList.toArray( new IAxis[0] );
-    final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axis, resultValuesList.toArray( new Object[0][] ) );
-    final IObservation resultObservation = new SimpleObservation( reportPathZML, "ID", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), false, null, new MetadataList(), axis, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis[] axes = resultAxisList.toArray( new IAxis[0] );
+    final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axes, resultValuesList.toArray( new Object[0][] ) );
+    final IObservation resultObservation = new SimpleObservation( reportPathZML, "ID", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), false, null, new MetadataList(), axes, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
     final Observation observation = ZmlFactory.createXML( resultObservation, null );
     final Marshaller marshaller = ZmlFactory.getMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -1423,7 +1422,7 @@ public class NaModelInnerCalcJob implements ISimulation
     OutputStreamWriter writerZML = null;
     FileOutputStream streamCSV = null;
     OutputStreamWriter writerCSV = null;
-    final SimpleDateFormat dateFormat = new SimpleDateFormat( "MM/dd/yy" ); //$NON-NLS-1$
+    final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss Z" ); //$NON-NLS-1$
     try
     {
       streamCSV = new FileOutputStream( reportFileCSV );
@@ -1441,10 +1440,13 @@ public class NaModelInnerCalcJob implements ISimulation
         writerCSV.write( dateFormat.format( currentElement ) );
         writerCSV.write( separatorCSV );
         currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 3 ) );
-        writerCSV.write( currentElement.toString().replaceFirst( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        writerCSV.write( getDoubleValueFormatted( currentElement ) );
         writerCSV.write( separatorCSV );
         currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 4 ) );
         writerCSV.write( currentElement.toString() );
+        writerCSV.write( separatorCSV );
+        currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 5 ) );
+        writerCSV.write( getDoubleValueFormatted( currentElement ) );
         writerCSV.write( "\n" ); //$NON-NLS-1$
       }
       writerCSV.flush();
@@ -1458,6 +1460,30 @@ public class NaModelInnerCalcJob implements ISimulation
       IOUtils.closeQuietly( streamZML );
       IOUtils.closeQuietly( writerCSV );
       IOUtils.closeQuietly( streamCSV );
+    }
+  }
+
+  private final String getDoubleValueFormatted( final Object object )
+  {
+    if( object == null )
+      return "";
+    try
+    {
+      double value = Double.NaN;
+      if( object instanceof Double )
+      {
+        value = (Double) object;
+      }
+      else if( object instanceof String )
+      {
+        value = Double.parseDouble( (String) object );
+      }
+      return String.format( Locale.ENGLISH, "%.8f", value );
+    }
+    catch( final Exception e )
+    {
+      Logger.getAnonymousLogger().log( Level.WARNING, e.getLocalizedMessage() );
+      return object.toString();
     }
   }
 

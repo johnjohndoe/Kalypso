@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	<!-- Styles -->
+	<catalog:system systemId="urn:style:sld:risk:inundation:waterlevel" uri="./WaterlevelCoverage.sld" />
+	<catalog:system systemId="urn:style:sld:risk:inundation:differences" uri="./WaterlevelDifferences.sld" />
+	<catalog:system systemId="urn:style:sld:risk:damage:specific" uri="./SpecificDamagePotential.sld" />
+	<catalog:system systemId="urn:style:sld:risk:zones:results" uri="./RiskZonesCoverage.sld" />
+	<catalog:system systemId="urn:style:sld:risk:result:differences" uri="./RiskResultDifferences.sld" />
+</catalog:catalog>
