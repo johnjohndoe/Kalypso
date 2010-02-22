@@ -77,7 +77,10 @@ public interface ISimulationSpecKalypsoRisk
     RASTER_MODEL,
     VECTOR_MODEL,
     INPUT_RASTER_FOLDER,
-    OUTPUT_RASTER_FOLDER;
+    OUTPUT_RASTER_FOLDER,
+    MAP_SPECIFIC_DAMAGE_POTENTIAL,
+    MAP_WATERLEVEL,
+    OUTPUT_SLD;
 
     public String getValue( )
     {
@@ -95,6 +98,12 @@ public interface ISimulationSpecKalypsoRisk
           return "models/raster/input"; //$NON-NLS-1$
         case OUTPUT_RASTER_FOLDER:
           return "models/raster/output"; //$NON-NLS-1$
+        case MAP_SPECIFIC_DAMAGE_POTENTIAL:
+          return "maps/SpecificDamagePotentialMap.gmt"; //$NON-NLS-1$
+        case MAP_WATERLEVEL:
+          return "maps/WaterlevelMap.gmt"; //$NON-NLS-1$
+        case OUTPUT_SLD:
+          return "styles/SpecificDamagePotentialCoverage.sld"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }

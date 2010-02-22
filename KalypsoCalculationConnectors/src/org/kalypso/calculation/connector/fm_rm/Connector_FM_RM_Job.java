@@ -2,6 +2,9 @@ package org.kalypso.calculation.connector.fm_rm;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
 
 import ogc31.www.opengis.net.gml.FileType;
 
@@ -9,15 +12,23 @@ import org.apache.commons.io.FileUtils;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_FM_RM;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.MODELSPEC_KALYPSORISK;
+import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.risk.model.utils.RiskModelHelper.LAYER_TYPE;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -63,7 +74,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
       {
         final IAnnualCoverageCollection annualCoverageCollection = riskWaterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
-        annualCoverageCollection.setReturnPeriod(runoffEvent.getReturnPeriod());
+        annualCoverageCollection.setReturnPeriod( runoffEvent.getReturnPeriod() );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         for( final ICoverage coverage : coverages )
         {
@@ -88,10 +99,34 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
         }
       }
       GmlSerializer.serializeWorkspace( rmOutputFile, rmModel, "UTF-8" );
-      setStatus( STATUS.OK, "Success" );
-// if (isOkStatus())
       resultEater.addResult( MODELSPEC_CONNECTOR_FM_RM.RM_Model.name(), rmOutputFile );
       resultEater.addResult( MODELSPEC_CONNECTOR_FM_RM.RM_InputRasterFolder.name(), rmInputRasterFolder );
+
+      final boolean updateMap = inputProvider.hasID( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString() );
+      if( updateMap )
+      {
+        final URL mapURL = (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString() );
+        final File mapFile = new File( mapURL.getPath() );
+
+        /* Load the map template. */
+        final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
+        final Layers layers = gisview.getLayers();
+        final List<JAXBElement< ? extends StyledLayerType>> layersList = layers.getLayer();
+        layersList.clear();
+
+        final ObjectFactory layerObjectFactory = new ObjectFactory();
+        for( final IAnnualCoverageCollection annualCoverageCollection : riskWaterlevelCoverageCollection )
+        {
+          final StyledLayerType layer = RiskModelHelper.createMapLayer( LAYER_TYPE.WATERLEVEL, annualCoverageCollection );
+          final JAXBElement<StyledLayerType> jaxbLayer = layerObjectFactory.createLayer( layer );
+          layersList.add( jaxbLayer );
+        }
+        final File outMap = File.createTempFile( "tempMap", ".gml", tmpdir ); //$NON-NLS-1$
+        GisTemplateHelper.saveGisMapView( gisview, outMap, "UTF-8" );
+        resultEater.addResult( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString(), outMap );
+      }
+
+      setStatus( STATUS.OK, "Success" );
     }
     catch( final Exception e )
     {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
-	<input id="CalculationNature" type="xs:string" optional="true" />
 	<input id="MetaSteuerdaten" description="Steuerdaten - Allgemein"/>
 	<input id="Modell" description="Modelldaten"/>
 	<input id="AnalyseModellXSD" description="Schema der Modelldaten fue Analyse" optional="true"/>

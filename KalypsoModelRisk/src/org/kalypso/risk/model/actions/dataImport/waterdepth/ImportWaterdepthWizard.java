@@ -149,7 +149,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
       scenarioDataProvider.saveModel( new NullProgressMonitor() );
 
       // remove themes that are showing invalid coverages
-      RiskModelHelper.updateWaterdepthLayers( scenarioFolder, rasterDataModel, rasterInfos, mapModell );
+      RiskModelHelper.updateWaterdepthLayers( rasterDataModel, rasterInfos, mapModell );
 
       // fireModellEvent to redraw a map...
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();

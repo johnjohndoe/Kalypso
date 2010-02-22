@@ -123,11 +123,11 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
           // observation...)
           for( final IAxis element : axisList )
           {
-            if( "Knoten - Nr.".equals( element.getName() ) )
+            if( "NODE_ID".equals( element.getName() ) )
             {
               axisNodeNr = element;
             }
-            if( "max. Abfluss".equals( element.getName() ) )
+            if( "DISCHARGE".equals( element.getName() ) )
             {
               axisMaxDischarge = element;
             }
