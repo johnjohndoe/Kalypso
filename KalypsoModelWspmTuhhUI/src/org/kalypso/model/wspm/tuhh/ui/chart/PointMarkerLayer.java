@@ -220,7 +220,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() )
+    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved()||hint.isProfilPropertyChanged() )
     {
       getEventHandler().fireLayerContentChanged( this );
     }

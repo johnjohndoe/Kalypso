@@ -60,12 +60,13 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
   /**
    * deletes this pointmarker
    * 
-   * @param deviderTyp,deviderIndex
-   *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
+   * @param deviderTyp
+   *          ,deviderIndex devider=IProfil.getDevider(deviderTyp)[deviderIndex] deviderindex < 0 remove all deviders
+   *          (same as remove component)
    */
   public DelDeviderResolution( final int deviderIndex, final String deviderTyp )
   {
-    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution.0"), null, null ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution.0" ), null, null ); //$NON-NLS-1$
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
     m_initialized = true;
@@ -73,7 +74,7 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
 
   public DelDeviderResolution( )
   {
-    this(-1,""); //$NON-NLS-1$
+    this( -1, "" ); //$NON-NLS-1$
     m_initialized = false;
   }
 
@@ -95,6 +96,9 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
     if( m_initialized )
     {
       final IComponent comp = profil.hasPointProperty( m_deviderTyp );
+      if( m_deviderIndex < 0 )
+        return profil.removePointProperty( comp );
+
       final IProfilPointMarker[] markers = profil.getPointMarkerFor( comp );
       final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
 
