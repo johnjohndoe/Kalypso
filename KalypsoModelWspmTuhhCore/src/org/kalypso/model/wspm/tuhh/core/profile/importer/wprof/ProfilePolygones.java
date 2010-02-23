@@ -84,4 +84,18 @@ class ProfilePolygones extends HashMap<String, ProfilePolygon>
     return null;
   }
 
+  public int getNumPoints( )
+  {
+    int numPoints = 0;
+    for( final ProfilePolygon poly : values() )
+      numPoints += poly.size();
+
+    return numPoints;
+  }
+
+  public String[] getAllIDs( )
+  {
+    return keySet().toArray( new String[size()] );
+  }
+
 }

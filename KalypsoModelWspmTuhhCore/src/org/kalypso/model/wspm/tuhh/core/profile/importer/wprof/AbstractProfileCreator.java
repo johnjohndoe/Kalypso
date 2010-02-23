@@ -47,7 +47,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -86,6 +86,11 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
 
     return polygon.getPoints();
   }
+  
+  protected final ProfilePolygones getPolygones( )
+  {
+    return m_data.getProfilePolygones();
+  }
 
   public GM_Point transform( final GM_Point location ) throws Exception
   {
@@ -118,8 +123,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
       e.printStackTrace();
 
       final IStatus status = e.getStatus();
-      final String message = StatusUtilities.messageFromStatus( status );
-      profile.setComment( message );
+      profile.setComment( status.toString() );
     }
     finally
     {
@@ -193,9 +197,16 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final String profileName = wprofPoint.getProfileName();
 
     profile.setName( profileName );
-    profile.setComment( comment );
-    // FIXME:
+    
+    final ProfilePolygones profilePolygones = m_data.getProfilePolygones();
+    final int numPoints = profilePolygones.getNumPoints();
+    final String[] objTypes = profilePolygones.getAllIDs();
+    final String objTypesString = Arrays.toString( objTypes, ", " );
+    final String profileComment = comment + "\nVorhandene Datenarten: " + objTypesString + "\nPunkte insgesammt: " + numPoints;
+    // FIXME: ROLF
+    profile.setComment( profileComment );
 
+    // FIXME:
     profile.setStation( station == null ? -999.999 : station.doubleValue() );
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );

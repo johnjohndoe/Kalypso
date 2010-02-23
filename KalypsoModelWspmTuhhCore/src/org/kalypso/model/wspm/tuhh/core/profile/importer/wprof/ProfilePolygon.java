@@ -95,4 +95,9 @@ class ProfilePolygon
     return m_objectType;
   }
 
+  public int size( )
+  {
+    return m_points.size();
+  }
+
 }

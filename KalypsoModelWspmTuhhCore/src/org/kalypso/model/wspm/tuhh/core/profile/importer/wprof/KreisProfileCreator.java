@@ -53,27 +53,32 @@ import com.vividsolutions.jts.geom.Envelope;
 
 class KreisProfileCreator extends BridgeProfileCreator
 {
-  private final String m_kreisPoints;
-
-  public KreisProfileCreator( final ProfileData data, final String soilPoints, final String kreisPoints, final String okPoints, final String bridgeWidthPoints )
+  public KreisProfileCreator( final String description, final ProfileData data, final String soilPoints, final String okPoints, final String bridgeWidthPoints )
   {
-    super( data, soilPoints, null, okPoints, bridgeWidthPoints, "Kreisdurchlass" );
-
-    m_kreisPoints = kreisPoints;
-  }
-
-  private IWProfPoint[] getKreisPoints( )
-  {
-    final IWProfPoint[] kreisPoints = getPoints( m_kreisPoints );
-    return kreisPoints;
+    super( data, soilPoints, null, okPoints, bridgeWidthPoints, description );
   }
 
   @Override
   protected IWProfPoint[] getSoilPoints( )
   {
-    final IWProfPoint[] soilPoints = super.getSoilPoints();
-    final IWProfPoint[] kreisPoints = getKreisPoints();
+    IWProfPoint[] soilPoints = super.getSoilPoints();
 
+    final ProfilePolygones polygones = getPolygones();
+    final String[] allIDs = polygones.getAllIDs();
+    for( final String id : allIDs )
+    {
+      if( id.startsWith( "K" ) )
+      {
+        final IWProfPoint[] kreisPoints = polygones.getPolygon( id ).getPoints();
+        soilPoints = applyKreis( soilPoints, kreisPoints );
+      }
+    }
+
+    return soilPoints;
+  }
+
+  private IWProfPoint[] applyKreis( final IWProfPoint[] soilPoints, final IWProfPoint[] kreisPoints )
+  {
     final Envelope envelope = calculateEnvelope( kreisPoints );
     final double yHalf = getYHalf( envelope );
 
@@ -87,7 +92,6 @@ class KreisProfileCreator extends BridgeProfileCreator
 
     return newPointsList.toArray( new IWProfPoint[newPointsList.size()] );
   }
-
 
   private static void addSmaller( final Collection<IWProfPoint> listToAdd, final double x, final IWProfPoint[] input, final boolean smaller )
   {
@@ -105,11 +109,24 @@ class KreisProfileCreator extends BridgeProfileCreator
   @Override
   protected IWProfPoint[] getUkPoints( )
   {
-    final IWProfPoint[] kreisPoints = getKreisPoints();
-    final Envelope envelope = calculateEnvelope( kreisPoints );
-    final double yHalf = getYHalf( envelope );
+    final Collection<IWProfPoint> ukPoints = new ArrayList<IWProfPoint>();
 
-    return getHalfPoints( kreisPoints, yHalf, true );
+    final ProfilePolygones polygones = getPolygones();
+    final String[] allIDs = polygones.getAllIDs();
+    for( final String id : allIDs )
+    {
+      if( id.startsWith( "K" ) )
+      {
+        final IWProfPoint[] kreisPoints = polygones.getPolygon( id ).getPoints();
+        final Envelope envelope = calculateEnvelope( kreisPoints );
+        final double yHalf = getYHalf( envelope );
+
+        final IWProfPoint[] upperPoints = getHalfPoints( kreisPoints, yHalf, true );
+        ukPoints.addAll( Arrays.asList( upperPoints ) );
+      }
+    }
+
+    return ukPoints.toArray( new IWProfPoint[ukPoints.size()] );
   }
 
   private static double getYHalf( final Envelope envelope )

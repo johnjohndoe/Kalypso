@@ -72,10 +72,8 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
  */
 public class PrfSink implements IProfilSink
 {
-
   private String toDataBlockKey( final Object profilKey )
   {
-
     if( IWspmTuhhConstants.WEHR_TYP_BEIWERT.equals( profilKey ) )
       return "BEIWERT"; //$NON-NLS-1$
     else if( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG.equals( profilKey ) )
@@ -657,7 +655,7 @@ public class PrfSink implements IProfilSink
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
    */
   @Override
-  public boolean write( Object source, Writer writer ) throws IOException
+  public boolean write( final Object source, final Writer writer ) throws IOException
   {
     if( source instanceof IProfil )
       return internalWrite( (IProfil) source, writer );

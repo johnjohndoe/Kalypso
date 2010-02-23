@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -65,6 +66,8 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
 
   private String m_shapeDefaultSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
+  private Charset m_shapeCharset = Charset.defaultCharset();
+
   private final IWProfContentHandler m_handler;
 
   private final IWProfPointFactory m_factory;
@@ -75,6 +78,11 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
 
     m_handler = handler;
     m_factory = factory;
+  }
+
+  public void setShapeCharset( final Charset charset )
+  {
+    m_shapeCharset = charset;
   }
 
   public void setShapeDefaultSrs( final String shapeDefaultSrs )
@@ -113,7 +121,7 @@ public class WProfImportOperation implements ICoreRunnableWithProgress
     final String shapeFilePath = m_wprofShape.getAbsolutePath();
     final String shapeFileBase = FilenameUtils.removeExtension( shapeFilePath );
 
-    final WProfImporter wProfImporter = new WProfImporter( shapeFileBase, m_factory );
+    final WProfImporter wProfImporter = new WProfImporter( shapeFileBase, m_shapeCharset, m_factory );
     wProfImporter.setShapeDefaultSrs( m_shapeDefaultSrs );
 
     /* Create Empty WSPM-Workspace */
