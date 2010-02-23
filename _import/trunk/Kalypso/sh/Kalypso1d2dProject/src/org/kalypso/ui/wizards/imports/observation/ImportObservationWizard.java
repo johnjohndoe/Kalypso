@@ -86,9 +86,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.RepositoryContainerSingelton;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.file.FileItem;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
@@ -161,7 +161,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
   private ZmlObservationRepository configureRepository( )
   {
     /* repository container */
-    final IRepositoryContainer repositoryContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
+    final IRepositoryContainer repositoryContainer = RepositoryContainerSingelton.getInstance().getContainer();
 
     /* add new project repository */
     final String location = m_timeseriesFolder.getLocation().toOSString();
