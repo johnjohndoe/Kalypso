@@ -124,10 +124,11 @@ public class WProfImportWizard extends Wizard
     final IWProfPointFactory pointFactory = new BCEShapeWPRofContentProviderFactory( photoContext );
 
     final WProfImportOperation op = new WProfImportOperation( shapeFile, handler, pointFactory );
+    op.setShapeCharset( m_wprofFilePage.getShapeCharset() );
     op.setShapeDefaultSrs( m_wprofFilePage.getShapeDefaultSrs() );
 
     final IWizardContainer container = getContainer();
-    final IStatus result = RunnableContextHelper.execute( container, true, false, op );
+    final IStatus result = RunnableContextHelper.execute( container, true, true, op );
     ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to import WProf data", result );
 
     return !result.matches( IStatus.ERROR );

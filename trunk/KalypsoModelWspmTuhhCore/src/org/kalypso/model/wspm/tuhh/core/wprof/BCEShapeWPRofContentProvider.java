@@ -150,7 +150,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     final double station = getProperty( "STATION", Double.class, Double.NaN ); //$NON-NLS-1$ 
     try
     {
-      return new BigDecimal( station ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+      return new BigDecimal( station / 1000.0 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     }
     catch( final NumberFormatException e )
     {
@@ -211,9 +211,10 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     {
       final String[] photoPathes = getPhotoPathes();
       final String riverId = getRiverId();
+      final String river5Id = String.format( "%5s", riverId ).replace( ' ', '0' );
       final String[] pathes = new String[photoPathes.length];
       for( int i = 0; i < pathes.length; i++ )
-        pathes[i] = String.format( "%5s\\Bilder\\%s", riverId, photoPathes[i] ); //$NON-NLS-1$
+        pathes[i] = String.format( "%s\\Bilder\\%s", river5Id, photoPathes[i] ); //$NON-NLS-1$
 
       return createPhotoUrls( pathes );
     }
@@ -298,14 +299,15 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
     final String pdfUrl = getPdfUrl();
 
-    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s%nPDF: %s", getRiverId(), profileName, getComment(), getObjectType(), dateText, pdfUrl ); //$NON-NLS-1$
+    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s%nPDF: %s ", getRiverId(), profileName, getComment(), getObjectType(), dateText, pdfUrl ); //$NON-NLS-1$
   }
 
   private String getPdfUrl( )
   {
     final String riverId = getRiverId();
+    final String river5Id = String.format( "%5s", riverId ).replace( ' ', '0' );
     final String pNam = getPNam();
-    final String pdfPath = String.format( "%5s\\Querprofile\\%s.pdf", riverId, pNam ); //$NON-NLS-1$
+    final String pdfPath = String.format( "%s\\Querprofile\\%s.pdf", river5Id, pNam ); //$NON-NLS-1$s
 
     try
     {

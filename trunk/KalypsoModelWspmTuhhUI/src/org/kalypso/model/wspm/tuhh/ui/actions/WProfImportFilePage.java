@@ -43,10 +43,13 @@ package org.kalypso.model.wspm.tuhh.ui.actions;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -55,6 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.CharsetViewer;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
@@ -70,11 +74,15 @@ public class WProfImportFilePage extends WizardPage
 {
   static final String SETTINGS_CRS = "wprofShapeCrs";
 
+  private static final String SETTINGS_CHARSET = "wprofShapeCharset";
+
   private FileChooserGroup m_shapeChooser;
 
   private FileChooserGroup m_imageChooser;
 
   private CRSSelectionPanel m_crsPanel;
+
+  private CharsetViewer m_charsetViewer;
 
   public WProfImportFilePage( final String pageName )
   {
@@ -98,18 +106,66 @@ public class WProfImportFilePage extends WizardPage
     panelLayout.marginHeight = 0;
     panel.setLayout( panelLayout );
 
-
     final Control fileControl = createFileControl( panel );
     fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Control srsControl = createSrsControl( panel );
     srsControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+    final Control charsetControl = createCharsetControl( panel );
+    charsetControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
     final Control imageContextControl = createImageContextControl( panel );
     imageContextControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     setControl( panel );
     setMessage( null, IMessageProvider.NONE );
+  }
+
+  private Control createCharsetControl( final Composite panel )
+  {
+    final Group group = new Group( panel, SWT.NONE );
+    group.setText( "Character Encoding" );
+    group.setLayout( new GridLayout() );
+
+    m_charsetViewer = new CharsetViewer( group );
+    m_charsetViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+    {
+      final String charsetName = dialogSettings.get( SETTINGS_CHARSET );
+      if( charsetName == null )
+        m_charsetViewer.setCharset( Charset.defaultCharset() );
+      else
+      {
+        final Charset charset = Charset.forName( charsetName );
+        m_charsetViewer.setCharset( charset );
+      }
+
+      m_charsetViewer.addSelectionChangedListener( new ISelectionChangedListener()
+      {
+        @Override
+        public void selectionChanged( final SelectionChangedEvent event )
+        {
+          handleCharsetChanged( dialogSettings );
+        }
+      } );
+    }
+
+    return group;
+  }
+
+  protected void handleCharsetChanged( final IDialogSettings dialogSettings )
+  {
+    final Charset charset = m_charsetViewer.getCharset();
+    if( charset == null )
+      dialogSettings.put( SETTINGS_CHARSET, (String) null );
+    else
+    {
+      final String charsetName = charset.name();
+      dialogSettings.put( SETTINGS_CHARSET, charsetName );
+    }
   }
 
   private Control createSrsControl( final Composite parent )
@@ -250,6 +306,11 @@ public class WProfImportFilePage extends WizardPage
     {
       return null;
     }
+  }
+
+  public Charset getShapeCharset( )
+  {
+    return m_charsetViewer.getCharset();
   }
 
 }

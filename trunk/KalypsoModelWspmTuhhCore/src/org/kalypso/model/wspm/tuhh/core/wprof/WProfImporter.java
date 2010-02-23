@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.wprof;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -68,9 +69,12 @@ public class WProfImporter
 
   private final IWProfPointFactory m_pointFactory;
 
-  public WProfImporter( final String shapePath, final IWProfPointFactory pointFactory )
+  private final Charset m_shapeCharset;
+
+  public WProfImporter( final String shapePath, final Charset shapeCharset, final IWProfPointFactory pointFactory )
   {
     m_shapePath = shapePath;
+    m_shapeCharset = shapeCharset;
     m_pointFactory = pointFactory;
   }
 
@@ -93,7 +97,7 @@ public class WProfImporter
     final String shapeSrs = ShapeSerializer.loadCrs( prjFile.toURI().toURL(), m_shapeDefaultSrs );
 
     monitor.subTask( "reading shape file..." );
-    final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( m_shapePath, shapeSrs, new SubProgressMonitor( monitor, 500 ) );
+    final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( m_shapePath, shapeSrs, m_shapeCharset, new SubProgressMonitor( monitor, 500 ) );
 
     final FeatureList w80features = (FeatureList) w80shapeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     System.out.println( String.format( "Read %d points", w80features.size() ) );

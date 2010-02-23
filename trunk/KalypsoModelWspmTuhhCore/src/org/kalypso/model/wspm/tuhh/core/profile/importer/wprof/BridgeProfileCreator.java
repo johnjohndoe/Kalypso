@@ -51,6 +51,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -181,7 +182,6 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     final IRecord lastUK = snapFirstToHeight( heightIndex, ukIndex, points, precision );
     snapFirstToHeight( heightIndex, okIndex, points, precision );
 
-    // FIXME:
     moveAllAbove( heightIndex, ukIndex, points );
     moveAllAbove( ukIndex, okIndex, points );
 
@@ -272,6 +272,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     profile.addPointProperty( component );
 
+    // FIXME: Rücksprünge in Brücken sind bei WSPM nicht möglich... es sollte daher irgendwas korrigiert werden...
+
     try
     {
       final int bridgeIndex = profile.indexOfProperty( bridgeProperty );
@@ -283,7 +285,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
         final double value = wprofPoint.getValue();
         final String comment = wprofPoint.getComment();
 
-        final IRecord point = ProfilUtil.findOrInsertPointAt( profile, distance );
+        final IRecord point = findOrInsertPointAt( profile, distance, bridgeIndex );
 
         point.setValue( bridgeIndex, value );
 
@@ -310,11 +312,32 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
   }
 
+  private IRecord findOrInsertPointAt( final IProfil profile, final BigDecimal distance, final int buildPropertyIndex )
+  {
+    final int indexOfDistance = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+
+    final IRecord existingPoint = ProfilUtil.findPoint( profile, distance.doubleValue(), 0.00001 );
+    if( existingPoint != null )
+    {
+      final Object buildingValue = existingPoint.getValue( buildPropertyIndex );
+      if( buildingValue == null )
+        return existingPoint;
+    }
+
+    // If no point with this width exist or if it already has the buildingProperty, create a new one:
+    final IRecord newPoint = profile.createProfilPoint();
+    newPoint.setValue( indexOfDistance, new Double( distance.doubleValue() ) );
+
+    final IRecord pointBefore = ProfilUtil.getPointBefore( profile, distance.doubleValue() );
+    ProfilUtil.insertPoint( profile, newPoint, pointBefore );
+    return newPoint;
+  }
+
   @Override
   protected void addMarker( final IProfil profile )
   {
     // Keine trennflächen: they will be set to the bridges edges
-    // FIXME: doch drinlassen?
+    // Keine Bordvollpunkte: verboten bei Brücken
 // addMarker( profile, MARKER_TYP_BORDVOLL );
     addMarker( profile, MARKER_TYP_DURCHSTROEMTE );
   }
