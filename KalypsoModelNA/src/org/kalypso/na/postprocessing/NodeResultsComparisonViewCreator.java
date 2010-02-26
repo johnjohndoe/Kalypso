@@ -20,7 +20,9 @@ import org.kalypso.template.obstableview.Obstableview.Rules;
 
 public final class NodeResultsComparisonViewCreator
 {
-  final static Color[] OBS_COLOR = new Color[] { new Color( 78, 227, 28 ), new Color( 0, 128, 64 ) };
+  final static Color COLOR_STATUSQUO = new Color( 0, 255, 0 );
+
+  final static Color COLOR_SCENARIO = new Color( 0, 0, 255 );
 
   public final static Obsdiagview createView( final String title, final String legendTitle, final String izPath, final String calculatePath, final String nodeID )
   {
@@ -38,8 +40,8 @@ public final class NodeResultsComparisonViewCreator
     mappingsMap.put( "date", "Datum" );
     mappingsMap.put( "Q", "Abfluss" );
     final List<TypeObservation> observationList = view.getObservation();
-    observationList.add( createDiagObservation( izPath, "Q - " + nodeID + " - Ist Zustand", "C1", OBS_COLOR[0], mappingsMap ) );
-    observationList.add( createDiagObservation( calculatePath, "Q - " + nodeID + " - Szenario", "C2", OBS_COLOR[1], mappingsMap ) );
+    observationList.add( createDiagObservation( izPath, "Q - " + nodeID + " - Status Quo", "C1", COLOR_STATUSQUO, mappingsMap ) );
+    observationList.add( createDiagObservation( calculatePath, "Q - " + nodeID + " - Szenario", "C2", COLOR_SCENARIO, mappingsMap ) );
     return view;
   }
 
@@ -99,7 +101,7 @@ public final class NodeResultsComparisonViewCreator
     curve.setName( obsTitle );
     curve.setId( obsID );
     curve.setStroke( new TypeCurve.Stroke() );
-    curve.getStroke().setWidth( 3.0f );
+    curve.getStroke().setWidth( 1.25f );
     curve.setShown( true );
     final List<TypeAxisMapping> mappings = curve.getMapping();
     for( final String key : mappingsMap.keySet() )
