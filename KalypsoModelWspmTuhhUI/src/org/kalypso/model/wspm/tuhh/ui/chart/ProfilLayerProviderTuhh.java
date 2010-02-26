@@ -154,13 +154,26 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.3" ), view.getProfil(), true ); //$NON-NLS-1$
       final IComponent rauheit_kst = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
       final IComponent rauheit_ks = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-      final IComponent rauheit_alt = rauheit_kst == null ? rauheit_ks : provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
-      final IComponent rauheit_neu = rauheit_ks == null ? rauheit_kst : provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+      final IComponent rauheit_neu;
+      final IComponent rauheit_alt;
+      final Object[] values;
 
-      final Object[] valuesFor = ProfilUtil.getValuesFor( profil, rauheit_alt );
+      if( rauheit_ks == null && rauheit_kst == null )
+      {
+        rauheit_neu = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+        rauheit_alt = null;
+        values = new Object[] { 0.0 };
+      }
+      else
+      {
+        rauheit_alt = rauheit_kst == null ? rauheit_ks : provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+        rauheit_neu = rauheit_ks == null ? rauheit_kst : provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+        values = ProfilUtil.getValuesFor( profil, rauheit_alt );
+        operation.addChange( new PointPropertyRemove( profil, rauheit_alt ) );
+
+      }
       m_targetAxisRight.setLabel( "[" + rauheit_neu.getUnit() + "]" );
-      operation.addChange( new PointPropertyRemove( profil, rauheit_alt ) );
-      operation.addChange( new PointPropertyAdd( profil, rauheit_neu, valuesFor ) );
+      operation.addChange( new PointPropertyAdd( profil, rauheit_neu, values ) );
       new ProfilOperationJob( operation ).schedule();
       return null;
     }
@@ -203,6 +216,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   {
     final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
     final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
+
     final IProfil profil = view.getProfil();
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
@@ -254,13 +268,16 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   final void setAxisLabel( final IProfil profil )
   {
     final String formatStr = "[%s]";
-    m_domainAxis.setLabel(String.format( formatStr,profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getUnit() ));
-    m_targetAxisLeft.setLabel(String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getUnit() ));
-    final IComponent roughness = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-    if( roughness == null )
-      m_targetAxisRight.setLabel(String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ).getUnit() ));
+    m_domainAxis.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getUnit() ) );
+    m_targetAxisLeft.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getUnit() ) );
+    final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    if( roughnessKS != null )
+      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKS.getUnit() ) );
+    else if( roughnessKST != null )
+      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKST.getUnit() ) );
     else
-      m_targetAxisRight.setLabel(String.format( formatStr, roughness.getUnit()) );
+      m_targetAxisRight.setLabel( "" );
   }
 
   /**
