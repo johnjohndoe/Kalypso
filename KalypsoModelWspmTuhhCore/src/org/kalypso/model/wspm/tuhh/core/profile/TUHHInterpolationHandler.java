@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
+import java.math.BigDecimal;
+
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IInterpolationHandler;
@@ -62,7 +64,7 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
    * @see org.kalypso.observation.result.IInterpolationHandler#doInterpolation(java.lang.String, java.lang.Double,
    *      java.lang.Double)
    */
-  public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final Double distance )
+  public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final double distance )
   {
     if( result == null || record == null || index < 0 || index > result.size() - 2 )
       return false;
@@ -75,11 +77,12 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
         final int i = result.indexOfComponent( id );
         if( i < 0 )
           continue;
-        final Double v1 = (Double) previous.getValue( i );
-        final Double v2 = (Double) next.getValue( i );
-        final Double value = v1 + (v2 - v1) * distance;
-        record.setValue( i, value );
+        final Object v1 = previous.getValue( i );
+        final Object v2 = next.getValue( i );
+        final Object interp = interpolateValues( v1, v2, distance );
+        record.setValue( i, interp );
       }
+
       for( final String id : m_defaultIDs )
       {
         final int i = result.indexOfComponent( id );
@@ -91,7 +94,35 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
     }
     catch( Exception e )
     {
+      e.printStackTrace();
       throw new ArithmeticException( e.getLocalizedMessage() );
     }
+  }
+
+  private Object interpolateValues( Object v1, Object v2, final double distance )
+  {
+    if( !(v1 instanceof Number) || !(v2 instanceof Number) )
+      return null;
+
+    Number n1 = (Number) v1;
+    Number n2 = (Number) v2;
+
+    double d1 = n1.doubleValue();
+    double d2 = n2.doubleValue();
+
+    final double result = d1 + (d2 - d1) * distance;
+    return createValue( v1, result );
+  }
+
+  private Object createValue( Object template, double value )
+  {
+    if( template.getClass() == Double.class )
+      return new Double( value );
+
+    if( template.getClass() == BigDecimal.class )
+      return new BigDecimal( value ).setScale( ((BigDecimal) template).scale(), BigDecimal.ROUND_HALF_UP );
+    if( template.getClass() == Integer.class )
+      return new Integer((int) Math.round( value));
+    return template;
   }
 }
