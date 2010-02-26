@@ -103,7 +103,7 @@ public class VegetationTheme extends AbstractProfilTheme
         public void paintSymbol( final GC gc, final Point size )
         {
           final Rectangle clipping = gc.getClipping();
-          drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height / 2, clipping.width, clipping.height ) );
+          drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height, clipping.width, clipping.height ) );
         }
       };
 
@@ -238,17 +238,17 @@ public class VegetationTheme extends AbstractProfilTheme
   protected void drawIcon( final GC gc, final Rectangle clipping )
   {
     getLineStyle().apply( gc );
-    if( clipping.width > 12 || clipping.height > 12 )
+    if( clipping.width > 12 )
     {
-      final int size = Math.min( Math.min( clipping.width, clipping.height ), 20 );
+      final int size = Math.min( clipping.width , 20 );
       final int left = clipping.x - size / 2;
       final int top = clipping.y - size / 2;
       final int right = left + size;
-      final int bottom = top + +size;
+      final int bottom = top + size ;
 
-      gc.drawLine( clipping.x - 3, bottom, clipping.x + 3, bottom );
-      gc.drawLine( clipping.x, bottom, clipping.x, clipping.y );
-      gc.drawOval( left + 2, top, right - left - 4, bottom - clipping.y + 4 );
+      gc.drawLine( clipping.x - 3, bottom- size / 2, clipping.x + 3, bottom- size / 2 );
+      gc.drawLine( clipping.x, bottom- size / 2, clipping.x, clipping.y - size / 2);
+      gc.drawOval( left + 2, top- size / 2, right - left - 4, bottom - clipping.y + 4 );
     }
     else
       gc.drawLine( clipping.x, clipping.y - 12, clipping.x, clipping.y );
@@ -256,13 +256,11 @@ public class VegetationTheme extends AbstractProfilTheme
 
   final boolean segmenthasVegetation( final IRecord point )
   {
-    if( getProfil().indexOfPoint( point ) > getProfil().getPoints().length - 5 )
-    {
+
       final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
       final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
       final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
       return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
-    }
-    return false;
+
   }
 }
