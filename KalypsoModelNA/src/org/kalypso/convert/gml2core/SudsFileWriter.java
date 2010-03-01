@@ -153,7 +153,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
 // final Object landuseClassLink = landuse.getLanduse();
 //                  final String landuseClassName = (landuseClassLink instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) landuseClassLink).getFeature().getName() : "GRext_N"; //$NON-NLS-1$
 
-                  value.add( String.format( Locale.US, "%s grs 2.8E-10 1.0", suds.getIdealLanduseName() ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s %s 2.8E-10 1.0", suds.getIdealLanduseName(), suds.getUsageType().getSoilTypeID() ) ); //$NON-NLS-1$
 
                   // second line params:
                   // 1. Drainage pipe diameter [mm]
