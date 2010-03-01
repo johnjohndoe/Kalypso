@@ -129,7 +129,7 @@ public class GelaendePanel extends AbstractProfilView
     cg.setLayout( new GridLayout() );
 
     toolkit.adapt( cg );
-    m_comment = toolkit.createText( cg, getProfil().getComment(), SWT.MULTI );
+    m_comment = toolkit.createText( cg, getProfil().getComment(), SWT.MULTI|SWT.BORDER);
     m_comment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_comment.addFocusListener( new FocusAdapter()

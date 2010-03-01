@@ -171,12 +171,10 @@ public class TubePanel extends AbstractProfilView
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( val.toString() );
+      if(m_text.isFocusControl())
+        m_text.selectAll();
     }
 
-    public void layout()
-    {
-
-    }
     public void dispose( )
     {
       m_text.dispose();
@@ -307,7 +305,7 @@ public class TubePanel extends AbstractProfilView
         m_cmb.setSelection( new StructuredSelection( tube ) );
     for( final PropertyLine line : m_lines )
       line.updateValue();
-    m_propPanel.layout();
+   // m_propPanel.layout();
   }
 
   @Override
@@ -321,7 +319,7 @@ public class TubePanel extends AbstractProfilView
         {
           public void run( )
           {
-            createPropertyPanel();
+            //createPropertyPanel();
              updateControls();
           }
         } );
