@@ -61,6 +61,7 @@ import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale;
 import org.kalypso.convert.namodel.schema.binding.suds.ISwale;
 import org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch;
+import org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof.EUsageType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -253,11 +254,17 @@ public class BodentypManager extends AbstractManager
   private final void addSudsSoilLayers( )
   {
     // add Greenroof type
-    final List<Layer> grsLayers = new ArrayList<Layer>();
-    grsLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
-    grsLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
-    grsLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
-    m_soilTypes.put( "grs", grsLayers ); //$NON-NLS-1$
+    final List<Layer> greenroofExternalLayers = new ArrayList<Layer>();
+    greenroofExternalLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
+    m_soilTypes.put( EUsageType.EXTENSIVE.getSoilTypeID(), greenroofExternalLayers ); //$NON-NLS-1$
+
+    final List<Layer> greenroofInternalLayers = new ArrayList<Layer>();
+    greenroofInternalLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "Substr", 6.0, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
+    m_soilTypes.put( EUsageType.INTENSIVE.getSoilTypeID(), greenroofInternalLayers ); //$NON-NLS-1$
 
     final Map<String, Double> mrsTypes = new LinkedHashMap<String, Double>();
     // default is 4.0

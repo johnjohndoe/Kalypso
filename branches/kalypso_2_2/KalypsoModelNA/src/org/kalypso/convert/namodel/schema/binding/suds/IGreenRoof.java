@@ -57,12 +57,24 @@ public interface IGreenRoof extends Feature
   public static enum EUsageType
   {
 
-    EXTENSIVE,
-    INTENSIVE;
+    EXTENSIVE("grs_ex"),
+    INTENSIVE("grs_int");
+
+    private final String m_soilTypeID;
+
+    EUsageType( final String soilTypeID )
+    {
+      m_soilTypeID = soilTypeID;
+    }
 
     public String value( )
     {
       return name();
+    }
+
+    public String getSoilTypeID( )
+    {
+      return m_soilTypeID;
     }
   }
 
