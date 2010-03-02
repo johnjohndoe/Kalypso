@@ -61,7 +61,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.util.LogHelper;
 
 /**
- * Thhis class is used to process a kalypso1d.exe length-section file.
+ * This class is used to process a kalypso1d.exe length-section file.
  * 
  * @author Gernot Belger
  */
@@ -124,25 +124,30 @@ public class LengthSectionParser
     {
       lineIterator = IOUtils.lineIterator( new FileInputStream( m_lsFile ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
 
-      BigDecimal previousStation = null; // station of previous line
+      BigDecimal firstStation = null; // station of previous line
       BigDecimal previousRunoff = null; // the runoff parsed from the current read line
       while( lineIterator.hasNext() )
       {
         if( log.checkCanceled() )
           return;
 
+        final String nextLine = lineIterator.nextLine();
+        // FIXME: do not use -999; use NaN instead and Kalypso should know how to handle it
         /* Introduce space around 'NaN' and '***' values to make it parseable */
-        final String line = lineIterator.nextLine().replaceAll( "NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
+        if( nextLine.contains( "NaN" ))
+          log.log( false, "WARNING: Results contain NaN values, calculation probably not correct." );
+        final String cleanLine1 = nextLine.replaceAll( "-NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String cleanLine2 = cleanLine1.replaceAll( "NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
 
-        final BigDecimal station = NumberUtils.parseQuietDecimal( line, 0, 11, IWspmTuhhConstants.STATION_SCALE );
-        final BigDecimal runoff = NumberUtils.parseQuietDecimal( line, 17, 27, 3 );
+        final BigDecimal station = NumberUtils.parseQuietDecimal( cleanLine2, 0, 11, IWspmTuhhConstants.STATION_SCALE );
+        final BigDecimal runoff = NumberUtils.parseQuietDecimal( cleanLine2, 17, 27, 3 );
 
         /* Any lines where station or runoff cannot be parsed are filtered out */
         if( station == null || runoff == null )
           continue;
 
         /* A new section begins, if the new station is lower than the next station */
-        final boolean sectionEnd = previousStation == null || stationComparator.compare( previousStation, station ) >= 0;
+        final boolean sectionEnd = firstStation == null || stationComparator.compare( firstStation, station ) == 0;
 
         if( sectionEnd )
         {
@@ -152,9 +157,10 @@ public class LengthSectionParser
         }
 
         /* clean line */
-        lsProc.addLine( line );
+        lsProc.addLine( cleanLine2 );
 
-        previousStation = station;
+        if( firstStation == null )
+          firstStation = station;
         previousRunoff = runoff;
       }
 
