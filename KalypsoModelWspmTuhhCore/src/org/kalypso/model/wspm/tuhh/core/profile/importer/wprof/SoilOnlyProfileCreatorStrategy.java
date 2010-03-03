@@ -43,69 +43,25 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
-
 /**
+ * Für Rolf: Erzeugt nur Gelände-Profile.... und kiene Profilkommentare...
+ * 
  * @author Gernot Belger
  */
-public class ProfileCreatorStrategy implements IProfileCreatorStrategy
+public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
 {
   public IProfileCreator createProfileCreator( final ProfileData data )
   {
+    final IProfileCreator creator = doCreateProfileCreator( data );
+    if( creator instanceof AbstractProfileCreator )
+      ((AbstractProfileCreator) creator).setDoCreateProfileComment( false );
+
+    return creator;
+  }
+
+  private IProfileCreator doCreateProfileCreator( final ProfileData data )
+  {
     final ProfilePolygones polygones = data.getProfilePolygones();
-
-    // FIXME: ROLF
-    final String[] allIDs = polygones.getAllIDs();
-    for( final String id : allIDs )
-    {
-      if( id.startsWith( "K" ) )
-      {
-        if( polygones.hasPoints( "V01" ) )
-          return new KreisProfileCreator( "Kreis", data, "V01", "V03", "V99" );
-
-        if( polygones.hasPoints( "D01" ) )
-          return new KreisProfileCreator( "Verdohlung Einlauf - Kreis", data, "D01", "D03", "V99" );
-
-        if( polygones.hasPoints( "D91" ) )
-          return new KreisProfileCreator( "Verdohlung Auslauf - Kreis", data, "D91", "D93", "V99" );
-      }
-    }
-
-    if( polygones.hasPoints( "V01", "V02", "V03" ) )
-      return new BridgeProfileCreator( data, "V01", "V02", "V03", "V99", "Brücke" );
-
-    if( polygones.hasPoints( "D01", "D02", "D03" ) )
-      return new BridgeProfileCreator( data, "D01", "D02", "D03", "V99", "Verdohlung Einlauf" );
-
-    if( polygones.hasPoints( "D01", "D02", "D05" ) )
-      return new BridgeProfileCreator( data, "D01", "D02", "D05", "V99", "Verdohlung Einlauf - Geländer als Oberkante" );
-
-    if( polygones.hasPoints( "D91", "D92", "D93" ) )
-      return new BridgeProfileCreator( data, "D91", "D92", "D93", "V99", "Verdohlung Auslauf" );
-
-    if( polygones.hasPoints( "D91", "D92", "D95" ) )
-      return new BridgeProfileCreator( data, "D91", "D92", "D95", "V99", "Verdohlung Auslauf - Geländer als Oberkante" );
-
-    /* Wehre */
-    final IWProfPoint anyPoint = polygones.getAnyPoint();
-    final int profileType = anyPoint.getProfileType();
-    // FIXME: enum!
-    if( profileType == 4 )
-    {
-      // TODO: wie die unteren Fälle erwischen?
-// return new WeirProfileCreator( "Absturz", data, "2314", "2314" );
-    }
-
-    // FIXME wir sollten eigentlich den Profiltyp erst mal auswerten: z.B. 4 = Absurzprofil...
-
-    // dieser Fall ist von den Attributen her gar kein Wehr...
-    if( polygones.hasPoints( "V01", "V03" ) )
-      return new WeirProfileCreator( "Absturz", data, "V01", "V03" );
-
-    if( polygones.hasPoints( "2314" ) )
-      return new WeirProfileCreator( "Absturz", data, "2314", "2314" );
-
-    // Im Zweifelsfall auch noch mal alles nur als Gelände versuchen
 
     if( polygones.hasPoints( "D01" ) )
       return new GelaendeProfileCreator( "Verdohlung Einlauf (nur Gelände)", data, "D01" );

@@ -86,10 +86,27 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   public void finished( ) throws CoreException
   {
-    final ProfileData[] data = m_data.values().toArray( new ProfileData[m_data.size()] );
-    final ProfileCreatorStrategy strategy = new ProfileCreatorStrategy( data, m_project );
-    strategy.addProfiles();
+    // FIXME: Rolf
+    final IProfileCreatorStrategy strategy = new SoilOnlyProfileCreatorStrategy();
+// final IProfileCreatorStrategy strategy = new ProfileCreatorStrategy();
+
+    addProfiles( strategy );
+
     fireChangeEvents();
+  }
+
+  public void addProfiles( final IProfileCreatorStrategy strategy ) throws CoreException
+  {
+    final ProfileData[] data = m_data.values().toArray( new ProfileData[m_data.size()] );
+    for( final ProfileData currentData : data )
+    {
+      final IProfileCreator profileCreator = strategy.createProfileCreator( currentData );
+      currentData.createProfile( m_project, profileCreator );
+    }
+
+    final IProfileSecondaryCreator[] secondaryCreators = strategy.createSecondaryCreators( data );
+    for( final IProfileSecondaryCreator secondaryCreator : secondaryCreators )
+      secondaryCreator.execute( m_project, data );
   }
 
   private void fireChangeEvents( )

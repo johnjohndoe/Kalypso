@@ -72,6 +72,8 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
 
   private final ProfileData m_data;
 
+  private boolean m_createProfileComment = true;
+
   public AbstractProfileCreator( final String description, final ProfileData data )
   {
     m_description = description;
@@ -203,8 +205,8 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final String[] objTypes = profilePolygones.getAllIDs();
     final String objTypesString = Arrays.toString( objTypes, ", " );
     final String profileComment = comment + "\nVorhandene Datenarten: " + objTypesString + "\nPunkte insgesammt: " + numPoints;
-    // FIXME: ROLF
-    profile.setComment( profileComment );
+    if( m_createProfileComment )
+      profile.setComment( profileComment );
 
     // FIXME:
     profile.setStation( station == null ? -999.999 : station.doubleValue() );
@@ -214,6 +216,11 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_COMMENT ) );
 
     System.out.println( String.format( "Create profile for riverId '%s' at station '%f'", riverId, station ) ); //$NON-NLS-1$
+  }
+
+  public void setDoCreateProfileComment( final boolean createProfileComment )
+  {
+    m_createProfileComment = createProfileComment;
   }
 
   public void setOverwriteStation( final BigDecimal station )
