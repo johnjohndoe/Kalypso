@@ -56,7 +56,6 @@ public interface IGreenRoof extends Feature
 
   public static enum EUsageType
   {
-
     EXTENSIVE("grs_ex"),
     INTENSIVE("grs_int");
 
