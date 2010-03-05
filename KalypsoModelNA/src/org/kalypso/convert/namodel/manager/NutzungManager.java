@@ -219,7 +219,7 @@ public class NutzungManager extends AbstractManager
 
     for( final String resource : resources )
     {
-      final URL source = getClass().getResource( String.format( "../resources/idealLanduseSuds/%s.nuz", resource ) );
+      final URL source = getClass().getResource( String.format( "/resources/idealLanduseSuds/%s.nuz", resource ) );
       final File destination = new File( String.format( "%s\\%s.nuz", m_conf.getNutzungDir(), resource ) ); //$NON-NLS-1$
       FileUtils.copyURLToFile( source, destination );
     }

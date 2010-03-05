@@ -8,6 +8,10 @@
               catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
               typeID="KalypsoNA"/>
       <simulation
+            simulationClass="org.kalypso.na.global_preprocessing.NA_GlobalPreprocessingJob"
+            typeID="KalypsoNA_GlobalPreprocessing">
+      </simulation>
+      <simulation
             simulationClass="org.kalypso.na.preprocessing.NA_PreprocessingJob"
             typeID="KalypsoNA_Preprocessing">
       </simulation>
