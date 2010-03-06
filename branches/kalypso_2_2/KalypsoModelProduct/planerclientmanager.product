@@ -47,6 +47,7 @@ de_DE</programArgs>
       <windows>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
    </vm>
 
+
    <plugins>
       <plugin id="com.ibm.icu"/>
       <plugin id="de.openali.odysseus.chart.ext.base"/>
@@ -58,11 +59,17 @@ de_DE</programArgs>
       <plugin id="de.renew.workflow.model"/>
       <plugin id="javax.servlet"/>
       <plugin id="javax.servlet.jsp"/>
+      <plugin id="javax.servlet.jsp.nl_de" fragment="true"/>
+      <plugin id="javax.servlet.nl_de" fragment="true"/>
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.commons.el"/>
+      <plugin id="org.apache.commons.el.nl_de" fragment="true"/>
       <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.apache.commons.logging.nl_de" fragment="true"/>
       <plugin id="org.apache.commons.vfs"/>
+      <plugin id="org.apache.directory.studio.jars"/>
       <plugin id="org.apache.jasper"/>
+      <plugin id="org.apache.jasper.nl_de" fragment="true"/>
       <plugin id="org.apache.lucene"/>
       <plugin id="org.apache.lucene.analysis"/>
       <plugin id="org.eclipse.ant.core"/>
@@ -124,6 +131,8 @@ de_DE</programArgs>
       <plugin id="org.eclipse.equinox.app.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.common.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.equinox.concurrent"/>
+      <plugin id="org.eclipse.equinox.concurrent.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.frameworkadmin"/>
       <plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
       <plugin id="org.eclipse.equinox.frameworkadmin.equinox.nl_de" fragment="true"/>
@@ -256,7 +265,9 @@ de_DE</programArgs>
       <plugin id="org.eclipse.update.ui"/>
       <plugin id="org.eclipse.update.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.wst.common.uriresolver"/>
+      <plugin id="org.eclipse.wst.common.uriresolver.nl_de" fragment="true"/>
       <plugin id="org.hamcrest.core"/>
+      <plugin id="org.hamcrest.core.nl_de" fragment="true"/>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
       <plugin id="org.junit4.nl_de" fragment="true"/>
@@ -316,7 +327,9 @@ de_DE</programArgs>
       <plugin id="org.kalypso.wspwin.core"/>
       <plugin id="org.kalypso.xplan"/>
       <plugin id="org.mortbay.jetty.server"/>
+      <plugin id="org.mortbay.jetty.server.nl_de" fragment="true"/>
       <plugin id="org.mortbay.jetty.util"/>
+      <plugin id="org.mortbay.jetty.util.nl_de" fragment="true"/>
    </plugins>
 
 
