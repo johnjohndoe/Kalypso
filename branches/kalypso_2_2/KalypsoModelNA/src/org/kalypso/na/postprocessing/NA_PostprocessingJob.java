@@ -386,10 +386,21 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( riverKm == null ? Double.NaN : riverKm );
 
         String name = node.getName();
-        if( name == null || name.length() == 0 )
-          name = node.getId();
-        final DischargeData izMax = izNodesMaxData.get( name );
-        final DischargeData calcMax = calcNodesMaxData.get( name );
+        DischargeData izMax = null;
+        DischargeData calcMax = null;
+        if( name != null && name.length() > 0 )
+        {
+          izMax = izNodesMaxData.get( name );
+          calcMax = calcNodesMaxData.get( name );
+        }
+        if( izMax == null )
+        {
+          izMax = izNodesMaxData.get( node.getId() );
+        }
+        if( calcMax == null )
+        {
+          calcMax = calcNodesMaxData.get( node.getId() );
+        }
         if( izMax == null || calcMax == null )
           continue;
 
