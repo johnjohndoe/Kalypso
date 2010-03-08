@@ -165,7 +165,7 @@ public class Greenroof extends AbstractSud implements IGreenRoof
   @Override
   public EUsageType getUsageType( )
   {
-    final String property = getProperty( QN_PROPERTY_SLOPE ).toString();
+    final String property = getProperty( QN_PROPERTY_USAGE_TYPE ).toString();
     if( EUsageType.INTENSIVE.value().equals( property ) )
       return EUsageType.INTENSIVE;
     return EUsageType.EXTENSIVE;
