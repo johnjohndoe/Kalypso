@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
@@ -66,7 +66,7 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf nicht unter Unterkante
- * 
+ *
  * @author kimwerner
  */
 public class BrueckeRule extends AbstractValidatorRule
@@ -153,8 +153,8 @@ public class BrueckeRule extends AbstractValidatorRule
       final int innerLeft = trenner.length > 1 ? profil.indexOfPoint( trenner[0].getPoint() ) : -1;
       final int innerRight = trenner.length > 1 ? profil.indexOfPoint( trenner[trenner.length - 1].getPoint() ) : -1;
       //Schnittp. OK-Brücke Boden
-      final int outerLeft = getBridgeLimits( points, delta, innerLeft, 0, -1 );
-      final int outerRight = getBridgeLimits( points, delta, innerRight, points.length - 1, 1 );
+      final int outerLeft = getBridgeLimits( points, delta, innerLeft, -1, -1 );
+      final int outerRight = getBridgeLimits( points, delta, innerRight, points.length, 1 );
 
       if( innerLeft == -1 || innerRight == -1 )
       {
@@ -214,12 +214,12 @@ public class BrueckeRule extends AbstractValidatorRule
             collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.25" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
             break;
           }
-          // Mehrfeldbrücke
-          if( deltaH < delta && i > innerLeft )
-          {
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Die Brückenunterkante berührt den Boden innerhalb des Flußschlauchs", String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-            break;
-          }
+          // Mehrfeldbrücke (Brücke mit mehreren Öffnungen erlaubt
+//          if( deltaH < delta && i > innerLeft )
+//          {
+//            collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Die Brückenunterkante berührt den Boden innerhalb des Flußschlauchs", String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+//            break;
+//          }
         }
 
       }
