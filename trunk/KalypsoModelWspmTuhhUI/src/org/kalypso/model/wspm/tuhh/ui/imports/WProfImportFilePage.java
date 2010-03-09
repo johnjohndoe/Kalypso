@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.actions;
+package org.kalypso.model.wspm.tuhh.ui.imports;
 
 import java.io.File;
 import java.net.MalformedURLException;

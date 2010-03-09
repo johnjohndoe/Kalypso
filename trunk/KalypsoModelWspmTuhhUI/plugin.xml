@@ -63,23 +63,6 @@
                      value="org.kalypso.model.wspmprofile#Profile">
                </filter>
             </objectContribution>
-            <objectContribution
-                  adaptable="false"
-                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.imports"
-                  objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
-               <filter
-                     name="featureAssociationQname"
-                     value="org.kalypso.model.wspmprofile#Profile;org.kalypso.model.wspm#WaterBody">
-               </filter>
-               <action
-                     class="org.kalypso.model.wspm.tuhh.ui.actions.ImportWProfAction"
-                     id="org.kalypso.model.wspm.tuhh.ui.actions.ImportWProfAction"
-                     label="WProf"
-                     menubarPath="additions"
-                     style="push"
-                     tooltip="Import WProf-Shape">
-               </action>
-            </objectContribution>
    </extension>
 
 	<extension point="org.eclipse.ui.handlers">
@@ -93,6 +76,61 @@
 				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected"/>
 			</activeWhen>
 		</handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.export.CsvExportProfilesHandler"
+                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                </reference>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.export.SobekExportProfilesHandler"
+                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                </reference>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.export.LngExportProfilesHandler"
+                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                </reference>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.export.PrfExportProfilesHandler"
+                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                </reference>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.imports.ImportWProfHandler"
+                commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf">
+                     <enabledWhen>
+                        <with
+                              variable="selection">
+                               <iterate
+                                     ifEmpty="false"
+                                     operator="and">
+                                  <test
+                                        args="property"
+                                        forcePluginActivation="false"
+                                        property="org.kalypso.ui.test.gmleditor.qname"
+                                        value="{org.kalypso.model.wspm}WaterBody">
+                                  </test>
+                               </iterate>
+                        </with>
+                     </enabledWhen>
+          </handler>
 	</extension>
 
    <extension
@@ -304,6 +342,28 @@
 				</and>
 			</with>
 		</definition>
+  <definition
+        id="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+     <with
+           variable="selection">
+        <iterate
+              ifEmpty="false"
+              operator="and">
+           <or>
+              <test
+                    forcePluginActivation="false"
+                    property="org.kalypso.ui.test.gmleditor.qname"
+                    value="{org.kalypso.model.wspmprofile}Profile">
+              </test>
+              <test
+                    forcePluginActivation="false"
+                    property="org.kalypso.ui.test.gmleditor.qname"
+                    value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+              </test>
+           </or>
+        </iterate>
+     </with>
+  </definition>
 	</extension>
 	
 	
@@ -334,6 +394,47 @@
 	     </command>
        </toolbar>
     </menuContribution>
+    <menuContribution
+          locationURI="popup:org.kalypso.model.wspm.ui.profileImport?after=additions">
+       <command
+             commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.kalypso.model.wspm.ui.profileExport?after=additions">
+       <command
+             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+       <command
+             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+       <command
+             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+       <command
+             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+    </menuContribution>
   </extension>
 
 
@@ -360,6 +461,30 @@
           id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
           name="Create Profile">
     </command>
+    <command
+          description="Export points of selected profiles as comma separated values."
+          id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
+          name="Comma Separated Values (.csv)">
+    </command>
+    <command
+          description="Export selected profiles to SOBEK ascii formats."
+          id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
+          name="SOBEK ASCII (.def)">
+    </command>
+    <command
+          description="Exports the selected profiles as a length section in WspWin-Plotter format."
+          id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
+          name="WspWin-Plotter Lenght-Section (.lng)">
+    </command>
+    <command
+          id="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
+          name="WspWin Profiles (.prf)">
+    </command>
+    <command
+          description="Imports points from a WProf-Shape and converts them into profiles."
+          id="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
+          name="WProf-Shape">
+    </command>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -367,6 +492,29 @@
            class="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider"
            id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
      </provider>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commandImages">
+     <image
+           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
+           icon="icons/elcl16/export_csv.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
+           icon="icons/elcl16/export_sobek.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
+           icon="icons/elcl16/export_plotter.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
+           icon="icons/elcl16/import_wprof.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
+           icon="icons/elcl16/export_prf.gif">
+     </image>
   </extension>
 
 	

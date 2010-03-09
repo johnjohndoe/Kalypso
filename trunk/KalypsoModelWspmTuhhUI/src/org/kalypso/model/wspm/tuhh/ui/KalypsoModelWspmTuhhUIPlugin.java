@@ -64,6 +64,11 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
     plugin = this;
   }
 
+  public static String getID( )
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
+
   /**
    * This method is called upon plug-in activation
    */
@@ -110,7 +115,7 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
    *          the path
    * @return the image descriptor
    */
-  public static ImageDescriptor getImageDescriptor( String path )
+  public static ImageDescriptor getImageDescriptor( final String path )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.wspm.tuhh.ui", path ); //$NON-NLS-1$
   }

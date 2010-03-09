@@ -55,7 +55,6 @@ import org.kalypso.observation.result.IRecord;
  */
 public class CsvSink implements IProfilSink
 {
-
   private final static String DOUBLE_FORMAT = "%.4f";
 
   private final static String TAB_DOUBLE_FORMAT = "\t%.4f";
@@ -79,10 +78,15 @@ public class CsvSink implements IProfilSink
           final int index = profil.indexOfProperty( component );
           if( index < 0 )
             writer.write( "\tnull" );
-          else if( profil.isPointMarker( component.getId() ) )
-            writer.write( String.format( "\t%s", point.getValue( index ).toString() ) );
           else
-            writer.write( String.format( TAB_DOUBLE_FORMAT, point.getValue( index ) ) );
+          {
+            final Object value = point.getValue( index );
+            // TODO: we need a more sophisticated handling of types here...
+            if( profil.isPointMarker( component.getId() ) || !(value instanceof Number) )
+              writer.write( String.format( "\t%s", value.toString() ) );
+            else
+              writer.write( String.format( TAB_DOUBLE_FORMAT, value ) );
+          }
         }
         writer.write( lineSeparator );
       }
@@ -101,7 +105,6 @@ public class CsvSink implements IProfilSink
 
   private final IComponent[] getComponents( final IProfil[] profiles )
   {
-
     final Set<IComponent> profCompSet = new HashSet<IComponent>();
     for( final IProfil profil : profiles )
     {
@@ -117,9 +120,8 @@ public class CsvSink implements IProfilSink
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
    */
 
-  public boolean internalWrite( IProfil[] profiles, Writer writer ) throws IOException
+  public boolean internalWrite( final IProfil[] profiles, final Writer writer ) throws IOException
   {
-
     // get all components of the profiles in order to create table header
     // that fits
     final IComponent[] comps = getComponents( profiles );
@@ -137,7 +139,7 @@ public class CsvSink implements IProfilSink
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
    */
   @Override
-  public boolean write( Object source, Writer writer ) throws IOException
+  public boolean write( final Object source, final Writer writer ) throws IOException
   {
     if( source instanceof IProfil[] )
       return internalWrite( (IProfil[]) source, writer );

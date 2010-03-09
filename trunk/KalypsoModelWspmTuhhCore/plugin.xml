@@ -14,7 +14,7 @@
             id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
             name="%org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"/>
       <sink
-            class="org.kalypso.model.wspm.tuhh.core.wspwin.strang.LngSink"
+            class="org.kalypso.model.wspm.tuhh.core.wspwin.prf.LngSink"
             extension="lng"
             id="org.kalypso.model.wspm.tuhh.core.wspwin.lng.LngSink"
             name="%org.kalypso.model.wspm.tuhh.core.wspwin.lng.LngSink">
@@ -84,5 +84,4 @@
             category="org.kalypso.model.wspm.tuhh.projectTemplate">
       </project>
    </extension>
-
 </plugin>

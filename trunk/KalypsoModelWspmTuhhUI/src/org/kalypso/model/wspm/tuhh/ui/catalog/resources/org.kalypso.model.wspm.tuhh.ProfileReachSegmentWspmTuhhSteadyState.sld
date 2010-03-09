@@ -44,14 +44,14 @@
 		    	</Stroke>
 		  	</Halo>
 		</TextSymbolizer>
-        <LineSymbolizer uom="meter">
+        <LineSymbolizer uom="pixel">
             <Geometry>
                 <ogc:PropertyName>profileLocation</ogc:PropertyName>
             </Geometry>
             <Stroke>
                 <CssParameter name="stroke">#ff8040</CssParameter>
                 <CssParameter name="stroke-width">3.0</CssParameter>
-                <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                <CssParameter name="stroke-linejoin">round</CssParameter>
                 <CssParameter name="stroke-opacity">1.0</CssParameter>
                 <CssParameter name="stroke-linecap">butt</CssParameter>
 				<CssParameter name="stroke-arrow-type">line</CssParameter>

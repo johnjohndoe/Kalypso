@@ -54,7 +54,6 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
   {
     final ProfilePolygones polygones = data.getProfilePolygones();
 
-    // FIXME: ROLF
     final String[] allIDs = polygones.getAllIDs();
     for( final String id : allIDs )
     {
