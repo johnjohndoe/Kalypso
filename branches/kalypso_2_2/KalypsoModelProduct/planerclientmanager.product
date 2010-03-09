@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso Planer Client Manager" id="org.kalypso.planer.client.manager.product" application="org.kalypso.model.product.kalypsomodelapplication" version="1.0.0" useFeatures="false" includeLaunchers="true">
+<product name="Kalypso Planer Client Koordinator" id="org.kalypso.planer.client.manager.product" application="org.kalypso.model.product.kalypsomodelapplication" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -27,7 +27,7 @@ de_DE</programArgs>
       startupProgressRect="0,215,400,15"
       startupMessageRect="4,200,390,15"
       startupForegroundColor="000000" />
-   <launcher name="KalypsoPlanerClientManager">
+   <launcher name="KalypsoPlanerClientKoordinator">
       <solaris/>
       <win useIco="false">
          <bmp
@@ -46,7 +46,6 @@ de_DE</programArgs>
       <linux>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
       <windows>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
    </vm>
-
 
    <plugins>
       <plugin id="com.ibm.icu"/>
@@ -67,7 +66,7 @@ de_DE</programArgs>
       <plugin id="org.apache.commons.logging"/>
       <plugin id="org.apache.commons.logging.nl_de" fragment="true"/>
       <plugin id="org.apache.commons.vfs"/>
-      <plugin id="org.apache.directory.studio.jars"/>
+      <plugin id="org.apache.directory.studio.jars" fragment=""/>
       <plugin id="org.apache.jasper"/>
       <plugin id="org.apache.jasper.nl_de" fragment="true"/>
       <plugin id="org.apache.lucene"/>
