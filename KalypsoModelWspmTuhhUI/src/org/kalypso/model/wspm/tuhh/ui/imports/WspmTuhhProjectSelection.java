@@ -38,21 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.actions;
+package org.kalypso.model.wspm.tuhh.ui.imports;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.actions.ActionDelegate;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -61,56 +52,45 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class ImportWProfAction extends ActionDelegate implements IObjectActionDelegate
+public class WspmTuhhProjectSelection
 {
-  private IWorkbenchPart m_targetPart;
+  private final CommandableWorkspace m_workspace;
 
-  private TuhhWspmProject m_project;
+  private final TuhhWspmProject m_project;
 
-  private CommandableWorkspace m_workspace;
-
-  /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
-   */
-  @Override
-  public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
+  public WspmTuhhProjectSelection( final ISelection selection )
   {
-    m_targetPart = targetPart;
-  }
-
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-    setSelection( selection );
-    action.setEnabled( m_project != null );
-  }
-
-  private void setSelection( final ISelection selection )
-  {
-    m_project = null;
-    m_workspace = null;
-
-    if( !(selection instanceof IFeatureSelection) )
+    final Feature parentFeature = findParentFeature( selection );
+    if( parentFeature == null )
+    {
+      m_workspace = null;
+      m_project = null;
       return;
+    }
+
+    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+    m_workspace = featureSelection.getWorkspace( parentFeature );
+
+    m_project = findProject( parentFeature );
+  }
+
+  private Feature findParentFeature( final ISelection selection )
+  {
+    if( !(selection instanceof IFeatureSelection) )
+      return null;
 
     final IFeatureSelection featureSelection = (IFeatureSelection) selection;
     final Object firstElement = featureSelection.getFirstElement();
     if( !(firstElement instanceof FeatureAssociationTypeElement) )
-      return;
+      return null;
 
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
-    final Feature parentFeature = fate.getParentFeature();
-    if( parentFeature == null )
-      return;
+    return fate.getParentFeature();
+  }
 
-    m_workspace = featureSelection.getWorkspace( parentFeature );
-
-    m_project = findProject( parentFeature );
+  public boolean hasProject( )
+  {
+    return m_project != null;
   }
 
   private TuhhWspmProject findProject( final Feature parentFeature )
@@ -128,19 +108,14 @@ public class ImportWProfAction extends ActionDelegate implements IObjectActionDe
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  @Override
-  public void run( final IAction action )
+  public CommandableWorkspace getWorkspace( )
   {
-    final Shell shell = m_targetPart.getSite().getShell();
-
-    final WProfImportWizard importWizard = new WProfImportWizard( m_workspace, m_project );
-    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "tuhhWProfImport" ); //$NON-NLS-1$
-    importWizard.setDialogSettings( settings );
-
-    final WizardDialog wizardDialog = new WizardDialog( shell, importWizard );
-    wizardDialog.open();
+    return m_workspace;
   }
+
+  public TuhhWspmProject getProject( )
+  {
+    return m_project;
+  }
+
 }

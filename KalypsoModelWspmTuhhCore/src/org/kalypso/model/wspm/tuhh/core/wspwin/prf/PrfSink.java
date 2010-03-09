@@ -539,9 +539,7 @@ public class PrfSink implements IProfilSink
 
   @SuppressWarnings("unchecked")
   private void extractMetaData( final DataBlockWriter pw, final IProfil p )
-
   {
-
     Map<Integer, String[]> metaData;
     try
     {
@@ -642,7 +640,6 @@ public class PrfSink implements IProfilSink
    */
   private boolean internalWrite( final IProfil profil, final Writer writer ) throws IOException
   {
-
     final DataBlockWriter prfwriter = new DataBlockWriter();
     extractMetaData( prfwriter, profil );
     if( profil.getPoints().length > 0 )
@@ -660,8 +657,8 @@ public class PrfSink implements IProfilSink
     if( source instanceof IProfil )
       return internalWrite( (IProfil) source, writer );
     if( source instanceof IProfil[] )
-      return internalWrite( ((IProfil[])source)[0], writer );
-    throw new IOException( "illegal Argument",new IllegalArgumentException(source.toString()) );
+      return internalWrite( ((IProfil[]) source)[0], writer );
+    throw new IOException( "illegal Argument", new IllegalArgumentException( source.toString() ) );
   }
 
 }
