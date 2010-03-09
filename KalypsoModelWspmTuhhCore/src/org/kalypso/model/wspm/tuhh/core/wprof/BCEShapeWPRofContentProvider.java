@@ -55,6 +55,7 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -129,10 +130,8 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getRiverId( )
   {
-    final int riverId = getProperty( "GEWAESSER_ID", Integer.class, -1 ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( riverId == -1 )
-      return "Unbekannt";
-    return Integer.toString( riverId );
+    final Object riverId = getProperty( "GEWAESSER_ID", Object.class, "Unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return ObjectUtils.toString( riverId );
   }
 
   /**
@@ -141,16 +140,21 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getRiverName( )
   {
-    return "" + getProperty( "GEWAESSER_NAME", Integer.class, -1 ); //$NON-NLS-1$ //$NON-NLS-2$
+    return "" + getProperty( "GEWAESSER_NAME", Object.class, "Unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
   public BigDecimal getStation( )
   {
-    final double station = getProperty( "STATION", Double.class, Double.NaN ); //$NON-NLS-1$ 
+    final double station = getProperty( "STATION", Double.class, Double.NaN ); //$NON-NLS-1$
+    if( Double.isNaN( station ) || station < -99990.00 )
+      return null;
+
     try
     {
-      return new BigDecimal( station / 1000.0 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+// double faktorStation = 1000.0;
+      final double faktorStation = 1;
+      return new BigDecimal( station / faktorStation ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     }
     catch( final NumberFormatException e )
     {
