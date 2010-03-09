@@ -98,46 +98,30 @@ public class BrueckeRule extends AbstractValidatorRule
     return true;
   }
 
-  private final Rectangle getBridgeLimits( final IRecord[] points, final double delta )
+  private final int getBridgeLimits( final IRecord[] points, final double delta, final int start, final int end, final int step )
   {
-    int outerLeft = -1;
-    int innerLeft = -1;
-    for( int i = 0; i < points.length; i++ )
+    int i = start < 0 ? end : start;
+    while( i != end )
     {
-      final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
-      final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] );
-      final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
-      if( okB.isNaN() || ukB.isNaN() )
-        continue;
-      if( (outerLeft == -1) && (Math.abs( h - okB ) > delta) )
-        outerLeft = i == 0 ? 0 : i - 1;
-      if( (outerLeft > -1) && (Math.abs( h - ukB ) > delta) )
-      {
-        innerLeft = i == 0 ? 0 : i - 1;
-        break;
-      }
-    }
-    // ermitteln der rechten Grenzen
-    int outerRight = points.length - 1;
-    int innerRight = points.length - 1;
-    for( int i = points.length - 1; i > innerLeft; i-- )
-    {
-      final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
-      final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] );
-      final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
-      if( okB.isNaN() || ukB.isNaN() )
-        continue;
-      if( (outerRight == points.length - 1) && (Math.abs( h - okB ) > delta) )
-        outerRight = i == points.length - 1 ? points.length - 1 : i + 1;
-      if( (outerRight < points.length - 1) && (Math.abs( h - ukB ) > delta) )
-      {
-        innerRight = i == points.length - 1 ? points.length - 1 : i + 1;
-        break;
-      }
-    }
+      final Double d = compare( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
 
-    return new Rectangle( outerLeft, innerLeft, innerRight, outerRight );
+      if( d.isNaN() )
+        return -1;
+      if( Math.abs( d ) < delta )
+        return i;
+      i = i + step;
+    }
+    return -1;
+  }
 
+  private final Double compare( final String compId1, final String compId2, final IRecord point )
+  {
+    final Double h1 = ProfilUtil.getDoubleValueFor( compId1, point );
+    final Double h2 = ProfilUtil.getDoubleValueFor( compId2, point );
+    if( h1.isNaN() || h2.isNaN() )
+      return Double.NaN;
+    else
+      return h1 - h2;
   }
 
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
@@ -165,41 +149,29 @@ public class BrueckeRule extends AbstractValidatorRule
       final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
       final double delta = cBreite == null ? 0.0001 : cBreite.getPrecision();
 
-      final Rectangle limits = getBridgeLimits( points, delta );
-
-      final int outerLeft = limits.x;
-      final int innerLeft = limits.y;
-      final int innerRight = limits.width;
-      final int outerRight = limits.height;
-
-      if( innerLeft == -1 )
-      {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.3" ), String.format( "km %.4f", profil.getStation() ), 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-        return;
-      }
-      if( outerLeft > -1 )
-      {
-        final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[outerLeft] );
-        final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[outerLeft] );
-        if( okB.isNaN() || (!h.isNaN() && Math.abs( h - okB ) > delta) )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brücke schließt nicht mit Geländehöhe ab", String.format( "km %.4f", profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-        return;
-      }
-
-      if( outerRight > -1 )
-      {
-        final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[outerRight] );
-        final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[outerRight] );
-        if( okB.isNaN() || (!h.isNaN() && Math.abs( h - okB ) > delta) )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brücke schließt nicht mit Geländehöhe ab", String.format( "km %.4f", profil.getStation() ), outerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-        return;
-      }
-
-      // Trennflächen
       final IProfilPointMarker[] trenner = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-      final int left = trenner.length > 1 ? profil.indexOfPoint( trenner[0].getPoint() ) : -1;
-      final int right = trenner.length > 1 ? profil.indexOfPoint( trenner[trenner.length - 1].getPoint() ) : -1;
+      final int innerLeft = trenner.length > 1 ? profil.indexOfPoint( trenner[0].getPoint() ) : -1;
+      final int innerRight = trenner.length > 1 ? profil.indexOfPoint( trenner[trenner.length - 1].getPoint() ) : -1;
+      //Schnittp. OK-Brücke Boden
+      final int outerLeft = getBridgeLimits( points, delta, innerLeft, 0, -1 );
+      final int outerRight = getBridgeLimits( points, delta, innerRight, points.length - 1, 1 );
 
+      if( innerLeft == -1 || innerRight == -1 )
+      {
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennflächen fehlen", String.format( "km %.4f", profil.getStation() ), 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+        return;
+      }
+      if( outerLeft == -1 )
+      {
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brücke schließt nicht mit Geländehöhe ab", String.format( "km %.4f", profil.getStation() ), 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+        return;
+      }
+      if( outerRight == -1 )
+      {
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brücke schließt nicht mit Geländehöhe ab", String.format( "km %.4f", profil.getStation() ), points.length - 1, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+        return;
+      }
+      // Wiederlager
       if( innerRight == outerRight )
       {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.5" ), String.format( "km %.4f", profil.getStation() ), outerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -208,64 +180,45 @@ public class BrueckeRule extends AbstractValidatorRule
       {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.7" ), String.format( "km %.4f", profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      else if( left != innerLeft )
+      // Trennflächen
+      else if( Math.abs( compare( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[innerLeft] ) ) > delta )
       {
-        final int destination = right == innerLeft ? innerRight : innerLeft;
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.9" ), String.format( "km %.4f", profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, destination ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.9" ), String.format( "km %.4f", profil.getStation() ), innerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-
-      else if( right != innerRight )
+      else if( Math.abs( compare( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[innerRight] ) ) > delta )
       {
-        final int destination = left == innerRight ? innerLeft : innerRight;
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.11" ), String.format( "km %.4f", profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, destination ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.11" ), String.format( "km %.4f", profil.getStation() ), innerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-
       else
       {
-// Brückemkanten und Bewuchs
-
+        // Brückemkanten und Bewuchs
         // sicher den ersten okB < minOK
         // sicher den ersten ukB > maxUK
         Double minOK = Double.MAX_VALUE;
         Double maxUK = -Double.MAX_VALUE;
-        final boolean checkVegetation = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) != null;
-
-        for( int i = outerLeft; i < outerRight; i++ )
+        for( int i = innerLeft; i < innerRight; i++ )
         {
-          final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
-          final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] );
-          final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
-          if( (i >= innerLeft) && (i <= innerRight) )
-          {
-            minOK = Math.min( minOK, okB );
-            maxUK = Math.max( maxUK, ukB );
-            // min Oberkante > max Unterkante
-            if( maxUK > minOK )
-            {
-              collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.25" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-              break;
-            }
-            // Mehrfeldbrücke
-            if( Math.abs( h - ukB ) < delta )
-            {
-              collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.17" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-              break;
-            }
-          }
+          final Double deltaH = compare( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+          final Double deltaB = compare( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
+          minOK = Math.min( minOK, ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] ).doubleValue() );
+          maxUK = Math.max( maxUK, ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] ).doubleValue() );
           // Schnittkanten
-          if( ukB - okB > delta )
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.21" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-          else if( h - okB > delta )
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new EditPointResolution( i, profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), h ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          else if( h - ukB > delta )
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new EditPointResolution( i, profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), h ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-          // Bewuchs unter der Brücke
-          else if( checkVegetation )
+          if( deltaB < delta )
           {
-            final Double bewuchs = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, points[i] );
-            if( bewuchs != 0.0 )
-              collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.27" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution( outerLeft, outerRight ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.21" ), String.format( "km %.4f", profil.getStation() ), i - 1, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+            break;
+          }
+          // min Oberkante > max Unterkante
+          if( maxUK > minOK )
+          {
+            collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.25" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+            break;
+          }
+          // Mehrfeldbrücke
+          if( deltaH < delta && i > innerLeft )
+          {
+            collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Die Brückenunterkante berührt den Boden innerhalb des Flußschlauchs", String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+            break;
           }
         }
 
