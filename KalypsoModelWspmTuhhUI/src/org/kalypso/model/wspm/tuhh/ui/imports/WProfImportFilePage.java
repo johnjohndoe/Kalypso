@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
@@ -129,35 +130,48 @@ public class WProfImportFilePage extends WizardPage
     group.setLayout( new GridLayout() );
 
     m_charsetViewer = new CharsetViewer( group );
+    final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
+    final String shapeLabel = String.format( "%s (default for ESRI Shape)", shapeDefaultCharset.displayName() );
+    m_charsetViewer.addLabelMapping( shapeDefaultCharset, shapeLabel );
+
     m_charsetViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null )
-    {
-      final String charsetName = dialogSettings.get( SETTINGS_CHARSET );
-      if( charsetName == null )
-        m_charsetViewer.setCharset( Charset.defaultCharset() );
-      else
-      {
-        final Charset charset = Charset.forName( charsetName );
-        m_charsetViewer.setCharset( charset );
-      }
+    final Charset charset = getInitialCharset( shapeDefaultCharset );
+    m_charsetViewer.setCharset( charset );
 
-      m_charsetViewer.addSelectionChangedListener( new ISelectionChangedListener()
+
+    m_charsetViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        @Override
-        public void selectionChanged( final SelectionChangedEvent event )
-        {
-          handleCharsetChanged( dialogSettings );
-        }
-      } );
-    }
+        handleCharsetChanged();
+      }
+    } );
 
     return group;
   }
 
-  protected void handleCharsetChanged( final IDialogSettings dialogSettings )
+  private Charset getInitialCharset( final Charset defaultCharset )
   {
+    final IDialogSettings dialogSettings = getDialogSettings();
+
+    if( dialogSettings == null )
+      return defaultCharset;
+
+    final String charsetName = dialogSettings.get( SETTINGS_CHARSET );
+    if( charsetName == null )
+      return defaultCharset;
+
+    return Charset.forName( charsetName );
+  }
+
+  protected void handleCharsetChanged( )
+  {
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings == null )
+      return;
+
     final Charset charset = m_charsetViewer.getCharset();
     if( charset == null )
       dialogSettings.put( SETTINGS_CHARSET, (String) null );
