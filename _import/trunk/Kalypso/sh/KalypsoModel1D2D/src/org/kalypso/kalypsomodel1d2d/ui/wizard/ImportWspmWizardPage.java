@@ -77,7 +77,7 @@ public class ImportWspmWizardPage extends ListSelectionWizardPage
   {
     m_calculation = calculation;
 
-    final List< ? > reaches = (List< ? >) m_calculation.getReach().getFeature().getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+    final List< ? > reaches = (List< ? >) m_calculation.getReach().getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
     setInput( reaches );
 
     setCheckedElements( reaches.toArray( new Object[reaches.size()] ) );

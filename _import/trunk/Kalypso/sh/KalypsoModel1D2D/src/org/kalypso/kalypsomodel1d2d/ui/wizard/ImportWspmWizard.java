@@ -243,7 +243,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       final String msg =  Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.11", foundNetwork.getName() ); //$NON-NLS-1$
       final MessageDialog messageDialog = new MessageDialog( getShell(), getWindowTitle(), null, msg, MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
-          IDialogConstants.CANCEL_LABEL }, 1 );
+        IDialogConstants.CANCEL_LABEL }, 1 );
       final int open = messageDialog.open();
       System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.12") + open ); //$NON-NLS-1$
       if( (open == 2) || (open == -1) )
@@ -746,7 +746,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final Feature networkFeature = network.getFeature();
 
     /* Set user friendly name and description */
-    final URL reachContext = reach.getFeature().getWorkspace().getContext();
+    final URL reachContext = reach.getWorkspace().getContext();
     final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm(); //$NON-NLS-1$
     final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.21" , reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
     network.setName( reach.getName() );
