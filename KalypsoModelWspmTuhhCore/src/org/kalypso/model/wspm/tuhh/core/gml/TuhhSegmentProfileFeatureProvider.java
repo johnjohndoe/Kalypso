@@ -56,9 +56,9 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
    */
   public IProfileFeature getProfile( final Feature feature )
   {
-    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), TuhhReach.QNAME_TUHH_REACH ) )
+    if( feature instanceof TuhhReach )
     {
-      final TuhhReach reach = new TuhhReach( feature );
+      final TuhhReach reach = (TuhhReach) feature;
       final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
       if( reachProfileSegments.length > 0 )
         return reachProfileSegments[0].getProfileMember();

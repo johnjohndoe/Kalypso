@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -102,16 +101,8 @@ public class ProfileSelection
   private void addFeature( final Feature fe )
   {
     // FIXME: probably a reach: find children of feature that are profiles
-    if( GMLSchemaUtilities.substitutes( fe.getFeatureType(), TuhhReach.QNAME_TUHH_REACH ) )
-      addTuhhReach( new TuhhReach( fe ) );
-
-// final IRelationType rt = (fe).getParentRelation();
-// final Feature parentFeature = (fe).getOwner();
-// m_selectedProfiles.addAll( m_selection.toList() );
-// if( rt.isList() )
-// m_foundProfiles.addAll( (FeatureList) parentFeature.getProperty( rt ) );
-// else
-// m_foundProfiles.add( (Feature) parentFeature.getProperty( rt ) );
+    if( fe instanceof TuhhReach )
+      addTuhhReach( (TuhhReach) fe );
   }
 
   private void addTuhhReach( final TuhhReach reach )

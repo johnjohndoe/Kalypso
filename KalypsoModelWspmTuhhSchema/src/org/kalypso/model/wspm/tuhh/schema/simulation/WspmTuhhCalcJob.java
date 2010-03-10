@@ -149,7 +149,7 @@ public class WspmTuhhCalcJob implements ISimulation
          * @see java.io.BufferedOutputStream#write(byte[], int, int)
          */
         @Override
-        public synchronized void write( byte[] b, int off, int len ) throws IOException
+        public synchronized void write( final byte[] b, final int off, final int len ) throws IOException
         {
           super.write( b, off, len );
 
@@ -160,7 +160,7 @@ public class WspmTuhhCalcJob implements ISimulation
          * @see java.io.BufferedOutputStream#write(int)
          */
         @Override
-        public synchronized void write( int b ) throws IOException
+        public synchronized void write( final int b ) throws IOException
         {
           super.write( b );
 
@@ -364,7 +364,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             mapContentStream = ovwMapURL.openStream();
             final String mapContent = IOUtils.toString( mapContentStream );
-            final FeaturePath ftPath = reach.getFeature().getWorkspace().getFeaturepathForFeature( reach.getFeature() );
+            final FeaturePath ftPath = reach.getWorkspace().getFeaturepathForFeature( reach );
             final String newMapContent = mapContent.replaceAll( "%FID%", ftPath.toString() ); //$NON-NLS-1$
             final File mapFile = new File( tmpDir, "map.gmt" ); //$NON-NLS-1$
             mapWriter = new PrintWriter( new BufferedWriter( new FileWriter( mapFile ) ) );
