@@ -1,9 +1,5 @@
-      MODULE BLKECOM
-!
-!
-!-
+  MODULE BLKECOM
       REAL ESTIFM(80,80)
-      REAL*8 F(0:80)
+      REAL*8 F(80)
       INTEGER NCON(20)
-!-
-      ENDMODULE
+  END MODULE
