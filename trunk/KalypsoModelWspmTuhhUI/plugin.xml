@@ -81,7 +81,7 @@
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv">
              <enabledWhen>
                 <reference
-                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
              </enabledWhen>
           </handler>
@@ -90,7 +90,7 @@
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek">
              <enabledWhen>
                 <reference
-                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
              </enabledWhen>
           </handler>
@@ -99,7 +99,7 @@
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng">
              <enabledWhen>
                 <reference
-                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
              </enabledWhen>
           </handler>
@@ -108,7 +108,7 @@
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf">
              <enabledWhen>
                 <reference
-                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
              </enabledWhen>
           </handler>
@@ -342,28 +342,6 @@
 				</and>
 			</with>
 		</definition>
-  <definition
-        id="org.kalypso.model.wspm.tuhh.ui.definition.selectionContainsProfiles">
-     <with
-           variable="selection">
-        <iterate
-              ifEmpty="false"
-              operator="and">
-           <or>
-              <test
-                    forcePluginActivation="false"
-                    property="org.kalypso.ui.test.gmleditor.qname"
-                    value="{org.kalypso.model.wspmprofile}Profile">
-              </test>
-              <test
-                    forcePluginActivation="false"
-                    property="org.kalypso.ui.test.gmleditor.qname"
-                    value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
-              </test>
-           </or>
-        </iterate>
-     </with>
-  </definition>
 	</extension>
 	
 	

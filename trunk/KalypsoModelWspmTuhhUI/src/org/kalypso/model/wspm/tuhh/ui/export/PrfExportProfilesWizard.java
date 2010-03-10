@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.PrfExporter;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author kimwerner

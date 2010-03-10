@@ -63,7 +63,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   private ICoverageCollection m_coverages;
 
-  private WspmWaterBody m_reach;
+  private WspmWaterBody m_water;
 
   public CreateProfileFromDEMWidget( )
   {
@@ -86,7 +86,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       final FeatureList themeFeatureList = ((IKalypsoFeatureTheme) model.getActiveTheme()).getFeatureList();
       final Feature reachFeature = (Feature) themeFeatureList.first();
 
-      m_reach = new WspmWaterBody( reachFeature.getOwner() );
+      m_water = (WspmWaterBody) reachFeature.getOwner();
 
       /* locate grid data - coverages feature */
       for( final IKalypsoTheme theme : model.getAllThemes() )
@@ -163,7 +163,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
         profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[points.length - 1] ).setValue( defaultValue );
       }
 
-      final WspmWaterBody lWaterBodyReach = m_reach;
+      final WspmWaterBody waterBody = m_water;
 
       new UIJob( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) )
       {
@@ -179,14 +179,14 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
             IProfileFeature profileFeature;
             try
             {
-              profileFeature = lWaterBodyReach.createNewProfile();
+              profileFeature = waterBody.createNewProfile();
               ProfileFeatureFactory.toFeature( profile, profileFeature );
 
               final GMLWorkspace workspace = profileFeature.getWorkspace();
 
               final Feature[] changed_features = new Feature[1];
               changed_features[0] = profileFeature;
-              final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, lWaterBodyReach.getFeature(), changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+              final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, waterBody, changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
               workspace.fireModellEvent( event );
             }
             catch( final GMLSchemaException e )
