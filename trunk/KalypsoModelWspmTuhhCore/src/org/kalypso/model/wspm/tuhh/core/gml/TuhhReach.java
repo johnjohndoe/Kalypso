@@ -82,9 +82,9 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
   public static final QName QNAME_PROP_REACHSEGMENTMEMBER = new QName( NS_WSPM_TUHH, "reachSegmentMember" ); //$NON-NLS-1$
 
-  public TuhhReach( final Feature reach )
+  public TuhhReach( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( reach, QNAME_TUHH_REACH );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -94,7 +94,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   {
     try
     {
-      final Feature feature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_REACHSEGMENTMEMBER, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ); //$NON-NLS-1$
+      final Feature feature = FeatureHelper.addFeature( this, QNAME_PROP_REACHSEGMENTMEMBER, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ); //$NON-NLS-1$
       final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
 
       // set default values
@@ -134,38 +134,28 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
   public void setWaterBody( final WspmWaterBody body )
   {
-    final IPropertyType waterProp = getFeature().getFeatureType().getProperty( QNAME_WATER_BODY_LINK_MEMBER );
-    getFeature().setProperty( waterProp, body.getFeature().getId() );
+    final IPropertyType waterProp = getFeatureType().getProperty( QNAME_WATER_BODY_LINK_MEMBER );
+    setProperty( waterProp, body.getId() );
   }
 
   public WspmWaterBody getWaterBody( )
   {
-    final Object body = getFeature().getProperty( QNAME_WATER_BODY_LINK_MEMBER );
+    final Object body = getProperty( QNAME_WATER_BODY_LINK_MEMBER );
 
-    if( body == null )
-      return null;
-
-    if( body instanceof Feature )
-      return new WspmWaterBody( (Feature) body );
-    else
-    {
-      final Feature feature = getFeature().getWorkspace().getFeature( (String) body );
-      return new WspmWaterBody( feature );
-    }
+    return (WspmWaterBody) FeatureHelper.resolveLinkedFeature( getWorkspace(), body );
   }
 
   protected FeatureList getReachSegmentList( )
   {
-    return (FeatureList) getFeature().getProperty( QNAME_PROP_REACHSEGMENTMEMBER );
+    return (FeatureList) getProperty( QNAME_PROP_REACHSEGMENTMEMBER );
   }
 
   public void recreateMarkerList( )
   {
-    final Feature feature = getFeature();
-    final IFeatureType featureType = feature.getFeatureType();
+    final IFeatureType featureType = getFeatureType();
     final IRelationType markerRT = (IRelationType) featureType.getProperty( QNAME_MARKER_MEMBER );
 
-    final FeatureList list = (FeatureList) feature.getProperty( markerRT );
+    final FeatureList list = (FeatureList) getProperty( markerRT );
     list.clear();
 
     final TuhhReachProfileSegment[] reachProfileSegments = getReachProfileSegments();
@@ -175,7 +165,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
       if( profileMember == null )
         continue;
 
-      String crs = profileMember.getSrsName();
+      final String crs = profileMember.getSrsName();
       final IProfil profil = profileMember.getProfil();
       final IComponent[] markerTypes = profil.getPointMarkerTypes();
       for( final IComponent markerTyp : markerTypes )
@@ -209,12 +199,11 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
   private TuhhMarker createMarker( final FeatureList markerList )
   {
-    final Feature feature = getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
+    final GMLWorkspace workspace = getWorkspace();
 
     final IRelationType markerRelation = markerList.getParentFeatureTypeProperty();
     final IFeatureType markerFT = markerRelation.getTargetFeatureType();
-    final Feature markerFeature = workspace.createFeature( feature, markerRelation, markerFT );
+    final Feature markerFeature = workspace.createFeature( this, markerRelation, markerFT );
 
     return new TuhhMarker( markerFeature );
   }

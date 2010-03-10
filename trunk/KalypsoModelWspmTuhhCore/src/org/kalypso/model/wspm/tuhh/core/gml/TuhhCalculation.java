@@ -168,7 +168,7 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
 
   public void setReachRef( final TuhhReach reach )
   {
-    setProperty( new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ), reach.getFeature().getId() ); //$NON-NLS-1$
+    setProperty( new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ), reach.getId() ); //$NON-NLS-1$
   }
 
   public void setFliessgesetz( final FLIESSGESETZ gesetz )
@@ -403,10 +403,7 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
   public TuhhReach getReach( )
   {
     final Feature reachFeature = FeatureHelper.resolveLink( getFeature(), new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ) ); //$NON-NLS-1$
-    if( reachFeature == null )
-      return null;
-
-    return new TuhhReach( reachFeature );
+    return (TuhhReach) reachFeature;
   }
 
   public Feature getRunOffEventFeature( )

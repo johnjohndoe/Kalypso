@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.tuhh.core.wprof.IWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.transformation.GeoTransformer;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -112,11 +111,8 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
   private void fireChangeEvents( )
   {
     final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
-    final Feature[] changedFeatures = new Feature[waterBodies.length];
-    for( int i = 0; i < waterBodies.length; i++ )
-      changedFeatures[i] = waterBodies[i].getFeature();
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project.getFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project.getFeature(), waterBodies, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     try
     {
       m_workspace.postCommand( new EmptyCommand( "", false ) );

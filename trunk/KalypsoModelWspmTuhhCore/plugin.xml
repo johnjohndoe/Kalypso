@@ -84,4 +84,11 @@
             category="org.kalypso.model.wspm.tuhh.projectTemplate">
       </project>
    </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.TuhhReach"
+            qname="{org.kalypso.model.wspm.tuhh]ReachWspmTuhhSteadyState">
+      </feature>
+   </extension>
 </plugin>
