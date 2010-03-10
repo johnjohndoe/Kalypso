@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.export;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger

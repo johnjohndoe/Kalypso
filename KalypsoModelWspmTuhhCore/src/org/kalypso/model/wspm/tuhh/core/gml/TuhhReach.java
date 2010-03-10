@@ -54,6 +54,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -72,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author Gernot Belger
  */
-public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants
+public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants, IProfileSelectionProvider
 {
   private static final QName QNAME_WATER_BODY_LINK_MEMBER = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ); //$NON-NLS-1$
 
@@ -206,6 +207,29 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     final Feature markerFeature = workspace.createFeature( this, markerRelation, markerFT );
 
     return new TuhhMarker( markerFeature );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileSelectionProvider#getSelectedProfiles(org.kalypso.gmlschema.property.relation.IRelationType)
+   */
+  @Override
+  public IProfileFeature[] getSelectedProfiles( final IRelationType selectionHint )
+  {
+    final FeatureList reachSegmentList = getReachSegmentList();
+    final List<IProfileFeature> profile = new ArrayList<IProfileFeature>();
+    for( final Object object : reachSegmentList )
+    {
+      final Feature segmentFeature = (Feature) object;
+      if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) ) //$NON-NLS-1$
+      {
+        final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( segmentFeature );
+        final IProfileFeature profileMember = segment.getProfileMember();
+        if( profileMember != null )
+          profile.add( profileMember );
+      }
+    }
+
+    return profile.toArray( new IProfileFeature[profile.size()] );
   }
 
 }

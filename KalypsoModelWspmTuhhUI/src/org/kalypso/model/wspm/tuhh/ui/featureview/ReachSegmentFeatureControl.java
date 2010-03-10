@@ -82,16 +82,13 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
   {
     private final TuhhReach m_reach;
 
-    private final Feature m_feature;
-
     private final IProfileFeature m_changedProfile;
 
     private final GMLWorkspace m_workspace;
 
-    public ChangeListSelectionCommand( final TuhhReach reach, final Feature feature, final IProfileFeature changedProfile, final GMLWorkspace workspace )
+    public ChangeListSelectionCommand( final TuhhReach reach, final IProfileFeature changedProfile, final GMLWorkspace workspace )
     {
       m_reach = reach;
-      m_feature = feature;
       m_changedProfile = changedProfile;
       m_workspace = workspace;
     }
@@ -109,7 +106,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
     public void process( ) throws Exception
     {
       final TuhhReachProfileSegment segment = m_reach.createProfileSegment( m_changedProfile, m_changedProfile.getStation() );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_feature, segment.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_reach, segment.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
 
     public void redo( ) throws Exception
@@ -229,16 +226,16 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
   public void updateControl( )
   {
     final Feature feature = getFeature();
-    if( feature == null )
+    if( !(feature instanceof TuhhReach) )
       m_viewer.setInput( null );
     else
     {
-      final TuhhReach reach = new TuhhReach( feature );
+      final TuhhReach reach = (TuhhReach) feature;
       final WspmWaterBody waterBody = reach.getWaterBody();
 
       if( waterBody != null )
       {
-        final List< ? > profiles = (List< ? >) waterBody.getFeature().getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
+        final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
         m_viewer.setInput( profiles );
       }
 
@@ -257,19 +254,17 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
     final GMLWorkspace workspace = profileFeature.getWorkspace();
 
     // add or remove profile segment according to new check-state
-    final TuhhReach reach = new TuhhReach( getFeature() );
-
-    final Feature feature = reach.getFeature();
+    final TuhhReach reach = (TuhhReach) getFeature();
     if( checked )
     {
       // post via command...
 
-      final ICommand changeCommand = new ChangeListSelectionCommand( reach, feature, profileFeature, workspace );
+      final ICommand changeCommand = new ChangeListSelectionCommand( reach, profileFeature, workspace );
       fireFeatureChange( changeCommand );
     }
     else
     {
-      final FeatureList segments = (FeatureList) feature.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+      final FeatureList segments = (FeatureList) reach.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
 
       // CAUTION: this is a linear search through a list, and so a potential performance problem
       for( final Object segmentFeature : segments )
@@ -280,7 +275,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
         {
           // TODO: post via command
           segments.remove( segmentFeature );
-          workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature, (Feature) segmentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+          workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach, (Feature) segmentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
           break;
         }
