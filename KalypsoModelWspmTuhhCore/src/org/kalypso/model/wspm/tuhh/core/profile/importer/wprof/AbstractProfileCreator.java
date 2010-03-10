@@ -88,7 +88,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
 
     return polygon.getPoints();
   }
-  
+
   protected final ProfilePolygones getPolygones( )
   {
     return m_data.getProfilePolygones();
@@ -147,11 +147,11 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     {
       final String riverId = anyPoint.getRiverId();
       final String riverName = anyPoint.getRiverName();
-      final String waterName = riverId + " - " + riverName;
-
       final URL[] photoUrls = anyPoint.getPhotos();
 
-      final IProfileFeature profileFeature = project.createNewProfile( waterName, true );
+      final IProfileFeature profileFeature = project.createNewProfile( riverName, true );
+      profileFeature.getWater().setRefNr( riverId );
+
       profileFeature.setSrsName( m_data.getTransformer().getTarget() );
       for( final URL url : photoUrls )
       {
@@ -196,10 +196,10 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final String riverId = wprofPoint.getRiverId();
     final BigDecimal station = getStation( wprofPoint );
     final String comment = wprofPoint.getProfileComment();
-    final String profileName = wprofPoint.getProfileName();
+    final String profileName = wprofPoint.getPNam();
 
     profile.setName( profileName );
-    
+
     final ProfilePolygones profilePolygones = m_data.getProfilePolygones();
     final int numPoints = profilePolygones.getNumPoints();
     final String[] objTypes = profilePolygones.getAllIDs();
