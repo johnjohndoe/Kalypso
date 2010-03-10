@@ -44,7 +44,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -57,10 +56,7 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution;
-import org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution;
-import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -198,7 +194,7 @@ public class BrueckeRule extends AbstractValidatorRule
         Double maxUK = -Double.MAX_VALUE;
         for( int i = innerLeft; i < innerRight; i++ )
         {
-          final Double deltaH = compare( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+ //         final Double deltaH = compare( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
           final Double deltaB = compare( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
           minOK = Math.min( minOK, ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] ).doubleValue() );
           maxUK = Math.max( maxUK, ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] ).doubleValue() );
