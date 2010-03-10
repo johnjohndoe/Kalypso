@@ -32,6 +32,7 @@ import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
+import org.kalypso.risk.project.KalypsoRiskProjectNature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
@@ -42,6 +43,12 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
   protected static final SortedMap<Double, String> m_riskZonesMap = new TreeMap<Double, String>();
 
   protected static boolean m_definitionsLoaded = false;
+
+  private static String NATURE_PLANERCLIENT = "org.kalypso.planer.client.base.project.PlanerClientProjectNature"; //$NON-NLS-1$
+
+  private static String CONTROLMODEL_NATURE_RISK = "/models/RasterizationControlModel.gml"; //$NON-NLS-1$
+
+  private static String CONTROLMODEL_NATURE_PLANERCLIENT = "/results/risk/RasterizationControlModel.gml"; //$NON-NLS-1$
 
   public RiskZonesThemeInfo( )
   {
@@ -175,10 +182,10 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
     if( scenarioFolder == null )
       return null;
     final IProject project = scenarioFolder.getProject();
-    if( project.getNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) != null ) //$NON-NLS-1$
-      return "/models/RasterizationControlModel.gml"; //$NON-NLS-1$
-    else if( project.getNature( "org.kalypso.planer.client.base.project.PlanerClientProjectNature" ) != null ) //$NON-NLS-1$
-      return "/results/risk/RasterizationControlModel.gml"; //$NON-NLS-1$
+    if( project.getNature( KalypsoRiskProjectNature.ID ) != null )
+      return CONTROLMODEL_NATURE_RISK;
+    else if( project.getNature( NATURE_PLANERCLIENT ) != null )
+      return CONTROLMODEL_NATURE_PLANERCLIENT;
     else
       return null;
   }

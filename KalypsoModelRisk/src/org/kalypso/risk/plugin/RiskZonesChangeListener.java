@@ -75,7 +75,10 @@ public class RiskZonesChangeListener implements IResourceChangeListener
 
     try
     {
-      final IPath resourcePath = scenarioFolder.getProjectRelativePath().append( RiskZonesThemeInfo.getResourcePath( scenarioFolder ) );
+      final String riskResourcePath = RiskZonesThemeInfo.getResourcePath( scenarioFolder );
+      if( riskResourcePath == null )
+        return;
+      final IPath resourcePath = scenarioFolder.getProjectRelativePath().append( riskResourcePath );
       final IPath roughnessPath = scenarioFolder.getProject().getFullPath().append( resourcePath );
       final IResourceDelta fileDelta = rootDelta.findMember( roughnessPath );
       if( fileDelta != null )
