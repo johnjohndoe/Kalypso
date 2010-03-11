@@ -50,11 +50,18 @@ import java.util.Collection;
  */
 public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
 {
+  private final boolean m_createComment;
+
+  public SoilOnlyProfileCreatorStrategy( final boolean createComment )
+  {
+    m_createComment = createComment;
+  }
+
   public IProfileCreator createProfileCreator( final ProfileData data )
   {
     final IProfileCreator creator = doCreateProfileCreator( data );
     if( creator instanceof AbstractProfileCreator )
-      ((AbstractProfileCreator) creator).setDoCreateProfileComment( false );
+      ((AbstractProfileCreator) creator).setDoCreateProfileComment( m_createComment );
 
     return creator;
   }
@@ -73,11 +80,11 @@ public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
     if( polygones.hasPoints( "V01" ) )
       return new GelaendeProfileCreator( "Gelände (V01)", data, "V01" );
 
-    if( polygones.hasPoints( "2314" ) )
-      return new GelaendeProfileCreator( "Absturz", data, "2314" );
-
     if( polygones.hasPoints( "21" ) )
       return new GelaendeProfileCreator( data, "21" );
+
+    if( polygones.hasPoints( "2314" ) )
+      return new GelaendeProfileCreator( "Absturz", data, "2314" );
 
     return new EmptyProfileCreator( data );
   }
