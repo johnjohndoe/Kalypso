@@ -101,6 +101,9 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
     if( polygones.hasPoints( "V01", "V03" ) )
       return new WeirProfileCreator( "Absturz", data, "V01", "V03" );
 
+    if( polygones.hasPoints( "21", "2314" ) )
+      return new WeirProfileCreator( "Absturz", data, "21", "2314" );
+
     if( polygones.hasPoints( "2314" ) )
       return new WeirProfileCreator( "Absturz", data, "2314", "2314" );
 

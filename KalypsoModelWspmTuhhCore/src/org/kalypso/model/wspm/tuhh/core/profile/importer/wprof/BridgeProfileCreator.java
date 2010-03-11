@@ -244,7 +244,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   private void addOK( final IProfil profile ) throws CoreException
   {
     final IWProfPoint[] okPoints = getOkPoints();
-    if( okPoints.length < 2 )
+    if( okPoints == null || okPoints.length < 2 )
       addDefaultProperty( profile, POINT_PROPERTY_OBERKANTEBRUECKE, POINT_PROPERTY_UNTERKANTEBRUECKE );
     else
       addBridgeProperty( profile, okPoints, POINT_PROPERTY_OBERKANTEBRUECKE );
@@ -341,6 +341,5 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 // addMarker( profile, MARKER_TYP_BORDVOLL );
     addMarker( profile, MARKER_TYP_DURCHSTROEMTE );
   }
-
 
 }

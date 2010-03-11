@@ -258,7 +258,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     final File photoDir = new File( photoRiverDir, "Bilder" );
     if( !photoDir.exists() || !photoDir.isDirectory() )
       return new String[] {};
-    
+
     final String pNam = getPNam();
     final FilenameFilter photoFilter = new PrefixSuffixFilter( pNam, "" );
     return photoDir.list( photoFilter );
@@ -327,7 +327,8 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
   public String getPNam( )
   {
-    return getProperty( "P_NAM", String.class, "Profilename unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String pnam = getProperty( "P_NAM", String.class, "Profilename unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return pnam.replaceAll( "\"", "" );
   }
 
   @Override
