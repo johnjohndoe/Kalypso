@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.tuhh.ui.wizards;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
@@ -56,10 +56,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
@@ -68,42 +69,35 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
+ * FIXME: use the LengthSectionExportPage?
+ * 
  * @author kimwerner
  */
 public class CreateLengthSectionWizard extends Wizard
 {
+  final private ProfilesChooserPage m_profileChooserPage;
 
-  final private ArrayChooserPage m_profileChooserPage;
+  final private GMLWorkspace m_workspace;
 
-  final private List<Feature> m_profiles;
-
-  final private List<Feature> m_selectedProfiles;
-
-  final private GMLWorkspace m_GMLws;
-
-  public CreateLengthSectionWizard( final GMLWorkspace ws, final List<Feature> profiles, final List<Feature> selection )
+  public CreateLengthSectionWizard( final ProfileSelection profileSelection )
   {
-    m_GMLws = ws;
-    m_profiles = profiles;
-    m_selectedProfiles = selection;
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.0" ) ); //$NON-NLS-1$
+    m_workspace = profileSelection.getWorkspace();
+
     setNeedsProgressMonitor( true );
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$ 
-    m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.2" ) ); //$NON-NLS-1$
+    final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.2" ); //$NON-NLS-1$
+    m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
   }
 
   /**
@@ -118,15 +112,19 @@ public class CreateLengthSectionWizard extends Wizard
 
   private final IProfil[] extractProfiles( final Object[] profilFeatures )
   {
-    final ArrayList<IProfil> profiles = new ArrayList<IProfil>();
+    final SortedMap<Double, IProfil> profiles = new TreeMap<Double, IProfil>();
     for( final Object objProfileFeature : profilFeatures )
     {
       if( !(objProfileFeature instanceof IProfileFeature) )
         continue;
       final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
-      profiles.add( profileFeature.getProfil() );
+
+      final IProfil profil = profileFeature.getProfil();
+      final double station = profil.getStation();
+      profiles.put( station, profil );
     }
-    return profiles.toArray( new IProfil[] {} );
+
+    return profiles.values().toArray( new IProfil[profiles.size()] );
   }
 
   /**
@@ -136,16 +134,16 @@ public class CreateLengthSectionWizard extends Wizard
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
-    URL context = m_GMLws.getContext();
-    IProject wspmProjekt = ResourceUtilities.findProjectFromURL( context );
-    IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" ); //$NON-NLS-1$
+    final URL context = m_workspace.getContext();
+    final IProject wspmProjekt = ResourceUtilities.findProjectFromURL( context );
+    final IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" ); //$NON-NLS-1$
     try
     {
       if( !parentFolder.exists() )
         parentFolder.create( false, true, new NullProgressMonitor() );
 
       final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length ); //$NON-NLS-1$
-      IFolder targetFolder = parentFolder.getFolder( fName );
+      final IFolder targetFolder = parentFolder.getFolder( fName );
       if( !targetFolder.exists() )
         targetFolder.create( false, true, new NullProgressMonitor() );
 
@@ -174,8 +172,11 @@ public class CreateLengthSectionWizard extends Wizard
       }
 
       targetFolder.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+
+      final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+      IDE.openEditor( page, kodFile, true );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

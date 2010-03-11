@@ -48,21 +48,6 @@
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
       </objectContribution>
-            <objectContribution
-                  adaptable="false"
-                  id="org.kalypso.model.wspm.ui.objectContribution.lengthSection"
-                  objectClass="org.kalypsodeegree.model.feature.Feature">
-               <action
-                     class="org.kalypso.model.wspm.tuhh.ui.actions.LengthSectionActionDelegate"
-                     icon="icons/obj16/kalypso_odt.gif"
-                     id="org.kalypso.model.wspm.tuhh.ui.action.LengthSectionActionDelegate"
-                     label="LengthSectionWizard">
-               </action>
-               <filter
-                     name="featureType"
-                     value="org.kalypso.model.wspmprofile#Profile">
-               </filter>
-            </objectContribution>
    </extension>
 
 	<extension point="org.eclipse.ui.handlers">
@@ -130,6 +115,15 @@
                                </iterate>
                         </with>
                      </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.actions.CreateLengthSectionHandler"
+                commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+             </enabledWhen>
           </handler>
 	</extension>
 
@@ -457,6 +451,11 @@
           id="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
           name="WProf-Shape">
     </command>
+    <command
+          description="Converts the selected profiles to a length section."
+          id="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
+          name="Length Section">
+    </command>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -486,6 +485,10 @@
      <image
            commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
            icon="icons/elcl16/export_prf.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
+           icon="icons/elcl16/profile_create_lengthSection.gif">
      </image>
   </extension>
 

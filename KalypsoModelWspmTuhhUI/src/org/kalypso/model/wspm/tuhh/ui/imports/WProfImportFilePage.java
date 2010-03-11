@@ -52,11 +52,18 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.ToolTip;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.CharsetViewer;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
@@ -84,6 +91,8 @@ public class WProfImportFilePage extends WizardPage
   private CRSSelectionPanel m_crsPanel;
 
   private CharsetViewer m_charsetViewer;
+
+  private FileChooserGroup m_pdfChooser;
 
   public WProfImportFilePage( final String pageName )
   {
@@ -116,8 +125,11 @@ public class WProfImportFilePage extends WizardPage
     final Control charsetControl = createCharsetControl( panel );
     charsetControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Control imageContextControl = createImageContextControl( panel );
-    imageContextControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_imageChooser = createContextControl( "imageContext" );
+    createChooserControl( panel, m_imageChooser, "Image Folder (Optional)", new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    m_pdfChooser = createContextControl( "pdfContext" );
+    createChooserControl( panel, m_pdfChooser, "PDF Folder (Optional)", new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     setControl( panel );
     setMessage( null, IMessageProvider.NONE );
@@ -138,7 +150,6 @@ public class WProfImportFilePage extends WizardPage
 
     final Charset charset = getInitialCharset( shapeDefaultCharset );
     m_charsetViewer.setCharset( charset );
-
 
     m_charsetViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -213,16 +224,16 @@ public class WProfImportFilePage extends WizardPage
     return m_crsPanel;
   }
 
-  private Control createImageContextControl( final Composite panel )
+  private FileChooserGroup createContextControl( final String settings )
   {
     final FileChooserDelegateDirectory directoryDelegate = new FileChooserDelegateDirectory();
-    m_imageChooser = new FileChooserGroup( directoryDelegate );
-    m_imageChooser.setShowLabel( false );
+    final FileChooserGroup contextChooser = new FileChooserGroup( directoryDelegate );
+    contextChooser.setShowLabel( false );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, "imageContext" );
-    m_imageChooser.setDialogSettings( shapeSection );
-    m_imageChooser.addFileChangedListener( new FileChangedListener()
+    final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, settings );
+    contextChooser.setDialogSettings( shapeSection );
+    contextChooser.addFileChangedListener( new FileChangedListener()
     {
       @Override
       public void fileChanged( final File file )
@@ -231,9 +242,50 @@ public class WProfImportFilePage extends WizardPage
       }
     } );
 
-    final Group chooserGroup = m_imageChooser.createControl( panel, SWT.NONE );
-    chooserGroup.setText( "Image Folder (Optional)" );
-    return chooserGroup;
+    return contextChooser;
+  }
+
+  private void createChooserControl( final Composite parent, final FileChooserGroup chooser, final String text, final GridData gridData )
+  {
+    final Group chooserGroup = chooser.createControl( parent, SWT.NONE );
+    chooserGroup.setText( text );
+    chooserGroup.setLayoutData( gridData );
+
+    final Hyperlink hyperlink = new Hyperlink( parent, SWT.NONE );
+    hyperlink.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
+    hyperlink.setText( "Hints" );
+    hyperlink.setUnderlined( true );
+
+    final ToolTip tip = new ToolTip( hyperlink.getShell(), SWT.ICON_INFORMATION );
+    tip.setText( "Available Tokens" );
+    tip.setMessage( "Message" );
+    tip.setVisible( false );
+
+    hyperlink.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      @Override
+      public void linkEntered( final HyperlinkEvent e )
+      {
+        final Point tipLocation = parent.toDisplay( chooserGroup.getLocation() );
+        tip.setLocation( tipLocation );
+        tip.setVisible( true );
+      }
+
+      @Override
+      public void linkExited( final HyperlinkEvent e )
+      {
+        tip.setVisible( false );
+      }
+    } );
+
+    hyperlink.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        tip.dispose();
+      }
+    } );
   }
 
   private Control createFileControl( final Composite panel )
