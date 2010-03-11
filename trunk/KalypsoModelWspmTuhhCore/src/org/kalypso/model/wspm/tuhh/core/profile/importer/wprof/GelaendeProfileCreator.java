@@ -82,7 +82,18 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   protected IWProfPoint[] getSoilPoints( )
   {
-    return getPoints( m_soilPointsID );
+    final ProfilePolygon profilePolygon = new ProfilePolygon( "-" );
+
+    final IWProfPoint[] soilPoints = getPoints( m_soilPointsID );
+    for( final IWProfPoint point : soilPoints )
+      profilePolygon.add( point );
+
+    /* We also add points that have no object-type: theses are probably points from the prolongation tool */
+    final IWProfPoint[] unknownPoints = getPoints( "" );
+    for( final IWProfPoint point : unknownPoints )
+      profilePolygon.add( point );
+
+    return profilePolygon.getPoints();
   }
 
   /**
