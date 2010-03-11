@@ -112,6 +112,10 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
         ProgressUtilities.worked( monitor, 1 );
       }
       exporter.close();
+
+      final IStatus status = exporter.getStatus();
+      if( !status.isOK() )
+        throw new CoreException( status );
     }
     catch( final IOException e )
     {

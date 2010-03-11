@@ -43,10 +43,12 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Formatter;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -62,35 +64,53 @@ public class SobekProfileExporter
 {
   private final Formatter m_formatter;
 
+  private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
+
   public SobekProfileExporter( final File file ) throws FileNotFoundException
   {
     m_formatter = new Formatter( file );
   }
 
-  public void writeProfile( final IProfil profil ) throws CoreException
+  public void writeProfile( final IProfil profil )
   {
     final String profileName = profil.getName();
-    final String userPrefix = "_";
-    final Object id = String.format( "%s_%.4f", userPrefix, profil.getStation() );
-    m_formatter.format("CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName);
-    m_formatter.format("TBLE%n");
+    final String pnam = getPNam( profileName );
+    final String userPrefix = "";
+// final Object id = String.format( "%s%s%.4f", userPrefix, profil.getStation() );
 
-    final int widhtIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int heightIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final Object id = String.format( "%s%s", userPrefix, pnam );
 
     final IRecord[] points = getPointsToExport( profil );
+
+    if( points == null )
+      return;
+
+    m_formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName );
+    m_formatter.format( "TBLE%n" );
+
+    final int widhtIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int heightIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+
     for( final IRecord point : points )
     {
       final Number y = (Number) point.getValue( widhtIndex );
       final Number z = (Number) point.getValue( heightIndex );
       m_formatter.format( "%.4f %.4f <%n", y, z );
     }
-    m_formatter.format("tble%n");
-    m_formatter.format("crds%n");
-    m_formatter.format( "%n" );
+    m_formatter.format( "tble%n" );
+    m_formatter.format( "crds%n" );
   }
 
-  private IRecord[] getPointsToExport( final IProfil profil ) throws CoreException
+  private String getPNam( final String profileName )
+  {
+    final String[] split = profileName.split( " " );
+    if( split.length == 0 )
+      return "-";
+
+    return split[0];
+  }
+
+  private IRecord[] getPointsToExport( final IProfil profil )
   {
     final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
 
@@ -102,7 +122,8 @@ public class SobekProfileExporter
     {
       final String message = String.format( "Zuwenige Trennflächen bei Profil %.4f (%s)", profil.getStation(), profil.getName() );
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message );
-      throw new CoreException( status );
+      m_stati.add( status );
+      return null;
     }
 
     final IRecord startPoint = markers[0].getPoint();
@@ -132,6 +153,14 @@ public class SobekProfileExporter
   public void closeQuiet( )
   {
     m_formatter.close();
+  }
+
+  public IStatus getStatus( )
+  {
+    final IStatus[] children = m_stati.toArray( new IStatus[m_stati.size()] );
+    if( children.length > 0 )
+      return new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), -1, children, "Es sind Probleme beim SOBEK-Export aufgetreten", null );
+    return Status.OK_STATUS;
   }
 
 }
