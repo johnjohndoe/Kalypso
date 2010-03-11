@@ -286,7 +286,6 @@ public class LngSink implements IProfilSink
   /**
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
    */
-
   public boolean internalWrite( final IObservation<TupleResult> obs, final Writer writer ) throws IOException
   {
 
