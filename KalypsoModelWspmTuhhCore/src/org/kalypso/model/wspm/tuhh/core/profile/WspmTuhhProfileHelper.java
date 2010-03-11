@@ -96,12 +96,24 @@ public class WspmTuhhProfileHelper
 
   private final static BigDecimal valueToBigDecimal( final Object value )
   {
-    return value instanceof Double ? new BigDecimal( (Double) value ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP ) : new BigDecimal( Double.NaN );
+    if( value instanceof BigDecimal )
+      return (BigDecimal) value;
+
+    if( value instanceof Number )
+    {
+      final double val = ((Number) value).doubleValue();
+      if( Double.isNaN( val ) )
+        return null;
+
+      return new BigDecimal( val ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP );
+    }
+    else
+      return null;
   }
 
   public static final IObservation<TupleResult> profilesToLengthSection( final IProfil[] profiles )
   {
-    TupleResult lsResult = new TupleResult();
+    final TupleResult lsResult = new TupleResult();
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND ) );
@@ -115,16 +127,15 @@ public class WspmTuhhProfileHelper
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT ) );
     lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_H_BV ) );
 
-    for( IProfil profil : profiles )
+    for( final IProfil profil : profiles )
     {
-
       final IComponent profHei = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       final int indHei = profil.indexOfProperty( profHei );
 
-      IRecord station = lsResult.createRecord();
+      final IRecord station = lsResult.createRecord();
       final String desc = profil.getDescription();
       station.setValue( 10, "".equals( desc ) ? null : desc );
-      station.setValue( 0, valueToBigDecimal( profil.getStation()), true );// Station
+      station.setValue( 0, valueToBigDecimal( profil.getStation() ), true );// Station
       // Kennung
       // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
       station.setValue( 2, ProfilUtil.stationToBigDecimal( ProfilUtil.getMinValueFor( profil, profHei ) ), true ); // Ground
