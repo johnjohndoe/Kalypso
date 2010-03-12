@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.imports;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -58,6 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfC
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPointFactory;
+import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextTokenReplacer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -82,7 +82,8 @@ public class WProfImportWizard extends Wizard
     m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", "WProf File Selection", null ); //$NON-NLS-1$
     m_wprofFilePage.setDescription( "Select a file to import WProf data from." );
 
-    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", "WProf Profile Segmentation", null ); //$NON-NLS-1$
+    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", "WProf Import Options", null ); //$NON-NLS-1$
+    m_wprofMarkerPage.setDescription( "Please configure your WProf Import" );
 
     final WProfProfileStrategyOptions profileStrategyOptions = m_wprofMarkerPage.getProfileStrategyOptions();
     profileStrategyOptions.addStrategy( new ProfileCreatorStrategy() );
@@ -112,7 +113,8 @@ public class WProfImportWizard extends Wizard
     final File shapeFile = m_wprofFilePage.getWProfFile();
 
     final String targetSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final URL photoContext = m_wprofFilePage.getPhotoContext();
+    final String photoContext = m_wprofFilePage.getPhotoContext();
+    final String pdfContext = m_wprofFilePage.getPdfContext();
 
     final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_workspace, m_targetProject, targetSrs );
 
@@ -130,7 +132,8 @@ public class WProfImportWizard extends Wizard
         handler.addMarkerMapping( markerID, type );
     }
 
-    final IWProfPointFactory pointFactory = new BCEShapeWPRofContentProviderFactory( photoContext );
+    final WProfContextTokenReplacer tokenReplace = m_wprofFilePage.getTokenReplace();
+    final IWProfPointFactory pointFactory = new BCEShapeWPRofContentProviderFactory( tokenReplace, photoContext, pdfContext );
 
     final WProfImportOperation op = new WProfImportOperation( shapeFile, handler, pointFactory );
     op.setShapeCharset( m_wprofFilePage.getShapeCharset() );

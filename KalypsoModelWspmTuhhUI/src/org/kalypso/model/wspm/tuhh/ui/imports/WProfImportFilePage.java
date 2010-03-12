@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.imports;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.Charset;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -71,6 +69,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextTokenReplacer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
@@ -93,6 +92,8 @@ public class WProfImportFilePage extends WizardPage
   private CharsetViewer m_charsetViewer;
 
   private FileChooserGroup m_pdfChooser;
+
+  private final WProfContextTokenReplacer m_tokenReplace = new WProfContextTokenReplacer();
 
   public WProfImportFilePage( final String pageName )
   {
@@ -258,7 +259,8 @@ public class WProfImportFilePage extends WizardPage
 
     final ToolTip tip = new ToolTip( hyperlink.getShell(), SWT.ICON_INFORMATION );
     tip.setText( "Available Tokens" );
-    tip.setMessage( "Message" );
+    final String tipMessage = m_tokenReplace.getMessage();
+    tip.setMessage( tipMessage );
     tip.setVisible( false );
 
     hyperlink.addHyperlinkListener( new HyperlinkAdapter()
@@ -335,16 +337,6 @@ public class WProfImportFilePage extends WizardPage
     if( selectedCRS == null )
       return new MessageProvider( "Pleae choose the coordinate system of the WProf file", IMessageProvider.ERROR );
 
-    final File imageDir = m_imageChooser.getFile();
-    if( imageDir != null )
-    {
-      if( !imageDir.exists() )
-        return new MessageProvider( "Image folder does not exist", IMessageProvider.ERROR );
-
-      if( !imageDir.isDirectory() )
-        return new MessageProvider( "Image folder is not a directory", IMessageProvider.ERROR );
-    }
-
     return new MessageProvider( null, IMessageProvider.NONE );
   }
 
@@ -358,25 +350,23 @@ public class WProfImportFilePage extends WizardPage
     return m_crsPanel.getSelectedCRS();
   }
 
-  public URL getPhotoContext( )
+  public WProfContextTokenReplacer getTokenReplace( )
   {
-    try
-    {
-      final File imageDir = m_imageChooser.getFile();
-      if( imageDir == null )
-        return null;
+    return m_tokenReplace;
+  }
 
-      return imageDir.toURI().toURL();
-    }
-    catch( final MalformedURLException e )
-    {
-      return null;
-    }
+  public String getPhotoContext( )
+  {
+    return m_imageChooser.getPath();
+  }
+
+  public String getPdfContext( )
+  {
+    return m_pdfChooser.getPath();
   }
 
   public Charset getShapeCharset( )
   {
     return m_charsetViewer.getCharset();
   }
-
 }
