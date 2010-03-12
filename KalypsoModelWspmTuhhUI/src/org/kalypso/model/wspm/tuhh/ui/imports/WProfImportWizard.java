@@ -50,8 +50,10 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileCreatorStrategy;
+import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.ProfileCreatorStrategy;
+import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.SoilOnlyProfileCreatorStrategy;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
@@ -70,7 +72,7 @@ public class WProfImportWizard extends Wizard
 
   private final CommandableWorkspace m_workspace;
 
-  private final WProfImportMarkerPage m_wprofMarkerPage;
+  private final WProfOptionsPage m_wprofMarkerPage;
 
   public WProfImportWizard( final CommandableWorkspace workspace, final TuhhWspmProject targetProject )
   {
@@ -80,10 +82,12 @@ public class WProfImportWizard extends Wizard
     m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", "WProf File Selection", null ); //$NON-NLS-1$
     m_wprofFilePage.setDescription( "Select a file to import WProf data from." );
 
-    m_wprofMarkerPage = new WProfImportMarkerPage( "wprofMarkerPage", "WProf Profile Segmentation", null ); //$NON-NLS-1$
-    m_wprofMarkerPage.setDescription( "Choose which Point-Atributes to use (',' to spearate multiple values)." );
-    m_wprofMarkerPage.setDefaultValues( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new int[] { 3, 10 } );
-    m_wprofMarkerPage.setDefaultValues( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new int[] { 3, 10 } );
+    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", "WProf Profile Segmentation", null ); //$NON-NLS-1$
+
+    final WProfProfileStrategyOptions profileStrategyOptions = m_wprofMarkerPage.getProfileStrategyOptions();
+    profileStrategyOptions.addStrategy( new ProfileCreatorStrategy() );
+    profileStrategyOptions.addStrategy( new SoilOnlyProfileCreatorStrategy( false ) );
+    profileStrategyOptions.addStrategy( new SoilOnlyProfileCreatorStrategy( true ) );
 
     setWindowTitle( "WProf Import" );
     setNeedsProgressMonitor( true );
@@ -112,7 +116,12 @@ public class WProfImportWizard extends Wizard
 
     final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_workspace, m_targetProject, targetSrs );
 
-    final Map<String, int[]> markerMappings = m_wprofMarkerPage.getMarkerMappings();
+    final WProfProfileStrategyOptions profileStrategyOptions = m_wprofMarkerPage.getProfileStrategyOptions();
+    final IProfileCreatorStrategy strategy = profileStrategyOptions.getCurrentStrategy();
+    handler.setStrategy( strategy );
+
+    final WProfMarkerOptions markerOptions = m_wprofMarkerPage.getMarkerOptions();
+    final Map<String, int[]> markerMappings = markerOptions.getMarkerMappings();
     for( final Entry<String, int[]> mappingEntry : markerMappings.entrySet() )
     {
       final String markerID = mappingEntry.getKey();
