@@ -71,6 +71,8 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   private final CommandableWorkspace m_workspace;
 
+  private IProfileCreatorStrategy m_strategy = new ProfileCreatorStrategy();
+
   public TuhhProfileWProfContentHandler( final CommandableWorkspace workspace, final TuhhWspmProject project, final String targetSrs )
   {
     m_workspace = workspace;
@@ -85,11 +87,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   public void finished( ) throws CoreException
   {
-    // FIXME: Rolf
-    final IProfileCreatorStrategy strategy = new SoilOnlyProfileCreatorStrategy();
-// final IProfileCreatorStrategy strategy = new ProfileCreatorStrategy();
-
-    addProfiles( strategy );
+    addProfiles( m_strategy );
 
     fireChangeEvents();
   }
@@ -156,6 +154,11 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
       m_data.put( pNam, new ProfileData( m_transformer, m_punktattribute ) );
 
     return m_data.get( pNam );
+  }
+
+  public void setStrategy( final IProfileCreatorStrategy strategy )
+  {
+    m_strategy = strategy;
   }
 
 }

@@ -50,6 +50,15 @@ import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
  */
 public class ProfileCreatorStrategy implements IProfileCreatorStrategy
 {
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return "Standard (mit Bauwerken)";
+  }
+
   public IProfileCreator createProfileCreator( final ProfileData data )
   {
     final ProfilePolygones polygones = data.getProfilePolygones();

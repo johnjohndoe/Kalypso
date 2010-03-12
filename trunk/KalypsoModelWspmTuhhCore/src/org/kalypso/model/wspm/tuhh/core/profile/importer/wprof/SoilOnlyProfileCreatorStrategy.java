@@ -57,6 +57,16 @@ public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
     m_createComment = createComment;
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    final String commentString = m_createComment ? "mit Kommentaren" : "ohne Kommentare";
+    return String.format( "Nur Gelände (%s)", commentString );
+  }
+
   public IProfileCreator createProfileCreator( final ProfileData data )
   {
     final IProfileCreator creator = doCreateProfileCreator( data );
