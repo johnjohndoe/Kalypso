@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -95,7 +96,7 @@ public class SobekProfileExporter
     {
       final Number y = (Number) point.getValue( widhtIndex );
       final Number z = (Number) point.getValue( heightIndex );
-      m_formatter.format( "%.4f %.4f <%n", y, z );
+      m_formatter.format( Locale.US, "%.4f %.4f <%n", y, z );
     }
     m_formatter.format( "tble%n" );
     m_formatter.format( "crds%n" );
