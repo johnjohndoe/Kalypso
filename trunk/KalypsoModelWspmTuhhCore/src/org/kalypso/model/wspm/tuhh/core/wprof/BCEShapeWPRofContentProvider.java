@@ -48,12 +48,9 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
@@ -72,14 +69,20 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 {
   private final Feature m_feature;
 
-  private final URL m_photoContext;
+  private final String m_photoContext;
 
   final Properties m_specifiction = new Properties();
 
-  public BCEShapeWPRofContentProvider( final Feature feature, final URL photoContext )
+  private final String m_pdfContext;
+
+  private final WProfContextTokenReplacer m_tokenReplace;
+
+  public BCEShapeWPRofContentProvider( final Feature feature, final WProfContextTokenReplacer tokenReplace, final String photoContext, final String pdfContext )
   {
     m_feature = feature;
+    m_tokenReplace = tokenReplace;
     m_photoContext = photoContext;
+    m_pdfContext = pdfContext;
 
     readSpecification();
   }
@@ -213,14 +216,17 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   {
     try
     {
-      final String[] photoPathes = getPhotoPathes();
-      final String riverId = getRiverId();
-      final String river5Id = String.format( "%5s", riverId ).replace( ' ', '0' );
-      final String[] pathes = new String[photoPathes.length];
-      for( int i = 0; i < pathes.length; i++ )
-        pathes[i] = String.format( "%s\\Bilder\\%s", river5Id, photoPathes[i] ); //$NON-NLS-1$
+      final File photoDir = getContextDir( m_photoContext );
+      if( photoDir == null || !photoDir.exists() || !photoDir.isDirectory() )
+        return new URL[] {};
 
-      return createPhotoUrls( pathes );
+      final String[] photoNames = getPhotoNames( photoDir );
+
+      final URL[] pathes = new URL[photoNames.length];
+      for( int i = 0; i < pathes.length; i++ )
+        pathes[i] = new File( photoDir, photoNames[i] ).toURI().toURL();
+
+      return pathes;
     }
     catch( final MalformedURLException e )
     {
@@ -232,49 +238,33 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     }
   }
 
-  private String[] getPhotoPathes( )
+  private String[] getPhotoNames( final File photoDir )
   {
     final String[] imageNames = getImageNames();
     if( imageNames == null || imageNames.length == 0 )
-      return searchImages();
+      return searchImages( photoDir );
 
     return imageNames;
   }
 
-  private String[] searchImages( )
+  private String[] searchImages( final File photoDir )
   {
-    if( m_photoContext == null )
-      return new String[] {};
-
-    final File photoBaseDir = FileUtils.toFile( m_photoContext );
-    if( photoBaseDir == null || !photoBaseDir.exists() || !photoBaseDir.isDirectory() )
-      return new String[] {};
-
-    final String riverId = getRiverId();
-    final File photoRiverDir = new File( photoBaseDir, riverId );
-    if( !photoRiverDir.exists() || !photoRiverDir.isDirectory() )
-      return new String[] {};
-
-    final File photoDir = new File( photoRiverDir, "Bilder" );
-    if( !photoDir.exists() || !photoDir.isDirectory() )
-      return new String[] {};
-
     final String pNam = getPNam();
     final FilenameFilter photoFilter = new PrefixSuffixFilter( pNam, "" );
     return photoDir.list( photoFilter );
   }
 
-  private URL[] createPhotoUrls( final String[] photoPathes ) throws MalformedURLException
+  private File getContextDir( final String context )
   {
-    final Collection<URL> urls = new ArrayList<URL>( photoPathes.length );
+    if( context == null )
+      return null;
 
-    for( final String photoPathe : photoPathes )
-    {
-      final URL photoURL = new URL( m_photoContext, photoPathe );
-      urls.add( photoURL );
-    }
+    String result = context;
+    final WProfContextToken[] tokens = m_tokenReplace.getTokens();
+    for( final WProfContextToken token : tokens )
+      result = token.replace( context, this );
 
-    return urls.toArray( new URL[urls.size()] );
+    return new File( result );
   }
 
   private String[] getImageNames( )
@@ -308,14 +298,13 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
   private String getPdfUrl( )
   {
-    final String riverId = getRiverId();
-    final String river5Id = String.format( "%5s", riverId ).replace( ' ', '0' );
+    final File contextDir = getContextDir( m_pdfContext );
     final String pNam = getPNam();
-    final String pdfPath = String.format( "%s\\Querprofile\\%s.pdf", river5Id, pNam ); //$NON-NLS-1$s
+    final File pdfFile = new File( contextDir, pNam + ".pdf" );
 
     try
     {
-      final URL pdfURL = new URL( m_photoContext, pdfPath );
+      final URL pdfURL = pdfFile.toURI().toURL();
       return pdfURL.toExternalForm();
     }
     catch( final MalformedURLException e )

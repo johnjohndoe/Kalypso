@@ -40,30 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
-import org.kalypsodeegree.model.feature.Feature;
-
-/**
- * @author Gernot Belger
- */
-public class BCEShapeWPRofContentProviderFactory implements IWProfPointFactory
+public abstract class WProfContextToken
 {
-  private final String m_photoContext;
+  private final String m_token;
 
-  private final String m_pdfContext;
+  private final String m_label;
 
-  private final WProfContextTokenReplacer m_tokenReplace;
-
-  public BCEShapeWPRofContentProviderFactory( final WProfContextTokenReplacer tokenReplace, final String photoContext, final String pdfContext )
+  public WProfContextToken( final String token, final String label )
   {
-    m_tokenReplace = tokenReplace;
-    m_photoContext = photoContext;
-    m_pdfContext = pdfContext;
+    m_token = token;
+    m_label = label;
   }
 
-  @Override
-  public IWProfPoint newPoint( final Feature feature )
+  public String getLabel( )
   {
-    return new BCEShapeWPRofContentProvider( feature, m_tokenReplace, m_photoContext, m_pdfContext );
+    return m_label;
   }
 
+  public String getToken( )
+  {
+    return m_token;
+  }
+
+  public abstract String replace( final String context, final IWProfPoint point );
 }

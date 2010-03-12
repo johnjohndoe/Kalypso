@@ -40,30 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
-import org.kalypsodeegree.model.feature.Feature;
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.List;
 
 /**
  * @author Gernot Belger
  */
-public class BCEShapeWPRofContentProviderFactory implements IWProfPointFactory
+public class WProfContextTokenReplacer
 {
-  private final String m_photoContext;
+  private final List<WProfContextToken> m_tokens = new ArrayList<WProfContextToken>();
 
-  private final String m_pdfContext;
-
-  private final WProfContextTokenReplacer m_tokenReplace;
-
-  public BCEShapeWPRofContentProviderFactory( final WProfContextTokenReplacer tokenReplace, final String photoContext, final String pdfContext )
+  public WProfContextTokenReplacer( )
   {
-    m_tokenReplace = tokenReplace;
-    m_photoContext = photoContext;
-    m_pdfContext = pdfContext;
+    m_tokens.add( new WProfContextToken( "<Gew-ID>", "Gewässer-ID" )
+    {
+      /**
+       * @see org.kalypso.model.wspm.tuhh.core.wprof.WProfContextToken#replace(java.lang.String,
+       *      org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint)
+       */
+      @Override
+      public String replace( final String context, final IWProfPoint point )
+      {
+        return context.replaceAll( getToken(), point.getRiverId() );
+      }
+    } );
   }
 
-  @Override
-  public IWProfPoint newPoint( final Feature feature )
+  public String getMessage( )
   {
-    return new BCEShapeWPRofContentProvider( feature, m_tokenReplace, m_photoContext, m_pdfContext );
+    final Formatter formatter = new Formatter();
+
+    for( final WProfContextToken token : m_tokens )
+      formatter.format( "%s: %s%n", token.getToken(), token.getLabel() );
+
+    return formatter.toString();
   }
 
+  public WProfContextToken[] getTokens( )
+  {
+    return m_tokens.toArray( new WProfContextToken[m_tokens.size()] );
+  }
 }
