@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:flood="org.kalypso.model.flood" xmlns:cov="org.kalypso.gml.common.coverage"
-	targetNamespace="org.kalypso.model.flood" elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:flood="org.kalypso.model.flood" xmlns:cov="org.kalypso.gml.common.coverage"
+	targetNamespace="org.kalypso.model.flood" elementFormDefault="qualified"
+	version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
 	<import namespace="org.kalypso.gml.common.coverage" />
 
-	<element name="FloodModel" type="flood:FloodModelType" substitutionGroup="gml:_Feature">
+	<element name="FloodModel" type="flood:FloodModelType"
+		substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation >
-				<name><![CDATA[FloodModel]]></name>
+			<documentation>
+				
 				<![CDATA[FloodModel]]>
-				<![CDATA[FloodModel]]>
-				<description><![CDATA[FloodModel]]></description>
+
 			</documentation>
 		</annotation>
 	</element>
@@ -24,17 +27,19 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="polygonMember" type="flood:FloodPolygonPropertyType" minOccurs="0" maxOccurs="unbounded">
+					<element name="polygonMember" type="flood:FloodPolygonPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
-							<documentation >
+							<documentation>
 								Polygon
-								Polygon
-								<description>Polygon</description>
+								
 							</documentation>
 						</annotation>
 					</element>
-					<element name="eventMember" type="flood:RunoffEventPropertyType" minOccurs="0" maxOccurs="unbounded"></element>
-					<element name="coveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1"></element>
+					<element name="eventMember" type="flood:RunoffEventPropertyType"
+						minOccurs="0" maxOccurs="unbounded"></element>
+					<element name="coveragesMember" type="flood:CoverageCollectionPropertyType"
+						minOccurs="1" maxOccurs="1"></element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -60,13 +65,11 @@
 	</complexType>
 
 
-	<element name="RunoffEvent" type="flood:RunoffEventType" substitutionGroup="gml:_Feature">
+	<element name="RunoffEvent" type="flood:RunoffEventType"
+		substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation >
-				<name><![CDATA[Ereignis]]></name>
-				${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}
+			<documentation>
 				<![CDATA[Ereignis]]>
-				<description><![CDATA[Ereignis]]></description>
 			</documentation>
 		</annotation>
 	</element>
@@ -75,47 +78,46 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="markedForProcessing" type="boolean" default="false" minOccurs="0" maxOccurs="1" />
-					<element name="tinMember" type="flood:TinReferencePropertyType" minOccurs="0" maxOccurs="unbounded">
+					<element name="markedForProcessing" type="boolean" default="false"
+						minOccurs="0" maxOccurs="1" />
+					<element name="tinMember" type="flood:TinReferencePropertyType"
+						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
-							<documentation >
-								<name><![CDATA[Wasserspiegellagen]]></name>
+							<documentation>
+								
 								<![CDATA[Wasserspiegellagen]]>
-								<description><![CDATA[Wasserspiegellagen]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
-					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1" nillable="false">
+					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType"
+						minOccurs="1" maxOccurs="1" nillable="false">
 						<annotation>
-							<documentation >
-								<name><![CDATA[Fließtiefen]]></name>
+							<documentation>
+								
 								<![CDATA[Fließtiefen]]>
-								<description><![CDATA[Fließtiefen]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
 					<element name="dataPath" type="string">
 						<annotation>
-							<documentation >
-								<name><![CDATA[Datenverzeichnis]]></name>
+							<documentation>
+								
 								<![CDATA[Pfad zu den unterliegenden Daten]]>
-								<description><![CDATA[Datenverzeichnis]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
-					<element name="returnPeriod" type="flood:PositiveIntType" default="1">
-					<!-- default = "1" only for backward compatibility -->
+					<element name="returnPeriod" type="flood:PositiveIntType"
+						default="1">
+						<!-- default = "1" only for backward compatibility -->
 						<annotation>
-							<documentation >
+							<documentation>
 								<![CDATA[Wiederkehr Intervall]]>
-								<![CDATA[Wiederkehr Intervall]]>
-								<description><![CDATA[Wiederkehr Intervall]]></description>
+
 							</documentation>
-							<documentation >
-								<![CDATA[Return interval]]>
-								<![CDATA[Return interval]]>
-								<description><![CDATA[Return interval of the event]]></description>
-							</documentation>
+
 						</annotation>
 					</element>
 				</sequence>
@@ -134,13 +136,13 @@
 		</sequence>
 	</complexType>
 
-	<element name="TinReference" type="flood:TinReferenceType" substitutionGroup="gml:_Feature">
+	<element name="TinReference" type="flood:TinReferenceType"
+		substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation >
-				<name><![CDATA[WSP-Referenz]]></name>
-				${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}
+			<documentation>
+				
 				<![CDATA[Referenz auf einen Wasserspiegel]]>
-				<description><![CDATA[Referenz auf einen Wasserspiegel]]></description>
+
 			</documentation>
 		</annotation>
 	</element>
@@ -151,55 +153,54 @@
 				<sequence>
 					<element name="min" type="decimal">
 						<annotation>
-							<documentation >
-								<![CDATA[Minimum]]>
+							<documentation>
+								
 								<![CDATA[Minimum aller TIN-Werte]]>
-								<description><![CDATA[Minimum aller TIN-Werte]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
 					<element name="max" type="decimal">
 						<annotation>
-							<documentation >
-								<![CDATA[Maximum]]>
+							<documentation>
+								
 								<![CDATA[Maximum aller TIN-Werte]]>
-								<description><![CDATA[Maximum aller TIN-Werte]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourceLocation" type="anyURI">
 						<annotation>
-							<documentation >
+							<documentation>
 								<![CDATA[Quell-URL]]>
 								<![CDATA[Herkunftsort der TIN-Daten]]>
-								<description><![CDATA[Herkunftsort der TIN-Daten]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourcePath" type="string">
 						<annotation>
-							<documentation >
+							<documentation>
 								<![CDATA[Quell-Pfad]]>
 								<![CDATA[Pfad innerhalb der Herkunftsdatei]]>
-								<description><![CDATA[GMLXPfad innerhalb der Herkunftsdatei auf die TIN-Geometry (gml:TriangulatedSurface)]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourceDate" type="dateTime">
 						<annotation>
-							<documentation >
-								<![CDATA[Quell-Datum]]>
+							<documentation>
+								
 								<![CDATA[Datum der letzten Datenübernahme]]>
-								<description><![CDATA[Datum der letzten Datenübernahme]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourceType">
 						<annotation>
-							<documentation >
-								<![CDATA[Quelldateityp]]>
+							<documentation>
+								
 								<![CDATA[Datentyp der Quelldatei]]>
-								<description><![CDATA[Datentyp der Quelldatei]]></description>
+
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -212,10 +213,9 @@
 					</element>
 					<element name="tin" type="flood:TriangulatedSurfacePropertyType">
 						<annotation>
-							<documentation >
+							<documentation>
 								<![CDATA[Dreiecksnetz]]>
-								<![CDATA[Die TIN-Geometry]]>
-								<description><![CDATA[Die TIN-Geometry]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
@@ -236,13 +236,13 @@
 		</sequence>
 	</complexType>
 
-	<element name="AbstractFloodPolygon" type="flood:AbstractFloodPolygonType" abstract="true" substitutionGroup="gml:_Feature">
+	<element name="AbstractFloodPolygon" type="flood:AbstractFloodPolygonType"
+		abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation >
-				<name><![CDATA[Polygon]]></name>
+			<documentation>
+				
 				<![CDATA[Polygon]]>
-				<![CDATA[Polygon]]>
-				<description><![CDATA[Polygon]]></description>
+
 			</documentation>
 		</annotation>
 	</element>
@@ -251,28 +251,31 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="areaMember" type="gml:PolygonPropertyType" minOccurs="1" maxOccurs="1">
+					<element name="areaMember" type="gml:PolygonPropertyType"
+						minOccurs="1" maxOccurs="1">
 						<annotation>
-							<documentation >
+							<documentation>
+
 								Geometrie des Polygons
-								Geometrie des Polygons
-								<description>Geometrie des Polygons</description>
+								
 							</documentation>
 						</annotation>
 					</element>
-					<element name="eventMember" type="flood:RunoffEventReferencePropertyType" minOccurs="0" maxOccurs="unbounded"></element>
+					<element name="eventMember" type="flood:RunoffEventReferencePropertyType"
+						minOccurs="0" maxOccurs="unbounded"></element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 
-	<element name="FloodExtrapolationPolygon" type="flood:FloodExtrapolationPolygonType" substitutionGroup="flood:AbstractFloodPolygon">
+	<element name="FloodExtrapolationPolygon" type="flood:FloodExtrapolationPolygonType"
+		substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
-			<documentation >
-				<name><![CDATA[Extrapolationspolygon]]></name>
-				<![CDATA[Extrapolationspolygon]]>
+			<documentation>
+				
+			
 				<![CDATA[Extrapolationspolygon mit zusätzlichem Referenzpunkt.]]>
-				<description><![CDATA[Extrapolationspolygon mit zusätzlichem Referenzpunkt.]]></description>
+
 			</documentation>
 		</annotation>
 	</element>
@@ -280,7 +283,9 @@
 	<complexType name="FloodExtrapolationPolygonType">
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty kapp:functionId="org.kalypso.gmlschema.functionProperty.connectCentersByLine" kapp:property="flood:connectorLine" kapp:isVirtual="true"
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.gmlschema.functionProperty.connectCentersByLine"
+					kapp:property="flood:connectorLine" kapp:isVirtual="true"
 					kapp:valueType="gml:LineString">
 					<kapp:parameter>
 						<kapp:name>geometry1Property</kapp:name>
@@ -302,19 +307,19 @@
 				<sequence>
 					<element name="referencePoint" type="gml:PointPropertyType">
 						<annotation>
-							<documentation >
-								Bezugspunkt
+							<documentation>
+
 								Bezugspunkt zum Höhenmodell
-								<description>Bezugspunkt zum Höhenmodell</description>
+								
 							</documentation>
 						</annotation>
 					</element>
 					<element name="connectorLine" type="gml:LineStringPropertyType">
 						<annotation>
-							<documentation >
-								Verbindungslinie
+							<documentation>
+
 								Verbindunglinie ziwschen Referenzpunkt und Fläche
-								<description>Verbindunglinie ziwschen Referenzpunkt und Fläche</description>
+								
 							</documentation>
 						</annotation>
 					</element>
@@ -323,13 +328,13 @@
 		</complexContent>
 	</complexType>
 
-	<element name="FloodClipPolygon" type="flood:FloodClipPolygonType" substitutionGroup="flood:AbstractFloodPolygon">
+	<element name="FloodClipPolygon" type="flood:FloodClipPolygonType"
+		substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
-			<documentation >
-				<name><![CDATA[Clip-Polygon]]></name>
+			<documentation>
+				
 				<![CDATA[Clip-Polygon]]>
-				<![CDATA[Clip-Polygon]]>
-				<description><![CDATA[Clip-Polygon]]></description>
+
 			</documentation>
 		</annotation>
 	</element>
@@ -340,25 +345,23 @@
 				<sequence minOccurs="1" maxOccurs="1">
 					<element name="type" default="negative">
 						<annotation>
-							<documentation >
-								<name><![CDATA[Art]]></name>
-								<![CDATA[Art]]>
+							<documentation>
+								
 								<![CDATA[Art des Clip-Polygons]]>
-								<description><![CDATA[Die Art des Clip-Polygon bestimmt, ob der angegebene Bereich explizit ausgeschlossen oder eingeschlossen wird.]]></description>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
 								<enumeration value="positive">
 									<annotation>
-										<documentation >
+										<documentation>
 											<![CDATA[Einschluss]]>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="negative">
 									<annotation>
-										<documentation >
+										<documentation>
 											<![CDATA[Ausschluss]]>
 										</documentation>
 									</annotation>
@@ -371,13 +374,13 @@
 		</complexContent>
 	</complexType>
 
-	<element name="FloodVolumePolygon" type="flood:FloodVolumePolygonType" substitutionGroup="flood:AbstractFloodPolygon">
+	<element name="FloodVolumePolygon" type="flood:FloodVolumePolygonType"
+		substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
-			<documentation >
-				<name><![CDATA[Volumen-Polygon]]></name>
+			<documentation>
+				
 				<![CDATA[Volumen-Polygon]]>
-				<![CDATA[Volumen-Polygon]]>
-				<description><![CDATA[Volumen-Polygon]]></description>
+
 			</documentation>
 		</annotation>
 	</element>
@@ -388,19 +391,19 @@
 				<sequence minOccurs="1" maxOccurs="1">
 					<element name="volume" type="decimal">
 						<annotation>
-							<documentation >
-								<name><![CDATA[Volumen]]></name>
+							<documentation>
+								
 								<![CDATA[Volumen]]>
-								<description><![CDATA[]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
 					<element name="waterlevel" type="decimal">
 						<annotation>
-							<documentation >
-								<name><![CDATA[Wasserspiegel]]></name>
+							<documentation>
+								
 								<![CDATA[Wasserspiegel]]>
-								<description><![CDATA[]]></description>
+
 							</documentation>
 						</annotation>
 					</element>
