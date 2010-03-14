@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <simBase:FlowRelationshipModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:swe="http://www.opengis.net/swe" xmlns:ns2="http://www.tu-harburg.de/wb/kalypso/schemata/observation" xmlns:math="org.kalypso.gml.common.math" xmlns:commonShp="org.kalypso.gml.common" xmlns:om="http://www.opengis.net/om" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
  <simBase:flowRelationshipMember>
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1212680777110315">
@@ -11,7 +11,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296156696">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296156226">
@@ -65,7 +65,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296156121">
-     <gml:description>Übernommen aus Datei: PROF0044.4050.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0044.4050.txt</gml:description>
      <gml:name>0044.4050</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296156344">
@@ -230,7 +230,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296234946">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation12225222962341064">
@@ -284,7 +284,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296234716">
-     <gml:description>Übernommen aus Datei: PROF0044.4250.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0044.4250.txt</gml:description>
      <gml:name>0044.4250</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234900">
@@ -449,7 +449,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296250940">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296250849">
@@ -503,7 +503,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250799">
-     <gml:description>Übernommen aus Datei: PROF0044.5000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0044.5000.txt</gml:description>
      <gml:name>0044.5000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296250605">
@@ -668,7 +668,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState12225222962651033">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation12225222962651300">
@@ -722,7 +722,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296265817">
-     <gml:description>Übernommen aus Datei: PROF0044.6000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0044.6000.txt</gml:description>
      <gml:name>0044.6000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265596">
@@ -887,7 +887,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296203446">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296203496">
@@ -941,7 +941,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296203305">
-     <gml:description>Übernommen aus Datei: PROF0044.7000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0044.7000.txt</gml:description>
      <gml:name>0044.7000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203198">
@@ -1106,7 +1106,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296234755">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296234135">
@@ -1160,7 +1160,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296234169">
-     <gml:description>Übernommen aus Datei: PROF0044.8000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0044.8000.txt</gml:description>
      <gml:name>0044.8000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234820">
@@ -1325,7 +1325,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296093275">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296093255">
@@ -1379,7 +1379,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296093380">
-     <gml:description>Übernommen aus Datei: PROF0044.9000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0044.9000.txt</gml:description>
      <gml:name>0044.9000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296093682">
@@ -1544,7 +1544,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296265504">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296265910">
@@ -1598,7 +1598,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962651276">
-     <gml:description>Übernommen aus Datei: PROF0045.0000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.0000.txt</gml:description>
      <gml:name>0045.0000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265854">
@@ -1763,7 +1763,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296234188">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296234945">
@@ -1817,7 +1817,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296234659">
-     <gml:description>Übernommen aus Datei: PROF0045.1000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.1000.txt</gml:description>
      <gml:name>0045.1000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234360">
@@ -1982,7 +1982,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296187313">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296187939">
@@ -2036,7 +2036,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296187233">
-     <gml:description>Übernommen aus Datei: PROF0045.2000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.2000.txt</gml:description>
      <gml:name>0045.2000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296187167">
@@ -2201,7 +2201,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState12225222962651259">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296265860">
@@ -2255,7 +2255,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962651435">
-     <gml:description>Übernommen aus Datei: PROF0045.3000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.3000.txt</gml:description>
      <gml:name>0045.3000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265180">
@@ -2420,7 +2420,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState12225222962341056">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296234550">
@@ -2474,7 +2474,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962341171">
-     <gml:description>Übernommen aus Datei: PROF0045.4000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.4000.txt</gml:description>
      <gml:name>0045.4000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234127">
@@ -2639,7 +2639,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296203428">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296203486">
@@ -2693,7 +2693,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296203899">
-     <gml:description>Übernommen aus Datei: PROF0045.5000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.5000.txt</gml:description>
      <gml:name>0045.5000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203592">
@@ -2858,7 +2858,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296171580">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296171673">
@@ -2912,7 +2912,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296171621">
-     <gml:description>Übernommen aus Datei: PROF0045.6000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.6000.txt</gml:description>
      <gml:name>0045.6000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296171587">
@@ -3077,7 +3077,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296171931">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296171478">
@@ -3131,7 +3131,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296171331">
-     <gml:description>Übernommen aus Datei: PROF0045.7000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.7000.txt</gml:description>
      <gml:name>0045.7000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296171472">
@@ -3296,7 +3296,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296187161">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation122252229618792">
@@ -3350,7 +3350,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296187574">
-     <gml:description>Übernommen aus Datei: PROF0045.8000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.8000.txt</gml:description>
      <gml:name>0045.8000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296187702">
@@ -3515,7 +3515,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296171242">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296171513">
@@ -3569,7 +3569,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296171807">
-     <gml:description>Übernommen aus Datei: PROF0045.9000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0045.9000.txt</gml:description>
      <gml:name>0045.9000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296171176">
@@ -3734,7 +3734,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296218917">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296218483">
@@ -3788,7 +3788,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296218593">
-     <gml:description>Übernommen aus Datei: PROF0046.0000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.0000.txt</gml:description>
      <gml:name>0046.0000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296218826">
@@ -3953,7 +3953,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296265393">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296265609">
@@ -4007,7 +4007,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation122252229626548">
-     <gml:description>Übernommen aus Datei: PROF0046.0160.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.0160.txt</gml:description>
      <gml:name>0046.0160</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265339">
@@ -4172,7 +4172,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState12225222962651124">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation12225222962651357">
@@ -4226,7 +4226,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296265411">
-     <gml:description>Übernommen aus Datei: PROF0046.1000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.1000.txt</gml:description>
      <gml:name>0046.1000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265587">
@@ -4391,7 +4391,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296156432">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296156164">
@@ -4445,7 +4445,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296156286">
-     <gml:description>Übernommen aus Datei: PROF0046.2000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.2000.txt</gml:description>
      <gml:name>0046.2000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296156457">
@@ -4610,7 +4610,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296250993">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296250886">
@@ -4664,7 +4664,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250462">
-     <gml:description>Übernommen aus Datei: PROF0046.3000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.3000.txt</gml:description>
      <gml:name>0046.3000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition12225222962501081">
@@ -4829,7 +4829,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296140184">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296140884">
@@ -4883,7 +4883,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296140331">
-     <gml:description>Übernommen aus Datei: PROF0046.4000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.4000.txt</gml:description>
      <gml:name>0046.4000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296140220">
@@ -5048,7 +5048,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296140670">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296140180">
@@ -5102,7 +5102,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296140557">
-     <gml:description>Übernommen aus Datei: PROF0046.5000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.5000.txt</gml:description>
      <gml:name>0046.5000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296140605">
@@ -5267,7 +5267,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState12225222962181113">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296218443">
@@ -5321,7 +5321,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296218278">
-     <gml:description>Übernommen aus Datei: PROF0046.6000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.6000.txt</gml:description>
      <gml:name>0046.6000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296218838">
@@ -5486,7 +5486,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState12225222962501124">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296250680">
@@ -5540,7 +5540,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250335">
-     <gml:description>Übernommen aus Datei: PROF0046.7000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.7000.txt</gml:description>
      <gml:name>0046.7000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296250505">
@@ -5705,7 +5705,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296281837">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation12225222962811216">
@@ -5759,7 +5759,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962811330">
-     <gml:description>Übernommen aus Datei: PROF0046.8000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.8000.txt</gml:description>
      <gml:name>0046.8000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296281626">
@@ -5924,7 +5924,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296187192">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296187453">
@@ -5978,7 +5978,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962031004">
-     <gml:description>Übernommen aus Datei: PROF0046.9000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0046.9000.txt</gml:description>
      <gml:name>0046.9000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203273">
@@ -6143,7 +6143,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState12225222962501253">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296250283">
@@ -6197,7 +6197,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250868">
-     <gml:description>Übernommen aus Datei: PROF0047.0000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0047.0000.txt</gml:description>
      <gml:name>0047.0000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition12225222962501297">
@@ -6362,7 +6362,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState122252229615681">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296156294">
@@ -6416,7 +6416,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296156961">
-     <gml:description>Übernommen aus Datei: PROF0047.1000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0047.1000.txt</gml:description>
      <gml:name>0047.1000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296156548">
@@ -6581,7 +6581,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296203894">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation1222522296203324">
@@ -6635,7 +6635,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296203886">
-     <gml:description>Übernommen aus Datei: PROF0047.2000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0047.2000.txt</gml:description>
      <gml:name>0047.2000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203846">
@@ -6800,7 +6800,7 @@
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
     <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1222522296218822">
-     <gml:description>Eine Berechnung für den Import in das instationäre FE-Modell</gml:description>
+     <gml:description>Eine Berechnung fÃ¼r den Import in das instationÃ¤re FE-Modell</gml:description>
      <gml:name>Polynomberechnung 1</gml:name>
      <wspm:calcCreationMember>
       <wspm:CalcCreation gml:id="CalcCreation122252229621823">
@@ -6854,7 +6854,7 @@
    </wb1d2d:wspmTuhhCalculationMember>
    <wb1d2d:pointsMember>
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296218453">
-     <gml:description>Übernommen aus Datei: PROF0047.3000.txt</gml:description>
+     <gml:description>Ãœbernommen aus Datei: PROF0047.3000.txt</gml:description>
      <gml:name>0047.3000</gml:name>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296218558">
@@ -7347,7 +7347,7 @@
  <simBase:flowRelationshipMember>
   <op1d2d:BoundaryCondition gml:id="BoundaryCondition1214399762355391">
    <gml:description>Manuell erzeugt am: 25.06.2008 15:16</gml:description>
-   <gml:name>Wasserstand Teichlösung 2D</gml:name>
+   <gml:name>Wasserstand TeichlÃ¶sung 2D</gml:name>
    <simBase:position>
     <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3929045.7501006303 773764.8059923581</gml:coordinates>
@@ -9043,7 +9043,7 @@
  <simBase:flowRelationshipMember>
   <op1d2d:BoundaryCondition gml:id="BoundaryCondition1231505809018736">
    <gml:description>Manuell erzeugt am: 09.01.2009 13:56</gml:description>
-   <gml:name>Abfluss Teichlösung 2D</gml:name>
+   <gml:name>Abfluss TeichlÃ¶sung 2D</gml:name>
    <simBase:position>
     <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3929967.2990107248 775458.2210388153</gml:coordinates>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <c1d2d:ControlModelGroup xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
  <simBase:version xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase">1.0</simBase:version>
  <c1d2d:controlModelCollection>
@@ -581,7 +581,7 @@
    </c1d2d:controlModelMember>
    <c1d2d:controlModelMember>
     <c1d2d:ControlModel gml:id="ControlModel12125830338111">
-     <gml:description>Demomodell für eine gekoppelte 1D/2D Berechnung/ Demo model to run coupled 1D/2D calculations.</gml:description>
+     <gml:description>Demomodell fÃ¼r eine gekoppelte 1D/2D Berechnung/ Demo model to run coupled 1D/2D calculations.</gml:description>
      <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit1D12125830336860"/>
      <c1d2d:Version>1.1.1_20090127</c1d2d:Version>
      <c1d2d:VEGETA>false</c1d2d:VEGETA>
@@ -645,7 +645,7 @@
    </c1d2d:controlModelMember>
    <c1d2d:controlModelMember>
     <c1d2d:ControlModel gml:id="ControlModel121446393945210">
-     <gml:description>Demomodell für eine gekoppelte 1D/2D Berechnung/ Demo model to run coupled 1D/2D calculations.</gml:description>
+     <gml:description>Demomodell fÃ¼r eine gekoppelte 1D/2D Berechnung/ Demo model to run coupled 1D/2D calculations.</gml:description>
      <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit1D2D12144639393734308"/>
      <c1d2d:Version>1.1.1_20090127</c1d2d:Version>
      <c1d2d:VEGETA>true</c1d2d:VEGETA>
