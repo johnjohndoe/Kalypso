@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_location</Name>
 		<Title>%rule_location_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PointSymbolizer uom="pixel">
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -73,8 +71,6 @@
 	<Rule>
 		<Name>rule_downstream_strand</Name>
 		<Title>%rule_downstream_strand_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_downStreamChannelMember</ogc:PropertyName>
@@ -91,8 +87,6 @@
 	<Rule>
 		<Name>rule_overflow</Name>
 		<Title>%rule_overflow</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_branchingMember</ogc:PropertyName>
@@ -116,8 +110,6 @@
 				</ogc:PropertyIsNull>
 			</ogc:Not>
 		</ogc:Filter>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 		<PointSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>

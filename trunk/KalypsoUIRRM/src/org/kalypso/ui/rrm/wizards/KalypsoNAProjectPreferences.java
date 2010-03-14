@@ -95,9 +95,10 @@ public class KalypsoNAProjectPreferences extends WizardPage
     topComposite.setLayout( new GridLayout() );
     final Group soil = new Group( topComposite, SWT.NONE );
     soil.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupText" ) ); //$NON-NLS-1$
-    soil.setLayout( new GridLayout( 2, true ) );
-    soil.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    soil.setLayout( new GridLayout( 2, false ) );
+    soil.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
     final Label soilLabel = new Label( soil, SWT.NONE );
+    soilLabel.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, true) );
     soilLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
     final IFeatureType catchmentFT = m_modelSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
@@ -130,12 +131,12 @@ public class KalypsoNAProjectPreferences extends WizardPage
 
     final Group channel = new Group( topComposite, SWT.NONE );
     channel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupText" ) ); //$NON-NLS-1$
-    channel.setLayout( new GridLayout( 2, true ) );
-    channel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    channel.setLayout( new GridLayout( 2, false ) );
+    channel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
     final Label channelLabel = new Label( channel, SWT.NONE );
     channelLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
+    channelLabel.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, true) );
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
-    m_channelCombo.setLayout( new GridLayout() );
     final IFeatureType kmChannelFT = m_modelSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
     final int maxOccursKM = kmChannelFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER ).getMaxOccurs();
     final ArrayList<String> noKMDischarge = new ArrayList<String>();

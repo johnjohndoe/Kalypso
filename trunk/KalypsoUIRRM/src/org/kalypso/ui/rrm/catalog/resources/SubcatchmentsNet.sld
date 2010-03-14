@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_geometry</Name>
 		<Title>%rule_geometry_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PolygonSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -92,8 +90,6 @@
 	<Rule>
 		<Name>rule_linkOutflow</Name>
 		<Title>%rule_linkOutflow_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>161229.58987861115</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_entwaesserungsStrangMember</ogc:PropertyName>

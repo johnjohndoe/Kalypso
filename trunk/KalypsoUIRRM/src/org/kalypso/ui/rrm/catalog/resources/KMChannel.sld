@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_kmchannel</Name>
 		<Title>%rule_kmchannel_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
