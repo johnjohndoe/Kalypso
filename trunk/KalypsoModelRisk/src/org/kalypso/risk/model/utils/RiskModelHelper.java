@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,6 +87,44 @@ public class RiskModelHelper
 
   /** themeId of the map-layer containing the events */
   private static final String THEME_PROPERTY_DEPTH = "depthGridThemes"; //$NON-NLS-1$
+
+  public static enum LAYER_TYPE
+  {
+    WATERLEVEL,
+    SPECIFIC_DAMAGE_POTENTIAL
+  }
+
+  private static enum FIELD
+  {
+    STYLE_URN,
+    THEMEINFO_CLASS,
+    I18N_THEMEINFO_LABEL,
+    I18N_LAYER_NAME
+  }
+
+  private static Map<LAYER_TYPE, Map<FIELD, String>> LAYER_PROPERTY_MAP = new HashMap<LAYER_TYPE, Map<FIELD, String>>()
+  {
+    {
+      put( LAYER_TYPE.WATERLEVEL, new HashMap<FIELD, String>()
+      {
+        {
+          put( FIELD.STYLE_URN, "urn:style:sld:risk:inundation:waterlevel" ); //$NON-NLS-1$
+          put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
+          put( FIELD.I18N_THEMEINFO_LABEL, "WaterlevelMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
+          put( FIELD.I18N_LAYER_NAME, "WaterlevelMap.gismapview.layer" ); //$NON-NLS-1$
+        }
+      } );
+      put( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, new HashMap<FIELD, String>()
+      {
+        {
+          put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
+          put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
+          put( FIELD.I18N_THEMEINFO_LABEL, "SpecificDamagePotentialMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
+          put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
+        }
+      } );
+    }
+  };
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
@@ -235,8 +274,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15" , sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
-      newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16" , new Date().toString() ) ); //$NON-NLS-1$
+      newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.15", sourceCoverageCollection.getReturnPeriod(), i ) ); //$NON-NLS-1$
+      newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.16", new Date().toString() ) ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
@@ -260,23 +299,19 @@ public class RiskModelHelper
     }
   }
 
-  /**
-   * creates a map layer for the grid collection
-   * 
-   * @param parentKalypsoTheme
-   *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
-   * @param coverageCollection
-   *          {@link IAnnualCoverageCollection} that will be added
-   * @param scenarioFolder
-   * @throws Exception
-   */
-  public static void createSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection ) throws Exception
+  public static StyledLayerType createMapLayer( final LAYER_TYPE type, final IAnnualCoverageCollection coverageCollection ) throws Exception
   {
-    final String layerName = Messages.getString( "org.kalypso.risk.model.utils.DamagePotentialCalculationHandler.13" ) + coverageCollection.getReturnPeriod() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    final Map<FIELD, String> propertyMap = LAYER_PROPERTY_MAP.get( type );
+    final String localizedLayerName = Messages.getString( propertyMap.get( FIELD.I18N_LAYER_NAME ) );
+    final String layerName = String.format( localizedLayerName, coverageCollection.getReturnPeriod() );
+    final String featurePath = String.format( "#fid#%s/coverageMember", coverageCollection.getFeature().getId() ); //$NON-NLS-1$
+    final String themeInfoClass = propertyMap.get( FIELD.THEMEINFO_CLASS );
+    final String localizedThemeInfoLabel = Messages.getString( propertyMap.get( FIELD.I18N_THEMEINFO_LABEL ) );
+    final String styleURN = propertyMap.get( FIELD.STYLE_URN );
 
     final StyledLayerType layer = new StyledLayerType();
     layer.setName( layerName );
-    layer.setFeaturePath( "#fid#" + coverageCollection.getFeature().getId() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+    layer.setFeaturePath( featurePath );
     layer.setLinktype( "gml" ); //$NON-NLS-1$
     layer.setType( "simple" ); //$NON-NLS-1$
     layer.setVisible( true );
@@ -288,19 +323,42 @@ public class RiskModelHelper
     layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
     final Property layerPropertyThemeInfoId = new Property();
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-    layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f \u20ac/m\u00b2" ); //$NON-NLS-1$
+    if( localizedThemeInfoLabel == null )
+      layerPropertyThemeInfoId.setValue( themeInfoClass );
+    else
+      layerPropertyThemeInfoId.setValue( String.format( "%s?format=%s", themeInfoClass, localizedThemeInfoLabel ) ); //$NON-NLS-1$
     final List<Property> layerPropertyList = layer.getProperty();
     layerPropertyList.add( layerPropertyDeletable );
     layerPropertyList.add( layerPropertyThemeInfoId );
     final List<Style> styleList = layer.getStyle();
     final Style style = new Style();
     style.setLinktype( "sld" ); //$NON-NLS-1$
-    style.setStyle( "Kalypso style" ); //$NON-NLS-1$
+    style.setStyle( "default" ); //$NON-NLS-1$
     style.setActuate( "onRequest" ); //$NON-NLS-1$
-    style.setHref( "../styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
+    style.setHref( styleURN );
     style.setType( "simple" ); //$NON-NLS-1$
     styleList.add( style );
+    return layer;
+  }
 
+  public static StyledLayerType createSpecificDamageMapLayer( final IAnnualCoverageCollection coverageCollection ) throws Exception
+  {
+    return createMapLayer( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, coverageCollection );
+  }
+
+  /**
+   * creates a map layer for the grid collection
+   * 
+   * @param parentKalypsoTheme
+   *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
+   * @param coverageCollection
+   *          {@link IAnnualCoverageCollection} that will be added
+   * @param scenarioFolder
+   * @throws Exception
+   */
+  public static void insertSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection ) throws Exception
+  {
+    final StyledLayerType layer = createMapLayer( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, coverageCollection );
     parentKalypsoTheme.addLayer( layer );
   }
 
@@ -359,7 +417,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor,  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" , i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14", i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -482,7 +540,7 @@ public class RiskModelHelper
 
     /* add the coverage collections to the map */
     for( final IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
-      createSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection );
+      insertSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection );
     parentKalypsoTheme.saveFeatures( new NullProgressMonitor() );
   }
 
@@ -497,7 +555,7 @@ public class RiskModelHelper
    * @throws SAXException
    * @throws CoreException
    */
-  public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
+  public static void updateWaterdepthLayers( final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
     final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.13" ), THEME_PROPERTY_DEPTH ); //$NON-NLS-1$
@@ -514,10 +572,9 @@ public class RiskModelHelper
     {
       final AsciiRasterInfo asciiRasterInfo = rasterInfos.get( i );
       final int returnPeriod = asciiRasterInfo.getReturnPeriod();
-      final String layerName = "HQ " + returnPeriod; //$NON-NLS-1$
 
       final int collectionIndex = getCollectionIndex( waterdepthCoverageCollection, returnPeriod );
-      createWaterdepthLayer( scenarioFolder, parentKalypsoTheme, waterdepthCoverageCollection.get( collectionIndex ), layerName );
+      createWaterdepthLayer( parentKalypsoTheme, waterdepthCoverageCollection.get( collectionIndex ) );
     }
   }
 
@@ -552,35 +609,9 @@ public class RiskModelHelper
       parentKalypsoTheme.removeTheme( themeToRemove );
   }
 
-  private static void createWaterdepthLayer( final IFolder scenarioFolder, final CascadingKalypsoTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection, final String layerName ) throws Exception
+  private static void createWaterdepthLayer( final CascadingKalypsoTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws Exception
   {
-    final StyledLayerType layer = new StyledLayerType();
-    layer.setName( layerName );
-    layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
-    layer.setLinktype( "gml" ); //$NON-NLS-1$
-    layer.setType( "simple" ); //$NON-NLS-1$
-    layer.setVisible( true );
-    layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-    layer.setVisible( true );
-    final Property layerPropertyDeletable = new Property();
-    layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-    layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
-    final Property layerPropertyThemeInfoId = new Property();
-    layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-    layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" ); //$NON-NLS-1$
-    final List<Property> layerPropertyList = layer.getProperty();
-    layerPropertyList.add( layerPropertyDeletable );
-    layerPropertyList.add( layerPropertyThemeInfoId );
-    final List<Style> styleList = layer.getStyle();
-    final Style style = new Style();
-    style.setLinktype( "sld" ); //$NON-NLS-1$
-    style.setStyle( "Kalypso style" ); //$NON-NLS-1$
-    style.setActuate( "onRequest" ); //$NON-NLS-1$
-    style.setHref( "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
-    style.setType( "simple" ); //$NON-NLS-1$
-    styleList.add( style );
-
+    final StyledLayerType layer = createMapLayer( LAYER_TYPE.WATERLEVEL, annualCoverageCollection );
     parentKalypsoTheme.addLayer( layer );
   }
 
@@ -733,7 +764,7 @@ public class RiskModelHelper
     Assert.isTrue( names.length == returnPeriods.length );
     Assert.isTrue( names.length == descriptions.length );
 
-    monitor.beginTask( Messages.getString("org.kalypso.risk.model.utils.RiskModelHelper.1"), names.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.1" ), names.length ); //$NON-NLS-1$
 
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
@@ -767,7 +798,7 @@ public class RiskModelHelper
       int coverageCount = 0;
       for( final ICoverage coverage : grids[i] )
       {
-        final String subtaks =  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17" , names[i], coverageCount + 1, grids[i].size() ); //$NON-NLS-1$
+        final String subtaks = Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17", names[i], coverageCount + 1, grids[i].size() ); //$NON-NLS-1$
         monitor.subTask( subtaks );
 
         // NO! When imported from Flood, return period is always 1 by default, so files will be overwritten!
@@ -781,8 +812,8 @@ public class RiskModelHelper
 
         final SubMonitor subMonitor = SubMonitor.convert( monitor, 10 );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", subMonitor ); //$NON-NLS-1$
-        newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18" , coverageCount + 1 ) ); //$NON-NLS-1$
-        newCoverage.setDescription(  Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19" , new Date() ) ); //$NON-NLS-1$
+        newCoverage.setName( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.18", coverageCount + 1 ) ); //$NON-NLS-1$
+        newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.19", new Date() ) ); //$NON-NLS-1$
         grid.dispose();
         coverageCount++;
         if( !subMonitor.isCanceled() && wspThemes != null )

@@ -3,7 +3,6 @@ package org.kalypso.risk.model.actions.specificDamage;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -18,22 +17,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
-import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
-import org.kalypso.risk.model.schema.binding.RasterDataModel;
 import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
-import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
+import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -76,24 +67,25 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
             final IStatus status;
             try
             {
-              status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.SPECIFIC_DAMAGE_CALCULATION ) );
-              if( status.isOK() )
-              {
-                final IMapPanel mapPanel = mapView.getMapPanel();
-                /* wait for map to load */
-                while( !mapPanel.getMapModell().isLoaded() )
-                  Thread.sleep( 300 );
-                final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
-                final IFile rasterModelFile = scenarioFolder.getFile( "/models/RasterDataModel.gml" ); //$NON-NLS-1$
-                final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( rasterModelFile );
-                final IRasterDataModel rasterDataModel = new RasterDataModel( workspace.getRootFeature() );
-                final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterDataModel.getSpecificDamageCoverageCollection();
-                final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
-                RiskModelHelper.updateDamageStyle( sldFile, specificDamageCoverageCollection );
-                RiskModelHelper.updateDamageLayers( specificDamageCoverageCollection, mapModell );
-                if( mapView != null )
-                  mapPanel.invalidateMap();
-              }
+              final Modeldata modeldata = SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.SPECIFIC_DAMAGE_CALCULATION );
+              status = ModelNature.runCalculation( scenarioFolder, monitor, modeldata );
+//              if( status.isOK() )
+//              {
+//                final IMapPanel mapPanel = mapView.getMapPanel();
+//                /* wait for map to load */
+//                while( !mapPanel.getMapModell().isLoaded() )
+//                  Thread.sleep( 300 );
+//                final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
+//                final IFile rasterModelFile = scenarioFolder.getFile( "/models/RasterDataModel.gml" ); //$NON-NLS-1$
+//                final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( rasterModelFile );
+//                final IRasterDataModel rasterDataModel = new RasterDataModel( workspace.getRootFeature() );
+//                final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterDataModel.getSpecificDamageCoverageCollection();
+//                final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
+//                RiskModelHelper.updateDamageStyle( sldFile, specificDamageCoverageCollection );
+//                RiskModelHelper.updateDamageLayers( specificDamageCoverageCollection, mapModell );
+//                if( mapView != null )
+//                  mapPanel.invalidateMap();
+//              }
             }
             catch( final Exception e )
             {

@@ -147,6 +147,13 @@ public class NAModellConverter
     {
       m_hydrotopManager.writeFile( asciiBuffer, m_conf.getHydrotopeWorkspace(), m_conf.getModelWorkspace(), m_conf.getParameterWorkspace() );
       writeToFile( m_conf.getHydrotopFile(), asciiBuffer.getHydBuffer() );
+      
+      
+      // generate ascii mapping
+      final StringBuffer buffer = new StringBuffer();
+      for( final String line : m_conf.getHydrotopMapping() )
+        buffer.append( line ).append( "\n" );
+      writeToFile( m_conf.getHydrotopMappingFile(), buffer );
     }
 
     if( m_conf.getParameterWorkspace() != null )

@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -66,6 +67,15 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
  */
 public class PointMarkerLayer extends AbstractProfilLayer
 {
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( )
+  {
+    return null;
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
    */
@@ -220,7 +230,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() )
+    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved()||hint.isProfilPropertyChanged() )
     {
       getEventHandler().fireLayerContentChanged( this );
     }

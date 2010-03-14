@@ -66,19 +66,6 @@ public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfil
   }
 
   /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getLanduseFileName()
-   */
-  @Override
-  public String getLanduseFileName( )
-  {
-   final Object property = getProperty( QN_PROPERTY_LANDUSE_FILE_NAME );
-   if( property instanceof String )
-      return (String) property;
-   
-    return "mrs_N.nutz"; //$NON-NLS-1$
-  }
-
-  /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getMaxPercRate()
    */
   @Override
@@ -102,6 +89,15 @@ public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfil
       return (Double) property;
 
     return 1.0;
+  }
+
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getIdealLanduseName()
+   */
+  @Override
+  public String getIdealLanduseName( )
+  {
+    return IDEAL_LANDUSE;
   }
 
 }

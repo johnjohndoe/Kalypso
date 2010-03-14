@@ -47,13 +47,16 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
@@ -160,7 +163,7 @@ public class NAConfiguration
 
   private Boolean m_iniWrite;
 
-  private TreeSet<Date> m_dateWriteSet;
+  private Date[] m_initialDates;
 
   private GMLWorkspace m_modelWorkspace = null;
 
@@ -181,6 +184,12 @@ public class NAConfiguration
   private int m_plcLanduseCounter = 1;
 
   private final Map<String, String> m_landuseLongNamesMap = new HashMap<String, String>();
+
+  private final File m_hydrotopMappingFile;
+
+  private final List<String> m_hydrotopMapping = new ArrayList<String>();
+
+  private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
 
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws InvocationTargetException
   {
@@ -222,6 +231,7 @@ public class NAConfiguration
     m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" ); //$NON-NLS-1$
     m_nutzungDir = new File( asciiBaseDir, "hydro.top" ); //$NON-NLS-1$
     m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" ); //$NON-NLS-1$
+    m_hydrotopMappingFile = new File( asciiBaseDir, "inp.dat/mapping.txt" ); //$NON-NLS-1$
     m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" ); //$NON-NLS-1$
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
@@ -258,7 +268,7 @@ public class NAConfiguration
   {
     if( featureName != null && featureName.length() < 10 )
       return featureName;
-    final String shortName = String.format( PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
+    final String shortName = String.format( Locale.US, PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
     System.out.println( "Created " + shortName + " for " + featureName ); //$NON-NLS-1$ //$NON-NLS-2$
     if( featureName == null )
       return shortName;
@@ -566,29 +576,19 @@ public class NAConfiguration
 
   }
 
-  public void setIniWrite( Boolean iniWrite )
-  {
-    m_iniWrite = iniWrite;
-  }
-
-  public Boolean getIniWrite( )
-  {
-    return m_iniWrite;
-  }
-
   public URL getSwaleAndTrenchFormatURL( )
   {
     return m_swaleAndTrenchFormatURL;
   }
 
-  public void setInitalValues( TreeSet<Date> dateWriteSet )
+  public void setInitalValues( Date[] initialDates )
   {
-    m_dateWriteSet = dateWriteSet;
+    m_initialDates = initialDates;
   }
 
-  public TreeSet<Date> getDateWriteSet( )
+  public Date[] getInitialDates( )
   {
-    return m_dateWriteSet;
+    return m_initialDates;
   }
 
   public void setModelWorkspace( GMLWorkspace modelWorkspace )
@@ -650,4 +650,44 @@ public class NAConfiguration
   {
     return m_sudsWorkspace;
   }
+
+  public File getHydrotopMappingFile( )
+  {
+    return m_hydrotopMappingFile;
+  }
+
+  public void addHydrotopMapping( final int catchmentAsciiID, final int hydrotopAsciiID, final Hydrotop hydrotop )
+  {
+    getHydrotopMapping().add( String.format( Locale.US, "%6d %6d   --->   [%s] \t%s", catchmentAsciiID, hydrotopAsciiID, hydrotop.getId(), hydrotop.getName() ) );
+  }
+
+  public List<String> getHydrotopMapping( )
+  {
+    return m_hydrotopMapping;
+  }
+
+  public void addSudsMaxPercRateMember( final String sudsFeatureID, final Double hydrotopMaxPerkolationRate )
+  {
+    List<Double> list = m_suds2HydrotopMaxPercRateMap.get( sudsFeatureID );
+    if( list == null )
+    {
+      list = new ArrayList<Double>();
+      m_suds2HydrotopMaxPercRateMap.put( sudsFeatureID, list );
+    }
+    if( hydrotopMaxPerkolationRate == null || Double.isNaN( hydrotopMaxPerkolationRate ) )
+      return;
+    list.add( hydrotopMaxPerkolationRate );
+  }
+
+  public Double getSudsAverageMaxPercRate( final String sudsFeatureID )
+  {
+    final List<Double> list = m_suds2HydrotopMaxPercRateMap.get( sudsFeatureID );
+    if( list == null || list.size() == 0 )
+      return Double.NaN;
+    double average = 0.0;
+    for( double value : list )
+      average += value;
+    return average / list.size();
+  }
+
 }

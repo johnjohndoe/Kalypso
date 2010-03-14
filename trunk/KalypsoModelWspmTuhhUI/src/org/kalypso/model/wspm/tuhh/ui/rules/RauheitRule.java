@@ -71,7 +71,7 @@ public class RauheitRule extends AbstractValidatorRule
     IComponent pointPropKST = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( pointPropKS == null && pointPropKST == null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3"), stationId, 0, "", pluginId );  //$NON-NLS-1$//$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3"), stationId, 0, "", pluginId ,new DelRoughnessResolution(new String[]{IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS,IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST},null));  //$NON-NLS-1$//$NON-NLS-2$
       return;
     }
 

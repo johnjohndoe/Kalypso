@@ -207,6 +207,10 @@
           class="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo"
           id="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo">
     </themeInfo>
+    <themeInfo
+          class="org.kalypso.risk.plugin.DamagePotentialThemeInfo"
+          id="org.kalypso.risk.plugin.DamagePotentialThemeInfo">
+    </themeInfo>
  </extension>
  <extension
        point="org.kalypso.contribs.eclipseplatform.projectTemplate">
@@ -261,6 +265,11 @@
                      catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
                      simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation"
                      typeID="KalypsoRisk_RiskZonesCalculation">
+               </simulation>
+               <simulation
+                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
+                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_InnundationDifferenceCalculation"
+                     typeID="KalypsoRisk_InnundationDifferenceCalculation">
                </simulation>
                <simulation
                      catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"

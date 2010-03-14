@@ -11,7 +11,7 @@
             <templ:property name="themeInfoId">org.kalypso.risk.plugin.RiskZonesThemeInfo</templ:property>
             <templ:property name="themeId">riskZonesGridTheme</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="%MainMap.mapv.layer.damagePotential" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="SpecificDamagePotentialMap.gmt" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="%SpecificDamagePotentialMap.gismapview.Schadenspotentiale" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="SpecificDamagePotentialMap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
             <templ:property name="themeId">damagePotentialThemes</templ:property>
         </mapv:layer>

@@ -41,14 +41,13 @@
 package org.kalypso.model.wspm.tuhh.ui.extension;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author kuch
  *
  */
-public class KalypsoWspmWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public class KalypsoWspmWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {
   protected static final Image IMG = new Image( null, KalypsoWspmWelcomePageFrame.class.getResourceAsStream( "icons/wspm_no.gif" ) ); //$NON-NLS-1$
 
@@ -67,15 +66,8 @@ public class KalypsoWspmWelcomePageFrame implements IKalypsoModuleWelcomePageFra
   }
 
   @Override
-  public String getTooltip( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule.2" ); //$NON-NLS-1$
-  }
-
-  @Override
   public Image getHoverIcon( )
   {
     return IMG_HOVER;
   }
-
 }

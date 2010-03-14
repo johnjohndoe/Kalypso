@@ -337,7 +337,7 @@ public class NaModelCalcJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/nacalcjob_spec.xml" ); //$NON-NLS-1$
+    return getClass().getResource( "/resources/nacalcjob_spec.xml" ); //$NON-NLS-1$
   }
 
   public boolean isSucceeded( )

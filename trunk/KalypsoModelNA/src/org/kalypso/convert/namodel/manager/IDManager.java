@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -167,7 +168,7 @@ public class IDManager
 
   public void dump( final Writer writer ) throws IOException
   {
-    final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator()
+    final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator<Object>()
     {
       @Override
       public boolean equals( Object obj )
@@ -186,20 +187,22 @@ public class IDManager
       }
     } );
     sort.addAll( m_idMapFeature.keySet() );
+    writer.write( String.format( Locale.US, "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$
     for( Iterator<IDMap> iter = sort.iterator(); iter.hasNext(); )
     {
-      IDMap idmap = iter.next();
-      writer.write( idmap.toString() );
-      writer.write( "\t" ); //$NON-NLS-1$
+      final IDMap idmap = iter.next();
+      writer.write( String.format( Locale.US, "%-10s -->  ", idmap.toString() ) ); //$NON-NLS-1$
       final Object value = m_idMapFeature.get( idmap );
       if( value instanceof Feature )
       {
-        Feature feature = (Feature) value;
-        writer.write( feature.getId() );
+        final Feature feature = (Feature) value;
+        final String type = feature.getFeatureType().getQName().getLocalPart().toString();
+        writer.write( String.format( Locale.US, "%-16s %-32s %-32s %-32s\n", type, feature.getId(), feature.getName(), feature.getDescription() ) ); //$NON-NLS-1$
       }
       else
-        writer.write( "dummy" ); //$NON-NLS-1$
-      writer.write( "\n" ); //$NON-NLS-1$
+      {
+        writer.write( "[control entry]\n" ); //$NON-NLS-1$
+      }
     }
   }
 
@@ -220,9 +223,7 @@ public class IDManager
 
     int asciiID;
 
-    public IDMap( @SuppressWarnings("hiding")
-    int asciiID, @SuppressWarnings("hiding")
-    int type )
+    public IDMap( @SuppressWarnings("hiding") int asciiID, @SuppressWarnings("hiding") int type )
     {
       this.type = type;
       this.asciiID = asciiID;
@@ -241,7 +242,7 @@ public class IDManager
     @Override
     public String toString( )
     {
-      return asciiID + "\t" + type; //$NON-NLS-1$
+      return asciiID + " [" + type + "]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
