@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_Hydrotope</Name>
 		<Title>%rule_Hydrotope_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PolygonSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>position</ogc:PropertyName>

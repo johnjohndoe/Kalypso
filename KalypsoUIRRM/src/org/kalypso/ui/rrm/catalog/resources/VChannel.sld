@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_Ort</Name>
 		<Title>%rule_Ort_title</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>

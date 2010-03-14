@@ -5,8 +5,6 @@
 	<Rule>
 		<Name>rule_Ort</Name>
 		<Title>%rule_Ort_title=Geoemtrie</Title>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PointSymbolizer uom="pixel">
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -83,8 +81,6 @@
 				</ogc:PropertyIsNull>
 			</ogc:Not>
 		</ogc:Filter>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>200000</MaxScaleDenominator>
 		<PointSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>

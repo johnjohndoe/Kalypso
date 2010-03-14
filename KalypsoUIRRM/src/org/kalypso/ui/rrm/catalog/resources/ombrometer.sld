@@ -9,8 +9,6 @@
 		<Name>default</Name>
 		<Title>Ombrometer</Title>
 		<Abstract>default</Abstract>
-		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>150000.0</MaxScaleDenominator>
 		<PointSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
