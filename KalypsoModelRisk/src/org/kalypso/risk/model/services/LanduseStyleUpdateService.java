@@ -71,7 +71,6 @@ import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.plugin.RasterizedLanduseThemeInfo;
-import org.kalypso.risk.plugin.RiskZonesThemeInfo;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -171,7 +170,6 @@ public class LanduseStyleUpdateService extends Job
           else
             values.put( -key, riskZoneDefinition.getName() );
         }
-        RiskZonesThemeInfo.updateZonesDefinition( values );
 
         // final List<ColorMapEntry> valueDefinitionList = new ArrayList<ColorMapEntry>();
         // for( final IRiskZoneDefinition zoneDef : riskZonesList )

@@ -152,6 +152,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public ILanduseClass getLanduseClass( final IRasterizationControlModel model )
   {
     final Object property = getFeature().getProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS );
+    // TODO: use the workspace of the bound feature, no need for the model to be given as parameter...
     final Feature feature = FeatureHelper.resolveLinkedFeature( model.getFeature().getWorkspace(), property );
 
     return new LanduseClass( feature );

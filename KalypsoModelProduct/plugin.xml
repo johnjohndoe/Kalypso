@@ -71,6 +71,45 @@
       </introProductBinding>
    </extension>
     <extension
+         point="org.eclipse.ui.activities">
+  
+      <activity
+            name="Model Product Activity"
+            description="Disables a lot of unwanted things."
+            id="org.kalypso.model.product.activity">
+      </activity>
+      
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.ant\.ui/.*">
+      </activityPatternBinding>
+
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.debug\.ui/.*">
+      </activityPatternBinding>
+
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.ui\.externaltools/.*">
+      </activityPatternBinding>
+
+      <category
+            name="Kalypso Model Product"
+            description="Disables a lot of not wanted things."
+            id="org.kalypso.model.product.categories.productCategory">
+      </category>
+
+      <categoryActivityBinding
+            activityId="org.kalypso.model.product.activity"
+            categoryId="org.kalypso.model.product.categories.productCategory">
+      </categoryActivityBinding>
+      
+      <defaultEnablement
+            id="org.kalypso.model.product.activity">
+      </defaultEnablement>
+   </extension>
+    <extension
           point="org.eclipse.ui.intro.config">
        <config
              content=""

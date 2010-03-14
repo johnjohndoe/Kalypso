@@ -57,6 +57,7 @@ import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof;
+import org.kalypso.convert.namodel.schema.binding.suds.ISealing;
 import org.kalypso.convert.namodel.schema.binding.suds.ISwale;
 import org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -67,12 +68,13 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * @author huebsch
+ * @author Dejan Antanaskovic
  */
 public class HydrotopManager extends AbstractManager
 {
@@ -106,8 +108,8 @@ public class HydrotopManager extends AbstractManager
       public String getAscii( )
       {
         if( m_bothSet )
-          return String.format( "%.3f %.3f", m_naturalAreaPercentage, m_sealedAreaPercentage ); //$NON-NLS-1$
-        return String.format( "%.3f", m_sealedAreaPercentage ); //$NON-NLS-1$
+          return String.format( Locale.US, "%.3f %.3f", m_naturalAreaPercentage, m_sealedAreaPercentage ); //$NON-NLS-1$
+        return String.format( Locale.US, "%.3f", m_sealedAreaPercentage ); //$NON-NLS-1$
       }
     }
 
@@ -130,18 +132,17 @@ public class HydrotopManager extends AbstractManager
     public void addSuds( final String type, final double naturalAreaPercentage, final double sealedAreaPercentage )
     {
       m_map.put( type, new AreaDescriptor( naturalAreaPercentage, sealedAreaPercentage ) );
-    };
+    }
 
     public void addSuds( final String type, final double sealedAreaPercentage )
     {
       m_map.put( type, new AreaDescriptor( sealedAreaPercentage ) );
-    };
+    }
 
     public String getAscii( )
     {
-      return String.format( "%s %s %s %s %s %s %s %s %s %s", m_map.get( "10" ).getAscii(), m_map.get( "11" ).getAscii(), m_map.get( "12" ).getAscii(), m_map.get( "13" ).getAscii(), m_map.get( "20" ).getAscii(), m_map.get( "21" ).getAscii(), m_map.get( "30" ).getAscii(), m_map.get( "31" ).getAscii(), m_map.get( "40" ).getAscii(), m_map.get( "41" ).getAscii() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+      return String.format( Locale.US, "%s %s %s %s %s %s %s %s %s %s", m_map.get( "10" ).getAscii(), m_map.get( "11" ).getAscii(), m_map.get( "12" ).getAscii(), m_map.get( "13" ).getAscii(), m_map.get( "20" ).getAscii(), m_map.get( "21" ).getAscii(), m_map.get( "30" ).getAscii(), m_map.get( "31" ).getAscii(), m_map.get( "40" ).getAscii(), m_map.get( "41" ).getAscii() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
     }
-
   }
 
   public HydrotopManager( final NAConfiguration conf ) throws IOException
@@ -173,17 +174,14 @@ public class HydrotopManager extends AbstractManager
   {
     final IDManager idManager = m_conf.getIdManager();
     // Catchment
-    Feature modelRootFeature = modelWorkspace.getRootFeature();
-    Feature modelCol = (Feature) modelRootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    List catchmentList = (List) modelCol.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    final Feature catchmentCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+    final List<Feature> catchmentList = (List<Feature>) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
 
-    Feature parameterRootFeature = parameterWorkspace.getRootFeature();
-    List landuseList = (List) parameterRootFeature.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
-    Iterator landuseIter = landuseList.iterator();
+    final List<Feature> landuseList = (List<Feature>) parameterWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+    final Iterator<Feature> landuseIter = landuseList.iterator();
     while( landuseIter.hasNext() )
     {
-      final Feature landuseFE = (Feature) landuseIter.next();
-
+      final Feature landuseFE = landuseIter.next();
       final IRelationType rt = (IRelationType) landuseFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
       final Feature linkedSealingFE = parameterWorkspace.resolveLink( landuseFE, rt );
       final Double sealingRate = (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
@@ -194,18 +192,18 @@ public class HydrotopManager extends AbstractManager
         m_landuseSealingRateMap.put( landuseName, sealingRate );
     }
 
-    Iterator catchmentIter = catchmentList.iterator();
+    final Iterator<Feature> catchmentIter = catchmentList.iterator();
     // vollständige HydrotopList
-    Feature rootFeature = hydWorkspace.getRootFeature();
-    FeatureList hydList = (FeatureList) rootFeature.getProperty( NaModelConstants.HYDRO_MEMBER );
+    final FeatureList hydList = (FeatureList) hydWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
 
-    final List soilTypeList = (List) parameterRootFeature.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
+    final List<Feature> soilTypeList = (List<Feature>) parameterWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
     asciiBuffer.getHydBuffer().append( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ) ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     while( catchmentIter.hasNext() )
     {
-      final Feature catchmentFE = (Feature) catchmentIter.next();
+      final Feature catchmentFE = catchmentIter.next();
       if( asciiBuffer.writeFeature( catchmentFE ) ) // do it only for relevant catchments
       {
+        final int catchmentAsciiID = idManager.getAsciiID( catchmentFE );
         boolean anySuds = false;
         final List<String> hydIdList = new ArrayList<String>();
         final List<String> hydrotopOutputList = new ArrayList<String>();
@@ -230,16 +228,13 @@ public class HydrotopManager extends AbstractManager
             final Double landuseSealing = m_landuseSealingRateMap.get( m_conf.getLanduseFeatureShortedName( landuseName ) );
             if( landuseSealing == null )
             {
-              final String msg = ""; //$NON-NLS-1$
+              final String msg = "Unknown landuse found. Please re=create hydrotop file!"; //$NON-NLS-1$
               m_conf.getLogger().severe( msg );
               throw new SimulationException( msg );
             }
-            final double combinedSealingRate = landuseSealing.doubleValue() * hydrotop.getCorrSealing();
-            final double hydrotopSealedArea = hydrotopArea * combinedSealingRate;
-            final double hydrotopNaturalArea = hydrotopArea - hydrotopSealedArea;
-            totalHydrotopArea += hydrotopArea;
-            totalHydrotopSealedArea += hydrotopSealedArea;
-            totalHydrotopNaturalArea += hydrotopNaturalArea;
+            double totalSealingPercentage = landuseSealing.doubleValue() * hydrotop.getCorrSealing();
+            double hydrotopSealedArea = hydrotopArea * totalSealingPercentage;
+            double hydrotopNaturalArea = hydrotopArea - hydrotopSealedArea;
             String soilType = hydrotop.getSoilType();
             for( final Object object : soilTypeList )
             {
@@ -251,49 +246,78 @@ public class HydrotopManager extends AbstractManager
               }
             }
 
+            final HydrotopSudsAsciiDescriptor hydrotopSudsAsciiDescriptor = new HydrotopSudsAsciiDescriptor();
             final IFeatureBindingCollection<Feature> sudsCollection = hydrotop.getSudCollection();
             if( sudsCollection.size() > 0 )
             {
-              final HydrotopSudsAsciiDescriptor hydrotopSudsAsciiDescriptor = new HydrotopSudsAsciiDescriptor();
+              // first, fix the sealing
               for( final Feature sudsFeature : hydrotop.getSudCollection() )
               {
-                if( sudsFeature instanceof ISwaleInfiltrationDitch )
+                final Feature feature = (sudsFeature instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) sudsFeature).getFeature() : sudsFeature;
+                if( feature instanceof ISealing )
                 {
-                  final ISwaleInfiltrationDitch suds = (ISwaleInfiltrationDitch) sudsFeature;
-                  final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double naturalAreaPart = hydrotopNaturalArea * areaRate;
-                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPart, sealedAreaPart );
-                  totalSudsNaturalArea += naturalAreaPart;
-                  totalSudsSealedArea += sealedAreaPart;
-                }
-                else if( sudsFeature instanceof ISwale )
-                {
-                  final ISwale suds = (ISwale) sudsFeature;
-                  final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double naturalAreaPart = hydrotopNaturalArea * areaRate;
-                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), naturalAreaPart, sealedAreaPart );
-                  totalSudsNaturalArea += naturalAreaPart;
-                  totalSudsSealedArea += sealedAreaPart;
-                }
-                else if( sudsFeature instanceof IGreenRoof )
-                {
-                  final IGreenRoof suds = (IGreenRoof) sudsFeature;
-                  final double areaRate = suds.getAreaPercentage() / 100.0;
-                  final double sealedAreaPart = hydrotopSealedArea * areaRate;
-                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sealedAreaPart );
-                  totalSudsSealedArea += sealedAreaPart;
+                  final ISealing suds = (ISealing) feature;
+                  totalSealingPercentage = totalSealingPercentage * suds.getSealingFactor();
+                  hydrotopSealedArea = hydrotopArea * totalSealingPercentage;
+                  hydrotopNaturalArea = hydrotopArea - hydrotopSealedArea;
                 }
               }
-              hydrotopOutputList.add( String.format( Locale.US, "%.3f %s %s %.3g %.3g %d %.3f 1 %s", hydrotopNaturalArea, m_conf.getLanduseFeatureShortedName( hydrotop.getLanduse() ), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingRate, hydrotopSudsAsciiDescriptor.getAscii() ) ); //$NON-NLS-1$
+              final double hydrotopNaturalAreaAfterUnsealing = hydrotopNaturalArea;
+              final double hydrotopSealedAreaAfterUnsealing = hydrotopSealedArea;
+              // than, apply other measures
+              for( final Feature sudsFeature : hydrotop.getSudCollection() )
+              {
+                final Feature feature = (sudsFeature instanceof XLinkedFeature_Impl) ? ((XLinkedFeature_Impl) sudsFeature).getFeature() : sudsFeature;
+                if( feature instanceof ISwaleInfiltrationDitch )
+                {
+                  final ISwaleInfiltrationDitch suds = (ISwaleInfiltrationDitch) feature;
+                  final double naturalAreaRate = suds.getNaturalAreaPercentage() / 100.0;
+                  final double drainingRateOfSealedArea = suds.getDrainedPercentageOfSealedArea() / 100.0;
+                  final double sudsNaturalAreaPart = hydrotopNaturalAreaAfterUnsealing * naturalAreaRate;
+                  final double sudsDrainedSealedAreaPart = hydrotopSealedAreaAfterUnsealing * drainingRateOfSealedArea;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sudsNaturalAreaPart, sudsDrainedSealedAreaPart );
+                  hydrotopNaturalArea -= sudsNaturalAreaPart;
+                  hydrotopSealedArea -= sudsDrainedSealedAreaPart;
+                  totalSudsNaturalArea += sudsNaturalAreaPart;
+                  totalSudsSealedArea += sudsDrainedSealedAreaPart;
+                  m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
+                }
+                else if( feature instanceof ISwale )
+                {
+                  final ISwale suds = (ISwale) feature;
+                  final double naturalAreaRate = suds.getNaturalAreaPercentage() / 100.0;
+                  final double drainingRateOfSealedArea = suds.getDrainedPercentageOfSealedArea() / 100.0;
+                  final double sudsNaturalAreaPart = hydrotopNaturalAreaAfterUnsealing * naturalAreaRate;
+                  final double sudsDrainedSealedAreaPart = hydrotopSealedAreaAfterUnsealing * drainingRateOfSealedArea;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sudsNaturalAreaPart, sudsDrainedSealedAreaPart );
+                  hydrotopNaturalArea -= sudsNaturalAreaPart;
+                  hydrotopSealedArea -= sudsDrainedSealedAreaPart;
+                  totalSudsNaturalArea += sudsNaturalAreaPart;
+                  totalSudsSealedArea += sudsDrainedSealedAreaPart;
+                  m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
+                }
+                else if( feature instanceof IGreenRoof )
+                {
+                  final IGreenRoof suds = (IGreenRoof) feature;
+                  final double areaRate = suds.getAreaPercentage() / 100.0;
+                  final double sealedAreaPart = hydrotopSealedAreaAfterUnsealing * areaRate;
+                  hydrotopSudsAsciiDescriptor.addSuds( suds.getElementType(), sealedAreaPart );
+                  hydrotopSealedArea -= sealedAreaPart;
+                  totalSudsSealedArea += sealedAreaPart;
+                  m_conf.addSudsMaxPercRateMember( feature.getId(), hydrotop.getMaxPerkolationRate() );
+                }
+              }
               anySuds = true;
             }
-            else
-            {
-              hydrotopOutputList.add( String.format( Locale.US, "%.3f %s %s %.3g %.3g %d %.3f 0", hydrotopNaturalArea, m_conf.getLanduseFeatureShortedName( hydrotop.getLanduse() ), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, combinedSealingRate ) ); //$NON-NLS-1$
-            }
+            // final double sealingRate = hydrotopSealedArea / (hydrotopArea - );
+            if( hydrotopNaturalArea < 0.0 )
+              throw new SimulationException( "Hydrotop natural area is less than 0.0 m2." );
+            hydrotopOutputList.add( String.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f %-1d %s", hydrotopNaturalArea, m_conf.getLanduseFeatureShortedName( hydrotop.getLanduse() ), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, totalSealingPercentage, (sudsCollection.size() > 0) ? 1 : 0, hydrotopSudsAsciiDescriptor.getAscii() ) ); //$NON-NLS-1$
+            totalHydrotopArea += hydrotopArea;
+            totalHydrotopSealedArea += hydrotopSealedArea;
+            totalHydrotopNaturalArea += hydrotopNaturalArea;
 
+            m_conf.addHydrotopMapping( catchmentAsciiID, hydrotopAsciiID, hydrotop );
             hydIdList.add( hydrotop.getId() );
           }
         }
@@ -306,11 +330,11 @@ public class HydrotopManager extends AbstractManager
 
         if( anySuds )
         {
-          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %.3f %.3f %.3f 1 %.3f %.3f %.3f\n", idManager.getAsciiID( catchmentFE ), hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea, totalSudsSealedArea, totalSudsNaturalArea, totalSudsSealedArea + totalSudsNaturalArea ) ); //$NON-NLS-1$
+          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %.3f %.3f %.3f 1 %.3f %.3f %.3f\n", catchmentAsciiID, hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea, totalSudsSealedArea, totalSudsNaturalArea, totalSudsSealedArea + totalSudsNaturalArea ) ); //$NON-NLS-1$
         }
         else
         {
-          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %g %g %g\n", idManager.getAsciiID( catchmentFE ), hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea ) ); //$NON-NLS-1$
+          asciiBuffer.getHydBuffer().append( String.format( Locale.US, "%d %d %g %g %g\n", catchmentAsciiID, hydrotopOutputList.size(), totalHydrotopSealedArea, totalHydrotopNaturalArea, totalHydrotopSealedArea + totalHydrotopNaturalArea ) ); //$NON-NLS-1$
         }
         for( final String line : hydrotopOutputList )
           asciiBuffer.getHydBuffer().append( line ).append( "\n" ); //$NON-NLS-1$

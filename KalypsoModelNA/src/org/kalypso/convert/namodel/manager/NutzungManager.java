@@ -61,11 +61,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.i18n.Messages;
+import org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof;
+import org.kalypso.convert.namodel.schema.binding.suds.ISwale;
+import org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -161,7 +165,7 @@ public class NutzungManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.6" , i , line )); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.6", i, line ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
@@ -175,45 +179,50 @@ public class NutzungManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( GMLWorkspace paraWorkspace ) throws Exception
+  public void writeFile( final GMLWorkspace paraWorkspace ) throws Exception
   {
-    Feature rootFeature = paraWorkspace.getRootFeature();
-    List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
-    Iterator iter = list.iterator();
+    final Feature rootFeature = paraWorkspace.getRootFeature();
+    final List<Feature> list = (List<Feature>) rootFeature.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+    final Iterator<Feature> iter = list.iterator();
 
     while( iter.hasNext() )
     {
-
-      final Feature nutzungFE = (Feature) iter.next();
+      final Feature nutzungFE = iter.next();
       final IRelationType rt = (IRelationType) nutzungFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
       final Feature linkedIdealLanduseFE = paraWorkspace.resolveLink( nutzungFE, rt );
       writeFeature( nutzungFE, linkedIdealLanduseFE );
     }
-
+    writeConstantSudsIdealLanduse();
   }
 
-  private void writeFeature( Feature feature, Feature linkedIdealLanduseFE ) throws Exception
+  private void writeFeature( final Feature feature, final Feature linkedIdealLanduseFE ) throws Exception
   {
     final String nutzName = m_conf.getLanduseFeatureShortedName( feature.getName() );
-    File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" ); //$NON-NLS-1$ //$NON-NLS-2$
-    FileWriter writer = new FileWriter( nutzungDir );
-    String name;
-    try
-    {
-      name = linkedIdealLanduseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ).toString();
-    }
-    catch( Exception e )
-    {
-      name = Messages.getString( "org.kalypso.convert.namodel.manager.NutzungManager.11" ); //$NON-NLS-1$
-    }
-    writer.write( name );
-    writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung! //$NON-NLS-1$
-    writer.write( "xxdatum     F EVA    We    BIMAX\n" ); //$NON-NLS-1$
-    Object idealLanduseProp = linkedIdealLanduseFE.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML );
+    final File outputFile = new File( String.format( "%s\\%s.nuz", m_conf.getNutzungDir(), nutzName ) ); //$NON-NLS-1$
+    final FileWriter writer = new FileWriter( outputFile );
+    writer.write( linkedIdealLanduseFE.getName() );
+    writer.write( "\nidealisierter jahresgang" );// "ideali" ist Kennung! //$NON-NLS-1$
+    writer.write( "\nxxdatum     F EVA    We    BIMAX\n" ); //$NON-NLS-1$
+    final Object idealLanduseProp = linkedIdealLanduseFE.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML );
     writeIdealLanduse( (IObservation) idealLanduseProp, writer );
     writer.write( "993456789012345678901234567890" ); //$NON-NLS-1$
     IOUtils.closeQuietly( writer );
+  }
 
+  private void writeConstantSudsIdealLanduse( ) throws Exception
+  {
+    final List<String> resources = new ArrayList<String>();
+    resources.add( IGreenRoof.IDEAL_LANDUSE_EXTENSIVE );
+    resources.add( IGreenRoof.IDEAL_LANDUSE_INTENSIVE );
+    resources.add( ISwale.IDEAL_LANDUSE );
+    resources.add( ISwaleInfiltrationDitch.IDEAL_LANDUSE );
+
+    for( final String resource : resources )
+    {
+      final URL source = getClass().getResource( String.format( "/resources/idealLanduseSuds/%s.nuz", resource ) );
+      final File destination = new File( String.format( "%s\\%s.nuz", m_conf.getNutzungDir(), resource ) ); //$NON-NLS-1$
+      FileUtils.copyURLToFile( source, destination );
+    }
   }
 
   private void writeIdealLanduse( IObservation observation, Writer zmlWriter ) throws SensorException, IOException
@@ -234,9 +243,9 @@ public class NutzungManager extends AbstractManager
       final int year = calendar.get( Calendar.YEAR ) - yearOffset;
       final int month = calendar.get( Calendar.MONTH ) + 1;
       final int day = calendar.get( Calendar.DATE );
-      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
       zmlWriter.write( "." ); //$NON-NLS-1$
-      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
       zmlWriter.write( "." ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 

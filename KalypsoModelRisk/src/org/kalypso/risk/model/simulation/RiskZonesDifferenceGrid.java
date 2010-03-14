@@ -71,14 +71,13 @@ public class RiskZonesDifferenceGrid extends AbstractDelegatingGeoGrid implement
       final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_inputGrid1, x, y, null );
       if( m_inputGrid1.getEnvelope().contains( coordinate ) && m_inputGrid2.getEnvelope().contains( coordinate ) )
       {
-        final double value1 = m_inputGrid1.getValue( coordinate );
-        final double value2 = m_inputGrid2.getValue( coordinate );
+        final double gridValue1 = m_inputGrid1.getValue( coordinate );
+        final double gridValue2 = m_inputGrid2.getValue( coordinate );
+        final double value1 = Double.isNaN( gridValue1 ) ? 0.0 : gridValue1;
+        final double value2 = Double.isNaN( gridValue2 ) ? 0.0 : gridValue2;
 
-        if( Double.isNaN( value1 ) || Double.isNaN( value2 ) )
-          return Double.NaN;
-        final double value = Math.abs( value1 ) + Math.abs( value2 );
+        final double value = Math.abs( value1 ) - Math.abs( value2 );
         m_difference += value;
-//        System.out.println(value);
         return value;
       }
       return Double.NaN;

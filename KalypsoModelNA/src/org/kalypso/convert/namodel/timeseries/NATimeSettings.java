@@ -30,19 +30,22 @@
 package org.kalypso.convert.namodel.timeseries;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.kalypso.core.KalypsoCorePlugin;
+
 /**
  * provides unique time(zone)-setting for the rainfall runoff simulation kernel
- *
+ * 
  * @author doemming
  */
 public class NATimeSettings
 {
-  // Very dangerous... and probably does not always work correctly
-  public static String CALCULATION_CORE_TIMEZONE = "GMT+1"; //"UTC"; //$NON-NLS-1$
+//  // Very dangerous... and probably does not always work correctly
+//  private static String CALCULATION_CORE_TIMEZONE = "GMT+1"; //"UTC"; //$NON-NLS-1$
 
   private static NATimeSettings m_instance = null;
 
@@ -50,17 +53,28 @@ public class NATimeSettings
 
   private final Calendar m_calendar;
 
-  private NATimeSettings( )
-  {
-    m_timeZone = TimeZone.getTimeZone( CALCULATION_CORE_TIMEZONE );
-    m_calendar = Calendar.getInstance( m_timeZone );
-  }
-
-  public static NATimeSettings getInstance( )
+  public synchronized static NATimeSettings getInstance( )
   {
     if( m_instance == null )
       m_instance = new NATimeSettings();
     return m_instance;
+  }
+
+  private NATimeSettings( )
+  {
+    // REMARK: we cannot use a fixed time zone anymore because because of the initial values.
+    // The initial values must be written as days. If we change the time-zone between user interface and
+    // calc-core, we may shift the initial values by one day.
+    // IMPORTANT: if we run Kalypso on the server side, we must make sure, that it is run in the
+    // same time zone as the client.... 
+    // This is not always possible, so it would be better to get the time zone to use from outside?
+    m_timeZone = KalypsoCorePlugin.getDefault().getTimeZone(); 
+    m_calendar = Calendar.getInstance( m_timeZone );
+  }
+  
+  public TimeZone getTimeZone( )
+  {
+    return m_timeZone;
   }
 
   public DateFormat getTimeZonedDateFormat( final DateFormat dateFormat )
@@ -83,5 +97,14 @@ public class NATimeSettings
     final Calendar result = getCalendar();
     result.setTime( date );
     return result;
+  }
+
+  /**
+   * DateFormat in .lzs and .lzg files.
+   */
+  public DateFormat getLzsLzgDateFormat( )
+  {
+    final SimpleDateFormat df = new SimpleDateFormat( "yyyyMMdd  00" ); //$NON-NLS-1$
+    return getTimeZonedDateFormat( df );
   }
 }

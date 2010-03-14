@@ -257,8 +257,8 @@ public class RauheitenPanel extends AbstractProfilView
         setValues( i_left, i_rechts, value );
       }
     } );
+    
     // Rauheitswerte Vorland rechts
-
     addLabel( toolkit, auto, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.10" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     m_re = addText( toolkit, auto, null );
     m_re.addFocusListener( new FocusAdapter()

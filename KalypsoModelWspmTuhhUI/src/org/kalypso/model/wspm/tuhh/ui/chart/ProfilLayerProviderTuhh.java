@@ -88,6 +88,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 {
+
   private final List<String> m_layers = new ArrayList<String>();
 
   protected final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
@@ -151,15 +152,28 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.3" ), view.getProfil(), true ); //$NON-NLS-1$
-      final IComponent rauheit = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
-      if( rauheit != null )
+      final IComponent rauheit_kst = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+      final IComponent rauheit_ks = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+      final IComponent rauheit_neu;
+      final IComponent rauheit_alt;
+      final Object[] values;
+
+      if( rauheit_ks == null && rauheit_kst == null )
       {
-        final Object[] valuesFor = ProfilUtil.getValuesFor( profil, rauheit );
-        operation.addChange( new PointPropertyRemove( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ) );
-        operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), valuesFor ) );
+        rauheit_neu = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+        rauheit_alt = null;
+        values = new Object[] { 0.0 };
       }
       else
-        operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) );
+      {
+        rauheit_alt = rauheit_kst == null ? rauheit_ks : provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+        rauheit_neu = rauheit_ks == null ? rauheit_kst : provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+        values = ProfilUtil.getValuesFor( profil, rauheit_alt );
+        operation.addChange( new PointPropertyRemove( profil, rauheit_alt ) );
+
+      }
+      m_targetAxisRight.setLabel( "[" + rauheit_neu.getUnit() + "]" );
+      operation.addChange( new PointPropertyAdd( profil, rauheit_neu, values ) );
       new ProfilOperationJob( operation ).schedule();
       return null;
     }
@@ -202,6 +216,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   {
     final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
     final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
+
     final IProfil profil = view.getProfil();
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
@@ -221,8 +236,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false ), new RiverChannelLayer( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_lsp, 15, false ) }, cmLeft );
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+    {
       return new RoughnessTheme( profil, new IProfilChartLayer[] { new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, m_lsp ),
           new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, m_lsp ) }, cmRight );
+    }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
       return new BuildingBridgeTheme( profil, new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
@@ -246,6 +263,21 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 // }
 
     return null;
+  }
+
+  final void setAxisLabel( final IProfil profil )
+  {
+    final String formatStr = "[%s]";
+    m_domainAxis.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getUnit() ) );
+    m_targetAxisLeft.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getUnit() ) );
+    final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    if( roughnessKS != null )
+      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKS.getUnit() ) );
+    else if( roughnessKST != null )
+      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKST.getUnit() ) );
+    else
+      m_targetAxisRight.setLabel( "" );
   }
 
   /**
@@ -328,11 +360,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     m_targetAxisRight.setPreferredAdjustment( aaRight );
 
-    m_domainAxis.setLabel( "[m]" ); //$NON-NLS-1$
-
-    m_targetAxisLeft.setLabel( "[m+NN]" ); //$NON-NLS-1$
-    m_targetAxisRight.setLabel( "[KS]" ); //$NON-NLS-1$
-
     mapperRegistry.addMapper( m_domainAxis );
     mapperRegistry.addMapper( m_targetAxisLeft );
     mapperRegistry.addMapper( m_targetAxisRight );
@@ -389,7 +416,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
     /* We always have a trenner layer, even if no trenner is defined. */
     layerToAdd.add( IWspmTuhhConstants.LAYER_DEVIDER );
-
+    setAxisLabel( profile );
     return layerToAdd.toArray( new String[0] );
   }
 

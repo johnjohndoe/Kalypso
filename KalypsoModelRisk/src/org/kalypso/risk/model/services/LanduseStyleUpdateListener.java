@@ -43,11 +43,9 @@ package org.kalypso.risk.model.services;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbench;
@@ -81,21 +79,15 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
     final IResourceDelta rootDelta = event.getDelta();
     if( rootDelta == null )
       return;
+    final IPath roughnessPath = scenarioFolder.getProject().getFullPath().append( resourcePath );
+    final IResourceDelta fileDelta = rootDelta.findMember( roughnessPath );
+    // TODO: check if it is a 1d2d project, there may be other projects with the same file
 
-    final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-    for( final IProject project : projects )
+    if( fileDelta != null )
     {
-      final IPath roughnessPath = project.getFullPath().append( resourcePath );
-      final IResourceDelta fileDelta = rootDelta.findMember( roughnessPath );
-      // TODO: check if it is a 1d2d project, there may be other projects with the same file
-
-      if( fileDelta != null )
-      {
-        if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
-          startStyleUpdateJob( (IFile) fileDelta.getResource() );
-      }
+      if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+        startStyleUpdateJob( (IFile) fileDelta.getResource() );
     }
-
   }
 
   public void startStyleUpdateJob( final IFile gmlDatabaseFile )

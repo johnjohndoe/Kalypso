@@ -49,11 +49,9 @@ import org.kalypso.convert.namodel.NaModelConstants;
  */
 public interface ISwale extends IAbstractSwale
 {
+  public static final String IDEAL_LANDUSE = "Mulde_N"; //$NON-NLS-1$
+
   public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // EnumSwaleType //$NON-NLS-1$
 
-  public QName QN_PROPERTY_LANDUSE_FILENAME = new QName( NaModelConstants.NS_NASUDS, "landuseFileName" ); // string //$NON-NLS-1$
-
   public String getElementType( );
-
-  public String getLanduseFilename( );
 }

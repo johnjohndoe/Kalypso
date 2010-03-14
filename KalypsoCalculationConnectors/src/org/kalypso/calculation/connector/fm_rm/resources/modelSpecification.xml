@@ -5,4 +5,7 @@
 	<input id="RM_Model" description="Risk model to read from"/>
 	<output id="RM_Model" description="Risk model to write to (usually the same as input ModelRM)"/>
 	<output id="RM_InputRasterFolder" description="Risk model input raster folder"/>
+	
+	<input id="MAP_WATERLEVEL" path="maps/WaterlevelMap.gmt" relativeToCalcCase="true" optional="true" />
+	<output id="MAP_WATERLEVEL" path="maps/WaterlevelMap.gmt" relativeToCalcCase="true" optional="true" />
 </modelspec>

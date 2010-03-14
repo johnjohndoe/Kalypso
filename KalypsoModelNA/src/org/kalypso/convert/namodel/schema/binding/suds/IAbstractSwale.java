@@ -50,9 +50,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IAbstractSwale extends Feature
 {
-  public static QName QN_PROPERTY_WIDTH = new QName( NaModelConstants.NS_NASUDS, "width" ); // double //$NON-NLS-1$
+  public static QName QN_PROPERTY_NATURAL_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "naturalAreaPercentage" ); // double //$NON-NLS-1$
 
-  public static QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double //$NON-NLS-1$
+  public static QName QN_PROPERTY_DRAINED_SEALED_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "drainedSealedAreaPercentage" ); // double //$NON-NLS-1$
 
   public static QName QN_PROPERTY_DRAINAGE_NODE = new QName( NaModelConstants.NS_NASUDS, "drainageNode" ); // feature //$NON-NLS-1$
 
@@ -70,7 +70,9 @@ public interface IAbstractSwale extends Feature
 
   public double getWidth( );
 
-  public double getAreaPercentage( );
+  public double getNaturalAreaPercentage( );
+
+  public double getDrainedPercentageOfSealedArea( );
 
   public Feature getDrainageNode( );
 
@@ -85,4 +87,7 @@ public interface IAbstractSwale extends Feature
   public Double getProfileThickness( );
 
   public double getMaxCapacityEmergencySpill( );
+
+  public String getIdealLanduseName( );
+
 }

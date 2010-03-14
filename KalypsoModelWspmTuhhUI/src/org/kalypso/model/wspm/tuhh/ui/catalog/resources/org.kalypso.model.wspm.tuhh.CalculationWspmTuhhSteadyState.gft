@@ -3,99 +3,81 @@
 	xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:wspm="org.kalypso.model.wspm">
 	
-	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="false"
+	<gft:gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="false"
 		grabExcessHorizontalSpace="true" />
-	<gft:gridLayout numColumns="4" />
+	<gft:gridLayout numColumns="3" />
 	<gft:label property="gml:name" visible="true" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+		<gft:gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
 	<gft:text editable="true" property="gml:name" style="SWT.BORDER">
-		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
 	<gft:validatorlabel property="gml:name" visible="true" style="SWT.NONE" >
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		<gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
+	
 	<gft:label property="gml:description" visible="true" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+		<gft:gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
 	<gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER">
-		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
+		<gft:gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.FILL"
 			heightHint="30" grabExcessHorizontalSpace="true" />
 	</gft:text>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
 	<gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE"
 		xmlns:gml="http://www.opengis.net/gml">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		<gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
+	
 	<gft:group property="wspm:calcCreationMember" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
+		<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="3" horizontalAlignment="SWT.FILL"
 			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
-		<gft:gridLayout numColumns="2" />
+		<gft:gridLayout numColumns="2" marginWidth="0" marginHeight="0"/>
 		<gft:subcomposite property="wspm:calcCreationMember" style="SWT.NONE" >
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL"
 				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
+	
 	<gft:label property="tuhh:fliessgesetz" visible="true"
 		 style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+		<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
 	<gft:combo property="tuhh:fliessgesetz"
 		style="SWT.DROP_DOWN | SWT.READ_ONLY">
-		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 	</gft:combo>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
 	<gft:validatorlabel property="tuhh:fliessgesetz" visible="true" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		<gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	<gft:label property="tuhh:mode" visible="true"
-		 style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
-			grabExcessHorizontalSpace="false" />
+	
+	<gft:label property="tuhh:mode" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:combo property="tuhh:mode"
-		
-		style="SWT.DROP_DOWN | SWT.READ_ONLY">
-		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	<gft:combo property="tuhh:mode"	style="SWT.DROP_DOWN | SWT.READ_ONLY">
+		<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 	</gft:combo>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
 	<gft:validatorlabel property="tuhh:mode" visible="true" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		<gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:label property="tuhh:reachWspmTuhhSteadyStateMember" visible="true"
-		 style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
-			grabExcessHorizontalSpace="false" />
+	<gft:label property="tuhh:reachWspmTuhhSteadyStateMember" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:combo property="tuhh:reachWspmTuhhSteadyStateMember"
-		
-		style="SWT.DROP_DOWN | SWT.READ_ONLY">
-		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	<gft:combo property="tuhh:reachWspmTuhhSteadyStateMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 	</gft:combo>
 	<gft:validatorlabel property="tuhh:reachWspmTuhhSteadyStateMember" visible="true" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		<gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
 	<gft:group property="tuhh:subReachDefinitionMember" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
-			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
-		<gft:gridLayout numColumns="2" />
+		<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="2" marginWidth="0" marginHeight="0"/>
 		<gft:subcomposite property="tuhh:subReachDefinitionMember" style="SWT.NONE">
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
-				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
+			<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
 
@@ -106,7 +88,7 @@
 				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
 			</ogc:PropertyIsEqualTo>
 		</gft:visibleOperation>
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+		<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING"
 			grabExcessHorizontalSpace="false">
 			<gft:excludeOperation>
 				<ogc:Not>
@@ -125,7 +107,7 @@
 				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
 			</ogc:PropertyIsEqualTo>
 		</gft:visibleOperation>
-		<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true">
+		<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true">
 			<gft:excludeOperation>
 				<ogc:Not>
 					<ogc:PropertyIsEqualTo>
@@ -143,7 +125,7 @@
 				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
 			</ogc:PropertyIsEqualTo>
 		</gft:visibleOperation>
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+		<gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false">
 			<gft:excludeOperation>
 				<ogc:Not>
 					<ogc:PropertyIsEqualTo>
@@ -162,7 +144,7 @@
 				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
 			</ogc:PropertyIsEqualTo>
 		</gft:visibleOperation>
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
+		<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="3" horizontalAlignment="SWT.FILL"
 			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true">
 			<gft:excludeOperation>
 				<ogc:Not>
@@ -173,9 +155,9 @@
 				</ogc:Not>
 			</gft:excludeOperation>
 		</gft:gridData>
-		<gft:gridLayout numColumns="2" />
+		<gft:gridLayout numColumns="2" marginWidth="0" marginHeight="0"/>
 		<gft:subcomposite property="tuhh:runOffIntervalMember" style="SWT.NONE">
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL"
 				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
@@ -189,28 +171,27 @@
 				</ogc:PropertyIsEqualTo>
 			</ogc:Not>
 		</gft:visibleOperation>
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
+		<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="3" horizontalAlignment="SWT.FILL"
 			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true">
 			<gft:excludeOperation>
-				<ogc:PropertyIsEqualTo>
+				<ogc:PropertyIsEqualTo> 
 					<ogc:Literal>BF_UNIFORM</ogc:Literal>
 					<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
 				</ogc:PropertyIsEqualTo>
 			</gft:excludeOperation>
 		</gft:gridData>
-		<gft:gridLayout numColumns="2" />
+		<gft:gridLayout numColumns="2" marginWidth="0" marginHeight="0"/>
 		<gft:subcomposite property="tuhh:startConditionMember" style="SWT.NONE">
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL"
 				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
 
 	<gft:group property="tuhh:waterlevelParameterMember" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
-			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
-		<gft:gridLayout numColumns="2" />
+		<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="2" marginWidth="0" marginHeight="0"/>
 		<gft:subcomposite property="tuhh:waterlevelParameterMember" style="SWT.NONE">
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			<gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL"
 				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>

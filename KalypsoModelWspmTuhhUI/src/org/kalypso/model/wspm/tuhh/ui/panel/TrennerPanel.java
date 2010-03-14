@@ -391,7 +391,7 @@ public class TrennerPanel extends AbstractProfilView
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
+    if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged())
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )

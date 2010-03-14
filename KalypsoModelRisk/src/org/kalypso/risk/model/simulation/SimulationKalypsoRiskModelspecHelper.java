@@ -66,6 +66,9 @@ public class SimulationKalypsoRiskModelspecHelper implements ISimulationSpecKaly
     final List<MODELSPEC_KALYPSORISK> outputs = new ArrayList<MODELSPEC_KALYPSORISK>();
     outputs.add( MODELSPEC_KALYPSORISK.RASTER_MODEL );
     outputs.add( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER );
+    
+    inputs.add( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL );
+    outputs.add( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL );
 
     return SimulationUtilitites.createModelData( typeID.getValue(), getMap( inputs ), true, getMap( outputs ), true );
   }

@@ -43,8 +43,8 @@ package org.kalypso.risk.model.simulation;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -125,7 +125,9 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
       final File propertiesFile = new File( tmpdir, "stats.txt" );
       final Properties properties = new Properties();
-      properties.put( "TOTAL_DIFFERENCE", NumberFormat.getCurrencyInstance().format( m_totalDifference ) );
+      properties.put( "TOTAL_DIFFERENCE", String.format(Locale.ENGLISH, "%.8f", m_totalDifference ) );
+      properties.put( "ANNUAL_COSTS", "n/a" );
+      properties.put( "VALUE_BENEFIT", "n/a" );
       final FileOutputStream propertiesStream = new FileOutputStream( propertiesFile );
       properties.store( propertiesStream, "Scenario statistics" );
       propertiesStream.flush();

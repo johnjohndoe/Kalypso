@@ -110,6 +110,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   private GM_MultiSurface m_workingArea = null;
 
+  private double m_forcedSealingCorrectionFactorValue = Double.NaN;
+
+  private boolean m_isSealingCorrectionForced = false;
+
   public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final FeatureList outputList, final GMLWorkspace outputWorkspace )
   {
     m_landuseList = landuseList;
@@ -138,10 +142,20 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     m_dissolveFeatures = dissolveFeatures;
   }
 
+  /**
+   * Forces the given sealing correction factor, instead the one from the landuse data. <br>
+   * If the given value is Double.NaN, then the factor value is not forced.
+   */
+  public final void forceSealingCorrectionFactor( final double value )
+  {
+    m_forcedSealingCorrectionFactorValue = value;
+    m_isSealingCorrectionForced = !Double.isNaN( value );
+  }
+
   private final FeatureListGeometryIntersector getIntersector( )
   {
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
-//    if( m_workingArea == null )
+// if( m_workingArea == null )
     {
       geometryIntersector.addFeatureList( m_catchmentsList );
       geometryIntersector.addFeatureList( m_pedologyList );
@@ -149,10 +163,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       geometryIntersector.addFeatureList( m_landuseList );
       m_outputList.clear();
     }
-//    else{
-//      final GM_Envelope envelope = m_workingArea.getEnvelope();
-//      m_catchmentsList.query( envelope, null );
-//    }
+// else{
+// final GM_Envelope envelope = m_workingArea.getEnvelope();
+// m_catchmentsList.query( envelope, null );
+// }
     return geometryIntersector;
   }
 
@@ -213,7 +227,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             {
               catchmentFound = true;
               final IFeatureType featureType = catchment.getFeatureType();
-              final String href = String.format( "project:/modell.gml#%s", catchment.getId() ); //$NON-NLS-1$
+              final String href = String.format( "modell.gml#%s", catchment.getId() ); //$NON-NLS-1$
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
               hydrotop.setCatchmentMember( lnk );
               break;
@@ -244,8 +258,15 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           else
             hydrotop.setLanduse( featureLanduse.getName() );
           hydrotop.setDrainageType( landuse.getDrainageType() );
-          hydrotop.setCorrSealing( landuse.getCorrSealing() );
-
+          if( m_isSealingCorrectionForced )
+          {
+            hydrotop.setCorrSealing( m_forcedSealingCorrectionFactorValue );
+          }
+          else
+          {
+            final Double corrSealing = landuse.getCorrSealing();
+            hydrotop.setCorrSealing( corrSealing );
+          }
           final IFeatureBindingCollection<Feature> landuseSudsCollection = landuse.getSudCollection();
           final IFeatureBindingCollection<Feature> hydrotopeSudsCollection = hydrotop.getSudCollection();
           for( final Feature feature : landuseSudsCollection )
@@ -254,7 +275,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             if( feature instanceof XLinkedFeature_Impl )
             {
               final IFeatureType ft = feature.getFeatureType();
-              final String href = String.format( "project:/suds.gml#%s", ((XLinkedFeature_Impl) feature).getFeatureId() ); //$NON-NLS-1$
+              final String href = String.format( "suds.gml#%s", ((XLinkedFeature_Impl) feature).getFeatureId() ); //$NON-NLS-1$
 
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
               hydrotopeSudsCollection.add( lnk );

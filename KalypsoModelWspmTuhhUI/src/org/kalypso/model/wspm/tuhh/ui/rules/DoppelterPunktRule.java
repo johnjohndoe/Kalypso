@@ -82,7 +82,7 @@ public class DoppelterPunktRule extends AbstractValidatorRule
           if( ProfilUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
           {
             final String msg = Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule.0" , point.getValue( iB ) ); //$NON-NLS-1$
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), cB.getId(), pluginId ); //$NON-NLS-1$
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, String.format("km %.4f" , profil.getStation() ), profil.indexOfPoint( point ), cB.getId(), pluginId ); //$NON-NLS-1$
           }
         prevPoint = point;
       }

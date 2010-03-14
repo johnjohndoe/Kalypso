@@ -56,12 +56,21 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
   }
 
   /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getAreaPercentage()
+   * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getTotalAreaPercentage()
    */
   @Override
-  public double getAreaPercentage( )
+  public double getNaturalAreaPercentage( )
   {
-    return (Double) getProperty( QN_PROPERTY_AREA_PERCENTAGE );
+    return (Double) getProperty( QN_PROPERTY_NATURAL_AREA_PERCENTAGE );
+  }
+
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getSealedAreaPercentage()
+   */
+  @Override
+  public double getDrainedPercentageOfSealedArea( )
+  {
+    return (Double) getProperty( QN_PROPERTY_DRAINED_SEALED_AREA_PERCENTAGE );
   }
 
   /**
@@ -160,7 +169,8 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
   @Override
   public double getWidth( )
   {
-    return (Double) getProperty( QN_PROPERTY_WIDTH );
+    // width parameter fixed in NA core to 1.8
+    return 1.8;
   }
 
 }
