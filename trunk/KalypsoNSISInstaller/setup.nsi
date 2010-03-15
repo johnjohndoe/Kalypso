@@ -8,8 +8,8 @@ Name Kalypso
 !define REGKEY "SOFTWARE\$(^Name)"
 
 # version number, which is used for builtin pathes and menu entries.
-!define VERSION 2.2.0.RC1
-!define DATE 20091126
+!define VERSION 2.2.0.RC2
+!define DATE 20100312
 
 !define COMPANY BCE
 !define URL http://kalypso.bjoernsen.de
@@ -98,7 +98,7 @@ InstallDir $PROGRAMFILES\Kalypso
 CRCCheck on
 XPStyle on
 ShowInstDetails hide
-VIProductVersion 2.2.0.20091126
+VIProductVersion 2.2.0.20100312
 
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductName Kalypso
@@ -406,10 +406,10 @@ FunctionEnd
 Function checkDirectory
     # Prüfe, ob das Verzeichnis bereits existiert.
     ${If} ${FileExists} "$INSTDIR\$sub_folder\*.*"
-        MessageBox MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2 \
-        "$(warndir)" \
-        IDYES DirOk
-        Abort
+	    MessageBox MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2 \
+	    "$(warndir)" \
+		IDYES DirOk
+	    Abort
     ${EndIf}
 
     DirOk:
@@ -418,10 +418,10 @@ FunctionEnd
 Function checkInst
     # Prüfe, ob es bereits eine Installation von kalypso in diesem Verzeichnis gibt.
     ${If} ${FileExists} "$INSTDIR\$sub_folder\kalypso.exe"
-        MessageBox MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2 \
-        "$(warninst)" \
-        IDYES DirOk
-        Abort
+	    MessageBox MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2 \
+	    "$(warninst)" \
+		IDYES DirOk
+	    Abort
     ${EndIf}
 
     DirOk:

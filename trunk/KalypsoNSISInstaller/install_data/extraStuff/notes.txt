@@ -1,8 +1,8 @@
 Notes:
-kalypso_2.2.0_RC1_build20091126
+kalypso_2.2.0_RC2_build20100312
 ===============================
 
-This is Version 2.2.0 Release Candidate 1 of Kalypso
+This is Version 2.2.0 Release Candidate 2 of Kalypso
 
 For further information, visit http://kalypso.sourceforge.net
 
