@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0.RC1_build20091126" useFeatures="false" includeLaunchers="true">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0.RC2_build20100312" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
