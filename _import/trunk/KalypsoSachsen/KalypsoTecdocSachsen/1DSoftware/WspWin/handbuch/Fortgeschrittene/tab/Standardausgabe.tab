@@ -1,0 +1,32 @@
+\scriptsize
+\begin{verbatim}
+  Saechsisches Landesamt fuer Umwelt und Geologie
+  Zur Wetterwarte 11 * 01109 Dresden * Tel 0351-8928-234
+
+  STATIONAERE    WASSERSPIEGELLAGEN
+
+  PROGRAMM WSPR2000 (c.) Knauf 2000             DATUM : 22.09.2001
+
+  PROJEKT
+  ZUSTAND     Station 0 + 100.00 bis 0 + 300.00 m
+  VARIANTE    Durchlass DN1200
+  DATEI       riws0016.001                                         SEITE     1
+
+                                         ERGEBNISSE
+                                         ==========
+  STATION     WSPLAGE/H   ABFLUSS   K-WERT   BREITE   UMFANG   FLAECHE  GESCHW   HZV   E-HOEHE  FROUDE  ALPHA  KZW
+  ABFLUSS      NN+m/m       m3/s      mm       m        m        m2      m/s      m      NN+m   IE o/oo ALPHAS
+
+                             8.02    200.0     8.25     8.70    10.85     0.81
+     0 + 100.00  159.02     29.82    200.0     8.00    18.02    20.66     1.44   0.000   159.11  0.307   1.340   5
+          40.60    3.02      1.98    200.0     3.75     4.51     4.76     0.42                    1.00   1.120
+
+                            10.60    200.0     8.25     8.70    11.43     0.93
+     0 + 200.00  159.14     28.27    200.0     8.00    12.59    21.22     1.33   0.000   159.21  0.282   1.263   0
+          40.60    3.09      1.89    200.0     3.75     4.51     5.02     0.38                    1.23   1.102
+
+                            10.05    200.0     8.25     8.70    12.03     0.84
+     0 + 300.00  159.26     28.58    200.0     8.00    12.74    21.80     1.31   0.000   159.33  0.269   1.209   0
+          40.60    3.16      1.85    200.0     3.75     4.51     5.30     0.35                    1.18   1.104
+\end{verbatim}
+\normalsize

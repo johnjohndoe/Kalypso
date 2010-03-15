@@ -1,0 +1,585 @@
+Modulhistory von wspwin.exe
+
+---------------------------
+
+
+
+Die jeweilige Überschrift bezeichnet das CVS-Tag.
+
+Der Tag hat jeweils die Form: wspwin.exe-%fileversion%
+
+
+
+CVSStart
+
+--------
+
+Tag für den Import-Branch
+
+
+
+
+
+wspwin-7-0-1
+
+------------
+
+Tag für die Import-Revision. Ab jetzt CVS-Verwaltung
+
+
+
+wspwin-7-0-2-0
+
+--------------
+
+- Projekte werden jetzt in den Papierkorb gelöscht
+
+- Datenblock Modellgrenzen nur noch in der Gidham Version vorhanden
+
+
+
+wspwin-exe-7-0-3-0
+
+------------------
+
+- nach Profil-Aufnehmen wird Profiltabelle gleich richtig sortiert
+
+- Nach Konvertierung ( von .wsp Daten ) wird die Netzverknüpfung automatisch übernommen
+
+ und der Benutzer nicht bloede gefragt ( vzk_block( daten ) )
+
+
+
+wspwin-exe-7-0-3-1
+
+------------------
+
+- nach Profil-Aufnehmen wird wieder ein Profil in der Profilliste selektiert
+
+- main_dll geschrumpft
+
+
+
+wspwin-exe-7-0-4-0
+
+------------------
+
+main_dll aufgelöst
+
+
+
+wspwin-exe-7-0-4-1
+
+------------------
+
+- laengs_dll entschlackt
+
+- Bug bei OberKante Wehr in BCE Version( Dialog 213 )
+
+	Absturz bei öffnen des Dialoges
+
+- Bug bei UK und OK in LWA Verssion, Mehrfeldoptimierung: List::DeleteStation war schlecht
+
+- Aufräumarbeiten
+
+
+
+wspwin-exe-7-0-4-2
+
+------------------
+
+- Bug bei WSP Import: war der Dateiname der wsp Datei kürzer als 5 Zeichen, wurde die Netzverknüpfung nicht kopiert
+
+- Bug in GaussKrügerInterpolation
+
+
+
+wspwin-exe-7-0-4-3
+
+------------------
+
+- Bug bei Projekt->Improtieren->Projekteintrag löschen: kein Eintrag vorselektiert und ( unabhängig ) Fehler beim
+
+	Löschen ( 'bad Value ...' )
+
+- Fehler bei Projekt->Speichern unter... : die wsp.prj wurde zerstört
+
+
+
+wspwin-exe-7-1-0-0 20.11.2001
+
+------------------
+
+- Fehlende englische String Resourcen 1016 und 1125
+
+- bessere Darstellung geZoomter Datensätze ( d.h. nicht nur Gelände / bzw. Sohl- höhe )
+
+- Bugfix: Kreissegmente: Sonderdialog:Änderungen der Daten wurden nicht automatisch gesichert; wird nicht mehr
+
+	in der Ausdehnung des Graphikeditors berücksichtigt
+
+- Bezeichnung des Datenblocks 'Wasserspiegeldifferenz [ m+NN ] in 'W... [ m ]' umbenannt
+
+- die drei Funktionen Laengs_read_profildatei, read_profildatei und LPread_profildatei wurden wieder zusammengeführt
+
+- die beiden Funktionen LSave_profildatei und save_profildatei wieder zusammengeführt
+
+- beim neuen Erzeugen der Längschnitte ConvertLaengschnit...ToBCE werden die Kommentare der Querprofile als TEXT
+
+	in den Längschnitt eingetragen
+
+
+
+Hängt ab von:
+
+	- wspprj-dll-1-2-5-0
+
+	- wspdlg-dll-1-2-1-1
+
+	- editor-exe-1-1-0-0
+
+	- interp-exe-1-1-0-0
+
+
+
+wspwin-exe-7-1-0-1 29.1.2002
+
+------------------
+
+- Bugfix von Dagmar: irgendwas mit Abflüssen beim Starten der Berechnung
+
+
+
+Hängt ab von
+
+	wspprj-dll-1-2-5-3
+
+	wspdlg-dll-1-2-1-3
+
+	editor-exe-1-1-0-1
+
+	interp-exe-1-1-0-1
+
+	laengs-dll-7-0-4-0
+
+
+
+wspwin-exe-7-1-1-0 21.2.2002
+
+------------------
+
+- FeatureMng für WspWin: alle Optionen + Benutzerabhängigen Einstellungen jetzt 
+
+über Optionsdatei wspwin.bfe
+
+- Bugfix: bei BCE Version wurde bei ConvertLaengschnittBCEToBCE der Längschnitt nicht richtig geschrieben
+
+
+
+	wspprj-dll-1-2-5-3
+
+	wspdlg-dll-1-2-2-0
+
+	editor-exe-1-1-0-1
+
+	interp-exe-1-1-0-1
+
+	laengs-dll-7-0-4-0
+
+
+
+wspwin-exe-7-1-2-0 13.3.2002
+
+------------------
+
+- Bugfixes: zusätzliche Checks beim Lesen/Schreiben, ob die Headerinfo ok ist
+
+- Bugfixes: Plotoptionen: Blattbezeichnung darf nicht leer sein, Schriftfelder gefixt 
+
+( hat überhaupt nicht funktioniert ), es darf keine leeren Felder geben im zweiten
+
+Plotdialog
+
+- In der LWA - Version ist es wieder möglich den Datensatz "Schütz" zu erzeugen
+
+- Bugfix: Editieren von Trennflächen und durchst. Bereichen: geänderte Daten werden stets
+
+übernommen, auch wenn im Sonderdialog nicht ok gedrückt wurde
+
+- Flächenberechnung und 2.Geländehöhe funktioniert jetzt wieder überall ( für Zustand und nur fürs einzelne Profil )
+
+- Noch ein Bugfix bei der Flächenberechnung: bei mehreren Profilen wurden die Globalen Daten nicht immer neu gesetzt -> Flächenberechnung schlug fehl
+
+- Bug im sortierten Einlesen der Strangtabelle ( bei verzw. System wurden die Profile des 0.Strangs stets nach
+
+vorne sortiert
+
+- Bugfix: falls Sonderprofil vorhanden ( z.B. Kreisprofil ) wurde a) bei LWA wegen Rauheiten Nachgefragt und b) bei BCE das Sonderprofil nicht gespeichert
+
+
+
+Hängt ab von
+
+	wspdlg-dll-1-2-2-1
+
+	laengs-dll-7-0-4-0
+
+	editor-exe-1-1-0-2
+
+	interp-exe-1-1-0-2
+
+
+
+wspwin-exe-7-1-2-1 20.3.2002
+
+------------------
+
+Bugfix Waspila Import: Profile wurden nicht geschrieben, da Dateiname nicht gesetzt wurde
+
+
+
+Hängt ab von
+
+	wspdlg-dll-1-2-2-1
+
+	laengs-dll-7-0-4-0
+
+	editor-exe-1-1-0-2
+
+	interp-exe-1-1-0-2
+
+
+
+
+
+wspwin-exe-7-1-2-1
+
+------------------
+
+- Bugfix: Aufruf der lwa2b.exe geändert
+
+- Bugfix: war die Anfangsstation der Berechnung grösser als der erste Eintrag in der Abflusstabelle
+
+kams zum Absturz -> Bug in der Wspr.exe ( resultiert aus Änderung in Version 7-1-0-1
+
+- Bugfix: Sonderdialog Durchst. Bereiche: die Textfelder wurden maximal mit 9 Zeichen ausgelesen, 
+
+dadurch wurde Stationen mit mehr Zeichen nicht mehr gefunden
+
+
+
+Hängt ab von
+
+	wspdlg-dll-1-2-2-2
+
+	laengs-dll-7-0-4-0
+
+	editor-exe-1-1-0-3
+
+	interp-exe-1-1-0-3
+
+
+
+
+
+wspwin-exe-7-1-3-0 4.6.2002
+
+------------------
+
+- LWA-Version: vor B2LWA.exe wird jetzt die tmp.wsp stets gelöscht
+
+- Jabron-Export: Anpassungen/Reparatur für Rolf Schroeder: 
+
+		- Bordvoll als L-GELAENDE/R-GELAENDE
+
+		- durchst. Bereiche als NICHT_ABFLUSSWIRKSAM
+
+		- KS eine Koordinate weniger
+
+		- jabron.ele wird ebenfalls erzeugt
+
+		- Brücken werden als GESCHLOSSEN exportiert + Stützprofile davor und danach
+
+		- Kreisprofile als KREIS
+
+- Löschen von Projekten: neuer Text ( -> 'Papierkorb' )
+
+- Menupunkt 'Sonderprogramme gleichförmig' jetzt immer aktiv
+
+- Blättern zwischen Querprofilen im Graphikeditor: bei WSP wurde die Y-Achse nicht immer richtig
+
+skaliert
+
+
+
+Hängt ab von
+
+	wspdlg-dll-1-4-0-0
+
+	laengs-dll-7-0-4-0 ???
+
+	editor-exe-1-2-0-0
+
+	interp-exe-1-2-0-0 ???
+
+
+
+
+
+wspwin-exe-7-1-3-1 6.6.2002
+
+------------------
+
+- Da66 Import braucht jetzt keine abschliessende 88er Zeile mehr
+
+- Versuch, die Anzahl der auszuwählenden Dateien zu vergrössern; theorethisch möglich aber leider gibts dann
+
+später Abstürze???
+
+
+
+Hängt ab von
+
+	wspdlg-dll-1-4-0-0
+
+	laengs-dll-7-0-4-0
+
+	editor-exe-1-2-0-0
+
+	interp-exe-1-2-0-0
+
+
+
+wspwin-exe-7-1-4-0 17.6.2002
+
+------------------
+
+- Laengs.dll endgültig nicht mehr benutzt
+
+
+
+Hängt ab von:
+
+	wspdlg-dll-1-4-1-0
+
+	editor-exe-1-2-0-0
+
+	interp-exe-1-2-0-0
+
+
+
+wspwin-exe-7-1-5-0  1.7.2002
+
+-------------------
+
+Bugfix: List::ds_check_daten: Überprüfung der Datensätze Rauheit, AX, AY, DP u.ä. führte in Gauss-Profilen zu
+
+Schrott beim rausschreiben
+
+
+
+Hängt ab von:
+
+	wspdlg-dll-1-4-1-0
+
+	editor-exe-1-2-0-0
+
+	interp-exe-1-2-0-0
+
+
+
+wspwin-exe-7-1-6-0 14.10.2002
+
+------------------
+
+- Im Infofenster steht 'Demo' bei Demoversion
+
+- Bugfix: paint_durchst_Bereiche stürzt nicht mehr ab, wenn Datensatznummer falsch
+
+- Bugfix: Datensätze ohne Koordinaten werden vor dem speichern gelöscht. Ausnahme: eine Reihe von Sonderprofilen
+
+
+
+Hängt ab von:
+
+	wspdlg-dll-1-4-1-0
+
+	editor-exe-1-2-0-0
+
+	interp-exe-1-2-0-0
+
+
+
+wspwin-exe-8-a-0-0 16.11.2002
+
+------------------
+
+- Rücksprünge werden jetzt im den beiden Profileditoren durch ein rotes Schriftfeld markiert
+
+- Sonderdialog Trennflächen: es wird zusätzlich die Höhe des gewählten Profilpunktes angezeigt
+
+- Dialog143 überarbeitet (sonderdialog für Trennflächen)
+
+	- einheitlichs update der Werte
+
+	- Höhen des jeweiligen Profilpunkts wird dargestellt
+
+- Beim verschieben der Trennflächen ändern sich die Rauheiten automatisch mit, falls sich in allen Profilabschnitten
+
+eine eindeutige Rauheit feststellen lässt.
+
+- vor der Rechnung (lwa) werden die Dateien wspr.log, wspr.err, b2lwa.log, b2lwa.err und tmp.wsp gelöscht um den Schein des vermeintlichen rechnens nicht zu erwecken
+
+- BCE: bei Bordvollberechnung stationär ungleichförmig wird nicht mehr nach fehlender Abflussdatei gemeckert
+
+- Profil aufnehmen: im Datei öffnen Dialog können jetzt deutlich mehr Dateien gleichzeitig markiert werden
+
+- Profil aufnehmen: einen obskuren Bug (manchmal Absturz) gefunden: wenn Sonderzeichen im Profil waren (>127) stürzte eine xvt Funktion ab
+
+- Optionen wurden reduziert: weggefallen (d.h. stets aktiviert) sind:
+
+	- Interpolation
+
+	- Online_Hilfe
+
+	- Massenberechnung
+
+	- Listauswertung
+
+	- Vergauswertung
+
+	- Pruefauswertung
+
+	- Da66
+
+	- Plot_Programm
+
+	- PlotDxf
+
+- In der BCE-Version wird jetzt das zu verwendende Rechenprogramm aus einer CFG Datei ausgelesen (wspbce.cfg). 
+
+	Ebenso, ob es eine Pause für den DOS Bildschirm geben soll.
+
+	
+
+Hängt ab von:
+
+	wspdlg-dll-1-4-1-0
+
+	editor-exe-1-2-0-0
+
+	interp-exe-1-2-0-0
+
+
+
+wspwin-exe-8-0-0-0  7.2.2003
+
+------------------
+
+- Anzahl der möglichen Profile pro Strang auf 3000 erhöht
+
+- Meldungen nach Berechnung geändert. Direkt nach der Berechnung kommt nur eine Meldung, falls es direkt einen Fehler gab.
+
+Ansonsten wurde die Meldung 'Längsschnitt nicht erstellt' durch die Meldung 'Berechnung nicht erfolgreich' ersetzt, sowie 
+
+an dieser Stelle eine Erfolgsmeldung ausgegeben, wenn der Längsschnitt erfolgreich konvertiert werden konnte.
+
+- editieren von Bordvollpunkten: jetzt der gleiche Dialog wie Trennflächen!
+
+- Bugfix: Pruefauswertung: falls nur eine .prf und keine .tab Datei als Ergebnis vorliegt, wurde die .prf gleich wieder gelöscht.
+
+- Jabron Export: Es wird gefragt, ob bei Brücken Stützprofile angelegt werden sollen oder nicht; 
+
+der Profilname wird nicht mehr als Kommentar rausgeschrieben
+
+- Feature-Management auf Registry umgestellt
+
+- Projekt sind jetzt entweder BCE oder LWA Projekte, beim laden alter, bzw. erstellen neuer Projekte wird gefragt
+
+- Bugfix: wenn im Grafikfenster (w117) die x oder y-koordinate zu lang wurde, wurde der WindowsHandle für die
+
+Ausgabe der Koordinate überschrieben (-> MsgBox InvalidHandle)
+
+- bei Rechnung mit Kalinin-Miljukov Parametern gibts ne Fehlermeldung, wenn die Tabelle noch nicht erzeugt wurde
+
+
+
+Hängt ab von 
+
+	wspdlg-dll-1-5-0-0
+
+	editor-exe-1-2-0-0
+
+	interp-exe-1-2-0-0
+
+
+wspwin-exe-8-0-1-0 18.2.2002
+------------------
+- Bugfix: beim Einfügen von Kommentaren wurde die Station falsch gerundet, so dass
+bei Profilen mit 4 Nachkommastellen der Kommentar nicht eingetragen wurde
+- Menüs werden abhängig vom Projekttyp (Pasche-Knauf) aktiviert/deaktiviert
+- Flag Kundennameedit wird wieder unterstüzt
+- Versionsnummer kommt nicht mehr aus der Featuredatei sonsdern aus der Versionsinfo der Datei
+- Info-Datum ist gleich dem Erstellungsdatum der Datei
+
+Hängt ab von
+	wspdlg-dll-1-5-0-1
+	editor-exe-1-2-0-0
+	interp-exe-1-2-0-0
+
+wspwin-exe-8-0-2-0 18.3.2003
+------------------
+- Bordvollpunkte konnten nicht editiert werden (die Höhe stand dran, es muss aber wie bei den Trennflaechen
+die Lage dranstehen)
+
+wspwin-exe-8-0-3-0  8.7.2003
+------------------
+- Überall die Texte Abtrag und Auftrag (Flächenberechnung und Massenberechnung) ausgetauscht.
+- Zusätzlicher Test bei Eingabe der Abflussvarianten: Name muss immer mit einem Buchstaben beginnen
+- Überflüssige alte Dialoge für Berechnungsparameter entfernt
+- die .plt Dateien werden nicht mehr erzeugt und es gibt keine entsprechende Meldung mehr
+- Bugifx: Absturz im alphanumerischen Editor beim erzeugen von neuen Profilen: nach Taskswitch oft Absturz
+- Bugfix: Fehler beim Profilaufnehmen: die letzte Zeile der Profildatei wurde immer doppelt in die kopierte Datei geschrieben
+- Bugfix: bei Löschen von Punkten im Längsschnitt werden auch evtl. vorhandenen Kommentartexte richtig behandelt
+
+wspwin-exe-8-0-4-0 5.4.2004
+------------------
+- Knauf-Rechenkern Ansteuerung: NASIM Schnittstelle: Umbenennen der Tape18 Dateien klappte nicht mehr
+- Bugfix: Lesen/Schreiben von Kreisprofilen hat diese manchmal zerstört (zusätzlicher 0.0000 er)
+- Bugfix: Eintragen von Wsp und WSP-Fixierungen in Längsschnitt auch bei Stationen mit 4 Nachkommastellen
+- Bugfix: Eintragen von WSP und WSP-Fixierungen in QPs auch bei allen Mehrfeldbrücken-Teilen
+- Handbuch: Fehlende Bilder im Kapitel 'Schütz' ergänzt
+- Bugfix: manchmal wurde die Abstandsberechnung für Längsschnitte auch bei Pasche Projekten durchgeführt -> Absturz
+- falls die PAUSE Zeile in wspbce.cfg einkommentiert ist, wird auch direkt nach der Rechnung angehalten (Pasche Rechenkern)
+
+wspwin-exe-8-0-5-0 24.1.2005
+------------------
+- Registrierungsschlüssel überarbeitet:
+	- ohne Schlüssel DEMO
+	- Schlüssel hat Versions- und Zeitinformation
+	- Schlüssel hat Informations zum Lizenznehmer (optionsdatei .bfe entfällt somit)
+	- Anlegen des Schlüssels über .reg Dateien
+- Bugfix: in manchen Schlüssel-Konfigurationen gabs nen Absturz beim Initialisieren der Menüs
+- Bugfix: Absturz beim Anlegen von Trennflächen im alphanumerischen Editor
+- Bugfix: beim Löschen einer Berechnungsvariante eines verzweigten Systems wurde die Netzverknüpfung (.vzk Datei) gelöscht
+- Bugfix: falls Netztverknüpfungsdatei fehlt, stürzt der Menüpunkt 'Netzverknüpfung' nicht gleich ab
+
+wspwin-exe-8-0-6-0 15.8.2005
+------------------
+- Bugfix: falls Profildatei beim Lesen nicht gefunden (z.b. Grafikeditor öffnen), 
+stürzt das Programm nicht mehr ab, sondern gibt eine Fehlermeldung aus.
+- Starten der pro.exe (DXF-Plotprogram): die dosbox hält jetzt immer an (PAUSE), damit man sehen kann was passiert ist.
+- Bugfix: Löschen aller Wasserpiegel nach dem Berechnen: es werden jetzt auch alle WSP aus den Mehrfeldbrücken gelöscht
+- Bugfix: Editieren der Teilgebiete für Ermitteln von Kalin-Miljukov Parametern: die Teilgebietsnummern wurden immer als 0en ausgegeben
+- Profileditor startet: wspwin unterstützt neuen und alten Profileditor. Is der neue da (d.h. profileditor.exe ist da), wird dieser benutzt, sonst der alte.
+- Bei ungleichförmiger Bordvollberechnung erfolgt die Übergabe des Abflussbereichs an den TUHH Rechenkern jetzt als double in m³/s. Damit kommen sowohl die alten als auch die neuen Versionen zurecht (bisher wars als Integer in dezi-liter/s)
+
+wspwin-exe-8-0-7-0 13.1.2006
+-----------------------------
+- Netzverknüpfung: man kann jetzt auch Abflussauftelung in Prozent mit zwei Nachkommastellen eingeben
+- Bugfix: Meldungen bei erfolgreicher/nicht erfolgreicher Rechnung korrigiert (Pasche, Knauf)
+- Bugfix: Aufruf des Plotter aus dem Grafik-Editor: es wird wieder direkt zum Profil gesprungen.
+
+wspwin-exe-...................
+-------------------------------
+- Neue Option in wspwin.ini: Ein Eintrag 'WSP_EINTRAGEN=0' verhindert, dass nach der Rechnung WSPs in die Querprofile eingetragen werden (deutlich schnellere Rechnung)

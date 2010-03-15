@@ -1,0 +1,25 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                                      %
+%              Tabelle mit Dateien im Systemverzeichnis                                %
+%                                                                                      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\tablefirsthead{  \hline
+%                     \multicolumn{1}{l}{\textbf{Dateiname}} &
+%                     \multicolumn{1}{l}{\textbf{Funktion}} \\[12pt]
+%                  \hline \hline }
+%\tablehead{ \hline
+%               \multicolumn{1}{l}{\textbf{Dateiname}} &
+%               \multicolumn{1}{l}{\textbf{Funktion}} \\[12pt]
+%            \hline \hline }
+\begin{tabular}{p{0.3\linewidth}p{0.6\linewidth}}
+   \hline
+      \textbf{Dateiname}   &  \textbf{Funktion} \\[6pt]
+   \hline \hline
+      \datei{mfc42.dll}    &  dll der Firma Microsoft (Visual~C++) \\
+      \datei{msvcirt.dll}  &  dll der Firma Microsoft (Visual~C++) \\
+      \datei{msvcrt.dll}   &  dll der Firma Microsoft (Visual~C++) \\
+      \datei{wsp.arh}      &  Archivdatei (archivierte Projekte) \\
+      \datei{wsp.prj}      &  Projektdateien \\
+      \datei{wspwin.ini}   &  Initialisierungsdatei (Pfad f\"{u}r \datei{wsp.prj} \\
+   \hline
+\end{tabular}

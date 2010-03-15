@@ -1,0 +1,538 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+#include "..\..\commonMfc\include\commResource.h"
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) (unknown sub-lang: 0x0) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, 0x0
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_INTERP_PAGE1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_INTERP_PAGE2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_INTERP_PAGE3, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 139
+    END
+
+    IDD_INTERP_PAGE4, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_INTERP_PAGE1 DIALOG DISCARDABLE  0, 0, 284, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_AUTOARRANGE | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,10,5,265,80
+    LTEXT           "Anzahl der zu interpolierenden Profile:",IDC_STATIC,55,
+                    95,120,8
+    EDITTEXT        IDC_EDIT1,185,95,40,14,ES_AUTOHSCROLL
+END
+
+IDD_INTERP_PAGE2 DIALOG DISCARDABLE  0, 0, 284, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Gewässername:",IDC_STATIC,5,35,65,8
+    EDITTEXT        IDC_EDIT1,80,35,55,14,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "Station [km]:",IDC_STATIC,5,55,40,8
+    LTEXT           "",IDC_STATIC2,5,20,275,8
+    EDITTEXT        IDC_EDIT2,80,55,55,14,ES_AUTOHSCROLL
+    LTEXT           "Zustand:",IDC_STATIC,5,75,65,8
+    LTEXT           "Verzweigungskennung:",IDC_STATIC,140,35,75,8
+    EDITTEXT        IDC_EDIT4,220,35,55,14,ES_AUTOHSCROLL
+    LTEXT           "Profilkennung:",IDC_STATIC,140,55,75,8
+    EDITTEXT        IDC_EDIT5,220,55,55,14,ES_AUTOHSCROLL
+    LTEXT           "Profilnummer:",IDC_STATIC,140,75,75,8
+    EDITTEXT        IDC_EDIT6,220,75,55,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT3,80,75,55,14,ES_AUTOHSCROLL
+    LTEXT           "",IDC_STATIC1,5,5,275,8
+END
+
+IDD_INTERP_PAGE3 DIALOG DISCARDABLE  0, 0, 284, 146
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Projekt:",IDC_STATIC,10,5,50,8
+    LTEXT           "",IDC_STATIC1,70,5,200,8
+    LTEXT           "Zustand:",IDC_STATIC,10,20,45,8
+    LTEXT           "",IDC_STATIC2,65,20,205,8
+    LTEXT           "Batchdatei:",IDC_STATIC,10,35,50,8
+    LTEXT           "",IDC_STATIC3,65,35,155,8
+    PUSHBUTTON      "Auswählen...",IDC_BUTTON1,225,35,50,14
+    CONTROL         "Flußschlauch und Vorland getrennt verschieben",
+                    IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,20,80,170,10
+    CONTROL         "gesamtes Profil verschieben",IDC_RADIO2,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,170,10
+    CONTROL         "existierende Profile verschieben",IDC_CHECK1,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,20,110,135,10
+    LTEXT           "minimaler Abstand zu vorhandenen Profilen:",IDC_STATIC,
+                    20,125,155,8
+    EDITTEXT        IDC_EDIT1,190,120,40,14,ES_AUTOHSCROLL
+    LTEXT           "(m)",IDC_STATIC,235,120,10,8
+    LTEXT           "(Format: Rechtswert Hochwert Station Sohlhöhe <Bordvolllinks> <Bordvollrechts>)",
+                    IDC_STATIC,10,55,265,8
+    GROUPBOX        "Einstellungen",IDC_STATIC,10,65,265,75
+END
+
+IDD_INTERP_PAGE4 DIALOG DISCARDABLE  0, 0, 284, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,10,20,265,85
+    CTEXT           "zu interpolierende Profile:",IDC_STATIC,10,5,265,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU DISCARDABLE 
+BEGIN
+    POPUP "&Interpolation"
+    BEGIN
+        MENUITEM "&Interpolation",              ID_INTERP_INTERP
+    END
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "#include ""..\\..\\commonMfc\\include\\commResource.h""\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 7, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif\r\n"
+    "#include ""res\\Interp.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.deu\\afxres.rc""          // Standard components\r\n"
+    "#include ""..\\..\\commonMfc\\include\\commonMfc.rc""\r\n"
+    "#endif\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Interp.ico"
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,2,2,0
+ PRODUCTVERSION 1,2,2,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "INTERP MFC Application\0"
+            VALUE "FileVersion", "1, 2, 2, 0\0"
+            VALUE "InternalName", "INTERP\0"
+            VALUE "LegalCopyright", "Copyright © 1999\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "INTERP.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "INTERP Application\0"
+            VALUE "ProductVersion", "1, 2, 2, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_INTERP              "Interpolation"
+    IDS_PROFIL_DATA         "Schlüsseldaten für das %1!d!. Profil:"
+    IDS_SELECT2ITEMS        "Bitte selektieren Sie genau zwei Profile."
+    IDS_NUMUSED             "Diese Profilnummer ist schon benutzt.\nBitte geben Sie ein andere Zahl ein."
+    IDS_BACKSPRING          "Ein Profil hat einen Rücksprung.\nInterpolation wird abgebrochen."
+    IDS_ERROR_NOGELAENDE    "Profil %1 hat keine Geländehöhe. Interpolation nicht möglich."
+    IDS_ERROR_INDEX         "Profil [%1!d!, %2!d!]: Index=%3!d! für X-Wert=%4!4.3f!."
+    IDS_VERTICAL            "Ein Profil hat eine vertikale Wand.\nInterpolation wird abgebrochen."
+    IDS_KEYEXISTS           "Die Schlüsseldaten für dieses Profil existiert bereits."
+    IDS_PKEMPTY             "Die Profilkennung darf nicht leer sein."
+    IDS_TOOMANYPOINTS       "Interpoliertes Profil hat mehr als 1000 Punkte.\nVerdünnung der Punkte ist nicht möglich.\nInterpolation wird abgebrochen."
+    IDS_DEMO                "Interpolation bei Demo nicht möglich."
+    IDS_NOFILENAME          "Bitte wählen Sie eine Batchdatei aus."
+    IDS_NOFILEEXIST         "Die ausgewählte Datei existiert nicht."
+    IDS_ERROR_READFILE      "Konnte Datei %1 nicht zum Lesen öffnen."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Interpolation"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_NOINTERP            "Die Station %1 liegt innerhalb des minimalen Abstands eines existierenden Profils und wird nicht interpoliert.\n"
+    IDS_NOTBETWEEN          "Die Station %1 liegt nicht zwischen zwei existierenden Profilen und wird nicht interpoliert.\n"
+    IDS_INTERPOLATING       "Station %1 wird interpoliert."
+    IDS_INTERP_OK           "Interpolation erfolgreich.\n"
+    IDS_INTERP_BAD          "Interpolation nicht erfolgreich.\n"
+    IDS_SHIFTING            "Station %1 wird verschoben."
+    IDS_SHIFT_OK            "Verschiebung erfolgreich.\n"
+    IDS_SHIFT_BAD           "Verschiebung nicht erfolgreich.\n"
+    IDS_SOHLHOEHE           "Sohlhöhe"
+    IDS_LBVHOEHE            "Höhe linker Bordvollpunkt"
+    IDS_RBVHOEHE            "Höhe rechter Bordvollpunkt"
+    IDS_NOBORDVOLL          "Es gibt keine Bordvollpunkte. Die Vorländer konnen nicht verschoben werden."
+    IDS_BV1_NOTINLEFT       "Der erste Bordvollpunkt liegt nicht im linken Vorland. Vorland links kann nicht verschoben werden."
+    IDS_BV2_NOTINRIGHT      "Der zweite Bordvollpunkt liegt nicht im rechten Vorland. Vorland rechts kann nicht verschoben werden."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_URDATEI             "Urdatei"
+    IDS_STATION_BOUNDS      "Stationgrenzwerte: (min=%1 : max=%2)"
+    IDS_ALLFILES            "Alle Dateien (*.*)|*.*||"
+    IDS_ERROR_SAVEFILE      "Konnte Datei %1 nicht zum Schreiben öffnen."
+END
+
+#endif    // Deutsch (Deutschland) (unknown sub-lang: 0x0) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Englisch (USA) (unknown sub-lang: 0x0) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, 0x0
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_INTERP_PAGE1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_INTERP_PAGE2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_INTERP_PAGE3, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 139
+    END
+
+    IDD_INTERP_PAGE4, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_INTERP_PAGE1 DIALOG DISCARDABLE  0, 0, 284, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_AUTOARRANGE | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,10,5,265,80
+    LTEXT           "Number of profiles to be interpolated:",IDC_STATIC,55,
+                    95,120,8
+    EDITTEXT        IDC_EDIT1,185,95,40,14,ES_AUTOHSCROLL
+END
+
+IDD_INTERP_PAGE2 DIALOG DISCARDABLE  0, 0, 284, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Waterway:",IDC_STATIC,5,35,65,8
+    EDITTEXT        IDC_EDIT1,80,35,55,14,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "Station [km]:",IDC_STATIC,5,55,40,8
+    LTEXT           "",IDC_STATIC2,5,20,275,8
+    EDITTEXT        IDC_EDIT2,80,55,55,14,ES_AUTOHSCROLL
+    LTEXT           "State:",IDC_STATIC,5,75,65,8
+    LTEXT           "Branch Code",IDC_STATIC,140,35,42,8
+    EDITTEXT        IDC_EDIT4,220,35,55,14,ES_AUTOHSCROLL
+    LTEXT           "Profile Code:",IDC_STATIC,140,55,75,8
+    EDITTEXT        IDC_EDIT5,220,55,55,14,ES_AUTOHSCROLL
+    LTEXT           "Profile Number:",IDC_STATIC,140,75,75,8
+    EDITTEXT        IDC_EDIT6,220,75,55,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT3,80,75,55,14,ES_AUTOHSCROLL
+    LTEXT           "",IDC_STATIC1,5,5,275,8
+END
+
+IDD_INTERP_PAGE3 DIALOG DISCARDABLE  0, 0, 284, 146
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Project:",IDC_STATIC,10,5,50,8
+    LTEXT           "State:",IDC_STATIC,10,20,45,8
+    LTEXT           "",IDC_STATIC1,70,5,200,8
+    LTEXT           "",IDC_STATIC2,65,20,205,8
+    LTEXT           "Batch file:",IDC_STATIC,10,35,50,8
+    LTEXT           "",IDC_STATIC3,65,35,155,8
+    PUSHBUTTON      "Select...",IDC_BUTTON1,225,35,50,14
+    CONTROL         "shift river bed and flood plain seperately",IDC_RADIO1,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,25,
+                    75,170,10
+    CONTROL         "shift whole profile",IDC_RADIO2,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,25,90,170,10
+    CONTROL         "shift existing profiles",IDC_CHECK1,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,25,105,135,10
+    LTEXT           "minimum distance from existing profiles:",IDC_STATIC,25,
+                    120,155,8
+    EDITTEXT        IDC_EDIT1,195,120,40,14,ES_AUTOHSCROLL
+    LTEXT           "(m)",IDC_STATIC,240,120,10,8
+    LTEXT           "(Format: X-Coord Y-Coord Station BedHeight <LeftBankHeight> <RightBankHeight>)",
+                    IDC_STATIC,10,55,265,8
+    GROUPBOX        "Settings",IDC_STATIC,10,65,265,75
+END
+
+IDD_INTERP_PAGE4 DIALOG DISCARDABLE  0, 0, 284, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Interpolation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,10,20,265,85
+    CTEXT           "Profiles to be interpolated:",IDC_STATIC,10,5,265,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU DISCARDABLE 
+BEGIN
+    POPUP "&Interpolation"
+    BEGIN
+        MENUITEM "&Interpolation",              ID_INTERP_INTERP
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_INTERP              "Interpolation"
+    IDS_PROFIL_DATA         "Key Data for Profile %1!d!:"
+    IDS_SELECT2ITEMS        "Please select exactly two profiles."
+    IDS_NUMUSED             "This profil number has already been used.\nPlease enter another number."
+    IDS_BACKSPRING          "One of the profiles has an overhang.\nInterpolation failed."
+    IDS_ERROR_NOGELAENDE    "Profile %1 has no terrain elevation. Interpolation not possible."
+    IDS_ERROR_INDEX         "Profil [%1!d!, %2!d!]: Index=%3!d! for X-Value=%4!4.3f!."
+    IDS_VERTICAL            "One of the profiles has a vertical wall.\nInterpolation failed."
+    IDS_KEYEXISTS           "The key data for this profile already exists."
+    IDS_PKEMPTY             "A profile code must be given."
+    IDS_TOOMANYPOINTS       "The interpolated profile has more than 1000 points.\nIt is not possible to thin out the points (data would be lost).\nInterpolation failed."
+    IDS_DEMO                "Interpolation in demo version not possible."
+    IDS_NOFILENAME          "Please select a batch file."
+    IDS_NOFILEEXIST         "The selected file doesn't exist."
+    IDS_ERROR_READFILE      "Couldn't read the file %1."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Interpolation"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_NOINTERP            "The station %1 lies inside the minimum distance from an existing profile and will not be interpolated.\n"
+    IDS_NOTBETWEEN          "The station %1 doesn't lie between two existing profiles and cannot be interpolated.\n"
+    IDS_INTERPOLATING       "Interpolating station %1."
+    IDS_INTERP_OK           "Interpolation succesfull.\n"
+    IDS_INTERP_BAD          "Interpolation failed.\n"
+    IDS_SHIFTING            "Shifting station."
+    IDS_SHIFT_OK            "Shift succesfull.\n"
+    IDS_SHIFT_BAD           "Shift failed.\n"
+    IDS_SOHLHOEHE           "River bed height"
+    IDS_LBVHOEHE            "Left bank height"
+    IDS_RBVHOEHE            "Right bank height"
+    IDS_NOBORDVOLL          "The left and right banks are not defined. The flood plain can't be shifted."
+    IDS_BV1_NOTINLEFT       "The left bank doesn't lie in the left flood plain. The left flood plain can't be shifted."
+    IDS_BV2_NOTINRIGHT      "The right bank doesn't lie in the right flood plain. The right flood plain can't be shifted."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_URDATEI             "Source File"
+    IDS_STATION_BOUNDS      "Station limits: (min=%1 : max=%2)"
+    IDS_ALLFILES            "All files (*.*)|*.*||"
+    IDS_ERROR_SAVEFILE      "Couldn't write to file %1."
+END
+
+#endif    // Englisch (USA) (unknown sub-lang: 0x0) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE 7, 1
+#pragma code_page(1252)
+#endif
+#include "res\Interp.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.deu\afxres.rc"          // Standard components
+#include "..\..\commonMfc\include\commonMfc.rc"
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

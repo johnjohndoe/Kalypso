@@ -1,0 +1,48 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                 Zusammenstellung aller Datenblocktypen und die M\"{o}glichkeit ihrer grafischen Bearbeitung                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\tablefirsthead{  \hline
+%                     \multicolumn{1}{l}{\textbf{Datenblocktyp}} &
+%                     \multicolumn{1}{l}{\textbf{Bearbeitung}} &
+%                     \multicolumn{1}{l}{\textbf{Darstellung}} \\[12pt]
+%                  \hline \hline  }
+%\tablehead{  \hline
+%               \multicolumn{1}{l}{\textbf{Datenblocktyp}} &
+%               \multicolumn{1}{l}{\textbf{Bearbeitung}} &
+%               \multicolumn{1}{l}{\textbf{Darstellung}} \\[12pt]
+%            \hline \hline  }
+\begin{tabular}{lll}
+   \hline
+      \textbf{Datenblocktyp}                             & \textbf{Bearbeitung}  &  \textbf{Darstellung} \\[12pt]
+   \hline \hline
+      Gel\"{a}ndeh\"{o}he [m+NN]                                 & grafisch-interaktiv   &  magenta Linie \\
+      Rauheit ks [m]                                     & grafisch-interaktiv   &  graue Balken \\
+      Rauheit KST [$m^{1/3}/s$]                           & grafisch-interaktiv   &  graue Balken \\
+      Trennfl\"{a}chen                                       & grafisch-interaktiv   &  gelbe Linie \\
+      Durchstr\"{o}mte Bereiche                              & grafisch-interaktiv   &  blauer Rahmen \\
+      Unterkante Br\"{u}cke [m+NN]                           & alphanumerisch        &  gr\"{u}ne Linie \\
+      Oberkante Br\"{u}cke  [m+NN]                           & alphanumerisch        &  gr\"{u}ne Linie \\
+      Bewuchsabst. ax in Flie{\ss}r. [m]                     & \multirow{3}{3cm}{$\left.\parbox{3cm}{alphanumerisch \\ alphanumerisch \\ alphanumerisch}\right\} $}
+                                                         & \multirow{3}{4cm}{B\"{a}umchen, $\omega_P$ als grauer Balken} \\
+      Bewuchsabst. ay quer Flie{\ss}r. [m]                   \\
+      Bewuchsdurchmesser DP [m]                          \\
+      OK Wehr  [m+NN]                                    & alphanumerisch        &  graue Linie \\
+      SVA-Werte                                          & alphanumerisch        &  -- \\
+      OK Gel\"{a}nde [m+NN]                                  & alphanumerisch        &  gr\"{u}ne Linie \\
+      Wehrfelder (\"{U}berfallbeiwerte)                      & alphanumerisch        &  -- \\
+      Rechtswert                                         & alphanumerisch        &  -- \\
+      Hochwert                                           & alphanumerisch        &  -- \\
+      WSP-H\"{o}he [m+NN]                                    & alphanumerisch        &  blaue Linie \\
+      WSP-Messung [m+NN]                                 & alphanumerisch        &  dunkelblaue Linie \\
+      Bordvollpunkte                                     & grafisch-interaktiv   &  \multirow{2}{5cm}{rote Linie (entspr. Ausuferung im Längsschnitt)}\\
+      \\
+      Maulprofil                                         & alphanumerisch        &  gelbe Schraffur \\
+      Eiprofil                                           & alphanumerisch        &  gelbe Schraffur \\
+      Kreisprofil                                        & alphanumerisch        &  gelbe Schraffur \\
+      Kreissegment                                       & alphanumerisch        &  -- \\
+      Sonderprofil ARMCO84                               & alphanumerisch        &  -- \\
+      Sonderprofil ARMCO71                               & alphanumerisch        &  -- \\
+      Niedrigwasserrinne                                 & alphanumerisch        &  -- \\
+      Kommentar                                          & alphanumerisch        &  -- \\
+   \hline
+\end{tabular}

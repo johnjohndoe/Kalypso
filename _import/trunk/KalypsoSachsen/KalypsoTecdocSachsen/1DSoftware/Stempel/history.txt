@@ -1,0 +1,57 @@
+Versionsgeschichte des Moduls stempel.exe
+-----------------------------------------
+
+Version 1.0.0.3
+---------------
+Umstellung auf CVS
+
+
+Version 1.1.0.0
+---------------
+.wpl werden wieder mit richtigen Icons im Explorer angezeigt
+FeatureInfo auch für den Stempeleditor
+
+stempel-exe-1-1-1-0
+-------------------
+Für den Plotter ( Tabelleeneinträge ausschaltbar ) musste einiges in den draw Klassen geändert werden
+
+stempel-exe-1-1-2-0  6.11.2001
+-------------------
+- global.h ausgemistet
+- Stempel mit Ausmassen grösser als 150mm möglich
+- Optionsdatei wird nicht mehr benutzt, kein individueller Lizenztext mehr
+
+Hängt ab von: wspprj-dll-1-2-3-0
+
+stempel-exe-1-1-2-1 9.11.2001
+-------------------
+- StdAfx Probleme
+
+stempel-exe-1-1-2-2 19.3.2002
+-------------------
+- Anpassung an CommonMfc.lib
+
+Hängt ab von
+	wspprj-dll-1-2-5-4
+	common-lib-1-0-0-1
+
+stempel-exe-2-a-0-0 30.8.2002
+-------------------
+- Anpassungen an Änderungen in commonMfc.lib
+- WspPrj.dll in statische Lib umgewandelt
+- Anpassungen an Änderungen in den Draw-Klassen
+
+
+Hängt ab von
+- common-lib-2-a-0-0
+- wspprj-lib-2-a-0-0
+
+stempel-exe-2-0-0-0 24.1.2004
+-------------------
+- Umstellung auf neues Key-Handling (siehe wspwin.exe)
+- Bugfix: Absturz bei Datei/Neu ohne installiertem Drucker
+- Bugfix: DXF Export hat nicht funktioniert (ist aber leider hässlich)
+
+stempel-exe-2-0-1-0 13.1.2006
+------------------------------
+- Bugfix: Die Stempelgrösse war über Bearbeiten-Eigenschaften nicht mehr einstellbar sondern wurde immer auf die aktuelle Seitengrösse geändert.

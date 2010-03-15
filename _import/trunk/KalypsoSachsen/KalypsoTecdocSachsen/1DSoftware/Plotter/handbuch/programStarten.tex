@@ -1,0 +1,69 @@
+\hypertarget{cmd:datei-neu}{}
+\hypertarget{cmd:projekt-oeffnen}{} 
+\section{Programm starten und Profildaten einladen}
+
+Nach Installation des Programms kann \wspplot\ entweder aus der Task-Leiste oder aus \wspwin\ heraus (Menü \menu{Plotten / Plottprogramm}) aufgerufen werden. Wird das Programm über \wspwin\ gestartet, 
+ist automatisch das gerade in \wspwin\ geöffnete Projekt auch im Plotter geöffnet. 
+Ansonsten ist im Plotterprogramm über \menu{Datei / öffnen Projekt} zunächst ein Projekt zu öffnen (Abb. \ref{fig:projekt-oeffnen}).
+  
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.70]{projekt-oeffnen}
+	\end{center}
+	\caption{Projekt öffnen}
+	\label{fig:projekt-oeffnen}
+\end{figure}
+ 
+
+\hypertarget{cmd:datei-oeffen}{}
+\hypertarget{dlg:profil-oeffnen}{}
+\subsection{Profildaten einladen}
+ 
+Nachdem ein Projekt geöffnet wurde, erscheint eine Baumstruktur, aus der zunächst ein Gewässer, dann ein Zustand und schließlich die Quer- oder Längsprofile, die dargestellt werden sollen, zu selektieren sind. 
+Wird eine Mehrfachauswahl getroffen, so werden entweder die ausgewählten Profile als einzelne Plots geöffnet oder alternativ (Kontrollkästchen \ctrl{Mehrere Plots auf ein Blatt} ist aktiviert) alle Profile auf demselben Blatt angezeigt (siehe Abschnitt~\ref{sec:multiplot}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.70]{offnen}
+	\end{center}
+	\caption{Auswahl darzustellender Profile im Verzeichnisbaum}
+	\label{fig:auswahl-profile}
+\end{figure}
+
+Im Projektverzeichnis werden die Unterverzeichnisse \file{/plot\_ls} und \file{/plot\_qp} angelegt, in denen die 'Plotdateien' mit der Endung '\file{.wpl}' gespeichert werden. 
+
+\hypertarget{cmd:projekt-schliessen}{}
+Neben der Dateiauswahl im Verzeichnisbaum können die darzustellenden Profile auch unabhängig von der \wspwin-Projektverwaltung über ihren Dateinamen geöffnet werden. Hierzu ist im Plotter zunächst das aktive Projekt zu schließen (Menü \menu{Datei / Projekt schliessen}) und anschließend eine Datei (\file{*.wpl} oder \file{*.prf}) auszuwählen (Menü \menu{Datei / öffnen}). Während bei geöffnetem Projekt unter dieser Option die Baumstruktur erscheint (Abb. \ref{fig:auswahl-profile}), sieht man bei geschlossenem Projekt ein Dateiauswahlfenster. 
+
+\hypertarget{cmd:datei-einfügen}{}
+\subsection{Profildaten einfügen}
+Über die Menüfolge \menu{Datei / Daten Einfügen} haben Sie die Möglichkeit
+mehrere Profile inkl. aller Datensätze wie Wasserspiegel und Sohlhöhe zum Vergleich übereinander zu
+laden. Wählen Sie das Vergleichsprofil aus und entscheiden Sie, ob es am
+tiefsten Punkt des Ursprungsprofils ausgerichtet werden soll, oder ob es an einem bestimmten
+Profilpunkt (Station) beginnen soll, der in dem entsprechenden Editierfeld einzugeben ist.
+
+\hypertarget{cmd:datei-profiluebersicht}{}
+Eine andere Form der Dateiauswahl ist über die Profilübersicht (\menu{Datei / Profilübersicht}) möglich. Nach Wahl der Option erscheinen mehrere Profile (standardmäßig 6) gleichzeitig in einer Übersicht (Abb. \ref{fig:profiluebersicht}). Aus dieser Übersicht heraus können durch Doppelklick auf das entsprechende Profil Profile aufgerufen werden. 
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.40]{profiluebersicht}
+	\end{center}
+	\caption{Profilübersicht}
+	\label{fig:profiluebersicht}
+\end{figure}
+
+\hypertarget{cmd:profiluebersicht-eigenschaften}{}
+Die Anzahl der dargestellten Profile kann über das Nummernsymbol (Abb.~\ref{fig:profiluebersicht-props}) in der linken oberen Bildhälfte eingestellt werden.
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.70]{profiluebersicht-props}
+	\end{center}
+	\caption{Einstellung der Eigenschaften der Profilübersicht}
+	\label{fig:profiluebersicht-props}
+\end{figure}
+
+Neben dem Nummernsymbol befindet sich ein Listenfeld mit einer Stationsangabe. Hier kann sowohl aus der Profilübersicht heraus, wie auch aus der eigentlichen Plotansicht gezielt ein Profil über die Stationsangabe gewählt werden. Die Pfeile links und rechts hiervon ermöglichen es, auf die vorangehenden oder nachfolgenden Profile zu springen.
+

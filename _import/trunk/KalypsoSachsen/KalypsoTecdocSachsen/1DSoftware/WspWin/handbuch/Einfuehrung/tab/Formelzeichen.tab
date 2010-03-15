@@ -1,0 +1,106 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                                                                          %
+%                                    Zusammenstellung aller verwendeten Formelzeichen                                      %
+%                                                                                                                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tablefirsthead{  \multicolumn{1}{l}{\textbf{Zeichen}} &
+                  \multicolumn{1}{l}{\textbf{Einheit}} &
+                  \multicolumn{1}{l}{\textbf{Bedeutung bzw. Definition}} \\[12pt] }
+\tablehead{ \multicolumn{1}{l}{\textbf{Zeichen}} &
+            \multicolumn{1}{l}{\textbf{Einheit}} &
+            \multicolumn{1}{l}{\textbf{Bedeutung Bzw. Definition}} \\[12pt] }
+\begin{supertabular}{p{0.15\linewidth}p{0.10\linewidth}p{0.70\linewidth}}
+   $A$                  &  $\mathrm{m^2}$       &  Flie{\ss}querschnitt \\
+   $a_\mathit{NB}$      &  $\mathrm{m}$         &  Wirbelnachlaufbreite hinter einem Bewuchselement \\
+   $a_\mathit{NL}$      &  $\mathrm{m}$         &  Wirbelnachlaufl\"{a}nge hinter einem Bewuchselement \\
+   $a_x$                &  $\mathrm{m}$         &  Abstand der Bewuchselemente in Flie{\ss}richtung \\
+   $a_y$                &  $\mathrm{m}$         &  Abstand der Bewuchselemente quer dazu (horizontal) \\
+   $a_z$                &  $\mathrm{m}$         &  Abstand der Bewuchselemente senkrecht dazu (vertikal) \\ [6pt]
+
+   $B$                  &  $\mathrm{-}$         &  Bewuchsparameter nach \autor{Mertens} \\
+   $B_W$                &  $\mathrm{m}$         &  Wehrbreite \\
+   $b$                  &  $\mathrm{m}$         &  Wasserspiegelbreite, Breite allgemein \\
+   $b_F$                &  $\mathrm{m}$         &  mitwirkende Breite des Flu{\ss}schlauchs bei der Berechnung des
+                                                   Trenn\-fl\"{a}chen\-widerstandes \\
+   $b_m$                &  $\mathrm{m}$         &  mitwirkende Breite der Bewuchszone \\
+   $b_N$                &  $\mathrm{m}$         &  Nachlaufbreite hinter einem Einzelk\"{o}rper \\
+   $b_V$                &  $\mathrm{m}$         &  Breite des Vorlandes \\
+   $b_\mathit{II,m}$    &  $\mathrm{m}$         &  mittlere Breite f\"{u}r den Bereich~II (\autor{Mertens}) \\
+   $b_\mathit{II,max}$  &  $\mathrm{m}$         &  maximale Breite f\"{u}r den Bereich~II (\autor{Mertens}) \\ 
+   $C$                  &  $\mathrm{m^3/s}$     &  Hydraulischer Leitwert \\
+   $c$                  &  $\mathrm{-}$         &  Abminderungsfaktor f\"{u}r unvollkommenen \"{U}berfall \\
+   $c_a$                &  $\mathrm{-}$         &  Abminderungsfaktor f\"{u}r Sto{\ss}verlust bei Aufweitung \\
+   $c_e$                &  $\mathrm{-}$         &  Abminderungsfaktor f\"{u}r Sto{\ss}verlust bei Einengung \\
+   $c_T$                &  $\mathrm{-}$         &  dimensionslose Trennfl\"{a}chengeschwindigkeit \\
+   $c_\mathit{WR}$      &  $\mathrm{-}$         &  Formwiderstandsbeiwert eines K\"{o}rpers \\
+   $c_\mathit{W\infty}$ &  $\mathrm{-}$         &  Formwiderstandsbeiwert eines einzelnen Kreiszylinders \\ 
+   $d$                  &  $\mathrm{m}$         &  hydraulischer Durchmesser \\
+   $\mathit{DKOK}$      &  $\mathrm{m\!+\!NN}$  &  Konstruktionsoberkante bei Sonderprofilen \\
+   $\mathit{DKUK}$      &  $\mathrm{m\!+\!NN}$  &  H\"{o}chster Punkt der Profilbegrenzung bei Durchl\"{a}ssen (Konstruktionsunterkante)\\
+   $d_P$                &  $\mathrm{m}$         &  Bewuchsdurchmesser \\
+   $D_P$                &  $\mathrm{m^{-2}}$    &  Bestockungsdichte \\
+   $dW$                 &  $\mathrm{m}$         &  Wasserspiegeldifferenz \\
+   $dz$                 &  $\mathrm{-}$         &  Wasserspiegelanhebung infolge Br\"{u}ckenstau \\ [6pt]
+   $\mathit{ESPH}$      &  $\mathrm{m}$         &  Genauigkeitsschranke f\"{u}r Wasserspiegellagenberechnung \\
+   $\mathit{ESPV}$      &  $\mathrm{m}$         &  Genauigkeitsschranke f\"{u}r Energieh\"{o}henvergleich bei Verzwei\-gun\-gen \\
+   $\mathit{f}$					&  											&	 Formbeiwert nach Marchi\\
+   $\mathit{Fr}$        &  $\mathrm{-}$         &  \autor{Froud}'sche Zahl \\
+   $g$                  &  $\mathrm{m^2/s}$     &  Erdbeschleunigung \\
+   $\mathit{HD}$        &  $\mathrm{m}$         &  Druckh\"{o}he \\
+   $H_E$                &  $\mathrm{NN\!+\!m}$  &  Energieh\"{o}he \\
+   $H_\mathit{Krone}$   &  $\mathrm{NN\!+\!m}$  &  Kronenh\"{o}he eines Wehres \\
+   $H_\mathit{ZV}$      &  $\mathrm{m}$         &  \"{o}rtliche Verlusth\"{o}he \\
+   $h$                  &  $\mathrm{m}$         &  Flie{\ss}tiefe, H\"{o}he allgemein \\
+   $h_{gr}$             &  $\mathrm{m}$         &  Grenztiefe \\
+   $h_k$                &  $\mathrm{m}$         &  Geschwindigkeitsh\"{o}he \\
+   $h_T$                &  $\mathrm{m}$         &  H\"{o}he der Trennfl\"{a}che \\
+   $h_m$                &  $\mathrm{m}$         &  mittlere \"{U}berstr\"{o}mungsh\"{o}he (Streichwehr) \\
+   $h_o$                &  $\mathrm{m}$         &  Oberwassertiefe bezogen auf Wehrkrone \\
+   $h_R$                &  $\mathrm{m}$         &  Reibungsverlusth\"{o}he \\
+   $h_T$                &  $\mathrm{m}$         &  Flie{\ss}tiefe in der Trennfl\"{a}che \\
+   $h_u$                &  $\mathrm{m}$         &  Unterwassertiefe bezogen auf Wehrkrone \\
+   $h_{"u}$             &  $\mathrm{m}$         &  \"{U}berfallh\"{o}he \\
+   $I_E$                &  $\mathrm{-}$         &  Energieliniengef\"{a}lle \\
+   $J_S$                &  $\mathrm{-}$         &  Sohlgef\"{a}lle \\
+   $k_S$                &  $\mathrm{m}$         &  \"{a}quivalente Rauheit \\
+   $k_\mathit{ST}$      &  $\mathrm{m^{1/3}/s}$ &  Rauheitsbeiwert (\autor{Manning-Strickler}) \\
+   $k_T$                &  $\mathrm{m}$         &  Trennfl\"{a}chenrauheit \\
+   $K_\tau$             &  $\mathrm{h}$         &  Retentionsparameter nach \autor{Kalinin-Miljukov} \\
+   $l$                  &  $\mathrm{m}$         &  Profilabstand \\
+   $L'$                 &  $\mathrm{m}$         &  Abschnittsl\"{a}nge (\autor{Kalinin-Miljukov}) \\
+%   $\mathit{PF}$        &  $\mathrm{-}$         &  Bewuchsparameter nach \autor{Felkel} \\
+   $Q$                  &  $\mathrm{m^3/s}$     &  Abflu{\ss} \\
+   $Q_S$                &  $\mathrm{m^3/s}$     &  Abflu{\ss} \"{u}ber Streichwehr \\
+   $Q_W$                &  $\mathrm{m^3/s}$     &  Wehrabflu{\ss} \\
+   $\mathit{Re}$        &  $\mathrm{-}$         &  \autor{Reynold}'sche Zahl \\
+   $r_\mathit{hy}$      &  $\mathrm{m}$         &  hydraulischer Radius \\
+   $S_M$                &  $\mathrm{-}$         &  Sinousit\"{a}t eines M\"{a}anders \\
+   $\mathit{S_L}$        &  $\mathrm{m}$         &  Streichwehrl\"{a}nge \\
+   $\mathit{S_W}$        &  $\mathrm{m}$         &  Streichwehrh\"{o}he \"{u}ber Gew\"{a}ssersohle \\
+   $U$                  &  $\mathrm{m}$         &  benetzter Umfang \\
+   $U_{T,L}$						&  $\mathrm{m}$					&  Trennfl\"{a}chenh\"{o}he links\\
+   $U_{T,R}$						&  $\mathrm{m}$					&  Trennfl\"{a}chenh\"{o}he rechts\\
+   $v$                  &  $\mathrm{m/s}$       &  Flie{\ss}geschwindigkeit \\
+   $W$                  &  $\mathrm{NN\!+\!m}$  &  Wasserstand \\
+   $w$                  &  $\mathrm{m}$         &  Schwellenh\"{o}he eines Wehres (oberwasserseitig) \\
+   $w$                  &  $\mathrm{m/s}$       &  Spezifische Geschwindigkeit \\
+   $y$									&  $\mathrm{m/s}$       &  Abstand\\
+   $z$									&  $\mathrm{NN\!+\!m}$  &  Gel\"{a}ndeh\"{o}he\\
+   $\alpha$             &  $\mathrm{-}$         &  Geschwindigkeitsh\"{o}henbeiwert \\
+   $\alpha'$            &  $\mathrm{-}$         &  Impulsstromverteilungsbeiwert \\
+   $\alpha_V$           &  $\mathrm{-}$         &  Verbauungsverh\"{a}ltnis \\
+   $\delta$             &  $\mathrm{-}$         &  Pfeilerformbeiwert nach \autor{Rehbock}\\
+   $\gamma$             &  $\mathrm{kN/m^3}$    &  spezifisches Gewicht von Wasser \\
+   $\lambda$            &  $\mathrm{-}$         &  Reibungsbeiwert \\
+   $\lambda_P$          &  $\mathrm{-}$         &  Widerstandsbeiwert der Bewuchselemente \\
+   $\lambda_T$          &  $\mathrm{-}$         &  Widerstandsbeiwert der fiktiven Trennfl\"{a}che \\
+   $\mu$                &  $\mathrm{-}$         &  \"{U}berfallbeiwert \\
+   $\nu$                &  $\mathrm{m^2/s}$     &  kinematische Z\"{a}higkeit \\
+   $\sigma$             &  $\mathrm{-}$         &  Pfeilerformbeiwert nach \autor{Yarnell} \\
+   $\tau$               &  $\mathrm{kN/m^2}$    &  Schubspannung \\
+   $\zeta_E$            &  $\mathrm{-}$         &  Verlustbeiwert f\"{u}r \"{o}rtliche Einzelverluste \\
+   $\Omega$             &  $\mathrm{-}$         &  Bewuchsparameter nach \autor{Pasche} \\
+   $\omega_P$           &  $1/m$                &  spezifische Vegetationsanstr\"{o}mfl\"{a}che nach
+                                                   \autor{Schr\"{o}der-Nuding} \\ [12pt]
+\end{supertabular}

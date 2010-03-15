@@ -1,0 +1,208 @@
+\hypertarget{cmd:themen-Hoehenmodellimportieren}{}
+\section{Arbeiten mit digitalen Höhenmodellen}
+Um Pre- und Postprocessing in \wspmap\ anhand von digitalisierten Höhendaten durchführen zu können, besteht die Möglichkeit digitale Geländemodelle (DGMs) in eine Karte zu importieren. Mit einem importierten Geländemodell können die folgenden Operationen durchgeführt werden:
+\begin{itemize}
+	\item Generieren von Querprofilen
+	\item Verlängern von Querprofilen
+	\item Ermitteln von Überflutungsflächen anhand gerechneter Wasserspiegel
+	\item Fliesstiefendarstellungen anhand gerechneter Wasserspiegel
+\end{itemize}
+
+\subsection{Importieren von Geländemodellen}
+Bevor Daten aus Geländemodellen zur Bearbeitung der Projektdaten herangezogen werden können, muss ein Geländemodell in die Karte eingelesen werden.
+\wspmap\ bietet die Option sowohl bereits vermaschte Höhenmodelle zu importieren als auch reine Punktdaten zu laden und diese zu triangulieren.
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.70]{abb27}
+	\end{center}
+	\caption{Höhenmodellimport}
+	\label{fig:abb27}
+\end{figure}
+
+\wspmap\ kann die folgenden Formate als Geländemodell importieren:
+\begin{itemize}
+	\item *.hmo: BCE-eigenes Höhenmodell-Format HMO
+  \item *.2dm: SMS-Format (Surfacewater Modeling Software oder über GeoCADOP)
+	\item *.net: 'ungenerated tin' - Format ESRI ArcINFO
+	\item *.ras: reine Punktdaten (Rechtswert, Hochwert, Höhe)
+\end{itemize}
+
+Beispieldateien für alle genannten Daten befinden sich auf der Installations-CD.
+
+Erkennt das Programm beim Import, dass keine Vermaschung vorliegt wird der Benutzer gefragt, ob die Punktdaten vermascht werden sollen. 
+
+Sind die Daten bereits trianguliert wird die vorhandenen Vermaschung übernommen und  vorhandene Bruchkanten bleiben erhalten.
+
+Nach dem Import eines Höhenmodells wird automatisch ein Thema für das DGM angelegt
+und im Kartenausschnitt dargestellt (siehe Abb.~\ref{fig:imported-dgm}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=1.0]{dgm}
+	\end{center}
+	\caption{Importiertes Höhenmodell}
+	\label{fig:imported-dgm}
+\end{figure}
+%Abb.27: Höhenmodellimport\\
+
+\hypertarget{cmd:tools-profilgenerieren}{}
+\subsection{Querprofile erzeugen}
+\wspmap\ bietet die Möglichkeit, anhand eines importierten Höhen\-modells neue
+Profile in einem Projekt zu generieren.
+
+Wählen Sie hierzu den Menüpunkt \menu{Tools / Profil generieren} oder das entsprechende Symbol aus der Symbolleiste. Das Tool kann nur aktiviert werden, wenn ein Höhenmodell importiert wurde.\\
+
+Voraussetzung für die Erzeugung neuer Profile aus einem digitalen Höhen\-modell ist das Vorhandensein einer Flussachse.
+Die Flussachse ist zur Ermittlung der Stationierung und Profilabstände
+bzw. zur Einsortierung in die Strangtabelle erforderlich. Sie sollte mindestens die beiden
+benachbarten Profile des neu zu generierenden Profils schneiden und im Allgemeinen in der
+Flußmitte liegen. Die Flussachse darf jedes Profil höchstens einmal schneiden. 
+
+\subsubsection{Erzeugen einer Flussachse}
+Nach Aktivierung des Menüpunktes bzw. des entsprechenden Symbols folgt, sofern noch
+keine Flussachse vorhanden ist, ein Hinweis, dass zunächst eine Hilfslinie in Längsrichtung des Gewässers zu zeichnen ist. Durch Klicken auf die Karte kann die Flussachse direkt digitalisiert werden, ähnlich wie dies beim Erzeugen von Objekten eines Linienthemas geschieht (siehe Abschnitt \ref{subsec:objekt-erzeugen}). Der Benutzer
+hat die Möglichkeit, den Vorgang durch Drücken der Escape-Taste abzubrechen. Durch
+Doppelklick wird die Linie fertiggestellt. Sie wird dann als gestrichelte blaue Linie
+dargestellt. Wenn die Linie später nicht mehr benötigt wird oder eine neue Linie gezeichnet
+werden soll, kann die vorhandene mittels ESC gelöscht werden. 
+
+Wird eine Flussachse mehrfach benötigt, kann man ein entsprechendes Thema anlegen. Dazu erzeugt man entweder ein neues Linienthema (wie in Abschnitt \ref{subsec:thema-erzeugen} beschrieben) oder importiert ein bereits vorhandenes (siehe Abschnitt \ref{subsec:thema-einfuegen}). In beiden Fällen muss gewährleistet sein, dass ein Attribut 'VZK' vorhanden ist. Das Attibut 'VZK' muss dabei als \emph{ganze Zahl} bzw. als Integer definiert sein, um vom Programm erkannt zu werden. Das Attribut dient bei verzweigten System zur Zuordnung der Verzweigungskennung und sollte bei unverzweigten System konstant 0 sein.
+Dieses Thema kann nun durch einfaches Kopieren zur Flussachse umdefiniert werden. Wählen Sie beim Kopieren des Themas (Menüpunkt \menu{Thema/Kopieren}) als Typ des neuen Themas 'Flussachse'.
+
+\subsubsection{Ein einzelnes Profil generieren}
+Falls eine Flussachse existiert, können beliebig viele Profile erzeugt werden.
+
+Die neuen Profile werden durch direkte Eingabe der Lage in die Karte erzeugt (\menu{Tools / Profil generieren}). Dies erfolgt durch Zeichnen einer Linie in der Karte. Auch hier wird mit Escape abgebrochen und durch Doppelklick die Eingabe abgeschlossen. Die neue Profil-Linie muß die Flussachse schneiden.\\
+Weiterhin ist darauf zu achten, die Profile in Fliessrichtung von links nach rechts zu digitalisieren, da die neuen Profilpunkte in Richtung der digitalisierten Linie in das Profil einsortiert werden.
+
+Nachdem die Profillinie erstellt worden ist, wird sie mit dem Geländemodell verschnitten. Der Benutzer erhält eine Vorschau des Profils sowie Angaben über die benachbarten Profile, die der Stationierung, Abstandsberechnung und Kilometrierung zugrunde gelegt werden. Ferner
+muß der Zustand selektiert werden, in den das Profil einzusortieren ist. Die vorgeschlagenen Daten können bei Bedarf korrigiert werden. Sobald 'Profil hinzufügen' gewählt ist, wird das Profil gespeichert und direkt in die Strangtabelle einsortiert.
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.35]{genprof}
+	\end{center}
+	\caption{Erzeugen und Einfügen eines neuen Profils}
+	\label{fig:genprof}
+\end{figure}
+
+\paragraph{Profildaten ausdünnen}
+Der Algorithmus zum Auslesen der Geländedaten aus dem digitalen Geländemodell produziert alle Schnittpunkte entlang der digitalisierten Profillage. Dies führt in vielen Fällen aber zu einer grossen Zahl von Höhenpunkten, die der gewählten Aufgabenstellung nicht entsprechen und in der späteren Bearbeitung hinderlich sein können.\\
+Aus diesem Grunde wurde die Maske zur Voransicht des generierten Profils erweitert, um nicht-relevante Profilpunkte automatisch auszusortieren. Im Diagramm wird die ursprünglich ausgelesene Profillinie rot, die ausgedünnte grün dargestellt. Der Benutzer kann die (standardmässig auf 1cm eingestellte) max. Höhentoleranz einstellen, um das Ergebnis zu optimeren. Bei jeder Änderung der Höhentoleranz wird die grüne Profilgeometry neu gezeichnet.
+
+\subsubsection{Mehrere Profile automatisch generieren}
+Alternativ können mehrere Profile automatisiert mit Hilfe eines beliebigen Linienthemas erzeugt werden, welches die Lage der Profile beschreibt (\menu{Tools / Profile generieren}). Alle Objekte des Themas werden mit dem Geländemodell verschnitten und zu einem (vorher auszuwählenden) Zustand hinzugefügt. Bei jeder verschnittenen Profillage erscheint der gleiche Dialog wie beim einzelnen generieren einzelner Profile.\\
+Ist im Linienthema zusätzlich das Attribut 'Station' als Dezimalzahl vorhanden. Wird die Station automatisch für die neuen Profile übernommen, der Dialog 'Profil generieren' entfällt in diesem Fall.
+
+\hypertarget{cmd:tools-profilverlaengern}{}
+\subsection{Querpfofile verlängern}
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{extendprofile}
+	\end{center}
+	\caption{Einfügen einer Profilverlängerung}
+	\label{fig:extendprofile}
+\end{figure}
+
+Neben dem Generieren neuer Profile besteht auch die Möglichkeit, bestehende Profile zu
+verlängern. Häufiger Anwendungsfall ist die Verlängerung terrestrisch gemessener Profile (z.B: Vermessung des Flussschlauchs per Echolot) über das Vorland hinaus anhand von Geländedaten aus Überfliegungen.\\
+Nach Wahl des Menüpunktes \menu{Tools / Profil verlängern} muss der Endpunkt eines vorhandenen Profiles ausgewählt werden. Die Profilverlängerung kann durch wiederholtes Klicken auf die Karte digitallisiert werden. Ein Doppelklick schliesst die Eingabe ab. Das Profil wird dabei bis zum ersten Stützpunkt geradlinig fortgesetzt, ist dies nicht gewünscht löst ein Druck auf Escape die Richtungsvorgabe. Ein zweites Drücken der Escape-Taste bricht den Vorgang ab.\\
+Nach Abschluss der Eingabe erscheint ein ähnlicher Dialog wie beim Generieren von Profilen, die Eingabe der Querprofildaten (z.B. Station) entfällt hier natürlich. 
+Wie bei 'Profil generieren' ist aber auch hier das Ausdünnen der Profildaten möglich.\\
+Nach Bestätigung des Dialogs wird das Profil in der Karte verlängert und kann in der Profilansicht eingesehen werden. Die Änderungen des Profils werden allerdings im Gegensatz zum 'Profil generieren' erst in die Profildatei übertragen, nachdem die Bearbeitung gespeichert wurde (Diskettensymbol im Dialog 'Profilauswahl').
+
+\hypertarget{cmd:themen-dgmmitwasserspiegel}{}
+\subsection{Ausweisung von Überflutungsflächen}
+Mit Hilfe von  \wspmap\ ist es möglich, berechnete Wasserspiegellagen im Lageplan als Überflutungsflächen zu visualisieren.
+
+Um die Wasserspiegellagen in die Karte zu laden, müssen diese in den Querprofilen eingetragen sein. Dies geschieht zum einen nach jeder Rechnung (nur die gerechneten Berechnungsvarianten) oder kann im Projektmanager im Menü \menu{Längsschnitt / Wsp einfügen in Querprofile} nachträglich durchgeführt werden.
+
+Sind die Wasserspiegel in den Querprofilen eingetragen, werden diese beim (Neu-)einladen der Querprofile automatisch als Themen im Lageplan angelegt. Pro gerechnetem Wasserspiegel wird dabei ein Punkt-Thema der Durchstichpunkte des Wasserspiegels im Querprofil und ein Polygon-Thema (Linear-verbundene Wasserspiegel) erzeugt. Die Themen werden analog der Berechnungsvariante benannt.
+
+Das neu erzeugte Polygon-Thema kann bereits zum Ausweisen von Über\-schwemmungs\-flächen herangezogen werden, die das Relief eines unterliegenden Geländemodells wird dabei aber nicht berücksichtigt (siehe Abb.~\ref{fig:wsp-linear}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=1.0]{wsp-linear}
+	\end{center}
+	\caption{lineare Darstellung der gerechneten Wasserspiegel}
+	\label{fig:wsp-linear}
+\end{figure}
+
+\subsection{Verschneidung der WSP-Lagen mit einem DGM}
+\label{sec:dgm:tincut}
+Um die zusätzliche Geländeinformation eines digitalen Geländemodells auszunutzen, ist es über die lineare Darstellung der Überflutungsflächen hinaus möglich, diese mit einem DGM zu verschneiden, um z.B. Einbuchtungen oder Ausuferungen zwischen den Profilen darstellen zu können.
+
+Die Verschneidung wird über den Menüpunkt \menu{Themen / mit Höhenmodell verschneiden} ausgelöst, wobei das zu verschneidende Thema ausgewählt sein muss (das Punktthema).
+
+Nach Auswahl des Menüs wird die externe Anwendung 'Fliesstiefenermittlung' gestartet, welche die eigentliche Verschneidung durchführt. Im Fall der Ausweisung von Überflutungsflächen kann hier nur die Genauigkeit der Verschneidung eingestellt werden, wobei eine Grösse von kleiner als 1[m] im allgemeinen nicht sinvoll ist und die Rechenzeit erheblich beinflussen kann.
+
+Nach Start der Verschneidung mit 'Ok' wird der Fortschritt der Operation angezeigt und danach das Ergebnis automatisch als neues Thema eingeladen.
+
+\paragraph{Arbeitsweise des Verschneidungsalgorythmus}
+\ \\Die Verschneidung der Wasserspiegellagen und dem ausgewählten DGM erfolgt rein geometrisch, es werden keine hydraulischen Begebenheiten berücksichtigt. Zu diesem Zweck wird aus den Wasserspiegelhöhen an den Querprofilen ein digitales Höhenmodell der Wasserspiegeloberfläche generiert. Der Verschneidungsalgorythmus ermittelt nun die Auftragsflächen dieses Höhenmodells über dem Geländemodell und generiert ein entsprechenden Polygonthema. Dabei wird im ersten Schritt lediglich die durch die lineare Verbindung der Wasserspiegellagen umrandete Fläche berücksichtigt.
+
+\paragraph{Extrapolation der Wasserspiegellagen}
+\ \\Um die zu verschneidende Fläche zu vergrössern besteht die Möglichkeit, diese manuell festzulegen. Dazu muss als erstes das Punktthema der zu bearbeitenden Wasserspiegellage kopiert werden. Wird das kopierte Thema ausgewählt, wird die zu verschneidende Fläche als Umrandung in der Karte dargestellt. Das Punktthema kann jetzt wie jedes andere Profilbezogene Thema (z.B: Trennflächen) auf den Profillinien verschoeben werden, die Umrandung wird dabei nachgeführt. Zur Vereinfachung der Bearbeitung kann der Menüpunkt \menu{Themen / Wasserspiegel nach aussen setzen} gewählt werden, um die Umrandung auf die Profilenden zu setzen.
+
+Wird jetzt der Befehl \menu{mit Höhenmodell verschneiden} auf dem Bearbeiteten Thema ausgeführt, wird die erweiterte Fläche zur Verschneidung herangezogen (siehe Abb.~\ref{fig:tincut}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics{tincut}
+	\end{center}
+	\caption{aus der Verschneidung mit extrapoliertem WSP berechnetes Überschwemmungsgebiet}
+	\label{fig:tincut}
+\end{figure}
+
+\subsection{Ermittlung von Fließtiefen}
+Neben dem Ausweisen der Überflutungsfläche ist es auch möglich, eine Fliesstiefendarstellung zu erzeugen\footnote{Diese Option ist nicht im normalen Lieferumfang von \wspmap\ enthalten}. Die Erzeugung der Fließtiefendarstellung läuft dabei identisch zur Erzeugung von Überflutungsflächen ab (siehe~\ref{sec:dgm:tincut}). 
+
+Wurde die Fließtiefenermittlung zusätzlich erworben, besteht im Dialogfenster zur Erzeugung der Fließtiefen die Möglichkeit, die Grenzen der Fließtiefenermittlung auszuwählen (Abb.~\ref{fig:fliti-dlg}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.50]{fliti-dlg}
+	\end{center}
+	\caption{Eingabe der Bereichsgrenzen zur Fließtiefenermittlung}
+	\label{fig:fliti-dlg}
+\end{figure}
+
+Folgende Parameter sind vom Benutzer editierbar:
+
+\emph{Dateien}:
+Die zur Fließtiefendarstellung notwendigen Dateien (Höhenmodell, Wasserspiegel, Ausgabedatei im shape-Format) werden standardmäßig im aktuellen Projektverzeichnis abgelegt. Die Pfade können vom Benutzer beliebig geändert werden. 
+
+\emph{Parameter}:
+Für die vorgegebene Rasterweite werden die Fließtiefen entweder als Höhenlinien (Option 'Isolinien') oder als Bereich der Wasserspiegellage (Option 'Isoflächen') ausgegeben. Die Rasterweite wird mit 1 m vorgegeben, was im Regelfall eine ausreichend detaillierte Fließtiefendarstellung erzeugt. Sie kann jedoch beliebig vom Benutzer geändert werden. Es gilt: Je kleiner die Rasterweite, desto detaillierter die Fließtiefendarstellung (mit entsprechend längerer Rechenzeit). 
+
+Bei Aktivierung des Kästchens "Teilvolumina" erfolgt gleichzeitig mit der Fließtiefenberechnung eine Ermittlung des Wasservolumens zwischen zwei Querprofilen. Diese Option verlängert die Rechendauer allerdings immens und sollte nur bei tatsächlichem Bedarf gewählt werden.
+
+\emph{Grenzen}:
+In diesem Dialogfeld werden die Höhenintervalle für die Fließtiefendarstellung vorgegeben. Dabei kann auf zuvor gespeicherte Intervall-Informationen zurückgegriffen oder die Intervalle per Hand eingegeben werden. Bei Bedarf können die eingegebenen Intervalle für eine erneute Benutzung gespeichert werden (Häkchen "Grenzen speichern" aktivieren und Bezeichnung eingeben).
+Durch Vorgabe eines festen Intervalls kann über die Schaltflächen "+" und "-" die vorhanden Grenzen erweitert bzw. reduziert werden (siehe Beispiel in Abb.~\ref{fig:fliti-dlg}).
+
+Durch Bestätigung auf "OK" wird die Berechnung zur Fließtiefenermittlung gestartet. Die ermittelten Fließtiefen werden anschließend der Karte als neues Thema hinzugefügt und
+nach vordefiniertem Farbverlauf eingefärbt. Gleichzeitig öffnet sich ein Dialogfenster, in dem das zu den Fließtiefen gehörige Gesamtvolumen als Information ausgegeben wird (Abb. \ref{fig:fliti-result}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics{fliti-result}
+	\end{center}
+	\caption{Ausgabe des Gesamtvolumens der überschwemmten Fläche}
+	\label{fig:fliti-result}
+\end{figure}
+
+Die Darstellung des Fließtiefen-Themas kann vom Benutzer wie bei einem Polygon-Thema geändert werden.
+
+Das erzeugte Thema wird als ESRI Shape-Datei im Projekt unter dem im Dialogfenster vorgegebenen Dateinamen abgelegt und kann mit anderen Programmen weiterverarbeitet werden. 
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics{fliesstiefen}
+	\end{center}
+	\caption{Ermittelte Flächen gleicher Fließtiefe (Isoflächen)}
+	\label{fig:fliti}
+\end{figure}

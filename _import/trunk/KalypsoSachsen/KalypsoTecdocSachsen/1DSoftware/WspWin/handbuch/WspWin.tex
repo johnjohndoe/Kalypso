@@ -1,0 +1,115 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                            BENUTZERHANDBUCH ZU WSPWIN 8.0                                                %
+%                                                                                                                          %
+%                                                 Stand Januar 2006                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Bemerkungen zur Bearbeitung                                                                                             %
+%     - Namen von Autoren und Urhebern sind im Text mittels \autor{Name} hervorgehoben                                     %
+%     - Der Schriftzug WSPWIN wird mit dem Kommando \wspwin erzeugt                                                        %
+%     - Pfadangaben und Dateinamen werden mit Hilfe von \datei{Pfadangabe} generiert                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt, a4paper, bibtotocnumbered, pointednumbers, fleqn, twoside]{scrreprt}
+
+%  12 pt Standardschrift
+%  auch Literaturverzeichnis ins Inhaltsverzeichnis
+%  Punkt nach Gliederung
+%  Gleichungen linksb\"{u}ndig
+%  zweiseitiger Druck
+
+
+\usepackage{german}                                %  Deutscher Zeichensatz
+\usepackage[latin1]{inputenc}
+\usepackage{times}                                 %  Times als Standardschrift
+
+\usepackage[pdftex]{graphicx}                       %  f\"{u}r Grafik-Einbindung mit *.png
+		\DeclareGraphicsExtensions{.png,.gif} 
+\usepackage{geometry}                              %  Seitenlayout \"{a}ndern
+\usepackage{fancyhdr}                              %  einfache Kopf/Fu{\ss}zeilen
+\usepackage{lscape}                                %  Abbildung im Querformat
+\usepackage{amsmath}                               %  Spezielle Gleichungsformen
+\usepackage{amssymb}                               %  Mathematische Symbole3,
+\usepackage{latexsym}                              %  Latexsymbole
+\usepackage[draft=false,
+						colorlinks, 
+						linkcolor=blue, urlcolor=blue, citecolor=blue,
+						bookmarks=true,									   %%% es werden Bookmarks erzeugt
+						bookmarksopen=true,  							 %%% Bookmarks werden alle angezeigt
+						bookmarksnumbered=true]            %%% ... with numbers
+					  {hyperref}
+\usepackage[all]{hypcap}
+\usepackage{supertabular}                          %  gro{\ss}e Tabellen \"{u}ber mehrere Seiten
+\usepackage{multirow}                              %  Tabellenzeilen zusammenfassen
+\usepackage{rotating}                              %  drehen von Grafiken und Tabellen
+\usepackage{fancybox}                              %  verschiedene Rahmenarten
+\usepackage{alltt}
+\usepackage{paralist}
+
+%  Seitengeometrie und Layout
+\geometry{left=2.5cm, textwidth=15cm}
+\pagestyle{fancy}
+
+%  Format der Kopf und Fu{\ss}zeilen
+\renewcommand{\footrulewidth}{0.4pt}               %  Linie oberhallb Fu{\ss}zeile
+\renewcommand{\headrulewidth}{0.4pt}               %  Linie unterhalb Kopfzeile
+\fancyhead{}
+\fancyhead[RE,LO]{\slshape \rightmark}
+\fancyhead[LE,RO]{\thepage}
+
+\fancyfoot{} \fancyfoot[LO]{\slshape \footnotesize Anwenderbeschreibung \wspwin{} \upshape 8.0}
+
+%  Sonderzeichen
+\newcommand{\grad}{\ensuremath{^\circ}}            %  Gradzeichen
+\newcommand{\marrow}{">}                         %  Men\"{u}pfeil
+\newcommand{\unit}[1]{\,\mathrm{#1}}               %  F\"{u}r Ma{\ss}einheiten
+\DeclareMathSymbol{,}{\mathord}{letters}{"3B}      %  F\"{u}r Dezimalzahlen ohne Zwischenraum
+
+
+%  \"{U}berschriftenformat
+\renewcommand{\sectfont}{\rmfamily\sc\bfseries}    %  \"{U}berschriften als fette Kapit\"{a}lchen
+\renewcommand{\descfont}{\rmfamily\bfseries}       %  description fett und Times
+
+%  Hervorgehobene Worte und spezielle Umgebungen
+\newcommand{\wspwin}                               %  Hervorgehobener Schriftzug "WSPWIN"
+   {{\bfseries \textsc{\mbox{WspWin}}}}
+\newcommand{\autor}{\textsc}                       %  Font f\"{u}r Autoren und Urheber
+\newcommand{\datei}{\textsf}                       %  Font f\"{u}r Dateinamen und Pfadangaben
+\newcommand{\schalter}[1]{\textbf{\flq #1\frq}}    %  Font f\"{u}r Schaltfl\"{a}chen
+\newcommand{\dialog}{\textsl}                      %  Font f\"{u}r Dialogmasken
+\newcommand{\menu}{\textsl}                        %  Font f\"{u}r Men\"{u}punkte
+\newcommand{\feld}{\textsl}                        %  Font f\"{u}r die Bezeichnung von Listen und Editierfeldern
+\newcommand{\checkbox}                             %  Darstellung der Checkbox
+   {$\;\Box\mspace{-12mu}\checkmark$\textsl}
+ \newcommand{\plusminus}{\frac{+}{-}}
+\newcommand{\beisp}{\texttt}                       %  Nutzereingabe im Beispiel
+\newcommand{\afz}[1]{"`#1"'}                       %  "Text in deutschen Anf\"{u}hrungszeichen"
+\newenvironment{hinweis}                           %  Umgebung f\"{u}r Hinweise mit Rahmen
+   { \begin{center} \begin{Sbox} Hinweis: \hspace{0.15cm} \begin{minipage}[t]{0.85\textwidth}}
+   { \end{minipage} \end{Sbox} \doublebox{\TheSbox} \end{center}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \begin{document}
+	 
+	 \include{Titel}
+
+   \cleardoublepage
+   \tableofcontents              %  Inhaltsverzeichnis
+
+%  Import externer Dateien (Kapitel)
+   \include{Vorwort}             %  Kapitel  1
+   \include{Einfuehrung}         %  Kapitel  2
+   \include{Installation}        %  Kapitel  3
+   \include{Einstieg}            %  Kapitel  4
+   \include{Fortgeschrittene}    %  Kapitel  5
+   \include{Sonderprofile}       %  Kapitel  6
+   \include{Fehler}              %  Kapitel  7
+   \include{Dialogprogramme}     %  Kapitel  8
+
+%   Literaturverzeichnis
+	\include{Bibliografie}
+
+	\listoffigures
+	\listoftables
+\end{document}

@@ -1,0 +1,2188 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+#include "..\..\commonMfc\include\commresource.h"
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) (unknown sub-lang: 0x0) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, 0x0
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_STEMPELTYPE MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
+        MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM "&Schließen",                  ID_FILE_CLOSE
+        MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
+        MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "E&igenschaften",              ID_FILE_SUMMARYINFO
+        MENUITEM SEPARATOR
+        MENUITEM "D&XF Export...",              ID_FILE_DXF_EXPORT
+        MENUITEM SEPARATOR
+        MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    POPUP "&Bearbeiten"
+    BEGIN
+        MENUITEM "&Rückgängig\tStrg+Z",         ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
+        MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
+        MENUITEM "&Einfügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM "In&halte einfügen...",        ID_EDIT_PASTE_SPECIAL
+        MENUITEM "&Löschen\tEntf",              ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "Eigen&schaften...",           ID_EDIT_PROPS
+        MENUITEM "&Zoomfaktor...",              ID_EDIT_ZOOM
+        MENUITEM SEPARATOR
+        MENUITEM "&Neues Objekt einfügen...",   ID_OLE_INSERT_NEW
+        MENUITEM "Verknü&pfungen...",           ID_OLE_EDIT_LINKS
+        MENUITEM "<<OLE VERBS GO HERE>>",       ID_OLE_VERB_FIRST
+    END
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "&Gitterlinie\tG",             ID_VIEW_GRID
+        MENUITEM "OLE Objekte anzeigen",        ID_VIEW_SHOWOBJECTS
+        MENUITEM SEPARATOR
+        MENUITEM "Ver&größern",                 ID_VIEW_ZOOMIN
+        MENUITEM "Ver&kleinern",                ID_VIEW_ZOOMOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Hauptsymbolleiste",          ID_VIEW_TOOLBAR
+        MENUITEM "&Zeichnensymbolleiste",       ID_VIEW_ZEICHNEN_BAR
+        MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Zeichnen"
+    BEGIN
+        MENUITEM "&Text",                       ID_DRAW_TEXT
+        MENUITEM "&Linie",                      ID_DRAW_LINE
+        MENUITEM "&Rechteck",                   ID_DRAW_RECT
+        MENUITEM "&Ellipse",                    ID_DRAW_ELLIPSE
+        MENUITEM "Linien&zug",                  ID_DRAW_POLYLINE
+        MENUITEM "&Vieleck",                    ID_DRAW_POLYGON
+    END
+    POPUP "Obje&kt"
+    BEGIN
+        MENUITEM "A&ttribute...\tAlt+Enter",    ID_OBJECT_PROPERTIES
+        MENUITEM SEPARATOR
+        MENUITEM "Nach oben setzen\tStrg+Plus", ID_OBJECT_MOVETOFRONT
+        MENUITEM "Nach unten setzen\tStrg+Minus", ID_OBJECT_MOVETOBACK
+        MENUITEM "Eins nach oben setzen\tPlus", ID_OBJECT_MOVEFORWARD
+        MENUITEM "Eins nach unten setzen\tMinus", ID_OBJECT_MOVEBACK
+    END
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Gittereinrichtung...",       ID_EXTRAS_GUIDE
+        MENUITEM "&Optionen...",                ID_EXTRAS_OPTIONS
+    END
+    POPUP "&Fenster"
+    BEGIN
+        MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
+        MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_HORZ
+        MENUITEM "Sy&mbole anordnen",           ID_WINDOW_ARRANGE
+        MENUITEM "Alle &schließen",             ID_WINDOW_CLOSEALL
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "&Hilfethemen",                ID_HELP_FINDER, HELP
+        MENUITEM SEPARATOR
+        MENUITEM "Inf&o über Stempeleditor...", ID_APP_ABOUT
+    END
+END
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
+        MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "&Hauptsymbolleiste",          ID_VIEW_TOOLBAR
+        MENUITEM "&Zeichnensymbolleiste",       ID_VIEW_ZEICHNEN_BAR
+        MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Optionen...",                ID_EXTRAS_OPTIONS
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "&Hilfethemen",                ID_HELP_FINDER, HELP
+        MENUITEM SEPARATOR
+        MENUITEM "Inf&o über Stempeleditor...", ID_APP_ABOUT
+    END
+END
+
+CG_IDR_POPUP_CHILD_FRAME MENU DISCARDABLE 
+BEGIN
+    POPUP "_POPUP_"
+    BEGIN
+        MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
+        MENUITEM "&Einfügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM "&Löschen\tEntf",              ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "A&ttribute...\tAlt+Enter",    ID_OBJECT_PROPERTIES
+    END
+END
+
+IDR_STEMPELTYPE_CNTR_IP MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
+        MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM "&Schließen",                  ID_FILE_CLOSE
+        MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    MENUITEM SEPARATOR
+    MENUITEM SEPARATOR
+    POPUP "&Fenster"
+    BEGIN
+        MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
+        MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_HORZ
+        MENUITEM "Sy&mbole anordnen",           ID_WINDOW_ARRANGE
+        MENUITEM "Alle &schließen",             ID_WINDOW_CLOSEALL
+    END
+END
+
+#if defined(APSTUDIO_INVOKED) || defined(_DEBUG)
+#if defined(APSTUDIO_INVOKED)
+IDR_STEMPELTYPE_DEBUG$(_DEBUG) MENU PRELOAD DISCARDABLE 
+#else
+IDR_STEMPELTYPE_DEBUG MENU PRELOAD DISCARDABLE 
+#endif
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
+        MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM "&Schließen",                  ID_FILE_CLOSE
+        MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
+        MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "E&igenschaften",              ID_FILE_SUMMARYINFO
+        MENUITEM SEPARATOR
+        MENUITEM "D&XF Export...",              ID_FILE_DXF_EXPORT
+        MENUITEM SEPARATOR
+        MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    POPUP "&Bearbeiten"
+    BEGIN
+        MENUITEM "&Rückgängig\tStrg+Z",         ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
+        MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
+        MENUITEM "&Einfügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM "In&halte einfügen...",        ID_EDIT_PASTE_SPECIAL
+        MENUITEM "&Löschen\tEntf",              ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "Eigen&schaften...",           ID_EDIT_PROPS
+        MENUITEM "&Zoomfaktor...",              ID_EDIT_ZOOM
+        MENUITEM SEPARATOR
+        MENUITEM "&Neues Objekt einfügen...",   ID_OLE_INSERT_NEW
+        MENUITEM "Verknü&pfungen...",           ID_OLE_EDIT_LINKS
+        MENUITEM "<<OLE VERBS GO HERE>>",       ID_OLE_VERB_FIRST
+    END
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "&Gitterlinie\tG",             ID_VIEW_GRID
+        MENUITEM "OLE Objekte anzeigen",        ID_VIEW_SHOWOBJECTS
+        MENUITEM SEPARATOR
+        MENUITEM "Ver&größern",                 ID_VIEW_ZOOMIN
+        MENUITEM "Ver&kleinern",                ID_VIEW_ZOOMOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Hauptsymbolleiste",          ID_VIEW_TOOLBAR
+        MENUITEM "&Zeichnensymbolleiste",       ID_VIEW_ZEICHNEN_BAR
+        MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Zeichnen"
+    BEGIN
+        MENUITEM "&Text",                       ID_DRAW_TEXT
+        MENUITEM "&Linie",                      ID_DRAW_LINE
+        MENUITEM "&Rechteck",                   ID_DRAW_RECT
+        MENUITEM "&Ellipse",                    ID_DRAW_ELLIPSE
+        MENUITEM "Linien&zug",                  ID_DRAW_POLYLINE
+        MENUITEM "&Vieleck",                    ID_DRAW_POLYGON
+    END
+    POPUP "Obje&kt"
+    BEGIN
+        MENUITEM "A&ttribute...\tAlt+Enter",    ID_OBJECT_PROPERTIES
+        MENUITEM "Debug...",                    ID_OBJECT_DEBUG
+        MENUITEM SEPARATOR
+        MENUITEM "Nach oben setzen\tStrg+Plus", ID_OBJECT_MOVETOFRONT
+        MENUITEM "Nach unten setzen\tStrg+Minus", ID_OBJECT_MOVETOBACK
+        MENUITEM "Eins nach oben setzen\tPlus", ID_OBJECT_MOVEFORWARD
+        MENUITEM "Eins nach unten setzen\tMinus", ID_OBJECT_MOVEBACK
+    END
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Gittereinrichtung...",       ID_EXTRAS_GUIDE
+        MENUITEM "&Optionen...",                ID_EXTRAS_OPTIONS
+    END
+    POPUP "&Fenster"
+    BEGIN
+        MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
+        MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_HORZ
+        MENUITEM "Sy&mbole anordnen",           ID_WINDOW_ARRANGE
+        MENUITEM "Alle &schließen",             ID_WINDOW_CLOSEALL
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "&Hilfethemen",                ID_HELP_FINDER, HELP
+        MENUITEM SEPARATOR
+        MENUITEM "Inf&o über Stempeleditor...", ID_APP_ABOUT
+    END
+END
+#endif
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 217, 34
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Info über WSPWIN Stempel Editor"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
+    LTEXT           "WSPWIN Stempel Editor, Version 1.1.2",IDC_STATIC3,36,7,
+                    131,8,SS_NOPREFIX
+    LTEXT           "Copyright © BCE, 2002",IDC_STATIC,36,18,74,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,32,14,WS_GROUP
+    LTEXT           "Demo",IDC_DEMO_TEXT,122,18,38,9
+END
+
+IDD_OFFNEN DIALOG DISCARDABLE  0, 0, 187, 141
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Öffnen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_LIST | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
+                    WS_BORDER | WS_TABSTOP,5,5,175,110
+    PUSHBUTTON      "Abbrechen",IDCANCEL,75,120,50,14
+    DEFPUSHBUTTON   "OK",IDOK,131,120,50,14
+END
+
+IDD_PROPERTIES DIALOG DISCARDABLE  0, 0, 257, 61
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Eigenschaften"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name:",IDC_STATIC,11,6,79,8
+    EDITTEXT        IDC_EDIT3,10,20,180,14,ES_AUTOHSCROLL
+    LTEXT           "Breite (mm):",IDC_STATIC,10,40,40,8
+    EDITTEXT        IDC_EDIT1,55,40,40,14,ES_AUTOHSCROLL
+    LTEXT           "Höhe (mm):",IDC_STATIC,105,40,40,8
+    EDITTEXT        IDC_EDIT2,150,40,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,200,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,200,25,50,14
+END
+
+IDD_GRID DIALOG DISCARDABLE  0, 0, 177, 71
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Gittereinrichtung"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "An Gitter ausrichten",IDC_CHECK1,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,5,78,10
+    GROUPBOX        "Gitterweiter",IDC_STATIC,5,15,105,50
+    LTEXT           "Breite (mm):",IDC_STATIC,15,25,38,8
+    EDITTEXT        IDC_EDIT1,60,25,40,14,ES_AUTOHSCROLL
+    LTEXT           "Höhe (mm):",IDC_STATIC,15,45,37,8
+    EDITTEXT        IDC_EDIT2,60,45,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,120,22,50,14
+END
+
+IDD_ZOOM DIALOG DISCARDABLE  0, 0, 129, 52
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Vergrößerung"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Zoomfaktor (%):",IDC_STATIC,10,5,55,8
+    COMBOBOX        IDC_COMBO1,70,5,48,65,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,10,30,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,70,30,50,14
+END
+
+IDD_PROP_TEXT DIALOG DISCARDABLE  0, 0, 192, 101
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Text"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "horizontale Ausrichtung:",IDC_STATIC,10,5,70,8
+    COMBOBOX        IDC_COMBO1,10,20,73,45,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "vertikale Ausrichtung:",IDC_STATIC,95,5,70,8
+    COMBOBOX        IDC_COMBO2,95,20,73,40,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Orientierung:",IDC_STATIC,10,40,45,8
+    EDITTEXT        IDC_EDIT1,10,55,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_ARROWKEYS,50,55,
+                    11,14
+    PUSHBUTTON      "Schrift...",IDC_BUTTON1,10,80,50,14
+    LTEXT           "Typ:",IDC_STATIC1,95,40,50,8
+    COMBOBOX        IDC_COMBO3,96,55,89,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Anzahl der Nach-\nkommastellen:",IDC_STATIC2,95,35,55,
+                    15
+    EDITTEXT        IDC_EDIT2,95,55,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_SPIN2,"msctls_updown32",UDS_ARROWKEYS,135,55,
+                    11,14
+    EDITTEXT        IDC_EDIT_TEXT,95,80,87,14,ES_AUTOHSCROLL
+    LTEXT           "Text:",IDC_STATIC,95,70,60,10
+END
+
+IDD_PROP_SOLID DIALOG DISCARDABLE  0, 0, 149, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Füllung"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "gefüllt",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,5,40,10
+    LTEXT           "Farbe:",IDC_STATIC,10,20,45,8
+    COMBOBOX        IDC_COMBO1,10,35,85,95,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Muster:",IDC_STATIC,10,55,45,8
+    COMBOBOX        IDC_COMBO2,10,70,85,100,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+END
+
+IDD_PROP_LINE DIALOG DISCARDABLE  0, 0, 149, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Linie"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Linientyp:",IDC_STATIC,10,5,50,8
+    COMBOBOX        IDC_COMBO1,10,20,60,80,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Linienbreite:",IDC_STATIC,80,5,50,8
+    EDITTEXT        IDC_EDIT1,80,20,50,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_ARROWKEYS,130,20,
+                    8,14
+    LTEXT           "Farbe:",IDC_STATIC,10,40,45,8
+    COMBOBOX        IDC_COMBO3,10,55,85,95,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "linke Pfeilspitze:",IDC_STATIC1,10,75,55,8
+    COMBOBOX        IDC_COMBO8,10,90,60,55,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "rechte Pfeilspitze:",IDC_STATIC2,80,75,55,8
+    COMBOBOX        IDC_COMBO9,80,90,58,55,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+END
+
+#if defined(APSTUDIO_INVOKED) || defined(_DEBUG)
+#if defined(APSTUDIO_INVOKED)
+IDD_DEBUG$(_DEBUG) DIALOG DISCARDABLE  0, 0, 187, 135
+#else
+IDD_DEBUG DIALOG DISCARDABLE  0, 0, 187, 135
+#endif
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Debug"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,130,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,130,24,50,14
+    CONTROL         "Break in Draw",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,125,70,55,10
+    LTEXT           "Objects in selection:",IDC_STATIC,10,5,105,8
+    CONTROL         "Trace undo operations",IDC_CHECK2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,105,80,10
+    LISTBOX         1037,10,20,110,80,LBS_SORT | LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Show Object Position Info",IDC_CHECK3,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,120,105,10
+    CONTROL         "Break when intersected",IDC_CHECK4,"Button",
+                    BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,125,85,55,15
+END
+#endif
+
+IDD_OPTION_SELTYPE DIALOG DISCARDABLE  0, 0, 249, 60
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION | WS_SYSMENU
+CAPTION "Objektselektion"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Objekte vollständig innerhalb des Rahmens",IDC_RADIO1,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,10,10,145,10
+    CONTROL         "den Rahmen schneidenden Objekte",IDC_RADIO2,"Button",
+                    BS_AUTORADIOBUTTON,10,25,145,10
+    LTEXT           "Toleranz (mm):",IDC_STATIC,10,40,55,8
+    EDITTEXT        IDC_EDIT1,70,40,40,14,ES_AUTOHSCROLL
+END
+
+IDD_SPLASH DIALOG DISCARDABLE  0, 0, 253, 86
+STYLE DS_MODALFRAME | WS_POPUP
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",IDC_BIGICON,"Button",BS_OWNERDRAW | WS_DISABLED,6,6,
+                    38,40
+    LTEXT           "WSPWIN Stempel Editor",IDC_STATIC3,60,6,83,8,NOT 
+                    WS_GROUP
+    LTEXT           "Copyright © BCE, Koblenz, 2002",-1,60,15,164,8,NOT 
+                    WS_GROUP
+    CONTROL         "",-1,"Static",SS_BLACKRECT,58,31,188,1
+    LTEXT           "blubber",IDC_LICENCE_TEXT,58,36,189,49
+    LTEXT           "Demo",IDC_DEMO_TEXT,147,6,49,8
+END
+
+IDD_SUMM_PAGE DIALOG DISCARDABLE  0, 0, 184, 148
+STYLE DS_CONTEXTHELP | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Datei-Info"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Anwendung:",IDC_STATIC,5,10,41,8
+    LTEXT           "Static",IDC_APPNAME,55,10,119,8
+    LTEXT           "Verfasser:",IDC_STATIC,5,27,32,8
+    EDITTEXT        IDC_AUTHOR,53,25,119,13,ES_AUTOHSCROLL
+    LTEXT           "Stichwörter:",IDC_STATIC,5,43,38,8
+    EDITTEXT        IDC_KEYWORDS,53,41,119,13,ES_AUTOHSCROLL
+    LTEXT           "Kommentare:",IDC_STATIC,5,59,42,8
+    EDITTEXT        IDC_COMMENTS,53,57,119,38,ES_MULTILINE | ES_WANTRETURN | 
+                    WS_VSCROLL
+    LTEXT           "Titel:",IDC_STATIC,5,103,16,8
+    EDITTEXT        IDC_TITLE,53,100,119,13,ES_AUTOHSCROLL
+    LTEXT           "Thema:",IDC_STATIC,5,118,25,8
+    EDITTEXT        IDC_SUBJECT,53,116,119,13,ES_AUTOHSCROLL
+    LTEXT           "Vorlage:",IDC_STATIC,5,134,27,8
+    LTEXT           "Static",IDC_TEMPLATE,55,134,120,8
+END
+
+IDD_STAT_PAGE DIALOG DISCARDABLE  0, 0, 184, 148
+STYLE DS_CONTEXTHELP | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Statistik"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Zuletzt gespeichert von:",IDC_STATIC,7,13,77,8
+    LTEXT           "Static",IDC_SAVEDBY,90,15,84,8
+    LTEXT           "Version:",IDC_STATIC,7,27,26,8
+    LTEXT           "Static",IDC_REVNUM,90,25,84,8
+    LTEXT           "Bearbeitungszeit:",IDC_STATIC,7,41,55,8
+    LTEXT           "Static",IDC_EDITTIME,90,39,84,8
+    LTEXT           "Gedruckt am:",IDC_STATIC,7,55,44,8
+    LTEXT           "Static",IDC_LASTPRINT,90,53,84,8
+    LTEXT           "Erstellt am:",IDC_STATIC,7,69,35,8
+    LTEXT           "Static",IDC_CREATEDATE,90,67,84,8
+    LTEXT           "Geändert am:",IDC_STATIC,7,83,44,8
+    LTEXT           "Static",IDC_LASTSAVE,90,81,84,8
+    LTEXT           "# Seiten:",IDC_STATIC,7,97,30,8
+    LTEXT           "Static",IDC_NUMPAGES,90,95,32,8
+END
+
+IDD_MEASURE DIALOG DISCARDABLE  0, 0, 186, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Vermessung"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Schließen",IDOK,65,60,50,14
+    LTEXT           "Entfernung:",IDC_STATIC,10,10,75,8
+    LTEXT           "horizontaler Entfernung:",IDC_STATIC,10,25,80,8
+    LTEXT           "vertikaler Entfernung:",IDC_STATIC,10,40,80,8
+    LTEXT           "",1034,100,10,80,8
+    LTEXT           "",1035,100,25,80,8
+    LTEXT           "",1036,100,40,80,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 210
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 27
+    END
+
+    IDD_OFFNEN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 134
+    END
+
+    IDD_PROPERTIES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 250
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 54
+    END
+
+    IDD_GRID, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 170
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 64
+    END
+
+    IDD_ZOOM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 122
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 45
+    END
+
+    IDD_PROP_TEXT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 185
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 94
+    END
+
+    IDD_PROP_SOLID, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 142
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_PROP_LINE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 142
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    "IDD_DEBUG$(_DEBUG)", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 128
+    END
+
+    IDD_OPTION_SELTYPE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 242
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 53
+    END
+
+    IDD_SUMM_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 177
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 141
+    END
+
+    IDD_STAT_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 177
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 146
+    END
+
+    IDD_MEASURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "+",            ID_OBJECT_MOVETOFRONT,  ASCII,  NOINVERT
+    "-",            ID_OBJECT_MOVEBACK,     ASCII,  NOINVERT
+    "=",            ID_OBJECT_MOVEFORWARD,  ASCII,  NOINVERT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "E",            ID_DRAW_ELLIPSE,        ASCII,  NOINVERT
+    "L",            ID_DRAW_LINE,           ASCII,  NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_DRAW_POLYLINE,       ASCII,  NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT_ALL,      VIRTKEY, CONTROL, ALT, NOINVERT
+    "R",            ID_DRAW_RECT,           ASCII,  NOINVERT
+    "S",            ID_DRAW_SELECT,         ASCII,  NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    "T",            ID_DRAW_TEXT,           ASCII,  NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_ADD,         ID_OBJECT_MOVEFORWARD,  VIRTKEY, NOINVERT
+    VK_ADD,         ID_OBJECT_MOVETOFRONT,  VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_ESCAPE,      ID_CANCEL_EDIT_CNTR,    VIRTKEY, NOINVERT
+    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    VK_RETURN,      ID_OBJECT_PROPERTIES,   VIRTKEY, ALT, NOINVERT
+    VK_SUBTRACT,    ID_OBJECT_MOVEBACK,     VIRTKEY, NOINVERT
+    VK_SUBTRACT,    ID_OBJECT_MOVETOBACK,   VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "_",            ID_OBJECT_MOVETOBACK,   ASCII,  NOINVERT
+    "e",            ID_DRAW_ELLIPSE,        ASCII,  NOINVERT
+    "l",            ID_DRAW_LINE,           ASCII,  NOINVERT
+    "p",            ID_DRAW_POLYLINE,       ASCII,  NOINVERT
+    "r",            ID_DRAW_RECT,           ASCII,  NOINVERT
+    "s",            ID_DRAW_SELECT,         ASCII,  NOINVERT
+    "t",            ID_DRAW_TEXT,           ASCII,  NOINVERT
+END
+
+IDR_STEMPELTYPE_SRVR_IP ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_ESCAPE,      ID_CANCEL_EDIT_SRVR,    VIRTKEY, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_ZOOM DLGINIT
+BEGIN
+    IDC_COMBO1, 0x403, 3, 0
+0x3035, "\000" 
+    IDC_COMBO1, 0x403, 4, 0
+0x3031, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3531, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3032, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3033, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3034, 0x0030, 
+    0
+END
+
+IDD_PROP_TEXT DLGINIT
+BEGIN
+    IDC_COMBO1, 0x403, 6, 0
+0x694c, 0x6b6e, 0x0073, 
+    IDC_COMBO1, 0x403, 10, 0
+0x655a, 0x746e, 0x6972, 0x7265, 0x0074, 
+    IDC_COMBO1, 0x403, 7, 0
+0x6552, 0x6863, 0x7374, "\000" 
+    IDC_COMBO2, 0x403, 5, 0
+0x624f, 0x6e65, "\000" 
+    IDC_COMBO2, 0x403, 10, 0
+0x655a, 0x746e, 0x6972, 0x7265, 0x0074, 
+    IDC_COMBO2, 0x403, 6, 0
+0x6e55, 0x6574, 0x006e, 
+    0
+END
+
+IDD_PROP_LINE DLGINIT
+BEGIN
+    IDC_COMBO8, 0x403, 6, 0
+0x656b, 0x6e69, 0x0065, 
+    IDC_COMBO8, 0x403, 6, 0
+0x666f, 0x6566, 0x006e, 
+    IDC_COMBO8, 0x403, 12, 0
+0x6567, 0x6373, 0x6c68, 0x736f, 0x6573, 0x006e, 
+    IDC_COMBO8, 0x403, 8, 0
+0x6567, 0xfc66, 0x6c6c, 0x0074, 
+    IDC_COMBO9, 0x403, 6, 0
+0x656b, 0x6e69, 0x0065, 
+    IDC_COMBO9, 0x403, 6, 0
+0x666f, 0x6566, 0x006e, 
+    IDC_COMBO9, 0x403, 12, 0
+0x6567, 0x6373, 0x6c68, 0x736f, 0x6573, 0x006e, 
+    IDC_COMBO9, 0x403, 8, 0
+0x6567, 0xfc66, 0x6c6c, 0x0074, 
+    0
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "#include ""..\\..\\commonMfc\\include\\commresource.h""\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 7, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif\r\n"
+    "#include ""res\\Stempel.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.deu\\afxres.rc""          // Standard components\r\n"
+    "#include ""l.deu\\afxolecl.rc""       // OLE client resources\r\n"
+    "#include ""..\\..\\commonMfc\\include\\commonMfc.rc""\r\n"
+    "#endif\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Stempel.ico"
+IDR_STEMPELTYPE         ICON    DISCARDABLE     "res\\Stempel.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
+IDR_ZEICHNEN            BITMAP  DISCARDABLE     "res\\toolbar1.bmp"
+IDB_PATTRN01            BITMAP  DISCARDABLE     "res\\pattrn01.bmp"
+IDB_PATTRN02            BITMAP  DISCARDABLE     "res\\pattrn02.bmp"
+IDB_PATTRN03            BITMAP  DISCARDABLE     "res\\pattrn03.bmp"
+IDB_PATTRN04            BITMAP  DISCARDABLE     "res\\pattrn04.bmp"
+IDB_PATTRN05            BITMAP  DISCARDABLE     "res\\pattrn05.bmp"
+IDB_PATTRN06            BITMAP  DISCARDABLE     "res\\pattrn06.bmp"
+IDB_PATTRN07            BITMAP  DISCARDABLE     "res\\pattrn07.bmp"
+IDB_PATTRN08            BITMAP  DISCARDABLE     "res\\pattrn08.bmp"
+IDB_PATTRN09            BITMAP  DISCARDABLE     "res\\pattrn09.bmp"
+IDB_PATTRN10            BITMAP  DISCARDABLE     "res\\pattrn10.bmp"
+IDB_PATTRN11            BITMAP  DISCARDABLE     "res\\pattrn11.bmp"
+IDB_PATTRN12            BITMAP  DISCARDABLE     "res\\pattrn12.bmp"
+IDB_PATTRN13            BITMAP  DISCARDABLE     "res\\pattrn13.bmp"
+IDB_PATTRN14            BITMAP  DISCARDABLE     "res\\pattrn14.bmp"
+IDB_PATTRN15            BITMAP  DISCARDABLE     "res\\pattrn15.bmp"
+IDB_PATTRN16            BITMAP  DISCARDABLE     "res\\pattrn16.bmp"
+IDB_PATTRN17            BITMAP  DISCARDABLE     "res\\pattrn17.bmp"
+IDB_PATTRN18            BITMAP  DISCARDABLE     "res\\pattrn18.bmp"
+IDB_PATTRN19            BITMAP  DISCARDABLE     "res\\pattrn19.bmp"
+IDB_PATTRN20            BITMAP  DISCARDABLE     "res\\pattrn20.bmp"
+IDB_PATTRN21            BITMAP  DISCARDABLE     "res\\pattrn21.bmp"
+IDB_PATTRN22            BITMAP  DISCARDABLE     "res\\pattrn22.bmp"
+IDB_PATTRN23            BITMAP  DISCARDABLE     "res\\pattrn23.bmp"
+IDB_PATTRN24            BITMAP  DISCARDABLE     "res\\pattrn24.bmp"
+IDB_BITMAP48            BITMAP  DISCARDABLE     "res\\bitmap48.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_VIEW_ZOOMIN
+    BUTTON      ID_VIEW_ZOOMOUT
+    SEPARATOR
+    BUTTON      ID_EDIT_ZOOM
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_CONTEXT_HELP
+END
+
+IDR_ZEICHNEN TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_DRAW_SELECT
+    BUTTON      ID_DRAW_TEXT
+    BUTTON      ID_DRAW_LINE
+    BUTTON      ID_DRAW_RECT
+    BUTTON      ID_DRAW_ELLIPSE
+    BUTTON      ID_DRAW_POLYLINE
+    BUTTON      ID_DRAW_POLYGON
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,0,1,0
+ PRODUCTVERSION 2,0,1,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "Björnsen Beratende Ingenieure (BCE)\0"
+            VALUE "FileDescription", "WSPWIN Stempeleditor\0"
+            VALUE "FileVersion", "2, 0, 1, 0\0"
+            VALUE "InternalName", "STEMPEL\0"
+            VALUE "LegalCopyright", "Copyright © 1999\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "STEMPEL.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "WSPWIN Stempeleditor\0"
+            VALUE "ProductVersion", "2, 0, 1, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_PENCIL              CURSOR  DISCARDABLE     "res\\pencil.cur"
+IDC_SIZEDIAG            CURSOR  DISCARDABLE     "res\\sizediag.cur"
+IDC_MAGNIFY             CURSOR  DISCARDABLE     "res\\magnify.cur"
+#endif    // Deutsch (Deutschland) (unknown sub-lang: 0x0) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Englisch (USA) (unknown sub-lang: 0x0) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, 0x0
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+CG_IDR_POPUP_CHILD_FRAME MENU DISCARDABLE 
+BEGIN
+    POPUP "_POPUP_"
+    BEGIN
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM "&Delete\tDel",                ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "Pr&operties...\tAlt+Enter",   ID_OBJECT_PROPERTIES
+    END
+END
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "Recent Files",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
+        MENUITEM "&Drawing Toolbar",            ID_VIEW_ZEICHNEN_BAR
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Options...",                 ID_EXTRAS_OPTIONS
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "&Topics",                     ID_HELP_FINDER, HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&About Inscription Editor...", ID_APP_ABOUT
+    END
+END
+
+IDR_STEMPELTYPE MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Su&mmary Info",               ID_FILE_SUMMARYINFO
+        MENUITEM SEPARATOR
+        MENUITEM "DX&F Export...",              ID_FILE_DXF_EXPORT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent Files",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM "Paste &special...",           ID_EDIT_PASTE_SPECIAL
+        MENUITEM "&Delete\tDel",                ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "Dra&wing Properties...",      ID_EDIT_PROPS
+        MENUITEM "&Zoom factor...",             ID_EDIT_ZOOM
+        MENUITEM SEPARATOR
+        MENUITEM "&New Object...",              ID_OLE_INSERT_NEW
+        MENUITEM "&Links...",                   ID_OLE_EDIT_LINKS
+        MENUITEM "<<OLE VERBS GO HERE>>",       ID_OLE_VERB_FIRST
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Grid Lines\tG",              ID_VIEW_GRID
+        MENUITEM "Show OLE Objects",            ID_VIEW_SHOWOBJECTS
+        MENUITEM SEPARATOR
+        MENUITEM "Zoom &In",                    ID_VIEW_ZOOMIN
+        MENUITEM "Zoom &Out",                   ID_VIEW_ZOOMOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
+        MENUITEM "&Drawing Toolbar",            ID_VIEW_ZEICHNEN_BAR
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "D&raw"
+    BEGIN
+        MENUITEM "&Text",                       ID_DRAW_TEXT
+        MENUITEM "&Line",                       ID_DRAW_LINE
+        MENUITEM "&Rectangle",                  ID_DRAW_RECT
+        MENUITEM "&Ellipse",                    ID_DRAW_ELLIPSE
+        MENUITEM "&Polyline",                   ID_DRAW_POLYLINE
+        MENUITEM "Poly&gon",                    ID_DRAW_POLYGON
+    END
+    POPUP "&Object"
+    BEGIN
+        MENUITEM "Pr&operties...\tAlt+Enter",   ID_OBJECT_PROPERTIES
+        MENUITEM SEPARATOR
+        MENUITEM "Move To &Top\tCtrl+Plus",     ID_OBJECT_MOVETOFRONT
+        MENUITEM "Move To &Bottom\tCtrl+Minus", ID_OBJECT_MOVETOBACK
+        MENUITEM "Move &Forward\tPlus",         ID_OBJECT_MOVEFORWARD
+        MENUITEM "Move &Back\tMinus",           ID_OBJECT_MOVEBACK
+    END
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Grid Properties...",         ID_EXTRAS_GUIDE
+        MENUITEM "&Options...",                 ID_EXTRAS_OPTIONS
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+        MENUITEM "Tile &Horizontally",          ID_WINDOW_TILE_HORZ
+        MENUITEM "Arrange &Icons",              ID_WINDOW_ARRANGE
+        MENUITEM "Close A&ll",                  ID_WINDOW_CLOSEALL
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "&Topics",                     ID_HELP_FINDER, HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&About Inscription Editor...", ID_APP_ABOUT
+    END
+END
+
+IDR_STEMPELTYPE_CNTR_IP MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    MENUITEM SEPARATOR
+    MENUITEM SEPARATOR
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+        MENUITEM "Tile &Horizontally",          ID_WINDOW_TILE_HORZ
+        MENUITEM "Arrange &Icons",              ID_WINDOW_ARRANGE
+        MENUITEM "Close A&ll",                  ID_WINDOW_CLOSEALL
+    END
+END
+
+#if defined(APSTUDIO_INVOKED) || defined(_DEBUG)
+#if defined(APSTUDIO_INVOKED)
+IDR_STEMPELTYPE_DEBUG$(_DEBUG) MENU PRELOAD DISCARDABLE 
+#else
+IDR_STEMPELTYPE_DEBUG MENU PRELOAD DISCARDABLE 
+#endif
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Su&mmary Info",               ID_FILE_SUMMARYINFO
+        MENUITEM SEPARATOR
+        MENUITEM "DX&F Export...",              ID_FILE_DXF_EXPORT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent Files",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM "Paste &special...",           ID_EDIT_PASTE_SPECIAL
+        MENUITEM "&Delete\tDel",                ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "Dra&wing Properties...",      ID_EDIT_PROPS
+        MENUITEM "&Zoom factor...",             ID_EDIT_ZOOM
+        MENUITEM SEPARATOR
+        MENUITEM "&New Object...",              ID_OLE_INSERT_NEW
+        MENUITEM "&Links...",                   ID_OLE_EDIT_LINKS
+        MENUITEM "<<OLE VERBS GO HERE>>",       ID_OLE_VERB_FIRST
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Grid Lines\tG",              ID_VIEW_GRID
+        MENUITEM "Show OLE Objects",            ID_VIEW_SHOWOBJECTS
+        MENUITEM SEPARATOR
+        MENUITEM "Zoom &In",                    ID_VIEW_ZOOMIN
+        MENUITEM "Zoom &Out",                   ID_VIEW_ZOOMOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
+        MENUITEM "&Drawing Toolbar",            ID_VIEW_ZEICHNEN_BAR
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "D&raw"
+    BEGIN
+        MENUITEM "&Text",                       ID_DRAW_TEXT
+        MENUITEM "&Line",                       ID_DRAW_LINE
+        MENUITEM "&Rectangle",                  ID_DRAW_RECT
+        MENUITEM "&Ellipse",                    ID_DRAW_ELLIPSE
+        MENUITEM "&Polyline",                   ID_DRAW_POLYLINE
+        MENUITEM "Poly&gon",                    ID_DRAW_POLYGON
+    END
+    POPUP "&Object"
+    BEGIN
+        MENUITEM "Pr&operties...\tAlt+Enter",   ID_OBJECT_PROPERTIES
+        MENUITEM "Debug...",                    ID_OBJECT_DEBUG
+        MENUITEM SEPARATOR
+        MENUITEM "Move To &Top\tCtrl+Plus",     ID_OBJECT_MOVETOFRONT
+        MENUITEM "Move To &Bottom\tCtrl+Minus", ID_OBJECT_MOVETOBACK
+        MENUITEM "Move &Forward\tPlus",         ID_OBJECT_MOVEFORWARD
+        MENUITEM "Move &Back\tMinus",           ID_OBJECT_MOVEBACK
+    END
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Grid Properties...",         ID_EXTRAS_GUIDE
+        MENUITEM "&Options...",                 ID_EXTRAS_OPTIONS
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+        MENUITEM "Tile &Horizontally",          ID_WINDOW_TILE_HORZ
+        MENUITEM "Arrange &Icons",              ID_WINDOW_ARRANGE
+        MENUITEM "Close A&ll",                  ID_WINDOW_CLOSEALL
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "&Topics",                     ID_HELP_FINDER, HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&About Inscription Editor...", ID_APP_ABOUT
+    END
+END
+#endif
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+#if defined(APSTUDIO_INVOKED) || defined(_DEBUG)
+#if defined(APSTUDIO_INVOKED)
+IDD_DEBUG$(_DEBUG) DIALOG DISCARDABLE  0, 0, 187, 135
+#else
+IDD_DEBUG DIALOG DISCARDABLE  0, 0, 187, 135
+#endif
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Debug"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,130,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,130,24,50,14
+    CONTROL         "Break in Draw",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,125,70,55,10
+    LTEXT           "Objects in selection:",IDC_STATIC,10,5,105,8
+    CONTROL         "Trace undo operations",IDC_CHECK2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,105,80,10
+    LISTBOX         1037,10,20,110,80,LBS_SORT | LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Show Object Position Info",IDC_CHECK3,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,120,105,10
+    CONTROL         "Break when intersected",IDC_CHECK4,"Button",
+                    BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,125,85,55,15
+END
+#endif
+
+IDD_GRID DIALOG DISCARDABLE  0, 0, 177, 71
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Grid Properties"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "snap to grid",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,5,53,10
+    GROUPBOX        "Grid Size",IDC_STATIC,5,15,105,50
+    LTEXT           "Width (mm):",IDC_STATIC,15,25,38,8
+    EDITTEXT        IDC_EDIT1,60,25,40,14,ES_AUTOHSCROLL
+    LTEXT           "Height (mm):",IDC_STATIC,15,45,40,8
+    EDITTEXT        IDC_EDIT2,60,45,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,120,22,50,14
+END
+
+IDD_MEASURE DIALOG DISCARDABLE  0, 0, 186, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Measurement"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,65,60,50,14
+    LTEXT           "Length:",IDC_STATIC,10,10,75,8
+    LTEXT           "Horizontal Distance:",IDC_STATIC,10,25,80,8
+    LTEXT           "Vertical Distance:",IDC_STATIC,10,40,80,8
+    LTEXT           "",1034,100,10,80,8
+    LTEXT           "",1035,100,25,80,8
+    LTEXT           "",1036,100,40,80,8
+END
+
+IDD_OFFNEN DIALOG DISCARDABLE  0, 0, 187, 141
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Open"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_LIST | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
+                    WS_BORDER | WS_TABSTOP,5,5,175,110
+    PUSHBUTTON      "Cancel",IDCANCEL,75,120,50,14
+    DEFPUSHBUTTON   "OK",IDOK,131,120,50,14
+END
+
+IDD_OPTION_SELTYPE DIALOG DISCARDABLE  0, 0, 249, 60
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION | WS_SYSMENU
+CAPTION "Object Selection"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Objects must lie inside the rectangle",IDC_RADIO1,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,10,10,145,10
+    CONTROL         "Objects must intersect the rectangle",IDC_RADIO2,"Button",
+                    BS_AUTORADIOBUTTON,10,25,145,10
+    LTEXT           "Tolerance (mm):",IDC_STATIC,10,40,55,8
+    EDITTEXT        IDC_EDIT1,70,40,40,14,ES_AUTOHSCROLL
+END
+
+IDD_PROP_LINE DIALOG DISCARDABLE  0, 0, 149, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Line"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Style:",IDC_STATIC,10,5,50,8
+    COMBOBOX        IDC_COMBO1,10,20,60,80,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Width:",IDC_STATIC,80,5,50,8
+    EDITTEXT        IDC_EDIT1,80,20,50,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_ARROWKEYS,130,20,
+                    8,14
+    LTEXT           "Colour:",IDC_STATIC,10,40,45,8
+    COMBOBOX        IDC_COMBO3,10,55,85,95,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Left Arrow:",IDC_STATIC1,10,75,55,8
+    COMBOBOX        IDC_COMBO8,10,90,60,55,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Right Arrow:",IDC_STATIC2,80,75,55,8
+    COMBOBOX        IDC_COMBO9,80,90,58,55,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+END
+
+IDD_PROP_SOLID DIALOG DISCARDABLE  0, 0, 149, 110
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Filling"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "filled",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,5,30,10
+    LTEXT           "Colour:",IDC_STATIC,10,20,45,8
+    COMBOBOX        IDC_COMBO1,10,35,85,95,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Brush:",IDC_STATIC,10,55,45,8
+    COMBOBOX        IDC_COMBO2,10,70,85,100,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+END
+
+IDD_PROP_TEXT DIALOG DISCARDABLE  0, 0, 192, 101
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Text"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Horizontal Alignment:",IDC_STATIC,10,5,70,8
+    COMBOBOX        IDC_COMBO1,10,20,73,45,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Vertikal Alignment:",IDC_STATIC,95,5,70,8
+    COMBOBOX        IDC_COMBO2,95,20,73,40,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Rotation:",IDC_STATIC,10,40,45,8
+    EDITTEXT        IDC_EDIT1,10,55,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_ARROWKEYS,50,55,
+                    11,14
+    PUSHBUTTON      "Font...",IDC_BUTTON1,10,80,50,14
+    LTEXT           "Type:",IDC_STATIC1,95,40,50,8
+    COMBOBOX        IDC_COMBO3,96,55,89,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Decimal Precision:",IDC_STATIC2,95,35,55,15
+    EDITTEXT        IDC_EDIT2,95,55,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_SPIN2,"msctls_updown32",UDS_ARROWKEYS,135,55,
+                    11,14
+    LTEXT           "Text:",IDC_STATIC,95,70,40,10
+    EDITTEXT        IDC_EDIT_TEXT,95,80,90,15,ES_AUTOHSCROLL
+END
+
+IDD_PROPERTIES DIALOG DISCARDABLE  0, 0, 257, 61
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Properties"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name:",IDC_STATIC,11,6,79,8
+    EDITTEXT        IDC_EDIT3,10,20,180,14,ES_AUTOHSCROLL
+    LTEXT           "Width (mm):",IDC_STATIC,10,40,40,8
+    EDITTEXT        IDC_EDIT1,55,40,40,14,ES_AUTOHSCROLL
+    LTEXT           "Height (mm):",IDC_STATIC,105,40,40,8
+    EDITTEXT        IDC_EDIT2,150,40,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,200,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,200,25,50,14
+END
+
+IDD_STAT_PAGE DIALOG DISCARDABLE  0, 0, 184, 148
+STYLE DS_CONTEXTHELP | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Statistics"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Last saved by:",IDC_STATIC,7,13,47,8
+    LTEXT           "Static",IDC_SAVEDBY,90,15,84,8
+    LTEXT           "Version:",IDC_STATIC,7,27,26,8
+    LTEXT           "Static",IDC_REVNUM,90,25,84,8
+    LTEXT           "Edit Time:",IDC_STATIC,7,41,32,8
+    LTEXT           "Static",IDC_EDITTIME,90,39,84,8
+    LTEXT           "Printed:",IDC_STATIC,7,55,25,8
+    LTEXT           "Static",IDC_LASTPRINT,90,53,84,8
+    LTEXT           "Created:",IDC_STATIC,7,69,28,8
+    LTEXT           "Static",IDC_CREATEDATE,90,67,84,8
+    LTEXT           "Last Changed:",IDC_STATIC,7,83,47,8
+    LTEXT           "Static",IDC_LASTSAVE,90,81,84,8
+    LTEXT           "# Pages:",IDC_STATIC,7,97,30,8
+    LTEXT           "Static",IDC_NUMPAGES,90,95,32,8
+END
+
+IDD_SUMM_PAGE DIALOG DISCARDABLE  0, 0, 184, 148
+STYLE DS_CONTEXTHELP | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "File Info"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Application:",IDC_STATIC,5,10,38,8
+    LTEXT           "Static",IDC_APPNAME,55,10,119,8
+    LTEXT           "Author:",IDC_STATIC,5,27,24,8
+    EDITTEXT        IDC_AUTHOR,53,25,119,13,ES_AUTOHSCROLL
+    LTEXT           "Keywords:",IDC_STATIC,5,43,34,8
+    EDITTEXT        IDC_KEYWORDS,53,41,119,13,ES_AUTOHSCROLL
+    LTEXT           "Comments:",IDC_STATIC,5,59,36,8
+    EDITTEXT        IDC_COMMENTS,53,57,119,38,ES_MULTILINE | ES_WANTRETURN | 
+                    WS_VSCROLL
+    LTEXT           "Title:",IDC_STATIC,5,103,16,8
+    EDITTEXT        IDC_TITLE,53,100,119,13,ES_AUTOHSCROLL
+    LTEXT           "Subject:",IDC_STATIC,5,118,27,8
+    EDITTEXT        IDC_SUBJECT,53,116,119,13,ES_AUTOHSCROLL
+    LTEXT           "Template:",IDC_STATIC,5,134,32,8
+    LTEXT           "Static",IDC_TEMPLATE,55,134,120,8
+END
+
+IDD_ZOOM DIALOG DISCARDABLE  0, 0, 129, 52
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Zoom"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Zoom Factor (%):",IDC_STATIC,10,5,55,8
+    COMBOBOX        IDC_COMBO1,70,5,48,65,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,10,30,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,70,30,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    "IDD_DEBUG$(_DEBUG)", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 128
+    END
+
+    IDD_GRID, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 170
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 64
+    END
+
+    IDD_MEASURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
+    END
+
+    IDD_OFFNEN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 134
+    END
+
+    IDD_OPTION_SELTYPE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 242
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 53
+    END
+
+    IDD_PROP_LINE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 142
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_PROP_SOLID, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 142
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_PROP_TEXT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 185
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 94
+    END
+
+    IDD_PROPERTIES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 250
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 54
+    END
+
+    IDD_STAT_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 177
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 146
+    END
+
+    IDD_SUMM_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 177
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 141
+    END
+
+    IDD_ZOOM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 122
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 45
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "+",            ID_OBJECT_MOVETOFRONT,  ASCII,  NOINVERT
+    "-",            ID_OBJECT_MOVEBACK,     ASCII,  NOINVERT
+    "=",            ID_OBJECT_MOVEFORWARD,  ASCII,  NOINVERT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "E",            ID_DRAW_ELLIPSE,        ASCII,  NOINVERT
+    "L",            ID_DRAW_LINE,           ASCII,  NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_DRAW_POLYLINE,       ASCII,  NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT_ALL,      VIRTKEY, CONTROL, ALT, NOINVERT
+    "R",            ID_DRAW_RECT,           ASCII,  NOINVERT
+    "S",            ID_DRAW_SELECT,         ASCII,  NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    "T",            ID_DRAW_TEXT,           ASCII,  NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_ADD,         ID_OBJECT_MOVEFORWARD,  VIRTKEY, NOINVERT
+    VK_ADD,         ID_OBJECT_MOVETOFRONT,  VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_ESCAPE,      ID_CANCEL_EDIT_CNTR,    VIRTKEY, NOINVERT
+    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    VK_RETURN,      ID_OBJECT_PROPERTIES,   VIRTKEY, ALT, NOINVERT
+    VK_SUBTRACT,    ID_OBJECT_MOVEBACK,     VIRTKEY, NOINVERT
+    VK_SUBTRACT,    ID_OBJECT_MOVETOBACK,   VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "_",            ID_OBJECT_MOVETOBACK,   ASCII,  NOINVERT
+    "e",            ID_DRAW_ELLIPSE,        ASCII,  NOINVERT
+    "l",            ID_DRAW_LINE,           ASCII,  NOINVERT
+    "p",            ID_DRAW_POLYLINE,       ASCII,  NOINVERT
+    "r",            ID_DRAW_RECT,           ASCII,  NOINVERT
+    "s",            ID_DRAW_SELECT,         ASCII,  NOINVERT
+    "t",            ID_DRAW_TEXT,           ASCII,  NOINVERT
+END
+
+IDR_STEMPELTYPE_SRVR_IP ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_ESCAPE,      ID_CANCEL_EDIT_SRVR,    VIRTKEY, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_PROP_LINE DLGINIT
+BEGIN
+    IDC_COMBO8, 0x403, 5, 0
+0x6f6e, 0x656e, "\000" 
+    IDC_COMBO8, 0x403, 5, 0
+0x706f, 0x6e65, "\000" 
+    IDC_COMBO8, 0x403, 7, 0
+0x6c63, 0x736f, 0x6465, "\000" 
+    IDC_COMBO8, 0x403, 7, 0
+0x6966, 0x6c6c, 0x6465, "\000" 
+    IDC_COMBO9, 0x403, 5, 0
+0x6f6e, 0x656e, "\000" 
+    IDC_COMBO9, 0x403, 5, 0
+0x706f, 0x6e65, "\000" 
+    IDC_COMBO9, 0x403, 7, 0
+0x6c63, 0x736f, 0x6465, "\000" 
+    IDC_COMBO9, 0x403, 7, 0
+0x6966, 0x6c6c, 0x6465, "\000" 
+    0
+END
+
+IDD_PROP_TEXT DLGINIT
+BEGIN
+    IDC_COMBO1, 0x403, 5, 0
+0x654c, 0x7466, "\000" 
+    IDC_COMBO1, 0x403, 7, 0
+0x6543, 0x746e, 0x7265, "\000" 
+    IDC_COMBO1, 0x403, 6, 0
+0x6952, 0x6867, 0x0074, 
+    IDC_COMBO2, 0x403, 4, 0
+0x6f54, 0x0070, 
+    IDC_COMBO2, 0x403, 7, 0
+0x6543, 0x746e, 0x7265, "\000" 
+    IDC_COMBO2, 0x403, 7, 0
+0x6f42, 0x7474, 0x6d6f, "\000" 
+    0
+END
+
+IDD_ZOOM DLGINIT
+BEGIN
+    IDC_COMBO1, 0x403, 3, 0
+0x3035, "\000" 
+    IDC_COMBO1, 0x403, 4, 0
+0x3031, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3531, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3032, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3033, 0x0030, 
+    IDC_COMBO1, 0x403, 4, 0
+0x3034, 0x0030, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDS_HOCHWERT            " Y-COORD %1"
+    IDS_RECHTSWERT          "X-COORD %1"
+    IDS_GRID                "GRID"
+    IDS_MAINTOOLBAR         "Main"
+    IDS_DRAWTOOLBAR         "Draw"
+    IDR_MAINFRAME           "Inscription Editor"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDR_STEMPELTYPE         "\nInscription\nInscription\nWSPWIN Inscriptionl (*.stp)\n.stp\nWSPWIN.Stempel.1\nWSPWIN Inscriptionl 1.0\nSTEMPEL\nWSPWIN Inscription"
+    IDR_STEMPELTYPE_DEBUG   "\nInscription\nInscription\nWSPWIN Inscription (*.stp)\n.stp\nWSPWIN.Stempel.1\nWSPWIN Inscription 1.0\nSTEMPEL\nWSPWIN Inscription"
+    IDS_DXFFILES_ALLFILES   "DXF Dateien (*.dxf)|*.dxf|Alle Dateien (*.*)|*.*||"
+    IDS_DXFFILES_ALLFILES2  "DXF Files (*.dxf)|*.dxf|All Files (*.*)|*.*||"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Inscription Editor"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active drawing\nClose"
+    ID_FILE_SAVE            "Save the active drawing\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save drawings\nExit"
+    ID_HELP_FINDER          "List Help topics\nHelp Topics"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Open this drawing"
+    ID_FILE_MRU_FILE2       "Open this drawing"
+    ID_FILE_MRU_FILE3       "Open this drawing"
+    ID_FILE_MRU_FILE4       "Open this drawing"
+    ID_FILE_MRU_FILE5       "Open this drawing"
+    ID_FILE_MRU_FILE6       "Open this drawing"
+    ID_FILE_MRU_FILE7       "Open this drawing"
+    ID_FILE_MRU_FILE8       "Open this drawing"
+    ID_FILE_MRU_FILE9       "Open this drawing"
+    ID_FILE_MRU_FILE10      "Open this drawing"
+    ID_FILE_MRU_FILE11      "Open this drawing"
+    ID_FILE_MRU_FILE12      "Open this drawing"
+    ID_FILE_MRU_FILE13      "Open this drawing"
+    ID_FILE_MRU_FILE14      "Open this drawing"
+    ID_FILE_MRU_FILE15      "Open this drawing"
+    ID_FILE_MRU_FILE16      "Open this drawing"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+    AFX_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_DRAW_TEXT            "Draw a text object\nText"
+    ID_DRAW_ELLIPSE         "Draw an ellipse\nEllipse"
+    ID_DRAW_POLYLINE        "Draw a polyline\nPolyline"
+    ID_OBJECT_PROPERTIES    "Edits the current selection's properties"
+    ID_EXTRAS_OPTIONS       "Change options"
+    ID_EXTRAS_GUIDE         "Change the grid properties"
+    ID_EDIT_PROPS           "Edits the inscription properties"
+    ID_DRAW_POLYGON         "Draw a polygon\nPolygon"
+    ID_VIEW_ZOOMIN          "Zoom in\nZoom In"
+    ID_VIEW_ZOOMOUT         "Zoom out\nZoom Out"
+    ID_OBJECT_DEBUG         "Shows the debug dialog."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERROR_READFILE      "Couldn't read the file %1."
+    IDS_OPENDLG_LSECTION    "VZK %1!s!: Stations %2!s! to %3!s!"
+    IDS_PROPDLG_STATION     "%1!s! - Station %2!s! km"
+    IDS_XVALUE              "X-Value"
+    IDS_YVALUE              "Y-Value"
+    IDS_PROFIL              "Profile"
+    IDS_STATIONIERUNG       "Stationing"
+    IDS_TABLE               "Table"
+    IDS_STAMP               "Inscription"
+    IDS_FRAME               "Frame"
+    IDS_DATA                "Data"
+    IDS_PROFIL_PLURAL       "Profiles"
+    IDS_OPENDLG_STATION     "Station %1!s! km"
+    IDS_NONE                "<none>"
+    IDS_OPTIONS             "Options"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROPERTIES          "Properties"
+    IDS_TITLE               "Title"
+    IDS_STPL_AG1            "Customer 1"
+    IDS_STPL_AG2            "Customer 2"
+    IDS_STPL_PB1            "Project Description 1"
+    IDS_STPL_PB2            "Project Description 2"
+    IDS_STPL_PB3            "Project Description 3"
+    IDS_STPL_BB1            "Page Description 1"
+    IDS_STPL_BB2            "Page Description 2"
+    IDS_STPL_BB3            "Page Description 3"
+    IDS_STPL_PN             "Project Number"
+    IDS_STPL_DAT            "Date"
+    IDS_STPL_BN             "Page Number"
+    IDS_GRAPHIC_ATTRIB      "Graphic Properties"
+    IDS_CLOSE               "Close"
+    IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDP_FAILED_TO_CREATE    "Failed to create object.  Make sure the object is entered in the system registry."
+    IDS_STPL_MS             "Scale"
+    IDS_STPL_UD             "Source File"
+    IDS_STPL_ZU             "Drawing Description"
+    IDS_ABOUT_TITLE         "About WspWin Inscription Editor"
+    IDS_LICENCE_TEXT        "WARNING: This program is protected by copyright law and international treaties.\nUnauthorised reproduction or distribution of this program, or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under law."
+    IDS_RENEWING_OBJECTS    "Renewing objects..."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_GRID            "Show or hide the grid lines.\nGrid Lines"
+    ID_OBJECT_MOVETOFRONT   "Move the selected object to the top"
+    ID_OBJECT_MOVETOBACK    "Move the selected object to the bottom"
+    ID_EDIT_ZOOM            "Changes the zoom factor\nZoom Factor"
+    ID_OBJECT_MOVEBACK      "Move the selected object one level back"
+    ID_OBJECT_MOVEFORWARD   "Move the selected object one level forward"
+    ID_VIEW_SHOWOBJECTS     "Show or hide the OLE Object highlighting"
+    ID_DRAW_SELECT          "Selects objects.\nObject Selector"
+    ID_DRAW_LINE            "Draw a line\nLine"
+    ID_DRAW_RECT            "Draw a rectangle\nRectangle"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nDelete"
+    ID_EDIT_CLEAR_ALL       "Clear all.\nClear all"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_PASTE_SPECIAL   "Insert Clipboard contents with options\nPaste Special"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OLE_INSERT_NEW       "Insert new embedded object\nNew Object"
+    ID_OLE_EDIT_LINKS       "Edit linked objects\nEdit Links"
+    ID_OLE_EDIT_CONVERT     "Convert selected object between types\nConvert Object"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OLE_VERB_FIRST       "Activate embedded or linked object"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle Toolbar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+    ID_VIEW_ZEICHNEN_BAR    "Show or hide the drawing toolbar\nToggle Drawing Toolbar"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SHAREVIOLATION_STEMPEL 
+                            "%1\nThe inscription file couldn't be opened.\nIt is possible that the file is already open in another application."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_TOOLBAR_ZOOMBOX     "Sets the zoom factor for the document.\nZoom Factor"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_UNKNOWN             "(unknown)"
+    IDS_DOC_PROPS           "Properties for %1"
+    IDS_CLOSEWITHSAVE       "Do you want to save all the inscriptions?"
+    IDS_VERSION             "WSPWIN Inscription Editor, Version %d.%d.%d"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_SUMMARYINFO     "Display summary info\nSummary Info"
+    ID_WINDOW_CLOSEALL      "Close all windows\nClose All"
+    ID_FILE_DXF_EXPORT      "Export the drawing in DXF format"
+END
+
+#endif    // Englisch (USA) (unknown sub-lang: 0x0) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDS_HOCHWERT            " HOCH-WERT %1"
+    IDS_RECHTSWERT          " RECHTS-WERT %1"
+    IDS_GRID                "ROSTZ"
+    IDS_MAINTOOLBAR         "Haupt"
+    IDS_DRAWTOOLBAR         "Zeichnen"
+    IDR_MAINFRAME           "Stempel Editor"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDR_STEMPELTYPE         "\nStempel\nStempel\nWSPWIN Stempel (*.stp)\n.stp\nWSPWIN.Stempel.1\nWSPWIN Stempel 1.0\nSTEMPEL\nWSPWIN Stempel"
+    IDR_STEMPELTYPE_DEBUG   "\nStempel\nStempel\nWSPWIN Stempel (*.stp)\n.stp\nWSPWIN.Stempel.1\nWSPWIN Stempel 1.0\nSTEMPEL\nWSPWIN Stempel"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Stempel Editor"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "ER"
+    ID_INDICATOR_CAPS       "UF"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "RF"
+    ID_INDICATOR_OVR        "ÜB"
+    ID_INDICATOR_REC        "MA"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Erstellt ein neues Dokument.\nNeu"
+    ID_FILE_OPEN            "Öffnet ein bestehendes Dokument.\nÖffnen"
+    ID_FILE_CLOSE           "Schließt das aktive Dokument.\nSchließen"
+    ID_FILE_SAVE            "Speichert das aktive Dokument.\nSpeichern"
+    ID_FILE_SAVE_AS         "Speichert das aktive Dokument unter neuem Namen.\nSpeichern unter"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Zeigt Programm-Informationen, Versionsnummer und Copyright an.\nInfo"
+    ID_APP_EXIT             "Verläßt die Anwendung; fragt, ob Dokumente gespeichert werden sollen.\nBeenden"
+    ID_HELP_FINDER          "Sucht nach einem Hilfethema durch Eingabe oder Auswahl eines Stichwortes.\nSuchen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE2       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE3       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE4       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE5       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE6       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE7       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE8       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE9       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE10      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE11      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE12      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE13      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE14      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE15      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE16      "Öffnet dieses Dokument."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_NEW           "Öffnet ein weiteres Fenster für das aktive Dokument.\nNeues Fenster"
+    ID_WINDOW_ARRANGE       "Ordnet die Symbole im unteren Bereich des Fensters an.\nSymbole anordnen"
+    ID_WINDOW_CASCADE       "Ordnet die Fenster überlappend an.\nÜberlappende Fenster"
+    ID_WINDOW_TILE_HORZ     "Ordnet die Fenster nebeneinander an.\nFenster nebeneinander"
+    ID_WINDOW_TILE_VERT     "Ordnet die Fenster nebeneinander an.\nFenster nebeneinander"
+    ID_WINDOW_SPLIT         "Teilt das aktive Fenster in Ausschnitte.\nTeilen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Ändert die Fenstergröße."
+    AFX_IDS_SCMOVE          "Ändert die Position des Fensters."
+    AFX_IDS_SCMINIMIZE      "Verkleinert das Fenster zu einem Symbol."
+    AFX_IDS_SCMAXIMIZE      "Vergrößert das Fenster zu voller Größe."
+    AFX_IDS_SCNEXTWINDOW    "Wechselt zum nächsten Dokumentfenster."
+    AFX_IDS_SCPREVWINDOW    "Wechselt zum vorherigen Dokumentfenster."
+    AFX_IDS_SCCLOSE         "Schließt das aktive Fenster und fordert zur Dokumentspeicherung auf."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Stellt das Fenster in seiner normalen Größe wieder her."
+    AFX_IDS_SCTASKLIST      "Aktiviert die Task-Liste."
+    AFX_IDS_MDICHILD        "Aktiviert dieses Fenster."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_DRAW_TEXT            "Fügt Text hinzu.\nText"
+    ID_DRAW_ELLIPSE         "Zeichnet eine Ellipse.\nEllipse"
+    ID_DRAW_POLYLINE        "Zeichnet einen Linienzug.\nLinienzug"
+    ID_OBJECT_PROPERTIES    "Verändert die graphische Atrribute der Markierung.\nAttribute"
+    ID_EXTRAS_OPTIONS       "Verändert die Optionen."
+    ID_EXTRAS_GUIDE         "Ändert die Gittereinrichtung."
+    ID_EDIT_PROPS           "Ändert die Eigenschaften des Stempels.\nEigenschaften"
+    ID_DRAW_POLYGON         "Zeichnet ein Vieleck.\nVieleck"
+    ID_VIEW_ZOOMIN          "Vergrößert die Zeichnung.\nVergrößern"
+    ID_VIEW_ZOOMOUT         "Verkleinert die Zeichnung.\nVerkleinern"
+    ID_OBJECT_DEBUG         "Shows the debug dialog."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERROR_READFILE      "Konnte Datei %1 nicht zum lesen öffnen."
+    IDS_OPENDLG_LSECTION    "VZK %1!s!: Stationen %2!s! bis %3!s!"
+    IDS_PROPDLG_STATION     "%1!s! - Station %2!s! km"
+    IDS_XVALUE              "X-Werte"
+    IDS_YVALUE              "Y-Werte"
+    IDS_PROFIL              "Profil"
+    IDS_STATIONIERUNG       "Stationierung"
+    IDS_TABLE               "Tabelle"
+    IDS_STAMP               "Stempel"
+    IDS_FRAME               "Rahmen"
+    IDS_DATA                "Daten"
+    IDS_PROFIL_PLURAL       "Profile"
+    IDS_OPENDLG_STATION     "Station %1!s! km"
+    IDS_NONE                "<keine>"
+    IDS_OPTIONS             "Optionen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROPERTIES          "Eigenschaften"
+    IDS_TITLE               "Titel"
+    IDS_STPL_AG1            "Auftraggeber 1"
+    IDS_STPL_AG2            "Auftraggeber 2"
+    IDS_STPL_PB1            "Projektbezeichnung 1"
+    IDS_STPL_PB2            "Projektbezeichnung 2"
+    IDS_STPL_PB3            "Projektbezeichnung 3"
+    IDS_STPL_BB1            "Blattbezeichnung 1"
+    IDS_STPL_BB2            "Blattbezeichnung 2"
+    IDS_STPL_BB3            "Blattbezeichnung 3"
+    IDS_STPL_PN             "Projektnummer"
+    IDS_STPL_DAT            "Datum"
+    IDS_STPL_BN             "Blattnummer"
+    IDS_GRAPHIC_ATTRIB      "graphische Attribute"
+    IDS_CLOSE               "Schließen"
+    IDP_OLE_INIT_FAILED     "OLE 2.0 Initialisierung war nicht erfolgreich. Überprufen Sie, ob die OLE-Bibliotheken in der korrekten Version vorliegen."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDP_FAILED_TO_CREATE    "Failed to create object.  Make sure the object is entered in the system registry."
+    IDS_STPL_MS             "Maßstab"
+    IDS_STPL_UD             "Urdatei"
+    IDS_STPL_ZU             "Zeichnungüberschrift"
+    IDS_ABOUT_TITLE         "Info über WspWin Stempel Editor"
+    IDS_LICENCE_TEXT        "Warnung: Diese Anwendung ist durch Urheberrecht und internationale Vereinbarungen geschützt.\nUnberechtigte Reproduktion oder nicht autorisierter Vertrieb dieser Anwendung oder einer ihrer Komponenten wird gerichtlich verfolgt und kann zu erheblichen Strafen führen."
+    IDS_RENEWING_OBJECTS    "Objekte werden erneuert..."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_GRID            "Blendet die Gitterlinie ein oder aus.\nGitterlinie"
+    ID_OBJECT_MOVETOFRONT   "Plaziert das Objekt an oberster Stelle."
+    ID_OBJECT_MOVETOBACK    "Plaziert das Objekt an unterster Stelle."
+    ID_EDIT_ZOOM            "Legt den Zoomfaktor für die Zeichnung fest.\nZoomfaktor"
+    ID_OBJECT_MOVEBACK      "Plaziert das Objekt um eine Stelle nach unten."
+    ID_OBJECT_MOVEFORWARD   "Plaziert das Objekt um eine Stelle nach oben."
+    ID_VIEW_SHOWOBJECTS     "Blendet die Markierung der OLE-Objekte ein oder aus."
+    ID_DRAW_SELECT          "Wählt Objekte aus.\nObjektwahl"
+    ID_DRAW_LINE            "Zeichnet eine Linie.\nLinie"
+    ID_DRAW_RECT            "Zeichnet ein Rechteck.\nRechteck"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Löscht die Markierung.\nLöschen"
+    ID_EDIT_CLEAR_ALL       "Löscht alles.\nAlles löschen"
+    ID_EDIT_COPY            "Kopiert die Markierung und überträgt sie in die Zwischenablage.\nKopieren"
+    ID_EDIT_CUT             "Entfernt die Markierung und überträgt sie in die Zwischenablage.\nAusschneiden"
+    ID_EDIT_FIND            "Sucht den angegebenen Text.\nSuchen"
+    ID_EDIT_PASTE           "Fügt den Inhalt der Zwischenablage ein.\nEinfügen"
+    ID_EDIT_PASTE_SPECIAL   "Fügt den Inhalt der Zwischenablage unter Verwendung von Optionen ein.\nInhalte einfügen"
+    ID_EDIT_REPEAT          "Wiederholt die letzte Aktion.\nWiederholen"
+    ID_EDIT_REPLACE         "Ersetzt einen bestimmten Text durch einen anderen.\nErsetzen"
+    ID_EDIT_SELECT_ALL      "Markiert das gesamte Dokument.\nAlles markieren"
+    ID_EDIT_UNDO            "Macht die letzte Aktion rückgängig.\nRückgängig"
+    ID_EDIT_REDO            "Wiederholt die vorher rückgängig gemachte Aktion.\nWiederherstellen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Wechselt zum nächsten Fensterausschnitt.\nNächster Ausschnitt"
+    ID_PREV_PANE            "Springt zum vorherigen Fensterausschnitt zurück.\nVorheriger Ausschnitt"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OLE_INSERT_NEW       "Fügt ein neues eingebettetes Objekt ein.\nNeues Objekt"
+    ID_OLE_EDIT_LINKS       "Bearbeitet verknüpfte Objekte.\nVerknüpfungen bearbeiten"
+    ID_OLE_EDIT_CONVERT     "Wandelt ein Objekt in einen anderen Typ um.\nObjekt konvertieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OLE_VERB_FIRST       "Aktiviert ein eingebettetes oder verknüpftes Objekt."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Blendet die Hauptsymbolleiste ein oder aus.\nHauptsymbolleiste ein-/ausschalten"
+    ID_VIEW_STATUS_BAR      "Blendet die Statusleiste ein oder aus.\nStatusleiste ein-/ausschalten"
+    ID_VIEW_ZEICHNEN_BAR    "Blendet die Zeichnensymbolleiste ein oder aus.\nZeichnensymbolleiste ein-/ausschalten"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SHAREVIOLATION_STEMPEL 
+                            "%1\nDer Stempel konnte nicht geöffnet werden.\nDer Stempel ist möglicherweise bereits geöffnet."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_TOOLBAR_ZOOMBOX     "Legt den Zoomfaktor für die Zeichnung fest.\nZoomfaktor"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_UNKNOWN             "(unbekannt)"
+    IDS_DOC_PROPS           "Eigenschaften von %1"
+    IDS_CLOSEWITHSAVE       "Möchten Sie alle Stempel speichern?"
+    IDS_VERSION             "WSPWIN Stempel Editor, Version %d.%d.%d"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_SUMMARYINFO     "Zeigt Datei-Info an.\nEigenschaften"
+    ID_WINDOW_CLOSEALL      "Schließt alle offenen Fenster.\nAlle schließen"
+    ID_FILE_DXF_EXPORT      "Erstellt eine DXF-Datei."
+END
+
+#endif    // Deutsch (Deutschland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE 7, 1
+#pragma code_page(1252)
+#endif
+#include "res\Stempel.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.deu\afxres.rc"          // Standard components
+#include "l.deu\afxolecl.rc"       // OLE client resources
+#include "..\..\commonMfc\include\commonMfc.rc"
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,3 @@
+- speichern aller klassen -> Abhängigkeiten etc. richtg klären
+- ProfilCtrl: Profile mit nur einem Punkt nicht anzeigen; mindest Höhe ( sonst roter Balken bei 0-Höhenunterschied )
+- falls beim profil-Laden in Zeile 14 ein Fehler autritt wird MessageBox "Error" eingeblendet aber nicht abgebrochen

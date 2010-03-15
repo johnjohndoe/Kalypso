@@ -1,0 +1,150 @@
+\section{Projektverwaltung}
+
+\subsection{Begriffserläuterung}
+Die Projektverwaltung verläuft analog der bewährten Struktur im BCE-Spiegel\-linien\-pro\-gramm
+\wspwin\ und gliedert sich in:\\
+
+\begin{itemize}
+	\item {\textbf{Projekt:}}
+	ein benutzerdefiniertes Verzeichnis, in dem alle Daten, die in einem
+	inhaltlichen Zusammenhang zueinander stehen, abgelegt sind (z.B. alle Daten
+	im Einzugsgebiet des Neckars).
+	
+	\item {\textbf{Gewässer:}}
+	innerhalb eines Projektes können mehrere Gewässer (z.B. aus demselben
+	Einzugsgebiet) definiert werden
+	
+	\item {\textbf{Zustand:}}
+	für jedes Gewässer können schließlich mehrere geometrische Zustände (z.B.
+	Ist-Zustand, Planungsfall) angelegt werden. Innerhalb eines Zustandes
+	existieren schließlich Quer- und Längsprofile, die die notwedigen 
+	Informationen beinhalten.
+	
+	\item {\textbf{Abflüsse:}}
+	Es können mehrere Abflussereignisse verarbeitet werden.
+	
+	\item {\textbf{Varianten:}}
+	unterschiedliche Eingaben für die hydraulische Berechnung werden in
+	Berechnungsvarianten organisiert.
+	
+\end{itemize}
+
+\hypertarget{cmd:beenden}{}
+\hypertarget{cmd:datei-projektmanager}{}
+\subsection{Projektmanager}
+\subsubsection{Allgemeines}
+
+Bevor mit \wspmap\ gearbeitet werden kann, müssen Projekte, Zustände und 
+Querprofile angelegt sein. Die Projektverwaltung erfolgt
+(wenn nicht bereits Projekte aus \wspwin\  vorhanden sind) komplett über den Projektmanager, der aus dem Menü \\ \menu{Datei / Projektmanager} geöffnet wird
+(öffnet sich bei Programmstart automatisch)(siehe Abb. \ref{fig:menu_pm} und \ref{fig:projektmanager}). 
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.70]{abb1}
+	\end{center}
+	\caption{Projektmanager öffnen}
+	\label{fig:menu_pm}
+\end{figure}
+
+Über den Menüpunkt \menu{Projekt / Neu} im Projektmanager wird ein neues
+Projekt angelegt. Dazu muss der entsprechende Pfad eingegeben oder ausgewählt werden (z.B. \file{D:/projekte/bfg/rhein}. 
+
+Falls bereits Projekte existieren, die aber nicht in der Liste aufgeführt sind, können diese 
+über \menu{Einfügen} importiert werden)(Abb. \ref{fig:projektmanager}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.65]{abb2}
+	\end{center}
+	\caption{Projektmanager}
+	\label{fig:projektmanager}
+\end{figure}
+
+Bei Auswahl eines der aufgeführten Projekte werden sämtliche Gewässer und die dazugehörigen Zustände eines Projektes, sofern bereits Daten vorhanden sind, angezeigt. Wenn noch keine Daten
+existieren, muss zunächst ein neuer Zustand über den Menüpunkt \menu{Zustand / Neu} definiert werden. In der
+daraufhin erscheinenden Maske wird der Gewässername und eine
+Zustandsbezeichnung eingegeben. Es können mehrere Zustände für dasselbe Gewässer angelegt werden. Nachdem Sie einen neuen Zustand angelegt haben, wird
+dieser in der Übersicht aufgeführt. Durch Aktivierung des +/- Kästchens können Sie ein
+Gewässer bzw. einen Zustand in der Baumstruktur aufklappen, woraufhin Querprofile,
+Längsschnitte, Abflüsse und Berechnungsvarianten zur Auswahl stehen.
+
+\subsubsection{Datenimport}
+Bezüglich des Datenimports stehen unabhängig von \wspwin\  verschiedene Schnitt\-stel\-len zum Datenimport zur Verfügung.\\
+
+Weitere Beschreibungen und Beispieldateien zu den oben genannten Import-Formaten befinden sich auf
+der WspWin-CD im Verzeichnis \menu{Informationen/Import-Export-Formate}. 
+
+Folgende Datenformate werden unterstützt:\\
+
+\underline{Geometrische Daten:}
+
+\begin{itemize}
+	\item {DA66:}
+	Profilgeometrie gem. REB-Standard
+	\item {DA50:}
+	Georeferenzierung der Profilfestpunkte
+	\item {WSV:}
+	Standardformat der Wasser- und Schiffahrtsverwaltung
+	\item {Tripple:}
+	Fluss-km, x-Koordinate, y-Koordinate, z-Koordinate, ggf. \\
+	Kennung (jeweils durch	Kommata getrennt)
+\end{itemize}
+
+Beim Import von DA66-Dateien ist die Reihenfolge zu be\-achten (zuerst DA66 und dann die
+Georeferenzierung in DA50). Sollten die Daten in einer Datei vorliegen, ist diese 2x (einmal
+über DA66 und einmal über den Menüpunkt DA50) zu importieren.
+\\
+Bei Import des Tripple-Formats können Knickpunkte durch zusätzliche Eingabe der Kennung
+KP hinter der letzten Koordinaten gekennzeichnet werden. Die Abstände innerhalb des Profils
+(y-Koordinaten) berechnen sich aus der Distanz zum ersten Profilpunkt bzw. zum zuletzt gelesenen Knickpunkt.
+Ebenso kann die Lage der Trennflächen durch die Kennzeichnung RU und LU markiert
+werden. Die durchströmten Bereiche werden stets automatisch auf den letzten Knickpunkt
+(bzw. den ersten Profilpunkt ) vor der ersten Trennfläche und den ersten Knickpunkt (bzw.
+letzten Profilpunkt) nach der zweiten Trennfläche gesetzt.
+
+\underline{Hydraulische Daten:}\\
+Über den Menüpunkt \menu{Hyk} können die Lage von Durchströmten Bereichen, Trennflächen und
+Modellgrenzen sowie von Böschungskanten gemäß BfG\footnote{Bundesanstalt für Gewässerkunde}-Format importiert werden:\\
+Bsp.:\\
+RL VL HF VR RR:\\
+RL  $\Rightarrow$  Modellgrenze li. Grenze\\
+VL  $\Rightarrow$  Durchströmter Bereich li. Grenze\\
+HF  $\Rightarrow$  Trennfläche links\\
+VR  $\Rightarrow$  Trennfläche rechts\\
+RR  $\Rightarrow$  Durchströmter Bereich rechte Grenze\\
+d.h. RL-VL =Durchströmter Bereich links\\
+VL-HF = Vorland links\\
+HF-VR = Hauptöffnung\\
+VR-RR = rechtes Vorland\\
+
+Berechnete Wasserstände im WST-Format der BfG können mit den zugehörigen Abflüssen über den Menüpunkt WST importiert werden. Sie werden in Berechnungsvarianten bzw.
+Längsschnitten gespeichert. Aus den Längsschnitten können die Wasserspiegel über die
+Menüfolge \\ \menu{Längsschnitt / Wsp einfügen} in die Profile eingetragen werden \\ (Abb. \ref{fig:abbdrei}), damit diese als Überschwemmungsgrenzen in der Karte angezeigt werden. So können z.B.
+verschiedene Abflüsse in Berechnungsvarianten / Längsschnitten verwaltet werden. Ebenso
+können nicht mehr benötigte Wasserspiegeleinträge wieder entfernt werden.
+
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{abbdrei}
+	\end{center}
+	\caption{Menüfolge: Wasserspiegel in Profile eintragen}
+	\label{fig:abbdrei}
+\end{figure}
+
+Der Datenimport erfolgt stets durch Selektion einer Datei im
+Standard-Windows-Dialog. Zu beachten ist, daß die importierten Daten in jedem Fall über
+ihre Gauss-Krüger-Koordinaten georeferenziert sein müssen, um im \wspmap\ dargestellt zu
+werden. Nachdem alle Daten importiert wurden, schließt sich das Fenster des
+Projektmanagers automatisch.
+
+\subsubsection{Datenexport}
+Über den Projektmanager können Daten (\menu{Datenexport}) nach der Bearbeitung 
+in \wspmap\ auch in verschiedene oben beschriebene Formate exportiert werden.
+
+\subsubsection{Projekt öffnen}
+
+Bevor mit \wspmap\ gearbeitet werden kann, muß immer erst ein Projekt im Projektmanager geöffnet werden. Dies erfolgt im Projektmanager über den Menü\-punkt \menu{Projekt / öffnen}.
+Nachdem ein Projekt geöffnet wurde, wird es im Fenstertitel der Anwendung angezeigt.
+

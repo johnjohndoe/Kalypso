@@ -1,0 +1,52 @@
+\documentclass[12pt, a4paper]{article}
+%\usepackage{makeidx}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx, color}
+	\DeclareGraphicsExtensions{.png} 
+	\graphicspath{{images/}}
+\usepackage[pdftex, 
+						colorlinks, linkcolor=blue, urlcolor=blue,
+						bookmarks=true,									   %%% es werden Bookmarks erzeugt
+						bookmarksopen=false,  							 %%% Bookmarks werden alle angezeigt
+						bookmarksnumbered=true]            %%% ... with numbers
+					  {hyperref}
+\usepackage[german]{babel}				
+\usepackage[all]{hypcap}
+\usepackage{wsp}
+
+%\makeindex
+
+\input{title.tex}
+
+\pagestyle{headings}
+
+\begin{document}
+
+%Titelseite
+\maketitle
+\thispagestyle{empty}
+\clearpage
+
+% Inhaltsverzeichnis
+\hypertarget{toc}{}
+\tableofcontents
+
+\include{einfuehrung}
+\include{programStarten}
+\include{profildarstellung}
+\include{plots}
+\include{multiplot}
+\include{stempel}
+\include{template}
+\include{print}
+\include{save}
+
+\listoffigures
+\clearpage
+
+%\listoftables
+%\clearpage
+
+%\printindex
+
+\end{document}

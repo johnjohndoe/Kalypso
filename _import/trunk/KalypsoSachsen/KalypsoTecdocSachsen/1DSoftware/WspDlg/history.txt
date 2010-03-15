@@ -1,0 +1,144 @@
+Modulhistory von wspdlg.dll
+---------------------------
+
+Die jeweilige Überschrift bezeichnet das CVS-Tag.
+Der Tag hat jeweils die Form: wspdlg.dll-%fileverson%
+
+CVSStart
+--------
+Tag für den Import-Branch
+
+
+wspdlg-1-1-2-4
+--------------
+Tag für die Import-Revision. Ab jetzt CVS-Verwaltung
+
+wspdlg-1-1-3-0
+--------------
+- Sortierte Exporte + Bugfix 
+
+
+wspdlg.dll-1.2.0.0
+------------------
+- Projektmanager resizable
+- Kopieren von Zuständen
+- automatisches Verstecken der Projektauswahl, falls weniger als zwei Projekte 
+  vorhanden sind
+- neuer Menüpunkt 'Längsschnitte' zum einfügen/löschen von Wsp's
+- Umschaltbar einfaches Menu / volles Menu
+- Feature-Datei auch für wspdlg.dll
+- Karten öffnen / erstellen aus dem Projektmanager ( d.h. sowas wie commandrouting zum Mapper )
+- optionales Abstellen der Knoten 'Querprofile' 'Längsschnitte' 'Abflüsse' 'Berechnungsvarianten' im
+    Status-Baum
+- falls keine Knoten mehr vorhanden sind, wird Profilfenster ausgeblendet
+- Bugfix für den Caddy-Import: ab jetzt sind die numerischen Einstellungen im wqspdlg.dll stets
+    auf englisch ( damit immer . als Dezimaltrennzeichen gewählt wird )
+    
+wspdlg-dll-1-2-0-1
+------------------
+- Bugfix: ungültige Zeichen im Zustandsnamen führten zum Misslingen des Datenexports
+    -> Zeichen jetzt im Zustandsdialog verboten
+    -> Zeichen / und \ werden vor Exportfiledialog durch _ ersetzt
+
+wspdlg-dll-1-2-1-0
+------------------
+- Bugfix im CaddyImport: das Datum aus dem Statedialog war zu lang
+- im dialog Calcpg1-BCE-Version: die Checkbox 'HMO' weg
+- falls wspdlg.bfe nicht existiert wird dennoch gestartet
+
+wspdlg-dll-1-2-1-1 20.11.2001
+------------------
+Neu kompilation wg. Änderungen in wspprj
+
+Hängt ab von:
+	- wspprj-dll-1-2-5-0
+	
+wspdlg-dll-1-2-1-2 11.12.2001
+------------------
+Neue Kompilation für Änderungen in WspPrj.dll
+
+Hängt ab von:
+	- wspprj-dll-1-2-5-1
+
+wspdlg-dll-1-2-1-3
+------------------
+Neue Kompilation für Änderungen in WspPrj.dll
+
+Hängt ab von:
+	- wspprj-dll-1-2-5-3
+
+wspdlg-dll-1-2-2-0 15.2.2002
+------------------
+Lädt keine Optionsdatei mehr
+
+Hängt ab von wspprj-dll-1-2-5-3
+
+wspdlg-dll-1-2-2-1 12.3.2002
+------------------
+Anpassung an Änderungen des Common-Source in die Lib CommonMfc
+
+Hängt ab von 
+	wspprj-dll-1-2-5-4
+	bce-lib-1-1-0-0
+	common-lib-1-0-0-0
+
+wspdlg-dll-1-2-2-2 25.3.2002
+------------------
+Anpassung an Änderungen in CommonMfc.lib
+
+Hängt ab von 
+	wspprj-dll-1-2-5-5
+	bce-lib-1-1-0-0
+	common-lib-1-0-1-0
+	
+wspdlg-dll-1-4-0-0 4.6.2002
+------------------
+WspPrj.dll in statische Lib umgewandelt
+
+Hängt ab von 
+	wspprj-lib-1-3-0-0
+	bce-lib-1-1-0-2
+	common-lib-1-0-3-0
+
+wspdlg-dll-1-4-1-0 17.6.2002
+------------------
+- Caddy-Import: durch Änderung im StateDlg ( wspprj.lib ) Absturz bei sprintf
+
+Hängt ab von 
+	wspprj-lib-1-3-0-0
+	bce-lib-1-1-0-2
+	common-lib-1-0-3-0
+
+wspdlg-dll-1-5-0-0 7.2.2003
+------------------
+- Dialog für Eingabe Berechnungsparameter BCE:
+	- Kalinin-Miljukov Kontrollkästchen nur noch bei Bordvoll sichtbar (Seite WSP-Lagen)
+	- der Text 'nur bei Bordvoll' nicht mehr an den Konstrollkästchen (Seite WSP-Lagen)
+	- bei BV-ungleichförmig werden Qmin,QMax und Qstep jetzt in m3/s eingegeben und dargestellt, die Einheit steht
+	am Label (Seite BV-Berechnung)
+
+Hängt ab von 
+	wspprj-lib-2-0-1-0
+	bce-lib-1-1-2-1
+	common-lib-2-0-0-1
+
+wspdlg-dll-1-5-0-1 18.2.2003
+------------------
+- Bugfix: Option 'Kundennameedit' wurde nicht richtig unterstützt
+- GetFeastureVersion liefert jetzt die ProduktNummer des Moduls
+- GetFeatureDate liefert jetzt die Erstellungszeit des Moduls
+
+Hängt ab von 
+	wspprj-lib-2-0-1-0
+	bce-lib-1-1-2-1
+	common-lib-2-0-0-2
+
+wspdlg-dll-1-5-1-0 8.3.2003
+------------------
+- Bugfix: die Berechnungs-Dialoge akzeptieren jetzt wieder . und , als Dezimaltrennzeichen
+- Beschriftung Pasche-Berechnungsdialoge: beta wird nur mit einem t geschrieben
+
+wspdlg-dll-1-6-0-0 24.1.2005
+------------------
+- überflüssige Optionen (hmo, kalinin, überschwemmungslinien) entfernt
+- Registry-Key handling überarbeitet (siehe auch wspwin-exe)

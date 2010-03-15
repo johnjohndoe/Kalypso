@@ -1,0 +1,94 @@
+\section{Fortgeschrittene Handhabung}
+
+\hypertarget{cmd:extras-nutzungsklassen}{}
+\subsection{Zuweisen von Nutzungsklassen}
+\wspmap\ bietet eine komfortable Möglichkeit, Profilen mit Hilfe von digitalen Landnutzungs-Themen Rauheiten und Bewuchs-Parameter zuzuordnen. Für diese Option werden folgende Daten benötigt:\\
+- Querprofile als Punkte-Thema (z.B. automatisch erzeugte Profilpunkte)\\
+- digitalisierte Landnutzung als Polygon-Thema\\
+- Nutzungstabelle, über die eine Zuordnung zwischen der Landnutzung und den dazugehörigen Parametern
+  erfolgt\\
+  \\
+
+Über die Menüfolge \menu{Extras / Nutzungklassen} haben Sie die Mög\-lich\-keit, Rauheits- und
+Bewuchswerte den Punkten der Querprofile zuzuordnen. Andererseits können Nutzungsklassen mit
+verschiedenen Landnutzungsformen angelegt, diesen Werte zugeordnet und schließlich mit
+Attributen (Einzelwerten) von z.B. importierten digitalisierten Landnutzungskarten im
+shape-Format verschnitten werden. Dazu wird über \menu{Neu} ein Name für die Tabelle vergeben
+und für jede 
+Nutzungsart eine Zeile angelegt. Über \ctrl{Spalte löschen} und \ctrl{Neue Spalte} legen Sie
+fest, welche Parameter zugeordnet werden sollen (Vermeiden Sie Werte mit 0 und löschen Sie
+besser die entsprechenden Spalten) (Abb. \ref{fig:abb16}). 
+Die Tabellen werden in Ihrem Betriebssystemverzeichnis
+im Unterverzeichnis \file{Wsp-Nutzklassen} einzeln gespeichert und können hier auch verwaltet
+werden.\\
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.70]{abb16}
+	\end{center}
+	\caption{Anlegen von Nutzungsklassen}
+	\label{fig:abb16}
+\end{figure}
+%Abb. 16: Anlegen von Nutzungsklassen
+
+\hypertarget{cmd:themen-mitprofilenschneiden}{}
+\subsection{Objekte mit Profilen schneiden}
+Es muß zunächst entschieden werden, ob Nutzungsklassen zuzuordnen sind (bei den
+Datensätzen Rauheit ks, kSt sowie Bewuchs AX, AY, DP) oder Trennlinien (bei Trennflächen
+und Durchströmten Bereichen) erzeugt werden sollen. Im Fall der Nutzungsklassen muß eine
+Tabelle zugeordnet werden und festgelegt werden, welchem Attribut diese zuzuordnen ist (Abb. \ref{fig:abb13}).\\
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.70]{abb13}
+	\end{center}
+	\caption{Thema mit Profil verschneiden über Nutzungsklassen}
+	\label{fig:abb13}
+\end{figure}
+%Abb.13: Thema mit Profil verschneiden über Nutzungsklassen\\
+Im Fall der Trennlinien ist das zu erstellende Thema zu wählen und festzulegen, ob evtl.
+vorhandene Trennlinien ersetzt werden sollen. Gegebenenfalls ist eine Einschränkung auf ein
+bestimmtes Attribut möglich  (Abb. \ref{fig:abb14}).\\
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{abb14}
+	\end{center}
+	\caption{Thema mit Profil verschneiden für Trennlinien}
+	\label{fig:abb14}
+\end{figure}
+
+%Abb.14: Thema mit Profil verschneiden für Trennlinien\\
+
+Um ein neu angelegtes oder importiertes/hinzugefügtes Thema auch \\ tatsächlich im Profil als
+einen Punkt innerhalb der referenzierten Datensätze zu speichern, muss das Linien- oder
+Polygonthema (z.B. Trennflächen-neu) mit den Profilen verschnitten werden. Hierzu markiert
+man das entsprechende Thema in der Themenübersicht. Mit einem Klick auf die
+rechte Maustaste erscheint das Kontextmenü und es wird \menu{Mit Profilen schneiden}
+ausgewählt. Nachdem die Verschneidung durchgeführt wurde, sind die entsprechenden
+Punkte in der Karte und im Querprofil ersichtlich. Sie werden in das ggf. bereits
+existierende Thema integriert.
+
+
+\hypertarget{cmd:profilabstaende-ermitteln}{}
+\subsection{Ermittlung von Profilabständen}
+Unter dem Menü \menu{Extras / Profilabstände ermitteln} werden die Abstände zwischen den Profilen auf Grundlage der Georeferenzierung neu berechnet. Zur Aktivierung des Menüpunktes muss zunächst das Thema \emph{Profillinien} aktiviert werden. 
+
+Die Abstandsberechnung erfolgt jeweils automatisch zwischen zwei aufeinander folgenden Profilen für das Hauptgerinne, das linke und rechte Vorland. Die Profilabstände werden anschließend in einer Tabelle auf dem Bildschirm ausgegeben (Abb.~\ref{fig:profilabstaende}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{profilabstand}
+	\end{center}
+	\caption{Ausgabetabelle nach Ermittlung der Profilabstände}
+	\label{fig:profilabstaende}
+\end{figure}
+
+Über die Schaltfläche \menu{Speichern und Ende} werden die aktuell ermittelten Abstände in die Strangtabelle des WSPWIN-Projektes (nach erneuter Bestätigung) übernommen. Durch Klick auf \menu{Abbrechen} wird die Tabelle geschlossen. Zusätzlich kann auch die Logdatei als Text eingesehen werden.
+
+\hypertarget{cmd:flip-profiles}{}
+\subsection{Profile Spiegeln}
+Der Menüpunkt \menu{Tools / Profil spiegeln} ermöglicht das Spiegeln der Profilpunkte mit der Mittelachse als Spiegellinie. Nach Aktivierung des Tools erfolgt  die Spiegelung eines Profils durch Klick mit dem Stiftsymbol auf eine Profillinie. Die Überprüfung des Ergebnisses kann durch Visualisierung in der Profilansicht erfolgen.
+
+Die Profilspiegelung wird zunächst nur in der Kartenansicht gespeichert. Sollen die Änderungen in das Berechnungsprogramm WspWin übertragen werden, müssen die entsprechenden Querprofile über die Profilübersicht gespeichert werden (vgl. auch Abschnitt~\ref{subsec:profildaten-speichern}). 
+	

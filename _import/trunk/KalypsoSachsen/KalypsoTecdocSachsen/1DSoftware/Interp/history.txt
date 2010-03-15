@@ -1,0 +1,63 @@
+Modulhistory von interp.exe
+---------------------------
+
+Die jeweilige Überschrift bezeichnet das CVS-Tag.
+Der Tag hat jeweils die Form: interp-exe-%fileversion%
+
+CVSStart
+--------
+Start der CVS-Verwaltung: Tag für den Import Branch
+
+
+wspwin-7-0-1
+------------
+Tag für die Import-Revision. Ab jetzt CVS-Verwaltung
+
+interp-exe-1-1-0-0 20.11.2001
+------------------
+- Überschriften PK und VZK in der ersten Dialogseite vertauscht
+- es gibt nur noch eine Version ( nicht mehr DDE / Kommandozeile getrennt )
+	falls ein Kommando per Kommandozeile übergeben wird, wird dies ausgeführt, sonst wartet Interp auf DDE
+- global.h aufgelöst
+- tlist nach Common geschoben
+- Bugfix: manchmal lief der Interp in eine Endlosschleife
+
+Hängt ab von:
+	- wspprj-dll-1-2-5-0
+
+interp-exe-1-1-0-1 29.1.2002
+------------------
+Neukompilation wg. Änderung in wspprj-dll
+
+Hängt ab von wspprj-dll-1-2-5-3
+
+
+interp-exe-1-1-0-2 12.3.2002
+------------------
+Anpassung an neue CommonMfc - Lib
+
+Hängt ab von
+	wspprj-dll-1-2-5-4
+	common-lib-1-0-0-1
+
+interp-exe-1-1-0-3 25.3.2002
+------------------
+Anpassung an Änderungen in CommonMfc
+
+Hängt ab von
+	wspprj-dll-1-2-5-5
+	common-lib-1-0-1-0
+
+
+interp-exe-1-2-0-0 4.6.2002
+------------------
+WspPrj.dll in statische Lib umgewandelt -> interp.exe angepasst
+
+interp-exe-1-2-1-0  8.7.2003
+------------------
+- Textmeldungen eingedeutscht
+- Anzahl der maximalen Punkte auf 1000 gesetzt
+
+interp-exe-1-2-2-0 24.1.2005
+------------------
+- nach Interpolation werden die Profile jetzt immer ausgedünnt (wie im Mapper), Schranke ist 2 Zentimeter

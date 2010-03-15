@@ -1,0 +1,1 @@
+- Triangle in eine Klasse stecken

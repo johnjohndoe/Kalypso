@@ -1,0 +1,13 @@
+#ifndef _AUTOSKETCH_DIALOG_H_INCLUDED_
+#define _AUTOSKETCH_DIALOG_H_INCLUDED_
+
+#define MODE_ASKETCH_START      1
+#define MODE_ASKETCH_OPTIONS    0
+#define MODE_EDITOR_START       3
+#define MODE_EDITOR_OPTIONS     2
+#define MODE_SONDERPROG_START   5
+#define MODE_SONDERPROG_OPTIONS 4
+
+int StartAutoSketch(WINDOW parentWin,int mode); // nur wspm001
+
+#endif _AUTOSKETCH_DIALOG_H_INCLUDED_

@@ -1,0 +1,3724 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+#include "..\..\commonMfc\include\commresource.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Englisch (USA) (unknown sub-lang: 0x0) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, 0x0
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 257, 127
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,15,20,20
+    LTEXT           "GIDHAM, Version ???",IDC_STATIC3,40,8,169,8,SS_NOPREFIX
+    LTEXT           "Copyright © BCE, 2000",IDC_ABOUT_COPYRIGHT,40,23,171,8
+    DEFPUSHBUTTON   "OK",IDOK,215,5,32,14,WS_GROUP
+    LTEXT           "Static",IDC_PHYSICAL_MEM,101,95,109,8
+    LTEXT           "Static",IDC_DISK_SPACE,101,110,114,8
+    LTEXT           "Memory Available:",IDC_STATIC,5,95,58,8
+    LTEXT           "Unused Disk Space:",IDC_STATIC,5,110,90,8
+    LTEXT           "Licensed to:",IDC_STATIC,35,50,55,8
+    LTEXT           "BCE",IDC_STATIC1,40,60,210,8
+    LTEXT           "Koblenz",IDC_STATIC2,40,70,210,8
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKRECT,5,85,245,1
+    LTEXT           "ESRI® software compatible",IDC_STATIC,40,35,130,8
+END
+
+IDD_ADVNCD_LABEL_PAGE DIALOGEX 0, 0, 352, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "No Overlapping Labels"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "Theme name:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    GROUPBOX        "Classification Options",IDC_STATIC,10,20,105,95
+    CONTROL         "Single Symbol",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Unique Values",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Class Breaks",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,65,90,10
+    CONTROL         "Standard Labels",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "No Overlapping Labels",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "The No Overlapping Labels classification draws text for a specified field and attempts to resolve overlapping and crowding of labels.",
+                    IDC_STATIC,10,120,105,60,NOT WS_GROUP
+    LTEXT           "Text field:",IDC_STATIC,125,25,90,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,125,35,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    GROUPBOX        "Label placement",IDC_STATIC,125,55,95,60
+    CONTROL         "On",IDC_RADIO6,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,135,65,25,10
+    CONTROL         "Above",IDC_RADIO7,"Button",BS_AUTORADIOBUTTON,135,80,37,
+                    10
+    CONTROL         "Below",IDC_RADIO8,"Button",BS_AUTORADIOBUTTON,135,95,35,
+                    10
+    CTEXT           "Abstand",IDC_STATIC,181,65,34,8,NOT WS_GROUP
+    CONTROL         "Slider2",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_VERT | TBS_TOP | WS_GROUP | WS_TABSTOP,185,75,25,35
+    PUSHBUTTON      "Font...",IDC_BUTTON1,170,125,50,14,WS_GROUP
+    CONTROL         "Draw features",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,230,25,100,10
+    CONTROL         "Allow duplicates",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,40,100,10
+    CONTROL         "Mask labels",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,55,100,10
+    LTEXT           "Mask colour:",IDC_STATIC,230,70,65,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON2,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,305,70,20,10,WS_EX_DLGMODALFRAME
+    GROUPBOX        "Label size",IDC_STATIC,230,85,105,35
+    CONTROL         "Slider6",IDC_SLIDER2,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_GROUP | WS_TABSTOP,245,95,75,20
+    CONTROL         153,IDC_STATIC,"Static",SS_BITMAP,235,100,11,10
+    CONTROL         32451,IDC_STATIC,"Static",SS_BITMAP,320,100,11,10
+    GROUPBOX        "",IDC_STATIC,230,125,105,40
+    CONTROL         "Scale labels",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,235,125,65,10
+    CONTROL         "Slider1",IDC_SLIDER3,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_GROUP | WS_TABSTOP,245,140,75,20
+    CONTROL         153,IDC_STATIC,"Static",SS_BITMAP,235,145,11,10
+    CONTROL         32451,IDC_STATIC,"Static",SS_BITMAP,320,145,11,10
+END
+
+IDD_BREAKS_SYMBOL_PAGE DIALOGEX 0, 0, 352, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Class Breaks"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "Theme name:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "The Class Breaks classification applies symbols to a set of discrete values.",
+                    IDC_STATIC,10,125,105,45,NOT WS_GROUP
+    LTEXT           "Numeric field:",IDC_STATIC,125,25,115,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,125,40,115,80,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "No. of Classes:",IDC_STATIC,250,25,50,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT2,250,40,40,14,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ARROWKEYS,290,40,11,14
+    LTEXT           "Class breaks:",IDC_STATIC,125,60,115,8,NOT WS_GROUP
+    CONTROL         "",IDC_LEGEND1,"{6E9D12DF-A025-11D2-9F40-00C04F8ECE6F}",
+                    0x0,125,75,115,100
+    LTEXT           "Colour ramp:",IDC_STATIC,250,75,45,8,NOT WS_GROUP
+    LTEXT           "Size ramp:",IDC_STATIC,305,75,40,8,NOT WS_GROUP
+    LTEXT           "Start:",IDC_STATIC,250,90,25,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON1,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,285,90,20,10,WS_EX_DLGMODALFRAME
+    COMBOBOX        IDC_COMBO2,315,90,30,55,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "End:",IDC_STATIC,250,110,16,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON2,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,285,110,20,10,WS_EX_DLGMODALFRAME
+    COMBOBOX        IDC_COMBO3,315,110,30,55,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    CONTROL         "Remove outline?",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,250,130,95,10
+    CONTROL         "",IDC_MAP1,"{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",NOT 
+                    WS_VISIBLE,330,150,10,10
+    GROUPBOX        "Classification Options",IDC_STATIC,10,20,105,95
+    CONTROL         "Single Symbol",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Unique Values",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Class Breaks",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,65,90,10
+    CONTROL         "Standard Labels",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "No Overlapping Labels",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+END
+
+IDD_MAP_FORM DIALOG DISCARDABLE  0, 0, 20, 18
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",IDC_MAP1,"{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",
+                    WS_TABSTOP,0,0,15,15
+END
+
+IDD_MAP_OPEN DIALOG DISCARDABLE  0, 0, 277, 97
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Open Map"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,220,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,220,22,50,14
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,10,5,200,85
+END
+
+IDD_NEW_LAYER DIALOG DISCARDABLE  0, 0, 257, 186
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Theme"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name:",IDC_STATIC,10,5,30,8
+    EDITTEXT        IDC_EDIT1,45,5,150,14,ES_AUTOHSCROLL
+    LTEXT           "File:",IDC_STATIC,10,25,14,8
+    LTEXT           "",IDC_STATIC1,45,25,145,8
+    PUSHBUTTON      "Select...",IDC_BUTTON1,200,25,50,14
+    GROUPBOX        "Theme Type",IDC_STATIC,10,40,75,65,WS_GROUP
+    CONTROL         "Points",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,20,55,55,10
+    CONTROL         "Lines",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,70,55,10
+    CONTROL         "Polygons",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,85,55,10
+    GROUPBOX        "Data Fields",IDC_STATIC,95,40,155,115,WS_GROUP
+    LTEXT           "No. of data fields:",IDC_STATIC,105,55,80,8
+    EDITTEXT        IDC_EDIT2,195,55,20,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS | WS_TABSTOP,215,55,11,
+                    14
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,105,75,135,70
+    LTEXT           "Note:\nIt is not possible to change the theme type or the theme's data fields after the theme has been created.",
+                    IDC_STATIC,10,115,75,60
+    DEFPUSHBUTTON   "OK",IDOK,140,165,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,200,165,50,14
+END
+
+IDD_NEW_MAP DIALOG DISCARDABLE  0, 0, 172, 47
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Map"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name:",IDC_STATIC,7,7,30,10,SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBO1,45,5,120,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,45,25,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,115,25,50,14
+END
+
+IDD_OBJECT_QUERY DIALOG DISCARDABLE  0, 0, 192, 221
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Object Query"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,80,200,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,135,200,50,14
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,10,85,175,80
+    LTEXT           "Position:",IDC_STATIC,10,5,35,8
+    LTEXT           "",IDC_STATIC1,55,5,130,8
+    LTEXT           "",IDC_STATIC2,10,20,175,8
+    LTEXT           "Objects:",IDC_STATIC,10,35,50,8
+    COMBOBOX        IDC_COMBO1,10,50,175,65,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Attributes:",IDC_STATIC,10,70,50,8
+    LTEXT           "Theme:",IDC_STATIC,10,170,35,8
+    LTEXT           "",IDC_STATIC3,55,170,130,8
+    LTEXT           "Object type:",IDC_STATIC,10,185,40,8
+    LTEXT           "",IDC_STATIC4,55,185,125,8
+END
+
+IDD_OVERVIEWBAR DIALOG DISCARDABLE  0, 0, 116, 216
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Maps:",IDC_STATIC1,5,105,105,8
+    CONTROL         "List1",IDC_OVERVIEWLIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOCOLUMNHEADER | 
+                    WS_BORDER | WS_TABSTOP,5,120,105,90
+    CONTROL         "",IDC_OVERVIEWMAP,
+                    "{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",0x0,5,5,105,95
+END
+
+IDD_SINGLE_SYMBOL_PAGE DIALOGEX 0, 0, 347, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Single Symbol"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "Theme name:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "The Single Symbol classification displays all the features in a theme with the same symbol.",
+                    IDC_STATIC,10,120,105,30,NOT WS_GROUP
+    LTEXT           "Colour:",IDC_STATIC,125,28,35,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON1,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,171,25,50,14,WS_EX_DLGMODALFRAME
+    LTEXT           "Size:",IDC_STATIC,125,53,40,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT2,171,50,40,14,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ARROWKEYS,211,50,11,14
+    LTEXT           "Style:",IDC_STATIC,125,76,35,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,171,74,50,70,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | WS_GROUP | 
+                    WS_TABSTOP
+    LTEXT           "Outline colour:",IDC_STATIC1,125,95,40,20,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON2,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,171,98,50,14,WS_EX_DLGMODALFRAME
+    GROUPBOX        "Classification Options",IDC_STATIC,10,20,105,95
+    CONTROL         "Single Symbol",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Unique Values",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Class Breaks",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,65,90,10
+    CONTROL         "Standard Labels",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "No Overlapping Labels",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+    CONTROL         "draw border",IDC_SINGLE_SYMBOL_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,230,100,66,10
+END
+
+IDD_SPLASH DIALOG DISCARDABLE  0, 0, 272, 126
+STYLE DS_MODALFRAME | WS_POPUP
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",IDC_BIGICON,"Button",BS_OWNERDRAW | WS_DISABLED,6,6,
+                    38,40
+    LTEXT           "GIDHAM, Version ???",IDC_STATIC3,60,6,164,8,NOT 
+                    WS_GROUP
+    LTEXT           "Copyright © BCE, Koblenz, 2000",IDC_SPLASH_COPYRIGHT,60,
+                    15,164,8,NOT WS_GROUP
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKRECT,55,75,210,1
+    LTEXT           "Licensed to:",IDC_STATIC,60,40,55,8
+    LTEXT           "",IDC_STATIC1,80,50,185,8
+    LTEXT           "",IDC_STATIC2,80,60,185,8
+    LTEXT           "ESRI® software compatible",IDC_STATIC,60,25,130,8
+    LTEXT           "WARNING: This program is protected by copyright law and",
+                    IDC_STATIC,55,80,205,8
+    LTEXT           "international treaties.",IDC_STATIC,55,88,205,8
+    LTEXT           "Unauthorised reproduction or distribution of this program, or any",
+                    IDC_STATIC,55,96,205,8
+    LTEXT           "portion of it, may result in severe civil and criminal penalties, and",
+                    IDC_STATIC,55,104,205,8
+    LTEXT           "will be prosecuted to the maximum extent possible under law.",
+                    IDC_STATIC,55,112,205,8
+END
+
+IDD_STNDRD_LABEL_PAGE DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Standard Labels"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Theme name:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "The Standard Labels classification draws text for a specified field.",
+                    IDC_STATIC,10,120,105,40,NOT WS_GROUP
+    LTEXT           "Text field:",IDC_STATIC,125,25,90,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,125,35,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Horizontal Alignment:",IDC_STATIC,125,55,95,8,NOT 
+                    WS_GROUP
+    COMBOBOX        IDC_COMBO2,125,65,95,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Vertikal Alignment:",IDC_STATIC,125,85,95,10,NOT 
+                    WS_GROUP
+    COMBOBOX        IDC_COMBO3,125,95,95,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "X-Offset field:",IDC_STATIC,125,115,95,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO4,125,125,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Y-Offset field:",IDC_STATIC,125,145,95,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO5,125,155,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    CONTROL         "Draw features",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,230,25,100,10
+    CONTROL         "Allow duplicates",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,40,105,10
+    CONTROL         "Splined text",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,55,105,10
+    CONTROL         "Flip",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    230,70,105,10
+    LTEXT           "Fitted field:",IDC_STATIC,230,85,110,10,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO6,230,95,100,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Rotation angle:",IDC_STATIC,230,115,55,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT2,285,115,45,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Slider1",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_GROUP | WS_TABSTOP,230,130,100,20
+    PUSHBUTTON      "Font...",IDC_BUTTON1,230,155,50,14,WS_GROUP
+    GROUPBOX        "Classification Options",IDC_STATIC,10,20,105,95
+    CONTROL         "Single Symbol",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Unique Values",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Class Breaks",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,65,90,10
+    CONTROL         "Standard Labels",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "No Overlapping Labels",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+END
+
+IDD_VALUE_SYMBOL_PAGE DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Unique Values"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Theme name:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "The Unique Values classification displays features by applying a symbol to each unique value for a specified field.",
+                    IDC_STATIC,10,125,105,35,NOT WS_GROUP
+    LTEXT           "Discrete values and symbols:",IDC_STATIC,125,25,130,8,
+                    NOT WS_GROUP
+    CONTROL         "",IDC_LEGEND1,"{6E9D12DF-A025-11D2-9F40-00C04F8ECE6F}",
+                    0x0,125,40,125,135
+    LTEXT           "Field:",IDC_STATIC,265,25,75,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,260,40,80,65,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    CONTROL         "Remove outline?",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,260,60,80,10
+    CONTROL         "",IDC_MAP1,"{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",NOT 
+                    WS_VISIBLE,330,80,10,10
+    GROUPBOX        "Classification Options",IDC_STATIC,10,20,105,95
+    CONTROL         "Single Symbol",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Unique Values",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Class Breaks",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,65,90,10
+    CONTROL         "Standard Labels",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "No Overlapping Labels",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_BREAKS_SYMBOL_PAGE DLGINIT
+BEGIN
+    IDC_LEGEND1, 0x376, 240, 0
+0x0000, 0x0000, 0xb293, 0x0000, 0x00ec, 0x0000, 0x0003, 0x0008, 0xf20b, 
+0x4757, 0x0020, 0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 
+0x0074, 0x0078, 0x11e1, 0x0000, 0x0003, 0x0008, 0xf20a, 0x4757, 0x0020, 
+0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 0x0074, 0x0079, 
+0x10d9, 0x0000, 0x0003, 0x0009, 0x7526, 0xbe25, 0x0024, 0x0000, 0x0062, 
+0x0061, 0x0063, 0x006b, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0004, 
+0x8000, 0x0000, 0x0003, 0x0009, 0x313a, 0xce21, 0x0024, 0x0000, 0x0066, 
+0x006f, 0x0072, 0x0065, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0012, 
+0x8000, 0x0000, 0x000d, 0x0004, 0xf375, 0xbc0d, 0x003c, 0x0000, 0x0066, 
+0x006f, 0x006e, 0x0074, 0x5203, 0x0be3, 0x8f91, 0x11ce, 0xe39d, 0xaa00, 
+0x4b00, 0x51b8, 0x0001, 0x0000, 0x0190, 0x4244, 0x0001, 0x4d0d, 0x2053, 
+0x6153, 0x736e, 0x5320, 0x7265, 0x6669, 0x0002, 0x0009, 0x18b1, 0xeb25, 
+0xff3c, 0xffff, 0x0062, 0x0061, 0x0063, 0x006b, 0x0073, 0x0074, 0x0079, 
+0x006c, 0x0065, 0x0000, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0035, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0036, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0037, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0038, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0039, 
+    IDC_COMBO2, 0x403, 3, 0
+0x3031, "\000" 
+    IDC_COMBO3, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0035, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0036, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0037, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0038, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0039, 
+    IDC_COMBO3, 0x403, 3, 0
+0x3031, "\000" 
+    IDC_MAP1, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x018d, 0x0000, 0x01a7, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0000, 0x0000, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_MAP_FORM DLGINIT
+BEGIN
+    IDC_MAP1, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x0261, 0x0000, 0x027b, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0001, 0x0100, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_OVERVIEWBAR DLGINIT
+BEGIN
+    IDC_OVERVIEWMAP, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x1054, 0x0000, 0x0feb, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0001, 0x0000, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_STNDRD_LABEL_PAGE DLGINIT
+BEGIN
+    IDC_COMBO2, 0x403, 5, 0
+0x654c, 0x7466, "\000" 
+    IDC_COMBO2, 0x403, 7, 0
+0x6543, 0x746e, 0x6572, "\000" 
+    IDC_COMBO2, 0x403, 6, 0
+0x6952, 0x6867, 0x0074, 
+    IDC_COMBO3, 0x403, 4, 0
+0x6f54, 0x0070, 
+    IDC_COMBO3, 0x403, 7, 0
+0x6543, 0x746e, 0x6572, "\000" 
+    IDC_COMBO3, 0x403, 7, 0
+0x6f42, 0x7474, 0x6d6f, "\000" 
+    0
+END
+
+IDD_VALUE_SYMBOL_PAGE DLGINIT
+BEGIN
+    IDC_LEGEND1, 0x376, 240, 0
+0x0000, 0x0000, 0xb293, 0x0000, 0x00ec, 0x0000, 0x0003, 0x0008, 0xf20b, 
+0x4757, 0x0020, 0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 
+0x0074, 0x0078, 0x136e, 0x0000, 0x0003, 0x0008, 0xf20a, 0x4757, 0x0020, 
+0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 0x0074, 0x0079, 
+0x16a2, 0x0000, 0x0003, 0x0009, 0x7526, 0xbe25, 0x0024, 0x0000, 0x0062, 
+0x0061, 0x0063, 0x006b, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0004, 
+0x8000, 0x0000, 0x0003, 0x0009, 0x313a, 0xce21, 0x0024, 0x0000, 0x0066, 
+0x006f, 0x0072, 0x0065, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0012, 
+0x8000, 0x0000, 0x000d, 0x0004, 0xf375, 0xbc0d, 0x003c, 0x0000, 0x0066, 
+0x006f, 0x006e, 0x0074, 0x5203, 0x0be3, 0x8f91, 0x11ce, 0xe39d, 0xaa00, 
+0x4b00, 0x51b8, 0x0001, 0x0000, 0x0190, 0x4244, 0x0001, 0x4d0d, 0x2053, 
+0x6153, 0x736e, 0x5320, 0x7265, 0x6669, 0x0002, 0x0009, 0x18b1, 0xeb25, 
+0xff3c, 0xffff, 0x0062, 0x0061, 0x0063, 0x006b, 0x0073, 0x0074, 0x0079, 
+0x006c, 0x0065, 0x0000, 
+    IDC_MAP1, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x018d, 0x0000, 0x01a7, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0000, 0x0000, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_HELP MENU DISCARDABLE 
+BEGIN
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Topics",                     ID_HELP_FINDER
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+IDR_WINDOW MENU DISCARDABLE 
+BEGIN
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+        MENUITEM "Tile &Horizontally",          ID_WINDOW_TILE_HORZ
+        MENUITEM "Arrange &Icons",              ID_WINDOW_ARRANGE
+    END
+END
+
+IDR_TOOLS MENU DISCARDABLE 
+BEGIN
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "Full &Extent",                ID_TOOLS_FULL_EXTENT
+        MENUITEM "Zoom &In",                    ID_TOOLS_ZOOMIN
+        MENUITEM SEPARATOR
+        MENUITEM "Edit &Profile",               ID_TOOLS_EDIT_PROFIL
+        MENUITEM "&Follow profiles (F5)",       ID_TOOLS_FOLLOW_PROFILE
+        MENUITEM "Profil &Cursor (F6)",         ID_TOOLS_SHOW_CURSOR
+        MENUITEM "&Mark active profile",        ID_TOOLS_MARK_PROFILE
+        MENUITEM SEPARATOR
+        MENUITEM "Generate profile",            ID_TOOLS_GENERATE_PROFILE
+        MENUITEM "Generate profiles",           ID_LAYER_GENERATE_PROFILES
+        MENUITEM "Extend profile",              ID_TOOLS_EXTEND_PROFILE
+        MENUITEM SEPARATOR
+        MENUITEM "&Flip profile",               ID_TOOLS_FLIP_PROFILE
+    END
+END
+
+IDR_OBJECT MENU DISCARDABLE 
+BEGIN
+    POPUP "&Geo-Objects"
+    BEGIN
+        MENUITEM "&Create Object",              ID_OBJECT_NEW
+        MENUITEM "&Query Object",               ID_OBJECT_QUERY
+        MENUITEM "&Move Object",                ID_OBJECT_MOVE
+        MENUITEM "&Delete Object",              ID_OBJECT_DELETE
+        MENUITEM "Clip Object",                 ID_OBJECT_CLIP
+        MENUITEM SEPARATOR
+        MENUITEM "&Insert Point",               ID_POINT_INSERT
+        MENUITEM "Delete Point",                ID_POINT_DELETE
+        MENUITEM "Move Point",                  ID_POINT_MOVE
+    END
+END
+
+IDR_THEME MENU DISCARDABLE 
+BEGIN
+    POPUP "&Theme"
+    BEGIN
+        MENUITEM "&New Theme...",               ID_LAYER_NEW
+        MENUITEM "&Add Theme...\tCtrl+A",       ID_LAYER_INSERT
+        POPUP "&Move Theme"
+        BEGIN
+            MENUITEM "Move To Top",                 ID_LAYER_MOVETOTOP
+            MENUITEM SEPARATOR
+            MENUITEM "Move Up",                     ID_LAYER_MOVEFORWARD
+            MENUITEM "Move Down",                   ID_LAYER_MOVEBACK
+            MENUITEM SEPARATOR
+            MENUITEM "Move To Bottom",              ID_LAYER_MOVETOBACK
+        END
+        MENUITEM "&Copy Theme",                 ID_LAYER_COPY
+        MENUITEM "&Remove Theme\tCtrl+R",       ID_LAYER_REMOVE
+        MENUITEM SEPARATOR
+        MENUITEM "Intersect with Profiles",     ID_LAYER_SHAPE_TO_PROFILE
+        MENUITEM SEPARATOR
+        MENUITEM "Import Terrain model",        ID_LAYER_HMO_IMPORT
+        MENUITEM "Intersect with terrain model", ID_LAYER_TINCUT
+        MENUITEM "Move waterlevel outwards",    ID_LAYER_MOVE_OUTWARDS
+        MENUITEM SEPARATOR
+        MENUITEM "&Zoom to Active Theme",       ID_LAYER_ZOOM
+        MENUITEM "Use in &Overview Map",        ID_LAYER_OVERVIEW
+        MENUITEM SEPARATOR
+        MENUITEM "E&xport properties",          ID_LAYER_PROPERTIES_EXPORT
+        MENUITEM "&Import properties",          ID_LAYER_PROPERTIES_IMPORT
+        MENUITEM "Edit &properties",            ID_LAYER_PROPERTIES
+    END
+END
+
+IDR_MAP MENU DISCARDABLE 
+BEGIN
+    POPUP "&Map"
+    BEGIN
+        MENUITEM "&New...",                     ID_MAP_NEW
+        MENUITEM "&Open...",                    ID_MAP_OPEN
+        MENUITEM "&Delete...",                  ID_MAP_DELETE
+        MENUITEM "&Save",                       ID_FILE_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Export as....",              ID_MAP_SAVE_AS
+        MENUITEM "&Copy to Clipboard",          ID_MAP_CLIPBOARD
+        MENUITEM SEPARATOR
+        MENUITEM "Save &template",              ID_SAFE_DEFAULT_PROPERTIES
+    END
+END
+
+IDR_VIEW MENU DISCARDABLE 
+BEGIN
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM "&Overview Map",               ID_VIEW_OVERVIEW_MAP
+        MENUITEM SEPARATOR
+        MENUITEM "&Profile editor",             ID_VIEW_PROFILEBAR
+        MENUITEM "Profile overview",            ID_VIEW_PROFILAUSWAHL
+        MENUITEM "&Toggle Legend",              ID_VIEW_LEGEND
+        MENUITEM "Over&view",                   ID_VIEW_OVERVIEW
+        MENUITEM SEPARATOR
+        MENUITEM "Scale Bar",                   ID_VIEW_SCALEBAR
+        POPUP "Scale Bar &Properties"
+        BEGIN
+            POPUP "&Map Units"
+            BEGIN
+                MENUITEM "&Decimal Degrees",            ID_VIEW_MAPUNITS_DEGREES
+
+                MENUITEM "&Feet",                       ID_VIEW_MAPUNITS_FEET
+
+                MENUITEM "&Meters",                     ID_VIEW_MAPUNITS_METERS
+
+            END
+            MENUITEM SEPARATOR
+            POPUP "&Scale Units"
+            BEGIN
+                MENUITEM "Mi&les",                      ID_VIEW_SCALEUNITS_MILES
+
+                MENUITEM "&Feet",                       ID_VIEW_SCALEUNITS_FEET
+
+                MENUITEM "&Meters",                     ID_VIEW_SCALEUNITS_METERS
+
+                MENUITEM "&Kilometers",                 ID_VIEW_SCALEUNITS_KM
+
+            END
+            POPUP "S&creen Units"
+            BEGIN
+                MENUITEM "&Centimeters",                ID_VIEW_SCREENUNITS_CM
+
+                MENUITEM "&Inches",                     ID_VIEW_SCREENUNITS_INCHES
+
+            END
+        END
+    END
+END
+
+IDR_MAINMAP MENU DISCARDABLE 
+BEGIN
+    POPUP "&Map"
+    BEGIN
+        MENUITEM "&New...",                     ID_MAP_NEW
+        MENUITEM "&Open...",                    ID_MAP_OPEN
+        MENUITEM "&Delete...",                  ID_MAP_DELETE
+    END
+END
+
+IDR_MAINVIEW MENU DISCARDABLE 
+BEGIN
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM "&Overview Map",               ID_VIEW_OVERVIEW_MAP
+    END
+END
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "Project &manager",            ID_FILE_MANAGER
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    MENUITEM "",                            65535
+END
+
+IDR_MAPTYPE MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "Project&manager",             ID_FILE_MANAGER
+        MENUITEM SEPARATOR
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM "Print Pre&view",              ID_FILE_PRINT_PREVIEW
+        MENUITEM "Print Set&up...",             ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+END
+
+IDR_SCALEBAR_POPUP MENU DISCARDABLE 
+BEGIN
+    POPUP "_POPUP_"
+    BEGIN
+        POPUP "&Map Units"
+        BEGIN
+            MENUITEM "&Decimal Degrees",            ID_VIEW_MAPUNITS_DEGREES
+            MENUITEM "&Feet",                       ID_VIEW_MAPUNITS_FEET
+            MENUITEM "&Meters",                     ID_VIEW_MAPUNITS_METERS
+        END
+        MENUITEM SEPARATOR
+        POPUP "&Scale Units"
+        BEGIN
+            MENUITEM "Mi&les",                      ID_VIEW_SCALEUNITS_MILES
+            MENUITEM "&Feet",                       ID_VIEW_SCALEUNITS_FEET
+            MENUITEM "&Meters",                     ID_VIEW_SCALEUNITS_METERS
+
+            MENUITEM "&Kilometers",                 ID_VIEW_SCALEUNITS_KM
+        END
+        POPUP "S&creen Units"
+        BEGIN
+            MENUITEM "&Centimeters",                ID_VIEW_SCREENUNITS_CM
+            MENUITEM "&Inches",                     ID_VIEW_SCREENUNITS_INCHES
+
+        END
+    END
+END
+
+IDR_EXTRAS MENU DISCARDABLE 
+BEGIN
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Types of land use",          ID_EXTRAS_EDIT_NUTZUNG
+        MENUITEM "Calculate profile distances", ID_EXTRAS_PROFILEDISTANCE
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "A",            ID_LAYER_INSERT,        VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "R",            ID_LAYER_REMOVE,        VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    VK_ESCAPE,      ID_ESCAPE,              VIRTKEY, NOINVERT
+    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          ID_TOOLS_FOLLOW_PROFILE, VIRTKEY, NOINVERT
+    VK_F6,          ID_TOOLS_SHOW_CURSOR,   VIRTKEY, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, CONTROL, 
+                                                    NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDS_DISK_SPACE          "%lu KB on %c:"
+    IDS_ALL_IMAGE_FORMATS   "All supported image formats"
+    IDS_ALL_FILES           "All files"
+    IDS_DISK_SPACE_UNAVAIL  "not available"
+    IDS_SAVE_MAP_TEMPLATE   "The default map template will be saved as %1."
+    IDS_NUTKLASS_ZOTABLE    "Map table:"
+    IDS_TOO_MANY_FILES_SELECTED "Too many files selected"
+    IDR_MAPPROJECTTYPE      "\nWSPWIN Map Project\n\nWSPWIN Map Project (.wpp)\n.wpp\nWSP.Karteprojekt.Document\nWSPWIN Map Project"
+    IDS_PIVOT_POINTS        "Pivot Points"
+    IDS_PIVOT_SHP           "_pivot"
+    IDS_USER_RW             "User defined"
+    IDS_USER_RW_SHP         "_user"
+    IDS_USER_DEFINED        "<user defined>"
+    IDS_NO_VALID_OPERATION_PROFILES "invalid operation: no profiles "
+    IDS_COPY                "copy"
+    IDS_ERROR_WRITING_TMP_FILE "Error creating temporary files"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDS_PRINT_MAP_SCALE     "Scale  1 : "
+    IDS_PRINT_MAP_RADION_EXTENT "Adjust map extent"
+    IDS_PRINT_MAP_RADION_PRINTRECT "Adjust print rect"
+    IDS_PRINT_MAP_ALIGN_NONE "No scale"
+    IDS_LAYER_COPY_FAILED   "Unable to copy layer."
+    IDS_COPY_LAYER_UNIQUE_AXIS "Only one river axis is allowed."
+    IDS_GENERATE_PROFILES_NO_STATION_ATTRIBUTE 
+                            "The layer must have an attribute 'station""."
+    IDS_ERROR_RIVER_CUTS_PROFILE_MULTIPLE 
+                            "New profile cuts river axis more than once.\nContinue?"
+    IDR_MAINFRAME           "WspWin Mapper"
+    IDR_MAPTYPE             "\nWSPWIN Map\nWSPWIN Map\nWSPWIN Map (.wpm)\n.wpm\nWSP.Karte.Document\nWSPWIN Map"
+    IDS_ERROR_RIVER_CUTS_MULTIPLE_TITLE "Generate Profiles"
+    IDS_GENERATE_PROFILES_SUCCESS "Profiles successfully generated."
+    IDS_COPY_LAYER_CHOOSER_TITLE "Copy layer"
+    IDS_COPY_LAYER_CHOOSER_TEXT "Please choose type of new layer:"
+    IDS_RIVER_AXIS          "river axis"
+    IDS_DEMO_TEXT1          "Demo Version"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "WSPWIN Mapper"
+    AFX_IDS_HELPMODEMESSAGE "Select an object you want to get Help on."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Create a new document.\nNew"
+    ID_FILE_OPEN            "Opens an existing document\nOpen"
+    ID_FILE_CLOSE           "Closes the active document\nClose"
+    ID_FILE_SAVE            "Saves the active map\nSave"
+    ID_FILE_SAVE_AS         "Saves the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Changes the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active map\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+    ID_FILE_SEND_MAIL       "Send the active map through electronic mail\nSend Mail"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application\nExit"
+    ID_HELP_INDEX           "List Help topics\nHelp Index"
+    ID_HELP_FINDER          "List Help topics\nHelp Topics"
+    ID_HELP_USING           "Display instructions about how to use help\nHelp"
+    ID_CONTEXT_HELP         "Display help for clicked on buttons, menus and windows\nHelp"
+    ID_HELP                 "Display help for current task or command\nHelp"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Opens this document"
+    ID_FILE_MRU_FILE2       "Opens this document"
+    ID_FILE_MRU_FILE3       "Opens this document"
+    ID_FILE_MRU_FILE4       "Opens this document"
+    ID_FILE_MRU_FILE5       "Opens this document"
+    ID_FILE_MRU_FILE6       "Opens this document"
+    ID_FILE_MRU_FILE7       "Opens this document"
+    ID_FILE_MRU_FILE8       "Opens this document"
+    ID_FILE_MRU_FILE9       "Opens this document"
+    ID_FILE_MRU_FILE10      "Opens this document"
+    ID_FILE_MRU_FILE11      "Opens this document"
+    ID_FILE_MRU_FILE12      "Opens this document"
+    ID_FILE_MRU_FILE13      "Opens this document"
+    ID_FILE_MRU_FILE14      "Opens this document"
+    ID_FILE_MRU_FILE15      "Opens this document"
+    ID_FILE_MRU_FILE16      "Opens this document"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle Toolbar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+    ID_VIEW_OVERVIEW_MAP    "Show or hide the overview map\nToggle Overview Map"
+    ID_VIEW_MAPBAR          "Show or hide the map toolbar\nToggle Map Toolbar"
+    ID_VIEW_LEGEND          "Show or hide the legend\nToggle Legend"
+    ID_VIEW_SCALEBAR        "Show or hide the scale bar\nToggle Scale Bar"
+    ID_VIEW_PROFILAUSWAHL   "Show or hide the profile overview"
+    IDW_PROFILAUSWAHL_TOOLBAR "Profile overview"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+    AFX_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_ALIGN_BOTTOMCENTER  "Align map to bottom centre of page\nAlign Bottom Center"
+    IDC_OVERVIEWMAP         "Overview Map\nOverview Map"
+    IDC_OVERVIEWLIST        "Project Maps\nProject Maps"
+    IDC_LEGENDLIST          "Legend\nLegend"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SMSFILES_OR_ALLFILES 
+                            "SMS Dateien (*.sms)|*.sms|Alle Dateien (*.*)|*.*||"
+    IDS_BUHNEN              "_groynes"
+    IDS_MODELL_SHP          "_model"
+    IDS_BANK                "River banks"
+    IDS_PROFILEDITOR_TITLE  "Profile editor"
+    IDS_BANK_SHP            "_banks"
+    ID_PROF_EDITOR_STATUS_STATION "Station"
+    IDS_NO_RESTRICTION      "- no restriction -"
+    IDS_WRONG_EXPORT_FORMAT "Export format not supported"
+    IDS_BUHNE               "Groynes"
+    IDS_PROFILAUSWAHL_TITLE "Profile overview"
+    IDS_CAD_DRAWINGS        "CAD drawings"
+    IDS_ALL_VECTOR_FORMATS  "All supported vector formats"
+    IDS_FLOOD_BORDER        "Flooded Area"
+    IDS_PHYSICAL_MEM        "%lu KB"
+    IDS_LINKSRECHTS         "Left or right"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_POINT               "Point"
+    IDS_LINE                "Line"
+    IDS_POLYGON             "Polygon"
+    IDS_TRUE                "true"
+    IDS_FALSE               "false"
+    IDS_DELETE              "Delete"
+    IDS_PRINT_MAP_ALIGN_NE  "Top right"
+    IDS_HMOFILES_OR_ALLFILES "HMO Files (*.hmo)|*.hmo|All Files (*.*)|*.*||"
+    IDS_THEME               "Theme"
+    IDS_TRIANGULATON_ERROR  "Triangulation error\nError %d"
+    IDS_LOAD_LAYER_ERROR    "Error loading theme %1"
+    IDS_WLINES              "_wlines"
+    IDS_MODELL_BOUNDS       "Model - Boundaries"
+    IDS_WSPWIN_SAVING_PROJECT "WSPWIN is saving the project..."
+    IDS_TINFILES_OR_ALLFILES 
+                            "TIN Dateien (*.net)|*.net|Alle Dateien (*.*)|*.*||"
+    IDS_VECTORDATA          "Vector Data"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_LAYER_INSERT         "Add a theme to the map.\nAdd Theme"
+    ID_LAYER_REMOVE         "Remove the active theme.\nRemove Theme"
+    ID_LAYER_ZOOM           "Zoom to active theme.\nZoom to Active Theme"
+    ID_LAYER_PROPERTIES     "Change the active theme's properties.\nTheme Properties"
+    ID_TOOLS_ZOOMIN         "Zoom in\nZoom In"
+    ID_TOOLS_ZOOMOUT        "Zoom out\nZoom Out"
+    ID_TOOLS_PAN            "Pan\nPan"
+    ID_FILE_SAVE_PROJECT    "Save the current project.\nSave Project"
+    ID_MAP_DELETE           "Delete an existing project map.\nDelete Map"
+    ID_TOOLS_FULL_EXTENT    "Full View\nFull Extent"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_OPEN_PROJECT    "Open a project\nOpen Project"
+    ID_FILE_CLOSE_PROJECT   "Close the current project.\nClose Project"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERROR_READFILE      "Couldn't read the file %1."
+    IDS_NONAME              "Please enter a name."
+    IDS_FILEINUSE           "The chosen file is already being used.\nPlease choose another file name."
+    IDS_NAMEUSED            "This name is already being used.\nPlease enter another name."
+    IDS_CANTFINDFILE        "Couldn't find the file %1.\nThe corresponding theme will not be shown.\n\nDo you want to retain the theme in this map?"
+    IDS_FIELDSTRINGS        "Integer\nDecimal\nDate\nText\nBoolean\n"
+    IDS_SAMEFIELDS          "All the data field names must be unique.\nPlease enter a different name."
+    IDS_REMOVEDATASET       "Do you want to delete the geo-dataset file?"
+    IDS_CANT_FIND_WSPWIN    "Could not find executable: "
+    IDS_HMOFILE1            "Please choose a water level HMO file.\n"
+    IDS_HMOFILE2            "Please choose a terrain model HMO file.\n"
+    IDS_SHAPEFILE           "Please choose a shape file.\n"
+    IDS_ALL                 "All"
+    IDS_GEWAESSER           "Waterway"
+    IDS_ZUSTAND             "State"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROFIL_AUSWAHL_DELETE_TITLE "Delete profile"
+    IDS_PROFIL_AUSWAHL_DELETE_TEXT 
+                            "The profile ( Station %8.4lf, VZK %d )  is not used in any other strand an will be deleted from the project.\nMove profile file %s to dustbin?"
+    IDS_DELETE_PROFILE_FROM_MAP "Remove profile from strand?"
+    IDS_NO_POINTS_FOUND     "no points found"
+    IDS_DIRECTORYUP         "Directory up"
+    IDS_ALLFORMATS          "All raster formats"
+    IDS_RASTERDATA          "Raster data"
+    IDS_PRINT_Map_ALIGN_TEXT "Alignment"
+    IDS_BUFFERTOOSMALL      "Not enough memory was allocated for the file names. New memory will now be allocated.\nPlease choose the file names again."
+    IDS_LOAD_PROFILES       "Loading Profiles"
+    IDS_HMOFILTER           "HMO Files (*.hmo)|*.hmo|All Files (*.*)|*.*||"
+    IDS_DELETE_SHAPES       "Delete Files?"
+    IDS_LEGENDBAR_TITLE     "Legend"
+    IDS_WLEVEL              "_wlevel"
+    IDS_WATER_LEVEL         "WLV"
+    IDS_PROFILBAR_TITLE     "Profile Overview"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_SAVEAS          "Save the current map with a new name.\nSave As"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_MAP_NEW              "Add a new map to the project.\nNew Map"
+    ID_MAP_OPEN             "Open an existing project map.\nOpen Map"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_XCOORD     "X: "
+    ID_INDICATOR_YCOORD     "Y: "
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_LAYER_NEW            "Create a new theme\nNew Theme"
+    ID_OBJECT_NEW           "Draw a new geo-object\nCreate Object"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OBJECT_QUERY         "Query a geo-object\nQuery Object"
+    ID_OBJECT_DELETE        "Delete a geo-object\nDelete Object"
+    ID_TOOLS_EDIT_PROFIL    "Double click on a proifle lineto edit it in WSPWIN.\nEdit Profile"
+    ID_VIEW_MAPUNITS_DEGREES "Decimal Degrees"
+    ID_VIEW_MAPUNITS_FEET   "Feet"
+    ID_VIEW_MAPUNITS_METERS "Meters"
+    ID_VIEW_SCALEUNITS_MILES "Miles"
+    ID_VIEW_SCALEUNITS_FEET "Feet"
+    ID_VIEW_SCALEUNITS_METERS "Meters"
+    ID_VIEW_SCALEUNITS_KM   "Kilometers"
+    ID_VIEW_SCREENUNITS_CM  "Centimeters"
+    ID_VIEW_SCREENUNITS_INCHES "Inches"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_LAYER      "no active theme"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_OVERVIEW        "Show or hide the overview\nToggle Overview"
+    ID_VIEW_CLEAROVERVIEW_LEGENDE "Clear Overview\nClear Overview"
+    ID_OVERVIEW_LAYER       "Add the active theme to the overview."
+    ID_LAYER_OVERVIEW       "Shows the active theme in overview map\nUse in overview map"
+    ID_FILE_MANAGER         "Opens the project manager\nProject manager"
+    ID_POINT_INSERT         "Insert a point\nInsert Point"
+    ID_POINT_DELETE         "Delete point from geoobject\nDelete Point"
+    ID_POINT_MOVE           "Move point in geoobject\nMove Point"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_HMO_IMPORT_FILTER   "HMO Files (*.hmo)|*.hmo|SMS Files (*.2dm)|*.2dm|Ungenerated TIN (*.net)|Point data (*.ras)|*.ras|All Files (*.*)|*.*||"
+    IDS_FORMAT_UNKNOWN      "File format not known"
+    IDS_ERROR_READ_DTM      "Error reading terrain model"
+    IDS_PROFILE_LINES       "Profile Lines"
+    IDS_PROFILE_POINTS      "Profile Points"
+    IDS_SEP_AREA            "Sep. Area"
+    IDS_FLOW_AREA           "Area of Flow"
+    IDS_ERROR_ACCESS_TMP_DIR "Error accesssing %1"
+    IDS_THEME1              "_theme"
+    IDS_PROFILES            "_profiles"
+    IDS_POINTS              "_points"
+    IDS_SEP                 "_sep"
+    IDS_FLOW                "_flow"
+    IDS_ERROR_CREATE_TMP_DIR "Error creating temporary directory: %1"
+    IDS_NO_TRIANGLES        "Data is not triangulated.\nTriangulate now?"
+    IDS_THEME2              "Theme %1!d!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_1OBJECTFOUND        "1 object(s) found"
+    IDS_NOBJECTSFOUND       "%1!d! object(s) found"
+    IDS_NOACTIVETHEME       "no active theme"
+    IDS_ACTIVETHEME         "active Theme: %1"
+    IDS_WHOLENUM            "integer"
+    IDS_DECIMAL             "decimal"
+    IDS_DATE                "date"
+    IDS_TEXT                "text"
+    IDS_BOOLEAN             "boolean"
+    IDS_PRINT_MAP_ALIGN_NW  "Top left"
+    IDS_TYPE                "Type"
+    IDS_VALUEN              "Value%1!d!"
+    IDS_SHAPEFILE_OR_ALLFILES 
+                            "ESRI Shape Files (*.shp)|*.shp|All Files (*.*)|*.*||"
+    IDS_FIELDNAME           "Field Name"
+    IDS_FIELDTYPE           "Field Type"
+    IDS_VALUE               "Value"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OBJECT_MOVE          "Move a geoobject\nMove Object"
+    ID_LAYER_SHAPE_TO_PROFILE 
+                            "Intersect theme with profiles\nIntersect with profiles"
+    ID_LAYER_TINCUT         "intersecs a digital terrain model with waterlevel\ncut waterlevel"
+    ID_VIEW_PROFILEBAR      "Show or hide the profile editor"
+    ID_LAYER_HMO_IMPORT     "imports a digital surface model\nimport DTM"
+    ID_TOOLS_FOLLOW_PROFILE "Profileditor follows the mouse cursor\nFollow profiles"
+    ID_OBJECT_CLIP          "Get a subobject\nClip object"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PREVIEW_NUMPAGE     "&Two pages"
+    IDS_PREVIEW_NEXT        "&Next"
+    IDS_PREVIEW_PREV        "&Previous"
+    IDS_PREVIEW_PRINT       "Print..."
+    IDS_PREVIEW_ZOOMIN      "Zoom &in"
+    IDS_PREVIEW_ZOOMOUT     "Zoom &out"
+    IDS_PRINTER_SETUP       "Printer setup"
+    IDS_PREVIEW_PRINTER_SETUP "Setup..."
+    IDS_PREVIEW_SELECT      "Select object"
+    IDS_PREVIEW_NEW_TEXT    "New text..."
+    IDS_PRINT_PROP_PAGE     "Object"
+    IDS_PRINT_BORDER_PAGE   "Border"
+    IDS_PRINT_PROP_CAPTION  "Properties"
+    ID_PROFILE_LIST         "List of profiles"
+    ID_PROFILAUSWAHL_TREE_CTRL "Please choose a state."
+    ID_INFORM_BUHNE         "Buhne\nBuhne"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_LAYER_COPY           "Copy the active theme.\nCopy theme"
+    ID_SAFE_DEFAULT_PROPERTIES 
+                            "Saves the template for new maps.\nSave map-template"
+    ID_TOOLS_MARK_PROFILE   "Highlights the active profile in the map.\nMark active Profile"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TINCUT_FAILED       "TinCut failed. Please look into the log file: %s"
+    IDS_PRINT_MAP_ALIGN_SW  "Bottom left"
+    IDS_SAVE_ALL_CHANGES_IN_MAP "Save chenges in map to project?"
+    IDS_DLG_AUTO_EXPORT_TITLE "Please choose export formats"
+    IDS_MAIN_STREAM         "Main stream"
+    IDS_VORLAND             "Flow Area"
+    IDS_RETENTION           "Flood Plain"
+    IDS_NUTZKLASS_BUTTON_NEW "New..."
+    IDS_NUTZKLASS_BUTTON_OK "Save and Exit"
+    IDS_NUTZKLASS_VON       "Type"
+    IDS_NUTZKLASS_TITLE     "Edit types of land use"
+    IDS_NUTZKLASS_ERROR_NAME "Invalid character in table name."
+    IDS_VERSCHNEID_TITLE    "Intersect theme"
+    IDS_VERSCHNEID_NUTZ     "Associate types of use"
+    IDS_VERSCHNEID_PROFIL   "Create separation lines"
+    IDS_VERSCHNEID_FIELDS_NUTZ "associate with this feature:"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SAVEPRCHANGES_AREAS "Update areas"
+    IDS_SAVEPRCHANGES_THEMES "Themes"
+    IDS_SAVEPRCHANGES_KINDOFAREA "Type of area"
+    IDS_SAVEPRCHANGES_FIELDS "Value"
+    IDS_SAVEPRCHANGES_PRODATA "Updata profile data"
+    IDS_SAVEPRCHANGES_MODELL "Model boundaries"
+    IDS_SAVEPRCHANGES_DURCHST "Areas of flow"
+    IDS_SAVEPRCHANGES_BOESCHUNG "river banks"
+    IDS_SAVEPRCHANGES_TRENN "Separation areas"
+    IDS_SAVEPRCHANGES_BUHNEN "Groynes"
+    IDS_SAVEPRCHANGES_STATION "Stations"
+    IDS_SAVEPRCHANGES_CANCEL "Cancel"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SAVEPRCHANGES_OK    "Update"
+    IDS_SAVEPRCHANGES_TITLE "Save profile changes"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INFORM_LAENGSW       "Längswerk\\Längswerk"
+    ID_INFORM_SOHLHOCH      "Sohlaufhöhung\nSohlaufhöhung"
+    ID_INFORM_SOHLTIEF      "Sohleintiefung\nSohleintiefung"
+    ID_INFORM_VORLHOCH      "Vorlandaufhöhung\nVorlandaufhöhung"
+    ID_INFORM_VORLTIEF      "Vorlandabgrabung\nVorlandabgrabung"
+    ID_INFORM_UFERAUS       "Uferanschüttung\nUferanschüttung"
+    ID_INFORM_UFERABG       "Uferabgrabung\nUferabgrabung"
+    ID_INFORM_DEICH         "Deichrückverlegung\nDeichrückverlegung"
+    IDS_PREVIEW_NEW_LEGEND  "New legend..."
+    IDS_PREVIEW_NEW_MAP     "New map..."
+    IDS_PREVIEW_DELETE      "Delete object"
+    IDS_PREVIEW_PROPS       "Object properties"
+    IDS_PREVIEW_ZFRONT      "move to front"
+    IDS_PREVIEW_ZBACK       "move to back"
+    IDS_PREVIEW_NEW_LOGO    "New logo"
+    IDS_TEST_LAYER_TYPE_FAILED "Attributes do not fit."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_LAYER_MOVE_OUTWARDS  "Moves waterlevel points to the end of their profil lines."
+    ID_EXTRAS_EDIT_NUTZUNG  "Edit or create types of land use.\nEdit / create land use types"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_VERSCHNEID_ART_PROFIL "Create theme:"
+    IDS_VERSCHNEID_ART_NUTZ "Type of use map:"
+    IDS_VERSCHNEID_FIELDS_PROFIL "with following constraint:"
+    IDS_VERSCHNEID_STATIC_UFER "Bank:"
+    IDS_VERSCHNEID_LEFT     "Left"
+    IDS_VERSCHNEID_RIGHT    "Right"
+    IDS_VERSCHNEID_PROGRESS "Intersecting theme with \nprofile points..."
+    IDS_DATABLOCKS_HEADING  "Please choose datablocks to save:"
+    IDS_DATABLOCKS_TITLE    "Save project"
+    IDS_NUTZKLASS_ERROR_DOUBLE_NAME "This name is already in use."
+    IDS_EXTENDPROFILE_TITEL "Extend profile"
+    IDS_EXTENDPROFILE_OKTEXT "Add to profile"
+    IDS_CUT_LINE_WITH_DGM   "Intersecting line with terrain model..."
+    IDS_ADD_POINTS_TO_MAP   "Adding new points to map..."
+    IDS_UPDATE_DATA         "Updating profile data..."
+    IDS_PROFILE_EXTEND_NO_POINTS "No new points found. Cancel action"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_TOOLS_GENERATE_PROFILE 
+                            "Generate new profile using a digital terrain mode\nGenerate new profile"
+    ID_TOOLS_EXTEND_PROFILE "Extends an existing profile using a digital terrain model\nExtend profile"
+    ID_LAYER_GENERATE_PROFILES 
+                            "Generate profiles from objects of a theme.\nGenerate profiles"
+    ID_TOOLS_SHOW_CURSOR    "Schaltet den Cursor in der Profilansicht an oder aus\nProfilcursor an bzw. ausschalten (F6)"
+    ID_LAYER_PROPERTIES_EXPORT 
+                            "Exports theme proeprties to external file\nExport properties of active theme"
+    ID_LAYER_PROPERTIES_IMPORT 
+                            "Imports properties from extern file\nImports properties into active theme"
+    ID_EXTRAS_PROFILEDISTANCE 
+                            "Recalculates the distances between profiles of one strand"
+    ID_TOOLS_FLIP_PROFILE   "Flips a profile a the y-Axis"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TRACK_RIVER         "Please draw river."
+    IDS_TRACK_PROFILE       "Please draw profile."
+    IDS_ERROR_RIVER_CUTS_PROFILE 
+                            "New profile must intersect with river line.\nPlease try again or change the riverline."
+    IDS_GENERATEPROFILE_TITEL "Generate new profile"
+    IDS_GENERATEPROFILE_OKTEXT "Add profile"
+    IDS_ERROR_RIVER_CUTS    "Error: the river line must not intersect with any profile more than once.\nPlease try again."
+    IDS_SAVE_PROFILES       "Saving profile files..."
+    IDS_PROFILE_SAVE_SUCCES "Succesfully updated profile data."
+    IDS_WRITE_MAP_TO_PROFILES "Writing map data to profiles..."
+    IDS_PROFILE_FILE        "Profile file"
+    IDS_PRED_PROFILE        "Predecessing profile:"
+    IDS_FOLLOW_PROFILE      "Following profile:"
+    IDS_NEW_PROFILE         "New profile:"
+    IDS_RIVER               "River"
+    IDS_STRANG_DISTANCE     "Distances"
+    IDS_PRINT_MAP_ALIGN_SE  "Bottom right"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_LEFT                "Left"
+    IDS_RIGHT               "Right"
+    IDS_PROFGEN_ERROR_NICHT_BENACHBART 
+                            "The two adjacent profile are no neighbours."
+    IDS_PROFGEN_ERROR_VERSCH_ZUSTAENDE 
+                            "The two adjacent profiles are not in the same state."
+    IDS_PROFGEN_ERROR_PROJECT "Error in project data"
+    IDS_PROFGEN_ERROR_NOTLAST 
+                            "The adjacent profile ist not the last or the first profile."
+    IDS_PROFGEN_NO_EMPTYSTATES 
+                            "No empty states available. Please open the project manager to make a new state."
+    IDS_GENPROFILE_DESCRIPTION 
+                            "You can edit the profile station and maybe choose between different states and/or vzk's."
+    IDS_GENPROFILE_DIGITRIVER 
+                            "There is no river line. You can digitalise one klicking on the map or create one by 'Copy Layer'."
+    IDS_GEN_PROFILE_WSPWIN_OPEN 
+                            "Please make sure that the WSPWIN dialog ""Edit state file"" is closed during this operation."
+    IDS_TINCUT_OBS_DLG_TITLE "Executing TinCut. Please wait..."
+    IDS_TINCUT_USER_BREAK   "TinCut stopped."
+    IDS_ERROR_HMO_TRIANG    "Extraordinary software exception in triangulation tool. Maybe the border line angles are too acute?"
+    IDS_ERROR_CREATE_LAYER  "Failed to create map layer. Is your harddrive full or write protected?"
+    IDS_CUT_LINES_ADDING_POINTS "Adding points..."
+    IDS_CUT_LINES_CUTTING   "Cutting layer to profiles..."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CUT_THEME_NO_LINES  "Profile line layer missing."
+    IDS_CUT_THEME_UPDATE_POINTS "Updating profile points..."
+    IDS_VERSCHNEID_DELETE_THEME "Replace points"
+    IDS_MOVE_OBJECT_OUT     "Moving points..."
+    IDS_COUNT_TOO_BIG       "No more than %d points per profile are allowed in this theme."
+    IDS_NUTZKLASS_BUTTON_DELCOL "Delete Column"
+    IDS_DATA_ERROR_MSG      "The following errors occured during data retrieval:\n\n%s\n\nThe mentioned datablocks were NOT changed."
+    IDS_ERROR_CUT_COUNT_COORDS 
+                            "More than %d coordinates at station km\n%s.\nSurplus points not beeing added. Continue?"
+    IDS_CUT_LINES_ADDING_PROFILE_POINTS "Creating profile points..."
+    IDS_CUT_LINES_READING_DATA "Reading profile data..."
+    IDS_CUT_LINES_DELETE_POINTS "Deleting supernumerary points..."
+    IDS_NUTZKLASS_ERROR_INPUT "Error in input"
+    IDS_NUTZKLASS_ADD_COL   "Add column:"
+    IDS_NUTZKLASS_DEL_COL   "Delete Column"
+    IDS_NUTZKLASS_DEL_ROW   "Delete row"
+    IDS_PREVIEW_CLOSE       "&Close"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_PRINT_TEXT_SCHRIFT  "Font..."
+    IDC_PRINT_BORDER_STYLE_STATIC "Line style:"
+    IDC_PRINT_BORDER_WIDTH_STATIC "Line width:"
+    IDC_PRINT_BORDER_COLOR_STATIC "Line color:"
+    IDC_PRINT_IMAGE_TEXT    "Filename:"
+    IDC_PRINT_IMAGE_SEARCH  "Choose file..."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_STATIC_TEXT         "Text:"
+    IDC_STATIC_ALLIGN       "Alignment:"
+    IDC_RADIO_CENTER        "Center"
+    IDC_RADIO_LEFT          "Left"
+    IDC_PRINT_IMAGE_SIZE_CHECK "Keep original size"
+    IDC_PRINT_LEGEND_FIXSIZE "Keep original size"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_RADIO_RIGHT         "Right"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CUT_LINES_WSP_QUEST_TITLE "Cut theme to profiles"
+    IDS_CUT_LINES_WSP_QUEST_TEXT "Please input name of calculation:"
+    IDS_PREVIEW_NEW_LEGEND2 "New legend (improved)..."
+    IDS_FEHLER_PROFILE_LADEN_RWHW 
+                            "Could not load all selected profile.\nPlease check profile at km %s."
+    IDS_AUSUENN_TEXT        "height tolerance [m]:"
+    IDS_AUSUENN_MSG         "%d of %d points removed"
+    IDS_EXTEND_PROFILE_TITLE "intersected polyline"
+    IDS_GENPROFILE_TITLE    "new profile"
+    IDS_PROFILE_OVERVIEW_REMOVE_PRF "Edited map data may be lost.\nContinue?"
+    IDS_PROFILE_OVERVIEW_SAVE_PRF 
+                            "Changed data in WspWin may be lost.\nContinue?"
+    IDS_PROFIL_AUSWAHL_MISSING_PRFS 
+                            "Some profiles do not longer exist in the strand.\nThe profile will be removed from the map."
+    IDS_MAP_LAYER_PROPS_TITLE "Theme Properties"
+    IDS_IMAGE_PROPS_COLOR   "Transparent Colour:"
+    IDS_IMAGE_PROPS_FILE    "File:"
+    IDS_IMAGE_PROPS_NAME    "Theme name:"
+    IDS_IMAGE_PROPS_TRANSPARENT "transparent"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_IMAGE_PROPS_TITLE   "Theme properties"
+    IDS_LAYER_FILEFILTER    "WspWin Mapper theme files (*.wth)|*.wth|All Files (*.*)|*.*||"
+END
+
+#endif    // Englisch (USA) (unknown sub-lang: 0x0) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 240, 127
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Info"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,15,20,20
+    LTEXT           "GIDHAM, Version ???",IDC_STATIC3,40,8,151,8,SS_NOPREFIX
+    LTEXT           "Copyright © BCE, MM YY",IDC_ABOUT_COPYRIGHT,40,20,170,8
+    DEFPUSHBUTTON   "OK",IDOK,201,5,32,14,WS_GROUP
+    LTEXT           "Static",IDC_PHYSICAL_MEM,101,95,105,8
+    LTEXT           "Static",IDC_DISK_SPACE,101,110,105,8
+    LTEXT           "Verfügbarer Arbeitsspeicher:",IDC_STATIC,5,95,90,8
+    LTEXT           "Freier Festplattespeicher:",IDC_STATIC,5,110,90,8
+    LTEXT           "Lizensiert für:",IDC_STATIC,35,50,55,8
+    LTEXT           "",IDC_STATIC1,45,60,188,8
+    LTEXT           "",IDC_STATIC2,45,70,188,8
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKRECT,5,85,230,1
+    LTEXT           "ESRI® software compatible",IDC_STATIC,40,35,130,8
+END
+
+IDD_MAP_FORM DIALOG DISCARDABLE  0, 0, 20, 18
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",IDC_MAP1,"{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",
+                    WS_TABSTOP,0,0,15,15
+END
+
+IDD_MAP_OPEN DIALOG DISCARDABLE  0, 0, 277, 97
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Karte öffnen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,220,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,220,22,50,14
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,10,5,200,85
+END
+
+IDD_LEGENDBAR DIALOGEX 0, 0, 122, 218
+STYLE WS_CHILD | WS_VISIBLE | WS_BORDER
+EXSTYLE WS_EX_TOOLWINDOW
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LEGENDE,"{6E9D12DF-A025-11D2-9F40-00C04F8ECE6F}",
+                    WS_TABSTOP,0,19,121,140
+    CONTROL         "",IDC_MAP1,"{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",
+                    WS_TABSTOP,0,158,121,60
+END
+
+IDD_SCALEBAR DIALOGEX 0, 0, 336, 38
+STYLE WS_CHILD
+EXSTYLE WS_EX_TOOLWINDOW
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_SBSCALEBAR1,
+                    "{7212AB53-049E-11D1-869E-080009EE4E46}",WS_TABSTOP,17,0,
+                    319,38
+END
+
+IDD_OVERVIEWBAR DIALOG DISCARDABLE  0, 0, 116, 216
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Karten:",IDC_STATIC1,5,105,105,8
+    CONTROL         "List1",IDC_OVERVIEWLIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOCOLUMNHEADER | 
+                    WS_BORDER | WS_TABSTOP,5,120,105,90
+    CONTROL         "",IDC_OVERVIEWMAP,
+                    "{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",0x0,5,5,105,95
+END
+
+IDD_NEW_MAP DIALOG DISCARDABLE  0, 0, 162, 47
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Neue Karte"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name:",IDC_STATIC,5,7,30,8
+    COMBOBOX        IDC_COMBO1,35,5,120,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,35,25,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,105,25,50,14
+END
+
+IDD_OBJECT_QUERY DIALOG DISCARDABLE  0, 0, 192, 221
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Objektabfrage"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,80,200,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,135,200,50,14
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,10,85,175,80
+    LTEXT           "Position:",IDC_STATIC,10,5,35,8
+    LTEXT           "",IDC_STATIC1,55,5,130,8
+    LTEXT           "",IDC_STATIC2,10,20,175,8
+    LTEXT           "Geo-Objekt:",IDC_STATIC,10,35,50,8
+    COMBOBOX        IDC_COMBO1,10,50,175,65,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Attribute:",IDC_STATIC,10,70,50,8
+    LTEXT           "Thema:",IDC_STATIC,10,170,35,8
+    LTEXT           "",IDC_STATIC3,55,170,130,8
+    LTEXT           "Objekttyp:",IDC_STATIC,10,185,40,8
+    LTEXT           "",IDC_STATIC4,55,185,125,8
+END
+
+IDD_SPLASH DIALOG DISCARDABLE  0, 0, 283, 126
+STYLE DS_MODALFRAME | WS_POPUP
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",IDC_BIGICON,"Button",BS_OWNERDRAW | WS_DISABLED,6,6,
+                    38,40
+    LTEXT           "GIDHAM, Version ???",IDC_STATIC3,60,6,164,8,NOT 
+                    WS_GROUP
+    LTEXT           "Copyright © BCE, Koblenz, MM YY",IDC_SPLASH_COPYRIGHT,
+                    60,15,164,8,NOT WS_GROUP
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKRECT,55,75,220,1
+    LTEXT           "Warnung: Diese Anwendung ist durch Urheberrecht und",
+                    IDC_STATIC,55,81,188,8
+    LTEXT           "internationale Vereinbarungen geschützt.",IDC_STATIC,55,
+                    89,188,8
+    LTEXT           "Unberechtigte Reproduktion oder nicht autorisierter Vertrieb",
+                    IDC_STATIC,55,97,188,8
+    LTEXT           "dieser Anwendung oder einer ihrer Komponenten wird",
+                    IDC_STATIC,55,105,188,8
+    LTEXT           "gerichtlich verfolgt und kann zu erheblichen Strafen führen.",
+                    IDC_STATIC,55,113,188,8
+    LTEXT           "Lizensiert für:",IDC_STATIC,60,40,55,8
+    LTEXT           "",IDC_STATIC1,80,50,195,8
+    LTEXT           "",IDC_STATIC2,80,60,195,8
+    LTEXT           "ESRI® software compatible",IDC_STATIC,60,25,130,8
+END
+
+IDD_NEW_LAYER DIALOG DISCARDABLE  0, 0, 257, 186
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Neues Thema"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name:",IDC_STATIC,10,5,30,8
+    EDITTEXT        IDC_EDIT1,45,5,150,14,ES_AUTOHSCROLL
+    LTEXT           "Datei:",IDC_STATIC,10,25,30,8
+    LTEXT           "",IDC_STATIC1,45,25,145,8
+    PUSHBUTTON      "Auswählen...",IDC_BUTTON1,200,25,50,14
+    GROUPBOX        "Art des Themas",IDC_STATIC,10,40,75,65,WS_GROUP
+    CONTROL         "Punkt",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,20,55,55,10
+    CONTROL         "Linie",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,70,55,10
+    CONTROL         "Polygon",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,85,55,10
+    GROUPBOX        "Datenfelder",IDC_STATIC,95,40,155,115,WS_GROUP
+    LTEXT           "Anzahl der Datenfelder:",IDC_STATIC,105,55,80,8
+    EDITTEXT        IDC_EDIT2,195,55,20,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS | WS_TABSTOP,215,55,11,
+                    14
+    CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,105,75,135,70
+    LTEXT           "Hinweis:\nNach der Erzeugung des Themas, wird es nicht mehr möglich den Art des Themas oder die Datenfelder zu verändern.",
+                    IDC_STATIC,10,115,75,60
+    DEFPUSHBUTTON   "OK",IDOK,140,165,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,200,165,50,14
+END
+
+IDD_VALUE_SYMBOL_PAGE DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Einzelwert"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name des Themas:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    GROUPBOX        "Klassifizierungsoptionen",IDC_STATIC,10,20,105,95
+    CONTROL         "Einzelnes Symbol",IDC_RADIO1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Einzelwert",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Abgestuftes Symbol",IDC_RADIO3,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,65,90,10
+    CONTROL         "Standardlabel",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "Erweiterte label",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "Bei Einzelwert-Klassifizierung wird jedes Geo-Objekt des Themas nach Auswahl eines Kriteriums differenziert angezeigt.",
+                    IDC_STATIC,10,125,105,35,NOT WS_GROUP
+    LTEXT           "Einzelwerte und Symbole:",IDC_STATIC,125,25,85,8,NOT 
+                    WS_GROUP
+    CONTROL         "",IDC_LEGEND1,"{6E9D12DF-A025-11D2-9F40-00C04F8ECE6F}",
+                    0x0,125,40,125,135
+    LTEXT           "Auswahlkriterium:",IDC_STATIC,265,25,75,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,260,40,80,65,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    CONTROL         "Remove Outline",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,260,60,80,10
+    CONTROL         "",IDC_MAP1,"{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",NOT 
+                    WS_VISIBLE,330,80,10,10
+END
+
+IDD_SINGLE_SYMBOL_PAGE DIALOGEX 0, 0, 347, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Einzelnes Symbol"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "Name des Themas:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    GROUPBOX        "Klassifizierungsoptionen",IDC_STATIC,10,20,105,95
+    CONTROL         "Einzelnes Symbol",IDC_RADIO1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Einzelwert",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Abgestuftes Symbol",IDC_RADIO3,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,65,90,10
+    CONTROL         "Standardlabel",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "Erweiterte label",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "Bei Einzelsymbol-Klassifizierung werden alle Geo-Objekte des Themas angezeigt.",
+                    IDC_STATIC,10,120,105,30,NOT WS_GROUP
+    LTEXT           "Farbe:",IDC_STATIC,125,28,35,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON1,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,171,25,50,14,WS_EX_DLGMODALFRAME
+    LTEXT           "Größe:",IDC_STATIC,125,53,40,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT2,171,50,40,14,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ARROWKEYS,211,50,11,14
+    LTEXT           "Stil:",IDC_STATIC,125,76,35,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,171,74,50,70,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | WS_GROUP | 
+                    WS_TABSTOP
+    LTEXT           "Randfarbe:",IDC_STATIC1,125,101,40,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON2,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,171,98,50,14,WS_EX_DLGMODALFRAME
+    CONTROL         "Rand zeichnen",IDC_SINGLE_SYMBOL_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,230,100,66,10
+END
+
+IDD_BREAKS_SYMBOL_PAGE DIALOGEX 0, 0, 352, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Abgestuftes Symbol"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "Name des Themas:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    GROUPBOX        "Klassifizierungsoptionen",IDC_STATIC,10,20,105,95
+    CONTROL         "Einzelnes Symbol",IDC_RADIO1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Einzelwert",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Abgestuftes Symbol",IDC_RADIO3,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,65,90,10
+    CONTROL         "Standardlabel",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "Erweiterte label",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "Bei Abgestufter Symbol-Klassifizierung werden die Geo-Objekte nach Auswahl eines Kriteriums verschiedenen Bereichen zugeordnet.",
+                    IDC_STATIC,10,125,105,45,NOT WS_GROUP
+    LTEXT           "Numerisches Feld:",IDC_STATIC,125,25,115,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,125,40,115,80,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Anzahl der Symbole:",IDC_STATIC,250,25,65,8,NOT 
+                    WS_GROUP
+    EDITTEXT        IDC_EDIT2,250,40,40,14,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Spin1",IDC_SPIN1,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ARROWKEYS,290,40,11,14
+    LTEXT           "Abgestufte Symbol:",IDC_STATIC,125,60,115,8,NOT 
+                    WS_GROUP
+    CONTROL         "",IDC_LEGEND1,"{6E9D12DF-A025-11D2-9F40-00C04F8ECE6F}",
+                    0x0,125,75,115,100
+    LTEXT           "Farbe:",IDC_STATIC,250,75,35,8,NOT WS_GROUP
+    LTEXT           "Symbolgröße:",IDC_STATIC,300,75,45,8,NOT WS_GROUP
+    LTEXT           "Start:",IDC_STATIC,250,90,25,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON1,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,285,90,20,10,WS_EX_DLGMODALFRAME
+    COMBOBOX        IDC_COMBO2,315,90,30,55,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Ende:",IDC_STATIC,250,110,20,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON2,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,285,110,20,10,WS_EX_DLGMODALFRAME
+    COMBOBOX        IDC_COMBO3,315,110,30,55,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    CONTROL         "Remove outline",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,250,130,95,10
+    CONTROL         "",IDC_MAP1,"{9BD6A64B-CE75-11D1-AF04-204C4F4F5020}",NOT 
+                    WS_VISIBLE,330,150,10,10
+END
+
+IDD_STNDRD_LABEL_PAGE DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Standardlabel"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name des Themas:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    GROUPBOX        "Klassifizierungsoptionen",IDC_STATIC,10,20,105,95
+    CONTROL         "Einzelnes Symbol",IDC_RADIO1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Einzelwert",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Abgestuftes Symbol",IDC_RADIO3,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,65,90,10
+    CONTROL         "Standardlabel",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "Erweiterte label",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "Bei Standardlabel-Klassifizierung wird zu jedem Geo-Objekt des Themas nach Auswahl eines Kriteriums ein Text angezeigt.",
+                    IDC_STATIC,10,120,105,40,NOT WS_GROUP
+    LTEXT           "Textfeld:",IDC_STATIC,125,25,90,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,125,35,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "horizontale Ausrichtung:",IDC_STATIC,125,55,95,8,NOT 
+                    WS_GROUP
+    COMBOBOX        IDC_COMBO2,125,65,95,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "vertikale Ausrichtung:",IDC_STATIC,125,85,95,10,NOT 
+                    WS_GROUP
+    COMBOBOX        IDC_COMBO3,125,95,95,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "X-Offset Feld:",IDC_STATIC,125,115,95,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO4,125,125,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Y-Offset Feld:",IDC_STATIC,125,145,95,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO5,125,155,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    CONTROL         "Geo-Objekte anzeigen",IDC_CHECK1,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,230,25,100,10
+    CONTROL         "Duplikate erlauben",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,40,105,10
+    CONTROL         "angepaßter Text",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,55,105,10
+    CONTROL         "180° drehen",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,70,105,10
+    LTEXT           "Eingepaßter Text Feld:",IDC_STATIC,230,85,110,10,NOT 
+                    WS_GROUP
+    COMBOBOX        IDC_COMBO6,230,95,100,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Drehwinkel:",IDC_STATIC,230,115,45,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT2,285,115,45,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Slider1",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_GROUP | WS_TABSTOP,230,130,100,20
+    PUSHBUTTON      "Schriftart...",IDC_BUTTON1,230,155,50,14,WS_GROUP
+END
+
+IDD_ADVNCD_LABEL_PAGE DIALOGEX 0, 0, 352, 181
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Erweiterte Label"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "Name des Themas:",IDC_STATIC,10,5,105,8,NOT WS_GROUP
+    GROUPBOX        "Klassifizierungsoptionen",IDC_STATIC,10,20,105,95
+    CONTROL         "Einzelnes Symbol",IDC_RADIO1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,20,35,90,10
+    CONTROL         "Einzelwert",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,50,90,10
+    CONTROL         "Abgestuftes Symbol",IDC_RADIO3,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,65,90,10
+    CONTROL         "Standardlabel",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,20,80,85,10
+    CONTROL         "Erweiterte label",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,20,95,85,10
+    EDITTEXT        IDC_EDIT1,125,5,170,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "Bei Erweiterte-Label-Klassifizierung wird zu jedem Geo-Objekt des Themas nach Auswahl eines Kriteriums ein Text angezeigt. Überlappungen werden möglichst vermieden.",
+                    IDC_STATIC,10,120,105,60,NOT WS_GROUP
+    LTEXT           "Textfeld:",IDC_STATIC,125,25,90,8,NOT WS_GROUP
+    COMBOBOX        IDC_COMBO1,125,35,95,60,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    GROUPBOX        "Labelplazierung",IDC_STATIC,125,55,95,60
+    CONTROL         "auf",IDC_RADIO6,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,135,65,26,10
+    CONTROL         "oberhalb",IDC_RADIO7,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,135,80,43,10
+    CONTROL         "unterhalb",IDC_RADIO8,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,135,95,45,10
+    CTEXT           "Abstand",IDC_STATIC,181,65,34,8,NOT WS_GROUP
+    CONTROL         "Slider2",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_VERT | TBS_TOP | WS_GROUP | WS_TABSTOP,185,75,25,35
+    PUSHBUTTON      "Schriftart...",IDC_BUTTON1,170,125,50,14,WS_GROUP
+    CONTROL         "Geo-Objekte anzeigen",IDC_CHECK1,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,230,25,100,10
+    CONTROL         "Duplikate erlauben",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,40,100,10
+    CONTROL         "Labelhintergrund",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,230,55,100,10
+    LTEXT           "Hintergrundfarbe:",IDC_STATIC,230,70,65,8,NOT WS_GROUP
+    CONTROL         "",IDC_BUTTON2,"Button",BS_OWNERDRAW | WS_GROUP | 
+                    WS_TABSTOP,305,70,20,10,WS_EX_DLGMODALFRAME
+    GROUPBOX        "Labelgröße",IDC_STATIC,230,85,105,35
+    CONTROL         "Slider6",IDC_SLIDER2,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_GROUP | WS_TABSTOP,245,95,75,20
+    CONTROL         153,IDC_STATIC,"Static",SS_BITMAP,235,100,11,10
+    CONTROL         32451,IDC_STATIC,"Static",SS_BITMAP,320,100,11,10
+    GROUPBOX        "",IDC_STATIC,230,125,105,40
+    CONTROL         "Skalierte Label",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,235,125,65,10
+    CONTROL         "Slider1",IDC_SLIDER3,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_GROUP | WS_TABSTOP,245,140,75,20
+    CONTROL         153,IDC_STATIC,"Static",SS_BITMAP,235,145,11,10
+    CONTROL         32451,IDC_STATIC,"Static",SS_BITMAP,320,145,11,10
+END
+
+IDD_IMAGE_PROPS DIALOGEX 0, 0, 192, 89
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Themeneigenschaften"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,77,68,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,135,68,50,14
+    LTEXT           "Name des Themas:",IDC_IMAGE_PROPS_STATIC_NAME,7,29,67,8
+    EDITTEXT        IDC_IMAGE_PROPS_EDIT,80,26,105,14,ES_AUTOHSCROLL
+    CONTROL         "durchsichtig",IDC_IMAGE_PROPS_CHECK_TRANSPARENT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,47,72,10
+    LTEXT           "durchsichtige Farbe:",IDC_IMAGE_PROPS_STATIC_COLOR,79,
+                    47,71,8
+    CONTROL         "",IDC_IMAGE_PROPS_BUTTON,"Button",BS_OWNERDRAW | 
+                    WS_TABSTOP,157,45,28,13,WS_EX_DLGMODALFRAME
+    LTEXT           "Datei:",IDC_IMAGE_PROPS_STATIC_FILE,7,10,65,8
+    EDITTEXT        IDC_IMAGE_PROPS_EDIT_FILE,80,7,105,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+END
+
+IDD_PROGRESSDLG DIALOG DISCARDABLE  0, 0, 137, 49
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",WS_BORDER,5,
+                    28,128,14
+    LTEXT           "Testtext\nTesttext",IDC_TEXTFELD,7,7,125,19,SS_NOPREFIX
+END
+
+IDD_DGM DIALOG DISCARDABLE  0, 0, 115, 81
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Verschneidung"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "OK",IDOK,5,60,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,60,60,50,14
+    COMBOBOX        IDC_HMO_COMBO,5,20,105,45,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Bitte Geländemodell auswählen:",IDC_STATIC,5,5,110,10,
+                    SS_CENTERIMAGE
+    CONTROL         "C:\\tmp\\hmo.hmo",IDC_HMO_PATH,"Static",
+                    SS_LEFTNOWORDWRAP | SS_NOPREFIX | SS_CENTERIMAGE,5,40,
+                    105,10
+END
+
+IDD_NUTZKLASS DIALOG DISCARDABLE  0, 0, 306, 194
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+FONT 8, "MS Sans Serif"
+BEGIN
+    COMBOBOX        IDC_NUTZKLASS_NAME_COMBO,78,6,82,47,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Neu",IDC_NUTZKLASS_NEW_BUTTON,191,6,40,14,BS_NOTIFY
+    CONTROL         "Grid Ctrl",IDC_NUTZKLASS_GRID,"MFCGridCtrl",WS_TABSTOP,
+                    7,31,224,132
+    PUSHBUTTON      "Zeile löschen",IDC_NUTZKLASS_DELETE_ROW,244,31,55,14
+    PUSHBUTTON      "Spalte löschen",IDC_NUTZKLASS_DELETE_COL,244,50,55,14
+    PUSHBUTTON      "neue Spalte",IDC_NUTZKLASS_ADD_COL,244,69,55,14
+    COMBOBOX        IDC_NUTZKLASS_COL_COMBO,244,88,55,46,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Speichern und Ende",IDC_NUTZKLASS_BUTTON_OK,152,173,81,
+                    14
+    PUSHBUTTON      "Abbrechen",IDC_NUTZKLASS_BUTTON_CANCEL,245,173,54,14
+    EDITTEXT        IDC_NUTZKLASS_EDIT,242,6,57,14,ES_AUTOHSCROLL
+    CONTROL         "Zordnungstab:",IDC_NUTZKLASS_STATIC_ZOTABLE,"Static",
+                    SS_SIMPLE | SS_NOPREFIX | SS_CENTERIMAGE | WS_GROUP,7,8,
+                    64,8
+END
+
+IDD_VERSCHNEID DIALOG DISCARDABLE  0, 0, 126, 172
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Radio1:",IDC_VERSCHNEID_RADIO_NUTZ,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,7,7,112,8
+    CONTROL         "Radio2:",IDC_VERSCHNEID_RADIO_PROFIL,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,7,19,112,8
+    LTEXT           "Static",IDC_VERSCHNEID_STATIC_ART,7,33,112,8
+    COMBOBOX        IDC_VERSCHNEID_COMBO_TYPE,7,46,112,51,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Thema leeren",IDC_CHECK_DELETE_THEME,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,68,112,10
+    CONTROL         "Einschränkung",IDC_FIELD_CHECK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,84,112,10
+    COMBOBOX        IDC_VERSCHNEID_COMBO_FIELDS,7,98,112,49,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CTEXT           "=",IDC_STATIC,7,115,15,12,NOT WS_GROUP
+    EDITTEXT        IDC_VERSCHNEID_EDIT_CONSTRAINT,28,115,91,12,
+                    ES_AUTOHSCROLL
+    LTEXT           "Static:",IDC_VERSCHNEID_STATIC_RELI,7,135,28,8,NOT 
+                    WS_GROUP
+    CONTROL         "Radio1",IDC_VERSCHNEID_RADIO_LEFT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,37,135,39,9
+    CONTROL         "Radio2",IDC_VERSCHNEID_RADIO_RIGHT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,80,135,39,9
+    DEFPUSHBUTTON   "OK",IDOK,7,151,50,14,WS_GROUP
+    PUSHBUTTON      "Abbrechen",IDCANCEL,69,151,50,14
+END
+
+IDD_UPDATA_DATABLOCKS DIALOG DISCARDABLE  0, 0, 133, 130
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,109,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,76,109,50,14
+    CONTROL         "List1",IDC_DATABLOCKS_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_NOLABELWRAP | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,7,31,119,68
+    LTEXT           "Static",IDC_DATABLOCKS_STATIC,7,7,119,17,SS_NOPREFIX
+END
+
+IDD_GENERATE_PROFILE DIALOGEX 0, 0, 414, 306
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,8,284,84,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,102,284,50,14
+    CONTROL         "",IDC_PROFILE_DUMMY,"Static",SS_BLACKFRAME,8,8,397,135
+    LTEXT           "Hier wird ein schöner Text\nangezeigt.",IDC_DESCRIPTION,
+                    8,152,250,20,SS_NOPREFIX
+    LTEXT           """Zustand:""",IDC_STATE_TEXT,8,179,55,10
+    LTEXT           """Vorgängerprofil"":",IDC_PRED_TEXT,8,214,55,10
+    LTEXT           "Nachfolgerprofil:",IDC_FOLLOWER_TEXT,8,234,55,10
+    LTEXT           """Neues Profil:""",IDC_NEW_TEXT,8,254,55,10
+    COMBOBOX        IDC_STATE_COMBO,78,179,75,50,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           """Profildatei""",IDC_FILE_TEXT,78,199,45,10
+    EDITTEXT        IDC_EDIT_FILE_PRED,78,214,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_FILE_FOLLOW,78,234,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    LTEXT           """Station""",IDC_STATION_TEXT,130,200,40,10
+    EDITTEXT        IDC_EDIT_STATION_PRED,130,215,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_STATION_FOLLOW,130,235,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_STATION_NEW,130,255,45,12,ES_AUTOHSCROLL
+    LTEXT           """VZK""",IDC_VZK_TEXT,180,200,25,10
+    EDITTEXT        IDC_EDIT_VZK_PRED,180,215,30,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_VZK_FOLLOW,180,235,30,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    COMBOBOX        IDC_COMBO_VZK,180,255,30,40,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CTEXT           """links""",IDC_VOR_L_TEXT,260,200,45,10
+    EDITTEXT        IDC_EDIT_VOR_L_PRED,260,215,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_VOR_L_FOLLOW,260,235,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    LTEXT           """PK""",IDC_PK_TEXT,215,200,25,10
+    EDITTEXT        IDC_EDIT_PK_PRED,215,215,30,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_PK_FOLLOW,215,235,30,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_PK_NEW,215,255,30,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    CTEXT           """Fluss""",IDC_FLUSS_TEXT,310,200,45,10
+    EDITTEXT        IDC_EDIT_FLUSS_PRED,310,215,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_FLUSS_FOLLOW,310,235,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    CTEXT           """rechts""",IDC_VOR_R_TEXT,360,200,46,10
+    EDITTEXT        IDC_EDIT_VOR_R_PRED,361,215,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_VOR_R_FOLLOW,361,235,45,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP,
+                    WS_EX_STATICEDGE
+    LTEXT           "Strang-Abstände",IDC_STRANG_DIST_TEXT,310,180,60,10
+    LTEXT           "0",IDC_STATIC_COUNT,284,287,122,11,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_AUSDUENN,251,286,25,12,ES_RIGHT | 
+                    ES_AUTOHSCROLL
+    LTEXT           "Glättungsgenauigkeit:",IDC_STATIC_AUSDUENN,176,286,73,
+                    12,SS_CENTERIMAGE
+END
+
+IDD_VIEW_PROFILE DIALOG DISCARDABLE  0, 0, 405, 170
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,8,148,68,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,79,148,50,14
+    CONTROL         "",IDC_PROFILE_DUMMY,"Static",SS_BLACKFRAME,8,8,389,135
+    LTEXT           "0",IDC_STATIC_COUNT,275,151,122,11,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_AUSDUENN,242,150,25,12,ES_RIGHT | 
+                    ES_AUTOHSCROLL
+    LTEXT           "Glättungsgenauigkeit:",IDC_STATIC_AUSDUENN,167,150,73,
+                    12,SS_CENTERIMAGE
+END
+
+IDD_OBSERVER DIALOG DISCARDABLE  0, 0, 186, 65
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Abbrechen",IDCANCEL,66,44,50,14
+    CONTROL         "Dies ist ein schöner Statustext",IDC_OBSERVER_TEXT,
+                    "Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    SS_CENTERIMAGE | WS_GROUP,7,7,172,8
+    CONTROL         "Progress1",IDC_OBSERVER_PROGRESS,"msctls_progress32",
+                    PBS_SMOOTH | WS_BORDER,7,23,172,15
+END
+
+IDD_PREVIEW_BAR DIALOG DISCARDABLE  0, 0, 266, 21
+STYLE WS_CHILD | WS_BORDER
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Drucken...",AFX_ID_PREVIEW_PRINT,5,3,16,16,BS_ICON
+    PUSHBUTTON      "Schliessen",AFX_ID_PREVIEW_CLOSE,243,3,16,16,BS_ICON
+    PUSHBUTTON      "Vergößern",AFX_ID_PREVIEW_ZOOMIN,37,3,16,16,BS_ICON
+    PUSHBUTTON      "Verkleinern",AFX_ID_PREVIEW_ZOOMOUT,53,3,16,16,BS_ICON
+    PUSHBUTTON      "Einstellungen...",ID_PREVIEW_PRINTER_SETUP,21,3,16,16,
+                    BS_ICON
+    CONTROL         "Neuer Text",ID_PREVIEW_NEW_TEXT,"Button",
+                    BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,94,3,16,16
+    CONTROL         "Select",ID_PREVIEW_SELECT,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,78,3,16,16
+    CONTROL         "Neue Karte",ID_PREVIEW_NEW_MAP,"Button",
+                    BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,126,3,16,16
+    CONTROL         "Neues Logo",ID_PREVIEW_NEW_LOGO,"Button",
+                    BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,142,3,16,16
+    PUSHBUTTON      "Objekt löschen",ID_PREVIEW_DELETE,168,3,16,16,BS_ICON
+    PUSHBUTTON      "Objekt eigenschaften",ID_PREVIEW_PROPS,184,3,16,16,
+                    BS_ICON
+    PUSHBUTTON      "nach vorn",ID_PREVIEW_ZFRONT,201,3,16,16,BS_ICON
+    PUSHBUTTON      "nach hinten",ID_PREVIEW_ZBACK,217,3,16,16,BS_ICON
+    CONTROL         "Neue Legende",ID_PREVIEW_NEW_LEGEND2,"Button",
+                    BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,110,3,16,16
+END
+
+IDD_PRINT_BORDER_PAGE DIALOGEX 0, 0, 157, 81
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Eigenschaftenseite"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "Farbe",IDC_PRINT_BORDER_COLOR,"Button",BS_OWNERDRAW | 
+                    WS_TABSTOP,10,60,50,14,WS_EX_DLGMODALFRAME
+    EDITTEXT        IDC_PRINT_BORDER_WIDTH,90,25,40,15,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_PRINT_BORDER_SPIN,"msctls_updown32",
+                    UDS_ARROWKEYS,135,25,11,14
+    COMBOBOX        IDC_PRINT_BORDER_STYLE,10,25,70,60,CBS_DROPDOWNLIST | 
+                    CBS_OWNERDRAWVARIABLE | CBS_SORT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Linientyp:",IDC_PRINT_BORDER_STYLE_STATIC,10,10,70,15
+    LTEXT           "Linienbreite:",IDC_PRINT_BORDER_WIDTH_STATIC,90,10,55,
+                    15
+    LTEXT           "Linienfarbe:",IDC_PRINT_BORDER_COLOR_STATIC,10,45,75,15
+END
+
+IDD_PRINT_TEXT_PAGE DIALOG DISCARDABLE  0, 0, 207, 130
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Eigenschaftenseite"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Text:",IDC_STATIC_TEXT,5,40,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_PRINT_TEXT_EDIT,5,55,195,65,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | 
+                    WS_VSCROLL | WS_HSCROLL
+    CONTROL         "Links",IDC_RADIO_LEFT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,5,20,40,15
+    CONTROL         "Zentriert",IDC_RADIO_CENTER,"Button",BS_AUTORADIOBUTTON,
+                    50,20,45,15
+    CONTROL         "Rechts",IDC_RADIO_RIGHT,"Button",BS_AUTORADIOBUTTON,95,
+                    20,40,15
+    LTEXT           "Ausrichtung",IDC_STATIC_ALLIGN,5,5,65,15
+    PUSHBUTTON      "Schrift...",IDC_PRINT_TEXT_SCHRIFT,150,20,50,14
+END
+
+IDD_PRINT_MAP_PAGE DIALOG DISCARDABLE  0, 0, 167, 111
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Eigenschaftenseite"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Maßstab:",IDC_PRINT_MAP_SCALETEXT,5,5,40,12,
+                    SS_CENTERIMAGE
+    COMBOBOX        IDC_PRINT_MAP_SCALECOMBO,50,5,60,40,CBS_DROPDOWN | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Kartenausschnitt anpassen",IDC_PRINT_MAP_RADIO_EXTENT,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,5,25,
+                    101,10
+    CONTROL         "Druckbereich anpassen",IDC_PRINT_MAP_RADIO_PRINTRECT,
+                    "Button",BS_AUTORADIOBUTTON,5,40,91,10
+    LTEXT           "Ausrichtung:",IDC_PRINT_MAP_TEXT,5,72,40,13,
+                    SS_CENTERIMAGE
+    COMBOBOX        IDC_PRINT_MAP_ALIGN_COMBO,55,72,90,43,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Schrift...",IDC_PRINT_MAP_FONT_BUTTON,55,90,50,14
+END
+
+IDD_PRINT_OLE_PAGE DIALOG DISCARDABLE  0, 0, 83, 38
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Eigenschaftenseite"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Objekt erzeugen",IDC_PRINT_OLE_BUTTON,3,9,62,14
+END
+
+IDD_PRINT_IMAGE_PAGE DIALOG DISCARDABLE  0, 0, 195, 65
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Eigenschaftenseite"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Durchsuchen...",IDC_PRINT_IMAGE_SEARCH,130,25,59,14
+    LTEXT           "Bitmap:",IDC_PRINT_IMAGE_TEXT,5,5,115,13
+    EDITTEXT        IDC_PRINT_IMAGE_NAME,5,25,114,14,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    CONTROL         "Originalgrösse beibehalten",IDC_PRINT_IMAGE_SIZE_CHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,45,114,10
+END
+
+IDD_PRINT_LEGEND_PAGE DIALOG DISCARDABLE  0, 0, 159, 50
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Legende"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Originalgrösse beibehalten",IDC_PRINT_LEGEND_FIXSIZE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,10,133,10
+END
+
+IDD_PRINT_LEGEND2_PAGE DIALOG DISCARDABLE  0, 0, 83, 44
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Eigenschaftenseite"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Schrift...",IDC_PRINT_LEGEND2_PAGE_SCHRIFT,15,14,50,14
+END
+
+IDD_VOLUME_DIALOG DIALOG DISCARDABLE  0, 0, 195, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Fliesstiefenermittlung"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,72,53,50,14
+    LTEXT           "Thema wurde erfolgreich mit Höhenmodell verschnitten.\n\nDas Gesamtvolumen der überschwemmten Fläche ist:",
+                    IDC_LABEL,7,7,181,30
+    EDITTEXT        IDC_VOLUME_EDIT,7,36,181,12,ES_RIGHT | ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+END
+
+IDD_STRANG_DISTANCES DIALOG DISCARDABLE  0, 0, 350, 242
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Profilabstände ermitteln"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "&Speichern und Ende",IDOK,210,221,78,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,293,221,50,14
+    CONTROL         "Grid Ctrl",IDC_GRID,"MFCGridCtrl",WS_TABSTOP,7,7,336,
+                    203
+    PUSHBUTTON      "&Logdatei einsehen",ID_BUTTON_LOG,7,221,78,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_MAP_FORM DLGINIT
+BEGIN
+    IDC_MAP1, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x0261, 0x0000, 0x027b, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0001, 0x0100, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_SCALEBAR DLGINIT
+BEGIN
+    IDC_SBSCALEBAR1, 0x376, 404, 0
+0x0000, 0x0000, 0xb293, 0x0000, 0x0190, 0x0000, 0x0003, 0x0008, 0xf20b, 
+0x4757, 0x0020, 0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 
+0x0074, 0x0078, 0x3182, 0x0000, 0x0003, 0x0008, 0xf20a, 0x4757, 0x0020, 
+0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 0x0074, 0x0079, 
+0x0668, 0x0000, 0x0003, 0x0009, 0x7526, 0xbe25, 0x0024, 0x0000, 0x0062, 
+0x0061, 0x0063, 0x006b, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x000f, 
+0x8000, 0x0000, 0x0008, 0x000b, 0x5474, 0xfef2, 0x0048, 0x0000, 0x0074, 
+0x006f, 0x006f, 0x006c, 0x0074, 0x0069, 0x0070, 0x0074, 0x0065, 0x0078, 
+0x0074, 0x0010, 0x0000, 0x004d, 0x0061, 0x00df, 0x0073, 0x0074, 0x0061, 
+0x0062, 0x0073, 0x0061, 0x006e, 0x007a, 0x0065, 0x0069, 0x0067, 0x0065, 
+0x0072, 0x0000, 0x000b, 0x0011, 0x6030, 0x95bf, 0x0030, 0x0000, 0x0061, 
+0x0064, 0x006a, 0x0075, 0x0073, 0x0074, 0x0066, 0x006f, 0x0072, 0x006c, 
+0x0061, 0x0074, 0x0069, 0x0074, 0x0075, 0x0064, 0x0065, 0x0000, 0x000d, 
+0x0004, 0xf375, 0xbc0d, 0x003c, 0x0000, 0x0066, 0x006f, 0x006e, 0x0074, 
+0x5203, 0x0be3, 0x8f91, 0x11ce, 0xe39d, 0xaa00, 0x4b00, 0x51b8, 0x0001, 
+0x0000, 0x0190, 0x4244, 0x0001, 0x4d0d, 0x2053, 0x6153, 0x736e, 0x5320, 
+0x7265, 0x6669, 0x0003, 0x0009, 0x09ae, 0x8a47, 0x0024, 0x0000, 0x0073, 
+0x0063, 0x0061, 0x006c, 0x0065, 0x0074, 0x0065, 0x0078, 0x0074, 0x0003, 
+0x0000, 0x0000, 0x0003, 0x0008, 0xf791, 0xcb46, 0x0020, 0x0000, 0x006d, 
+0x0061, 0x0070, 0x0075, 0x006e, 0x0069, 0x0074, 0x0073, 0x0002, 0x0000, 
+0x0003, 0x000d, 0x1316, 0x8ef7, 0xfea4, 0xffff, 0x0073, 0x0063, 0x0061, 
+0x006c, 0x0065, 0x0062, 0x0061, 0x0072, 0x0075, 0x006e, 0x0069, 0x0074, 
+0x0073, 0x0003, 0x0000, 0x0000, 
+    0
+END
+
+IDD_OVERVIEWBAR DLGINIT
+BEGIN
+    IDC_OVERVIEWMAP, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x1054, 0x0000, 0x0feb, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0001, 0x0000, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_LEGENDBAR DLGINIT
+BEGIN
+    IDC_LEGENDE, 0x376, 240, 0
+0x0000, 0x0000, 0xb293, 0x0000, 0x00ec, 0x0000, 0x0003, 0x0008, 0xf20b, 
+0x4757, 0x0020, 0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 
+0x0074, 0x0078, 0x12cf, 0x0000, 0x0003, 0x0008, 0xf20a, 0x4757, 0x0020, 
+0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 0x0074, 0x0079, 
+0x1791, 0x0000, 0x0003, 0x0009, 0x7526, 0xbe25, 0x0024, 0x0000, 0x0062, 
+0x0061, 0x0063, 0x006b, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0004, 
+0x8000, 0x0000, 0x0003, 0x0009, 0x313a, 0xce21, 0x0024, 0x0000, 0x0066, 
+0x006f, 0x0072, 0x0065, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0012, 
+0x8000, 0x0000, 0x000d, 0x0004, 0xf375, 0xbc0d, 0x003c, 0x0000, 0x0066, 
+0x006f, 0x006e, 0x0074, 0x5203, 0x0be3, 0x8f91, 0x11ce, 0xe39d, 0xaa00, 
+0x4b00, 0x51b8, 0x0001, 0x0000, 0x0190, 0x4244, 0x0001, 0x4d0d, 0x2053, 
+0x6153, 0x736e, 0x5320, 0x7265, 0x6669, 0x0002, 0x0009, 0x18b1, 0xeb25, 
+0xff3c, 0xffff, 0x0062, 0x0061, 0x0063, 0x006b, 0x0073, 0x0074, 0x0079, 
+0x006c, 0x0065, 0x0000, 
+    IDC_MAP1, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x12cf, 0x0000, 0x0a21, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0101, 0x0000, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0035, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_VALUE_SYMBOL_PAGE DLGINIT
+BEGIN
+    IDC_LEGEND1, 0x376, 240, 0
+0x0000, 0x0000, 0xb293, 0x0000, 0x00ec, 0x0000, 0x0003, 0x0008, 0xf20b, 
+0x4757, 0x0020, 0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 
+0x0074, 0x0078, 0x136e, 0x0000, 0x0003, 0x0008, 0xf20a, 0x4757, 0x0020, 
+0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 0x0074, 0x0079, 
+0x16a2, 0x0000, 0x0003, 0x0009, 0x7526, 0xbe25, 0x0024, 0x0000, 0x0062, 
+0x0061, 0x0063, 0x006b, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0004, 
+0x8000, 0x0000, 0x0003, 0x0009, 0x313a, 0xce21, 0x0024, 0x0000, 0x0066, 
+0x006f, 0x0072, 0x0065, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0012, 
+0x8000, 0x0000, 0x000d, 0x0004, 0xf375, 0xbc0d, 0x003c, 0x0000, 0x0066, 
+0x006f, 0x006e, 0x0074, 0x5203, 0x0be3, 0x8f91, 0x11ce, 0xe39d, 0xaa00, 
+0x4b00, 0x51b8, 0x0001, 0x0000, 0x0190, 0x4244, 0x0001, 0x4d0d, 0x2053, 
+0x6153, 0x736e, 0x5320, 0x7265, 0x6669, 0x0002, 0x0009, 0x18b1, 0xeb25, 
+0xff3c, 0xffff, 0x0062, 0x0061, 0x0063, 0x006b, 0x0073, 0x0074, 0x0079, 
+0x006c, 0x0065, 0x0000, 
+    IDC_MAP1, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x018d, 0x0000, 0x01a7, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0000, 0x0000, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_BREAKS_SYMBOL_PAGE DLGINIT
+BEGIN
+    IDC_LEGEND1, 0x376, 240, 0
+0x0000, 0x0000, 0xb293, 0x0000, 0x00ec, 0x0000, 0x0003, 0x0008, 0xf20b, 
+0x4757, 0x0020, 0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 
+0x0074, 0x0078, 0x11e1, 0x0000, 0x0003, 0x0008, 0xf20a, 0x4757, 0x0020, 
+0x0000, 0x005f, 0x0065, 0x0078, 0x0074, 0x0065, 0x006e, 0x0074, 0x0079, 
+0x10d9, 0x0000, 0x0003, 0x0009, 0x7526, 0xbe25, 0x0024, 0x0000, 0x0062, 
+0x0061, 0x0063, 0x006b, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0004, 
+0x8000, 0x0000, 0x0003, 0x0009, 0x313a, 0xce21, 0x0024, 0x0000, 0x0066, 
+0x006f, 0x0072, 0x0065, 0x0063, 0x006f, 0x006c, 0x006f, 0x0072, 0x0012, 
+0x8000, 0x0000, 0x000d, 0x0004, 0xf375, 0xbc0d, 0x003c, 0x0000, 0x0066, 
+0x006f, 0x006e, 0x0074, 0x5203, 0x0be3, 0x8f91, 0x11ce, 0xe39d, 0xaa00, 
+0x4b00, 0x51b8, 0x0001, 0x0000, 0x0190, 0x4244, 0x0001, 0x4d0d, 0x2053, 
+0x6153, 0x736e, 0x5320, 0x7265, 0x6669, 0x0002, 0x0009, 0x18b1, 0xeb25, 
+0xff3c, 0xffff, 0x0062, 0x0061, 0x0063, 0x006b, 0x0073, 0x0074, 0x0079, 
+0x006c, 0x0065, 0x0000, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0035, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0036, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0037, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0038, 
+    IDC_COMBO2, 0x403, 2, 0
+0x0039, 
+    IDC_COMBO2, 0x403, 3, 0
+0x3031, "\000" 
+    IDC_COMBO3, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0035, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0036, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0037, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0038, 
+    IDC_COMBO3, 0x403, 2, 0
+0x0039, 
+    IDC_COMBO3, 0x403, 3, 0
+0x3031, "\000" 
+    IDC_MAP1, 0x376, 121, 0
+0x001d, 0x0000, 0x0043, 0x006f, 0x0070, 0x0079, 0x0072, 0x0069, 0x0067, 
+0x0068, 0x0074, 0x0020, 0x0028, 0x0063, 0x0029, 0x0020, 0x0031, 0x0039, 
+0x0039, 0x0039, 0x0020, 0x0045, 0x0053, 0x0052, 0x0049, 0x002c, 0x0020, 
+0x0049, 0x006e, 0x0063, 0x002e, 0x0000, 0x0002, 0x018d, 0x0000, 0x01a7, 
+0x0000, 0x00e1, 0x0000, 0xffff, 0x00ff, 0x0001, 0x0000, 0x0000, 0x2710, 
+0x0000, 0x0001, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0001, 0xffff, 0x00ff, 0x0200, 0x0000, 0x0000, "\000" 
+    0
+END
+
+IDD_STNDRD_LABEL_PAGE DLGINIT
+BEGIN
+    IDC_COMBO2, 0x403, 6, 0
+0x694c, 0x6b6e, 0x0073, 
+    IDC_COMBO2, 0x403, 10, 0
+0x655a, 0x746e, 0x6972, 0x7265, 0x0074, 
+    IDC_COMBO2, 0x403, 7, 0
+0x6552, 0x6863, 0x7374, "\000" 
+    IDC_COMBO3, 0x403, 5, 0
+0x624f, 0x6e65, "\000" 
+    IDC_COMBO3, 0x403, 10, 0
+0x655a, 0x746e, 0x6972, 0x7265, 0x0074, 
+    IDC_COMBO3, 0x403, 6, 0
+0x6e55, 0x6574, 0x006e, 
+    0
+END
+
+IDD_PRINT_MAP_PAGE DLGINIT
+BEGIN
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 4, 0
+0x3031, 0x0030, 
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 5, 0
+0x3031, 0x3030, "\000" 
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 5, 0
+0x3032, 0x3030, "\000" 
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 5, 0
+0x3035, 0x3030, "\000" 
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 6, 0
+0x3031, 0x3030, 0x0030, 
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 6, 0
+0x3532, 0x3030, 0x0030, 
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 6, 0
+0x3035, 0x3030, 0x0030, 
+    IDC_PRINT_MAP_SCALECOMBO, 0x403, 7, 0
+0x3031, 0x3030, 0x3030, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAPTYPE MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "Projekt&manager",             ID_FILE_MANAGER
+        MENUITEM SEPARATOR
+        MENUITEM "&Drucken...\tStrg+P",         ID_FILE_PRINT
+        MENUITEM "Sei&tenansicht",              ID_FILE_PRINT_PREVIEW
+        MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+END
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "Projekt&manager",             ID_FILE_MANAGER
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    MENUITEM "",                            65535
+END
+
+IDR_SCALEBAR_POPUP MENU DISCARDABLE 
+BEGIN
+    POPUP "_POPUP_"
+    BEGIN
+        POPUP "&Karteneinheit"
+        BEGIN
+            MENUITEM "&Dezimal",                    ID_VIEW_MAPUNITS_DEGREES
+            MENUITEM "&Fuß",                        ID_VIEW_MAPUNITS_FEET
+            MENUITEM "&Meter",                      ID_VIEW_MAPUNITS_METERS
+        END
+        MENUITEM SEPARATOR
+        POPUP "&Maßstabseinheit"
+        BEGIN
+            MENUITEM "Mei&len",                     ID_VIEW_SCALEUNITS_MILES
+            MENUITEM "&Fuß",                        ID_VIEW_SCALEUNITS_FEET
+            MENUITEM "&Meter",                      ID_VIEW_SCALEUNITS_METERS
+
+            MENUITEM "&Kilometer",                  ID_VIEW_SCALEUNITS_KM
+        END
+        POPUP "&Bildschirmeinheit"
+        BEGIN
+            MENUITEM "Zenti&meter",                 ID_VIEW_SCREENUNITS_CM
+            MENUITEM "&Zoll",                       ID_VIEW_SCREENUNITS_INCHES
+
+        END
+    END
+END
+
+IDR_HELP MENU DISCARDABLE 
+BEGIN
+    POPUP "&Hilfe"
+    BEGIN
+        MENUITEM "&Hilfethemen",                ID_HELP_FINDER
+        MENUITEM "Inf&o...",                    ID_APP_ABOUT
+    END
+END
+
+IDR_WINDOW MENU DISCARDABLE 
+BEGIN
+    POPUP "&Fenster"
+    BEGIN
+        MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
+        MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_HORZ
+        MENUITEM "&Symbole anordnen",           ID_WINDOW_ARRANGE
+    END
+END
+
+IDR_TOOLS MENU DISCARDABLE 
+BEGIN
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Maximale Darstellung",       ID_TOOLS_FULL_EXTENT
+        MENUITEM "Ausschnitt ver&größern",      ID_TOOLS_ZOOMIN
+        MENUITEM SEPARATOR
+        MENUITEM "&Profil editieren",           ID_TOOLS_EDIT_PROFIL
+        MENUITEM "Profileditor &Automatik (F5)", ID_TOOLS_FOLLOW_PROFILE
+        MENUITEM "Profil&cursor (F6)",          ID_TOOLS_SHOW_CURSOR
+        MENUITEM "aktives Profil &markieren",   ID_TOOLS_MARK_PROFILE
+        MENUITEM SEPARATOR
+        MENUITEM "Profil generieren",           ID_TOOLS_GENERATE_PROFILE
+        MENUITEM "Profile &generieren",         ID_LAYER_GENERATE_PROFILES
+        MENUITEM "Profil verlängern",           ID_TOOLS_EXTEND_PROFILE
+        MENUITEM SEPARATOR
+        MENUITEM "Profil &spiegeln",            ID_TOOLS_FLIP_PROFILE
+    END
+END
+
+IDR_OBJECT MENU DISCARDABLE 
+BEGIN
+    POPUP "&Geo-Objekte"
+    BEGIN
+        MENUITEM "Objekt &erzeugen",            ID_OBJECT_NEW
+        MENUITEM "Objektab&frage",              ID_OBJECT_QUERY
+        MENUITEM "Objekt &verschieben",         ID_OBJECT_MOVE
+        MENUITEM "Objekt &löschen",             ID_OBJECT_DELETE
+        MENUITEM "Objekt auschneiden",          ID_OBJECT_CLIP
+        MENUITEM SEPARATOR
+        MENUITEM "Punkt einfügen",              ID_POINT_INSERT
+        MENUITEM "Punkt löschen",               ID_POINT_DELETE
+        MENUITEM "Punkt verschieben",           ID_POINT_MOVE
+    END
+END
+
+IDR_THEME MENU DISCARDABLE 
+BEGIN
+    POPUP "&Themen"
+    BEGIN
+        MENUITEM "&Neues Thema...",             ID_LAYER_NEW
+        MENUITEM "Themen hinzu&fügen...\tStrg+A", ID_LAYER_INSERT
+        POPUP "Thema verschieben"
+        BEGIN
+            MENUITEM "Nach oben verschieben",       ID_LAYER_MOVETOTOP
+            MENUITEM SEPARATOR
+            MENUITEM "Eins nach oben verschieben",  ID_LAYER_MOVEFORWARD
+            MENUITEM "Eins nach unten verschieben", ID_LAYER_MOVEBACK
+            MENUITEM SEPARATOR
+            MENUITEM "Nach unten verschieben",      ID_LAYER_MOVETOBACK
+        END
+        MENUITEM "Thema &kopieren",             ID_LAYER_COPY
+        MENUITEM "Thema &entfernen\tStrg+R",    ID_LAYER_REMOVE
+        MENUITEM SEPARATOR
+        MENUITEM "mit Profilen schneiden",      ID_LAYER_SHAPE_TO_PROFILE
+        MENUITEM SEPARATOR
+        MENUITEM "Höhenmodel importieren",      ID_LAYER_HMO_IMPORT
+        MENUITEM "mit Höhenmodell verschneiden", ID_LAYER_TINCUT
+        MENUITEM "Wasserpiegel nach außen setzen", ID_LAYER_MOVE_OUTWARDS
+        MENUITEM SEPARATOR
+        MENUITEM "&Zoom zum aktiven Thema",     ID_LAYER_ZOOM
+        MENUITEM "Im Übersichtsfenster anzeigen", ID_LAYER_OVERVIEW
+        MENUITEM SEPARATOR
+        MENUITEM "Eigenschaften e&xportieren...", ID_LAYER_PROPERTIES_EXPORT
+        MENUITEM "Eigenschaften &importieren...", ID_LAYER_PROPERTIES_IMPORT
+        MENUITEM "&Eigenschaften editieren",    ID_LAYER_PROPERTIES
+    END
+END
+
+IDR_MAP MENU DISCARDABLE 
+BEGIN
+    POPUP "&Karte"
+    BEGIN
+        MENUITEM "&Neu...",                     ID_MAP_NEW
+        MENUITEM "Ö&ffnen...",                  ID_MAP_OPEN
+        MENUITEM "&Löschen...",                 ID_MAP_DELETE
+        MENUITEM "&Speichern",                  ID_FILE_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Exportieren als...",         ID_MAP_SAVE_AS
+        MENUITEM "In &Zwischenablage",          ID_MAP_CLIPBOARD
+        MENUITEM SEPARATOR
+        MENUITEM "&Vorlage speichern",          ID_SAFE_DEFAULT_PROPERTIES
+    END
+END
+
+IDR_VIEW MENU DISCARDABLE 
+BEGIN
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+        MENUITEM "Übersichts&karte",            ID_VIEW_OVERVIEW_MAP
+        MENUITEM SEPARATOR
+        MENUITEM "&Profileditor",               ID_VIEW_PROFILEBAR
+        MENUITEM "Profilübersicht",             ID_VIEW_PROFILAUSWAHL
+        MENUITEM "&Legende",                    ID_VIEW_LEGEND
+        MENUITEM "&Übersichtsfenster",          ID_VIEW_OVERVIEW
+        MENUITEM SEPARATOR
+        MENUITEM "Maßstabs&anzeige",            ID_VIEW_SCALEBAR
+        POPUP "Maßstabs&eigenschaften"
+        BEGIN
+            POPUP "&Karteneinheit"
+            BEGIN
+                MENUITEM "&Dezimal",                    ID_VIEW_MAPUNITS_DEGREES
+
+                MENUITEM "&Fuß",                        ID_VIEW_MAPUNITS_FEET
+
+                MENUITEM "&Meter",                      ID_VIEW_MAPUNITS_METERS
+
+            END
+            MENUITEM SEPARATOR
+            POPUP "&Maßstabseinheit"
+            BEGIN
+                MENUITEM "Mei&len",                     ID_VIEW_SCALEUNITS_MILES
+
+                MENUITEM "&Fuß",                        ID_VIEW_SCALEUNITS_FEET
+
+                MENUITEM "&Meter",                      ID_VIEW_SCALEUNITS_METERS
+
+                MENUITEM "&Kilometer",                  ID_VIEW_SCALEUNITS_KM
+
+            END
+            POPUP "&Bildschirmeinheit"
+            BEGIN
+                MENUITEM "Zenti&meter",                 ID_VIEW_SCREENUNITS_CM
+
+                MENUITEM "&Zoll",                       ID_VIEW_SCREENUNITS_INCHES
+
+            END
+        END
+    END
+END
+
+IDR_MAINMAP MENU DISCARDABLE 
+BEGIN
+    POPUP "&Karte"
+    BEGIN
+        MENUITEM "&Neu...",                     ID_MAP_NEW
+        MENUITEM "Ö&ffnen...",                  ID_MAP_OPEN
+        MENUITEM "&Löschen...",                 ID_MAP_DELETE
+    END
+END
+
+IDR_MAINVIEW MENU DISCARDABLE 
+BEGIN
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+        MENUITEM "Übersichts&karte",            ID_VIEW_OVERVIEW_MAP
+    END
+END
+
+IDR_EXTRAS MENU DISCARDABLE 
+BEGIN
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Nutzungsklassen",            ID_EXTRAS_EDIT_NUTZUNG
+        MENUITEM "&Profilabstände ermitteln",   ID_EXTRAS_PROFILEDISTANCE
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "A",            ID_LAYER_INSERT,        VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "R",            ID_LAYER_REMOVE,        VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    VK_ESCAPE,      ID_ESCAPE,              VIRTKEY, NOINVERT
+    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          ID_TOOLS_FOLLOW_PROFILE, VIRTKEY, NOINVERT
+    VK_F6,          ID_TOOLS_SHOW_CURSOR,   VIRTKEY, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, CONTROL, 
+                                                    NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 233
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 120
+    END
+
+    IDD_MAP_OPEN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 270
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 90
+    END
+
+    IDD_LEGENDBAR, DIALOG
+    BEGIN
+        RIGHTMARGIN, 121
+    END
+
+    IDD_OBJECT_QUERY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 185
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 214
+    END
+
+    IDD_NEW_LAYER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 250
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 179
+    END
+
+    IDD_IMAGE_PROPS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 185
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 82
+    END
+
+    IDD_PROGRESSDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 130
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 42
+    END
+
+    IDD_DGM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 108
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
+    END
+
+    IDD_NUTZKLASS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 299
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 187
+    END
+
+    IDD_VERSCHNEID, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 119
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 165
+    END
+
+    IDD_UPDATA_DATABLOCKS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 126
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 123
+    END
+
+    IDD_GENERATE_PROFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 8
+        RIGHTMARGIN, 406
+        TOPMARGIN, 8
+        BOTTOMMARGIN, 298
+    END
+
+    IDD_VIEW_PROFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 8
+        RIGHTMARGIN, 397
+        TOPMARGIN, 8
+        BOTTOMMARGIN, 162
+    END
+
+    IDD_OBSERVER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 58
+    END
+
+    IDD_PREVIEW_BAR, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 259
+        TOPMARGIN, 3
+    END
+
+    IDD_PRINT_OLE_PAGE, DIALOG
+    BEGIN
+        RIGHTMARGIN, 77
+        BOTTOMMARGIN, 30
+    END
+
+    IDD_VOLUME_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 188
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 67
+    END
+
+    IDD_STRANG_DISTANCES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 343
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 235
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "#include ""..\\..\\commonMfc\\include\\commresource.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#include ""l.deu\\afxres.rc""          // Standardkomponenten\r\n"
+    "#include ""l.deu\\afxprint.rc""        // Ressourcen für Drucken/Seitenansicht\r\n"
+    "#include ""..\\commonMfc\\include\\commonMfc.rc""\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\WSPMap.ico"
+IDR_MAPTYPE             ICON    DISCARDABLE     "res\\idr_mapt.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAPBAR              BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
+IDR_TOOLSBAR            BITMAP  DISCARDABLE     "res\\mapbar.bmp"
+IDB_PATTRN01            BITMAP  DISCARDABLE     "res\\pattrn01.bmp"
+IDB_PATTRN02            BITMAP  DISCARDABLE     "res\\pattrn2.bmp"
+IDB_PATTRN03            BITMAP  DISCARDABLE     "res\\pattrn3.bmp"
+IDB_BITMAP48            BITMAP  DISCARDABLE     "res\\bitmap48.bmp"
+IDR_PROFILAUSWAHL       BITMAP  DISCARDABLE     "res\\profilau.bmp"
+IDR_THEMEBAR            BITMAP  DISCARDABLE     "res\\theme.bmp"
+IDR_OBJECTBAR           BITMAP  DISCARDABLE     "res\\objectba.bmp"
+IDR_HELPBAR             BITMAP  DISCARDABLE     "res\\helpbar.bmp"
+IDR_FILEBAR             BITMAP  DISCARDABLE     "res\\filebar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAPBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_MAP_NEW
+    BUTTON      ID_MAP_OPEN
+END
+
+IDR_TOOLSBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_TOOLS_FULL_EXTENT
+    BUTTON      ID_LAYER_ZOOM
+    SEPARATOR
+    BUTTON      ID_TOOLS_NONE
+    BUTTON      ID_TOOLS_ZOOMIN
+    SEPARATOR
+    BUTTON      ID_TOOLS_EDIT_PROFIL
+    BUTTON      ID_TOOLS_MARK_PROFILE
+    SEPARATOR
+    BUTTON      ID_TOOLS_FOLLOW_PROFILE
+    BUTTON      ID_TOOLS_SHOW_CURSOR
+    SEPARATOR
+    BUTTON      ID_TOOLS_EXTEND_PROFILE
+    BUTTON      ID_TOOLS_GENERATE_PROFILE
+    SEPARATOR
+    BUTTON      ID_TOOLS_FLIP_PROFILE
+END
+
+IDR_PROFILAUSWAHL TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_PROFIL_AUSWAHL_ADD
+    SEPARATOR
+    BUTTON      ID_PROFIL_AUSWAHL_REMOVE
+    SEPARATOR
+    BUTTON      ID_PROFILAUSWAHL_SAVE
+    SEPARATOR
+    BUTTON      ID_PROFILAUSWAHL_SELECTALL
+END
+
+IDR_THEMEBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_LAYER_PROPERTIES
+    BUTTON      ID_LAYER_INSERT
+    BUTTON      ID_LAYER_SHAPE_TO_PROFILE
+END
+
+IDR_OBJECTBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_OBJECT_NEW
+    BUTTON      ID_OBJECT_MOVE
+    BUTTON      ID_OBJECT_QUERY
+    BUTTON      ID_OBJECT_DELETE
+    SEPARATOR
+    BUTTON      ID_OBJECT_CLIP
+    SEPARATOR
+    BUTTON      ID_POINT_INSERT
+    BUTTON      ID_POINT_MOVE
+    BUTTON      ID_POINT_DELETE
+END
+
+IDR_HELPBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_CONTEXT_HELP
+    BUTTON      ID_APP_ABOUT
+END
+
+IDR_FILEBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_FILE_PRINT_PREVIEW
+    BUTTON      ID_FILE_PRINT
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,1,3,0
+ PRODUCTVERSION 2,1,3,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "WSPMap.exe\0"
+            VALUE "FileVersion", "2, 1, 3, 0\0"
+            VALUE "InternalName", "WSP Mapper\0"
+            VALUE "LegalCopyright", "Copyright (C) 2001\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "WSPMap.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "WSPMap Application\0"
+            VALUE "ProductVersion", "2, 1, 3, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDS_DISK_SPACE          "%lu KB auf %c:"
+    IDS_ALL_IMAGE_FORMATS   "Alle unterstützten Rasterformate"
+    IDS_ALL_FILES           "Alle Dateien"
+    IDS_DISK_SPACE_UNAVAIL  "nicht erhältlich"
+    IDS_SAVE_MAP_TEMPLATE   "Die Standardkartenvorlage wird unter %1 abgespeichert."
+    IDS_NUTKLASS_ZOTABLE    "Zuordnungstabelle:"
+    IDS_TOO_MANY_FILES_SELECTED "Zu viele Dateien ausgewählt"
+    IDR_MAPPROJECTTYPE      "\nWSPWIN Kartenprojekt\n\nWSPWIN Kartenprojekte (.wpp)\n.wpp\nWSP.Karteprojekt.Document\nWSPWIN Karteprojekt"
+    IDS_PIVOT_POINTS        "Festpunkte"
+    IDS_PIVOT_SHP           "_pivot"
+    IDS_USER_RW             "Benutzerdefiniert"
+    IDS_USER_RW_SHP         "_benutzer"
+    IDS_USER_DEFINED        "<benutzerdefiniert>"
+    IDS_NO_VALID_OPERATION_PROFILES 
+                            "ungültige Operation: keine Profile vorhanden"
+    IDS_COPY                "Kopie"
+    IDS_ERROR_WRITING_TMP_FILE "Fehler beim Erzeugen der temporären Dateien"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDS_PRINT_MAP_SCALE     "Maßstab  1 : "
+    IDS_PRINT_MAP_RADION_EXTENT "Kartenauschnitt anpassen"
+    IDS_PRINT_MAP_RADION_PRINTRECT "Druckbereich anpassen"
+    IDS_PRINT_MAP_ALIGN_NONE "Maßstab unsichtbar"
+    IDS_LAYER_COPY_FAILED   "Thema konnte nicht kopiert werden."
+    IDS_COPY_LAYER_UNIQUE_AXIS "Es darf immer nur eine Flussachse geben."
+    IDS_GENERATE_PROFILES_NO_STATION_ATTRIBUTE 
+                            "Das Thema muss ein Attribute 'Station"" haben."
+    IDS_ERROR_RIVER_CUTS_PROFILE_MULTIPLE 
+                            "Achtung: Neues Profil schneidet die Flussachse mehrfach.\nFortfahren?"
+    IDR_MAINFRAME           "WspWin Mapper"
+    IDR_MAPTYPE             "\nWSPWIN Karte\nWSPWIN Karte\nWSPWIN Karten (.wpm)\n.wpm\nWSP.Karte.Document\nWSPWIN Karte"
+    IDS_ERROR_RIVER_CUTS_MULTIPLE_TITLE "Profile generieren"
+    IDS_GENERATE_PROFILES_SUCCESS "Profile wurden erfolgreich erzeugt."
+    IDS_COPY_LAYER_CHOOSER_TITLE "Thema kopieren"
+    IDS_COPY_LAYER_CHOOSER_TEXT "Bitte wählen Sie den Typ des neuen Themas:"
+    IDS_RIVER_AXIS          "Flussachse"
+    IDS_DEMO_TEXT1          "Demoversion"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "WSPWIN Mapper"
+    AFX_IDS_HELPMODEMESSAGE "Wählen Sie das Objekt, zu dem Sie Hilfe wünschen."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "ER"
+    ID_INDICATOR_CAPS       "UF"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "RF"
+    ID_INDICATOR_OVR        "ÜB"
+    ID_INDICATOR_REC        "MA"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Erstellt ein neues Dokument.\nNeu"
+    ID_FILE_OPEN            "Öffnet ein bestehendes Dokument.\nÖffnen"
+    ID_FILE_CLOSE           "Schließt das aktive Dokument.\nSchließen"
+    ID_FILE_SAVE            "Speichert die aktive Karte.\nKarte speichern"
+    ID_FILE_SAVE_AS         "Speichert das aktive Dokument unter neuem Namen.\nSpeichern unter"
+    ID_FILE_PAGE_SETUP      "Ändert die Druckoptionen.\nSeite einrichten"
+    ID_FILE_PRINT_SETUP     "Ändert die Druckereinstellungen\nDruckereinstellungen ändern"
+    ID_FILE_PRINT           "Druckt die aktive Karte.\nDrucken"
+    ID_FILE_PRINT_PREVIEW   "Zeigt ganze Seiten an.\nSeitenansicht"
+    ID_FILE_SEND_MAIL       "Versendet das aktive Dokument mittels elektronischer Post.\nNachricht senden"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Zeigt Programm-Informationen, Versionsnummer und Copyright an.\nInfo"
+    ID_APP_EXIT             "Verläßt die Anwendung.\nBeenden"
+    ID_HELP_INDEX           "Öffnet die Hilfefunktion.\nHilfethemen"
+    ID_HELP_FINDER          "Listet die Hilfethemen auf.\nHilfethemen"
+    ID_HELP_USING           "Zeigt Anweisungen zum Umgang mit der Hilfe an.\nHilfe"
+    ID_CONTEXT_HELP         "Zeigt Hilfe zu angeklickten Schaltflächen, Menüs und Fenstern an.\nHilfe"
+    ID_HELP                 "Zeigt Hilfe zum aktuellen Vorgang oder Befehl an.\nHilfe"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE2       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE3       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE4       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE5       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE6       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE7       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE8       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE9       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE10      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE11      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE12      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE13      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE14      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE15      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE16      "Öffnet dieses Dokument."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Wechselt zum nächsten Fensterausschnitt.\nNächster Ausschnitt"
+    ID_PREV_PANE            "Springt zum vorherigen Fensterausschnitt zurück.\nVorheriger Ausschnitt"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_NEW           "Öffnet ein weiteres Fenster für das aktive Dokument.\nNeues Fenster"
+    ID_WINDOW_ARRANGE       "Ordnet die Symbole im unteren Bereich des Fensters an.\nSymbole anordnen"
+    ID_WINDOW_CASCADE       "Ordnet die Fenster überlappend an.\nÜberlappende Fenster"
+    ID_WINDOW_TILE_HORZ     "Ordnet die Fenster nebeneinander an.\nFenster nebeneinander"
+    ID_WINDOW_TILE_VERT     "Ordnet die Fenster nebeneinander an.\nFenster nebeneinander"
+    ID_WINDOW_SPLIT         "Teilt das aktive Fenster in Ausschnitte.\nTeilen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Blendet die Hauptsymbolleiste ein oder aus.\nHauptsymbolleiste ein-/ausschalten"
+    ID_VIEW_STATUS_BAR      "Blendet die Statusleiste ein oder aus.\nStatusleiste ein-/ausschalten"
+    ID_VIEW_OVERVIEW_MAP    "Schaltet die Übersichtskarte an oder aus."
+    ID_VIEW_MAPBAR          "Blendet die Mapsymbolleiste ein oder aus.\nMapsymbolleiste ein-/ausschalten"
+    ID_VIEW_LEGEND          "Schaltet die Legende an oder aus."
+    ID_VIEW_SCALEBAR        "Schaltet die Maßstabsanzeige an oder aus."
+    ID_VIEW_PROFILAUSWAHL   "Schaltet die Profilübersicht ein oder aus"
+    IDW_PROFILAUSWAHL_TOOLBAR "Profilauswahl"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Ändert die Fenstergröße."
+    AFX_IDS_SCMOVE          "Ändert die Position des Fensters."
+    AFX_IDS_SCMINIMIZE      "Verkleinert das Fenster zu einem Symbol."
+    AFX_IDS_SCMAXIMIZE      "Vergrößert das Fenster zu voller Größe."
+    AFX_IDS_SCNEXTWINDOW    "Wechselt zum nächsten Dokumentfenster."
+    AFX_IDS_SCPREVWINDOW    "Wechselt zum vorherigen Dokumentfenster."
+    AFX_IDS_SCCLOSE         "Schließt das aktive Fenster und fordert zur Dokumentspeicherung auf."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Stellt das Fenster in seiner normalen Größe wieder her."
+    AFX_IDS_SCTASKLIST      "Aktiviert die Task-Liste."
+    AFX_IDS_MDICHILD        "Aktiviert dieses Fenster."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_ALIGN_BOTTOMCENTER  "Richtet die Karte nach unten mitte aus.\nAlign Bottom Center"
+    IDC_OVERVIEWMAP         "Übersichtskarte\nÜbersichtskarte"
+    IDC_OVERVIEWLIST        "Projektkarten\nProjektkarten"
+    IDC_LEGENDLIST          "Legende\nLegende"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SMSFILES_OR_ALLFILES 
+                            "SMS Dateien (*.sms)|*.sms|Alle Dateien (*.*)|*.*||"
+    IDS_BUHNEN              "_buhnen"
+    IDS_MODELL_SHP          "_model"
+    IDS_BANK                "Böschung"
+    IDS_PROFILEDITOR_TITLE  "Profileditor"
+    IDS_BANK_SHP            "_bordvoll"
+    ID_PROF_EDITOR_STATUS_STATION "Station"
+    IDS_NO_RESTRICTION      "- keine Einschränkung -"
+    IDS_WRONG_EXPORT_FORMAT "Exportformat nicht unterstützt"
+    IDS_BUHNE               "Buhnen"
+    IDS_PROFILAUSWAHL_TITLE "Profilübersicht"
+    IDS_CAD_DRAWINGS        "CAD Zeichnungen"
+    IDS_ALL_VECTOR_FORMATS  "Alle unterstützten Vektorformate"
+    IDS_FLOOD_BORDER        "Ü - Grenzen"
+    IDS_PHYSICAL_MEM        "%lu KB"
+    IDS_LINKSRECHTS         "Links oder rechts"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_POINT               "Punkt"
+    IDS_LINE                "Linie"
+    IDS_POLYGON             "Polygon"
+    IDS_TRUE                "Ja"
+    IDS_FALSE               "Nein"
+    IDS_DELETE              "Löschen"
+    IDS_PRINT_MAP_ALIGN_NE  "Oben rechts"
+    IDS_HMOFILES_OR_ALLFILES 
+                            "HMO Dateien (*.hmo)|*.hmo|Alle Dateien (*.*)|*.*||"
+    IDS_THEME               "Thema"
+    IDS_TRIANGULATON_ERROR  "Triangulation nicht erfolgreich.\nFehler %d"
+    IDS_LOAD_LAYER_ERROR    "Fehler beim Laden von Thema %1"
+    IDS_WLINES              "_wlines"
+    IDS_MODELL_BOUNDS       "Modellgrenzen"
+    IDS_WSPWIN_SAVING_PROJECT "WSPWIN speichert das Projekt..."
+    IDS_TINFILES_OR_ALLFILES 
+                            "TIN Dateien (*.net)|*.net|Alle Dateien (*.*)|*.*||"
+    IDS_VECTORDATA          "Vektordaten"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_LAYER_INSERT         "Fügt Themen zur Karte hinzu.\nThemen zur Karte hinzufügen"
+    ID_LAYER_REMOVE         "Entfernt das aktive Thema.\nThema entfernen"
+    ID_LAYER_ZOOM           "Maximale Darstellung des aktiven Themas.\nZoom zum aktiven Thema"
+    ID_LAYER_PROPERTIES     "Ändert die Eigenschaften des aktiven Themas.\nThemeneigenschaften ändern"
+    ID_TOOLS_ZOOMIN         "Vergrößert den Kartenausschnitt\nAusschnitt vergrößern"
+    ID_TOOLS_ZOOMOUT        "Verkleinert den Kartenausschnitt\nAusschnitt verkleinern"
+    ID_TOOLS_PAN            "Verschiebt den Kartenausschnitt\nVerschieben"
+    ID_FILE_SAVE_PROJECT    "Speichert das Projekt.\nProjekt speichern"
+    ID_MAP_DELETE           "Löscht eine Karte des aktiven Projekt.\nKarte löschen"
+    ID_TOOLS_FULL_EXTENT    "Maximale Darstellung\nMaximale Darstellung"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_OPEN_PROJECT    "Öffnet ein Projekt.\nÖffnen Projekt"
+    ID_FILE_CLOSE_PROJECT   "Schließt das aktive Projekt.\nProjekt Schließen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERROR_READFILE      "Konnte Datei %1 nicht zum Lesen öffnen."
+    IDS_NONAME              "Bitte geben Sie einen Namen ein."
+    IDS_FILEINUSE           "Die ausgewählte Datei ist schon benutzt.\nBitte wählen Sie einen anderen Dateinamen aus."
+    IDS_NAMEUSED            "Dieser Name wird schon benutzt.\nBitte geben Sie einen anderen Namen ein."
+    IDS_CANTFINDFILE        "Konnte die Datei %1 nicht finden.\nDas entsprechende Thema kann nicht angezeigt werden.\n\nMöchten Sie das Thema in dieser Karte behalten?"
+    IDS_FIELDSTRINGS        "ganze Zahl\nDezimalzahl\nDatum\nText\nBoolean\n"
+    IDS_SAMEFIELDS          "Alle Datenfeldenamen mußen unterschiedlich sein.\nBitte geben Sie einen anderen Namen ein."
+    IDS_REMOVEDATASET       "Möchten Sie die Geo-Dataset-Dateien löschen?"
+    IDS_CANT_FIND_WSPWIN    "Konnte Programm nicht finden: "
+    IDS_HMOFILE1            "Bitte wählen Sie die HMO Datei zur Wasserspiegel aus.\n"
+    IDS_HMOFILE2            "Bitte wählen Sie die HMO Datei zur Höhenmodell aus.\n"
+    IDS_SHAPEFILE           "Bitte wählen Sie die Shape Datei aus.\n"
+    IDS_ALL                 "Alle"
+    IDS_GEWAESSER           "Gewässer"
+    IDS_ZUSTAND             "Zustand"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROFIL_AUSWAHL_DELETE_TITLE "Profil löschen"
+    IDS_PROFIL_AUSWAHL_DELETE_TEXT 
+                            "Das Profil ( Station %8.4lf, VZK %d ) wird in keinem anderen Zustand mehr benutzt und deshalb aus dem Projekt gelöscht.\nDie Profildatei %s in den Papierkorb verschieben?"
+    IDS_DELETE_PROFILE_FROM_MAP "Profil auch aus dem Strang entfernen?"
+    IDS_NO_POINTS_FOUND     "keine Schnittpunkte gefunden"
+    IDS_DIRECTORYUP         "übergeordnetes Verzeichnis"
+    IDS_ALLFORMATS          "alle Rasterformate"
+    IDS_RASTERDATA          "Rasterdaten"
+    IDS_PRINT_Map_ALIGN_TEXT "Ausrichtung:"
+    IDS_BUFFERTOOSMALL      "Der Speicherplatz für die Dateinamen war zu klein. Neuer Speicher wird jetzt zugewiesen.\nBitte wählen Sie die Dateien erneuert aus."
+    IDS_LOAD_PROFILES       "Profile werden geladen"
+    IDS_HMOFILTER           "HMO Dateien (*.hmo)|*.hmo|Alle Dateien (*.*)|*.*||"
+    IDS_DELETE_SHAPES       "Dateien löschen?"
+    IDS_LEGENDBAR_TITLE     "Legende"
+    IDS_WLEVEL              "_wlevel"
+    IDS_WATER_LEVEL         "WSP"
+    IDS_PROFILBAR_TITLE     "Profilübersicht"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_SAVEAS          "Speichert die aktive Karte unter einen neuen Namen.\nSpeichern unter"
+    ID_TOOLS_NONE           "Objekte im Übersichtsfenster darstellen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_MAP_NEW              "Fügt eine neue Karte zum Projekt ein.\nNeue Karte"
+    ID_MAP_OPEN             "Öffnet eine Karte des aktiven Projekt.\nKarte öffnen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_XCOORD     "X: "
+    ID_INDICATOR_YCOORD     "Y: "
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_LAYER_NEW            "Erstellt ein neue Thema\nNeues Thema"
+    ID_OBJECT_NEW           "Zeichnet ein neues Geo-Objekt\nObjekt erzeugen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OBJECT_QUERY         "Stellt eine Abfrage zum Geo-Objekt zur verfügen\nObjektabfrage"
+    ID_OBJECT_DELETE        "Löscht ein Geo-Objekt\nObjekt löschen"
+    ID_TOOLS_EDIT_PROFIL    "Ein einfacher Klick auf eine Profillinie öffnet den Profileditor, ein Doppelklicke den WSPWIN Graphikeditor.\nProfil ansehen/editieren"
+    ID_VIEW_MAPUNITS_DEGREES "Dezimal"
+    ID_VIEW_MAPUNITS_FEET   "Fuß"
+    ID_VIEW_MAPUNITS_METERS "Meter"
+    ID_VIEW_SCALEUNITS_MILES "Meilen"
+    ID_VIEW_SCALEUNITS_FEET "Fuß"
+    ID_VIEW_SCALEUNITS_METERS "Meter"
+    ID_VIEW_SCALEUNITS_KM   "Kilometer"
+    ID_VIEW_SCREENUNITS_CM  "Zentimeter"
+    ID_VIEW_SCREENUNITS_INCHES "Zoll"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_LAYER      "kein aktives Thema"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_OVERVIEW        "Schaltet die Übersichtsfenster an oder aus."
+    ID_VIEW_CLEAROVERVIEW_LEGENDE "Löscht den Inchalt des Übersichtsfensters"
+    ID_OVERVIEW_LAYER       "Zeigt aktives Thema im Übersichtsfenster an"
+    ID_LAYER_OVERVIEW       "Zeigt aktives Thema im Übersichtfenster der Legende an\nThema in Übersicht anzeigen"
+    ID_FILE_MANAGER         "Öffnet den Projektmanager\nProjektmanager"
+    ID_OBJECT_CHANGE        "Erlaubt es Geo-Objekte zu verschieben\n Objekt verschieben"
+    ID_POINT_INSERT         "Fügt einen Punkt in ein Geo-Objekt ein\nPunkt einfügen"
+    ID_POINT_DELETE         "Löscht einen Punkt aus einem Geo-Objekt\nPunkt löschen"
+    ID_POINT_MOVE           "Verschiebt einen Punkt eines Geo-objektes\nPunkt verschieben"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_HMO_IMPORT_FILTER   "HMO Dateien (*.hmo)|*.hmo|SMS Dateien (*.2dm)|*.2dm|Ungenerated TIN (*.net)|*.net|Punkt Daten (*.ras)|*.ras|Alle Dateien (*.*)|*.*||"
+    IDS_FORMAT_UNKNOWN      "Unbekanntes Dateiformat"
+    IDS_ERROR_READ_DTM      "Fehler beim Einlesen des Höhenmodels"
+    IDS_PROFILE_LINES       "Profillinien"
+    IDS_PROFILE_POINTS      "Profilpunkte"
+    IDS_SEP_AREA            "Trennflächen"
+    IDS_FLOW_AREA           "Durchst. Bereiche"
+    IDS_ERROR_ACCESS_TMP_DIR "Fehler beim Zugriff auf %1"
+    IDS_THEME1              "_thema"
+    IDS_PROFILES            "_profile"
+    IDS_POINTS              "_punkte"
+    IDS_SEP                 "_trenn"
+    IDS_FLOW                "_durch"
+    IDS_ERROR_CREATE_TMP_DIR 
+                            "Fehler beim erstellen des temporären Verzeichnisses: %1"
+    IDS_NO_TRIANGLES        "Daten sind nicht trianguliert.\nJetzt triangulieren?"
+    IDS_THEME2              "Thema %1!d!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_1OBJECTFOUND        "1 Objekt gefunden"
+    IDS_NOBJECTSFOUND       "%1!d! Objekt(e) gefunden"
+    IDS_NOACTIVETHEME       "kein aktives Thema"
+    IDS_ACTIVETHEME         "aktives Thema: %1"
+    IDS_WHOLENUM            "ganze Zahl"
+    IDS_DECIMAL             "Dezimalzahl"
+    IDS_DATE                "Datum"
+    IDS_TEXT                "Text"
+    IDS_BOOLEAN             "Boolean"
+    IDS_PRINT_MAP_ALIGN_NW  "Oben links"
+    IDS_TYPE                "Typ"
+    IDS_VALUEN              "Wert%1!d!"
+    IDS_SHAPEFILE_OR_ALLFILES 
+                            "ESRI Shapedateien (*.shp)|*.shp|Alle Dateien (*.*)|*.*||"
+    IDS_FIELDNAME           "Feldname"
+    IDS_FIELDTYPE           "Feldtyp"
+    IDS_VALUE               "Wert"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OBJECT_MOVE          "Verschiebt ein Geo-Objekt\nObjekt verschieben"
+    ID_LAYER_SHAPE_TO_PROFILE 
+                            "Verschneidet Thema mit Profillinien\nmit Profilen schneiden"
+    ID_TESTBUTTON           "Test\nTest"
+    ID_LAYER_TINCUT         "Wasserspiegel mit digitalem Höhenmodel (DGM) verschneiden\nWasserspiegel verschneiden"
+    ID_VIEW_PROFILEBAR      "Schaltet den Profileditor ein oder aus"
+    ID_LAYER_HMO_IMPORT     "Ein Digitales Höhenmodel (DHM) importieren\\Höhenmodel importieren"
+    ID_TOOLS_FOLLOW_PROFILE "Profileditor automatisch aktualisieren\nProfileditor Automatik (F5)"
+    ID_MAP_EXPORT_BMP       "Karte als Windows - Bitmap exportieren\nKarte exportieren"
+    ID_MAP_EXPORT_CLIBBOARD "Karte in die Zwischenablage kopieren\\Karte kopieren"
+    ID_MAP_SAVE_AS          "Karte speichern\nKarte speichern"
+    ID_MAP_CLIPBOARD        "Kopiert die Karte in die Zwischenablage\nKarte kopieren"
+    ID_OBJECT_CLIP          "Schneidet ein Teilobjekt aus\nObjekt auschneiden"
+    ID_PROFIL_AUSWAHL_REMOVE 
+                            "Entfernt Profile aus der Karte\nProfile aus der Karte entfernen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PREVIEW_NUMPAGE     "&Zwei Seiten"
+    IDS_PREVIEW_NEXT        "&Nächste"
+    IDS_PREVIEW_PREV        "&Vorherige"
+    IDS_PREVIEW_PRINT       "&Drucken..."
+    IDS_PREVIEW_ZOOMIN      "Ver&größern"
+    IDS_PREVIEW_ZOOMOUT     "Ver&kleinern"
+    IDS_PRINTER_SETUP       "Druckereinstellungen"
+    IDS_PREVIEW_PRINTER_SETUP "Einstellungen..."
+    IDS_PREVIEW_SELECT      "Element auswählen"
+    IDS_PREVIEW_NEW_TEXT    "Text neu..."
+    IDS_PRINT_PROP_PAGE     "Objekt"
+    IDS_PRINT_BORDER_PAGE   "Rand"
+    IDS_PRINT_PROP_CAPTION  "Eigenschaften"
+    ID_PROFILE_LIST         "Liste der sich im Projekt befindlichen Profile"
+    ID_PROFILAUSWAHL_TREE_CTRL "Wählen Sie einen Zustand aus."
+    ID_INFORM_BUHNE         "Buhne\nBuhne"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_PROFIL_AUSWAHL_ADD   "Fügt Profile zur Karte hinzu\nProfile in Karte laden/aktualisieren"
+    ID_PROFILAUSWAHL_SAVE   "Speichert die in der Karte vorgenommenen Änderungen\nÄnderungen in die Profildateien speichern"
+    ID_LAYER_COPY           "Kopiert das aktive Thema\nThema kopieren"
+    ID_PROFILAUSWAHL_SELECTALL "Selektiert alle Profile\nAlle auswählen"
+    ID_SAFE_DEFAULT_PROPERTIES 
+                            "Speichert die Standardvorlage für neue Karten nach den aktuellen Einstellungen.\nKarten-Standardvorlage speichern"
+    ID_TOOLS_MARK_PROFILE   "Aktives Profil in der Karte markieren.\nAktives Profil markieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TINCUT_FAILED       "Fehler beim Ausführen von TinCut. Bitte sehen Sie die Log - Datei ein: %s"
+    IDS_PRINT_MAP_ALIGN_SW  "Unten links"
+    IDS_SAVE_ALL_CHANGES_IN_MAP 
+                            "Sollen Änderungen in der Karte in das Projekt übernommen werden?"
+    IDS_DLG_AUTO_EXPORT_TITLE "Bitte Exportformate wählen"
+    IDS_MAIN_STREAM         "Hauptöffnung"
+    IDS_VORLAND             "Vorland"
+    IDS_RETENTION           "Retentionsgebiet"
+    IDS_NUTZKLASS_BUTTON_NEW "Neu..."
+    IDS_NUTZKLASS_BUTTON_OK "Speichern und Ende"
+    IDS_NUTZKLASS_VON       "Typ"
+    IDS_NUTZKLASS_TITLE     "Nutzungsklassen editieren"
+    IDS_NUTZKLASS_ERROR_NAME 
+                            "Ungültiges Zeichen im Name. Bitte Eingabe wiederholen."
+    IDS_VERSCHNEID_TITLE    "Thema verschneiden"
+    IDS_VERSCHNEID_NUTZ     "Nutzungsklassen zuordnen"
+    IDS_VERSCHNEID_PROFIL   "Trennlinien erzeugen"
+    IDS_VERSCHNEID_FIELDS_NUTZ "Zuzuordnendes Attribut:"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SAVEPRCHANGES_AREAS "Bereiche aktualisieren"
+    IDS_SAVEPRCHANGES_THEMES "Themen"
+    IDS_SAVEPRCHANGES_KINDOFAREA "Art des Bereichs"
+    IDS_SAVEPRCHANGES_FIELDS "Wertefeld"
+    IDS_SAVEPRCHANGES_PRODATA "Profilbezogene Daten aktualisieren"
+    IDS_SAVEPRCHANGES_MODELL "Modellgrenzen"
+    IDS_SAVEPRCHANGES_DURCHST "durchströmte Bereiche"
+    IDS_SAVEPRCHANGES_BOESCHUNG "Bordvollpunkte"
+    IDS_SAVEPRCHANGES_TRENN "Trennflächen"
+    IDS_SAVEPRCHANGES_BUHNEN "Buhnen"
+    IDS_SAVEPRCHANGES_STATION "Stationen und Strangtabelle"
+    IDS_SAVEPRCHANGES_CANCEL "Abbrechen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SAVEPRCHANGES_OK    "Aktualisieren"
+    IDS_SAVEPRCHANGES_TITLE "Speichern der Änderungen in den Profilen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INFORM_LAENGSW       "Längswerk\nLängswerk"
+    ID_INFORM_SOHLHOCH      "Sohlaufhöhung\nSohlaufhöhung"
+    ID_INFORM_SOHLTIEF      "Sohleintiefung\nSohleintiefung"
+    ID_INFORM_VORLHOCH      "Vorlandaufhöhung\nVorlandaufhöhung"
+    ID_INFORM_VORLTIEF      "Vorlandabgrabung\nVorlandabgrabung"
+    ID_INFORM_UFERAUS       "Uferanschüttung\nUferanschüttung"
+    ID_INFORM_UFERABG       "Uferabgrabung\nUferabgrabung"
+    ID_INFORM_DEICH         "Deichrückverlegung\nDeichrückverlegung"
+    IDS_PREVIEW_NEW_LEGEND  "Neue Legende..."
+    IDS_PREVIEW_NEW_MAP     "Neue Karte..."
+    IDS_PREVIEW_DELETE      "löschen"
+    IDS_PREVIEW_PROPS       "Eigenschaften ändern"
+    IDS_PREVIEW_ZFRONT      "nach vorne holen"
+    IDS_PREVIEW_ZBACK       "nach hinten schieben"
+    IDS_PREVIEW_NEW_LOGO    "Neues Logo..."
+    IDS_TEST_LAYER_TYPE_FAILED "Die Attribute des Themas passen nicht."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_LAYER_MOVE_OUTWARDS  "Verschiebt alle Wasserspiegel an die Endpunkte ihres Profils."
+    ID_EXTRAS_EDIT_NUTZUNG  "Erstellen oder editieren der Nutzungsklassen\nNutzungsklassen erstellen / editieren."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_VERSCHNEID_ART_PROFIL "Dieses Thema erstellen:"
+    IDS_VERSCHNEID_ART_NUTZ "Zuordnungstabelle:"
+    IDS_VERSCHNEID_FIELDS_PROFIL "Einschränkung durch Attribut:"
+    IDS_VERSCHNEID_STATIC_UFER "Uferlinie:"
+    IDS_VERSCHNEID_LEFT     "Links"
+    IDS_VERSCHNEID_RIGHT    "Rechts"
+    IDS_VERSCHNEID_PROGRESS "Thema wird mit \nProfilpunkten verschnitten..."
+    IDS_DATABLOCKS_HEADING  "Welche Datenblöcke\nsollen ersetzt werden?"
+    IDS_DATABLOCKS_TITLE    "Projekt speichern"
+    IDS_NUTZKLASS_ERROR_DOUBLE_NAME "Dieser Name ist schon vergeben."
+    IDS_EXTENDPROFILE_TITEL "Profil verlängern"
+    IDS_EXTENDPROFILE_OKTEXT "Profil verlängern"
+    IDS_CUT_LINE_WITH_DGM   "Verschneide Linie mit Höhenmodel..."
+    IDS_ADD_POINTS_TO_MAP   "Neue Punkte werden zur Karte hinzugefügt..."
+    IDS_UPDATE_DATA         "Profildaten werden aktualisiert..."
+    IDS_PROFILE_EXTEND_NO_POINTS "Keine neuen Punkte gefunden, Abbruch"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_TOOLS_GENERATE_PROFILE 
+                            "Generiert ein neues Profil mithilfe eines Geländemodels\nneues Profil generieren"
+    ID_TOOLS_EXTEND_PROFILE "Verlängert ein bestehendes Profil mithilfe eines Geländemodels\nProfil verlängern"
+    ID_PREVIEW_NEW_MAP_TOOL "Neue Karte erzeugen\nErzeugt eine neue Karte."
+    ID_LAYER_GENERATE_PROFILES 
+                            "Generiert aus den Linien des gewählten Themas Profile anhand eines Geländemodels.\nProfile generieren"
+    ID_TOOLS_SHOW_CURSOR    "Schaltet den Cursor in der Profilansicht an oder aus\nProfilcursor an bzw. ausschalten (F6)"
+    ID_LAYER_PROPERTIES_EXPORT 
+                            "Exportiert die Themeneigenschaften in eine separate Datei\nExportiert Eigenschaften des aktiven Thema"
+    ID_LAYER_PROPERTIES_IMPORT 
+                            "Importiert die Themeneigenschaften aus einer separaten Datei\nImportiert Eigenschaften zum aktiven Thema"
+    ID_EXTRAS_PROFILEDISTANCE 
+                            "Ermittelt die Profilabstände innheralb eines Strangs anhand eines Linienthemas."
+    ID_TOOLS_FLIP_PROFILE   "Spiegelt ein Profil an der y-Achse\nProfil spiegeln"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TRACK_RIVER         "Bitte digitalisieren Sie jetzt den Flussverlauf."
+    IDS_TRACK_PROFILE       "Bitte digitalisieren Sie jetzt den Verlauf des gewünschten Profils."
+    IDS_ERROR_RIVER_CUTS_PROFILE 
+                            "Das neue Profil schneidet die Flussachse nicht.\nBitte wiederholen Sie die Eingabe oder ändern Sie den Flussverlauf."
+    IDS_GENERATEPROFILE_TITEL "Neues Profil erzeugen"
+    IDS_GENERATEPROFILE_OKTEXT "Profil hinzufügen"
+    IDS_ERROR_RIVER_CUTS    "Fehler: die Fluss-Linie darf jedes Profil höchstens einmal schneiden.\nBitte wiederholen Sie die Eingabe."
+    IDS_SAVE_PROFILES       "Profildateien werden gespeichert..."
+    IDS_PROFILE_SAVE_SUCCES "Profildaten wurden erfolgreich aktualisiert."
+    IDS_WRITE_MAP_TO_PROFILES 
+                            "Übertrage Daten von der Karte in die Profile..."
+    IDS_PROFILE_FILE        "Profildatei"
+    IDS_PRED_PROFILE        "Vorgängerprofil:"
+    IDS_FOLLOW_PROFILE      "Nachfolgerprofil:"
+    IDS_NEW_PROFILE         "Neues Profil:"
+    IDS_RIVER               "Fluss"
+    IDS_STRANG_DISTANCE     "Strang - Abstände"
+    IDS_PRINT_MAP_ALIGN_SE  "Unten rechts"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_LEFT                "Links"
+    IDS_RIGHT               "Rechts"
+    IDS_PROFGEN_ERROR_NICHT_BENACHBART 
+                            "Die beiden angrenzenden Profile sind im Strang nicht benachbart."
+    IDS_PROFGEN_ERROR_VERSCH_ZUSTAENDE 
+                            "Die beiden angrenzenden Profile sind nicht im gleichen Zustand geladen."
+    IDS_PROFGEN_ERROR_PROJECT "Fehler im Projekt"
+    IDS_PROFGEN_ERROR_NOTLAST "Das angrenzende Profil ist nicht am Strangende"
+    IDS_PROFGEN_NO_EMPTYSTATES 
+                            "Kein leerer Zustand vorhanden. Sie können einen neuen Zustand im Projektmanager anlegen."
+    IDS_GENPROFILE_DESCRIPTION 
+                            "Sie können jetzt die Stationierung ändern und möglicherweise unter verschiedenen Zuständen und Verzeigungskennungen wählen."
+    IDS_GENPROFILE_DIGITRIVER 
+                            "Es existiert noch keine Flusslinie. Sie können eine durch 'Thema kopieren' oder durch Klicken auf die Karte erzeugen."
+    IDS_GEN_PROFILE_WSPWIN_OPEN 
+                            "Bitte stellen Sie sicher, dass in WspWin die Eingabemaske ""Editierung der Zustandsdatei"" geschlossen ist, da es bei dieser Operation sonst zu Konflikten kommen kann."
+    IDS_TINCUT_OBS_DLG_TITLE "TinCut läuft. Bitte warten..."
+    IDS_TINCUT_USER_BREAK   "TinCut wurde durch den Benutzer abgebrochen."
+    IDS_ERROR_HMO_TRIANG    "Schwerer Fehler im Triangulationstool. Möglicherweise sind die  Winkel der Umrandungslinie zu spitz."
+    IDS_ERROR_CREATE_LAYER  "Das Thema konnte nicht erzeugt werden. Ist die Festplatte voll oder schreibgeschützt?"
+    IDS_CUT_LINES_ADDING_POINTS "Punkte werden hinzugefügt..."
+    IDS_CUT_LINES_CUTTING   "Verschneide Thema mit Profillinien..."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CUT_THEME_NO_LINES  "Es sind keine Profillinien vorhanden."
+    IDS_CUT_THEME_UPDATE_POINTS "Profilpunkte werden neu numeriert..."
+    IDS_VERSCHNEID_DELETE_THEME "Punkte ersetzen"
+    IDS_MOVE_OBJECT_OUT     "Punkte werden verschoben..."
+    IDS_COUNT_TOO_BIG       "Dieses Thema erlaubt nicht mehr als %d Punkte pro Profil."
+    IDS_NUTZKLASS_BUTTON_DELCOL "Spalte löschen"
+    IDS_DATA_ERROR_MSG      "Folgende Fehler sind beim Übertragen der Daten in die Profile aufgetreten:\n\n%s\n\nDie genannten Datenblöcke wurden NICHT verändert."
+    IDS_ERROR_CUT_COUNT_COORDS 
+                            "Mehr als %d Koordinaten bei Station km\n%s.\nÜberzählige Punkte werden nicht hinzugefügt. Dennoch fortfahren?"
+    IDS_CUT_LINES_ADDING_PROFILE_POINTS "Profilpunkte werden erzeugt..."
+    IDS_CUT_LINES_READING_DATA "Profildaten werden ausgelesen..."
+    IDS_CUT_LINES_DELETE_POINTS "Überzählige Punkte werden gelöscht..."
+    IDS_NUTZKLASS_ERROR_INPUT "Fehlerhafte Eingabe"
+    IDS_NUTZKLASS_ADD_COL   "neue Spalte:"
+    IDS_NUTZKLASS_DEL_COL   "Spalte löschen"
+    IDS_NUTZKLASS_DEL_ROW   "Zeile löschen"
+    IDS_PREVIEW_CLOSE       "&Schließen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_PRINT_TEXT_SCHRIFT  "Schrift..."
+    IDC_PRINT_BORDER_STYLE_STATIC "Linientyp:"
+    IDC_PRINT_BORDER_WIDTH_STATIC "Linienbreite:"
+    IDC_PRINT_BORDER_COLOR_STATIC "Linienfarbe:"
+    IDC_PRINT_IMAGE_TEXT    "Dateiname der Bitmap:"
+    IDC_PRINT_IMAGE_SEARCH  "Durchsuchen..."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_STATIC_TEXT         "Text:"
+    IDC_STATIC_ALLIGN       "Ausrichtung:"
+    IDC_RADIO_CENTER        "Zentriert"
+    IDC_RADIO_LEFT          "Links"
+    IDC_PRINT_IMAGE_SIZE_CHECK "Originalgrösse beibehalten"
+    IDC_PRINT_LEGEND_FIXSIZE "Originalgrösse beibehalten"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_RADIO_RIGHT         "Rechts"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CUT_LINES_WSP_QUEST_TITLE "Thema mit Profilen schneiden"
+    IDS_CUT_LINES_WSP_QUEST_TEXT 
+                            "Bitte geben Sie den Namen der Berechnungvariante ein:"
+    IDS_PREVIEW_NEW_LEGEND2 "Neue Legende (verbessert)..."
+    IDS_FEHLER_PROFILE_LADEN_RWHW 
+                            "Nicht alle Profile konnten geladen werden.\nÜberprüfen Sie Hoch- und Rechtswert an den Stationen km %s."
+    IDS_AUSUENN_TEXT        "Höhentoleranz [m]:"
+    IDS_AUSUENN_MSG         "%d von %d Punkten entfernt"
+    IDS_EXTEND_PROFILE_TITLE "ausgelesene Geländekante"
+    IDS_GENPROFILE_TITLE    "neues Profil"
+    IDS_PROFILE_OVERVIEW_REMOVE_PRF 
+                            "In der Karte geänderte Daten gehen hiermit verloren.\nFortfahren?"
+    IDS_PROFILE_OVERVIEW_SAVE_PRF 
+                            "In WspWin geänderte Daten werden möglicherweise überschrieben.\nFortfahren?"
+    IDS_PROFIL_AUSWAHL_MISSING_PRFS 
+                            "Ein oder mehrere Profile wurden seit dem letzten Öffnen der Karte aus dem Strang entfernt.\nDie Profile werden automatisch aus der Karte entfernt."
+    IDS_MAP_LAYER_PROPS_TITLE "Themeneigenschaften"
+    IDS_IMAGE_PROPS_COLOR   "durchsichtige Farbe:"
+    IDS_IMAGE_PROPS_FILE    "Datei:"
+    IDS_IMAGE_PROPS_NAME    "Name des Themas:"
+    IDS_IMAGE_PROPS_TRANSPARENT "durchsichtig"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_IMAGE_PROPS_TITLE   "Themeneigenschaften"
+    IDS_LAYER_FILEFILTER    "WspWin Mapper Themendateien (*.wth)|*.wth|Alle Dateien (*.*)|*.*||"
+END
+
+#endif    // Deutsch (Deutschland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#include "l.deu\afxres.rc"          // Standardkomponenten
+#include "l.deu\afxprint.rc"        // Ressourcen für Drucken/Seitenansicht
+#include "..\commonMfc\include\commonMfc.rc"
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

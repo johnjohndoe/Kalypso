@@ -1,0 +1,48 @@
+Modulhistory von editor.exe
+---------------------------
+
+Die jeweilige Überschrift bezeichnet das CVS-Tag.
+Der Tag hat jeweils die Form: editor.exe-%fileversion%
+
+CVSStart
+--------
+Tag für den Import-Branch
+
+
+wspwin-7-0-1
+------------
+Tag für die Import-Revision. Ab jetzt CVS-Verwaltung
+
+editor-1-1-0-0 20.11.2001
+--------------
+erste Versionierte Version; neukompilation wg. Änderung in wspprj.dll
+
+Hängt ab von: 
+	- wspprj-dll-1-2-5-0
+
+editor-1-1-0-1 29.1.2002
+------------------------
+Neukompilation wg. Änderung in wspprj.dll
+
+Hängt ab von: 
+	- wspprj-dll-1-2-5-3
+
+editor-exe-1-1-0-2 12.3.2002
+------------------
+Anpassung an neue CommonMfc - Lib
+
+Hängt ab von
+	wspprj-dll-1-2-5-4
+	common-lib-1-0-0-1
+
+editor-exe-1-1-0-3 25.3.2002
+------------------
+Anpassung an Änderungen in CommonMfc
+
+Hängt ab von 
+	wspprj-dll-1-2-5-5
+	common-lib-1-0-1-0
+	
+editor-exe-1-2-0-0 4.6.2002
+------------------
+WspPrj.dll in statische Lib umgewandelt -> editor angepasst

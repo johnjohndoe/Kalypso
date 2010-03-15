@@ -1,0 +1,89 @@
+Geschichte der Bibliothek 'CommonMFC'
+-------------------------------
+
+Die Bezeichnungen der Versionen entsprechen den CVS - Tags
+
+common-lib-1-0-0-0 12.3.2002
+------------------
+Die erste ausgelieferte Version
+
+common-lib-1-0-0-1 13.3.2002
+------------------
+Ein paar neue MessageBoxen für die Funktion CrossSectionArray::ChangeDataBlocks:
+	Abfragen der Art "Ja", "Immer", "Nein", "Niemals", "Abbrechen"
+
+common-lib-1-0-1-0 20.3.2002
+------------------
+CGridCtrl integriert
+
+common-lib-1-0-2-0 25.4.2002
+------------------
+- CPrinterSettings integriert
+- CDIBSectionLite integriert
+- CGraphComboBox::Init hat jetzt Option, einen Eintrag mehr anzuzeigen -> bewirkt in CLineComboBox, dass auch PS_NULL
+als Linientyp möglich ist
+
+common-lib-1-0-3-0 4.6.2002
+------------------
+- WspPrj.dll in statische Lib umgewandelt -> commonMfc.lib angepasst
+- Plotter benutzt jetzt auch die CCommonImagleList -> ein paar Bildchen aufgenommen
+- neue Klasse CFileDebugContext
+- CCommonImageList zerstört jetzt seine Instanzen selbst
+
+common-lib-1-0-4-0
+------------------
+- Rect::operator -= geconstet
+- neue Klasse CVersion zum Auslesen der Versionsinformation einer Exe
+- neue Klasse CMapDouble: ist gleich zu CMap<double, double, double, double>, mit ein paar zusätzlichen Gimmicks
+- neue Klasse CMapUIntToString
+- neue Klasse IDDEWnd: Support für CWnd's um DDE Nachrichten zu schicken
+- neue Klasse CContextHelp zum Aufruf von ContextHilfe mittels PDF
+
+common-lib-2-a-0-0 30.8.2002
+------------------
+- Die Klassen Point und Rect als Templates umgeschrieben für beliebige Typen; Rect insbsondere als normale und 
+inverse Rchtecke
+- neuer Dialog CWspInsertDialog, wird für das Einfügen von Wasserspiegeln in Querprofile benötigt
+- neue Dialog-Ressource: für den DatablockTypeChooserDialog in der wspprj.lib
+- Achtung: ab jetzt neue Tagging/Release Strategie
+
+common-lib-2-a-0-1 2.9.2002
+------------------
+- Ressource DatablockTypeChosserDialog musste noch ein bisschen angepasst werden
+
+common-lib-2-a-0-2 15.10.2002
+------------------
+- CPrinterSettings: nach Serialisierung wird geprüft, ob der Drucker vorhanden ist, 
+wenn nein, wird der Standarddrucker verwendet ( Bugfix aus Branch common-lib-1-0-fixed )
+- Bugfix: die Kontextsensitive Hilfe ( CContextHelp ) funktionierte nicht, wenn der Pfad Leerzeichen enthielt: Beim DDE kommando muss der Pfad 
+in Anführungszeichen gesetzt werden
+
+common-lib-2-a-0-3  16.11.2002
+------------------
+- neuer Dialog 'ItemChooser': lässt eine einzelne Auswahl aus einer Liste belibiger Elemente tätigen. 
+Verallgemeinerung der Dialoge StateChooser, HmoChooser (CDgmDlg) etc.
+- neuer Dialog: CStringInputDlg zur Eingabe eines einfachen Strings
+
+common-lib-2-0-0-0
+------------------
+- neue Klasse CBoxPaer zum anordnen von Rechtecken auf Seiten
+- Quellcodekommentierung mit DoxyGen: Konfigurationsdatei angelegt
+- fürs Debugging wird jetzt die LoggingBibliothek log4cpp benutzt
+
+common-lib-2-0-0-1 4.2.2003
+------------------
+- neuer Dialog MessageBox2 für Dialoge mit 2 bel. beschriftbaren Knöpfen
+
+common-lib-2-0-0-2 18.2.2003
+------------------
+CVersion unterstützt jetzt auch die Erstellungszeit der Datei
+
+common-lib-2-0-1-0 24.1.2005
+------------------
+- CExecuteExtern zeigt eine Fehlermeldung an, wenn der Prozess nicht gestartet werden konnte
+
+common-lib-2-0-2-0 8.6.2005
+---------------------------
+- CExecuteExtern: Fehlermeldung enthält jetzt immer die ganze Command-Line, nicht nur bis
+zum ersten Space (zwr, länger, dafür richtiger (denn: Space im Pfad möglich!)
+- CGridCtrl: Es können pro Zelle individuelle Tooltips (aka 'TitleTips') gesetzt werden)

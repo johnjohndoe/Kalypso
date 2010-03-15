@@ -1,0 +1,230 @@
+\hypertarget{cmd:bearbeiten-eigenschaften}{}
+\section{Profildarstellung bearbeiten}
+\label{sec:profildarstellung}
+
+Sobald Sie eine Datei ausgewählt haben, wird automatisch ein vorformatierter Plot (vgl.
+Abb. \ref{fig:formatierter-plot}) inklusive Stempel für Sie erzeugt. Er kann anschließend nach Ihren eigenen
+Wünschen gestaltet werden. Sämtliche Formatierungsoptionen finden sich unter \menu{Bearbeiten / Eigenschaften}.
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.5]{formatierter-plot}
+	\end{center}
+	\caption{Standardformatierung eines Plots}
+	\label{fig:formatierter-plot}
+\end{figure}
+
+Nachdem Sie die Menüfolge \menu{Bearbeiten / Eigenschaften} gewählt haben, stehen
+Ihnen in Form von Karteikarten eine Vielzahl von Formatierungsmöglichkeiten zur
+Verfügung (Abb. \ref{fig:dlg-eigenschaften}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{dlg-eigenschaften}
+	\end{center}
+	\caption{Dialogfeld \dialog{Eigenschaften / Allgemein}}
+	\label{fig:dlg-eigenschaften}
+\end{figure}
+
+
+\subsection{Allgemeine Eigenschaften}
+
+\hypertarget{cmd:bearbeiten-eigenschaften-allgemein}{}
+\hypertarget{dlg:bearbeiten-eigenschaften-allgemein}{}
+Über die erste Karteikarte \dialog{Allgemein} können folgende allgemeine Parameter modifiziert
+werden:
+
+\begin{itemize}
+	\item{Maßstab}\\
+	\wspplot\ errechnet automatisch bezogen auf die eingestellte Papiergröße einen x- und
+	y-Maßstab. Wenn die automatische Voreinstellung nicht übernommen werden soll,
+	können Sie die entsprechenden Listenfelder aufklappen und einen der hier angegebenen
+	Maßstäbe selektieren oder direkt in die Editierfenster des Listenfeldes einen eigenen Wert
+	eintragen. Soll später wieder auf die automatische Berechnung zurückgegriffen werden,
+	ist die Einstellung '$<$automatisch$>$' aus dem Listenfeld zu selektieren. Der gerade
+	eingestellte Maßstab wird als Text über dem Listenfeld angezeigt. Bei der automatischen
+	Berechnung werden nur Maßstäbe, die im Listenfeld aufgeführt sind, verwendet.
+	
+	\item{dargestellter Bereich}\\
+	Es besteht die Möglichkeit den dargestellten Bereich eines Profils festzulegen. Zum einen 
+	können manuell die Grenzen festgelegt werden, wobei die Ausmaße des Profils nicht überschritten 
+	werden dürfen. Zm anderen kann die Darstellung durch Aktivierung des Kontrollkästchens 'Auf Datenblock 
+	eingeschränkt'  auf die Ausmaße eines bestimmten Datenblocks begrenzt werden. Wird also zum Beispiel der Datenblock 	  
+	'Trennflächen' gewählt, so wird nur der Bereich innerhalb der Trennflächen dargestellt.
+	Standardmäßig sind die Kontrollkästchen 'Minimum' und 'Maximum' aktiviert, welche bewirken, daß der gesamte Profilbereich   angezeigt wird.
+	
+	\item{Bezugshöhe}\\
+	Die Bezugshöhe errechnet sich automatisch in Abhängigkeit der Profildaten. Sollten Sie
+	ein anderes Bezugsniveau für Ihre Profilzeichnung wünschen, können Sie hier, nach
+	Ausschalten des Kontrollkästchens für die automatische Übernahme, einen Wert
+	eingeben.
+
+	\item {Einstellungen}\\
+	Auf ähnliche Weise ist es möglich, Formatvorlagen für die Plots zu erstellen und diese
+	dem Plot zuzuordnen. Über \menu{Einstellungen / Eigenschaften} können Sie die
+	vorhandenen Standards (Erzeugung) aus\-wäh\-len und dem aktuellen Plot zuordnen.
+	
+	\item{Stempel}\\
+	Über den Stempeleditor ist es möglich, einen individuellen Stempel zu kreieren.
+	Jedem Stempel ist ein Name zuzuordnen, über den er an dieser Stelle angesprochen
+	werden kann. Alle verfügbaren Stempel werden hier aufgeführt und es kann aus dem
+	entsprechenden Listenfeld der dem jeweiligen Plot zuzuordnende Stempel ausgewählt
+	werden.
+	
+\end{itemize}
+
+
+\subsection{Abstände und Ausrichtung der Zeichenelemente}
+
+\hypertarget{dlg:bearbeiten-eigenschaften-ausrichtung}{}
+Über die Karteikarte \dialog{Ausrichtung} lassen sich Abstände und Ausrichtung von Profil und Stempel einstellen (Abb. \ref{fig:dlg-eigenschaften-ausrichtung})
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[width=0.8\linewidth]{dlg-eigenschaften-ausrichtung}
+	\end{center}
+	\caption{Dialogfeld \dialog{Eigenschaften / Ausrichtung}}
+	\label{fig:dlg-eigenschaften-ausrichtung}
+\end{figure}
+
+In der oberen Dialoghälfte (\ctrl{Abstände}) lassen sich die Abstände zum Profil (d.h. Profil und Tabelle) und zum Stempel einstellen. 
+Alle Abstände bezeichnen dabei die Mindestabstände, die entweder zum Rand oder zum jeweils anderen Zeichnungselement (d.h. Profil zum Stempel oder umgekehrt) eingehalten werden.
+
+In der unteren Dialoghälfte (\ctrl{Ausrichtung}) kann der Benutzer einstellen, in welche Richtung das Profil ausgerichtet werden soll. Zur Zeit stehen die Richtungen 'Unten links', 'Unten rechts', 'Oben links' und 'Oben rechts' zur Verfügung.
+
+Der Stempel wird dann je nach Einstellung horizontal oder vertikal neben dem Profil angeordnet. Weiterhin lässt sich einstellen, ob der Stempel dabei möglichst entfernt vom Profil (am Seitenrand ausrichten) oder möglichst nah am Profil (am Profil ausrichten) angeordnet wird.
+
+Schließlich kann für den Stempel eine Skalierung eingestellt werden. Es sind Werte zwischen 10 und 1000\% möglich.
+
+\subsection{Format}
+
+\hypertarget{dlg:bearbeiten-eigenschaften-format}{}
+Weitere Möglichkeiten zur Änderungen der Darstellungen von Profil und Tabelle bietet die Karteikarte \dialog{Format} (Abb. \ref{fig:dlg-eigenschaften-format}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{dlg-eigenschaften-format}
+	\end{center}
+	\caption{Dialogfeld \dialog{Eigenschaften / Format}}
+	\label{fig:dlg-eigenschaften-format}
+\end{figure}
+
+Die Einstellungsmöglichkeiten im Einzelnen:
+
+\begin{itemize}
+
+\item{Profil}\\
+Hier kann eingestellt werden, bis wohin die senkrechten Stationierungslinien im Profil gezogen werden. Es kann bis zum Minimum oder zum Maximum aller dargestellten Datensätze gezeichnet werden ('Stationierungslinien hochziehen bis zur minimalen Profillinie' oder 'Stationierungslinien hochziehen bis zur maximalen Profillinie'), oder stets bis zur Geländehöhe ('Stationierungslinien hochziehen bis zum Gelände').
+
+\item{Tabelle}\\
+Im Unterpunkt 'Tabelle' hat der Benutzer die Möglichkeit zu entscheiden, welche Stationierungslinien in die Tabelle eingetragen werden.
+
+\item{X-Wert Position / Y-Wert Position}\\
+Durch diese beiden Punkte wird die Ausrichtung der Beschriftung von X- und Y-Werten in der Tabelle bestimmt. Möglich sind hierbei die Positionen 'Oben links', 'Oben rechts', 'Unten links' und 'Unten rechts'. X- und Y-Wert können hierbei aber nie die gleiche Position einnehmen.
+
+\end{itemize}
+
+
+\subsection{Selektion der darzustellenden Datensätze}
+\label{sec:profildarstellung:daten}
+
+\hypertarget{dlg:bearbeiten-eigenschaften-daten}
+Der für Sie vorformatierte Plot enthält automatisch eine Vielzahl von Datensätzen.
+Normalerweise wird man zuerst einmal entscheiden, welche Datensätze im Schriftfeld und
+welche in der Zeichnung selbst mit aufgenommen werden sollen. Dies erfolgt über das Dialogfeld \dialog{Eigenschaften / Daten} (Abb. \ref{fig:dlg-eigenschaften-daten}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{dlg-eigenschaften-daten}
+	\end{center}
+	\caption{Dialogfeld \dialog{Eigenschaften / Daten}}
+	\label{fig:dlg-eigenschaften-daten}
+\end{figure}
+
+Sobald Sie auf das Kästchen vor dem Gewässernamen klicken, werden Ihnen links alle im
+Profil vorhandenen Datensätze und rechts alle im Profil dargestellten Parameter angezeigt.
+Wenn Sie einen Datensatz markieren und auf die Pfeiltasten in der Bildmitte klicken, können
+Sie den Datensatz zu den angezeigten Daten hinzufügen oder entfernen. Sobald Sie einen
+Datensatz über das Kreuz davor aufklappen, können Sie auf gleiche Weise die Form der
+Darstellung auswählen. Folgende Wahlmöglichkeiten stehen zur Verfügung:
+
+\begin{itemize}
+	\item{Legende:} Der Datensatzname wird im Schriftfeld links namentlich mit aufgeführt
+	\item{Profil:} Der Datensatz wird gezeichnet
+	\item{X-Werte:} Die y-Werte werden im Schriftfeld mit aufgeführt
+	\item{Y-Werte:} Die z-Werte werden im Schriftfeld mit aufgeführt
+	\item{Füllung (nicht bei allen Datensätzen verfügbar):} Der Datensatz wird flächig gezeichnet
+\end{itemize}
+
+Sobald Sie OK (Dialog schließt sich) oder \menu{Übernehmen} (Dialog bleibt offen) wählen,
+wird die Auswahl übernommen.
+
+\subsection{Linien und Füllungen}
+
+\hypertarget{dlg:bearbeiten-eigenschaften-linien}{}
+\hypertarget{dlg:bearbeiten-eigenschaften-fuellungen}{}
+Für die in die Zeichnung aufgenommen Datensätze (siehe Absatz \ref{sec:profildarstellung:daten}) stehen 
+verschiedene Formatierungsmöglichkeiten zur Verfügung.
+Über die Karteikarte \dialog{Linien} können Sie Linientyp, -breite und -farbe
+für Tabelle, Stempel und Rahmen auswählen. Sobald Sie das Kästchen vor dem
+Gewässernamen aufklappen (Abb. \ref{fig:dlg-eigenschaften-linien}), können Sie für jeden gezeichneten Datensatz diese
+Optionen bestimmen.
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{dlg-eigenschaften-linien}
+	\end{center}
+	\caption{Dialogfeld \dialog{Eigenschaften / Linien}}
+	\label{fig:dlg-eigenschaften-linien}
+\end{figure}
+
+Für die Datensätze, die über die Karteikarte \dialog{Daten}, mit Füllungen versehen wurden, kann
+ mit der Karteikarte \dialog{Füllungen} die Art der Füllung festgelegt
+werden. Zunächst ist das Kontrollkästchen \ctrl{Gefüllt} zu aktivieren, danach können für die
+markierten Datensätze Farbe und Muster der Füllung über die Listenfelder festgelegt werden.
+Linienart und Füllung können auch interaktiv in der Karte verändert werden. Klicken Sie
+doppelt auf die zu formatierende Linie oder Fläche. Es erscheint ein Dialogfenster, das Ihnen
+die Formatierungseinstellungen für Linien und Flächen ermöglicht. Diese Option kann auch
+nach dem Markieren durch \key{Rechte Maustaste} und \menu{Attribute} verfügbar gemacht
+werden.
+
+\subsection{Textformatierungen}
+
+\hypertarget{dlg:bearbeiten-eigenschaften-text}
+Über \menu{Bearbeiten / Eigenschaften / Text} können fast alle Texte des Plots eingegeben
+und formatiert werden (Abb. \ref{fig:dlg-eigenschaften-text}).
+
+\begin{figure}[hbtp]
+	\begin{center}
+		\includegraphics[scale=0.60]{dlg-eigenschaften-text}
+	\end{center}
+	\caption{Dialogfeld \dialog{Eigenschaften / Text}}
+	\label{fig:dlg-eigenschaften-text}
+\end{figure}
+
+Folgende Texte werden unterschieden, die Sie durch Klicken des Kreuzes davor aufklappen
+können. An den mit '\emph{abc}' rot markierten Stellen können Sie (außer bei x- und y-Werten) durch
+Markieren und explizites Klicken in das Feld einen beliebigen Text eingeben.
+
+\begin{itemize}
+	\item{Titel:} In die Zeichnungsüberschrift werden standardmäßig der Ge\-wässer\-name, der Zustand und
+		die Stationsangabe über Platzhalter eingetragen. Diese können bei Bedarf gelöscht und
+		durch einen beliebigen Text überschrieben werden.
+	\item{Bezugshöhe:} Der Wert der Bezugshöhe wird automatisch auch über Platzhalter links zwischen
+		Schriftfeld und Tabelle angegeben. Auch hier kann ein beliebiger Text eingegeben werden
+		(z.B. HN statt NN).
+	\item{Kommentar:} Der im Querprofil in \wspwin\ eingetragene Kommentar wird hier über den
+		Platzhalter 'Comment' angezeigt.
+	\item{Tabelle:} Für das gesamte Schriftfeld kann die Schriftgröße und die Anzahl
+		Nachkommastellen festgelegt werden.
+	\item{Stempel:} Im Stempeleditor können verschiedene Platzhalter (z.B. Auftraggeber, Datum,
+		Blattnummer, Überschrift...) vergeben werden, für die an dieser Stelle, wiederum durch
+		Anklicken des abc-Editierfeldes, Text eingegeben und formatiert werden kann.
+	\item{Gewässer / Zustand (Datensätze):} Schließlich können durch Aufklappen der einzelnen
+		Datensätze, Texteingaben und Formatierungen für die Datensatzbezeichnung und die
+		Dimension, sowie die Schriftart und Anzahl Nachkommastellen der y- und z-Werte
+		eingegeben werden.
+\end{itemize}
+
+Sämtliche Textformatierungen können ebenfalls interaktiv durch Markieren eines Textes in
+der Graphik und Doppelklick bzw. rechte Maus und Attribute vorgenommen werden.

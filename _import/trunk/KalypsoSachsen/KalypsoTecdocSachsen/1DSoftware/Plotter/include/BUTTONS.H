@@ -1,0 +1,35 @@
+// Buttons.h
+
+static UINT BASED_CODE MainButtons[] =
+{
+	// same order as in the bitmap 'toolbar.bmp'
+	ID_FILE_NEW,
+	ID_FILE_OPEN,
+  ID_FILE_SAVE,
+  
+  ID_SEPARATOR,
+  
+  ID_FILE_PRINT_DIRECT,
+  ID_FILE_PRINT_PREVIEW,
+
+  ID_SEPARATOR,
+
+	ID_EDIT_CUT,
+	ID_EDIT_COPY,
+	ID_EDIT_PASTE,
+
+	ID_SEPARATOR,
+
+  ID_EDIT_ZOOM,
+
+	ID_SEPARATOR,
+
+	ID_VIEW_ZOOMIN,
+	ID_VIEW_ZOOMOUT,
+
+	ID_SEPARATOR,
+	
+	ID_APP_ABOUT,
+	ID_CONTEXT_HELP,
+};
+

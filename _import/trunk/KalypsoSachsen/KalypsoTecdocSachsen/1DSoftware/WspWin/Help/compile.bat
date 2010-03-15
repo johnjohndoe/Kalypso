@@ -1,0 +1,1 @@
+"C:\Programme\Microsoft Visual Studio\Common\Tools\hcw.exe" /C /E /M "wspwin.hpj"

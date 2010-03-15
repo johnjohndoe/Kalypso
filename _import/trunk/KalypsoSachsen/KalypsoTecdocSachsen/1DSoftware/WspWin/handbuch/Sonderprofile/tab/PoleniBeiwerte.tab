@@ -1,0 +1,28 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                                                                          %
+%                       \"{U}berfallbeiwerte f\"{u}r den vollkommenen \"{U}berfall nach Poleni                                         %
+%                                                                                                                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\arraystretch}{2.0}
+\begin{tabular}{llcc}
+   \hline
+      \textbf{Kronenform} &                                       & $\mathbf{\mu}$  &  $\mathbf{n}$ \\[6pt]
+   \hline \hline
+      \parbox{2.0cm}{\includegraphics[width=0.15\textwidth]{PoleniScharfBreit}}
+            &  Breit, scharfkantig, waagerecht                    &  $0,45...0,51$  &  $16$ \\
+      \parbox{2.0cm}{\includegraphics[width=0.15\textwidth]{PoleniBreit}}
+            &  Breit, gut abgerundete Kanten, waagerecht          &  $0,50...0,55$  &  $16$ \\
+      \parbox{2.0cm}{\includegraphics[width=0.15\textwidth]{PoleniKlappe}}
+            &  \parbox{7.5cm}{Vollst\"{a}ndig abgerundeter, breiter \"{U}berfall, g\"{a}nzlich umgelegte Klappen bei
+                              abgerundeten Kanten des Wehrk\"{o}rpers}
+                                                                  &  $0,65...0,73$  &  $10$ \\
+      \parbox{2.0cm}{\centering \includegraphics[width=0.08\textwidth]{PoleniScharfkantig}}
+            &  Scharfkantig, mit Bel\"{u}ftung des Strahls            &  $0,64$         &  $1,6$ \\
+      \parbox{2.0cm}{\centering \includegraphics[width=0.15\textwidth]{PoleniAbgerundet}}
+            &  \parbox{7.5cm}{Abgerundet, mit lotrechter Oberwasserseite und geneigter Unterwasserseite}
+                                                                  &  $0,75$         &  $4,9$ \\
+      \parbox{2.0cm}{\centering \includegraphics[width=0.15\textwidth]{PoleniDachfoermig}}
+            &  Dachf\"{o}rmig, mit abgerundeter Krone                 &  $0,79$         &  $9,2$ \\
+   \hline
+\end{tabular}
+\renewcommand{\arraystretch}{1.0}

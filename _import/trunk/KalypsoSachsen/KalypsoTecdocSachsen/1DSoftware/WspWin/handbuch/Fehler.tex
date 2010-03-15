@@ -1,0 +1,81 @@
+\cleardoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Fehlerhinweise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Fehlerbehandlung}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sollten Fehler bei der Programmbedienung, im Datenformat oder bei der Berechnung auftreten, werden im allgemeinen hierzu
+Meldungen ausgegeben.
+%Allerdings gibt es einerseits kein vollkommen fehlerfreies Programm, andererseits ist es nicht m\"{o}glich alle Fehler durch
+%Meldungen abzufangen.
+F\"{u}r jeden Hinweis auf Programmfehler, die von uns nicht abgefangen wurden, sind wir dankbar. Wenn Probleme bei der
+Projektbearbeitung auftreten und Sie trotz Studie der Fehlerhinweise nicht weiterkommen, sollten Sie uns am besten Ihr
+komplettes Projekt mit einer genauen Fehlerbeschreibung zusenden.
+
+Zur Eingrenzung und Behebung von Fehlern kann die Einsicht folgender Dateien hilfreich sein:
+\begin{description}
+   \item[\datei{error.log} und \datei{error2.log}:] Hier werden Fehlerhinweise ausgegeben, die in Zusammenhang mit den
+      Konvertierungsprogrammen \datei{b2lwa} und \datei{lwa2b} auftreten.
+   \item[\datei{profil.log} und \datei{profil2.log}:] Hier wird ein Protokoll der Konvertierung \datei{b2lwa} und
+      \datei{lwa2b} angelegt aus dem hervorgeht bis zu welcher Datei fehlerfrei gearbeitet wurde.
+   \item[\datei{kon\$.bat} und \datei{bat\$.bat}:] Stapelverarbeitungsdatei mit DOS-Befehlen im Rahmen der Berechnung und
+      Konvertierung.
+   \item[\datei{profil\$.str}:] Schnittstellendatei zwischen altem und neuem Format.
+\end{description}
+Sollten im Rahmen der Berechnung Fehler aufgetreten sein, m\"{u}ssen die Ergebnisdatei (\datei{*er*.*}) und die Eingabedatei
+im alten Format (\datei{*ws*.*}) eingesehen werden. Hier werden Fehlerkennziffern ausgegeben, die sich in zwei Gruppen
+unterteilen lassen:
+\begin{itemize}
+   \item Fehler der Dateneingabe (Kennziffer $D$)
+   \item Fehler, die erst bei der Ausf\"{u}hrung der Berechnung erkannt werden (Kennziffer $R$)
+\end{itemize}
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Fehlerarten}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Fehler der Dateieingabe:
+\begin{quote}
+   \begin{tabular}{ll}
+      DF &  Dateneingabe unvollst\"{a}ndig \\
+      DG &  \"{U}berschreitung von Grenzwerten \\
+      DL &  Lesefehler \\
+      DR &  Reihenfolge der Datens\"{a}tze falsch \\
+      DS &  Steuerparameter oder Kennziffer unzul\"{a}ssig \\
+      DY &  Fehler bei der Daten\"{u}bernahme aus LWANAS
+   \end{tabular}
+\end{quote}
+Fehler bei der Ausf\"{u}hrung:
+\begin{quote}
+   \begin{tabular}{ll}
+      RD &  Dateneingabefehler, erst bei Ausf\"{u}hrung erkennbar \\
+      RE &  Energieh\"{o}henfehler \\
+      RF &  unzul\"{a}ssiger Flie{\ss}wechsel \\
+      RG &  Fehler bei der berechnung von \autor{Gauss}-Profilen \\
+      RI &  Iteration konvergiert nicht (Laufzeitfehler) \\
+      RP &  unvollst\"{a}ndige Parameterliste beim Aufruf von Unterprogrammen \\
+      RT &  Fehler bei der Berechnung der Trennfl\"{a}chenrauheit (Verfahren nach \autor{Pasche})
+   \end{tabular}
+\end{quote}
+In der folgenden \"{U}bersicht sind die Fehlerhinweise nach ihren Kennziffern sortiert aufgelistet. Zu jeder Fehlerkennziffer
+werden Hinweise zu m\"{o}glichen Ursachen und zur Behebung des Fehlers gegeben. Jeder Fehler kann auch als Folgefehler eines
+vorhergehenden Fehlers auftreten. Hierauf wird nicht extra verwiesen.
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Fehlerliste}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Dateneingabefehler}
+\input{Fehler/tab/FehlerlisteDaten.tab}
+
+\subsection{Fehler bei Ausf\"{u}hrung der Berechnung}
+\input{Fehler/tab/FehlerlisteBerechnung.tab}

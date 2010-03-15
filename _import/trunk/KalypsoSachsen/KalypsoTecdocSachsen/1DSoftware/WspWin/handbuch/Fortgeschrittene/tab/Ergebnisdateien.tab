@@ -1,0 +1,38 @@
+\tablefirsthead{  \multicolumn{1}{l}{\textbf{Dateiname}} &
+                  \multicolumn{1}{l}{\textbf{Bedeutung}} \\[12pt] }
+\tablehead{  \multicolumn{1}{l}{\textbf{Dateiname}} &
+             \multicolumn{1}{l}{\textbf{Bedeutung}}   \\[12pt] }
+
+
+\begin{supertabular}{lp{0.75\textwidth}}
+   \datei{fuws0001.001}    &  Eingangsdatei f\"{u}r die Berechnung, entspricht \datei{*.wsp}-Datei der ehemaligen DOS-Version,
+                              wird durch Konvertierung \datei{B2LWA} vor jeder Berechnung erstellt \\
+   \datei{fulp0001.001}    &  Plotdatei f\"{u}r L\"{a}ngsschnitte im Format der ehemaligen DOS-Version, wird bei der Berechnung
+                              erstellt und ins \wspwin-Format (pl) umgewandelt. \\
+   \datei{fupl0001.001}    &  Plotdatei f\"{u}r L\"{a}ngsschnitte im Format der Windows-Oberfl\"{a}che, wird aus lp-Datei im Rahmen der
+                              Berechnung automatisch erstellt, wird der \datei{*.dxf}-Datei zugrundegelegt \\
+   \datei{fuer0001.001}    &  Ergebnisdatei \\
+   \datei{fube0001.001}    &  Zwischenergebnisse bei Bewuchs (ehemals \datei{*.bew}-Datei) \\
+   \datei{fun50001.001}    &  Nasimschnittstelle (Abschnitte) \\
+   \datei{fun60001.001}    &  Nasimschnittstelle (alle Profile) \\[12pt]
+
+   \datei{fuwk0001.001}    &  Ergebnisse der Listenauswertung (Name der ersten Berechnungsvariante wird zugrunde gelegt),
+                              Profile pro Abflu{\ss} \\
+   \datei{fuma0001.001}    &  Ergebnisse der Listenauswertung (Name der ersten Berechnungsvariante wird zugrundegelegt),
+                              nur Bordvollabfl\"{u}sse pro Profil \\
+   \datei{fuex0001.001}    &  Ergebnisse der Listenauswertung (Name der ersten Berechnungsvariante wird zugrundegelegt),
+                              L\"{a}ngsschnitt im Excel-Format \\
+   \datei{fuue0001.001}    &  Ergebnisse der Listenauswertung (Name der ersten Berechnungsvariante wird zugrundegelegt),
+                              Abfl\"{u}sse pro Station \\
+   \datei{fupr0001.001}    &  Ergebnisse des Pr\"{u}fprogramms der Listenauswertung (\datei{*.prf}) \\
+   \datei{fuvg0001.001}    &  Ergebnisse des Vergleichsprogramms d. Listenauswertung (\datei{*.vgl}) \\[12pt]
+
+   \datei{error2.log}      &  Eventuelle Fehlermeldungen bei Aufruf des Konvertierungsprogramms \datei{b2lwa} im Rahmen
+                              der Berechnung \\
+   \datei{profil.log}      &  Protokoll der Konvertierung b2lwa vor der Berechnung \\
+   \datei{error.log}       &  Eventuelle Fehlermeldungen bei Aufruf des Konvertierungsprogramms \datei{LWA2B} im Rahmen der
+                              Konvertierung vom LWA-Format ins \wspwin-Format \\
+   \datei{fulda.log}       &  Protokoll der Konvertierung \datei{LWA2B} vom LWA-Format ins \wspwin-Format \\
+   \datei{profil\$.str}    &  Schnittstellendatei f\"{u}r Steuerdaten zwischen LWA-Format (Berechnungsprogramm) und
+                              \wspwin-Format (Windows-Oberfl\"{a}che), wird bei Berechnung und Konvertierung erstellt \\
+\end{supertabular}

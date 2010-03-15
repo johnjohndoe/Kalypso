@@ -1,0 +1,230 @@
+:Base wspwin.hlp
+1 Einführung
+2 Begriffserläuterungen=HID_KAPITEL_2_1
+2 Voraussetzungen
+3 Allgemeine Grundlagen=HID_KAPITEL_2_2_1
+3 Theoretische Grundlagen=HID_KAPITEL_2_2_2
+3 Vorarbeiten=HID_KAPITEL_2_2_3
+1 Einstieg in die Handhabung - Beispiel Normalprofil
+2 Einstieg in die Handhabung=HID_KAPITEL_4
+2 Projekte bearbeiten
+3 Neues Projekt anlegen=HID_KAPITEL_4_2_1
+3 Projekt öffnen=HID_KAPITEL_4_2_2
+3 Projekt löschen=HID_KAPITEL_4_2_3
+3 Beispiel=HID_KAPITEL_4_2_4
+2 Zustandsdateien bearbeiten
+3 Zustandsdatei bearbeiten=HID_KAPITEL_4_3
+3 Neue Zustandsdatei anlegen=HID_KAPITEL_4_3_1
+3 Zustandsdatei öffnen=HID_KAPITEL_4_3_2
+3 Zustand löschen=HID_KAPITEL_4_3_3
+3 Beispiel=HID_KAPITEL_4_3_4
+2 Profildateien bearbeiten
+3 Neues Profil anlegen
+4 Beschreibung der Dateneingabe=HID_KAPITEL_4_4_1_1
+4 Beispiel=HID_KAPITEL_4_4_1_2
+3 Dateneingabe der Geländehöhe im alphanumerischen Editor
+4 Beschreibung der Dateneingabe=HID_KAPITEL_4_4_2_1
+4 Beispiel=HID_KAPITEL_4_4_2_2
+3 Profil im Graphikeditor bearbeiten
+4 Graphikeditor bearbeiten=HID_KAPITEL_4_4_3
+4 Neue Datensätze anlegen=HID_KAPITEL_4_4_3_1
+4 Rauheiten eingeben
+5 Beschreibung der Dateneingabe=HID_KAPITEL_4_4_3_2_1
+5 Beispiel=HID_KAPITEL_4_4_3_2_2
+4 Trennflächen definieren
+5 Trennflächen definieren=HID_KAPITEL_4_4_3_3
+5 Beschreibung der Dateneingabe=HID_KAPITEL_4_4_3_3_1
+5 Beispiel=HID_KAPITEL_4_4_3_3_2
+4 Durchströmte Bereiche festlegen
+5 Durchströmte Bereiche festlegen=HID_KAPITEL_4_4_3_4
+5 Beschreibung der Dateneingabe=HID_KAPITEL_4_4_3_4_1
+5 Beispiel=HID_KAPITEL_4_4_3_4_2
+3 Randbedingungen
+4 Abflußdatei
+5 Abflußdatei=HID_KAPITEL_4_5_1
+5 Beschreibung der Dateneingabe=HID_KAPITEL_4_5_1_1
+5 Beispiel=HID_KAPITEL_4_5_1_1
+4 Verlustdatei
+5 Verlustdatei=HID_KAPITEL_4_5_2
+5 Beschreibung der Dateneingabe=HID_KAPITEL_4_5_2_1
+5 Beispiel=HID_KAPITEL_4_5_2_2
+3 Berechnen
+4 Steuerdaten eingeben
+5 Steuerdaten eingeben=HID_KAPITEL_4_6_1
+5 Erste Dialogmaske (Basisdata)
+6 Erste Dialogmaske=HID_KAPITEL_4_6_1_1
+6 Anfangsbedingungen=HID_KAPITEL_4_6_1_1_1
+6 Fließgesetze=HID_KAPITEL_4_6_1_1_2
+6 Theorie: Manning-Strickler=HID_KAPITEL_4_6_1_1_2_1
+6 Theorie: Prandtl-Colebrook=HID_KAPITEL_4_6_1_1_2_2
+6 Anfangs-/Endprofil=HID_KAPITEL_4_6_1_1_3
+6 Abflußereignis=HID_KAPITEL_4_6_1_1_4
+6 Kennzeichnung der Berechnungsvariante=HID_KAPITEL_4_6_1_1_5
+6 Ausdruckparameter=HID_KAPITEL_4_6_1_1_6
+5 Beispiel=HID_KAPITEL_4_6_1_2
+4 Berechnung starten=HID_KAPITEL_4_6_2
+3 Tabellarische Ergebnisse einsehen
+4 Dateien im Browser einsehen=HID_KAPITEL_4_7_1
+4 Dateien drucken=HID_KAPITEL_4_7_2
+4 Beispiel=HID_KAPITEL_4_7_3
+4 Erläuterung der Abkürzungen im Ergebnisausdruck=HID_KAPITEL_4_7_4
+3 Längsschnitt mit den Berechnungsergebnissen graphisch einsehen
+4 Graphikeditor für Längsschnitte=HID_KAPITEL_4_8_1
+4 Längsschnitte drucken=HID_KAPITEL_4_8_2
+4 Beispiel=HID_KAPITEL_4_8_3
+1 Sonderprofile eingeben
+2 Brücken
+3 Pfeilerstau
+4 Theorie=HID_KAPITEL_5_1_1_1
+4 Dateneingabe=HID_KAPITEL_5_1_1_2
+4 Beispiel=HID_KAPITEL_5_1_1_3
+3 Mehrfeldbrücken
+4 Theorie=HID_KAPITEL_5_1_2_1
+4 Dateneingabe=HID_KAPITEL_5_1_2_2
+4 Beispiel=HID_KAPITEL_5_1_2_3
+3 überströmte Brücken
+4 Theorie=HID_KAPITEL_5_1_3_1
+4 Dateneingabe=HID_KAPITEL_5_1_3_2
+4 Beispiel=HID_KAPITEL_5_1_3_3
+2 Überfälle
+3 Theorie
+4 Vollkommene Überfälle=HID_KAPITEL_5_2_1_1
+4 Unvollkommene Überfälle=HID_KAPITEL_5_2_1_2
+4 Wehre mit unterschiedlichen Kronenhöhen=HID_KAPITEL_5_2_1_3
+4 Streichwehr=HID_KAPITEL_5_2_1_4
+3 Beschreibung der Dateneingabe=HID_KAPITEL_5_2_2
+3 Beispiel
+4 Streichwehr=HID_KAPITEL_5_2_3_1
+4 Sohlschwelle rundkronig=HID_KAPITEL_5_2_3_2
+4 Wehr mit mehreren Wehrfeldern=HID_KAPITEL_5_2_3_3
+2 Durchlässe
+3 Theorie=HID_KAPITEL_5_3_1
+3 Beschreibung der Dateneingabe
+4 Beschreibung der Dateneingabe=HID_KAPITEL_5_3_2
+4 Kreis=HID_KAPITEL_5_3_2_1
+4 Gerade Decke=HID_KAPITEL_5_3_2_2
+4 Kreissegment=HID_KAPITEL_5_3_2_3
+4 Maul DIN 4263=HID_KAPITEL_5_3_2_4
+4 Maul Armco 71=HID_KAPITEL_5_3_2_5
+4 Ei DIN 4263=HID_KAPITEL_5_3_2_6
+4 Maul Armco 84=HID_KAPITEL_5_3_2_7
+4 Ellipse Armco 84=HID_KAPITEL_5_3_2_8
+4 Super-Span Armco 84=HID_KAPITEL_5_3_2_9
+3 Beispiel=HID_KAPITEL_5_3_3
+2 Bewuchs
+3 Theorie
+4 Theorie=HID_KAPITEL_5_4_1
+4 LWA-Richtlinie 1984, Ansatz nach Felkel=HID_KAPITEL_5_4_1_1
+4 Ansatz nach KAISER=HID_KAPITEL_5_4_1_2
+4 Ansatz nach SCHRÖDER-NUDING=HID_KAPITEL_5_4_1_3
+4 Ansatz nach MERTENS=HID_KAPITEL_5_4_1_4
+4 Ansatz nach PASCHE=HID_KAPITEL_5_4_1_5
+3 Beschreibung der Dateneingabe
+4 Ansatz von Kaiser=HID_KAPITEL_5_4_2_1
+4 Ansätze von Schröder-Nuding, Mertens und Pasche=HID_KAPITEL_5_4_2_2
+3 Beispiel
+4 Ansatz von Kaiser=HID_KAPITEL_5_4_3_1
+4 Ansätze von Schröder-Nuding, Mertens und Pasche=HID_KAPITEL_5_4_3_2
+2 Verzweigte Systeme
+3 Theorie=HID_KAPITEL_5_5_1
+3 Beschreibung der Dateneingabe=HID_KAPITEL_5_5_2
+3 Beispiel=HID_KAPITEL_5_5_3
+1 Fortgeschrittene Handhabung
+2 Menüpunkt Projekt
+3 Projekte kopieren=HID_KAPITEL_6_1_1
+3 Projekte archivieren=HID_KAPITEL_6_1_2
+2 Menüpunkt / Zustand
+3 Profile des selben Gewässers in neue Zustandsdatei aufnehmen=HID_KAPITEL_6_2_1
+3 Zustand kopieren=HID_KAPITEL_6_2_2
+3 Editieren der Zustandsdatei / Profile
+4 Editieren der Zustandsdatei / Profile=HID_KAPITEL_6_2_3
+4 Strangtabelle=HID_KAPITEL_6_2_3_1
+4 Profiltabelle=HID_KAPITEL_6_2_3_2
+4 Profil aufnehmen=HID_KAPITEL_6_2_3_3
+4 Profil löschen=HID_KAPITEL_6_2_3_4
+4 Profilschlüssel ändern=HID_KAPITEL_6_2_3_5
+2 Alphanumerischer / Graphik-Editor
+3 Alphanumerischer / Graphik-Editor=HID_KAPITEL_6_3
+3 Profilpunkt einfügen/löschen=HID_KAPITEL_6_3_1
+3 Datensatz löschen=HID_KAPITEL_6_3_2
+3 Zoomen=HID_KAPITEL_6_3_3
+3 Interaktives Editieren=HID_KAPITEL_6_3_4
+2 Berechnung - Editieren der Steuerdaten
+3 Zweite Dialogmaske (zusätzliche Berechnungsmöglichkeiten)
+4 Eichung von Rauheitswerten=HID_KAPITEL_6_4_1_1
+4 Schiessender Abfluß (Umkehr der Berechnungsrichtung) (Dialogmaske 1 und 2)=HID_KAPITEL_6_4_1_2
+4 Berechnung der Grenztiefe für alle Profile=HID_KAPITEL_6_4_1_3
+4 Berechnung der Normalwassertiefe für alle Profile=HID_KAPITEL_6_4_1_4
+4 Kalinin-Miljukov=HID_KAPITEL_6_4_1_5
+4 Nasim-Schnittstelle=HID_KAPITEL_6_4_1_6
+4 Wasserstand-Schleppspannungsberechnung=HID_KAPITEL_6_4_1_7
+4 Abfluß-Wasserstand-Volumen-Tabelle=HID_KAPITEL_6_4_1_8
+4 Wasserstand-Abfluß-Beziehung=HID_KAPITEL_6_4_1_9
+3 Dritte Dialogmaske (Einstellungen für die Berechnung)
+4 Verengungs-/Erweiterungsverluste=HID_KAPITEL_6_4_2_1
+4 Froudezahlberechnung=HID_KAPITEL_6_4_2_2
+4 Zusatzparameter=HID_KAPITEL_6_4_2_3
+4 Sinuosität=HID_KAPITEL_6_4_2_4
+4 Formbeiwert nach Marchi=HID_KAPITEL_6_4_2_5
+4 Korrektur des benetzten Umfangs=HID_KAPITEL_6_4_2_6
+4 Impulsstromverteilungsbeiwert=HID_KAPITEL_6_4_2_7
+3 Vierte Dialogmaske (Ausgabeparameter)
+4 Wahl des Ergebnis 1=HID_KAPITEL_6_4_3_1
+4 Profilnummer=HID_KAPITEL_6_4_3_2
+4 Zeilenanzahl=HID_KAPITEL_6_4_3_3
+4 Bezugshöhe=HID_KAPITEL_6_4_3_4
+4 Wasserspiegelfixierungen=HID_KAPITEL_6_4_3_5
+2 Ergebnisse einsehen=HID_KAPITEL_6_5
+2 Längsschnitte einsehen / Vergleichsdaten aufnehmen=HID_KAPITEL_6_6
+2 Plotten
+3 DXF
+4 DXF=HID_KAPITEL_6_7_1
+4 Plotoptionen eingeben
+5 Plotoptionen eingeben=HID_KAPITEL_6_7_1_1
+5 Dialogmaske 1=HID_KAPITEL_6_7_1_1_1
+5 Dialogmaske 2=HID_KAPITEL_6_7_1_1_2
+5 Dialogmaske 3=HID_KAPITEL_6_7_1_1_3
+5 Dialogmaske 4=HID_KAPITEL_6_7_1_1_4
+4 Plotdatei erstellen=HID_KAPITEL_6_7_1_2
+4 Plotten Konfiguration=HID_KAPITEL_6_7_1_3
+3 CAD-Programm=HID_KAPITEL_6_7_2
+3 Plotprogramm=HID_KAPITEL_6_7_3
+1 Zusatzoptionen
+2 Fremddaten
+3 HYDRA WSP=HID_KAPITEL_7_1_1
+3 Jabron=HID_KAPITEL_7_1_2
+3 DA66=HID_KAPITEL_7_1_3
+2 Zustandsdatei bezogen
+3 Rauheiten für mehrere Profildateien ändern=HID_KAPITEL_7_2_1
+3 Interpolation=HID_KAPITEL_7_2_2
+3 Geländeverknüpfung zustandsbezogen=HID_KAPITEL_7_2_3
+3 Flächenberechnung zustandsbezogen=HID_KAPITEL_7_2_4
+2 Profildatei bezogen
+3 Rauheitsdatenbank=HID_KAPITEL_7_3_1
+3 Geländeverknüpfung und Flächenberechnung profilbezogen=HID_KAPITEL_7_3_2
+3 Profilverlängerung=HID_KAPITEL_7_3_3
+2 Berechnung
+3 Massenberechnung=HID_KAPITEL_7_4_1
+3 Sonderprogramme=HID_KAPITEL_7_4_2
+2 Ergebnisse
+3 Auswertung
+4 Listenauswertung=HID_KAPITEL_7_5_1_1
+4 Vergleichslisten=HID_KAPITEL_7_5_1_2
+4 Prüflisten=HID_KAPITEL_7_5_1_3
+3 Wasserspiegel einfügen=HID_KAPITEL_7_5_2
+2 Extras
+3 Graphikauflösung=HID_KAPITEL_7_6_1
+1 Fehlerhinweise
+2 Fehlerhinweise=HID_KAPITEL_8
+1 Dialogprogramme HYDRA
+2 Inhalt=HID_KAPITEL_10_1
+2 Installation=HID_KAPITEL_10_2
+2 Hauptmenü=HID_KAPITEL_10_3
+2 Gerinne=HID_KAPITEL_10_4
+2 Rohre=HID_KAPITEL_10_5
+2 Überfälle=HID_KAPITEL_10_6
+2 Wasserspiegel=HID_KAPITEL_10_7
+2 ATV-Richtlinien=HID_KAPITEL_10_8
+2 Kanalnetze=HID_KAPITEL_10_9
+2 Straßenentwässerung=HID_KAPITEL_10_10
+2 DOS-Hilfsprogramme=HID_KAPITEL_10_11

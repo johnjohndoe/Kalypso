@@ -1,0 +1,17 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                                                                          %
+%                                    Pfeilerformbeiwerte nach Yarnell                                                      %
+%                                                                                                                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{tabular}{lc}
+   \hline
+      \textbf{Pfeilerform} &  $\mathbf{\sigma}$ \\[6pt]
+   \hline \hline
+      Pfeiler mit halbkreisf\"{o}rmigen K\"{o}pfen   & \hfill $0,90$ \\
+      2 zylindrische Pfeiler mit Wand        & \hfill $0,95$ \\
+      2 zylindrische Pfeiler ohne Wand       & \hfill $1,05$ \\
+      Pfeiler mit dreiechsf\"{o}rmigen K\"{o}pfen    & \hfill $1,05$ \\
+      Pfeiler mit rechteckigen K\"{o}pfen        & \hfill $1,25$ \\
+   \hline
+\end{tabular}

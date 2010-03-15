@@ -1,0 +1,1937 @@
+\graphicspath{{Sonderprofile/eps/}} \cleardoublepage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Sonderprofile}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Profile mit R\"{u}ckspr\"{u}ngen}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Profile mit R\"{u}ckspr\"{u}ngen k\"{o}nnen wie Normalprofile eingegeben werden. Die Berechnung erfolgt mit Hilfe des
+\autor{Gauss}'schen Algorithmus f\"{u}r die Fl\"{a}chenberechnung. Hierbei werden die Schnittpunkte zwischen horizontaler
+Wasserspiegellage und Profilpolygon ermittelt und der Fl\"{a}cheninhalt berechnet.
+\begin{figure}[htpb]
+   \centering
+   \includegraphics[width=0.8\textwidth]{Gaussprofil}
+   \caption{Profil mit auskragender Fahrbahnplatte}
+   \label{Sonderprofile Abb Fahrbahnplatte}
+\end{figure}
+Die Eingabereihenfolge der Profilpunkte wird aus Abbildung~\ref{Sonderprofile Abb Fahrbahnplatte} ersichtlich. Eine
+Unterteilung des Abflu{\ss}querschnitts in Vorl\"{a}nder und Flu{\ss}bett wird nicht ber\"{u}cksichtigt. Die Berechnung erfolgt f\"{u}r die im
+Flu{\ss}schlauch angegebenen Rauheiten.
+
+Im Profileditor (alphanumerisch und grafisch) werden Profile mit Rücksprüngen in den Schlüsseldaten mit 'GaussRücksprung' gekennzeichnet. Darüberhinaus sind alle Profilpunkte, welche an einer senkrechten Wand oder einem Rücksprung liegen, im Textfeld rot markiert.
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Niedrigwasserrinnen}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Eine Variante f\"{u}r die Eingabe besteht darin, einen Teilabflu{\ss}querschnitt des Flu{\ss}schlauchs in integraler Form einzugeben
+(Abbildung~\ref{Sonderprofile Abb integraleProfileingabe}). Von dem Teilabflu{\ss}querschnitt werden die planimetrierte Fl\"{a}che (FP), der Umfang (UP) und die Wasserspiegelbreite (BP) ben\"{o}tigt. Der linke und rechte Uferanschnittpunkt des zum
+Teilabflu{\ss}querschnitt geh\"{o}renden Wasserspiegels sind dabei als Profilpunkte durch Koordinatenangabe festzulegen. Die f\"{u}r
+diese Berechnungsart erforderlichen zus\"{a}tzlichen Daten sind im Datensatz \afz{Niedrigwasserrinne} einzutragen.
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.9\textwidth]{ProfilaufnahmeIntegral}
+   \caption{Querprofildaten - Eingabe teilweise in Koordinaten, teilweise in integraler Form}
+   \label{Sonderprofile Abb integraleProfileingabe}
+\end{figure}
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Br\"{u}cken}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+An Br\"{u}cken werden nach~\cite{BWK1999} folgende Abflu{\ss}zust\"{a}nde unterschieden:
+\begin{quote}
+   \begin{itemize}
+      \item Freier Abflu{\ss}
+      \item R\"{u}ckgestaute Br\"{u}cke mit freiem Abflu{\ss} unter der Br\"{u}cke
+      \item R\"{u}ckgestaute Br\"{u}cke und Druckabflu{\ss}
+      \item Vollkommener \"{U}berfall und Druckabflu{\ss} unter der Br\"{u}cke
+      \item \"{U}berstr\"{o}men und Druckabflu{\ss} unter der Br\"{u}cke
+   \end{itemize}
+\end{quote}
+
+
+\subsection{Freier Abfluss}
+
+Liegt der Wasserspiegel sowohl vor, als auch hinter der Br\"{u}cke unterhalb deren Konstruktionsunterkante, so spricht man von
+einem freien Abflu{\ss}. Durch Einbauten im Flie{\ss}querschnitt in Form von Br\"{u}ckenpfeilern kann hier eine Wasserspiegelanhebung
+entstehen. Diese l\"{a}{\ss}t sich mit Hilfe der Pfeilerstauformeln nach \autor{Rehbock} oder \autor{Yarnell} berechnen.
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.8\textwidth]{Pfeilerstau}
+   \caption{Pfeilerstau bei str\"{o}mendem Abflu{\ss}}
+   \label{Sonderprofile Abb Pfeilerstau}
+\end{figure}
+
+Durch \"{U}berspringen des Br\"{u}ckenprofils~$(i-1)$ wird zun\"{a}chst die \afz{ungest\"{o}rte} Wasserspiegelh\"{o}he im Profil~$(i)$ und
+durch Interpolation zwischen den Profilen~$(i-2)$ und $(i)$ eine fiktive Wasserspiegelh\"{o}he im Querschnitt~$(i-1)$
+berechnet. F\"{u}r diese Referenzh\"{o}he wird dann der Flie{\ss}querschnitt sowohl f\"{u}r das Br\"{u}ckenprofil als auch f\"{u}r das
+unterwasserseitige Profil~$(i-2)$ ermittelt. Werden diese Flie{\ss}fl\"{a}chen mit $A'_{i-1}$ und $A'_{i-2}$ bezeichnet, so lautet
+der Ansatz f\"{u}r das Verbauungsverh\"{a}ltnis
+\begin{equation}
+   \alpha_V = \frac{A'_{i-2} - A'_{i-1}}{A'_{i-2}}
+\end{equation}
+
+Mit diesem Verbauungsverh\"{a}ltnis, dem vorzugebenden Pfeilerformbeiwert und den hydraulischen Kennwerten des unterstromigen
+Querschnitts kann die Aufstauh\"{o}he $dz$ berechnet und zu der ermittelten \afz{ungest\"{o}rten} Wasserspiegellage addiert
+werden. Wie f\"{u}r jeden anderen Querschnitt wird die \autor{Froude}'sche Zahl auch f\"{u}r das Br\"{u}ckenprofil berechnet. Ergibt
+sich f\"{u}r die Engstelle ein Wert $Fr > 1$, so liegt im Bereich der Verbauung ein Flie{\ss}wechsel vor. In diesem Fall wird die
+oberstromige Wasserspiegellage mit Hilfe des Extremalprinzips berechnet.
+
+Aus der gew\"{a}hlten Berechnungsart ergibt sich, da{\ss} das unterstromige Querprofil bei einer Br\"{u}cke (bis auf die den
+Flu{\ss}querschnitt einengenden Einbauten) genau dem Br\"{u}ckenprofil entsprechen mu{\ss}. Der Flie{\ss}querschnitt darf hier keinesfalls
+kleiner als in der Br\"{u}cke selbst sein, sonst ergibt sich ein negatives Verbauungsverh\"{a}ltnis.
+
+\subsubsection{Pfeilerstauformel nach Rehbock}
+Die allgemeine Form der Pfeilerstauformel nach \autor{Rehbock} lautet:
+\begin{equation}
+   dz = \alpha_V \cdot \left( \delta - \alpha_V \cdot (\delta - 1) \right) \cdot
+        \left( 0,4 + \alpha_V + 9\alpha_V^3 \right) \cdot \left( 1 + Fr_{i-2}^2 \right) \cdot h_{k,i-1}
+\end{equation}
+Die Pfeilerformbeiwerte k\"{o}nnen Abbildung~\ref{Sonderprofile Abb RehbockBeiwerte} entnommen werden.
+
+\begin{figure}[hpbt]
+   \centering
+   \includegraphics[width=0.75\textwidth]{Rehbock}
+   \caption{Pfeilerformbeiwerte nach \autor{Rehbock}}
+   \label{Sonderprofile Abb RehbockBeiwerte}
+\end{figure}
+
+Hinsichtlich der Anwendbarkeit der \autor{Rehbock}-Formel auf Gerinneeinbauten in Form von Widerlagern liegen
+Untersuchungen~\cite{Schwarze} an Modellgerinnen mit Rechteck- und Trapezquerschnitten vor. Erwartungsgem\"{a}{\ss} ergab sich f\"{u}r
+den seitlichen Verbau des Flie{\ss}querschnitts allgemein ein kleinerer Aufstau $dz$ als bei einem fl\"{a}chengleichen
+Mittelpfeilerverbau. Andererseits stellte sich heraus, da{\ss} bei \"{U}berschreitung eines von der Gerinneform abh\"{a}ngigen
+Verbauungsverh\"{a}ltnisses die \autor{Rehbock}-Formel zu kleine Werte liefert. Als Grenzwerte des Verbauungsverh\"{a}ltnisses,
+bis zu dem bei Widerlagerverbau die \autor{Rehbock}-Formel auf der sicheren Seite liegende Ergebnisse liefert, ergaben
+sich nach~\cite{Schwarze}:
+\begin{quote}
+   \begin{tabular}{lll}
+      Rechteckgerinne:  &  $\alpha_V = 0,23$ \\
+      Trapezgerinne :   &  $\alpha_V = 0,34$ & (B\"{o}schungsneigung $1:2$)\\
+                        &  $\alpha_V = 0,44$ & (B\"{o}schungsneigung $1:3$)
+   \end{tabular}
+\end{quote}
+
+
+\subsubsection{Pfeilerstau nach Yarnell}
+Die durch Einbauten in Form von Pfeilern verursachte Wasserspiegelanhebung $dz$ kann alternativ auch f\"{u}r den freien und
+str\"{o}menden Abflu{\ss} in \"{a}hnlicher Weise wie oben beschrieben mit Hilfe der Formel von \autor{Yarnell} berechnet werden:
+\begin{equation}
+   dz = 2\sigma \cdot \left( \sigma + 10 \cdot \frac{h_{k,i-1}}{h_u} - 0,6 \right) \cdot
+        \left(\alpha_V + 15\alpha_V^4 \right) \cdot h_{k,i-1}
+\end{equation}
+Die zugeh\"{o}rigen Pfeilerformbeiwerte $\sigma$ k\"{o}nnen Tabelle~\ref{Sonderprofile Tab Yarnell} entnommen werden.
+\begin{table}[hp]
+   \centering
+   \input{Sonderprofile/tab/Yarnell.tab}
+   \caption{Pfeilerformbeiwerte $\sigma$ nach \autor{Yarnell}}
+   \label{Sonderprofile Tab Yarnell}
+\end{table}
+
+%%dz  = Anhebung der ungest\"{o}rten Wasserspiegelh\"{o}he im Profil(i) in m av = Verbauungsverh\"{a}ltnis = verbaute Fl\"{a}che/
+%%unverbaute Fl\"{a}che s = Pfeilerformbeiwert nach YARNELL
+
+Wie die \autor{Rehbock}'sche Staugleichung ist diese Gleichung nur f\"{u}r den freien Abflu{\ss} ohne Flie{\ss}wechsel g\"{u}ltig.
+
+
+\subsection{R\"{u}ckgestaute Br\"{u}cken}
+
+Die Berechnung r\"{u}ckgestauter Br\"{u}cken ohne \"{U}berstr\"{o}mung erfolgt in gleicher Weise wie in Abschnitt~\ref{Sonderprofile Subse
+UeberstroemteBruecken} beschrieben. Der Anteil der \"{U}berstr\"{o}mung $Q_{Rest}$ ist dann jedoch null.
+
+
+\subsection{Mehrfeldbr\"{u}cken}
+\label{Sonderprofile Subsec Mehrfeldbruecken}
+
+Der Durchflu{\ss} durch Br\"{u}cken mit mehreren Flut\"{o}ffnungen kann wie eine Stromverzweigung mit Hilfe einer iterativen
+Stromaufteilungsberechnung nach Abschnitt~\ref{Sonderprofile Sec VerzweigteSysteme} berechnet werden.
+
+Bei normalen relativ kurzen Br\"{u}ckenbauwerken ist jedoch die Kenntnis der einzelnen Teilstr\"{o}me durch die jeweiligen
+Flut\"{o}ffnungen meist nicht erforderlich. Der Aufwand f\"{u}r die Verzweigungsberechnung kann in diesem Fall durch eine
+integrale Berechnungsweise ersetzt werden, wobei sich die Differenzierung auf maximal 3~Teilstr\"{o}me beschr\"{a}nkt.
+
+Zweckm\"{a}{\ss}igerweise ist der Br\"{u}ckenabflu{\ss} wie der Abflu{\ss} im Normalprofil in Vorland- und Flu{\ss}bettabflu{\ss} zu unterteilen. In
+Abh\"{a}ngigkeit von der Wasserspiegellage werden die hydraulisch relevanten Kenngr\"{o}{\ss}en der einzelnen Flut\"{o}ffnungen wie
+Spiegelbreite, benetzter Umfang und Durchflu{\ss}fl\"{a}che berechnet und als skalare Gr\"{o}{\ss}en zum Teilabflu{\ss}querschnitt des
+Vorlandes bzw. Flu{\ss}bettes aufsummiert. \"{A}hnlich wie bei normalen gegliederten Profilen ist die Zuordnung der einzelnen
+Flut\"{o}ffnungen zum Teilstrom Vorland oder Teilstrom Flu{\ss}bett durch die Dateneingabe vorzugeben.
+
+F\"{u}r jede in der H\"{o}he begrenzte Flut\"{o}ffnung ist ein gesondertes Querprofil einzugeben, wobei alle Profiltypen verwendet
+werden k\"{o}nnen. Durch diese Art der Eingabe bestehen keine zus\"{a}tzlichen Beschr\"{a}nkungen hinsichtlich Anzahl und Form der
+einzelnen Flut\"{o}ffnungen einer Mehrfeldbr\"{u}cke. Lediglich die Gesamtzahl aller Querprofile eines Berechnungsabschnittes ist
+aus Speicherplatzgr\"{u}nden begrenzt.
+
+Die integrale Mehrfeldbr\"{u}ckenberechnung beschr\"{a}nkt sich auf die explizite Berechnung von drei Teilstr\"{o}men, f\"{u}r die
+hydraulische Ersatzquerschnitte unter Beachtung ver\"{a}n\-derlicher Rauheitsbeiwerte gebildet werden. Da der Abstand zwischen
+den Flut\"{o}ffnungen nicht in die Berechnung eingeht (die Kombination von Mehrfeldbr\"{u}ckenberechnung und Pfeilerstauberechnung
+ist nicht zul\"{a}ssig) kann diese Art der Berechnung nur als N\"{a}herung betrachtet werden. F\"{u}r genauere Berechnungen ist eine
+Verzweigungsberechnung zu w\"{a}hlen. Zur Erfassung zus\"{a}tzlicher \"{o}rtlicher Verluste bei Mehrfeldbr\"{u}cken sind entsprechende
+Verlustbeiwerte festzulegen.
+
+
+\subsection{\"{U}berstr\"{o}mte Br\"{u}cken}
+\label{Sonderprofile Subse UeberstroemteBruecken}
+
+Wenn die hydraulische Kapazit\"{a}t von Br\"{u}cken oder Durchl\"{a}ssen \"{u}berschritten wird oder wenn der Unterwasserstand eine Br\"{u}cke
+einstaut, dann findet ein Abflu{\ss} durch die Br\"{u}cke ohne Freibord statt (Sonderbauwerk mit vollaufendem Querschnitt).
+
+In diesen F\"{a}llen staut sich das Wasser vor der Br\"{u}cke, bis die zum Abflu{\ss} der ankommenden Wassermenge erforderliche
+Energieh\"{o}he erreicht ist. Der Wasserstand vor der Br\"{u}cke steigt mit der im Abflu{\ss}querschnitt erforderlichen
+Geschwindigkeitsh\"{o}he quadratisch mit der Flie{\ss}geschwindigkeit an, d.h. bei sehr gro{\ss}en Geschwindigkeiten k\"{o}nnen sich
+Stauh\"{o}hen ergeben, die h\"{o}her sind als die Oberkante des Bauwerkes. In diesen F\"{a}llen wird die Br\"{u}cke \"{u}berflutet, d.h. die
+theoretische Stauh\"{o}he stellt sich nicht ein, sondern es findet eine Entlastung \"{u}ber die Br\"{u}cke statt.
+
+Um unrealistische Spr\"{u}nge in der Wasserspiegellage zu vermeiden, k\"{o}nnen im Rahmen von Spiegellinienberechnungen die
+hydraulischen Oberkanten der Br\"{u}cken ber\"{u}cksichtigt werden. Von Bedeutung wird dabei die Wassermengenaufteilung. Ein Teil
+der ankommenden Wassermenge wird weiterhin den Br\"{u}ckenquerschnitt durchflie{\ss}en, der \"{u}berwiegende Teil wird sich jedoch als
+\"{U}berfallstr\"{o}mung \"{u}ber das Bauwerk ergie{\ss}en.
+
+Hydraulisch handelt es sich bei dem Abflu{\ss}anteil im Br\"{u}ckenquerschnitt um einen unvollkommenen Ausflu{\ss} aus einer
+begrenzten \"{O}ffnung. Nach~\cite{PressSchroeder} gilt f\"{u}r diesen Fall:
+\begin{equation}
+   Q_{Br"ucke} = \alpha_B \cdot A \cdot \sqrt{2g \cdot (h_o - h_u)}
+\end{equation}
+\begin{quote}
+   \begin{tabular}{lll}
+   mit   &  $h_o$      &  Stauh\"{o}he vor der Br\"{u}cke \\
+         &  $h_u$      &  Unterwasserstand \\
+         &  $A$        &  Flie{\ss}querschnitt der Br\"{u}cke \\
+         &  $\alpha_B$ &  Abflu{\ss}zahl
+   \end{tabular}
+\end{quote}
+Der Gesamtabflu{\ss} setzt sich aus dem Anteilen des Druckabflusses und der \"{U}berstr\"{o}mung zusammen. Der Anteil der \"{U}berstr\"{o}mung
+betr\"{a}gt demnach:
+\begin{equation}
+   Q_{Rest} = Q_{ges} - Q_{Br"ucke}
+\end{equation}
+Die Wassermenge $Q_{Rest}$ kann als \"{U}berfallstr\"{o}mung behandelt werden. Bei Vorgabe einer gesch\"{a}tzten \"{U}berfallbreite $B_W$
+und eines \"{U}berfallbeiwertes (Defaultwert : $\mu_W = 0,5$) kann nach Gleichung~\ref{Sonderprofile Gl Ueberfallhoehe} die
+erforderliche \"{U}berfallh\"{o}he $h_{"u}$ berechnet werden :
+\begin{equation}
+   \label{Sonderprofile Gl Ueberfallhoehe}
+   h_{"u} = \left( \frac{1,5 \cdot Q_{Rest}}{\sqrt{2g} \cdot \mu_W \cdot B_W} \right)^{2/3}
+\end{equation}
+
+F\"{u}r beide Abflu{\ss}anteile zusammen mu{\ss} folgende Bedingung erf\"{u}llt sein :
+\begin{equation}
+   h_o = h_{"u} + \mathit{DKOK}
+\end{equation}
+Dieser Zusammenhang l\"{a}{\ss}t eine iterative Berechnung des Abflu{\ss}vorganges zu. $\mathit{DKOK}$ ist hierbei die Kronenh\"{o}he der
+\"{U}berfallstr\"{o}mung, die im Normalfall der Konstruktions\-ober\-kante der Br\"{u}cke entspricht. Eine \"{a}hnliche Vorgehensweise
+wurde von \autor{Naudascher} \cite{Naudascher} f\"{u}r die Berechnung von gleichzeitig \"{u}ber- und unterstr\"{o}mten
+Wehrverschl\"{u}ssen beschrieben.
+
+Im Hinblick auf die gesuchte Stauh\"{o}he vor der Br\"{u}cke kann auf eine genauere Bestimmung der Abflu{\ss}zahl $\alpha_B$
+verzichtet werden (im Programm wird als Defaultwert $\alpha_B = 0.8$ gesetzt, zur Steuerung der Abflu{\ss}aufteilung gen\"{u}gt
+meist die Wahl des \"{U}berfallbeiwertes $\mu_W$), wichtiger ist eine zutreffende Absch\"{a}tzung der wirksamen \"{U}berfallbreite
+$B_W$. Bei Konvergenzproblemen k\"{o}nnen der Abflu{\ss}beiwert $\alpha_B$ f\"{u}r den Br\"{u}ckenquerschnitt (nur bei der neueren
+DOS-Version) und der \"{U}berfallbeiwert $\mu_W$ f\"{u}r die \"{U}berfallstr\"{o}mung als Dateneingabeparameter variiert werden.
+
+Aus der Art der hydraulischen Berechnung ergibt sich, da{\ss} diese Vorgehensweise auf kurze Durchl\"{a}sse beschr\"{a}nkt ist. Das
+Br\"{u}ckenprofil ist (wie bei Mehrfeldbr\"{u}cken und einer Pfeilerstauberechnung nach \autor{Rehbock}) durch nur \emph{ein}
+repr\"{a}sentatives Querprofil zu beschreiben. Die fiktive Wehrbreite entspricht der \"{U}berstr\"{o}mungsbreite an der engsten
+Stelle. Bei unterschiedlichen H\"{o}hen der Br\"{u}ckenoberkante wird der \"{U}berstr\"{o}mungsabflu{\ss} hydraulisch als Wehrstr\"{o}mung mit
+unterschiedlichen Kronenh\"{o}hen (vgl. Abschnitt~\ref{Sonderprofile Subsec SenkrWehre}) behandelt.
+
+Das Eingabe mehrerer überströmbarer Brücken ohne Zwischenprofil ist nicht zulässig und führt zu einem Abbruch der Berechnung. Längere Durchlässe können als verzweigte Systeme behandelt werden, indem der Durchlass und das überströmte Gelände als eigenstänsdige Stromröhren modelliert werden.
+
+\subsection{\"{U}berflutete Br\"{u}cken mit seitlicher Umstr\"{o}mung}
+
+Wenn bei einer Br\"{u}cken\"{u}berflutung gleichzeitig eine seitliche Umstr\"{o}mung durch Vorlandabflu{\ss} m\"{o}glich ist, so k\"{o}nnen
+derartige Abflu{\ss}zust\"{a}nde durch die Definition von Mehrfeldbr\"{u}cken mit mehreren Flut\"{o}ffnungen beschrieben werden. Die
+seitlichen Flut\"{o}ffnungen k\"{o}nnen als Normalprofile, also ohne obere Berandung definiert werden.
+
+Zuerst wird eine Abflu{\ss}aufteilung f\"{u}r die drei Stromr\"{o}hren linkes Vorland, Flu{\ss}schlauch und rechtes Vorland berechnet.
+Anschlie{\ss}end wird f\"{u}r die mittlere Stromr\"{o}hre (Flu{\ss}schlauch) die Abflu{\ss}aufteilung wie f\"{u}r eine \"{u}berflutete Br\"{u}cke nach
+o.g. Ans\"{a}tzen bestimmt.
+
+Bei l\"{a}ngeren Durchl\"{a}ssen kann die Angabe von nur einer mittleren \"{U}berstr\"{o}mungsh\"{o}he unzureichend sein. Wenn also die
+Entlastung \"{u}ber der Br\"{u}cke nur als Gerinnestr\"{o}mung zu berechnen ist (Beschreibung der Geometrie in Flie{\ss}richtung durch
+mehrere Querprofile), so ist eine Verzweigungsberechnung vorzunehmen.
+
+
+\subsection{Beschreibung der Dateneingabe}
+
+Wenn Sie den Datensatz \afz{Unterkante Br\"{u}cke [NN+m]} neu anlegen, erscheint das Dialogfenster \dialog{Br\"{u}ckenparameter}. Neben dem Listenfeld zur Auswahl des Datensatzes erscheint die Schaltfläche \schalter{?}. Über Sie können Hinweise zur Eingabe der erforderlichen Parameter aufgerufen werden.
+F\"{u}r eine Br\"{u}ckenstauberechnung nach \autor{Rehbock} oder \autor{Yarnell} ist an dem Profil mit der Engstelle ein Pfeilerformbeiwert einzugeben.
+
+\begin{figure}[htbp]
+   \centering
+   \includegraphics[width=1.0\textwidth]{UnterkanteBruecke}
+   \caption{Dateneingabe bei einer Br\"{u}cke mit Pfeilern}
+   \label{Sonderprofile Abb UnterkanteBruecke}
+\end{figure}
+
+\"{U}ber die Checkbox \checkbox{nach Rehbock (sonst nach Yarnell)} steuern sie die Auswahl des Berechnungsansatzes f\"{u}r die
+Br\"{u}ckenstauberechnung. Wenn kein Pfeilerformbeiwert angegeben ist ($\delta = 0$ bzw. $\sigma = 0$), wird keine
+Br\"{u}ckenstauberechnung durchgef\"{u}hrt, auch wenn pfeilerf\"{o}rmige Einbauten im Profil vorhanden sind. Weiterhin fordert sie der
+Dialog zur Angabe der Sohlh\"{o}he im Unterwasser der Br\"{u}cke auf. Die Felder \feld{Br\"{u}ckenbreite} und \feld{Sohlrauheit im
+Br\"{u}ckenbereich} sind grau hinterlegt. Die Br\"{u}ckenbreite wird aus der Summe der halben Abst\"{a}nde zum oberwasserseitigen und
+unterwasserseitigen Profil ermittelt. Sie geht in die Berechnung der Wasserspiegellage nicht ein.
+
+Zur Erfassung der Querschnittseinengung f\"{u}r die Br\"{u}ckenstauberechnung ist unterwasserseitig der Br\"{u}cke ein Zusatzprofil
+anzuordnen, das bis auf die den Querschnitt einengenden Einbauten genau dem Br\"{u}ckenprofil entsprechen mu{\ss}. Auf keinen Fall
+darf der Flie{\ss}querschnitt im Unterwasserprofil der Br\"{u}cke kleiner als in der Br\"{u}cke sein, da sich in diesem Fall ein
+negatives Verbauungsverh\"{a}ltnis ergibt.
+
+Beim Eingeben der Gerinnegeometrie werden die Umrisse der Pfeiler mit nachgezeichnet (vgl. Abbildung~\ref{Sonderprofile
+Abb UnterkanteBruecke}. Die Br\"{u}ckenunterkante wird im Datensatz \afz{Unterkante Br\"{u}cke [NN+m]} in der dritten Spalte des
+Spreadsheets eingegeben. Verwenden Sie nur horizontale Br\"{u}ckenunterkanten. Bogenbr\"{u}cken k\"{o}nnen mit Hilfe von
+Kreissegmentprofilen nachgebildet werden (Abschnitt~\ref{Sonderprofile Subsec DurchlassDateneingabe}).
+\begin{hinweis}
+   Die Punkte der Br\"{u}ckenunterkante m\"{u}ssen mit denen in der Gel\"{a}ndekontur angegeben \"{u}bereinstimmen, so da{\ss} ein
+   geschlossener Polygonzug entsteht.
+\end{hinweis}
+
+Soll eine \"{U}berflutung der Br\"{u}cke mit ber\"{u}cksichtigt werden, mu{\ss} zus\"{a}tzlich zur Br\"{u}\discretionary{k-}{k}{ck}enunterkante
+noch der Datensatz \afz{Oberkante Br\"{u}\discretionary{k-}{k}{ck}e [NN+m]} angelegt werden. In die dritte Spalte des Spreadsheets kann zwar eine beliebige Kontur der Br\"{u}ckenoberkante eingegeben werden,
+berücksichtigt werden aber nur gerade Brückenoberkanten. Maßgebend ist dabei der erste Punkt. Im Feld \feld{\"{U}berfallbeiwert} kann
+ein \"{U}berfallbeiwert f\"{u}r die \"{U}berstr\"{o}mung der Br\"{u}cke definiert werden. Sie finden hier bereits $\mu = 0,5$ f\"{u}r breitkronige
+\"{U}berf\"{a}lle eingetragen. Die Abflu{\ss}zahl ist mit $0,8$ vorbelegt. Sie stellt einen Startwert f\"{u}r die iterative Berechnung der
+Abflu{\ss}aufteilung dar und sollte nur bei Konvergenzproblemen ge\"{a}ndert werden.
+
+\begin{figure}[htbp]
+   \centering
+   \includegraphics[width=0.5\textwidth]{ProfilschluesselMehrfeldbruecke}
+   \caption{Definition des Profilschl\"{u}ssels bei einer Mehrfeldbr\"{u}cke}
+   \label{Sonderprofile Abb ProfilschluesselMehrfeldbruecke}
+\end{figure}
+
+Die Zuordnung eines Querprofils zu einer Mehrfeldbr\"{u}cke wird durch die Profilkennung im \dialog{Profilschl\"{u}ssel}
+vereinbart (Abbildung~\ref{Sonderprofile Abb ProfilschluesselMehrfeldbruecke}). \"{U}ber die ersten beiden Kennziffern findet
+die Zuordnung zum linken (LL) oder rechten (RR) Vorland bzw. zum Flu{\ss}schlauch (FF) statt. Die nachfolgende Ziffer
+kennzeichnet die Reihenfolge der Profile im Querschnitt, d.h. z.B. LL1, LL2, FF3, FF4 etc. Handelt es sich bei dem
+Br\"{u}ckenprofil um keine Mehrfeldbr\"{u}cke, wird die Profilkennung wie vorgegeben auf 0 belassen.
+
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.8\textwidth]{StrangtabelleMehrfeldbruecken}
+   \caption{Einf\"{u}gen eines Profils in die Strangtabelle bei Mehrfeldbr\"{u}cken}
+   \label{Sonderprofile Abb StrangtabelleMehrfeldbruecke}
+\end{figure}
+
+Alle Flut\"{o}ffnungen m\"{u}ssen die gleiche Station (Br\"{u}ckenmitte) aufweisen. Die Berechnung einer Mehrfeldbr\"{u}cke als Durchla{\ss}
+mit mehreren Profilen in Flie{\ss}richtung ist nicht vorgesehen. M\"{o}glich ist dagegen eine Berechnung, wenn die Br\"{u}cken\"{o}ffnung
+\"{u}berstr\"{o}mt wird und gleichzeitig eine seitliche Umstr\"{o}mung \"{u}ber die Vorlandprofile stattfinden kann.
+
+Nachdem Sie die Profilkennung im Profilschl\"{u}ssel eingegeben haben erscheint, sobald sich mindestens ein Profil mit einer
+Profilkennung ungleich null in der Vernetzungsdatei befindet, ein neuer Dialog, der Sie dazu auffordert, die Position
+festzulegen, in der das Profil in der Strangtabelle einsortiert werden soll (Abbildung~\ref{Sonderprofile Abb
+StrangtabelleMehrfeldbruecke}). Dies ist notwendig, da alle Teilstr\"{a}nge (Flut\"{o}ffnungen) im Bereich einer Br\"{u}cke das
+gleiche Anfangs- und Endprofil besitzen.
+
+Die Profile sind so einzusortieren, wie sie nacheinander von links nach rechts im Profilquerschnitt erscheinen. Ist das
+K\"{a}stchen \checkbox{Endprofil = Anfangsprofil des n\"{a}chsten Strangs} aktiviert, so erfolgt die Einsortierung nach dem
+ausgew\"{a}hlten Profil, d.h. das ausgew\"{a}hlte Profil bildet den Anfang des neuen Strangs, der mit Hilfe des neuen Profils
+erzeugt wird. \checkbox{Am Anfang einf\"{u}gen} bewirkt eine Einsortierung vor dem ersten Profil.
+
+
+\clearpage
+\subsection{Beispiele zur Brückenberechnung}
+
+\subsubsection{Pfeilerstau}
+Das Profil an der Station $1,325\unit{km}$ des Beispiels \afz{stawabe} des mitgelieferten Demoprojektes stellt eine Br\"{u}cke
+mit Pfeilern dar. Die Dateneingabe sieht hier wie folgt aus:
+\begin{quote}
+   \begin{tabular}{ccc}
+      y-Wert[m]     &  Gel\"{a}nde H\"{o}he [NN+m]  &  UK Br\"{u}cke [NN+m] \\[6pt]
+      \beisp{~0,00} &  \beisp{107,20}       &  \beisp{107,2} \\
+      \beisp{~0,00} &  \beisp{106,80} \\
+      \beisp{~0,20} &  \beisp{105,80} \\
+      \beisp{~0,85} &  \beisp{105,12} \\
+      \beisp{~4,85} &  \beisp{105,12} \\
+      \beisp{~5,50} &  \beisp{105,80} \\
+      \beisp{~5,70} &  \beisp{106,80} \\
+      \beisp{~5,70} &  \beisp{107,20}        &  \beisp{107,2} \\
+      \beisp{~7,20} &  \beisp{107,20}        &  \beisp{107,2} \\
+      \beisp{~7,20} &  \beisp{106,80} \\
+      \beisp{~7,40} &  \beisp{105,80} \\
+      \beisp{~8,05} &  \beisp{104,82} \\
+      \beisp{12,05} &  \beisp{104,82} \\
+      \beisp{12,70} &  \beisp{105,80} \\
+      \beisp{12,90} &  \beisp{106,80} \\
+      \beisp{12,90} &  \beisp{107,20}        &  \beisp{107,2} \\
+   \end{tabular}
+\end{quote}
+Die Rauheit im gesamten Profil liegt bei $k_{ST} = 50\unit{m^{1/3}/s}$. Der Sonderdialog zu Eingabe der Br\"{u}ckenparameter
+enth\"{a}lt die folgenden Angaben:
+\begin{quote}
+   \begin{tabular}{ll}
+      H\"{o}he der Gew\"{a}ssersohle im UW [NN+m]: &  \beisp{104,8} \\
+      Br\"{u}ckenbreite [m]:            &  \beisp{15,0} \\
+      Sohlrauheit:                  &  \beisp{50,0} \\
+      Pfeilerformbeiwert:           &  \beisp{4,0} \\
+   \end{tabular}
+\end{quote}
+Die Felder \feld{Br\"{u}ckenbreite} und \feld{Sohlrauheit} sind grau hinterlegt und nicht editierbar. Die Br\"{u}ckenbreite ergibt
+sich mit Hilfe des Abstandes vom Br\"{u}ckenprofil zum oberwasserseitig (Station $1,34\unit{km}$) und unterwasserseitig
+gelegenen Profil (Station $1,31\unit{km}$) zu:
+\begin{equation*}
+   B_{Br"ucke} = \frac{1,34 - 1,31}{2} \cdot 1000 = 15,0\unit{m}
+\end{equation*}
+Die Rauheit wird aus dem Datensatz Rauheit \"{u}bernommen. Die Berechnung des Aufstaus infolge der Einbauten erfolgt nach dem
+Ansatz von \autor{Rehbock}. Der einzugebende Wert f\"{u}r die H\"{o}he der Gew\"{a}ssersohle im Unterwasser der Br\"{u}cke geht bei der
+derzeit vorliegenden Programmversion nicht in die Berechnung ein.
+
+
+\subsubsection{Mehrfeldbr\"{u}cke}
+Ein Beispiel f\"{u}r eine Mehrfeldbr\"{u}cke finden sie in dem mitgelieferten Demoprojekt. Hier finden sie an den Stationen
+$0,0551\unit{km}$ und $0,1752\unit{km}$ Mehrfeldbr\"{u}cken mit je zwei Flut\"{o}ffnungen bzw. Profildateien an der selben
+Station. Die Eingabe am Flu{\ss}kilometer $0,1752\unit{km}$ sieht dabei wie im folgenden beschrieben aus:
+
+Zun\"{a}chst mu{\ss} ein neues Profil angelegt werden. Der Profilschl\"{u}ssel f\"{u}r das linke Profil erh\"{a}lt folgende Angaben:
+\begin{quote}
+   \begin{tabular}{ll}
+      Gew\"{a}ssername:        &  \beisp{Mehrfeld} \\
+      Station:             &  \beisp{0,1752} \\
+      Zustand:             &  \beisp{Demo} \\
+      Verzweigungskennung: &  \beisp{0} \\
+      Profilkennung:       &  \beisp{LL1} \\
+      Profilnummer:        &  \beisp{6} \\
+   \end{tabular}
+\end{quote}
+Die Profilkennung regelt die Zuordnung zum linken Vorland. Das Profil ist von links gesehen das erste an dieser Station.
+Nach dem Verlassen des Profilschl\"{u}ssels mit \schalter{OK} gelangen sie wieder automatisch in den alphanumerischen Editor,
+in dem Sie die Datens\"{a}tze f\"{u}r die Gel\"{a}ndeh\"{o}he, Rauheit usw. eingeben.
+\begin{quote}
+   \begin{tabular}{ccc}
+      $y$-Wert [m]   &  Gel\"{a}ndeh\"{o}he [NN+m]   &  Rauheit $ks$ [m] \\[6pt]
+      \beisp{0,0}    &  \beisp{413,21} &  \beisp{0,001} \\
+      \beisp{1,0}    &  \beisp{413,21} \\
+      \beisp{2,1}    &  \beisp{413,21} \\
+   \end{tabular}
+\end{quote}
+Die \"{O}ffnung auf dem linken Vorland besteht hier aus einem Kreisprofil (vgl. auch Abschnitt~\ref{Sonderprofile Sec
+Durchlaesse}):
+\begin{quote}
+   \begin{tabular}{ll}
+      gr\"{o}{\ss}ter Durchmesser [m]: &  \beisp{1,40} \\
+      Gef\"{a}lle [-]:             &  \beisp{0,001} \\
+      y-Wert [m]:          &  \beisp{1,0} \\
+      z-Wert [NN+m]:       &  \beisp{410,81}
+   \end{tabular}
+\end{quote}
+Nach der Eingabe aller erforderlichen Datens\"{a}tze kann dann die zweite Flut\"{o}ffnung an der Station erstellt werden. Der
+Profilschl\"{u}ssel lautet hier:
+\begin{quote}
+   \begin{tabular}{ll}
+      Gew\"{a}ssername:        &  \beisp{Mehrfeld} \\
+      Station:             &  \beisp{0,1752} \\
+      Zustand:             &  \beisp{Demo} \\
+      Verzweigungskennung: &  \beisp{0} \\
+      Profilkennung:       &  \beisp{FF2} \\
+      Profilnummer:        &  \beisp{7} \\
+   \end{tabular}
+\end{quote}
+Das Profil liegt damit im Flu{\ss}schlauch und steht an zweiter Stelle an der Station. Die Flut\"{o}ffnung bildet hier ein
+normales Profil mit horizontaler Br\"{u}ckenunterkante:
+\begin{quote}
+   \begin{tabular}{cccc}
+      y-Wert [m]  &  Gel\"{a}ndeh\"{o}he [NN+m]  &  Rauheit ks [m]    &  UK Br\"{u}cke [NN+m] \\[6pt]
+      \beisp{0,0} &  \beisp{411,61}      &  \beisp{0,001}     &  \beisp{411,61} \\
+      \beisp{0,0} &  \beisp{410,51} \\
+      \beisp{1,5} &  \beisp{410,51} \\
+      \beisp{1,5} &  \beisp{411,61}      &                    &  \beisp{411,61}
+   \end{tabular}
+\end{quote}
+Der Sonderdialog zur Eingabe der Br\"{u}ckenparameter enth\"{a}lt folgende Angaben:
+\begin{quote}
+   \begin{tabular}{ll}
+      H\"{o}he der Gew\"{a}ssersohle im UW [NN+m]: &  \beisp{410,51} \\
+      Pfeilerformbeiwert:           &  \beisp{0} \\
+   \end{tabular}
+\end{quote}
+Es wird keine Pfeilerstauberechnung durchgef\"{u}hrt.
+
+Die Kombination von Mehrfeldbrückenberechnung und Pfeilerstauberechnung ist nicht vorgesehen.
+
+\subsubsection{\"{U}berflutete Br\"{u}cken}
+
+\"{U}berflutete Sonderprofile finden Sie in den Beispielen \afz{wipper} und \afz{br77}. Bei der Wipper ist das Profil an der
+Station $0,3849\unit{km}$ ein geschlossenes Profil mit beliebiger Gel\"{a}ndekontur und gerader Decke. Die Br\"{u}ckenoberkante
+ist ebenfalls gerade.
+
+Das Beispiel \afz{br77} mu{\ss} zun\"{a}chst in das \wspwin{}-Format konvertiert werden. Hier befindet sich an Station
+$5,628\unit{km}$ ein \"{a}hnliches Profil mit gerader Br\"{u}ckenoberkante und an Station $6,288\unit{km}$ ein \"{u}berflutbares
+Sonderprofil mit ungerader Oberkante.
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\"{U}berf\"{a}lle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Wehre senkrechter Anstr\"{o}mung}
+\label{Sonderprofile Subsec SenkrWehre}
+
+Nach \autor{Poleni}~\cite{Schmidt} ergibt sich der Abflu{\ss} \"{u}ber ein Wehr nach der Beziehung:
+\begin{equation}
+   \begin{minipage}{0.60\textwidth}
+      \raggedright
+      \includegraphics[width=0.6\textwidth]{Ueberfall}
+   \end{minipage}
+   Q_W = \frac{2}{3} \cdot \mu \cdot c \cdot b_W \cdot \sqrt{2g} \cdot h_{"u}^{3/2}
+   \label{Sonderprofile Gl Poleni}
+\end{equation}
+Die Anstr\"{o}mgeschwindigkeit auf das Wehr wird dabei nicht ber\"{u}cksichtigt. Beispiele f\"{u}r die Abflu{\ss}beiwerte $\mu$ finden
+sich in nahezu jedem Tabellenwerk. Einige Abflu{\ss}beiwerte f\"{u}r g\"{a}ngige Wehrformen sind in Tabelle~\ref{Sonderprofile Tab
+PoleniBeiwerte} wiedergegeben.
+\begin{table}[hpbt]
+   \centering
+   \input{Sonderprofile/tab/PoleniBeiwerte.tab}
+   \caption{\"{U}berfallbeiwerte nach \autor{Poleni} f\"{u}r den vollkommenen \"{U}berfall}
+   \label{Sonderprofile Tab PoleniBeiwerte}
+\end{table}
+
+Die in Tabelle~\ref{Sonderprofile Tab PoleniBeiwerte} angegebenen Abflu{\ss}beiwerte gelten nur f\"{u}r hohe Wehre mit kleiner
+\"{U}berstr\"{o}mungsh\"{o}he. Bei \"{U}berstr\"{o}mungsh\"{o}hen $h_{"u} > 0.5 \cdot w$ \"{a}ndert sich der \"{U}berfallbeiwert mit dem Verh\"{a}ltnis
+$h_{"u}/w$. Nach~\cite{Naudascher} kann f\"{u}r bel\"{u}ftete, scharfkantige Wehre ein allm\"{a}hlicher \"{U}bergang von der Wehrstr\"{o}mung
+zur Schwellenstr\"{o}mung mit $\mu$-Werten nach Abbildung~\ref{Sonderprofile Abb Kandaswany} angenommen werden.
+\begin{figure}
+   \centering
+   \includegraphics[width=0.8\textwidth]{Kandaswany}
+   \caption{Abflu{\ss}beiwerte f\"{u}r bel\"{u}ftete scharfkantige Wehre und Schwellen nach \autor{Kandaswany/Rouse}
+            \cite{Naudascher}}
+   \label{Sonderprofile Abb Kandaswany}
+\end{figure}
+Die h\"{o}chsten Abflu{\ss}beiwerte stellen sich dementsprechend im Bereich $8 < h_{"u}/w < 12$ ein, mit Maximalwerten bis zu $\mu
+= 1,19$. Diese durch Versuche ermittelten Beiwerte gelten jedoch nur an Wehren, die eine ausreichende Bel\"{u}ftung aufweisen
+und wo die Randeinfl\"{u}sse vernachl\"{a}ssigbar klein sind.
+
+Der Faktor $c$ in Gleichung~\ref{Sonderprofile Gl Poleni} stellt eine Abminderung f\"{u}r unvollkommene \"{U}berf\"{a}lle dar. Ein
+\"{U}berfall wird dann als unvollkommen bezeichnet, wenn der Unterwasserstand h\"{o}her liegt als die Oberkante der Wehrkrone. Der
+Abminderungsfaktor wird nach der folgenden Beziehung~\cite{ATV111, BWK1999} berechnet:
+\begin{equation}
+   c = \sqrt{1 - \left( h_u/h_{"u} \right)^n}
+      \label{Sonderprofile Gl UeberfallAbminderungsfaktoren}
+\end{equation}
+Der Exponent $n$ ist abh\"{a}ngig von der Wehrform (vgl. Tabelle~\ref{Sonderprofile Tab PoleniBeiwerte}). Im Fall eines
+vollkommenen \"{U}berfalls erfolgt keine Abflu{\ss}minderung und der Faktor wird $c = 1,0$.
+
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.8\textwidth]{Abminderungsfaktoren}
+   \caption{Abminderungsfaktoren nach Gleichung~\ref{Sonderprofile Gl UeberfallAbminderungsfaktoren}}
+   \label{Sonderprofile Abb Abminderungsfaktoren}
+\end{figure}
+
+Der Anfangswasserstand oberhalb eines Wehres ergibt sich aus der H\"{o}he der Wehrkrone und der \"{U}berfallh\"{o}he
+\begin{equation}
+      W_{i+1} = H_{Krone} + h_{"u}
+\end{equation}
+Durch Umstellen der Gleichung~\ref{Sonderprofile Gl Poleni} erh\"{a}lt man f\"{u}r die \"{U}berfallh\"{o}he
+\begin{equation}
+      h_{"u} = \left( \frac{1,5 \cdot Q_W}{\mu \cdot c \cdot \sqrt{2g} \cdot b_W} \right)^{2/3}
+\end{equation}
+%\begin{figure}
+%   \centering
+%   \includegraphics{RueckstauNormal}
+%   \caption{Abminderungsfaktor $c$ f\"{u}r R\"{u}ckstau an normalen Wehrformen}
+%   \label{Sonderprofile Abb RueckstauNormal}
+%\end{figure}
+Wehre mit verschiedenen Wehrfeldern k\"{o}nnen unterschiedliche Kronenh\"{o}hen aufweisen. Dabei k\"{o}nnen auch \"{u}ber die Wehrbreite ver\"{a}nderliche Abflu{\ss}beiwerte
+auftreten. Die Berechnung geschieht iterativ, indem ein Oberwasserspiegel vorgegeben wird. Der gesamte Abflu{\ss} \"{u}ber das
+Wehr wird dann nach Gleichung~\ref{Sonderprofile Gl WehrGesamt} berechnet.
+\begin{equation}
+   \label{Sonderprofile Gl WehrGesamt}
+   Q_W = \frac{2}{3} \cdot \sqrt{2g} \cdot \sum \left( c_j \cdot \mu_j \cdot b_{w,j} \cdot h_{"u,j}^{3/2} \right)
+\end{equation}
+Bei \"{u}berstr\"{o}mten Br\"{u}cken und Wehren mit unterschiedlichen Kronenh\"{o}hen errechnet das Programm die Abminderungsfaktoren
+$c_j$ f\"{u}r breitkronige Wehre nach Gleichung~\ref{Sonderprofile Gl UeberfallAbminderungsfaktoren} mit $n = 16$.
+\begin{hinweis}
+   Zur Kontrolle erfolgt eine Berechnung der Grenztiefe im Querschnitt~($i$) f\"{u}r die Wehrkrone. Die Abflu{\ss}beiwerte sind so
+   zu w\"{a}hlen, da{\ss} die oberwasserseitige Energieh\"{o}he immer \"{u}ber der Grenztiefe an der Wehrkrone liegt.
+\end{hinweis}
+
+Die Absenkung des Wasserspiegels im Oberwasser des Wehres beginnt nach~\cite{Bollrich} in einer Entfernung von etwa $3...4
+\cdot h_{"u}$ hinter der Wehrkrone. Aufgrund der gew\"{a}hlten Berechnungsart sollte das Profil~($i+1$) im Oberwasser des
+Wehres in etwa in diesem Bereich liegen.
+
+
+\subsection{Streichwehre}
+
+Ein Sonderfall von Wehrbauwerken ist das sogenannte Streichwehr, bei dem die Anstr\"{o}mung des \"{U}berfalls nicht senkrecht,
+sondern parallel zur \"{U}berfallkrone erfolgt. Die Leistungsf\"{a}higkeit von Streichwehren wird im str\"{o}menden Flie{\ss}zustand
+allein durch die geometrischen Abmessungen und die hydraulischen Randbedingungen am Streichwehrende bestimmt.
+
+Bei Eingabe der erforderlichen geometrischen Wehrdaten k\"{o}nnen daher im Zuge der Wasserspiegellagenberechnung die
+oberstromigen Wasserspiegelh\"{o}hen von Streichwehren berechnet werden. Obwohl im Bereich des seitlichen \"{U}berfalls ein
+r\"{a}umlicher Str\"{o}\-mungszustand vorliegt, wird in der vorliegenden Berechnung ein eindimensionaler Str\"{o}\-mungszustand
+vorausgesetzt. Entsprechende N\"{a}herungsverfahren sind in \cite{PressSchroeder}, S.~360 und \cite{Timm}, S.~87 angef\"{u}hrt.
+Die Grundlagen der Berechnung bilden dabei die \autor{Bernoulli}'sche Gleichung und die Wehrformel von \autor{Poleni}.
+
+Die Streichwehrberechnung geht von der bekannten hydraulischen Randbedingung am Streichwehrende aus. Oberwasserstand,
+Gesamtabflu{\ss} im oberstromigen Querschnitt und die Wehrleistung werden berechnet. Zun\"{a}chst wird der Wasserstand am
+Streichwehranfang gesch\"{a}tzt und solange iterativ verbessert, bis die Summe aus Wehrleistung
+\begin{equation}
+   Q_S = \frac{2}{3} \cdot \mu_S \cdot \sqrt{2g} \cdot \mathit{SL} \cdot h_m^{3/2}
+\end{equation}
+und vorgegebenem Abflu{\ss} im unterstromigen Querschnitt mit dem aus der \autor{Bernoulli}'schen Energiegleichung
+berechneten oberstromigen Abflu{\ss}
+\begin{equation}
+   \label{Sonderprofile Gl oberstromigerAbfluss}
+   Q_i = A_i \cdot \sqrt{2g \cdot \left( H_{E,i-1} + h_R + H_{ZV} - W_i \right)}
+\end{equation}
+\"{u}bereinstimmt. Gleichung~\ref{Sonderprofile Gl oberstromigerAbfluss} ergibt sich aus
+\begin{equation}
+   W_i + h_{k,i} = H_{E,i-1} + h_R + H_{ZV}
+\end{equation}
+mit Hilfe der Geschwindigkeitsh\"{o}he $h_k$ im Querschnitt~(i).
+\begin{equation}
+   h_{k,i} = \frac{Q_i^2}{A_i^2 \cdot 2g}
+\end{equation}
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.8\textwidth]{Streichwehr}
+   \caption{Grundri{\ss} und L\"{a}ngsschnitt eines geraden Streichwehres}
+   \label{Sonderprofile Abb Streichwehr}
+\end{figure}
+
+Der Reibungsverlust wird n\"{a}herungsweise gleich der H\"{o}hendifferenz zwischen Wehranfang und Wehrende gesetzt. Die \"{o}rtliche
+Verlusth\"{o}he (Abzweigverlust) kann n\"{a}herungsweise wie bei einer Rohrstr\"{o}mung ber\"{u}cksichtigt werden. Der Verlustbeiwert
+$\zeta$ bezieht sich auf den Gesamtzuflu{\ss} $Q_i$.
+
+Die Berechnung wird mit Hilfe des bin\"{a}ren Intervallschachtelungsverfahrens durchgef\"{u}hrt. Die oberstromige
+Wasserspiegelh\"{o}he wird solange verbessert, bis die Genauigkeitsschranke $\mathit{EPSH}$ unterschritten wird. Mit dem hier
+angewendeten N\"{a}herungsverfahren erh\"{a}lt man brauchbare Ergebnisse f\"{u}r die Streichwehrleistung, solange der Flie{\ss}zustand
+l\"{a}ngs des Wehres im str\"{o}menden Bereich bleibt. Als obere Grenze f\"{u}r die Einhaltung dieser Bedingung wird in
+\cite{PressSchroeder}, S.~360 eine \autor{Froude}'sche Zahl von $Fr \leq 0,75$ angegeben. Bei Str\"{o}mungsvorg\"{a}ngen mit
+Flie{\ss}wechsel wird die Berechnung abgebrochen. F\"{u}r Abflu{\ss}erscheinungen dieser Art liegen noch keine brauchbaren
+Rechenverfahren vor.
+
+
+\subsection{Dateneingabe}
+
+Wie bei den Brücken erscheint auch beim Anlegen des Datensatzes für die Wehrberechnung die Schaltfläche \schalter{?}, über die Sie Hinweise zur Dateneingabe abrufen können.
+
+Sofern ein Wehr am Anfang einer Berechnungsstrecke liegt und damit die hydraulische Randbedingung f\"{u}r einen Abschnitt
+bestimmt, ist dies bei der Eingabe der Steuerdaten f\"{u}r die Spiegellinienberechnung zu kennzeichnen. Bei der Festlegung des
+Berechnungsabschnitts ist hier das K\"{a}stchen \checkbox{Wehr am Anfang} anzukreuzen. F\"{u}r diesen Fall wird ein vollkommener \"{U}berfall vorausgesetzt.
+
+Im folgenden werden Wehre betrachtet, die innerhalb einer Berechnungsstrecke liegen. Derartige Wehre k\"{o}nnen auch einen unvollkommenen \"{U}berfall aufweisen, wenn der unterwasserseitige Wasserspiegel \"{u}ber der Wehrkrone liegt und damit einen R\"{u}ckstau verursacht.
+Zur Berechnung der Wasserspiegelhöhe im Wehrquerschnitt (Profil i) und im oberwasserseitigen Profil (i+1) sind folgende Angaben bezogen auf das Profil (i) erforderlich:
+\begin{itemize}
+	\item Wehre mit einem Wehrfeld:	waagerechte Wehrkrone
+	\item Wehre mit Wehrfeldern:		unterschiedliche Kronenhöhen
+\end{itemize}
+
+Bei der Auswahl des Datensatzes \afz{OK-Wehr} \"{o}ffnet sich ein Sonderdialog (Abbildung~\ref{Sonderprofile Abb DialogWehr})
+in den die erforderlichen Wehrparameter einzutragen sind. Das erste Feld stellt ein Listenfeld dar, aus dem sie den
+vorhandenen Wehrtyp ausw\"{a}h\-len. Zur Auswahl stehen breitkronige, dachf\"{o}rmige, rundkronige und scharfkantige \"{U}ber\-f\"{a}l\-le. Bei der Berechnung wird lediglich unterschieden, ob es sich um ein Streichwehr oder einen beliebigen
+anderen Wehrtyp handelt. Im Falle eines Streichwehres werden die Angaben im Sonderdialog anders interpretiert.
+
+\begin{figure}[tbh]
+   \centering
+   \includegraphics[width=0.5\textwidth]{DialogWehr}
+   \caption{Sonderdialog zur Eingabe der Wehrparameter}
+   \label{Sonderprofile Abb DialogWehr}
+\end{figure}
+
+\subsubsection{Senkrecht angestr\"{o}mte Wehre}
+Der Wehrquerschnitt selbst ist wie ein normales Profil mit der jeweiligen Wehrkrone als Sohle einzugeben (Werte von
+Datensatz \afz{Gel\"{a}ndeh\"{o}he} und \afz{OK-Wehr} sind identisch). In das Feld \feld{Wehrkote [NN+m]} wird die H\"{o}he der
+\"{U}berfallkrone eingetragen. Bei mehreren Wehrfeldern wird die Lage der Trennfl\"{a}chen ber\"{u}cksichtigt. Zus\"{a}tzlich sind die
+\"{U}berfallbeiwerte der einzelnen Wehrfelder im Datensatz \afz{Wehrfelder [\"{U}berfallbeiwerte]} zu definieren.
+
+Stellt sich anstatt eines unvollkommenen ein vollkommener \"{U}berfall ein, so wird ein entsprechender Hinweis ausgegeben. Zur
+Kontrolle der Berechnungsannahmen ($\mu$-Beiwert) wird f\"{u}r das Wehrprofil die Grenztiefe berechnet, die lediglich eine
+untere Begrenzung des sich tats\"{a}chlich einstellenden Wasserspiegels angibt. Die oberwasserseitige Energieh\"{o}he mu{\ss} in jedem
+Fall gr\"{o}{\ss}er als $H_{E,min}$ im Wehrbereich sein. Bei der Bestimmung der oberwasserseitigen Spiegellage geht die
+Wasserspiegelh\"{o}he des Wehrquerschnittes (Grenztiefe) nicht ein.
+
+Bei der Berechnung des OW-Spiegels vor dem Wehr wird davon ausgegangen, da{\ss} die gesamte Abflu{\ss}menge \"{u}ber das Wehr
+abgef\"{u}hrt wird. Wenn eine seitliche Umstr\"{o}mung bei gr\"{o}{\ss}eren Abfl\"{u}ssen m\"{o}glich ist, kann die Wehrformel keine zutreffenden
+Werte mehr liefern. In diesem Fall ist eine Ausuferungsh\"{o}he f\"{u}r die unterwasserseitigen Verh\"{a}ltnisse zu definieren. Wenn
+die berechnete Wasserspiegellage diesen Schwellenwert \"{u}berschreitet, findet keine Wehrberechnung statt, sondern das
+Wehrprofil wird wie ein normales Gel\"{a}ndeprofil mit Vorl\"{a}ndern eingesetzt. Ist keine Ausuferungsh\"{o}he angegeben, wird der
+niedrigere Ufergrenzpunkt (gekennzeichnet durch die Trennfl\"{a}chen) als Grenzwert angenommen.
+
+\"{U}bersteigt die mit der Wehrformel berechnete oberwasserseitige Wasserspiegellage die Ufergrenzpunkte des
+oberwasserseitigen Querprofils, wird ebenfalls auf die Berechnung ohne Wehrformel umgeschaltet. Wenn die Umschaltung nicht
+erw\"{u}nscht ist, sind die Ufergrenzpunkte entsprechend hoch anzugeben. Welche Berechnungsart im Einzelfall angewendet wurde,
+wird durch den Parameter $\mathit{KZW}$ (vgl. Abschnitt~\ref{Einstieg Subsec Ergebnisausdruck}) in der Ergebnisliste
+angezeigt.
+
+
+\subsubsection{Streichwehr}
+Zus\"{a}tzlich zur Wehrkote mu{\ss} hier noch die Wehrh\"{o}he angegeben werden. Die einzugebende Wehrbreite entspricht hier der
+Streichwehrl\"{a}nge $\mathit{SL}$. Die \"{U}berfallbeiwerte f\"{u}r Streichwehre liegen nach \cite{Bollrich} bei etwa $95\%$ der
+Werte f\"{u}r senkrecht angestr\"{o}mte Wehre.
+\begin{hinweis}
+   Es wird angenommen, da{\ss} die Neigung der Wehrkrone mit der Sohlneigung \"{u}bereinstimmt. Die Sohlneigung des Gerinnes geht
+   zwar nicht direkt in die Berechnung der Leistungsf\"{a}higkeit ein, wohl aber in die Berechnung der ma{\ss}gebenden
+   \"{U}berfallh\"{o}he am Streichwehranfang und -ende. Bei horizontaler Streichwehrkrone ist darum $J_S = 0$ einzugeben.
+\end{hinweis}
+
+\subsection{Beispiele zur Wehrberechnung}
+
+\subsubsection{Rundkronige Sohlschwelle}
+Beim Testbeispieldatensatz ''stawabe'' wird das 7. Profil an Station km 1,46 durch eine rundkronige Sohlstufe gebildet. Folgende Werte wurden an dieser Station in das Programm eingegeben:
+
+\begin{quote}
+   \begin{tabular}{ccc}
+			y-Wert [m]	& Geländehöhe [NN+m]	& OK-Wehr [NN+m] \\[6pt]
+ 			0,00				&	110,00							&	110,00 \\
+ 			3,00				&	108,00							&	108,00 \\
+ 			0,00				& 110,00							& 110,00 \\
+ 			3,00				& 106,70							& 106,70 \\
+			11,00				&	106,70							&	106,70 \\
+			11,00				& 108,00							& 108,00 \\
+			14,00				& 110,00							& 110,00 \\
+   \end{tabular}
+\end{quote}
+
+Die \autor{Manning-Strickler}-Rauheit liegt bei $35~m^{1/3}/s$. Der Sonderdialog Wehrparameter enthält folgende Daten:
+
+\begin{tabular}{ll}
+	Wehrart:							&		rundkronig \\
+  Wehrkote [NN+m]:			& 106,70 \\
+	Wehrbreite [m]:				&	8,00 \\
+	Überfallbeiwert [-]:	& 0,73 \\
+	Wehrhöhe [m]:					& 1,50	(zum Unterwasser hin) \\
+	Ausuferungshöhe [m]:	& 0,00 \\
+\end{tabular}
+
+\subsubsection{Mehrere Wehrfelder}
+
+Bei den Testbeispielen findet sich in der Datei \datei{mfw77.wsp} ein Beispiel für ein Wehr mit mehreren Wehrfeldern. Das Beispiel ist mit Hilfe von \menu{\marrow Fremddaten \marrow HYDRAWSP} ins \wspwin-Format zu konvertieren (vgl. Abschnitt 6.1.5). Das Wehr befindet sich an Station km 11,5.
+
+Im Gegensatz zu dem Beispiel mit der rundkronigen Sohlschwelle wird hier in die Felder des Sonderdialogs Wehrparameter 0 eingetragen. Lediglich der Wehrtyp erhält eine Bezeichnung. Die Kronenhöhen und die Überfallbeiwerte werden in den Datensätzen ''OK-Wehr'' und ''LWA-Felder'' in das Spreadsheet eingetragen.
+
+\begin{quote}
+	\begin{tabular}{ccccl}
+		y-Wert	& Geländehöhe	& OK-Wehr	& LWA-Felder	& Rauheit kST \\[6pt]
+		[m]			& 	[NN+m]		&  [NN+m]	&    [-]	    &   [m1/3/s] \\ [6pt]
+	  20,46	  &	126,56			&	126,56	& 	0,50			&    D	10,0 \\
+ 		21,88		& 126,56			& 126,56	&   0,50		\\
+ 		23,69		& 126,53			& 126,53	&   0,55			&		TL	33,8 \\
+		23,69		& 125,38			& 125,38	&	  0,55		\\
+		32,89		& 125,34			& 125,34	&   0,55		\\
+		44,79		& 125,46			& 125,46	&   0,55		\\
+ 		57,69		& 124,42			& 124,42	&   0,55		\\
+ 		65,70		& 125,42			& 125,42	&   0,55		\\
+ 		78,92		& 125,47			& 125,47	&   0,55		\\
+ 		89,83		& 125,48			& 125,48	&   0,55		\\
+	 109,78		& 125,47			& 125,47	&   0,55		\\
+	 110,38		& 125,98			& 125,98	&   0,65		\\
+	 122,84		& 126,01			& 126,01	&   0,65		\\
+	 129,28		& 126,36			& 126,36	&   0,55			&		TR	10,0 \\
+	 135,78		& 126,87			& 126,87	&   0,55		  &			D	 \\
+	\end{tabular}
+\end{quote}
+
+Ein Beispiel für ein Streichwehr findet sich bei Testdaten in der Datei \datei{strei.wsp,} die über \menu{\marrow Fremddaten \marrow HYDRAWSP} ins \wspwin-Format konvertiert werden kann. Das zweite Profil des Berechnungsabschnitts beinhaltet ein Streichwehr. Die Datensätze ''Geländehöhe'' und ''OK Wehr'' enthalten folgende Daten:
+\begin{quote}
+	\begin{tabular}{ccc}
+		y-Wert	& Geländehöhe	& OK-Wehr \\[6pt]
+		[m]			& [NN+m]			& [NN+m] \\ [6pt]
+		0,00		& 4,02				&	4,02 \\
+		0,00		& 0,02				& 0,02 \\
+		0,00		& 4,02				& 4,02 \\
+		4,00		& 0,02				& 0,02 \\
+		4,00		& 4,02				& 4,02 \\
+	\end{tabular}
+\end{quote}
+
+Im Sonderdialog Wehrparameter sind folgende Daten zur Beschreibung des Streichwehrs einzugeben:
+\begin{quote}
+	\begin{tabular}{ll}
+		Wehrart:							& Streichwehr \\
+		Wehrkote [NN+m]:			& 1,35 \\
+		Wehrbreite [m]:				& 7,25 \\
+		Überfallbeiwert [-]: 	&	0,70 \\
+		Wehrhöhe [m]:					& 0,00 \\
+		Ausuferungshöhe [m]:	& 0,00 \\
+	\end{tabular}
+\end{quote}
+
+
+\subsection{Verluste an Schützen}
+
+\subsubsection{Theoretische Grundlagen}
+
+Der Abflussvorgang bei einem Schütz wird durch den Grad der Strömungsumlenkung und die durch Boden- und Wandreibung verursachten Verluste bestimmt.
+Genauso wie beim Wehrüberfall unterscheidet man beim Schütz zwischen freiem und rückgestautem Abfluss, manchmal auch in Analogie zum Überfall als Schützabfluss mit vollkommenem bzw. unvollkommenem Grundstrahl bezeichnet. Beim freien Abfluss ist der Oberwasserstand ausschließlich eine Funktion des Abflusses und der am Schütz auftretenden Verluste. Nur beim rückgestauten Abfluss wirkt sich der Unterwasserspiegel auf die Wasserstände oberhalb des Schützes aus. 
+
+\paragraph{Schütz mit freiem Abfluss}
+\ \\
+\underline{Berechnung nach \autor{Schmidt}~\cite{Schmidt}}
+
+Wie ein Abfluss aus einer begrenzten Öffnung lässt sich der Abfluss unter einer Vertikalschütze mit Hilfe der allgemeinen Abflussgleichung berechnen. 
+
+\begin{equation}
+	Q_{\mathrm{Schuetz}} = \mu_S \cdot A \cdot \sqrt{2g \cdot h_o}
+\end{equation}
+
+Von Bedeutung ist, dass sich eine Strahlkontraktion an der Schützöffnungsoberkante einstellt. Für den Kontraktionsbeiwert    liegen umfangreiche Messergebnisse vor. Der Zusammenhang zwischen Kontraktionsbeiwert und Ausflussbeiwert $\mu_S$ ist durch 
+
+\begin{equation}
+	\mu = \frac{\delta}{\sqrt{1 + \delta \frac{a}{h}}}
+\end{equation}
+		
+gegeben. Werte für die Ausflussbeiwerte $\mu_S$ können Abb.~\ref{Sonderprofile Abb Ausflussbeiwerte} für vertikale und schräge Planschützen entnommen werden. Die erforderlichen Kennwerte werden im Programm aus den Kenngrößen Winkel $\beta$ und Überstströmungsverhältnis $h/a$ berechnet.
+
+\begin{figure}[htbp]
+	\centering
+% 	\includegraphics[width=1.0\textwidth]{}
+ 	\caption{Ausflussbeiwerte $\mu_S$ für geneigte Planschützen nach \cite{ATV110} S. 364}
+ 	\label{Sonderprofile Abb Ausflussbeiwerte}
+\end{figure}
+
+\noindent
+\underline{Berechnung nach \autor{Knapp} \cite{Knapp} und \autor{BWK} \cite{BWK1999,BWK2000}}
+
+Die Abflussleistung eines Schützes errechnet sich nach \autor{Knapp} wie folgt:
+
+\begin{equation}
+	Q_{\mathrm{Schuetz}} = \mu_R \cdot \mu_S \cdot A \cdot \sqrt{2g \cdot (h_o - \mu_S \cdot a)}
+	\label{Sonderprofile Eq Knapp}
+\end{equation}
+
+mit
+
+\begin{quote}
+\begin{tabular}{ll}
+ $\mu_S$  =  Einschnürungsbeiwert infolge vertikaler Kontraktion \\
+ $\mu_R$  =  Beiwert für Reibungs- und Umlenkverluste	&	$b_o$ = Breite Zulaufgerinne \\
+ $a$ =  Schützöffnungshöhe														&	$b_s$ = Schützöffnungsbreite \\
+ $A$ = Schützöffnungsfläche 													&	$b_u$ = Breite Ablaufgerinne \\
+\end{tabular}
+\end{quote}
+
+Der Oberwasserspiegel am Schütz bei freiem Abfluss ergibt sich aus Gl. \ref{Sonderprofile Eq Knapp} zu
+
+\begin{equation}
+	h_o = \left( \frac{Q}{\mu_S \cdot \mu_R \cdot A} \right)^2 \cdot \frac{1 - \Phi^2}{2g} + \mu_S \cdot a
+\end{equation}
+
+mit
+
+\begin{displaymath}
+	\Phi = \mu_S \cdot \mu_R \cdot \frac{b_s / b_o}{h_o / a} \text{\hspace{1cm} für Rechteckquerschnitte}	
+\end{displaymath}
+
+\begin{equation}
+	\mu_S = 1.06 \cdot ( N \plusminus \sqrt{N^2 - X})
+\end{equation}
+
+\begin{equation}
+	N = \frac{H_{E,o}}{a}	\text{\hspace{1cm}mit der Energiehöhe im OW\hspace{1cm}} H_{E,o} = h_o + \frac{v_o^2}{2g}
+\end{equation}
+
+\begin{equation}
+	X = \frac{\left(N \cdot \alpha - \frac{1 - \cos\alpha^0}{\sin\alpha^0}\right) \cdot (2N - 1)}
+					{N\left(1 + \alpha - \cos\alpha^0\right) - \frac{1 - \cos\alpha^0}{\sin\alpha^0} - 0.5\left(\frac{\alpha}{\sin\alpha^0} - \cos\alpha^0\right)}
+\end{equation}
+
+\begin{tabular}{l}
+	$\alpha^0$ = Neigung des Schützes gegenüber der Horizontalen in Grad \\
+	$\alpha$ =  Winkel im Bogenmaß \\
+\end{tabular}
+
+Für geneigte Schütztafeln in Gerinnen mit Betonwandungen kann der Beiwert für Umlenkverluste und Reibung nach \cite{Schumacher} aus
+
+\begin{equation}
+	\mu_R = 0.96 + 0.0017 \cdot \alpha^0 - 0.05 \left(\frac{a}{H_{E,o}}\right)
+\end{equation}
+
+berechnet werden.
+
+\paragraph{Schütz mit gestautem Durchfluss}
+\ \\
+\noindent
+\underline{Berechnung nach \autor{Schmidt}~\cite{Schmidt}} 
+
+Wie bei unvollkommenen Überfällen wird die Abflusszahl $\mu_S$ durch $c \cdot \mu_S$ ersetzt. Der Korrekturfaktor $c$ wird in Abhängigkeit von den Überströmungshöhen im Oberwasser ($h/a$) und Unterwasser ($hu/a$) 
+% nach Abb.~\ref{Sonderprofile Abb Ueberstroemungshoehen} 
+iterativ ermittelt.
+
+% Bild fehlt! 
+%\begin{figure}[htbp]
+%	\centering
+% 	\includegraphics[width=1.0\textwidth]{}
+% 	\caption{Korrekturfaktor in Abhängigkeit von Überströmungshöhen}
+% 	\label{Sonderprofile Abb Ueberstroemungshoehen}
+%\end{figure}
+
+\noindent
+\underline{Berechnung nach \autor{Knapp} \cite{Knapp} und \autor{BWK} \cite{BWK1999,BWK2000}}
+
+Für den Fall des gestauten Durchflusses ist nach \autor{Knapp}~\cite{Knapp} folgendes Gleichungssystem zu lösen, wenn eine durchgehende Sohle in Fließrichtung  vorliegt.:
+
+\begin{equation}
+	H_{E,o} = h_S - \left( \frac{m}{b_u} \right) \plusminus \sqrt{ \left(\frac{m}{b_u}\right)^2 + \frac{2n}{b_u}}
+\end{equation}
+
+mit den Abkürzungen
+
+\begin{equation}
+	m = \frac{2 \cdot \mu_R \cdot \mu_S \cdot a \cdot b_S}{1 - \Phi^2} \left(\mu_R - X \right) - b_u - h_0
+\end{equation}
+
+\begin{equation}
+	n = \frac{b_u}{2} \left( h_u^2 - h_0^2 \right)
+\end{equation}
+
+\begin{equation}
+	X = \mu_R \cdot \mu_S \cdot \frac{b_S / b_u}{h_u / a}
+\end{equation}
+
+\begin{equation}
+	\frac{h_S}{h_u} = \left\{ 1 + 2Fr_u^2 \left(1 - \frac{h_u}{\mu \cdot a} \right) \right\}
+\end{equation}
+
+\begin{equation}
+	Fr_u^2 = \frac{Q^2}{gh_u^3 \cdot b_u^2}
+\end{equation}
+
+Das Gleichungssystem ist nur iterativ zu lösen. Die bisherigen Erfahrungen zeigen eine sehr hohe numerische Empfindlichkeit, d.h. Konvergenzschwierigkeiten sind zu erwarten.
+
+Im Fall einer UW-seitigen Sohlstufe wird das Gleichungssystem noch komplizierter (s.~\cite{Schumacher} Seite 61 ff). Da dieser Fall bei Gewässern nur selten vorkommen wird und die numerischen Instabilitäten auf der anderen Seite noch mehr zunehmen würden, wurden die erweiterten Formen der Gleichungen  im Programm bisher nicht verwendet. Ebenso wird der Einfluss der möglichen Schussstrahlformen im Unterwasser der Schütztafel nicht berücksichtigt.
+
+\subsubsection{Dateneingabe}
+
+Für Verluste an Schützen mit gerader und geneigter Tafel ist ein neuer Datensatz ''Schütz'' anzulegen. Neben dem angewandten Verfahren (\autor{Schmidt} oder \autor{Knapp}) ist der Neigungswinkel (in Grad) in einem Sonderdialog anzugeben. Das Schütz wird behandelt wie ein Sonderprofil. Die Schützöffnung ist über die Geländehöhe und die Schützunterkante über den Datensatz UK-Brücke anzugeben. 
+
+\begin{figure}[htbp]
+	\centering
+	 	\includegraphics[width=0.3\textwidth]{schuetz}
+ 	\caption{Eingabe eines Schütz}
+ 	\label{Sonderprofile Abb Schuetz}
+\end{figure}
+
+Daneben kann bei beliebigen geschlossenen Sonderprofilen mit Einstau oder Überströmung der Brückenoberkante auch bei der Wahl der Durchströmungsart die Schützströmung selektiert werden. So ist nach Anlegen des Datensatzes OK-Brücke zwischen dem Standardverfahren, bei dem der Überfallbeiwert und die Abflusszahl einzugeben sind, und den Schützströmungen nach \autor{Schmidt} oder \autor{Knapp}, für die neben dem Überfallbeiwert wiederum der Neigungswinkel einzutragen ist, zu wählen. Die Unterscheidung zwischen Einstau und Überströmung erfolgt programmintern automatisch anhand der Höhe der Brückenunter- und -oberkante. 
+
+\begin{figure}[htbp]
+	\centering
+	 	\includegraphics[width=0.3\textwidth]{schuetz2}
+ 	\caption{Wahl der Durchströmungsart bei Einstau und Überströmung}
+ 	\label{Sonderprofile Abb Schuetz2}
+\end{figure}
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Durchl\"{a}sse}
+\label{Sonderprofile Sec Durchlaesse}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Theoretische Grundlagen}
+
+\"{A}hnlich wie an \"{o}rtlichen Engstellen entstehen an Durchl\"{a}ssen zus\"{a}tzliche Str\"{o}mungsverluste, die bei der
+Wasserspiegellagenberechnung gesondert in Ansatz zu bringen sind. Eine n\"{a}herungsweise Ber\"{u}cksichtigung der Energieverluste
+bei Durchl\"{a}ssen im Rahmen der Wasserspiegellagenberechnung ist wie folgt m\"{o}glich:
+\begin{enumerate}
+   \item F\"{u}r den Eintrittsverlust ist ein Verlustbeiwert $\zeta_e$ in der Verlustdatei (siehe Abschnitte~\ref{Fortgeschrittene Subsec Einzelverluste} und~\ref{Fortgeschrittene Subsec Einstellungen} zu
+      definieren. Je nach Ausbildung des Einlaufbereiches k\"{o}nnen folgende Werte nach \cite{Bleines}, S.~63 angenommen
+      werden: \\
+      \begin{minipage}{1.0\linewidth}
+         \vspace{6pt}
+         \centering
+         \includegraphics[width=0.8\textwidth]{DurchlassEinlaufverlust}\\
+         \small \hspace{0.2cm} $\zeta_e = 0,6...1,3$ \hspace{0.6cm}  $\zeta_e = 0,3...0,5$  \hspace{1.0cm}
+         $\zeta_e = 0,25$ \hspace{0.8cm} $\zeta_e = 0,05...0,10$ \normalsize
+         \vspace{6pt}
+      \end{minipage}
+      Bei gro{\ss}er Flie{\ss}geschwindigkeit im Durchla{\ss} ergeben sich sehr gro{\ss}e Eintrittsverluste. Bei kurzen Durchl\"{a}ssen ist
+      der Gesamtverlust wegen der hier geringen Reibungsverluste haupts\"{a}chlich von der Ausbildung des Einlaufs abh\"{a}ngig.
+   \item Die Reibungsverluste $h_R$ k\"{o}nnen mit dem Widerstandsgesetz nach \autor{Prandtl-Cole\-brook} oder mit
+      der Flie{\ss}formel von \autor{Manning-Strickler} berechnet werden. Bei l\"{a}ngeren Durchl\"{a}ssen ($L > 10 \cdot D$) empfiehlt
+      sich die Anwendung der genaueren Berechnung nach \autor{Colebrook}; dies gilt insbesondere f\"{u}r die Berechnung
+      vollaufender Durchl\"{a}sse oder D\"{u}ker. Unterschiedliche Rauheitswerte im geschlossenen Sonderprofil sind zugelassen.
+   \item F\"{u}r den Austrittsverlust wird der Ansatz nach \autor{Borda-Carnot} zugrunde gelegt (siehe
+      Abschnitt~\ref{Fortgeschrittene Subsec Einzelverluste}).
+      Bei konischen Querschnittserweiterungen ist je nach Strahlausbreitung in der unterstromigen Gerinnestrecke
+      folgender $c_a$-Wert als Abminderungsfaktor anzusetzen:
+
+      \begin{tabular}{lll}
+         Strahlausbreitung &  $< \hfill 8\grad$:    &  $c_a = 0,15...0,20$ \\
+                           &  $< 30\grad$:          &  $c_a = 0,20...0,50$ \\
+                           &  $> 30\grad$:          &  $c_a = 1,00$
+      \end{tabular}
+\end{enumerate}
+Die Flie{\ss}verluste auf der durch einen Flie{\ss}wechsel gest\"{o}rten unterstromigen Flie{\ss}strecke bleiben ohne Ansatz, da sich \"{u}ber
+den Flie{\ss}wechsel hinaus nach oberstrom keine Auswirkungen ergeben. Bei teilgef\"{u}llten Durchl\"{a}ssen erfolgt die Berechnung
+der Wasserspiegellage wie bei Normalprofilen, wobei f\"{u}r die Berechnung der geometrischen Kenndaten die im nachfolgenden
+Kapitel angegebenen geschlossenen Profiltypen gew\"{a}hlt werden k\"{o}nnen.
+
+\begin{figure}[htbp]
+   \centering
+   \includegraphics[width=0.8\textwidth]{DurchlassEnergiehoehen}
+   \caption{Energieh\"{o}he bei vollaufendem Durchla{\ss}}
+   \label{Sonderprofile Abb DurchlassEnergiehoehe}
+\end{figure}
+
+Die Energieh\"{o}he im Profil~($i$) errechnet sich aus der Wasserspiegellage im Profil~($i-1$) nach der folgenden Beziehung:
+\begin{equation}
+   H_{E,i} = W_{i-1} + h_{R,i} + H_{ZV,i}
+\end{equation}
+Zur Bestimmung des Reibungsgef\"{a}lles wird dazu eine Sch\"{a}tzung des Anfangswasserstandes oder der Druckh\"{o}he im Profil~($i$)
+vorgenommen. Parallel dazu wird die Energieh\"{o}he aus einem gesch\"{a}tzten Anfangswasserstand im Profil~($i$) berechnet. Bei
+Vollf\"{u}llung des Durchla{\ss}profils setzt sich die Energieh\"{o}he aus der Druckh\"{o}he und der Geschwindigkeitsh\"{o}he zusammen.
+\begin{equation}
+   H_{E,i} = \mathit{HD}_{i} + h_{k,i}
+      \label{Sonderprofile Gl DurchlassRueckgestaut}
+\end{equation}
+Verbleibt ein Luftraum im Durchla{\ss}, kann die Energieh\"{o}he analog dem freien Abflu{\ss} berechnet werden:
+\begin{equation}
+   H_{E,i} = \mathit{W}_{i} + h_{k,i}
+\end{equation}
+Die Geschwindigkeitsh\"{o}he ergibt sich aus dem bekannten Abflu{\ss} im Durchla{\ss}profil und der Flie{\ss}fl\"{a}che
+\begin{equation}
+   h_{k,i} = \frac{v_i^2}{2g} \cdot \frac{Q^2}{A_i^2 \cdot 2g}
+\end{equation}
+Mit dem Unterschreiten der Genauigkeitsschranke $\mathit{EPSH}$ beim Vergleich der Energieh\"{o}\-hen im Querschnitt~($i$)
+wird die Iteration beendet. Aus der gew\"{a}hlten Berechnungsart wird ersichtlich, da{\ss} die Querprofile so zu legen sind, da{\ss}
+eine Mittelung der Reibungsverluste zul\"{a}ssig ist. Das Sonderprofil gilt jeweils bis zur H\"{a}lfte des Abstands zu den
+n\"{a}chsten Profilen nach ober- und unterstrom. Bei l\"{a}ngeren Durchl\"{a}ssen sind mehrere Profile anzuordnen, wobei auch
+unterschiedliche Sonderprofile zugelassen sind.
+
+
+\subsection{Beschreibung der Dateneingabe}
+\label{Sonderprofile Subsec DurchlassDateneingabe}
+
+Als Durchl\"{a}sse werden alle Sonderbauwerke mit geschlossenen Profilen betrachtet. Die Geometrie des Durchlasses wird durch
+spezielle Querprofile beschrieben. Die Anzahl und Art der hintereinander liegenden Sonderprofile ist beliebig.
+
+Bei der Wahl der ma{\ss}gebenden St\"{u}tzstellen (Querprofile) der Berechnung ist zu beachten, da{\ss} es sich in der Regel nicht um
+prismatische Stromr\"{o}hren handelt, bei denen lediglich die Stellen der Wasserspiegelfixierungen auszuw\"{a}hlen sind, sondern
+es werden Festlegungen zur dreidimensionalen Geometrie getroffen. Die Abst\"{a}nde der Querprofile m\"{u}ssen dem hydraulischen
+Einflu{\ss}bereich der Durchl\"{a}sse entsprechen. Das erste Profil im Durchla{\ss} sollte in etwa genauso weit vom Einlauf bzw.
+Auslauf entfernt liegen, wie das erste Profil auf der freien Flie{\ss}strecke.
+
+Bei den \"{u}blichen Berechnungsverfahren werden quasi-station\"{a}r-gleichf\"{o}rmige Abflu{\ss}verh\"{a}ltnisse vorausgesetzt, d.h. die
+hydraulischen Gr\"{o}{\ss}en eines Profiles~$(i)$ werden bis zur Mitte des Profilabstandes als ma{\ss}gebend angenommen (die
+berechneten Reibungsgef\"{a}lle der Profile~$(i)$ und $(i+1)$ werden gemittelt).
+
+Die richtige Wahl der Berechnungsprofile ist in Abbildung~\ref{Sonderprofile Abb DurchlassEnergiehoehe} dargestellt. Jeder
+Durchla{\ss} ist durch mindestens drei Profile zu definieren (nur ein Querprofil in Br\"{u}ckenmitte beschreibt die Geometrie des
+geschlossenen Sonderprofils). Bei l\"{a}ngeren Br\"{u}cken oder Durchl\"{a}ssen kann die Profilanzahl - unter Beachtung der o.g.
+Grunds\"{a}tze - beliebig erh\"{o}ht werden. Im Programm sind die wichtigsten analytisch erfa{\ss}baren Profiltypen vorgegeben.
+
+Wichtig bei der Dateneingabe der Durchl\"{a}sse ist, da{\ss} in jedem Fall immer zus\"{a}tzlich zum Sonderdialog/Datensatz f\"{u}r den
+Durchla{\ss} ein Datensatz Gel\"{a}ndeh\"{o}he als Bezug anzulegen ist. Die Str\"{o}mungsverluste bei Durchl\"{a}ssen sind wie folgt
+einzugeben:
+\begin{description}
+   \item[Einlaufverlust]
+      Der entsprechende $\zeta$-Wert ist beim oberstromigen Querprofil zu definieren (Eingabe \"{u}ber \menu{\marrow
+      Z\underline{u}stand \marrow Einzel\underline{v}erluste}).
+   \item[Reibungsverlust]
+      Die Reibungsverluste bei vollaufendem oder teilgef\"{u}lltem Durchla{\ss} k\"{o}nnen wahlweise nach \autor{Manning-Strickler}
+      oder \autor{Prandtl-Colebrook} berechnet werden, und zwar unabh\"{a}ngig von der Berechnung der Reibungsverluste in der
+      freien Flie{\ss}strecke.
+   \item[Auslaufverlust]
+      Bei Angabe eines $\zeta$-Wertes f\"{u}r das erste geschlossene (vom Unterwasser gesehen) Durchla{\ss}profil wird das
+      $\zeta$-fache des \autor{Borda}'schen Verlustansatzes ber\"{u}cksichtigt (Eingabe \"{u}ber \menu{ \marrow
+      Z\underline{u}stand \marrow Einzel\underline{v}erluste}).
+\end{description}
+
+Wenn ein Durchla{\ss} \"{u}berflutet wird, ist wie bei Br\"{u}cken zus\"{a}tzlich ein Datensatz OK-Br\"{u}cke anzulegen. Die Definition der
+Trennfl\"{a}chen und durchstr\"{o}mten Bereiche ist bei Durchl\"{a}ssen i.A. nicht erforderlich. Es kann lediglich bei
+Zusatzfunktionen wie \afz{Interpolation} oder \afz{Rauheiten global \"{a}ndern} u.U. zu Problemen f\"{u}hren, falls diese
+Datens\"{a}tze nicht angelegt wurden.
+
+\clearpage
+\subsubsection{Kreisprofil}
+Ein Durchla{\ss}profil mit einem Vollkreisquerschnitt erfordert als Eingabewerte den Durchmesser des Durchlasses, einen
+Bezugspunkt (($y,z$)-Koordinatenpaar), der den tiefsten Punkt darstellt, sowie die Sohlneigung $J_S$ im Durchla{\ss}.
+
+\begin{figure}[htb]
+   \centering
+      \includegraphics[width=0.9\textwidth]{DialogKreisprofil}
+   \caption{Kreisprofil und Sonderdialog zur Eingabe der erforderlichen Parameter}
+   \label{Sonderprofile Abb Kreisprofil}
+\end{figure}
+
+Im Grafikeditor erfolgt die Darstellung des Kreisprofils als gelb schraffierte Ellipse, da f\"{u}r L\"{a}nge und H\"{o}he
+unterschiedliche Ma{\ss}st\"{a}be verwendet werden.
+
+
+\subsubsection{Kreissegment}
+
+Profile mit einer oberen Begrenzung in Form eines Halbkreises oder eines Kreissegments und einer beliebigen unteren
+Begrenzung k\"{o}nnen \"{u}ber den Datensatz \afz{Kreissegment} eingegeben werden. 
+
+\begin{figure}[htb]
+   \centering
+      \includegraphics[width=0.9\textwidth]{DialogKreissegment}
+   \caption{Kreissegmentprofil und Eingabemaske im Datensatz \afz{Kreissegment}}
+   \label{Sonderprofile Abb Kreissegment}
+\end{figure}
+
+Die Eingabe der unteren Begrenzung erfolgt wie
+bei einem normalen Profil \"{u}ber den Datensatz Gel\"{a}ndeh\"{o}he. Zus\"{a}tzlich sind in einem Sonderdialog, der beim Anlegen des
+Datensatzes \afz{Kreissegment} erscheint, die $y$-Werte des linken und rechten K\"{a}mpfers sowie $y$- und $z$-Wert des
+Scheitelpunktes und das Sohlgef\"{a}lle einzugeben. Vom Benutzer ist selbst darauf zu
+achten, da{\ss} die $z$-Werte des linken und rechten K\"{a}mpfers im Datensatz Gel\"{a}ndeh\"{o}he vorhanden sind. Anhand der beiden Kämpfer und des Scheitelpunktes erfolgt eine interne Berechnung des Durchmessers.
+
+Die durchströmten Bereiche müssen immer auf bzw. innerhalb der eingegebenen Kämpferpunkte gesetzt werden. Ist der Abstand zwischen den durchströmten Bereichen größer als der intern berechnete Durchmesser, so erfolgt ein Abbruch der Berechnung mit dem Hinweis, dass der Radius RHK kleiner ist als die Mindestgröße laut SA30 (durchströmte Bereiche).
+
+Bei der Berechnung wird daher nur der Querschnittsbereich innerhalb der festgelegten Kämpferpunkte berücksichtigt (dies gilt insbesondere für die Breite einer eventuell überströmten Oberkante). Ist der Gesamtquerschnitt breiter als der Bereich des Kreissegementes, müssen die Bereiche links und rechts der Kämpfer als spearate Felder einer Mehrfeldbrücke abgebildet werden.
+
+\subsubsection{Horizontale Decke}
+Als Kastenprofile k\"{o}nnen alle Durchla{\ss}typen, die keine Verj\"{u}ngung aufweisen (die Spiegelbreite wird mit steigendem
+Wasserspiegel gr\"{o}{\ss}er oder bleibt gleich) vereinbart werden.
+
+\begin{figure}[htbp]
+   \centering
+   \includegraphics[width=0.9\textwidth]{DialogGeradeDecke}
+   \caption{Durchla{\ss} mit gerader Decke und Eingabemaske im Grafikeditor}
+   \label{Sonderprofile Abb GeradeDecke}
+\end{figure}
+
+Die Profileingabe erfolgt wie bei offenen Querschnitten im Datensatz \afz{Gel\"{a}ndeh\"{o}he}. Zus\"{a}tzlich ist die
+Konstruktionsunterkante $\mathit{DKUK}$ (s. Abb. unten) \"{u}ber zwei $(y,z)$-Koordi\-natenpaare im Datensatz \afz{Unterkante
+Br\"{u}cke} einzutragen. Der Sonderdialog in diesem Datensatz wird irrelevant. Wichtig ist nur, da{\ss} der Pfeilerformbeiwert in
+jedem Fall $0$ betr\"{a}gt (keine Pfeilerstauberechnung). Die Darstellung der Deckenober- und Unterkante erfolgt als gr\"{u}ne
+Linie.
+
+\subsubsection{Maul DIN~4263}
+Ein Durchla{\ss}profil mit einem Maulquerschnitt erfordert als Eingabewerte den gr\"{o}{\ss}ten Durchmesser $D$, die lichte H\"{o}he $h$,
+die Sohlneigung $J_S$ des Durchlasses sowie die $(y,z)$-Koordi\-na\-ten des tiefsten Punktes. Diese Parameter sind im
+Datensatz \afz{Maulprofil} einzugeben.
+
+\begin{figure}[hbt]
+   \centering
+      \includegraphics[width=0.9\textwidth]{DialogMaulprofil}
+   \caption{Maulprofil nach DIN~4263 und Eingabemaske}
+   \label{Sonderprofile Abb MaulprofilDIN}
+\end{figure}
+Die Darstellung erfolgt wieder als gelb schraffierte Fl\"{a}che.
+
+
+\subsubsection{Maulprofil ARMCO 71}
+Als Eingabewerte werden die in Abbildung~\ref{Sonderprofile Abb MaulArmco71} angegebenen Kennwerte f\"{u}r das
+ARMCO-Multi-Plate-Maulprofil ben\"{o}tigt. Die Werte sind der ARMCO-Fibel~71, Seite~7, zu entnehmen und im Datensatz
+\afz{Sonderprofil ARMCO71} einzutragen. Nach dem Anlegen des Datensatzes erscheint ein Sonderdialog. Die geometrischen
+Werte der ARMCO-Fibel k\"{o}nnen \"{u}ber den Schalter \schalter{Datenbank} aus der dann erscheinenden Tabelle heraus direkt in
+\wspwin{} \"{u}bernommen werden. Sie m\"{u}ssen dann nur noch die Lageparameter eingeben.
+
+\begin{figure}[hbt]
+   \centering
+      \includegraphics[width=1.0\linewidth]{DialogArmco71}
+   \caption{Maulprofil nach ARMCO-Fibel~71 und zugeh\"{o}riger Sonderdialog}
+   \label{Sonderprofile Abb MaulArmco71}
+\end{figure}
+
+Das Sonderprofil ARMCO~71 wird im Grafikeditor nicht dargestellt.
+
+
+\subsubsection{Eiprofil DIN~4263}
+Ein Durchla{\ss}profil mit einem Ei-Normprofil erfordert als Eingabewerte den gr\"{o}{\ss}ten Durchmesser \mbox{$D = 2r$}, die
+Gesamth\"{o}he \mbox{$h = 3r$}, die Sohlneigung $J_S$ des Durchlasses, sowie die $(y,z)$-Koordinaten des tiefsten Punktes. Die
+Parameter werden im Datensatz \afz{Eiprofil} eingegeben.
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.9\textwidth]{DialogEiprofil}
+   \caption{Eiprofil nach DIN~4263 und Sonderdialog zur Eingabe der erforderlichen Parameter}
+   \label{Sonderprofile Abb Eiprofil}
+\end{figure}
+Das Eiprofil wird gelb schraffiert im Grafikeditor dargestellt.
+
+\subsubsection{Ellipse ARMCO 84}
+Elliptische Profile nach der ARMCO-Fibel 84 k\"{o}nnen mit Hilfe des Datensatzes \afz{Sonderprofile ARMCO84} erstellt werden.
+F\"{u}r den Profiltyp ist dann $\mathit{EA}$, $\mathit{EB}$ oder $\mathit{SE}$ aus dem Listenfeld zu w\"{a}hlen.
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.9\textwidth]{DialogArmco84Ellipse}
+   \caption{Elliptisches Profil nach ARMCO~84 und Eingabemaske}
+   \label{Sonderprofile Abb Armco84Ellipse}
+\end{figure}
+
+F\"{u}r die Ellipse m\"{u}ssen neben der Lagebeschreibung folgende geometrische Parameter (Abbildung~\ref{Sonderprofile Abb
+Armco84Ellipse}) angegeben werden:
+\begin{quote}
+   $\mathit{SCO}$, $\mathit{HCO}$, $\mathit{R1}$, $\mathit{R2}$, $\mathit{W1}$, $\mathit{W2}$
+\end{quote}
+Wenn einzelne Parameter bei verschiedenen ARMCO~84-Profilen nicht ben\"{o}tigt werden (z.B. $\mathit{R3}$ oder
+$\mathit{FCRED}$) bleiben sie mit $0$ besetzt. \"{U}ber die Schaltfl\"{a}che \schalter{Datenbank} k\"{o}n\-nen die Werte der
+ARMCO-Fibel \"{u}bernommen werden.
+
+\subsubsection{Maulprofil ARMCO 84}
+Die Eingabe des Maulprofils erfolgt im gleichen Dialog wie bei der Ellipse der ARMCO~84-Reihe. F\"{u}r den Profiltyp ist dann
+$\mathit{MA}$, $\mathit{MB}$, $\mathit{WA}$ oder $\mathit{WB}$ aus dem Listenfeld zu w\"{a}hlen. Zur Beschreibung der
+Profilgeometrie sind folgende Parameter erforderlich (Abbildung~\ref{Sonderprofile Abb Armco84Maul}):
+\begin{quote}
+   $\mathit{SCO}$, $\mathit{HCO}$, $\mathit{R1}$, $\mathit{R2}$, $\mathit{R3}$, $\mathit{W1}$, $\mathit{W3}$
+\end{quote}
+Auch der Dialog zur Eingabe der ARMCO~84-Profile enth\"{a}lt eine Datenbank, aus der sie die geometrischen Parameter
+\"{u}bernehmen k\"{o}nnen.
+\begin{figure}[hp]
+   \centering
+   \includegraphics[width=0.5\textwidth]{DialogArmco84Maul}
+      \caption{Maulprofil nach ARMCO 84}
+      \label{Sonderprofile Abb Armco84Maul}
+\end{figure}
+
+\clearpage
+\subsubsection{Super-Span ARMCO 84}
+Mit Hilfe des Profiltyps $\mathit{SB}$ erh\"{a}lt man den Super-Span-Bogen (Abbildung~\ref{Sonderprofile Abb Armco84Super})
+nach ARMCO~84. Seine Kontur wird durch die folgenden geometrischen Parameter beschrieben:
+\begin{quote}
+   $\mathit{SCO}$, $\mathit{HCO}$, $\mathit{R1}$, $\mathit{R2}$, $\mathit{W1}$, $\mathit{W2}$
+\end{quote}
+Auch hierf\"{u}r stehen Werte in einer Datenbank zur Verf\"{u}gung. Die Eingabemaske entspricht Abbildung~\ref{Sonderprofile Abb
+Armco84Ellipse}.
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.5\textwidth]{DialogArmco84Super}
+      \caption{Super-Span Bogen nach ARMCO Fibel 84 (Profiltyp 19}
+      \label{Sonderprofile Abb Armco84Super}
+\end{figure}
+
+\clearpage
+\subsection{Beispiele}
+Das Demoprojekt enth\"{a}lt das Beispiel \afz{Testbach}. Im Zustand \afz{Kreis} finden Sei hier auf einem $160\unit{m}$ langen
+Berechnungsabschnitt zwei Durchl\"{a}sse, ein Maulprofil nach ARMCO-71 mit einer L\"{a}nge von $30\unit{m}$ und einen $50\unit{m}$
+langen Kreisdurchla{\ss}. Die Dateneingabe f\"{u}r das Maulprofil sieht folgenderma{\ss}en aus:
+
+Zun\"{a}chst mu{\ss} der Datensatz \afz{Gel\"{a}ndeh\"{o}he} als Bezug angelegt werden. Er geht jedoch in die Berechnung nicht ein. Im
+Beispiel liegt die Gel\"{a}ndeh\"{o}he auf einem Niveau von $2,6\unit{NN\!+\!m}$. F\"{u}r die Rauheit im Durchla{\ss} ist ein Wert von
+$40\unit{m^{1/3}/s}$ vorgegeben. Dieser braucht nur einmal im Querprofil angegeben werden.
+
+Danach wird der Datensatz \afz{Sonderprofil ARMCO71} neu angelegt. In dem folgenden Sonderdialog k\"{o}nnen die geometrischen
+Parameter des Profils \"{u}ber die Schaltfl\"{a}che \schalter{Datenbank} aus der Profildatenbank \"{u}bernommen werden. Sie betragen
+im einzelnen:
+\begin{quote}
+   \begin{tabular}{lll}
+      Breite [m]:    &  \beisp{2,240} &   (entspricht SCO) \\
+      H\"{o}he [m]:      &  \beisp{1,550} &   (entspricht HCO) \\
+      RCO [m]:       &  \beisp{1,071} \\
+      R1CO [m]:      &  \beisp{2,647} \\
+      R2CO [m]:      &  \beisp{0,457} \\
+      BCO [m]:       &  \beisp{0,544} \\
+      FCRED [m$^2$]: &  \beisp{0,000}
+   \end{tabular}
+\end{quote}
+
+Nun ist nur noch die Festlegung der Lageparameter des Profils erforderlich. Als Lagebezugspunkt dient der tiefste Punkt im
+Profil. Beachten Sie, da{\ss} das Sohlgef\"{a}lle in Promille angegeben wird.
+
+\begin{quote}
+   \begin{tabular}{ll}
+      y-Wert [m]:        &  \beisp{0,00} \\
+      z-Wert [NN+m]:     &  \beisp{0,05} \\
+      Gef\"{a}lle [1/1000]:  &  \beisp{5,00}
+    \end{tabular}
+\end{quote}
+
+In \"{a}quivalenter Weise erfolgt die Eingabe des Kreisprofils im Datensatz \afz{Kreisprofil}. Auch hier mu{\ss} zun\"{a}chst eine
+Gel\"{a}ndeh\"{o}he angegeben werden.
+
+Weitere Beispiele zu Durchla{\ss}typen der ARMCO-84 Reihe finden sich im Beispiel \datei{armco.wsp}. Die Datei mu{\ss} jedoch
+zun\"{a}chst vom HYDRA- ins \wspwin{}-Format konvertiert werden. Einen \"{u}berfluteten Kreisdurchla{\ss} enth\"{a}lt das Beispiel
+\datei{ueber2.wsp}. Zus\"{a}tzlich zum Durchla{\ss}profil ist hier f\"{u}r die \"{U}berflutung der Datensatz \afz{Oberkante Br\"{u}cke}
+angelegt.
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bewuchs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Der Einflu{\ss} von Bepflanzungen auf die hydraulische Leistungsf\"{a}higkeit von Gerinneprofilen war ein besonderer Schwerpunkt der Wasserbauforschung in den achtziger Jahren.
+
+W\"{a}hrend die ersten Vorschl\"{a}ge von \autor{Felkel}~\cite{LWA-NRW} lediglich Korrekturbeiwerte zu den
+\autor{Manning-Strickler}-Beiwerten lieferten, wurden erstmals mit der DVWK-Richtli\-nie~\cite{DVWK1991}
+Berechnungsverfahren empfohlen, die konsequent das Widerstandsgesetz von \autor{Prandtl-Colebrook} und den
+Rauheits\"{u}berlagerungsansatz nach \autor{Kaiser} zugrundelegen. Zus\"{a}tzlich zum Einflu{\ss} der Pflanzenelemente auf das
+Widerstandsverhalten wird der Einflu{\ss} der Interaktion zwischen Vorland und Flu{\ss}schlauch quantifiziert.
+
+Trotz umfangreicher Forschungsaktivit\"{a}ten konnten noch nicht alle Str\"{o}mungsprobleme abschlie{\ss}end gekl\"{a}rt werden. So wurden
+z.B. die Einfl\"{u}sse aus einer geschwungenen Linienf\"{u}hrung (M\"{a}anderbildung) ebenso ausgeklammert wie die Ber\"{u}cksichtigung
+von flexiblem Bewuchs. Auch ist es nicht gelungen, ein Berechnungsverfahren verbindlich einzuf\"{u}hren, so da{\ss} die Verfahren
+nach \autor{Kaiser}, \autor{Schr\"{o}der-Nuding}, \autor{Mertens} und \autor{Pasche} nebeneinander verwendet werden k\"{o}nnen.
+
+Die grundlegenden Verfahren zur Widerstandsberechnung sind bei allen Methoden \"{a}hnlich, lediglich bei der Quantifizierung
+der Interaktionswirkung gibt es methodische Unterschiede, die sich insbesondere in den unterschiedlichen Ans\"{a}tzen f\"{u}r den
+(fiktiven) Trennfl\"{a}chenwiderstand ausdr\"{u}cken. Erst die praktische Erprobung und der Vergleich mit Naturmessungen kann im
+Laufe der Zeit zu einer Vereinheitlichung der verschiedenen Ans\"{a}tze f\"{u}hren. Im Programm \wspwin{} sind alle genannten
+Ans\"{a}tze implementiert, damit Vergleichsrechnungen mit gleichen Datens\"{a}tzen m\"{o}glich werden.
+
+%\subsection{Ansatz nach Felkel}
+%
+%Im Jahre 1980 wurde vom Landesamt f\"{u}r Wasser und Abfall NRW eine Richtlinie~\cite{LWA-NRW} f\"{u}r den naturnahen Ausbau und
+%die Unterhaltung von Flie{\ss}gew\"{a}ssern herausgegeben. In dieser Richtlinie wird die Bepflanzung von Gew\"{a}sserquerschnitten
+%empfohlen. Eine derartige Bepflanzung hat einen Einflu{\ss} auf die hydraulische Leistungsf\"{a}higkeit der Flie{\ss}querschnitte, der
+%bei der Berechnung von Wasserspiegellagen zu ber\"{u}cksichtigen ist. Aus diesem Grund wurde die Gestaltungsempfehlung in der
+%o.g. Richtlinie durch ein Beispiel zur hydraulischen Berechnung geh\"{o}lzbestandener Gew\"{a}sser erg\"{a}nzt.
+%
+%Einem Vorschlag von \autor{Felkel} folgend, wird der Einflu{\ss} des Geh\"{o}lzbewuchses durch einen Faktor $U_0/U$ als
+%Korrekturfaktor zum Rauheitsbeiwert nach Strickler ber\"{u}cksichtigt. $U_0$ ist der geh\"{o}lzfreie Teil des benetzten Umfanges
+%$U$ eines Flie{\ss}querschnittes.
+%
+%Im Programm \wspwin kann der Bewuchs f\"{u}r jeden Teilabflu{\ss}querschnitt gesondert ber\"{u}cksichtigt werden. Hierzu sind die
+%Bepflanzungsparameter
+%\begin{quote}
+%   \begin{tabular}{ll}
+%      $\mathit{PF}_L = U_{0,L} / U_L$  &   f\"{u}r das linke Vorland, \\
+%      $\mathit{PF}_F = U_{0,F} / U_F$  &   f\"{u}r das Flu{\ss}bett und \\
+%      $\mathit{PF}_R = U_{0,R} / U_R$  &   f\"{u}r das rechte Vorland \\
+%   \end{tabular}
+%\end{quote}
+%in der Dateneingabe vorzugeben.
+%
+%Die spezifischen Geschwindigkeiten $w_j$ werden damit wie folgt berechnet (vgl. Gleichung~\ref{Einstieg Gl
+%SpezifGeschwindigkeit}):
+%\begin{equation}
+%   \begin{split}
+%      w_L &= k_\mathit{ST} \cdot \mathit{PF}_L \cdot r_\mathit{hy,L}^{2/3} \cdot (l_F/l_L)^{1/2} \\
+%      w_F &= k_\mathit{ST} \cdot \mathit{PF}_F \cdot r_\mathit{hy,F}^{2/3} \\
+%      w_L &= k_\mathit{ST} \cdot \mathit{PF}_R \cdot r_\mathit{hy,R}^{2/3} \cdot (l_F/l_R)^{1/2} \\
+%   \end{split}
+%\end{equation}
+%
+%Zu beachten ist, da{\ss} die Bepflanzungsparameter vom jeweiligen Abflu{\ss} abh\"{a}ngig sind, d.h. sie sind ggf. f\"{u}r jede
+%Wasserf\"{u}hrung gesondert zu ermitteln und in der Dateneingabe einzugeben. Dieser Weg der Dateneingabe wurde gew\"{a}hlt, um
+%auch Profile berechnen zu k\"{o}nnen, bei denen die genaue Lage der Geh\"{o}lze nicht bekannt ist, das mittlere Verh\"{a}ltnis
+%zwischen geh\"{o}lzfreiem und benetztem Umfang aber vorgegeben werden kann.
+%
+%Zur Ermittlung der Bepflanzungsparameter ist von der spezifischen Einflu{\ss}breite $l_{B,j}$ des Geh\"{o}lzbewuchses auszugehen.
+%F\"{u}r Str\"{a}ucher ist die vollentwickelte Strauchbreite anzusetzen. F\"{u}r baumartige Geh\"{o}lze sind Einflu{\ss}breiten zwischen
+%$1,00\unit{m}$ und $1,50\unit{m}$ je nach Astwerkausbildung, bei im Abflu{\ss}profil astfreien B\"{a}umen die Stammbreite,
+%anzunehmen.
+%
+%Die Bepflanzungsparameter ergeben sich aus den spezifischen Einflu{\ss}breiten $l_{B,j}$ der Geh\"{o}lzgruppen wie folgt:
+%\begin{equation}
+%   \mathit{PF}_j = \frac{U_j - l_{B,j}}{U_j}
+%\end{equation}
+%F\"{u}r den Index~$(j)$ ist je nach Teilabflu{\ss}querschnitt der $L$, $F$ oder $R$ einzusetzen.
+
+
+\subsection{Ansatz nach Kaiser}
+\label{Sonderprofile Subsec Kaiser}
+
+Einem Vorschlag von \autor{Kaiser}~\cite{Kaiser} folgend, wurde von \autor{Schr\"{o}der} (\cite{SchroederNuding1,
+DtForschungsgem}) ein Berechnungsverfahren empfohlen, das eine Absch\"{a}tzung des Bewuchseinflusses erm\"{o}glicht. Von Bedeutung
+ist hierbei, da{\ss} f\"{u}r die Absch\"{a}tzung des Interaktionseinflusses und der mitwirkenden Bewuchszonenbreiten lediglich das
+Verh\"{a}ltnis der Geschwindigkeiten im Flu{\ss}bett und auf dem Vorland ma{\ss}gebend ist. Eine Definition der
+Bewuchselementab\-st\"{a}n\-de $a_x$ bzw. $a_y$ ist nicht erforderlich. Die Eingabedaten beschr\"{a}nken sich daher auf die
+Festlegung von Wandrauheiten und spezifischen Vegetationsanstr\"{o}mfl\"{a}chen $\omega_P$.
+
+\begin{figure}[hptb]
+   \begin{minipage}{0.5\textwidth}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Bewuchsdurchmesser02}
+   \end{minipage}
+   \begin{minipage}{0.5\textwidth}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Bewuchsdurchmesser01}
+      \begin{equation*}
+         c_\mathit{WR} = \frac{ \sum (c_{W,i} \cdot v_i^2 \cdot A_{P,i})}{v^2 \sum A_{P,i}}
+      \end{equation*}
+   \end{minipage}
+   \caption{Skizze zur Ermittlung des \"{a}quivalenten Bewuchsdurchmessers $d_P$ und der mittleren Widerstandszahl $c_\mathit{WR}$}
+   \label{Sonderprofile Abb Bewuchsdurchmesser}
+\end{figure}
+
+Verwendet werden die Berechnungsformeln nach \autor{Prandtl-Colebrook} mit einer iterativen Bestimmung der zugeordneten
+hydraulischen Radien nach dem Verfahren von \autor{Kaiser}, wobei die Widerstandswerte $\lambda$ additiv durch den
+Bewuchseinflu{\ss} vergr\"{o}{\ss}ert werden.
+\begin{equation}
+   \label{Sonderprofile Gl Kaiser}
+   v = \sqrt{\frac{8g \cdot  r_\mathit{hy} \cdot I_E}{\lambda_W + (4c_\mathit{WR} \cdot \omega_P \cdot r_\mathit{hy})}}
+     = \sqrt{\frac{8g \cdot  r_\mathit{hy} \cdot I_E}{\lambda_W + \lambda_T}}
+\end{equation}
+An jedem Profilpunkt k\"{o}nnen $k_S$-Werte zur Beschreibung der Wandrauheiten und die spezifischen Vegetationsanstr\"{o}mfl\"{a}chen
+$\omega_P$ definiert werden. Nach \cite{SchroederW} d\"{u}rfen die in Tabelle~\ref{Sonderprofile Tab
+Vegetationsanstroemflache} angegebenen Werte angenommen werden.
+
+\begin{table}[htp]
+   \centering
+   \begin{tabular}{ll}
+      \hline
+         \textbf{Bewuchsart}              &  $ \mathbf{\omega_P~[1/m]}$ \\[6pt]
+      \hline \hline
+         lockerer, strauchiger Bewuchs    &  $0,1...0,5$ \\
+         dichter, strauchartiger Bewuchs  &  $1,5...3,0$ \\
+         baumartiger Bewuchs              &  $d_{P,m} \cdot  D_P$ \\
+      \hline
+   \end{tabular}
+   \caption{Spezifische Vegetationsanstr\"{o}mfl\"{a}chen}
+   \label{Sonderprofile Tab Vegetationsanstroemflache}
+\end{table}
+
+Die Bestockungsdichte $D_P$ ergibt sich aus den mittleren Bewuchsabst\"{a}nden $a_x$ und $a_y$ in und quer zur Flie{\ss}richtung:
+\begin{equation}
+   D_P = \frac{1}{a_x \cdot a_y}
+\end{equation}
+Damit kann die spezifische Vegetationsanstr\"{o}mfl\"{a}che $\omega_P$ wie folgt berechnet werden:
+\begin{equation}
+   \label{Sonderprofile Gl SpezifischeVegetationsanstroemflaeche}
+   \omega_P = d_P \cdot D_P = \frac{d_P}{a_x \cdot a_y}
+\end{equation}
+Der Vegetationseinflu{\ss} im Teilabflu{\ss}querschnitt ergibt sich dann zu:
+\begin{equation}
+   \lambda_{P,j} = 4 \cdot c_\mathit{WR,j} \cdot \omega_{P,j} \cdot r_\mathit{hy,j}
+\end{equation}
+Der Widerstandsbeiwert aus dem Wandeinflu{\ss} (vgl. Gleichung~\ref{Einstieg Gl LambdaBeiwert})betr\"{a}gt:
+\begin{equation}
+   \label{Sonderprofile Gl WandeinflussKaiser}
+   \lambda_{W,j} = \left[ -2\lg \left( \frac{k_{S,j}}{14,84 \cdot r_\mathit{hy,j}} \right)\right]^{-2}
+\end{equation} \newpage
+Hierbei bedeuten: \nopagebreak[4]
+\begin{quote}
+   \begin{tabular}{ll}
+      $k_{S,j}$          &  Wandrauheit in $\mathrm{[m]}$ \\
+      $c_\mathit{WR,j}$  &  Widerstandszahl f\"{u}r Bewuchs (zwischen $1,0$ bis $1,5$) \\
+      $\omega_{P,j}$     &  spezifische Vegetationsanstr\"{o}mfl\"{a}che in $\mathrm{[1/m]}$ \\
+      $r_\mathit{hy,j}$  &  hydraulischer Radius der jeweiligen Teilfl\"{a}che $j$
+   \end{tabular}
+\end{quote}
+
+Am Geh\"{o}lzsaum entstehen zus\"{a}tzliche Reibungsverluste durch die  Interaktion zwischen dem langsamer flie{\ss}enden Wasser in
+den Vorl\"{a}ndern mit Bewuchs und dem Flu{\ss}bett mit gr\"{o}{\ss}erer Flie{\ss}geschwindigkeit. Diese zus\"{a}tzlichen Widerstandskr\"{a}fte durch
+Wirbelbildungen werden nach \cite{SchroederW} ber\"{u}cksichtigt.
+
+Der Geh\"{o}lzsaum mit der H\"{o}he $h_T$ wird rechnerisch als feste Wand betrachtet. Sein Widerstandswert setzt sich aus einem
+festen Pauschalwert $\lambda_{T1}$ und einem Interaktionswiderstandsbeiwert $\lambda_{T2}$ zusammen.
+\begin{eqnarray}
+    \lambda_{T1} &=& 0,06...0,10 \\
+    \lambda_{T2} &=& C_1 \cdot \lambda_{max} \quad \textrm{mit}
+        \qquad \lambda_{max} = 0,18 \cdot \lg \left( \frac{0,0135 \cdot v_F^2 \cdot 1\unit{m}}{v_V^2 \cdot h_T} \right)
+\end{eqnarray}
+Im Programm wird f\"{u}r $\lambda_\mathit{T1} = 0,10$ gesetzt. Die Korrekturgr\"{o}{\ss}e $C_1$ ist von der Interak\-tions\-breite
+abh\"{a}ngig. F\"{u}r Geh\"{o}lzzonen auf ebenem Vorland gilt:
+\begin{align*}
+   C_1 & = 0    && \textrm{f\"{u}r} \quad \frac{v_F^2 \cdot h_T}{v_L^2} \leq 80\unit{m} \\
+   C_1 & = 1 - \left( 1 - \frac{b_V}{b_{V,max}} \right)^{2,5}
+                && \textrm{f\"{u}r} \quad b_V < b_{V,max} \\
+   C_1 & = 1 - \frac{b_{V,max}}{3,5 \cdot B_V}
+                && \textrm{f\"{u}r} \quad b_V \geq b_{V,max}
+\end{align*}
+
+
+
+Der Bewuchs mu{\ss} hierbei bis zur (durch Trennfl\"{a}chen markierten) Grenze zwischen Vorland und Flu{\ss}schlauch reichen, sonst
+wird keine Interaktion zwischen Vorland und Flu{\ss}schlauch angenommen. Bei Geh\"{o}lzbewuchs auf der B\"{o}schung des Flu{\ss}schlauchs
+gelten folgende Bestimmungsgleichungen:
+\begin{align*}
+   C_1 & = 1 - \frac{b_{V,max}}{3,5 \cdot b_V} \cdot
+           \left[1 - \left(1 - \frac{b_V}{b_{V,max}}\right)^{3,5} \right]
+                && \textrm{f\"{u}r} \quad b_V < b_{V,max} \\
+   C_1 & = 1 - \frac{b_{V,max}}{3,5 \cdot b_V}
+                && \textrm{f\"{u}r} \quad b_V \geq b_{V,max}
+\end{align*}
+Der Geh\"{o}lzsaum wird hierbei dem jeweiligen Vorland zugeordnet, d.h. die Grenzpunkte $\mathit{LU}$ bzw. $\mathit{RU}$
+m\"{u}ssen jeweils den unteren Fu{\ss}punkt des Geh\"{o}lzsaums markieren. Die Bewuchszonenbreite kann bei voll ausgepr\"{a}gter
+Interaktion wie folgt berechnet werden:
+\begin{equation}
+   b_{V,max} = 17,5 \cdot \frac{v_V^2 \cdot \lambda_{max}}{g \cdot I_E}
+\end{equation}
+Alle o.g. Bestimmungsformeln gelten sowohl f\"{u}r das rechte Vorland als auch das linke Vorland. Die Geh\"{o}lzsaumh\"{o}he $h_T$
+ergibt sich aus der Flie{\ss}tiefe bei $\mathit{LU}$ bzw. $\mathit{RU}$, die mittlere Bewuchsbreite aus den angrenzenden
+Gel\"{a}ndestreifen mit Bewuchsparametern ($\omega_P > 0$).
+
+
+\clearpage
+\subsection{Ansatz nach Schr\"{o}der-Nuding}
+\label{Sonderprofile Subsec Nuding}
+
+Abweichend vom Ansatz nach \autor{Kaiser} wird der Reibungsbeiwert des Geh\"{o}lzsaums unter Beachtung der
+Nachlaufwirbelbreiten $b_N$ der Pflanzenelemente berechnet. Hierbei gehen die Geh\"{o}lzabst\"{a}nde $a_x$ (in Flie{\ss}richtung) und
+$a_y$ (quer dazu) in die Berechnung ein \cite{SchroederNuding2}.
+\begin{equation}
+   \lambda_T = 4 \cdot \left[ \lg \left( \frac{v_{0,F}}{v_{0,L}} \right) \right]^2 \cdot \frac{r_\mathit{hy,L} \cdot b_m}
+   {h_T \cdot b_F}
+\end{equation}
+Dabei sind $v_{0,j}$ die mittleren Geschwindigkeiten im Teilabflu{\ss}querschnitt ohne Ber\"{u}cksichtigung des
+Trennfl\"{a}cheneinflusses ($h_T = 0$). Die Nachlaufwirbelbreite $b_N$ eines Ge\-h\"{o}lz\-elementes ergibt sich zu:
+\begin{equation}
+   b_N = 3,2 \cdot \sqrt{a_x \cdot d_P}
+\end{equation}
+F\"{u}r mittlere Vegetationsbreite $b_m$ wird angenommen:
+\begin{equation}
+   \begin{split}
+      b_m &= a_y \qquad \textrm{f\"{u}r} \quad b_N \geq a_y \\
+      b_m &= b_N \qquad \textrm{f\"{u}r} \quad b_N < a_y
+   \end{split}
+\end{equation}
+F\"{u}r das rechte Vorland gelten die Gleichungen entsprechend. Der Formwiderstandsbeiwert $c_\mathit{WR}$ wird als konstant
+angenommen.
+
+Bei typischen Strauchwerkstrukturen ohne Bl\"{a}tter k\"{o}nnen die vertikalen Abst\"{a}nde der Zweige nach Versuchen von
+\autor{Nuding} nicht mehr einem zylinderf\"{o}rmigem Besatz mit Baumst\"{a}mmen gleichgesetzt werden. In derartigen F\"{a}llen ist die
+spezifische Vegetationsanstr\"{o}mfl\"{a}che nach Gleichung~\ref{Sonderprofile Gl SpezifischeVegetationsanstroemflaeche} mit den
+vertikalen Zweigabst\"{a}nden $a_z$ und den Zweigdurchmessern $d_{P,z}$ zu modifizieren:
+\begin{equation}
+   \omega_P = \frac{d_{P,y} \cdot d_{P,z} \cdot a_y/a_z}{a_x \cdot a_y}
+\end{equation}
+Die sonstige Vorgehensweise entspricht dem Verfahren nach \autor{Kaiser}. Die G\"{u}ltigkeit f\"{u}r diesen Ansatz beschr\"{a}nkt sich
+auf den Bereich
+\begin{eqnarray*}
+   b_F &\geq& 5 \cdot b_M \\
+   \omega_P &\leq& 9,6
+\end{eqnarray*}
+
+
+
+\subsection{Ansatz nach Mertens}
+\label{Sonderprofile Subsec Mertens}
+
+\autor{Mertens} empfiehlt den Wandwiderstand nach Gleichung~\ref{Einstieg Gl LambdaBeiwert} mit dem Formbeiwert f\"{u}r
+Trapezgerinne $f = 0,827$ zu modifizieren. Aus Gleichung~\ref{Sonderprofile Gl WandeinflussKaiser} wird dementsprechend
+\begin{equation}
+   \lambda_{W,j} = \left[ -2\lg \left( \frac{k_{S,j}}{12,27 \cdot r_{hy,j}} \right) \right]^{-2}
+\end{equation}
+Der Einflu{\ss} der Pflanzelemente auf die Str\"{o}mung wird nach \autor{Lindner}~\cite{DVWK1991, Lindner} mit
+\begin{equation}
+   \lambda_P = \frac{4 \cdot c_{WR} \cdot d_{P,i} \cdot h_i \cdot \cos \alpha}{a_x \cdot a_y}
+\end{equation}
+beschrieben. Hierbei bedeuten: \nopagebreak[4]
+\begin{quote}
+   \begin{tabular}{ll}
+      $h_i$       & Flie{\ss}tiefe am Pflanzelement \\
+      $d_{P,i}$   & \"{a}quivalenter Pflanzelementdurchmesser \\
+      $\alpha$    & Neigung der B\"{o}schung (B\"{o}schungswinkel)
+   \end{tabular}
+\end{quote}
+In \cite{DVWK1991} wird die Vorgehensweise von \autor{Mertens} zur Berechnung der Interaktion ausf\"{u}hrlich beschrieben. F\"{u}r
+den Trennfl\"{a}chenwiderstand gelten im folgenden angef\"{u}hrten Bestimmungsgleichungen. \\
+
+\begin{figure}[hbt]
+   \centering
+   \includegraphics[width=0.8\textwidth]{Bewuchszonen}
+   \caption{Einteilung eines Flie{\ss}querschnitts in Bewuchszonen~\cite{DVWK1991}}
+   \label{Sonderprofile Abb Bewuchszonen}
+\end{figure}
+
+Die Trennfl\"{a}chenrauheit $k_T$ ist abh\"{a}ngig von der Breite des makroturbulenten Bereichs im Querschnitt:
+\begin{equation}
+   k_T = c \cdot b_\mathit{II,m} + 1,5 \cdot d_P
+\end{equation}
+Der Einflu{\ss}faktor $c$ kann mit Hilfe der folgenden Gleichung
+\begin{equation}
+   c = 1,2 - 0,0003 \cdot B + 0,06 \cdot (0,001 \cdot B)^{1,5}
+\end{equation}
+und dem Bewuchsparameter $B$ berechnet werden.
+\begin{equation}
+   B = \left( \frac{a_x}{d_P} - 1 \right)^2 \cdot \left(\frac{a_y}{d_P} \right)
+\end{equation}
+In Abh\"{a}ngigkeit der Dichte des Bewuchses ist eine Absch\"{a}tzung  der maximalen Breite des makroturbulenten Bereiches
+$b_\mathit{II, m}$ m\"{o}glich:
+\begin{align*}
+   b_\mathit{II,max} & = b_\mathit{III}
+         && \textrm{f\"{u}r} \quad B > 16 \quad \textrm{(lichter Bewuchs)} \\
+   b_\mathit{II,max} & = 0,25 \cdot B^{0,5} \cdot b_\mathit{III}
+         && \textrm{f\"{u}r} \quad B < 16 \quad \textrm{(dichter Bewuchs)}
+\end{align*}
+Die mittlere Breite $b_\mathit{II}$ des Einflu{\ss}bereiches  betr\"{a}gt dann (Vorlandbewuchs oder B\"{o}schung):
+\begin{align*}
+    b_\mathit{II} &= b_\mathit{II,max}     && \textrm{f\"{u}r}   \quad b_\mathit{II} > b_\mathit{II, max} \\
+    b_\mathit{II} &= A_\mathit{II}/h_T     && \textrm{f\"{u}r}   \quad b_\mathit{II} < b_\mathit{II, max}
+\end{align*}
+\begin{tabular}{lll}
+    \qquad mit \quad   &  $A_\mathit{II}$  & mitwirkende Fl\"{a}che \"{u}ber $b_\mathit{II}$ \\
+                      &  $b_\mathit{III}$ & Flu{\ss}schlauchbreite (Bereich $\mathit{III}$)
+\end{tabular}
+\\ F\"{u}r die mitwirkenden Breiten im Flu{\ss}schlauch gelten folgende Beziehungen
+\begin{eqnarray}
+   \label{Sonderprofile Gl MitwirkendeBreite1}
+   b_\mathit{III,li} \cdot \lambda_{T,re} &=& b_\mathit{III,re} \cdot \lambda_{T,li} \\
+   \label{Sonderprofile Gl MitwirkendeBreite2}
+   b_\mathit{III,li} + b_\mathit{III,re}  &=& b_F
+\end{eqnarray}
+
+\subsubsection{Durchf\"{u}hrung der Berechnung}
+Als Startwert f\"{u}r die iterative Berechnung wird die halbe Flu{\ss}schlauchbreite
+\begin{equation*}
+   b_\mathit{III} = b_F/2
+\end{equation*}
+angenommen. Die Iteration wird so lang ausgef\"{u}hrt bis sich bei der Berechnung mit Hilfe der Gleichungen~\ref{Sonderprofile
+Gl MitwirkendeBreite1} und~\ref{Sonderprofile Gl MitwirkendeBreite2}
+\begin{equation*}
+   b_\mathit{III,li,neu} = \frac{b_F \cdot \lambda_{T,li}}{\lambda_{T,re} + \lambda_{T,li}}
+\end{equation*}
+keine \"{A}nderung mehr f\"{u}r $b_\mathit{III}$ ergibt. Die Flie{\ss}geschwindigkeit im Hauptgerinne wird unter Beachtung des
+\"{U}berlagerungsansatzes nach \autor{Kaiser} (Abschnitt~\ref{Sonderprofile Subsec Kaiser}) mit Hilfe eines als konstant
+angenommenen Formwiderstandsbeiwertes $c_\mathit{WR}$ berechnet. Dieser Ansatz kann f\"{u}r Bewuchsparameter $B < 6000$
+angewendet werden.
+
+
+\subsection{Ansatz nach Pasche}
+\label{Sonderprofile Subsec Pasche}
+
+Das etwas aufwendigere Verfahren zur Ber\"{u}cksichtigung der Bewuchseinfl\"{u}sse wurde von \autor{Pasche} entwickelt, es ist
+ebenfalls in \cite{DVWK1991} mit einem Rechenbeispiel beschrieben.
+
+Im Unterschied zu den oben erw\"{a}hnten Methoden wird der Formwiderstandsbeiwert $c_\mathit{WR}$ der Bewuchselemente hier
+nicht mehr als konstant angenommen. \autor{Pasche} verwendet das von ihm modifizierte Verfahren nach
+\autor{Lindner}~\cite{Lindner, Pasche} zur individuellen Festlegung der $c_\mathit{WR}$-Werte, die von den relativen
+Anstr\"{o}mgeschwindigkeiten sowie den Nachlaufl\"{a}ngen und -breiten abh\"{a}ngen. Zus\"{a}tzlich werden Ma{\ss}stabseffekte ber\"{u}cksichtigt.
+
+Der $c_\mathit{WR}$-Wert ergibt sich aus der relativen Anstr\"{o}mgeschwindigkeit $v_n/v_i$, welche aus den Nachlaufl\"{a}ngen und
+-breiten zu berechnen ist:
+\begin{equation}
+   \left( \frac{v_n}{v_i} \right)^2 = 1,15 \cdot \left( \frac{a_\mathit{NL}}{a_x} \right)^{-0,48}
+                                      + 0,5 \cdot \left( \frac{a_{NB}}{a_y} \right)^{1,1}
+\end{equation}
+\begin{equation}
+   c_\mathit{WR} = 1,31 \cdot \left( \frac{v_n}{v_j} \right)^2 + \Delta c_W
+\end{equation}
+$\Delta c_W$ ist dabei eine Korrekturgr\"{o}{\ss}e mit der Ma{\ss}stabseffekte ber\"{u}cksichtigt werden. Sie ist von der
+\autor{Froud}'schen Zahl abh\"{a}ngig.
+
+In \"{a}hnlicher Weise wird zun\"{a}chst der $c_\mathit{WR}$-Wert f\"{u}r die Bewuchselemente am Geh\"{o}lzsaum zum Flu{\ss}schlauch bestimmt.
+Die mitwirkende Bewuchsbreite $b_m$ ergibt sich aus
+\begin{equation}
+   b_m = \frac{c \cdot h_T}{\lambda_V \cdot (0,068 \cdot e^{0,56c_T} - 0,056)}
+\end{equation}
+\begin{quote}
+   Hierbei bedeuten: \\
+   \begin{tabular}{ll}
+      $c$         &  B\"{o}schungsfaktor ($c = 1,7$ B\"{o}schung, $c = 1,0$ Vorland) \\
+      $h_T$       &  Geh\"{o}lzsaumh\"{o}he \\
+      $\lambda_L$ &  Reibungsbeiwert im Vorland bzw. B\"{o}schung \\
+      $c_T$       &  dimensionslose Trennfl\"{a}chengeschwindigkeit
+   \end{tabular}
+\end{quote}
+Die dimensionslose Trennfl\"{a}chengeschwindigkeit $c_T$ erh\"{a}lt man aus
+\begin{equation}
+   c_T = -3,27 \cdot \lg \Omega + 2,85
+\end{equation}
+Sie ist abh\"{a}ngig vom Bewuchsparameter $\Omega$
+\begin{equation}
+   \Omega = \left( 0,07\frac{a_\mathit{NL}}{a_x} \right)^{3,3} + \left( \frac{a_\mathit{NB}}{a_y} \right)^{0,95}
+\end{equation}
+in dessen Berechnung die Nachlaufl\"{a}nge $a_\mathit{NB}$ und die Nachlaufbreite $a_\mathit{NL}$ Eingang finden.
+\begin{equation}
+   a_\mathit{NB} = 0,24 \cdot a_\mathit{NL}^{0,59} \cdot (c_\mathit{W\infty} \cdot d_P)^{0,41}
+\end{equation}
+Der Formbeiwert $c_\mathit{W\infty}$ des Kreiszylinders ist nach \autor{Lindner} wie folgt zu bestimmen:
+\begin{equation}
+   \mathit{Re} = \frac{v_{P,i} \cdot d_{P,i}}{\nu}
+\end{equation}
+\begin{quote}
+   \begin{tabular}{lll}
+      $c_\mathit{W\infty} = 3,07 \cdot \mathit{Re}^{-0,168}$   &  f\"{u}r   &  $\mathit{Re} < 800$ \\
+      $c_\mathit{W\infty} = 1,00$                              &  f\"{u}r   &  $800 \leq \mathit{Re} \leq 8000$ \\
+      $c_\mathit{W\infty} = 1,20$                              &  f\"{u}r   &  $\mathit{Re} > 8000$ \\
+   \end{tabular}
+\end{quote}
+Die Nachlaufl\"{a}nge $a_\mathit{NL}$ wird iterativ aus
+\begin{equation}
+   \frac{\Delta v_\mathit{max}}{v_\infty} = 0,03 = 0,9 \cdot \left( \frac{a_\mathit{NL}}{c_\mathit{W\infty}} \right)^{-0,7}
+      \cdot \left(1 + \frac{g \cdot a_\mathit{NL}\cdot  I_E}{v_T^2/2} \right)^{-1,5}
+\end{equation}
+errechnet. F\"{u}r einreihigen Bewuchs ist die relative Nachlaufbreite $a_\mathit{NB} /a_y = 0$ zu setzen. F\"{u}r den
+Widerstandsbeiwert der Trennfl\"{a}chen wurde folgende Bestimmungsgleichung abgeleitet:
+\begin{equation}
+   \frac{1}{\sqrt{\lambda_T}} = -2,03 \cdot \lg \left[ 0,072 \left( \frac{b_m}{b_\mathit{III}} \right)^{1,07} \cdot \Omega
+   \right]
+\end{equation}
+Zus\"{a}tzlich zum Bewuchseinflu{\ss} durch $\Omega$ wird der Trennfl\"{a}chenwiderstand ma{\ss}geblich durch die relative
+Interaktionsbreite $b_m/b_\mathit{III}$ bestimmt, welche in Analogie zur relativen Rauheit $k/d$ bei Wandrauheiten zu
+sehen ist. Wie bei dem Verfahren von \autor{Mertens} wird die mitwirkende Flu{\ss}breite mit Hilfe von den
+Gleichungen~\ref{Sonderprofile Gl MitwirkendeBreite1} und \ref{Sonderprofile Gl MitwirkendeBreite2} iterativ berechnet.
+
+
+Eine weitere Besonderheit im Verfahren von \autor{Pasche} ist die Absch\"{a}tzung des durch Interaktion vergr\"{o}{\ss}erten Vorland-
+bzw. B\"{o}schungsabflusses nach folgender Sch\"{a}tzformel:
+\begin{equation}
+   \Delta Q_{V,j} = 0,25 \cdot b_m \cdot h_m (v_T \cdot v_V)
+\end{equation}
+Dieser Mehrabflu{\ss} geht in die Gesamtkapazit\"{a}t des Querschnitts ein. Die Anwendung des Verfahrens ist durch
+\begin{equation*}
+   b_F \leq 25 \cdot h_T   \qquad   \textrm{und}   \qquad   h_T \leq 0,5 \cdot h_F
+\end{equation*}
+eingeschr\"{a}nkt.
+
+\subsubsection{Korrektur f\"{u}r gr\"{o}{\ss}ere Flu{\ss}breiten}
+
+Die mitwirkende Breite des Flu{\ss}schlauchs wird in den o.g. Ans\"{a}tzen (den Modellversuchen von \autor{Pasche} entsprechend)
+unter Beachtung von
+\begin{equation*}
+        b_\mathit{III,li} + b_\mathit{III,re} = b_F
+\end{equation*}
+iterativ bestimmt. Nach Auswertungen von neueren Versuchen (SERC-FCF, Wallingford, UK) hat
+\autor{Schumacher}~\cite{Schumacher} eine Reduzierung der mitwirkenden Breite entsprechend folgender Sch\"{a}tzformel
+empfohlen:
+\begin{equation}
+   b_\mathit{III,m} = (-0,006 \cdot b_F / h_{T} + 1,14) \cdot  b_F
+\end{equation}
+Die Reduzierung der mitwirkenden Breite gilt f\"{u}r den Bereich:
+\begin{equation*}
+   25 < b_F/h_T \leq 60 \qquad \textrm{und} \qquad h_T \leq 0,5 \cdot h_F
+\end{equation*}
+
+
+\clearpage
+\subsection{Beschreibung der Dateneingabe}
+
+\subsubsection{Ansatz von Kaiser}
+Soll der abflu{\ss}hemmende Einflu{\ss} von Str\"{a}uchern oder B\"{a}umen im Abflu{\ss}querschnitt ber\"{u}cksichtigt werden, so ist f\"{u}r den
+Ansatz nach \autor{Kaiser} das entsprechende Flie{\ss}gesetz \autor{Prandtl-Colebrook} mit Bewuchs nach \autor{Kaiser} zu
+w\"{a}hlen. Zus\"{a}tzlich zu den \autor{Darcy-Weisbach}'schen Rauheiten ist der Datensatz \afz{SVA-Werte} anzulegen. Hier werden
+die spezifischen Vegetationsanstr\"{o}mfl\"{a}chen $\omega_P$ in das Spreadsheet eingegeben.
+
+Typische, in der Natur vorkommende, Bewuchsparameter k\"{o}nnen Sie Tabelle~\ref{Sonderprofile Tab Bewuchsparamter} entnehmen.
+
+\begin{table}[hbt]
+   \centering
+   \input{Sonderprofile/tab/Bewuchsparameter.tab}
+   \caption{In der Natur beobachtete Bewuchsparameter~\cite{DVWK1991}}
+   \label{Sonderprofile Tab Bewuchsparamter}
+\end{table}
+
+F\"{u}r die Interaktion zwischen Flu{\ss}schlauch und Vorland bzw. Uferb\"{o}schung mit Bewuchs sind die jeweiligen Trennfl\"{a}chen auf
+dem Vorland bzw. bei einer Uferb\"{o}schung am B\"{o}schungsfu{\ss} zu markieren. Der B\"{o}schungswinkel $\alpha$ und die jeweilige
+Bewuchszonenbreiten werden aus den Gel\"{a}ndekoordinaten berechnet.
+
+
+\subsubsection{Ans\"{a}tze von Schr\"{o}der-Nuding, Mertens und Pasche}
+
+F\"{u}r den Bewuchseinflu{\ss} sind hier drei Datens\"{a}tze anzulegen:
+\begin{quote}
+\begin{description}
+   \item[Bewuchsabst. AX in Flie{\ss}r. {[m]}] Hier wird der Bewuchsabstand $a_x$ in Flie{\ss}richtung in das Spreadsheet
+      eingegeben.
+   \item[Bewuchsabst. AX quer Flie{\ss}r. {[m]}] Der Bewuchsabstand $a_y$ quer zur Flie{\ss}richtung mu{\ss} genau an den Stellen im
+      Querprofil definiert werden, wo auch schon Bewuchsparameter $a_x$ vorgegeben wurden.
+   \item[Bewuchsdurchmesser DP {[m]}] Der Bewuchsdurchmesser $d_P$ ist ebenfalls an allen Stellen wo $a_x$ und $a_y$
+   definiert sind, in das Spreadsheet einzugeben.
+\end{description}
+\end{quote}
+Beachten Sie, da{\ss} an einem Punkt im Querprofil immer alle drei Werte definiert werden. Das hei{\ss}t, wenn $a_x$ besetzt ist,
+m\"{u}ssen an dieser Stelle auch $a_y$ und $d_P$ einen Wert ungleich 0 haben. Wo kein Bewuchs im Querschnitt auftritt, ist
+null einzutragen, was standardm\"{a}{\ss}ig vorgegeben ist. L\"{u}cken im Querschnitt sind zu vermeiden. Die Eingabe eines vertikalen
+Astabstandes $a_z$ (Ansatz \autor{Nuding}) ist z.Zt. nicht vorgesehen.
+
+
+\subsection{Beispiele}
+
+\subsubsection{Ansatz nach Kaiser}
+Das im Kapitel~\ref{Einstieg} als Beispiel f\"{u}r Normalprofile ohne Bewuchs durchgerechnete Gew\"{a}sser Testbach kann auch
+unter Ber\"{u}cksichtigung des Bewuchses von Erlen auf dem linken Vorland und von Weiden an der rechten B\"{o}schung berechnet
+werden. Das Beispiel entspricht dem mitgelieferten Testdatensatz \datei{rickert4.wsp}. Bei dem Ansatz nach \autor{Kaiser}
+ist die spezifische Vegetationsanstr\"{o}mfl\"{a}che im Datensatz \afz{SVA-Werte} in $\mathrm{1/m^2}$ einzugeben.
+
+Nach dem Anlegen des Datensatzes sind folgende Werte an den entsprechenden Profilpunkten der 3~Profile einzutragen.
+\begin{quote}
+   \begin{tabular}{ccccc}
+      y-Wert [m]     &  SVA-Werte      & \qquad &  y-Wert [m]     &  SVA-Werte \\
+      \beisp{~0,00}  &  \beisp{0,000}  &        &  \beisp{20,50}  &  \beisp{0,000} \\
+      \beisp{~5,00}  &  \beisp{0,025}  &        &  \beisp{21,25}  &  \beisp{0,500} \\
+      \beisp{~7,25}  &  \beisp{0,025}  &        &  \beisp{25,00}  &  \beisp{0,000} \\
+      \beisp{13,25}  &  \beisp{0,000}  &        &  \beisp{30,00}  &  \beisp{0,000} \\
+      \beisp{15,25}  &  \beisp{0,000} \\
+   \end{tabular}
+\end{quote}
+Beim Editieren der Steuerdaten mu{\ss} das Flie{\ss}gesetz \afz{PC + Bewuchs (Kaiser)} ausgew\"{a}hlt werden.
+
+
+\subsubsection{Ans\"{a}tze von Schr\"{o}der-Nuding, Mertens und Pasche}
+Im mitgelieferten Testdatensatz \datei{rickert5.wsp} (Beispiel aus Kapitel~\ref{Einstieg}) wird der Bewuchs nicht nach dem
+Verfahren \autor{Kaiser}, sondern nach den Ans\"{a}tzen von \autor{Schr\"{o}der-Nuding}, \autor{Mertens} und \autor{Pasche}
+ber\"{u}cksichtigt. Bei diesen Verfahren sind die Datens\"{a}tze
+\begin{itemize}
+   \item Bewuchsabst. AX in Flie{\ss}r. [m]
+   \item Bewuchsabst. AX quer Flie{\ss}r. [m]
+   \item Bewuchsdurchmesser DP [m]
+\end{itemize}
+neu anzulegen und folgende Werte in einzugeben:
+\begin{quote}
+   \begin{tabular}{cccc}
+      $y$-Wert $[m]$  &  $a_x$ [m]  &  $a_y$ [m] & $d_P$ [m] \\
+      \beisp{~0,00}  &  \beisp{0,00}   &  \beisp{0,00}   &  \beisp{0,00} \\
+      \beisp{~5,00}  &  \beisp{2,00}   &  \beisp{2,00}   &  \beisp{0,10} \\
+      \beisp{~7,25}  &  \beisp{2,00}   &  \beisp{2,00}   &  \beisp{0,10} \\
+      \beisp{13,25}  &  \beisp{0,00}   &  \beisp{0,00}   &  \beisp{0,00} \\
+      \beisp{15,25}  &  \beisp{0,00}   &  \beisp{0,00}   &  \beisp{0,00} \\
+      \beisp{20,50}  &  \beisp{0,00}   &  \beisp{0,00}   &  \beisp{0,00} \\
+      \beisp{21,25}  &  \beisp{0,30}   &  \beisp{0,20}   &  \beisp{0,03} \\
+      \beisp{25,00}  &  \beisp{0,00}   &  \beisp{0,00}   &  \beisp{0,00} \\
+      \beisp{30,00}  &  \beisp{0,00}   &  \beisp{0,00}   &  \beisp{0,00} \\
+   \end{tabular}
+\end{quote}
+Beim Editieren der Steuerdaten k\"{o}nnen drei verschiedene Berechnungsvarianten erstellt werden:
+\begin{quote}
+   \begin{itemize}
+      \item PC + Bewuchs (NUDING)
+      \item PC + Bewuchs (MERTENS)
+      \item PC + Bewuchs (PASCHE)
+   \end{itemize}
+\end{quote}
+Die Rauheiten im Querprofil m\"{u}ssen als \autor{Darcy-Weisbach}-Rauheiten ($k_S$-Werte) deklariert sein.
+
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Verzweigte Systeme}
+\label{Sonderprofile Sec VerzweigteSysteme}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Theorie der Verzweigungsberechnung}
+
+\wspwin{} gestattet die Berechnung von verzweigten Flu{\ss}systemen mit beliebiger Netzverkn\"{u}pfung. Die Berechnung des Systems
+und die Dateneingabe erfolgt wie bei unverzweigten Fl\"{u}ssen entgegen der Flie{\ss}richtung. \"{O}rtliche Flie{\ss}wechsel innerhalb
+einer Teilstrecke sind zugelassen, der schie{\ss}ende Abflu{\ss}bereich darf jedoch nicht \"{u}ber eine Verzweigungsstelle
+hinausgehen. Derartige Flie{\ss}vorg\"{a}nge sind z.Zt. noch nicht ausreichend untersucht worden (siehe \cite{PressSchroeder}
+S.~295). Ein Abflusswechsel innerhalb einer verzweigten Teilstrecke hingegen ist nicht möglich, eine entsprechende Eingabe wird ignoriert.
+
+Die Zugeh\"{o}rigkeit eines Profils zu der Teilstrecke einer Verzweigung wird durch Angabe einer
+Teilstrecken-Kennziffer-Indexnummer f\"{u}r die zugeh\"{o}rige Teilabflu{\ss}menge gekennzeichnet. Aus diesem Grund hat die
+Numerierung der Teilstrecken nach den im nachfolgenden Abschnitt erl\"{a}uterten Grunds\"{a}tzen bzw. Vereinbarungen zu erfolgen.
+\begin{figure}[hbt]
+   \centering
+   \begin{minipage}{0.3\textwidth}
+      \centering
+      \includegraphics[width=1.0\textwidth]{Stromverzweigung}
+   \end{minipage}
+   \begin{minipage}{0.6\textwidth}
+      \caption{Zuordnung der Verteilungskennziffern Strangnummern bei einer Stromverzweigung}
+      \label{Sonderprofile Abb Stromverzweigung}
+   \end{minipage}
+\end{figure}
+
+Jeder Verzweigungspunkt ist durch mindestens drei Querprofile zu beschreiben, die m\"{o}glichst unmittelbar an der
+Verzweigungsstelle liegen sollten. Das unverzweigte Gesamtprofil und die Geometrie der beiden Abzweigungen m\"{u}ssen mit
+diesen drei Querprofilen festgelegt sein. An jeder Verzweigungsstelle sind maximal zwei Zufl\"{u}sse und zwei Abfl\"{u}sse
+zugelassen. Bei mehr als zwei Zufl\"{u}ssen oder Abfl\"{u}ssen ist eine fiktive Zusatzverzweigung mit einer kurzen Zwischenstrecke
+einzuf\"{u}hren. F\"{u}r die Berechnung der Teilwassermengen sind zwei F\"{a}lle vorgesehen:
+\begin{itemize}
+   \item Wassermengenaufteilung ist vorgegeben
+   \item Wassermengenaufteilung wird iterativ berechnet
+\end{itemize}
+
+Im Fall der iterativen Berechnung der Wassermengenaufteilung wird zun\"{a}chst eine Wassermengenaufteilung vorgegeben und
+diese dann solange verbessert, bis die Energieh\"{o}hen an den Verzweigungspunkten mit einer als $\mathit{EPSV}$ vorzugebenden
+Genauigkeit \"{u}bereinstimmen. Die Energieh\"{o}hen in den abzweigenden Teilstrecken unterscheiden sich dann lediglich durch die
+in Ansatz gebrachten Abzweig- und Stromvereinigungsverluste. Die entsprechenden Verlustbeiwerte sind auf den zugeh\"{o}rigen
+Datens\"{a}tzen der abzweigenden Teilstreckenprofile anzugeben. Zu beachten ist hierbei, da{\ss} sich die Verlustbeiwerte jeweils
+auf die Geschwindigkeitsh\"{o}he im unverzweigten Gesamtprofil beziehen (siehe \cite{PressSchroeder} S.~293).
+
+
+\subsection{Beschreibung der Dateneingabe}
+
+F\"{u}r die Berechnung der Wasserspiegellagen und der Wassermengenaufteilung in verzweigten Systemen sind in \wspwin{}
+folgende Vorarbeiten erforderlich:
+\begin{enumerate}
+   \item Jede Teilstrecke eines verzweigten Systems erh\"{a}lt eine Verzweigungskennziffer $\mathit{VZK}$. Das erste, noch
+      unverzweigte Querprofil besitzt die Kennziffer \mbox{$\mathit{VZK} = 1$}. Die Teilstreckennummern sind in
+      Flie{\ss}richtung (also entgegengesetzt zur Reihenfolge der Profileingabe) sukzessive zu erh\"{o}hen. Eine
+      Teilstreckennummer kann erst dann festgelegt werden, wenn alle Zufl\"{u}sse zu der betreffenden Teilstrecke bekannt sind.
+   \item Die Teilstreckennummern sind bei der Eingabe der Schl\"{u}sseldaten der Querprofile als Verzweigungskennung anzugeben.
+      Die Anzahl der Querprofile einer Teilstrecke ist beliebig. Die Eingabe erfolgt gegen die Flie{\ss}richtung, d.h. die
+      Querprofile mit der h\"{o}chsten Teilstreckennummer werden zuerst eingegeben. Danach folgen die Querprofile mit der
+      n\"{a}chst kleineren Teilstreckennummer. Die Reihenfolge der Profile in der Strangtabelle ist nicht beliebig, sondern
+      wird vom Benutzer durch die Teilstreckennumerierung festgelegt.
+   \item Die Art der Netzverkn\"{u}pfung ist beliebig. Zum Aufbau des Netzes ist f\"{u}r jede Teilstrecke einer Verzweigung ein
+      Netzverkn\"{u}pfungssatz beim Editieren der Steuerdaten (bzw. auch beim Konvertieren von Daten aus dem LWA-Format) mit
+      folgenden Angaben einzugeben:
+      \begin{itemize}
+         \item Teilstreckennummer (Wert vorgegeben)
+         \item Teilstreckennummer des ersten Zuflusses $\mathit{KZU1}$
+         \item Teilstreckennummer des zweiten Zuflusses $\mathit{KZU2}$
+         \item Teilstreckennummer des ersten Abflusses $\mathit{KAB1}$
+         \item Teilstreckennummer des zweiten Abflusses $\mathit{KAB2}$
+         \item Startwert f\"{u}r die iterative Berechnung der Abflu{\ss}aufteilung (bei Eingabe von 0 wird die Abflu{\ss}aufteilung
+               auf $50\%$ gesetzt)
+         \item Berechnung der Abflu{\ss}aufteilung (Wird die Option nicht angekreuzt, bleibt der Startwert f\"{u}r die
+               iterative Berechnung der Abflu{\ss}aufteilung unver\"{a}ndert. Wenn die Option gew\"{a}hlt wird, wird die
+               Wassermengenaufteilung f\"{u}r diesen Knoten iterativ ermittelt.
+      \end{itemize}
+   \end{enumerate}
+Die Kennziffern $\mathit{KZU1}$ und $\mathit{KAB1}$ m\"{u}ssen f\"{u}r jede Teilstrecke vorhanden sein (ungleich Null), hiervon
+ausgenommen sind lediglich Anfangs- und Endstrecke der Verzweigung. In der Windows-Oberfl\"{a}che erfolgt die Dateneingabe
+folgenderma{\ss}en:
+
+Beim Neuanlegen eines Profiles ist f\"{u}r jede Station eine Verzweigungskennung zu vergeben, \"{u}ber die Sie das Profil einer Teilstrecke bzw. einem Knoten zuordnen.
+
+Sie können nur unter \menu{\marrow Extras \marrow Optionen} in dem Dialog Standardeinstellungen entscheiden, ob Sie das Profil manuell in die Strangtabelle einordnen möchten, oder ob Sie eine automatische Einsortierung wünschen (Abbildung~\ref{Sonderprofile Abb VerzweigungOptionen}). Im Normalfall wird man die automatische Einsortierung einstellen und nur bei auftauchenden Fehlern manuell nachjustieren. Im gleichen Dialog kann auch die Sortierreihenfolge im Längsschnitt verändert werden. Sie lässt sich anhand der Stationierung oder der Verzweigung durchführen.
+
+\begin{figure}
+   \centering
+   \includegraphics[width=0.5\textwidth]{VerzweigungProfilschluessel.png}
+   \caption{Profilschl\"{u}ssel bei der Eingabe einer Verzweigung}
+   \label{Sonderprofile Abb VerzweigungOptionen}
+\end{figure}
+
+Die Reihenfolge der Profile in der Strangtabelle verl\"{a}uft entgegen der Flie{\ss}richtung, wobei darauf zu achten ist, da{\ss} die
+Verzweigungskennungen kontinuierlich abnehmen, also z.B. nicht Teilstrecke~2 vor Teilstrecke~3 einsortiert wird. Innerhalb
+der Teilstrecken erfolgt die Stationierung entgegen der Flie{\ss}richtung in aufsteigender Reihenfolge. Es ist darauf zu
+achten, da{\ss} die Stationierung kontinuierlich fortlaufend ist, z.B. kann bei einer verzweigten Teilstrecke die
+Stationierung nicht wieder pl\"{o}tzlich bei $0$ beginnen, wenn weiter stromab f\"{u}r den Gesamtflu{\ss} bereits h\"{o}here
+$\unit{km}$-Angaben vorliegen.
+
+\begin{figure}[htbp]
+   \centering
+   \includegraphics[width=0.8\textwidth]{VerzweigungStrangEinordnen}
+   \caption{Einf\"{u}gen eines Profiles in die Strangtabelle bei verzweigten Systemen}
+   \label{Sonderprofile Abb VerzweigungStrangEinordnen}
+\end{figure}
+
+Bei der manuellen Sortierung wählen Sie durch Anklicken des entsprechenden Listeneintrages den Strang aus, bei dem ihr aktuelles Profil (die
+Station wird in der linken unteren Ecke noch einmal angezeigt) als Endprofil einzuf\"{u}gen ist. Sofern die Station auch als
+Anfangsprofil des nachfolgenden Stranges \"{u}bernommen werden soll, markieren Sie die Checkbox \checkbox{Endprofil =
+Anfangsprofil des n\"{a}chsten Stranges} durch ein Kreuz. Standardm\"{a}{\ss}ig ist dieses K\"{a}stchen immer aktiviert. Soll das neue
+Profil dagegen ganz am Anfang der Strangtabelle eingef\"{u}gt werden, ist das Kontrollk\"{a}stchen \checkbox{Am Anfang einf\"{u}gen}
+zu markieren. Die Dialogmaske \dialog{Strang in verzweigtem System} stellt eine Vereinfachung bez\"{u}glich der Bearbeitung
+der Strangtabelle dar, die jederzeit auch per Hand editiert werden kann.
+
+\begin{hinweis}
+	Nachdem das Profil in die Strangtabelle manuell oder automatisch einsortiert wurde, ist 
+	bez\"{u}glich des	Profilabstandes beim \"{U}bergang von einer	Teilstrecke zur anderen 
+	ggf. eine Korrektur in der Strangtabelle vorzunehmen, da der Profilabstand automatisch
+	aus der	Differenz der Stationen errechnet wird. Beim \"{U}bergang von z.B. Teilstrecke~3 
+	zu Teilstrecke~2 ist also als Profilabstand	nicht die Differenz zwischen dem letzten 
+	Profil vom Strang~3 zum ersten Profil von Strang~2 (wie automatisch vorgegeben)
+	einzutragen, sondern dieser Wert mit dem Abstand vom Knotenprofil mit der Verzweigungskennung~4 
+	zum ersten Profil von	Strang~3 auf den Vorl\"{a}ndern und im Flu{\ss}schlauch in der 
+	Strangtabelle zu \"{u}berschreiben.
+\end{hinweis}
+
+Sobald sich mindestens ein Profil mit einer Verzweigungskennung ungleich Null in Ihrer Vernetzungsdatei befindet, mu{\ss} f\"{u}r
+jede Teilstrecke innerhalb des gew\"{a}hlten Berechnungsabschnittes die Netzverkn\"{u}pfung definiert werden. Der Dialog dazu kann
+\"{u}ber \menu{\marrow Z\underline{u}stand \marrow \underline{N}etzverkn\"{u}pfung} aufgerufen werden.
+
+\begin{figure}[htbp]
+   \centering
+   \includegraphics[width=0.8\textwidth]{DialogNetzverknuepfung}
+   \caption{Dialogmaske zur Festlegung der Abflu{\ss}aufteilung bei einer Verzweigungsberechnung}
+   \label{Sonderprofile Abb Netzverknuepfung}
+\end{figure}
+
+Die Maske enth\"{a}lt Eingabefelder zur Definition der Zuflu{\ss} und Abflu{\ss}wassermengen an den jeweiligen Teilstrecken. Im
+obersten, grau hinterlegten Feld finden Sie die Verzweigungskennziffer, auf die sich die nachfolgenden Angaben beziehen.
+Der Teilstrom~1 (Knoten~1) wird beispielsweise aus dem unverzweigten Flu{\ss}lauf gespeist -- f\"{u}r die Verteilungskennziffern
+der Zul\"{a}ufe ist also jeweils Null einzutragen. Gleichzeitig teilt sich hier jedoch der Abflu{\ss} auf die Teilstr\"{o}me~2 und 3
+auf, d.h. die Verteilungskennziffern des zweiten und dritten Abflusses betragen~2 und 3. Da die Berechnung vom Unterwasser
+her erfolgt, liegt am Knoten~1 keine Aufteilung der Wassermenge mehr vor (Abflu{\ss}aufteilung 100\%). In gleicher Weise ist
+f\"{u}r alle \"{u}brigen Teilstr\"{o}me zu verfahren. Dabei k\"{o}nnen Sie jeweils eine Abflu{\ss}aufteilung durch die Eingabe einer
+Prozentzahl vorgeben oder durch Aktivieren der Option \checkbox{Abflu{\ss}aufteilung iterativ verbessern} iterativ berechnen
+lassen. Bei der iterativen Berechnung wird die eingetragene Abflu{\ss}aufteilung als Startwert verwendet.
+
+
+\subsection{Beispiel einer Verzweigungsberechnung}
+
+Ein Beispiel f\"{u}r ein verzweigtes System findet sich im Demobeispiel \afz{Bach}. Der Teilstreckenaufbau ist schematisch in
+Abbildung~\ref{Sonderprofile Abb VerzweigungSchema} dargestellt. Die Verzweigungskennungen~4 und 1 kennzeichnen Knoten,
+die Verzweigungskennungen~3 und 2 stehen f\"{u}r die Teilstrecken. Der unverzweigte Flu{\ss} erh\"{a}lt vor und nach der Verzweigung
+die Verzweigungskennziffer~0.
+
+Im Dialog \dialog{Netzverkn\"{u}pfung} werden dazu folgende Festlegungen zur Aufteilung der Abfl\"{u}sse getroffen:
+\begin{quote}
+   \begin{tabular}{lrrrr}
+      Verzweigungskennung  &  1  &  2  &  3  & 4 \\
+      Verzweigungskennung des 1. Zuflusses:  & \beisp{0}    & \beisp{1}   & \beisp{1}   & \beisp{2} \\
+      Verzweigungskennung des 2. Zuflusses:  & \beisp{0}    & \beisp{0}   & \beisp{0}   & \beisp{3} \\
+      Verzweigungskennung des 1. Ablaufs:    & \beisp{2}    & \beisp{4}   & \beisp{4}   & \beisp{4} \\
+      Verzweigungskennung des 2. Ablaufs:    & \beisp{3}    & \beisp{0}   & \beisp{0}   & \beisp{0} \\
+      Abflu{\ss}menge [\%]:                      & \beisp{100}  & \beisp{~50} & \beisp{~50} & \beisp{100} \\
+      Abflu{\ss}aufteilung iterativ verbessern:  & \checkbox{}  & \checkbox{} & \checkbox{} & \checkbox{}
+   \end{tabular}
+\end{quote}
+
+\begin{sidewaysfigure}
+   \includegraphics[width=0.8\textwidth]{VerzweigungSchema}
+   \caption{Schematische Darstellung der Verzweigung des Demobeispiels \afz{Bach}. Die Ziffern in Klammern hinter der Stationierung geben die Verzweigungskennziffer $\mathit{VKZ}$ wieder. Die Tabelle daneben gibt die Reihenfolge der Profileingabe in der Strangtabelle an.}
+   \label{Sonderprofile Abb VerzweigungSchema}
+\end{sidewaysfigure}
+
