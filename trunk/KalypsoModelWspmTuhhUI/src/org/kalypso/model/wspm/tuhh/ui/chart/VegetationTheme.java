@@ -73,8 +73,8 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  * @author kimwerner
  */
 public class VegetationTheme extends AbstractProfilTheme
-
 {
+  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.2" ); //$NON-NLS-1$
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
@@ -194,7 +194,7 @@ public class VegetationTheme extends AbstractProfilTheme
 
   public VegetationTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.2" ), chartLayers, cm ); //$NON-NLS-1$
+    super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, TITLE, chartLayers, cm );
     setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) ); //$NON-NLS-1$
   }
 
@@ -240,15 +240,15 @@ public class VegetationTheme extends AbstractProfilTheme
     getLineStyle().apply( gc );
     if( clipping.width > 12 )
     {
-      final int size = Math.min( clipping.width , 20 );
+      final int size = Math.min( clipping.width, 20 );
       final int left = clipping.x - size / 2;
       final int top = clipping.y - size / 2;
       final int right = left + size;
-      final int bottom = top + size ;
+      final int bottom = top + size;
 
-      gc.drawLine( clipping.x - 3, bottom- size / 2, clipping.x + 3, bottom- size / 2 );
-      gc.drawLine( clipping.x, bottom- size / 2, clipping.x, clipping.y - size / 2);
-      gc.drawOval( left + 2, top- size / 2, right - left - 4, bottom - clipping.y + 4 );
+      gc.drawLine( clipping.x - 3, bottom - size / 2, clipping.x + 3, bottom - size / 2 );
+      gc.drawLine( clipping.x, bottom - size / 2, clipping.x, clipping.y - size / 2 );
+      gc.drawOval( left + 2, top - size / 2, right - left - 4, bottom - clipping.y + 4 );
     }
     else
       gc.drawLine( clipping.x, clipping.y - 12, clipping.x, clipping.y );
@@ -257,10 +257,10 @@ public class VegetationTheme extends AbstractProfilTheme
   final boolean segmenthasVegetation( final IRecord point )
   {
 
-      final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
-      final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
-      final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
-      return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
+    final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+    final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+    final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
+    return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
 
   }
 }

@@ -61,23 +61,25 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * @author kimwerner
  */
 public class BuildingBridgeTheme extends AbstractProfilTheme
-
 {
+  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.0" ); //$NON-NLS-1$
+
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if(hint.isPointsChanged()||hint.isPointValuesChanged()||hint.isActivePointChanged())
+    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isActivePointChanged() )
     {
-       fireLayerContentChanged();
+      fireLayerContentChanged();
     }
   }
 
-  public BuildingBridgeTheme(final IProfil profil,final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public BuildingBridgeTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(profil, IWspmTuhhConstants.LAYER_BRUECKE, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.0"), chartLayers, cm ); //$NON-NLS-1$
+    super( profil, IWspmTuhhConstants.LAYER_BRUECKE, TITLE, chartLayers, cm );
   }
 
   /**
@@ -89,7 +91,6 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
     return new BridgePanel( getProfil() );
   }
 
- 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
    */
@@ -97,8 +98,8 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.1"), getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[]{} ) );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.1" ), getProfil(), true ); //$NON-NLS-1$
+    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) );
     new ProfilOperationJob( operation ).schedule();

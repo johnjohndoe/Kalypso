@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -61,13 +60,12 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * @author kimwerner
  */
 public class BuildingTubesTheme extends AbstractProfilTheme
-
 {
+  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.0" ); //$NON-NLS-1$
 
-  public BuildingTubesTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public BuildingTubesTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(profil, IWspmTuhhConstants.LAYER_TUBES, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.0"), chartLayers, cm ); //$NON-NLS-1$
-
+    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, chartLayers, cm );
   }
 
   /**
@@ -75,21 +73,23 @@ public class BuildingTubesTheme extends AbstractProfilTheme
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isObjectDataChanged() || hint.isObjectChanged() )
     {
       getEventHandler().fireLayerContentChanged( this );
     }
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
    */
   @Override
   public IChartLayer[] getLegendNodes( )
   {
-    return new IChartLayer[]{};
+    return new IChartLayer[] {};
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
    */
@@ -97,8 +97,8 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1"), getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectSet( profil, null) );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1" ), getProfil(), true ); //$NON-NLS-1$
+    operation.addChange( new ProfileObjectSet( profil, null ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
