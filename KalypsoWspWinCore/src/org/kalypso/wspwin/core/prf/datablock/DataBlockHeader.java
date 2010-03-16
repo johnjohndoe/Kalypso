@@ -53,14 +53,13 @@ import java.util.StringTokenizer;
  */
 public class DataBlockHeader
 {
-
   private String m_firstLine;
 
   private String m_secondLine;
 
   private String m_thirdLine;
 
-  private List<Integer> m_specifications = new ArrayList<Integer>();
+  private final List<Integer> m_specifications = new ArrayList<Integer>();
 
   public void printToPrinter( final PrintWriter pw )
   {
@@ -81,25 +80,27 @@ public class DataBlockHeader
     m_secondLine = "[-]"; //$NON-NLS-1$
     m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
   }
-  
-  public DataBlockHeader(final String firstLine )
+
+  public DataBlockHeader( final String firstLine )
   {
     m_firstLine = firstLine;
     m_secondLine = "[-]"; //$NON-NLS-1$
     m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
   }
-  public DataBlockHeader(final String firstLine ,final String secondLine)
+
+  public DataBlockHeader( final String firstLine, final String secondLine )
   {
     m_firstLine = firstLine;
     m_secondLine = secondLine;
     m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
   }
+
   public String getFirstLine( )
   {
     return m_firstLine;
   }
 
-  public void setFirstLine( String firstLine )
+  public void setFirstLine( final String firstLine )
   {
     m_firstLine = firstLine;
   }
@@ -109,7 +110,7 @@ public class DataBlockHeader
     return m_secondLine;
   }
 
-  public void setSecondLine( String secondLine )
+  public void setSecondLine( final String secondLine )
   {
     m_secondLine = secondLine;
   }
@@ -130,7 +131,7 @@ public class DataBlockHeader
     return m_thirdLine;
   }
 
-  public void setThirdLine( String thirdLine )
+  public void setThirdLine( final String thirdLine )
   {
     m_thirdLine = thirdLine;
     parseThirdLine();
@@ -148,7 +149,7 @@ public class DataBlockHeader
         final int i = Integer.parseInt( sT.nextToken() );
         m_specifications.add( i );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
         m_specifications.clear();
         break;
