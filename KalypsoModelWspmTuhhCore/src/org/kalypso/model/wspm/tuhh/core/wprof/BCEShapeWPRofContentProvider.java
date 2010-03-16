@@ -340,4 +340,13 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   {
     return getProperty( "TEILPROFIL", Integer.class, -1 ); //$NON-NLS-1$
   }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getFeature()
+   */
+  @Override
+  public Feature getFeature( )
+  {
+    return m_feature;
+  }
 }
