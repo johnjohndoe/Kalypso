@@ -74,7 +74,7 @@ public class CoordDataBlock extends AbstractDataBlock
 
   private Double[] m_ys = new Double[0];
 
-  public CoordDataBlock( DataBlockHeader dbh )
+  public CoordDataBlock( final DataBlockHeader dbh )
   {
     super( dbh );
   }
@@ -121,11 +121,11 @@ public class CoordDataBlock extends AbstractDataBlock
       {
         final String readLine = reader.readLine();
         if( readLine == null )
-          throw new EOFException( Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.0") ); //$NON-NLS-1$
+          throw new EOFException( Messages.getString( "org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.0" ) ); //$NON-NLS-1$
 
         sT = new StringTokenizer( readLine );
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         // TODO: ist das gut, vielleicht doch lieber ne exception raus werfen und das ganze profil
         // verwerfen??
@@ -142,7 +142,7 @@ public class CoordDataBlock extends AbstractDataBlock
 
       if( ci < 4 && counter + ci < count )
       {
-        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.1") ); //$NON-NLS-1$
+        m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.1" ) ); //$NON-NLS-1$
         return coords;
       }
 
@@ -155,10 +155,10 @@ public class CoordDataBlock extends AbstractDataBlock
 
           coords[counter] = Double.parseDouble( dblStr );
         }
-        catch( NoSuchElementException e )
+        catch( final NoSuchElementException e )
         {
           coords[counter] = 0.0;
-          m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.2",dblStr,  counter + 1  , e.getLocalizedMessage()));  //$NON-NLS-1$
+          m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.2", dblStr, counter + 1, e.getLocalizedMessage() ) ); //$NON-NLS-1$
         }
         counter++;
         if( counter == count )
@@ -187,12 +187,10 @@ public class CoordDataBlock extends AbstractDataBlock
    *          -
    */
   private void writeDoubleBlock( final Double[] dbls, final PrintWriter pw )
-
   {
     for( int i = 0; i < dbls.length; i++ )
     {
-
-      pw.write( formatDouble( dbls[i]==null? Double.NaN:dbls[i] ) );
+      pw.write( formatDouble( dbls[i] == null ? Double.NaN : dbls[i] ) );
 
       if( (i + 1) % 8 == 0 & i != dbls.length - 1 )
         pw.println();
