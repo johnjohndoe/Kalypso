@@ -57,33 +57,44 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
  */
 public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 {
+  private static final String POINT = "_POINT"; //$NON-NLS-1$
+
+  private static final String LINE = "_LINE"; //$NON-NLS-1$
+
   @Override
   protected void createStyles( )
   {
     // TODO: read styles from *.kod file
-    createPointMarkerSytles();
+    createPointMarkerStyles();
     createCrossSectionSytles();
     createRoughnessSytles();
     createBridgeSytles();
     createWeirSytles();
     createVegetationStyle();
+    createWasserspiegel2dStyle();
   }
 
-  private void createPointMarkerSytles( )
+  private void createWasserspiegel2dStyle( )
+  {
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WASSERSPIEGEL2D + LINE, LineStyle.class ); //$NON-NLS-1$
+    ls.setColor( new RGB( 0, 0, 255 ) );
+  }
+
+  private void createPointMarkerStyles( )
   {
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
 
-    final ILineStyle lsT = getStyleFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_LINE", LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle lsT = getStyleFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + LINE, LineStyle.class ); //$NON-NLS-1$
     lsT.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     lsT.setWidth( 2 );
 
     final ILineStyle lsD = lsT.copy();
     lsD.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
-    addStyle( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "_LINE", lsD ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + LINE, lsD ); //$NON-NLS-1$
 
     final ILineStyle lsB = lsT.copy();
     lsB.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
-    addStyle( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "_LINE", lsB ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + LINE, lsB ); //$NON-NLS-1$
   }
 
   private void createWeirSytles( )
@@ -91,39 +102,39 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
     final RGB col = markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.MARKER_TYP_WEHR + "_LINE", LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.MARKER_TYP_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( col );
-    addStyle( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE", ls.copy() ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.copy() );
   }
 
   private void createCrossSectionSytles( )
   {
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_LINE", LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 255, 150, 0 ) );
   }
 
   private void createVegetationStyle( )
   {
-    getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", LineStyle.class ).setColor( new RGB( 0, 255, 0 ) ); //$NON-NLS-1$
+    getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + LINE, LineStyle.class ).setColor( new RGB( 0, 255, 0 ) ); //$NON-NLS-1$
   }
 
   private void createBridgeSytles( )
   {
-    final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_LINE", LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + LINE, LineStyle.class ); //$NON-NLS-1$
     lsO.setColor( new RGB( 0, 128, 0 ) );
 
     final ILineStyle lsU = lsO.copy();
     lsU.setColor( new RGB( 0, 128, 179 ) );
-    addStyle( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_LINE", lsU ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + LINE, lsU ); //$NON-NLS-1$
   }
 
   private void createRoughnessSytles( )
   {
-    final IPointStyle psKS = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS + "_POINT", PointStyle.class ); //$NON-NLS-1$
+    final IPointStyle psKS = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS + POINT, PointStyle.class ); //$NON-NLS-1$
     psKS.getStroke().setColor( new RGB( 0, 0, 0 ) );
     psKS.setInlineColor( new RGB( 0, 0, 0 ) );
     psKS.setAlpha( 50 );
-    addStyle( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST + "_POINT", psKS.copy() ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST + POINT, psKS.copy() ); //$NON-NLS-1$
   }
 
 }

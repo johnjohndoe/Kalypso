@@ -61,24 +61,25 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * @author kimwerner
  */
 public class BuildingWeirTheme extends AbstractProfilTheme
-
 {
+  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.0" ); //$NON-NLS-1$
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if(hint.isActivePointChanged()||hint.isMarkerMoved()||hint.isPointPropertiesChanged()||hint.isPointValuesChanged()||hint.isPointsChanged())
+    if( hint.isActivePointChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
       fireLayerContentChanged();
     }
   }
 
-  public BuildingWeirTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public BuildingWeirTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(profil, IWspmTuhhConstants.LAYER_WEHR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.0"), chartLayers, cm ); //$NON-NLS-1$
+    super( profil, IWspmTuhhConstants.LAYER_WEHR, TITLE, chartLayers, cm );
 
   }
 
@@ -89,7 +90,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.1"), getProfil(), true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.1" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
     new ProfilOperationJob( operation ).schedule();
@@ -104,5 +105,4 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     return new WeirPanel( getProfil() );
   }
 
- 
 }

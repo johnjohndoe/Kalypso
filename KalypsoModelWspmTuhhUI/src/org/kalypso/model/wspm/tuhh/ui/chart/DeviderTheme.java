@@ -64,9 +64,11 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class DeviderTheme extends AbstractProfilTheme
 {
+  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.DeviderTheme.0" ); //$NON-NLS-1$
+
   public DeviderTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( profil, IWspmTuhhConstants.LAYER_DEVIDER, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.DeviderTheme.0" ), chartLayers, cm ); //$NON-NLS-1$
+    super( profil, IWspmTuhhConstants.LAYER_DEVIDER, TITLE, chartLayers, cm );
   }
 
   /**
@@ -95,7 +97,7 @@ public class DeviderTheme extends AbstractProfilTheme
         }
       }
     }
-    return cl.toArray( new IChartLayer[]{});
+    return cl.toArray( new IChartLayer[] {} );
   }
 
   @Override
@@ -118,6 +120,5 @@ public class DeviderTheme extends AbstractProfilTheme
 
     return new ILegendEntry[] { le };
   }
-
 
 }

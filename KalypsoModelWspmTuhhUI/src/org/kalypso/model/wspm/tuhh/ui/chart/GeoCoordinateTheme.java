@@ -57,12 +57,12 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * @author kimwerner
  */
 public class GeoCoordinateTheme extends AbstractProfilTheme
-
 {
+  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.0" ); //$NON-NLS-1$
 
-  public GeoCoordinateTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public GeoCoordinateTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(profil, IWspmTuhhConstants.LAYER_GEOKOORDINATEN, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.0"), chartLayers, cm ); //$NON-NLS-1$
+    super( profil, IWspmTuhhConstants.LAYER_GEOKOORDINATEN, TITLE, chartLayers, cm );
 
   }
 
@@ -72,8 +72,9 @@ public class GeoCoordinateTheme extends AbstractProfilTheme
   @Override
   public IChartLayer[] getLegendNodes( )
   {
-    return new IChartLayer[]{};
+    return new IChartLayer[] {};
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
    */
@@ -82,7 +83,7 @@ public class GeoCoordinateTheme extends AbstractProfilTheme
   {
     final IProfil profil = getProfil();
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.1"), getProfil(), true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.1" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) );
     new ProfilOperationJob( operation ).schedule();
