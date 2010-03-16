@@ -105,7 +105,10 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
     try
     {
       addSoil( profile );
+
       addMarker( profile );
+
+      addExtras( profile );
     }
     catch( final Exception e )
     {
@@ -113,6 +116,15 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
       final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
+  }
+
+  private void addExtras( final IProfil profile )
+  {
+    final WaterlevelExtra waterlevelExtra = new WaterlevelExtra();
+    final IWProfPoint[] soilPoints = getSoilPoints();
+    waterlevelExtra.findWaterlevel( soilPoints );
+    waterlevelExtra.insertWaterlevel( profile );
+    waterlevelExtra.moveDurchstroemteBereiche( profile );
   }
 
   private void addSoil( final IProfil profile ) throws Exception
@@ -178,12 +190,18 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   private void addDefaultMarkers( final IProfil profile, final int numberOfMarkersToAdd, final String markerType )
   {
-    final IRecord[] points = profile.getPoints();
-    if( points.length < 2 )
+    // TRICKY: we use the soil points, to determine the default points here...
+    // This is useful for extended profiles: the markers than sit on the last/first real wprof point.
+    final IWProfPoint[] soilPoints = getPoints( m_soilPointsID );
+
+    if( soilPoints.length < 2 )
       return;
 
-    final IRecord firstPoint = points[0];
-    final IRecord lastPoint = points[points.length - 1];
+    final IWProfPoint firstSoilPoint = soilPoints[0];
+    final IWProfPoint lastSoilPoint = soilPoints[soilPoints.length - 1];
+
+    final IRecord firstPoint = ProfilUtil.findPoint( profile, firstSoilPoint.getDistance().doubleValue(), 0.0001 );
+    final IRecord lastPoint = ProfilUtil.findPoint( profile, lastSoilPoint.getDistance().doubleValue(), 0.0001 );
 
     switch( numberOfMarkersToAdd )
     {

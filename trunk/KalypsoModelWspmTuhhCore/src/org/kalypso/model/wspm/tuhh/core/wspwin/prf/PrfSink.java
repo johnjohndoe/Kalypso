@@ -45,7 +45,9 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -65,6 +67,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
+import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
 /**
@@ -91,6 +94,10 @@ public class PrfSink implements IProfilSink
     writePoints( pw, p );
     writeDevider( pw, p );
     writeRauheit( pw, p );
+
+    // FIXME: spezial Zeugs für Steiermark, aber wohin?
+    writeWaterlevel( pw, p );
+
     if( p.getProfileObjects() != null )
       writeBuilding( pw, p );
     if( p.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
@@ -99,6 +106,17 @@ public class PrfSink implements IProfilSink
       writeBewuchs( pw, p );
     if( p.getComment() != null )
       writeComment( pw, p );
+  }
+
+  /**
+   * Experimental: only used for steiermark project....
+   */
+  private void writeWaterlevel( final DataBlockWriter pw, final IProfil p )
+  {
+    final PlotterWaterlevelWriter plotterExporter = new PlotterWaterlevelWriter( p );
+    final IDataBlock[] dbs = plotterExporter.createDataBlocks();
+    for( final IDataBlock dataBlock : dbs )
+      pw.addDataBlock( dataBlock );
   }
 
   private void writeComment( final DataBlockWriter pw, final IProfil profil )
@@ -185,7 +203,6 @@ public class PrfSink implements IProfilSink
   }
 
   private final DataBlockHeader createHeader( final String key )
-
   {
     final DataBlockHeader dbh = new DataBlockHeader();
 
@@ -284,8 +301,9 @@ public class PrfSink implements IProfilSink
   private void writeCoords( final IProfil profil, final IComponent prop, final CoordDataBlock db )
   {
     final IRecord[] points = profil.getPoints();
-    final Double[] Xs = new Double[points.length];
-    final Double[] Ys = new Double[points.length];
+
+    final List<Double> xs = new ArrayList<Double>( points.length );
+    final List<Double> ys = new ArrayList<Double>( points.length );
 
     final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int iProp = profil.indexOfProperty( prop );
@@ -293,29 +311,34 @@ public class PrfSink implements IProfilSink
     {
       try
       {
-        Xs[i] = (Double) points[i].getValue( iBreite );
+        final Object vBreite = points[i].getValue( iBreite );
+        final Object vProp = points[i].getValue( iProp );
 
-        final Double value = (Double) points[i].getValue( iProp );
-
-        if( value != null )
-          Ys[i] = value;
-        else
-          Ys[i] = 0.0;
+        // FIXME: das ist neu: vorher wurden Punkte mit vProp == null als 0.0 geschrieben.
+        if( vBreite instanceof Number && vProp instanceof Number )
+        {
+          xs.add( ((Number) vBreite).doubleValue() );
+          ys.add( ((Number) vProp).doubleValue() );
+        }
+        else if( vBreite instanceof Number )
+        {
+          xs.add( ((Number) vBreite).doubleValue() );
+          ys.add( 0.0 );
+        }
       }
       catch( final Exception e )
       {
-        Xs[i] = 0.0;
-        Ys[i] = 0.0;
-
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
       }
     }
-    db.setCoords( Xs, Ys );
+
+    final Double[] xArray = xs.toArray( new Double[xs.size()] );
+    final Double[] yArray = ys.toArray( new Double[ys.size()] );
+    db.setCoords( xArray, yArray );
   }
 
   private void writeHochRechts( final DataBlockWriter pw, final IProfil profil )
   {
-
     final DataBlockHeader dbhh = createHeader( "HOC" ); //$NON-NLS-1$
     final CoordDataBlock dbh = new CoordDataBlock( dbhh );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ), dbh );
