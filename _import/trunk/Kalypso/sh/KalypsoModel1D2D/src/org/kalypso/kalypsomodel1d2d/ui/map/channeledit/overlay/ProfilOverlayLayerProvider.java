@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -54,46 +55,21 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
  */
 public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
 {
-
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getRequieredLayer(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh#createLayers(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
   @Override
-  public String[] getRequiredLayer( final ProfilChartView view )
+  public IProfilChartLayer[] createLayers( final ProfilChartView chartView )
   {
-    final ArrayList<String> layers = new ArrayList<String>();
-    layers.addAll( Arrays.asList( super.getRequiredLayer( view ) ) );
-    layers.add( IWspmOverlayConstants.LAYER_OVERLAY );
-    return layers.toArray( new String[0] );
+    final List<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
+
+    final IProfilChartLayer[] superLayers = super.createLayers( chartView );
+    layers.addAll( Arrays.asList( superLayers ) );
+
+    final ProfilOverlayLayer overlay = new ProfilOverlayLayer( chartView, m_lsp );
+    overlay.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );
+    layers.add( overlay );
+
+    return layers.toArray( new IProfilChartLayer[layers.size()] );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#providesLayer(java.lang.String)
-   */
-  @Override
-  public boolean providesLayer( final String layerId )
-  {
-    return IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ) ? true : super.providesLayer( layerId );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayer(java.lang.String,
-   *      org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
-   */
-  @Override
-  public IProfilChartLayer createLayer( final String layerId, final ProfilChartView view )
-  {
-    
-    if( IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ) )
-    {
-      final ProfilOverlayLayer overlay = new ProfilOverlayLayer( view, m_lsp );
-      overlay.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );
-      return overlay;
-    }
-    final IProfilChartLayer layer = super.createLayer( layerId, view );
-    layer.lockLayer( true );
-    return layer;
-
-  }
-
 }
