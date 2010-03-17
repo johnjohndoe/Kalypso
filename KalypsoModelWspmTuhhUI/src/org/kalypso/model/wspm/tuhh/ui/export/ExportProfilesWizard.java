@@ -53,7 +53,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypsodeegree.model.feature.Feature;
@@ -93,20 +92,20 @@ public abstract class ExportProfilesWizard extends Wizard
     addPage( m_profileChooserPage );
   }
 
-  private IProfil[] getChosenProfiles( final Object[] profilFeatures )
+  private IProfileFeature[] getChosenProfiles( final Object[] profilFeatures )
   {
-    final Collection<IProfil> profiles = new ArrayList<IProfil>( profilFeatures.length );
+    final Collection<IProfileFeature> profiles = new ArrayList<IProfileFeature>( profilFeatures.length );
 
     for( final Object profilFeature : profilFeatures )
     {
-      if( profilFeature instanceof Feature )
+      if( profilFeature instanceof IProfileFeature )
       {
         final IProfileFeature wspmProfil = (IProfileFeature) profilFeature;
         if( wspmProfil != null )
-          profiles.add( wspmProfil.getProfil() );
+          profiles.add( wspmProfil );
       }
     }
-    return profiles.toArray( new IProfil[] {} );
+    return profiles.toArray( new IProfileFeature[] {} );
   }
 
   /**
@@ -116,7 +115,7 @@ public abstract class ExportProfilesWizard extends Wizard
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
-    final IProfil[] chosenProfiles = getChosenProfiles( profilFeatures );
+    final IProfileFeature[] chosenProfiles = getChosenProfiles( profilFeatures );
 
     final ICoreRunnableWithProgress m_exportJob = new ICoreRunnableWithProgress()
     {
@@ -142,5 +141,5 @@ public abstract class ExportProfilesWizard extends Wizard
     return !result.matches( IStatus.ERROR );
   }
 
-  protected abstract void exportProfiles( IProfil[] profiles, IProgressMonitor monitor ) throws CoreException;
+  protected abstract void exportProfiles( IProfileFeature[] profiles, IProgressMonitor monitor ) throws CoreException;
 }

@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.CsvSink;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -87,12 +87,8 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     addPage( m_profileFileChooserPage );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.export.ExportProfilesWizard#exportProfiles(org.kalypso.model.wspm.core.profil.IProfil[],
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  protected void exportProfiles( final IProfil[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File file = m_profileFileChooserPage.getFile();
     final SinkExporter exporter = new SinkExporter( new CsvSink() );

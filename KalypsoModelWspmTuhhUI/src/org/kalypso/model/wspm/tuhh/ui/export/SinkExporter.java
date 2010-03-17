@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 
@@ -68,7 +69,7 @@ public class SinkExporter
     m_sink = sink;
   }
 
-  public void export( final IProfil[] profiles, final File file, final IProgressMonitor monitor ) throws CoreException
+  public void export( final IProfileFeature[] profiles, final File file, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -88,7 +89,7 @@ public class SinkExporter
     }
   }
 
-  private void writeProfiles( final IProfil[] profiles, final File file ) throws IOException
+  private void writeProfiles( final IProfileFeature[] profiles, final File file ) throws IOException
   {
     OutputStream os = null;
     try
@@ -103,8 +104,12 @@ public class SinkExporter
     }
   }
 
-  private void writeProfiles( final IProfil[] profiles, final OutputStream os ) throws IOException
+  private void writeProfiles( final IProfileFeature[] profileFeatures, final OutputStream os ) throws IOException
   {
+    final IProfil[] profiles = new IProfil[profileFeatures.length];
+    for( int i = 0; i < profiles.length; i++ )
+      profiles[i] = profileFeatures[i].getProfil();
+
     // FIXME: what encoding?
     final OutputStreamWriter writer = new OutputStreamWriter( os );
     m_sink.write( profiles, writer );
