@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
@@ -96,7 +96,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void exportProfiles( final IProfil[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     SobekProfileExporter exporter = null;
 
@@ -106,9 +106,9 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
 
       final File file = m_profileFileChooserPage.getFile();
       exporter = new SobekProfileExporter( file );
-      for( final IProfil profil : profiles )
+      for( final IProfileFeature profil : profiles )
       {
-        exporter.writeProfile( profil );
+        exporter.writeProfile( profil.getProfil() );
         ProgressUtilities.worked( monitor, 1 );
       }
       exporter.close();

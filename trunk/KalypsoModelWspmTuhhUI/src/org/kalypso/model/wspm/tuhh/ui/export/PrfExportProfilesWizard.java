@@ -47,9 +47,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.PrfExporter;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
@@ -83,12 +82,8 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     addPage( m_profileFileChooserPage );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.export.ExportProfilesWizard#exportProfiles(org.kalypso.model.wspm.core.profil.IProfil[],
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  protected void exportProfiles( final IProfil[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File file = m_profileFileChooserPage.getFile();
 
