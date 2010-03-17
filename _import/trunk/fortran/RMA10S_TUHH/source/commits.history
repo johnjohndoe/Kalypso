@@ -1639,3 +1639,10 @@ new features introduced/ started to be introduced:
 209.) Refactoring: remove all common blocks
 210.) Refactoring: convert all operators to new form (== /= < <= >= >), enforce space enclosing other operators and capitalize (.NOT. .AND. .OR.)
 --- Stefan Kurzbach, 22.12.2009
+
+211.) changed interpolation of external wind data (affects getwind.f90)
+212.) changes for single wave data sets per time step (affects getwave.f90)
+213.) changed if-clause for the calculation of totalwsll for the output of extrernal boundary conditions (clq, clh) (affects check.f90)
+214.) changed format of external wind file to formatted (affects file.f90)
+
+--- Eva Falke, 17.03.2010
