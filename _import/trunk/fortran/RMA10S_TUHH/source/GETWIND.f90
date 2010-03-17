@@ -134,29 +134,28 @@
             TIN=tatime(I,J)       
             IF(CTIM < TIN) THEN
              tw=twin(I-1,J)+(twin(I,J)-twin(I-1,J))*                    &
-     &        (CTIM-TIM)/(TIN-TIM)  
-!EFa oct09, testing for winddirections               
-!ta=tain(I-1,J)+(tain(I,J)-tain(I-1,J))*              
-!+        (CTIM-TIM)/(TIN-TIM)                             
-             if (abs(tain(i-1,j))+abs(tain(i,j)) >= 180.0)then
-               ta = -(abs(tain(i,j))+abs(tain(i-1,j)))+360.
-               if (tain(i-1,j) < 0.0) then
-                 ta = tain(i-1,j)-ta*(ctim-tim)/(tin-tim)
-               else
-                 ta = tain(i-1,j)+ta*(ctim-tim)/(tin-tim)
+     &        (CTIM-TIM)/(TIN-TIM)   
+             if (tain(i-1,j).lt.0.0.and.tain(i,j).gt.0.0) then
+               tain(i-1,j) = 360. + tain(i-1,j)
+               ta = tain(i-1,j)+(tain(i,j)-tain(i-1,j))*                &
+     &              (ctim-tim)/(tin-tim)
+               if (ta.gt.180.)then
+                 ta = ta - 360.
                endif
-               if (ta < -180.) then
-                 ta = 360.-ta
-               elseif (ta > 180.) then
-                 ta = ta - 360
-               endif               
-             else                          
-               ta=tain(I-1,J)+(tain(I,J)-tain(I-1,J))*                  &
-     &         (CTIM-TIM)/(TIN-TIM)
-             endif    
-!-                      
-              RETURN
-!-              
+               tain(i-1,j) = tain(i-1,j)-360. 
+             elseif (tain(i-1,j).gt.0.0.and.tain(i,j).lt.0.0) then
+               tain(i,j) = 360. + tain(i,j)
+               ta = tain(i-1,j)+(tain(i,j)-tain(i-1,j))*                &
+     &              (ctim-tim)/(tin-tim)               
+               if (ta.gt.180.)then
+                 ta = ta - 360.
+               endif      
+               tain(i-1,j) = tain(i-1,j)-360.         
+             else
+               ta = tain(i-1,j)+(tain(i,j)-tain(i-1,j))*                &
+     &              (ctim-tim)/(tin-tim)
+             endif                       
+              RETURN        
             ENDIF
   260     CONTINUE
   300 CONTINUE
