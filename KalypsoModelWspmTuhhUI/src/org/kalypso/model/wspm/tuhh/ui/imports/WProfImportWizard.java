@@ -111,12 +111,13 @@ public class WProfImportWizard extends Wizard
   public boolean performFinish( )
   {
     final File shapeFile = m_wprofFilePage.getWProfFile();
+    final String wprofPath = shapeFile.getAbsolutePath();
 
     final String targetSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final String photoContext = m_wprofFilePage.getPhotoContext();
     final String pdfContext = m_wprofFilePage.getPdfContext();
 
-    final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_workspace, m_targetProject, targetSrs );
+    final TuhhProfileWProfContentHandler handler = new TuhhProfileWProfContentHandler( m_workspace, m_targetProject, targetSrs, wprofPath );
 
     final WProfProfileStrategyOptions profileStrategyOptions = m_wprofMarkerPage.getProfileStrategyOptions();
     final IProfileCreatorStrategy strategy = profileStrategyOptions.getCurrentStrategy();
