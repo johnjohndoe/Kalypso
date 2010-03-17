@@ -469,7 +469,10 @@ FileRead: DO
 !-----------------  
   ELSEIF(ID == 'INWAVE  ') THEN
     IWVIN=101
-    call fileOpen (IWVIN, trim(FNAME), 'OLD', 'UNFORMATTED', FNAM21, IERMSG)
+!EFa mar10, changed format to formatted
+    call fileOpen (IWVIN, trim(FNAME), 'OLD', 'FORMATTED', FNAM21, IERMSG)
+!    call fileOpen (IWVIN, trim(FNAME), 'OLD', 'UNFORMATTED', FNAM21, IERMSG)
+!-
 
 !surface stress data (INPUT) (unformatted file)  
 !-----------------------------------------------  
