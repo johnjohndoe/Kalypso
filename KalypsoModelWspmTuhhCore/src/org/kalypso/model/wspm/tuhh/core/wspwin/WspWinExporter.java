@@ -442,7 +442,7 @@ public class WspWinExporter
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );
         prfWriter = new PrintWriter( outPrfFile );
         final IProfilSink ps = new PrfSink();
-        ps.write(profil, prfWriter );
+        ps.write( new IProfil[] { profil }, prfWriter );
       }
 
       zustWriter.close();

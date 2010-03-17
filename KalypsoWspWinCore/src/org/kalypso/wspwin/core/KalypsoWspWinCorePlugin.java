@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoWspWinCorePlugin extends Plugin
+public class KalypsoWspWinCorePlugin extends AbstractUIPlugin
 {
 
   // The shared instance.

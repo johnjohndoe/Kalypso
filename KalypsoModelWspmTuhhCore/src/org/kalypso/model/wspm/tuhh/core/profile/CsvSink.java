@@ -119,8 +119,8 @@ public class CsvSink implements IProfilSink
   /**
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
    */
-
-  public boolean internalWrite( final IProfil[] profiles, final Writer writer ) throws IOException
+  @Override
+  public boolean write( final IProfil[] profiles, final Writer writer ) throws IOException
   {
     // get all components of the profiles in order to create table header
     // that fits
@@ -135,15 +135,4 @@ public class CsvSink implements IProfilSink
     return true;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSink#write(java.lang.Object, java.io.Writer)
-   */
-  @Override
-  public boolean write( final Object source, final Writer writer ) throws IOException
-  {
-    if( source instanceof IProfil[] )
-      return internalWrite( (IProfil[]) source, writer );
-
-    throw new IOException( "illegal Argument", new IllegalArgumentException( source.toString() ) );
-  }
 }
