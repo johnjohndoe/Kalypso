@@ -748,12 +748,15 @@
         TOTAL(J) = SUMX - SUMY
 !
 !EFa aug08, for calculation of qdir and output of external BC         
-!EFa jun09, added if-clause                
-        if (sumh .gt. 0.0) then      
+!EFa jun09, added if-clause
+!EFa jan10, changed if-clause (because sumh is > 0.0 when there is no transformation of the z-value)                
+        !if (sumh .gt. 0.0) then      
+        if (sumdl > 0.01) then
           TOTALWSLL = sumh / sumdl
         else
           totalwsll = -99.00
         endif
+!-
 !
 !Save the water that's going through the line within the current step        
         if (associated (ccls(j)%storageElt)) then
