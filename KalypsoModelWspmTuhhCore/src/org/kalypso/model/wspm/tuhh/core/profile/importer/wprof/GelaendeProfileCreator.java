@@ -90,8 +90,11 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
     /* We also add points that have no object-type: theses are probably points from the prolongation tool */
     final IWProfPoint[] unknownPoints = getPoints( "" );
-    for( final IWProfPoint point : unknownPoints )
-      profilePolygon.add( point );
+    if( unknownPoints != null )
+    {
+      for( final IWProfPoint point : unknownPoints )
+        profilePolygon.add( point );
+    }
 
     return profilePolygon.getPoints();
   }
@@ -120,7 +123,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   private void addExtras( final IProfil profile )
   {
-    final WaterlevelExtra waterlevelExtra = new WaterlevelExtra();
+    final Waterlevel2DCreator waterlevelExtra = new Waterlevel2DCreator();
     final IWProfPoint[] soilPoints = getSoilPoints();
     waterlevelExtra.findWaterlevel( soilPoints );
     waterlevelExtra.insertWaterlevel( profile );

@@ -64,9 +64,12 @@ class ProfileData
 
   private IProfil m_profile;
 
-  public ProfileData( final GeoTransformer transformer, final PunktattributMapping punktattribute )
+  private final String m_wprofPath;
+
+  public ProfileData( final GeoTransformer transformer, final PunktattributMapping punktattribute, final String wprofPath )
   {
     m_transformer = transformer;
+    m_wprofPath = wprofPath;
     m_markers = new ProfileMarkers( punktattribute );
   }
 
@@ -117,5 +120,10 @@ class ProfileData
       return null;
 
     return anyPoint.getRiverId();
+  }
+
+  public String getWProfPath( )
+  {
+    return m_wprofPath;
   }
 }

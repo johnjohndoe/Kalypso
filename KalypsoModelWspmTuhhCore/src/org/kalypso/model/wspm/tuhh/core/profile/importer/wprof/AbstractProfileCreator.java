@@ -108,8 +108,9 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileCreator#addProfiles(org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject)
    */
   @Override
-  public IProfil addProfile( final TuhhWspmProject project ) throws CoreException
+  public final IProfil addProfile( final TuhhWspmProject project ) throws CoreException
   {
+
     final IProfileFeature profileFeature = createNewProfile( project );
     if( profileFeature == null )
       return null;
@@ -183,7 +184,9 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   {
     addBasicData( profile );
 
-    final String newName = String.format( "%s (%s)", profile.getName(), m_description );
+ final String newName = String.format( "%s (%s)", profile.getName(), m_description );
+    // FIXME: Andrea
+//    final String newName = String.format( "%s", profile.getName(), m_description );
     profile.setName( newName );
 
     configure( profile );
@@ -193,10 +196,11 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   {
     final IWProfPoint wprofPoint = m_data.getProfilePolygones().getAnyPoint();
 
-    final String riverId = wprofPoint.getRiverId();
     final BigDecimal station = getStation( wprofPoint );
     final String comment = wprofPoint.getProfileComment();
     final String profileName = wprofPoint.getPNam();
+
+    System.out.println( String.format( "Create profile '%s'", profileName ) ); //$NON-NLS-1$
 
     profile.setName( profileName );
 
@@ -214,8 +218,6 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_COMMENT ) );
-
-    System.out.println( String.format( "Create profile for riverId '%s' at station '%f'", riverId, station ) ); //$NON-NLS-1$
   }
 
   public void setDoCreateProfileComment( final boolean createProfileComment )
