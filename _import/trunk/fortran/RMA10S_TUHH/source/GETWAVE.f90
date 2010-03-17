@@ -16,7 +16,9 @@
 !EFa aug08, changed if-clause      
 !IF(IT == 1.) THEN      
       IF(itime == 0)then
-!-      
+!-    
+!EFa nov09, testing waves
+        if (inwgt == 10) then  
 !EFa aug08, add weighting factors for external coordinates        
           READ(INWGT,'(A1000)') HEADWT
           DO N=1,NP
@@ -24,7 +26,9 @@
  5000     FORMAT(8X,I8,3I8,3F8.5)
           ENDDO
           CLOSE(INWGT)
-!-        
+!-
+        end if        
+!-
 !ipk jan98
         iydd=iyrr
         iyrd=iyrr
@@ -82,6 +86,15 @@
                 READ(iwvin,'(8x,i8,3f16.3)')                            &
      &              k,waveht(k),peakprd(k),wavedr(k)
               end do
+!EFa dec09, added for input of wave data (single wave data per time step)
+              if (nv == 1) then
+                do  n = 1,np
+                  waveht(n) = waveht(1)
+                  peakprd(n) = peakprd(1)
+                  wavedr(n) = wavedr(1)
+                enddo
+              endif
+!-              
             else
               do l=1,nv
                 READ(iwvin,'(8x,i8,3f16.3)')k,wvh1(k),wvt1(k),wva1(k)
@@ -232,11 +245,21 @@
 !
 !EFa aug08, added if-clause for the weighting factors of extrernal coordinates          
           if (icordin == 0) then
-            do k=1,np
-              WAVEHT(K)=wvh0(K)+FCTI*(wvh1(K)-wvh0(K))
-              WAVEDR(K)=wva0(K)+FCTI*(wva1(K)-wva0(K))
-              PEAKPRD(K)=wvt0(K)+FCTI*(wvt1(K)-wvt0(K))
-            end do
+!EFa dec09, added if-clause (nv = 1) for the input of wave data (single data set per time step)
+            if (nv == 1) then
+              do k = 1, np
+                WAVEHT(K)=wvh0(1)+FCTI*(wvh1(1)-wvh0(1))
+                WAVEDR(K)=wva0(1)+FCTI*(wva1(1)-wva0(1))
+                PEAKPRD(K)=wvt0(1)+FCTI*(wvt1(1)-wvt0(1))               
+              enddo
+            else
+              do k=1,np
+                WAVEHT(K)=wvh0(K)+FCTI*(wvh1(K)-wvh0(K))
+                WAVEDR(K)=wva0(K)+FCTI*(wva1(K)-wva0(K))
+                PEAKPRD(K)=wvt0(K)+FCTI*(wvt1(K)-wvt0(K))
+              end do
+            endif
+!-          
           else
             DO n=1,NP
               waveht(n) = 0
