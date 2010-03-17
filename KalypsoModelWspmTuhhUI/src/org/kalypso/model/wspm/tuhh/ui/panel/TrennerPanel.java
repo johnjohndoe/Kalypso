@@ -334,7 +334,11 @@ public class TrennerPanel extends AbstractProfilView
     if( tf_devs.length > 0 )
     {
       m_fzl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, tf_devs[0].getPoint() ) ) ); //$NON-NLS-1$
-      m_fzl_combo.setSelection( new StructuredSelection( tf_devs[0].getIntepretedValue() ) );
+      final Object intepretedValue = tf_devs[0].getIntepretedValue();
+      if( intepretedValue == null )
+        System.out.println( "null" );
+      else
+        m_fzl_combo.setSelection( new StructuredSelection( intepretedValue ) );
     }
     else
     {
@@ -345,7 +349,11 @@ public class TrennerPanel extends AbstractProfilView
     if( tf_devs.length > 1 )
     {
       m_fzr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, tf_devs[1].getPoint() ) ) ); //$NON-NLS-1$
-      m_fzr_combo.setSelection( new StructuredSelection( tf_devs[1].getIntepretedValue() ) );
+      final Object intepretedValue = tf_devs[1].getIntepretedValue();
+      if( intepretedValue == null )
+        System.out.println( "null" );
+      else
+        m_fzr_combo.setSelection( new StructuredSelection( intepretedValue ) );
     }
     else
     {
@@ -391,7 +399,7 @@ public class TrennerPanel extends AbstractProfilView
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged())
+    if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
