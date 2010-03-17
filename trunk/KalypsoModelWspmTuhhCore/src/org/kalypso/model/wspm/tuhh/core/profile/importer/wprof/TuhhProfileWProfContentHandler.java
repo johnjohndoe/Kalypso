@@ -73,10 +73,13 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   private IProfileCreatorStrategy m_strategy = new ProfileCreatorStrategy();
 
-  public TuhhProfileWProfContentHandler( final CommandableWorkspace workspace, final TuhhWspmProject project, final String targetSrs )
+  private final String m_wprofPath;
+
+  public TuhhProfileWProfContentHandler( final CommandableWorkspace workspace, final TuhhWspmProject project, final String targetSrs, final String wprofPath )
   {
     m_workspace = workspace;
     m_project = project;
+    m_wprofPath = wprofPath;
     m_transformer = new GeoTransformer( targetSrs );
   }
 
@@ -151,7 +154,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     final String pNam = wprofPoint.getPNam();
 
     if( !m_data.containsKey( pNam ) )
-      m_data.put( pNam, new ProfileData( m_transformer, m_punktattribute ) );
+      m_data.put( pNam, new ProfileData( m_transformer, m_punktattribute, m_wprofPath ) );
 
     return m_data.get( pNam );
   }

@@ -75,7 +75,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Gernot Belger
  */
-public class WaterlevelExtra
+public class Waterlevel2DCreator
 {
   private static final double WPROF_WATERLEVEL_MINIMAL_NODATA = -999999.999;
 
@@ -214,7 +214,7 @@ public class WaterlevelExtra
       }
     }
 
-    /* Enlarge by all points htat have a waterlevel */
+    /* Enlarge by all points that have a waterlevel */
     for( final SortedSet<Point2D> waterlevel : m_waterlevels.values() )
     {
       for( final Point2D point2d : waterlevel )
@@ -227,6 +227,10 @@ public class WaterlevelExtra
         }
       }
     }
+
+    /* Enlarge by 20m or at least 2 profile points */
+    dbMin -= 10.0;
+    dbMax += 10.0;
 
     createMarker( profile, dbMin, dbMax );
   }

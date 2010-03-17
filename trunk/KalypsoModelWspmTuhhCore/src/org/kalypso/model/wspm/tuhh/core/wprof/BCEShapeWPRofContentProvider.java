@@ -289,11 +289,11 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     final String dateText = date == null ? "-" : DateFormat.getDateInstance( DateFormat.MEDIUM ).format( date );
 // final String dateText = (String) m_feature.getProperty( "DATUM" );
 
-    final String profileName = getProfileName();
+    final String pnam = getPNam();
 
     final String pdfUrl = getPdfUrl();
 
-    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s%nPDF: %s ", getRiverId(), profileName, getComment(), getObjectType(), dateText, pdfUrl ); //$NON-NLS-1$
+    return String.format( "Gew-ID: %s%nProfilname: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s%nPDF: %s ", getRiverId(), pnam, getComment(), getObjectType(), dateText, pdfUrl ); //$NON-NLS-1$
   }
 
   private String getPdfUrl( )
