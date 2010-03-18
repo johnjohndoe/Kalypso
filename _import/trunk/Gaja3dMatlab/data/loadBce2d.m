@@ -4,6 +4,11 @@ function [ points, arcs, elements ] = loadBce2d( filename, varargin )
     if(fid == -1)
         error('Could not open file %s: %s', filename, message);
     end
+    line = fgetl(fid);
+    % if first line is a header (00), skip it (rewind otherwise)
+    if(~strncmp('00', line, 2))
+        fseek(fid, 0);
+    end
     data = textscan(fid, '%s %f %f %f %f %f %f %f %f %f %f');
     fclose(fid);
     

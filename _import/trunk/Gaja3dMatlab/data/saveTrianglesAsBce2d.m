@@ -91,7 +91,6 @@ function [xshift, yshift] = saveTrianglesAsBce2d( filename, elements, Xtri, Ytri
     arcCount = 0;
     arcIndex = [1 2; 2 3; 3 1]; % index pairs for traversing triangle arcs
     for t=1:totalTriCount
-        tic; % stop watch
         for node=1:3
             arcNodes = elements(t, arcIndex(node,:));
             node1 = arcNodes(1);

@@ -1,4 +1,4 @@
-function [handle] = plotBce2d( points, arcs, elements )
+function varargout = plotBce2d( points, arcs, elements )
     elementcount = size(elements,1);
     arccount = size(arcs,1);
     faces = zeros(elementcount, 4) * NaN;
@@ -38,8 +38,14 @@ function [handle] = plotBce2d( points, arcs, elements )
         end
     end
     faces(isnan(faces(:,1)),:) = [];
-    FV.vertices = points(:,1:3);
-    FV.faces = faces;
-    handle = patch(FV, 'FaceVertexCData', points(:,3), 'FaceColor','interp','EdgeColor','black');
+    if(nargout == 1)
+        FV.vertices = points(:,1:3);
+        FV.faces = faces;
+        % return handle to patch graphics
+        varargout{1} = patch(FV, 'FaceVertexCData', points(:,3), 'FaceColor','interp','EdgeColor','black');
+    elseif(nargout == 2)
+        varargout{1} = points;
+        varargout{2} = faces;
+    end
 end
 
