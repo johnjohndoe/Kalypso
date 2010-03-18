@@ -47,8 +47,8 @@ public class ShapeImportDescriptiorHelper
 {
   public final static Double parseAsDouble( final Object value )
   {
-    if( value instanceof Double )
-      return (Double) value;
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
     if( value instanceof String )
     {
       final String string = value.toString().replaceFirst( ",", "." );
