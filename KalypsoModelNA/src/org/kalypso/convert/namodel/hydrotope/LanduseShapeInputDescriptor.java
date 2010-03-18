@@ -130,9 +130,9 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
   public double getSealingCorrectionFactor( final int index ) throws CoreException
   {
     final Object property = getProperty( index, m_corrSealingColumn );
-    if( property instanceof Number )
-      return ((Number) property).doubleValue();
-
+    final Double value = ShapeImportDescriptiorHelper.parseAsDouble( property );
+    if( value != null )
+      return value;
     final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.4", m_corrSealingColumn ); //$NON-NLS-1$
     throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
   }
