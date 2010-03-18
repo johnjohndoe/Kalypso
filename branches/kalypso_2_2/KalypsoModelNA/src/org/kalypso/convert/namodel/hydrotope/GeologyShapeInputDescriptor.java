@@ -123,14 +123,14 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   public double getGWFactor( final int index ) throws CoreException
   {
     final Object property = getProperty( index, m_gwFactorColumn );
-    return property == null ? null : (Double) property;
+    return ShapeImportDescriptiorHelper.parseAsDouble( property );
   }
 
   @Override
   public double getMaxPerkulationsRate( final int index ) throws CoreException
   {
     final Object property = getProperty( index, m_maxPerculationRateColumn );
-    return property == null ? null : (Double) property;
+    return ShapeImportDescriptiorHelper.parseAsDouble( property );
   }
 
   /**
