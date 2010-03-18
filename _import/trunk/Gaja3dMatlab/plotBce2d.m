@@ -37,6 +37,7 @@ function [handle] = plotBce2d( points, arcs, elements )
             end
         end
     end
+    faces(isnan(faces(:,1)),:) = [];
     FV.vertices = points(:,1:3);
     FV.faces = faces;
     handle = patch(FV, 'FaceVertexCData', points(:,3), 'FaceColor','interp','EdgeColor','black');

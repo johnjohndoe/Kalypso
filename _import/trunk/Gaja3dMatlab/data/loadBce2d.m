@@ -8,7 +8,14 @@ function [ points, arcs, elements ] = loadBce2d( filename, varargin )
     fclose(fid);
     
     % find point rows
-    entries = reshape([data{:,2:11}], size(data{1},1), 10);
+    lastIndex = 3;
+    while(size(data{lastIndex+1},1) == size(data{lastIndex},1))
+        lastIndex = lastIndex + 1;
+        if(lastIndex == size(data,2))
+            break;
+        end
+    end
+    entries = reshape([data{:,2:lastIndex}], size(data{1},1), lastIndex-1);
     pkind = strcmp(data{:,1}, 'FP');
     points = zeros(sum(pkind), 4+4*(nargin-1));
     points(:,1:4) = entries(pkind,1:4);
@@ -22,13 +29,21 @@ function [ points, arcs, elements ] = loadBce2d( filename, varargin )
     
     if(nargout > 1)
         arckind = strcmp(data{:,1}, 'AR');
-        arcs = entries(arckind,2:6);
+        arcs = entries(arckind,2:5);
     end
     
     if(nargout > 2)
         elementkind = strcmp(data{:,1}, 'FE');
         elements = zeros(sum(elementkind), 12);
         elements(:,1:8) = entries(elementkind,2:9);
+        isActive = elements(:,2) > 0;
+        inactiveIds = find(~isActive);
+        for i=1:numel(inactiveIds)
+            setToZeroLeft = arcs(:,3) == inactiveIds(i);
+            setToZeroRight = arcs(:,4) == inactiveIds(i);
+            arcs(setToZeroLeft,3) = 0;
+            arcs(setToZeroRight,4) = 0;
+        end
         frkind = strcmp(data{:,1}, 'FR');
         if(~all(frkind==0))
             elements(:,9:12) = entries(frkind,2:5);
