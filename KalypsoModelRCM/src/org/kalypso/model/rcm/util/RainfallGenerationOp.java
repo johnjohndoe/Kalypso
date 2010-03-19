@@ -45,13 +45,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
@@ -76,13 +72,13 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * This class does the real generation stuff.
@@ -113,11 +109,13 @@ public class RainfallGenerationOp
 
   private final URL m_rcmGmlLocation;
 
+  private final URL m_catchmentGmlLocation;
+
   private final String m_catchmentFeaturePath;
 
   private final String m_catchmentObservationPath;
 
-  private final Map<QName, String> m_catchmentMetadata;
+  private final String m_catchmentAreaPath;
 
   private final String m_targetFilter;
 
@@ -125,35 +123,16 @@ public class RainfallGenerationOp
 
   private final Date m_targetTo;
 
-  private final GMLWorkspace m_catchmentWorkspace;
-
-  private final ILog m_log;
-
-  /**
-   * The constructor.
-   * 
-   * @param rcmGmlLocation
-   * @param catchmentWorkspace
-   * @param catchmentFeaturePath
-   * @param catchmentObservationPath
-   * @param catchmentMetadata
-   * @param targetFilter
-   * @param targetFrom
-   * @param targetTo
-   * @param log
-   *          If provided, the generators will write messages to this log.
-   */
-  public RainfallGenerationOp( final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo, final ILog log )
+  public RainfallGenerationOp( final URL rcmGmlLocation, final URL catchmentGmlLocation, final String catchmentFeaturePath, final String catchmentObservationPath, final String catchmentAreaPath, final String targetFilter, final Date targetFrom, final Date targetTo )
   {
     m_rcmGmlLocation = rcmGmlLocation;
-    m_catchmentWorkspace = catchmentWorkspace;
+    m_catchmentGmlLocation = catchmentGmlLocation;
     m_catchmentFeaturePath = catchmentFeaturePath;
     m_catchmentObservationPath = catchmentObservationPath;
-    m_catchmentMetadata = catchmentMetadata;
+    m_catchmentAreaPath = catchmentAreaPath;
     m_targetFilter = targetFilter;
     m_targetFrom = targetFrom;
     m_targetTo = targetTo;
-    m_log = log;
   }
 
   public void addGenerator( final String gmlId, final Date from, final Date to )
@@ -161,20 +140,22 @@ public class RainfallGenerationOp
     m_generators.add( new Generator( gmlId, from, to ) );
   }
 
-  public IObservation[] execute( final ILogger logger, final IProgressMonitor monitor ) throws CoreException
+  public void execute( final ILogger logger, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "", m_generators.size() * 10 + 2 * 3 + 10 );
 
     // 1. Load and verify catchments
-    final URL targetContext = m_catchmentWorkspace.getContext();
-    final Feature[] catchmentFeatureArray = findCatchmentFeatures( m_catchmentWorkspace, logger );
+    final GMLWorkspace catchmentWorkspace = loadGml( "Lade Einzugsgebiete", m_catchmentGmlLocation, logger, progress );
+    final URL targetContext = catchmentWorkspace.getContext();
+    final Feature[] catchmentFeatureArray = findCatchmentFeatures( catchmentWorkspace, logger );
     final TimeseriesLinkType[] targetLinks = findCatchmentLinks( catchmentFeatureArray, logger );
-    final List<IObservation>[] results = new List[catchmentFeatureArray.length];
+    final GM_Surface<GM_SurfacePatch>[] catchmentAreas = findCatchmentAreas( catchmentFeatureArray, logger );
+    final List<IObservation>[] results = new List[catchmentAreas.length];
     for( int i = 0; i < results.length; i++ )
       results[i] = new ArrayList<IObservation>();
 
     // 2. Load and verify generators
-    final GMLWorkspace rcmWorkspace = loadGML( "Lade Gebietsniederschlagsmodelldefinition", m_rcmGmlLocation, logger, progress );
+    final GMLWorkspace rcmWorkspace = loadGml( "Lade Gebietsniederschlagsmodelldefinition", m_rcmGmlLocation, logger, progress );
 
     for( final Generator generatorDesc : m_generators )
     {
@@ -182,7 +163,7 @@ public class RainfallGenerationOp
       {
         final Date from = generatorDesc.m_from;
         final Date to = generatorDesc.m_to;
-        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentFeatureArray, from, to, logger, m_log, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
+        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentAreas, from, to, logger, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
         if( obses == null )
         {
           final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorDesc.m_gmlId );
@@ -195,6 +176,7 @@ public class RainfallGenerationOp
         }
         else
         {
+          // sort by catchment
           for( int i = 0; i < obses.length; i++ )
           {
             final IObservation e = obses[i];
@@ -205,6 +187,7 @@ public class RainfallGenerationOp
             }
           }
         }
+
       }
       catch( final Exception e )
       {
@@ -220,20 +203,9 @@ public class RainfallGenerationOp
     // Combine observations and write into target file while applying the targetFilter
     progress.subTask( "Schreibe Zeitreihen" );
     final IObservation[] combinedObservations = combineObservations( results );
-
-    /* Add additional metadata, if wanted. */
-    addAdditionalMetadata( catchmentFeatureArray, combinedObservations );
-
-    if( targetLinks != null )
-      writeObservations( combinedObservations, targetLinks, targetContext );
+    writeObservations( combinedObservations, targetLinks, targetContext );
 
     ProgressUtilities.worked( progress, 10 );
-
-    /* Dispose the rainfall catchment workspace. */
-    if( rcmWorkspace != null )
-      rcmWorkspace.dispose();
-
-    return combinedObservations;
   }
 
   /**
@@ -247,6 +219,7 @@ public class RainfallGenerationOp
     final String href = o.getHref();
     final String identifier = o.getIdentifier();
     final String name = o.getName();
+    final Object target = o.getTarget();
     final MetadataList metadataList = new MetadataList();
     metadataList.putAll( o.getMetadataList() );
     final IAxis[] axisList = o.getAxisList(); // clone?
@@ -254,7 +227,7 @@ public class RainfallGenerationOp
 
     final SimpleTuppleModel clonedValues = new SimpleTuppleModel( values, new DateRange( from, to ) );
 
-    final SimpleObservation simpleObservation = new SimpleObservation( href, identifier, name, false, metadataList, axisList, clonedValues );
+    final SimpleObservation simpleObservation = new SimpleObservation( href, identifier, name, false, target, metadataList, axisList, clonedValues );
     return simpleObservation;
   }
 
@@ -265,46 +238,6 @@ public class RainfallGenerationOp
       result[i] = combineObservations( observationLists[i] );
 
     return result;
-  }
-
-  private void addAdditionalMetadata( final Feature[] catchmentFeatureArray, final IObservation[] combinedObservations )
-  {
-    if( m_catchmentMetadata == null || m_catchmentMetadata.size() == 0 )
-      return;
-
-    for( int i = 0; i < combinedObservations.length; i++ )
-    {
-      /* All arrays must be in the same order and must have the same length. */
-      IObservation observation = combinedObservations[i];
-      Feature feature = catchmentFeatureArray[i];
-      if( observation == null || feature == null )
-        continue;
-
-      /* Get the metadata list of this observation. */
-      MetadataList metadataList = observation.getMetadataList();
-
-      /* Get the qnames (keys) of the properties, which should be added as additional metadata. */
-      QName[] qnames = m_catchmentMetadata.keySet().toArray( new QName[] {} );
-      for( int j = 0; j < qnames.length; j++ )
-      {
-        /* Get the qname. */
-        QName qname = qnames[j];
-
-        /* Get the target string. */
-        String target = m_catchmentMetadata.get( qname );
-
-        /* Get the metadata property. */
-        Object property = feature.getProperty( qname );
-
-        /* Add the metadata property. */
-        if( property != null )
-          metadataList.setProperty( target, property.toString() );
-        else
-          metadataList.setProperty( target, "-" );
-      }
-
-      // TODO More fixed metadata ...
-    }
   }
 
   /**
@@ -335,19 +268,7 @@ public class RainfallGenerationOp
     }
   }
 
-  /**
-   * @param generatorDesc
-   * @param rcmWorkspace
-   * @param catchmentFeatures
-   * @param from
-   * @param to
-   * @param logger
-   *          To this log, the function will write its messages.
-   * @param log
-   *          If provided, the generators will write messages to this log.
-   * @param monitor
-   */
-  private IObservation[] generate( final Generator generatorDesc, final GMLWorkspace rcmWorkspace, final Feature[] catchmentFeatures, final Date from, final Date to, final ILogger logger, final ILog log, final IProgressMonitor monitor ) throws CoreException
+  private IObservation[] generate( final Generator generatorDesc, final GMLWorkspace rcmWorkspace, final GM_Surface<GM_SurfacePatch>[] catchmentAreas, final Date from, final Date to, final ILogger logger, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
@@ -358,7 +279,6 @@ public class RainfallGenerationOp
       return null;
     }
 
-    /* Get the rainfall generator. */
     final Feature feature = rcmWorkspace.getFeature( generatorId );
     if( feature == null )
     {
@@ -370,20 +290,17 @@ public class RainfallGenerationOp
     final IRainfallGenerator rainGen = (IRainfallGenerator) feature;
     if( rainGen == null )
     {
-      final String msg = String.format( "Generator mit ID '%s' konnte nicht instanziiert werden. Eintrag wird ignoriert.", generatorId );
+      final String msg = String.format( "Generator mit ID '%s' konnte nicht instantiiert werden. Eintrag wird ignoriert.", generatorId );
       logger.log( Level.SEVERE, -1, msg );
       return null;
     }
-
-    /* Update the generator with the log, he should use. */
-    rainGen.setLog( log );
 
     final String generatorName = rainGen.getName();
     progress.subTask( generatorName );
 
     try
     {
-      final IObservation[] observations = rainGen.createRainfall( catchmentFeatures, from, to, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      final IObservation[] observations = rainGen.createRainfall( catchmentAreas, from, to, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
       final String msg = String.format( "Generator '%s' erfolgreich ausgeführt.", generatorName );
       logger.log( Level.INFO, -1, msg );
       return observations;
@@ -426,9 +343,6 @@ public class RainfallGenerationOp
 
   private TimeseriesLinkType[] findCatchmentLinks( final Feature[] catchments, final ILogger logger ) throws CoreException
   {
-    if( m_catchmentObservationPath == null )
-      return null;
-
     final FeaturePath featurePath = new FeaturePath( m_catchmentObservationPath );
 
     final TimeseriesLinkType[] links = new TimeseriesLinkType[catchments.length];
@@ -457,6 +371,37 @@ public class RainfallGenerationOp
     return links;
   }
 
+  @SuppressWarnings("unchecked")
+  private GM_Surface<GM_SurfacePatch>[] findCatchmentAreas( final Feature[] catchments, final ILogger logger ) throws CoreException
+  {
+    final FeaturePath featurePath = new FeaturePath( m_catchmentAreaPath );
+
+    final GM_Surface<GM_SurfacePatch>[] areas = new GM_Surface[catchments.length];
+
+    for( int i = 0; i < catchments.length; i++ )
+    {
+      final Feature catchment = catchments[i];
+      if( catchment == null )
+        continue;
+
+      final Object object = featurePath.getFeatureForSegment( catchment.getWorkspace(), catchment, 0 );
+      if( object instanceof GM_Surface )
+        areas[i] = (GM_Surface) object;
+      else if( object == null )
+      {
+        logger.log( Level.WARNING, -1, "Einzugsgebiet ohne Polygonfläche: " + catchment );
+        catchments[i] = null; // does not make sense to process
+      }
+      else
+      {
+        final String msg = String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface", object, m_catchmentAreaPath );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
+      }
+    }
+
+    return areas;
+  }
+
   private Feature[] findCatchmentFeatures( final GMLWorkspace catchmentWorkspace, final ILogger logger ) throws CoreException
   {
     final FeaturePath catchmentFeaturePath = new FeaturePath( m_catchmentFeaturePath );
@@ -473,21 +418,15 @@ public class RainfallGenerationOp
     return array;
   }
 
-  private GMLWorkspace loadGML( final String msg, final URL location, final ILogger logger, final SubMonitor progress ) throws CoreException
+  private GMLWorkspace loadGml( final String msg, final URL location, final ILogger logger, final SubMonitor progress ) throws CoreException
   {
     try
     {
       progress.subTask( msg );
-      logger.log( Level.INFO, -1, msg + ": " + location );
-
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( location, null );
-
-      /* Transform. */
-      final TransformVisitor transformVisitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      workspace.accept( transformVisitor, workspace.getRootFeature(), TransformVisitor.DEPTH_INFINITE );
-
+      logger.log( Level.INFO, -1, msg + ": " + m_catchmentGmlLocation );
+      final GMLWorkspace catchmentWorkspace = GmlSerializer.createGMLWorkspace( location, null );
       ProgressUtilities.worked( progress, 3 );
-      return workspace;
+      return catchmentWorkspace;
     }
     catch( final CoreException e )
     {
@@ -499,4 +438,5 @@ public class RainfallGenerationOp
       throw new CoreException( status );
     }
   }
+
 }

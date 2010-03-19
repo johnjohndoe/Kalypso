@@ -46,38 +46,36 @@ import java.util.Date;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.rcm.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
-import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.transformation.GeoTransformer;
-import org.kalypso.utils.log.LogUtilities;
+import org.kalypso.ogc.sensor.filter.filters.NOperationFilter;
+import org.kalypso.ogc.sensor.filter.filters.OperationFilter;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -97,149 +95,114 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
   public static final QName QNAME_PROP_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
-  public static final QName QNAME_PROP_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
 
-  /**
-   * The log.
-   */
-  private ILog m_log;
-
-  /**
-   * The constructor.
-   * 
-   * @param parent
-   *          The parent.
-   * @param parentRelation
-   *          The parent relation.
-   * @param featureType
-   *          The feature type.
-   * @param id
-   *          The feature id.
-   * @param propValues
-   *          The property values.
-   */
-  public OmbrometerRainfallGenerator( Object parent, IRelationType parentRelation, IFeatureType featureType, String id, Object[] propValues )
+  public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
-
-    m_log = null;
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#setLog(org.eclipse.core.runtime.ILog)
+   * @see
+   *      org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.geometry.GM_Surface<org
+   *      .kalypsodeegree.model.geometry.GM_SurfacePatch>[], java.util.Date, java.util.Date,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
-  public void setLog( ILog log )
+  public IObservation[] createRainfall( final GM_Surface<GM_SurfacePatch>[] areas, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
   {
-    m_log = log;
-  }
+    final Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
+    final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
+    final FeatureList ombrometerList = (FeatureList) new FeaturePath( collectionPath ).getFeatureForSegment( ombrometerCollection.getWorkspace(), ombrometerCollection, 0 );
+    final String areaPath = getProperty( QNAME_PROP_areaPath, String.class );
+    final String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
-   *      java.util.Date, java.util.Date, org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
-  {
-    /* Update the log. */
-    LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
+    // Find the ombrometer-areas
+    final Feature[] ombrometerFeatures = FeatureHelper.toArray( ombrometerList );
+    if( ombrometerFeatures.length < ombrometerList.size() )
+    {
+      // TODO: log problem
+    }
 
-    /* Get the needed properties. */
-    Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
-    String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
-    String areaPath = getProperty( QNAME_PROP_areaPath, String.class );
-    String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
-    String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
-
-    /* Create the paths. */
-    GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
-    GMLXPath areaXPath = new GMLXPath( areaPath, getWorkspace().getNamespaceContext() );
-    GMLXPath linkXPath = new GMLXPath( linkPath, getWorkspace().getNamespaceContext() );
-    GMLXPath catchmentAreaXPath = new GMLXPath( catchmentAreaPath, getWorkspace().getNamespaceContext() );
+    final GM_Surface< ? >[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaPath, new GM_Surface[ombrometerFeatures.length] );
+    final TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkPath, new TimeseriesLinkType[ombrometerFeatures.length] );
+    final URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
 
     try
     {
-      /* Get the ombrometers. */
-      FeatureList ombrometerList = (FeatureList) GMLXPathUtilities.query( collectionXPath, ombrometerCollection );
-
-      // Find the ombrometer-areas
-      Feature[] ombrometerFeatures = FeatureHelper.toArray( ombrometerList );
-      if( ombrometerFeatures.length < ombrometerList.size() )
-      {
-        // TODO: log problem
-      }
-
-      GM_Surface< ? >[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaXPath, new GM_Surface[ombrometerFeatures.length] );
-      TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
-      URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
-
-      IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceContext );
+      final IObservation[] ombrometerObservations = readObservations( ombrometerLinks, from, to, sourceContext );
 
       // Convert to JTS-Geometries
-      Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
-      GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
       for( int i = 0; i < ombrometerAreas.length; i++ )
       {
         if( ombrometerAreas[i] != null )
-        {
-          GM_Surface< ? > ombrometerArea = ombrometerAreas[i];
-          GM_Object ombrometerTransformed = transformer.transform( ombrometerArea );
-          ombrometerPolygons[i] = (Polygon) JTSAdapter.export( ombrometerTransformed );
-        }
+          ombrometerPolygons[i] = (Polygon) JTSAdapter.export( ombrometerAreas[i] );
       }
 
-      /* Get all catchment areas. */
-      GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaXPath );
-
       // Iterate through all catchments
-      IObservation[] result = new IObservation[areas.length];
+      final IObservation[] result = new IObservation[areas.length];
       for( int i = 0; i < areas.length; i++ )
       {
-        GM_MultiSurface area = areas[i];
+        final GM_Surface<GM_SurfacePatch> area = areas[i];
         if( area == null )
           continue;
 
-        Geometry areaGeometry = JTSAdapter.export( area );
-        double[] weights = JTSUtilities.fractionAreasOf( areaGeometry, ombrometerPolygons );
-        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights );
+        final Polygon areaPolygon = (Polygon) JTSAdapter.export( area );
+        final double[] weights = JTSUtilities.fractionAreasOf( areaPolygon, ombrometerPolygons );
+        result[i] = combineObses( ombrometerObservations, weights );
       }
-
-      /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, "Berechnet", null ) );
 
       return result;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
-      /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
-
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert Geometrie: " + e.toString(), e ) );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert Geometrie: " + e.toString(), e );
+      throw new CoreException( status );
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
-      /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
-
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine Observations: " + e.toString(), e ) );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine Observations: " + e.toString(), e );
+      throw new CoreException( status );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
-      /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
-
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e ) );
-    }
-    catch( Exception e )
-    {
-      /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
-
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create the rainfall: " + e.toString(), e ) );
-    }
-    finally
-    {
-      /* Update the log. */
-      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde beendet.", null ) );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e );
+      throw new CoreException( status );
     }
   }
+
+  private IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final URL context ) throws MalformedURLException, SensorException
+  {
+    final IRequest request = new ObservationRequest( from, to );
+
+    final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
+    for( int i = 0; i < ombrometerLinks.length; i++ )
+    {
+      final TimeseriesLinkType link = ombrometerLinks[i];
+      if( link != null )
+      {
+        final String href = link.getHref();
+        if( href != null )
+        {
+          final String hrefRequest = ZmlURL.insertRequest( href, request );
+          final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
+          if( zmlLocation != null )
+            readObservations[i] = ZmlFactory.parseXML( zmlLocation, href );
+        }
+      }
+    }
+
+    return readObservations;
+  }
+
+  private IObservation combineObses( final IObservation[] observations, final double[] weights ) throws SensorException
+  {
+    Assert.isTrue( observations.length == weights.length );
+
+    final IObservation[] weightedObervations = new IObservation[observations.length];
+    for( int i = 0; i < weights.length; i++ )
+      weightedObervations[i] = new OperationFilter( OperationFilter.OPERATION_MAL, weights[i], observations[i] );
+
+    return new NOperationFilter( NOperationFilter.OPERATION_PLUS, weightedObervations );
+  }
+
 }

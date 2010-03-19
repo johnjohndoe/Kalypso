@@ -29,7 +29,6 @@
  */
 package org.kalypso.model.rcm.ant;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,15 +45,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.model.rcm.util.RainfallGenerationOp;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.utils.log.GeoStatusLog;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * This task generates rainfall for catchment areas.
@@ -67,9 +60,9 @@ public class RainfallGenerationTask extends Task
   {
     private String m_id;
 
-    private String m_from;
+    private long m_from;
 
-    private String m_to;
+    private long m_to;
 
     public String getRcmId( )
     {
@@ -81,22 +74,22 @@ public class RainfallGenerationTask extends Task
       m_id = id;
     }
 
-    public String getFrom( )
+    public long getFrom( )
     {
       return m_from;
     }
 
-    public void setFrom( final String from )
+    public void setFrom( final long from )
     {
       m_from = from;
     }
 
-    public String getTo( )
+    public long getTo( )
     {
       return m_to;
     }
 
-    public void setTo( final String to )
+    public void setTo( final long to )
     {
       m_to = to;
     }
@@ -112,13 +105,13 @@ public class RainfallGenerationTask extends Task
 
   private String m_catchmentObservationPath;
 
+  private String m_catchmentAreaPath;
+
   private String m_targetFilter;
 
   private Date m_targetFrom;
 
   private Date m_targetTo;
-
-  private File m_logFile;
 
   public void addConfiguredGenerator( final Generator generator )
   {
@@ -145,24 +138,24 @@ public class RainfallGenerationTask extends Task
     m_catchmentObservationPath = catchmentObservationPath;
   }
 
+  public void setCatchmentAreaPath( final String catchmentAreaPath )
+  {
+    m_catchmentAreaPath = catchmentAreaPath;
+  }
+
   public void setTargetFilter( final String targetFilter )
   {
     m_targetFilter = targetFilter;
   }
 
-  public void setTargetFrom( final String targetFrom )
+  public void setTargetFrom( final Long targetFrom )
   {
-    m_targetFrom = DateUtilities.parseDateTime( targetFrom );
+    m_targetFrom = new Date( targetFrom );
   }
 
-  public void setTargetTo( final String targetTo )
+  public void setTargetTo( final Long targetTo )
   {
-    m_targetTo = DateUtilities.parseDateTime( targetTo );
-  }
-
-  public void setLogFile( final File logFile )
-  {
-    m_logFile = logFile;
+    m_targetTo = new Date( targetTo );
   }
 
   /**
@@ -203,26 +196,12 @@ public class RainfallGenerationTask extends Task
       final SubMonitor progress = SubMonitor.convert( monitor, taskMessage, 100 );
       progress.subTask( "Operation wird initialisiert" );
 
-      /* Load the catchment workspace. */
-      final GMLWorkspace catchmentWorkspace = GmlSerializer.createGMLWorkspace( m_catchmentUrl, null );
-
-      /* Tansform the catchment workspace. */
-      final TransformVisitor transformVisitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      catchmentWorkspace.accept( transformVisitor, catchmentWorkspace.getRootFeature(), TransformVisitor.DEPTH_INFINITE );
-
-      ProgressUtilities.worked( progress, 4 );
-
-      /* Create a log, if a log file was provided. */
-      GeoStatusLog log = null;
-      if( m_logFile != null )
-        log = new GeoStatusLog( m_logFile );
-
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo, log );
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, m_catchmentUrl, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, m_targetFilter, m_targetFrom, m_targetTo );
       for( final Generator generator : m_generators )
       {
+        final Date fromDate = new Date( generator.getFrom() );
+        final Date toDate = new Date( generator.getTo() );
         final String id = generator.getRcmId();
-        final Date fromDate = DateUtilities.parseDateTime( generator.getFrom() );
-        final Date toDate = DateUtilities.parseDateTime( generator.getTo() );
         operation.addGenerator( id, fromDate, toDate );
       }
       ProgressUtilities.worked( progress, 1 );
@@ -230,7 +209,7 @@ public class RainfallGenerationTask extends Task
       // call the operation
       try
       {
-        final SubMonitor subMon = progress.newChild( 95, SubMonitor.SUPPRESS_NONE );
+        final SubMonitor subMon = progress.newChild( 99, SubMonitor.SUPPRESS_NONE );
         operation.execute( logger, subMon );
       }
       catch( final CoreException ce )
@@ -238,10 +217,6 @@ public class RainfallGenerationTask extends Task
         final IStatus status = ce.getStatus();
         antProject.log( this, status.getMessage(), status.getException(), Project.MSG_ERR );
       }
-
-      /* Write the log, if one was created. */
-      if( log != null )
-        log.serialize();
     }
     catch( final Throwable e )
     {
