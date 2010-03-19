@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="featureview.template.kalypso.org featureview.xsd">
+	<layer id="foo" featurePath="/" linktype="gml" xlink:href="../../.calculation"/>
+	
+	<view typename="NAControl" style="0" tooltip="">
+		<gridData grabExcessHorizontalSpace="true"
+		 grabExcessVerticalSpace="true"/>
+		
+		<gridLayout numColumns="2" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
+
+<!--
+
+ Allgemeines:
+
+-->
+		<group text="Allgemeines" style="0">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2"  horizontalSpacing="10"/>
+			<label property="editor" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="editor" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="description" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="description" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="calctime" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="calctime" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="comment" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="comment" style="2050">
+				<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+			</text>
+		</group>
+
+<!--
+  
+Simulationszeit:
+ 
+
+-->
+		<group text="Simulationsmanagement" style="SWT.NONE">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessHorizontalSpace="true"/>		
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2"/>			
+			
+			<label property="startsimulation" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="startsimulation" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="startforecast" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="startforecast" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="hoursforecast" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="hoursforecast" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="minutesTimestep" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="minutesTimestep" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+			<label property="versionKalypsoNA" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="versionKalypsoNA" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+			</text>
+		</group>
+	</view>
+</featuretemplate>
