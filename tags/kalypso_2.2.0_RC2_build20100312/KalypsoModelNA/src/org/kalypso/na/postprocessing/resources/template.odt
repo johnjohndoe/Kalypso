@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obsv:obsdiagview xmlns:ns1="obstableview.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org">
+    <obsv:title>Neki naslov</obsv:title>
+    <obsv:legend visible="true" title=""/>
+    <obsv:features>Vorhersage;Alarmstufen</obsv:features>
+    <obsv:axis inverted="false" position="bottom" direction="horizontal" unit="" label="Datum" datatype="date" id="date"/>
+    <obsv:axis inverted="false" position="left" direction="vertical" unit="m³/s" label="Abfluss" datatype="double" id="Q"/>
+    <obsv:observation linktype="zml" xlink:href="platform:/resource//01_PLC_Kollau_NA/Rechenvarianten/Langzeitsimulation/Ergebnisse/2009-06-17(13-19-47)/Node/4500/Gesamtabfluss.zml">
+        <obsv:curve shown="true" color="78;227;28" name="Q - 4500 - Gesamtabfluss Node" id="C1">
+            <obsv:mapping diagram-axis="date" observation-axis="Datum"/>
+            <obsv:mapping diagram-axis="Q" observation-axis="Abfluss"/>
+            <obsv:stroke width="3.0"/>
+        </obsv:curve>
+    </obsv:observation>
+    <obsv:observation linktype="zml" xlink:href="platform:/resource//01_PLC_Kollau_NA/Rechenvarianten/Langzeitsimulation/Ergebnisse/2009-06-11(13-13-01)/Knoten/4500/Gesamtabfluss.zml">
+        <obsv:curve shown="true" color="0;128;64" name="Q - 4500 - Gesamtabfluss Knoten" id="C2">
+            <obsv:mapping diagram-axis="date" observation-axis="Datum"/>
+            <obsv:mapping diagram-axis="Q" observation-axis="Abfluss"/>
+            <obsv:stroke width="3.0"/>
+        </obsv:curve>
+    </obsv:observation>
+</obsv:obsdiagview>

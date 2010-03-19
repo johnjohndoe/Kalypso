@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:par="http://www.tuhh.de/parameter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<element name="Parameter" type="par:ParameterType"/>
+	<complexType name="ParameterType">
+		<complexContent>
+			<extension base="par:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="SnowCollectionMember" type="par:SnowCollectionAssociationType"/>
+					<element name="NutzungCollectionMember" type="par:NutzungCollectionAssociationType"/>
+					<element name="BodentypCollectionMember" type="par:BodentypCollectionAssociationType"/>
+					<element name="BodenartCollectionMember" type="par:BodenartCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NonGeometricAbstractFeatureType" abstract="true">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+			<!--				<sequence>
+					<element ref="gml:description" minOccurs="0"/>
+					<element ref="gml:name" minOccurs="0"/>
+				</sequence>-->
+		</complexContent>
+	</complexType>
+	<!--___SnowCollection_________________________________________________-->
+	<complexType name="SnowCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:SnowCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SnowCollection" type="par:SnowCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SnowCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="SnowMember" type="par:SnowAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SnowAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Schnee"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!--___Snow_________________________________________________-->
+	<element name="Schnee" type="par:SnowType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SnowType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
+   -->
+					<element name="texttyp" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Schneetyp</label>
+								<tooltip>Schneetyp Name</tooltip>
+								<description>Schneetyp, welcher einem Gebiet zugeordnet werden kann</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xwwo" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Neuschneedichte</label>
+								<tooltip>Wasseranteil im Schnee [-] (= 0-1)</tooltip>
+								<description>Wasseranteil im Schnee (Neuschneedichte) [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xwwmax" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>max. Wasseranteil</label>
+								<tooltip>maximaler Wasseranteil [-] (= 0-1)</tooltip>
+								<description>maximaler Wasseranteil (maximale Lagerungsdichte - Beginn der Schneeschmelze) [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xsnotem" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>temp. Schneeschmelzrate</label>
+								<tooltip>temperaturabhängige Schneeschmelzrate [mm/h]</tooltip>
+								<description>temperaturabhängige Schneeschmelzrate [mm/h]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xsnorad" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>strahl. Schneeschmelzrate</label>
+								<tooltip>strahlungsabhängige Schneeschmelzrate [mm/h]</tooltip>
+								<description>strahlungsabhängige Schneeschmelzrate [mm/h]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xh0" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangsschneehöhe</label>
+								<tooltip>Anfangsschneehöhe [mm]</tooltip>
+								<description>Anfangsschneehöhe [mm]</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___NutzungCollection_________________________________________________-->
+	<complexType name="NutzungCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:NutzungCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="NutzungCollection" type="par:NutzungCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="NutzungCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="NutzungMember" type="par:NutzungAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NutzungAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Nutzung"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!--___Nutzung_________________________________________________-->
+	<element name="Nutzung" type="par:NutzungType" substitutionGroup="gml:_Feature"/>
+	<complexType name="NutzungType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
+   -->
+					<element name="text" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bezeichnung</label>
+								<tooltip>Nutzungsbezeichnung</tooltip>
+								<description>Nutzungsbezeichnung</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="NutzungParameterMember" type="par:NutzungParameterAssociationType" minOccurs="12" maxOccurs="12">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Nutzungsparameter</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NutzungParameterAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:NutzungParameter"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="NutzungParameter" type="par:NutzungParameterType"/>
+	<complexType name="NutzungParameterType">
+		<complexContent>
+			<extension base="par:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="dat" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Datum</label>
+								<tooltip>Datum</tooltip>
+								<description>Datum</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xkc" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Korrekturfaktor der Verdunstung gegenüber potentieller Verdunstung</label>
+								<tooltip>Korrekturfaktor der Verdunstung gegenüber potentieller Verdunstung</tooltip>
+								<description>Korrekturfaktor der Verdunstung gegenüber potentieller Verdunstung</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--TODO: Link prüfen-->
+					<element name="xwt" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wurzeltiefe</label>
+								<tooltip>Wurzeltiefe [dm]</tooltip>
+								<description>Wurzeltiefe [dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xlai" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Speicherinhalt Interzeptionsspeicher </label>
+								<tooltip>Speicherinhalt Interzeptionsspeicher [mm]</tooltip>
+								<description>Speicherinhalt Interzeptionsspeicher [mm]</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___BodenartCollection_________________________________________________-->
+	<complexType name="BodenartCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:BodenartCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="BodenartCollection" type="par:BodenartCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BodenartCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="BodenartMember" type="par:BodenartAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BodenartAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Bodenart"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!--___Bodenart_________________________________________________-->
+	<element name="Bodenart" type="par:BodenartType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BodenartType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(typchar,*)(1)_(typkap,*)(1)_(typwp,*)(1)_(typfk,*)(1)_(typbfm,*)(1)_(typkf,*)(1)_(typbf0,*)(1)
+-->
+					<element name="typchar" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenartschlüssel</label>
+								<tooltip>Bodeartschlüssel</tooltip>
+								<description>Bodenartschlüssel auf den der Link aus der Bodentyppdatei bezogen ist</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- TODO: wird vom NA-Modell nicht verwendet -->
+					<element name="typkap" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Schlüssel für den kapillaren Aufstieg*</label>
+								<tooltip>Schlüssel für den kapillaren Aufstieg*</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<!--TODO: Link prüfen-->
+					<element name="typwp" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Welkepunkt</label>
+								<tooltip>Welkepunkt [mm/dm]</tooltip>
+								<description>Welkepunkt [mm/dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typfk" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Feldkapazität</label>
+								<tooltip>Feldkapazität [mm/dm]</tooltip>
+								<description>Feldkapazität [mm/dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typbfm" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>maximales Porenvolumen</label>
+								<tooltip>maximales Porenvolumen [mm/dm]</tooltip>
+								<description>maximales Porenvolumen [mm/dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typkf" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>kf-Wert</label>
+								<tooltip>kf-Wert [mm/d]</tooltip>
+								<description>kf-Wert [mm/d]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="typbf0" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangsbodenfeuchte</label>
+								<tooltip>Anfangsbodenfeuchte [-] (= 0-1)</tooltip>
+								<description>Anfangsbodenfeuchte [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___BodentypCollection_________________________________________________-->
+	<complexType name="BodentypCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:BodentypCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="BodentypCollection" type="par:BodentypCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BodentypCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="BodentypMember" type="par:BodentypAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BodentypAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Bodentyp"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!--___Bodentyp_________________________________________________-->
+	<element name="Bodentyp" type="par:BodentypType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BodentypType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--
+(text,a)
+(text6,a10)(ianz,i4)
+(char3,a8)(xtief,*)_(xret,*)
+(char3,a8)(xtief,*)_(xret,*)
+(char3,a8)(xtief,*)_(xret,*)
+			   -->
+					<element name="text6" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Profilbezeichnung</label>
+								<tooltip>Bodenprofilschlüssel/ Benennung</tooltip>
+								<description>Bodenprofilschlüssel, welcher die Zuordnung zu den Hydrotopen erlaubt</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="BodArtParameterMember" type="par:BodArtParameterAssociationType" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenhorizonte</label>
+								<tooltip>Bodenhorizonte</tooltip>
+								<description>Bodenhorizonte des Bodenprofils</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--BodArt Parameter-->
+	<complexType name="BodArtParameterAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:BodArtParameter"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="BodArtParameter" type="par:BodArtParameterType"/>
+	<complexType name="BodArtParameterType">
+		<complexContent>
+			<extension base="par:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="BodArtLink" type="par:BodenartAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenartschlüssel</label>
+								<tooltip>Bodenartschlüssel/ Bezeichnung des Bodenhorizontes</tooltip>
+								<description>Jedem Horizont ist eine Bodenart durch einen Bodenartschlüssel zugewiesen</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--TODO: Link prüfen-->
+					<element name="xtief" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Mächtigkeit</label>
+								<tooltip>Mächtigkeit des Bodenhorizontes [dm]</tooltip>
+								<description>Mächtigkeit des Bodenhorizontes [dm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xret" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Flag Interflow</label>
+								<tooltip>Auswahl Interflow [-] (= 0 oder 1)</tooltip>
+								<description>Auswahl, ob Interflow in diesem Horizont zugelassen wird [-] (0= nein, 1= ja) </description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

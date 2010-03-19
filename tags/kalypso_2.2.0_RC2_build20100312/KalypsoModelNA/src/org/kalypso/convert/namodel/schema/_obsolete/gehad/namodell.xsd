@@ -1,0 +1,1770 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.2">
+    <import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+    <import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+    <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
+    <!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+               <element name="Abfluss" type="obslink:TimeseriesLinkType/>
+        jetzt: <element name="Abfluss" type="obslink:TimeseriesLinkFeatureProperty/>
+	-->
+    <element name="Catchment" type="na:CatchmentFeatureType" substitutionGroup="gml:_Feature"/>
+    <element name="NaModell" type="na:NaModellType"/>
+    <complexType name="NaModellType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="CatchmentCollectionMember" type="na:CatchmentCollectionAssociationType"/>
+                    <element name="ChannelCollectionMember" type="na:ChannelCollectionAssociationType"/>
+                    <element name="NodeCollectionMember" type="na:NodeCollectionAssociationType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- __ Nodes _________________________________ -->
+    <complexType name="NodeCollectionAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="na:NodeCollection"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <element name="NodeCollection" type="na:NodeCollectionType" substitutionGroup="gml:_Feature"/>
+    <complexType name="NodeCollectionType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="nodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="NodeAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence minOccurs="0">
+                    <element ref="na:Node"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature"/>
+    <complexType name="NodeFeatureType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="Ort" type="gml:PointPropertyType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Ort</label>
+                                <tooltip>geometriescher Ort</tooltip>
+                                <description>Geometrie des Objektes</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Geometry</label>
+                                <tooltip>geometric position</tooltip>
+                                <description>Geometry of the Object</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="num" type="integer">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Nummer</label>
+                                <tooltip>Knoten Nummer</tooltip>
+                                <description>Jedem Knoten ist eine Knotennummer zugewiesen. Diese ist eindeutig und sollte nicht veraendert werden</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Number</label>
+                                <tooltip>Node Number</tooltip>
+                                <description>A node number is shown to each node. This is unambiguous and should not be changed</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="generateResult" type="boolean">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>berechnen</label>
+                                <tooltip>Berechnung bzw. Ergebnisse erzeugen</tooltip>
+                                <description>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis für diesen Knoten erzeugt wird.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>calculate</label>
+                                <tooltip>Produce calculations and/or results</tooltip>
+                                <description>Selection brings about that in a calculation a result is produced for this node. </description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Unterwasserstrang</label>
+                                <tooltip>Gewaesserstrang der Unterwasser anschliesst</tooltip>
+                                <description>Gewaesserstrang, welcher im weiteren Fliessverlauf Unterwasser anschliesst</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Downstream Strand</label>
+                                <tooltip>Water strand which connects the lower water</tooltip>
+                                <description>Water strand which connects lower water in the further discharge</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="pegelZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Pegel(rep)</label>
+                                <tooltip>Verknuepfung Pegel Repository</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Pegel (lok)</label>
+                                <tooltip>Verknuepfung Pegel lokal</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Level(rep)</label>
+                                <tooltip>Connection level Repository</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!-- ZR berechnet, hier wird das ergebnis gespeichert-->
+                    <element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Abfluss berechnet</label>
+                                <tooltip>Berechnete Abflussganglinie</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Calculated discharge</label>
+                                <tooltip>Calculated discharge line</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="pegelBerechnetZRAblage" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>ZR Ablage Berechnung</label>
+                                <tooltip>Verknuepfung zur Ablage des Ergebnisses in der Datenbank</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>TS Storage calculation </label>
+                                <tooltip>Connection of the storage with the results in the database</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--ab hier kann entfernt werden, falls Branching verwendet wird-->
+                    <!-- ZR Zufluss falls zufluss vorhanden -->
+                    <element name="zuflussZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zufluss Eingang</label>
+                                <tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Inflow input</label>
+                                <tooltip>Combined Inflow time series, Input data</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="zuflussZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zufluss Eingang</label>
+                                <tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten Vorhersage</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Inflow input</label>
+                                <tooltip>Combined Inflow time series, Input data forecast</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zufluss Berechnung</label>
+                                <tooltip>Verknuepfte Zuflusszeitreihe, Berechnungsdaten</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Inflow calculation</label>
+                                <tooltip>Combined Inflow time series, calculated data</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!-- verzweigung -->
+                    <element name="zproz" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Verzweigungsfaktor</label>
+                                <tooltip>Abflussanteil zum Verzweigungsknoten (0-1)</tooltip>
+                                <description>Anteil des Abflusses, der dem Verzweigungsknoten zugefuehrt wird (0-1)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Branching factor</label>
+                                <tooltip>Outflow part going to the branching nodes (0-1)</tooltip>
+                                <description>The part of the outflow, which is applied to the branching nodes (0-1)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="verzweigungNodeMember" type="na:NodeAssociationType" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Verzweigungsknoten</label>
+                                <tooltip>Verknuepfung Zielknoten der Verzweigung</tooltip>
+                                <description>Zielknoten, dem der angegebene Verzweigungsanteil des Abflusses zugefuehrt wird</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Branchingnode</label>
+                                <tooltip>Connection aim nodes of the branching</tooltip>
+                                <description>Aim nodes, to which the given part of the branching of the outflow is applied</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--bis hier kann entfernt werden, falls Branching verwendet wird-->
+                    <!-- branching ab hier aktivieren
+					<element name="qzug" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zugabemenge</label>
+								<tooltip>kont. Zugabemenge [m^3/s]</tooltip>
+								<description>kontinuierliche Zugabemenge [m^3/s] zum Knotenabfluss</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Additional discharge</label>
+								<tooltip>continuous additional discharge [m^3/s]</tooltip>
+								<description>continuous additional discharge [m^3/s] to the node outflow</description>
+							</documentation>
+
+						</annotation>
+					</element>
+					<element name="BranchingMember" type="na:BranchingAssociationType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Knoten zu Knoten</label>
+								<tooltip>Verzweigung, Zufluss, Entnahme,Überlauf</tooltip>
+								<description>Verbindung mit oder von einem Zielknoten (Verzweigung, Zufluss, Entnahme,Überlauf)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Nodes to nodes</label>
+								<tooltip>Branching, Inflow, Withdrawal,Overflow</tooltip>
+								<description>Connection with or from one aim node (Branching, Inflow, Withdrawal,Overflow)</description>
+							</documentation>
+
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BranchingAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:_Branching"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="_Branching" type="na:AbstractBranchingType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<complexType name="AbstractBranchingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="branchingNodeMember" type="na:NodeAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Relation Knoten</label>
+								<tooltip>RelationVerzweigungsknoten</tooltip>
+								<description>Relation zum Verzweigungsknoten der Knoten zu Knoten Beziehung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Relation nodes</label>
+								<tooltip>Relation connection nodes</tooltip>
+								<description>Relation to connection nodes of node to node relationship</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="kontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="ContExtractionFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="qabg" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Entnahmemenge</label>
+								<tooltip>kont. Entnahmemenge [m^3/s]</tooltip>
+								<description>kont. Entnahmemenge [m^3/s], welche dem Zielknoten zugeschlagen wird</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Withdrawal discharge</label>
+								<tooltip>continuous withdrawal discharge[m^3/s]</tooltip>
+								<description>continuous withdrawal discharge[m^3/s], which is added to the nodes</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Ueberlauf" type="na:OverfallFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="OverfallFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="queb" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überlaufhöhe</label>
+								<tooltip>Überlaufhöhe [m^3/s]</tooltip>
+								<description>Überlaufhöhe [m^3/s], bei Überschreitung wird der darüber liegende Abfluss dem Zielknoten zugeschlagen</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Overflowheight</label>
+								<tooltip>Overflowheight [m^3/s]</tooltip>
+								<description>Overflowheight [m^3/s], by exceeding it,the overflow will be added to the aim nodes.</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Zuflusspegel" type="na:InflowGageFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="InflowGageFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="zuflussZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Eingang</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten</tooltip>
+								<description>.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Inflow input</label>
+								<tooltip>Combined Inflow time series, Inputdata</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="zuflussZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Eingang</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten Vorhersage</tooltip>
+								<description>.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Inflow input</label>
+								<tooltip>Combined Inflow time series, Inputdata forecast</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Berechnung</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Berechnungsdaten</tooltip>
+								<description>.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Calculating inflow</label>
+								<tooltip>Combined Inflow time series, Calculation data</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="BranchingFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="zproz" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Verzweigungsfaktor</label>
+								<tooltip>Abflussanteil zum Verzweigungsknoten (0-1)</tooltip>
+								<description>Anteil des Abflusses, der dem Verzweigungsknoten zugefuehrt wird (0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Branching factor</label>
+								<tooltip>Outflow part going to the branching nodes (0-1)</tooltip>
+								<description>The part of the outflow, which  is applied to the branching nodes (0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+-->
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- ________Catchments__________________ -->
+    <complexType name="CatchmentCollectionAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="na:CatchmentCollection"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <element name="CatchmentCollection" type="na:CatchmentCollectionType" substitutionGroup="gml:_Feature"/>
+    <complexType name="CatchmentCollectionType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="catchmentMember" type="na:CatchmentAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="CatchmentFeatureType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <!--
+    ___________(inum,i5)____(ispk,i3)
+(text,a80)
+(flaech,*)
+(pns,a1)_(kurzzeit,a)_(namfn,a)_(langzeit,a)_(faktn,f5.2)
+(namft,a)_(namept,a)
+(namfzf,a)
+(namhydro,a)
+(snowtype,a15)(ftem,*)_(fver,*)
+    -->
+                    <element name="Ort" type="gml:PolygonPropertyType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Ort</label>
+                                <tooltip>geometriescher Ort</tooltip>
+                                <description>Geometrie des Objektes</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Geometry</label>
+                                <tooltip>Geometric position</tooltip>
+                                <description>Geometry of the object</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="inum" type="integer">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>TG-Nummer</label>
+                                <tooltip>Teilgebietsnummer</tooltip>
+                                <description>Nummer des Teilgebietes</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>SC-Number</label>
+                                <tooltip>Subcatchment number</tooltip>
+                                <description>Number of the subcatchments</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="entwaesserungsStrangMember" type="na:ChannelAssociationType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zielstrang</label>
+                                <tooltip>Relation zum Entwässerungsstrang</tooltip>
+                                <description>Relation zum dem Strang, in welchen das Teilgebiet entwässert.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Aim strand</label>
+                                <tooltip>Relation to drainage line </tooltip>
+                                <description>Relation to the line, in which the subcatchment drains.</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="generateResult" type="boolean">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>berechnen</label>
+                                <tooltip>Berechnung bzw. Ergebnisse erzeugen</tooltip>
+                                <description>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis für dieses Gebiet erzeugt wird.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>calculating</label>
+                                <tooltip>Calculation, producing results </tooltip>
+                                <description>Selection secures, that by single calculation one result will be produced for this catchment</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="flaech" type="long">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>TG-Flaeche</label>
+                                <tooltip>Flaeche des Teilgebietes [m^2]</tooltip>
+                                <description>Gesamtfläche des Teilgebietes [m^2]</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>SC-Area</label>
+                                <tooltip>Area of the subcatchments [m^2]</tooltip>
+                                <description>Total area of the subcatchments[m^2]</description>
+                            </documentation>
+                        </annotation>
+                        <!-- JH, Flaeche kann auch aus der Hydrotopdatei hierher übernommen werden (wird im Modell ohnehin aus Hydrotopdatei übernommen)-->
+                    </element>
+                    <element name="faktn" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor Niederschlag</label>
+                                <tooltip>Korrekturfaktor des Niederschlages, multiplikativ</tooltip>
+                                <description>Korrekturfaktor mit dem alle Werte der Niederschlagszeitreihe zur Berechnung multipliziert werden</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Precipitation coefficient</label>
+                                <tooltip>Correction coefficient of the precipitaition, multiplicative</tooltip>
+                                <description>Correction coefficient with all the values of the precipitation time series, which were multiplicated during the calculations</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="snowtype">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Schneetyp</label>
+                                <tooltip>Schneetyp Referenz DB</tooltip>
+                                <description>Schneetypen-Referenz auf Schneedatenbank</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Snowtype</label>
+                                <tooltip>Snowtype Reference DB </tooltip>
+                                <description>Snowtypes-Reference on snowdatabase</description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="string">
+                                <maxLength value="30"/>
+                                <minLength value="0"/>
+                            </restriction>
+                        </simpleType>
+                        <!-- TODO standard oder snowdatei uebernehmen -->
+                    </element>
+                    <element name="ftem" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Temperaturverschiebung</label>
+                                <tooltip>Korrekturwert Temperatur, additiv [°C]</tooltip>
+                                <description>Korrekturwert, der zu jedem Wert der Temperaturzeitreihe addiert wird</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Change in temperature</label>
+                                <tooltip>Correcting value for the Temperature, additive [°C]</tooltip>
+                                <description>Correcting value, which is added for every value of the temperature time series </description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="fver">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor Verdunstung</label>
+                                <tooltip>Korreturfaktor der Verdunstung (multiplikativ)</tooltip>
+                                <description>Korrekturfaktor mit dem alle Werte der Verdunstungszeitreihe zur Berechnung multipliziert werden</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Evaporation coefficient</label>
+                                <tooltip>Correction coefficient of the evaporation (multiplicative)</tooltip>
+                                <description>Correction coefficient, with which all values of evaporation time series for calculation are multiplicated </description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="2.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <!--
+(vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,f5.1)_____(tint,f5.1)_____(rintmx,f5.1)
+-->
+                    <element name="vsg">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Versiegelungsgrad</label>
+                                <tooltip>Versiegelungsgrad (0.0-1.0)</tooltip>
+                                <description>Versiegelungsanteil des Teilgebietes (nur zur Info, Versiegelungsgrad zur Berechnung wird aus Hydrotop übernommen)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Evaporation rate</label>
+                                <tooltip>Evaporation rate (0.0-1.0)</tooltip>
+                                <description>Evaporation rate of the subcatchments (just for Info, For the calculations evaporation rate is considered as a hydrotop)</description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="1.0"/>
+                            </restriction>
+                        </simpleType>
+                        <!--JH, wird aus Hydrotopdatei übernommen (im Rechenkern), ist hier daher auch eigentlich überflüssig-->
+                    </element>
+                    <element name="bimax" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor max. Interzeption</label>
+                                <tooltip>Korrekturfaktor maximaler Inhalt Interzeptionsspeicher, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor zum maximalen Interzeptionsspeicherinhalt</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>coeff. max. Interception</label>
+                                <tooltip>Correction coefficient for the maximal content of interception storage, multiplicative </tooltip>
+                                <description>Multiplicative correction coefficient for maximal interception storage content </description>
+                            </documentation>
+                        </annotation>
+                        <!-- JH, wird im Code nicht für ispk=7 verwendet, wegen doppelter Definition m_retlay-->
+                    </element>
+                    <element name="bianf">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor Inhalt Interzeption</label>
+                                <tooltip>Korrekturfaktor Anfangsinhalt Interzeptionsspeicher</tooltip>
+                                <description>Multiplikativer Faktor zur Korrektur des Anfangsinhaltes im Interzeptionsspeicher</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Coefficient content interception</label>
+                                <tooltip>Correction coefficient for the initial content of interception storage</tooltip>
+                                <description>Multiplicative coefficient for correction of the initial content in the interception storage. </description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="2.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="izkn_vers" type="na:NodeAssociationType" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zielknoten Qvers</label>
+                                <tooltip>Link Zielknoten Abfluss versiegelter Flächen</tooltip>
+                                <description>Link zum Zielknoten zu welchem bei Bedarf der Abfluss versiegelter Flächen umgeleitet werden kann</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Aim nodes Qsealed</label>
+                                <tooltip>Link discharge aim nodes of sealed areas</tooltip>
+                                <description>Link to aim nodes, to which as required the discharge sealed areas can be redirected </description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="tint" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anstieg Interflow</label>
+                                <tooltip>Anstiegsrate Interflow [mm/h]</tooltip>
+                                <description>Anstiegsrate des Interflows</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Increasing Interflow</label>
+                                <tooltip> Interflow increasing rate[mm/h]</tooltip>
+                                <description>Increasing rate of the interflow</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="rintmx" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>max Interflow</label>
+                                <tooltip>maximaler Interflow [mm]</tooltip>
+                                <description>maximal moeglicher Interflow</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>max Interflow</label>
+                                <tooltip>maximal interflow [mm]</tooltip>
+                                <description>maximal possible interflow</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!-- 
+ (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
+siehe bodenkorrekturmember...
+-->
+                    <element name="bodenkorrekturmember" type="na:bodenschichtkorrekturAssociationType" maxOccurs="10">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Link Bodenkorrektur</label>
+                                <tooltip>Link Korrekturparameter Bodenschichten</tooltip>
+                                <description>Link zu den Bodenkorrekturparametern der einzelnen Bodenschichten des Teilgebietes</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Link soil correction</label>
+                                <tooltip>Link correction parameter of the soil layers</tooltip>
+                                <description>Link to the soil correction parameters of the single soil layers of subcatchments</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--
+(f_eva,f4.1)_(aint,f4.1)_(aigw,f6.2)_(fint,f4.2)_(ftra,f4.2)
+(retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
+(igwzu,*)
+-->
+                    <element name="f_eva" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Korr. Verdunstung Vegetationsabhaengig</label>
+                                <tooltip>Vegetationsabhaengige Korrektur der Verdunstung</tooltip>
+                                <description>Vegetationsabhaengige Korrektur der Verdunstung</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Correction of vegetation dependant evaporation</label>
+                                <tooltip>Correction of evaporation, function of vegetation</tooltip>
+                                <description>Correction of evaporation, function of vegetation</description>
+                            </documentation>
+                        </annotation>
+                        <!-- JH, wird fuer Gebietsbearbeitungsfall ispk =7 nicht verwendet?-->
+                    </element>
+                    <element name="aint" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anfangsinhalt Interzeptionsspeicher</label>
+                                <tooltip>Anfangsinhalt Interzeptionsspeicher (Anfangswert)</tooltip>
+                                <description>Inhalt des Interzeptionsspeichers als Anfangswert für den ersten Berechnungszyklus </description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Initial capacity of the interception storage</label>
+                                <tooltip>Initial capacity of the interception storage (initial value)</tooltip>
+                                <description>Capacity of the interception storage as initial value for the first calculation cycle </description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="aigw" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anfangsinhalt Grundwasserspeicher</label>
+                                <tooltip>Anfangsinhalt Grundwasserspeicher (Anfangswert)</tooltip>
+                                <description>Inhalt des Grundwasserspeichers als Anfangswert für den ersten Berechnungszyklus</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Initial capacity of groundwater storage</label>
+                                <tooltip>Initial capacity of groundwater storage (initial value)</tooltip>
+                                <description>Capacity of the groundwater storage as initial value for the first calculation cycle</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="fint">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor Interzeptionsspeicher</label>
+                                <tooltip>Korrekturfaktor des max. Interzeptiosspeichers Winterhalbjahr, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor des maximalen Inhaltes im Interzeptionsspeicher für das Winterhalbjahr</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Coefficient of interception storage</label>
+                                <tooltip>Correction coefficient of the max. interception storage of the winter half of the year, multiplicative</tooltip>
+                                <description>Multiplicative correction coefficient of the maximal capacity in the interception storage, for the winter half of the year </description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="2.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="ftra">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor Verdunstung</label>
+                                <tooltip>Korrekturfaktor der Verdunstung Winterhalbjahr, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor der Verdunstung für das Winterhalbjahr</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Coefficient of evaporation</label>
+                                <tooltip>Correction coefficient of evaporation, winter half of the year, multiplicative</tooltip>
+                                <description>Multiplicative Correction coefficient of evaporation for the winter half of the year</description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="2.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <!--        Retentionskonstanten       -->
+                    <element name="retvs">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>k QObfl.vers.</label>
+                                <tooltip>Retentionskonstante Oberflaechenabfluss, versiegelt [h]</tooltip>
+                                <description>Retentionskonstante (Speicherkonstante) des Oberflaechenabflusses versiegelter Flaechen</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>k QsealedArea</label>
+                                <tooltip>Retention constant of the surface area discharge, sealed [h]</tooltip>
+                                <description>Retention constant (stoage constant) of the surface discharge of sealed surfaces </description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="10.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="retob">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>k QObfl.nat.</label>
+                                <tooltip>Retentionskonstante Oberflaechenabfluss, natuerlich [h]</tooltip>
+                                <description>Retentionskonstante (Speicherkonstante) des Oberflaechenabflusses natuerlicher Flaechen</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>k QnatArea</label>
+                                <tooltip>Retention constant of the surface area discharge, natural [h]</tooltip>
+                                <description>Retention constant (stoage constant) of the surface discharge of natural surfaces</description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="10.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="retint" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>k QIntf.</label>
+                                <tooltip>Retentionskonstante Interflow [h]</tooltip>
+                                <description>Retentionskonstante (Speicherkonstante) des Interflows</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>k QIntf.</label>
+                                <tooltip>Retention constant Interflow [h]</tooltip>
+                                <description>Retention constant (stoage constant) of the Interflow</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="retbas" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>k QBasis</label>
+                                <tooltip>Retentionskonstante Basisabfluss [h]</tooltip>
+                                <description>Retentionskonstante (Speicherkonstante) des Basisabflusses</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>k QBasis</label>
+                                <tooltip>Retention constant of basis discharge [h]</tooltip>
+                                <description>Retention constant (stoage constant) of the basis discharge</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="retgw" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>k QGw</label>
+                                <tooltip>Retentionskonstante Grundwasser [h]</tooltip>
+                                <description>Retentionskonstante (Speicherkonstante) des Grundwasserflusses in die Nachbargebiete</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>k QGw</label>
+                                <tooltip>Retention constant groundwater [h]</tooltip>
+                                <description>Retention constant (stoage constant) of groundwater flow in the neighbouring areas</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="retklu" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>k Q tiefenGw</label>
+                                <tooltip>Retentionskonstante Tiefengrundwasserleiter [h]</tooltip>
+                                <description>Retentionskonstante (Speicherkonstante) des Flusses im Tiefengrundwasserleiter</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>k Q lowerGw</label>
+                                <tooltip>Retention constant for deep aquifer [h]</tooltip>
+                                <description>Retention constant (stoage constant) of the flow in deep aquifer</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!-- (ngwzu,*)_...
+						  (gwwi,*)_...-->
+                    <!--     Grundwasser       -->
+                    <element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Link GW Relation</label>
+                                <tooltip>Link Grundwasserrelation</tooltip>
+                                <description>Link Grundwasserrelation in Nachbargebiete</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Link GW Relation</label>
+                                <tooltip>Link groundwater relation</tooltip>
+                                <description>Link groundwater relation in neighbouring areas</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--	<element name="ngwzu" type="string"/>
+					<element name="gwwi" type="string"/>
+					-->
+                    <!-- (hgru,*)(hgro,*)(rtr,*)(pors,*)(gwsent,*)(klupor,*)(izkn,*)  -->
+                    <element name="hgru" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>min h GW</label>
+                                <tooltip>Maechtigkeit des Grundwasserleiters bis zur Gerinnesohle [m]</tooltip>
+                                <description>Grenzgrundwasserstand bei dessen Ueberschreitung Basisabfluss entsteht</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>min h GW</label>
+                                <tooltip>Thickness of the aquifer up to the lower level [m]</tooltip>
+                                <description>Boundary groundwater level, by which exceedance basis discharge is generated</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="hgro" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>max h GW</label>
+                                <tooltip>Maechtigkeit Grundwasserleiter [m]</tooltip>
+                                <description>Maximaler Grundwasserstand, welcher der Maechtigkeit des Grundwasserleiters entspricht</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>max h GW</label>
+                                <tooltip>Thickness of the aquifer [m]</tooltip>
+                                <description>Maximal groundwater level, which corresponds to the thickness of the aquifer</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="rtr">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Aufteilungsfaktor GW</label>
+                                <tooltip>Auteilungsfaktor flacher und tiefer Grundwasserleiter (0-1)</tooltip>
+                                <description>Auteilungsfaktor flacher und tiefer Grundwasserleiter (Angabe des Anteils flacher Grundwasserleiter)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Partitioning groundwater coefficient</label>
+                                <tooltip>Partitioning coefficient of surfaces and lower aquifer (0-1)</tooltip>
+                                <description>Partitioning coefficient of surfaces and lower aquifer (Indication of the share of flat surface aquifer)</description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="1.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="pors">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Porositaet GW</label>
+                                <tooltip>Porositaet Grundwasserspeicher (0-1)</tooltip>
+                                <description>Porositaet des Grundwasserspeichers</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Porosity GW</label>
+                                <tooltip>Porosity groundwater storage (0-1)</tooltip>
+                                <description>Porosity of the groundwater storage</description>
+                            </documentation>
+                        </annotation>
+                        <simpleType>
+                            <restriction base="double">
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="1.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="gwsent" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Entnahme GW</label>
+                                <tooltip>Entnahmemenge Grundwasser [m^3/h]</tooltip>
+                                <description>kontinuierliche Entnahmemenge aus dem flachen Grundwasserspeicher [m^3/h]</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Withdrawal GW</label>
+                                <tooltip>Withdrawal quantity of groundwater [m^3/h]</tooltip>
+                                <description>continuous withdrawal from the flat groundwater storage [m^3/h]</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="klupor" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zuflussrate tiefenGW</label>
+                                <tooltip>Zuflussrate Tiefengrundwasserleiter [%]</tooltip>
+                                <description>Zuflussrate in den Tiefengrundwasserleiter (Anteil der Tiefengrundwasserflaeche an der Gesamtgebietsflaeche)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Influx rate lowerGW</label>
+                                <tooltip>Influx rate of lower aquifer [%]</tooltip>
+                                <description>Influx rate in lower aquifer (Share of the lower groundwater surface area as a part of the whole catchment area)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="izkn" type="na:NodeAssociationType" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Relation tiefenGW</label>
+                                <tooltip>Relation zum Knoten des Tiefengrundwasserleiters</tooltip>
+                                <description>Rekation zum Knoten, welcher den Abfluss Tiefengrundwasser aufnimmt</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Deep Groundwater Relation</label>
+                                <tooltip>Relation to the node of the deep groundwater stratum</tooltip>
+                                <description>Relation to the node which takes up the deep Groundwater discharge</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!-- ZR niederschlag -->
+                    <element name="niederschlagZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe N Repository</label>
+                                <tooltip>Zeitreihe N Repository</tooltip>
+                                <description>Zeitreihe N Repository</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries P Repository</label>
+                                <tooltip>Timeseries P Repository</tooltip>
+                                <description>Timeseries P Repository</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="niederschlagZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe N Vorhersage</label>
+                                <tooltip>Zeitreihe N Vorhersage</tooltip>
+                                <description>Zeitreihe N Vorhersage</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries P forecast</label>
+                                <tooltip>Timeseries P forecast</tooltip>
+                                <description>Timeseries P forecast</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="niederschlagZR" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe N lokal</label>
+                                <tooltip>Zeitreihe N lokal</tooltip>
+                                <description>Zeitreihe N lokal</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries P local</label>
+                                <tooltip>Timeseries P local</tooltip>
+                                <description>Timeseries P local</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--ZR Temperatur-->
+                    <element name="temperaturZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe T Repository</label>
+                                <tooltip>Zeitreihe T Repository</tooltip>
+                                <description>Zeitreihe T Repository</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries T Repository</label>
+                                <tooltip>Timeseries T Repository</tooltip>
+                                <description>Timeseries T Repository</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="temperaturZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe T Vorhersage</label>
+                                <tooltip>Zeitreihe T Vorhersage</tooltip>
+                                <description>Zeitreihe T Vorhersage</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries T forecast</label>
+                                <tooltip>Timeseries T forecast</tooltip>
+                                <description>Timeseries T forecast</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="temperaturZR" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe T lokal</label>
+                                <tooltip>Zeitreihe T lokal</tooltip>
+                                <description>Zeitreihe T lokal</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries T local</label>
+                                <tooltip>Timeseries T local</tooltip>
+                                <description>Timeseries T local</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!-- ZR Verdunstung -->
+                    <element name="verdunstungZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe V Repository</label>
+                                <tooltip>Zeitreihe V Repository</tooltip>
+                                <description>Zeitreihe V Repository</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries V Repository</label>
+                                <tooltip>Timeseries V Repository</tooltip>
+                                <description>Timeseries V Repository</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="verdunstungZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe V Vorhersage</label>
+                                <tooltip>Zeitreihe V Vorhersage</tooltip>
+                                <description>Zeitreihe V Vorhersage</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries V forecast</label>
+                                <tooltip>Timeseries V forecast</tooltip>
+                                <description>Timeseries V forecast</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="verdunstungZR" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitreihe V lokal</label>
+                                <tooltip>Zeitreihe V lokal</tooltip>
+                                <description>Zeitreihe V lokal</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Timeseries V local</label>
+                                <tooltip>Timeseries V local</tooltip>
+                                <description>Timeseries V local</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--               Optimierung              -->
+                    <element name="faktorBianf" type="double" default="1.0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor Bianf</label>
+                                <tooltip>Optimierungsfaktor Anfangsinhalt Interzeptionsspeicher</tooltip>
+                                <description>Faktor, welcher bei der Berechnung einer Optimierung den Anfangsinhalt Interzeptionsspeicher optimiert</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Coeff. Bianf</label>
+                                <tooltip>Optimization coefficient initial value interzeption storage</tooltip>
+                                <description>Optimization coefficient initial value interzeption storage</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!-- TODO loeschen, bianf ist schon der faktor -->
+                    <element name="faktorAigw" type="double" default="1.0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor AIGW</label>
+                                <tooltip>Optimierungsfaktor Anfangsinhalt GW Speicher</tooltip>
+                                <description>Faktor, welcher bei der Berechnung einer Optimierung den Anfangsinhalt Grundwasserspeicher optimiert</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Coeff. AIGW</label>
+                                <tooltip>Optimization coefficient initial value groundwater storage</tooltip>
+                                <description>Optimization coefficient initial value groundwater storage</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="faktorRetobRetint" type="double" default="1.0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor RETOB,RETINT</label>
+                                <tooltip>Optimierungsfaktor Retentionskonstanten Oberflächenabfluss (natürlich) und Interflow</tooltip>
+                                <description>Faktor, welcher bei der Berechnung einer Optimierung die Retentionskonstanten des Oberflächenabflusses natürlicher Flächen und des Interflows optimiert</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Coeff. RETOB,RETINT</label>
+                                <tooltip>Optimization coefficient retention constant of overlandflow (natural area) and interflow</tooltip>
+                                <description>Optimization coefficient retention constant of overlandflow (natural area) and interflow</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- ______________Channels_____________________ -->
+    <complexType name="ChannelCollectionAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="na:ChannelCollection"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <element name="ChannelCollection" type="na:ChannelCollectionType" substitutionGroup="gml:_Feature"/>
+    <complexType name="ChannelCollectionType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="channelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ChannelAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence minOccurs="0">
+                    <element ref="na:_Channel"/>
+                </sequence>
+            </restriction>
+            <!--				<attributeGroup ref="xlink:simpleLink"/>
+		<attribute ref="gml:remoteSchema" use="optional"/>-->
+        </complexContent>
+    </complexType>
+    <!-- check abstract (doemming ) abstract="true" -->
+    <element name="_Channel" type="na:AbstractChannelType" substitutionGroup="gml:_Feature"/>
+    <!-- Channel super type -->
+    <complexType name="AbstractChannelType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="Ort" type="gml:LineStringPropertyType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Ort</label>
+                                <tooltip>geometriescher Ort</tooltip>
+                                <description>Geometrie des Objektes</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Geometry</label>
+                                <tooltip>Geometric Position</tooltip>
+                                <description>Geometry of the Object</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="inum" type="integer">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Nummer</label>
+                                <tooltip>Strangnummer</tooltip>
+                                <description>Nummer des Gewaesserstranges</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Number</label>
+                                <tooltip>Strand number</tooltip>
+                                <description>Number of the water strands</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="downStreamNodeMember" type="na:NodeAssociationType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Relation UW-Knoten</label>
+                                <tooltip>Relation Unterwasserknoten</tooltip>
+                                <description>Relation zum Unterwasserknoten des Stranges</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Relation lower node</label>
+                                <tooltip>Relation lower node</tooltip>
+                                <description>Relation for the lower node of the strand</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- Virtual Channel -->
+    <element name="VirtualChannel" type="na:VirtualChannelFeatureType" substitutionGroup="na:_Channel"/>
+    <complexType name="VirtualChannelFeatureType">
+        <complexContent>
+            <extension base="na:AbstractChannelType">
+                <sequence>
+                    <!-- virtueller channel hat sonst keine properties -->
+                    <!--<element name="kjh" type="string"/>-->
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- KM-Channel -->
+    <element name="KMChannel" type="na:KMChannelFeatureType" substitutionGroup="na:_Channel"/>
+    <complexType name="KMChannelFeatureType">
+        <complexContent>
+            <extension base="na:AbstractChannelType">
+                <sequence>
+                    <element name="qfmax" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Q-Bordvoll</label>
+                                <tooltip>bordvoller Abfluss [m^3/s]</tooltip>
+                                <description>maximaler Abfluss innerhalb des Flussschlauches</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Q-Bankfull</label>
+                                <tooltip>Bankfull discharge [m^3/s]</tooltip>
+                                <description>Maximun discharge within the stream channel</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="c" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Aufteilungsfaktor F-V</label>
+                                <tooltip>Aufteilungsfaktor Fluss-Vorland</tooltip>
+                                <description>Abflussanteil, welcher ueber das Vorland abfliesst</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Distribution Factor S-F</label>
+                                <tooltip>Distribution Factor Stream-Foreland</tooltip>
+                                <description>Discharge fraction which flows over the foreland</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Ref. KM-Parameter</label>
+                                <tooltip>Referenz Kalinin-Miljukov Parameter</tooltip>
+                                <description>Referenz auf die Kalinin-Miljukov Parameter des Stranges</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Ref. KM-Parameter</label>
+                                <tooltip>Reference Kalinin-Miljukov Parameter</tooltip>
+                                <description>Reference of the Kalinin-Miljukov Parameters of the strands</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--    Optimierung   -->
+                    <element name="faktorRkf" type="double" default="1.0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor k</label>
+                                <tooltip>Optimierungsfaktor Speicherkonstante k (Kalinin-Miljukov-Verfahren)</tooltip>
+                                <description>Faktor, welcher bei der Berechnung einer Optimierung die Speicherkonstante k optimiert (Kalinin-Miljukov-Verfahren)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Factor k</label>
+                                <tooltip>Optimization factor of the storage-constante k (Kalinin-Miljukov-method)</tooltip>
+                                <description>Factor which by computation optimizes the storage constante k (Kalinin-Miljukov-method)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="faktorRnf" type="double" default="1.0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor n</label>
+                                <tooltip>Optimierungsfaktor Speicheranzahl n (Kalinin-Miljukov-Verfahren)</tooltip>
+                                <description>Faktor, welcher bei der Berechnung einer Optimierung die Speicheranzahl n optimiert (Kalinin-Miljukov-Verfahren)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Factor n</label>
+                                <tooltip>Optimization factor of the storage-number n (Kalinin-Miljukov-method)</tooltip>
+                                <description>Factor which by computation optimizes the storage number n (Kalinin-Miljukov-method)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- Storage Channel -->
+    <element name="StorageChannel" type="na:StorageChannelFeatureType" substitutionGroup="na:_Channel"/>
+    <complexType name="StorageChannelFeatureType">
+        <complexContent>
+            <extension base="na:AbstractChannelType">
+                <sequence>
+                    <element name="iknotNodeMember" type="na:NodeAssociationType" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Überlaufknoten</label>
+                                <tooltip>Zielknoten der Hochwasserentlastungsanlage</tooltip>
+                                <description>Zielknoten auf den die Hochwasserentlastungsanlage abschlägt (Falls 0 gewählt wird, wird der Überlauf zum Grundabfluss addiert und dem Endknoten des Speicherstranges zugeschlagen)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Overflow node</label>
+                                <tooltip>Target node of the overflow</tooltip>
+                                <description>Target node on which the overflow knocks off (If 0 is selected, the overflow will be added to the discharge at the outlet and both will be added to the end node of the storage strand)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="c" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Aufteilungsfaktor</label>
+                                <tooltip>Aufteilungsfaktor zwischen QAA und QAN</tooltip>
+                                <description>Aufteilungsfaktor zwischen den Stationsgrößen QAA und QAN im Konvergenzkriterium (normal: 0.0) </description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Distribution factor</label>
+                                <tooltip>Distribution factor between QAA und QAN</tooltip>
+                                <description>Distribution factor between the Station sizes QAA und QAN in the convergence criterion (normal: 0.0) </description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="sv" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anfangsinhalt</label>
+                                <tooltip>Anfangsbeckeninhalt [hm^3]</tooltip>
+                                <description>Beckeninhalt zu Beginn der Simulation</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Initial capacity</label>
+                                <tooltip>Initial reservoir capacity [hm^3]</tooltip>
+                                <description>Reservoir capacity at the beginning of the simulation</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="vmax" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>max. Inhalt</label>
+                                <tooltip>max. Beckeninhalt [hm^3]</tooltip>
+                                <description>maximaler Beckeninhalt [hm^3]</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Max. content</label>
+                                <tooltip>Max. reservoir capacity [hm^3]</tooltip>
+                                <description>Maximun reservoir capacity [hm^3]</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="vmin" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>min. Inhalt</label>
+                                <tooltip>min. Beckeninhalt [hm^3]</tooltip>
+                                <description>minimaler Beckeninhalt [hm^3]</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>min. capacity</label>
+                                <tooltip>min. reservoir capacity [hm^3]</tooltip>
+                                <description>Minimum reservoir capacity [hm^3]</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="hvvsqd" type="na:DiagramType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>WVQ-Beziehung</label>
+                                <tooltip>Wasserstand [mNN]-Volumen [hm^3]-Abgabe [m^3/s]-Beziehung</tooltip>
+                                <description>Beziehung zwischen Wasserstand [mNN], Volumen/ Inhalt [hm^3] und Abgabe/ Abfluss [m^3/s] aus dem Speicher (max. 24 Wertetripel)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>WVQ-relationship</label>
+                                <tooltip>Water level [mNN]-Volume [hm^3]-Discharge [m^3/s]-relationship</tooltip>
+                                <description>Relationship between Water level [mNN], Volume/ Capacity [hm^3] and Delivery/ Discharge [m^3/s] from the storage (max. 24 pair of values)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- ________Sonstiges__________________ -->
+    <!--Kalinin-Miljukov Parameter -->
+    <complexType name="KMParameterAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="na:KMParameter"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <element name="KMParameter" type="na:KMParameterType" substitutionGroup="gml:_Feature"/>
+    <complexType name="KMParameterType">
+        <complexContent>
+            <extension base="na:NonGeometricAbstractFeatureType">
+                <sequence>
+                    <element name="qrk" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Abfluss</label>
+                                <tooltip>Abfluss [m^3/s]</tooltip>
+                                <description>Es sollten mindestens 5 verschiedene Abfluessfaelle angegeben werden</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Discharge</label>
+                                <tooltip>Discharge [m^3/s]</tooltip>
+                                <description>At least 5 different discharge events should be indicated</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="rkf" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>K Fluss</label>
+                                <tooltip>Speicherkonstante Fluss [h]</tooltip>
+                                <description>Speicherkonstante K des Flusses (Kalinin-Muljukov)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>K Flow</label>
+                                <tooltip>Storage constant Flow [h]</tooltip>
+                                <description>Storage constant K of the flow (Kalinin-Muljukov)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="rnf" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>n Fluss</label>
+                                <tooltip>Speicheranzahl Fluss [-]</tooltip>
+                                <description>Anzahl n der Speicher des Flusses (Kalinin-Miljukov)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>n Flow</label>
+                                <tooltip>number of storages Flow [-]</tooltip>
+                                <description>number of storage n in the Flow (Kalinin-Miljukov)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="rkv" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>K Vorland</label>
+                                <tooltip>Speicherkonstante Vorland [h]</tooltip>
+                                <description>Speicherkonstante K des Vorlandes (Kalinin-Muljukov)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>K Foreland</label>
+                                <tooltip>Foreland storage constant [h]</tooltip>
+                                <description>Foreland storage constant K (Kalinin-Muljukov)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="rnv" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>n Vorland</label>
+                                <tooltip>Speicheranzahl Vorland [-]</tooltip>
+                                <description>Anzahl n der Speicher des Vorlandes (Kalinin-Miljukov)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>n Foreland</label>
+                                <tooltip>Foreland storage number [-]</tooltip>
+                                <description>number of storage n Foreland (Kalinin-Miljukov)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="NonGeometricAbstractFeatureType" abstract="true">
+        <complexContent>
+            <restriction base="gml:AbstractFeatureType"/>
+        </complexContent>
+    </complexType>
+    <complexType name="bodenschichtkorrekturAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="na:bodenschichtkorrektur"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <element name="bodenschichtkorrektur" type="na:bodenschichtkorrekturType" substitutionGroup="gml:_Feature"/>
+    <!--
+ (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
+-->
+    <complexType name="bodenschichtkorrekturType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <annotation>
+                        <documentation xml:lang="de">
+                            <label>nicht verwendet</label>
+                            <tooltip>nicht verwendet</tooltip>
+                            <description>nicht verwendet</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                            <label>not used</label>
+                            <tooltip>not used</tooltip>
+                            <description>not used</description>
+                        </documentation>
+                    </annotation>
+                    <element name="cinh" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>KZ-Faktor cin</label>
+                                <tooltip>Korrekturfaktor cin Kurzzeit, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor des Infiltrationsparameters in der Kurzzeitsimulation </description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>ST-Faktor cin</label>
+                                <tooltip>Correction factor cin short-term, multiplicative</tooltip>
+                                <description>Multiplicative correction factor of the infiltration parameter in the short term simulation </description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="cind" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>LZ-Faktor cin</label>
+                                <tooltip>Korrekturfaktor cin Langzeit, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor des Infiltrationsparameters in der Langzeitsimulation</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>LT-Factor cin</label>
+                                <tooltip>Correction factor cin long term, multiplicative</tooltip>
+                                <description>Multiplicative correction factor of the infiltration parameter in the long term simulation </description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="cex" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor cex</label>
+                                <tooltip>Korrekturfaktor cex, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor des Perkolationsparameters des Bodenhorizontes</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Factor cex</label>
+                                <tooltip>Correction factor cex, multiplicative</tooltip>
+                                <description>Multiplicative correction factor of the percolation parameter of the soil horizons</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="bmax" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor max. Porenvolumen</label>
+                                <tooltip>Korrekturfaktor max. Porenvolumen, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor des maximalen Porenvolumens</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Max. Pore volume factor</label>
+                                <tooltip>Correction factor max. Pore volume, multiplicative</tooltip>
+                                <description>Multiplicative correction factor of the maximum Pore volume</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="banf" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anfangsbodenfeuchte</label>
+                                <tooltip>Anfangswert Bodenfeuchte</tooltip>
+                                <description>Anfangswert der Bodenfeuchte fuer des ersten Berechnungszyklus</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Initial soil moisture</label>
+                                <tooltip>Initial value of soil moisture</tooltip>
+                                <description>Initial value of soil moisture for the first computation cycle</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="fko" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor nFK</label>
+                                <tooltip>Korrekturfaktor nutzbare Feldkapazitaet, multiplikativ</tooltip>
+                                <description>Multiplikativer Korrekturfaktor der nutzbaren Feldkapazitaet</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Factor aFC</label>
+                                <tooltip>Correction factor of available field capacity, multiplicative</tooltip>
+                                <description>Multiplicative correction factor of the available field capacity</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="retlay" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor k QIntf.</label>
+                                <tooltip>Korrekturfaktor Retentionskonstante Interflow, multiplikativ (0-1)</tooltip>
+                                <description>Multiplikativer Korrekturfaktor der Retentionskonstante Interflow (0-1)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Factor k QIntf.</label>
+                                <tooltip>Correction factor of the retention constant Interflow, multiplicative (0-1)</tooltip>
+                                <description>Multiplicative correction factor of the retention constant Interflow (0-1)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="evalay" type="double"/>
+                    <!-- TODO loeschen und standard schreiben, da vom NA-modell nicht benutzt -->
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="grundwasserabflussAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="na:grundwasserabfluss"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <element name="grundwasserabfluss" type="na:grundwasserabflussType" substitutionGroup="gml:_Feature"/>
+    <complexType name="grundwasserabflussType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="ngwzu" type="na:CatchmentAssociationType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>TG Nummer GW-Relation</label>
+                                <tooltip>Teilgebietsnummer Grundwasserabfluss</tooltip>
+                                <description>Teilgebietsnummer des Gebietes, in welches das Grundwasser aus dem aktuellen Gebiet fliesst</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>SC Nummer GW-Relation</label>
+                                <tooltip>Subcatchment number - groundwater discharge</tooltip>
+                                <description>number of the subcatchment, into which the groundwater from the current subcatchment flows</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="gwwi" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anteil GW-Abfluss</label>
+                                <tooltip>Anteil des Grundwasserabflusses Nachbargebiet (Summe = 1)</tooltip>
+                                <description>Anteil des Grundwasserabfluss in das Nachbargebiet (Summe = 1)</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Portion GW-Discharge</label>
+                                <tooltip>Portion of the groundwater discharge</tooltip>
+                                <description>Portion of the Groundwater discharge into the neighbour subcatchments (Sum = 1)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="CatchmentAssociationType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence minOccurs="0">
+                    <element ref="na:Catchment"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <simpleType name="DiagramType">
+        <restriction base="string"/>
+    </simpleType>
+</schema>
