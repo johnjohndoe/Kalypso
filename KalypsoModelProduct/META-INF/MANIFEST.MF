@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelProduct Plug-in
+Bundle-SymbolicName: org.kalypso.model.product; singleton:=true
+Bundle-Version: 2.2.0.RC2_build20100312
+Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
+Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.kalypso1d2d.pjt,
+ org.kalypso.KalypsoManual1D2D,
+ org.kalypso.KalypsoManualWSPM,
+ org.kalypso.ui.rrm,
+ org.kalypso.model.flood,
+ org.kalypso.risk,
+ org.kalypso.model.wspm.tuhh.ui,
+ org.eclipse.ui.intro,
+ org.kalypso.simulation.ui,
+ org.kalypso.afgui,
+ org.eclipse.help.ui,
+ org.kalypso.KalypsoManualFlood,
+ org.kalypso.KalypsoManualRisk,
+ org.kalypso.KalypsoManualNA,
+ org.kalypso.ui.observationimport,
+ org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
+ org.kalypso.project.database.client;bundle-version="1.0.0",
+ org.eclipse.ui.ide.application;bundle-version="1.0.0",
+ org.kalypso.ui;bundle-version="1.0.0",
+ javax.servlet;bundle-version="2.5.0"
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.ui.internal.ide.application
