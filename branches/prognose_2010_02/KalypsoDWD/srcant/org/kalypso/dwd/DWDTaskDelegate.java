@@ -50,6 +50,8 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.dwd.DWDObservationRaster;
+import org.kalypso.dwd.DWDRasterHelper;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
@@ -106,7 +108,8 @@ public class DWDTaskDelegate
     DWDObservationRaster obsRaster = null;
     try
     {
-      obsRaster = DWDRasterHelper.loadObservationRaster( obsRasterURL, conf.getDwdKey(), conf.getNumberOfCells() );
+      // conf.getNumberOfCells()
+      obsRaster = DWDRasterHelper.loadObservationRaster( obsRasterURL, conf.getDwdKey() );
     }
     catch( final Exception e )
     {
@@ -162,7 +165,7 @@ public class DWDTaskDelegate
     logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " bis " + stopSim );
     logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " generate zml..." );
     // iterate zml to generate
-    
+
     for( final Target targetZML : targetList )
     {
       final String targetZMLref = targetZML.getTargetZR();
@@ -182,7 +185,7 @@ public class DWDTaskDelegate
         // iterate rastercells
         final List<Map> map = targetZML.getMap();
         double value = 0;
-        
+
         for( final Map mapping : map )
         {
           final int cellPos = mapping.getCellPos();
