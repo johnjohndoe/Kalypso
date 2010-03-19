@@ -29,8 +29,10 @@
  */
 package org.kalypso.dwd;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -44,17 +46,12 @@ public class DWDObservationRaster
   /**
    * The value hash.
    */
-  private final SortedMap<Date, double[]> m_valueHash = new TreeMap<Date, double[]>();
+  private final SortedMap<Date, List<Double>> m_valueHash = new TreeMap<Date, List<Double>>();
 
   /**
    * The type of the observation.
    */
   private final int m_dwdKey;
-
-  /**
-   * The maximum amount of cells per raster.
-   */
-  private final int m_maxCells;
 
   /**
    * The unit of the values of this observation.
@@ -66,15 +63,12 @@ public class DWDObservationRaster
    * 
    * @param dwdKey
    *          The type of the observation.
-   * @param maxCells
-   *          The maximum amount of cells per raster.
    * @param unit
    *          The unit of the values of this observation.
    */
-  public DWDObservationRaster( final int dwdKey, final int maxCells, final String unit )
+  public DWDObservationRaster( final int dwdKey, final String unit )
   {
     m_dwdKey = dwdKey;
-    m_maxCells = maxCells;
     m_unit = unit;
   }
 
@@ -101,16 +95,16 @@ public class DWDObservationRaster
   public void setValueFor( final Date date, final int cellPos, final double value )
   {
     if( !m_valueHash.containsKey( date ) )
-      m_valueHash.put( date, new double[m_maxCells] );
+      m_valueHash.put( date, new ArrayList<Double>() );
 
-    final double[] values = m_valueHash.get( date );
-    values[cellPos] = value;
+    final List<Double> values = m_valueHash.get( date );
+    values.add( new Double( value ) );
   }
 
   public double getValueFor( final Date date, final int cellPos )
   {
-    final double[] values = m_valueHash.get( date );
-    return values[cellPos];
+    final List<Double> values = m_valueHash.get( date );
+    return values.get( cellPos ).doubleValue();
   }
 
   /** Returns all known dates by this raster. The dates are sorted in ascending order. */
@@ -125,7 +119,7 @@ public class DWDObservationRaster
       min = m_valueHash.firstKey();
     if( max == null )
       max = m_valueHash.lastKey();
-    final SortedMap<Date, double[]> result = m_valueHash.subMap( min, max );
+    final SortedMap<Date, List<Double>> result = m_valueHash.subMap( min, max );
     return result.keySet().toArray( new Date[result.size()] );
   }
 
@@ -151,6 +145,14 @@ public class DWDObservationRaster
    */
   public int getMaxCells( )
   {
-    return m_maxCells;
+    Date firstKey = m_valueHash.firstKey();
+    if( firstKey == null )
+      return 0;
+
+    List<Double> firstValue = m_valueHash.get( firstKey );
+    if( firstValue == null )
+      return 0;
+
+    return firstValue.size();
   }
 }
