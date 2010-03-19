@@ -1,0 +1,3 @@
+(text10,a)
+(num,*)_(typanz,*)_(flaech1,*)_(flaech2,*)_(flaech3,*)
+(flaech4,a10)(nutz,a10)_(boden,a10)(m_perkm,*)_(m_f1gws,*)_(n_hydid,*)_(m_versGes,*)_(m_hydTyp,*)
