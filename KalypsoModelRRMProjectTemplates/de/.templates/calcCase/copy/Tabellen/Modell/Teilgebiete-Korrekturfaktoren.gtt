@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:gistableview xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns0:layer id="id" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" xlink:type="simple" xlink:href="../../calcCase.gml" xlink:actuate="onRequest">
+        <ns0:column width="100" name="description" format="" editable="true" alignment="16384"/>
+        <ns0:column width="54" name="name" format="" editable="false" alignment="16777216"/>
+        <ns0:column width="112" name="faktn" format="" editable="true" alignment="16384"/>
+        <ns0:column width="141" name="ftem" format="" editable="true" alignment="16384"/>
+        <ns0:column width="112" name="fver" format="" editable="true" alignment="16384"/>
+        <ns0:column width="112" name="bodenkorrekturmember" format="" editable="true" alignment="16384"/>
+        <ns0:column width="100" name="tint" format="" editable="true" alignment="16384"/>
+        <ns0:column width="82" name="rintmx" format="" editable="true" alignment="16384"/>
+        <ns0:column width="100" name="bianf" format="" editable="true" alignment="16384"/>        
+        <ns0:sort propertyName="name" inverse="false"/>
+    </ns0:layer>
+</ns0:gistableview>
+
