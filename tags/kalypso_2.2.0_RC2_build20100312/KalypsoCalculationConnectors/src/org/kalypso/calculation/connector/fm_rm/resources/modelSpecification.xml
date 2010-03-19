@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="KalypsoModelConnector_FM_RM">
+	<input id="FM_Model" description="Flood model file - given by absolute path (i.e. relative from workspace root)"/>
+	<input id="FM_EventsFolder" description="Events folder - given by absolute path (i.e. relative from workspace root)"/>
+	<input id="RM_Model" description="Risk model to read from"/>
+	<output id="RM_Model" description="Risk model to write to (usually the same as input ModelRM)"/>
+	<output id="RM_InputRasterFolder" description="Risk model input raster folder"/>
+	
+	<input id="MAP_WATERLEVEL" path="maps/WaterlevelMap.gmt" relativeToCalcCase="true" optional="true" />
+	<output id="MAP_WATERLEVEL" path="maps/WaterlevelMap.gmt" relativeToCalcCase="true" optional="true" />
+</modelspec>
