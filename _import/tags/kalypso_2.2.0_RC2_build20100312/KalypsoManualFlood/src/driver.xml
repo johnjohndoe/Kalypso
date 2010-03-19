@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE book PUBLIC "" "xsl/manual.dtd" [
+    <!ENTITY file_bookinfo SYSTEM "bookinfo.xml">
+    <!ENTITY file_introduction SYSTEM "einfuehrungFlood.xml">
+    <!ENTITY file_preprozessing SYSTEM "preprocessingFlood.xml">
+    <!ENTITY file_postprozessing SYSTEM "postprocessingFlood.xml">
+]>
+<!--book id="book" lang="de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xinclude="http://www.w3.org/2001/XInclude" xsi:schemaLocation="http://www.w3.org/2001/XInclude xincluder.xsd"-->
+<book id="book" lang="de">
+	&file_bookinfo;	
+	<toc/>
+
+	&file_introduction; 
+	&file_preprozessing; 
+	&file_postprozessing; 
+	<lot/>
+	<index/>
+</book>
