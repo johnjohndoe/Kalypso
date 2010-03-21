@@ -287,7 +287,6 @@ Library.
       <plugin id="org.eclipse.core.resources.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility"/>
       <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
       <plugin id="org.eclipse.core.runtime.compatibility.auth.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.runtime.compatibility.nl_de" fragment="true"/>
@@ -368,16 +367,6 @@ Library.
       <plugin id="org.eclipse.equinox.p2.touchpoint.eclipse.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.p2.touchpoint.natives"/>
       <plugin id="org.eclipse.equinox.p2.touchpoint.natives.nl_de" fragment="true"/>
-      <plugin id="org.eclipse.equinox.p2.ui"/>
-      <plugin id="org.eclipse.equinox.p2.ui.nl_de" fragment="true"/>
-      <plugin id="org.eclipse.equinox.p2.ui.sdk"/>
-      <plugin id="org.eclipse.equinox.p2.ui.sdk.nl_de" fragment="true"/>
-      <plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler"/>
-      <plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler.nl_de" fragment="true"/>
-      <plugin id="org.eclipse.equinox.p2.updatechecker"/>
-      <plugin id="org.eclipse.equinox.p2.updatechecker.nl_de" fragment="true"/>
-      <plugin id="org.eclipse.equinox.p2.updatesite"/>
-      <plugin id="org.eclipse.equinox.p2.updatesite.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.preferences.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
@@ -488,8 +477,6 @@ Library.
       <plugin id="org.eclipse.ui.workbench.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
       <plugin id="org.eclipse.ui.workbench.texteditor.nl_de" fragment="true"/>
-      <plugin id="org.eclipse.update.configurator"/>
-      <plugin id="org.eclipse.update.configurator.nl_de" fragment="true"/>
       <plugin id="org.eclipse.wst.common.uriresolver"/>
       <plugin id="org.eclipse.wst.common.uriresolver.nl_de" fragment="true"/>
       <plugin id="org.hamcrest.core"/>
@@ -504,6 +491,7 @@ Library.
       <plugin id="org.kalypso.KalypsoManualWSPM"/>
       <plugin id="org.kalypso.ModelSimulationBase"/>
       <plugin id="org.kalypso.NACalcJob"/>
+      <plugin id="org.kalypso.activities"/>
       <plugin id="org.kalypso.afgui"/>
       <plugin id="org.kalypso.auth"/>
       <plugin id="org.kalypso.commons"/>
