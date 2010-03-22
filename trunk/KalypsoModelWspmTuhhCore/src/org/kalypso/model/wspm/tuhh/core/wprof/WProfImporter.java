@@ -111,6 +111,8 @@ public class WProfImporter
   {
     monitor.beginTask( m_shapeDefaultSrs, w80features.size() + w80features.size() * m_handlers.size() );
 
+    // FIXME: check specification against shape-feature-type
+
     for( final Object object : w80features )
     {
       final Feature feature = (Feature) object;

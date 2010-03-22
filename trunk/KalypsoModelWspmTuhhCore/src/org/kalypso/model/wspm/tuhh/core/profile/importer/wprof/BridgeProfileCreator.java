@@ -107,12 +107,19 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   private void addBridgeObject( final IProfil profile )
   {
     final BuildingBruecke bridge = new BuildingBruecke( profile );
+    setBridgeDefaultValues( bridge );
+
     final IWProfPoint widthPoint = findBridgetWidth();
     if( widthPoint != null )
       setWidth( profile, bridge, widthPoint );
     setUWheight( profile, bridge, widthPoint );
 
     profile.addProfileObjects( new IProfileObject[] { bridge } );
+  }
+
+  private void setBridgeDefaultValues( final BuildingBruecke bridge )
+  {
+    bridge.setValueFor( BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
   }
 
   private void setUWheight( final IProfil profile, final BuildingBruecke bridge, final IWProfPoint widthPoint )
@@ -122,7 +129,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     final int heightIndex = profile.indexOfProperty( heightComponent );
     final IRecord lowestSoilPoint = ProfilUtil.getMinPoint( profile, heightComponent );
     final double lowestSoilZ = lowestSoilPoint == null ? Double.MAX_VALUE : (Double) lowestSoilPoint.getValue( heightIndex );
-    // FIXME: 5cm runter ist zu fix, besser noch mal gegen das uw-Profil prüfen
+    // FIXME: 2cm runter ist zu fix, besser noch mal gegen das uw-Profil prüfen
     final double uwZ = Math.min( lowestSoilZ - 0.02, widthPointZ );
     if( uwZ < Double.MAX_VALUE )
     {
@@ -137,10 +144,12 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     final GM_Point location = widthPoint.getLocation();
 
     final GM_Curve profileLine = ProfileFeatureBinding.createProfileSegment( profile, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
-    final double width = location.distance( profileLine );
-
-    final BigDecimal widthScaled = new BigDecimal( width ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-    bridge.setValueFor( BUILDING_PROPERTY_BREITE, widthScaled.doubleValue() );
+    if( profileLine != null )
+    {
+      final double width = location.distance( profileLine );
+      final BigDecimal widthScaled = new BigDecimal( width ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+      bridge.setValueFor( BUILDING_PROPERTY_BREITE, widthScaled.doubleValue() );
+    }
   }
 
   private IWProfPoint findBridgetWidth( )

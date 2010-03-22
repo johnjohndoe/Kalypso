@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.tuhh.core.wprof;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -51,7 +49,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -67,41 +64,29 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConstants
 {
+  private static final String SPEC_Z = "Z"; //$NON-NLS-1$
+
+  private static final String SPEC_P_NAM = "P_NAM"; //$NON-NLS-1$
+
+  private static final String SPEC_NUMMER = "NUMMER"; //$NON-NLS-1$
+
   private final Feature m_feature;
 
   private final String m_photoContext;
 
-  final Properties m_specifiction = new Properties();
+  private final Properties m_specifiction;
 
   private final String m_pdfContext;
 
   private final WProfContextTokenReplacer m_tokenReplace;
 
-  public BCEShapeWPRofContentProvider( final Feature feature, final WProfContextTokenReplacer tokenReplace, final String photoContext, final String pdfContext )
+  public BCEShapeWPRofContentProvider( final Feature feature, final WProfContextTokenReplacer tokenReplace, final String photoContext, final String pdfContext, final Properties specification )
   {
     m_feature = feature;
     m_tokenReplace = tokenReplace;
     m_photoContext = photoContext;
     m_pdfContext = pdfContext;
-
-    readSpecification();
-  }
-
-  private void readSpecification( )
-  {
-    final URL resource = getClass().getResource( "BCEShapeWProfSpecification.ini" );
-    InputStream is = null;
-    try
-    {
-      is = resource.openStream();
-      m_specifiction.load( is );
-      is.close();
-    }
-    catch( final IOException e )
-    {
-      IOUtils.closeQuietly( is );
-      e.printStackTrace();
-    }
+    m_specifiction = specification;
   }
 
   public <T> T getProperty( final String name, final Class<T> type, final T defaultValue )
@@ -113,21 +98,33 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     return defaultValue;
   }
 
-  @SuppressWarnings("deprecation")
-  public <T> T getProperty( final String name, final Class<T> type )
+  private void checkPropertyExists( final String propertySpecificationName )
   {
-    final String property = m_specifiction.getProperty( name );
-
-    final IFeatureType featureType = m_feature.getFeatureType();
-    final IPropertyType pt = featureType.getProperty( property );
-    if( pt == null )
+    final IPropertyType propertyType = getPropertyType( propertySpecificationName );
+    if( propertyType == null )
     {
-      // FIXME: zwischen optionalen und nicht unterscheiden
-      return null;
+      final String property = m_specifiction.getProperty( propertySpecificationName );
+      final String msg = String.format( "Missing property '%s' in input shapefile.", property );
+      throw new IllegalArgumentException( msg );
     }
+  }
+
+  public <T> T getProperty( final String propertySpecificationName, final Class<T> type )
+  {
+    final IPropertyType pt = getPropertyType( propertySpecificationName );
+    if( pt == null )
+      return null;
 
     final Object value = m_feature.getProperty( pt );
     return type.cast( value );
+  }
+
+  @SuppressWarnings("deprecation")
+  private IPropertyType getPropertyType( final String propertySpecificationName )
+  {
+    final String property = m_specifiction.getProperty( propertySpecificationName );
+    final IFeatureType featureType = m_feature.getFeatureType();
+    return featureType.getProperty( property );
   }
 
   @Override
@@ -181,7 +178,12 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public BigDecimal getDistance( )
   {
+    checkPropertyExists( "DISTANCE" );//$NON-NLS-1$
+
     final double distance = getProperty( "DISTANCE", Double.class, Double.NaN ); //$NON-NLS-1$
+    if( Double.isNaN( distance ) )
+      return null;
+
     final BigDecimal bigDecimal = new BigDecimal( distance );
     bigDecimal.setScale( 4, BigDecimal.ROUND_HALF_UP );
     return bigDecimal;
@@ -190,7 +192,8 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public double getValue( )
   {
-    return getProperty( "Z", Double.class, Double.NaN ); //$NON-NLS-1$
+    checkPropertyExists( SPEC_Z );
+    return getProperty( SPEC_Z, Double.class, Double.NaN );
   }
 
   @Override
@@ -316,7 +319,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
   public String getPNam( )
   {
-    final String pnam = getProperty( "P_NAM", String.class, "Profilename unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String pnam = getProperty( SPEC_P_NAM, String.class, "Profilename unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
     return pnam.replaceAll( "\"", "" );
   }
 
@@ -332,7 +335,9 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public int getNumber( )
   {
-    return getProperty( "NUMMER", Integer.class, -1 ); //$NON-NLS-1$
+    checkPropertyExists( SPEC_NUMMER ); //$NON-NLS-1$
+
+    return getProperty( SPEC_NUMMER, Integer.class, -1 ); //$NON-NLS-1$
   }
 
   @Override
