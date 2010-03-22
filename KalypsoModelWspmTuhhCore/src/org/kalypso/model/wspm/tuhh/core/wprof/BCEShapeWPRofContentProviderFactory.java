@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
+
+import org.apache.commons.io.IOUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -47,23 +53,58 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class BCEShapeWPRofContentProviderFactory implements IWProfPointFactory
 {
-  private final String m_photoContext;
+  private String m_photoContext;
 
-  private final String m_pdfContext;
+  private String m_pdfContext;
 
-  private final WProfContextTokenReplacer m_tokenReplace;
+  private WProfContextTokenReplacer m_tokenReplace;
 
-  public BCEShapeWPRofContentProviderFactory( final WProfContextTokenReplacer tokenReplace, final String photoContext, final String pdfContext )
+  private Properties m_specification;
+
+  public void setTokenReplace( final WProfContextTokenReplacer tokenReplace )
   {
     m_tokenReplace = tokenReplace;
-    m_photoContext = photoContext;
+  }
+
+  public void setPdfContext( final String pdfContext )
+  {
     m_pdfContext = pdfContext;
+  }
+
+  public void setPhotoContext( final String photoContext )
+  {
+    m_photoContext = photoContext;
+  }
+
+  public void setSpecification( final Properties specification )
+  {
+    m_specification = specification;
   }
 
   @Override
   public IWProfPoint newPoint( final Feature feature )
   {
-    return new BCEShapeWPRofContentProvider( feature, m_tokenReplace, m_photoContext, m_pdfContext );
+    return new BCEShapeWPRofContentProvider( feature, m_tokenReplace, m_photoContext, m_pdfContext, m_specification );
   }
 
+  public Properties getDefaultSpecification( )
+  {
+    final Properties defaultSpecification = new Properties();
+
+    final URL resource = getClass().getResource( "BCEShapeWProfSpecification.ini" );
+    InputStream is = null;
+    try
+    {
+      is = resource.openStream();
+      defaultSpecification.load( is );
+      is.close();
+    }
+    catch( final IOException e )
+    {
+      IOUtils.closeQuietly( is );
+      e.printStackTrace();
+    }
+
+    return defaultSpecification;
+  }
 }

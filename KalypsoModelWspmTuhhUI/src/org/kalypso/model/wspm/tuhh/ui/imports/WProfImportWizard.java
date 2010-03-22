@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.imports;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IStatus;
@@ -56,7 +57,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.SoilOnlyProfileCr
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
-import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPointFactory;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextTokenReplacer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -66,6 +66,8 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class WProfImportWizard extends Wizard
 {
+  private final BCEShapeWPRofContentProviderFactory m_pointFactory = new BCEShapeWPRofContentProviderFactory();
+
   private final TuhhWspmProject m_targetProject;
 
   private final WProfImportFilePage m_wprofFilePage;
@@ -73,6 +75,8 @@ public class WProfImportWizard extends Wizard
   private final CommandableWorkspace m_workspace;
 
   private final WProfOptionsPage m_wprofMarkerPage;
+
+  private final WProfPropertyPage m_wprofPropertyPage;
 
   public WProfImportWizard( final CommandableWorkspace workspace, final TuhhWspmProject targetProject )
   {
@@ -90,18 +94,15 @@ public class WProfImportWizard extends Wizard
     profileStrategyOptions.addStrategy( new SoilOnlyProfileCreatorStrategy( false ) );
     profileStrategyOptions.addStrategy( new SoilOnlyProfileCreatorStrategy( true ) );
 
+    final Properties defaultSpecification = m_pointFactory.getDefaultSpecification();
+    m_wprofPropertyPage = new WProfPropertyPage( "wprofPropertyPage", defaultSpecification ); //$NON-NLS-1$
+
     setWindowTitle( "WProf Import" );
     setNeedsProgressMonitor( true );
-  }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
     addPage( m_wprofFilePage );
     addPage( m_wprofMarkerPage );
+    addPage( m_wprofPropertyPage );
   }
 
   /**
@@ -134,9 +135,13 @@ public class WProfImportWizard extends Wizard
     }
 
     final WProfContextTokenReplacer tokenReplace = m_wprofFilePage.getTokenReplace();
-    final IWProfPointFactory pointFactory = new BCEShapeWPRofContentProviderFactory( tokenReplace, photoContext, pdfContext );
+    final Properties specification = m_wprofPropertyPage.getSpecification();
+    m_pointFactory.setTokenReplace( tokenReplace );
+    m_pointFactory.setPdfContext( pdfContext );
+    m_pointFactory.setPhotoContext( photoContext );
+    m_pointFactory.setSpecification( specification );
 
-    final WProfImportOperation op = new WProfImportOperation( shapeFile, handler, pointFactory );
+    final WProfImportOperation op = new WProfImportOperation( shapeFile, handler, m_pointFactory );
     op.setShapeCharset( m_wprofFilePage.getShapeCharset() );
     op.setShapeDefaultSrs( m_wprofFilePage.getShapeDefaultSrs() );
 

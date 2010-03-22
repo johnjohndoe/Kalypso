@@ -110,7 +110,6 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   @Override
   public final IProfil addProfile( final TuhhWspmProject project ) throws CoreException
   {
-
     final IProfileFeature profileFeature = createNewProfile( project );
     if( profileFeature == null )
       return null;
@@ -184,9 +183,9 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   {
     addBasicData( profile );
 
- final String newName = String.format( "%s (%s)", profile.getName(), m_description );
+    final String newName = String.format( "%s (%s)", profile.getName(), m_description );
     // FIXME: Andrea
-//    final String newName = String.format( "%s", profile.getName(), m_description );
+// final String newName = String.format( "%s", profile.getName(), m_description );
     profile.setName( newName );
 
     configure( profile );
