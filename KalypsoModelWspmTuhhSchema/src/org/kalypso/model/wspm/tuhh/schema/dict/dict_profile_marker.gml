@@ -15,11 +15,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="DURCHSTROEMTE">
-   <gml:name>Durchströmte Bereiche</gml:name>
+   <gml:name>%durchstroemte.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_DurchstroemteBereiche">
-     <gml:description>Markierung Durchströmte Bereiche</gml:description>
-     <gml:name>Durchströmte Bereiche</gml:name>
+     <gml:description>%durchstroemte.description</gml:description>
+     <gml:name>%durchstroemte.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -35,11 +35,10 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BORDVOLL">
-   <gml:name>Bordvollpunkte</gml:name>
+   <gml:name>%bordvoll.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Bordvoll">
-     <gml:description>Markierung Bordvollpunkte</gml:description>
-     <gml:name>Bordvollpunkte</gml:name>
+     <gml:name>%bordvoll.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -55,11 +54,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="TRENNFLAECHE">
-   <gml:name>Trennflächen</gml:name>
+   <gml:name>%trennflaeche.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Trennflaechen">
-     <gml:description>Markierung Trennflächen</gml:description>
-     <gml:name>Trennflächen</gml:name>
+     <gml:description>%trennflaeche.description</gml:description>
+     <gml:name>%trennflaeche.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -77,11 +76,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="WEHR">
-   <gml:name>Trennlinie Wehr</gml:name>
+   <gml:name>%wehr.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_TrennlinieWehr">
-     <gml:description>Markierung Trennlinie Wehr</gml:description>
-     <gml:name>Trennlinie Wehr</gml:name>
+     <gml:description>%wehr.description</gml:description>
+     <gml:name>%wehr.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>

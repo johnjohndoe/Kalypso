@@ -15,11 +15,11 @@
  
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BREITE">
-   <gml:name>größte Breite/Durchmesser</gml:name>
+   <gml:name>%breite.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Breite">
-     <gml:description/>
-     <gml:name>größte Breite/Durchmesser</gml:name>
+     <gml:description>%breite.description</gml:description>
+     <gml:name>%breite.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -32,11 +32,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="HOEHE">
-   <gml:name>Gesamthöhe</gml:name>
+   <gml:name>%hoehe.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Hoehe">
-     <gml:description/>
-     <gml:name>Gesamthöhe</gml:name>
+     <gml:description>%hoehe.description</gml:description>
+     <gml:name>%hoehe.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -49,11 +49,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="SOHLGEFAELLE">
-   <gml:name>Sohlgefälle</gml:name>
+   <gml:name>%sohlgefaelle.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Sohlgefaelle">
-     <gml:description/>
-     <gml:name>Sohlgefälle</gml:name>
+     <gml:description>%wehrart.description</gml:description>
+     <gml:name>%wehrart.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -66,11 +66,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BEZUGSPUNKT_X">
-   <gml:name>Bezugspunkt Breite</gml:name>
+   <gml:name>%bezugspunkt_x.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_BEZUGSPUNKT_X">
-     <gml:description/>
-     <gml:name>Bezugspunkt Breite</gml:name>
+     <gml:description>%bezugspunkt_x.description</gml:description>
+     <gml:name>%bezugspunkt_x.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -83,11 +83,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BEZUGSPUNKT_Y">
-   <gml:name>Bezugspunkt Höhe</gml:name>
+   <gml:name>%bezugspunkt_y.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_BEZUGSPUNKT_Y">
-     <gml:description/>
-     <gml:name>Bezugspunkt Höhe</gml:name>
+        <gml:description>%bezugspunkt_y.description</gml:description>
+     <gml:name>%bezugspunkt_y.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -100,11 +100,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="STEIGUNG">
-   <gml:name>Steigung der Dreieckseite</gml:name>
+   <gml:name>%steigung.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_STEIGUNG">
-     <gml:description/>
-     <gml:name>Steigung der Dreieckseite</gml:name>
+     <gml:description>%steigung.description</gml:description>
+     <gml:name>%steigung.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -117,11 +117,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="RAUHEIT">
-   <gml:name>Rauheit</gml:name>
+   <gml:name>%rauheit.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_RAUHEIT">
-     <gml:description>Rauheitsbeiwert im Durchlass</gml:description>
-     <gml:name>Rauheit</gml:name>
+     <gml:description>%rauheit.description</gml:description>
+     <gml:name>%rauheit.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -134,11 +134,12 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="FORMBEIWERT">
-   <gml:name>Formbeiwert</gml:name>
+   <gml:name>%formbeiwert.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_FORMBEIWERT">
      <gml:description/>
-     <gml:name>Formbeiwert</gml:name>
+     <gml:name>%formbeiwert.name</gml:name>
+          <gml:description>%formbeiwert.description</gml:description>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -151,11 +152,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="UNTERWASSER">
-   <gml:name>Unterwasser</gml:name>
+   <gml:name>%unterwasser.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_UNTERWASSER">
-     <gml:description>Höhe der Gewässersohle im Unterwasser</gml:description>
-     <gml:name>Unterwasser</gml:name>
+     <gml:description>%unterwasser.description</gml:description>
+     <gml:name>%unterwasser.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -168,11 +169,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="WEHRART">
-   <gml:name>Wehrart</gml:name>
+   <gml:name>%wehrart.name</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_WEHRART">
-     <gml:description>Form der Wehrkrone</gml:description>
-     <gml:name>Wehrart</gml:name>
+     <gml:description>%wehrart.description</gml:description>
+     <gml:name>%wehrart.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
