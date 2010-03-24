@@ -193,18 +193,34 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   private void addDefaultMarkers( final IProfil profile, final int numberOfMarkersToAdd, final String markerType )
   {
-    // TRICKY: we use the soil points, to determine the default points here...
-    // This is useful for extended profiles: the markers than sit on the last/first real wprof point.
-    final IWProfPoint[] soilPoints = getPoints( m_soilPointsID );
+    // FIXME: make optional
+    final boolean useLastObservedPoints = false;
+    final IRecord firstPoint;
+    final IRecord lastPoint;
+    if( useLastObservedPoints )
+    {
+      // TRICKY: we use the soil points, to determine the default points here...
+      // This is useful for extended profiles: the markers than sit on the last/first real wprof point.
+      final IWProfPoint[] soilPoints = getPoints( m_soilPointsID );
 
-    if( soilPoints.length < 2 )
-      return;
+      if( soilPoints.length < 2 )
+        return;
 
-    final IWProfPoint firstSoilPoint = soilPoints[0];
-    final IWProfPoint lastSoilPoint = soilPoints[soilPoints.length - 1];
+      final IWProfPoint firstSoilPoint = soilPoints[0];
+      final IWProfPoint lastSoilPoint = soilPoints[soilPoints.length - 1];
 
-    final IRecord firstPoint = ProfilUtil.findPoint( profile, firstSoilPoint.getDistance().doubleValue(), 0.0001 );
-    final IRecord lastPoint = ProfilUtil.findPoint( profile, lastSoilPoint.getDistance().doubleValue(), 0.0001 );
+      firstPoint = ProfilUtil.findPoint( profile, firstSoilPoint.getDistance().doubleValue(), 0.0001 );
+      lastPoint = ProfilUtil.findPoint( profile, lastSoilPoint.getDistance().doubleValue(), 0.0001 );
+    }
+    else
+    {
+      final IRecord[] points = profile.getPoints();
+      if( points.length < 2 )
+        return;
+
+      firstPoint = points[0];
+      lastPoint = points[points.length - 1];
+    }
 
     switch( numberOfMarkersToAdd )
     {
