@@ -125,6 +125,24 @@
                 </reference>
              </enabledWhen>
           </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.export.PlotterExportHandler"
+                commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.export.LengthSectionExportHandler"
+                commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.chart.ui.chartEditorActive">
+                </reference>
+             </enabledWhen>
+          </handler>
 	</extension>
 
    <extension
@@ -380,6 +398,13 @@
           </visibleWhen>
        </command>
        <command
+             commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+       <command
              commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
              style="push">
           <visibleWhen
@@ -395,6 +420,16 @@
        </command>
        <command
              commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
+       <command
+             commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
              style="push">
           <visibleWhen
                 checkEnabled="true">
@@ -456,6 +491,10 @@
           id="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
           name="Length Section">
     </command>
+    <command
+          id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
+          name="WspWin Plotter">
+    </command>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -489,6 +528,10 @@
      <image
            commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
            icon="icons/elcl16/profile_create_lengthSection.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
+           icon="icons/elcl16/export_plotter.gif">
      </image>
   </extension>
 

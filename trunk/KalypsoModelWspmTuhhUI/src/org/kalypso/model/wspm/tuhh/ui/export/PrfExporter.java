@@ -76,7 +76,7 @@ public class PrfExporter
     m_exportDirectory = exportDirectory;
   }
 
-  public IStatus export( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  public IStatus export( final IProfileFeature[] profiles, final IProgressMonitor monitor )
   {
     final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
     final MultiStatus resultStatus = new MultiStatus( id, 1, "Several profiles could not be written.", null );
