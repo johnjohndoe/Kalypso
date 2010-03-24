@@ -103,7 +103,20 @@ public class WProfPropertyPage extends WizardPage
     scrolledForm.setExpandVertical( true );
 
     final Composite body = scrolledForm.getBody();
-    body.setLayout( new GridLayout( 2, false ) );
+    body.setLayout( new GridLayout( 3, false ) );
+
+    /* Header */
+    final Label keyLabel = new Label( body, SWT.NONE );
+    keyLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    keyLabel.setText( "Key" );
+
+    final Label defaultLabel = new Label( body, SWT.NONE );
+    defaultLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    defaultLabel.setText( "Default Attribute" );
+
+    final Label valueLabel = new Label( body, SWT.NONE );
+    valueLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    valueLabel.setText( "User Defined Attribute" );
 
     final Set<Object> keySet = m_defaultSpecification.keySet();
     for( final Object key : keySet )
@@ -150,9 +163,14 @@ public class WProfPropertyPage extends WizardPage
 
   private void createRow( final Composite parent, final String key )
   {
-    final Text keyText = new Text( parent, SWT.READ_ONLY | SWT.LEFT | SWT.BORDER );
-    keyText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    keyText.setText( key );
+    final Label keyLabel = new Label( parent, SWT.NONE );
+    keyLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
+    keyLabel.setText( key );
+
+    final Text defaultText = new Text( parent, SWT.READ_ONLY | SWT.LEFT | SWT.BORDER );
+    defaultText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final String defaultValue = m_defaultSpecification.getProperty( key );
+    defaultText.setText( defaultValue );
 
     final Object value = m_specification.get( key );
     final Text valueText = new Text( parent, SWT.LEFT | SWT.BORDER );
@@ -175,7 +193,7 @@ public class WProfPropertyPage extends WizardPage
 
   protected void handlePropertyChanged( final String key, final String value )
   {
-    final String valueToSet = value.isEmpty() ? null : value;
+    final String valueToSet = value.isEmpty() ? "" : value;//$NON-NLS-1$
 
     m_specification.setProperty( key, valueToSet );
     final IDialogSettings settings = getSettings();
