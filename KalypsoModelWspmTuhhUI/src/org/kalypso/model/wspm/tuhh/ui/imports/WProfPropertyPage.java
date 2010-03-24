@@ -193,9 +193,12 @@ public class WProfPropertyPage extends WizardPage
 
   protected void handlePropertyChanged( final String key, final String value )
   {
-    final String valueToSet = value.isEmpty() ? "" : value;//$NON-NLS-1$
+    final String valueToSet = value.isEmpty() ? null : value;//$NON-NLS-1$
 
-    m_specification.setProperty( key, valueToSet );
+    if( valueToSet == null )
+      m_specification.remove( key );
+    else
+      m_specification.setProperty( key, valueToSet );
     final IDialogSettings settings = getSettings();
     if( settings != null )
       settings.put( key, valueToSet );
