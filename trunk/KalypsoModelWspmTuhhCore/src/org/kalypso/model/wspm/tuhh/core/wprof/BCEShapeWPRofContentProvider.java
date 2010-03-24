@@ -49,7 +49,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -131,7 +130,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   public String getRiverId( )
   {
     final Object riverId = getProperty( "GEWAESSER_ID", Object.class, "Unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return ObjectUtils.toString( riverId );
+    return String.format( "%5s", riverId ).replaceAll( " ", "0" );
   }
 
   /**
@@ -152,7 +151,6 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
     try
     {
-// double faktorStation = 1000.0;
       final double faktorStation = 1;
       return new BigDecimal( station / faktorStation ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     }
