@@ -68,6 +68,7 @@ import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper.LAYER_TYPE;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -111,7 +112,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
     final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
 
     try

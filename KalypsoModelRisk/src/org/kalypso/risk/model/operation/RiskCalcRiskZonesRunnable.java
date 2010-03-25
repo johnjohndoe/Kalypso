@@ -48,6 +48,7 @@ import org.kalypso.risk.model.simulation.RiskZonesGrid;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskStatisticTableValues;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -80,7 +81,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
     final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
 
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$

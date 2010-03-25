@@ -55,6 +55,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -127,7 +128,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
 
   private void doInnundationDifferenceCalculation( final File tmpdir, final IRasterDataModel rasterModelOutput, final IRasterDataModel rasterModelInput1, final IRasterDataModel rasterModelInput2, final IProgressMonitor monitor ) throws SimulationException
   {
-    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
     final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
 
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.0" ), 100 ); //$NON-NLS-1$
