@@ -56,6 +56,7 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -125,7 +126,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
       final File propertiesFile = new File( tmpdir, "stats.txt" );
       final Properties properties = new Properties();
-      properties.put( "TOTAL_DIFFERENCE", String.format(Locale.ENGLISH, "%.8f", m_totalDifference ) );
+      properties.put( "TOTAL_DIFFERENCE", String.format( Locale.ENGLISH, "%.8f", m_totalDifference ) );
       properties.put( "ANNUAL_COSTS", "n/a" );
       properties.put( "VALUE_BENEFIT", "n/a" );
       final FileOutputStream propertiesStream = new FileOutputStream( propertiesFile );
@@ -145,9 +146,9 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
   private void doRiskZonesCalculation( final File tmpdir, final IRasterDataModel rasterModelOutput, final IRasterDataModel rasterModelInput1, final IRasterDataModel rasterModelInput2, final IProgressMonitor monitor ) throws SimulationException
   {
-    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
     final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-    
+
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
 
     try

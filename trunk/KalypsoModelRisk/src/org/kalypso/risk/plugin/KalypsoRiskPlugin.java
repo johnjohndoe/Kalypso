@@ -21,7 +21,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class KalypsoRiskPlugin extends AbstractUIPlugin
 {
-  private static KalypsoRiskPlugin m_plugin;
+  private static KalypsoRiskPlugin PLUGIN;
 
   private TaskExecutionAuthority m_taskExecutionAuthority;
 
@@ -33,12 +33,13 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
 
   public KalypsoRiskPlugin( )
   {
-    m_plugin = this;
+    super();
+    PLUGIN = this;
   }
 
   public static KalypsoRiskPlugin getDefault( )
   {
-    return m_plugin;
+    return PLUGIN;
   }
 
   @Override
@@ -87,7 +88,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
       caseDataProvider.removeScenarioDataListener( m_szenarioController );
     }
 
-    m_plugin = null;
+    PLUGIN = null;
     super.stop( context );
   }
 

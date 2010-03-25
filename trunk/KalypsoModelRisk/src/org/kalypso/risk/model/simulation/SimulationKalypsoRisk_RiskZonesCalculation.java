@@ -82,6 +82,7 @@ import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskStatisticTableValues;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -121,9 +122,9 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
     final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-    
+
     try
     {
       final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
