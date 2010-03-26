@@ -229,8 +229,8 @@ public class Waterlevel2DCreator
     }
 
     /* Enlarge by 20m or at least 2 profile points */
-    dbMin -= 10.0;
-    dbMax += 10.0;
+    dbMin -= 20.0;
+    dbMax += 20.0;
 
     createMarker( profile, dbMin, dbMax );
   }
