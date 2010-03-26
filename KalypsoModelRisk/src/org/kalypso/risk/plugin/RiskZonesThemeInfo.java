@@ -62,7 +62,7 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
   @Override
   protected String initFormatString( final Properties props )
   {
-    final IPreferenceStore preferences = KalypsoRiskPreferencePage.getPreferences();
+    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
     final int digits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
     return props.getProperty( PROP_FORMAT, "%." + digits + "g \u20ac/m\u00b2/a - %s" ); //$NON-NLS-1$
   }
