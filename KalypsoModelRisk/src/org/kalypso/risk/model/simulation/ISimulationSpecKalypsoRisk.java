@@ -50,7 +50,6 @@ public interface ISimulationSpecKalypsoRisk
 {
   public enum SIMULATION_KALYPSORISK_TYPEID
   {
-    LANDUSE_RASTERIZATION,
     SPECIFIC_DAMAGE_CALCULATION,
     RISK_ZONES_CALCULATION;
     public String getValue( )
@@ -59,8 +58,6 @@ public interface ISimulationSpecKalypsoRisk
 
       switch( kind )
       {
-        case LANDUSE_RASTERIZATION:
-          return "KalypsoRisk_LanduseRasterization"; //$NON-NLS-1$
         case SPECIFIC_DAMAGE_CALCULATION:
           return "KalypsoRisk_SpecificDamageCalculation"; //$NON-NLS-1$
         case RISK_ZONES_CALCULATION:
