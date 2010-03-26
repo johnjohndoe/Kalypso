@@ -183,9 +183,9 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   {
     addBasicData( profile );
 
-    final String newName = String.format( "%s (%s)", profile.getName(), m_description );
+// final String newName = String.format( "%s (%s)", profile.getName(), m_description );
     // FIXME: Andrea
-// final String newName = String.format( "%s", profile.getName(), m_description );
+    final String newName = String.format( "%s", profile.getName() );
     profile.setName( newName );
 
     configure( profile );

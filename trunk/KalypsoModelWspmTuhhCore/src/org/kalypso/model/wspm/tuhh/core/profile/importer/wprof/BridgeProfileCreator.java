@@ -47,7 +47,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -164,18 +163,68 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   private void cleanup( final IProfil profile )
   {
     final int heightComponent = profile.indexOfProperty( POINT_PROPERTY_HOEHE );
-    final int ukComponent = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
+
+    // FIXME Steiermark
+// final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
+    final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
+
     final int okComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
 
     ProfilUtil.interpolateProperty( profile, heightComponent );
-    ProfilUtil.interpolateProperty( profile, ukComponent );
+    ProfilUtil.interpolateProperty( profile, bridgeComponent );
     ProfilUtil.interpolateProperty( profile, okComponent );
 
-    final IRecord[] trennflaechenPoints = cleanupHeights( profile );
+    // FIXME: Steiermark
+// cleanupHeights( profile );
+
+    final IRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, bridgeComponent );
     createMarkers( profile, trennflaechenPoints, MARKER_TYP_TRENNFLAECHE );
   }
 
-  private IRecord[] cleanupHeights( final IProfil profile )
+  private IRecord[] findFirstLast( final IProfil profile, final int heightComponent, final int bridgeComponent )
+  {
+    final Collection<IRecord> firstLast = new ArrayList<IRecord>( 2 );
+
+    final List<IRecord> points = Arrays.asList( profile.getPoints() );
+    final IRecord firstPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
+    if( firstPoint != null )
+      firstLast.add( firstPoint );
+
+    Collections.reverse( points );
+
+    final IRecord lastPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
+    if( lastPoint != null )
+      firstLast.add( lastPoint );
+
+    return firstLast.toArray( new IRecord[firstLast.size()] );
+  }
+
+  private IRecord findFirstBridgePoint( final Collection<IRecord> points, final int heightComponent, final int bridgeComponent )
+  {
+    if( points.size() == 0 )
+      return null;
+
+    IRecord lastBridgePoint = points.iterator().next();
+    for( final IRecord point : points )
+    {
+      final Object bridgeValue = point.getValue( bridgeComponent );
+      final Object heightValue = point.getValue( heightComponent );
+
+      if( bridgeValue instanceof Number && heightValue instanceof Number )
+      {
+        final double bridgeHeight = ((Number) bridgeValue).doubleValue();
+        final double heightHeight = ((Number) heightValue).doubleValue();
+        if( bridgeHeight > heightHeight )
+          return lastBridgePoint;
+      }
+
+      lastBridgePoint = point;
+    }
+
+    return null;
+  }
+
+  private void cleanupHeights( final IProfil profile )
   {
     final int ukIndex = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
     final int okIndex = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
@@ -184,19 +233,15 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     final IRecord[] points = profile.getPoints();
     final List<IRecord> pointsList = Arrays.asList( points );
-    final IRecord firstUK = snapFirstToHeight( heightIndex, ukIndex, points, precision );
+    /* final IRecord firstUK = */snapFirstToHeight( heightIndex, ukIndex, points, precision );
     snapFirstToHeight( heightIndex, okIndex, points, precision );
 
     Collections.reverse( pointsList );
-    final IRecord lastUK = snapFirstToHeight( heightIndex, ukIndex, points, precision );
+    /* final IRecord lastUK = */snapFirstToHeight( heightIndex, ukIndex, points, precision );
     snapFirstToHeight( heightIndex, okIndex, points, precision );
 
     moveAllAbove( heightIndex, ukIndex, points );
     moveAllAbove( ukIndex, okIndex, points );
-
-    final Collection<IRecord> ukFirstLast = new ArrayList<IRecord>( Arrays.asList( firstUK, lastUK ) );
-    CollectionUtils.removeAll( ukFirstLast, Arrays.asList( (IRecord) null ) );
-    return ukFirstLast.toArray( new IRecord[ukFirstLast.size()] );
   }
 
   private IRecord snapFirstToHeight( final int heightIndex, final int toSnapIndex, final IRecord[] points, final double precision )
@@ -247,7 +292,58 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   protected IWProfPoint[] getUkPoints( )
   {
     final IWProfPoint[] ukPoints = getPoints( m_ukPointsID );
-    return ukPoints;
+    return swapBackJumps( ukPoints );
+  }
+
+  private static final BigDecimal MIN_DISTTANCE = new BigDecimal( "0.0001" );
+
+  private static final double dMAX_BACKJUMP_DISTANCE = 0.30;
+
+  private IWProfPoint[] swapBackJumps( final IWProfPoint[] bridgePoints )
+  {
+    final BridgePoint[] adjustedPoints = new BridgePoint[bridgePoints.length];
+    for( int i = 0; i < adjustedPoints.length; i++ )
+      adjustedPoints[i] = new BridgePoint( bridgePoints[i] );
+
+    final boolean adjust = true;
+    // FIXME
+    if( !adjust )
+      return adjustedPoints;
+
+    /* Now we do adjust... */
+    for( int i = 0; i < adjustedPoints.length; i++ )
+    {
+      if( i > 1 )
+      {
+        final BridgePoint before = adjustedPoints[i - 2];
+        final BridgePoint here = adjustedPoints[i - 1];
+        final BridgePoint after = adjustedPoints[i];
+
+        final BigDecimal beforeDistance = before.getDistance();
+        final BigDecimal hereDistance = here.getDistance();
+        final BigDecimal afterDistance = after.getDistance();
+
+        final double backDistance = beforeDistance.subtract( hereDistance ).doubleValue();
+        final double frontDistance = hereDistance.subtract( afterDistance ).doubleValue();
+        if( backDistance > 0 && backDistance < dMAX_BACKJUMP_DISTANCE )
+        {
+          if( hereDistance.compareTo( beforeDistance ) <= 0 )
+          {
+            final BigDecimal newHere = beforeDistance.add( MIN_DISTTANCE );
+            if( newHere.compareTo( afterDistance ) < 0 )
+              here.setDistance( newHere );
+          }
+        }
+        else if( frontDistance > 0 && frontDistance < dMAX_BACKJUMP_DISTANCE )
+        {
+          final BigDecimal newHere = afterDistance.subtract( MIN_DISTTANCE );
+          if( newHere.compareTo( beforeDistance ) > 0 )
+            here.setDistance( newHere );
+        }
+      }
+    }
+
+    return adjustedPoints;
   }
 
   private void addOK( final IProfil profile ) throws CoreException
@@ -261,7 +357,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   protected IWProfPoint[] getOkPoints( )
   {
-    return getPoints( m_okPointsID );
+    final IWProfPoint[] points = getPoints( m_okPointsID );
+    return swapBackJumps( points );
   }
 
   private void addDefaultProperty( final IProfil profile, final String propertyToSet, final String propertyToCopy )
@@ -281,29 +378,20 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     profile.addPointProperty( component );
 
-    // FIXME: Rücksprünge in Brücken sind bei WSPM nicht möglich... es sollte daher irgendwas korrigiert werden...
-
     try
     {
       final int bridgeIndex = profile.indexOfProperty( bridgeProperty );
       final int commentIndex = profile.indexOfProperty( POINT_PROPERTY_COMMENT );
 
-      for( final IWProfPoint wprofPoint : bridgePoints )
+      for( final IWProfPoint bridgePoint : bridgePoints )
       {
-        final BigDecimal distance = wprofPoint.getDistance();
-        final double value = wprofPoint.getValue();
-        final String comment = wprofPoint.getComment();
+        final BigDecimal distance = bridgePoint.getDistance();
+        final double value = bridgePoint.getValue();
+        final String comment = bridgePoint.getComment();
 
-        final IRecord point = findOrInsertPointAt( profile, distance, bridgeIndex );
+        final IRecord point = findOrInsertPointAt( profile, distance.doubleValue(), bridgeIndex );
 
         point.setValue( bridgeIndex, value );
-
-        // for( final String markerID : markerIDs )
-        // {
-        // final IProfilPointMarker marker = profil.createPointMarker( markerID, point );
-        // final Object defaultValue = provider.getDefaultValue( markerID );
-        // marker.setValue( defaultValue );
-        // }
 
         if( comment != null && !comment.isEmpty() )
         {
@@ -321,11 +409,11 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
   }
 
-  private IRecord findOrInsertPointAt( final IProfil profile, final BigDecimal distance, final int buildPropertyIndex )
+  private IRecord findOrInsertPointAt( final IProfil profile, final double distance, final int buildPropertyIndex )
   {
     final int indexOfDistance = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    final IRecord existingPoint = ProfilUtil.findPoint( profile, distance.doubleValue(), 0.00001 );
+    final IRecord existingPoint = ProfilUtil.findPoint( profile, distance, 0.00001 );
     if( existingPoint != null )
     {
       final Object buildingValue = existingPoint.getValue( buildPropertyIndex );
@@ -335,9 +423,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     // If no point with this width exist or if it already has the buildingProperty, create a new one:
     final IRecord newPoint = profile.createProfilPoint();
-    newPoint.setValue( indexOfDistance, new Double( distance.doubleValue() ) );
+    newPoint.setValue( indexOfDistance, new Double( distance ) );
 
-    final IRecord pointBefore = ProfilUtil.getPointBefore( profile, distance.doubleValue() );
+    final IRecord pointBefore = ProfilUtil.getPointBefore( profile, distance );
     ProfilUtil.insertPoint( profile, newPoint, pointBefore );
     return newPoint;
   }

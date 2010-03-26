@@ -46,7 +46,6 @@ import java.io.IOException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -57,11 +56,10 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
-import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfWriter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.wspwin.core.Plotter;
@@ -69,7 +67,10 @@ import org.kalypso.wspwin.core.Plotter;
 /**
  * Action which exports the selected profile as .prf files.
  * <p>
- * TODO: better use a wizard and let the user choose 1) the profiles to export 2) a name pattern for the generated files
+ * TODO: better use a wizard and let the user choose <br>
+ * 1) the profiles to export<br>
+ * 2) a name pattern for the generated files<br>
+ * 3) If to directly print or show the plot
  * 
  * @author Gernot Belger
  */
@@ -97,29 +98,33 @@ public class PlotterExportHandler extends AbstractHandler
       {
         monitor.beginTask( "Export to Plotter", profiles.length );
 
-        IProfilSink sink;
-        try
+        for( final IProfileFeature feature : profiles )
         {
-          sink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" );
-        }
-        catch( final CoreException e1 )
-        {
-          return new Status( IStatus.ERROR, id, 1, "Profilexport konnte nicht gestartet werden", null );
-        }
-
-        for( int i = 0; i < profiles.length; i++ )
-        {
-          final IProfileFeature feature = profiles[i];
+          final WspmWaterBody water = feature.getWater();
 
           final IProfil profile = feature.getProfil();
-          final File file = new File( System.getProperty( "java.io.tmpdir" ), "exportTmp" + i + ".prf" );//$NON-NLS-1$ //$NON-NLS-2$// $NON-NLS-3$
+
+          final String filename = PrfExporter.createWspWinFileName( profile );
+//          String filename = "exportTmp" + i + ".prf"; //$NON-NLS-1$ //$NON-NLS-2$
+          final File file = new File( System.getProperty( "java.io.tmpdir" ), filename );//$NON-NLS-1$
           try
           {
-            ProfilSerializerUtilitites.writeProfile( sink, profile, file );
+            final PrfWriter prfWriter = new PrfWriter( profile );
+
+            PrfExporter.configurePrfWriterWithMetadata( water, profile, prfWriter );
+
+            prfWriter.write( file );
 
             Plotter.openPrf( file );
+
+            Thread.sleep( 500 );
           }
           catch( final IOException e )
+          {
+            e.printStackTrace();
+            return StatusUtilities.statusFromThrowable( e, "an error occured starting the plotter" );
+          }
+          catch( final InterruptedException e )
           {
             e.printStackTrace();
             return StatusUtilities.statusFromThrowable( e, "an error occured starting the plotter" );
@@ -127,14 +132,14 @@ public class PlotterExportHandler extends AbstractHandler
 
           monitor.worked( 1 );
           if( monitor.isCanceled() )
-            return new Status( IStatus.CANCEL, id, 1, "program abortion through user", null );
+            return new Status( IStatus.CANCEL, id, 1, "program abortion by user", null );
         }
 
         return new Status( IStatus.OK, id, "" );
       }
     };
 
-    ProgressUtilities.busyCursorWhile( op, "could not export cross section profile" );
+    ProgressUtilities.busyCursorWhile( op, "could not export profile" );
     return null;
   }
 
