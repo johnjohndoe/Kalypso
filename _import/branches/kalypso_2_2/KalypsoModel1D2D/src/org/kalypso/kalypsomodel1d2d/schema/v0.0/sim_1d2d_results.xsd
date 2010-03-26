@@ -116,9 +116,9 @@
 					</xs:element>
 					<xs:element name="waterlevel" type="xs:double">
 						<xs:annotation>
-
-							Waterlevel
-						</xs:documentation>
+							<xs:documentation>
+								Waterlevel
+							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="virtualdepth" type="xs:double">
