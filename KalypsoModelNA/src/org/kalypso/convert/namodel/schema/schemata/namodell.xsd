@@ -580,49 +580,49 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="cinh">
+					<element name="cinh" default="1.0">
 						<simpleType>
 							<restriction base="double">
 								<minExclusive value="0.0"/>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="cind">
+					<element name="cind" default="1.0">
 						<simpleType>
 							<restriction base="double">
 								<minExclusive value="0.0"/>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="cex">
+					<element name="cex" default="1.0">
 						<simpleType>
 							<restriction base="double">
 								<minExclusive value="0.0"/>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="bmax">
+					<element name="bmax" default="1.0">
 						<simpleType>
 							<restriction base="double">
 								<minExclusive value="0.0"/>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="banf">
+					<element name="banf" default="1.0">
 						<simpleType>
 							<restriction base="double">
 								<minExclusive value="0.0"/>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="fko">
+					<element name="fko" default="1.0">
 						<simpleType>
 							<restriction base="double">
 								<minExclusive value="0.0"/>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="retlay">
+					<element name="retlay" default="1.0">
 						<simpleType>
 							<restriction base="double">
 								<minInclusive value="0"/>
