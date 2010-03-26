@@ -90,6 +90,27 @@ class ProfilePolygon
     return values.toArray( new IWProfPoint[values.size()] );
   }
 
+// public BridgePoint[] getAsBridgePoints( )
+// {
+// final Collection<IWProfPoint> points = m_points.values();
+// return points.toArray( new IWProfPoint[points.size()] );
+// }
+
+// public static BridgePoint[] toBridgePoints( final Collection<IWProfPoint> points )
+// {
+// final Collection<BridgePoint> bps = new ArrayList<BridgePoint>();
+//
+// for( final IWProfPoint point : points )
+// {
+// final BigDecimal distance = point.getDistance();
+// final double value = point.getValue();
+// final String comment = point.getComment();
+// bps.add( new BridgePoint( distance, value, comment ) );
+// }
+//
+// return bps.toArray( new BridgePoint[bps.size()] );
+// }
+
   public String getObjectType( )
   {
     return m_objectType;

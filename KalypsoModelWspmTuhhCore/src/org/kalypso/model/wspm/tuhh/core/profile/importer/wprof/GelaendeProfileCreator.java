@@ -172,7 +172,6 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
     newPoint.setValue( indexOfDistance, new Double( distance.doubleValue() ) );
     profil.addPoint( newPoint );
     return newPoint;
-
   }
 
   protected void addMarker( final IProfil profile )

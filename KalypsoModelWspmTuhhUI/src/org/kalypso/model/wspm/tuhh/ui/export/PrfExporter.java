@@ -40,15 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -56,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IPrfConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfWriter;
@@ -67,9 +62,6 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 public class PrfExporter
 {
   private final File m_exportDirectory;
-
-  // FIXME: where to get this flag from...?
-  private final boolean wspwinFileNames = true;
 
   public PrfExporter( final File exportDirectory )
   {
@@ -86,9 +78,8 @@ public class PrfExporter
     for( final IProfileFeature feature : profiles )
     {
       final IProfil profil = feature.getProfil();
-
       final String profileName = profil.getName();
-      final String riverId = feature.getWater().getRefNr();
+      final WspmWaterBody water = feature.getWater();
 
       monitor.subTask( profileName );
 
@@ -98,23 +89,11 @@ public class PrfExporter
 
       try
       {
-        Writer writer = null;
-        try
-        {
-          writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
-          final PrfWriter prfWriter = new PrfWriter( profil );
+        final PrfWriter prfWriter = new PrfWriter( profil );
 
-          // TODO: let user configure this export.
-          prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_4_PROJEKTBEZEICHNUNG_1, riverId );
-          prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, profileName );
+        configurePrfWriterWithMetadata( water, profil, prfWriter );
 
-          prfWriter.write( writer );
-          writer.close();
-        }
-        finally
-        {
-          IOUtils.closeQuietly( writer );
-        }
+        prfWriter.write( file );
       }
       catch( final IOException e )
       {
@@ -129,7 +108,23 @@ public class PrfExporter
     return resultStatus;
   }
 
-  private String createWspWinFileName( final IProfil profile )
+  // FIXME: get this information from a wizard page (let the user define what to do)
+  // Let all prf-exports use the same wizard page.
+  public static void configurePrfWriterWithMetadata( final WspmWaterBody water, final IProfil profil, final PrfWriter prfWriter )
+  {
+    final String profileName = profil.getName();
+    final String riverId = water.getRefNr();
+    final String riverDescription = water.getDescription();
+    final String riverDescriptionCleaned = riverDescription.replace( '\n', '-' ).replace( '\r', '-' );
+    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_4_PROJEKTBEZEICHNUNG_1, riverId );
+    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescriptionCleaned );
+    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, profileName );
+  }
+
+  // FIXME: where to get this flag from...?
+  private final static boolean wspwinFileNames = false;
+
+  public static String createWspWinFileName( final IProfil profile )
   {
     if( wspwinFileNames )
     {

@@ -115,6 +115,22 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
       return null;
 
     final Object value = m_feature.getProperty( pt );
+    if( type.isInstance( value ) )
+      return type.cast( value );
+
+    if( value instanceof Number )
+    {
+      if( type == Integer.class )
+        return type.cast( new Integer( ((Number) value).intValue() ) );
+    }
+
+    if( value instanceof String )
+    {
+      if( type == Integer.class )
+        return type.cast( new Integer( (String) value ) );
+    }
+
+    /* Will throw an ClassCastException, that is intended */
     return type.cast( value );
   }
 

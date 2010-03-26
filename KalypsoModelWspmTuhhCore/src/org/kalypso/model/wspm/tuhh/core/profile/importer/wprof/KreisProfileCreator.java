@@ -146,8 +146,7 @@ class KreisProfileCreator extends BridgeProfileCreator
         result.put( distance, point );
     }
 
-    final Collection<IWProfPoint> values = result.values();
-    return values.toArray( new IWProfPoint[values.size()] );
+    return result.values().toArray( new IWProfPoint[result.size()] );
   }
 
   private static Envelope calculateEnvelope( final IWProfPoint[] points )

@@ -42,6 +42,8 @@ package org.kalypso.wspwin.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -136,15 +138,22 @@ public class Plotter
    */
   public static void openPrf( final File file ) throws IOException
   {
+    final boolean doPrint = true;
+
     final File plotterExe = getPlotterExeChecked();
     if( plotterExe == null )
       return;
 
     final Runtime runtime = Runtime.getRuntime();
-    final String[] cmdarray = new String[] { plotterExe.getAbsolutePath(), file.getName() };
-    runtime.exec( cmdarray, null, file.getParentFile() );
-//
-//    Runtime.getRuntime().exec( "\"" + plotterExe + "\" \"" + file.getPath() + "\"" );//$NON-NLS-1$ //$NON-NLS-2$// $NON-NLS-3$
+
+    final Collection<String> commands = new ArrayList<String>();
+    commands.add( plotterExe.getAbsolutePath() );
+    if( doPrint )
+      commands.add( "-p" );
+    commands.add( file.getName() );
+
+    final String[] cmdArray = commands.toArray( new String[commands.size()] );
+    runtime.exec( cmdArray, null, file.getParentFile() );
   }
 
 }

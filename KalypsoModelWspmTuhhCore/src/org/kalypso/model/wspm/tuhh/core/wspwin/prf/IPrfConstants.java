@@ -51,5 +51,9 @@ public interface IPrfConstants
 
   static final Integer PRF_LINE_4_PROJEKTBEZEICHNUNG_1 = 4;
 
+  static final Integer PRF_LINE_5_PROJEKTBEZEICHNUNG_2 = 5;
+
+  static final Integer PRF_LINE_6_PROJEKTBEZEICHNUNG_3 = 6;
+
   static final Integer PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT = 13;
 }

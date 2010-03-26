@@ -42,9 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
@@ -134,7 +132,7 @@ public class PlotterWaterlevelWriter
     final List<Double> xs = new ArrayList<Double>( points.length );
     final List<Double> ys = new ArrayList<Double>( points.length );
 
-    final Map<IRecord, Double> extrapolatedWaterlevel = extrapolateWaterlevel( points, iWaterlevel, iHoehe );
+    final Double[] extrapolatedWaterlevel = extrapolateWaterlevel( points, iWaterlevel, iBreite, iHoehe );
     for( int i = 1; i < points.length; i++ )
     {
       final IRecord pointFirst = points[i - 1];
@@ -142,7 +140,16 @@ public class PlotterWaterlevelWriter
 
       try
       {
-        writeWaterlevelSegment( iBreite, iHoehe, xs, ys, pointFirst, pointSecond, extrapolatedWaterlevel );
+        final Object breiteFirst = pointFirst.getValue( iBreite );
+        final Object breiteSecond = pointSecond.getValue( iBreite );
+
+        final Object hoeheFirst = pointFirst.getValue( iHoehe );
+        final Object hoeheSecond = pointSecond.getValue( iHoehe );
+
+        final Double waterlevelFirst = extrapolatedWaterlevel[i - 1];
+        final Double waterlevelSecond = extrapolatedWaterlevel[i];
+
+        writeWaterlevelSegment( xs, ys, breiteFirst, breiteSecond, hoeheFirst, hoeheSecond, waterlevelFirst, waterlevelSecond );
       }
       catch( final SameXValuesException e )
       {
@@ -156,23 +163,20 @@ public class PlotterWaterlevelWriter
     return db;
   }
 
-  private Map<IRecord, Double> extrapolateWaterlevel( final IRecord[] points, final int iWaterlevel, final int iHoehe )
+  private Double[] extrapolateWaterlevel( final IRecord[] points, final int iWaterlevel, final int iBreite, final int iHoehe )
   {
-    final Map<IRecord, Double> result = new HashMap<IRecord, Double>();
+    final Double[] result = new Double[points.length];
 
     for( int i = 0; i < points.length; i++ )
     {
-      final IRecord point = points[i];
-
-      final Double waterlevel = getExtrapolatedWaterlevel( points, i, iWaterlevel, iHoehe );
-      if( waterlevel != null )
-        result.put( point, waterlevel );
+      final Double waterlevel = getExtrapolatedWaterlevel( points, i, iWaterlevel, iBreite, iHoehe );
+      result[i] = waterlevel;
     }
 
     return result;
   }
 
-  private Double getExtrapolatedWaterlevel( final IRecord[] points, final int i, final int iWaterlevel, final int iHoehe )
+  private Double getExtrapolatedWaterlevel( final IRecord[] points, final int i, final int iWaterlevel, final int iBreite, final int iHoehe )
   {
     final IRecord point = points[i];
 
@@ -181,14 +185,45 @@ public class PlotterWaterlevelWriter
     if( value instanceof Number )
       return ((Number) value).doubleValue();
 
-    final Double prevWaterlevel = findNextWaterlevel( points, i, iWaterlevel, iHoehe );
-    if( prevWaterlevel != null )
-      return prevWaterlevel;
+    final IRecord prevWaterlevel = findPrevWaterlevel( points, i, iWaterlevel, iHoehe );
+    final IRecord nextWaterlevel = findNextWaterlevel( points, i, iWaterlevel, iHoehe );
 
-    return findPrevWaterlevel( points, i, iWaterlevel, iHoehe );
+    if( nextWaterlevel != null && prevWaterlevel != null )
+    {
+      final double prevW = ((Number) prevWaterlevel.getValue( iWaterlevel )).doubleValue();
+      final double nextW = ((Number) nextWaterlevel.getValue( iWaterlevel )).doubleValue();
+
+      final Object breite = point.getValue( iBreite );
+      final Object prevBreite = prevWaterlevel.getValue( iBreite );
+      final Object nextBreite = nextWaterlevel.getValue( iBreite );
+
+      if( breite instanceof Number && prevBreite instanceof Number && nextBreite instanceof Number )
+      {
+        final double prevB = ((Number) prevBreite).doubleValue();
+        final double nextB = ((Number) nextBreite).doubleValue();
+
+        try
+        {
+          final LinearEquation linearEquation = new LinearEquation( prevB, prevW, nextB, nextW );
+          return linearEquation.computeY( ((Number) breite).doubleValue() );
+        }
+        catch( final SameXValuesException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    if( nextWaterlevel != null )
+      return ((Number) nextWaterlevel.getValue( iWaterlevel )).doubleValue();
+
+    if( prevWaterlevel != null )
+      return ((Number) prevWaterlevel.getValue( iWaterlevel )).doubleValue();
+
+    return null;
   }
 
-  private Double findPrevWaterlevel( final IRecord[] points, final int i, final int iWaterlevel, final int iHoehe )
+  private IRecord findPrevWaterlevel( final IRecord[] points, final int i, final int iWaterlevel, final int iHoehe )
   {
     double maxHeight = -Double.MAX_VALUE;
 
@@ -209,7 +244,7 @@ public class PlotterWaterlevelWriter
       {
         final double w = ((Number) valueWaterlevel).doubleValue();
         if( w > maxHeight )
-          return w;
+          return point;
 
         /* Stop on first encountered waterlevel */
         return null;
@@ -219,7 +254,7 @@ public class PlotterWaterlevelWriter
     return null;
   }
 
-  private Double findNextWaterlevel( final IRecord[] points, final int i, final int iWaterlevel, final int iHoehe )
+  private IRecord findNextWaterlevel( final IRecord[] points, final int i, final int iWaterlevel, final int iHoehe )
   {
     double maxHeight = -Double.MAX_VALUE;
 
@@ -240,7 +275,7 @@ public class PlotterWaterlevelWriter
       {
         final double w = ((Number) valueWaterlevel).doubleValue();
         if( w > maxHeight )
-          return w;
+          return point;
 
         /* Stop on first encountered waterlevel */
         return null;
@@ -250,17 +285,8 @@ public class PlotterWaterlevelWriter
     return null;
   }
 
-  private void writeWaterlevelSegment( final int iBreite, final int iHoehe, final List<Double> xs, final List<Double> ys, final IRecord pointFirst, final IRecord pointSecond, final Map<IRecord, Double> extrapolatedWaterlevel ) throws SameXValuesException
+  private void writeWaterlevelSegment( final List<Double> xs, final List<Double> ys, final Object breiteFirst, final Object breiteSecond, final Object hoeheFirst, final Object hoeheSecond, final Double waterlevelFirst, final Double waterlevelSecond ) throws SameXValuesException
   {
-    final Object breiteFirst = pointFirst.getValue( iBreite );
-    final Object breiteSecond = pointSecond.getValue( iBreite );
-
-    final Object hoeheFirst = pointFirst.getValue( iHoehe );
-    final Object hoeheSecond = pointSecond.getValue( iHoehe );
-
-    final Double waterlevelFirst = extrapolatedWaterlevel.get( pointFirst );
-    final Double waterlevelSecond = extrapolatedWaterlevel.get( pointSecond );
-
     if( breiteFirst instanceof Number && breiteSecond instanceof Number && hoeheFirst instanceof Number && hoeheSecond instanceof Number )
     {
       final double b1 = ((Number) breiteFirst).doubleValue();
@@ -268,19 +294,6 @@ public class PlotterWaterlevelWriter
       final double h1 = ((Number) hoeheFirst).doubleValue();
       final double h2 = ((Number) hoeheSecond).doubleValue();
 
-// if( waterlevelFirst == null && waterlevelSecond != null )
-// {
-// /* open beginning: extrapolate to the left side */
-// final double w2 = ((Number) waterlevelSecond).doubleValue();
-// addWaterlevelSegment( xs, ys, b1, w2, b2, w2, h1, h2 );
-// }
-// else if( waterlevelFirst != null && waterlevelSecond == null )
-// {
-// /* open beginning: extrapolate to the left side */
-// final double w1 = ((Number) waterlevelFirst).doubleValue();
-// addWaterlevelSegment( xs, ys, b1, w1, b2, w1, h1, h2 );
-// }
-// else
       if( waterlevelFirst != null && waterlevelSecond != null )
       {
         final double w1 = ((Number) waterlevelFirst).doubleValue();
