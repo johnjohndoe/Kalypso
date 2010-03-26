@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  DenickestraÃŸe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.preferences;
 
-import java.io.IOException;
-
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -62,59 +59,27 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  * 
  */
 public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
-  private static final String RISK_PREFERENCE_STORE = "kalypso.risk.settings"; //$NON-NLS-1$
-
   private static final String DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS = "2"; //$NON-NLS-1$
 
   public static final String KEY_RISKTHEMEINFO_IMPORTANTDIGITS = "KEY_RISKTHEMEINFO_IMPORTANTDIGITS"; //$NON-NLS-1$
-
-  static public IPreferenceStore getPreferences( )
-  {
-    try
-    {
-      final PreferenceStore mystore = new PreferenceStore( RISK_PREFERENCE_STORE );
-      mystore.load();
-
-      checkStore( mystore );
-
-      return mystore;
-    }
-    catch( final IOException e )
-    {
-      try
-      {
-        final PreferenceStore mystore = new PreferenceStore( RISK_PREFERENCE_STORE );
-
-        mystore.setValue( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS );
-
-        mystore.save();
-
-        return mystore;
-      }
-      catch( final IOException e1 )
-      {
-        e1.printStackTrace();
-      }
-    }
-
-    throw new IllegalStateException();
-  }
 
   private ComboViewer m_cmbFormat;
 
   public KalypsoRiskPreferencePage( )
   {
     super();
-
     setTitle( Messages.getString( "org.kalypso.risk.preferences.title" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.risk.preferences.description" ) ); //$NON-NLS-1$
+    setPreferenceStore( KalypsoRiskPlugin.getDefault().getPreferenceStore() );
+    checkStore();
   }
 
   protected void checkPage( )
@@ -160,8 +125,8 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
     lFormat.setText( Messages.getString( "org.kalypso.risk.preferences.cmblabel" ) ); //$NON-NLS-1$
 
     final String[] formats = new String[12];
-    for(int i=0;i<12;i++)
-      formats[i]=Integer.toString( i+1 );
+    for( int i = 0; i < 12; i++ )
+      formats[i] = Integer.toString( i + 1 );
 
     m_cmbFormat = new ComboViewer( cgrScreen, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     m_cmbFormat.setContentProvider( new ArrayContentProvider() );
@@ -199,54 +164,12 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
     return composite;
   }
 
-  /**
-   * @see org.eclipse.jface.preference.PreferencePage#getPreferenceStore()
-   */
-  @Override
-  public IPreferenceStore getPreferenceStore( )
+  private void checkStore( )
   {
-    IPreferenceStore store = super.getPreferenceStore();
-
-    if( store == null )
-    {
-      final PreferenceStore mystore = new PreferenceStore( RISK_PREFERENCE_STORE );
-      try
-      {
-        // TODO: file gets created on the desktop, somethings wrong; probably get pref-store from plug-in instead!
-        mystore.load();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-
-      store = mystore;
-      setPreferenceStore( store );
-    }
-
-    checkStore( store );
-
-    return store;
-  }
-
-  static private void checkStore( final IPreferenceStore store )
-  {
+    final IPreferenceStore store = getPreferenceStore();
     final String format = store.getString( KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
     if( format == null || format.length() == 0 )
       store.setValue( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS );
-
-    if( store instanceof PreferenceStore )
-    {
-      final PreferenceStore pStrore = (PreferenceStore) store;
-      try
-      {
-        pStrore.save();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
   }
 
   /**
@@ -254,7 +177,6 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
    */
   public void init( final IWorkbench workbench )
   {
-    getPreferenceStore().setDefault( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS );
   }
 
   /**
@@ -269,34 +191,36 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
   }
 
   /**
-   * @see org.eclipse.jface.preference.PreferencePage#performOk()
+   * @see org.eclipse.jface.preference.PreferencePage#performApply()
    */
   @Override
-  public boolean performOk( )
+  protected void performApply( )
   {
+    /* Get the preference store. */
+    final IPreferenceStore store = getPreferenceStore();
+
+    /* Set the new value */
     final ISelection selection = m_cmbFormat.getSelection();
     if( selection instanceof StructuredSelection )
     {
       final StructuredSelection strSelection = (StructuredSelection) selection;
       final Object element = strSelection.getFirstElement();
 
-      getPreferenceStore().setValue( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, element.toString() );
+      store.setValue( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, element.toString() );
     }
 
-    final IPreferenceStore iStore = getPreferenceStore();
-    if( iStore instanceof PreferenceStore )
-    {
-      final PreferenceStore store = (PreferenceStore) iStore;
-      try
-      {
-        store.save();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
+    /* Save the plugin preferences. */
+    KalypsoRiskPlugin.getDefault().savePluginPreferences();
+    super.performApply();
+  }
 
+  /**
+   * @see org.eclipse.jface.preference.PreferencePage#performOk()
+   */
+  @Override
+  public boolean performOk( )
+  {
+    performApply();
     return super.performOk();
   }
 }
