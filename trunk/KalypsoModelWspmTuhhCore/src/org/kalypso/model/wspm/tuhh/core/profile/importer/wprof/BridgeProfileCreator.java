@@ -165,8 +165,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     final int heightComponent = profile.indexOfProperty( POINT_PROPERTY_HOEHE );
 
     // FIXME Steiermark
-// final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
-    final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
+    final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
+// final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
 
     final int okComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
 
@@ -175,7 +175,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     ProfilUtil.interpolateProperty( profile, okComponent );
 
     // FIXME: Steiermark
-// cleanupHeights( profile );
+    cleanupHeights( profile );
 
     final IRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, bridgeComponent );
     createMarkers( profile, trennflaechenPoints, MARKER_TYP_TRENNFLAECHE );
