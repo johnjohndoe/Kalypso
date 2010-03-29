@@ -69,7 +69,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils;
+import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -100,8 +100,8 @@ public class Command1D2DTimestepsInterpolate extends AbstractHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
-    m_tupleResult = TupleResultCommandUtils.findTupleResult( event );
+    final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );
+    m_tupleResult = ToolbarCommandUtils.findTupleResult( event );
     if( viewer == null || m_tupleResult == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.0" ) ); //$NON-NLS-1$
 
