@@ -169,7 +169,9 @@ public class MergeTrianglesWidget extends AbstractWidget
       final IFE1D2DElement[] elements2remove = adjacentElements.toArray( new IFE1D2DElement[adjacentElements.size()] );
       
       final GM_Surface<GM_SurfacePatch> newElement = createNewElement( (IPolyElement) elements2remove[0], (IPolyElement) elements2remove[1] );
-
+      /*trac ticket #346:
+        New element had no coordinate system set.*/
+      newElement.setCoordinateSystem( m_currentEdge.getGeometry().getCoordinateSystem() );
       final CommandableWorkspace workspace = m_theme.getWorkspace();
 
       // add remove element command
