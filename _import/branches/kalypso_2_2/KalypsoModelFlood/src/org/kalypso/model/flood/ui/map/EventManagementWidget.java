@@ -465,17 +465,17 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final Shell shell = event.display.getActiveShell();
 
-    // open colorMap dialog
-    final PolygonColorMap input = (PolygonColorMap) m_colorMapTableViewer.getInput();
-
     // get selected event
     final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
-
     if( runoffEvent == null )
     {
       MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.10" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
+
+    final IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
+
+    final PolygonColorMap colorMap = findColorMap( runoffEventTheme );
 
     final IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
 
@@ -498,18 +498,16 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       }
     }
 
-    if( input != null )
+    if( colorMap != null )
     {
-      final EventStyleDialog dialog = new EventStyleDialog( shell, input, event_min, event_max );
+      final EventStyleDialog dialog = new EventStyleDialog( shell, colorMap, event_min, event_max );
       if( dialog.open() == Window.OK )
       {
         try
         {
-          final IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
           final UserStyle[] styles = runoffEventTheme.getStyles();
           for( final UserStyle userStyle : styles )
           {
-
             if( userStyle instanceof GisTemplateUserStyle )
             {
               final GisTemplateUserStyle gtus = (GisTemplateUserStyle) userStyle;
@@ -523,7 +521,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         {
           e.printStackTrace();
         }
-        m_colorMapTableViewer.refresh();
+
+        // CHECK: probably the style will be automatically reloaded by the pool, so updating the colormap here may not really 
+        // set the right colorMap entry here...
+        updateStylePanel( runoffEventTheme );
 
         m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
       }
@@ -557,12 +558,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       final UserStyle style = findUserStyle( styles, "wspUserStyle") ; //$NON-NLS-1$
       if( style != null )
       {
-
         final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" ); //$NON-NLS-1$
         final Rule wspRule = wspFts.getRule( "wspRule" ); //$NON-NLS-1$
         final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
         return symb.getColorMap();
-
       }
     }
     catch( final Exception e )
