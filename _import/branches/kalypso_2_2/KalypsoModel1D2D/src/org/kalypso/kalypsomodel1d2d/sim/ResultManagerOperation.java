@@ -80,8 +80,6 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
 {
   private final ResultManager m_resultManager;
 
-  private final ProcessResultsBean m_processBean;
-
   private final IContainer m_unitFolder;
 
   private final IStatus m_simulationStatus;
@@ -90,14 +88,22 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
 
   private final IGeoLog m_geoLog;
 
-  public ResultManagerOperation( final ResultManager resultManager, final IContainer unitFolder, final IStatus simulationStatus, final ProcessResultsBean processBean, final ICaseDataProvider<IModel> caseDataProvider )
+  private File m_outputDir;
+
+  private ICalcUnitResultMeta m_calcUnitMeta;
+
+  private String[] m_originalStepsToDelete;
+
+  public ResultManagerOperation( final ResultManager resultManager, final IContainer unitFolder, final IStatus simulationStatus, final ICaseDataProvider<IModel> caseDataProvider, final File outputDir, final ICalcUnitResultMeta calcUnitMeta, String[] strings )
   {
     m_resultManager = resultManager;
     m_unitFolder = unitFolder;
     m_simulationStatus = simulationStatus;
-    m_processBean = processBean;
     m_geoLog = m_resultManager.getGeoLog();
     m_caseDataProvider = caseDataProvider;
+    m_outputDir = outputDir;
+    m_calcUnitMeta = calcUnitMeta;
+    m_originalStepsToDelete = strings;
   }
 
   /**
@@ -105,19 +111,19 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
    */
   public IStatus execute( final IProgressMonitor monitor )
   {
-    m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.0") ); //$NON-NLS-1$
+    m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.0" ) ); //$NON-NLS-1$
 
     final IStatus resultStatus = doExecute( monitor );
 
     // Adapt status
     if( resultStatus.isOK() )
-      return m_geoLog.formatLog( IStatus.OK, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.1") ); //$NON-NLS-1$
+      return m_geoLog.formatLog( IStatus.OK, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.1" ) ); //$NON-NLS-1$
 
     if( resultStatus.matches( IStatus.CANCEL ) )
-      return m_geoLog.formatLog( IStatus.CANCEL, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.2") ); //$NON-NLS-1$
+      return m_geoLog.formatLog( IStatus.CANCEL, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.2" ) ); //$NON-NLS-1$
 
     /* Warning or Error */
-    m_geoLog.formatLog( IStatus.ERROR, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.3") ); //$NON-NLS-1$
+    m_geoLog.formatLog( IStatus.ERROR, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.3" ) ); //$NON-NLS-1$
     m_geoLog.log( resultStatus );
 
     return resultStatus;
@@ -133,34 +139,22 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
 
       final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
-      /* Process Results */
-
       // Step 1: Delete existing results and save result-DB (in case of problems while processing)
-      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.4") ); //$NON-NLS-1$
-      final IStatus deleteStatus = deleteExistingResults( scenarioMeta, calculationUnit, m_processBean, progress.newChild( 5 ) );
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.4" ) ); //$NON-NLS-1$
+      final IStatus deleteStatus = deleteExistingResults( scenarioMeta, calculationUnit, progress.newChild( 5 ) );
       if( deleteStatus.matches( IStatus.CANCEL ) )
         return deleteStatus;
       if( !deleteStatus.isOK() )
         m_geoLog.log( deleteStatus );
 
-      // Step 2: Process results and add new entries to result-DB
-      final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
-      final IStatus processResultsStatus = m_resultManager.processResults( calcUnitMeta, progress.newChild( 90 ) );
-      final File outputDir = m_resultManager.getOutputDir();
-      m_geoLog.log( processResultsStatus );
-
       // Step 3: Fill in result of calculation
-      calcUnitMeta.setStatus( m_simulationStatus );
-      calcUnitMeta.setCalcEndTime( new Date() );
-
-      if( processResultsStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
-        return processResultsStatus;
-
-      // TODO: move this outside this method...?
+      m_calcUnitMeta.setStatus( m_simulationStatus );
+      m_calcUnitMeta.setCalcEndTime( new Date() );
 
       // Step 4: Move results into workspace and save result-DB
-      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.5") ); //$NON-NLS-1$
-      return moveResults( outputDir, progress.newChild( 5 ) );
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.5" ) ); //$NON-NLS-1$
+      
+      return moveResults( m_outputDir, progress.newChild( 5 ) );
     }
     catch( final CoreException ce )
     {
@@ -168,33 +162,33 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     }
     catch( final Throwable t )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.6") + t.toString(), t ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.6" ) + t.toString(), t ); //$NON-NLS-1$
     }
   }
 
   /**
    * Delete all existing results inside the current result database.
    */
-  private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit, final ProcessResultsBean processBean, final IProgressMonitor monitor ) throws CoreException
+  private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
-    progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.7") ); //$NON-NLS-1$
+    progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.7" ) ); //$NON-NLS-1$
 
-    final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
+//    final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
 
     /* If no results available yet, nothing to do. */
-    if( calcUnitMeta == null )
+    if( m_calcUnitMeta == null )
       return Status.OK_STATUS;
 
-    final Date[] stepsToDelete = findStepsToDelete( calcUnitMeta, processBean );
+//    final String[] stepsToDelete = findStepsToDelete( calcUnitMeta, processBean );
     ProgressUtilities.worked( progress, 5 );
 
-    final IStatus result = ResultMeta1d2dHelper.deleteResults( calcUnitMeta, stepsToDelete, progress.newChild( 90 ) );
+    final IStatus result = ResultMeta1d2dHelper.deleteAllByID( m_calcUnitMeta, m_originalStepsToDelete, progress.newChild( 90 ) );
 
     // REMARK: we save the result DB, even if deletion fails; in doubt, the new results will just overwrite the old ones
 
     /* Save result DB */
-    
+
     // REMARL: Saving in between causes sometimes, that results are not moved to the ScenarioResultMeta.gml.
     // try
     // {
@@ -209,64 +203,11 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     return result;
   }
 
-  private static Date[] findStepsToDelete( final ICalcUnitResultMeta calcUnitMeta, final ProcessResultsBean processBean )
-  {
-    final Date[] existingSteps = ResultMeta1d2dHelper.getStepDates( calcUnitMeta );
-
-    if( processBean.deleteAll )
-      return existingSteps;
-
-    final SortedSet<Date> dates = new TreeSet<Date>();
-
-    /* Always delete all calculated steps */
-    dates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
-
-    if( processBean.deleteFollowers && !dates.isEmpty() )
-    {
-      /* Delete all steps later than the first calculated */
-      // special cases for maxi and steady results
-      boolean maxi = false;
-      boolean steady = false;
-
-      // first remove the MAXI and STEADY dates from the list in order to make this code work
-      final Date[] dateArray = dates.toArray( new Date[dates.size()] );
-      for( final Date dateToProcess : dateArray )
-      {
-        if( dateToProcess.equals( MAXI_DATE ) )
-        {
-          dates.remove( MAXI_DATE );
-          maxi = true;
-        }
-        if( dateToProcess.equals( STEADY_DATE ) )
-        {
-          dates.remove( STEADY_DATE );
-          steady = true;
-        }
-      }
-
-      if( dates.size() > 0 )
-      {
-      final Date firstCalculated = dates.first();
-      for( final Date date : existingSteps )
-      {
-        if( date.after( firstCalculated ) )
-          dates.add( date );
-      }
-    }
-      // then add them again.
-      if( maxi == true )
-        dates.add( MAXI_DATE );
-      if( steady == true )
-        dates.add( STEADY_DATE );
-    }
-
-    return dates.toArray( new Date[dates.size()] );
-  }
 
   private IStatus moveResults( final File outputDir, final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
-    progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.10") ); //$NON-NLS-1$
+    progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.10" ) ); //$NON-NLS-1$
 
     try
     {
@@ -288,11 +229,11 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     }
     catch( final IOException e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.12"), e ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.12" ), e ); //$NON-NLS-1$
     }
     catch( final InvocationTargetException e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.13"), e.getTargetException() ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.13" ), e.getTargetException() ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

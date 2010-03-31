@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,11 +80,14 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.model.IModel;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.util.swt.StatusComposite;
@@ -96,6 +100,11 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulation1D2DConstants
 {
   private final ResultManager m_resultManager;
+
+  public ResultManager getResultManager( )
+  {
+    return m_resultManager;
+  }
 
   private IStatus m_simulationStatus;
 
@@ -120,14 +129,12 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   protected RMA10ResultPage( final String pageName, final FileObject fileObject, final IGeoLog geoLog, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
   {
     super( pageName );
-    final ResultManager resultManager = new ResultManager( fileObject, caseDataProvider, geoLog );
-
-    m_resultManager = resultManager;
+    m_resultManager = new ResultManager( fileObject, caseDataProvider, geoLog );
     m_unitFolder = unitFolder;
     m_caseDataProvider = caseDataProvider;
     m_parentWizard = parentWizard;
 
-    setTitle(Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.0" , resultManager.getControlModel().getCalculationUnit().getName() ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.0", m_resultManager.getControlModel().getCalculationUnit().getName() ) ); //$NON-NLS-1$
 
     if( m_unitFolder.exists() )
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.1" ), WARNING ); //$NON-NLS-1$
@@ -471,6 +478,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     bean.userCalculatedSteps = m_selection;
     if( m_selection == null )
+    {
       try
       {
         bean.userCalculatedSteps = m_resultManager.findCalculatedSteps();
@@ -479,8 +487,11 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
       {
         e.printStackTrace();
       }
+    }
+
     /* Result processing */
-    final ResultManagerOperation operation = new ResultManagerOperation( m_resultManager, m_unitFolder, m_simulationStatus, bean, m_caseDataProvider );
+
+    final ResultProcessingOperation processingOperation = new ResultProcessingOperation( m_resultManager, bean );
 
     m_isProcessing = true;
 
@@ -488,10 +499,46 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     if( container instanceof WizardDialog2 )
     {
       final WizardDialog2 wd2 = (WizardDialog2) container;
-      m_resultStatus = wd2.executeUnblocked( true, true, operation );
+      m_resultStatus = wd2.executeUnblocked( true, false, processingOperation );
     }
     else
-      m_resultStatus = RunnableContextHelper.execute( container, true, true, operation );
+    {
+      m_resultStatus = RunnableContextHelper.execute( container, true, true, processingOperation );
+    }
+
+    // if anything happened during the processing, restore the original results db from disk
+    if( m_resultStatus.isOK() != true )
+    {
+      try
+      {
+        // set the dirty flag of the results model
+        ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
+      }
+      catch( InvocationTargetException e )
+      {
+        e.printStackTrace();
+      }
+
+      m_caseDataProvider.reloadModel();
+    }
+
+    // otherwise move the new results data to the results folder
+    // this operation is not cancelable
+    if( m_resultStatus.isOK() )
+    {
+      // processing finished without problems, prepare the data-operation
+      final ResultManagerOperation dataOperation = new ResultManagerOperation( m_resultManager, m_unitFolder, m_simulationStatus, m_caseDataProvider, processingOperation.getOutputDir(), processingOperation.getCalcUnitMeta(), processingOperation.getOriginalStepsToDelete() );
+
+      if( container instanceof WizardDialog2 )
+      {
+        final WizardDialog2 wd2 = (WizardDialog2) container;
+        m_resultStatus = wd2.executeUnblocked( false, false, dataOperation );
+      }
+      else
+      {
+        m_resultStatus = RunnableContextHelper.execute( container, true, false, dataOperation );
+      }
+    }
 
     /* The user may have changed the page meanwhile, return now to this page */
     if( container.getShell() != null )
