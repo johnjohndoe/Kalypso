@@ -113,7 +113,7 @@ public class SobekProfileExporter
 
   private IRecord[] getPointsToExport( final IProfil profil )
   {
-    final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
+    final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
 
     if( pointMarkerId == null )
       return profil.getPoints();
