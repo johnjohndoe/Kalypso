@@ -78,13 +78,13 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class FloodModelHelper
 {
   /**
    * gets the index of a given wsp theme inside the cascading "wasserspiegellagen" theme.
-   *
+   * 
    * @return index of the wsp theme or -1 if none is found
    */
   public static int findWspTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
@@ -111,7 +111,7 @@ public class FloodModelHelper
 
   /**
    * gets the index of a given result theme inside the cascading "wasserspiegellagen" theme.
-   *
+   * 
    * @return index of the result theme or -1 if none is found
    */
   public static int findResultTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
@@ -192,7 +192,7 @@ public class FloodModelHelper
   {
     final StyledLayerType wspLayer = new StyledLayerType();
 
-    wspLayer.setName(  Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.0" , event.getName() ) ); //$NON-NLS-1$
+    wspLayer.setName( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.0", event.getName() ) ); //$NON-NLS-1$
     wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
     wspLayer.setType( "simple" ); //$NON-NLS-1$
@@ -205,7 +205,10 @@ public class FloodModelHelper
 
     final Property layerPropertyThemeInfoId = new Property();
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-    layerPropertyThemeInfoId.setValue( CoverageThemeInfo.class.getName() + "?format=Fliesstiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final String infoFormat = String.format( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.10" ), event.getName() ); //$NON-NLS-1$
+    final String infoValue = String.format( "%s?format=%s", CoverageThemeInfo.class.getName(), infoFormat );//$NON-NLS-1$ 
+    layerPropertyThemeInfoId.setValue( infoValue );
 
     final List<Property> layerPropertyList = wspLayer.getProperty();
     layerPropertyList.add( layerPropertyDeletable );
@@ -265,17 +268,17 @@ public class FloodModelHelper
     }
     catch( final Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.1") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.1" ) ); //$NON-NLS-1$
     }
   }
 
   /**
    * shows a {@link ListSelectionDialog} in which the user can select {@link IRunoffEvent} for further processing
-   *
+   * 
    * @param shell
    * @param events
    *          the RunoffEvents
-   *
+   * 
    * @return a array of selected {@link IRunoffEvent}
    */
   public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureWrapperCollection<IRunoffEvent> events )
@@ -292,7 +295,7 @@ public class FloodModelHelper
         final ICoverageCollection resultCoverages = event.getResultCoverages();
         if( resultCoverages != null && resultCoverages.size() > 0 )
         {
-          return event.getName() + Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.18"); //$NON-NLS-1$
+          return event.getName() + Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.18" ); //$NON-NLS-1$
         }
         else
         {
@@ -305,8 +308,8 @@ public class FloodModelHelper
       }
     };
 
-    final ListSelectionDialog dialog = new ListSelectionDialog( shell, events, new ArrayContentProvider(), labelProvider, Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.21") ); //$NON-NLS-1$
-    dialog.setTitle( Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.22") ); //$NON-NLS-1$
+    final ListSelectionDialog dialog = new ListSelectionDialog( shell, events, new ArrayContentProvider(), labelProvider, Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.21" ) ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.22" ) ); //$NON-NLS-1$
 
     if( dialog.open() != Window.OK )
       return null;
@@ -326,7 +329,7 @@ public class FloodModelHelper
 
   public static IKalypsoFeatureTheme findThemeForEvent( final IMapModell mapModell, final IRunoffEvent runoffEvent )
   {
-    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.23"), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.23" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( runoffEvent == null || wspThemes == null )
       return null;

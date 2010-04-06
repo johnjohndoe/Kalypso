@@ -382,21 +382,21 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         try
         {
           // Always check, if sld file exists
-          AddEventOperation.checkSLDFile( runoffEvent, getEventFolder( runoffEvent ), SLD_TEMPLATE_LOCATION );
+          if( runoffEvent != null )
+            AddEventOperation.checkSLDFile( runoffEvent, getEventFolder( runoffEvent ), SLD_TEMPLATE_LOCATION );
 
           final IKalypsoCascadingTheme wspThemes = findWspTheme();
-          if( runoffEventTheme == null )
+          if( runoffEventTheme == null && runoffEvent != null )
           {
             /* A bit crude: if the theme does not yet exist, we create it right now */
             AddEventOperation.addEventThemes( wspThemes, runoffEvent );
           }
           /* Also add result theme if results are available */
-          if( getResultFolder( runoffEvent ).exists() && FloodModelHelper.findResultTheme( runoffEvent, wspThemes ) == -1 )
+          if( runoffEvent != null && getResultFolder( runoffEvent ).exists() && FloodModelHelper.findResultTheme( runoffEvent, wspThemes ) == -1 )
             FloodModelHelper.addResultTheme( runoffEvent, wspThemes, -1 );
         }
         catch( final Exception e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
         runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
