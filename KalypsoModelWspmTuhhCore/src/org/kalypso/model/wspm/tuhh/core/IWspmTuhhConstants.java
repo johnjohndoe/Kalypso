@@ -66,8 +66,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static final String WSPMTUHH_CODEPAGE = "Cp1252"; //$NON-NLS-1$
 
   /*
-   * sind Tuhh-Konstanten werden aber wegen der Abwärtskompatibilität in
-   * {@link org.kalypso.model.wspm.schema.dict_profile_point} geführt
+   * sind Tuhh-Konstanten werden aber wegen der Abwärtskompatibilität in {@link
+   * org.kalypso.model.wspm.schema.dict_profile_point} geführt
    */
 
   public static final String MARKER_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#"; //$NON-NLS-1$
@@ -133,10 +133,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static final String MARKER_TYP_TRENNFLAECHE = MARKER_TYP + "TRENNFLAECHE"; //$NON-NLS-1$
 
   public static final String MARKER_TYP_WEHR = MARKER_TYP + "WEHR"; //$NON-NLS-1$
-  
-
-  
-  
 
   /* Profil MetaStrings */
   public static final String PROFIL_PROPERTY = "org.kalypso.model.wspm.tuhh.core.profil.PROFIL_PROPERTY_"; //$NON-NLS-1$
@@ -174,7 +170,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static String LAYER_RAUHEIT = PROFILE_LAYER + "RAUHEIT"; //$NON-NLS-1$
 
- // public static String LAYER_RAUHEIT_KS = PROFILE_LAYER + "RAUHEIT_KS";
+  // public static String LAYER_RAUHEIT_KS = PROFILE_LAYER + "RAUHEIT_KS";
 
   public static String LAYER_RAUHEIT_QUICKVIEW = PROFILE_LAYER + "RAUHEIT_QUICKVIEW"; //$NON-NLS-1$
 
@@ -191,18 +187,19 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String LAYER_DEVIDER = PROFILE_LAYER + "DEVIDER"; //$NON-NLS-1$
 
   public static String LAYER_EI = PROFILE_LAYER + "EI"; //$NON-NLS-1$
-  
+
   public static String LAYER_TUBES = PROFILE_LAYER + "TUBES"; //$NON-NLS-1$
 
-  /* Layer_Colors */
-  /**
-   * the layer store their colors themselves in the
-   * {@link org.kalypso.model.wspm.core.profil.impl.ProfilEventManager#getColorRegistry()} using this keys
-   */
-
-// public static String LAYER_BRUECKE_COLOR_TOP = LAYER_BRUECKE + "COLOR_TOP";
-//
-// public static String LAYER_BRUECKE_COLOR_BOTTOM = LAYER_BRUECKE + "COLOR_BOTTOM";
   public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
+  // Names of commonly used directories
+  public static String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
+
+  public static String FOLDER_CURRENT_RESULT = "_aktuell";//$NON-NLS-1$
+
+  public static String FOLDER_RESULT_DATA = "Daten";//$NON-NLS-1$
+
+  public static String FILE_WSPTIN = "WspTin.gml";//$NON-NLS-1$
+
+  public static String FILE_WSPM_GMV = "WSPM.gmv"; //$NON-NLS-1$
 }
