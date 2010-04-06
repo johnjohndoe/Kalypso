@@ -1,9 +1,12 @@
 package org.kalypso.ui.wizards.imports.baseMap;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -24,6 +27,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.swt.widgets.FileDialogUtils;
+import org.kalypso.contribs.java.io.filter.IgnoreCaseFilenameFilter;
+import org.kalypso.grid.WorldFileFormat;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
@@ -31,17 +37,17 @@ import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
+ * FIXME: Totally copy/paste and double code.... Combine this one with the general image import page!
+ * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class ImportBaseMapImportImgPage extends WizardPage
 {
-  private Text sourceFileField;
+  private Text m_sourceFileField;
 
-  private IPath initialSourcePath;
+  private IPath m_initialSourcePath;
 
   private IPath m_sourcePath = null;
-
-  List<String> fileExtensions = new LinkedList<String>();
 
   protected String m_crs;
 
@@ -59,11 +65,11 @@ public class ImportBaseMapImportImgPage extends WizardPage
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
    * 
    * @param parent
-   *            the parent composite
+   *          the parent composite
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    Composite container = new Composite( parent, SWT.NULL );
+    final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
@@ -74,21 +80,21 @@ public class ImportBaseMapImportImgPage extends WizardPage
     label_1.setLayoutData( gridData_1 );
     label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.4" ) ); //$NON-NLS-1$
 
-    sourceFileField = new Text( container, SWT.BORDER );
-    sourceFileField.addModifyListener( new ModifyListener()
+    m_sourceFileField = new Text( container, SWT.BORDER );
+    m_sourceFileField.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
       }
     } );
-    sourceFileField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_sourceFileField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final Button button = new Button( container, SWT.NONE );
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         browseForSourceFile();
       }
@@ -108,14 +114,14 @@ public class ImportBaseMapImportImgPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5") ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
         updatePageComplete();
@@ -131,52 +137,51 @@ public class ImportBaseMapImportImgPage extends WizardPage
    * Called by the wizard to initialize the receiver's cached selection.
    * 
    * @param selection
-   *            the selection or <code>null</code> if none
+   *          the selection or <code>null</code> if none
    */
-  @SuppressWarnings("unchecked")
-  public void init( ISelection selection )
+  public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( new String( "tif" ) ); //$NON-NLS-1$
-    fileExtensions.add( new String( "jpg" ) ); //$NON-NLS-1$
-    // fileExtensions.add( new String( "gml" ) );
+    final List<String> fileExtensions = new LinkedList<String>();
 
-    // Find the first plugin.xml file.
-    Iterator iter = ((IStructuredSelection) selection).iterator();
+    final WorldFileFormat[] availableFormats = WorldFileFormat.getAvailableFormats();
+    for( final WorldFileFormat worldFileFormat : availableFormats )
+      fileExtensions.add( worldFileFormat.getImgFileExtension() );
+
+    final Iterator< ? > iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
-      Object item = iter.next();
+      final Object item = iter.next();
       if( item instanceof IFile )
       {
-        IFile file = (IFile) item;
+        final IFile file = (IFile) item;
         if( fileExtensions.contains( file.getFileExtension() ) )
         {
-          initialSourcePath = file.getLocation();
+          m_initialSourcePath = file.getLocation();
           break;
         }
-        item = file.getProject();
       }
     }
   }
 
   /**
-   * Called by <code>createControl</code> to initialize the receiver's content based upon the cached selection
-   * provided by the wizard.
+   * Called by <code>createControl</code> to initialize the receiver's content based upon the cached selection provided
+   * by the wizard.
    */
   private void initContents( )
   {
-    if( initialSourcePath == null )
+    if( m_initialSourcePath == null )
     {
       setPageComplete( false );
       return;
     }
-    IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-    IPath path = initialSourcePath;
+    final IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+    IPath path = m_initialSourcePath;
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
-    sourceFileField.setText( path.toString() );
+    m_sourceFileField.setText( path.toString() );
     updatePageComplete();
     setMessage( null );
     setErrorMessage( null );
@@ -189,30 +194,41 @@ public class ImportBaseMapImportImgPage extends WizardPage
   {
     setPageComplete( false );
 
-    IPath sourceLoc = getSourceLocation();
-    // if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
-    if( sourceLoc == null || !sourceLoc.toFile().isFile() )
+    setMessage( null );
+    setErrorMessage( null );
+
+    final IPath sourceLoc = getSourceLocation();
+    if( sourceLoc == null || sourceLoc.isEmpty() )
     {
-      setMessage( null );
+      // no error message, but page is not complete
+      return;
+    }
+
+    final File file = sourceLoc.toFile();
+    if( !file.isFile() )
+    {
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.6" ) ); //$NON-NLS-1$
       return;
     }
-    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile() ) //$NON-NLS-1$ //$NON-NLS-2$
+
+    final String fileExtension = sourceLoc.getFileExtension();
+    final WorldFileFormat[] availableFormats = WorldFileFormat.getAvailableFormats();
+    for( final WorldFileFormat worldFileFormat : availableFormats )
     {
-      setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
-          sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment() } ) ); //$NON-NLS-1$
-      return;
+      if( worldFileFormat.getImgFileExtension().equalsIgnoreCase( fileExtension ) )
+      {
+        final IPath worldFilePath = sourceLoc.removeFileExtension().addFileExtension( worldFileFormat.getWorldFileExtension() );
+        final String worldFileName = worldFilePath.lastSegment();
+        final FilenameFilter filter = new IgnoreCaseFilenameFilter( worldFileName );
+        if( file.getParentFile().listFiles( filter ).length == 0 )
+        {
+          final String msg = Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.1", worldFileName ); //$NON-NLS-1$
+          setErrorMessage( msg );
+          return;
+        }
+      }
     }
-    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile() ) //$NON-NLS-1$ //$NON-NLS-2$
-    {
-      setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
-          sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment() } ) ); //$NON-NLS-1$
-      return;
-    }
-    setMessage( null );
-    setErrorMessage( null );
+
     setPageComplete( true );
   }
 
@@ -224,26 +240,45 @@ public class ImportBaseMapImportImgPage extends WizardPage
     IPath path = browse( getSourceLocation() );
     if( path == null )
       return;
-    IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+    final IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
-    sourceFileField.setText( path.toString() );
+    m_sourceFileField.setText( path.toString() );
   }
 
   /**
    * Open a file dialog for selecting a file
    * 
    * @param path
-   *            the initially selected file
+   *          the initially selected file
    * @param mustExist
-   *            <code>true</code> if the selected file must already exist, else <code>false</code>
+   *          <code>true</code> if the selected file must already exist, else <code>false</code>
    * @return the newly selected file or <code>null</code>
    */
-  private IPath browse( IPath path )
+  private IPath browse( final IPath path )
   {
-    FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.tif; *.jpg" } ); //$NON-NLS-1$
-    // dialog.setFilterExtensions( (String[]) fileExtensions.toArray() );
+    // TODO: replace with file chooser stuff. Lots of small features are missing....
+    final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
+
+    String[] filterNames = new String[0];
+    String[] filterExtensions = new String[0];
+
+    filterNames = (String[]) ArrayUtils.add( filterNames, WorldFileFormat.getAllSuportedFilterName() );
+    filterExtensions = (String[]) ArrayUtils.add( filterExtensions, WorldFileFormat.getAllSupportedFilters() );
+
+    final WorldFileFormat[] availableFormats = WorldFileFormat.getAvailableFormats();
+    for( final WorldFileFormat worldFileFormat : availableFormats )
+    {
+      filterNames = (String[]) ArrayUtils.add( filterNames, worldFileFormat.getFilterName() );
+      filterExtensions = (String[]) ArrayUtils.add( filterExtensions, worldFileFormat.getFilterExtension() );
+    }
+
+    filterNames = (String[]) ArrayUtils.add( filterNames, FileDialogUtils.FILTERNAME_ALL_FILES );
+    filterExtensions = (String[]) ArrayUtils.add( filterExtensions, FileDialogUtils.FILTER_ALL_FILES );
+
+    dialog.setFilterNames( filterNames );
+    dialog.setFilterExtensions( filterExtensions );
+    dialog.setFilterIndex( 0 );
     if( path != null )
     {
       if( path.segmentCount() > 1 )
@@ -251,7 +286,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
       if( path.segmentCount() > 0 )
         dialog.setFileName( path.lastSegment() );
     }
-    String result = dialog.open();
+    final String result = dialog.open();
     if( result == null )
       return null;
     return new Path( result );
@@ -264,7 +299,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
   {
     // if(m_sourcePath != null)
     // return m_sourcePath;
-    String text = sourceFileField.getText().trim();
+    final String text = m_sourceFileField.getText().trim();
     if( text.length() == 0 )
       return null;
     m_sourcePath = new Path( text );

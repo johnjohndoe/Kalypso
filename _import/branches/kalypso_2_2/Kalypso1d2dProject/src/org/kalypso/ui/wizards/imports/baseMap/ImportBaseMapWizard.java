@@ -46,6 +46,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Set;
@@ -58,12 +59,12 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -71,11 +72,14 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.grid.WorldFileReader;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
@@ -84,6 +88,7 @@ import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
 import org.kalypso.ui.wizards.i18n.Messages;
+import org.kalypso.util.swt.StatusDialog;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -107,17 +112,13 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
   private ImportBaseMapWizardMainPage m_PageMain;
 
-  protected ImportBaseMapImportImgPage m_PageImportImg;
+  protected ImportBaseMapImportImgPage m_pageImportImg;
 
   protected ImportBaseMapImportShpPage m_PageImportShp;
-
-  // protected LineShpMainPage m_PageImportShp;
 
   protected ImportWmsWizardPage m_PageImportWMS;
 
   private final ArrayList<String> m_catalog = new ArrayList<String>();
-
-  // private ISzenarioDataProvider m_modelProvider;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
@@ -153,9 +154,9 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
   /**
    * @param workbench
-   *            the current workbench
+   *          the current workbench
    * @param selection
-   *            the current object selection
+   *          the current object selection
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
@@ -189,13 +190,13 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
   public void addPages( )
   {
     m_PageMain = new ImportBaseMapWizardMainPage();
-    m_PageImportImg = new ImportBaseMapImportImgPage();
+    m_pageImportImg = new ImportBaseMapImportImgPage();
     m_PageImportShp = new ImportBaseMapImportShpPage();
-    m_PageImportWMS = new ImportWmsWizardPage( "WmsImportPage", Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.5"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_PageImportImg.init( initialSelection );
+    m_PageImportWMS = new ImportWmsWizardPage( "WmsImportPage", Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.5" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_pageImportImg.init( initialSelection );
     m_PageImportShp.init( initialSelection );
     addPage( m_PageMain );
-    addPage( m_PageImportImg );
+    addPage( m_pageImportImg );
     addPage( m_PageImportShp );
     addPage( m_PageImportWMS );
   }
@@ -203,7 +204,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
   private SelectedPage getSelectedPage( )
   {
     final IWizardPage currentPage = getContainer().getCurrentPage();
-    if( currentPage == m_PageImportImg )
+    if( currentPage == m_pageImportImg )
       return SelectedPage.PageImportIMG;
     if( currentPage == m_PageImportShp )
       return SelectedPage.PageImportSHP;
@@ -255,122 +256,105 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.6") ); //$NON-NLS-1$
+      StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.6" ) ); //$NON-NLS-1$
       return false;
-    }
-    final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
-    switch( getSelectedPage() )
-    {
-      case PageImportIMG:
-        return performFinishIMG( mapView, mapModell );
-
-      case PageImportSHP:
-        return performFinishSHP( mapView, mapModell );
-
-      case PageImportWMS:
-        return performFinishWMS( mapView, mapModell );
-
-      default:
-        return false;
-    }
-  }
-
-  private boolean performFinishIMG( final MapView mapView, final GisTemplateMapModell mapModell )
-  {
-    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    if( !dstFilePath.exists() )
-      try
-    {
-        dstFilePath.create( true, true, null );
-    }
-    catch( final CoreException e1 )
-    {
-      e1.printStackTrace();
-    }
-    final File srcFileImage = new File( m_PageImportImg.getSourceLocation().toOSString() );
-    final IFile dstFileImage = dstFilePath.getFile( m_PageImportImg.getSourceLocation().lastSegment() );
-    File srcFileGeoreference = null;
-    IFile dstFileGeoreference = null;
-    final String extension = m_PageImportImg.getSourceLocation().getFileExtension().toLowerCase();
-    if( extension.equalsIgnoreCase( "tif" ) ) //$NON-NLS-1$
-    {
-      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() ); //$NON-NLS-1$
-      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() ); //$NON-NLS-1$
-    }
-    else if( extension.equalsIgnoreCase( "jpg" ) ) //$NON-NLS-1$
-    {
-      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).toOSString() ); //$NON-NLS-1$
-      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() ); //$NON-NLS-1$
-    }
-    else
-    {
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) + ": " + extension ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     try
     {
-      final File finalSrcGeoreference = srcFileGeoreference;
-      final IFile finalDstGeoreference = dstFileGeoreference;
-      final String coordinateSystem = m_PageImportImg.getCoordinateSystem();
-      getContainer().run( true, true, new IRunnableWithProgress()
+      final IKalypsoLayerModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
+      switch( getSelectedPage() )
       {
-        public void run( final IProgressMonitor monitor )
+        case PageImportIMG:
+          return performFinishIMG( mapView, mapModell );
+
+        case PageImportSHP:
+          return performFinishSHP( mapView, mapModell );
+
+        case PageImportWMS:
+          return performFinishWMS( mapView, mapModell );
+
+        default:
+          return false;
+      }
+    }
+    catch( final CoreException e )
+    {
+      final StatusDialog statusDialog = new StatusDialog( getShell(), e.getStatus(), getWindowTitle() );
+      statusDialog.open();
+      return false;
+    }
+  }
+
+  private boolean performFinishIMG( final MapView mapView, final IKalypsoLayerModell mapModell ) throws CoreException
+  {
+    final IFolder importsFolder = m_scenarioFolder.getProject().getFolder( "imports" ); //$NON-NLS-1$
+    final IFolder dstFileFolder = importsFolder.getFolder( "basemap" ); //$NON-NLS-1$ 
+
+    final IPath sourceLocation = m_pageImportImg.getSourceLocation();
+    final File srcFileImage = new File( sourceLocation.toString() );
+    final IFile dstFileImage = dstFileFolder.getFile( srcFileImage.getName() );
+
+    final File srcFileGeoreference = WorldFileReader.findWorldFile( srcFileImage );
+    if( srcFileGeoreference == null )
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) + ": " + sourceLocation.getFileExtension() ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final IFile dstFileGeoreference = dstFileFolder.getFile( srcFileGeoreference.getName() );
+
+    final String coordinateSystem = m_pageImportImg.getCoordinateSystem();
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+      {
+        try
         {
-          try
-          {
-            if( !dstFilePath.exists() )
-            {
-              dstFilePath.create( true, true, monitor );
-            }
-            copy( srcFileImage, dstFileImage, monitor );
-            copy( finalSrcGeoreference, finalDstGeoreference, monitor );
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-          }
-          catch( final IOException e )
-          {
-            e.printStackTrace();
-          }
+          if( !dstFileFolder.exists() )
+            dstFileFolder.create( true, true, monitor );
+
+          copy( srcFileImage, dstFileImage, monitor );
+          copy( srcFileGeoreference, dstFileGeoreference, monitor );
+          return Status.OK_STATUS;
         }
-      } );
-      final String layerName = m_PageImportImg.getSourceLocation().removeFileExtension().lastSegment();
-      final String imgHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportImg.getSourceLocation().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, extension, null, imgHref );
-      mapView.postCommand( command, null );
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-    catch( final InterruptedException e )
-    {
-      // User canceled, so stop but don’t close wizard.
-      e.printStackTrace();
-      return false;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+        catch( final IOException e )
+        {
+          throw new InvocationTargetException( e );
+        }
+      }
+    };
+
+    final IStatus copyResult = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    if( !copyResult.isOK() )
+      throw new CoreException( copyResult );
+
+    final String type = sourceLocation.getFileExtension();
+    final String layerName = sourceLocation.removeFileExtension().lastSegment();
+
+    final URL context = mapModell.getContext();
+    final IFile mapFile = ResourceUtilities.findFileFromURL( context );
+    final IPath relativeDstPath = ResourceUtilities.makeRelativ( mapFile, dstFileImage );
+
+    //    final String imgHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + sourceLocation.lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final String imgHref = String.format( "%s#%s", relativeDstPath.toString(), coordinateSystem );
+    final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, type, null, imgHref );
+    mapView.postCommand( command, null );
+
     return true;
   }
 
-  private boolean performFinishSHP( final MapView mapView, final GisTemplateMapModell mapModell )
+  private boolean performFinishSHP( final MapView mapView, final IKalypsoLayerModell mapModell )
   {
     final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( !dstFilePath.exists() )
       try
-    {
+      {
         dstFilePath.create( true, true, null );
-    }
-    catch( final CoreException e1 )
-    {
-      e1.printStackTrace();
-    }
+      }
+      catch( final CoreException e1 )
+      {
+        e1.printStackTrace();
+      }
     final File srcFileShape = new File( m_PageImportShp.getSourceLocation().toOSString() );
     final IFile dstFileShape = dstFilePath.getFile( m_PageImportShp.getSourceLocation().lastSegment() );
     File srcFileIndex = null;
@@ -387,7 +371,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     }
     else
     {
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.26") + extension ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.26" ) + extension ); //$NON-NLS-1$
     }
     try
     {
@@ -438,7 +422,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     return true;
   }
 
-  private boolean performFinishWMS( final MapView mapView, final GisTemplateMapModell mapModell )
+  private boolean performFinishWMS( final MapView mapView, final IKalypsoLayerModell mapModell )
   {
     /* Finishes the work on this page (dialog settings). */
     m_PageImportWMS.finish();
