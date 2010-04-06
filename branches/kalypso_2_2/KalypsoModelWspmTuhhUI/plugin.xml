@@ -131,7 +131,7 @@
       <wizard
             canFinishEarly="false"
             category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wspm.ui"
-            class="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.NewWspmProjectWizard"
             descriptionImage="icons/wizban/kalypso32.gif"
             finalPerspective="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
             hasPages="true"
