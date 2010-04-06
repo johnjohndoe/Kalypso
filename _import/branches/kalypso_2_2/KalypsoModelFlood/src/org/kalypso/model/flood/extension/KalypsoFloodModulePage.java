@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.extension;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -68,7 +67,7 @@ public class KalypsoFloodModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public URL getInfoURL( ) throws MalformedURLException
+  public URL getInfoURL( )
   {
     return getInfoURL( getClass(), KalypsoModelFloodPlugin.getDefault() );
   }
@@ -121,5 +120,4 @@ public class KalypsoFloodModulePage extends AbstractKalypsoModulePage
     return 4;
   }
 
- 
 }
