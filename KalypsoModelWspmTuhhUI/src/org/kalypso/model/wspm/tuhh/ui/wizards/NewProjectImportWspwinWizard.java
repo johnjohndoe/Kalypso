@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter;
@@ -58,7 +57,7 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public class NewProjectImportWspwinWizard extends NewProjectWizard
+public class NewProjectImportWspwinWizard extends NewWspmProjectWizard // extends NewProjectWizard
 {
   private WspWinImportSourcePage m_wspWinImportPage;
 
@@ -74,16 +73,16 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
     super.addPages();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createPageControls( final Composite pageContainer )
-  {
-    // REMARK: do not create the controls now
-    // in order to allow the hack in getNextPage
-    // super.createPageControls(pageContainer);
-  }
+// /**
+// * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
+// */
+// @Override
+// public void createPageControls( final Composite pageContainer )
+// {
+// // REMARK: do not create the controls now
+// // in order to allow the hack in getNextPage
+// // super.createPageControls(pageContainer);
+// }
 
   /**
    * Overwritten in order to set the new project name to the name of the selected wspwin directory (= name of the wspwin
@@ -111,17 +110,13 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
   }
 
   /**
-   * Additionally import wspwin data into freshly created project.
-   * 
-   * @see org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard#doFinish(org.eclipse.core.resources.IProject,
+   * @see org.kalypso.afgui.wizards.NewProjectWizard#postCreateProject(org.eclipse.core.resources.IProject,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  protected void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard.1"), 10 ); //$NON-NLS-1$
-
-    super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
+    monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard.1" ), 10 ); //$NON-NLS-1$
 
     final File wspwinDirectory = m_wspWinImportPage.getSourceDirectory();
 
