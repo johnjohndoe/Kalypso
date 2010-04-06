@@ -15,7 +15,7 @@
         <mapv:layer visible="true" name="%flood.layer.terrain_model" id="ID_5" featurePath="#fid#CoverageCollection11933046861910/coverageMember" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/flood.gml" xlink:actuate="onRequest">
             <templ:style style="dtmGridUserStyle" linktype="sld" xlink:type="simple" xlink:href="grids.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Geländehöhe: %.2f [NN+m]</templ:property>
+            <templ:property name="themeInfoId">%flood.layer.terrain.themeInfoId</templ:property>
             <templ:property name="themeId">terrainThemes</templ:property>
         </mapv:layer>
     </mapv:layers>
