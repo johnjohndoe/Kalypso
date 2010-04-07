@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.conv.results.test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs.FileObject;
@@ -54,9 +56,19 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
+import org.kalypso.ogc.gml.serialize.Gml2ShapeConverter;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
+import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
+import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
  * @author Thomas Jung
@@ -86,9 +98,15 @@ public class NodeResultsHandler2DTest
       outputDir.mkdir();
 
       log.log( StatusUtilities.createStatus( IStatus.INFO, "calling ProcessResultsJob", null ) ); //$NON-NLS-1$
-      final ProcessResultsJob job = new ProcessResultsJob( resultFileObject, outputDir, null, null, null, null, ResultManager.STEADY_DATE, null );
+      final List<TYPE> parameters = new ArrayList<TYPE>();
+      parameters.add( TYPE.DEPTH );
+      parameters.add( TYPE.WATERLEVEL );
+      final ProcessResultsJob job = new ProcessResultsJob( resultFileObject, outputDir, null, null, null, parameters, ResultManager.STEADY_DATE, null );
       final IStatus result = job.run( new NullProgressMonitor() );
       log.log( result );
+
+      if( result.isOK() )
+        writeShape( outputDir );
     }
     finally
     {
@@ -99,5 +117,28 @@ public class NodeResultsHandler2DTest
       System.gc();
       System.out.println( "Total memory" + Runtime.getRuntime().totalMemory() ); //$NON-NLS-1$
     }
+  }
+
+  private void writeShape( final File outputDir ) throws Exception
+  {
+    final File tinFile = new File( outputDir, "Tin\\tin_WATERLEVEL.gz" );
+
+    final File shapeFile = new File( outputDir, "Waterlevel" );
+
+    final GMLWorkspace tinWorkspace = GmlSerializer.createGMLWorkspace( tinFile, null );
+    final Feature rootFeature = tinWorkspace.getRootFeature();
+    final Object property = rootFeature.getProperty( "triangulatedSurfaceMember" );
+
+    final SplitSort featureList = new SplitSort( null, null );
+    featureList.add( rootFeature );
+
+    final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
+    final IShapeDataProvider shapeDataProvider = new TriangulatedSurfaceSinglePartShapeDataProvider( (Feature[]) featureList.toArray( new Feature[featureList.size()] ), shapeType );
+
+    final IFeatureType type = rootFeature.getFeatureType();
+
+    final Gml2ShapeConverter converter = Gml2ShapeConverter.createDefault( type );
+    converter.writeShape( featureList, shapeFile.getAbsolutePath(), shapeDataProvider, new NullProgressMonitor() );
+
   }
 }

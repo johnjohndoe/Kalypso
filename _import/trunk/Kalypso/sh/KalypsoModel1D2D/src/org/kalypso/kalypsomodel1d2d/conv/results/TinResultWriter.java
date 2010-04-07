@@ -48,7 +48,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.QName;
 
-import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
@@ -112,7 +111,7 @@ public class TinResultWriter
    * 
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final GM_Position... nodes ) throws SAXException, UnknownCRSException, GM_Exception
+  public void add( final GM_Position... nodes ) throws SAXException, GM_Exception
   {
     if( m_marshaller == null )
       return;
@@ -136,9 +135,9 @@ public class TinResultWriter
     try
     {
       m_marshaller.endSurface();
-      
+
       m_xmlStream.endElement( "", "triangulatedSurfaceMember", "triangulatedSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-     
+
       final AttributesImpl atts = new AttributesImpl();
       for( final QNameAndString prop : m_props )
       {
@@ -146,8 +145,8 @@ public class TinResultWriter
         m_xmlStream.startElement( qname.getNamespaceURI(), qname.getLocalPart(), qname.getLocalPart(), atts );
         m_xmlStream.characters( prop.m_value.toCharArray(), 0, prop.m_value.length() );
         m_xmlStream.endElement( qname.getNamespaceURI(), qname.getLocalPart(), qname.getLocalPart() );
-      }      
-      
+      }
+
       m_xmlStream.endElement( "", "TinResult", "TinResult" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       m_xmlStream.endDocument();
 
@@ -195,7 +194,6 @@ public class TinResultWriter
       }
 
       m_marshaller.startSurface( atts );
-      m_marshaller.marshall( );
     }
     catch( final Exception e )
     {
