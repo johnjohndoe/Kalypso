@@ -524,7 +524,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation) flowRelation1d, depth );
 
     if( area == null )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18" , nodeResult.getGmlID(), station.doubleValue() ) ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getGmlID(), station.doubleValue() ) ); //$NON-NLS-1$
 
     final BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
     nodeResult.setDischarge( discharge.doubleValue() );
@@ -561,7 +561,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     for( int i = 0; i < nodes.length; i++ )
     {
-      IFlowRelationship lFlowRel = getFlowRelation( nodes[i] );
+      final IFlowRelationship lFlowRel = getFlowRelation( nodes[i] );
       if( !(lFlowRel instanceof IFlowRelation1D) )
       {
         break;
@@ -786,7 +786,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         for( final GM_SurfacePatch surfacePatch : element )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
-          feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, Arrays.copyOf( ring, 3) );
+          feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, Arrays.copyOf( ring, 3 ) );
         }
       }
     }
@@ -980,6 +980,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     boolean dry = false;
     for( final INodeResult node : nodes )
     {
+
       if( node.isWet() )
         wet = true;
       else
@@ -1013,22 +1014,31 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       // remember the split arc
       final INodeResult addedNode = insertNode( nodes[0], nodes[1] );
-      splitArcs.add( 0 );
-      nodesInserted.add( addedNode );
+      if( addedNode != null )
+      {
+        splitArcs.add( 0 );
+        nodesInserted.add( addedNode );
+      }
     }
     if( NodeResultHelper.checkTriangleArc( nodes[1], nodes[2] ) )
     {
       // remember the split arc
       final INodeResult addedNode = insertNode( nodes[1], nodes[2] );
-      splitArcs.add( 1 );
-      nodesInserted.add( addedNode );
+      if( addedNode != null )
+      {
+        splitArcs.add( 1 );
+        nodesInserted.add( addedNode );
+      }
     }
     if( NodeResultHelper.checkTriangleArc( nodes[2], nodes[0] ) )
     {
       // remember the split arc
       final INodeResult addedNode = insertNode( nodes[2], nodes[0] );
-      splitArcs.add( 2 );
-      nodesInserted.add( addedNode );
+      if( addedNode != null )
+      {
+        splitArcs.add( 2 );
+        nodesInserted.add( addedNode );
+      }
     }
 
     switch( splitArcs.size() )
@@ -1603,7 +1613,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     try
     {
-      IFlowRelationship lFlowRel = getFlowRelation( nodeResult1d );
+      final IFlowRelationship lFlowRel = getFlowRelation( nodeResult1d );
       if( !(lFlowRel instanceof IFlowRelation1D) )
       {
         return;
@@ -1716,7 +1726,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         final INodeResult nodeResult = m_nodeIndex.get( nodeID );
 
-        IFlowRelationship lFlowRel = getFlowRelation( nodeResult );
+        final IFlowRelationship lFlowRel = getFlowRelation( nodeResult );
         if( !(lFlowRel instanceof IFlowRelation1D) )
         {
           break;
