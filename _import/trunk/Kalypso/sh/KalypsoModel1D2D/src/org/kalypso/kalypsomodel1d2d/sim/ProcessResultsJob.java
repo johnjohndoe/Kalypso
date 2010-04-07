@@ -67,9 +67,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.performance.TimeLogger;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
@@ -191,13 +192,13 @@ public class ProcessResultsJob extends Job
     else if( m_stepDate == ResultManager.MAXI_DATE )
       timeStepName = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.6" ); //$NON-NLS-1$
     else
-      timeStepName =  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7" , m_stepDate ); //$NON-NLS-1$
+      timeStepName = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7", m_stepDate ); //$NON-NLS-1$
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.8" ) + timeStepName, 10 ); //$NON-NLS-1$
     monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.9" ) + timeStepName ); //$NON-NLS-1$
 
-	//TODO: simultaneous parsing and zipping caused problems
-	// the last few lines of the 2d-file were just ignored
+    // TODO: simultaneous parsing and zipping caused problems
+    // the last few lines of the 2d-file were just ignored
     try
     {
       InputStream contentStream = null;
@@ -240,7 +241,8 @@ public class ProcessResultsJob extends Job
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.14" ) ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.14" ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), msg, e );
     }
 
     return Status.OK_STATUS;
@@ -310,7 +312,7 @@ public class ProcessResultsJob extends Job
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54" , m_inputFile.getName() ) ); //$NON-NLS-1$
+      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54", m_inputFile.getName() ) ); //$NON-NLS-1$
 
       conv.parse( is );
 
@@ -553,7 +555,7 @@ public class ProcessResultsJob extends Job
     {
       // TODO: check for right time zone
       final String dateString = dateFormatter.format( stepDate );
-      stepResultMeta.setName(  Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.97" , dateString ) ); //$NON-NLS-1$
+      stepResultMeta.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.97", dateString ) ); //$NON-NLS-1$
       stepResultMeta.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.98" ) + dateString ); //$NON-NLS-1$
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
       stepResultMeta.setStepTime( stepDate );
