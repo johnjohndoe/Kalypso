@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -142,7 +143,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       final IPath sourcePath = mPage.getSourceLocation();// .toOSString();
       final String setFileName = mPage.getNameForFile();
       final String setFileDescription = mPage.getDescriptionForFileArea();
-      final String defaultText = "" ; //$NON-NLS-1$
+      final String defaultText = ""; //$NON-NLS-1$
       final String replaceText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.10" ); //$NON-NLS-1$
       final String selectedCoordinateSystem = mPage.getCoordinateSystem();
 
@@ -253,8 +254,8 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     // fileNumbersMap.put( srcFileTif.getName(), (i++)+"");
     // }
     final Random generator = new Random( 126545 );
-    final int key = generator.nextInt();
-    System.out.println( "key :" + key ); //$NON-NLS-1$
+    final int key = (int) ((new Date()).getTime() + generator.nextInt());
+    //    System.out.println( "key :" + key ); //$NON-NLS-1$
 
     if( new File( folder, getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ).toString() ).exists() ) //$NON-NLS-1$ //$NON-NLS-2$
       getNewFileName( folder, srcFileTif );
