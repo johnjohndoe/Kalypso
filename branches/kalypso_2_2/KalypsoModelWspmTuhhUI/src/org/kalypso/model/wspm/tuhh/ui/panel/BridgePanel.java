@@ -155,11 +155,11 @@ public class BridgePanel extends AbstractProfilView
       if( building == null )
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
-      m_text.setText( val.toString() );
+      final String text = String.format( "%.2f", val );
+      m_text.setText( text );
       if(m_text.isFocusControl())
         m_text.selectAll();
     }
-
     
     public void dispose( )
     {
