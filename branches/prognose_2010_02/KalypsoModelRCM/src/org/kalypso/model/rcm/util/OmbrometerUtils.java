@@ -49,9 +49,17 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.IOmbrometer;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -208,4 +216,61 @@ public class OmbrometerUtils
     return null;
   }
 
+  public static String analyseOmbrometer( final IObservation observation ) throws SensorException
+  {
+    final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxisList(), "N" );
+    final ITuppleModel values = observation.getValues( null );
+
+    final int goods = countStatus( values, axis );
+    final int count = values.getCount();
+    return String.format( "%3d / %3d", goods, count );
+  }
+
+  /**
+   * Zählt die Anzahl der nicht gewarnten oder editierten Werte.
+   * 
+   * @throws SensorException
+   */
+  private static int countStatus( final ITuppleModel values, final IAxis axis ) throws SensorException
+  {
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxisList(), axis );
+    int count = 0;
+    for( int i = 0; i < values.getCount(); i++ )
+    {
+      final int status = ((Number) values.getElement( i, statusAxis )).intValue();
+      if( !KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_CHECK ) || KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_USER_MODIFIED ) )
+        count++;
+    }
+
+    return count;
+  }
+
+  public static Boolean checkIfOmbrometershouldBeUsed( final IOmbrometer ombro )
+  {
+    final String description = ombro.getDescription();
+    return getUsedFromDescription( description );
+  }
+
+  public static Boolean getUsedFromDescription( final String description )
+  {
+    final double ratio = getRatioFromOmbrometerDescription( description );
+    if( ratio > 0.8 ) // TODO: configure
+      return Boolean.TRUE;
+    else
+      return Boolean.FALSE;
+  }
+
+  public static double getRatioFromOmbrometerDescription( final String description )
+  {
+    final int index = description.indexOf( '/' );
+    double ratio = 0;
+    if( index != -1 )
+    {
+      final Integer goods = NumberUtils.parseQuietInteger( description.substring( 0, index ).trim() );
+      final Integer count = NumberUtils.parseQuietInteger( description.substring( index + 1 ).trim() );
+      if( goods != null && count != null )
+        ratio = goods.doubleValue() / count.doubleValue();
+    }
+    return ratio;
+  }
 }
