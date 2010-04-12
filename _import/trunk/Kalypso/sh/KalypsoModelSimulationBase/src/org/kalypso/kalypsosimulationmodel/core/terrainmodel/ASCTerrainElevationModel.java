@@ -71,7 +71,11 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePatchVisitable<GM_SurfacePatch>
 {
-  /**
+  private static final int PROPORTIONAL_FACTOR = 160;
+
+  private static final int MIN_FINE = 4;
+
+  /** 
    * The envelop if the region of interest
    */
   private double cellSize;
@@ -102,11 +106,11 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    * regionInterest is null the file elevation information is computed and therefore available
    * 
    * @param ascFile
-   *            the asc file containing the native terrain model
+   *          the asc file containing the native terrain model
    * @param regionOfInterest
-   *            the {@link GM_Envelope} of region of interest
+   *          the {@link GM_Envelope} of region of interest
    * @throws IllegalArgumentException
-   *             if asc file is null or is a directory or does not exist or is not accesible (cannot be read)
+   *           if asc file is null or is a directory or does not exist or is not accesible (cannot be read)
    * 
    */
   public ASCTerrainElevationModel( final URL ascFileURL ) throws IllegalArgumentException, IOException
@@ -209,9 +213,20 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
+   *      
+   * Extended for better performance. according to the zoom factor only each (n) cell of the grid will be visited, 
+   * after getting close enough will refine the representation of model. 
    */
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException, GM_Exception
   {
+    int iProportional = (int) (Math.min( envToVisit.getHeight(), envToVisit.getWidth()) /( cellSize * PROPORTIONAL_FACTOR ));
+    int iShift = ( Math.max( MIN_FINE, iProportional ) );
+    double dShiftMonitor = iShift;
+    boolean lBoolDoFine = false;
+    if( iProportional < MIN_FINE / 2 ){
+      lBoolDoFine = true;
+      dShiftMonitor = ( double )MIN_FINE / ( MIN_FINE + 1 ) ;
+    }
     final GM_Envelope env = GMRectanglesClip.getIntersectionEnv( maxEnvelope, envToVisit );
     final double xmin = env.getMin().getX();
     final int col = (int) Math.floor( (xmin - xllcorner) / cellSize );
@@ -222,18 +237,19 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
 
     if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
     {
-      monitor.beginTask( "", row ); //$NON-NLS-1$
+      monitor.beginTask( "", ( int )( Math.floor( env.getWidth() / cellSize ) / dShiftMonitor ) ); //$NON-NLS-1$
 
       final int N_COL_ENV = (int) Math.floor( env.getWidth() / cellSize );
       final int N_ROW_ENV = (int) Math.floor( env.getHeight() / cellSize );
-      for( int i = 0; i < N_ROW_ENV; i++ )
+      // iteration for rough representation with adaptive walking through the grid. iShift variable defines the step size of walking
+      for( int i = 0; i < N_ROW_ENV; i += iShift )
       {
-        for( int j = 0; j < N_COL_ENV; j++ )
+        for( int j = 0; j < N_COL_ENV; j += iShift )
         {
           final double x = xmin + j * cellSize;
-          final double xPlusCellSize = x + cellSize;
+          final double xPlusCellSize = x + cellSize * iShift;
           final double y = ymin + i * cellSize;
-          final double yPlusCellSize = y + cellSize;
+          final double yPlusCellSize = y + cellSize * iShift;
           final double z = elevations[row + i][col + j];
 
           final GM_Position pos0 = GeometryFactory.createGM_Position( x, y, z );
@@ -241,18 +257,54 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
           final GM_Position pos2 = GeometryFactory.createGM_Position( xPlusCellSize, yPlusCellSize, z );
           final GM_Position pos3 = GeometryFactory.createGM_Position( x, yPlusCellSize, z );
 
-          final GM_Triangle patch1 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos0, pos1, pos3 }, crs );
-          final GM_Triangle patch2 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos1, pos2, pos3 }, crs );
-          surfacePatchVisitor.visit( patch1, z );
-          surfacePatchVisitor.visit( patch2, z );
+          try
+          {
+            final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( new GM_Position[] { pos0, pos1, pos2, pos3, pos0 }, null, crs );
+            surfacePatchVisitor.visit( patch, z );
+          }
+          catch( Throwable e )
+          {
+            e.printStackTrace();
+          }
         }
 
         ProgressUtilities.worked( monitor, 1 );
       }
-    }
-    else
-    {
+      // the refinement iteration, visits all the points of the given grid in actual envelope.
+      if( lBoolDoFine )
+      {
+        for( int i = 0; i < N_ROW_ENV; i++ )
+        {
+          for( int j = 0; j < N_COL_ENV; j++ )
+          {
+            final double x = xmin + j * cellSize;
+            final double xPlusCellSize = x + cellSize;
+            final double y = ymin + i * cellSize;
+            final double yPlusCellSize = y + cellSize;
+            final double z = elevations[row + i][col + j];
 
+            final GM_Position pos0 = GeometryFactory.createGM_Position( x, y, z );
+            final GM_Position pos1 = GeometryFactory.createGM_Position( xPlusCellSize, y, z );
+            final GM_Position pos2 = GeometryFactory.createGM_Position( xPlusCellSize, yPlusCellSize, z );
+            final GM_Position pos3 = GeometryFactory.createGM_Position( x, yPlusCellSize, z );
+
+            final GM_Triangle patch1 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos0, pos1, pos3 }, crs );
+            final GM_Triangle patch2 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos1, pos2, pos3 }, crs );
+           
+            try
+            {
+              surfacePatchVisitor.visit( patch1, z );
+              surfacePatchVisitor.visit( patch2, z );
+            }
+            catch( Throwable e )
+            {
+              e.printStackTrace();
+            }
+          }
+
+          ProgressUtilities.worked( monitor, 1 );
+        }
+      }
     }
     return;
   }
