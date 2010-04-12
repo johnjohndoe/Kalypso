@@ -74,7 +74,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class LengthSectionExportHandler extends AbstractHandler
 {
-  public static String PLOTTER_FILE_NOT_FOUND = "plotter_file_not_found";
+  // public static String PLOTTER_FILE_NOT_FOUND = "plotter_file_not_found";
 
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -113,8 +113,16 @@ public class LengthSectionExportHandler extends AbstractHandler
     final File file = new File( System.getProperty( "java.io.tmpdir" ), "exportTmp.lng" );//$NON-NLS-1$ //$NON-NLS-2$
     file.deleteOnExit();
     final LengthSectionExporter lngExp = new LengthSectionExporter();
-    lngExp.write( obs, new PrintWriter( new FileOutputStream( file ) ) );
-
+    final PrintWriter writer = new PrintWriter( new FileOutputStream( file ) );
+    try
+    {
+      if( !lngExp.write( obs, writer ) )
+        throw new IOException( "Internal error occured while writing length section" );
+    }
+    finally
+    {
+      writer.close();
+    }
     Plotter.openPrf( file );
   }
 
