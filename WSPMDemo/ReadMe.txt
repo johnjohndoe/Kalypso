@@ -9,4 +9,4 @@ Inhalt:
 Testing:
 Referenzergebnisse liegen jeweils unter Ergebnisse\Rechnung X\ReferenzErgebnisse
 
-Nach Berechnung können diese mit Ergebnisse\Rechnung X\_aktuell verglichen werden ('Compare With-Each Other')
+Nach Berechnung kÃ¶nnen diese mit Ergebnisse\Rechnung X\_aktuell verglichen werden ('Compare With-Each Other')
