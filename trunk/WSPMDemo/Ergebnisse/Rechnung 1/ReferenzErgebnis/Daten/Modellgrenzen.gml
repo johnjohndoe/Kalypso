@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <boundary:Boundary xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:boundary="org.kalypso.model.wspmboundary" gml:id="root">
  <boundary:geometry>
   <gml:Polygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">

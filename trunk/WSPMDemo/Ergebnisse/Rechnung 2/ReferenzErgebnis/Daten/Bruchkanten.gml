@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <breakline:BreaklineCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:breakline="org.kalypso.model.wspmbreakline" gml:id="root">
  <breakline:breaklineMember>
   <breakline:Breakline gml:id="Breakline12269318725090">

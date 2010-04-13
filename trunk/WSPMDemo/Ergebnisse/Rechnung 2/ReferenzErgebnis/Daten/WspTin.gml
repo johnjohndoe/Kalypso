@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <wspmcommon:TriangulatedSurfaceFeature xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:wspmcommon="org.kalypso.model.wspmcommon" gml:id="root">
  <gml:description>Wasserspiegel-Tin: </gml:description>
  <gml:name>Triangulierter Wasserpiegel der Berechnung ''</gml:name>

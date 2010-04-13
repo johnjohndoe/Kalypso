@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <wspmproj:WspmProject xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:wspmproj="org.kalypso.model.wspmproj" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:swe="http://www.opengis.net/swe" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:commonShp="org.kalypso.gml.common" gml:id="root">
  <wspm:waterBodyMember xmlns:wspm="org.kalypso.model.wspm">
   <wspm:WaterBody gml:id="WaterBody12119937672611">
-   <gml:description>Ein Demo-Gewässer</gml:description>
+   <gml:description>Ein Demo-GewÃ¤sser</gml:description>
    <gml:name>Demo</gml:name>
    <wspm:refNr/>
    <wspm:isDirectionUpstream>true</wspm:isDirectionUpstream>
@@ -10064,7 +10064,7 @@
    </wspm:profileMember>
    <wspm:reachMember>
     <tuhh:ReachWspmTuhhSteadyState gml:id="ReachWspmTuhhSteadyState1211993884481105">
-     <gml:description>ein Demo Gewässerstrang</gml:description>
+     <gml:description>ein Demo Gewï¿½sserstrang</gml:description>
      <gml:name>Demo Strang</gml:name>
      <tuhh:waterBodyLinkMember xlink:href="#WaterBody12119937672611"/>
      <tuhh:waterAxis/>
