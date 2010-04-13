@@ -36,6 +36,7 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
@@ -61,6 +62,7 @@ import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
@@ -159,7 +161,7 @@ public class RiskModelHelper
     sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
   }
 
-  public static void fillStatistics( final int returnPeriod, ILanduseClass landuseClass, final double damageValue, final double cellSize )
+  public static void fillStatistics( final int returnPeriod, final ILanduseClass landuseClass, final double damageValue, final double cellSize )
   {
     final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
     final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
@@ -768,7 +770,16 @@ public class RiskModelHelper
 
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
+
+    final String failedToLoadRiskMsg = String.format( "Failed to load Risk-Model. Unable to import runoff events." );
+    final IStatus failedToLoadRiskStatus = new Status( IStatus.ERROR, PluginUtilities.id( KalypsoRiskPlugin.getDefault() ), failedToLoadRiskMsg );
+    if( !riskDataProvider.waitForModelToLoad( IRasterDataModel.class.getName(), 5 * 1000 ) )
+      throw new CoreException( failedToLoadRiskStatus );
+
     final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class.getName(), IRasterDataModel.class );
+    if( rasterDataModel == null )
+      throw new CoreException( failedToLoadRiskStatus );
+
     final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
 
     /* --- demo code for accessing the depth grid coverage collections --- */
@@ -847,7 +858,7 @@ public class RiskModelHelper
    * 
    * @return <code>true</code>, if the theme was succesfully activated.
    * */
-  public static boolean activateEventTheme( IMapPanel mapPanel )
+  public static boolean activateEventTheme( final IMapPanel mapPanel )
   {
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
