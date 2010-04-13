@@ -134,7 +134,7 @@ public class BridgePanel extends AbstractProfilView
             if( val == value )
               return;
 
-            final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.0",m_property.getName()), getProfil(), true ); //$NON-NLS-1$
+            final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.0", m_property.getName() ), getProfil(), true ); //$NON-NLS-1$
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
           }
@@ -155,12 +155,12 @@ public class BridgePanel extends AbstractProfilView
       if( building == null )
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
-      final String text = String.format( "%.2f", val );
+      final String text = String.format( "%.3f", val );
       m_text.setText( text );
-      if(m_text.isFocusControl())
+      if( m_text.isFocusControl() )
         m_text.selectAll();
     }
-    
+
     public void dispose( )
     {
       m_text.dispose();
@@ -176,13 +176,13 @@ public class BridgePanel extends AbstractProfilView
     {
 // TUHH Hack
       if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
-        label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.1"); //$NON-NLS-1$
+        label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.1" ); //$NON-NLS-1$
       if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( property.getId() ) )
-        label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.2"); //$NON-NLS-1$
+        label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.2" ); //$NON-NLS-1$
     }
     finally
     {
-      return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3",label, property.getUnit()); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3", label, property.getUnit() ); //$NON-NLS-1$
     }
   }
 
@@ -230,7 +230,7 @@ public class BridgePanel extends AbstractProfilView
     }
     for( final PropertyLine line : m_lines )
       line.updateValue();
- //   m_propPanel.layout();
+    // m_propPanel.layout();
   }
 
   @Override
@@ -244,7 +244,7 @@ public class BridgePanel extends AbstractProfilView
         {
           public void run( )
           {
-           // createPropertyPanel();
+            // createPropertyPanel();
             updateControls();
           }
         } );
