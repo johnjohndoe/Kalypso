@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -101,20 +102,17 @@ public class WeirPanel extends AbstractProfilView
 
     public final String m_text;
 
-    public final String m_tooltip;
-
-    public Wehrart( final String id, final String label, final String text, final String tooltip )
+    public Wehrart( final String id, final String label, final String text, @SuppressWarnings("unused") final String tooltip )
     {
       m_id = id;
       m_label = label;
       m_text = text;
-      m_tooltip = tooltip;
     }
   }
 
   private class DeviderLine
   {
-    protected final int position;
+    protected final int m_position;
 
     protected Text m_beiwert;
 
@@ -123,7 +121,7 @@ public class WeirPanel extends AbstractProfilView
     public DeviderLine( final Composite parent, final int index )
     {
       final Composite cmp = m_toolkit.createComposite( parent );
-      position = index;
+      m_position = index;
       final GridLayout layout2 = new GridLayout( 4, true );
       layout2.marginWidth = 0;
       layout2.marginHeight = 0;
@@ -137,7 +135,7 @@ public class WeirPanel extends AbstractProfilView
       final Color badColor = display.getSystemColor( SWT.COLOR_RED );
       final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-      m_toolkit.createLabel( cmp, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.0") ); //$NON-NLS-1$
+      m_toolkit.createLabel( cmp, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.0" ) ); //$NON-NLS-1$
       m_point = m_toolkit.createText( cmp, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
       final GridData pointData = new GridData( SWT.FILL, SWT.CENTER, true, false );
       final Label spacer = m_toolkit.createSeparator( cmp, SWT.SEPARATOR | SWT.HORIZONTAL );
@@ -160,23 +158,30 @@ public class WeirPanel extends AbstractProfilView
         @Override
         public void focusLost( final FocusEvent e )
         {
-          if( (m_point == null) || m_point.isDisposed() )
+          if( m_point == null || m_point.isDisposed() )
             return;
-          final double value = NumberUtils.parseQuietDouble( m_point.getText() );
-          if( !Double.isNaN( value ) )
-          {
 
-            final IProfilPointMarker marker = getMarker();
-            final IRecord point = ProfilUtil.findNearestPoint( getProfil(), value );
-            final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.2"), getProfil(), true ); //$NON-NLS-1$
-            operation.addChange( new PointMarkerSetPoint( marker, point ) );
-            operation.addChange( new ActiveObjectEdit(  getProfil(), point, null ) );
-            new ProfilOperationJob( operation ).schedule();
-          }
+          final String currentText = m_point.getText();
+          final String markerText = getMarkerText();
+
+          /* If nothing changed, just return */
+          if( ObjectUtils.equals( currentText, markerText ) )
+            return;
+
+          final double value = NumberUtils.parseQuietDouble( currentText );
+          if( Double.isNaN( value ) )
+            return;
+
+          final IProfilPointMarker marker = getMarker();
+          final IRecord point = ProfilUtil.findNearestPoint( getProfil(), value );
+          final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.2" ), getProfil(), true ); //$NON-NLS-1$
+          operation.addChange( new PointMarkerSetPoint( marker, point ) );
+          operation.addChange( new ActiveObjectEdit( getProfil(), point, null ) );
+          new ProfilOperationJob( operation ).schedule();
         }
       } );
 
-      if( position < Integer.MAX_VALUE )
+      if( m_position < Integer.MAX_VALUE )
       {
         final Composite btnGroup = m_toolkit.createComposite( cmp );
         final GridLayout layout3 = new GridLayout( 2, true );
@@ -187,9 +192,9 @@ public class WeirPanel extends AbstractProfilView
         btnGroup.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false, 2, 1 ) );
 
         final Button btnDel = m_toolkit.createButton( btnGroup, "", SWT.NONE ); //$NON-NLS-1$
-        btnDel.setToolTipText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.4") ); //$NON-NLS-1$
+        btnDel.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.4" ) ); //$NON-NLS-1$
         btnDel.setImage( m_deleteImg );
-        btnDel.setEnabled( position > -1 );
+        btnDel.setEnabled( m_position > -1 );
         btnDel.addSelectionListener( new SelectionAdapter()
         {
           @Override
@@ -197,12 +202,12 @@ public class WeirPanel extends AbstractProfilView
           {
 
             final IProfilChange change = new PointMarkerEdit( getMarker(), null );
-            final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5"), getProfil(), change, true ); //$NON-NLS-1$
+            final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5" ), getProfil(), change, true ); //$NON-NLS-1$
             new ProfilOperationJob( operation ).schedule();
           }
         } );
         final Button btnAdd = m_toolkit.createButton( btnGroup, "", SWT.NONE ); //$NON-NLS-1$
-        btnAdd.setToolTipText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.7") ); //$NON-NLS-1$
+        btnAdd.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.7" ) ); //$NON-NLS-1$
         btnAdd.setImage( m_addImg );
         btnAdd.addSelectionListener( new SelectionAdapter()
         {
@@ -214,7 +219,7 @@ public class WeirPanel extends AbstractProfilView
             final IProfil profil = getProfil();
             final IRecord point = profil.getPoint( getProfil().indexOfPoint( marker.getPoint() ) + 1 );
 
-            final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8"), profil, true ); //$NON-NLS-1$
+            final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8" ), profil, true ); //$NON-NLS-1$
             final IProfilPointMarker trenner = profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
 
             if( trenner != null )
@@ -229,7 +234,7 @@ public class WeirPanel extends AbstractProfilView
           }
         } );
 
-        m_toolkit.createLabel( cmp, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.9") ); //$NON-NLS-1$
+        m_toolkit.createLabel( cmp, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.9" ) ); //$NON-NLS-1$
         m_beiwert = m_toolkit.createText( cmp, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
         m_beiwert.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
         m_beiwert.addModifyListener( doubleModifyListener );
@@ -249,29 +254,38 @@ public class WeirPanel extends AbstractProfilView
           @Override
           public void focusLost( final FocusEvent e )
           {
-            if( (m_beiwert == null) || m_beiwert.isDisposed() )
+            if( m_beiwert == null || m_beiwert.isDisposed() )
               return;
-            final double value = NumberUtils.parseQuietDouble( m_beiwert.getText() );
-            if( !Double.isNaN( value ) )
+
+            final String currentText = m_beiwert.getText();
+            final String beiwertText = getBeiwertText();
+
+            /* If nothing changed, just return */
+            if( ObjectUtils.equals( currentText, beiwertText ) )
+              return;
+
+            final double value = NumberUtils.parseQuietDouble( currentText );
+            // FIXME Performance, check if really anything changed
+            if( Double.isNaN( value ) )
+              return;
+
+            if( m_position < 0 )
             {
-              if( position < 0 )
-              {
-                final IProfileObject[] profileObjects = getProfil().getProfileObjects();
-                IProfileObject building = null;
-                if( profileObjects.length > 0 )
-                  building = profileObjects[0];
+              final IProfileObject[] profileObjects = getProfil().getProfileObjects();
+              IProfileObject building = null;
+              if( profileObjects.length > 0 )
+                building = profileObjects[0];
+              // FIXME: if building is null, does the rest makes sense?
 
-                final IProfilChange change = new ProfileObjectEdit( building, building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), value );
-                final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11"), getProfil(), change, true ); //$NON-NLS-1$
-                new ProfilOperationJob( operation ).schedule();
-              }
-              else
-              {
-
-                final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.12"), getProfil(), true ); //$NON-NLS-1$
-                operation.addChange( new PointMarkerEdit( getMarker(), value ) );
-                new ProfilOperationJob( operation ).schedule();
-              }
+              final IProfilChange change = new ProfileObjectEdit( building, building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), value );
+              final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), getProfil(), change, true ); //$NON-NLS-1$
+              new ProfilOperationJob( operation ).schedule();
+            }
+            else
+            {
+              final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.12" ), getProfil(), true ); //$NON-NLS-1$
+              operation.addChange( new PointMarkerEdit( getMarker(), value ) );
+              new ProfilOperationJob( operation ).schedule();
             }
           }
         } );
@@ -280,16 +294,16 @@ public class WeirPanel extends AbstractProfilView
 
     protected final IProfilPointMarker getMarker( )
     {
-      final String m_markerID = (position < 0 | position == Integer.MAX_VALUE) ? IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE : IWspmTuhhConstants.MARKER_TYP_WEHR;
+      final String m_markerID = (m_position < 0 | m_position == Integer.MAX_VALUE) ? IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE : IWspmTuhhConstants.MARKER_TYP_WEHR;
 
       final IComponent cmpMarker = getProfil().hasPointProperty( m_markerID );
       final IProfilPointMarker[] markers = getProfil().getPointMarkerFor( cmpMarker );
-      if( position < 0 )
+      if( m_position < 0 )
         return markers[0];
-      else if( position == Integer.MAX_VALUE )
+      else if( m_position == Integer.MAX_VALUE )
         return markers[markers.length - 1];
       else
-        return markers[position];
+        return markers[m_position];
     }
 
     public void dispose( )
@@ -299,30 +313,43 @@ public class WeirPanel extends AbstractProfilView
 
     public void refresh( )
     {
+      final String markerText = getMarkerText();
+      m_point.setText( markerText ); //$NON-NLS-1$
 
-      if( position < 0 )
+      final String beiwertText = getBeiwertText();
+      if( beiwertText != null && m_beiwert != null && !m_beiwert.isDisposed() )
+        m_beiwert.setText( beiwertText );
+    }
+
+    protected String getBeiwertText( )
+    {
+      if( m_position < 0 )
       {
         final IProfileObject[] profileObjects = getProfil().getProfileObjects();
-        IProfileObject building = null;
         if( profileObjects.length > 0 )
-          building = profileObjects[0];
-        final IComponent beiwert = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
-        final String objValue = building.getValue( beiwert ).toString();
-        m_beiwert.setText( objValue == null ? "" : NumberUtils.isDouble( objValue ) ? objValue : String.format( "%.4f", objValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        m_point.setText( String.format("%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, getMarker().getPoint() ) ) ); //$NON-NLS-1$
+        {
+          final IProfileObject building = profileObjects[0];
+          final IComponent beiwert = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+          // TODO: very strange code... check this! What is the type of these components??
+          final String objValue = building.getValue( beiwert ).toString();
+          return NumberUtils.isDouble( objValue ) ? objValue : String.format( "%.4f", objValue );
+        }
       }
-      else if( position < Integer.MAX_VALUE )
+      else if( m_position < Integer.MAX_VALUE )
       {
         final IProfilPointMarker marker = getMarker();
         final Object objValue = marker.getValue();
-        final Double value = (objValue == null || !(objValue instanceof Double)) ? Double.NaN : (Double) objValue;
-        m_beiwert.setText( value.toString() );
-        m_point.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, marker.getPoint() ) ) ); //$NON-NLS-1$
+        if( objValue instanceof Number )
+          return String.format( "%.4f", objValue );
       }
-      else
-      {
-        m_point.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, getMarker().getPoint() ) ) ); //$NON-NLS-1$
-      }
+
+      return "";//$NON-NLS-1$
+    }
+
+    protected String getMarkerText( )
+    {
+      final IProfilPointMarker marker = getMarker();
+      return String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, marker.getPoint() ) ); //$NON-NLS-1$
     }
   }
 
@@ -353,10 +380,10 @@ public class WeirPanel extends AbstractProfilView
     m_deleteImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
     m_addImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
     m_wehrarten = new HashMap<String, Wehrart>();
-    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, new Wehrart( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.17"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.18"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.18") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, new Wehrart( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.21"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.22"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.23") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, new Wehrart( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.24"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.25"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.26") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_BEIWERT, new Wehrart( IWspmTuhhConstants.WEHR_TYP_BEIWERT, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.27"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.28"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.29") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, new Wehrart( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.17" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.18" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.18" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, new Wehrart( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.21" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.22" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.23" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, new Wehrart( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.24" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.25" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.26" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_BEIWERT, new Wehrart( IWspmTuhhConstants.WEHR_TYP_BEIWERT, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.27" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.28" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.29" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override
@@ -381,7 +408,7 @@ public class WeirPanel extends AbstractProfilView
     panel.setLayout( gridLayout );
 
     // Wehrart ComboBox
-    final String tooltip = "";/* TODO:Kim getLabelProvider; */ //$NON-NLS-1$
+    final String tooltip = "";/* TODO:Kim getLabelProvider; *///$NON-NLS-1$
     final Label label = toolkit.createLabel( panel, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.31" ), SWT.NONE ); //$NON-NLS-1$
     label.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label.setToolTipText( tooltip );
@@ -421,7 +448,7 @@ public class WeirPanel extends AbstractProfilView
         if( type.equals( building.getValue( cWehr ) ) )
           return;
         final IProfilChange change = new ProfileObjectEdit( building, cWehr, type );
-        final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.32"), getProfil(), change, true ); //$NON-NLS-1$
+        final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.32" ), getProfil(), change, true ); //$NON-NLS-1$
         new ProfilOperationJob( operation ).schedule();
       }
     } );
