@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mapv:gismapview name="Wasserspiegellagen" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+<mapv:gismapview name="%wsp.title" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <mapv:extent top="775801.471014823" srs="EPSG:31467" right="3930104.7958418936" left="3929763.3499202165" bottom="775298.2875512986"/>
+    <mapv:translator id="commons.msgGetString">
+        <class>org.kalypso.model.flood:org.kalypso.model.flood.i18n.MapMessages</class>
+    </mapv:translator>
     <mapv:layers>
-        <mapv:layer visible="false" name="WSP-Anpassung - alle Ereignisse" id="ID_0" featurePath="polygonMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="%wsp.layer.waterlevel_customisation" id="ID_0" featurePath="polygonMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="extrapolationPolygonUserStyle" linktype="sld" xlink:type="simple" xlink:href="polygons.sld" xlink:actuate="onRequest"/>
             <templ:style style="clipPolygonUserStyle" linktype="sld" xlink:type="simple" xlink:href="polygons.sld" xlink:actuate="onRequest"/>
