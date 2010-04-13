@@ -33,6 +33,7 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.util.swt.StatusDialog2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -94,13 +95,13 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       for( int i = 0; i < eventsToProcess.length; i++ )
       {
         eventNames[i] = eventsToProcess[i].getName();
-        final String importText = Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.3", floodModelScenarioFolder.getProject().getName() ); //$NON-NLS-1$
+        final String importText = Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.3", floodModelScenarioFolder.getProject().getName() ); //$NON-NLS-1$
         eventDescriptions[i] = String.format( "%s (%s)", eventsToProcess[i].getDescription(), importText ); //$NON-NLS-1$
         eventPeriods[i] = eventsToProcess[i].getReturnPeriod();
         eventGrids[i] = eventsToProcess[i].getResultCoverages();
       }
 
-      /* Create Risk Projekt: show project new dialog */
+      /* Create Risk Project: show project new dialog */
       final IAction action = new NewWizardShortcutAction( workbenchWindow, wizardDesc );
       action.run();
 
@@ -113,7 +114,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         return null;
       }
 
-      /* Now we can import the flodd-depth grids */
+      /* Now we can import the flood-depth grids */
       final ICoreRunnableWithProgress importOperation = new ICoreRunnableWithProgress()
       {
         @Override
@@ -121,6 +122,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         {
           try
           {
+            // Thread.sleep( 10000 );
+
             Assert.isNotNull( floodModelScenarioFolder );
 
             // Delegate importing the grids to Raster-Code; it knows best what to do with it
@@ -142,14 +145,21 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         }
 
       };
-      ProgressUtilities.busyCursorWhile( importOperation, Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.0") ); //$NON-NLS-1$
+      final IStatus result = ProgressUtilities.busyCursorWhile( importOperation, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.0" ) ); //$NON-NLS-1$
+      if( !result.isOK() )
+      {
+        // final String msg = "Failed to create Risk Model, please try again.";
+        final String title = Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.4" );
+        final StatusDialog2 dialog = new StatusDialog2( shell, result, title );
+        dialog.open();
+      }
 
     }
-    catch( final Exception e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
-
-      throw new ExecutionException( e.getLocalizedMessage(), e );
+      final String msg = e.getStatus().getMessage();
+      throw new ExecutionException( msg, e );
     }
     return null;
 
