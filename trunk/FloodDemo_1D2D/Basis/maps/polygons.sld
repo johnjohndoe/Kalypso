@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?> 
+<?xml version="1.0" encoding="UTF-8"?>
 <StyledLayerDescriptor version="String" xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:flood="org.kalypso.model.flood"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -6,7 +6,7 @@
 		<Name>dtmGrid</Name>
 		<UserStyle>
 			<Name>extrapolationPolygonUserStyle</Name>
-			<Title>Extrapolations-Polygone</Title>
+			<Title>%userStyle.extrapolationPolygonUserStyle.title</Title>
 			<FeatureTypeStyle>
 				<Name>extrapolationPolygonStyle</Name>
 				<Title>Extrapolations-Polygone</Title>
@@ -104,7 +104,7 @@
 		</UserStyle>
 		<UserStyle>
 			<Name>clipPolygonUserStyle</Name>
-			<Title>Clip-Polygone</Title>
+			<Title>%userStyle.clipPolygonUserStyle.title</Title>
 			<FeatureTypeStyle >
 				<Name>clipPolygonStyle</Name>
 				<FeatureTypeName>{org.kalypso.model.flood}FloodClipPolygon</FeatureTypeName>
@@ -165,7 +165,7 @@
 		</UserStyle>
 		<UserStyle>
 			<Name>volumePolygonUserStyle</Name>
-			<Title>Volumen-Polygone</Title>
+			<Title>%userStyle.volumePolygonUserStyle.title</Title>
 			<FeatureTypeStyle >
 				<Name>volumePolygonStyle</Name>
 				<FeatureTypeName>{org.kalypso.model.flood}FloodVolumePolygon</FeatureTypeName>
