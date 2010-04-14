@@ -45,10 +45,13 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
@@ -72,10 +75,8 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
  */
 public class PrfSink implements IProfilSink
 {
-
   private String toDataBlockKey( final Object profilKey )
   {
-
     if( IWspmTuhhConstants.WEHR_TYP_BEIWERT.equals( profilKey ) )
       return "BEIWERT"; //$NON-NLS-1$
     else if( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG.equals( profilKey ) )
@@ -188,33 +189,41 @@ public class PrfSink implements IProfilSink
 
   private void writeCoords( final IProfil profil, final IComponent prop, final CoordDataBlock db )
   {
+    writeCoords( profil, prop, db, 0.0 );
+  }
+
+  private void writeCoords( final IProfil profil, final IComponent prop, final CoordDataBlock db, final Double defaultValue )
+  {
     final IRecord[] points = profil.getPoints();
-    final double[] Xs = new double[points.length];
-    final double[] Ys = new double[points.length];
+
+    final List<Double> xs = new ArrayList<Double>( points.length );
+    final List<Double> ys = new ArrayList<Double>( points.length );
 
     final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int iProp = profil.indexOfProperty( prop );
-    for( int i = 0; i < points.length; i++ )
+    for( final IRecord point : points )
     {
-      try
+      final Double x = (Double) point.getValue( iBreite );
+
+      final Double value = (Double) point.getValue( iProp );
+      if( value == null )
       {
-        Xs[i] = (Double) points[i].getValue( iBreite );
-
-        final Double value = (Double) points[i].getValue( iProp );
-
-        if( value != null )
-          Ys[i] = value;
-        else
-          Ys[i] = 0.0;
+        if( defaultValue != null )
+        {
+          xs.add( x );
+          ys.add( defaultValue );
+        }
       }
-      catch( final Exception e )
+      else
       {
-        Xs[i] = 0;
-        Ys[i] = 0;
-
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
+        xs.add( x );
+        ys.add( value );
       }
     }
+
+    final double[] Xs = ArrayUtils.toPrimitive( xs.toArray( new Double[xs.size()] ) );
+    final double[] Ys = ArrayUtils.toPrimitive( ys.toArray( new Double[ys.size()] ) );
+
     db.setCoords( Xs, Ys );
   }
 
@@ -301,11 +310,11 @@ public class PrfSink implements IProfilSink
     {
       final DataBlockHeader dbho = PrfWriter.createHeader( "OK-B" ); //$NON-NLS-1$
       final CoordDataBlock dbo = new CoordDataBlock( dbho );
-      writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), dbo );
+      writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), dbo, null );
       pw.addDataBlock( dbo );
       final DataBlockHeader dbhu = PrfWriter.createHeader( "UK-B" ); //$NON-NLS-1$
       final CoordDataBlock dbu = new CoordDataBlock( dbhu );
-      writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), dbu );
+      writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), dbu, null );
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
