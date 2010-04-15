@@ -253,10 +253,10 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       }
       else
       {
-
         for( final Object o : catchmentList )
         {
           final Feature catchment = (Feature) o;
+          // FIXME: do not use default geometry property at all!
           final Geometry geometry = JTSAdapter.export( catchment.getDefaultGeometryPropertyValue() );
           if( planingAreaGeometry.intersects( geometry ) )
           {
@@ -385,7 +385,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         final Double riverKm = (Double) node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
         dataList.add( riverKm == null ? Double.NaN : riverKm );
 
-        String name = node.getName();
+        final String name = node.getName();
         DischargeData izMax = null;
         DischargeData calcMax = null;
         if( name != null && name.length() > 0 )
@@ -416,6 +416,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + fid++, shapeFT, dataList.toArray() ); //$NON-NLS-1$
         workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
       }
+
+      // FIXME: check if this workspace is empty and give a better error message
       final File shapeFile = new File( tmpdir, "difference" ); //$NON-NLS-1$
       ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
     }
