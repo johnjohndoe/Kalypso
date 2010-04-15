@@ -1,1764 +1,1846 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<boundary:Boundary xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:boundary="org.kalypso.model.wspmboundary" gml:id="root">
- <boundary:geometry>
-  <gml:Polygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+<Boundary xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns="org.kalypso.model.wspmboundary" gml:id="root">
+ <geometry>
+  <gml:Polygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
    <gml:exterior>
     <gml:LinearRing>
-     <gml:coordinates ts="," decimal="." cs=" ">3929101.534782787 773775.7022459016 362.72,3929106.5774639174 773783.6810103094 363.086,3929108.176289855 773790.5809565217 363.093,3929117.3583442625 773853.2864344262 363.211,3929122.1518291924 773955.175363354 363.33,3929111.8016666663 774056.0736666666 363.345,3929105.6763110235 774092.2185944882 363.348,3929090.9649331947 774151.6297494781 363.348,3929076.2028354434 774246.4572151898 363.354,3929120.6165555553 774316.4614444444 363.357,3929198.33784 774336.3581999999 363.36,3929259.61641573 774274.8597247191 363.374,3929304.23810687 774182.3661816794 363.398,3929368.0485424786 774099.487452845 363.441,3929475.15725 774080.9985625 363.491,3929561.7852540985 774134.1071120219 363.503,3929563.71040678 774136.0827457628 363.506,3929610.758090069 774233.3311454966 363.51,3929640.978877863 774331.507043893 363.516,3929672.260015873 774419.2327301587 363.518,3929728.2462918824 774498.7603834197 363.519,3929801.9688285873 774565.1441889375 363.521,3929867.605078125 774643.4298744212 363.524,3929922.277403226 774727.7333548388 363.527,3929979.382474053 774813.8356395512 363.529,3929965.764564706 774922.1388470588 363.531,3929906.6441360945 775003.6719250493 363.533,3929869.488490196 775072.620013072 363.536,3929865.766726829 775088.637593496 363.537,3929862.099657744 775182.21 363.54,3929882.3557196134 775274.405487569 363.54,3929934.149208255 775356.1400656659 363.544,3929993.1687560976 775438.4464780488 363.549,3929998.0844351146 775449.7417694656 363.548,3930001.644362484 775457.5329340938 363.548,3930006.5813674415 775467.1046511628 363.549,3930029.273040886 775536.5507614992 363.553,3930062.970707224 775629.892026616 363.561,3930095.2295306493 775724.1087923148 363.564,3930130.771 775816.762 363.565,3930167.0975529714 775907.8420284237 363.566,3930209.4441490737 775998.1535287037 363.567,3930253.4364372883 776091.3749296609 363.569,3930262.742966799 776200.3401075696 363.571,3930268.372396896 776295.6181463415 363.572,3930323.9081689534 776347.7117826715 363.572,3930407.3616270754 776358.9357854406 363.573,3930514.4430846563 776397.238419753 363.573,3930587.4907209063 776484.421122554 363.573,3930619.4243988437 776594.7628728324 363.573,3930629.3656671667 776704.2046476761 363.573,3930623.501462786 776799.7830858779 363.574,3930627.4544623853 776815.5077211009 363.574,3930642.4138681777 776867.1366406381 363.574,3930693.342058543 776941.5850251871 363.574,3930759.633653622 776999.0138717736 363.574,3930818.785719101 777038.6976608784 363.574,3930919.4927024674 777087.7599550072 363.574,3931006.971595463 777132.7340756144 363.574,3931097.720990511 777192.0111087591 363.574,3931175.487695238 777265.9634571428 363.633,3931221.7711796877 777364.3818300782 363.727,3931286.397359929 777443.4456702127 363.763,3931341.3059640722 777529.6175469062 363.781,3931385.2766805557 777621.9615555556 363.798,3931415.531396104 777721.7464659091 363.814,3931361.3888974357 777733.1303076923 363.814,3931319.064237288 777649.0898644067 363.798,3931299.924932927 777551.570762195 363.781,3931225.8126863902 777483.3005384615 363.763,3931170.185341772 777405.8837341772 363.727,3931107.024588235 777335.8521764706 363.633,3931034.3878125604 777277.9235623188 363.574,3930956.1012820513 777229.846174359 363.574,3930866.53660628 777181.8714855072 363.574,3930782.0601157025 777156.8574008264 363.574,3930677.677150794 777089.0314814815 363.574,3930596.797110461 777010.9532955377 363.574,3930541.943612978 776915.66299073 363.574,3930498.417519435 776810.0461660777 363.574,3930501.3265825105 776794.1152327221 363.574,3930521.1915519997 776693.0636959999 363.573,3930525.694911197 776603.1136023166 363.573,3930518.646 776517.206 363.573,3930482.4583932585 776438.9409775281 363.573,3930405.8850728157 776401.081354369 363.573,3930289.2250890047 776395.5710890052 363.572,3930230.292433071 776313.7258740157 363.572,3930219.448836364 776207.4480727272 363.571,3930215.6859603757 776103.4717226276 363.569,3930181.13181128 776014.06929718 363.567,3930130.0203534486 775925.4452724139 363.566,3930094.9231781713 775831.1043218283 363.565,3930059.99819765 775736.8923536324 363.564,3930025.2748988764 775643.6763848314 363.561,3929910.9056416187 775577.768300578 363.553,3929961.94746729 775471.0391028038 363.549,3929957.1557058822 775461.5856470588 363.548,3929954.0051503764 775454.1513157894 363.548,3929949.1529468605 775443.897705314 363.549,3929909.3431541454 775373.7410932643 363.544,3929855.3640136556 775285.9188119747 363.54,3929829.656010178 775182.21 363.54,3929834.714294964 775081.0640197842 363.537,3929842.2235653233 775060.330942613 363.536,3929885.9773638863 774987.8263391383 363.533,3929940.510735786 774905.0300969899 363.531,3929950.32015625 774824.8683242188 363.529,3929894.87600376 774746.5178270676 363.527,3929841.589997647 774662.6587835294 363.524,3929778.162408946 774585.7622843451 363.521,3929705.195090909 774519.6360427808 363.519,3929644.0378674697 774437.8261566265 363.518,3929605.8646894903 774339.0085350318 363.516,3929580.1542715104 774245.514416826 363.51,3929542.354 774161.9 363.506,3929540.2260569744 774159.8375363457 363.503,3929468.0878474577 774109.1390847458 363.491,3929380.564404494 774121.5064157303 363.441,3929324.2388545917 774193.5685688775 363.398,3929281.009246795 774285.1269391025 363.374,3929209.245283019 774365.9779056604 363.36,3929101.871903737 774343.6967180067 363.357,3929040.598088235 774255.4305882353 363.354,3929061.408312418 774141.8299098039 363.348,3929078.2652461533 774084.6297446154 363.348,3929082.775792079 774051.3191485149 363.345,3929095.471585538 773953.9080405644 363.33,3929093.8155922443 773855.0004688601 363.211,3929083.7587001477 773789.8834047267 363.093,3929082.144447205 773783.8368509316 363.086,3929080.6973406593 773775.0610285715 362.72,3929101.534782787 773775.7022459016 362.72</gml:coordinates>
+     <gml:coordinates ts="," cs=" " decimal=".">3929106.5352333332 773775.8558499999 363.5,3929108.3023110046 773783.6694497608 363.508,3929109.835 773790.6289029346 363.507,3929118.2970108697 773853.2181902174 363.535,3929123.389349057 773955.2343490566 363.582,3929112.6155980146 774056.2068808933 363.592,3929106.5111515746 774092.4495492127 363.595,3929091.9905323596 774151.9702463466 363.594,3929077.084025641 774246.2349487179 363.599,3929121.1404738952 774315.6998433735 363.601,3929197.9422506667 774335.28372 363.602,3929259.2555898875 774274.6863019663 363.611,3929304.0532 774182.2626 363.627,3929367.921144193 774099.2632252533 363.653,3929475.27975 774080.5111875 363.687,3929562.199159509 774133.6124233129 363.695,3929564.1208313257 774135.587493976 363.697,3929611.3346189377 774233.1017690531 363.701,3929641.5877175573 774331.3768358778 363.705,3929672.6357410713 774418.9851383929 363.707,3929728.497239193 774498.5332507205 363.708,3929802.1246035052 774565.0093220153 363.71,3929867.8300624997 774643.2635439815 363.711,3929922.4800493955 774727.6194959678 363.714,3929979.661531557 774813.729681627 363.716,3929966.120139706 774922.3800220587 363.718,3929907.0227396446 775003.9621143984 363.719,3929869.8572810455 775072.7860697169 363.721,3929866.2233609757 775088.7488943089 363.722,3929862.5718852775 775182.21 363.725,3929882.7602154696 775274.2324972375 363.725,3929934.485621013 775355.901348968 363.728,3929993.3056341466 775438.4295170732 363.732,3929998.1757328245 775449.7327801527 363.732,3930001.8264347273 775457.5164664133 363.731,3930006.9214069764 775467.074860465 363.732,3930029.641516184 775536.4224889268 363.734,3930063.3876844104 775629.7395741446 363.741,3930095.610294602 775723.9705709058 363.743,3930131.1669974425 775816.603601023 363.744,3930167.4285552558 775907.6847331536 363.744,3930209.683689008 775998.0188150135 363.745,3930253.936044068 776091.2148805084 363.747,3930263.266092961 776200.2542988047 363.749,3930268.6645859214 776295.4792132505 363.75,3930324.0483841156 776347.5184888087 363.75,3930407.3708952744 776358.671980843 363.75,3930514.695241135 776396.909248227 363.75,3930587.8296725024 776484.2598043254 363.751,3930619.760035775 776594.7327061328 363.751,3930629.8188065966 776704.2513493253 363.751,3930623.8022614503 776799.7969351145 363.751,3930627.769814679 776815.5211990826 363.751,3930642.720905961 776866.9883232578 363.751,3930693.5678570457 776941.422845473 363.751,3930759.859730225 776998.7656885929 363.751,3930818.8593033706 777038.4608171603 363.751,3930919.615793761 777087.5412357019 363.751,3931007.1304158787 777132.4307353498 363.752,3931097.90119927 777191.7667160584 363.752,3931176.653679245 777264.7730377358 363.773,3931222.0289921877 777364.1743769532 363.815,3931286.6028297874 777443.3105106383 363.84,3931341.5074790423 777529.5105968064 363.854,3931385.4509374998 777621.89 363.867,3931415.6989675327 777721.7112159091 363.88,3931353.5744838705 777734.7732903225 363.88,3931317.1206 777649.8860909091 363.867,3931279.5070769233 777562.402076923 363.854,3931225.2723195264 777483.6559230768 363.84,3931169.944428718 777406.0775456411 363.815,3931105.917148515 777336.9833267326 363.773,3931033.9545932366 777278.5112202899 363.752,3930955.9194786325 777230.1933504273 363.752,3930866.363667874 777182.1786702898 363.751,3930781.861060729 777157.4968259109 363.751,3930677.4144603177 777089.3199259259 363.751,3930596.4424198978 777011.2081565473 363.751,3930541.615455388 776915.8215318656 363.751,3930496.2318938053 776809.953761062 363.751,3930500.085528302 776794.0575896227 363.751,3930520.142064 776692.955472 363.751,3930521.5561543205 776603.4820987654 363.751,3930500.1340909093 776526.0218181818 363.751,3930480.4108608696 776441.6109130435 363.75,3930405.855 776401.938 363.75,3930288.1685925927 776397.029074074 363.75,3930229.931661871 776313.8977122302 363.75,3930218.9018909093 776207.5378818181 363.749,3930215.2482919707 776103.6120437955 363.747,3930180.561902386 776014.3897744035 363.745,3930129.478681035 775925.7024517242 363.744,3930094.4755111937 775831.283488806 363.744,3930059.6920235045 775737.0034636752 363.743,3930025.0655730334 775643.7529859551 363.741,3929908.563580247 775578.5833950618 363.734,3929961.1584299067 775471.1089906541 363.732,3929956.4540987653 775461.6496255144 363.731,3929953.235 775454.2278440368 363.732,3929948.3855845416 775443.9927415459 363.732,3929908.9675641027 775374.0077435897 363.728,3929854.9192347825 775286.1030086958 363.725,3929829.2398778624 775182.21 363.725,3929834.2844028776 775080.9590422661 363.722,3929841.8815750913 775060.1766630037 363.721,3929885.7739743358 774987.6705151238 363.719,3929940.254492582 774904.8561869436 363.718,3929949.975375 774824.999078125 363.716,3929894.349662857 774746.8793085715 363.714,3929841.0296560847 774663.073021164 363.711,3929777.7284137933 774586.1389241378 363.71,3929704.8600454545 774519.9397566846 363.708,3929643.739060241 774438.0227469879 363.707,3929605.531531847 774339.0795605095 363.705,3929579.7284474187 774245.6838699809 363.701,3929541.8984399997 774162.4504857142 363.697,3929539.737946955 774160.4199489193 363.695,3929467.8774636677 774109.977484429 363.687,3929380.935536913 774122.1599060403 363.653,3929324.9089132654 774193.9441989796 363.627,3929281.8019263456 774285.5072974504 363.611,3929209.5590350404 774366.8297978437 363.602,3929101.624311438 774344.0565005662 363.601,3929040.353488562 774255.4922385621 363.599,3929061.0799908494 774141.7208980393 363.594,3929078.0011461535 774084.5564046154 363.595,3929082.5404957565 774051.2805438472 363.592,3929095.27980776 773953.8989294532 363.582,3929093.0819283198 773855.0541515864 363.535,3929082.502635155 773789.8473249631 363.507,3929080.7206557826 773783.8454897959 363.508,3929077.8126106723 773774.9723656126 363.5,3929106.5352333332 773775.8558499999 363.5</gml:coordinates>
     </gml:LinearRing>
    </gml:exterior>
   </gml:Polygon>
- </boundary:geometry>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318294790">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929101.534782787 773775.7022459016 362.72</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7200</boundary:station>
-   <boundary:wsp>362.72</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318294791">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929080.6973406593 773775.0610285715 362.72</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7200</boundary:station>
-   <boundary:wsp>362.72</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318294792">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929080.6973406593 773775.0610285713 362.72</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7200</boundary:station>
-   <boundary:wsp>362.72</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318294793">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929080.6973406593 773775.0610285715 362.72</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7200</boundary:station>
-   <boundary:wsp>362.72</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318294951">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929106.5774639174 773783.6810103094 363.086</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7400</boundary:station>
-   <boundary:wsp>363.086</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318294950">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929082.144447205 773783.8368509316 363.086</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7400</boundary:station>
-   <boundary:wsp>363.086</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318295266">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929108.176289855 773790.5809565217 363.093</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7450</boundary:station>
-   <boundary:wsp>363.093</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318295261">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929083.7587001477 773789.8834047267 363.093</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.7450</boundary:station>
-   <boundary:wsp>363.093</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318296043">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929117.3583442625 773853.2864344262 363.211</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.8000</boundary:station>
-   <boundary:wsp>363.211</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318296044">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929093.8155922443 773855.0004688601 363.211</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.8000</boundary:station>
-   <boundary:wsp>363.211</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318296351">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929122.1518291924 773955.175363354 363.33</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.9000</boundary:station>
-   <boundary:wsp>363.33</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693182963512">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929095.471585538 773953.9080405644 363.33</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>41.9000</boundary:station>
-   <boundary:wsp>363.33</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318296664">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929111.8016666663 774056.0736666666 363.345</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.0000</boundary:station>
-   <boundary:wsp>363.345</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318296662">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929082.775792079 774051.3191485149 363.345</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.0000</boundary:station>
-   <boundary:wsp>363.345</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318297609">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929105.6763110235 774092.2185944882 363.348</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.0350</boundary:station>
-   <boundary:wsp>363.348</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318297607">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929078.2652461533 774084.6297446154 363.348</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.0350</boundary:station>
-   <boundary:wsp>363.348</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318298534">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929090.9649331947 774151.6297494781 363.348</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.1000</boundary:station>
-   <boundary:wsp>363.348</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693182985316">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929061.408312418 774141.8299098039 363.348</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.1000</boundary:station>
-   <boundary:wsp>363.348</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318299468">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929076.2028354434 774246.4572151898 363.354</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.2000</boundary:station>
-   <boundary:wsp>363.354</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318299465">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929040.598088235 774255.4305882353 363.354</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.2000</boundary:station>
-   <boundary:wsp>363.354</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693182999315">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929120.6165555553 774316.4614444444 363.357</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.3000</boundary:station>
-   <boundary:wsp>363.357</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693182999310">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929101.871903737 774343.6967180067 363.357</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.3000</boundary:station>
-   <boundary:wsp>363.357</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183008723">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929198.33784 774336.3581999999 363.36</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.4000</boundary:station>
-   <boundary:wsp>363.36</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318300870">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929209.245283019 774365.9779056604 363.36</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.4000</boundary:station>
-   <boundary:wsp>363.36</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183018013">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929259.61641573 774274.8597247191 363.374</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.5000</boundary:station>
-   <boundary:wsp>363.374</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318301803">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929281.009246795 774285.1269391025 363.374</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.5000</boundary:station>
-   <boundary:wsp>363.374</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183021110">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929304.23810687 774182.3661816794 363.398</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.6000</boundary:station>
-   <boundary:wsp>363.398</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183021126">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929324.2388545917 774193.5685688775 363.398</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.6000</boundary:station>
-   <boundary:wsp>363.398</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183030512">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929368.0485424786 774099.487452845 363.441</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.7000</boundary:station>
-   <boundary:wsp>363.441</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183030514">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929380.564404494 774121.5064157303 363.441</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.7000</boundary:station>
-   <boundary:wsp>363.441</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183033624">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929475.15725 774080.9985625 363.491</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.8000</boundary:station>
-   <boundary:wsp>363.491</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318303366">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929468.0878474577 774109.1390847458 363.491</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.8000</boundary:station>
-   <boundary:wsp>363.491</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183041422">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929561.7852540985 774134.1071120219 363.503</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.8950</boundary:station>
-   <boundary:wsp>363.503</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318304145">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929540.2260569744 774159.8375363457 363.503</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.8950</boundary:station>
-   <boundary:wsp>363.503</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318304459">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929563.71040678 774136.0827457628 363.506</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.9000</boundary:station>
-   <boundary:wsp>363.506</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183044522">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929542.354 774161.9 363.506</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>42.9000</boundary:station>
-   <boundary:wsp>363.506</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183052321">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929610.758090069 774233.3311454966 363.51</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.0000</boundary:station>
-   <boundary:wsp>363.51</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183052335">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929580.1542715104 774245.514416826 363.51</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.0000</boundary:station>
-   <boundary:wsp>363.51</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318306164">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929640.978877863 774331.507043893 363.516</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.1000</boundary:station>
-   <boundary:wsp>363.516</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183061611">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929605.8646894903 774339.0085350318 363.516</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.1000</boundary:station>
-   <boundary:wsp>363.516</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183066324">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929672.260015873 774419.2327301587 363.518</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.2000</boundary:station>
-   <boundary:wsp>363.518</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183066327">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929644.0378674697 774437.8261566265 363.518</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.2000</boundary:station>
-   <boundary:wsp>363.518</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183069429">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929728.2462918824 774498.7603834197 363.519</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.3000</boundary:station>
-   <boundary:wsp>363.519</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318306940">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929705.195090909 774519.6360427808 363.519</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.3000</boundary:station>
-   <boundary:wsp>363.519</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318307728">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929801.9688285873 774565.1441889375 363.521</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.4000</boundary:station>
-   <boundary:wsp>363.521</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183077212">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929778.162408946 774585.7622843451 363.521</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.4000</boundary:station>
-   <boundary:wsp>363.521</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183085025">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929867.605078125 774643.4298744212 363.524</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.5000</boundary:station>
-   <boundary:wsp>363.524</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183085029">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929841.589997647 774662.6587835294 363.524</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.5000</boundary:station>
-   <boundary:wsp>363.524</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183094414">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929922.277403226 774727.7333548388 363.527</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.6000</boundary:station>
-   <boundary:wsp>363.527</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183094418">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929922.260752266 774727.709120846 363.527</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.6000</boundary:station>
-   <boundary:wsp>363.527</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183094443">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929922.260752266 774727.7091208459 363.527</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.6000</boundary:station>
-   <boundary:wsp>363.527</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183094432">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929894.87600376 774746.5178270676 363.527</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.6000</boundary:station>
-   <boundary:wsp>363.527</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318309599">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929979.382474053 774813.8356395512 363.529</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.7000</boundary:station>
-   <boundary:wsp>363.529</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183095931">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929950.32015625 774824.8683242188 363.529</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.7000</boundary:station>
-   <boundary:wsp>363.529</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183103754">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929965.764564706 774922.1388470588 363.531</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.8000</boundary:station>
-   <boundary:wsp>363.531</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183103740">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929940.510735786 774905.0300969899 363.531</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.8000</boundary:station>
-   <boundary:wsp>363.531</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183106826">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929906.6441360945 775003.6719250493 363.533</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.9000</boundary:station>
-   <boundary:wsp>363.533</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183106822">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929885.9773638863 774987.8263391383 363.533</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.9000</boundary:station>
-   <boundary:wsp>363.533</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183108413">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929869.488490196 775072.620013072 363.536</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.9820</boundary:station>
-   <boundary:wsp>363.536</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183108433">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929842.2235653233 775060.330942613 363.536</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>43.9820</boundary:station>
-   <boundary:wsp>363.536</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183116259">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929865.766726829 775088.637593496 363.537</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.0000</boundary:station>
-   <boundary:wsp>363.537</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183116230">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929834.714294964 775081.0640197842 363.537</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.0000</boundary:station>
-   <boundary:wsp>363.537</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183125531">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929862.099657744 775182.21 363.54</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.1000</boundary:station>
-   <boundary:wsp>363.54</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183125542">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929829.656010178 775182.21 363.54</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.1000</boundary:station>
-   <boundary:wsp>363.54</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183127113">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929882.3557196134 775274.405487569 363.54</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.2000</boundary:station>
-   <boundary:wsp>363.54</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318312718">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929855.3640136556 775285.9188119747 363.54</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.2000</boundary:station>
-   <boundary:wsp>363.54</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183130242">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929934.149208255 775356.1400656659 363.544</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.3000</boundary:station>
-   <boundary:wsp>363.544</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183130262">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929909.3431541454 775373.7410932643 363.544</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.3000</boundary:station>
-   <boundary:wsp>363.544</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183133351">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929993.1687560976 775438.4464780488 363.549</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.3900</boundary:station>
-   <boundary:wsp>363.549</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183133349">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929949.1529468605 775443.897705314 363.549</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.3900</boundary:station>
-   <boundary:wsp>363.549</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183134946">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929998.0844351146 775449.7417694656 363.548</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.4000</boundary:station>
-   <boundary:wsp>363.548</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183134933">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929954.0051503764 775454.1513157894 363.548</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.4000</boundary:station>
-   <boundary:wsp>363.548</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183142634">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930001.644362484 775457.5329340938 363.548</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.4050</boundary:station>
-   <boundary:wsp>363.548</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183142642">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929957.1557058822 775461.5856470588 363.548</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.4050</boundary:station>
-   <boundary:wsp>363.548</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183145855">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930006.5813674415 775467.1046511628 363.549</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.4250</boundary:station>
-   <boundary:wsp>363.549</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183145812">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929961.94746729 775471.0391028038 363.549</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.4250</boundary:station>
-   <boundary:wsp>363.549</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183152055">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930029.273040886 775536.5507614992 363.553</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.5000</boundary:station>
-   <boundary:wsp>363.553</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183152048">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929993.193388548 775549.1139243353 363.553</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.5000</boundary:station>
-   <boundary:wsp>363.553</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183152058">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929913.288245059 775576.9383241106 363.553</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.5000</boundary:station>
-   <boundary:wsp>363.553</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183152025">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3929910.9056416187 775577.768300578 363.553</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.5000</boundary:station>
-   <boundary:wsp>363.553</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183155179">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930062.970707224 775629.892026616 363.561</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.6000</boundary:station>
-   <boundary:wsp>363.561</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183155159">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930025.2748988764 775643.6763848315 363.561</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.6000</boundary:station>
-   <boundary:wsp>363.561</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183155139">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930025.2748988764 775643.6763848314 363.561</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.6000</boundary:station>
-   <boundary:wsp>363.561</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318315511">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930025.2748988764 775643.6763848314 363.561</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.6000</boundary:station>
-   <boundary:wsp>363.561</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183156716">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930095.2295306493 775724.1087923148 363.564</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.7000</boundary:station>
-   <boundary:wsp>363.564</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183156711">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930059.99819765 775736.8923536324 363.564</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.7000</boundary:station>
-   <boundary:wsp>363.564</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183162957">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930130.771 775816.762 363.565</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.8000</boundary:station>
-   <boundary:wsp>363.565</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183162915">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930130.771 775816.762 363.565</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.8000</boundary:station>
-   <boundary:wsp>363.565</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318316299">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930094.9231781713 775831.1043218283 363.565</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.8000</boundary:station>
-   <boundary:wsp>363.565</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183166072">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930167.0975529714 775907.8420284237 363.566</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.9000</boundary:station>
-   <boundary:wsp>363.566</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183166022">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930130.0203534486 775925.4452724139 363.566</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>44.9000</boundary:station>
-   <boundary:wsp>363.566</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183167651">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930209.4441490737 775998.1535287037 363.567</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.0000</boundary:station>
-   <boundary:wsp>363.567</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183167644">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930181.13181128 776014.06929718 363.567</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.0000</boundary:station>
-   <boundary:wsp>363.567</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183173810">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930253.4364372883 776091.3749296609 363.569</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.1000</boundary:station>
-   <boundary:wsp>363.569</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318317383">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930215.6859603757 776103.4717226276 363.569</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.1000</boundary:station>
-   <boundary:wsp>363.569</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183175492">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930262.742966799 776200.3401075696 363.571</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.2000</boundary:station>
-   <boundary:wsp>363.571</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183175410">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930219.448836364 776207.4480727272 363.571</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.2000</boundary:station>
-   <boundary:wsp>363.571</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183176933">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930268.372396896 776295.6181463415 363.572</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.3000</boundary:station>
-   <boundary:wsp>363.572</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318317693">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930230.292433071 776313.7258740157 363.572</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.3000</boundary:station>
-   <boundary:wsp>363.572</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183184720">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930323.9081689534 776347.7117826715 363.572</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.4000</boundary:station>
-   <boundary:wsp>363.572</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183184779">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930289.2250890047 776395.5710890052 363.572</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.4000</boundary:station>
-   <boundary:wsp>363.572</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183186322">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930407.3616270754 776358.9357854406 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.5000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931831863102">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930405.8850728157 776401.081354369 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.5000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183187890">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930514.4430846563 776397.238419753 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.6000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183187819">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930482.4583932585 776438.9409775281 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.6000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183194112">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930587.4907209063 776484.421122554 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.7000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183194153">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930518.646 776517.206 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.7000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183194165">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930518.646 776517.206 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.7000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931831956108">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930619.4243988437 776594.7628728324 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.8000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183195666">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930525.694911197 776603.1136023166 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.8000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183197281">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930629.3656671667 776704.2046476761 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.9000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183197220">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930521.1915519997 776693.0636959999 363.573</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>45.9000</boundary:station>
-   <boundary:wsp>363.573</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183198792">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930623.501462786 776799.7830858779 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.0000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183198785">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930501.3265825105 776794.1152327221 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.0000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183200369">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930627.4544623853 776815.5077211009 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.0160</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183200391">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930498.417519435 776810.0461660777 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.0160</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183206585">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930642.4138681777 776867.1366406381 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.1000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832065113">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930541.943612978 776915.66299073 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.1000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183208181">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930693.342058543 776941.5850251871 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.2000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183208196">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930596.797110461 777010.9532955377 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.2000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183208170">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930759.633653622 776999.0138717736 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.3000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183208123">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930677.677150794 777089.0314814815 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.3000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183209664">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930818.785719101 777038.6976608784 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.4000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832096116">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930782.0601157025 777156.8574008264 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.4000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318321128">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930919.4927024674 777087.7599550072 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.5000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832112107">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930866.53660628 777181.8714855072 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.5000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832174109">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931006.971595463 777132.7340756144 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.6000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183217443">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3930956.1012820513 777229.846174359 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.6000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183219054">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931097.720990511 777192.0111087591 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.7000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183219077">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931034.3878125604 777277.9235623188 363.574</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.7000</boundary:station>
-   <boundary:wsp>363.574</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832205105">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931175.487695238 777265.9634571428 363.633</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.8000</boundary:station>
-   <boundary:wsp>363.633</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183220597">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931158.8708965513 777282.9260000001 363.633</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.8000</boundary:station>
-   <boundary:wsp>363.633</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832205128">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931157.798782353 777284.0211176471 363.633</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.8000</boundary:station>
-   <boundary:wsp>363.633</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183220539">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931107.024588235 777335.8521764706 363.633</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.8000</boundary:station>
-   <boundary:wsp>363.633</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832268129">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931221.7711796877 777364.3818300782 363.727</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.9000</boundary:station>
-   <boundary:wsp>363.727</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183226848">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931170.185341772 777405.8837341772 363.727</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>46.9000</boundary:station>
-   <boundary:wsp>363.727</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832283111">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931286.397359929 777443.4456702127 363.763</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.0000</boundary:station>
-   <boundary:wsp>363.763</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183228338">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931225.8126863902 777483.3005384615 363.763</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.0000</boundary:station>
-   <boundary:wsp>363.763</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318322996">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931341.3059640722 777529.6175469062 363.781</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.1000</boundary:station>
-   <boundary:wsp>363.781</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183229925">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931299.924932927 777551.570762195 363.781</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.1000</boundary:station>
-   <boundary:wsp>363.781</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183231436">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931385.2766805557 777621.9615555556 363.798</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.2000</boundary:station>
-   <boundary:wsp>363.798</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint12269318323145">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931328.7416065573 777645.1250491804 363.798</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.2000</boundary:station>
-   <boundary:wsp>363.798</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832314134">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931321.4942 777648.094 363.798</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.2000</boundary:station>
-   <boundary:wsp>363.798</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183231449">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931319.064237288 777649.0898644067 363.798</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.2000</boundary:station>
-   <boundary:wsp>363.798</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint1226931832377101">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931415.531396104 777721.7464659091 363.814</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.3000</boundary:station>
-   <boundary:wsp>363.814</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
- <boundary:wspPointMember>
-  <boundary:WspPoint gml:id="WspPoint122693183237797">
-   <boundary:geometry>
-    <gml:Point xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
-     <gml:coordinates ts="," decimal="." cs=" ">3931361.3888974357 777733.1303076923 363.814</gml:coordinates>
-    </gml:Point>
-   </boundary:geometry>
-   <boundary:station>47.3000</boundary:station>
-   <boundary:wsp>363.814</boundary:wsp>
-   <boundary:ufer/>
-  </boundary:WspPoint>
- </boundary:wspPointMember>
-</boundary:Boundary>
+
+ </geometry>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596701">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929106.5352333332 773775.8558499999 363.5</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.7200</station>
+   <wsp>363.5</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596700">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929077.8126106723 773774.9723656126 363.5</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.7200</station>
+   <wsp>363.5</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596702">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929108.3023110046 773783.6694497608 363.508</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.7400</station>
+   <wsp>363.508</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596703">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929080.7206557826 773783.8454897959 363.508</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.7400</station>
+   <wsp>363.508</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596704">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929109.835 773790.6289029346 363.507</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.7450</station>
+   <wsp>363.507</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596705">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929082.502635155 773789.8473249631 363.507</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.7450</station>
+   <wsp>363.507</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596707">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929118.2970108697 773853.2181902174 363.535</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.8000</station>
+   <wsp>363.535</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596708">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929093.0819283198 773855.0541515864 363.535</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.8000</station>
+   <wsp>363.535</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596709">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929123.389349057 773955.2343490566 363.582</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.9000</station>
+   <wsp>363.582</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596706">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929095.27980776 773953.8989294532 363.582</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>41.9000</station>
+   <wsp>363.582</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596864">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929112.6155980146 774056.2068808933 363.592</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.0000</station>
+   <wsp>363.592</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968612">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929082.5404957565 774051.2805438472 363.592</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.0000</station>
+   <wsp>363.592</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968610">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929106.5111515746 774092.4495492127 363.595</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.0350</station>
+   <wsp>363.595</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596862">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929078.0011461535 774084.5564046154 363.595</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.0350</station>
+   <wsp>363.595</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596860">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929091.9905323596 774151.9702463466 363.594</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.1000</station>
+   <wsp>363.594</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968611">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929061.0799908494 774141.7208980393 363.594</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.1000</station>
+   <wsp>363.594</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596865">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929077.084025641 774246.2349487179 363.599</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.2000</station>
+   <wsp>363.599</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596868">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929040.353488562 774255.4922385621 363.599</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.2000</station>
+   <wsp>363.599</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596869">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929121.1404738952 774315.6998433735 363.601</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.3000</station>
+   <wsp>363.601</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596866">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929101.624311438 774344.0565005662 363.601</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.3000</station>
+   <wsp>363.601</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596863">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929197.9422506667 774335.28372 363.602</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.4000</station>
+   <wsp>363.602</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968618">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929209.5590350404 774366.8297978437 363.602</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.4000</station>
+   <wsp>363.602</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968615">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929259.2555898875 774274.6863019663 363.611</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.5000</station>
+   <wsp>363.611</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968620">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929281.8019263456 774285.5072974504 363.611</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.5000</station>
+   <wsp>363.611</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968622">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929304.0532 774182.2626 363.627</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.6000</station>
+   <wsp>363.627</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347596867">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929324.9089132654 774193.9441989796 363.627</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.6000</station>
+   <wsp>363.627</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968621">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929367.921144193 774099.2632252533 363.653</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.7000</station>
+   <wsp>363.653</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968616">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929380.935536913 774122.1599060403 363.653</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.7000</station>
+   <wsp>363.653</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968624">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929475.27975 774080.5111875 363.687</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.8000</station>
+   <wsp>363.687</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968628">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929467.8774636677 774109.977484429 363.687</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.8000</station>
+   <wsp>363.687</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968614">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929562.199159509 774133.6124233129 363.695</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.8950</station>
+   <wsp>363.695</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968630">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929539.737946955 774160.4199489193 363.695</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.8950</station>
+   <wsp>363.695</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968617">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929564.1208313257 774135.587493976 363.697</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.9000</station>
+   <wsp>363.697</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968619">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929541.8984399997 774162.4504857142 363.697</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>42.9000</station>
+   <wsp>363.697</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968631">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929611.3346189377 774233.1017690531 363.701</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.0000</station>
+   <wsp>363.701</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968623">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929579.7284474187 774245.6838699809 363.701</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.0000</station>
+   <wsp>363.701</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968636">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929641.5877175573 774331.3768358778 363.705</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.1000</station>
+   <wsp>363.705</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968629">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929605.531531847 774339.0795605095 363.705</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.1000</station>
+   <wsp>363.705</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968626">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929672.6357410713 774418.9851383929 363.707</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.2000</station>
+   <wsp>363.707</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968633">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929643.739060241 774438.0227469879 363.707</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.2000</station>
+   <wsp>363.707</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968632">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929728.497239193 774498.5332507205 363.708</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.3000</station>
+   <wsp>363.708</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968638">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929704.8600454545 774519.9397566846 363.708</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.3000</station>
+   <wsp>363.708</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968642">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929802.1246035052 774565.0093220153 363.71</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.4000</station>
+   <wsp>363.71</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968637">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929777.7284137933 774586.1389241378 363.71</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.4000</station>
+   <wsp>363.71</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968643">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929867.8300624997 774643.2635439815 363.711</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.5000</station>
+   <wsp>363.711</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968640">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929841.0296560847 774663.073021164 363.711</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.5000</station>
+   <wsp>363.711</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968627">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929922.4800493955 774727.6194959678 363.714</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.6000</station>
+   <wsp>363.714</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968647">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929922.451141994 774727.5782396778 363.714</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.6000</station>
+   <wsp>363.714</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968634">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929922.451141994 774727.5782396777 363.714</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.6000</station>
+   <wsp>363.714</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968641">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929894.349662857 774746.8793085715 363.714</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.6000</station>
+   <wsp>363.714</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968646">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929979.661531557 774813.729681627 363.716</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.7000</station>
+   <wsp>363.716</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968639">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929949.975375 774824.999078125 363.716</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.7000</station>
+   <wsp>363.716</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968651">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929966.120139706 774922.3800220587 363.718</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.8000</station>
+   <wsp>363.718</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968650">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929940.254492582 774904.8561869436 363.718</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.8000</station>
+   <wsp>363.718</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968653">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929907.0227396446 775003.9621143984 363.719</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.9000</station>
+   <wsp>363.719</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968648">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929885.7739743358 774987.6705151238 363.719</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.9000</station>
+   <wsp>363.719</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968657">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929869.8572810455 775072.7860697169 363.721</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.9820</station>
+   <wsp>363.721</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968645">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929841.8815750913 775060.1766630037 363.721</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>43.9820</station>
+   <wsp>363.721</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968656">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929866.2233609757 775088.7488943089 363.722</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.0000</station>
+   <wsp>363.722</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968660">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929834.2844028776 775080.9590422661 363.722</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.0000</station>
+   <wsp>363.722</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968652">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929862.5718852775 775182.21 363.725</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.1000</station>
+   <wsp>363.725</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968661">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929829.2398778624 775182.21 363.725</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.1000</station>
+   <wsp>363.725</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968655">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929882.7602154696 775274.2324972375 363.725</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.2000</station>
+   <wsp>363.725</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475968663">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929854.9192347825 775286.1030086958 363.725</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.2000</station>
+   <wsp>363.725</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970259">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929934.485621013 775355.901348968 363.728</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.3000</station>
+   <wsp>363.728</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970235">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929908.9675641027 775374.0077435897 363.728</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.3000</station>
+   <wsp>363.728</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970212">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929993.3056341466 775438.4295170732 363.732</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.3900</station>
+   <wsp>363.732</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347597029">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929948.3855845416 775443.9927415459 363.732</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.3900</station>
+   <wsp>363.732</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970225">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929998.1757328245 775449.7327801527 363.732</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.4000</station>
+   <wsp>363.732</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970229">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929953.235 775454.2278440368 363.732</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.4000</station>
+   <wsp>363.732</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970238">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930001.8264347273 775457.5164664133 363.731</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.4050</station>
+   <wsp>363.731</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970267">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929956.4540987653 775461.6496255144 363.731</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.4050</station>
+   <wsp>363.731</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970222">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930006.9214069764 775467.074860465 363.732</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.4250</station>
+   <wsp>363.732</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970220">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929961.1584299067 775471.1089906541 363.732</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.4250</station>
+   <wsp>363.732</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970248">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930029.641516184 775536.4224889268 363.734</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.5000</station>
+   <wsp>363.734</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970272">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929992.468456274 775549.3665475285 363.734</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.5000</station>
+   <wsp>363.734</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970214">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929915.7660693876 775576.0752693877 363.734</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.5000</station>
+   <wsp>363.734</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970227">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3929908.563580247 775578.5833950618 363.734</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.5000</station>
+   <wsp>363.734</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970266">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930063.3876844104 775629.7395741446 363.741</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.6000</station>
+   <wsp>363.741</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970237">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930025.0655730334 775643.7529859551 363.741</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.6000</station>
+   <wsp>363.741</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347597025">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930025.0655730334 775643.752985955 363.741</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.6000</station>
+   <wsp>363.741</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970213">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930025.0655730334 775643.7529859551 363.741</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.6000</station>
+   <wsp>363.741</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347597024">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930095.610294602 775723.9705709058 363.743</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.7000</station>
+   <wsp>363.743</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970243">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930059.6920235045 775737.0034636752 363.743</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.7000</station>
+   <wsp>363.743</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970269">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930131.1669974425 775816.603601023 363.744</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.8000</station>
+   <wsp>363.744</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970270">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930094.4755111937 775831.283488806 363.744</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.8000</station>
+   <wsp>363.744</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970255">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930167.4285552558 775907.6847331536 363.744</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.9000</station>
+   <wsp>363.744</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970278">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930129.478681035 775925.7024517242 363.744</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>44.9000</station>
+   <wsp>363.744</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970285">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930209.683689008 775998.0188150135 363.745</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.0000</station>
+   <wsp>363.745</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970252">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930180.561902386 776014.3897744035 363.745</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.0000</station>
+   <wsp>363.745</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347597028">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930253.936044068 776091.2148805084 363.747</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.1000</station>
+   <wsp>363.747</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970277">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930215.2482919707 776103.6120437955 363.747</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.1000</station>
+   <wsp>363.747</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970251">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930263.266092961 776200.2542988047 363.749</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.2000</station>
+   <wsp>363.749</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970261">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930218.9018909093 776207.5378818181 363.749</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.2000</station>
+   <wsp>363.749</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970286">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930268.6645859214 776295.4792132505 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.3000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347597021">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930229.931661871 776313.8977122302 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.3000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970297">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930324.0483841156 776347.5184888087 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.4000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347597023">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930288.1685925927 776397.029074074 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.4000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970258">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930407.3708952744 776358.671980843 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.5000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint12713347597020">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930405.855 776401.938 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.5000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970273">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930405.855 776401.938 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.5000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970249">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930514.695241135 776396.909248227 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.6000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970247">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930480.4108608696 776441.6109130435 363.75</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.6000</station>
+   <wsp>363.75</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970264">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930587.8296725024 776484.2598043254 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.7000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970280">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930500.1340909093 776526.0218181818 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.7000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970245">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930619.760035775 776594.7327061328 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.8000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970217">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930521.5561543205 776603.4820987654 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.8000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970256">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930629.8188065966 776704.2513493253 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.9000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970298">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930520.142064 776692.955472 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>45.9000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970287">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930623.8022614503 776799.7969351145 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.0000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702100">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930500.085528302 776794.0575896227 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.0000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970296">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930627.769814679 776815.5211990826 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.0160</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970284">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930496.2318938053 776809.953761062 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.0160</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970223">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930642.720905961 776866.9883232578 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.1000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702103">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930541.615455388 776915.8215318656 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.1000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970274">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930693.5678570457 776941.422845473 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.2000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702105">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930596.4424198978 777011.2081565473 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.2000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970263">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930759.859730225 776998.7656885929 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.3000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970257">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930677.4144603177 777089.3199259259 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.3000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970236">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930818.8593033706 777038.4608171603 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.4000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970239">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930781.861060729 777157.4968259109 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.4000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970250">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930919.615793761 777087.5412357019 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.5000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970246">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930866.363667874 777182.1786702898 363.751</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.5000</station>
+   <wsp>363.751</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970271">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931007.1304158787 777132.4307353498 363.752</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.6000</station>
+   <wsp>363.752</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702123">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3930955.9194786325 777230.1933504273 363.752</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.6000</station>
+   <wsp>363.752</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970231">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931097.90119927 777191.7667160584 363.752</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.7000</station>
+   <wsp>363.752</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702115">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931033.9545932366 777278.5112202899 363.752</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.7000</station>
+   <wsp>363.752</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702111">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931176.653679245 777264.7730377358 363.773</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.8000</station>
+   <wsp>363.773</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970242">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931105.917148515 777336.9833267326 363.773</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.8000</station>
+   <wsp>363.773</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970275">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931222.0289921877 777364.1743769532 363.815</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.9000</station>
+   <wsp>363.815</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970262">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931169.944428718 777406.0775456411 363.815</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>46.9000</station>
+   <wsp>363.815</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970240">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931286.6028297874 777443.3105106383 363.84</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.0000</station>
+   <wsp>363.84</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702131">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931225.2723195264 777483.6559230768 363.84</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.0000</station>
+   <wsp>363.84</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702106">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931341.5074790423 777529.5105968064 363.854</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.1000</station>
+   <wsp>363.854</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702104">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931299.4152682927 777551.8409512194 363.854</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.1000</station>
+   <wsp>363.854</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970226">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931295.5734814815 777553.8793333333 363.854</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.1000</station>
+   <wsp>363.854</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970279">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931279.5070769233 777562.402076923 363.854</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.1000</station>
+   <wsp>363.854</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702118">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931385.4509374998 777621.89 363.867</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.2000</station>
+   <wsp>363.867</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702101">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931317.1206 777649.8860909091 363.867</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.2000</station>
+   <wsp>363.867</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint127133475970294">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931415.6989675327 777721.7112159091 363.88</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.3000</station>
+   <wsp>363.88</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+ <wspPointMember>
+  <WspPoint gml:id="WspPoint1271334759702124">
+   <geometry>
+    <gml:Point xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gts" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," cs=" " decimal=".">3931353.5744838705 777734.7732903225 363.88</gml:coordinates>
+    </gml:Point>
+
+   </geometry>
+   <station>47.3000</station>
+   <wsp>363.88</wsp>
+   <ufer/>
+  </WspPoint>
+ </wspPointMember>
+</Boundary>

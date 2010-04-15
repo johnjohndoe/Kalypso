@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mapv:gismapview xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns11="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org">
-    <mapv:extent srs="EPSG:31467" bottom="773711.9438484847" top="777806.9781515151" right="3931458.16" left="3928745.2640000004"/>
+    <mapv:extent top="5943783.040240497" srs="EPSG:31467" right="3564590.500380601" left="3561217.9955939827" bottom="5941101.824868414"/>
     <mapv:translator id="commons.msgGetString">
         <class>org.kalypso.model.wspm.tuhh.core:org.kalypso.model.wspm.tuhh.core.i18n.MapMessages</class>
     </mapv:translator>

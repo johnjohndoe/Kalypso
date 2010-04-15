@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="ls">
     <Title>Längsschnitt</Title>
@@ -112,7 +112,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer id="h_BV" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Layer id="h_BV" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/Längsschnitt.gml" name="href"/>
