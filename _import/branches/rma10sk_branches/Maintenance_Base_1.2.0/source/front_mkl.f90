@@ -38,8 +38,6 @@ SUBROUTINE FRONT_PARDISO(nrx)
       integer (kind = 4) :: nodec, nprocs
       real (kind = 8) :: sutim1, sutim2
       
-      
-      
       INTEGER(kind = 8), allocatable :: LROWENT(:),LRPOINT(:)
 
 ! superLU
@@ -128,70 +126,70 @@ SUBROUTINE FRONT_PARDISO(nrx)
       NLSTEL=0
       do i = 1, mr1SIZ
         ICHGL (i) = 0
-      enddo 
-           
-      K=NESAV+1
+      enddo
 
+!--------------------------------------------
+!find last occurance element of each equation
+!--------------------------------------------
+      findNLSTEL: DO k = nesav, 1, -1
+        N = NFIXH (K)
+        
+        !element number must be in available range
+        IF (N < 0 .or. n > NE) cycle findNLSTEL
+        !element has to be active and not dry
+        IF (IMAT (N) <= 0) cycle findNLSTEL
+        !???
+        IF (ICOLLAPE (N) == 1  .and.  IMAT(N)/ 1000 /= 1) cycle findNLSTEL
 
-      DO NN=1,NESAV
-
-
-        K=K-1
-        N=NFIXH(K)
-        IF(N > 0 .and. n <= NE) THEN
-          IF(IMAT(N) .GT. 0) THEN
-!ipk NOV99
-            IF(ICOLLAPE(N) .NE. 1  .OR.  IMAT(N)/1000 .EQ. 1) THEN
-
-!ipk jan06
-              IF(imat (n) > 0) THEN
-                ncn=20
-                IF(ITEQV(MAXN) .EQ. 5) THEN
-                  DO I=1,8
-                    NCON(I)=NOPS(N,I)
-                    IF(NCON(I) .GT. 0) NCN=I
-                  ENDDO
-                ELSE
-                  DO I=1,NCN
-                    NCON(I)=NOP(N,I)
-                  ENDDO
-                ENDIF
-
-                DO M=1,NCN
-                  L=NCON(M)
-!ipk JAN99 SKIP OUT FOR 2DV
-                  if(l .GT. 0) THEN
-                    DO I=1,NDF
-                      J=NBC(L,I)
-                      IF(J .GT. 0) THEN
-                        IF(NLSTEL(J) .EQ. 0) THEN
-                          NLSTEL(J)=N
-                        ENDIF
-                      ENDIF
-                    ENDDO
-                  ENDIF
-                ENDDO
-              ENDIF
-            ENDIF
-          ENDIF
+        !Get the node numbers local
+        ncn = 20
+        IF (ITEQV (MAXN) == 5) THEN
+          DO I = 1, 8
+            NCON (I) = NOPS (N, I)
+            IF (NCON (I) > 0) NCN = I
+          ENDDO
+        ELSE
+          DO I = 1, NCN
+            NCON (I) = NOP (N, I)
+          ENDDO
         ENDIF
-      ENDDO
-   
+
+        !run through all element's nodes,
+        !  because elements are passed iterated from nesav to 1 the last occurance element (nlstel) of each equation can be found
+        DO M = 1, NCN
+          !get node number
+          L = NCON (M)
+          !check for node, whether it is exisiting
+          if (l > 0) THEN
+            checkDOFs: DO I = 1, NDF
+              !get equaion number
+              J = NBC (L, I)
+              IF (J <= 0) cycle checkDOFs
+              if (NLSTEL (J) == 0) NLSTEL (J) = N
+            ENDDO checkDOFs
+          ENDIF
+        ENDDO
+      ENDDO findNLSTEL
+
+!---------------------------------------------------------------------
+!Recount the equations for new numbering, because PARDISO will reorder
+!---------------------------------------------------------------------
       icteq = 0
-      do nn = 1, nesav
-	    !run through elements due to classical reordering order
+      
+      renumber: do nn = 1, nesav
+	    !classical reordering number of element
 	    n = nfixh (nn)
+	    !number of corner nodes
 	    ncn = ncorn (n)
         IF (NOP (N, 3) == 0) NCN = 2
+        !initializations
         do kc = 1, 80
           nk (kc) = 0
-!ipk feb07 add initialization of LLDONE 
           LLDONE (KC) = 0
         enddo
-
         kc = 0
-!ipk jun07        DO J=1,NCN
-        DO J = 1, 20
+
+        DO J = 1, ncn
           I = NOP (N, J)
           IF (I == 0) THEN
             KC = KC + NDF
@@ -201,31 +199,29 @@ SUBROUTINE FRONT_PARDISO(nrx)
               LL = NBC (I, L)
               !count global ordinal number
               KC = KC + 1
-!ipk feb07 add LLDONE 
               !lldone shows, whether old number of DOF is already processed
               LLDONE (KC) = LL
               NK (KC) = LL
+              IF (LL == 0) cycle oldDOFs
 
-              IF (LL /= 0) THEN
-                !Check, whether this element is the last occurance of the degree of freedom
-                IF (NLSTEL (LL) == N) NK (KC) = -LL
+              !check: Is the last occurance of the equation within the current element
+              IF (NLSTEL (LL) == N) NK (KC) = -LL
                 
                 if(nk(kc) .lt. 0) then
                   DO JJ=1,KC-1
 !ipk feb07 add LLDONE test
                     IF(LLDONE(JJ) .EQ. ABS(LL)) GO TO 250
                   ENDDO
-	              icteq=icteq+1
-	              ichgl(ll)=icteq
+                    icteq=icteq+1
+                    ichgl(ll)=icteq
   250             CONTINUE	            
 	            endif
-              ENDIF
 
             ENDDO oldDOFs
           ENDIF
         enddo
-      ENDDO
-      
+      ENDDO renumber
+
       !Reset the number of the global equation; reordering is done in solver
       !---------------------------------------------------------------------
       do n=1,np
@@ -241,8 +237,10 @@ SUBROUTINE FRONT_PARDISO(nrx)
       DO J=1,NSZF
         NLSTEL(J)=0
         LROWENT(J)=0
-	  LRPOINT(J)=0
-	ENDDO
+        LRPOINT(J)=0
+      ENDDO
+
+
       K=NESAV+1
       DO NN=1,NESAV
         K=K-1
