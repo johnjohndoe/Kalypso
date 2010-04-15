@@ -122,10 +122,6 @@ public class BreakLinesHelper implements IWspmConstants
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
 
-      // debug
-// final SimpleShapeWriter writer = new SimpleShapeWriter( new File( "c://test.shp" ), GeometryUtilities.QN_POINT,
-      // XmlTypes.XS_DOUBLE, XmlTypes.XS_DOUBLE );
-      
       GM_Curve lastProfile = null;
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
@@ -133,8 +129,6 @@ public class BreakLinesHelper implements IWspmConstants
         final BigDecimal station = reach.getStation();
         if( geometry == null ) // ignore profiles without geometry
           continue;
-        
-        
 
         final Double wsp = wspMap.get( station.doubleValue() );
         final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
@@ -163,13 +157,11 @@ public class BreakLinesHelper implements IWspmConstants
             {
               final GM_Triangle_Impl gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
               surface.add( gmTriangle );
-              
+
               try
               {
                 final GM_TriangulatedSurface mySurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
                 mySurface.add( gmTriangle );
-
-// writer.add( mySurface, station.doubleValue(), wsp );
               }
               catch( final Exception e )
               {
@@ -184,8 +176,6 @@ public class BreakLinesHelper implements IWspmConstants
 
       GmlSerializer.serializeWorkspace( tinFile, triangleWorkspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
       GmlSerializer.serializeWorkspace( breaklineFile, workspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
-
-// writer.close();
     }
   }
 
@@ -195,9 +185,9 @@ public class BreakLinesHelper implements IWspmConstants
     final IComponent wspComp = TupleResultUtilities.findComponentById( result, strWsp );
 
     if( statComponent == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strStationierung )); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strStationierung ) ); //$NON-NLS-1$
     if( wspComp == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strWsp )); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strWsp ) ); //$NON-NLS-1$
 
     final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
     for( final IRecord record : result )
@@ -247,8 +237,6 @@ public class BreakLinesHelper implements IWspmConstants
       final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), file.toURI().toURL(), null ); //$NON-NLS-1$
       final Feature rootFeature = workspace.getRootFeature();
 
-      // we assume that all points have the same crs
-
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
@@ -267,11 +255,11 @@ public class BreakLinesHelper implements IWspmConstants
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
           // simulation does not concern the whole reach.
           {
-            points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue(), null );
+            points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue() );
           }
         }
         else
-          points = WspmProfileHelper.calculateWspPoints( profil, Double.MAX_VALUE, null );
+          points = WspmProfileHelper.calculateWspPoints( profil, Double.MAX_VALUE );
 
         if( points != null )
         {
