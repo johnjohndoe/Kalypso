@@ -73,6 +73,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -83,9 +84,9 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -104,9 +105,9 @@ public class WspWinExporter
 
   public static IStatus exportWspmProject( final Iterator<IResource> modelGml, final File wspwinDir, final SubProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.0"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.0" ), 1000 ); //$NON-NLS-1$
 
-    monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.1" ) ); //$NON-NLS-1$
 
     // modelGml holds all selected resources (very general)
     while( modelGml.hasNext() )
@@ -129,12 +130,12 @@ public class WspWinExporter
           final QName featureName = featureType.getQName();
 
           // process only WspmProject features
-          if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject")  ) //$NON-NLS-1$
+          if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) ) //$NON-NLS-1$
           {
             // TODO: sicherstellen, dass es sich um ein TU-HH-Modell handelt?
 
             // load (initialize) WspmProject
-            monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3") + resource.getName() + Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.4") ); //$NON-NLS-1$ //$NON-NLS-2$
+            monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3" ) + resource.getName() + Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
             final Feature modelRootFeature = gmlWrkSpce.getRootFeature();
             final TuhhWspmProject wspmProject = new TuhhWspmProject( modelRootFeature );
 
@@ -150,7 +151,7 @@ public class WspWinExporter
             wspwinProjDir.mkdirs();
 
             // write data into wspwinDir projectDir
-            monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6") ); //$NON-NLS-1$
+            monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
 
             // CalculationTuhh
             final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
@@ -197,7 +198,7 @@ public class WspWinExporter
 
     final TuhhReach reach = calculation.getReach();
     if( reach == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.11") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.11" ) ); //$NON-NLS-1$
 
     final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
 
@@ -207,7 +208,7 @@ public class WspWinExporter
     {
       final IObservation<TupleResult> runOffEvent = calculation.getRunOffEvent();
       if( runOffEvent == null )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12") ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12" ) ); //$NON-NLS-1$
 
       write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
     }
@@ -217,18 +218,8 @@ public class WspWinExporter
   {
     final TupleResult result = runOffEvent.getResult();
 
-    int stationComp = -1;
-    int abflussComp = -1;
-    final IComponent[] components = result.getComponents();
-    for( int i = 0; i < components.length; i++ )
-    {
-      final IComponent comp = components[i];
-      // TODO: get component via phenomenon
-      if( comp.getName().startsWith( "Abfluss" ) ) //$NON-NLS-1$
-        abflussComp = i;
-      if( comp.getName().startsWith( "Station" ) ) //$NON-NLS-1$
-        stationComp = i;
-    }
+    final int stationComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_STATION );
+    final int abflussComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_RUNOFF );
 
     final Comparator<BigDecimal> comp = new Comparator<BigDecimal>()
     {
@@ -256,8 +247,8 @@ public class WspWinExporter
 
       pw = new PrintWriter( new BufferedWriter( new FileWriter( qwtFile ) ) );
 
-      String runoffName = runOffEvent.getName();
-      String cleanRunoffName = cleanupRunoffName( runoffName );
+      final String runoffName = runOffEvent.getName();
+      final String cleanRunoffName = cleanupRunoffName( runoffName );
       pw.print( cleanRunoffName );
       pw.print( " " ); //$NON-NLS-1$
       pw.println( result.size() );
@@ -280,7 +271,7 @@ public class WspWinExporter
     }
   }
 
-  private static String cleanupRunoffName( String runoffName )
+  private static String cleanupRunoffName( final String runoffName )
   {
     return runoffName.replaceAll( "( |,|\\.)", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -321,7 +312,7 @@ public class WspWinExporter
       pw.format( "FLIESSGESETZ=%s%n", calculation.getFliessgesetz().name() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
-      pw.format("ANFANGSSTATION=%s%n", Double.toString( calculation.getStartStation().doubleValue() ) ); //$NON-NLS-1$
+      pw.format( "ANFANGSSTATION=%s%n", Double.toString( calculation.getStartStation().doubleValue() ) ); //$NON-NLS-1$
       pw.format( "ENDSTATION=%s%n", Double.toString( calculation.getEndStation().doubleValue() ) ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
