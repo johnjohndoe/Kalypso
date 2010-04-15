@@ -810,10 +810,10 @@ CIPK OCT98        MX = LMT(J)
             !EFa jun09, changed tet to tofday (tet: summarized time, tooday: daytime)
             !WRITE(uclq,'(a2,i6,f8.4,i8,5f8.2)')'QD',dayofy,tet,0,
             !EFa jun09, added chenged total(j) to abs(total(j)
-            WRITE(uclq,'(a2,i6,f8.4,i8,5f8.2)')'QD',dayofy,tofday,0,
+            WRITE(uclq,'(a2,i6,f8.4,i8,5f15.2)')'QD',dayofy,tofday,0,
      +       abs(total(j)),aves(j),avet(j),avesd(j), atan2(sumvy,sumvx) 
             !WRITE(uclh,'(a2,i6,f8.4,i8,4f8.2)')'HD',dayofy,tet,0,
-            WRITE(uclh,'(a2,i6,f8.4,i8,4f8.2)')'HD',dayofy,tofday,0,
+            WRITE(uclh,'(a2,i6,f8.4,i8,4f15.2)')'HD',dayofy,tofday,0,
      +       totalwsll,aves(j),avet(j),avesd(j)
             call FLUSH(uclq)
             call FLUSH(uclh)
@@ -838,6 +838,7 @@ CIPK JUL01
      +		 DAYOFY,TET,(TOTAL(J),J=JJ,JT)
           ELSE
             WRITE(IOCON,'(15X,1P20E11.3)') (TOTAL(J),J=JJ,JT)
+            call flush (iocon)
           ENDIF
         ENDDO
       ENDIF
