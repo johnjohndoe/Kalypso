@@ -419,11 +419,15 @@ write_elements: DO i = 1, ne
         WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
       end if
     !write number of profiles to interpolate in between
-    elseif (imat (i) == 89 .and. (.NOT.(IntPolProf (nop (i, 1))))) then
+    !elseif (imat (i) == 89 .and. (.NOT.(IntPolProf (nop (i, 1))))) then
+    elseif (imat (i) == 89) then
 
-      WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i)
-
-      write (IKALYPSOFM, 7046) i, IntPolNo (i)
+      if (IntPolProf (nop (i, 1))) then
+        write (IKALYPSOFM, 7055) i, imat (i), imato (i), nfixh (i)
+      else
+        write (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i)
+        write (IKALYPSOFM, 7046) i, IntPolNo (i)
+      endif
     end if
 
     !only for real results, not for minmax-results
@@ -559,6 +563,8 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7053 FORMAT ('VOI', i9,3(1x,ES19.12))
  !Zeitgradienten des vergangenen Zeitschrit
  7054 FORMAT ('GOI', i9,3(1x,ES19.12))
+ !Elementinformationen für interpolierte Elemente
+ 7055 format ('FEI', i9, 3i10, 5f15.7)
 
 
 
