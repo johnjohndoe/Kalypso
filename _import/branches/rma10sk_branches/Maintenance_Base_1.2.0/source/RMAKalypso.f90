@@ -57,8 +57,8 @@ PROGRAM RMAKalypso
   character (len = 10) :: builddate
   character (len = 1000) :: defaultModelName = 'defaultModelID'
   
-  version = '1.2.0 beta'
-  builddate = '2009/12/22'
+  version = '1.2.0 RC1'
+  builddate = '2010/04/15'
 
 !information during the execution:
   do i = 1, 8
@@ -81,7 +81,7 @@ PROGRAM RMAKalypso
   WRITE(*,*) '                        21073 Hamburg'
   WRITE(*,*) '                         Germany'
   write(*,*)
-  WRITE(*,*) '                    December, 22nd 2009'
+  WRITE(*,*) '                     April, 15th 2010'
   write(*,*)
   write(*,*) '     *                  **********                  *'
   write(*,*) '     *                                              *'
