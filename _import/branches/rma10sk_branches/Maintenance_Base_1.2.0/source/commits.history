@@ -1653,3 +1653,15 @@ version information
 214.) Add some documentation concerning element inflow definitions
 
 --- Nico Schrage, 12.01.2010
+
+215.) Accuracy of Q-output at continuity lines for BC-generation (origin from Eva)
+      (affects check.for)
+216.) Flushing the Q-output file (iocon)
+      (affects check.for)
+217.) Add writing and reading of result informations on interpolated 1D-elements for proper restarting; this only works, if no
+      numbering changes/ model changes are incorporated.
+      (affects: rdkalypso.f90, modell_schreiben.f90)
+218.) Some code modernization.
+      (affects: front_mkl.f90)
+
+--- Nico Schrage, 15.04.2010 (released RMA·Kalypso Version 1.2.0 Release Candiate 1 build 15.04.2010 with filename: rma-kalypso_1.2.0_RC1_<sys>_build20100415.exe)
