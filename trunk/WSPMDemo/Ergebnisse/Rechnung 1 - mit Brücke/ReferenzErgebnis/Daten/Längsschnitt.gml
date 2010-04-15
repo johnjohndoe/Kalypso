@@ -1,6 +1,66 @@
-       Stat Kenn   Abfluss     Sohle     h_WSP       hen      h_BV    Boe_li    Boe_re     v_m  tau_fl      Q_li      Q_fl      Q_re lamb_li lamb_fl lamb_re      f_li      f_fl      f_re     br_li     br_fl     br_re    WehrOK  BrueckOK  BrueckUK   BrueckB    RohrDN   AlphaIW   AlphaEW    I_Reib
-         km    -     m^3/s       mNN       mNN       mNN       mNN       mNN       mNN     m/s   N/m^2     m^3/s     m^3/s     m^3/s       -       -       -       m^2       m^2         m         m         m         m       mNN       mNN       mNN         m         m         -         -         -
-    41.7200    n    20.000   362.033   363.500   363.520   364.363   365.007   364.363   0.628    4.30     0.000    20.000     0.000  0.0000  0.0873  0.0000     0.000    31.857     0.000     0.000    32.078     0.000  -999.999  -999.999  -999.999  -999.999  -999.999   1.00000   1.00000   0.00000
+<?xml version="1.0" encoding="windows-1252"?>
+<om:Observation gml:id="LengthSectionResult" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
+    http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd
+    http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd
+    http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
+    http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
+    "
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:gml="http://www.opengis.net/gml"
+    xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe">
+    <gml:name>Längsschnitt</gml:name>
+    <om:time/>
+    <om:procedure>
+        <om:ObservationProcedure gml:id="proc_wspm_ls">
+            <gml:description>WSPM TUHH Längsschnitt Ergebnis</gml:description>
+            <gml:name>WSPM-TUHH-LS</gml:name>
+            <om:method/>
+        </om:ObservationProcedure>
+    </om:procedure>
+    <om:observedProperty>
+        <swe:Phenomenon gml:id="phen_wspm_ls">
+            <gml:name>WSPM-TUHH-LS</gml:name>
+        </swe:Phenomenon>
+    </om:observedProperty>
+    <om:featureOfInterest/>
+    <om:resultDefinition>
+        <swe:RecordDefinition recordLength="25" gml:id="rd">
+            <gml:name/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionProfileType"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_tau_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_f_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_f_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_f_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_br_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_br_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_br_re"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeUK"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeWidth"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_AlphaIW"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_AlphaEW"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_I_Reib"/>
+        </swe:RecordDefinition>
+    </om:resultDefinition>
+    <om:result><![CDATA[    41.7200    n    20.000   362.033   363.500   363.520   364.363   365.007   364.363   0.628    4.30     0.000    20.000     0.000  0.0000  0.0873  0.0000     0.000    31.857     0.000     0.000    32.078     0.000  -999.999  -999.999  -999.999  -999.999  -999.999   1.00000   1.00000   0.00000
     41.7400    n    20.000   362.033   363.508   363.530   364.574   365.126   364.574   0.657    4.53     0.000    20.000     0.000  0.0000  0.0840  0.0000     0.000    30.446     0.000     0.000    28.918     0.000  -999.999  -999.999  -999.999  -999.999  -999.999   1.00000   1.00000   0.00000
     41.7450    n    20.000   362.033   363.507   363.533   365.191   365.191   365.296   0.703    5.20     0.000    19.970     0.000  0.0000  0.0844  0.0000     0.000    28.441     0.000     0.000    27.346     0.000  -999.999  -999.999  -999.999  -999.999  -999.999   1.00000   1.00000   0.00000
     41.8000    n    20.000   362.035   363.535   363.561   364.709   365.384   364.709   0.717    5.25     0.000    20.029     0.000  0.0000  0.0815  0.0000     0.000    27.902     0.000     0.000    25.280     0.000  -999.999  -999.999  -999.999  -999.999  -999.999   1.00000   1.00000   0.00000
@@ -57,12 +117,18 @@
     46.2000    n    20.000   358.194   363.751   363.751   362.059   362.059   362.080   0.051    0.02     5.199    14.054     0.748  0.0630  0.0531  0.0919   125.264   236.000    30.849    51.737    52.394    25.774  -999.999  -999.999  -999.999  -999.999  -999.999   1.06449   1.17458   0.00000
     46.3000    n    20.000   359.020   363.751   363.752   360.921   362.163   360.921   0.051    0.02     9.334    10.002     0.664  0.0538  0.0569  0.0704   183.411   190.174    21.405    58.851    49.835    13.779  -999.999  -999.999  -999.999  -999.999  -999.999   1.03028   1.07967   0.00000
     46.4000    n    20.000   359.094   363.751   363.752   361.385   362.240   361.385   0.052    0.02     8.960    10.613     0.427  0.0560  0.0565  0.0782   173.266   193.424    17.156    57.068    52.311    17.496  -999.999  -999.999  -999.999  -999.999  -999.999   1.03350   1.08627   0.00000
-    46.5000    n    20.000   359.172   363.751   363.752   361.417   362.583   361.417   0.060    0.03     8.357    11.283     0.360  0.0565  0.0572  0.0692   146.293   175.618    10.539    53.347    46.649     8.596  -999.999  -999.999  -999.999  -999.999  -999.999   1.03157   1.08218   0.00000
-    46.6000    n    20.000   359.309   363.752   363.752   362.296   363.097   362.296   0.071    0.05     4.947    13.726     1.326  0.0582  0.0563  0.0745    82.483   171.606    27.488    43.157    50.058    17.146  -999.999  -999.999  -999.999  -999.999  -999.999   1.04781   1.12617   0.00000
-    46.7000    n    20.000   361.199   363.752   363.753   362.782   362.908   362.782   0.127    0.19     1.634    13.375     4.991  0.1107  0.0737  0.0788    23.700    92.153    42.060    34.594    44.046    29.124  -999.999  -999.999  -999.999  -999.999  -999.999   1.06273   1.16382   0.00000
-    46.8000    n    20.000   362.984   363.773   363.783   363.328   363.652   363.328   0.407    3.27     0.870    17.435     1.704  0.1865  0.1289  0.1714     4.575    38.733     5.858    26.812    58.083    16.192  -999.999  -999.999  -999.999  -999.999  -999.999   1.04646   1.12207   0.00000
-    46.9000    n    20.000   362.748   363.815   363.823   363.703   363.886   363.703   0.389    2.47     0.000    17.531     2.469  0.0000  0.1206  0.1389     0.000    43.284     8.183     0.000    51.450    15.398  -999.999  -999.999  -999.999  -999.999  -999.999   1.01275   1.03370   0.00000
-    47.0000    n    20.000   362.535   363.840   363.845   363.410   363.936   363.410   0.298    1.38     0.000    16.654     3.347  0.0000  0.1061  0.1395     0.000    51.606    15.451     0.000    52.068    26.555  -999.999  -999.999  -999.999  -999.999  -999.999   1.02640   1.07116   0.00000
-    47.1000    n    20.000   362.399   363.854   363.860   363.730   364.023   363.730   0.337    1.37     0.000    19.996     0.004  0.0000  0.0965  0.1720     0.000    59.320     0.060     0.000    56.109     0.978  -999.999  -999.999  -999.999  -999.999  -999.999   1.00068   1.00149   0.00000
-    47.2000    n    20.000   362.532   363.867   363.872   363.336   364.211   363.336   0.314    1.27     0.000    19.651     0.350  0.0000  0.0947  0.1405     0.000    59.957     3.773     0.000    54.210    29.123  -999.999  -999.999  -999.999  -999.999  -999.999   1.03183   1.07376   0.00000
-    47.3000    n    20.000   362.510   363.880   363.887   363.741   364.359   363.741   0.375    1.68     0.000    19.928     0.072  0.0000  0.0931  0.1654     0.000    52.419     0.985     0.000    48.260    15.182  -999.999  -999.999  -999.999  -999.999  -999.999   1.01190   1.02629   0.00000
+    46.5000    n    20.000   359.172   363.751   363.752   361.417   362.583   361.417   0.103    0.08     0.379    19.015     0.606  0.0925  0.0572  0.0692     7.576   175.611    10.538     6.338    46.649     8.596  -999.999  -999.999  -999.999  -999.999  -999.999   1.02613   1.06549   0.00000
+    46.5489    i    20.000   359.246   363.752   363.752   362.233   363.034   362.233   0.065    0.04     4.654    14.078     1.268  0.0582  0.0560  0.0731    85.223   193.330    28.579    43.279    55.372    17.286  -999.999  -999.999  -999.999  -999.999  -999.999   1.04485   1.11813   0.00000
+    46.5950    i    20.000   359.309   363.752   363.752   368.913   371.097   368.913   0.117    0.16     0.000    20.000     0.000  0.0000  0.0941  0.0000     0.000   171.609     0.000     0.000    50.058     0.000  -999.999  -999.999  -999.999  -999.999  -999.999   0.00000   0.00000   0.00000
+    46.6000    b    20.000   359.309   363.755   363.756   364.000   364.000   364.000   0.116    0.10     0.000    20.000     0.000  0.0000  0.0562  0.0000     0.000   171.796     0.000     0.000    50.058     0.000  -999.999   364.000   363.097     5.000  -999.999   0.00000   0.00000   0.00000
+    46.6050    i    20.000   359.359   363.756   363.756   362.346   363.147   362.346   0.072    0.05     4.909    13.791     1.299  0.0581  0.0566  0.0755    80.509   169.313    26.705    43.069    50.058    17.045  -999.999  -999.999  -999.999  -999.999  -999.999   0.00000   0.00000   0.00000
+    46.7000    n    20.000   361.199   363.756   363.758   362.782   362.908   362.782   0.205    0.41     0.171    19.450     0.379  0.1561  0.0736  0.0964     2.441    92.334     2.915     5.123    44.046     2.913  -999.999  -999.999  -999.999  -999.999  -999.999   1.01611   1.03937   0.00000
+    46.8000    n    20.000   362.984   363.777   363.786   363.328   363.652   363.328   0.404    3.21     0.887    17.407     1.709  0.1865  0.1286  0.1716     4.670    38.940     5.916    26.855    58.083    16.215  -999.999  -999.999  -999.999  -999.999  -999.999   1.04660   1.12255   0.00000
+    46.9000    n    20.000   362.748   363.818   363.826   363.703   363.886   363.703   0.387    2.45     0.000    17.525     2.475  0.0000  0.1204  0.1388     0.000    43.429     8.226     0.000    51.461    15.407  -999.999  -999.999  -999.999  -999.999  -999.999   1.01272   1.03364   0.00000
+    47.0000    n    20.000   362.535   363.843   363.848   363.410   363.936   363.410   0.297    1.37     0.000    16.646     3.355  0.0000  0.1059  0.1392     0.000    51.738    15.518     0.000    52.076    26.576  -999.999  -999.999  -999.999  -999.999  -999.999   1.02636   1.07104   0.00000
+    47.1000    n    20.000   362.399   363.856   363.862   363.730   364.023   363.730   0.336    1.36     0.000    19.996     0.004  0.0000  0.0964  0.1720     0.000    59.455     0.063     0.000    56.116     0.997  -999.999  -999.999  -999.999  -999.999  -999.999   1.00071   1.00154   0.00000
+    47.2000    n    20.000   362.532   363.869   363.874   363.336   364.211   363.336   0.313    1.26     0.000    19.645     0.356  0.0000  0.0946  0.1416     0.000    60.083     3.840     0.000    54.216    29.204  -999.999  -999.999  -999.999  -999.999  -999.999   1.03225   1.07480   0.00000
+    47.3000    n    20.000   362.510   363.882   363.889   363.741   364.359   363.741   0.374    1.67     0.000    19.926     0.075  0.0000  0.0930  0.1613     0.000    52.527     1.019     0.000    48.266    15.454  -999.999  -999.999  -999.999  -999.999  -999.999   1.01237   1.02734   0.00000
+]]>
+    </om:result>
+</om:Observation>
