@@ -58,7 +58,7 @@ import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents the contents of an wsp.cfg file
- *
+ * 
  * @author belger
  */
 public class WspCfgBean
@@ -118,7 +118,7 @@ public class WspCfgBean
 
       final String firstLine = reader.readLine();
       if( firstLine == null || firstLine.length() == 0 )
-        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.1"), reader.getLineNumber() ); //$NON-NLS-1$
+        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfgBean.1" ), reader.getLineNumber() ); //$NON-NLS-1$
 
       // ignore the values, we read the count from the linecount
       // just parse the type
@@ -131,36 +131,31 @@ public class WspCfgBean
       while( reader.ready() )
       {
         final String line = reader.readLine();
-        // stop at empty line
-        if( line == null || line.trim().length() == 0 )
+        if( line == null )
           break;
 
-        // TODO: not OK: should read wsp.cfg with fixed columns instead. As the strings in column 2 can reach just to
-        // column 3.
-        final StringTokenizer tokenizer = new StringTokenizer( line );
-        if( tokenizer.countTokens() != 6 )
-        {
-          final String msg = String.format( "org.kalypso.wspwin.core.WspCfgBean.2", reader.getLineNumber() ); //$NON-NLS-1$
-          throw new ParseException( msg, reader.getLineNumber() );
-        }
+        final String trimmedLine = line.trim();
+        if( trimmedLine.length() == 0 || trimmedLine.length() < 85 )
+          continue;
 
         try
         {
-          final String waterName = tokenizer.nextToken();
-          final String name = tokenizer.nextToken();
+          final String waterName = trimmedLine.substring( 0, 15 ).trim();
+          final String name = trimmedLine.substring( 15, 30 ).trim();
           // normally it should always be german, but it depends on the wspwin installation
           final DateFormat dateInstance = SimpleDateFormat.getDateInstance( SimpleDateFormat.SHORT, Locale.GERMAN );
-          final Date date = dateInstance.parse( tokenizer.nextToken() );
-          final Double start = new Double( tokenizer.nextToken() );
-          final Double end = new Double( tokenizer.nextToken() );
-          final String fileName = tokenizer.nextToken();
+          final String dateString = trimmedLine.substring( 30, 41 ).trim();
+          final Date date = dateInstance.parse( dateString );
+          final Double start = new Double( trimmedLine.substring( 41, 56 ) );
+          final Double end = new Double( trimmedLine.substring( 56, 71 ) );
+          final String fileName = trimmedLine.substring( 71 ).trim();
 
           bean.addZustand( name, waterName, fileName, start, end, date );
         }
         catch( final NumberFormatException e )
         {
           e.printStackTrace();
-          throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.3") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
+          throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfgBean.3" ) + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
         }
 
       }
@@ -203,7 +198,7 @@ public class WspCfgBean
     }
     catch( final ParseException pe )
     {
-      final String msg = Messages.getString("org.kalypso.wspwin.core.WspCfgBean.6") + profprojFile.getAbsolutePath() + " \n" + pe.getLocalizedMessage(); //$NON-NLS-1$ //$NON-NLS-2$
+      final String msg = Messages.getString( "org.kalypso.wspwin.core.WspCfgBean.6" ) + profprojFile.getAbsolutePath() + " \n" + pe.getLocalizedMessage(); //$NON-NLS-1$ //$NON-NLS-2$
       final ParseException newPe = new ParseException( msg, pe.getErrorOffset() );
       newPe.setStackTrace( pe.getStackTrace() );
       throw newPe;
@@ -219,13 +214,13 @@ public class WspCfgBean
   {
     final String firstLine = reader.readLine();
     if( firstLine == null || firstLine.length() == 0 )
-      throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.8"), reader.getLineNumber() ); //$NON-NLS-1$
+      throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfgBean.8" ), reader.getLineNumber() ); //$NON-NLS-1$
 
     // ignore the values, we read the count from the linecount
     // just parse the type
     final StringTokenizer firstLineTokenizer = new StringTokenizer( firstLine );
     if( firstLineTokenizer.countTokens() < 2 )
-      throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.9"), reader.getLineNumber() ); //$NON-NLS-1$
+      throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfgBean.9" ), reader.getLineNumber() ); //$NON-NLS-1$
 
     final int[] counts = new int[2];
     counts[0] = Integer.parseInt( firstLineTokenizer.nextToken() );
