@@ -58,7 +58,7 @@ PROGRAM RMAKalypso
   character (len = 1000) :: defaultModelName = 'defaultModelID'
   
   version = '1.2.0 RC1'
-  builddate = '2010/04/15'
+  builddate = '2010/04/16'
 
 !information during the execution:
   do i = 1, 8
