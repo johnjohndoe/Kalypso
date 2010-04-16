@@ -68,6 +68,13 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
     m_propertyId = property.getId();
     m_value = value;
   }
+  public EditPointResolution( final int index, final String propertyID, final double value )
+  {
+    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,propertyID ), null, null ); //$NON-NLS-1$ 
+    m_index = index;
+    m_propertyId = propertyID;
+    m_value = value;
+  }
   public EditPointResolution()
   {
     super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.2"), null, null ); //$NON-NLS-1$
