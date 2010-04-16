@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -48,7 +47,6 @@ import org.kalypso.risk.model.simulation.RiskZonesGrid;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskStatisticTableValues;
-import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -81,9 +79,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
-    final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-
+    final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
     if( m_rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$

@@ -67,9 +67,13 @@ import org.kalypso.risk.plugin.KalypsoRiskPlugin;
  */
 public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
-  private static final String DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS = "2"; //$NON-NLS-1$
+  public static final int DEFAULT_RISKTHEMEINFO_PRECISION = 2;
 
-  public static final String KEY_RISKTHEMEINFO_IMPORTANTDIGITS = "KEY_RISKTHEMEINFO_IMPORTANTDIGITS"; //$NON-NLS-1$
+  public static final int MIN_RISKTHEMEINFO_PRECISION = 1;
+
+  public static final int MAX_RISKTHEMEINFO_PRECISION = 12;
+
+  public static final String KEY_RISKTHEMEINFO_PRECISION = "eclipse.preferences.kalypso.risk.themeinfo.precision"; //$NON-NLS-1$
 
   private ComboViewer m_cmbFormat;
 
@@ -124,9 +128,9 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
     final Label lFormat = new Label( cgrScreen, SWT.NONE );
     lFormat.setText( Messages.getString( "org.kalypso.risk.preferences.cmblabel" ) ); //$NON-NLS-1$
 
-    final String[] formats = new String[12];
-    for( int i = 0; i < 12; i++ )
-      formats[i] = Integer.toString( i + 1 );
+    final String[] formats = new String[MAX_RISKTHEMEINFO_PRECISION - MIN_RISKTHEMEINFO_PRECISION + 1];
+    for( int i = MIN_RISKTHEMEINFO_PRECISION; i <= MAX_RISKTHEMEINFO_PRECISION; i++ )
+      formats[i - MIN_RISKTHEMEINFO_PRECISION] = Integer.toString( i );
 
     m_cmbFormat = new ComboViewer( cgrScreen, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     m_cmbFormat.setContentProvider( new ArrayContentProvider() );
@@ -144,9 +148,9 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
     m_cmbFormat.setInput( formats );
     m_cmbFormat.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final String format = getPreferenceStore().getString( KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
+    final String format = getPreferenceStore().getString( KEY_RISKTHEMEINFO_PRECISION );
     if( format == null || format.length() == 0 )
-      m_cmbFormat.setSelection( new StructuredSelection( getPreferenceStore().getDefaultString( KEY_RISKTHEMEINFO_IMPORTANTDIGITS ) ) );
+      m_cmbFormat.setSelection( new StructuredSelection( Integer.toString( DEFAULT_RISKTHEMEINFO_PRECISION ) ) );
     else
       m_cmbFormat.setSelection( new StructuredSelection( format ) );
 
@@ -167,9 +171,9 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
   private void checkStore( )
   {
     final IPreferenceStore store = getPreferenceStore();
-    final String format = store.getString( KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
+    final String format = store.getString( KEY_RISKTHEMEINFO_PRECISION );
     if( format == null || format.length() == 0 )
-      store.setValue( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS );
+      store.setValue( KEY_RISKTHEMEINFO_PRECISION, Integer.toString( DEFAULT_RISKTHEMEINFO_PRECISION ) );
   }
 
   /**
@@ -185,8 +189,8 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
   @Override
   protected void performDefaults( )
   {
-    getPreferenceStore().setDefault( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS );
-    m_cmbFormat.setSelection( new StructuredSelection( DEFAULT_RISKTHEMEINFO_IMPORTANTDIGITS ) );
+    getPreferenceStore().setDefault( KEY_RISKTHEMEINFO_PRECISION, Integer.toString( DEFAULT_RISKTHEMEINFO_PRECISION ) );
+    m_cmbFormat.setSelection( new StructuredSelection( Integer.toString( DEFAULT_RISKTHEMEINFO_PRECISION ) ) );
     super.performDefaults();
   }
 
@@ -206,12 +210,11 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
       final StructuredSelection strSelection = (StructuredSelection) selection;
       final Object element = strSelection.getFirstElement();
 
-      store.setValue( KEY_RISKTHEMEINFO_IMPORTANTDIGITS, element.toString() );
+      store.setValue( KEY_RISKTHEMEINFO_PRECISION, element.toString() );
     }
 
     /* Save the plugin preferences. */
     KalypsoRiskPlugin.getDefault().savePluginPreferences();
-    super.performApply();
   }
 
   /**

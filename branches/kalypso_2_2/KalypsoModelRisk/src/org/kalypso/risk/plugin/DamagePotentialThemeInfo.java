@@ -3,11 +3,9 @@ package org.kalypso.risk.plugin;
 import java.util.Formatter;
 import java.util.Properties;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
-import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 public class DamagePotentialThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
@@ -16,11 +14,10 @@ public class DamagePotentialThemeInfo extends CoverageThemeInfo implements IKaly
    * @see org.kalypso.gml.ui.map.CoverageThemeInfo#initFormatString(java.util.Properties)
    */
   @Override
-  protected String initFormatString( Properties props )
+  protected String initFormatString( final Properties props )
   {
-    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
-    final int digits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-    return props.getProperty( PROP_FORMAT, "%." + digits + "g \u20ac/m\u00b2" ); //$NON-NLS-1$
+    final int digits = KalypsoRiskPlugin.getPreferences_themeInfoPrecision();
+    return props.getProperty( PROP_FORMAT, new StringBuffer( "%,." ).append( digits ).append( "f \u20ac/m\u00b2" ).toString() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

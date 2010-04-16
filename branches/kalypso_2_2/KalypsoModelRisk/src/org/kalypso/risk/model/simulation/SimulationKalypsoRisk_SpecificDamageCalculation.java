@@ -45,13 +45,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
@@ -68,7 +69,6 @@ import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper.LAYER_TYPE;
-import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -112,9 +112,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
-    final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-
+    final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
     try
     {
       final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
@@ -131,9 +129,15 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
       outputRasterTmpDir.mkdir();
       doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, importantDigits, simulationMonitorAdaptor );
+      final File tmpControlModel = File.createTempFile( IRasterizationControlModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
+      final File tmpVectorModel = File.createTempFile( IVectorDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( tmpControlModel, controlModelWorkspace, "UTF-8" ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( tmpVectorModel, vectorModelWorkspace, "UTF-8" ); //$NON-NLS-1$
+      resultEater.addResult( MODELSPEC_KALYPSORISK.CONTROL_MODEL.toString(), tmpControlModel );
       resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.toString(), tmpRasterModel );
+      resultEater.addResult( MODELSPEC_KALYPSORISK.VECTOR_MODEL.toString(), tmpVectorModel );
       resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.toString(), outputRasterTmpDir );
 
       final boolean updateMap = inputProvider.hasID( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString() );
@@ -206,7 +210,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
         int ordinalNumber = landuseClass.getOrdinalNumber();
         if( landuseClasses.size() > ordinalNumber && landuseClasses.get( ordinalNumber ) != null )
-          System.out.println( String.format( "WARNING: two landuse classes with same ordinal number: %s", ordinalNumber ) ); //$NON-NLS-1$
+          Logger.getAnonymousLogger().log( Level.WARNING, String.format( "WARNING: two landuse classes with same ordinal number: %s", ordinalNumber ) ); //$NON-NLS-1$
 
         while( landuseClasses.size() < ordinalNumber + 1 )
           landuseClasses.add( null );
