@@ -1,6 +1,8 @@
-#Fri Mar 05 10:47:52 CET 2010
+#Mon Apr 12 13:16:39 CEST 2010
 eclipse.preferences.version=1
 encoding//src/org/kalypso/model/wspm/tuhh/schema/dict=UTF-8
+encoding//src/org/kalypso/model/wspm/tuhh/schema/dict/dict_profile_building_de.properties=ISO-8859-1
+encoding//src/org/kalypso/model/wspm/tuhh/schema/dict/dict_profile_marker_de.properties=ISO-8859-1
 encoding//src/org/kalypso/model/wspm/tuhh/schema/schemata/wspmTuhhQintervallResults.xsd=UTF-8
 encoding//src/org/kalypso/model/wspm/tuhh/schema/schemata/wspmTuhhSteadyState.xsd=UTF-8
 encoding//src/org/kalypso/model/wspm/tuhh/schema/simulation/resources/lengthSection.kod=UTF-8
