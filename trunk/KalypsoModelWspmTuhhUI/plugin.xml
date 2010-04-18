@@ -427,6 +427,16 @@
        </command>
     </menuContribution>
     <menuContribution
+          locationURI="popup:org.kalypso.model.wspm.ui.profileChange?after=additions">
+       <command
+             commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+    </menuContribution>
+    <menuContribution
           locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
        <command
              commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
@@ -475,7 +485,7 @@
     <command
           description="Exports the selected profiles as a length section in WspWin-Plotter format."
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
-          name="WspWin-Plotter Lenght-Section (.lng)">
+          name="WspWin Plotter Length-Section (.lng)">
     </command>
     <command
           description="Exports the selected profiles as .prf files."
@@ -496,6 +506,11 @@
           id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
           name="WspWin Plotter">
     </command>
+    <command
+	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+	       name="Create Length-Section">
+	</command>
+
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">

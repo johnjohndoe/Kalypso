@@ -41,26 +41,31 @@
 package org.kalypso.model.wspm.tuhh.ui.export;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.LngSink;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.wspwin.core.Plotter;
 
 /**
  * @author Gernot Belger
  */
 public class LngExportProfilesWizard extends ExportProfilesWizard
 {
-  private static final String FILTER_LABEL = "WspWin-Plotter Length Section";
+  private static final String FILTER_LABEL = "WspWin Plotter Length Section";
 
   private static final String EXTENSION = "lng";
 
-  final private ExportFileChooserPage m_profileFileChooserPage;
+  final private LngExportFileChooserPage m_profileFileChooserPage;
 
   public LngExportProfilesWizard( final ProfileSelection selection )
   {
@@ -70,19 +75,10 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
 
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
     saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION );
-    m_profileFileChooserPage = new ExportFileChooserPage( saveDelegate, EXTENSION );
+    m_profileFileChooserPage = new LngExportFileChooserPage( saveDelegate, EXTENSION );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
     m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );
     m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
-    super.addPages();
 
     addPage( m_profileFileChooserPage );
   }
@@ -93,5 +89,21 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     final File file = m_profileFileChooserPage.getFile();
     final SinkExporter exporter = new SinkExporter( new LngSink() );
     exporter.export( profiles, file, monitor );
+
+    if( m_profileFileChooserPage.doOpenPlotter() )
+      openInPlotter( file );
+  }
+
+  private void openInPlotter( final File file ) throws CoreException
+  {
+    try
+    {
+      Plotter.openPrf( file, false );
+    }
+    catch( final IOException e )
+    {
+      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to open file in WspWin Plotter", e );
+      throw new CoreException( status );
+    }
   }
 }
