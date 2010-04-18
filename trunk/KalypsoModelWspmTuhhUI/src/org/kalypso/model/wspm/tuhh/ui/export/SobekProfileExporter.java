@@ -77,7 +77,9 @@ public class SobekProfileExporter
     final String profileName = profil.getName();
     final String pnam = getPNam( profileName );
     final String userPrefix = "";
-// final Object id = String.format( "%s%s%.4f", userPrefix, profil.getStation() );
+
+    // TODO: get id-pattern from user: see .prf export how to do it
+    // final Object id = String.format( "%s%s%.4f", userPrefix, profil.getStation() );
 
     final Object id = String.format( "%s%s", userPrefix, pnam );
 
@@ -113,7 +115,10 @@ public class SobekProfileExporter
 
   private IRecord[] getPointsToExport( final IProfil profil )
   {
+    // TODO: let user choose get marker type
     final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
+    // TODO: get from some registry
+    final String markerLabel = "Bordvollpunkte";
 
     if( pointMarkerId == null )
       return profil.getPoints();
@@ -121,10 +126,10 @@ public class SobekProfileExporter
     final IProfilPointMarker[] markers = profil.getPointMarkerFor( pointMarkerId );
     if( markers.length < 2 )
     {
-      final String message = String.format( "Zuwenige Trennflächen bei Profil %.4f (%s)", profil.getStation(), profil.getName() );
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+      final String message = String.format( "Gewählte Markierung (%s) bei Profil %.4f (%s) nicht gesetzt. Es wurden alle Profilpunkte exportiert.", markerLabel, profil.getStation(), profil.getName() );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
       m_stati.add( status );
-      return null;
+      return profil.getPoints();
     }
 
     final IRecord startPoint = markers[0].getPoint();
