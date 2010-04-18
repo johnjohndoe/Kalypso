@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -123,17 +121,6 @@ public class ExportPrfFileChooserPage extends ExportFileChooserPage
     final Button button = new Button( group, SWT.ARROW | SWT.LEFT );
     button.setToolTipText( "Insert a token from the list of available patterns" );
     final Menu menu = menuManager.createContextMenu( button );
-
-    menuManager.addMenuListener( new IMenuListener()
-    {
-      @Override
-      public void menuAboutToShow( final IMenuManager manager )
-      {
-// final IContributionItem[] items = ProfilePatternInputReplacer.getINSTANCE().asContributionItems( text );
-// for( final IContributionItem item : items )
-// manager.add( item );
-      }
-    } );
 
     button.setMenu( menu );
 

@@ -136,10 +136,8 @@ public class Plotter
    * Starts the plotter on the specified profile or length-section.<br>
    * The method {@link #checkPlotterExe(Shell)} should be called beforehand.
    */
-  public static void openPrf( final File file ) throws IOException
+  public static void openPrf( final File file, final boolean doPrint ) throws IOException
   {
-    final boolean doPrint = true;
-
     final File plotterExe = getPlotterExeChecked();
     if( plotterExe == null )
       return;

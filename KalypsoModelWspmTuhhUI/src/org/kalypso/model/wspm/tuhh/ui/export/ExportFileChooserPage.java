@@ -94,6 +94,9 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
     createPageContent( comp );
 
     setControl( comp );
+
+    final IMessageProvider message = validatePage();
+    setPageComplete( message == null || message.getMessageType() != IMessageProvider.ERROR );
   }
 
   /**

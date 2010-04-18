@@ -123,7 +123,9 @@ public class LengthSectionExportHandler extends AbstractHandler
     {
       writer.close();
     }
-    Plotter.openPrf( file );
+    // FIXME: get from user
+    final boolean doPrint = false;
+    Plotter.openPrf( file, doPrint );
   }
 
   private final IObservation<TupleResult> getLSObservation( final IChartPart chartPart )

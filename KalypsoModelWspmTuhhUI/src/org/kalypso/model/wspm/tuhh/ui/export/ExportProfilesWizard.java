@@ -81,14 +81,7 @@ public abstract class ExportProfilesWizard extends Wizard
 
     final String pageMessage = "Bitte wählen Sie die Profile aus, die exportiert werden sollen.";
     m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, 1, false );
-  }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
     addPage( m_profileChooserPage );
   }
 
