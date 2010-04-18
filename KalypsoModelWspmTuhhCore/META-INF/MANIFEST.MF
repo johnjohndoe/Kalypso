@@ -20,6 +20,7 @@ Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.building,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass,
  org.kalypso.model.wspm.tuhh.core.profile.importer.wprof,
+ org.kalypso.model.wspm.tuhh.core.utils,
  org.kalypso.model.wspm.tuhh.core.wprof,
  org.kalypso.model.wspm.tuhh.core.wspwin,
  org.kalypso.model.wspm.tuhh.core.wspwin.prf

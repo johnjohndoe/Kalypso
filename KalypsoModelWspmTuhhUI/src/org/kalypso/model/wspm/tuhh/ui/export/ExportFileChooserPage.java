@@ -91,6 +91,25 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
     final Composite comp = new Composite( parent, SWT.NONE );
     comp.setLayout( new GridLayout() );
 
+    createPageContent( comp );
+
+    setControl( comp );
+  }
+
+  /**
+   * Creates the contents of this page, intended to be overwritten by clients.<br>
+   * Clients should call the super implementation of this method, before adding its own contents.
+   * 
+   * @param parent
+   *          A composite with a grid layout.
+   */
+  protected void createPageContent( final Composite parent )
+  {
+    createFileChooser( parent );
+  }
+
+  private void createFileChooser( final Composite comp )
+  {
     m_fileChooserGroup = new FileChooserGroup( m_fileChooser );
     m_fileChooserGroup.addFileChangedListener( new FileChooserGroup.FileChangedListener()
     {
@@ -114,8 +133,6 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
       final String newFileName = enforceSuffix( file );
       setFile( new File( newFileName ) );
     }
-
-    setControl( comp );
   }
 
   public String enforceSuffix( final File file )
@@ -131,8 +148,21 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
   {
     m_file = file;
 
-    final IMessageProvider validate = m_fileChooser.validate( m_file );
+    updateMessage();
+  }
+
+  protected void updateMessage( )
+  {
+    final IMessageProvider validate = validatePage();
     setMessage( validate );
+  }
+
+  /**
+   * Validates this page. Intended to be overwritten by clients.
+   */
+  protected IMessageProvider validatePage( )
+  {
+    return m_fileChooser.validate( m_file );
   }
 
   /**
@@ -153,5 +183,4 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
   {
     return m_file;
   }
-
 }

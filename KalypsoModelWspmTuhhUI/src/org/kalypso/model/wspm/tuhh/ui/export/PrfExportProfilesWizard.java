@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public class PrfExportProfilesWizard extends ExportProfilesWizard
 {
-  private final ExportFileChooserPage m_profileFileChooserPage;
+  private final ExportPrfFileChooserPage m_profileFileChooserPage;
 
   public PrfExportProfilesWizard( final ProfileSelection selection )
   {
@@ -65,7 +65,7 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
-    m_profileFileChooserPage = new ExportFileChooserPage( dirDelegate, null );
+    m_profileFileChooserPage = new ExportPrfFileChooserPage( dirDelegate, null );
     m_profileFileChooserPage.setTitle( "Ablageverzeichnis wählen" );
     m_profileFileChooserPage.setDescription( "Bitte wählen Sie das Ablageverzeichnis aus." );
     m_profileFileChooserPage.setFileGroupText( "Ablageverzeichnis" );
@@ -86,8 +86,9 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File file = m_profileFileChooserPage.getFile();
+    final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
 
-    final PrfExporter prfExporter = new PrfExporter( file );
+    final PrfExporter prfExporter = new PrfExporter( file, filenamePattern );
     final IStatus export = prfExporter.export( profiles, monitor );
     if( !export.isOK() )
       throw new CoreException( export );

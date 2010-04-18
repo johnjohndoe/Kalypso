@@ -69,7 +69,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
-import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextTokenReplacer;
+import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextPatternReplacer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
@@ -92,8 +92,6 @@ public class WProfImportFilePage extends WizardPage
   private CharsetViewer m_charsetViewer;
 
   private FileChooserGroup m_pdfChooser;
-
-  private final WProfContextTokenReplacer m_tokenReplace = new WProfContextTokenReplacer();
 
   public WProfImportFilePage( final String pageName )
   {
@@ -259,7 +257,7 @@ public class WProfImportFilePage extends WizardPage
 
     final ToolTip tip = new ToolTip( hyperlink.getShell(), SWT.ICON_INFORMATION );
     tip.setText( "Available Tokens" );
-    final String tipMessage = m_tokenReplace.getMessage();
+    final String tipMessage = WProfContextPatternReplacer.getInstance().getMessage();
     tip.setMessage( tipMessage );
     tip.setVisible( false );
 
@@ -348,11 +346,6 @@ public class WProfImportFilePage extends WizardPage
   public String getShapeDefaultSrs( )
   {
     return m_crsPanel.getSelectedCRS();
-  }
-
-  public WProfContextTokenReplacer getTokenReplace( )
-  {
-    return m_tokenReplace;
   }
 
   public String getPhotoContext( )

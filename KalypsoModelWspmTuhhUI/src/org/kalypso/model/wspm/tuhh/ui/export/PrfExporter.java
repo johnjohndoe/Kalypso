@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,9 +65,14 @@ public class PrfExporter
 {
   private final File m_exportDirectory;
 
-  public PrfExporter( final File exportDirectory )
+  private final Set<String> m_filenames = new HashSet<String>();
+
+  private final String m_filenamePattern;
+
+  public PrfExporter( final File exportDirectory, final String filenamePattern )
   {
     m_exportDirectory = exportDirectory;
+    m_filenamePattern = filenamePattern;
   }
 
   public IStatus export( final IProfileFeature[] profiles, final IProgressMonitor monitor )
@@ -73,19 +80,26 @@ public class PrfExporter
     final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
     final MultiStatus resultStatus = new MultiStatus( id, 1, "Several profiles could not be written.", null );
 
-    monitor.beginTask( "Profiles are being saved -", profiles.length );
+    monitor.beginTask( "Profiles are being saved", profiles.length );
 
     for( final IProfileFeature feature : profiles )
     {
       final IProfil profil = feature.getProfil();
       final String profileName = profil.getName();
+      final double station = profil.getStation();
       final WspmWaterBody water = feature.getWater();
 
-      monitor.subTask( profileName );
+      monitor.subTask( String.format( "%s (km %.4f)", profileName, station ) );
 
-      final String fileName = createWspWinFileName( profil );
-      final String cleanFileName = cleanupFilename( fileName );
-      final File file = new File( m_exportDirectory, cleanFileName );
+      final String fileName = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_filenamePattern, profil );
+      final String uniqueFileName = createUniqueFilename( fileName );
+      final String cleanFileName = cleanupFilename( uniqueFileName );
+      final File file = new File( m_exportDirectory, cleanFileName + ".prf" );
+
+      if( file.exists() )
+      {
+        System.out.println( "File already exists: " + file );
+      }
 
       try
       {
@@ -108,6 +122,17 @@ public class PrfExporter
     return resultStatus;
   }
 
+  private String createUniqueFilename( final String fileName )
+  {
+    String uniqueName = fileName;
+
+    for( int i = 0; i < Integer.MAX_VALUE && m_filenames.contains( uniqueName ); i++ )
+      uniqueName = fileName + i;
+
+    m_filenames.add( uniqueName );
+    return uniqueName;
+  }
+
   // FIXME: get this information from a wizard page (let the user define what to do)
   // Let all prf-exports use the same wizard page.
   public static void configurePrfWriterWithMetadata( final WspmWaterBody water, final IProfil profil, final PrfWriter prfWriter )
@@ -119,22 +144,6 @@ public class PrfExporter
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_4_PROJEKTBEZEICHNUNG_1, riverId );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescriptionCleaned );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, profileName );
-  }
-
-  // FIXME: where to get this flag from...?
-  private final static boolean wspwinFileNames = false;
-
-  public static String createWspWinFileName( final IProfil profile )
-  {
-    if( wspwinFileNames )
-    {
-      final double station = profile.getStation();
-      final String stationString = String.format( "%.4f", station ).replace( '.', '+' ).replace( ' ', '0' );
-
-      return String.format( "%s.prf", stationString );
-    }
-    else
-      return profile.getName();
   }
 
   private String cleanupFilename( final String fileName )
