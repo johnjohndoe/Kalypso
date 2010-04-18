@@ -478,6 +478,7 @@
           name="WspWin-Plotter Lenght-Section (.lng)">
     </command>
     <command
+          description="Exports the selected profiles as .prf files."
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
           name="WspWin Profiles (.prf)">
     </command>

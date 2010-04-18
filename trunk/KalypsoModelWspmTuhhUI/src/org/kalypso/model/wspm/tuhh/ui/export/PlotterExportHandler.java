@@ -104,9 +104,9 @@ public class PlotterExportHandler extends AbstractHandler
 
           final IProfil profile = feature.getProfil();
 
-          final String filename = PrfExporter.createWspWinFileName( profile );
-//          String filename = "exportTmp" + i + ".prf"; //$NON-NLS-1$ //$NON-NLS-2$
-          final File file = new File( System.getProperty( "java.io.tmpdir" ), filename );//$NON-NLS-1$
+          final String fileName = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( "<WspWin>", profile );
+
+          final File file = new File( System.getProperty( "java.io.tmpdir" ), fileName + ".prf" );//$NON-NLS-1$
           try
           {
             final PrfWriter prfWriter = new PrfWriter( profile );

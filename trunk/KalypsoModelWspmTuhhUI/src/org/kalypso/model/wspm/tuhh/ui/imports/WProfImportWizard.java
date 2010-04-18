@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.SoilOnlyProfileCr
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
-import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextTokenReplacer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -134,9 +133,7 @@ public class WProfImportWizard extends Wizard
         handler.addMarkerMapping( markerID, type );
     }
 
-    final WProfContextTokenReplacer tokenReplace = m_wprofFilePage.getTokenReplace();
     final Properties specification = m_wprofPropertyPage.getSpecification();
-    m_pointFactory.setTokenReplace( tokenReplace );
     m_pointFactory.setPdfContext( pdfContext );
     m_pointFactory.setPhotoContext( photoContext );
     m_pointFactory.setSpecification( specification );
