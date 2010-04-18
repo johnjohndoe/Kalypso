@@ -74,8 +74,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class LengthSectionExportHandler extends AbstractHandler
 {
-  // public static String PLOTTER_FILE_NOT_FOUND = "plotter_file_not_found";
-
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
