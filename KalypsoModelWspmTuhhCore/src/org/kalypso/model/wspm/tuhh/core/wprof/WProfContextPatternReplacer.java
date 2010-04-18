@@ -40,27 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
-public abstract class WProfContextToken
+import org.kalypso.model.wspm.tuhh.core.utils.AbstractPatternInput;
+import org.kalypso.model.wspm.tuhh.core.utils.PatternInputReplacer;
+
+/**
+ * @author Gernot Belger
+ */
+public class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoint>
 {
-  private final String m_token;
+  private static final WProfContextPatternReplacer INSTANCE = new WProfContextPatternReplacer();
 
-  private final String m_label;
-
-  public WProfContextToken( final String token, final String label )
+  public static WProfContextPatternReplacer getInstance( )
   {
-    m_token = token;
-    m_label = label;
+    return INSTANCE;
   }
 
-  public String getLabel( )
+  private WProfContextPatternReplacer( )
   {
-    return m_label;
+    addReplacer( new AbstractPatternInput<IWProfPoint>( "<Gew-ID>", "Gewässer-ID" )
+    {
+      /**
+       * @see org.kalypso.model.wspm.tuhh.core.wprof.WProfContextToken#replace(java.lang.String,
+       *      org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint)
+       */
+      @Override
+      public String replace( final String context, final IWProfPoint point )
+      {
+        return context.replaceAll( getToken(), point.getRiverId() );
+      }
+    } );
   }
-
-  public String getToken( )
-  {
-    return m_token;
-  }
-
-  public abstract String replace( final String context, final IWProfPoint point );
 }

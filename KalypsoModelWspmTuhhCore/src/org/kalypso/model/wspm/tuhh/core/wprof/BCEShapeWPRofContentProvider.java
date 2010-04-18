@@ -77,12 +77,9 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
   private final String m_pdfContext;
 
-  private final WProfContextTokenReplacer m_tokenReplace;
-
-  public BCEShapeWPRofContentProvider( final Feature feature, final WProfContextTokenReplacer tokenReplace, final String photoContext, final String pdfContext, final Properties specification )
+  public BCEShapeWPRofContentProvider( final Feature feature, final String photoContext, final String pdfContext, final Properties specification )
   {
     m_feature = feature;
-    m_tokenReplace = tokenReplace;
     m_photoContext = photoContext;
     m_pdfContext = pdfContext;
     m_specifiction = specification;
@@ -273,13 +270,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
   private File getContextDir( final String context )
   {
-    if( context == null )
-      return null;
-
-    String result = context;
-    final WProfContextToken[] tokens = m_tokenReplace.getTokens();
-    for( final WProfContextToken token : tokens )
-      result = token.replace( context, this );
+    final String result = WProfContextPatternReplacer.getInstance().replaceTokens( context, this );
 
     return new File( result );
   }

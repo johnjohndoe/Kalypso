@@ -57,14 +57,7 @@ public class BCEShapeWPRofContentProviderFactory implements IWProfPointFactory
 
   private String m_pdfContext;
 
-  private WProfContextTokenReplacer m_tokenReplace;
-
   private Properties m_specification;
-
-  public void setTokenReplace( final WProfContextTokenReplacer tokenReplace )
-  {
-    m_tokenReplace = tokenReplace;
-  }
 
   public void setPdfContext( final String pdfContext )
   {
@@ -84,7 +77,7 @@ public class BCEShapeWPRofContentProviderFactory implements IWProfPointFactory
   @Override
   public IWProfPoint newPoint( final Feature feature )
   {
-    return new BCEShapeWPRofContentProvider( feature, m_tokenReplace, m_photoContext, m_pdfContext, m_specification );
+    return new BCEShapeWPRofContentProvider( feature, m_photoContext, m_pdfContext, m_specification );
   }
 
   public Properties getDefaultSpecification( )
