@@ -42,9 +42,8 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -63,16 +62,11 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  */
 public class PrfExporter
 {
-  private final File m_exportDirectory;
+  private final IPrfExporterCallback m_callback;
 
-  private final Set<String> m_filenames = new HashSet<String>();
-
-  private final String m_filenamePattern;
-
-  public PrfExporter( final File exportDirectory, final String filenamePattern )
+  public PrfExporter( final IPrfExporterCallback callback )
   {
-    m_exportDirectory = exportDirectory;
-    m_filenamePattern = filenamePattern;
+    m_callback = callback;
   }
 
   public IStatus export( final IProfileFeature[] profiles, final IProgressMonitor monitor )
@@ -91,11 +85,7 @@ public class PrfExporter
 
       monitor.subTask( String.format( "%s (km %.4f)", profileName, station ) );
 
-      final String fileName = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_filenamePattern, profil );
-      final String uniqueFileName = createUniqueFilename( fileName );
-      final String cleanFileName = cleanupFilename( uniqueFileName );
-      final File file = new File( m_exportDirectory, cleanFileName + ".prf" );
-
+      final File file = m_callback.getExportFile( profil );
       if( file.exists() )
       {
         System.out.println( "File already exists: " + file );
@@ -108,11 +98,17 @@ public class PrfExporter
         configurePrfWriterWithMetadata( water, profil, prfWriter );
 
         prfWriter.write( file );
+
+        m_callback.profileWritten( file );
       }
       catch( final IOException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         resultStatus.add( status );
+      }
+      catch( final CoreException e )
+      {
+        resultStatus.add( e.getStatus() );
       }
 
       monitor.worked( 1 );
@@ -120,17 +116,6 @@ public class PrfExporter
         return new Status( IStatus.CANCEL, id, 1, "Operation cancelled by user", null ); //$NON-NLS-1$
     }
     return resultStatus;
-  }
-
-  private String createUniqueFilename( final String fileName )
-  {
-    String uniqueName = fileName;
-
-    for( int i = 0; i < Integer.MAX_VALUE && m_filenames.contains( uniqueName ); i++ )
-      uniqueName = fileName + i;
-
-    m_filenames.add( uniqueName );
-    return uniqueName;
   }
 
   // FIXME: get this information from a wizard page (let the user define what to do)
@@ -145,15 +130,4 @@ public class PrfExporter
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescriptionCleaned );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, profileName );
   }
-
-  private String cleanupFilename( final String fileName )
-  {
-    String result = fileName;
-    result = fileName.replace( '#', '_' );
-    result = fileName.replace( ':', '_' );
-    result = fileName.replace( ' ', '_' );
-    result = fileName.replace( ' ', '_' );
-    return result;
-  }
-
 }
