@@ -44,9 +44,7 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
-import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
@@ -235,7 +233,7 @@ public class NodeResultHelper
 
   public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final String crs ) throws Exception, GM_Exception
   {
-    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel, null );
+    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     IProfil cutProfile = null;
 
     if( points != null )
