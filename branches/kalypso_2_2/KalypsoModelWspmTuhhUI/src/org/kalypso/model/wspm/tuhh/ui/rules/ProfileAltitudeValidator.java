@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import java.awt.Point;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -48,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -103,79 +106,66 @@ public class ProfileAltitudeValidator
     m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID, m_pluginId, new IProfilMarkerResolution[] { resolution } );
   }
 
-  public final int isEqual( final int begin, final int end, final String componentID )
+  public final int whileEqual( final int begin, final int end, final String componentID )
   {
-    return isEqual( begin, end, componentID, IWspmConstants.POINT_PROPERTY_HOEHE );
+    return validate( begin, end, componentID, 0, false );
   }
 
-  public final int isEqual( final int begin, final int end, final String componentID_1, final String componentID_2 )
+  public final int whileUpper( final int begin, final int end, final String componentID, final boolean orEqual )
   {
-    return compare( begin, end, componentID_1, componentID_2, 0 );
+    return validate( begin, end, componentID, orEqual ? -1 : 1, orEqual );
   }
 
-  public final int isUpper( final int begin, final int end, final String upperComp, final String lowerComp )
+  public final int whileLower( final int begin, final int end, final String componentID, final boolean orEqual )
   {
-    return compareNot( begin, end, upperComp, lowerComp, -1 );
+    return validate( begin, end, componentID, orEqual ? 1 : -1, orEqual );
   }
 
-  public final int isUpper( final int begin, final int end, final String upperComp )
+  public final int whileNaN( final int begin, final int end, final String componentID )
   {
-    return isUpper( begin, end, upperComp, IWspmConstants.POINT_PROPERTY_HOEHE );
-  }
-
-  public final int isLower( final int begin, final int end, final String lowerComp )
-  {
-    return isLower( begin, end, IWspmConstants.POINT_PROPERTY_HOEHE, lowerComp );
-  }
-
-  public final int isLower( final int begin, final int end, final String upperComp, final String lowerComp )
-  {
-    return compareNot( begin, end, upperComp, lowerComp, 1 );
-  }
-
-  /**
-   * @return the index of first point check failed
-   * @param check
-   *          -1 for componentID_1 < componentID_2
-   *          <p>
-   *          0 for componentID_1 = componentID_2
-   *          <p>
-   *          1 for componentID_1 > componentID_2
-   */
-
-  public final int compareNot( final int begin, final int end, final String componentID_1, final String componentID_2, final int check )
-  {
-
     final int step = begin < end ? 1 : -1;
     int i = begin;
     final IRecord[] points = m_profil.getPoints();
     while( i != end )
     {
       final IRecord point = points[i];
-      final Double h1 = ProfilUtil.getDoubleValueFor( componentID_1, point );
-      final Double h2 = ProfilUtil.getDoubleValueFor( componentID_2, point );
-      if( h1.isNaN() || !h2.isNaN() || (int) (Math.abs( h1 - h2 ) < m_delta ? 0 : Math.signum( h2 - h1 )) != check )
-      {
-        i = i + step;
-        continue;
-      }
-      return i;
+      final Double h = ProfilUtil.getDoubleValueFor( componentID, point );
+      if( !h.isNaN() )
+        return i;
+      i = i + step;
     }
     return -1;
   }
 
-  public final int compare( final int begin, final int end, final String componentID_1, final String componentID_2, final int check )
+  public final boolean compare( final Double d1, final Double d2, final int signum, final boolean orEqual )
+  {
+    final int sign = (int) (Math.abs( d1 - d2 ) < m_delta ? 0 : Math.signum( d1 - d2 ));
+    return orEqual ^ (sign == signum);
+  }
+
+  /**
+   * @param check
+   *          the signum(id1-id2) result to look for (-1,0,1)
+   * @return the index of first point check failed or -1 if validation succeed
+   */
+  public final int validate( final int begin, final int end, final String componentID, final int check, final boolean orEqual )
   {
     final int step = begin < end ? 1 : -1;
     int i = begin;
+    int lastPos = -1;
+
     final IRecord[] points = m_profil.getPoints();
     while( i != end )
     {
       final IRecord point = points[i];
-      final Double h1 = ProfilUtil.getDoubleValueFor( componentID_1, point );
-      final Double h2 = ProfilUtil.getDoubleValueFor( componentID_2, point );
-      if( !h1.isNaN() && !h2.isNaN() && (int) (Math.abs( h1 - h2 ) < m_delta ? 0 : Math.signum( h2 - h1 )) == check )
-        return i;
+      final Double h1 = ProfilUtil.getDoubleValueFor( componentID, point );
+      if( !h1.isNaN() )
+      {
+        final Double h2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, point );
+        if( !compare( h1, h2, check, orEqual ) )
+          return lastPos;
+        lastPos = i;
+      }
       i = i + step;
     }
     return -1;
