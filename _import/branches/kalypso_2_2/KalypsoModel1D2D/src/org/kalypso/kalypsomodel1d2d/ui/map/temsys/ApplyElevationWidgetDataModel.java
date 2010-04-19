@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -263,6 +264,18 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public List<IFE1D2DNode> getSelectedNodeList( )
   {
     return m_selectedNodeList;
+  }
+  
+  public void saveModels(){
+    try
+    {
+      m_dataProvider.saveModel( new NullProgressMonitor() );
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
 }
