@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.apache.tools.ant.taskdefs.optional.junit.OutErrSummaryJUnitResultFormatter;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -121,17 +122,28 @@ public class BrueckeRule extends AbstractValidatorRule
         pav.createMarker( "Trennflächen fehlen", 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
         return;
       }
-      final int innerLeft = pav.isEqual( 1, pointsCount-1, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-      final int innerRight = pav.isEqual( pointsCount - 2, 0, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+      // ersten BrückenOberkantenpunkt von Links
+      final int pLOK = pav.whileNaN( 0, pointsCount, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+      // ersten BrückenOberkantenpunkt von Rechts
+      final int pROK = pav.whileNaN( pointsCount - 1, pLOK, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+      // ersten BrückenUnterkantenpunkt von Links
+      final int pLUK = pav.whileNaN( 0, pointsCount, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+      // ersten BrückenUnterkantenpunkt von Rechts
+      final int pRUK = pav.whileNaN( pointsCount - 1, pLUK, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
 
-   // Flußschlauch
+      // Flußschlauch
+      final int iL = pav.whileEqual( pLUK, pRUK, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+      final int innerLeft = iL < 0 ? pLUK : iL;
+      final int iR = pav.whileEqual( pRUK, pLUK, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+      final int innerRight = iR < 0 ? pRUK : iR;
       if( innerLeft == -1 || innerRight == -1 )
       {
         pav.createMarker( "Brücke unvollständig", 0, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
         return;
       }
+
       // Trennflächen position
-     
+
       if( innerRight != markerRight )
       {
         pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.9" ), markerRight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, new MoveDeviderResolution( 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerRight ) );//$NON-NLS-1$
@@ -139,7 +151,7 @@ public class BrueckeRule extends AbstractValidatorRule
       }
       if( innerLeft != markerLeft )
       {
-        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.9" ), markerLeft, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, new MoveDeviderResolution( 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerRight ) );//$NON-NLS-1$
+        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.9" ), markerLeft, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerLeft ) );//$NON-NLS-1$
         return;
       }
 
@@ -152,8 +164,10 @@ public class BrueckeRule extends AbstractValidatorRule
       {
         final double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pav.getPoints()[i] ).doubleValue();
         final double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, pav.getPoints()[i] ).doubleValue();
-        minOK = Math.min( minOK, okB );
-        maxUK = Math.max( maxUK, ukB );
+        if( !Double.isNaN( okB ) )
+          minOK = Math.min( minOK, okB );
+        if( !Double.isNaN( ukB ) )
+          maxUK = Math.max( maxUK, ukB );
         // min Oberkante > max Unterkante
         if( maxUK > minOK )
         {
@@ -161,9 +175,10 @@ public class BrueckeRule extends AbstractValidatorRule
           return;
         }
       }
-
-      final int outerLeft = pav.isEqual( 0, innerLeft, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-      final int outerRight = pav.isEqual( pointsCount - 1, innerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+      final int outL = pav.whileUpper( pLOK, innerLeft, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, true );
+      final int outerLeft = outL < 0 ? pLOK : outL;
+      final int outR = pav.whileUpper( pROK, innerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, true );
+      final int outerRight = outR < 0 ? pROK : outR;
 
       // Wiederlager
       if( innerRight == outerRight )
@@ -178,16 +193,17 @@ public class BrueckeRule extends AbstractValidatorRule
       }
 
       // Schnittkanten
-      int duh = pav.isUpper( outerLeft, outerRight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+      int duh = pav.whileUpper( outerLeft, outerRight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, true );
       if( duh > -1 )
       {
-        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.21" ), duh, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
+        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23" ), duh, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );//$NON-NLS-1$
         return;
       }
-      int duo = pav.isUpper( outerLeft, outerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-      if( duo > -1 )
+      // Schnittkanten
+      int doh = pav.whileUpper( outerLeft, outerRight < pointsCount - 1 ? outerRight + 1 : outerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, true );
+      if( doh > -1 )
       {
-        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23" ), duo, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
+        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23" ), doh, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
         return;
       }
 
