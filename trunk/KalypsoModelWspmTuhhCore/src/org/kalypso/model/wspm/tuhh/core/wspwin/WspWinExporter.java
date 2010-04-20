@@ -257,8 +257,8 @@ public class WspWinExporter
 
       pw = new PrintWriter( new BufferedWriter( new FileWriter( qwtFile ) ) );
 
-      String runoffName = runOffEvent.getName();
-      String cleanRunoffName = cleanupRunoffName( runoffName );
+      final String runoffName = runOffEvent.getName();
+      final String cleanRunoffName = cleanupRunoffName( runoffName );
       pw.print( cleanRunoffName );
       pw.print( " " ); //$NON-NLS-1$
       pw.println( result.size() );
@@ -281,7 +281,7 @@ public class WspWinExporter
     }
   }
 
-  private static String cleanupRunoffName( String runoffName )
+  private static String cleanupRunoffName( final String runoffName )
   {
     return runoffName.replaceAll( "( |,|\\.)", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -410,7 +410,6 @@ public class WspWinExporter
 
     PrintWriter zustWriter = null;
     PrintWriter psiWriter = null;
-    PrintWriter prfWriter = null;
     try
     {
       zustFile.getParentFile().mkdirs();
@@ -422,38 +421,48 @@ public class WspWinExporter
       int fileCount = 0;
       for( final TuhhReachProfileSegment segment : segments )
       {
-        final BigDecimal station = segment.getStation();
+        PrintWriter prfWriter = null;
+        try
+        {
+          final BigDecimal station = segment.getStation();
 
-        if( stationRange.isOutside( station ) )
-          continue;
+          if( stationRange.isOutside( station ) )
+            continue;
 
-        final IProfileFeature profileMember = segment.getProfileMember();
+          final IProfileFeature profileMember = segment.getProfileMember();
 
-        final String prfName = "Profil_" + fileCount++ + ".prf"; //$NON-NLS-1$ //$NON-NLS-2$
+          final String prfName = "Profil_" + fileCount++ + ".prf"; //$NON-NLS-1$ //$NON-NLS-2$
 
-        zustWriter.print( prfName );
-        zustWriter.print( " " ); //$NON-NLS-1$
-        // TODO mindestens 4, besser 5 Nachkommastellen?
-        zustWriter.println( station );
+          zustWriter.print( prfName );
+          zustWriter.print( " " ); //$NON-NLS-1$
+          // TODO mindestens 4, besser 5 Nachkommastellen?
+          zustWriter.println( station );
 
-        final IProfil profil = profileMember.getProfil();
-        profil.setStation( station.doubleValue() );
+          final IProfil profil = profileMember.getProfil();
+          profil.setStation( station.doubleValue() );
 
-        final File outPrfFile = new File( zustFile.getParentFile(), prfName );
-        prfWriter = new PrintWriter( outPrfFile );
-        final IProfilSink ps = new PrfSink();
-        ps.write( new IProfil[] { profil }, prfWriter );
+          final File outPrfFile = new File( zustFile.getParentFile(), prfName );
+          prfWriter = new PrintWriter( outPrfFile );
+          final IProfilSink ps = new PrfSink();
+          ps.write( new IProfil[] { profil }, prfWriter );
+          prfWriter.flush();
+          prfWriter.close();
+        }
+        finally
+        {
+          IOUtils.closeQuietly( prfWriter );
+        }
       }
 
+      zustWriter.flush();
       zustWriter.close();
+      psiWriter.flush();
       psiWriter.close();
-      prfWriter.close();
     }
     finally
     {
       IOUtils.closeQuietly( zustWriter );
       IOUtils.closeQuietly( psiWriter );
-      IOUtils.closeQuietly( prfWriter );
     }
   }
 }
