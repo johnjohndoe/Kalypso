@@ -56,12 +56,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Utility class for creating SLD styles
- *
+ * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class StyleUtils
 {
-
   private boolean m_DataPrepared = false;
 
   private boolean m_CreateFilter = false;
@@ -241,25 +240,25 @@ public class StyleUtils
 
   /**
    * Creates custom SLD file based on input GML file
-   *
-   * @param inputGMLFile -
-   *            input GML file, full path
-   * @param resultSLDFile -
-   *            output SLD file, full path
-   * @param styleLayerName -
-   *            name for styled layer, eg. "Roughness style"
-   * @param geometryProperty -
-   *            optional; name of geometry property to use; if null or empty/whitespace string, default geometry
-   *            property will be used instead
-   * @param filterProperty -
-   *            optional; name of the property on which values different styles will be defined; if null or
-   *            empty/whitespace string, one default style will be created (no filtering)
-   * @param knownPropertyColorSet -
-   *            optional; set of known filterProperty values with preffered colors; doesn't have to be full set of all
-   *            possible values; can also be null or empty; for values not contained in knownPropertyColorSet,
-   *            (different) random colors will be used
-   * @throws Exception -
-   *             if GmlSerializer cannot create workspace based on input GML file
+   * 
+   * @param inputGMLFile
+   *          - input GML file, full path
+   * @param resultSLDFile
+   *          - output SLD file, full path
+   * @param styleLayerName
+   *          - name for styled layer, eg. "Roughness style"
+   * @param geometryProperty
+   *          - optional; name of geometry property to use; if null or empty/whitespace string, default geometry
+   *          property will be used instead
+   * @param filterProperty
+   *          - optional; name of the property on which values different styles will be defined; if null or
+   *          empty/whitespace string, one default style will be created (no filtering)
+   * @param knownPropertyColorSet
+   *          - optional; set of known filterProperty values with preffered colors; doesn't have to be full set of all
+   *          possible values; can also be null or empty; for values not contained in knownPropertyColorSet, (different)
+   *          random colors will be used
+   * @throws Exception
+   *           - if GmlSerializer cannot create workspace based on input GML file
    * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
    */
   public static void createCustomStyle( final String inputGMLFile, final String resultSLDFile, final String styleLayerName, final String geometryProperty, final String filterProperty, final HashMap<String, Color> knownPropertyColorSet ) throws Exception
@@ -330,20 +329,20 @@ public class StyleUtils
 
   /**
    * Helper function that is actually creating SLD file
-   *
+   * 
    * @param styleLayerName
    * @param geometryProperty
    * @param filterProperty
    * @param filterPropertyColorMap
    * @param resultSLDFile
-   * @throws IOException -
-   *             by FileWriter
-   * @throws SAXException -
-   *             by XML parser
-   * @throws TransformerFactoryConfigurationError -
-   *             by Transformer
-   * @throws TransformerException -
-   *             by Transformer
+   * @throws IOException
+   *           - by FileWriter
+   * @throws SAXException
+   *           - by XML parser
+   * @throws TransformerFactoryConfigurationError
+   *           - by Transformer
+   * @throws TransformerException
+   *           - by Transformer
    */
   @SuppressWarnings("unchecked")
   private static final void internal_createStyle( final String styleLayerName, final String geometryProperty, final String filterProperty, final HashMap<String, Color> filterPropertyColorMap, final String resultSLDFile ) throws IOException, SAXException, TransformerFactoryConfigurationError, TransformerException
