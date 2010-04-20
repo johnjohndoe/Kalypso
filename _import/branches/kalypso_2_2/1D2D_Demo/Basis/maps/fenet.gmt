@@ -60,7 +60,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Rauheitszonen" id="ID_12" linktype="gmt" xlink:actuate="onRequest" xlink:href="roughness.gmt" xlink:type="simple">
+        <mapv:layer visible="false" name="%fenet.mapv.layer.Rauheitszonen" id="ID_12" linktype="gmt" xlink:actuate="onRequest" xlink:href="roughness.gmt" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
