@@ -40,22 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.math.NumberRange;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -67,8 +71,18 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizerUtils;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.xml.sax.SAXException;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chartconfig.x020.AxisType;
@@ -99,6 +113,8 @@ public class LengthSectionProcessor
   private File m_breaklineFile;
 
   private File m_tinFile;
+
+  private File m_tinSldFile;
 
   private File m_boundaryFile;
 
@@ -174,39 +190,39 @@ public class LengthSectionProcessor
 // final TimeLogger timeLogger = new TimeLogger( "Post Processing Length-Section" );
 
     if( !gmlFile.exists() )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5" ) ); //$NON-NLS-1$
 
-    final String diagFilename = String.format( "Längsschnitt" + m_runoffPattern + ".kod", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String tableFilename = String.format( "Tabelle" + m_runoffPattern + ".gft", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String breaklineFilename = String.format( "Bruchkanten" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String tinFilename = String.format( "wspTin" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String boundaryFilename = String.format( "Modellgrenzen" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String waterlevelFilename = String.format( "Überschwemmungslinie" + m_runoffPattern + ".gml", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String runoffName = String.format( m_runoffPattern, runoff );
+
+    final String diagFilename = "Längsschnitt" + runoffName + ".kod"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String tableFilename = "Tabelle" + runoffName + ".gft"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String breaklineFilename = "Bruchkanten" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String tinFilename = "wspTin" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String tinSldFilename = "wspTin" + runoffName + ".sld"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String boundaryFilename = "Modellgrenzen" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String waterlevelFilename = "Überschwemmungslinie" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
 
     m_diagFile = new File( m_outDir, diagFilename );
     m_tableFile = new File( m_outDir, tableFilename );
     m_breaklineFile = new File( m_dataDir, breaklineFilename );
     m_tinFile = new File( m_dataDir, tinFilename );
+    m_tinSldFile = new File( m_dataDir, tinSldFilename );
+
     m_boundaryFile = new File( m_dataDir, boundaryFilename );
     m_waterlevelFile = new File( m_dataDir, waterlevelFilename );
 
     final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null ); //$NON-NLS-1$
 
     // Read Length-Section GML
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentInterim( "Start-Read LS: " );
-
     final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( gmlFile.toURI().toURL(), null );
     final Feature rootFeature = obsWks.getRootFeature();
 
     final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
     final TupleResult result = lengthSectionObs.getResult();
- 
+
     final TuhhReachProfileSegment[] reachProfileSegments = m_reach.getReachProfileSegments();
 
     /* sort the segments */
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentInterim( "Sort Segments: " );
     final boolean isDirectionUpstreams = m_reach.getWaterBody().isDirectionUpstreams();
     Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
@@ -215,9 +231,6 @@ public class LengthSectionProcessor
     //
     try
     {
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentInterim( "Start-Create Diagram " );
-
       final WspmWaterBody waterBody = m_reach.getWaterBody();
       createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
       final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF-8" ); //$NON-NLS-1$
@@ -226,7 +239,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.0") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.0" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -244,7 +257,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.1") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.1" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -252,14 +265,13 @@ public class LengthSectionProcessor
     //
     try
     {
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentInterim( "Start-Create Breaklines " );
-
-      BreakLinesHelper.createBreaklines( reachProfileSegments, result,IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, Double.valueOf( m_epsThinning ), m_breaklineFile, m_tinFile );
+      final NumberRange wspRange = BreakLinesHelper.createBreaklines( reachProfileSegments, result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, Double.valueOf( m_epsThinning ), m_breaklineFile, m_tinFile );
+      if( wspRange != null )
+        createWspTinSld( wspRange );
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.2") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.2" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -267,14 +279,11 @@ public class LengthSectionProcessor
     //
     try
     {
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentInterim( "Start-Create Modelboundary " );
-
       BreakLinesHelper.createModelBoundary( reachProfileSegments, result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, m_boundaryFile, false );
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.3") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.3" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -282,20 +291,43 @@ public class LengthSectionProcessor
     //
     try
     {
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentInterim( "Start-Waterlevel " );
-
-      BreakLinesHelper.createModelBoundary( reachProfileSegments, result,IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, m_waterlevelFile, true );
+      BreakLinesHelper.createModelBoundary( reachProfileSegments, result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, m_waterlevelFile, true );
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.4") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.4" ) ) ); //$NON-NLS-1$
     }
 
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentTotal( "Fertisch " );
-
     return multiStatus;
+  }
+
+  private void createWspTinSld( final NumberRange wspRange ) throws IOException, XMLParsingException, SAXException
+  {
+    /* Fetch template polygon symbolizer */
+    final URL wspSldLocation = getClass().getResource( "resources/WspTin.sld" );
+    final FeatureTypeStyle wspStyle = SLDFactory.createFeatureTypeStyle( null, wspSldLocation );
+    final Rule[] rules = wspStyle.getRules();
+    final SurfacePolygonSymbolizer polySymb = (SurfacePolygonSymbolizer) rules[0].getSymbolizers()[0];
+    final PolygonColorMap colorMap = polySymb.getColorMap();
+
+    final BigDecimal stepWidth = new BigDecimal( "0.01" );
+    final BigDecimal minValue = new BigDecimal( wspRange.getMinimumDouble() );
+    final BigDecimal maxValue = new BigDecimal( wspRange.getMaximumDouble() );
+
+    final Color minFill = new Color( 255, 0, 0, 128 );
+    final Color maxFill = new Color( 0, 255, 0, 128 );
+    final Color minStroke = ColorUtilities.createTransparent( minFill, 255 );
+    final Color maxStroke = ColorUtilities.createTransparent( maxFill, 255 );
+    final PolygonColorMapEntry fromEntry = StyleFactory.createPolygonColorMapEntry( minFill, minStroke, minValue, minValue.add( stepWidth ) );
+    final PolygonColorMapEntry toEntry = StyleFactory.createPolygonColorMapEntry( maxFill, maxStroke, maxValue.subtract( stepWidth ), maxValue );
+
+    /* Create and replace new color map */
+    final List<PolygonColorMapEntry> colorMapEntries = PolygonSymbolizerUtils.createColorMap( fromEntry, toEntry, stepWidth, minValue, maxValue, true );
+    colorMap.replaceColorMap( colorMapEntries );
+
+    /* Save as tin-sld */
+    final String styleAsString = wspStyle.exportAsXML();
+    FileUtils.writeStringToFile( m_tinSldFile, styleAsString, "UTF-8" );
   }
 
   private String replaceTokens( final String template, final Map<String, String> tokenMap )
@@ -332,6 +364,11 @@ public class LengthSectionProcessor
     return m_tinFile;
   }
 
+  public File getTinSldFile( )
+  {
+    return m_tinSldFile;
+  }
+
   public File getBoundaryFile( )
   {
     return m_boundaryFile;
@@ -352,9 +389,11 @@ public class LengthSectionProcessor
     // Check if optional bundle is installed
     // They are no more optional... however the id has changed and this does not work any more...
     // TODO: probably its better to check per reflection if a certain class is present...
-    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a warning message)
-//    if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" ) == null )
-//      return;
+    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a
+    // warning message)
+// if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" )
+    // == null )
+// return;
 
     /* We just load the template and tweak the direction of the station-axis */
     final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
