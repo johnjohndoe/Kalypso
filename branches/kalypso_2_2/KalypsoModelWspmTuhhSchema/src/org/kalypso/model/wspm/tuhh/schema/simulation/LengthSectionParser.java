@@ -134,8 +134,8 @@ public class LengthSectionParser
         final String nextLine = lineIterator.nextLine();
         // FIXME: do not use -999; use NaN instead and Kalypso should know how to handle it
         /* Introduce space around 'NaN' and '***' values to make it parseable */
-        if( nextLine.contains( "NaN" ))
-          log.log( false, "WARNING: Results contain NaN values, calculation probably not correct." );
+        if( nextLine.contains( "NaN" )) //$NON-NLS-1$
+          log.log( false, "WARNING: Results contain NaN values, calculation probably not correct." ); //$NON-NLS-1$
         final String cleanLine1 = nextLine.replaceAll( "-NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
         final String cleanLine2 = cleanLine1.replaceAll( "NaN", " -999.999 " ); //$NON-NLS-1$ //$NON-NLS-2$
 

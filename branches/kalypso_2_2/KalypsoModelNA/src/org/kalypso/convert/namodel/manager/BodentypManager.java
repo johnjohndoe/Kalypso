@@ -310,27 +310,27 @@ public class BodentypManager extends AbstractManager
     if( swale instanceof ISwale )
     {
       if( profileThickness == null )
-        return "mulde_b";
+        return "mulde_b"; //$NON-NLS-1$
       if( profileThickness == 0.3 )
-        return "mulde_30";
+        return "mulde_30"; //$NON-NLS-1$
       if( profileThickness == 0.6 )
-        return "mulde_60";
+        return "mulde_60"; //$NON-NLS-1$
       if( profileThickness == 0.8 )
-        return "mulde_80";
-      return "mulde_b";
+        return "mulde_80"; //$NON-NLS-1$
+      return "mulde_b"; //$NON-NLS-1$
     }
     if( swale instanceof ISwaleInfiltrationDitch )
     {
       if( profileThickness == null )
-        return "mrs";
+        return "mrs"; //$NON-NLS-1$
       if( profileThickness == 0.3 )
-        return "mrs_30";
+        return "mrs_30"; //$NON-NLS-1$
       if( profileThickness == 0.6 )
-        return "mrs_60";
+        return "mrs_60"; //$NON-NLS-1$
       if( profileThickness == 0.8 )
-        return "mrs_80";
-      return "mrs";
+        return "mrs_80"; //$NON-NLS-1$
+      return "mrs"; //$NON-NLS-1$
     }
-    throw new Exception( "Unknown swale type, class: " + swale.getClass().getCanonicalName() );
+    throw new Exception( "Unknown swale type, class: " + swale.getClass().getCanonicalName() ); //$NON-NLS-1$
   }
 }

@@ -971,7 +971,7 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_15;
     else
     {
-      Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) );
+      Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
       m_kalypsoKernelPath = EXE_FILE_2_15;
     }
   }
@@ -1247,7 +1247,7 @@ public class NaModelInnerCalcJob implements ISimulation
           }
         }
         // lese ergebnis-link um target fuer zml zu finden
-        String resultPathRelative = "";
+        String resultPathRelative = ""; //$NON-NLS-1$
         if( targetTSLink != null )
         {
           try
@@ -1265,7 +1265,7 @@ public class NaModelInnerCalcJob implements ISimulation
               // WTF!?
               // resultPathRelative = href.substring( 19 );
 
-              resultPathRelative = "Pegel" + href.substring( href.lastIndexOf( "/" ) );
+              resultPathRelative = "Pegel" + href.substring( href.lastIndexOf( "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
             }
           }
@@ -1359,7 +1359,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final String featureName = feature.getName();
       final String featureDescription = feature.getDescription();
       final String nodeTitle = (featureName == null || featureName.length() == 0) ? feature.getId() : featureName;
-      final String nodeDescription = (featureDescription == null || featureDescription.length() == 0) ? "" : featureDescription;
+      final String nodeDescription = (featureDescription == null || featureDescription.length() == 0) ? "" : featureDescription; //$NON-NLS-1$
 
       final File resultFile = new File( resultDir.getAbsolutePath(), "/Ergebnisse/Aktuell/" + resultFileRelativePath ); //$NON-NLS-1$
       final IObservation observation = ZmlFactory.parseXML( resultFile.toURI().toURL(), null );
@@ -1466,7 +1466,7 @@ public class NaModelInnerCalcJob implements ISimulation
   private final String getDoubleValueFormatted( final Object object )
   {
     if( object == null )
-      return "";
+      return ""; //$NON-NLS-1$
     try
     {
       double value = Double.NaN;
@@ -1478,7 +1478,7 @@ public class NaModelInnerCalcJob implements ISimulation
       {
         value = Double.parseDouble( (String) object );
       }
-      return String.format( Locale.ENGLISH, "%.8f", value );
+      return String.format( Locale.ENGLISH, "%.8f", value ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

@@ -658,7 +658,7 @@ public class NAConfiguration
 
   public void addHydrotopMapping( final int catchmentAsciiID, final int hydrotopAsciiID, final Hydrotop hydrotop )
   {
-    getHydrotopMapping().add( String.format( Locale.US, "%6d %6d   --->   [%s] \t%s", catchmentAsciiID, hydrotopAsciiID, hydrotop.getId(), hydrotop.getName() ) );
+    getHydrotopMapping().add( String.format( Locale.US, "%6d %6d   --->   [%s] \t%s", catchmentAsciiID, hydrotopAsciiID, hydrotop.getId(), hydrotop.getName() ) ); //$NON-NLS-1$
   }
 
   public List<String> getHydrotopMapping( )

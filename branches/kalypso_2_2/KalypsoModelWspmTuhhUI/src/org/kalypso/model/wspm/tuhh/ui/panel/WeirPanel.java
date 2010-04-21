@@ -332,7 +332,7 @@ public class WeirPanel extends AbstractProfilView
           final IComponent beiwert = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
           // TODO: very strange code... check this! What is the type of these components??
           final String objValue = building.getValue( beiwert ).toString();
-          return NumberUtils.isDouble( objValue ) ? objValue : String.format( "%.4f", objValue );
+          return NumberUtils.isDouble( objValue ) ? objValue : String.format( "%.4f", objValue ); //$NON-NLS-1$
         }
       }
       else if( m_position < Integer.MAX_VALUE )
@@ -340,7 +340,7 @@ public class WeirPanel extends AbstractProfilView
         final IProfilPointMarker marker = getMarker();
         final Object objValue = marker.getValue();
         if( objValue instanceof Number )
-          return String.format( "%.4f", objValue );
+          return String.format( "%.4f", objValue ); //$NON-NLS-1$
       }
 
       return "";//$NON-NLS-1$

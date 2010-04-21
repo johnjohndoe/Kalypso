@@ -122,7 +122,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     public String getDateMaximumFormatted( )
     {
       final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-      final DateFormat dfm = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss Z" );
+      final DateFormat dfm = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss Z" ); //$NON-NLS-1$
       dfm.setTimeZone( timeZone );
       return dfm.format( m_dateMaximum );
     }
@@ -131,7 +131,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/modelSpecification.xml" );
+    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-1$
   }
 
   @Override
@@ -145,7 +145,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
     if( !calculatedResultsFolder.isDirectory() || !statusQuoResultsFolder.isDirectory() )
     {
-      setStatus( STATUS.ERROR, "Input data not available." );
+      setStatus( STATUS.ERROR, "Input data not available." ); //$NON-NLS-1$
       return;
     }
 
@@ -184,19 +184,19 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       final IAxis[] axes1 = obs1.getAxisList();
       final IAxis[] axes2 = obs2.getAxisList();
-      final IAxis idAxis1 = ObservationUtilities.findAxisByName( axes1, "NODE_ID" );
-      final IAxis idAxis2 = ObservationUtilities.findAxisByName( axes2, "NODE_ID" );
-      final IAxis dateAxis1 = ObservationUtilities.findAxisByName( axes1, "DATE" );
-      final IAxis dateAxis2 = ObservationUtilities.findAxisByName( axes2, "DATE" );
-      final IAxis valueAxis1 = ObservationUtilities.findAxisByName( axes1, "DISCHARGE" );
-      final IAxis valueAxis2 = ObservationUtilities.findAxisByName( axes2, "DISCHARGE" );
-      final IAxis volumeAxis1 = ObservationUtilities.findAxisByName( axes1, "VOLUME" );
-      final IAxis volumeAxis2 = ObservationUtilities.findAxisByName( axes2, "VOLUME" );
-      IAxis pathAxis1 = ObservationUtilities.findAxisByName( axes1, "PATH" );
-      final IAxis pathAxis2 = ObservationUtilities.findAxisByName( axes2, "PATH" );
+      final IAxis idAxis1 = ObservationUtilities.findAxisByName( axes1, "NODE_ID" ); //$NON-NLS-1$
+      final IAxis idAxis2 = ObservationUtilities.findAxisByName( axes2, "NODE_ID" ); //$NON-NLS-1$
+      final IAxis dateAxis1 = ObservationUtilities.findAxisByName( axes1, "DATE" ); //$NON-NLS-1$
+      final IAxis dateAxis2 = ObservationUtilities.findAxisByName( axes2, "DATE" ); //$NON-NLS-1$
+      final IAxis valueAxis1 = ObservationUtilities.findAxisByName( axes1, "DISCHARGE" ); //$NON-NLS-1$
+      final IAxis valueAxis2 = ObservationUtilities.findAxisByName( axes2, "DISCHARGE" ); //$NON-NLS-1$
+      final IAxis volumeAxis1 = ObservationUtilities.findAxisByName( axes1, "VOLUME" ); //$NON-NLS-1$
+      final IAxis volumeAxis2 = ObservationUtilities.findAxisByName( axes2, "VOLUME" ); //$NON-NLS-1$
+      IAxis pathAxis1 = ObservationUtilities.findAxisByName( axes1, "PATH" ); //$NON-NLS-1$
+      final IAxis pathAxis2 = ObservationUtilities.findAxisByName( axes2, "PATH" ); //$NON-NLS-1$
       if( pathAxis2 == null )
       {
-        Logger.getAnonymousLogger().log( Level.SEVERE, "Unable to detect node result path. Postprocessing aborted." );
+        Logger.getAnonymousLogger().log( Level.SEVERE, "Unable to detect node result path. Postprocessing aborted." ); //$NON-NLS-1$
         return;
       }
       final boolean useOnlyResult = pathAxis1 == null;
@@ -208,7 +208,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       final int cnt1 = values1.getCount();
       final int cnt2 = values2.getCount();
       if( cnt1 != cnt2 )
-        Logger.getAnonymousLogger().log( Level.WARNING, "Compared NA results are not of the same size; check calculation config!" );
+        Logger.getAnonymousLogger().log( Level.WARNING, "Compared NA results are not of the same size; check calculation config!" ); //$NON-NLS-1$
 
       for( int i = 0; i < Math.max( cnt1, cnt2 ); i++ )
       {
@@ -297,7 +297,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       if( affectedNodes.size() == 0 )
       {
-        final String message = "No catchment is affected. Please redefine the model/planing area.";
+        final String message = "No catchment is affected. Please redefine the model/planing area."; //$NON-NLS-1$
         // Logger.getAnonymousLogger().log( Level.WARNING, message );
         setStatus( STATUS.ERROR, message );
         throw new SimulationException( message );
@@ -322,10 +322,10 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         FileUtils.copyFileToDirectory( calcFile, calcFolder );
         final String izPath = String.format( Locale.US, "izNodes/%s/%s", name, izFile.getName() ); //$NON-NLS-1$
         final String calcPath = String.format( Locale.US, "sudsNodes/%s/%s", name, calcFile.getName() ); //$NON-NLS-1$
-        final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name );
+        final Obsdiagview view = NodeResultsComparisonViewCreator.createView( "Gesamtabfluss: " + name, "", izPath, calcPath, name ); //$NON-NLS-1$ //$NON-NLS-2$
         final Obstableview table = NodeResultsComparisonViewCreator.createTableView( izPath, calcPath );
-        final File odtFile = new File( tmpdir, name + ".odt" );
-        final File ottFile = new File( tmpdir, name + ".ott" );
+        final File odtFile = new File( tmpdir, name + ".odt" ); //$NON-NLS-1$
+        final File ottFile = new File( tmpdir, name + ".ott" ); //$NON-NLS-1$
         final BufferedWriter outDiag = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( odtFile ), "UTF-8" ) ); //$NON-NLS-1$
         final BufferedWriter outTable = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( ottFile ), "UTF-8" ) ); //$NON-NLS-1$
         DiagViewUtils.saveDiagramTemplateXML( view, outDiag );
@@ -381,7 +381,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( node.getName() );
 
         final String riverCode = (String) node.getProperty( NaModelConstants.NODE_RIVER_CODE_PROP );
-        dataList.add( riverCode == null ? "" : riverCode );
+        dataList.add( riverCode == null ? "" : riverCode ); //$NON-NLS-1$
         final Double riverKm = (Double) node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
         dataList.add( riverKm == null ? Double.NaN : riverKm );
 
@@ -426,7 +426,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
       throw new SimulationException( e.getLocalizedMessage() );
     }
-    resultEater.addResult( "OutputFolder", tmpdir );
-    setStatus( STATUS.OK, "Success" );
+    resultEater.addResult( "OutputFolder", tmpdir ); //$NON-NLS-1$
+    setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$
   }
 }

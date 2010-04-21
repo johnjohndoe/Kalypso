@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _KalininMiljukovGroup_QNAME = new QName("http://www.kalypso.wb.tu-harburg.de/rrm/kalininmiljukov", "KalininMiljukovGroup");
+    private final static QName _KalininMiljukovGroup_QNAME = new QName("http://www.kalypso.wb.tu-harburg.de/rrm/kalininmiljukov", "KalininMiljukovGroup"); //$NON-NLS-1$ //$NON-NLS-2$
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: de.tu_harburg.wb.kalypso.rrm.kalininmiljukov
