@@ -42,11 +42,15 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.util.Formatter;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -61,46 +65,80 @@ public class CsvSink implements IProfilSink
 
   private final String lineSeparator = System.getProperty( "line.separator" );
 
-  private final void writeData( final Writer writer, final IComponent[] comps, final IProfil[] profiles ) throws IOException
+  private final WspmResultLengthSection[] m_lengthSections;
+
+  public CsvSink( final WspmResultLengthSection[] lengthSections )
+  {
+    m_lengthSections = lengthSections;
+  }
+
+  private final void writeData( final Formatter formatter, final IComponent[] comps, final IProfil[] profiles ) throws IOException
   {
     // get data from profiles
     for( final IProfil profil : profiles )
     {
+      final double station = profil.getStation();
+      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
+
       // get metadata from profile
-      final String metaString = String.format( DOUBLE_FORMAT + "\t'%s'\t'%s'\t'%s'", profil.getStation(), profil.getName(), profil.getDescription(), profil.getComment() );
+      final String metaString = String.format( DOUBLE_FORMAT + "\t'%s'\t'%s'\t'%s'", bigStation, profil.getName(), profil.getDescription(), profil.getComment() );
+
+      final int[] componentIndices = new int[comps.length];
+      for( int i = 0; i < componentIndices.length; i++ )
+        componentIndices[i] = profil.indexOfProperty( comps[i] );
 
       // get point data
       for( final IRecord point : profil.getPoints() )
       {
-        writer.write( metaString );
+        formatter.format( metaString );
+
         for( final IComponent component : comps )
         {
           final int index = profil.indexOfProperty( component );
           if( index < 0 )
-            writer.write( "\tnull" );
+            formatter.format( "\tnull" );
           else
           {
             final Object value = point.getValue( index );
             // TODO: we need a more sophisticated handling of types here...
             if( profil.isPointMarker( component.getId() ) || !(value instanceof Number) )
-              writer.write( String.format( "\t%s", value.toString() ) );
+              formatter.format( "\t%s", value.toString() );
             else
-              writer.write( String.format( TAB_DOUBLE_FORMAT, value ) );
+              formatter.format( TAB_DOUBLE_FORMAT, value );
           }
         }
-        writer.write( lineSeparator );
+
+        writeResults( bigStation, formatter );
+
+        formatter.format( lineSeparator );
+
+        final IOException ioException = formatter.ioException();
+        if( ioException != null )
+          throw ioException;
       }
     }
   }
 
-  private final void writeHeader( final Writer writer, final IComponent[] comps ) throws IOException
+  private void writeResults( final BigDecimal station, final Formatter formatter )
   {
-    writer.write( "Station\tName\tBeschreibung\tKommentar" );
+    for( final WspmResultLengthSection ls : m_lengthSections )
+    {
+      final BigDecimal waterlevel = ls.getWaterlevel( station );
+      formatter.format( TAB_DOUBLE_FORMAT, waterlevel );
+    }
+  }
+
+  private final void writeHeader( final Formatter formatter, final IComponent[] comps ) throws IOException
+  {
+    formatter.format( "Station\tName\tBeschreibung\tKommentar" );
 
     for( final IComponent comp : comps )
-      writer.write( String.format( "\t'%s'", comp.getName() ) );
+      formatter.format( "\t'%s'", comp.getName() );
 
-    writer.write( lineSeparator );
+    for( final WspmResultLengthSection ls : m_lengthSections )
+      formatter.format( "\t'%s'", ls.getLabel() );
+
+    formatter.format( lineSeparator );
   }
 
   private final IComponent[] getComponents( final IProfil[] profiles )
@@ -126,11 +164,15 @@ public class CsvSink implements IProfilSink
     // that fits
     final IComponent[] comps = getComponents( profiles );
 
-    // write table header including all components
-    writeHeader( writer, comps );
+    final Formatter formatter = new Formatter( writer );
 
     // write table header including all components
-    writeData( writer, comps, profiles );
+    writeHeader( formatter, comps );
+
+    // write table header including all components
+    writeData( formatter, comps, profiles );
+
+    formatter.flush();
 
     return true;
   }

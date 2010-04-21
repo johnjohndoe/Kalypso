@@ -43,10 +43,13 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -59,20 +62,23 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
- * This is an abstraction layer for tuhh wspm modells. It ensures, that only the right kind of data gets into the model.
- * <p>
- * It has NO own member variables, everything is backed by the given feature instance.
- * </p>
- *
+ * This is an abstraction layer for tuhh wspm modells. It ensures, that only the right kind of data gets into the model.<br/>
+ * It has NO own member variables, everything is backed by the given feature instance.<br/>
+ * <br/>
+ * FIXME: tricky, this thing is actually not a real abstraction of WspmProject (on gml-level), but is used to mark a
+ * project of kind 'tuhh'. We will probably get problems as soon as we introduce a WSPMProject of another kind.
+ * 
  * @author Gernot Belger
  */
 public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 {
+  public static final QName QName = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "" );
+
   public static final QName QNAME_PROP_CALC_MEMBER = new QName( NS_WSPM, "calculationMember" ); //$NON-NLS-1$
 
-  public TuhhWspmProject( final Feature wspProject )
+  public TuhhWspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( wspProject );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -113,22 +119,20 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 
   public TuhhCalculation createCalculation( ) throws GMLSchemaException
   {
-    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC, -1 );
-    return new TuhhCalculation( calcFeature );
+    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC, -1 );
   }
 
   public TuhhCalculation createReibConstCalculation( ) throws GMLSchemaException
   {
-    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST, -1 );
-    return new TuhhCalculation( calcFeature );
+    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST, -1 );
   }
 
   public TuhhCalculation[] getCalculations( )
   {
-    final GMLWorkspace workspace = getFeature().getWorkspace();
+    final GMLWorkspace workspace = getWorkspace();
 
-    final FeatureList calcList = (FeatureList) getFeature().getProperty( QNAME_PROP_CALC_MEMBER );
-    final ArrayList<TuhhCalculation> calcs = new ArrayList<TuhhCalculation>( calcList.size() );
+    final FeatureList calcList = getProperty( QNAME_PROP_CALC_MEMBER, FeatureList.class );
+    final List<TuhhCalculation> calcs = new ArrayList<TuhhCalculation>( calcList.size() );
     for( final Object o : calcList )
     {
       final Feature calcFeature;
@@ -137,7 +141,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
       else
         calcFeature = workspace.getFeature( (String) o );
 
-      calcs.add( new TuhhCalculation( calcFeature ) );
+      calcs.add( (TuhhCalculation) calcFeature );
     }
 
     return calcs.toArray( new TuhhCalculation[calcs.size()] );
@@ -149,7 +153,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
   public static TuhhWspmProject create( final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
   {
     final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QNAME, context, factory );
-    return new TuhhWspmProject( projectWorkspace.getRootFeature() );
+    final Feature rootFeature = projectWorkspace.getRootFeature();
+    return (TuhhWspmProject) rootFeature;
   }
-
 }
