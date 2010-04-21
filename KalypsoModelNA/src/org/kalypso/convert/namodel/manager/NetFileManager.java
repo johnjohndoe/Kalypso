@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -77,6 +78,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -667,11 +669,34 @@ public class NetFileManager extends AbstractManager
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izuf, "i5" ) ); //$NON-NLS-1$
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       asciiBuffer.getNetBuffer().append( specialBuffer.toString() );
+      writeQQRelation( nodeFE, asciiBuffer.getNetBuffer() );
       // ENDKNOTEN
 
     }
     asciiBuffer.getNetBuffer().append( " 9001    0    0    0    0    0\n" ); //$NON-NLS-1$
     asciiBuffer.getNetBuffer().append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
+  }
+
+  private void writeQQRelation( final Feature node, final StringBuffer buffer ) throws SensorException
+  {
+    final String relatedNodeID = (String) node.getProperty( NaModelConstants.NODE_QQRELATED_NODE_PROP );
+    final IObservation observation = (IObservation) node.getProperty( NaModelConstants.NODE_QQRELATION_PROP );
+    if( relatedNodeID == null || observation == null || relatedNodeID.length() == 0 )
+      return;
+    final IAxis[] axisList = observation.getAxisList();
+    final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF );
+    final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF_RHB );
+    final ITuppleModel values = observation.getValues( null );
+    int count = values.getCount();
+    if( count < 1 )
+      return;
+    buffer.append( String.format( "%5d %6s\n", count, relatedNodeID ) ); //$NON-NLS-1$
+    for( int row = 0; row < count; row++ )
+    {
+      final double q1 = (Double) values.getElement( row, q1Axis );
+      final double q2 = (Double) values.getElement( row, q2Axis );
+      buffer.append( String.format( Locale.ENGLISH, "%8.3f %8.3f\n", q1, q2 ) ); //$NON-NLS-1$
+    }
   }
 
   private String getZuflussEingabeDateiString( Feature nodeFE, NAConfiguration conf )
