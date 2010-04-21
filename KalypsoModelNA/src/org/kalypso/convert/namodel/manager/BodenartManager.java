@@ -168,20 +168,20 @@ public class BodenartManager extends AbstractManager
     Substr kap 4.5 19.0 42.0 350.0 0.25
     Drain kap 4.5 36.0 42.0 4000.0 0.25     
   */
-    if(!names.contains( "mulde" ))
-      asciiBuffer.getBodartBuffer().append("mulde kap 1.0 2.0 99.0 8640.0 0.01\n");
-    if(!names.contains( "rein" ))
-      asciiBuffer.getBodartBuffer().append("rein kap 11.5 28.5 38.5 864.0 0.50\n");
-    if(!names.contains( "filter" ))
-      asciiBuffer.getBodartBuffer().append("filter kap 4.5 36.0 42.0 3110.0 0.50\n");
-    if(!names.contains( "base" ))
-      asciiBuffer.getBodartBuffer().append("base kap 4.5 19.0 51.0 3110.0 0.50\n");
-    if(!names.contains( "GR-stau" ))
-      asciiBuffer.getBodartBuffer().append("GR-stau kap 1.0 2.0 99.0 8640.0 0.01\n");
-    if(!names.contains( "Substr" ))
-      asciiBuffer.getBodartBuffer().append("Substr kap 4.5 19.0 42.0 350.0 0.25\n");
-    if(!names.contains( "Drain" ))
-      asciiBuffer.getBodartBuffer().append("Drain kap 4.5 36.0 42.0 4000.0 0.25\n");
+    if(!names.contains( "mulde" )) //$NON-NLS-1$
+      asciiBuffer.getBodartBuffer().append("mulde kap 1.0 2.0 99.0 8640.0 0.01\n"); //$NON-NLS-1$
+    if(!names.contains( "rein" )) //$NON-NLS-1$
+      asciiBuffer.getBodartBuffer().append("rein kap 11.5 28.5 38.5 864.0 0.50\n"); //$NON-NLS-1$
+    if(!names.contains( "filter" )) //$NON-NLS-1$
+      asciiBuffer.getBodartBuffer().append("filter kap 4.5 36.0 42.0 3110.0 0.50\n"); //$NON-NLS-1$
+    if(!names.contains( "base" )) //$NON-NLS-1$
+      asciiBuffer.getBodartBuffer().append("base kap 4.5 19.0 51.0 3110.0 0.50\n"); //$NON-NLS-1$
+    if(!names.contains( "GR-stau" )) //$NON-NLS-1$
+      asciiBuffer.getBodartBuffer().append("GR-stau kap 1.0 2.0 99.0 8640.0 0.01\n"); //$NON-NLS-1$
+    if(!names.contains( "Substr" )) //$NON-NLS-1$
+      asciiBuffer.getBodartBuffer().append("Substr kap 4.5 19.0 42.0 350.0 0.25\n"); //$NON-NLS-1$
+    if(!names.contains( "Drain" )) //$NON-NLS-1$
+      asciiBuffer.getBodartBuffer().append("Drain kap 4.5 36.0 42.0 4000.0 0.25\n"); //$NON-NLS-1$
   }
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception

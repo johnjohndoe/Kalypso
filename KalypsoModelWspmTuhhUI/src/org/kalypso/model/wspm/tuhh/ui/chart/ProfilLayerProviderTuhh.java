@@ -99,6 +99,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
   protected final IAxis m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, null );//$NON-NLS-1$
 
+  private final String m_AxisLabel = "[%s]"; //$NON-NLS-1$
   public ProfilLayerProviderTuhh( )
   {
     m_layers.add( IWspmTuhhConstants.LAYER_BEWUCHS );
@@ -172,7 +173,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
         operation.addChange( new PointPropertyRemove( profil, rauheit_alt ) );
 
       }
-      m_targetAxisRight.setLabel( "[" + rauheit_neu.getUnit() + "]" );
+      m_targetAxisRight.setLabel( String.format(m_AxisLabel,rauheit_neu.getUnit()));
       operation.addChange( new PointPropertyAdd( profil, rauheit_neu, values ) );
       new ProfilOperationJob( operation ).schedule();
       return null;
@@ -267,17 +268,16 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
   final void setAxisLabel( final IProfil profil )
   {
-    final String formatStr = "[%s]";
-    m_domainAxis.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getUnit() ) );
-    m_targetAxisLeft.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getUnit() ) );
+    m_domainAxis.setLabel( String.format( m_AxisLabel, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getUnit() ) );
+    m_targetAxisLeft.setLabel( String.format( m_AxisLabel, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getUnit() ) );
     final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( roughnessKS != null )
-      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKS.getUnit() ) );
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, roughnessKS.getUnit() ) );
     else if( roughnessKST != null )
-      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKST.getUnit() ) );
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, roughnessKST.getUnit() ) );
     else
-      m_targetAxisRight.setLabel( "" );
+      m_targetAxisRight.setLabel( "" ); //$NON-NLS-1$
   }
 
   /**

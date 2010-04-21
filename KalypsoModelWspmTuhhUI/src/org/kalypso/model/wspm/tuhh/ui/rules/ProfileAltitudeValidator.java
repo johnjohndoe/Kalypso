@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import java.awt.Point;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -76,7 +74,7 @@ public class ProfileAltitudeValidator
   {
     m_Breite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     m_delta = m_Breite == null ? 0.0001 : m_Breite.getPrecision();
-    m_station = String.format( "km %.4f", profil.getStation() );
+    m_station = String.format( "km %.4f", profil.getStation() ); //$NON-NLS-1$
     m_profil = profil;
     m_collector = collector;
   }
@@ -146,7 +144,11 @@ public class ProfileAltitudeValidator
   /**
    * @param check
    *          the signum(id1-id2) result to look for (-1,0,1)
-   * @return the index of first point check failed or -1 if validation succeed
+   * @param begin
+   *          start validation
+   * @param end
+   *          will NOT be validated
+   * @return the index of last point check fits or -1 if validation succeed
    */
   public final int validate( final int begin, final int end, final String componentID, final int check, final boolean orEqual )
   {

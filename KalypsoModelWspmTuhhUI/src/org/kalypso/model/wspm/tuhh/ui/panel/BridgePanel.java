@@ -102,7 +102,7 @@ public class BridgePanel extends AbstractProfilView
       final Color badColor = display.getSystemColor( SWT.COLOR_RED );
       final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-      m_label = toolkit.createLabel( parent, "" );
+      m_label = toolkit.createLabel( parent, "" ); //$NON-NLS-1$
 
       m_text = toolkit.createText( parent, null, SWT.FILL | SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
       m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, true ) );
@@ -164,7 +164,7 @@ public class BridgePanel extends AbstractProfilView
       if( building == null )
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
-      final String textText = String.format( "%.3f", val );
+      final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
       m_text.setText( textText );
       m_text.setToolTipText( description );
       if( m_text.isFocusControl() )

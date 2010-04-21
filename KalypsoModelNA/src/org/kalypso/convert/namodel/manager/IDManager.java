@@ -187,7 +187,7 @@ public class IDManager
       }
     } );
     sort.addAll( m_idMapFeature.keySet() );
-    writer.write( String.format( Locale.US, "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$
+    writer.write( String.format( Locale.US, "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     for( Iterator<IDMap> iter = sort.iterator(); iter.hasNext(); )
     {
       final IDMap idmap = iter.next();

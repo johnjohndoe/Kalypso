@@ -57,16 +57,16 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class NA_GlobalPreprocessingJob extends AbstractInternalStatusJob implements ISimulation
 {
-  private final static String INPUT_PARAMETER_MODEL = "parametersModel";
+  private final static String INPUT_PARAMETER_MODEL = "parametersModel"; //$NON-NLS-1$
 
-  private final static String OUTPUT_SUDS_MODEL = "sudsModel";
+  private final static String OUTPUT_SUDS_MODEL = "sudsModel"; //$NON-NLS-1$
 
-  private final static String OUTPUT_SUDS_FOLDER = "SudsFolder";
+  private final static String OUTPUT_SUDS_FOLDER = "SudsFolder"; //$NON-NLS-1$
 
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/modelSpecification.xml" );
+    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-1$
   }
 
   @Override
@@ -75,13 +75,13 @@ public class NA_GlobalPreprocessingJob extends AbstractInternalStatusJob impleme
     try
     {
       final File parametersFile = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_PARAMETER_MODEL ) );
-      final URL sudsURL = getClass().getResource( "/resources/templates/suds.gml" );
-      final File sudsFile = File.createTempFile( "suds", ".gml", tmpdir );
+      final URL sudsURL = getClass().getResource( "/resources/templates/suds.gml" ); //$NON-NLS-1$
+      final File sudsFile = File.createTempFile( "suds", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
       FileUtils.copyURLToFile( sudsURL, sudsFile );
 
-      final File sudsFolder = new File( tmpdir, "suds" );
+      final File sudsFolder = new File( tmpdir, "suds" ); //$NON-NLS-1$
       sudsFolder.mkdirs();
-      final String[] folders = new String[] { "greenroof", "swale", "swale-infiltration-ditch" };
+      final String[] folders = new String[] { "greenroof", "swale", "swale-infiltration-ditch" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       for( final String folderName : folders )
       {
         final File folder = new File( sudsFolder, folderName );
@@ -94,9 +94,9 @@ public class NA_GlobalPreprocessingJob extends AbstractInternalStatusJob impleme
     }
     catch( final IOException e )
     {
-      setStatus( STATUS.ERROR, "Error creating data structure." );
+      setStatus( STATUS.ERROR, "Error creating data structure." ); //$NON-NLS-1$
       return;
     }
-    setStatus( STATUS.OK, "Success" );
+    setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$
   }
 }

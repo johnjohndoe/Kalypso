@@ -152,7 +152,7 @@ public class NAModellConverter
       // generate ascii mapping
       final StringBuffer buffer = new StringBuffer();
       for( final String line : m_conf.getHydrotopMapping() )
-        buffer.append( line ).append( "\n" );
+        buffer.append( line ).append( "\n" ); //$NON-NLS-1$
       writeToFile( m_conf.getHydrotopMappingFile(), buffer );
     }
 

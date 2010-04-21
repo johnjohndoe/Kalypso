@@ -56,8 +56,8 @@ public interface IGreenRoof extends Feature
 
   public static enum EUsageType
   {
-    EXTENSIVE("grs_ex"),
-    INTENSIVE("grs_int");
+    EXTENSIVE("grs_ex"), //$NON-NLS-1$
+    INTENSIVE("grs_int"); //$NON-NLS-1$
 
     private final String m_soilTypeID;
 
