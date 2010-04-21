@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.extension;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -50,7 +49,7 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
-import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
+import org.kalypso.model.wspm.tuhh.ui.wizards.NewWspmProjectWizard;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
 
@@ -71,7 +70,7 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public URL getInfoURL( ) throws MalformedURLException
+  public URL getInfoURL( )
   {
     return getInfoURL( getClass(), KalypsoModelWspmTuhhUIPlugin.getDefault() );
   }
@@ -97,7 +96,7 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
   @Override
   public INewProjectWizard getProjectWizard( )
   {
-    final NewProjectWizard wizard = new NewProjectWizard();
+    final NewWspmProjectWizard wizard = new NewWspmProjectWizard();
     wizard.init( PlatformUI.getWorkbench(), null );
 
     return wizard;
@@ -132,7 +131,5 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
   {
     return 2;
   }
-
-
 
 }

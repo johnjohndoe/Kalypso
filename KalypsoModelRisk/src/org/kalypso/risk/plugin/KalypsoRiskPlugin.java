@@ -1,6 +1,7 @@
 package org.kalypso.risk.plugin;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -9,6 +10,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.risk.project.SzenarioController;
 import org.osgi.framework.BundleContext;
 
@@ -104,4 +106,14 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   {
     return getDefault().m_imageProvider;
   }
+  
+  public static final int getPreferences_themeInfoPrecision( )
+  {
+    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
+    int digits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_PRECISION );
+    if( digits < KalypsoRiskPreferencePage.MIN_RISKTHEMEINFO_PRECISION || digits > KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION )
+      digits = KalypsoRiskPreferencePage.DEFAULT_RISKTHEMEINFO_PRECISION;
+    return digits;
+  }
+
 }

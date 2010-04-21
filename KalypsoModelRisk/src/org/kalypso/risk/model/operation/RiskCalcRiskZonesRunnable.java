@@ -81,9 +81,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
-    final int importantDigits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-
+    final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
     if( m_rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$

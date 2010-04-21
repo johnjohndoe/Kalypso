@@ -73,6 +73,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -83,9 +84,9 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -207,11 +208,9 @@ public class WspWinExporter
     {
       final IObservation<TupleResult> runOffEvent = calculation.getRunOffEvent();
       if( runOffEvent == null )
-      {
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12" ) ); //$NON-NLS-1$
-      }
-      else
-        write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
+
+      write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
     }
   }
 
@@ -219,17 +218,8 @@ public class WspWinExporter
   {
     final TupleResult result = runOffEvent.getResult();
 
-    int stationComp = -1;
-    int abflussComp = -1;
-    final IComponent[] components = result.getComponents();
-    for( int i = 0; i < components.length; i++ )
-    {
-      final IComponent comp = components[i];
-      if( IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF.equals( comp.getId() ) )
-        abflussComp = i;
-      if( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION.equals( comp.getId() ) )
-        stationComp = i;
-    }
+    final int stationComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_STATION );
+    final int abflussComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_RUNOFF );
 
     final Comparator<BigDecimal> comp = new Comparator<BigDecimal>()
     {

@@ -192,15 +192,22 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
 
+  public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
+
+  // Names of commonly used directories
+  public static String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
+
+  public static String FOLDER_CURRENT_RESULT = "_aktuell";//$NON-NLS-1$
+
+  public static String FOLDER_RESULT_DATA = "Daten";//$NON-NLS-1$
+
   /* Layer_Colors */
   /**
    * the layer store their colors themselves in the
    * {@link org.kalypso.model.wspm.core.profil.impl.ProfilEventManager#getColorRegistry()} using this keys
    */
 
-// public static String LAYER_BRUECKE_COLOR_TOP = LAYER_BRUECKE + "COLOR_TOP";
-//
-// public static String LAYER_BRUECKE_COLOR_BOTTOM = LAYER_BRUECKE + "COLOR_BOTTOM";
-  public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
+  public static String FILE_WSPTIN = "WspTin.gml";//$NON-NLS-1$
 
+  public static String FILE_WSPM_GMV = "WSPM.gmv"; //$NON-NLS-1$
 }

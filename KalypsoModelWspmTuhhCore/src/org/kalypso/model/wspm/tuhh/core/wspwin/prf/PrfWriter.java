@@ -395,29 +395,23 @@ public class PrfWriter implements IPrfConstants
 
     final int iBreite = m_profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int iProp = m_profil.indexOfProperty( prop );
-    for( int i = 0; i < points.length; i++ )
+    for( final IRecord point : points )
     {
-      try
-      {
-        final Object vBreite = points[i].getValue( iBreite );
-        final Object vProp = points[i].getValue( iProp );
+      final Double x = (Double) point.getValue( iBreite );
 
-        // FIXME: das ist neu: vorher wurden Punkte mit vProp == null als 0.0 geschrieben.
-        if( vBreite instanceof Number && vProp instanceof Number )
+      final Double value = (Double) point.getValue( iProp );
+      if( value == null )
+      {
+        if( nullValue != null )
         {
-          xs.add( ((Number) vBreite).doubleValue() );
-          ys.add( ((Number) vProp).doubleValue() );
-        }
-        // FIXME: brauchen wir für Rechenkern export... flag?
-        else if( vBreite instanceof Number && nullValue != null )
-        {
-          xs.add( ((Number) vBreite).doubleValue() );
+          xs.add( x );
           ys.add( nullValue );
         }
       }
-      catch( final Exception e )
+      else
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
+        xs.add( x );
+        ys.add( value );
       }
     }
 
