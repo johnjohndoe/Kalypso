@@ -165,6 +165,11 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
         return false;
       }
     }
+    else
+    {
+      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.2" ), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return true;
+    }
     return true;
 
   }
