@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -246,8 +246,6 @@ public class BreakLinesHelper implements IWspmConstants
       final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), file.toURI().toURL(), null ); //$NON-NLS-1$
       final Feature rootFeature = workspace.getRootFeature();
 
-      // we assume that all points have the same crs
-
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
@@ -266,11 +264,11 @@ public class BreakLinesHelper implements IWspmConstants
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
           // simulation does not concern the whole reach.
           {
-            points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue(), null );
+            points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue() );
           }
         }
         else
-          points = WspmProfileHelper.calculateWspPoints( profil, Double.MAX_VALUE, null );
+          points = WspmProfileHelper.calculateWspPoints( profil, Double.MAX_VALUE );
 
         if( points != null )
         {
