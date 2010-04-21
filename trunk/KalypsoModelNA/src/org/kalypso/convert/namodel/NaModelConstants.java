@@ -268,6 +268,10 @@ public interface NaModelConstants
 
   public static final QName NODE_RIVER_KILOMETER_PROP = new QName( NS_NAMODELL, "riverKilometer" ); //$NON-NLS-1$
 
+  public static final QName NODE_QQRELATION_PROP = new QName( NS_NAMODELL, "qqRelation" ); //$NON-NLS-1$
+
+  public static final QName NODE_QQRELATED_NODE_PROP = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
+
   // catchments
   public static final QName CATCHMENT_ELEMENT_FT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 

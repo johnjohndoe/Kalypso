@@ -75,6 +75,8 @@
 							</restriction>
 						</simpleType>
 					</element>
+					<element name="qqRelation" type="zmlinline:ZmlInlineQQType"/>
+					<element name="qqRelatedNode" type="string" minOccurs="0" default=""/>
 				</sequence>
 			</extension>
 		</complexContent>
