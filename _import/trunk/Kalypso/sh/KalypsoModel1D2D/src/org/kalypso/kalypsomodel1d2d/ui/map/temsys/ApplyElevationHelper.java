@@ -82,7 +82,7 @@ public class ApplyElevationHelper
     if( workspace == null )
       return;
 
-    final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d );
+    final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d, dataModel.getElevationModelSystem() );
     ChangeNodePositionCommand changePosCmd;
 
     for( final IFE1D2DNode node : nodeList )
@@ -92,7 +92,7 @@ public class ApplyElevationHelper
         final double elevation = elevationProvider.getElevation( node.getPoint() );
 
         changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
-        changePosCmd.process();
+        changePosCmd.process(); 
         compositeCommand.addCommand( changePosCmd, null );
       }
     }

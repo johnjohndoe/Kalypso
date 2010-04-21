@@ -221,6 +221,7 @@ public class ProcessResultsJob extends Job
         IOUtils.closeQuietly( zos );
         IOUtils.closeQuietly( contentStream );
       }
+      ProgressUtilities.worked( monitor, 1 );
 
       try
       {
@@ -368,14 +369,10 @@ public class ProcessResultsJob extends Job
             {
               /* check if there exists already an entry for terrainTin */
               final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) m_stepResultMeta.getParent();
-              final boolean terrainExists = existsTerrain( calcUnitResult );
-              /* if not, add it */
-              if( terrainExists == false )
-              {
-                min = new BigDecimal( m_resultMinMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-                max = new BigDecimal( m_resultMinMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-                ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.68" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.69" ), IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-              }
+
+              min = new BigDecimal( m_resultMinMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              max = new BigDecimal( m_resultMinMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.68" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.69" ), IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
 
             break;

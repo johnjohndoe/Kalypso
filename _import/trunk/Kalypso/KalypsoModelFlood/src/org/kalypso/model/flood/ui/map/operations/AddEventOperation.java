@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -145,15 +146,31 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
    */
   public static void checkSLDFile( final IRunoffEvent event, final IFolder eventFolder, final URL sldTemplate ) throws Exception
   {
+    // TODO: this is quite crude, but the only way right now. We need to get the strings from an ITranslator defined in
+    // the sld similar to the .gmt approach.
+
     // Configure sld
     final IFile sldFile = eventFolder.getFile( "wsp.sld" ); //$NON-NLS-1$
+    final IFile propertiesFile = eventFolder.getFile( "wsp.properties" ); //$NON-NLS-1$
+    final IFile propertiesDeFile = eventFolder.getFile( "wsp_de.properties" ); //$NON-NLS-1$
     if( !sldFile.exists() )
     {
-      final String sldContent = FileUtilities.toString( sldTemplate, "UTF-8" ).replaceAll( "%eventFeatureId%", event.getFeature().getId() ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String eventID = event.getFeature().getId();
 
-      final InputStream sldSource = IOUtils.toInputStream( sldContent, "UTF-8" ); //$NON-NLS-1$
-      sldFile.create( sldSource, false, new NullProgressMonitor() );
+      final URL propertiesLocation = new URL( sldTemplate, "wsp.properties" ); //$NON-NLS-1$
+      final URL propertiesDeLocation = new URL( sldTemplate, "wsp_de.properties" ); //$NON-NLS-1$
+
+      createFromUrl( sldFile, sldTemplate, eventID );
+      createFromUrl( propertiesFile, propertiesLocation, eventID );
+      createFromUrl( propertiesDeFile, propertiesDeLocation, eventID );
     }
+  }
+
+  private static void createFromUrl( final IFile sldFile, final URL resource, final String eventReplace ) throws IOException, CoreException
+  {
+    final String content = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "%eventFeatureId%", eventReplace ); //$NON-NLS-1$ //$NON-NLS-2$
+    final InputStream source = IOUtils.toInputStream( content, "UTF-8" ); //$NON-NLS-1$
+    sldFile.create( source, false, new NullProgressMonitor() );
   }
 
   public static void addEventThemes( final IKalypsoCascadingTheme wspThemes, final IRunoffEvent event ) throws Exception
@@ -163,7 +180,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();
 
-      polygoneLayer.setName(  Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.6" , event.getName() ) ); //$NON-NLS-1$
+      polygoneLayer.setName( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.6", event.getName() ) ); //$NON-NLS-1$
       polygoneLayer.setFeaturePath( "polygonMember" ); //$NON-NLS-1$
       polygoneLayer.setLinktype( "gml" ); //$NON-NLS-1$
       polygoneLayer.setType( "simple" ); //$NON-NLS-1$
@@ -214,7 +231,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     { // Wasserspiegel
       final StyledLayerType wspLayer = new StyledLayerType();
 
-      wspLayer.setName(  Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.26" , event.getName() ) ); //$NON-NLS-1$
+      wspLayer.setName( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.26", event.getName() ) ); //$NON-NLS-1$
       wspLayer.setFeaturePath( "#fid#" + eventID + "/tinMember" ); //$NON-NLS-1$ //$NON-NLS-2$
       wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
       wspLayer.setType( "simple" ); //$NON-NLS-1$
@@ -228,7 +245,10 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       final Property layerPropertyThemeInfoId = new Property();
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      final String infoFormat = String.format( Messages.getString("org.kalypso.model.flood.ui.map.operations.AddEventOperation.2"), event.getName() ); //$NON-NLS-1$
+      final String infoValue = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=" + infoFormat; //$NON-NLS-1$
+      layerPropertyThemeInfoId.setValue( infoValue );
 
       final Property layerPropertyEventId = new Property();
       layerPropertyEventId.setName( PROPERTY_EVENT_ID );

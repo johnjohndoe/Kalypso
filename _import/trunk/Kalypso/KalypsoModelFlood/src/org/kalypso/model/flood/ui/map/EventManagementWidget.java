@@ -383,21 +383,21 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         try
         {
           // Always check, if sld file exists
-          AddEventOperation.checkSLDFile( runoffEvent, getEventFolder( runoffEvent ), SLD_TEMPLATE_LOCATION );
+          if( runoffEvent != null )
+            AddEventOperation.checkSLDFile( runoffEvent, getEventFolder( runoffEvent ), SLD_TEMPLATE_LOCATION );
 
           final IKalypsoCascadingTheme wspThemes = findWspTheme();
-          if( runoffEventTheme == null )
+          if( runoffEventTheme == null && runoffEvent != null )
           {
             /* A bit crude: if the theme does not yet exist, we create it right now */
             AddEventOperation.addEventThemes( wspThemes, runoffEvent );
           }
           /* Also add result theme if results are available */
-          if( getResultFolder( runoffEvent ).exists() && FloodModelHelper.findResultTheme( runoffEvent, wspThemes ) == -1 )
+          if( runoffEvent != null && getResultFolder( runoffEvent ).exists() && FloodModelHelper.findResultTheme( runoffEvent, wspThemes ) == -1 )
             FloodModelHelper.addResultTheme( runoffEvent, wspThemes, -1 );
         }
         catch( final Exception e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
         runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
@@ -466,17 +466,17 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final Shell shell = event.display.getActiveShell();
 
-    // open colorMap dialog
-    final PolygonColorMap input = (PolygonColorMap) m_colorMapTableViewer.getInput();
-
     // get selected event
     final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
-
     if( runoffEvent == null )
     {
       MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.10" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
+
+    final IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
+
+    final PolygonColorMap colorMap = findColorMap( runoffEventTheme );
 
     final IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
 
@@ -499,14 +499,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       }
     }
 
-    if( input != null )
+    if( colorMap != null )
     {
-      final EventStyleDialog dialog = new EventStyleDialog( shell, input, event_min, event_max );
+      final EventStyleDialog dialog = new EventStyleDialog( shell, colorMap, event_min, event_max );
       if( dialog.open() == Window.OK )
       {
         try
         {
-          final IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
           final IKalypsoStyle[] styles = runoffEventTheme.getStyles();
           for( final IKalypsoStyle style : styles )
           {
@@ -518,7 +517,11 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         {
           e.printStackTrace();
         }
-        m_colorMapTableViewer.refresh();
+
+        // CHECK: probably the style will be automatically reloaded by the pool, so updating the colormap here may not
+        // really
+        // set the right colorMap entry here...
+        updateStylePanel( runoffEventTheme );
 
         m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
       }
@@ -556,7 +559,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         final Rule wspRule = wspFts.getRule( "wspRule" ); //$NON-NLS-1$
         final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
         return symb.getColorMap();
-
       }
     }
     catch( final Exception e )
@@ -935,9 +937,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Shell shell = event.display.getActiveShell();
     final InputDialog dialog = new InputDialog( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.42" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.43" ), "", inputValidator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     if( dialog.open() != Window.OK )
-    {
       return;
-    }
 
     try
     {

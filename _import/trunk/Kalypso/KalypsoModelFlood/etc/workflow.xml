@@ -14,7 +14,7 @@
 		</Task>
 		<Task context="FloodMap" URI="org.kalypso.model.flood.ManageWaterlevelData">
 			<Help>%KalypsoFlood_DataLoad_ManageWaterlevelData_help</Help>
-			<Name>Wasserspiegeldaten verwalten</Name>
+			<Name>%KalypsoFlood_DataLoad_ManageWaterlevelData</Name>
 		</Task>
 		<Task context="CoverageTheme" URI="org.kalypso.model.flood.ManageDTMData">
 			<Help>%KalypsoFlood_DataLoad_ManageDTMData_help</Help>

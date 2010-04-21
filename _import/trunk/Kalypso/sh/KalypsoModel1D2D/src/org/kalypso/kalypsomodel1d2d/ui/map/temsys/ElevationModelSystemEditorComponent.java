@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -357,7 +358,7 @@ public class ElevationModelSystemEditorComponent
       return;
 
     final ITerrainElevationModelSystem modelSystem = m_dataModel.getElevationModelSystem();
-    final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d );
+    final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d, modelSystem );
 
     for( final Object selected : selection.toList() )
     {
@@ -369,6 +370,8 @@ public class ElevationModelSystemEditorComponent
         compositeCommand.addCommand( delCmd, nativeEleModel.getSourceFile() );
       }
     }
+    
+    
     m_dataModel.setElevationModel( null );
     m_elevationListViewer.setSelection( new StructuredSelection() );
 
@@ -381,8 +384,18 @@ public class ElevationModelSystemEditorComponent
         ViewerUtilities.refresh( elevationListTableViewer, true );
       }
     } );
+    
+    MultiStatus deleteFiles = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, "", null ); //$NON-NLS-1$
+    if( deleteFiles.isOK() ){
+      try{
+        m_dataModel.saveModels();
+        deleteFiles.add( compositeCommand.deleteFiles() );
+      }
+      catch (Exception e) {
+        deleteFiles.add( new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.4"), null ) );
+      }
+    }
 
-    final IStatus deleteFiles = compositeCommand.deleteFiles();
     ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.3"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.4"), deleteFiles ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }

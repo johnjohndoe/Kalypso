@@ -218,6 +218,15 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     }
     final IStatus simulationStatus = m_calcPage.getSimulationStatus();
 
+    /**
+     * needed for fix of the bug #242, if the calculation was canceled the container is not shown any more, so the
+     * following operations shouldn't be done
+     */
+    if( simulationStatus.matches( IStatus.CANCEL ) )
+    {
+      return simulationStatus;
+    }
+
     addPage( m_resultPage );
     getContainer().updateButtons();
 
@@ -358,6 +367,24 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
       m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.4" ), null, null ); //$NON-NLS-1$
       saveLogAndCleanup();
+    }
+
+    if( m_resultPage.isProcessing() )
+    {
+      if( this.getContainer() instanceof WizardDialog2 )
+      {
+        // hide the cancel button
+        final WizardDialog2 wd2 = (WizardDialog2) this.getContainer();
+        wd2.getButton( IDialogConstants.CANCEL_ID ).setEnabled( false );
+        // IDialogBlockedHandler handler = wd2.getBlockedHandler();
+        // handler.clearBlocked();
+      }
+
+      // show the "cancelling" message
+      m_resultPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.7" ) ); /* *///$NON-NLS-1$
+
+      // and wait ...
+      return false;
     }
     return true;
   }

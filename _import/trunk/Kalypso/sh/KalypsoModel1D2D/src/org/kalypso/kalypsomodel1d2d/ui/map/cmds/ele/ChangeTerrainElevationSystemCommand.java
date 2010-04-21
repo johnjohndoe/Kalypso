@@ -55,6 +55,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -81,22 +82,32 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
 
   private boolean isUndoable = true;
 
+  private boolean m_toDelete = false;
+  
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
   private final String m_description;
 
+  private ITerrainElevationModelSystem m_terrainModel;
+
+  public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final ITerrainElevationModelSystem terrainModel )
+  {
+    this( commandableWorkspace, model1d2d, terrainModel, DEFAULT_DESCRIPTION );
+  }
+  
   public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d )
   {
-    this( commandableWorkspace, model1d2d, DEFAULT_DESCRIPTION );
+    this( commandableWorkspace, model1d2d, null, DEFAULT_DESCRIPTION );
   }
 
-  public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final String description )
+  public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final ITerrainElevationModelSystem terrainModel, final String description )
   {
     Assert.throwIAEOnNullParam( model1d2d, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.1") ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( description, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.2") ); //$NON-NLS-1$
     m_commandableWorkspace = commandableWorkspace;
     m_model1d2d = model1d2d;
     m_description = description;
+    m_terrainModel = terrainModel;
   }
 
   /**
@@ -118,6 +129,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
     final List<Feature> changedFeatures = new ArrayList<Feature>();
@@ -126,6 +138,9 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
       try
       {
         command.process();
+        if( command instanceof DeleteNativeTerrainElevationWrapper ){
+          m_toDelete = true;
+        }
         final IFeatureWrapper2[] changedFeatures2 = command.getChangedFeature();
         if( changedFeatures2 != null )
         {
@@ -149,19 +164,30 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
       }
     }
 
-    // why is this needed
-    m_model1d2d.getEdges().getWrappedList().invalidate();
-    m_model1d2d.getElements().getWrappedList().invalidate();
-    m_model1d2d.getNodes().getWrappedList().invalidate();
+    if( m_toDelete ){
+      fireElementsRemove( changedFeatures );
+    }
+    else{
+      fireStructureChange( changedFeatures );
+      // why is this needed
+      m_model1d2d.getEdges().getWrappedList().invalidate();
+      m_model1d2d.getElements().getWrappedList().invalidate();
+      m_model1d2d.getNodes().getWrappedList().invalidate();
+    }
+  }
 
-    fireStructureChange( changedFeatures );
+  private void fireElementsRemove( List<Feature> changedFeatures )
+  {
+    final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
+    changedFeatures.toArray( changedFeaturesArray );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_terrainModel.getFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   private final void fireStructureChange( final List<Feature> changedFeatures )
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
   }
 
   /**
