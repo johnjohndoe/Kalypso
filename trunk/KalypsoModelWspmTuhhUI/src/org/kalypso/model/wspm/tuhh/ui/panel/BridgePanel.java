@@ -62,11 +62,11 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
+import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -102,7 +102,7 @@ public class BridgePanel extends AbstractProfilView
       final Color badColor = display.getSystemColor( SWT.COLOR_RED );
       final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-      m_label = toolkit.createLabel( parent, getLabel( m_property ) );
+      m_label = toolkit.createLabel( parent, "" );
 
       m_text = toolkit.createText( parent, null, SWT.FILL | SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
       m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, true ) );
@@ -134,7 +134,7 @@ public class BridgePanel extends AbstractProfilView
             if( val == value )
               return;
 
-            final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.0",m_property.getName()), getProfil(), true ); //$NON-NLS-1$
+            final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.0", m_property.getName() ), getProfil(), true ); //$NON-NLS-1$
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
           }
@@ -145,9 +145,18 @@ public class BridgePanel extends AbstractProfilView
 
     public void updateValue( )
     {
-      m_label.setText( getLabel( m_property ) );
-      if( m_text == null || m_text.isDisposed() )
+      if( m_text == null || m_text.isDisposed() || m_label == null || m_label.isDisposed() )
         return;
+
+      final String unit = m_property.getUnit();
+
+      final IPhenomenon phenomenon = m_property.getPhenomenon();
+      final String label = phenomenon.getName();
+      final String labelText = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3", label, unit ); //$NON-NLS-1$
+      final String description = phenomenon.getDescription();
+
+      m_label.setText( labelText );
+      m_label.setToolTipText( description );
 
       final IProfil profil = getProfil();
       final IProfileObject[] objects = profil == null ? null : profil.getProfileObjects();
@@ -155,34 +164,17 @@ public class BridgePanel extends AbstractProfilView
       if( building == null )
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
-      m_text.setText( val.toString() );
-      if(m_text.isFocusControl())
+      final String textText = String.format( "%.3f", val );
+      m_text.setText( textText );
+      m_text.setToolTipText( description );
+      if( m_text.isFocusControl() )
         m_text.selectAll();
     }
 
-    
     public void dispose( )
     {
       m_text.dispose();
       m_label.dispose();
-    }
-  }
-
-  @SuppressWarnings("finally")
-  protected String getLabel( final IComponent property )
-  {
-    String label = property.getName();
-    try
-    {
-// TUHH Hack
-      if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
-        label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.1"); //$NON-NLS-1$
-      if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( property.getId() ) )
-        label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.2"); //$NON-NLS-1$
-    }
-    finally
-    {
-      return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3",label, property.getUnit()); //$NON-NLS-1$
     }
   }
 
@@ -225,12 +217,10 @@ public class BridgePanel extends AbstractProfilView
   {
     final IProfileObject[] obj = getProfil().getProfileObjects();
     if( obj == null || obj.length < 1 )
-    {
       return;
-    }
+
     for( final PropertyLine line : m_lines )
       line.updateValue();
- //   m_propPanel.layout();
   }
 
   @Override
@@ -244,7 +234,7 @@ public class BridgePanel extends AbstractProfilView
         {
           public void run( )
           {
-           // createPropertyPanel();
+            // createPropertyPanel();
             updateControls();
           }
         } );

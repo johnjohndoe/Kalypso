@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -31,7 +30,6 @@ import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
-import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.risk.project.KalypsoRiskProjectNature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -62,9 +60,8 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
   @Override
   protected String initFormatString( final Properties props )
   {
-    final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
-    final int digits = preferences.getInt( KalypsoRiskPreferencePage.KEY_RISKTHEMEINFO_IMPORTANTDIGITS );
-    return props.getProperty( PROP_FORMAT, "%." + digits + "g \u20ac/m\u00b2/a - %s" ); //$NON-NLS-1$
+    final int digits = KalypsoRiskPlugin.getPreferences_themeInfoPrecision();
+    return props.getProperty( PROP_FORMAT, new StringBuffer( "%,." ).append( digits ).append( "f \u20ac/m\u00b2/a - %s" ).toString() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

@@ -110,6 +110,7 @@ public class RiverChannelLayer extends PointMarkerLayer
       }
     }
   }
+
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
@@ -118,21 +119,23 @@ public class RiverChannelLayer extends PointMarkerLayer
       return;
     if( hint.isMarkerMoved() )
     {
-      for (final IProfilChange change : changes)
+      for( final IProfilChange change : changes )
       {
-        if (change instanceof PointMarkerSetPoint)
-        {
+//        if( change.getInfo().equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
+//      if (change instanceof PointMarkerSetPoint)
+//      {
           //TODO: Kim set river channel roughness values
          // if (change instanceof PointMarkerSetPoint )
          // {
          //   final IProfilPointMarker marker = (IProfilPointMarker)(change.getObjects()[0]);
 // final IRecord[] points = (IRecord[])(change.getObjects());
          // }
-        }
+//      }
       }
     }
     super.onProfilChanged( hint, changes );
   }
+
   private final IComponent getRoughness( )
   {
     final IComponent cmpKS = getProfil().hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );

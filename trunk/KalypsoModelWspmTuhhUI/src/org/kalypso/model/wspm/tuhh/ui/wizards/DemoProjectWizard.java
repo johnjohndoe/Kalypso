@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
-
 /**
  * Wizard to create a new wspm tuhh project.
  * <p>
@@ -52,10 +51,12 @@ package org.kalypso.model.wspm.tuhh.ui.wizards;
  * 
  * @author Gernot Belger
  */
-public class DemoProjectWizard extends NewProjectWizard
+public class DemoProjectWizard extends NewWspmProjectWizard
 {
+  public static final String WSPM_TUHH_DEMO_PROJECT_CATEGORY = "org.kalypso.model.wspm.tuhh.demoProjects"; //$NON-NLS-1$
+
   public DemoProjectWizard( )
   {
-    super( true );
+    super( WSPM_TUHH_DEMO_PROJECT_CATEGORY, true );
   }
 }

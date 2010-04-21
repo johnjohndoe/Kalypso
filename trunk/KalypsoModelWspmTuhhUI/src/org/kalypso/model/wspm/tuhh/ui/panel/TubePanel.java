@@ -149,7 +149,7 @@ public class TubePanel extends AbstractProfilView
             if( val == value )
               return;
 
-            final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.0",m_property.getName()), getProfil(), true ); //$NON-NLS-1$
+            final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.0", m_property.getName() ), getProfil(), true ); //$NON-NLS-1$
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
           }
@@ -171,7 +171,7 @@ public class TubePanel extends AbstractProfilView
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( val.toString() );
-      if(m_text.isFocusControl())
+      if( m_text.isFocusControl() )
         m_text.selectAll();
     }
 
@@ -185,7 +185,6 @@ public class TubePanel extends AbstractProfilView
   @SuppressWarnings("finally")
   protected String getLabel( final IComponent property )
   {
-
     String label = property.getName();
     try
     {
@@ -193,18 +192,18 @@ public class TubePanel extends AbstractProfilView
       if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
       {
         if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1"); //$NON-NLS-1$
+          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1" ); //$NON-NLS-1$
         else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2"); //$NON-NLS-1$
+          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2" ); //$NON-NLS-1$
         else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3"); //$NON-NLS-1$
+          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3" ); //$NON-NLS-1$
         else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4"); //$NON-NLS-1$
+          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4" ); //$NON-NLS-1$
       }
     }
     finally
     {
-      return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5",label,property.getUnit()); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5", label, property.getUnit() ); //$NON-NLS-1$
     }
   }
 
@@ -249,7 +248,7 @@ public class TubePanel extends AbstractProfilView
 
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {
-          final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.8"), getProfil(), true ); //$NON-NLS-1$
+          final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.8" ), getProfil(), true ); //$NON-NLS-1$
           getProfil().addProfileObjects( new IProfileObject[] { tube } );
           for( final IComponent cmp : tube.getObjectProperties() )
           {
@@ -305,7 +304,7 @@ public class TubePanel extends AbstractProfilView
         m_cmb.setSelection( new StructuredSelection( tube ) );
     for( final PropertyLine line : m_lines )
       line.updateValue();
-   // m_propPanel.layout();
+    // m_propPanel.layout();
   }
 
   @Override
@@ -319,8 +318,8 @@ public class TubePanel extends AbstractProfilView
         {
           public void run( )
           {
-            //createPropertyPanel();
-             updateControls();
+            // createPropertyPanel();
+            updateControls();
           }
         } );
     }

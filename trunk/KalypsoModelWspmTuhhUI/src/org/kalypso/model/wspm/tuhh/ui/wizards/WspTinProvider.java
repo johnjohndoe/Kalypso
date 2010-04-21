@@ -33,6 +33,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.gml.provider.GmlSource;
 import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceProvider;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -57,12 +58,12 @@ public class WspTinProvider implements IGmlSourceProvider
       if( resource instanceof IContainer )
       {
         final IContainer c = (IContainer) resource;
-        final IResource member = c.findMember( new Path( "_aktuell/Daten/WspTin.gml" ) ); //$NON-NLS-1$
-        if( member instanceof IFile )
+        final IFile tinFile = c.getFolder( new Path( IWspmTuhhConstants.FOLDER_CURRENT_RESULT ) ).getFolder( IWspmTuhhConstants.FOLDER_RESULT_DATA ).getFile( IWspmTuhhConstants.FILE_WSPTIN );
+        if( tinFile.exists() )
         {
           try
           {
-            final URL url = ResourceUtilities.createURL( member );
+            final URL url = ResourceUtilities.createURL( tinFile );
             final String name = c.getProject().getName() + " - " + c.getName(); //$NON-NLS-1$
             final String desc = c.getName();
             final IGmlSource source = new GmlSource( name, desc, url, new GMLXPath( "TriangulatedSurfaceFeature/triangulatedSurfaceMember", null ) ); //$NON-NLS-1$
@@ -84,9 +85,9 @@ public class WspTinProvider implements IGmlSourceProvider
 
   private final ITreeContentProvider m_contentProvider = new ITreeContentProvider()
   {
-    private Map<IProject, IGmlSource[]> m_sources = new HashMap<IProject, IGmlSource[]>();
+    private final Map<IProject, IGmlSource[]> m_sources = new HashMap<IProject, IGmlSource[]>();
 
-    public Object[] getChildren( Object parentElement )
+    public Object[] getChildren( final Object parentElement )
     {
       // Project: load workspace
       if( parentElement instanceof IProject )
@@ -107,10 +108,10 @@ public class WspTinProvider implements IGmlSourceProvider
 
         final List<IGmlSource> tins = new ArrayList<IGmlSource>();
 
-        final IFolder resultsFolder = project.getFolder( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider.3") ); //$NON-NLS-1$
+        final IFolder resultsFolder = project.getFolder( IWspmTuhhConstants.FOLDER_RESULTS ); //$NON-NLS-1$
         if( resultsFolder.exists() )
         {
-          IResourceVisitor tinVisitor = new TinVisitor( tins );
+          final IResourceVisitor tinVisitor = new TinVisitor( tins );
           resultsFolder.accept( tinVisitor, IResource.DEPTH_ONE, false );
         }
 
@@ -119,14 +120,14 @@ public class WspTinProvider implements IGmlSourceProvider
 
         return tinArray;
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( e.getStatus() );
         return new IGmlSource[] {};
       }
     }
 
-    public Object getParent( Object element )
+    public Object getParent( final Object element )
     {
       if( element instanceof IFile )
         return ((IFile) element).getProject();
@@ -134,7 +135,7 @@ public class WspTinProvider implements IGmlSourceProvider
       return null;
     }
 
-    public boolean hasChildren( Object element )
+    public boolean hasChildren( final Object element )
     {
       if( element instanceof IProject )
         return true;
@@ -142,7 +143,7 @@ public class WspTinProvider implements IGmlSourceProvider
       return false;
     }
 
-    public Object[] getElements( Object inputElement )
+    public Object[] getElements( final Object inputElement )
     {
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final IProject[] projects = root.getProjects();
@@ -168,7 +169,7 @@ public class WspTinProvider implements IGmlSourceProvider
       m_sources.clear();
     }
 
-    public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+    public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
     {
     }
   };
@@ -181,7 +182,7 @@ public class WspTinProvider implements IGmlSourceProvider
      * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
      */
     @Override
-    public Image getImage( Object element )
+    public Image getImage( final Object element )
     {
       if( element instanceof IResource )
         return m_workbenchLP.getImage( element );
@@ -196,7 +197,7 @@ public class WspTinProvider implements IGmlSourceProvider
      * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
      */
     @Override
-    public String getText( Object element )
+    public String getText( final Object element )
     {
       if( element instanceof IResource )
         return m_workbenchLP.getText( element );
@@ -225,7 +226,7 @@ public class WspTinProvider implements IGmlSourceProvider
     final Label label = new Label( composite, SWT.NONE );
     label.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, true ) );
 
-    label.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider.5") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider.5" ) ); //$NON-NLS-1$
   }
 
   public IGmlSource createSource( final Object element )
