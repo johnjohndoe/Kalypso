@@ -26,6 +26,8 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   public RoughnessCls( final Feature featureToBind ) throws IllegalArgumentException
   {
     super( featureToBind, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
+    final Feature feature = getFeature();
+    feature.setName( feature.getName().trim() );
   }
 
   /**
@@ -223,7 +225,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
       return check;
 
     final Feature feature = getFeature();
-    feature.setProperty( Feature.QN_NAME, name );
+    feature.setProperty( Feature.QN_NAME, name.trim() ); 
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, ks );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, dp );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, eddy_xx );
