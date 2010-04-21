@@ -31,6 +31,15 @@
                localPart="ReachWspmTuhhSteadyState"
                namespace="org.kalypso.model.wspm.tuhh"/>
       </listener>
+      <listener
+            class="org.kalypso.model.wspm.tuhh.schema.gml.DictI18nGmlListener"
+            id="org.kalypso.model.wspm.schema.gml.DictI18nGmlListener"
+            name="Dict 18n listener">
+         <qname
+               localPart="Dictionary"
+               namespace="http://www.opengis.net/gml">
+         </qname>
+      </listener>
    </extension>
    <extension
          point="org.kalypso.core.catalogContribution">

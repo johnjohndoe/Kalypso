@@ -16,42 +16,42 @@
  <gml:dictionaryEntry>
     <swe:Phenomenon gml:id="BRUECKE">
      <gml:description/>
-     <gml:name>Brücke</gml:name>
+     <gml:name>%bruecke.name</gml:name>
     </swe:Phenomenon>
  </gml:dictionaryEntry>
 
  <gml:dictionaryEntry>
     <swe:Phenomenon gml:id="EI">
      <gml:description/>
-     <gml:name>Ei</gml:name>
+     <gml:name>%ei.name</gml:name>
     </swe:Phenomenon>
  </gml:dictionaryEntry>
 
  <gml:dictionaryEntry>
     <swe:Phenomenon gml:id="KREIS">
      <gml:description/>
-     <gml:name>Kreis</gml:name>
+     <gml:name>%kreis.name</gml:name>
     </swe:Phenomenon>
  </gml:dictionaryEntry>
 
  <gml:dictionaryEntry>
     <swe:Phenomenon gml:id="MAUL">
      <gml:description/>
-     <gml:name>Maul</gml:name>
+     <gml:name>%maul.name</gml:name>
     </swe:Phenomenon>
  </gml:dictionaryEntry>
 
  <gml:dictionaryEntry>
     <swe:Phenomenon gml:id="TRAPEZ">
      <gml:description/>
-     <gml:name>Trapez</gml:name>
+     <gml:name>%trapez.name</gml:name>
     </swe:Phenomenon>
  </gml:dictionaryEntry>
 
  <gml:dictionaryEntry>
     <swe:Phenomenon gml:id="WEHR">
      <gml:description/>
-     <gml:name>Wehr</gml:name>
+     <gml:name>%wehr.name</gml:name>
     </swe:Phenomenon>
  </gml:dictionaryEntry>
 
