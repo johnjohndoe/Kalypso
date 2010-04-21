@@ -125,31 +125,31 @@ public class WspWinImporter
    */
   public static IStatus importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
   {
-    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.1"), null ); //$NON-NLS-1$
+    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.1" ), null ); //$NON-NLS-1$
 
-    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.2"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.2" ), 1000 ); //$NON-NLS-1$
 
-    monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.3") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.3" ) ); //$NON-NLS-1$
     // HACK: initialize KalypsoUI
     KalypsoGisPlugin.getDefault();
 
     try
     {
       // load gml workspace
-      monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.4" ) ); //$NON-NLS-1$
       final IFile modelFile = targetContainer.getFile( new Path( "modell.gml" ) ); //$NON-NLS-1$
       final URL url = ResourceUtilities.createURL( modelFile );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
       monitor.worked( 200 );
 
-      monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.6") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.6" ) ); //$NON-NLS-1$
       // load wspwin data
 
-      monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.7") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.7" ) ); //$NON-NLS-1$
       // fill wspwin data into workspace
       final Feature modelRootFeature = workspace.getRootFeature();
 
-      final WspmProject wspmProject = new WspmProject( modelRootFeature );
+      final WspmProject wspmProject = (WspmProject) modelRootFeature;
 
       // ////////////// //
       // set model name //
@@ -166,12 +166,12 @@ public class WspWinImporter
       if( modelDescription.length() != 0 )
         modelDescription.append( "\n\n" ); //$NON-NLS-1$
 
-      modelDescription.append( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10",wspwinDirectory.getAbsolutePath() ,DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) )) ); //$NON-NLS-1$
+      modelDescription.append( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10", wspwinDirectory.getAbsolutePath(), DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) ) ) ); //$NON-NLS-1$
 
       final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
       if( wspwinModelDescription != null )
       {
-        modelDescription.append( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.13") ); //$NON-NLS-1$
+        modelDescription.append( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.13" ) ); //$NON-NLS-1$
         modelDescription.append( wspwinModelDescription );
       }
 
@@ -185,12 +185,12 @@ public class WspWinImporter
       final boolean isNotTuhhProject = wspCfgBean.getType() != 'b';
       if( isNotTuhhProject )
       {
-        PluginUtilities.logToPlugin( KalypsoModelWspmTuhhCorePlugin.getDefault(), IStatus.WARNING, Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.14"), null ); //$NON-NLS-1$
+        PluginUtilities.logToPlugin( KalypsoModelWspmTuhhCorePlugin.getDefault(), IStatus.WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.14" ), null ); //$NON-NLS-1$
         wspCfgBean.setType( 'b' );
       }
 
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
-      final TuhhWspmProject tuhhProject = new TuhhWspmProject( modelRootFeature );
+      final TuhhWspmProject tuhhProject = (TuhhWspmProject) modelRootFeature;
 
       // TODO: ask direction from user
       final boolean isDirectionUpstreams = true;
@@ -210,7 +210,7 @@ public class WspWinImporter
          * If an error in the profproj parsing happens, just give a warning to the user. What we really need are the
          * profile within the existing strand-elements.
          */
-        logStatus.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.15"), pe ) ); //$NON-NLS-1$
+        logStatus.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.15" ), pe ) ); //$NON-NLS-1$
       }
 
       // ////////////// //
@@ -225,7 +225,7 @@ public class WspWinImporter
         }
         catch( final Exception e )
         {
-          logStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.16") + zustandBean.getFileName() ) ); //$NON-NLS-1$
+          logStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.16" ) + zustandBean.getFileName() ) ); //$NON-NLS-1$
         }
       }
 
@@ -236,7 +236,7 @@ public class WspWinImporter
       // /////////////// //
       // write workspace //
       // /////////////// //
-      monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.17") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.17" ) ); //$NON-NLS-1$
       final SetContentHelper contentHelper = new SetContentHelper()
       {
         @Override
@@ -262,7 +262,7 @@ public class WspWinImporter
    */
   private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, IProfileFeature> addedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject )
   {
-    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.18"), null ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.18" ), null ); //$NON-NLS-1$
 
     for( final ProfileBean bean : commonProfiles )
     {
@@ -275,7 +275,7 @@ public class WspWinImporter
 
         if( Math.abs( profStation.doubleValue() - beanStation.doubleValue() ) > 0.001 )
         {
-          final String msg = Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
           status.add( StatusUtilities.createWarningStatus( msg ) );
           profile.setBigStation( new BigDecimal( bean.getStation() ) );
         }
@@ -345,7 +345,7 @@ public class WspWinImporter
    */
   private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws IOException, ParseException
   {
-    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.21") + zustandBean.getFileName(), null ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.21" ) + zustandBean.getFileName(), null ); //$NON-NLS-1$
 
     final String name = zustandBean.getName();
     final String waterName = zustandBean.getWaterName();
@@ -363,8 +363,8 @@ public class WspWinImporter
     reach.setName( name );
 
     final StringBuffer descBuffer = new StringBuffer();
-    descBuffer.append( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.22") ); //$NON-NLS-1$
-    descBuffer.append( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.23") + DATE_FORMATTER.format( zustandBean.getDate() ) ); //$NON-NLS-1$
+    descBuffer.append( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.22" ) ); //$NON-NLS-1$
+    descBuffer.append( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.23" ) + DATE_FORMATTER.format( zustandBean.getDate() ) ); //$NON-NLS-1$
 
     reach.setDescription( descBuffer.toString() );
 
@@ -503,8 +503,8 @@ public class WspWinImporter
         final TuhhCalculation calc = tuhhProject.createCalculation();
 
         calc.setName( baseName + bean.getName() );
-        calc.setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.26") ); //$NON-NLS-1$
-        calc.setCalcCreation( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.27"), new Date() ); //$NON-NLS-1$
+        calc.setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.26" ) ); //$NON-NLS-1$
+        calc.setCalcCreation( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.27" ), new Date() ); //$NON-NLS-1$
         calc.setReachRef( reach );
 
         final FLIESSGESETZ fliessgesetz = contentBean.getFliessgesetz();
@@ -607,7 +607,7 @@ public class WspWinImporter
   {
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( runOffFeature );
     obs.setName( name );
-    obs.setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.28") ); //$NON-NLS-1$
+    obs.setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.28" ) ); //$NON-NLS-1$
 
     final TupleResult result = obs.getResult();
     final IComponent[] components = result.getComponents();

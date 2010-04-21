@@ -181,8 +181,7 @@ public class WspmTuhhCalcJob implements ISimulation
         return;
       }
 
-      final Feature calculationFeature = (Feature) calcObject;
-      final TuhhCalculation calculation = new TuhhCalculation( calculationFeature );
+      final TuhhCalculation calculation = (TuhhCalculation) calcObject;
 
       monitor.setProgress( 10 );
 

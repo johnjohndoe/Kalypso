@@ -136,8 +136,7 @@ public class WspWinExporter
 
             // load (initialize) WspmProject
             monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3" ) + resource.getName() + Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            final Feature modelRootFeature = gmlWrkSpce.getRootFeature();
-            final TuhhWspmProject wspmProject = new TuhhWspmProject( modelRootFeature );
+            final TuhhWspmProject wspmProject = (TuhhWspmProject) gmlWrkSpce.getRootFeature();
 
             // create unique wspwinProjectDir
             File wspwinProjDir = new File( wspwinDir, wspmProject.getName() );
@@ -157,7 +156,7 @@ public class WspWinExporter
             final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
             for( final TuhhCalculation calculation : tuhhCalcs )
             {
-              final File dir = new File( wspwinProjDir, calculation.getFeature().getId() );
+              final File dir = new File( wspwinProjDir, calculation.getId() );
               writeForTuhhKernel( calculation, dir );
             }
           }

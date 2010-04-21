@@ -20,12 +20,6 @@
             name="%org.kalypso.model.wspm.tuhh.core.wspwin.lng.LngSink">
       </sink>
       <sink
-            class="org.kalypso.model.wspm.tuhh.core.profile.CsvSink"
-            extension="csv"
-            id="org.kalypso.model.wspm.tuhh.core.profile.CsvSink"
-            name="%org.kalypso.model.wspm.tuhh.core.profile.CsvSink">
-      </sink>
-      <sink
             class="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
             extension="DIRECTORY_FILTER_SUFFIX"
             id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.MultiPrfSink"
@@ -89,6 +83,18 @@
       <feature
             class="org.kalypso.model.wspm.tuhh.core.gml.TuhhReach"
             qname="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject"
+            qname="{org.kalypso.model.wspmproj}WspmProject">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState"
+            qname="{org.kalypso.model.wspm.tuhh}CalculationWspmTuhhSteadyState">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState"
+            qname="{org.kalypso.model.wspm.tuhh}CalculationReibConstWspmTuhhSteadyState">
       </feature>
    </extension>
 </plugin>

@@ -113,7 +113,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
   {
     final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project.getFeature(), waterBodies, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project, waterBodies, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     try
     {
       m_workspace.postCommand( new EmptyCommand( "", false ) );

@@ -210,4 +210,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String FILE_WSPTIN = "WspTin.gml";//$NON-NLS-1$
 
   public static String FILE_WSPM_GMV = "WSPM.gmv"; //$NON-NLS-1$
+
+  public static String FILE_RESULT_LENGTH_SECTION_GML = "Längsschnitt.gml"; //$NON-NLS-1$
 }

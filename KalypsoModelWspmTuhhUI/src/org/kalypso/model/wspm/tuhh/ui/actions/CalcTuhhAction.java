@@ -100,7 +100,8 @@ public class CalcTuhhAction implements IActionDelegate
 
     for( final Feature feature : features )
     {
-      final TuhhCalculation calculation = new TuhhCalculation( feature );
+      // FIXME: use new result provider api
+      final TuhhCalculation calculation = (TuhhCalculation) feature;
 
       final URL context = feature.getWorkspace().getContext();
       final IFile gmlFile = ResourceUtilities.findFileFromURL( context );
@@ -112,25 +113,25 @@ public class CalcTuhhAction implements IActionDelegate
         continue;
       }
 
-      final Job calcJob = new Job( Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.0", calculation.getName() )) //$NON-NLS-1$
+      final Job calcJob = new Job( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.0", calculation.getName() ) ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           try
           {
-            final String calcxpath = String.format( "id('%s')", calculation.getFeature().getId() ); //$NON-NLS-1$
+            final String calcxpath = String.format( "id('%s')", calculation.getId() ); //$NON-NLS-1$
             final String resultPath = calculation.getResultFolder().toPortableString();
 
             final ModelNature nature = (ModelNature) gmlFile.getProject().getNature( ModelNature.ID );
             if( nature == null )
-              return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.5") + ModelNature.ID ); //$NON-NLS-1$
+              return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.5" ) + ModelNature.ID ); //$NON-NLS-1$
 
             final Map<String, Object> properties = new HashMap<String, Object>();
             properties.put( "calc.xpath", calcxpath ); //$NON-NLS-1$
             properties.put( "result.path", resultPath ); //$NON-NLS-1$
 
-            return nature.launchAnt( Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.8"), "calc", properties, gmlFile.getParent(), monitor ); //$NON-NLS-1$ //$NON-NLS-2$
+            return nature.launchAnt( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.8" ), "calc", properties, gmlFile.getParent(), monitor ); //$NON-NLS-1$ //$NON-NLS-2$
           }
           catch( final Throwable t )
           {
@@ -167,7 +168,7 @@ public class CalcTuhhAction implements IActionDelegate
     if( objectsToSave.size() == 0 )
       return Status.OK_STATUS;
 
-    final StringBuffer msg = new StringBuffer( Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.10") ); //$NON-NLS-1$
+    final StringBuffer msg = new StringBuffer( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.10" ) ); //$NON-NLS-1$
     for( final CommandableWorkspace workspace : objectsToSave )
     {
       final KeyInfo info = pool.getInfo( workspace );
@@ -175,16 +176,16 @@ public class CalcTuhhAction implements IActionDelegate
       msg.append( "\n" ); //$NON-NLS-1$
     }
 
-    if( MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.12"), msg.toString() ) ) //$NON-NLS-1$
+    if( MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.12" ), msg.toString() ) ) //$NON-NLS-1$
     {
-      final Job job = new Job( Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.13") ) //$NON-NLS-1$
+      final Job job = new Job( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.13" ) ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           final MultiStatus resultStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() ), 0, "", null ); //$NON-NLS-1$
 
-          monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.15"), objectsToSave.size() ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.15" ), objectsToSave.size() ); //$NON-NLS-1$
 
           for( final CommandableWorkspace workspace : objectsToSave )
           {

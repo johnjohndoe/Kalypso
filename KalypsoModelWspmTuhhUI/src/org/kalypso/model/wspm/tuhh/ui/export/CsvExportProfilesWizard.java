@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.export;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -48,6 +50,10 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.CsvSink;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
@@ -60,7 +66,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
   private static final String EXTENSION = "csv";
 
-  private final ExportFileChooserPage m_profileFileChooserPage;
+  private final ExportCsvPage m_profileFileChooserPage;
 
   public CsvExportProfilesWizard( final ProfileSelection selection )
   {
@@ -70,7 +76,10 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
     saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION );
-    m_profileFileChooserPage = new ExportFileChooserPage( saveDelegate, EXTENSION );
+
+    final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
+
+    m_profileFileChooserPage = new ExportCsvPage( saveDelegate, EXTENSION, results );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
     m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );
     m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );
@@ -90,8 +99,27 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
+    final IWspmResultNode[] results = m_profileFileChooserPage.getResults();
+    final WspmResultLengthSection[] lengthSections = readLengthSections( results );
+
     final File file = m_profileFileChooserPage.getFile();
-    final SinkExporter exporter = new SinkExporter( new CsvSink() );
+    final SinkExporter exporter = new SinkExporter( new CsvSink( lengthSections ) );
     exporter.export( profiles, file, monitor );
+  }
+
+  private WspmResultLengthSection[] readLengthSections( final IWspmResultNode[] results )
+  {
+    final Collection<WspmResultLengthSection> lengthSections = new ArrayList<WspmResultLengthSection>();
+
+    for( final IWspmResultNode result : results )
+    {
+      if( result instanceof IWspmResult )
+      {
+        final WspmResultLengthSection section = ((IWspmResult) result).getLengthSection();
+        lengthSections.add( section );
+      }
+    }
+
+    return lengthSections.toArray( new WspmResultLengthSection[lengthSections.size()] );
   }
 }

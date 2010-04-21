@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -55,6 +56,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
+import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -232,4 +234,30 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     return profile.toArray( new IProfileFeature[profile.size()] );
   }
 
+  /**
+   * Returns all calculations, that use this reach.
+   */
+  public TuhhCalculation[] findCalculations( )
+  {
+    final Collection<TuhhCalculation> result = new ArrayList<TuhhCalculation>();
+
+    final WspmWaterBody waterBody = getWaterBody();
+    if( waterBody != null )
+    {
+      final WspmProject project = waterBody.getProject();
+      if( project instanceof TuhhWspmProject )
+      {
+        final TuhhWspmProject tuhhProject = (TuhhWspmProject) project;
+        final TuhhCalculation[] calculations = tuhhProject.getCalculations();
+        for( final TuhhCalculation tuhhCalculation : calculations )
+        {
+          final TuhhReach reach = tuhhCalculation.getReach();
+          if( this.equals( reach ) )
+            result.add( tuhhCalculation );
+        }
+      }
+    }
+
+    return result.toArray( new TuhhCalculation[result.size()] );
+  }
 }

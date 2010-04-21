@@ -95,14 +95,14 @@ public class WspmTuhhProjectSelection
 
   private TuhhWspmProject findProject( final Feature parentFeature )
   {
-    if( GMLSchemaUtilities.substitutes( parentFeature.getFeatureType(), TuhhWspmProject.QNAME ) )
-      return new TuhhWspmProject( parentFeature );
+    if( parentFeature instanceof TuhhWspmProject )
+      return (TuhhWspmProject) parentFeature;
 
     if( GMLSchemaUtilities.substitutes( parentFeature.getFeatureType(), WspmWaterBody.QNAME ) )
     {
       final Feature grandDad = parentFeature.getParent();
-      if( GMLSchemaUtilities.substitutes( grandDad.getFeatureType(), TuhhWspmProject.QNAME ) )
-        return new TuhhWspmProject( grandDad );
+      if( grandDad instanceof TuhhWspmProject )
+        return (TuhhWspmProject) grandDad;
     }
 
     return null;
