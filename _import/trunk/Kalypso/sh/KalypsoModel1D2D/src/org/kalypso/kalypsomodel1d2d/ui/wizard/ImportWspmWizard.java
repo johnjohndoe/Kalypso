@@ -185,7 +185,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* Choose network collection */
     m_wspmGmlPage.setValidKind( true, false );
 
-    m_importPage = new ImportWspmWizardPage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.1") ); //$NON-NLS-1$
+    m_importPage = new ImportWspmWizardPage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -241,11 +241,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
       existingNetwork = null;
     else
     {
-      final String msg =  Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.11", foundNetwork.getName() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.11", foundNetwork.getName() ); //$NON-NLS-1$
       final MessageDialog messageDialog = new MessageDialog( getShell(), getWindowTitle(), null, msg, MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
-        IDialogConstants.CANCEL_LABEL }, 1 );
+          IDialogConstants.CANCEL_LABEL }, 1 );
       final int open = messageDialog.open();
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.12") + open ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.12" ) + open ); //$NON-NLS-1$
       if( (open == 2) || (open == -1) )
         return false;
 
@@ -349,7 +349,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       for( final TuhhReachProfileSegment segment : segments )
         allowedStations.add( segment.getStation() );
 
-      final GMLWorkspace calcWorkspace = calculation.getFeature().getWorkspace();
+      final GMLWorkspace calcWorkspace = calculation.getWorkspace();
       final URL calcContext = calcWorkspace.getContext();
       final URL qresultsUrl = new URL( calcContext, "Ergebnisse/" + calculation.getName() + "/_aktuell/Daten/qIntervallResults.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qresultsUrl, calcWorkspace.getFeatureProviderFactory() );
@@ -358,7 +358,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final Feature flowRelParentFeature = flowRelModel.getFeature();
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
 
-      final List resultList = qResultCollection.getQResultFeatures();
+      final List< ? > resultList = qResultCollection.getQResultFeatures();
 
       final List<Feature> addedFeatures = new ArrayList<Feature>();
       for( final Object o : resultList )
@@ -372,7 +372,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           continue;
 
         // get corresponding 1d-element
-        final IFE1D2DNode node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
+        final IFE1D2DNode< ? > node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
 
         final IFlowRelation1D flowRel;
 
@@ -380,17 +380,17 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final IObservation<TupleResult> buildingObs = qresult.getBuildingObservation( false );
         if( node == null )
         {
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14", station ))); //$NON-NLS-1$
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14", station ) ) ); //$NON-NLS-1$
           flowRel = null;
         }
         else if( buildingObs != null )
         {
           // REMARK: it is important that elementsByStation is sorted in upstream direction
-          final IFE1D2DNode downStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, false );
-          final IFE1D2DNode upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
+          final IFE1D2DNode< ? > downStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, false );
+          final IFE1D2DNode< ? > upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
           if( (downStreamNode == null) || (upStreamNode == null) )
           {
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17"), null ) ); //$NON-NLS-1$
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17" ), null ) ); //$NON-NLS-1$
           }
           else
             flowRel = addBuilding( flowRelModel, node, qresult, downStreamNode, upStreamNode );
@@ -645,11 +645,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
         addedFeatures.add( node.getFeature() );
 
         node.setName( "" ); //$NON-NLS-1$
-        final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.18"  + profileMember.getDescription() ); //$NON-NLS-1$
+        final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.18" + profileMember.getDescription() ); //$NON-NLS-1$
         node.setDescription( desc );
 
         if( point == null )
-          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19" , station )) ); //$NON-NLS-1$
+          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19", station ) ) ); //$NON-NLS-1$
 
         node.setPoint( point );
       }
@@ -748,7 +748,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* Set user friendly name and description */
     final URL reachContext = reach.getWorkspace().getContext();
     final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm(); //$NON-NLS-1$
-    final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.21" , reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
+    final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.21", reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
     network.setName( reach.getName() );
     network.setDescription( desc );
 
@@ -759,7 +759,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
       if( profileMember == null )
         continue;
-
 
       if( profileMember == null )
         continue;
@@ -790,7 +789,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     if( event.getSelectedPage() == m_importPage )
     {
       final IStructuredSelection wspmSelection = m_wspmGmlPage.getSelection();
-      final TuhhCalculation calculation = new TuhhCalculation( (Feature) wspmSelection.getFirstElement() );
+      final TuhhCalculation calculation = (TuhhCalculation) wspmSelection.getFirstElement();
       m_importPage.setCalculation( calculation );
     }
   }

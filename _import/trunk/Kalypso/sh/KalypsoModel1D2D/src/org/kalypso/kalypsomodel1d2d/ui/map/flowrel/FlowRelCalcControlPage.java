@@ -104,7 +104,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     m_featureGroup.setLayout( new GridLayout() );
     final GridData groupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     m_featureGroup.setLayoutData( groupData );
-    m_featureGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.0") ); //$NON-NLS-1$
+    m_featureGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.0" ) ); //$NON-NLS-1$
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( "resources/calcControlPage.gft" ) ); //$NON-NLS-1$
@@ -148,12 +148,12 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
       if( m_template == null )
       {
         // show error message
-        setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.3") ); //$NON-NLS-1$
+        setErrorMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.3" ) ); //$NON-NLS-1$
       }
       else
       {
         // show template in feature control
-        m_featureComposite.setFeature( m_template.getFeature() );
+        m_featureComposite.setFeature( m_template );
         m_featureComposite.createControl( m_featureGroup, SWT.NONE );
         m_featureGroup.layout();
         m_scrolledForm.reflow( true );
@@ -163,7 +163,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     {
       e.printStackTrace();
 
-      setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.4") + e.toString() ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.4" ) + e.toString() ); //$NON-NLS-1$
     }
   }
 
@@ -187,11 +187,9 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     }
 
     /* If a calculation exists, copy its values */
-    final IFeatureType featureType = project.getFeature().getFeatureType();
+    final IFeatureType featureType = project.getFeatureType();
     final IRelationType rt = (IRelationType) featureType.getProperty( TuhhWspmProject.QNAME_PROP_CALC_MEMBER );
-    final Feature clonedFeature = FeatureHelper.cloneFeature( project.getFeature(), rt, calculation.getFeature() );
-
-    return new TuhhCalculation( clonedFeature );
+    return (TuhhCalculation) FeatureHelper.cloneFeature( project, rt, calculation );
   }
 
   public TuhhCalculation getTemplate( )

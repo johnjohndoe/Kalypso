@@ -117,7 +117,7 @@ public class Restart1DImporter
 
   public void doImport( final IFile lengthSectionFile, final String lsComponentStation, final String lsComponentWaterlevel, final String lsComponentVelocity, final String lsComponentKennung, final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.0"), 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.0" ), 100 ); //$NON-NLS-1$
 
     try
     {
@@ -158,7 +158,7 @@ public class Restart1DImporter
       e.printStackTrace();
 
       /* If anything happens, do not proceed */
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.3") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.3" ) ) ); //$NON-NLS-1$
     }
   }
 
@@ -172,7 +172,7 @@ public class Restart1DImporter
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
       final IProfileFeature profileMember = segment.getProfileMember();
-      String crs = profileMember.getSrsName();
+      final String crs = profileMember.getSrsName();
       final BigDecimal station = profileMember.getBigStation();
       final IProfil profil = profileMember.getProfil();
       final IRecord sohlPoint = ProfilUtil.getMinPoint( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
@@ -188,7 +188,7 @@ public class Restart1DImporter
     final IFile file = project.getFile( "modell.gml" ); //$NON-NLS-1$
     final URL modelURL = ResourceUtilities.createURL( file );
     final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
-    final TuhhWspmProject tuhhWspmProject = new TuhhWspmProject( modelWorkspace.getRootFeature() );
+    final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
 
     final TuhhCalculation[] calculations = tuhhWspmProject.getCalculations();
     for( final TuhhCalculation tuhhCalculation : calculations )
@@ -197,7 +197,7 @@ public class Restart1DImporter
         return tuhhCalculation;
     }
 
-    throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.5") + calcName ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.5" ) + calcName ); //$NON-NLS-1$
   }
 
   /**
@@ -208,8 +208,8 @@ public class Restart1DImporter
    */
   private ICalcUnitResultMeta createCalcUnitResult( final IScenarioResultMeta scenarioResultMeta, final String projectName )
   {
-    final String name = Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.6", projectName ); //$NON-NLS-1$
-    final String description =  Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.7", name ); //$NON-NLS-1$
+    final String name = Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.6", projectName ); //$NON-NLS-1$
+    final String description = Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.7", name ); //$NON-NLS-1$
 
     /* Search for calcUnitMeta with same name (Is this strong enough?) */
     for( final IResultMeta resultMeta : scenarioResultMeta.getChildren() )
@@ -249,7 +249,7 @@ public class Restart1DImporter
       }
     }
 
-    final String description =  Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.9", name ); //$NON-NLS-1$
+    final String description = Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.9", name ); //$NON-NLS-1$
 
     final IStepResultMeta stepResultMeta = calcUnitResult.getChildren().addNew( IStepResultMeta.QNAME, IStepResultMeta.class );
     stepResultMeta.setDescription( description );
@@ -264,7 +264,7 @@ public class Restart1DImporter
 
   private IDocumentResultMeta createDocument( final String projectName, final String calcName, final IStepResultMeta stepResultMeta )
   {
-    final String description = Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.10", projectName, calcName ); //$NON-NLS-1$
+    final String description = Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.10", projectName, calcName ); //$NON-NLS-1$
 
     for( final IResultMeta resultMeta : stepResultMeta.getChildren() )
     {
@@ -343,14 +343,14 @@ public class Restart1DImporter
         final GM_Point midPoint = GeometryUtilities.createGM_PositionAtCenter( prevPoint, currentPoint );
         final BigDecimal midWaterlevel = prevWaterlevel.add( currentWaterlevel ).divide( new BigDecimal( "2" ), BigDecimal.ROUND_HALF_UP ); //$NON-NLS-1$
 
-        createNodeResult( nodeResults, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.15") + prevStation + " - " + currentStation, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.17"), midPoint, midWaterlevel, midsideVector2d, true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        createNodeResult( nodeResults, Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.15" ) + prevStation + " - " + currentStation, Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.17" ), midPoint, midWaterlevel, midsideVector2d, true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
 
       /* Calculate the direction */
       final Vector2d vector2d = vectorFrom3Points( prevPoint, currentPoint, nextPoint );
       vector2d.scale( currentVelocity.doubleValue() );
 
-      createNodeResult( nodeResults, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.18") + currentStation, "", currentPoint, currentWaterlevel, vector2d, false ); //$NON-NLS-1$ //$NON-NLS-2$
+      createNodeResult( nodeResults, Messages.getString( "org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.18" ) + currentStation, "", currentPoint, currentWaterlevel, vector2d, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
       min = min.min( currentVelocity );
       max = max.max( currentVelocity );

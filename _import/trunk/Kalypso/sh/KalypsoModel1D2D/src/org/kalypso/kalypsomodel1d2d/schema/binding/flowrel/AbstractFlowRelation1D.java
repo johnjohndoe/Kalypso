@@ -66,10 +66,10 @@ public abstract class AbstractFlowRelation1D extends FlowRelationship implements
   public TuhhCalculation getCalculation( )
   {
     final Feature calcFeature = getProperty( QNAME_PROP_TUHH_CALCULATION, Feature.class );
-    if( calcFeature == null )
-      return null;
+    if( calcFeature instanceof TuhhCalculation )
+      return (TuhhCalculation) calcFeature;
 
-    return new TuhhCalculation( calcFeature );
+    return null;
   }
 
   /**
@@ -83,7 +83,7 @@ public abstract class AbstractFlowRelation1D extends FlowRelationship implements
     final IRelationType calcRT = (IRelationType) flowRelFT.getProperty( IFlowRelation1D.QNAME_PROP_TUHH_CALCULATION );
     try
     {
-      FeatureHelper.cloneFeature( flowRelFeature, calcRT, calculation.getFeature() );
+      FeatureHelper.cloneFeature( flowRelFeature, calcRT, calculation );
     }
     catch( final Exception e )
     {
