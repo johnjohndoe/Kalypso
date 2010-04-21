@@ -6,7 +6,7 @@
 		<Name>dtmGrid</Name>
 		<UserStyle>
 			<Name>extrapolationPolygonUserStyle</Name>
-			<Title>Extrapolations-Polygone</Title>
+			<Title>%userStyle.extrapolationPolygonUserStyle.title</Title>
 			<FeatureTypeStyle>
 				<Name>extrapolationPolygonStyle</Name>
 				<Title>Extrapolations-Polygone</Title>
@@ -104,7 +104,7 @@
 		</UserStyle>
 		<UserStyle>
 			<Name>clipPolygonUserStyle</Name>
-			<Title>Clip-Polygone</Title>
+			<Title>%userStyle.clipPolygonUserStyle.title</Title>
 			<FeatureTypeStyle >
 				<Name>clipPolygonStyle</Name>
 				<FeatureTypeName>{org.kalypso.model.flood}FloodClipPolygon</FeatureTypeName>
@@ -165,7 +165,7 @@
 		</UserStyle>
 		<UserStyle>
 			<Name>volumePolygonUserStyle</Name>
-			<Title>Volumen-Polygone</Title>
+			<Title>%userStyle.volumePolygonUserStyle.title</Title>
 			<FeatureTypeStyle >
 				<Name>volumePolygonStyle</Name>
 				<FeatureTypeName>{org.kalypso.model.flood}FloodVolumePolygon</FeatureTypeName>
