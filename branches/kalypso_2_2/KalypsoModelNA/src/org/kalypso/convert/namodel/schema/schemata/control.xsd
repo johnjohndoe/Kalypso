@@ -22,7 +22,7 @@
 					<element name="startforecast" type="dateTime"/>
 					<element name="hoursforecast" type="int" minOccurs="0"/>
 					<element name="minutesTimestep" type="int" minOccurs="0"/>
-					<element name="versionKalypsoNA" type="na:versionEnumerationType"/>
+					<element name="versionKalypsoNA" type="na:versionKalypsoNAType"/>
 					<element name="editor" type="string"/>
 					<element name="description" type="string"/>
 					<element name="comment" type="string"/>
@@ -51,21 +51,9 @@
 			<enumeration value="rechtsschiefer Regen" />
 		</restriction>
 	</simpleType>
-	<simpleType name="versionEnumerationType">
+	<simpleType name="versionKalypsoNAType">
 		<restriction base="string">
-			<enumeration value="v2.0.5" />
-			<enumeration value="v2.0.6" />
-			<enumeration value="v2.0.7" />
-			<enumeration value="v2.0.8" />
-			<enumeration value="v2.1.1" />
-			<enumeration value="v2.1.3" />
-			<enumeration value="v2.1.4.1" />
-			<enumeration value="v2.1.5" />
-			<enumeration value="neueste" />
-			<!-- 
-			<enumeration value="latest" />
-			 -->
-			<enumeration value="test" />
+			<minLength value="1"/>
 		</restriction>
 	</simpleType>
 </schema>

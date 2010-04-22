@@ -79,7 +79,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
@@ -148,29 +150,9 @@ public class NaModelInnerCalcJob implements ISimulation
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/"; //$NON-NLS-1$
 
-  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_06 = "start/kalypso_2.0.6.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_07 = "start/kalypso_2.0.7.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_08 = "start/kalypso_2.0.8.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_11 = "start/kalypso_2.1.1.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_13 = "start/kalypso_2.1.3.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_141 = "start/update_bodenhorizonte_10_11_09.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_15 = "start/kalypso_2.1.5.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_TEST = "start/kalypso_test.exe"; //$NON-NLS-1$
-
   private boolean m_succeeded = false;
 
-  private String m_kalypsoKernelPath = null;
+  private File m_kalypsoKernelPath = null;
 
   final private Map<Feature, String> m_resultMap = new HashMap<Feature, String>();
 
@@ -273,7 +255,7 @@ public class NaModelInnerCalcJob implements ISimulation
         return;
 
       // calualtion model
-      final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
+      final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile, monitor );
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL, null );
 
@@ -541,7 +523,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private GMLWorkspace generateASCII( final NAConfiguration conf, final File tmpDir, final ISimulationDataProvider dataProvider, final File newModellFile ) throws Exception
+  private GMLWorkspace generateASCII( final NAConfiguration conf, final File tmpDir, final ISimulationDataProvider dataProvider, final File newModellFile, final ISimulationMonitor monitor ) throws Exception
   {
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     final Feature metaFE = metaWorkspace.getRootFeature();
@@ -644,7 +626,7 @@ public class NaModelInnerCalcJob implements ISimulation
     conf.setMinutesOfTimeStep( minutesTimeStep );
 
     // choose simulation kernel
-    chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ) );
+    chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ), monitor );
 
     // choose precipitation form and parameters
     final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
@@ -945,35 +927,20 @@ public class NaModelInnerCalcJob implements ISimulation
    * @param kalypsoNAVersion
    *          name/version of simulation kernel
    */
-  private void chooseSimulationExe( final String kalypsoNAVersion )
+  private void chooseSimulationExe( final String kalypsoNAVersion, final ISimulationMonitor monitor ) throws SimulationException
   {
-    if( kalypsoNAVersion.equals( "test" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_TEST;
-    else if( kalypsoNAVersion.equals( "lfug" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
-    else if( kalypsoNAVersion.equals( "v2.0.5" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_05beta;
-    else if( kalypsoNAVersion.equals( "v2.0.6" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_06;
-    else if( kalypsoNAVersion.equals( "v2.0.7" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_07;
-    else if( kalypsoNAVersion.equals( "v2.0.8" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_08;
-    else if( kalypsoNAVersion.equals( "v2.1.1" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_11;
-    else if( kalypsoNAVersion.equals( "v2.1.3" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_13;
-    else if( kalypsoNAVersion.equals( "v2.1.4.1" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_141;
-    else if( kalypsoNAVersion.equals( "v2.1.5" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_15;
-    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) ) // latest stable is 2.1.5 //$NON-NLS-1$ //$NON-NLS-2$
-      m_kalypsoKernelPath = EXE_FILE_2_15;
-    else
+    /*
+     * for backward compatibility, any string that is not the proper version identifier will be considered as the
+     * "latest version" request
+     */
+    final File executable = NaModelHelper.findExecutable( kalypsoNAVersion );
+    if( executable == null )
     {
-      Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_15;
+      Logger.getAnonymousLogger().log( Level.SEVERE, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
     }
+    m_kalypsoKernelPath = executable;
   }
 
   private void initializeModell( final Feature controlFeature, final URL inputModellURL, final File outputModelFile ) throws Exception
@@ -1711,23 +1678,10 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private void copyExecutable( final File basedir ) throws Exception
   {
-    final String exeResource = m_resourceBase + m_kalypsoKernelPath;
-    final File destFile = new File( basedir, m_kalypsoKernelPath );
+    final File executableFolder = new File( basedir, "start" ); //$NON-NLS-1$
+    final File destFile = new File( executableFolder, m_kalypsoKernelPath.getName() );
     if( !destFile.exists() )
-    {
-      try
-      {
-        final InputStream inputStream = getClass().getResourceAsStream( exeResource );
-        FileUtilities.makeFileFromStream( false, destFile, inputStream );
-        System.out.println( " ...copied" ); //$NON-NLS-1$
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-
-        System.out.println( "ERR: " + exeResource + " may not exist" ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-    }
+      FileUtils.copyFile( m_kalypsoKernelPath, destFile );
 
     // TODO: do not commit...
 // URL defaultZfl = getClass().getResource( m_resourceBase + "inp.dat/we999-weisseelster.zfl" );
@@ -1757,8 +1711,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private void startCalculation( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final File exeFile = new File( basedir, m_kalypsoKernelPath );
-    final File exeDir = exeFile.getParentFile();
+    final File exeDir = new File( basedir, "start" ); //$NON-NLS-1$
+    final File exeFile = new File( exeDir, m_kalypsoKernelPath.getName() );
     final String commandString = exeFile.getAbsolutePath();
 // final long timeOut = 1000l * 60l * 60l; // max 60 minutes
 

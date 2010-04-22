@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -110,6 +116,12 @@ public class NaModelHelper
   public static final int OPERATION_SUCCEEDED = 0;
 
   private static final double m_factorHecto = 1 / 100d;
+
+  public static final String EXECUTABLES_FOLDER = "bin";
+
+  public static final String EXECUTABLES_FILE_TEMPLATE = "na-kalypso_%s.exe";
+
+  public static final String EXECUTABLES_FILE_PATTERN = "na-kalypso_(.+)\\.exe";
 
   // public static File getResultFile( URL context, Feature nodeFE ) throws MalformedURLException
   // {
@@ -280,4 +292,57 @@ public class NaModelHelper
         * factorHecto;
     return new Double( value * factorHecto );
   }
+
+  public static File findExecutable( final String version )
+  {
+    /*
+     * for backward compatibility, any string that is not the correct version identifier will be considered as the
+     * "latest version" request
+     */
+    if( version == null || version.length() == 0 )
+      return getLatestExecutable();
+
+    // REMARK: This is OS dependent; we use should use a pattern according to OS
+    final String exeName = String.format( EXECUTABLES_FILE_TEMPLATE, version );
+
+    final File exeFile = new File( getExecutablesDirectory(), exeName );
+    if( exeFile != null && exeFile.exists() && exeFile.isFile() )
+      return exeFile;
+    return getLatestExecutable();
+  }
+
+  public static File getLatestExecutable( )
+  {
+    /*
+     * we will assume that the latest executable is the one with the most recent file modification date
+     */
+    final File[] executables = getExecutablesDirectory().listFiles( new FileFilter()
+    {
+      @Override
+      public boolean accept( final File pathname )
+      {
+        return Pattern.matches( EXECUTABLES_FILE_PATTERN, pathname.getName() );
+      }
+    } );
+    if( executables == null || executables.length == 0 )
+      return null;
+    if( executables.length == 1 )
+      return executables[0];
+    File latest = executables[0];
+    for( int i = 1; i < executables.length; i++ )
+    {
+      if( executables[i].lastModified() > latest.lastModified() )
+        latest = executables[i];
+    }
+    return latest;
+  }
+
+  public static File getExecutablesDirectory( )
+  {
+    final Location installLocation = Platform.getInstallLocation();
+    final File installDir = FileUtils.toFile( installLocation.getURL() );
+    final File exeDir = new File( installDir, EXECUTABLES_FOLDER );
+    return exeDir;
+  }
+
 }

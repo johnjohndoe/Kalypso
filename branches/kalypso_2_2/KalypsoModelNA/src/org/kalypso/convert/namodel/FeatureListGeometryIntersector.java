@@ -41,7 +41,6 @@
 package org.kalypso.convert.namodel;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -53,7 +52,9 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
 
@@ -68,20 +69,20 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for intersecting a number of feature geometry layers
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class FeatureListGeometryIntersector
 {
   private SplitSortSpatialIndex m_index;
 
-  private Envelope m_bbox; // index bounding box
+  private Envelope m_bbox = null; // index bounding box
 
   private final List<Geometry> m_coverBuffer = new ArrayList<Geometry>();
 
   // better performances if layers with smaller number of (big) polygons are processed first - the reason for sorted
   // map...
-  private final SortedMap<Integer, FeatureList> m_sourceLayers = new TreeMap<Integer, FeatureList>();
+  private final SortedMap<Integer, List<Feature>> m_sourceLayers = new TreeMap<Integer, List<Feature>>();
 
   private boolean m_initialized = false;
 
@@ -92,19 +93,19 @@ public class FeatureListGeometryIntersector
     m_initialized = false;
   }
 
-  public FeatureListGeometryIntersector( final List<FeatureList> sourceFeatureLists )
+  public FeatureListGeometryIntersector( final List<List<Feature>> sourceFeatureLists )
   {
-    for( final FeatureList featureList : sourceFeatureLists )
+    for( final List<Feature> featureList : sourceFeatureLists )
     {
       if( featureList != null && featureList.size() > 0 )
         m_sourceLayers.put( featureList.size(), featureList );
     }
   }
 
-  public void addFeatureList( final FeatureList featureList )
+  public void addFeatureList( final List<Feature> list )
   {
-    if( featureList != null && featureList.size() > 0 )
-      m_sourceLayers.put( featureList.size(), featureList );
+    if( list != null && list.size() > 0 )
+      m_sourceLayers.put( list.size(), list );
   }
 
   public void clearFeatureList( )
@@ -117,15 +118,34 @@ public class FeatureListGeometryIntersector
   {
     if( !m_sourceLayers.isEmpty() && !m_initialized )
     {
-      final Iterator<FeatureList> layers = m_sourceLayers.values().iterator();
-      final FeatureList firstLayer = layers.next();
-      m_numberOfFeatures = firstLayer.size();
-      m_bbox = JTSAdapter.export( firstLayer.getBoundingBox() );
-      while( layers.hasNext() )
+      for( final List<Feature> list : m_sourceLayers.values() )
       {
-        final FeatureList layer = layers.next();
-        m_numberOfFeatures += layer.size();
-        m_bbox.expandToInclude( JTSAdapter.export( layer.getBoundingBox() ) );
+        Envelope boundingBox = null;
+        if( list instanceof FeatureList )
+        {
+          boundingBox = JTSAdapter.export( ((FeatureList) list).getBoundingBox() );
+        }
+        else
+        {
+          for( final Feature feature : list )
+          {
+            final GM_Object value = feature.getDefaultGeometryPropertyValue();
+            if( value != null )
+            {
+              final GM_Envelope envelope = value.getEnvelope();
+              if( boundingBox == null )
+                boundingBox = JTSAdapter.export( envelope );
+              else
+                boundingBox.expandToInclude( JTSAdapter.export( envelope ) );
+            }
+          }
+        }
+        if( boundingBox == null )
+          return false;
+        if( m_bbox == null )
+          m_bbox = boundingBox;
+        else
+          m_bbox.expandToInclude( boundingBox );
       }
       m_index = new SplitSortSpatialIndex( m_bbox );
       m_initialized = true;
@@ -140,9 +160,9 @@ public class FeatureListGeometryIntersector
    */
   public List<MultiPolygon> intersect( final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.0"), 1000 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.0" ), 1000 ); //$NON-NLS-1$
 
-    progress.subTask( Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.1") ); //$NON-NLS-1$
+    progress.subTask( Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.1" ) ); //$NON-NLS-1$
     final List<MultiPolygon> resultGeometryList = new ArrayList<MultiPolygon>();
     if( !init() )
       return resultGeometryList;
@@ -150,17 +170,17 @@ public class FeatureListGeometryIntersector
 
     /* Find out num feature */
     int countFeatures = 0;
-    for( final FeatureList list : m_sourceLayers.values() )
+    for( final List<Feature> list : m_sourceLayers.values() )
       countFeatures += list.size();
     progress.setWorkRemaining( countFeatures );
 
     int count = 0;
-    for( final FeatureList featureList : m_sourceLayers.values() )
+    for( final List<Feature> featureList : m_sourceLayers.values() )
     {
-      for( final Feature feature : featureList.toFeatures() )
+      for( final Feature feature : featureList )
       {
         if( count % 100 == 0 )
-          progress.subTask( Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countFeatures ) ); //$NON-NLS-1$
+          progress.subTask( Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countFeatures ) ); //$NON-NLS-1$
         count++;
 
         final List<Geometry> featurePolygons = removeGeometryCollections( JTSAdapter.export( feature.getDefaultGeometryPropertyValue() ) );
