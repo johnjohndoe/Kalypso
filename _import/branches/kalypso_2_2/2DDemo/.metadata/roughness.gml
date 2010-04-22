@@ -5,6 +5,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117813102775819">
    <gml:name>deaktivierte Elemente</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366140021861"/>
    <wbr:colorStyle>#ff0000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -13,6 +14,7 @@
    <gml:name>Vorland mit Bewuchs 25</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls11781236916091"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#80ff80</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -20,6 +22,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls11781233116313">
    <gml:name>Fluss oben</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls11707777217344"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#0080ff</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -28,6 +31,7 @@
    <gml:name>Wehr</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812351454536"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812369082860"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#000000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -35,6 +39,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls11781230887268">
    <gml:name>Fluss</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls11707777217344"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#8000ff</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -42,6 +47,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308790520">
    <gml:name>Sohlschüttung</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812341634323"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#6b6b6b</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -49,6 +55,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308713428">
    <gml:name>Graben</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812341634323"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#8000ff</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -56,6 +63,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308631332">
    <gml:name>Böschung</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812341544240"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ff8000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -63,6 +71,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308554222">
    <gml:name>Böschung_rauh</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812341424022"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ffff00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -70,6 +79,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308473018">
    <gml:name>Böschungssicherung</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812346816436"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#808080</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -78,6 +88,7 @@
    <gml:name>Vorland mit Bewuchs 1</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812359067335"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#808000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -85,6 +96,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308269729">
    <gml:name>Vorland ohne Bewuchs</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#800080</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -92,6 +104,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308185619">
    <gml:name>Vorland Röhricht ohne Bewuchs</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117812349000723"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ff80ff</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -99,6 +112,7 @@
   <wbr:RoughnessCls gml:id="RoughnessCls117812308098418">
    <gml:name>Strasse</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls11781234998831"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#c0c0c0</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -107,6 +121,7 @@
    <gml:name>Vorland mit Bewuchs 2</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812359013224"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#004000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -115,6 +130,7 @@
    <gml:name>Vorland mit Bewuchs 3</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358938128"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#008000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -123,6 +139,7 @@
    <gml:name>Vorland mit Bewuchs 4</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls11781235884406"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#00ff00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -131,6 +148,7 @@
    <gml:name>Vorland mit Bewuchs 5</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls11781235875184"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#008080</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -139,6 +157,7 @@
    <gml:name>Vorland mit Bewuchs 6</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358689710"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#408080</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -147,6 +166,7 @@
    <gml:name>Vorland mit Bewuchs 7</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358583633"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ff8080</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -155,6 +175,7 @@
    <gml:name>Vorland mit Bewuchs 8</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358531514"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ff80ff</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -163,6 +184,7 @@
    <gml:name>Vorland mit Bewuchs 9</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358450449"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#00ffff</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -171,6 +193,7 @@
    <gml:name>Vorland mit Bewuchs 10</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358382343"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#c05b3f</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -179,6 +202,7 @@
    <gml:name>Vorland mit Bewuchs 11</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358317232"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#914d93</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -187,6 +211,7 @@
    <gml:name>Vorland mit Bewuchs 12</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358252131"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#e21dbf</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -195,6 +220,7 @@
    <gml:name>Vorland mit Bewuchs 13</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812358183028"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#f8d6d8</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -203,6 +229,7 @@
    <gml:name>Vorland mit Bewuchs 15</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812357962639"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#3ec16b</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -211,6 +238,7 @@
    <gml:name>Vorland mit Bewuchs 17</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812365773750"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#c1b91e</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -219,6 +247,7 @@
    <gml:name>Vorland mit Bewuchs 18</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812365706625"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#5e0f4e</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -227,6 +256,7 @@
    <gml:name>Vorland mit Bewuchs 19</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812365637563"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#0db360</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -235,6 +265,7 @@
    <gml:name>Vorland mit Bewuchs 20</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812365542325"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#0e6372</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -243,6 +274,7 @@
    <gml:name>Vorland mit Bewuchs 21</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812365444256"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#cd4932</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -251,6 +283,7 @@
    <gml:name>Vorland mit Bewuchs 22</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812369603614"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ff8040</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -259,6 +292,7 @@
    <gml:name>Vorland mit Bewuchs 23</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812369537556"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#8bf3c1</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -267,6 +301,7 @@
    <gml:name>Vorland mit Bewuchs 24</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls117812369234160"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#e39be1</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -276,6 +311,7 @@
    <gml:name>Gras mit dichtem jungen Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123589381281"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#003300</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -285,6 +321,7 @@
    <gml:name>Gras mit dichtem mehrjährigen Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358751841"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#005100</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -294,6 +331,7 @@
    <gml:name>Gras mit lockerem Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123590132241"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#006f00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -303,6 +341,7 @@
    <gml:name>Gras mit mehrjährigem Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358844061"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#008c00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -312,6 +351,7 @@
    <gml:name>Gras mit aufgelockerten Büschen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123656375631"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#00aa00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -321,6 +361,7 @@
    <gml:name>Gras mit großen Büschen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657066251"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#00aa00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -330,6 +371,7 @@
    <gml:name>Gras mit kleinen Buschgruppen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123655423251"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#00cc00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -339,6 +381,7 @@
    <gml:name>Gras mit kleinen Büschen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123690828601"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#00e800</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -348,6 +391,7 @@
    <gml:name>Gras mit Büschen mit Kronenschluss</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123590673351"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#15ff15</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -357,6 +401,7 @@
    <gml:name>Gras mit Büschen mittlerer Größe</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657737501"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#53ff53</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -366,6 +411,7 @@
    <gml:name>Gras mit großen Buschgruppen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1183481772242461"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123654442561"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#95ff95</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -375,6 +421,7 @@
    <gml:name>Kraut mit dichtem jungen Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123589381281"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#804000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -384,6 +431,7 @@
    <gml:name>Kraut mit dichtem mehrjährigen Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358751841"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#b35900</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -393,6 +441,7 @@
    <gml:name>Kraut mit lockeren Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123590132241"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#d76b00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -402,6 +451,7 @@
    <gml:name>Kraut mit aufgelockerten Büschen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123656375631"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ff8b17</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -411,6 +461,7 @@
    <gml:name>Kraut mit großen Büschen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657066251"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ffaa55</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -420,6 +471,7 @@
    <gml:name>Kraut mit kleinen Buschgruppen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123655423251"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ffc68c</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -429,6 +481,7 @@
    <gml:name>Kraut mit kleinen Büschen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123690828601"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ffe6cc</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -438,6 +491,7 @@
    <gml:name>Kraut mit Büschen mit Kronenschluss</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123590673351"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#fefbc5</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -447,6 +501,7 @@
    <gml:name>Kraut mit Büschen mittlerer Größe</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123657737501"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#fded80</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -456,6 +511,7 @@
    <gml:name>Kraut mit mehrjährigem Baumbesatz</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls117812358844061"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#f4dd59</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
@@ -465,6 +521,7 @@
    <gml:name>Kraut mit großen Buschgruppen</gml:name>
    <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls1178123514545361"/>
    <wbr:roughness_VegetationLink xlink:href="roughness.gml#Roughness_VegetationCls1178123654442561"/>
+   <wbr:roughness_EddyViscosityLink xlink:href="#Roughness_EddyViscosityCls118366136518763"/>
    <wbr:colorStyle>#ffff00</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>

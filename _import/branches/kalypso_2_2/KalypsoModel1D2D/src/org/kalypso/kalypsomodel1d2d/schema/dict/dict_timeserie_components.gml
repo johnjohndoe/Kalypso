@@ -25,7 +25,7 @@
 					<st:restriction base="integer">
 						<st:minInclusive value="1" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#none" />
+					<gml:unitOfMeasure uom="" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
