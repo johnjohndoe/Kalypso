@@ -53,8 +53,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationResultEater;
@@ -73,22 +74,25 @@ public class LengthSectionParser
 
   private final File m_outputDir;
 
-  private final TuhhReach m_reach;
-
   private final String m_epsThinning;
 
   private final List<LengthSectionProcessor> m_lengthSections = new ArrayList<LengthSectionProcessor>();
 
-  private final boolean m_addRunoffToFilename;
+  private final String m_titlePattern;
 
-  public LengthSectionParser( final TuhhReach reach, final File lsFile, final ISimulationResultEater resultEater, final File outputDir, final String epsThinning, final boolean addRunoffToFilename )
+  private final TuhhCalculation m_calculation;
+
+  private final String m_lsFilePattern;
+
+  public LengthSectionParser( final TuhhCalculation calculation, final File lsFile, final ISimulationResultEater resultEater, final File outputDir, final String epsThinning, final String titlePattern, final String lsFilePattern )
   {
-    m_reach = reach;
+    m_calculation = calculation;
     m_lsFile = lsFile;
     m_resultEater = resultEater;
     m_outputDir = outputDir;
     m_epsThinning = epsThinning;
-    m_addRunoffToFilename = addRunoffToFilename;
+    m_titlePattern = titlePattern;
+    m_lsFilePattern = lsFilePattern;
   }
 
   public IStatus process( final LogHelper log ) throws Exception
@@ -99,23 +103,24 @@ public class LengthSectionParser
   private IStatus processIntern( final LogHelper log ) throws Exception
   {
     if( !m_lsFile.exists() )
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.0") + m_lsFile.getName() ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.0" ) + m_lsFile.getName() ); //$NON-NLS-1$
 
     /* Add Input File to results */
     m_resultEater.addResult( "LengthSection", m_lsFile ); //$NON-NLS-1$
-    log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.1") ); //$NON-NLS-1$
+    log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.1" ) ); //$NON-NLS-1$
 
     final String strHeader = FileUtilities.toString( getClass().getResource( "resources/headerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE ); //$NON-NLS-1$
     final String strFooter = FileUtilities.toString( getClass().getResource( "resources/footerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE ); //$NON-NLS-1$
 
     processLSFile( strHeader, strFooter, log );
-
+// TODO: use status of lsProcessors instead
     return Status.OK_STATUS;
   }
 
   private void processLSFile( final String header, final String footer, final LogHelper log ) throws Exception
   {
-    final TuhhStationComparator stationComparator = new TuhhStationComparator( m_reach.getWaterBody().isDirectionUpstreams() );
+    final WspmWaterBody waterBody = m_calculation.getReach().getWaterBody();
+    final TuhhStationComparator stationComparator = new TuhhStationComparator( waterBody.isDirectionUpstreams() );
 
     LineIterator lineIterator = null;
 
@@ -134,7 +139,7 @@ public class LengthSectionParser
         final String nextLine = lineIterator.nextLine();
 
         /* Introduce space around 'NaN' and '***' values to make it parseable */
-        if( nextLine.contains( "NaN" ))
+        if( nextLine.contains( "NaN" ) )
           log.log( false, "WARNING: Results contain NaN values, calculation result is probably not correct." );
         final String cleanLine1 = nextLine.replaceAll( "-NaN", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
         final String cleanLine2 = cleanLine1.replaceAll( "NaN", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -152,8 +157,10 @@ public class LengthSectionParser
         if( sectionEnd )
         {
           closeProcessor( lsProc, previousRunoff );
-          log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.2"), runoff ); //$NON-NLS-1$
-          lsProc = new LengthSectionProcessor( m_outputDir, m_reach, header, footer, m_epsThinning, m_addRunoffToFilename );
+          log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.2" ), runoff ); //$NON-NLS-1$
+          lsProc = new LengthSectionProcessor( m_outputDir, m_calculation, header, footer, m_epsThinning );
+          lsProc.setTitlePattern( m_titlePattern );
+          lsProc.setLsFilePattern( m_lsFilePattern );
         }
 
         /* clean line */
