@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.featureview.control.ChooseExeControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -77,7 +78,7 @@ public class ChooseExeControlFactory implements IFeatureviewControlFactory
 
     final File exeDir = new File( installDir, dir );
 
-    return new ChooseExeControl( feature, pt, exeDir, exePattern );
+    return new ChooseExeControl( feature, pt, exeDir, exePattern, "RMA·Kalypso" );
   }
 
 }
