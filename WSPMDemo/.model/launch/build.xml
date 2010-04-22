@@ -77,6 +77,7 @@
 			<output id="LengthSectionGml" path="${result.path.aktuell.data}/Längsschnitt.gml" relativeToCalcCase="true" />
 			<output id="Bruchkanten" path="${result.path.aktuell.data}/Bruchkanten.gml" relativeToCalcCase="true" />
 			<output id="WspTin" path="${result.path.aktuell.data}/WspTin.gml" relativeToCalcCase="true" />
+			<output id="WspTinSld" path="${result.path.aktuell.data}/WspTin.sld" relativeToCalcCase="true" />
 			<output id="Modellgrenzen" path="${result.path.aktuell.data}/Modellgrenzen.gml" relativeToCalcCase="true" />
 			<output id="Ueberschwemmungslinie" path="${result.path.aktuell.data}/Überschwemmungslinie.gml" relativeToCalcCase="true" />
 
