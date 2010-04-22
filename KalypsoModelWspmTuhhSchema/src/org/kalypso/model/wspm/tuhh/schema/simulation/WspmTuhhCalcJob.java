@@ -103,6 +103,14 @@ public class WspmTuhhCalcJob implements ISimulation
 
   public static final String OUTPUT_SIMULATION_LOG = "SimulationLog"; //$NON-NLS-1$
 
+  private static final String TITLE_PATTERN_REIB_CONST = "<runoff>"; //$NON-NLS-1$
+
+  private static final String TITLE_PATTERN_WATERLEVEL = "<calcname>"; //$NON-NLS-1$
+
+  private static final String LSFILE_PATTERN_WATERLEVEL = "Längsschnitt.gml";//$NON-NLS-1$ 
+
+  private static final String LSFILE_PATTERN_REIB_CONST = "lengthSection_<runoff>.gml";//$NON-NLS-1$ 
+
   private final PrintStream m_calcOutConsumer;
 
   public WspmTuhhCalcJob( )
@@ -272,7 +280,7 @@ public class WspmTuhhCalcJob implements ISimulation
       {
         case WATERLEVEL:
         {
-          final LengthSectionParser lsProcessor = new LengthSectionParser( reach, new File( dathDir, "laengsschnitt.txt" ), resultEater, tmpDir, epsThinning, false ); //$NON-NLS-1$
+          final LengthSectionParser lsProcessor = new LengthSectionParser( calculation, new File( dathDir, "laengsschnitt.txt" ), resultEater, tmpDir, epsThinning, TITLE_PATTERN_WATERLEVEL, LSFILE_PATTERN_WATERLEVEL ); //$NON-NLS-1$
           final IStatus lsResult = lsProcessor.process( log );
           if( lsResult.getSeverity() == IStatus.ERROR )
           {
@@ -446,7 +454,7 @@ public class WspmTuhhCalcJob implements ISimulation
           lsOutDir.mkdirs();
           resultEater.addResult( "resultListsNonUni", lsOutDir ); //$NON-NLS-1$
 
-          final LengthSectionParser lsProcessor = new LengthSectionParser( reach, new File( dathDir, "Q_LangSchnitt.txt" ), resultEater, lsOutDir, epsThinning, true ); //$NON-NLS-1$
+          final LengthSectionParser lsProcessor = new LengthSectionParser( calculation, new File( dathDir, "Q_LangSchnitt.txt" ), resultEater, lsOutDir, epsThinning, TITLE_PATTERN_REIB_CONST, LSFILE_PATTERN_REIB_CONST ); //$NON-NLS-1$
           final IStatus lsResult = lsProcessor.process( log );
           if( lsResult.getSeverity() == IStatus.ERROR )
           {

@@ -43,25 +43,26 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberRange;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
@@ -86,25 +87,26 @@ import org.xml.sax.SAXException;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chartconfig.x020.AxisType;
-import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.AxisType.Direction;
 
 public class LengthSectionProcessor
 {
+  private static final String TOKEN_GMLFILENAME = "%GMLFILENAME%";
+
+  private static final String PATTERN_RUNOFF = "<runoff>";
+
+  private static final String PATTERN_CALCNAME = "<calcname>";
+
   private final StringBuffer m_buffer = new StringBuffer();
 
   private final File m_outDir;
 
   private final String m_footer;
 
-  private final String m_runoffPattern;
-
   private final String m_epsThinning;
 
   private File m_gmlFile;
-
-  private final TuhhReach m_reach;
 
   private File m_diagFile;
 
@@ -124,24 +126,32 @@ public class LengthSectionProcessor
 
   private final File m_dataDir;
 
-  private final String m_titlePattern;
+  private String m_titlePattern = "Längsschnitt - <runoff> (<calcname>)";
 
-  private final String m_gmlFilePattern;
+  private String m_gmlFilePattern = "lengthSection_<runoff>.gml";
 
-  public LengthSectionProcessor( final File outDir, final TuhhReach reach, final String header, final String footer, final String epsThinning, final boolean addRunoffToFilename )
+  private final TuhhCalculation m_calculation;
+
+  public LengthSectionProcessor( final File outDir, final TuhhCalculation calculation, final String header, final String footer, final String epsThinning )
   {
     m_outDir = outDir;
-    m_reach = reach;
+    m_calculation = calculation;
     m_footer = footer;
     m_epsThinning = epsThinning;
 
     m_buffer.append( header );
 
-    m_runoffPattern = addRunoffToFilename ? "_%.3f" : ""; //$NON-NLS-1$ //$NON-NLS-2$
-    m_titlePattern = addRunoffToFilename ? "Längsschnitt - %.3f" : "Längsschnitt"; //$NON-NLS-1$ //$NON-NLS-2$
-    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f" : "Längsschnitt"; //$NON-NLS-1$ //$NON-NLS-2$
-
     m_dataDir = new File( m_outDir, "Daten" ); //$NON-NLS-1$
+  }
+
+  public void setLsFilePattern( final String pattern )
+  {
+    m_gmlFilePattern = pattern;
+  }
+
+  public void setTitlePattern( final String titlePattern )
+  {
+    m_titlePattern = titlePattern;
   }
 
   public void close( final BigDecimal runoff )
@@ -152,23 +162,9 @@ public class LengthSectionProcessor
 
       m_dataDir.mkdirs();
 
-      final String fileName = String.format( m_gmlFilePattern + ".gml", runoff ); //$NON-NLS-1$
+      final String fileName = String.format( m_gmlFilePattern, runoff ); //$NON-NLS-1$
       m_gmlFile = new File( m_dataDir, fileName );
-
-      /* Configure replace tokens for diagram/table template */
-      final Map<String, String> replaceTokens = new LinkedHashMap<String, String>();
-      replaceTokens.put( "%GMLFILENAME%", m_gmlFile.getName() ); //$NON-NLS-1$
-      replaceTokens.put( "%TITLE%", String.format( m_titlePattern, runoff ) ); //$NON-NLS-1$
-
-      // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
-      // (without header) + new footer
-      final String lsgml = replaceTokens( m_buffer.toString(), replaceTokens );
-      FileUtils.writeStringToFile( m_gmlFile, lsgml, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
-
-      /* Clear buffer to free resources as this object will not be dereferenced immediatly */
-      m_buffer.delete( 0, m_buffer.length() - 1 );
-
-      m_result = postProcess( m_gmlFile, runoff, replaceTokens );
+      m_result = postProcess( m_gmlFile, runoff );
     }
     catch( final Throwable t )
     {
@@ -185,14 +181,9 @@ public class LengthSectionProcessor
   }
 
   /** Create stuff which depends on the observation. */
-  private IStatus postProcess( final File gmlFile, final BigDecimal runoff, final Map<String, String> replaceTokens ) throws Exception
+  private IStatus postProcess( final File gmlFile, final BigDecimal runoff ) throws Exception
   {
-// final TimeLogger timeLogger = new TimeLogger( "Post Processing Length-Section" );
-
-    if( !gmlFile.exists() )
-      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5" ) ); //$NON-NLS-1$
-
-    final String runoffName = String.format( m_runoffPattern, runoff );
+    final String runoffName = runoff.toString();
 
     final String diagFilename = "Längsschnitt" + runoffName + ".kod"; //$NON-NLS-1$ //$NON-NLS-2$
     final String tableFilename = "Tabelle" + runoffName + ".gft"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -213,17 +204,19 @@ public class LengthSectionProcessor
 
     final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null ); //$NON-NLS-1$
 
-    // Read Length-Section GML
-    final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( gmlFile.toURI().toURL(), null );
-    final Feature rootFeature = obsWks.getRootFeature();
-
-    final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
+    final String title = getTitle( runoff );
+    final String description = String.format( "Längsschnitt: %s", title );
+    final IObservation<TupleResult> lengthSectionObs = createLengthSection( title, description );
     final TupleResult result = lengthSectionObs.getResult();
+    if( !gmlFile.exists() )
+      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5" ) ); //$NON-NLS-1$
 
-    final TuhhReachProfileSegment[] reachProfileSegments = m_reach.getReachProfileSegments();
+    final TuhhReach reach = m_calculation.getReach();
+    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
 
     /* sort the segments */
-    final boolean isDirectionUpstreams = m_reach.getWaterBody().isDirectionUpstreams();
+    final WspmWaterBody waterBody = reach.getWaterBody();
+    final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
     Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     //
@@ -231,11 +224,7 @@ public class LengthSectionProcessor
     //
     try
     {
-      final WspmWaterBody waterBody = m_reach.getWaterBody();
-      createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
-      final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF-8" ); //$NON-NLS-1$
-      final String diagram = replaceTokens( diagramTemplate, replaceTokens );
-      FileUtils.writeStringToFile( m_diagFile, diagram, "UTF-8" ); //$NON-NLS-1$
+      createDiagram( m_diagFile, isDirectionUpstreams, title );
     }
     catch( final Exception e )
     {
@@ -247,12 +236,9 @@ public class LengthSectionProcessor
     //
     try
     {
-// timeLogger.takeInterimTime();
-// timeLogger.printCurrentInterim( "Start-Create Table " );
-
       final URL tableUrl = getClass().getResource( "resources/table.gft" ); //$NON-NLS-1$
       final String tableTemplate = FileUtilities.toString( tableUrl, "UTF-8" ); //$NON-NLS-1$
-      final String table = replaceTokens( tableTemplate, replaceTokens );
+      final String table = tableTemplate.replaceAll( TOKEN_GMLFILENAME, m_gmlFile.getName() );
       FileUtils.writeStringToFile( m_tableFile, table, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
@@ -301,6 +287,27 @@ public class LengthSectionProcessor
     return multiStatus;
   }
 
+  private String getTitle( final BigDecimal runoff )
+  {
+    final String calcname = m_calculation.getName();
+    return m_titlePattern.replaceAll( PATTERN_RUNOFF, runoff.toString() ).replaceAll( PATTERN_CALCNAME, calcname );
+  }
+
+  private IObservation<TupleResult> createLengthSection( final String title, final String description ) throws Exception
+  {
+    // Read Length-Section GML
+    final InputStream obsIs = IOUtils.toInputStream( m_buffer.toString(), "UTF-8" );
+    m_buffer.delete( 0, m_buffer.length() - 1 );
+    final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( obsIs, null, null );
+    final Feature rootFeature = obsWks.getRootFeature();
+    rootFeature.setName( title );
+    rootFeature.setDescription( description );
+
+    GmlSerializer.serializeWorkspace( m_gmlFile, obsWks, "UTF-8" );
+
+    return ObservationFeatureFactory.toObservation( rootFeature );
+  }
+
   private void createWspTinSld( final NumberRange wspRange ) throws IOException, XMLParsingException, SAXException
   {
     /* Fetch template polygon symbolizer */
@@ -328,15 +335,6 @@ public class LengthSectionProcessor
     /* Save as tin-sld */
     final String styleAsString = wspStyle.exportAsXML();
     FileUtils.writeStringToFile( m_tinSldFile, styleAsString, "UTF-8" );
-  }
-
-  private String replaceTokens( final String template, final Map<String, String> tokenMap )
-  {
-    String result = template;
-    for( final Entry<String, String> entry : tokenMap.entrySet() )
-      result = result.replaceAll( entry.getKey(), entry.getValue() );
-
-    return result;
   }
 
   public File getGmlFile( )
@@ -384,44 +382,33 @@ public class LengthSectionProcessor
     return m_result;
   }
 
-  public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws IOException, XmlException
+  private void createDiagram( final File diagFile, final boolean isDirectionUpstreams, final String title ) throws IOException, XmlException
   {
-    // Check if optional bundle is installed
-    // They are no more optional... however the id has changed and this does not work any more...
-    // TODO: probably its better to check per reflection if a certain class is present...
-    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a
-    // warning message)
-// if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" )
-    // == null )
-// return;
-
     /* We just load the template and tweak the direction of the station-axis */
     final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
-    final ChartConfigurationLoader ccl = new ChartConfigurationLoader( kodResource );
-    final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.parse( kodResource );
+    final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" );
+    final String kodContentReplaced = kodContent.replaceAll( TOKEN_GMLFILENAME, m_gmlFile.getName() );
+    final ChartConfigurationLoader ccl = new ChartConfigurationLoader( IOUtils.toInputStream( kodContentReplaced, "UTF-8" ) );
 
-    if( ccd != null )
+    final ChartType[] charts = ccl.getCharts();
+
+    // only use first chart - there should only be one
+    final ChartType chart = charts[0];
+
+    chart.setTitle( String.format( "Längsschnitt - %s", title ) );
+
+    final AxisType[] axes = chart.getMappers().getAxisArray();
+    for( final AxisType axis : axes )
     {
-      final ChartType[] charts = ccl.getCharts();
-
-      // only use first chart - there should only be one
-      final ChartType chart = charts[0];
-      chart.setTitle( lsObs.getName() );
-      chart.setDescription( lsObs.getDescription() );
-
-      final AxisType[] axes = chart.getMappers().getAxisArray();
-      for( final AxisType axis : axes )
+      if( axis.getLabel().equals( "Station_Axis" ) ) //$NON-NLS-1$
       {
-        if( axis.getLabel().equals( "Station_Axis" ) ) //$NON-NLS-1$
-        {
-          if( isDirectionUpstreams )
-            axis.setDirection( Direction.NEGATIVE );
-          else
-            axis.setDirection( Direction.POSITIVE );
-        }
+        if( isDirectionUpstreams )
+          axis.setDirection( Direction.NEGATIVE );
+        else
+          axis.setDirection( Direction.POSITIVE );
       }
-
-      ccd.save( diagFile );
     }
+
+    ccl.getChartConfigurationDocument().save( diagFile );
   }
 }
