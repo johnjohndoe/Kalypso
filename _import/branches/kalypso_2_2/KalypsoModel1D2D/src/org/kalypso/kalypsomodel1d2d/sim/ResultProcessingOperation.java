@@ -187,7 +187,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
           {
             ids.add( id );
           }
-          else if( date.after( firstCalculated ) )
+          else if( date.after( firstCalculated ) || date.equals( firstCalculated ) )
           {
             ids.add( id );
           }
