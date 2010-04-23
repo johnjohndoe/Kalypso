@@ -172,7 +172,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   // public static String LAYER_RAUHEIT_KS = PROFILE_LAYER + "RAUHEIT_KS";
 
-  public static String LAYER_RAUHEIT_QUICKVIEW = PROFILE_LAYER + "RAUHEIT_QUICKVIEW"; //$NON-NLS-1$
+  //public static String LAYER_RAUHEIT_QUICKVIEW = PROFILE_LAYER + "RAUHEIT_QUICKVIEW"; //$NON-NLS-1$
 
   public static String LAYER_BRUECKE = PROFILE_LAYER + "BRUECKE"; //$NON-NLS-1$
 
