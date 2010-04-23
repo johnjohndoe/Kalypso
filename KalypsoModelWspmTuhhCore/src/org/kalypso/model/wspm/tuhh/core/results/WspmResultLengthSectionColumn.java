@@ -40,67 +40,57 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.eclipse.core.resources.IFile;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import java.math.BigDecimal;
+
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Gernot Belger
  */
-public class WspmResultLengthSection
+public class WspmResultLengthSectionColumn
 {
-  public static WspmResultLengthSection create( final IFile observationFile, final GMLXPath gmlxPath )
-  {
-    try
-    {
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( observationFile );
-      final Feature obsFeature = (Feature) GMLXPathUtilities.query( gmlxPath, workspace );
-      final WspmResultLengthSection obs = create( obsFeature );
-      workspace.dispose();
-      return obs;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  public static WspmResultLengthSection create( final Feature fixation )
-  {
-    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( fixation );
-    return new WspmResultLengthSection( observation );
-  }
-
   private final IObservation<TupleResult> m_observation;
 
   private final TupleResultIndex m_stationIndex;
 
-  public WspmResultLengthSection( final IObservation<TupleResult> observation )
+  private final int m_component;
+
+  private final String m_label;
+
+  public WspmResultLengthSectionColumn( final IObservation<TupleResult> observation, final TupleResultIndex stationIndex, final IComponent component )
   {
     m_observation = observation;
+    m_stationIndex = stationIndex;
     final TupleResult result = m_observation.getResult();
-    final IComponent stationComponent = TupleResultUtilities.findComponentById( result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
-    m_stationIndex = new TupleResultIndex( result, stationComponent );
+    m_component = result.indexOfComponent( component );
+
+    // FIXME: replace with component.getLabel
+    final String componentLabel = component.getName();
+    m_label = String.format( "%s - %s", m_observation.getName(), componentLabel );
   }
 
-  public WspmResultLengthSectionColumn getColumn( final IComponent component )
+  private BigDecimal getValue( final BigDecimal station, final int componentIndex )
   {
-    return new WspmResultLengthSectionColumn( m_observation, m_stationIndex, component );
+    final IRecord record = m_stationIndex.getRecord( station );
+    if( record == null )
+      return null;
+
+    return (BigDecimal) record.getValue( componentIndex );
+  }
+
+  /** The result value for the given station */
+  public Object getValue( final BigDecimal station )
+  {
+    return getValue( station, m_component );
   }
 
   public String getLabel( )
   {
-    return m_observation.getName();
+    return m_label;
   }
+
 }

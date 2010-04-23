@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,56 +46,56 @@ import java.util.Set;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
+import org.eclipse.swt.widgets.Control;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultContentProvider;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
 
 /**
+ * Shows the currently available WSPM results in a tree view and let the user check them.
+ * 
  * @author Gernot Belger
  */
-public class ExportCsvPage extends ExportFileChooserPage
+public class CsvExportResultChooser
 {
-  private final IWspmResultNode m_rootNode;
-
   private final Set<IWspmResultNode> m_results = new HashSet<IWspmResultNode>();
 
-  public ExportCsvPage( final IFileChooserDelegate fileChooser, final String extension, final IWspmResultNode results )
+  private final IWspmResultNode m_rootNode;
+
+  public CsvExportResultChooser( final IWspmResultNode rootNode )
   {
-    super( fileChooser, extension );
-    m_rootNode = results;
+    m_rootNode = rootNode;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage#createPageContent(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected void createPageContent( final Composite parent )
+  public Control createControl( final Composite parent )
   {
-    super.createPageContent( parent );
-
-    final Composite waterlevelGroup = createWaterlevelGroup( parent );
-    waterlevelGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-  }
-
-  private Composite createWaterlevelGroup( final Composite parent )
-  {
-    final Group group = new Group( parent, SWT.NONE );
-    group.setLayout( new GridLayout() );
-    group.setText( "Weitere Daten" );
-
     // add a tree-table that shows the fetcher data
-    final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( group, SWT.SINGLE | SWT.FULL_SELECTION | SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL );
-    treeViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL );
     WspmResultContentProvider.initTreeViewer( treeViewer );
 
     treeViewer.setContentProvider( new WspmResultContentProvider() );
     treeViewer.setLabelProvider( new WspmResultLabelProvider( treeViewer ) );
+    treeViewer.setCheckStateProvider( new ICheckStateProvider()
+    {
+      @Override
+      public boolean isGrayed( final Object element )
+      {
+        return !(element instanceof IWspmResult);
+      }
+
+      @Override
+      public boolean isChecked( final Object element )
+      {
+        if( element instanceof IWspmResult )
+          return hasResult( (IWspmResult) element );
+        else
+          return true;
+      }
+    } );
     treeViewer.setInput( m_rootNode );
 
     treeViewer.addCheckStateListener( new ICheckStateListener()
@@ -111,10 +111,17 @@ public class ExportCsvPage extends ExportFileChooserPage
           else
             removeResultNode( (IWspmResultNode) element );
         }
+        else
+          treeViewer.setChecked( element, true );
       }
     } );
 
-    return group;
+    return treeViewer.getControl();
+  }
+
+  protected boolean hasResult( final IWspmResult element )
+  {
+    return m_results.contains( element );
   }
 
   protected void addResultNode( final IWspmResultNode node )
@@ -127,8 +134,9 @@ public class ExportCsvPage extends ExportFileChooserPage
     m_results.remove( node );
   }
 
-  public IWspmResultNode[] getResults( )
+  public IWspmResultNode[] getSelectedResults( )
   {
     return m_results.toArray( new IWspmResultNode[m_results.size()] );
   }
+
 }

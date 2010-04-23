@@ -69,7 +69,7 @@ public class WspmResultContentProvider implements ITreeContentProvider
   {
     final Tree tree = viewer.getTree();
     tree.setHeaderVisible( true );
-    viewer.setAutoExpandLevel( 1 );
+    viewer.setAutoExpandLevel( 3 );
 
     final TreeColumn labelColumn = new TreeColumn( tree, SWT.NONE );
     labelColumn.setText( "Bezeichnung" );
