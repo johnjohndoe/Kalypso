@@ -38,9 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**

@@ -62,7 +62,7 @@
 			</activeWhen>
 		</handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.CsvExportProfilesHandler"
+                class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesHandler"
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv">
              <enabledWhen>
                 <reference
