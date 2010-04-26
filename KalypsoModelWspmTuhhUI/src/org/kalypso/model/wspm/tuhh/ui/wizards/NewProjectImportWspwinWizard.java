@@ -73,17 +73,6 @@ public class NewProjectImportWspwinWizard extends NewWspmProjectWizard // extend
     super.addPages();
   }
 
-// /**
-// * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
-// */
-// @Override
-// public void createPageControls( final Composite pageContainer )
-// {
-// // REMARK: do not create the controls now
-// // in order to allow the hack in getNextPage
-// // super.createPageControls(pageContainer);
-// }
-
   /**
    * Overwritten in order to set the new project name to the name of the selected wspwin directory (= name of the wspwin
    * project).
