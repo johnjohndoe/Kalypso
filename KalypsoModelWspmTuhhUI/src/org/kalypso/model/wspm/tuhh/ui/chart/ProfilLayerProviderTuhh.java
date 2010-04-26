@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
@@ -88,7 +89,6 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 {
-
   private final List<String> m_layers = new ArrayList<String>();
 
   protected final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
@@ -100,6 +100,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   protected final IAxis m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, null );//$NON-NLS-1$
 
   private final String m_AxisLabel = "[%s]"; //$NON-NLS-1$
+
   public ProfilLayerProviderTuhh( )
   {
     m_layers.add( IWspmTuhhConstants.LAYER_BEWUCHS );
@@ -173,7 +174,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
         operation.addChange( new PointPropertyRemove( profil, rauheit_alt ) );
 
       }
-      m_targetAxisRight.setLabel( String.format(m_AxisLabel,rauheit_neu.getUnit()));
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( rauheit_neu ) ) );
       operation.addChange( new PointPropertyAdd( profil, rauheit_neu, values ) );
       new ProfilOperationJob( operation ).schedule();
       return null;
@@ -268,14 +269,14 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
   final void setAxisLabel( final IProfil profil )
   {
-    m_domainAxis.setLabel( String.format( m_AxisLabel, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getUnit() ) );
-    m_targetAxisLeft.setLabel( String.format( m_AxisLabel, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getUnit() ) );
+    m_domainAxis.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) ) ) );
+    m_targetAxisLeft.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
     final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( roughnessKS != null )
-      m_targetAxisRight.setLabel( String.format( m_AxisLabel, roughnessKS.getUnit() ) );
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKS ) ) );
     else if( roughnessKST != null )
-      m_targetAxisRight.setLabel( String.format( m_AxisLabel, roughnessKST.getUnit() ) );
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKST ) ) );
     else
       m_targetAxisRight.setLabel( "" ); //$NON-NLS-1$
   }
@@ -325,7 +326,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getAxisRenderer(de.openali.odysseus.chart.framework.model.mapper.IAxis[])
    */
   @Override
-  public IAxisRenderer[] registerAxisRenderer( IMapperRegistry mapperRegistry )
+  public IAxisRenderer[] registerAxisRenderer( final IMapperRegistry mapperRegistry )
   {
     if( mapperRegistry == null )
       return new IAxisRenderer[] {};
@@ -346,7 +347,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getChartAxis()
    */
   @Override
-  public IAxis[] registerAxis( IMapperRegistry mapperRegistry )
+  public IAxis[] registerAxis( final IMapperRegistry mapperRegistry )
   {
     if( mapperRegistry == null )
       return new IAxis[] {};
