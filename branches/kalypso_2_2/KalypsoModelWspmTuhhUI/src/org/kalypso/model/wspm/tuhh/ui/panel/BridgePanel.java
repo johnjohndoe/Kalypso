@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -148,11 +149,11 @@ public class BridgePanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() || m_label == null || m_label.isDisposed() )
         return;
 
-      final String unit = m_property.getUnit();
+      final String labelText = ComponentUtilities.getComponentLabel( m_property );
 
       final IPhenomenon phenomenon = m_property.getPhenomenon();
-      final String label = phenomenon.getName();
-      final String labelText = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3", label, unit ); //$NON-NLS-1$
+// final String label = phenomenon.getName();
+//      final String labelText = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3", label, unit ); //$NON-NLS-1$
       final String description = phenomenon.getDescription();
 
       m_label.setText( labelText );
