@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
@@ -78,7 +79,6 @@ import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
  */
 public class PrfSource implements IProfilSource
 {
-
   private void readSource( final PrfReader pr, final IProfil p )
   {
     if( p == null )
@@ -105,11 +105,30 @@ public class PrfSource implements IProfilSource
         if( !(readWehr( p, pr ) || readBridge( p, pr )) )
           readBuilding( p, pr );
       }
+
+      final String srsName = findCoordinateSystem( p );
+      p.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, srsName );
     }
     catch( final IllegalArgumentException e )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, e.getMessage(), e ) );
     }
+  }
+
+  // FIXME: we probably should let the user set the coordinate system
+  // For the moment, we guess the coordinate system by assuming it is gauss-krueger
+  private String findCoordinateSystem( final IProfil profile )
+  {
+    final int rwIndex = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IRecord[] points = profile.getPoints();
+    for( final IRecord point : points )
+    {
+      final Object value = point.getValue( rwIndex );
+      if( value instanceof Number )
+        return TimeserieUtils.getCoordinateSystemNameForGkr( value.toString() );
+    }
+
+    return null;
   }
 
   private void readComment( final IProfil p, final PrfReader pr )
@@ -618,7 +637,6 @@ public class PrfSource implements IProfilSource
     {
       prfReader.readFromReader( new BufferedReader( reader ) );
       readSource( prfReader, profil );
-
       return true;
     }
     catch( final IOException e )
