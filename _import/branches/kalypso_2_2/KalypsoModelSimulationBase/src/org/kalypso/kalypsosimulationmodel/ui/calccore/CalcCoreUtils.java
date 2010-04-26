@@ -1,0 +1,147 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.kalypsosimulationmodel.ui.calccore;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.service.datalocation.Location;
+import org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+
+/**
+ * @author Gernot Belger
+ */
+public final class CalcCoreUtils
+{
+  private CalcCoreUtils( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );//$NON-NLS-1$
+  }
+
+  private static final String BIN_DIR = "bin"; //$NON-NLS-1$
+
+  public static File getExecutablesDirectory( )
+  {
+    final Location installLocation = Platform.getInstallLocation();
+    final File installDir = FileUtils.toFile( installLocation.getURL() );
+    final File exeDir = new File( installDir, BIN_DIR );
+    return exeDir;
+  }
+
+  public static File findExecutable( final String version, final String pattern, final String searchPattern ) throws CoreException
+  {
+    /*
+     * for backward compatibility, any string that is not the correct version identifier will be considered as the
+     * "latest version" request
+     */
+    if( StringUtils.isBlank( version ) )
+    {
+      final File latestExecutable = getLatestExecutable( searchPattern );
+      if( latestExecutable == null )
+      {
+        // Version des Rechenkerns nicht angegeben. Die Version muss in den Steuerparametern gesetzt werden.
+        final String msg = Messages.getString( "CalcCoreUtils_0" ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+        throw new CoreException( status );
+      }
+
+      return latestExecutable;
+    }
+
+    // REMARK: This is OS dependent; we use should use a pattern according to OS
+    final String exeName = String.format( pattern, version );
+    final File exeFile = new File( getExecutablesDirectory(), exeName );
+    if( !exeFile.isFile() )
+    {
+      final String msg = Messages.getString( "CalcCoreUtils_1", exeFile.getAbsolutePath() ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+      throw new CoreException( status );
+    }
+
+    if( !exeFile.canExecute() )
+    {
+      final String msg = Messages.getString( "CalcCoreUtils_2", exeFile.getAbsolutePath() ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+      throw new CoreException( status );
+    }
+
+    return exeFile;
+  }
+
+  public static File getLatestExecutable( final String searchPattern )
+  {
+    /*
+     * we will assume that the latest executable is the one with the most recent file modification date
+     */
+    final File[] executables = getExecutablesDirectory().listFiles( new FileFilter()
+    {
+      @Override
+      public boolean accept( final File pathname )
+      {
+        return Pattern.matches( searchPattern, pathname.getName() );
+      }
+    } );
+
+    if( ArrayUtils.isEmpty( executables ) )
+      return null;
+
+    if( executables.length == 1 )
+      return executables[0];
+
+    File latest = executables[0];
+    for( int i = 1; i < executables.length; i++ )
+    {
+      if( executables[i].lastModified() > latest.lastModified() )
+        latest = executables[i];
+    }
+    return latest;
+  }
+
+}

@@ -104,11 +104,10 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     m_featureGroup.setLayout( new GridLayout() );
     final GridData groupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     m_featureGroup.setLayoutData( groupData );
-    m_featureGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.0") ); //$NON-NLS-1$
+    m_featureGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.0" ) ); //$NON-NLS-1$
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( "resources/calcControlPage.gft" ) ); //$NON-NLS-1$
-    featureviewFactory.addView( getClass().getResource( "resources/waterlevelParameter.gft" ) ); //$NON-NLS-1$
     m_featureComposite = new FeatureComposite( null, null, featureviewFactory );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
@@ -148,7 +147,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
       if( m_template == null )
       {
         // show error message
-        setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.3") ); //$NON-NLS-1$
+        setErrorMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.3" ) ); //$NON-NLS-1$
       }
       else
       {
@@ -163,7 +162,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     {
       e.printStackTrace();
 
-      setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.4") + e.toString() ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.4" ) + e.toString() ); //$NON-NLS-1$
     }
   }
 

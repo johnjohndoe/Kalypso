@@ -94,10 +94,6 @@
       id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory"
     >
     </extensionControl>
-    <extensionControl class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory"
-      id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory"
-    >
-    </extensionControl>
   </extension>
 
   <extension point="org.eclipse.ui.handlers">
