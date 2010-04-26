@@ -41,13 +41,12 @@
 package org.kalypso.kalypsosimulationmodel.ui.calccore;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -64,6 +63,7 @@ import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -137,23 +137,11 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
 
     // find all possible exes
     final Pattern pattern = Pattern.compile( m_exePattern, Pattern.CASE_INSENSITIVE );
-    final File exeDir = CalcCoreUtils.getExecutablesDirectory();
-    // TODO: move to CalcCoreUtils
-    final File[] exeFiles = exeDir.listFiles( new FilenameFilter()
-    {
-      public boolean accept( final File dir, final String name )
-      {
-        return pattern.matcher( name ).matches();
-      }
-    } );
 
-    if( exeFiles == null || exeFiles.length == 0 )
-    {
-      // FIXME: much better error message
-      final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.1", exeDir.getAbsolutePath(), m_exePattern ); //$NON-NLS-1$
-      MessageDialog.openWarning( shell, m_displayName, msg );
+    /* Always call this in order to provoke the download error message */
+    final File[] exeFiles = checkExecutablesAvailable( shell );
+    if( exeFiles == null )
       return;
-    }
 
     // Find the currently chosen file, if any
     final String oldVersion = (String) getFeature().getProperty( getFeatureTypeProperty() );
@@ -199,6 +187,20 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
 
     final ChangeFeatureCommand command = new ChangeFeatureCommand( getFeature(), getFeatureTypeProperty(), newVersion );
     fireFeatureChange( command );
+  }
+
+  private File[] checkExecutablesAvailable( final Shell shell )
+  {
+    try
+    {
+      return CalcCoreUtils.getAvailableExecuteablesChecked( m_exePattern );
+    }
+    catch( final CoreException e )
+    {
+      final StatusDialog statusDialog = new StatusDialog( shell, e.getStatus(), m_displayName );
+      statusDialog.open();
+      return null;
+    }
   }
 
   protected String versionFromFile( final Pattern pattern, final File file )

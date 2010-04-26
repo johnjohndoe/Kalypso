@@ -95,6 +95,9 @@ public final class CalcCoreUtils
       return latestExecutable;
     }
 
+    /* Always call this in order to provoke the download error message */
+    getAvailableExecuteablesChecked( searchPattern );
+
     // REMARK: This is OS dependent; we use should use a pattern according to OS
     final String exeName = String.format( pattern, version );
     final File exeFile = new File( getExecutablesDirectory(), exeName );
@@ -115,7 +118,35 @@ public final class CalcCoreUtils
     return exeFile;
   }
 
-  public static File getLatestExecutable( final String searchPattern )
+  public static File getLatestExecutable( final String searchPattern ) throws CoreException
+  {
+    final File[] executables = getAvailableExecuteablesChecked( searchPattern );
+    if( executables.length == 1 )
+      return executables[0];
+
+    File latest = executables[0];
+    for( int i = 1; i < executables.length; i++ )
+    {
+      if( executables[i].lastModified() > latest.lastModified() )
+        latest = executables[i];
+    }
+    return latest;
+  }
+
+  public static File[] getAvailableExecuteablesChecked( final String searchPattern ) throws CoreException
+  {
+    final File[] executables = getAvailableExecutables( searchPattern );
+    if( ArrayUtils.isEmpty( executables ) )
+    {
+      final File exeDir = getExecutablesDirectory();
+      final String msg = String.format( Messages.getString( "CalcCoreUtils.3" ), exeDir.getAbsolutePath() ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModelSimulationBase.ID, msg );
+      throw new CoreException( status );
+    }
+    return executables;
+  }
+
+  private static File[] getAvailableExecutables( final String searchPattern )
   {
     /*
      * we will assume that the latest executable is the one with the most recent file modification date
@@ -128,20 +159,7 @@ public final class CalcCoreUtils
         return Pattern.matches( searchPattern, pathname.getName() );
       }
     } );
-
-    if( ArrayUtils.isEmpty( executables ) )
-      return null;
-
-    if( executables.length == 1 )
-      return executables[0];
-
-    File latest = executables[0];
-    for( int i = 1; i < executables.length; i++ )
-    {
-      if( executables[i].lastModified() > latest.lastModified() )
-        latest = executables[i];
-    }
-    return latest;
+    return executables;
   }
 
 }
