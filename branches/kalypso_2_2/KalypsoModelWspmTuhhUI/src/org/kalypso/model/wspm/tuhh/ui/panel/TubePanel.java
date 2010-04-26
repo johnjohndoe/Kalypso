@@ -78,6 +78,7 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -204,7 +205,7 @@ public class TubePanel extends AbstractProfilView
     }
     finally
     {
-      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5", label, property.getUnit() ); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5", label, ComponentUtilities.getComponentUnitLabel( property ) ); //$NON-NLS-1$
     }
   }
 
