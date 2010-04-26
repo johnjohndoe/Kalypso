@@ -40,14 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -69,7 +67,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.FormatterUtils;
@@ -79,7 +76,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties.TripleMode;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.ExeVersion;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
@@ -103,11 +99,15 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Helper class to start the processing of the polynomes.
- *
+ * 
  * @author Gernot Belger
  */
 public class PolynomeHelper
 {
+  public static final String POLYNOME_1D_EXE_FORMAT = "Polynome1d%s.exe";//$NON-NLS-1$ 
+
+  public static final String POLYNOME_1D_EXE_PATTERN = "Polynome1d(.*).exe";//$NON-NLS-1$ 
+
   // TODO: Deciding which approach to take, energy level or water stage
 
 // private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
@@ -120,7 +120,7 @@ public class PolynomeHelper
 
   /**
    * Prepares the input files for the polynome process
-   *
+   * 
    * @param tmpDir
    *          any tmp dir, must be empty before start, may be deleted after end
    * @param dathDir
@@ -141,27 +141,9 @@ public class PolynomeHelper
     {
       if( !file.exists() )
       {
-        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.0"), file ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.0" ), file ); //$NON-NLS-1$
         return null;
       }
-    }
-
-    /* Prepare exe dir */
-    InputStream zipInputStream = null;
-    try
-    {
-      zipInputStream = new BufferedInputStream( WspmTuhhCalcJob.class.getResourceAsStream( "resources/polynom1d.zip" ) ); //$NON-NLS-1$
-      ZipUtilities.unzip( zipInputStream, tmpDir, false );
-      zipInputStream.close();
-    }
-    catch( final IOException e )
-    {
-      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.1") ); //$NON-NLS-1$
-      return null;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( zipInputStream );
     }
 
     /* Copy input data to exe dir */
@@ -176,7 +158,7 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.2") ); //$NON-NLS-1$
+      log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.2" ) ); //$NON-NLS-1$
       return null;
     }
   }
@@ -185,19 +167,21 @@ public class PolynomeHelper
   {
     final ISimulationMonitor monitor = log.getMonitor();
 
-    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.3") ); //$NON-NLS-1$
+    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.3" ) ); //$NON-NLS-1$
 
-    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.4") ); //$NON-NLS-1$
+    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.4" ) ); //$NON-NLS-1$
 
     final File eingangDir = preparePolynomes( tmpDir, dathDir, log );
     final File resultDir = new File( tmpDir, "02Ausgang" ); //$NON-NLS-1$
+    /* Need to create result-dir, else the calculation does not work */
+    resultDir.mkdirs();
     if( eingangDir == null )
       return;
 
     if( monitor.isCanceled() )
       return;
 
-    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.5") ); //$NON-NLS-1$
+    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.5" ) ); //$NON-NLS-1$
     prepareSteuerpoly( tmpDir, calculation );
 
     if( monitor.isCanceled() )
@@ -214,17 +198,12 @@ public class PolynomeHelper
       errStream = new BufferedOutputStream( new FileOutputStream( errFile ) );
 
       /* Start the polynome1d process */
-      final ExeVersion version = calculation.getVersion();
-      if( version == null )
-        throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.6"), null ); //$NON-NLS-1$
-
-      // start calculation; the out-stream gets copied into the simulation.log and the system.out
-      final File exeFile = new File( tmpDir, "Polynome1d" + version.name() + ".exe" ); //$NON-NLS-1$ //$NON-NLS-2$
-      if( !exeFile.exists() )
-        throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.7") + exeFile.getAbsolutePath() ); //$NON-NLS-1$
+      final File exeFile = WspmTuhhCalcJob.getExecuteable( calculation, POLYNOME_1D_EXE_FORMAT, POLYNOME_1D_EXE_PATTERN, monitor );
+      if( exeFile == null )
+        return;
 
       final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-      ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, timeout, logStream, errStream, null );
+      ProcessHelper.startProcess( cmdLine, null, tmpDir, monitor, timeout, logStream, errStream, null );
 
       logStream.close();
       errStream.close();
@@ -235,14 +214,14 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.8") + e.getLocalizedMessage() ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.9") ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.10") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
+      log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.8" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.9" ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.10" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
     catch( final ProcessTimeoutException e )
     {
-      log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11") ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11") ); //$NON-NLS-1$
+      log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11" ) ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11" ) ); //$NON-NLS-1$
       return;
     }
     finally
@@ -255,7 +234,7 @@ public class PolynomeHelper
       return;
 
     /* Read results */
-    log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.13") ); //$NON-NLS-1$
+    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.13" ) ); //$NON-NLS-1$
     final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" ); //$NON-NLS-1$
     try
     {
@@ -265,8 +244,8 @@ public class PolynomeHelper
     }
     catch( final Throwable e )
     {
-      log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.14"), e.getLocalizedMessage() ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.15") + e.getLocalizedMessage() ); //$NON-NLS-1$
+      log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.14" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.15" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
     }
 
     final File polynomeLogFile = new File( tmpDir, "Polynome1d.log" ); //$NON-NLS-1$
@@ -326,7 +305,7 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.16"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.16" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -364,7 +343,7 @@ public class PolynomeHelper
     final File[] profFiles = resultDir.listFiles( filter );
     if( profFiles == null || profFiles.length == 0 )
     {
-      log.finish( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.17") ); //$NON-NLS-1$
+      log.finish( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.17" ) ); //$NON-NLS-1$
       return results;
     }
 
@@ -388,7 +367,7 @@ public class PolynomeHelper
       {
         final QIntervallResult qresult = resultCollection.createQResult();
         qresult.setName( station.toString() );
-        qresult.setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.18") + name ); //$NON-NLS-1$
+        qresult.setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.18" ) + name ); //$NON-NLS-1$
         qresult.setStation( station );
         qresult.setSlope( slope );
 
@@ -400,7 +379,7 @@ public class PolynomeHelper
         /* Create the points observation */
         final IObservation<TupleResult> observation = qresult.getPointsObservation();
         final String obsName = stationString;
-        final String description = Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.19") + name; //$NON-NLS-1$
+        final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.19" ) + name; //$NON-NLS-1$
         observation.setName( obsName );
         observation.setDescription( description );
         readProfFile( profFile, observation.getResult(), log );
@@ -410,7 +389,7 @@ public class PolynomeHelper
       }
       catch( final Exception e )
       {
-        log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.20"), name ); //$NON-NLS-1$
+        log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.20" ), name ); //$NON-NLS-1$
       }
     }
 
@@ -514,7 +493,7 @@ public class PolynomeHelper
           catch( final NumberFormatException nfe )
           {
             /* A good line but bad content. Give user a hint that something might be wrong. */
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.21"), profFile.getName(), reader.getLineNumber(), token ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.21" ), profFile.getName(), reader.getLineNumber(), token ); //$NON-NLS-1$
           }
         }
 
@@ -578,7 +557,7 @@ public class PolynomeHelper
           if( tokens.length < 7 + order + 1 )
           {
             /* A good line but bad content. Give user a hint that something might be wrong. */
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.22"), polyFile.getName(), reader.getLineNumber() ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.22" ), polyFile.getName(), reader.getLineNumber() ); //$NON-NLS-1$
             continue;
           }
 
@@ -607,14 +586,14 @@ public class PolynomeHelper
               break;
 
             default:
-              log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.23"), station ); //$NON-NLS-1$
+              log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.23" ), station ); //$NON-NLS-1$
               continue;
           }
 
           /* find feature for station */
           final QIntervallResult qresult = pointResults.get( station );
           if( qresult == null )
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.24"), station, line ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.24" ), station, line ); //$NON-NLS-1$
           else
           {
             /* create new polynome */
@@ -632,12 +611,12 @@ public class PolynomeHelper
         catch( final NumberFormatException nfe )
         {
           /* A good line but bad content. Give user a hint that something might be wrong. */
-          log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), polyFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() ); //$NON-NLS-1$
+          log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25" ), polyFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() ); //$NON-NLS-1$
         }
         catch( final Exception e )
         {
           // should never happen
-          log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), polyFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() ); //$NON-NLS-1$
+          log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25" ), polyFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() ); //$NON-NLS-1$
         }
 
       }
@@ -676,12 +655,12 @@ public class PolynomeHelper
         catch( final NumberFormatException nfe )
         {
           /* A good line but bad content. Give user a hint that something might be wrong. */
-          log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), buildingFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() ); //$NON-NLS-1$
+          log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25" ), buildingFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() ); //$NON-NLS-1$
         }
         catch( final Throwable e )
         {
           // should never happen
-          log.log( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25"), buildingFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() ); //$NON-NLS-1$
+          log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.25" ), buildingFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() ); //$NON-NLS-1$
         }
 
       }
@@ -729,7 +708,7 @@ public class PolynomeHelper
       newqresult.setStation( station );
 
       newqresult.setName( station.toString() );
-      final String descMessage = Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.26") + buildingFile.getName(); //$NON-NLS-1$
+      final String descMessage = Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.26" ) + buildingFile.getName(); //$NON-NLS-1$
       if( !newqresult.getDescription().contains( descMessage ) )
         newqresult.setDescription( descMessage );
 
@@ -739,7 +718,7 @@ public class PolynomeHelper
     final QIntervallResult qresult = pointResults.get( station );
 
     /* Add comment */
-    qresult.setDescription( qresult.getDescription() + Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.27") + buildingFile.getName() ); //$NON-NLS-1$
+    qresult.setDescription( qresult.getDescription() + Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.27" ) + buildingFile.getName() ); //$NON-NLS-1$
 
     /* Add values to the weir observation */
     final IObservation<TupleResult> weirObs = qresult.getBuildingObservation( true );

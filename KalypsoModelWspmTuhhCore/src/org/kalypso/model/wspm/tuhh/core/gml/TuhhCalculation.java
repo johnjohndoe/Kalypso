@@ -64,26 +64,12 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for CalculationReibConstWspmTuhhSteadyState AND CalculationWspmTuhhSteadyState
- *
+ * 
  * @author Gernot Belger
  */
 public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConstants, IWspmTuhhConstants
 {
   public static final QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" ); //$NON-NLS-1$
-
-  public static enum ExeVersion
-  {
-    _2_0_6_6,
-    _2_1_0_0,
-    _2_1_1_0,
-    _2_1_2_0,
-    _2_1_2_1,
-    _2_1_4_0,
-    _2_1_4_1,
-    _2_1_5_0,
-    _2_1_5_1,
-    _2_1_5_2
-  }
 
   public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" ); //$NON-NLS-1$
 
@@ -449,20 +435,16 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
     return new PolynomeProperties( polyFeature );
   }
 
-  public ExeVersion getVersion( )
+  public String getVersion( )
   {
     final Feature parameterFeature = FeatureHelper.getSubFeature( getFeature(), QNAME_PROP_WATERLEVEL_PARAMS );
-    final String version = (String) parameterFeature.getProperty( QNAME_PROP_EXE_VERSION );
-    if( version == null )
-      return null;
-
-    return ExeVersion.valueOf( version );
+    return (String) parameterFeature.getProperty( QNAME_PROP_EXE_VERSION );
   }
 
-  public void setVersion( final ExeVersion version )
+  public void setVersion( final String version )
   {
     final Feature parameterFeature = FeatureHelper.getSubFeature( getFeature(), QNAME_PROP_WATERLEVEL_PARAMS );
-    parameterFeature.setProperty( QNAME_PROP_EXE_VERSION, version == null ? null : version.name() );
+    parameterFeature.setProperty( QNAME_PROP_EXE_VERSION, version == null ? null : version );
   }
 
   public IPath getResultFolder( )

@@ -81,6 +81,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -102,6 +103,7 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -146,9 +148,9 @@ import org.xml.sax.SAXParseException;
  */
 public class NaModelInnerCalcJob implements ISimulation
 {
+  public static final String EXECUTABLES_FILE_TEMPLATE = "na-kalypso_%s.exe";
 
-  // resourcebase for static files used in calculation
-  private final String m_resourceBase = "template/"; //$NON-NLS-1$
+  public static final String EXECUTABLES_FILE_PATTERN = "na-kalypso_(.+)\\.exe";
 
   private boolean m_succeeded = false;
 
@@ -256,6 +258,9 @@ public class NaModelInnerCalcJob implements ISimulation
 
       // calualtion model
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile, monitor );
+      if( modellWorkspace == null )
+        return;
+
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL, null );
 
@@ -626,7 +631,9 @@ public class NaModelInnerCalcJob implements ISimulation
     conf.setMinutesOfTimeStep( minutesTimeStep );
 
     // choose simulation kernel
-    chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ), monitor );
+    m_kalypsoKernelPath = chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ), monitor );
+    if( m_kalypsoKernelPath == null )
+      return null;
 
     // choose precipitation form and parameters
     final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
@@ -927,20 +934,22 @@ public class NaModelInnerCalcJob implements ISimulation
    * @param kalypsoNAVersion
    *          name/version of simulation kernel
    */
-  private void chooseSimulationExe( final String kalypsoNAVersion, final ISimulationMonitor monitor ) throws SimulationException
+  private File chooseSimulationExe( final String kalypsoNAVersion, final ISimulationMonitor monitor )
   {
     /*
      * for backward compatibility, any string that is not the proper version identifier will be considered as the
      * "latest version" request
      */
-    final File executable = NaModelHelper.findExecutable( kalypsoNAVersion );
-    if( executable == null )
+    try
     {
-      Logger.getAnonymousLogger().log( Level.SEVERE, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) ); //$NON-NLS-1$
+      return CalcCoreUtils.findExecutable( kalypsoNAVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN );
     }
-    m_kalypsoKernelPath = executable;
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      monitor.setFinishInfo( status.getSeverity(), status.getMessage() );
+      return null;
+    }
   }
 
   private void initializeModell( final Feature controlFeature, final URL inputModellURL, final File outputModelFile ) throws Exception
@@ -1054,7 +1063,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     loadTextFileResults( tmpdir, logger, resultDir );
 
-    Date[] initialDates = conf.getInitialDates();
+    final Date[] initialDates = conf.getInitialDates();
     final LzsimManager lzsimManager = new LzsimManager( initialDates );
     lzsimManager.readInitialValues( conf.getIdManager(), tmpdir, logger, resultDir );
   }

@@ -174,7 +174,7 @@ public class LengthSectionProcessor
 // final TimeLogger timeLogger = new TimeLogger( "Post Processing Length-Section" );
 
     if( !gmlFile.exists() )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5" ) ); //$NON-NLS-1$
 
     final String diagFilename = String.format( "Längsschnitt" + m_runoffPattern + ".kod", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
     final String tableFilename = String.format( "Tabelle" + m_runoffPattern + ".gft", runoff ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -228,7 +228,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.0") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.0" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -246,7 +246,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.1") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.1" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -261,7 +261,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.2") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.2" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -276,7 +276,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.3") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.3" ) ) ); //$NON-NLS-1$
     }
 
     //
@@ -291,7 +291,7 @@ public class LengthSectionProcessor
     }
     catch( final Exception e )
     {
-      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.4") ) ); //$NON-NLS-1$
+      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.4" ) ) ); //$NON-NLS-1$
     }
 
 // timeLogger.takeInterimTime();
@@ -354,9 +354,11 @@ public class LengthSectionProcessor
     // Check if optional bundle is installed
     // They are no more optional... however the id has changed and this does not work any more...
     // TODO: probably its better to check per reflection if a certain class is present...
-    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a warning message)
-//    if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" ) == null )
-//      return;
+    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a
+    // warning message)
+// if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" )
+    // == null )
+// return;
 
     /* We just load the template and tweak the direction of the station-axis */
     final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$

@@ -27,6 +27,7 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.optimize;visibility:=reexport,
  org.junit;resolution:=optional,
  org.kalypso.simulation.core,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.kalypso.ModelSimulationBase;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
