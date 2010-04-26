@@ -208,11 +208,4 @@
               qname="{http://www.tuhh.de/hydrotop}Hydrotop">
         </feature>
      </extension>
-     <extension
-           point="org.kalypso.ui.featureViewExtensionControl">
-        <extensionControl
-              class="org.kalypso.na.ui.featurecontrol.ChooseExeControlFactory"
-              id="org.kalypso.na.ui.featurecontrol.ChooseExeControlFactory">
-        </extensionControl>
-     </extension>
 </plugin>

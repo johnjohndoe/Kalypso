@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -57,12 +56,12 @@ import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.ExeVersion;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
@@ -85,6 +84,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class WspmTuhhCalcJob implements ISimulation
 {
+  public static final String KALYPSO_1D_EXE_PATTERN = "Kalypso-1D(.*).exe";//$NON-NLS-1$ 
+
+  public static final String KALYPSO_1D_EXE_FORMAT = "Kalypso-1D%s.exe";//$NON-NLS-1$ 
 
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml"; //$NON-NLS-1$
 
@@ -135,7 +137,7 @@ public class WspmTuhhCalcJob implements ISimulation
     resultEater.addResult( OUTPUT_SIMULATION_LOG, simulogFile );
 
     PrintWriter pwSimuLog = null;
-    InputStream zipInputStream = null;
+    final InputStream zipInputStream = null;
     OutputStream strmKernelErr = null;
     InputStream mapContentStream = null;
     PrintWriter mapWriter = null;
@@ -149,7 +151,7 @@ public class WspmTuhhCalcJob implements ISimulation
          * @see java.io.BufferedOutputStream#write(byte[], int, int)
          */
         @Override
-        public synchronized void write( byte[] b, int off, int len ) throws IOException
+        public synchronized void write( final byte[] b, final int off, final int len ) throws IOException
         {
           super.write( b, off, len );
 
@@ -160,7 +162,7 @@ public class WspmTuhhCalcJob implements ISimulation
          * @see java.io.BufferedOutputStream#write(int)
          */
         @Override
-        public synchronized void write( int b ) throws IOException
+        public synchronized void write( final int b ) throws IOException
         {
           super.write( b );
 
@@ -170,7 +172,7 @@ public class WspmTuhhCalcJob implements ISimulation
       pwSimuLog = new PrintWriter( new OutputStreamWriter( osSimuLog, "CP1252" ) ); //$NON-NLS-1$
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor, calcOutConsumer );
-      log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.7"), calcXPath ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.7" ), calcXPath ); //$NON-NLS-1$
 
       final GMLXPath calcpath = new GMLXPath( calcXPath, null );
 
@@ -179,8 +181,8 @@ public class WspmTuhhCalcJob implements ISimulation
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
       if( !(calcObject instanceof Feature) )
       {
-        monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.8") + calcObject ); //$NON-NLS-1$
-        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.9"), calcXPath, calcObject ); //$NON-NLS-1$
+        monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.8" ) + calcObject ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.9" ), calcXPath, calcObject ); //$NON-NLS-1$
         return;
       }
 
@@ -189,7 +191,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
       monitor.setProgress( 10 );
 
-      log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.10") ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.10" ) ); //$NON-NLS-1$
 
       // write calculation to tmpDir
       WspWinExporter.writeForTuhhKernel( calculation, tmpDir );
@@ -197,11 +199,6 @@ public class WspmTuhhCalcJob implements ISimulation
       // ensure availability of DATH directory (for results)
       final File dathDir = new File( tmpDir, "dath" ); //$NON-NLS-1$
       dathDir.mkdirs();
-
-      // unpack kernel into tmpDir
-      zipInputStream = new BufferedInputStream( WspmTuhhCalcJob.class.getResourceAsStream( "resources/rechenkern.zip" ) ); //$NON-NLS-1$
-      ZipUtilities.unzip( zipInputStream, tmpDir, false );
-      zipInputStream.close();
 
       // prepare kernel logs (log and err)
       final File fleKernelErr = new File( tmpDir, "kernel.err" ); //$NON-NLS-1$
@@ -213,17 +210,15 @@ public class WspmTuhhCalcJob implements ISimulation
       monitor.setProgress( 20 );
 
       /* Start kalypso-1d.exe */
-      log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.11") ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.11" ) ); //$NON-NLS-1$
 
       if( log.checkCanceled() )
         return;
 
-      final ExeVersion version = calculation.getVersion();
-      if( version == null )
-        throw new SimulationException( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.12"), null ); //$NON-NLS-1$
+      final File exeFile = getExecuteable( calculation, KALYPSO_1D_EXE_FORMAT, KALYPSO_1D_EXE_PATTERN, monitor );
+      if( exeFile == null )
+        return;
 
-      // start calculation; the out-stream gets copied into the simulation.log and the system.out
-      final File exeFile = new File( tmpDir, "Kalypso-1D" + version.name() + ".exe" ); //$NON-NLS-1$ //$NON-NLS-2$
       final String sCmd = "\"" + exeFile.getAbsolutePath() + "\" n \"" + iniFile.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, 0, osSimuLog, strmKernelErr, null );
 
@@ -232,8 +227,8 @@ public class WspmTuhhCalcJob implements ISimulation
 
       // load results + copy to result folder + unzip templates
       monitor.setProgress( 80 );
-      monitor.setMessage( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.13") ); //$NON-NLS-1$
-      pwSimuLog.println( Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.14") ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.13" ) ); //$NON-NLS-1$
+      pwSimuLog.println( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.14" ) ); //$NON-NLS-1$
 
       // alle Modi
       final File ctrlFile = new File( dathDir, "Kontroll.log" ); //$NON-NLS-1$
@@ -241,27 +236,27 @@ public class WspmTuhhCalcJob implements ISimulation
       {
         resultEater.addResult( "ControlFile", ctrlFile ); //$NON-NLS-1$
 
-        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.15") ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.15" ) ); //$NON-NLS-1$
       }
       else
-        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.16") ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.16" ) ); //$NON-NLS-1$
 
       final File beiwerteFile = new File( dathDir, "Beiwerte.aus" ); //$NON-NLS-1$
       if( beiwerteFile.exists() )
       {
         resultEater.addResult( "BeiwerteAus", beiwerteFile ); //$NON-NLS-1$
-        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.17") ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.17" ) ); //$NON-NLS-1$
       }
       else
-        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.18") ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.18" ) ); //$NON-NLS-1$
 
       final File lambdaFile = new File( dathDir, "lambda_i.txt" ); //$NON-NLS-1$
       if( lambdaFile.exists() )
       {
         resultEater.addResult( "LambdaI", lambdaFile ); //$NON-NLS-1$
-        log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.19") ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.19" ) ); //$NON-NLS-1$
       }
-      log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.20") ); //$NON-NLS-1$
+      log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.20" ) ); //$NON-NLS-1$
 
       if( log.checkCanceled() )
         return;
@@ -280,9 +275,9 @@ public class WspmTuhhCalcJob implements ISimulation
           final IStatus lsResult = lsProcessor.process( log );
           if( lsResult.getSeverity() == IStatus.ERROR )
           {
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.21") ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22") ); //$NON-NLS-1$
-            monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.21" ) ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
+            monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
             return;
           }
 
@@ -292,14 +287,14 @@ public class WspmTuhhCalcJob implements ISimulation
           final LengthSectionProcessor[] processedLengthSections = lsProcessor.getProcessedLengthSections();
           if( processedLengthSections.length < 1 )
           {
-            log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23"), new Object[0] ); //$NON-NLS-1$
-            monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23") ); //$NON-NLS-1$
+            log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ), new Object[0] ); //$NON-NLS-1$
+            monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ) ); //$NON-NLS-1$
             return;
           }
           else if( processedLengthSections.length > 1 )
           {
-            log.log( true, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24"), new Object[0] ); //$NON-NLS-1$
-            monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24") ); //$NON-NLS-1$
+            log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ), new Object[0] ); //$NON-NLS-1$
+            monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ) ); //$NON-NLS-1$
             return;
           }
           final LengthSectionProcessor processedLS = processedLengthSections[0];
@@ -308,49 +303,49 @@ public class WspmTuhhCalcJob implements ISimulation
           if( gmlFile.exists() )
           {
             resultEater.addResult( "LengthSectionGml", gmlFile ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.25") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.25" ) ); //$NON-NLS-1$
           }
 
           final File diagFile = processedLS.getDiagFile();
           if( diagFile.exists() )
           {
             resultEater.addResult( "LengthSectionDiag", diagFile ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.26") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.26" ) ); //$NON-NLS-1$
           }
 
           final File tableFile = processedLS.getTableFile();
           if( tableFile.exists() )
           {
             resultEater.addResult( "LengthSectionTab", tableFile ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.27") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.27" ) ); //$NON-NLS-1$
           }
 
           final File breaklineFile = processedLS.getBreaklineFile();
           if( breaklineFile.exists() )
           {
             resultEater.addResult( "Bruchkanten", breaklineFile ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.28") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.28" ) ); //$NON-NLS-1$
           }
 
           final File tinFile = processedLS.getTinFile();
           if( tinFile.exists() )
           {
             resultEater.addResult( "WspTin", tinFile ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.29") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.29" ) ); //$NON-NLS-1$
           }
 
           final File boundaryFile = processedLS.getBoundaryFile();
           if( boundaryFile.exists() )
           {
             resultEater.addResult( "Modellgrenzen", boundaryFile ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.30") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.30" ) ); //$NON-NLS-1$
           }
 
           final File waterlevelFile = processedLS.getWaterlevelFile();
           if( waterlevelFile.exists() )
           {
             resultEater.addResult( "Ueberschwemmungslinie", waterlevelFile ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.31") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.31" ) ); //$NON-NLS-1$
           }
 
           if( log.checkCanceled() )
@@ -373,7 +368,7 @@ public class WspmTuhhCalcJob implements ISimulation
             if( mapFile.exists() )
             {
               resultEater.addResult( "OvwMap", mapFile ); //$NON-NLS-1$
-              log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.32") ); //$NON-NLS-1$
+              log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.32" ) ); //$NON-NLS-1$
             }
           }
 
@@ -388,7 +383,7 @@ public class WspmTuhhCalcJob implements ISimulation
             // assumption: max. one TAB-file
             resultEater.addResult( "resultList", ergListFile[0] ); //$NON-NLS-1$
 
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.0") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.0" ) ); //$NON-NLS-1$
           }
 
           break;
@@ -405,7 +400,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.1") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.1" ) ); //$NON-NLS-1$
           }
 
           // *.tab (-> fixed name "Ergebnis.list")
@@ -415,7 +410,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one TAB-file
             resultEater.addResult( "resultList", ergListFile[0] ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.2") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.2" ) ); //$NON-NLS-1$
           }
 
           break;
@@ -437,7 +432,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.3") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.3" ) ); //$NON-NLS-1$
           }
 
           /* break */
@@ -456,13 +451,13 @@ public class WspmTuhhCalcJob implements ISimulation
           final IStatus lsResult = lsProcessor.process( log );
           if( lsResult.getSeverity() == IStatus.ERROR )
           {
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.4") ); //$NON-NLS-1$
-            log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.5") ); //$NON-NLS-1$
-            monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.5") ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.4" ) ); //$NON-NLS-1$
+            log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.5" ) ); //$NON-NLS-1$
+            monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.5" ) ); //$NON-NLS-1$
             return;
           }
 
-          log.log( false, Messages.getString("org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.6") ); //$NON-NLS-1$
+          log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.6" ) ); //$NON-NLS-1$
           if( log.checkCanceled() )
             return;
 
@@ -489,6 +484,24 @@ public class WspmTuhhCalcJob implements ISimulation
       IOUtils.closeQuietly( strmKernelErr );
       IOUtils.closeQuietly( mapContentStream );
       IOUtils.closeQuietly( mapWriter );
+    }
+  }
+
+  public final static File getExecuteable( final TuhhCalculation calculation, final String exeFormat, final String exePattern, final ISimulationMonitor monitor )
+  {
+    try
+    {
+      final String version = calculation.getVersion();
+      final File exeFile = CalcCoreUtils.findExecutable( version, exeFormat, exePattern );
+      if( exeFile == null )
+        return null;
+      return exeFile;
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      monitor.setFinishInfo( status.getSeverity(), status.getMessage() );
+      return null;
     }
   }
 
