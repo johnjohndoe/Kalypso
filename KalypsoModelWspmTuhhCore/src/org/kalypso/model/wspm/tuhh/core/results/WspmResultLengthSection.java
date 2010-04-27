@@ -96,11 +96,21 @@ public class WspmResultLengthSection
 
   public WspmResultLengthSectionColumn getColumn( final IComponent component )
   {
+    final TupleResult result = m_observation.getResult();
+    if( !result.hasComponent( component ) )
+      return null;
+
     return new WspmResultLengthSectionColumn( m_observation, m_stationIndex, component );
   }
 
   public String getLabel( )
   {
     return m_observation.getName();
+  }
+
+  public boolean hasColumn( final IComponent component )
+  {
+    final TupleResult result = m_observation.getResult();
+    return result.hasComponent( component );
   }
 }

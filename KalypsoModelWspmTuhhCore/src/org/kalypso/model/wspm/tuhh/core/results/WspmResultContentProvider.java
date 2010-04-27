@@ -68,13 +68,11 @@ public class WspmResultContentProvider implements ITreeContentProvider
   public static void initTreeViewer( final TreeViewer viewer )
   {
     final Tree tree = viewer.getTree();
-    tree.setHeaderVisible( true );
     viewer.setAutoExpandLevel( 3 );
 
     final TreeColumn labelColumn = new TreeColumn( tree, SWT.NONE );
-    labelColumn.setText( "Bezeichnung" );
     labelColumn.setData( DATA_PROPERTY, Property.LABEL );
-    labelColumn.setWidth( tree.getSize().x );
+    labelColumn.setWidth( tree.getSize().x - 5 );
 
     tree.addControlListener( new ControlAdapter()
     {
@@ -84,7 +82,7 @@ public class WspmResultContentProvider implements ITreeContentProvider
       @Override
       public void controlResized( final ControlEvent e )
       {
-        labelColumn.setWidth( tree.getSize().x );
+        labelColumn.setWidth( tree.getSize().x - 5 );
       }
     } );
   }

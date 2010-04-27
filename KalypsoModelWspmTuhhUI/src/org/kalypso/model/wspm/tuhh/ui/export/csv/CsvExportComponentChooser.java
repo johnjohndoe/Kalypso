@@ -48,14 +48,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
+import org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.deegree.binding.gml.Definition;
@@ -116,20 +115,7 @@ public class CsvExportComponentChooser
 
   public Control createControl( final Composite parent )
   {
-    final Table table = new Table( parent, SWT.CHECK | SWT.HIDE_SELECTION | SWT.BORDER );
-    final CheckboxTableViewer viewer = new CheckboxTableViewer( table );
-
-    viewer.addCheckStateListener( new ICheckStateListener()
-    {
-      @Override
-      public void checkStateChanged( final CheckStateChangedEvent event )
-      {
-        final Object[] checkedElements = viewer.getCheckedElements();
-        handleColumnChecked( checkedElements );
-      }
-    } );
-
-    viewer.setLabelProvider( new LabelProvider()
+    final LabelProvider labelProvider = new LabelProvider()
     {
       @Override
       public String getText( final Object element )
@@ -138,14 +124,27 @@ public class CsvExportComponentChooser
         // FIXME: replace later with getLabel
         return component.getName();
       }
+    };
+
+    final ListSelectionComposite listSelectionComposite = new ListSelectionComposite( new ArrayContentProvider(), labelProvider );
+
+    final Control control = listSelectionComposite.createControl( parent, SWT.HIDE_SELECTION | SWT.BORDER );
+
+    listSelectionComposite.addCheckStateListener( new ICheckStateListener()
+    {
+      @Override
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        final Object[] checkedElements = listSelectionComposite.getCheckedElements();
+        handleColumnChecked( checkedElements );
+      }
     } );
 
-    viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setComparator( new ViewerComparator() );
-    viewer.setInput( m_components );
-    viewer.setCheckedElements( m_selectedColumns );
+    listSelectionComposite.setComparator( new ViewerComparator() );
+    listSelectionComposite.setInput( m_components );
+    listSelectionComposite.setCheckedElements( m_selectedColumns );
 
-    return table;
+    return control;
   }
 
   protected void handleColumnChecked( final Object[] checkedElements )

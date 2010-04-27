@@ -55,16 +55,16 @@ public class WspmResultLengthSectionColumn
 {
   private final IObservation<TupleResult> m_observation;
 
-  private final TupleResultIndex m_stationIndex;
+  private final TupleResultIndex m_stationHash;
 
   private final int m_component;
 
   private final String m_label;
 
-  public WspmResultLengthSectionColumn( final IObservation<TupleResult> observation, final TupleResultIndex stationIndex, final IComponent component )
+  public WspmResultLengthSectionColumn( final IObservation<TupleResult> observation, final TupleResultIndex stationHash, final IComponent component )
   {
     m_observation = observation;
-    m_stationIndex = stationIndex;
+    m_stationHash = stationHash;
     final TupleResult result = m_observation.getResult();
     m_component = result.indexOfComponent( component );
 
@@ -73,19 +73,14 @@ public class WspmResultLengthSectionColumn
     m_label = String.format( "%s - %s", m_observation.getName(), componentLabel );
   }
 
-  private BigDecimal getValue( final BigDecimal station, final int componentIndex )
-  {
-    final IRecord record = m_stationIndex.getRecord( station );
-    if( record == null )
-      return null;
-
-    return (BigDecimal) record.getValue( componentIndex );
-  }
-
   /** The result value for the given station */
   public Object getValue( final BigDecimal station )
   {
-    return getValue( station, m_component );
+    final IRecord record = m_stationHash.getRecord( station );
+    if( record == null || m_component == -1 )
+      return null;
+
+    return record.getValue( m_component );
   }
 
   public String getLabel( )

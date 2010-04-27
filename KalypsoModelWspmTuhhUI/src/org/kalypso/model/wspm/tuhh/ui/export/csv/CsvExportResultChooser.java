@@ -74,7 +74,7 @@ public class CsvExportResultChooser
   public Control createControl( final Composite parent )
   {
     // add a tree-table that shows the fetcher data
-    final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL );
+    final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.CHECK | SWT.BORDER );
     WspmResultContentProvider.initTreeViewer( treeViewer );
 
     treeViewer.setContentProvider( new WspmResultContentProvider() );
