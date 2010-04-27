@@ -202,6 +202,7 @@ public class CsvSink
     // write table header including all components
     for( final IProfileFeature profileFeature : profiles )
     {
+      monitor.subTask( String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() ) );
       final IProfil profil = profileFeature.getProfil();
       writeData( formatter, comps, profil );
       ProgressUtilities.worked( monitor, 1 );

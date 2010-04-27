@@ -118,8 +118,11 @@ public class ExportCsvPage extends ExportFileChooserPage
         final WspmResultLengthSection section = ((IWspmResult) result).getLengthSection();
         for( final IComponent component : components )
         {
-          final WspmResultLengthSectionColumn column = section.getColumn( component );
-          columns.add( column );
+          if( section.hasColumn( component ) )
+          {
+            final WspmResultLengthSectionColumn column = section.getColumn( component );
+            columns.add( column );
+          }
         }
       }
     }
