@@ -51,6 +51,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -104,6 +105,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class PolynomeHelper
 {
+  private static final String ERGEBNISSE_GMV = "Ergebnisse.gmv"; //$NON-NLS-1$
+
   public static final String POLYNOME_1D_EXE_FORMAT = "Polynome1d%s.exe";//$NON-NLS-1$ 
 
   public static final String POLYNOME_1D_EXE_PATTERN = "Polynome1d(.*).exe";//$NON-NLS-1$ 
@@ -239,7 +242,9 @@ public class PolynomeHelper
     try
     {
       readResults( resultDir, targetGmlFile, calculation, log, resultEater );
-      final File gmvResultFile = new File( tmpDir, "Ergebnisse.gmv" ); //$NON-NLS-1$
+      final File gmvResultFile = new File( tmpDir, ERGEBNISSE_GMV );
+      final URL ergebnisseGmbLocation = PolynomeHelper.class.getResource( "resources/" + ERGEBNISSE_GMV );
+      FileUtils.copyURLToFile( ergebnisseGmbLocation, gmvResultFile );
       resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT_GMV, gmvResultFile );
     }
     catch( final Throwable e )
@@ -330,7 +335,7 @@ public class PolynomeHelper
       return;
 
     /* Write workspace into file */
-    GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "CP1252" ); //$NON-NLS-1$
+    GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "UTF-8" ); //$NON-NLS-1$
     resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT, targetGmlFile );
   }
 
