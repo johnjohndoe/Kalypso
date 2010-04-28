@@ -69,7 +69,7 @@ public class NewWspmProjectWizard extends org.kalypso.afgui.wizards.NewProjectWi
    * @see org.kalypso.afgui.wizards.NewProjectWizard#openProject(org.eclipse.core.resources.IProject)
    */
   @Override
-  protected void openProject( final IProject project )
+  public void openProject( final IProject project )
   {
     final IFile fileToOpen = project.getFile( IWspmTuhhConstants.FILE_WSPM_GMV );
     openTreeView( fileToOpen );
