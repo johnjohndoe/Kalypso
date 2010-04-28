@@ -29,18 +29,30 @@
    <extension
          point="org.kalypso.model.wspm.core.profilePointFilter">
       <filter
-            class="org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"
+            class="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.VorlandlinksProfilePointFilter"
             description="%org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter.description"
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"
             name="%org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"/>
       <filter
-            class="org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter"
+            class="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.BvLinksProfilePointFilter"
+            description="Profilpunkte der linken Böschung (zwischen Trennfläche und Bordvollpunkt)"
+            id="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.BvLinksProfilePointFilter"
+            name="Böschung links">
+      </filter>
+      <filter
+            class="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.FlussschlauchProfilePointFilter"
             description="%org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter.description"
             id="org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter"
             name="%org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter">
       </filter>
       <filter
-            class="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
+            class="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.BvRechtsProfilePointFilter"
+            description="Profilpunkte der rechten Böschung (zwischen Trennfläche und Bordvollpunkt)"
+            id="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.BvRechtsProfilePointFilter"
+            name="Böschung rechts">
+      </filter>
+      <filter
+            class="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.VorlandrechtsProfilePointFilter"
             description="%org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter.description"
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
             name="%org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter">

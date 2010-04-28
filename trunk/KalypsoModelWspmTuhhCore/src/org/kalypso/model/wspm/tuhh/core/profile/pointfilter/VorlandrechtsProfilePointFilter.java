@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile;
+package org.kalypso.model.wspm.tuhh.core.profile.pointfilter;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
@@ -58,17 +57,13 @@ public class VorlandrechtsProfilePointFilter extends AbstractProfilePointFilter
    */
   public boolean accept( final IProfil profil, final IRecord point )
   {
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( devider.length != 2 )
-      return true;
+    IProfilPointMarker[] tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    if( tfMarker == null || tfMarker.length == 0 )
+      tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( tfMarker.length != 2 )
+      return false;
 
-    final IRecord rightPoint = devider[1].getPoint();
-    final IRecord[] points = profil.getPoints();
-
-    final int right = ArrayUtils.indexOf( points, rightPoint );
-    final int index = ArrayUtils.indexOf( points, point );
-
-    return index >= right;
+    return isBetweenMarkers( profil, point, tfMarker[1], null );
   }
 
 }

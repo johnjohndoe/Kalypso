@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile;
+package org.kalypso.model.wspm.tuhh.core.profile.pointfilter;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
@@ -50,7 +49,7 @@ import org.kalypso.observation.result.IRecord;
 /**
  * @author Gernot Belger
  */
-public class VorlandlinksProfilePointFilter extends AbstractProfilePointFilter
+public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter
 {
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
@@ -60,15 +59,9 @@ public class VorlandlinksProfilePointFilter extends AbstractProfilePointFilter
   {
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( devider.length != 2 )
-      return true;
+      return false;
 
-    final IRecord leftPoint = devider[0].getPoint();
-    final IRecord[] points = profil.getPoints();
-
-    final int left = ArrayUtils.indexOf( points, leftPoint );
-    final int index = ArrayUtils.indexOf( points, point );
-
-    return index < left;
+    return isBetweenMarkers( profil, point, devider[0], devider[1] );
   }
 
 }
