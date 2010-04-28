@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.2.0.qualifier" useFeatures="false" includeLaunchers="true">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.3.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -14,7 +14,6 @@
       <linux>/KalypsoModelProduct/etc/config.ini</linux>
       <macosx>/KalypsoModelProduct/etc/config.ini</macosx>
       <solaris>/KalypsoModelProduct/etc/config.ini</solaris>
-      <win32>/KalypsoModelProduct/etc/config.ini</win32>
    </configIni>
 
    <launcherArgs>
@@ -526,6 +525,10 @@ Library.
       <plugin id="org.sat4j.core"/>
       <plugin id="org.sat4j.pb"/>
    </plugins>
+
+   <features>
+      <feature id="org.kalypso.model.feature" version="2.3.0.qualifier"/>
+   </features>
 
    <configurations>
       <plugin id="org.kalypso.contribs.ogc31" autoStart="true" startLevel="0" />
