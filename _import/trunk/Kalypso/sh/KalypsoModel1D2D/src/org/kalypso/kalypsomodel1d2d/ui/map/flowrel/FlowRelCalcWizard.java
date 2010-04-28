@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -79,7 +78,7 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
 
   private final IPageChangingListener m_pageListener = new IPageChangingListener()
   {
-    public void handlePageChanging( PageChangingEvent event )
+    public void handlePageChanging( final PageChangingEvent event )
     {
       FlowRelCalcWizard.this.handlePageChanging( event );
     }
@@ -91,7 +90,7 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
     m_flowModel = flowModel;
     m_discModel = discModel;
 
-    m_chooseFlowsRelPage = new ListSelectionWizardPage( "selectFLowRelsPage", new ArrayContentProvider(), new LabelProvider() //$NON-NLS-1$
+    m_chooseFlowsRelPage = new ListSelectionWizardPage( "selectFLowRelsPage", new LabelProvider() //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -106,21 +105,21 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
 
     m_chooseFlowsRelPage.setInput( m_flowRels );
     m_chooseFlowsRelPage.setCheckedElements( m_flowRels );
-    m_chooseFlowsRelPage.setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.1") ); //$NON-NLS-1$
-    m_chooseFlowsRelPage.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.2") ); //$NON-NLS-1$
+    m_chooseFlowsRelPage.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.1" ) ); //$NON-NLS-1$
+    m_chooseFlowsRelPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.2" ) ); //$NON-NLS-1$
     m_chooseFlowsRelPage.setAllowNextIfEmpty( false );
 
-    m_controlPage = new FlowRelCalcControlPage( "controlPage", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.4"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_controlPage.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.5") ); //$NON-NLS-1$
+    m_controlPage = new FlowRelCalcControlPage( "controlPage", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.4" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_controlPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.5" ) ); //$NON-NLS-1$
 
-    m_simulationPage = new FlowRelCalcSimulationPage( "simulationPage", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.7"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_simulationPage.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.8") ); //$NON-NLS-1$
+    m_simulationPage = new FlowRelCalcSimulationPage( "simulationPage", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.7" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_simulationPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.8" ) ); //$NON-NLS-1$
 
     addPage( m_chooseFlowsRelPage );
     addPage( m_controlPage );
     addPage( m_simulationPage );
 
-    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.9") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.9" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

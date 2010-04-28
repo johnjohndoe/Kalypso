@@ -43,8 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.wizard;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -62,10 +62,10 @@ public class ImportWspmWizardPage extends ListSelectionWizardPage
 
   public ImportWspmWizardPage( final String pageName )
   {
-    super( pageName, new ArrayContentProvider(), new GMLLabelProvider() );
+    super( pageName, new GMLLabelProvider() );
 
-    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizardPage.0") ); //$NON-NLS-1$
-    setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizardPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizardPage.0" ) ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizardPage.1" ) ); //$NON-NLS-1$
   }
 
   public TuhhCalculation getCalculation( )
@@ -82,7 +82,7 @@ public class ImportWspmWizardPage extends ListSelectionWizardPage
 
     setCheckedElements( reaches.toArray( new Object[reaches.size()] ) );
 
-    setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizardPage.2") + calculation.getName(), null ) ); //$NON-NLS-1$
+    setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizardPage.2" ) + calculation.getName(), null ) ); //$NON-NLS-1$
   }
 
   public TuhhReachProfileSegment[] getReachProfileSegments( )
