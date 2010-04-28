@@ -44,14 +44,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
-import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter implements IProfilePointFilter
+public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter
 {
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
@@ -59,7 +58,7 @@ public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter 
    */
   public boolean accept( final IProfil profil, final IRecord point )
   {
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE  );
+    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( devider.length != 2 )
       return true;
 

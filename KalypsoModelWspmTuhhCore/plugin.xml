@@ -45,12 +45,6 @@
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
             name="%org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter">
       </filter>
-      <filter
-            class="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
-            description="%org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter.description"
-            id="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
-            name="%org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter">
-      </filter>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profilPointMarkerProvider">
