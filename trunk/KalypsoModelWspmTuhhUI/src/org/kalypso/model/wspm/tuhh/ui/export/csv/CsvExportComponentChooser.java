@@ -46,7 +46,6 @@ import java.util.HashSet;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -126,7 +125,7 @@ public class CsvExportComponentChooser
       }
     };
 
-    final ListSelectionComposite listSelectionComposite = new ListSelectionComposite( new ArrayContentProvider(), labelProvider );
+    final ListSelectionComposite listSelectionComposite = new ListSelectionComposite( labelProvider );
 
     final Control control = listSelectionComposite.createControl( parent, SWT.HIDE_SELECTION | SWT.BORDER );
 
