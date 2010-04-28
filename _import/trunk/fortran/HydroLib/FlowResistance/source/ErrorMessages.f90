@@ -1,4 +1,16 @@
-subroutine ErrorMessages (1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009)
+subroutine ErrorMessages (errorcode)
+
+integer :: errorcode
+
+write (*,errorcode)
+
+if errorcode = 1001 then
+  write (*,1001)
+else if errorcode = 1002) then
+  write (*, 1002)
+else if (errorc
+...
+end if
 
 1001 format (1X, 'One or more parameters are missing or don´t have a valid value.'/ &
            & 1X, 'Please enter a valid value for all non-optional Parameters. ')
