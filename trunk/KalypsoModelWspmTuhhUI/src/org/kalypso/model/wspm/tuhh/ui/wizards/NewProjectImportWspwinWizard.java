@@ -114,7 +114,7 @@ public class NewProjectImportWspwinWizard extends NewWspmProjectWizard // extend
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard.1" ), 10 ); //$NON-NLS-1$
 
