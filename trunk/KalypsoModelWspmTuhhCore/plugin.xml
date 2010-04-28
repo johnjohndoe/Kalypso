@@ -75,16 +75,6 @@
       </profiletype>
    </extension>
    <extension
-         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
-      <project
-            data="etc/projectTemplate.zip"
-            description="%org.kalypso.model.wspm.tuhh.projectTemplate.description"
-            label="%org.kalypso.model.wspm.tuhh.projectTemplate"
-            projectName=""
-            category="org.kalypso.model.wspm.tuhh.projectTemplate">
-      </project>
-   </extension>
-   <extension
          point="org.kalypso.deegree.featureBinding">
       <feature
             class="org.kalypso.model.wspm.tuhh.core.gml.TuhhReach"
