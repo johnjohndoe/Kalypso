@@ -44,14 +44,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
-import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class VorlandrechtsProfilePointFilter extends AbstractProfilePointFilter implements IProfilePointFilter
+public class VorlandrechtsProfilePointFilter extends AbstractProfilePointFilter
 {
   /**
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
