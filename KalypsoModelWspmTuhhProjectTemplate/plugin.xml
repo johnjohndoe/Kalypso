@@ -5,10 +5,9 @@
          point="org.kalypso.contribs.eclipseplatform.projectTemplate">
       <project
             category="org.kalypso.model.wspm.tuhh.projectTemplate"
-            data="bundle:org.kalypso.model.wspm.tuhh.project.template"
+            data="org.kalypso.model.wspm.tuhh.project.template:/"
             description="%org.kalypso.model.wspm.tuhh.projectTemplate.description"
             label="%org.kalypso.model.wspm.tuhh.projectTemplate">
       </project>
    </extension>
-
 </plugin>
