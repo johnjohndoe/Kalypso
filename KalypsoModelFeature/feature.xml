@@ -198,4 +198,17 @@
          fragment="true"
          unpack="false"/>
 
+   <plugin
+         id="org.kalypso.model.wspm.tuhh.project.template"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.model.wspm.tuhh.project.demo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
