@@ -111,8 +111,6 @@ public class NaModelHelper
 
   private static final double m_factorHecto = 1 / 100d;
 
-  public static final String EXECUTABLES_FOLDER = "bin";
-
   public static int addRHBinCatchment( final GMLWorkspace modelworkspace, final Feature catchment, final IFeatureType rhbFT, final Feature measureRhbFE )
   {
     // throw new UnsupportedOperationException( "still a TODO, not upgraded after java5.0/eclipse3.1" );
