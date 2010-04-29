@@ -11,9 +11,6 @@
    </aboutInfo>
 
    <configIni use="default">
-      <linux>/KalypsoModelProduct/etc/config.ini</linux>
-      <macosx>/KalypsoModelProduct/etc/config.ini</macosx>
-      <solaris>/KalypsoModelProduct/etc/config.ini</solaris>
    </configIni>
 
    <launcherArgs>
