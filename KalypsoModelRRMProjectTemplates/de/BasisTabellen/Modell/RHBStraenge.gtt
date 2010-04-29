@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:gistableview xmlns:ns2="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns2:layer id="id" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" linktype="gml" xlink:type="simple" xlink:href="project:/modell.gml" xlink:actuate="onRequest">
+        <ns2:column width="204" name="description" format="" editable="true" alignment="16384"/>
+        <ns2:column width="54" name="name" format="" editable="false" alignment="16777216"/>
+        <ns2:column width="100" name="generateResult" format="" editable="true" alignment="16384"/>
+        <ns2:column width="66" name="vmin" format="" editable="true" alignment="16777216"/>
+        <ns2:column width="69" name="vmax" format="" editable="true" alignment="16777216"/>
+        <ns2:column width="79" name="sv" format="" editable="true" alignment="16777216"/>
+        <ns2:column width="100" name="hvvsqd" format="" editable="true" alignment="16384"/>
+        <ns2:sort propertyName="name" inverse="false"/>
+    </ns2:layer>
+</ns2:gistableview>
+
