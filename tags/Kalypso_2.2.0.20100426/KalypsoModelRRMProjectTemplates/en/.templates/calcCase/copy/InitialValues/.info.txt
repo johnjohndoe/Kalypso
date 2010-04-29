@@ -1,0 +1,2 @@
+Dieses Verzeichnis ist fuer Anfangswerte (*.gml) vorgesehen.
+ 
