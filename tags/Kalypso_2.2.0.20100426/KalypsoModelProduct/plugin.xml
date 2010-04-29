@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         id="kalypsomodelapplication"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run class="org.kalypso.model.product.application.KalypsoModelApplication"/>
+      </application>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.kalypso.model.product.kalypsomodelapplication"
+            name="Kalypso">
+         <property
+               name="aboutImage"
+               value="etc/aboutKalypso.gif"/>
+         <property
+               name="aboutText"
+               value="%aboutText"/>
+         <property
+               name="windowImages"
+               value="etc/applicationicons/icon_16.gif,etc/applicationicons/icon_32.gif,etc/applicationicons/icon_48.gif,etc/applicationicons/icon_64.gif,etc/applicationicons/icon_128.gif"/>
+         <property
+               name="startupMessageRect"
+               value="4,200,390,15"/>
+         <property
+               name="startupForegroundColor"
+               value="000000"/>
+         <property
+               name="appName"
+               value="Kalypso">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="0,215,400,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+      </product>
+   </extension> 
+ <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.kalypso.model.product.view.KalypsoWelcomePage"
+            icon="etc/applicationicons/icon_16.gif"
+            id="org.kalypso.model.product.introID">
+      </intro>
+      <introProductBinding
+            introId="org.kalypso.model.product.introID"
+            productId="org.kalypso.model.product.product">
+      </introProductBinding>
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.kalypso.model.product.intro">
+      </intro>
+      <introProductBinding
+            introId="org.kalypso.model.product.introID"
+            productId="org.kalypso.planer.client.manager.product">
+      </introProductBinding>
+   </extension>
+    <extension
+         point="org.eclipse.ui.activities">
+  
+      <activity
+            name="Model Product Activity"
+            description="Disables a lot of unwanted things."
+            id="org.kalypso.model.product.activity">
+      </activity>
+      
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.ant\.ui/.*">
+      </activityPatternBinding>
+
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.debug\.ui/.*">
+      </activityPatternBinding>
+
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.ui\.externaltools/.*">
+      </activityPatternBinding>
+
+      <category
+            name="Kalypso Model Product"
+            description="Disables a lot of not wanted things."
+            id="org.kalypso.model.product.categories.productCategory">
+      </category>
+
+      <categoryActivityBinding
+            activityId="org.kalypso.model.product.activity"
+            categoryId="org.kalypso.model.product.categories.productCategory">
+      </categoryActivityBinding>
+      
+      <defaultEnablement
+            id="org.kalypso.model.product.activity">
+      </defaultEnablement>
+   </extension>
+    <extension
+          point="org.eclipse.ui.intro.config">
+       <config
+             content=""
+             id="org.kalypso.model.product.introConfigId"
+             introId="org.kalypso.model.product.intro">
+          <presentation
+                home-page-id="root">
+             <implementation
+                   kind="html"
+                   os="win32,linux,macosx"
+                   style="content/shared.css">
+             </implementation>
+          </presentation>
+       </config>
+    </extension>
+
+
+</plugin>
