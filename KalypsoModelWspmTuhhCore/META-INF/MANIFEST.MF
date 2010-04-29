@@ -12,7 +12,8 @@ Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
  org.kalypso.model.wspm.schema;visibility:=reexport,
  org.kalypso.wspwin.core;visibility:=reexport,
  de.openali.odysseus.chart.factory;bundle-version="0.2.0",
- org.kalypso.model.wspm.tuhh.project.template;bundle-version="0.0.1"
+ org.kalypso.model.wspm.tuhh.project.template;bundle-version="0.0.1",
+ org.kalypso.model.wspm.tuhh.project.demo;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.gml,
