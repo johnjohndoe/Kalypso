@@ -4,13 +4,6 @@
    <extension
          point="org.kalypso.contribs.eclipseplatform.projectTemplate">
       <project
-            category="org.kalypso.model.wspm.tuhh.demoProjects"
-            data="etc/demos/WspmDemo.zip"
-            description="%wspm.project.description"
-            label="%wspm.project.label"
-            projectName="%wspm.project.projectName">
-      </project>
-      <project
             category="org.kalypso.model.flood.demoProject"
             data="etc/demos/FloodDemo.zip"
             description="%flood.project.description"
