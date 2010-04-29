@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview xmlns:gft="featureview.template.kalypso.org" xmlns:tuhh="org.kalypso.model.wspm.tuhh" typename="tuhh:SpecialOptions" style="SWT.NONE">
+    <gft:gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+    <gft:gridLayout numColumns="4"/>
+
+    <gft:label property="tuhh:doCalcBridges" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+    </gft:label>
+    <gft:checkbox editable="true" property="tuhh:doCalcBridges" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+        <gft:text> </gft:text>
+    </gft:checkbox>
+    <gft:validatorlabel property="tuhh:doCalcBridges" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:validatorlabel>
+
+    <gft:label property="tuhh:doCalcBarrages" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+    </gft:label>
+    <gft:checkbox editable="true" property="tuhh:doCalcBarrages" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+        <gft:text> </gft:text>
+    </gft:checkbox>
+    <gft:validatorlabel property="tuhh:doCalcBarrages" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:validatorlabel>
+
+    <gft:label property="tuhh:useExtremeRoughness" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+    </gft:label>
+    <gft:checkbox editable="true" property="tuhh:useExtremeRoughness" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+        <gft:text> </gft:text>
+    </gft:checkbox>
+    <gft:validatorlabel property="tuhh:useExtremeRoughness" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:validatorlabel>
+</gft:featureview>
