@@ -1,1 +1,0 @@
-in dieses Verzeichnis wird die Niederschlagvorhersage abgelegt.

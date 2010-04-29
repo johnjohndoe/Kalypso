@@ -53,15 +53,14 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.openjump.core.graph.delauneySimplexInsert.DTriangulationForJTS;
 
 import com.vividsolutions.jts.algorithm.ConvexHull;
@@ -122,30 +121,25 @@ public class OmbrometerUtils
 
     // Gather data:
     // - used point into point-list
-    // - all coordinates into list for convex hull
+    // - all coordinates into for convex hull
     // - ombrometer into geo index for quicker search later
     // - feature changes for ombrometers to null, in order to delete old geometries
     final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<com.vividsolutions.jts.geom.Point>();
-    final FeatureList geoIndex = FeatureFactory.createFeatureList( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
+    final SplitSort geoIndex = new SplitSort( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
     final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> changeMap = new HashMap<IOmbrometer, GM_Surface<GM_SurfacePatch>>();
     final List<Coordinate> crds = new ArrayList<Coordinate>();
-    String crs = null;
     for( final Object listEntry : ombrometerList )
     {
       final IOmbrometer ombro = (IOmbrometer) listEntry;
       final GM_Point stationLocation = ombro.getStationLocation();
-      if( stationLocation != null )
+      final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
+      if( ombro.isUsed() )
       {
-        final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
-        if( ombro.isUsed() )
-        {
-          crs = stationLocation.getCoordinateSystem();
-          points.add( point );
-          geoIndex.add( ombro );
-        }
-        crds.add( point.getCoordinate() );
+        points.add( point );
+        geoIndex.add( ombro );
       }
       changeMap.put( ombro, null );
+      crds.add( point.getCoordinate() );
     }
 
     ProgressUtilities.worked( monitor, 1 );
@@ -166,8 +160,7 @@ public class OmbrometerUtils
     else if( geoIndex.size() == 1 )
     {
       final IOmbrometer ombro = (IOmbrometer) geoIndex.get( 0 );
-      final GM_Surface<GM_SurfacePatch> gmBoundary = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( thiessenBoundary, crs );
-      gmBoundary.setCoordinateSystem( crs );
+      final GM_Surface<GM_SurfacePatch> gmBoundary = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( thiessenBoundary );
       changeMap.put( ombro, gmBoundary );
     }
     else
@@ -179,7 +172,7 @@ public class OmbrometerUtils
 
       for( final Polygon polygon : thiessenPolys )
       {
-        final GM_Surface<GM_SurfacePatch> affectedArea = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( polygon, crs );
+        final GM_Surface<GM_SurfacePatch> affectedArea = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( polygon );
         final IOmbrometer ombro = findOmbrometerFor( affectedArea, geoIndex );
         if( ombro == null )
           throw new GM_Exception( "Fehler bei der Ermittlung der Thiessen Polygone" );
@@ -195,7 +188,7 @@ public class OmbrometerUtils
     return changeMap;
   }
 
-  private static IOmbrometer findOmbrometerFor( final GM_Surface<GM_SurfacePatch> surface, final FeatureList geoIndex )
+  private static IOmbrometer findOmbrometerFor( final GM_Surface<GM_SurfacePatch> surface, final SplitSort geoIndex )
   {
     final List< ? > query = geoIndex.query( surface.getEnvelope(), null );
     for( final Object object : query )
