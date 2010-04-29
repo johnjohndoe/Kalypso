@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns8="obstableview.template.kalypso.org" xmlns:ns9="gistableview.template.kalypso.org">
+    <mapv:translator id="commons.msgGetString">
+        <class xmlns="" xmlns:ns11="types.template.kalypso.org">org.kalypso.model.wspm.tuhh.core:org.kalypso.model.wspm.tuhh.core.i18n.MapMessages</class>
+    </mapv:translator>
+    <mapv:extent srs="EPSG:31467" bottom="772835.2590301505" top="778683.6629698493" right="3931458.16" left="3928745.2640000004"/>
+    <mapv:layers active="ID_2">
+        <mapv:layer visible="true" name="%resultmap.layer.simplified_flood_points" featurePath="#fid#root/wspPointMember[WspPoint]" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="Daten/Überschwemmungslinie.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="false" name="%resultmap.layer.simplified_model_border_points" featurePath="#fid#root/wspPointMember[WspPoint]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="Daten/Modellgrenzen.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="%resultmap.layer.profiles" featurePath="#fid#ReachWspmTuhhSteadyState1271333074688608/reachSegmentMember[ProfileReachSegmentWspmTuhhSteadyState]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../../../modell.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="%resultmap.layer.simplified.flood_line" featurePath="#fid#root" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="Daten/Überschwemmungslinie.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="false" name="%resultmap.layer.simplified_model_border_line" featurePath="#fid#root" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="Daten/Modellgrenzen.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+    </mapv:layers>
+</mapv:gismapview>
