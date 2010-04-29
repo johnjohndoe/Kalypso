@@ -148,9 +148,9 @@ import org.xml.sax.SAXParseException;
  */
 public class NaModelInnerCalcJob implements ISimulation
 {
-  public static final String EXECUTABLES_FILE_TEMPLATE = "na-kalypso_%s.exe";
+  public static final String EXECUTABLES_FILE_TEMPLATE = "Kalypso-NA_%s.exe";
 
-  public static final String EXECUTABLES_FILE_PATTERN = "na-kalypso_(.+)\\.exe";
+  public static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe";
 
   private boolean m_succeeded = false;
 
