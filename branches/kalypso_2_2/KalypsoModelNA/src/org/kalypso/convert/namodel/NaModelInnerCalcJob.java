@@ -936,13 +936,9 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private File chooseSimulationExe( final String kalypsoNAVersion, final ISimulationMonitor monitor )
   {
-    /*
-     * for backward compatibility, any string that is not the proper version identifier will be considered as the
-     * "latest version" request
-     */
     try
     {
-      return CalcCoreUtils.findExecutable( kalypsoNAVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN );
+      return CalcCoreUtils.findExecutable( kalypsoNAVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
     }
     catch( final CoreException e )
     {
@@ -1586,6 +1582,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private void loadLogs( final File tmpDir, final Logger logger, final NAConfiguration conf, final File resultDir )
   {
+    conf.getCalculationLogger().stopLogging();
     final File logFile = new File( tmpDir, "start/error.gml" ); //$NON-NLS-1$
 
     if( logFile.exists() )

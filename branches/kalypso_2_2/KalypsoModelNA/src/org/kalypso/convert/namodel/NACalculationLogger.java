@@ -44,29 +44,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * @author Dejan Antanaskovic
  */
 public class NACalculationLogger
 {
-  private static final String NA_LOG_FILE_PATH[] = { NaModelConstants.OUTPUT_DIR_NAME, "Ergebnisse", "Aktuell", "Log", "calculation.xlog" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+  private static final String NA_LOG_FILE_PATH[] = { NaModelConstants.OUTPUT_DIR_NAME, "Ergebnisse", "Aktuell", "Log", "calculation.log" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-  private boolean m_isLoggerCreated;
+  private boolean m_isLoggerActive;
 
   private final String m_calculationFolder;
 
   private Logger m_logger;
 
+  private FileHandler m_logHandler;
+
   public NACalculationLogger( final String calculationFolder )
   {
-    m_isLoggerCreated = false;
+    m_isLoggerActive = false;
     m_calculationFolder = calculationFolder;
   }
 
   public final void startLogging( )
   {
-    if( m_isLoggerCreated )
+    if( m_isLoggerActive )
       return;
     try
     {
@@ -76,12 +79,13 @@ public class NACalculationLogger
       final File logFile = new File( buffer.toString() );
       logFile.getParentFile().mkdirs();
       logFile.createNewFile();
-      // Create a non-appending file handler
-      final FileHandler handler = new FileHandler( buffer.toString(), false );
+      m_logHandler = new FileHandler( buffer.toString(), false );
+      m_logHandler.setFormatter( new SimpleFormatter() );
+      m_logHandler.setEncoding( "UTF-8" );
 
-      m_logger = Logger.getAnonymousLogger();
-      m_logger.addHandler( handler );
-      m_isLoggerCreated = true;
+      m_logger = Logger.getLogger( NA_LOG_FILE_PATH[NA_LOG_FILE_PATH.length - 1] );
+      m_logger.addHandler( m_logHandler );
+      m_isLoggerActive = true;
       m_logger.info( "Calculation logging started" ); //$NON-NLS-1$
     }
     catch( final IOException e )
@@ -91,10 +95,20 @@ public class NACalculationLogger
     }
   }
 
-  public final Logger getCalculationLogger( )
+  public final Logger getLogger( )
   {
     startLogging();
     return m_logger;
+  }
+
+  public final void stopLogging( )
+  {
+    if( m_isLoggerActive )
+    {
+      m_logHandler.flush();
+      m_logHandler.close();
+      m_isLoggerActive = false;
+    }
   }
 
 // public static final Logger getProjectLogger( )
