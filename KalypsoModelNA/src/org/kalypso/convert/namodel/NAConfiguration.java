@@ -240,9 +240,14 @@ public class NAConfiguration
     m_iniWrite = false;
   }
 
+  public NACalculationLogger getCalculationLogger( )
+  {
+    return m_calculationLogger;
+  }
+
   public Logger getLogger( )
   {
-    return m_calculationLogger.getCalculationLogger();
+    return getCalculationLogger().getLogger();
   }
 
   public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
