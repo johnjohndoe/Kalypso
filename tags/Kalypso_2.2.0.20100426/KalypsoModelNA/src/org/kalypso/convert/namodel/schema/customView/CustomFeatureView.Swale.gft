@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview xmlns:rrmSuds="http://sourceforge.kalypso.org/schemata/hydrology/suds" typename="rrmSuds:Swale" style="SWT.NONE" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+	<gft:gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" />
+	<gft:gridLayout numColumns="4" />
+
+	<gft:label property="rrmSuds:elementType" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER" />
+	</gft:label>
+	<gft:combo property="rrmSuds:elementType" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+		<gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL" />
+	</gft:combo>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING" />
+	</gft:label>
+	<gft:validatorlabel property="rrmSuds:elementType" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" />
+	</gft:validatorlabel>
+
+	<gft:label property="rrmSuds:naturalAreaPercentage" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER" />
+	</gft:label>
+	<gft:text editable="true" property="rrmSuds:naturalAreaPercentage" style="SWT.BORDER">
+		<gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL" />
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING" />
+	</gft:label>
+	<gft:validatorlabel property="rrmSuds:naturalAreaPercentage" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" />
+	</gft:validatorlabel>
+
+	<gft:label property="rrmSuds:sealedAreaPercentage" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER" />
+	</gft:label>
+	<gft:text editable="true" property="rrmSuds:sealedAreaPercentage" style="SWT.BORDER">
+		<gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL" />
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING" />
+	</gft:label>
+	<gft:validatorlabel property="rrmSuds:sealedAreaPercentage" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" />
+	</gft:validatorlabel>
+
+	<gft:label property="rrmSuds:drainagePipeDiameter" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER" />
+	</gft:label>
+	<gft:combo property="rrmSuds:drainagePipeDiameter" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+		<gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL" />
+	</gft:combo>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING" />
+	</gft:label>
+	<gft:validatorlabel property="rrmSuds:drainagePipeDiameter" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" />
+	</gft:validatorlabel>
+
+	<!--
+        <gft:label property="rrmSuds:drainagePipeKFvalue" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+        </gft:label>
+        <gft:text editable="true" property="rrmSuds:drainagePipeKFvalue" style="SWT.BORDER">
+            <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL"/>
+        </gft:text>
+        <gft:label visible="false" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING"/>
+        </gft:label>
+        <gft:validatorlabel property="rrmSuds:drainagePipeKFvalue" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </gft:validatorlabel>
+        -->
+
+	<!--
+        <gft:label property="rrmSuds:drainagePipeSlope" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+        </gft:label>
+        <gft:text editable="true" property="rrmSuds:drainagePipeSlope" style="SWT.BORDER">
+            <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL"/>
+        </gft:text>
+        <gft:label visible="false" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING"/>
+        </gft:label>
+        <gft:validatorlabel property="rrmSuds:drainagePipeSlope" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </gft:validatorlabel>
+        -->
+
+	<!--
+        <gft:label property="rrmSuds:drainagePipeRoughness" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+        </gft:label>
+        <gft:text editable="true" property="rrmSuds:drainagePipeRoughness" style="SWT.BORDER">
+            <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL"/>
+        </gft:text>
+        <gft:label visible="false" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING"/>
+        </gft:label>
+        <gft:validatorlabel property="rrmSuds:drainagePipeRoughness" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </gft:validatorlabel>
+        -->
+
+	<!--
+		<gft:label property="rrmSuds:drainageNode" visible="true" style="SWT.NONE"> <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/> </gft:label> <gft:composite style="SWT.NONE"> <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/> <gft:gridLayout makeColumnsEqualWidth="false" numColumns="2" marginWidth="1"/> <gft:combo property="rrmSuds:drainageNode" style="SWT.DROP_DOWN | SWT.READ_ONLY"> <gft:gridData grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"/> </gft:combo> <gft:button property="rrmSuds:drainageNode" style="SWT.PUSH"> <gft:gridData horizontalAlignment="GridData.BEGINNING"/> </gft:button> </gft:composite> <gft:validatorlabel property="rrmSuds:drainageNode" visible="true" style="SWT.NONE"> <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/> </gft:validatorlabel>
+	-->
+
+	<gft:label property="rrmSuds:layerProfileThickness" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER" />
+	</gft:label>
+	<gft:combo property="rrmSuds:layerProfileThickness" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+		<gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL" />
+	</gft:combo>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING" />
+	</gft:label>
+	<gft:validatorlabel property="rrmSuds:layerProfileThickness" visible="true" style="SWT.NONE">
+		<gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" />
+	</gft:validatorlabel>
+
+	<!--
+        <gft:label property="rrmSuds:landuseFileName" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+        </gft:label>
+        <gft:text editable="true" property="rrmSuds:landuseFileName" style="SWT.BORDER">
+            <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL"/>
+        </gft:text>
+        <gft:label visible="false" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING"/>
+        </gft:label>
+        <gft:validatorlabel property="rrmSuds:landuseFileName" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </gft:validatorlabel>
+        -->
+
+	<!--
+        <gft:label property="rrmSuds:soilLayerParametersFileName" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+        </gft:label>
+        <gft:text editable="true" property="rrmSuds:soilLayerParametersFileName" style="SWT.BORDER">
+            <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL"/>
+        </gft:text>
+        <gft:label visible="false" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING"/>
+        </gft:label>
+        <gft:validatorlabel property="rrmSuds:soilLayerParametersFileName" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </gft:validatorlabel>
+        -->
+
+	<!--
+        <gft:label property="rrmSuds:maxCapacityOfEmergencySpill" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+        </gft:label>
+        <gft:text editable="true" property="rrmSuds:maxCapacityOfEmergencySpill" style="SWT.BORDER">
+            <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL"/>
+        </gft:text>
+        <gft:label visible="false" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.BEGINNING"/>
+        </gft:label>
+        <gft:validatorlabel property="rrmSuds:maxCapacityOfEmergencySpill" visible="true" style="SWT.NONE">
+            <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </gft:validatorlabel>
+        -->
+
+</gft:featureview>

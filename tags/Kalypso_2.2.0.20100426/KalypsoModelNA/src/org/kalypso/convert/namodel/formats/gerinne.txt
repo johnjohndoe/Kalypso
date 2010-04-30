@@ -1,0 +1,13 @@
+(name,*)
+(iart,*)
+(qfmax,*)_(c,*)_(IGNORE,*)_(IGNORE,*)_(IGNORE,*)
+(qrk,*)_(rkf,*)_(rnf,*)_(rkv,*)_(rnv,*)_(c,*)_(IGNORE,f11.6)(IGNORE,f12.6)
+# RHB:
+(inum,i8)
+(num,i8)
+(c,f6.2)
+(name,a80)
+(num,i4)
+(sv,f10.6)(vmax,f10.6)(vmin,f10.6)
+____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
+(kende,a5)
