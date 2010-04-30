@@ -65,6 +65,14 @@ public final class CalcCoreUtils
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );//$NON-NLS-1$
   }
 
+  public static enum COMPATIBILITY_MODE
+  {
+    NONE,
+    NA,
+    WSPM,
+    RMA
+  }
+
   private static final String BIN_DIR = "bin"; //$NON-NLS-1$
 
   public static File getExecutablesDirectory( )
@@ -77,10 +85,11 @@ public final class CalcCoreUtils
 
   public static File findExecutable( final String version, final String pattern, final String searchPattern ) throws CoreException
   {
-    /*
-     * for backward compatibility, any string that is not the correct version identifier will be considered as the
-     * "latest version" request
-     */
+    return findExecutable( version, pattern, searchPattern, COMPATIBILITY_MODE.NONE );
+  }
+
+  public static File findExecutable( final String version, final String pattern, final String searchPattern, final COMPATIBILITY_MODE compatibilityMode ) throws CoreException
+  {
     if( StringUtils.isBlank( version ) )
     {
       final File latestExecutable = getLatestExecutable( searchPattern );
@@ -93,6 +102,21 @@ public final class CalcCoreUtils
       }
 
       return latestExecutable;
+    }
+
+    switch( compatibilityMode )
+    {
+      case NA:
+        /*
+         * for backward compatibility, strings "neueste" or "latest" will be considered as well
+         */
+        if( "neueste".equals( version ) || "latest".equals( version ) )
+          return getLatestExecutable( searchPattern );
+        break;
+      case NONE:
+      case WSPM:
+      case RMA:
+        break;
     }
 
     /* Always call this in order to provoke the download error message */
