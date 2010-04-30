@@ -139,13 +139,17 @@ public class LengthSectionParser
         final String nextLine = lineIterator.nextLine();
 
         /* Introduce space around 'NaN' and '***' values to make it parseable */
+
         if( nextLine.contains( "NaN" ) )
           log.log( false, "WARNING: Results contain NaN values, calculation result is probably not correct." );
+
+        // TODO: handle NaN-values to keep information alive (unfortunally BigDecimal throws a NumberFormatException)
         final String cleanLine1 = nextLine.replaceAll( "-NaN", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
         final String cleanLine2 = cleanLine1.replaceAll( "NaN", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String cleanLine3 = cleanLine2.replaceAll( "-999.999", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
 
-        final BigDecimal station = NumberUtils.parseQuietDecimal( cleanLine2, 0, 11, IWspmTuhhConstants.STATION_SCALE );
-        final BigDecimal runoff = NumberUtils.parseQuietDecimal( cleanLine2, 17, 27, 3 );
+        final BigDecimal station = NumberUtils.parseQuietDecimal( cleanLine3, 0, 11, IWspmTuhhConstants.STATION_SCALE );
+        final BigDecimal runoff = NumberUtils.parseQuietDecimal( cleanLine3, 17, 27, 3 );
 
         /* Any lines where station or runoff cannot be parsed are filtered out */
         if( station == null || runoff == null )
@@ -164,7 +168,7 @@ public class LengthSectionParser
         }
 
         /* clean line */
-        lsProc.addLine( cleanLine2 );
+        lsProc.addLine( cleanLine3 );
 
         if( firstStation == null )
           firstStation = station;
