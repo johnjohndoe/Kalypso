@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.tools.ant.taskdefs.optional.junit.OutErrSummaryJUnitResultFormatter;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -162,8 +161,8 @@ public class BrueckeRule extends AbstractValidatorRule
       Double maxUK = -Double.MAX_VALUE;
       for( int i = innerLeft; i < innerRight; i++ )
       {
-        final double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pav.getPoints()[i] ).doubleValue();
-        final double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, pav.getPoints()[i] ).doubleValue();
+        final double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pav.getPoints()[i] );
+        final double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, pav.getPoints()[i] );
         if( !Double.isNaN( okB ) )
           minOK = Math.min( minOK, okB );
         if( !Double.isNaN( ukB ) )
@@ -193,14 +192,14 @@ public class BrueckeRule extends AbstractValidatorRule
       }
 
       // Schnittkanten
-      int duh = pav.whileUpper( outerLeft, outerRight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, true );
+      final int duh = pav.whileUpper( outerLeft, outerRight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, true );
       if( duh > -1 )
       {
         pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23" ), duh, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );//$NON-NLS-1$
         return;
       }
       // Schnittkanten
-      int doh = pav.whileUpper( outerLeft, outerRight < pointsCount - 1 ? outerRight + 1 : outerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, true );
+      final int doh = pav.whileUpper( outerLeft, outerRight < pointsCount - 1 ? outerRight + 1 : outerRight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, true );
       if( doh > -1 )
       {
         pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23" ), doh, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
