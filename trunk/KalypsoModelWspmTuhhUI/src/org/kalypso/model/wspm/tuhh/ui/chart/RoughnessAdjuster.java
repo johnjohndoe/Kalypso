@@ -53,7 +53,8 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * Helper class for displacementof trennflaechen. If active, the mover will also change the roughness values of the
- * corresponding channel.
+ * corresponding channel.<br>
+ * TODO: we should use this from the flow zone panel as well...
  * 
  * @author Gernot Belger
  */
@@ -70,12 +71,7 @@ public class RoughnessAdjuster
     Assert.isTrue( m_devider.getId().getId().equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
   }
 
-  public void move( final IRecord newPoint )
-  {
-    adjustRoughness( newPoint );
-  }
-
-  private void adjustRoughness( final IRecord newPoint )
+  public void moveDevider( final IRecord newPoint )
   {
     final IProfilPointMarker[] trennflaechen = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker[] durchstroemte = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
