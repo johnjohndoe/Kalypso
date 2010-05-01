@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.awt.geom.Point2D;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -109,27 +110,42 @@ public class PointMarkerLayer extends AbstractProfilLayer
    */
 
   @Override
-  public void executeDrop( final Point point, final EditInfo dragStartData )
+  public final void executeDrop( final Point point, final EditInfo dragStartData )
   {
     final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
-    if( pos > -1 )
+    if( pos == -1 )
+      return;
+
+    final IProfil profil = getProfil();
+    final IRecord profilPoint = profil.getPoint( pos );
+
+    final IRecord newPoint = ProfilUtil.findNearestPoint( profil, toNumeric( point ).getX() );
+    if( newPoint == profilPoint )
+      return;
+
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profilPoint );
+    final IProfilPointMarker[] targetDeviders = profil.getPointMarkerFor( newPoint );
+
+    for( final IProfilPointMarker devider : deviders )
     {
-      final IProfil profil = getProfil();
-      final IRecord profilPoint = profil.getPoint( pos );
-      final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profilPoint );
-      for( final IProfilPointMarker devider : deviders )
+      // BUGIFX: prohibit that a marker is moved on another marker of the same type, which
+      // will incidentally remove it
+      if( movesOnSameDeviderType( devider, targetDeviders ) )
+        continue;
+
+      if( devider.getId().getId().equals( getTargetComponent().getId() ) )
       {
-        if( devider.getId().getId().equals( getTargetComponent().getId() ) )
-        {
-          final IRecord newPoint = ProfilUtil.findNearestPoint( profil, toNumeric( point ).getX() );
-          if( newPoint != profilPoint )
-          {
-            devider.setPoint( newPoint );
-            profil.setActivePoint( newPoint );
-          }
-        }
+        moveDevider( devider, newPoint );
       }
     }
+  }
+
+  // TODO: we should use the profile commands to change the profile here!
+  protected void moveDevider( final IProfilPointMarker devider, final IRecord newPoint )
+  {
+    final IProfil profil = getProfil();
+    devider.setPoint( newPoint );
+    profil.setActivePoint( newPoint );
   }
 
   /**
@@ -215,7 +231,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     final Point2D p = getPoint2D( point );
     try
     {
-      return  Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer.0" , new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } ); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer.0", new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } ); //$NON-NLS-1$
     }
     catch( final RuntimeException e )
     {
@@ -230,9 +246,21 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved()||hint.isProfilPropertyChanged() )
-    {
+    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() )
       getEventHandler().fireLayerContentChanged( this );
-    }
   }
+
+  private boolean movesOnSameDeviderType( final IProfilPointMarker devider, final IProfilPointMarker[] targetDeviders )
+  {
+    final String id = devider.getId().getId();
+    for( final IProfilPointMarker marker : targetDeviders )
+    {
+      final String targetId = marker.getId().getId();
+      if( ObjectUtils.equals( id, targetId ) )
+        return true;
+    }
+
+    return false;
+  }
+
 }
