@@ -38,39 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
-
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.internal.preferences.Preferences;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.observation.result.IRecord;
+package org.kalypso.model.wspm.tuhh.ui.internal.preferences;
 
 /**
- * @author kimwerner
+ * Constants for preferences uses whithin this plug-in.
+ * 
+ * @author Gernot Belger
  */
-public class RiverChannelLayer extends PointMarkerLayer
+public interface IKalypsoModelWspmTuhhUIPreferences
 {
-  public RiverChannelLayer( final IProfil profil, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
-  {
-    super( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, styleProvider, offset, close );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer#moveDevider(org.kalypso.model.wspm.core.profil.IProfilPointMarker,
-   *      org.kalypso.observation.result.IRecord)
-   */
-  @Override
-  protected void moveDevider( final IProfilPointMarker devider, final IRecord newPoint )
-  {
-    if( Preferences.isKeepChannelRoughness() )
-    {
-      final RoughnessAdjuster mover = new RoughnessAdjuster( getProfil(), devider );
-      mover.moveDevider( newPoint );
-    }
-
-    super.moveDevider( devider, newPoint );
-  }
-
+  /** If <code>true</code>, Kalypso tries to keep the roughness of a river channel, if all values are the same within. */
+  String KEEP_CHANNEL_ROUGHNESS = "keepChannelRoughness"; //$NON-NLS-1$
 }

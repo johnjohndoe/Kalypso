@@ -470,45 +470,45 @@
     <command
           categoryId="org.kalypso.ogc.gml.map.category"
           id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
-          name="Create Profile">
+          name="%command.name">
     </command>
     <command
-          description="Export points of selected profiles as comma separated values."
+          description="%command.description"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
-          name="Comma Separated Values (.csv)">
+          name="%command.name.0">
     </command>
     <command
-          description="Export selected profiles to SOBEK ascii formats."
+          description="%command.description.0"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
-          name="SOBEK ASCII (.def)">
+          name="%command.name.1">
     </command>
     <command
-          description="Exports the selected profiles as a length section in WspWin-Plotter format."
+          description="%command.description.1"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
-          name="WspWin Plotter Length-Section (.lng)">
+          name="%command.name.2">
     </command>
     <command
-          description="Exports the selected profiles as .prf files."
+          description="%command.description.2"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
-          name="WspWin Profiles (.prf)">
+          name="%command.name.3">
     </command>
     <command
-          description="Imports points from a WProf-Shape and converts them into profiles."
+          description="%command.description.3"
           id="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
-          name="WProf-Shape">
+          name="%command.name.4">
     </command>
     <command
-          description="Converts the selected profiles to a length section."
+          description="%command.description.4"
           id="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
-          name="Length Section">
+          name="%command.name.5">
     </command>
     <command
           id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-          name="WspWin Plotter">
+          name="%command.name.6">
     </command>
     <command
 	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-	       name="Create Length-Section">
+	       name="%command.name.7">
 	</command>
 
   </extension>
@@ -549,6 +549,38 @@
            commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
            icon="icons/elcl16/export_plotter.gif">
      </image>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="org.kalypso.model.wspm.tuhh.ui.internal.preferences.PreferenceInitializer">
+     </initializer>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="menu:org.kalypso.model.wspm.ui.view.chart.ChartView?after=additions">
+        <command
+              commandId="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference"
+              style="toggle">
+        </command>
+     </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           categoryId="org.kalypso.chart.ui.commands.category"
+           description="%command.description.5"
+           id="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference"
+           name="%command.name.8">
+     </command>
+  </extension>
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.kalypso.model.wspm.tuhh.ui.actions.ToggleKeepChannelRoughnessHandler"
+           commandId="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference">
+     </handler>
   </extension>
 
 	

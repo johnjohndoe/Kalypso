@@ -38,39 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
+package org.kalypso.model.wspm.tuhh.ui.internal.preferences;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.internal.preferences.Preferences;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.observation.result.IRecord;
+import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public class RiverChannelLayer extends PointMarkerLayer
+public class PreferenceInitializer extends AbstractPreferenceInitializer implements IKalypsoModelWspmTuhhUIPreferences
 {
-  public RiverChannelLayer( final IProfil profil, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
-  {
-    super( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, styleProvider, offset, close );
-  }
-
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer#moveDevider(org.kalypso.model.wspm.core.profil.IProfilPointMarker,
-   *      org.kalypso.observation.result.IRecord)
+   * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
    */
   @Override
-  protected void moveDevider( final IProfilPointMarker devider, final IRecord newPoint )
+  public void initializeDefaultPreferences( )
   {
-    if( Preferences.isKeepChannelRoughness() )
-    {
-      final RoughnessAdjuster mover = new RoughnessAdjuster( getProfil(), devider );
-      mover.moveDevider( newPoint );
-    }
+    final String pluginID = KalypsoModelWspmTuhhUIPlugin.getID();
 
-    super.moveDevider( devider, newPoint );
+    final IEclipsePreferences node = new DefaultScope().getNode( pluginID );
+
+    node.putBoolean( KEEP_CHANNEL_ROUGHNESS, true );
   }
 
 }

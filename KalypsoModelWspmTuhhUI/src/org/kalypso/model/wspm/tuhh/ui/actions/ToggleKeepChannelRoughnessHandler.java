@@ -38,39 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
+package org.kalypso.model.wspm.tuhh.ui.actions;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import java.util.Map;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.ui.commands.IElementUpdater;
+import org.eclipse.ui.menus.UIElement;
 import org.kalypso.model.wspm.tuhh.ui.internal.preferences.Preferences;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.observation.result.IRecord;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public class RiverChannelLayer extends PointMarkerLayer
+public class ToggleKeepChannelRoughnessHandler extends AbstractHandler implements IElementUpdater
 {
-  public RiverChannelLayer( final IProfil profil, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
+  @Override
+  public Object execute( final ExecutionEvent event )
   {
-    super( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, styleProvider, offset, close );
+    final boolean newValue = !Preferences.isKeepChannelRoughness();
+    Preferences.setKeepChannelRoughness( newValue );
+    return null;
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer#moveDevider(org.kalypso.model.wspm.core.profil.IProfilPointMarker,
-   *      org.kalypso.observation.result.IRecord)
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  protected void moveDevider( final IProfilPointMarker devider, final IRecord newPoint )
+  public void updateElement( final UIElement element, final Map parameters )
   {
-    if( Preferences.isKeepChannelRoughness() )
-    {
-      final RoughnessAdjuster mover = new RoughnessAdjuster( getProfil(), devider );
-      mover.moveDevider( newPoint );
-    }
-
-    super.moveDevider( devider, newPoint );
+    final boolean isOn = Preferences.isKeepChannelRoughness();
+    element.setChecked( isOn );
   }
 
 }

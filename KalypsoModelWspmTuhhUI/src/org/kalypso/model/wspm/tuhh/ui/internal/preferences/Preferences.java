@@ -38,39 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
+package org.kalypso.model.wspm.tuhh.ui.internal.preferences;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.internal.preferences.Preferences;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.observation.result.IRecord;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 /**
- * @author kimwerner
+ * Helper class used to access preferences of this plug-in.
+ * 
+ * @author Gernot Belger
  */
-public class RiverChannelLayer extends PointMarkerLayer
+public final class Preferences
 {
-  public RiverChannelLayer( final IProfil profil, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
+  private Preferences( )
   {
-    super( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, styleProvider, offset, close );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer#moveDevider(org.kalypso.model.wspm.core.profil.IProfilPointMarker,
-   *      org.kalypso.observation.result.IRecord)
-   */
-  @Override
-  protected void moveDevider( final IProfilPointMarker devider, final IRecord newPoint )
+  public static boolean isKeepChannelRoughness( )
   {
-    if( Preferences.isKeepChannelRoughness() )
-    {
-      final RoughnessAdjuster mover = new RoughnessAdjuster( getProfil(), devider );
-      mover.moveDevider( newPoint );
-    }
+    final IPreferenceStore store = KalypsoModelWspmTuhhUIPlugin.getDefault().getPreferenceStore();
+    return store.getBoolean( IKalypsoModelWspmTuhhUIPreferences.KEEP_CHANNEL_ROUGHNESS );
+  }
 
-    super.moveDevider( devider, newPoint );
+  public static void setKeepChannelRoughness( final boolean keepChannelRoughness )
+  {
+    final IPreferenceStore store = KalypsoModelWspmTuhhUIPlugin.getDefault().getPreferenceStore();
+    store.setValue( IKalypsoModelWspmTuhhUIPreferences.KEEP_CHANNEL_ROUGHNESS, keepChannelRoughness );
   }
 
 }
