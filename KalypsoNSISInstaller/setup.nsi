@@ -173,7 +173,6 @@ Section Kalypso SEC0000
 
     # Path to your deploy folder
     File /r /x .svn install_data\kalypso\*
-    File /r /x .svn install_data\extraStuff\*
 SectionEnd
 
 # Diese Sektion ist versteckt (wegen dem -).
