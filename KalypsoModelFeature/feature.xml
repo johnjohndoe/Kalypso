@@ -212,4 +212,22 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.kalypso.model.flood.project.demo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.model.flood.project.demo1d2d"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.model.flood.project.template"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
