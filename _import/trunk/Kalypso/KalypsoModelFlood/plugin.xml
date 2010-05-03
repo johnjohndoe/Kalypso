@@ -331,16 +331,6 @@
          </category>
       </provider>
    </extension>
-   <extension
-         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
-      <project
-            category="org.kalypso.model.flood.projectTemplate"
-            data="etc/projectTemplate.zip"
-            description="%org.kalypso.contribs.eclipseplatform.projectTemplate.description"
-            label="%org.kalypso.contribs.eclipseplatform.projectTemplate"
-            projectName="">
-      </project>
-   </extension>
      <extension
          point="org.kalypso.project.database.client.kalypsoModule">
       <module

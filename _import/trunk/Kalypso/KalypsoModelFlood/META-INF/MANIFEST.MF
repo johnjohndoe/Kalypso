@@ -15,7 +15,10 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.risk,
  org.kalypso.simulation.ui;bundle-version="0.0.1",
  org.kalypso.project.database.client;bundle-version="1.0.0",
- org.kalypso.contribs.ogc31;bundle-version="1.0.0"
+ org.kalypso.contribs.ogc31;bundle-version="1.0.0",
+ org.kalypso.model.flood.project.demo;resolution:=optional,
+ org.kalypso.model.flood.project.demo1d2d;resolution:=optional,
+ org.kalypso.model.flood.project.template
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.model.flood.binding,
