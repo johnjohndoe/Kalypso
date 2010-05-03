@@ -4,13 +4,6 @@
    <extension
          point="org.kalypso.contribs.eclipseplatform.projectTemplate">
       <project
-            category="org.kalypso.model.flood.demoProject"
-            data="etc/demos/FloodDemo.zip"
-            description="%flood.project.description"
-            label="%flood.project.label"
-            projectName="%flood.project.projectName">
-      </project>
-      <project
             category="org.kalypso.kalypso1d2d.pjt.demoProject"
             data="etc/demos/2DDemo.zip"
             description="%2d.project.description"
@@ -23,13 +16,6 @@
             description="%1d2d.project.description"
             label="%1d2d.project.label"
             projectName="%1d2d.project.projectName">
-      </project>
-      <project
-            category="org.kalypso.model.flood.demoProject"
-            data="etc/demos/FloodDemo_1D2D.zip"
-            description="%flood.1d2d.project.description"
-            label="%flood.1d2d.project.label"
-            projectName="%flood.1d2d.project.projectName">
       </project>
       <project
             category="org.kalypso.model.risk.demoProject"
