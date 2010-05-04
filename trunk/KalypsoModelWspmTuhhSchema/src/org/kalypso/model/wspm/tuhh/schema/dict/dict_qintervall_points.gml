@@ -16,8 +16,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Waterlevel">
-			<gml:description>WSP [NN+m]</gml:description>
-			<gml:name>WSP [NN+M]</gml:name>
+			<gml:description>WSP</gml:description>
+			<gml:name>WSP</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -32,8 +32,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelUpstream">
-			<gml:description>Oberwasser [NN+m]</gml:description>
-			<gml:name>hOW [NN+m]</gml:name>
+			<gml:description>Oberwasser</gml:description>
+			<gml:name>hOW</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -48,8 +48,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelDownstream">
-			<gml:description>Unterwasser [NN+m]</gml:description>
-			<gml:name>hUW [NN+m]</gml:name>
+			<gml:description>Unterwasser</gml:description>
+			<gml:name>hUW</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -64,8 +64,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Depth">
-			<gml:description>Tiefe [m]</gml:description>
-			<gml:name>Tiefe [m]</gml:name>
+			<gml:description>Tiefe</gml:description>
+			<gml:name>Tiefe</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -80,15 +80,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Area">
-			<gml:description>Fläche [m²]</gml:description>
-			<gml:name>Fläche [m²]</gml:name>
+			<gml:description>Fläche</gml:description>
+			<gml:name>Fläche</gml:name>
 			<swe:property xlink:href="#phenomenonArea" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m2" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m²" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -96,15 +96,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Runoff">
-			<gml:description>Abfluss [m³/s]</gml:description>
-			<gml:name>Q [m³/s]</gml:name>
+			<gml:description>Abfluss</gml:description>
+			<gml:name>Q</gml:name>
 			<swe:property xlink:href="#phenomenonRunoff" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m³/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -112,8 +112,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Alpha">
-			<gml:description>Alpha [-]</gml:description>
-			<gml:name>Alpha [-]</gml:name>
+			<gml:description>Alpha</gml:description>
+			<gml:name>Alpha</gml:name>
 			<swe:property xlink:href="phenomenonAlpha" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -128,15 +128,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="DeltaArea">
-			<gml:description>Delta Fläche [m²]</gml:description>
-			<gml:name>Delata Fläche [m²]</gml:name>
+			<gml:description>Delta Fläche</gml:description>
+			<gml:name>Delata Fläche</gml:name>
 			<swe:property xlink:href="#phenomenonArea" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m2" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m²" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -144,15 +144,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="DeltaRunoff">
-			<gml:description>Delta Q [m³/s]</gml:description>
-			<gml:name>Delta Q  [m³/s]</gml:name>
+			<gml:description>Delta Q</gml:description>
+			<gml:name>Delta Q</gml:name>
 			<swe:property xlink:href="#phenomenonRunoff" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m³/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -160,15 +160,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="DeltaAlpha">
-			<gml:description>Delta Alpha [-]</gml:description>
-			<gml:name>Delta Alpha [-]</gml:name>
+			<gml:description>Delta Alpha</gml:description>
+			<gml:name>Delta Alpha</gml:name>
 			<swe:property xlink:href="#phenomenonAlpha" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="" />
+					<gml:unitOfMeasure uom="dict_uom.xml#none" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -178,35 +178,35 @@
 	<!--  Phenomenons -->
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonWaterlevel">
-			<gml:description>WSP [NN+m]</gml:description>
+			<gml:description>WSP</gml:description>
 			<gml:name>WSP</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonDepth">
-			<gml:description>Tiefe [m]</gml:description>
+			<gml:description>Tiefe</gml:description>
 			<gml:name>Tiefe</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonArea">
-			<gml:description>Fläche [m²]</gml:description>
+			<gml:description>Fläche</gml:description>
 			<gml:name>Fläche</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonRunoff">
-			<gml:description>Q [m³/s]</gml:description>
+			<gml:description>Q</gml:description>
 			<gml:name>Q</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonAlpha">
-			<gml:description>Alpha [-]</gml:description>
+			<gml:description>Alpha</gml:description>
 			<gml:name>Alpha</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>

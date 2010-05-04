@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
 import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
@@ -90,6 +91,8 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhConstants
 {
+  private final List<String> m_layers = new ArrayList<String>();
+
   protected final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
 
   protected final IAxis m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, null );//$NON-NLS-1$
@@ -97,6 +100,21 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   protected final IAxis m_targetAxisLeft = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_LEFT", POSITION.LEFT, null );//$NON-NLS-1$
 
   protected final IAxis m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, null );//$NON-NLS-1$
+
+  private final String m_AxisLabel = "[%s]"; //$NON-NLS-1$
+
+  public ProfilLayerProviderTuhh( )
+  {
+    m_layers.add( IWspmTuhhConstants.LAYER_BEWUCHS );
+    m_layers.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
+    m_layers.add( IWspmTuhhConstants.LAYER_GELAENDE );
+    // TODO Kim m_layers.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
+    m_layers.add( IWspmTuhhConstants.LAYER_RAUHEIT );
+    m_layers.add( IWspmTuhhConstants.LAYER_BRUECKE );
+    m_layers.add( IWspmTuhhConstants.LAYER_WEHR );
+    m_layers.add( IWspmTuhhConstants.LAYER_TUBES );
+    m_layers.add( IWspmTuhhConstants.LAYER_DEVIDER );
+  }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayer()
@@ -155,7 +173,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
         operation.addChange( new PointPropertyRemove( profil, rauheit_alt ) );
 
       }
-      m_targetAxisRight.setLabel( "[" + rauheit_neu.getUnit() + "]" );
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( rauheit_neu ) ) );
       operation.addChange( new PointPropertyAdd( profil, rauheit_neu, values ) );
       new ProfilOperationJob( operation ).schedule();
     }
@@ -301,17 +319,16 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
   final void setAxisLabel( final IProfil profil )
   {
-    final String formatStr = "[%s]";
-    m_domainAxis.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getUnit() ) );
-    m_targetAxisLeft.setLabel( String.format( formatStr, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getUnit() ) );
+    m_domainAxis.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) ) ) );
+    m_targetAxisLeft.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
     final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( roughnessKS != null )
-      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKS.getUnit() ) );
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKS ) ) );
     else if( roughnessKST != null )
-      m_targetAxisRight.setLabel( String.format( formatStr, roughnessKST.getUnit() ) );
+      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKST ) ) );
     else
-      m_targetAxisRight.setLabel( "" );
+      m_targetAxisRight.setLabel( "" ); //$NON-NLS-1$
   }
 
   /**

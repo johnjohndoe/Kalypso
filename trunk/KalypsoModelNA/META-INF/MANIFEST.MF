@@ -17,7 +17,6 @@ Export-Package: org.kalypso.convert.namodel,
  org.kalypso.convert.namodel.schema.binding,
  org.kalypso.convert.namodel.schema.binding.suds,
  org.kalypso.convert.namodel.template,
- org.kalypso.convert.namodel.template.start,
  org.kalypso.convert.namodel.timeseries,
  org.kalypso.convert.namodel.timeseries.diff,
  org.kalypso.convert.namodel.timeseries.test,
@@ -28,6 +27,7 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.optimize;visibility:=reexport,
  org.junit;resolution:=optional,
  org.kalypso.simulation.core,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.kalypso.ModelSimulationBase;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin

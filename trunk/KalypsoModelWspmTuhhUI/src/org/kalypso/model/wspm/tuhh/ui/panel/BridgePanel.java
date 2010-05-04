@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -102,7 +103,7 @@ public class BridgePanel extends AbstractProfilView
       final Color badColor = display.getSystemColor( SWT.COLOR_RED );
       final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-      m_label = toolkit.createLabel( parent, "" );
+      m_label = toolkit.createLabel( parent, "" ); //$NON-NLS-1$
 
       m_text = toolkit.createText( parent, null, SWT.FILL | SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
       m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, true ) );
@@ -148,11 +149,11 @@ public class BridgePanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() || m_label == null || m_label.isDisposed() )
         return;
 
-      final String unit = m_property.getUnit();
+      final String labelText = ComponentUtilities.getComponentLabel( m_property );
 
       final IPhenomenon phenomenon = m_property.getPhenomenon();
-      final String label = phenomenon.getName();
-      final String labelText = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3", label, unit ); //$NON-NLS-1$
+// final String label = phenomenon.getName();
+//      final String labelText = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3", label, unit ); //$NON-NLS-1$
       final String description = phenomenon.getDescription();
 
       m_label.setText( labelText );
@@ -164,7 +165,7 @@ public class BridgePanel extends AbstractProfilView
       if( building == null )
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
-      final String textText = String.format( "%.3f", val );
+      final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
       m_text.setText( textText );
       m_text.setToolTipText( description );
       if( m_text.isFocusControl() )

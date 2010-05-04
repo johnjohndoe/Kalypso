@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -56,13 +55,13 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.ExeVersion;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
@@ -85,6 +84,10 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class WspmTuhhCalcJob implements ISimulation
 {
+  public static final String KALYPSO_1D_EXE_PATTERN = "Kalypso-1D(.*).exe";//$NON-NLS-1$ 
+
+  public static final String KALYPSO_1D_EXE_FORMAT = "Kalypso-1D%s.exe";//$NON-NLS-1$ 
+
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml"; //$NON-NLS-1$
 
   public static final String INPUT_OVW_MAP_SPECIAL = "OVW_MAP_SPECIAL"; //$NON-NLS-1$
@@ -142,7 +145,7 @@ public class WspmTuhhCalcJob implements ISimulation
     resultEater.addResult( OUTPUT_SIMULATION_LOG, simulogFile );
 
     PrintWriter pwSimuLog = null;
-    InputStream zipInputStream = null;
+    final InputStream zipInputStream = null;
     OutputStream strmKernelErr = null;
     try
     {
@@ -202,11 +205,6 @@ public class WspmTuhhCalcJob implements ISimulation
       final File dathDir = new File( tmpDir, "dath" ); //$NON-NLS-1$
       dathDir.mkdirs();
 
-      // unpack kernel into tmpDir
-      zipInputStream = new BufferedInputStream( WspmTuhhCalcJob.class.getResourceAsStream( "resources/rechenkern.zip" ) ); //$NON-NLS-1$
-      ZipUtilities.unzip( zipInputStream, tmpDir, false );
-      zipInputStream.close();
-
       // prepare kernel logs (log and err)
       final File fleKernelErr = new File( tmpDir, "kernel.err" ); //$NON-NLS-1$
       resultEater.addResult( "KernelErr", fleKernelErr ); //$NON-NLS-1$
@@ -222,12 +220,10 @@ public class WspmTuhhCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      final ExeVersion version = calculation.getVersion();
-      if( version == null )
-        throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.12" ), null ); //$NON-NLS-1$
+      final File exeFile = getExecuteable( calculation, KALYPSO_1D_EXE_FORMAT, KALYPSO_1D_EXE_PATTERN, monitor );
+      if( exeFile == null )
+        return;
 
-      // start calculation; the out-stream gets copied into the simulation.log and the system.out
-      final File exeFile = new File( tmpDir, "Kalypso-1D" + version.name() + ".exe" ); //$NON-NLS-1$ //$NON-NLS-2$
       final String sCmd = "\"" + exeFile.getAbsolutePath() + "\" n \"" + iniFile.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, 0, osSimuLog, strmKernelErr, null );
 
@@ -489,6 +485,24 @@ public class WspmTuhhCalcJob implements ISimulation
       IOUtils.closeQuietly( pwSimuLog );
       IOUtils.closeQuietly( zipInputStream );
       IOUtils.closeQuietly( strmKernelErr );
+    }
+  }
+
+  public final static File getExecuteable( final TuhhCalculation calculation, final String exeFormat, final String exePattern, final ISimulationMonitor monitor )
+  {
+    try
+    {
+      final String version = calculation.getVersion();
+      final File exeFile = CalcCoreUtils.findExecutable( version, exeFormat, exePattern );
+      if( exeFile == null )
+        return null;
+      return exeFile;
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      monitor.setFinishInfo( status.getSeverity(), status.getMessage() );
+      return null;
     }
   }
 

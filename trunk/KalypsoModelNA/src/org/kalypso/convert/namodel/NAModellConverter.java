@@ -72,7 +72,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class NAModellConverter
 {
-  private GMLSchema m_modelSchema;
+  private final GMLSchema m_modelSchema;
 
   private final CatchmentManager m_catchmentManager;
 
@@ -96,7 +96,7 @@ public class NAModellConverter
 
   private final SchneeManager m_schneeManager;
 
-//  private final SwaleAndTrenchManager m_swaleAndTrenchManager;
+// private final SwaleAndTrenchManager m_swaleAndTrenchManager;
 
   private final IdleLanduseManager m_idleLanduseManager;
 
@@ -106,14 +106,14 @@ public class NAModellConverter
 
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     m_modelSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
-    GMLSchema m_parameterSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
+    final GMLSchema m_parameterSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
 
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
     m_nodeManager = new NetFileManager( m_conf );
     m_rhbManager = new RHBManager( m_modelSchema, m_conf );
     m_hydrotopManager = new HydrotopManager( m_conf );
-//    m_swaleAndTrenchManager = new SwaleAndTrenchManager( m_modelSchema, m_conf );
+// m_swaleAndTrenchManager = new SwaleAndTrenchManager( m_modelSchema, m_conf );
     m_bodartManager = new BodenartManager( m_parameterSchema, m_conf );
     m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );
     m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
@@ -130,12 +130,12 @@ public class NAModellConverter
   public void write( ) throws Exception
   {
     // TODO replace this AsciiBuffer with some no-memory-consuming structure (regular StringBuffer)
-    AsciiBuffer asciiBuffer = new AsciiBuffer();
+    final AsciiBuffer asciiBuffer = new AsciiBuffer();
 
-    m_nodeManager.writeFile( asciiBuffer,m_conf.getModelWorkspace(),m_conf.getSynthNWorkspace() );
+    m_nodeManager.writeFile( asciiBuffer, m_conf.getModelWorkspace(), m_conf.getSynthNWorkspace() );
     m_catchmentManager.writeFile( asciiBuffer, m_conf.getModelWorkspace() );
     m_gerinneManager.writeFile( asciiBuffer, m_conf.getModelWorkspace() );
-//    m_swaleAndTrenchManager.writeFile( asciiBuffer, modelWorkspace );
+// m_swaleAndTrenchManager.writeFile( asciiBuffer, modelWorkspace );
     writeToFile( m_conf.getNetFile(), asciiBuffer.getNetBuffer() );
     writeToFile( m_conf.getCatchmentFile(), asciiBuffer.getCatchmentBuffer() );
     writeToFile( m_conf.getChannelFile(), asciiBuffer.getChannelBuffer() );
@@ -147,12 +147,11 @@ public class NAModellConverter
     {
       m_hydrotopManager.writeFile( asciiBuffer, m_conf.getHydrotopeWorkspace(), m_conf.getModelWorkspace(), m_conf.getParameterWorkspace() );
       writeToFile( m_conf.getHydrotopFile(), asciiBuffer.getHydBuffer() );
-      
-      
+
       // generate ascii mapping
       final StringBuffer buffer = new StringBuffer();
       for( final String line : m_conf.getHydrotopMapping() )
-        buffer.append( line ).append( "\n" );
+        buffer.append( line ).append( "\n" ); //$NON-NLS-1$
       writeToFile( m_conf.getHydrotopMappingFile(), buffer );
     }
 
@@ -166,19 +165,20 @@ public class NAModellConverter
       writeToFile( m_conf.getSchneeFile(), asciiBuffer.getSnowBuffer() );
       m_nutzManager.writeFile( m_conf.getParameterWorkspace() );
     }
-    
-    new SudsFileWriter(m_conf).write();
+
+    new SudsFileWriter( m_conf ).write();
 
   }
-  public static Feature modelAsciiToFeature( NAConfiguration conf ) throws Exception
+
+  public static Feature modelAsciiToFeature( final NAConfiguration conf ) throws Exception
   {
-    NAModellConverter main = new NAModellConverter( conf );
+    final NAModellConverter main = new NAModellConverter( conf );
     return main.getParseManager().modelAsciiToFeature();
   }
 
-  public static Feature parameterAsciiToFeature( NAConfiguration conf ) throws Exception
+  public static Feature parameterAsciiToFeature( final NAConfiguration conf ) throws Exception
   {
-    NAModellConverter main = new NAModellConverter( conf );
+    final NAModellConverter main = new NAModellConverter( conf );
     return main.getParseManager().parameterAsciiToFeature();
   }
 

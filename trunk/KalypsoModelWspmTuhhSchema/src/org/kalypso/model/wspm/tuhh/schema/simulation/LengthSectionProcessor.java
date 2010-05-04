@@ -185,6 +185,9 @@ public class LengthSectionProcessor
   {
     final String runoffName = runoff.toString();
 
+    if( !gmlFile.exists() )
+      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5" ) ); //$NON-NLS-1$
+
     final String diagFilename = "Längsschnitt" + runoffName + ".kod"; //$NON-NLS-1$ //$NON-NLS-2$
     final String tableFilename = "Tabelle" + runoffName + ".gft"; //$NON-NLS-1$ //$NON-NLS-2$
     final String breaklineFilename = "Bruchkanten" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -384,6 +387,15 @@ public class LengthSectionProcessor
 
   private void createDiagram( final File diagFile, final boolean isDirectionUpstreams, final String title ) throws IOException, XmlException
   {
+    // Check if optional bundle is installed
+    // They are no more optional... however the id has changed and this does not work any more...
+    // TODO: probably its better to check per reflection if a certain class is present...
+    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a
+    // warning message)
+// if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" )
+    // == null )
+// return;
+
     /* We just load the template and tweak the direction of the station-axis */
     final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
     final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" );

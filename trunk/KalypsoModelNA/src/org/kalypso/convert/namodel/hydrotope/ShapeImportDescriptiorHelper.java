@@ -51,7 +51,7 @@ public class ShapeImportDescriptiorHelper
       return ((Number) value).doubleValue();
     if( value instanceof String )
     {
-      final String string = value.toString().replaceFirst( ",", "." );
+      final String string = value.toString().replaceFirst( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
       return Double.parseDouble( string );
     }
     return null;

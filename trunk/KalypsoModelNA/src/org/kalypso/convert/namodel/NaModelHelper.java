@@ -111,35 +111,6 @@ public class NaModelHelper
 
   private static final double m_factorHecto = 1 / 100d;
 
-  // public static File getResultFile( URL context, Feature nodeFE ) throws MalformedURLException
-  // {
-  // final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
-  // if( link == null )
-  // return null;
-  // final String href = link.getHref().replaceAll( "\\?.*", "" ); // optionen
-  // // loeschen
-  //
-  // IUrlResolver res = new UrlUtilities();
-  // final URL url = res.resolveURL( context, href );
-  //
-  // return new File( url.getFile() );
-  // }
-  //
-  // public static boolean resultExists( GMLWorkspace modellWorkspace, Feature nodeFE )
-  // {
-  // try
-  // {
-  // final File resultFile = NaModelHelper.getResultFile( modellWorkspace.getContext(), nodeFE );
-  // if( resultFile == null )
-  // return false;
-  // return resultFile.exists();
-  // }
-  // catch( MalformedURLException e )
-  // {
-  // return false;
-  // }
-  // }
-
   public static int addRHBinCatchment( final GMLWorkspace modelworkspace, final Feature catchment, final IFeatureType rhbFT, final Feature measureRhbFE )
   {
     // throw new UnsupportedOperationException( "still a TODO, not upgraded after java5.0/eclipse3.1" );

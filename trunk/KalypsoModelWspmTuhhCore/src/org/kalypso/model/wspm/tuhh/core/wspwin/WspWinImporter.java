@@ -87,7 +87,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.wspwin.core.CalculationBean;
 import org.kalypso.wspwin.core.CalculationContentBean;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
@@ -130,8 +129,6 @@ public class WspWinImporter
     monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.2" ), 1000 ); //$NON-NLS-1$
 
     monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.3" ) ); //$NON-NLS-1$
-    // HACK: initialize KalypsoUI
-    KalypsoGisPlugin.getDefault();
 
     try
     {

@@ -64,5 +64,11 @@
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalcPolynomes:featureview:default"
 		uri="org.kalypso.model.wspm.tuhh.CalcPolynomes.gft" />
 
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:SpecialOptions:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.SpecialOptions.gft" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WaterlevelParameter:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.WaterlevelParameter.gft" />
+
 </catalog:catalog>
 
