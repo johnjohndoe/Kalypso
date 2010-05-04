@@ -79,7 +79,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
@@ -100,12 +103,14 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
@@ -143,33 +148,13 @@ import org.xml.sax.SAXParseException;
  */
 public class NaModelInnerCalcJob implements ISimulation
 {
+  public static final String EXECUTABLES_FILE_TEMPLATE = "Kalypso-NA_%s.exe";
 
-  // resourcebase for static files used in calculation
-  private final String m_resourceBase = "template/"; //$NON-NLS-1$
-
-  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_06 = "start/kalypso_2.0.6.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_07 = "start/kalypso_2.0.7.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_08 = "start/kalypso_2.0.8.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_11 = "start/kalypso_2.1.1.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_13 = "start/kalypso_2.1.3.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_141 = "start/update_bodenhorizonte_10_11_09.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_2_15 = "start/kalypso_2.1.5.exe"; //$NON-NLS-1$
-
-  private final String EXE_FILE_TEST = "start/kalypso_test.exe"; //$NON-NLS-1$
+  public static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe";
 
   private boolean m_succeeded = false;
 
-  private String m_kalypsoKernelPath = null;
+  private File m_kalypsoKernelPath = null;
 
   final private Map<Feature, String> m_resultMap = new HashMap<Feature, String>();
 
@@ -272,7 +257,10 @@ public class NaModelInnerCalcJob implements ISimulation
         return;
 
       // calualtion model
-      final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
+      final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile, monitor );
+      if( modellWorkspace == null )
+        return;
+
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL, null );
 
@@ -540,7 +528,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private GMLWorkspace generateASCII( final NAConfiguration conf, final File tmpDir, final ISimulationDataProvider dataProvider, final File newModellFile ) throws Exception
+  private GMLWorkspace generateASCII( final NAConfiguration conf, final File tmpDir, final ISimulationDataProvider dataProvider, final File newModellFile, final ISimulationMonitor monitor ) throws Exception
   {
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     final Feature metaFE = metaWorkspace.getRootFeature();
@@ -642,8 +630,10 @@ public class NaModelInnerCalcJob implements ISimulation
       minutesTimeStep = minutesOfTimeStep.intValue() != 0 ? minutesOfTimeStep.intValue() : 60;
       conf.setMinutesOfTimeStep( minutesTimeStep );
 
-      // choose simulation kernel
-      chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ) );
+    // choose simulation kernel
+    m_kalypsoKernelPath = chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ), monitor );
+    if( m_kalypsoKernelPath == null )
+      return null;
 
       // choose precipitation form and parameters
       final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
@@ -944,34 +934,17 @@ public class NaModelInnerCalcJob implements ISimulation
    * @param kalypsoNAVersion
    *          name/version of simulation kernel
    */
-  private void chooseSimulationExe( final String kalypsoNAVersion )
+  private File chooseSimulationExe( final String kalypsoNAVersion, final ISimulationMonitor monitor )
   {
-    if( kalypsoNAVersion.equals( "test" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_TEST;
-    else if( kalypsoNAVersion.equals( "lfug" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
-    else if( kalypsoNAVersion.equals( "v2.0.5" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_05beta;
-    else if( kalypsoNAVersion.equals( "v2.0.6" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_06;
-    else if( kalypsoNAVersion.equals( "v2.0.7" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_07;
-    else if( kalypsoNAVersion.equals( "v2.0.8" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_08;
-    else if( kalypsoNAVersion.equals( "v2.1.1" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_11;
-    else if( kalypsoNAVersion.equals( "v2.1.3" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_13;
-    else if( kalypsoNAVersion.equals( "v2.1.4.1" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_141;
-    else if( kalypsoNAVersion.equals( "v2.1.5" ) ) //$NON-NLS-1$
-      m_kalypsoKernelPath = EXE_FILE_2_15;
-    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) ) // latest stable is 2.1.5 //$NON-NLS-1$ //$NON-NLS-2$
-      m_kalypsoKernelPath = EXE_FILE_2_15;
-    else
+    try
     {
-      Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.69" ) );
-      m_kalypsoKernelPath = EXE_FILE_2_15;
+      return CalcCoreUtils.findExecutable( kalypsoNAVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      monitor.setFinishInfo( status.getSeverity(), status.getMessage() );
+      return null;
     }
   }
 
@@ -1246,7 +1219,7 @@ public class NaModelInnerCalcJob implements ISimulation
           }
         }
         // lese ergebnis-link um target fuer zml zu finden
-        String resultPathRelative = "";
+        String resultPathRelative = ""; //$NON-NLS-1$
         if( targetTSLink != null )
         {
           try
@@ -1264,7 +1237,7 @@ public class NaModelInnerCalcJob implements ISimulation
               // WTF!?
               // resultPathRelative = href.substring( 19 );
 
-              resultPathRelative = "Pegel" + href.substring( href.lastIndexOf( "/" ) );
+              resultPathRelative = "Pegel" + href.substring( href.lastIndexOf( "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
             }
           }
@@ -1300,6 +1273,12 @@ public class NaModelInnerCalcJob implements ISimulation
 
         final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", titleForObservation, false, metadataList, axis, qTuppelModel ); //$NON-NLS-1$
 
+        // update with Scenario metadata
+        // FIXME: Where is ObservationConstants.MD_SCENARIO ??
+//        final String scenarioID = conf.getScenarioID();
+//        if( scenarioID != null && scenarioID.length() > 0 )
+//          resultObservation.getMetadataList().put( ObservationConstants.MD_SCENARIO, scenarioID );
+
         // write result
         // final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
         final Observation observation = ZmlFactory.createXML( resultObservation, null );
@@ -1323,8 +1302,6 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  // FIXME: this is planer client stuff! Remove this from general NA calculation. At the very least, put it into a
-  // separate class.
   private void createStatistics( final GMLWorkspace modellWorkspace, final File resultDir, final Logger logger ) throws Exception
   {
     final IFeatureType FT_NODE = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
@@ -1355,7 +1332,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final String featureName = feature.getName();
       final String featureDescription = feature.getDescription();
       final String nodeTitle = (featureName == null || featureName.length() == 0) ? feature.getId() : featureName;
-      final String nodeDescription = (featureDescription == null || featureDescription.length() == 0) ? "" : featureDescription;
+      final String nodeDescription = (featureDescription == null || featureDescription.length() == 0) ? "" : featureDescription; //$NON-NLS-1$
 
       final File resultFile = new File( resultDir.getAbsolutePath(), "/Ergebnisse/Aktuell/" + resultFileRelativePath ); //$NON-NLS-1$
       final IObservation observation = ZmlFactory.parseXML( resultFile.toURI().toURL(), null );
@@ -1407,10 +1384,9 @@ public class NaModelInnerCalcJob implements ISimulation
       }
       resultValuesList.add( new Object[] { nodeTitle, nodeDescription, maxValueDate, maxValue, resultFileRelativePath, volume } );
     }
-
-    final IAxis[] axis = resultAxisList.toArray( new IAxis[0] );
-    final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axis, resultValuesList.toArray( new Object[0][] ) );
-    final IObservation resultObservation = new SimpleObservation( reportPathZML, "ID", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), false, new MetadataList(), axis, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis[] axes = resultAxisList.toArray( new IAxis[0] );
+    final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axes, resultValuesList.toArray( new Object[0][] ) );
+    final IObservation resultObservation = new SimpleObservation( reportPathZML, "ID", Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), false, new MetadataList(), axes, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
     final Observation observation = ZmlFactory.createXML( resultObservation, null );
     final Marshaller marshaller = ZmlFactory.getMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -1463,7 +1439,7 @@ public class NaModelInnerCalcJob implements ISimulation
   private final String getDoubleValueFormatted( final Object object )
   {
     if( object == null )
-      return "";
+      return ""; //$NON-NLS-1$
     try
     {
       double value = Double.NaN;
@@ -1475,7 +1451,7 @@ public class NaModelInnerCalcJob implements ISimulation
       {
         value = Double.parseDouble( (String) object );
       }
-      return String.format( Locale.ENGLISH, "%.8f", value );
+      return String.format( Locale.ENGLISH, "%.8f", value ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -1607,6 +1583,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private void loadLogs( final File tmpDir, final Logger logger, final NAConfiguration conf, final File resultDir )
   {
+    conf.getCalculationLogger().stopLogging();
     final File logFile = new File( tmpDir, "start/error.gml" ); //$NON-NLS-1$
 
     if( logFile.exists() )
@@ -1708,23 +1685,10 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private void copyExecutable( final File basedir ) throws Exception
   {
-    final String exeResource = m_resourceBase + m_kalypsoKernelPath;
-    final File destFile = new File( basedir, m_kalypsoKernelPath );
+    final File executableFolder = new File( basedir, "start" ); //$NON-NLS-1$
+    final File destFile = new File( executableFolder, m_kalypsoKernelPath.getName() );
     if( !destFile.exists() )
-    {
-      try
-      {
-        final InputStream inputStream = getClass().getResourceAsStream( exeResource );
-        FileUtilities.makeFileFromStream( false, destFile, inputStream );
-        System.out.println( " ...copied" ); //$NON-NLS-1$
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-
-        System.out.println( "ERR: " + exeResource + " may not exist" ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-    }
+      FileUtils.copyFile( m_kalypsoKernelPath, destFile );
 
     // TODO: do not commit...
 // URL defaultZfl = getClass().getResource( m_resourceBase + "inp.dat/we999-weisseelster.zfl" );
@@ -1754,8 +1718,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private void startCalculation( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final File exeFile = new File( basedir, m_kalypsoKernelPath );
-    final File exeDir = exeFile.getParentFile();
+    final File exeDir = new File( basedir, "start" ); //$NON-NLS-1$
+    final File exeFile = new File( exeDir, m_kalypsoKernelPath.getName() );
     final String commandString = exeFile.getAbsolutePath();
 // final long timeOut = 1000l * 60l * 60l; // max 60 minutes
 

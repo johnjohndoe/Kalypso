@@ -54,7 +54,7 @@
          point="org.eclipse.ui.intro">
       <intro
             class="org.kalypso.model.product.view.KalypsoWelcomePage"
-            icon="etc/applicationicons/icon_16.gif"
+            icon="etc_/applicationicons/icon_16.gif"
             id="org.kalypso.model.product.introID">
       </intro>
       <introProductBinding

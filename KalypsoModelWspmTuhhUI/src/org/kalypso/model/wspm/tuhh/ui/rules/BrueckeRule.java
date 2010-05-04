@@ -93,19 +93,20 @@ public class BrueckeRule extends AbstractValidatorRule
 
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
+    if( profil == null )
+      return;
+    
     final ProfileAltitudeValidator pav = new ProfileAltitudeValidator( profil, collector );
-
     final IProfileObject[] profileObjects = profil.getProfileObjects();
-    IProfileObject building = null;
-    if( profileObjects.length > 0 )
-      building = profileObjects[0];
+    final IProfileObject building = profileObjects.length > 0 ? profileObjects[0] : null;
+    final int pointsCount = profil.getPoints().length;
 
-    if( profil == null || building == null || !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
+    if( building == null || !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
       return;
 
     try
     {
-      final int pointsCount = profil.getPoints().length;
+
       // validierung ohne Brückengeometrie möglich
       if( !validateParams( building, pav ) || !validateBankfullPoints( pav, profil ) )
         return;
@@ -118,7 +119,7 @@ public class BrueckeRule extends AbstractValidatorRule
       // Trennflächen vorhanden
       if( markerLeft == -1 || markerRight == -1 )
       {
-        pav.createMarker( "Trennflächen fehlen", 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        pav.createMarker( Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.1"), 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ); //$NON-NLS-1$
         return;
       }
       // ersten BrückenOberkantenpunkt von Links
@@ -137,7 +138,7 @@ public class BrueckeRule extends AbstractValidatorRule
       final int innerRight = iR < 0 ? pRUK : iR;
       if( innerLeft == -1 || innerRight == -1 )
       {
-        pav.createMarker( "Brücke unvollständig", 0, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+        pav.createMarker( Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.2"), 0, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ); //$NON-NLS-1$
         return;
       }
 

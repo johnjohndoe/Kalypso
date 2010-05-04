@@ -21,18 +21,18 @@ import org.kalypso.simulation.core.SimulationException;
 
 public class NA_PreprocessingJob extends AbstractInternalStatusJob implements ISimulation
 {
-  private final static String INPUT_STATUSQUO_RESULTSFOLDER = "StatusQuoResultsFolder";
+  private final static String INPUT_STATUSQUO_RESULTSFOLDER = "StatusQuoResultsFolder"; //$NON-NLS-1$
 
-  private final static String INPUT_DIFFERENCE_FOLDER = "StatusQuoResultsFolder";
+  private final static String INPUT_DIFFERENCE_FOLDER = "StatusQuoResultsFolder"; //$NON-NLS-1$
 
-  private final static String INPUT_ACTUAL_RESULTSFOLDER = "ActualResultsFolder";
+  private final static String INPUT_ACTUAL_RESULTSFOLDER = "ActualResultsFolder"; //$NON-NLS-1$
 
-  private final static String OUTPUT_FOLDER = "OutputFolder";
+  private final static String OUTPUT_FOLDER = "OutputFolder"; //$NON-NLS-1$
 
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/modelSpecification.xml" );
+    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-1$
   }
 
   @Override
@@ -57,27 +57,27 @@ public class NA_PreprocessingJob extends AbstractInternalStatusJob implements IS
         final File actualResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_ACTUAL_RESULTSFOLDER ) );
         if( !actualResultsFolder.exists() )
         {
-          setStatus( STATUS.ERROR, "Actual results folder does not exist!" );
+          setStatus( STATUS.ERROR, "Actual results folder does not exist!" ); //$NON-NLS-1$
           return;
         }
-        final File statusQuoFolder = new File( tmpdir, "IstZustand" );
+        final File statusQuoFolder = new File( tmpdir, "IstZustand" ); //$NON-NLS-1$
         statusQuoFolder.mkdirs();
         FileUtils.copyDirectory( actualResultsFolder, statusQuoFolder );
         if( !differenceFolderExists )
         {
-          final File differenceFolder = new File( tmpdir, "Difference" );
+          final File differenceFolder = new File( tmpdir, "Difference" ); //$NON-NLS-1$
           differenceFolder.mkdirs();
-          final File dummyFile = new File( differenceFolder, "control.ctl" );
+          final File dummyFile = new File( differenceFolder, "control.ctl" ); //$NON-NLS-1$
           dummyFile.createNewFile();
         }
       }
     }
     catch( final IOException e )
     {
-      setStatus( STATUS.ERROR, "Error creating data structure." );
+      setStatus( STATUS.ERROR, "Error creating data structure." ); //$NON-NLS-1$
       return;
     }
     resultEater.addResult( OUTPUT_FOLDER, tmpdir );
-    setStatus( STATUS.OK, "Success" );
+    setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$
   }
 }

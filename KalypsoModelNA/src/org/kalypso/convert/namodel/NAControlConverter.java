@@ -180,7 +180,7 @@ public class NAControlConverter
     boolean hasSwales = false;
     if( sudsWorkspace != null )
     {
-      final List<AbstractSud> suds = (List<AbstractSud>) sudsWorkspace.getRootFeature().getProperty( new QName( "http://sourceforge.kalypso.org/schemata/hydrology/suds", "sudMember" ) );
+      final List<AbstractSud> suds = (List<AbstractSud>) sudsWorkspace.getRootFeature().getProperty( new QName( Messages.getString("NAControlConverter.0"), Messages.getString("NAControlConverter.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$
       for( final AbstractSud sudsItem : suds )
       {
         hasGreenRoofs |= sudsItem instanceof Greenroof;
@@ -188,11 +188,11 @@ public class NAControlConverter
         hasSwales |= sudsItem instanceof Swale;
       }
     }
-    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Überlauf", ".qgu" ) );
-    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Drainrohr", ".qgr" ) );
-    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Überlauf Mulden-Rigolen", ".que" ) );
-    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Drainrohr Mulden-Rigolen", ".qmr" ) );
-    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) );
+    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.2"), hasGreenRoofs ? Messages.getString("NAControlConverter.3") : Messages.getString("NAControlConverter.4"), Messages.getString("NAControlConverter.5"), Messages.getString("NAControlConverter.6") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.7"), hasGreenRoofs ? Messages.getString("NAControlConverter.8") : Messages.getString("NAControlConverter.9"), Messages.getString("NAControlConverter.10"), Messages.getString("NAControlConverter.11") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.12"), hasSwaleInfiltrationDitches ? Messages.getString("NAControlConverter.13") : Messages.getString("NAControlConverter.14"), Messages.getString("NAControlConverter.15"), Messages.getString("NAControlConverter.16") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.17"), hasSwaleInfiltrationDitches ? Messages.getString("NAControlConverter.18") : Messages.getString("NAControlConverter.19"), Messages.getString("NAControlConverter.20"), Messages.getString("NAControlConverter.21") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.22"), hasSwales ? Messages.getString("NAControlConverter.23") : Messages.getString("NAControlConverter.24"), Messages.getString("NAControlConverter.25"), Messages.getString("NAControlConverter.26") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 
   private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final StringBuffer b, final IDManager idManager )

@@ -311,7 +311,7 @@ public class HydrotopManager extends AbstractManager
             }
             // final double sealingRate = hydrotopSealedArea / (hydrotopArea - );
             if( hydrotopNaturalArea < 0.0 )
-              throw new SimulationException( "Hydrotop natural area is less than 0.0 m2." );
+              throw new SimulationException( "Hydrotop natural area is less than 0.0 m2." ); //$NON-NLS-1$
             hydrotopOutputList.add( String.format( Locale.US, "%-10.3f %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f %-1d %s", hydrotopNaturalArea, m_conf.getLanduseFeatureShortedName( hydrotop.getLanduse() ), soilType, hydrotop.getMaxPerkolationRate(), hydrotop.getGWFactor(), ++hydrotopAsciiID, totalSealingPercentage, (sudsCollection.size() > 0) ? 1 : 0, hydrotopSudsAsciiDescriptor.getAscii() ) ); //$NON-NLS-1$
             totalHydrotopArea += hydrotopArea;
             totalHydrotopSealedArea += hydrotopSealedArea;
