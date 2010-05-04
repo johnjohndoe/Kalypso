@@ -242,7 +242,7 @@ public class SimulationKalypsoFlood implements ISimulation
       return Status.OK_STATUS;
 
     final IStatus[] children = stati.toArray( new IStatus[stati.size()] );
-    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, -1, children, "Volume iteration has warnings", null );
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, -1, children, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.1"), null ); //$NON-NLS-1$
   }
 
   private IStatus processVolume( final IRunoffEvent event, final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainCoverages, final IProgressMonitor monitor ) throws SimulationException, GeoGridException, GM_Exception
@@ -252,7 +252,7 @@ public class SimulationKalypsoFlood implements ISimulation
     final BigDecimal volumeValue = volumePolygon.getVolume();
     String volumeName = volumePolygon.getName();
 
-    final String noValueMsg = String.format( "Failed to process polygone '%s', volume value not set.", volumeName );
+    final String noValueMsg = String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.2"), volumeName ); //$NON-NLS-1$
     final IStatus noValueStatus = StatusUtilities.createStatus( IStatus.WARNING, noValueMsg, null );
 
     if( volumeValue == null )
@@ -351,14 +351,14 @@ public class SimulationKalypsoFlood implements ISimulation
     if( Math.abs( currentWsp - minWsp ) < WSP_EPS )
     {
       final double volumeDif = Math.abs( minVol - targetVolume );
-      final String msg = String.format( "Volume iteration cancelled, change in waterlevel was too small. Using last waterlevel with volume difference of %.1f m³", volumeDif );
+      final String msg = String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.3"), volumeDif ); //$NON-NLS-1$
       return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), minWsp );
     }
 
     if( Math.abs( currentWsp - maxWsp ) < WSP_EPS )
     {
       final double volumeDif = Math.abs( maxVol - targetVolume );
-      final String msg = String.format( "Volume iteration cancelled, change in waterlevel was too small. Using last waterlevel with volume difference of %.1f m³", volumeDif );
+      final String msg = String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.4"), volumeDif ); //$NON-NLS-1$
       return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), maxWsp );
     }
 
@@ -372,7 +372,7 @@ public class SimulationKalypsoFlood implements ISimulation
     final double targetDiff = Math.abs( currentVolume - targetVolume );
     progress.subTask( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.22", currentWsp, targetDiff ) ); //$NON-NLS-1$
 
-    String msg = String.format( "min: (%.3f/%.1f) max: (%.3f/%.1f) current: (%.3f/%.1f)", minWsp, minVol, maxWsp, maxVol, currentWsp, currentVolume );
+    String msg = String.format( "min: (%.3f/%.1f) max: (%.3f/%.1f) current: (%.3f/%.1f)", minWsp, minVol, maxWsp, maxVol, currentWsp, currentVolume ); //$NON-NLS-1$
     System.out.println( msg );
 
     if( targetDiff < VOLUME_EPS )

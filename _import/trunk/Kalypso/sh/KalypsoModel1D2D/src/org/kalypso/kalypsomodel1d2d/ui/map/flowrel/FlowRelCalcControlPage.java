@@ -108,7 +108,6 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( "resources/calcControlPage.gft" ) ); //$NON-NLS-1$
-    featureviewFactory.addView( getClass().getResource( "resources/waterlevelParameter.gft" ) ); //$NON-NLS-1$
     m_featureComposite = new FeatureComposite( null, null, featureviewFactory );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {

@@ -25,7 +25,7 @@
 					<st:restriction base="integer">
 						<st:minInclusive value="1" />
 					</st:restriction>
-					<gml:unitOfMeasure uom=" " />
+					<gml:unitOfMeasure uom="" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -51,7 +51,7 @@
 	<!--
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
-			<gml:name>Relaxationsfaktor [-]</gml:name>
+			<gml:name>Relaxationsfaktor</gml:name>
 			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -59,7 +59,7 @@
 						<st:minInclusive value="0.1" />
 						<st:maxInclusive value="1.0" />
 					</st:restriction>
-					<gml:unitOfMeasure uom=" " />
+					<gml:unitOfMeasure uom="dict_uom.xml#none" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -68,12 +68,12 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
-			<gml:name>Relaxationsfaktor [-]</gml:name>
+			<gml:name>Relaxationsfaktor</gml:name>
 			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="string" />
-					<gml:unitOfMeasure uom=" " />
+					<gml:unitOfMeasure uom="dict_uom.xml#none" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -81,8 +81,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Waterlevel">
-			<gml:description>Wasserstand [NN+m]</gml:description>
-			<gml:name>Wasserstand [NN+m]</gml:name>
+			<gml:description>Wasserspiegellage</gml:description>
+			<gml:name>Wasserspiegellage</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -97,8 +97,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelUpstream">
-			<gml:description>Oberwasser [NN+m]</gml:description>
-			<gml:name>h-O [NN+m]</gml:name>
+			<gml:description>Oberwasser</gml:description>
+			<gml:name>h-O</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -113,8 +113,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelDownstream">
-			<gml:description>Unterwasser [NN+m]</gml:description>
-			<gml:name>h-U [NN+m]</gml:name>
+			<gml:description>Unterwasser</gml:description>
+			<gml:name>h-U</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -129,15 +129,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Discharge">
-			<gml:description>Abfluss [m≥/s]</gml:description>
-			<gml:name>Abfluss [m≥/s]</gml:name>
+			<gml:description>Abfluss</gml:description>
+			<gml:name>Abfluss</gml:name>
 			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m≥/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -145,15 +145,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Velocity">
-			<gml:description>Geschwindigkeit [m/s]</gml:description>
-			<gml:name>Geschwindigkeit [m/s]</gml:name>
+			<gml:description>Geschwindigkeit</gml:description>
+			<gml:name>Geschwindigkeit</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -161,8 +161,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Depth">
-			<gml:description>Flieﬂtiefe [m]</gml:description>
-			<gml:name>Flieﬂtiefe [m]</gml:name>
+			<gml:description>Flieﬂtiefe</gml:description>
+			<gml:name>Flieﬂtiefe</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -177,15 +177,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge1D">
-			<gml:description>spezifischer Abfluss [m≥/s/m≤]</gml:description>
-			<gml:name>Abfluss [m≥/s/m≤]</gml:name>
+			<gml:description>spezifischer Abfluss</gml:description>
+			<gml:name>spezifischer Abfluss</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s_m2" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m≥/s/m≤" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -193,15 +193,15 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge2D">
-			<gml:description>spezifischer Abfluss [m≥/s/m]</gml:description>
-			<gml:name>Abfluss [m≥/s/m]</gml:name>
+			<gml:description>spezifischer Abfluss</gml:description>
+			<gml:name>spezifischer Abfluss</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s_m" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m≥/s/m" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -210,7 +210,7 @@
 	<!--  Components for the iteration observations: describing, how the iteration proceeded during the 1d2d-simulation -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxVelocityX">
-			<gml:description>Maximale Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
+			<gml:description>Maximale Geschwindigkeitsdifferenz in X-Richtung</gml:description>
 			<gml:name>Max v-x</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
@@ -218,7 +218,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -226,7 +226,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxVelocityY">
-			<gml:description>Maximale Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
+			<gml:description>Maximale Geschwindigkeitsdifferenz in X-Richtung</gml:description>
 			<gml:name>Max v-y</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
@@ -234,7 +234,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -243,13 +243,13 @@
 	<!-- TODO: do we really want to use node numbers?  maybe better use the geo-position instead? -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxVelocityNode">
-			<gml:description>Knoten der maximalen Geschwindigkeitsdifferenz [-]</gml:description>
+			<gml:description>Knoten der maximalen Geschwindigkeitsdifferenz</gml:description>
 			<gml:name>Max v-Node</gml:name>
 			<swe:property xlink:href="#phenomenonOrdinalNumber" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="integer"/>
-					<gml:unitOfMeasure uom="dict_uom.xml#ordinal" />
+					<gml:unitOfMeasure uom="" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -257,7 +257,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxDepth">
-			<gml:description>Maximale Flieﬂtiefendifferenz [m]</gml:description>
+			<gml:description>Maximale Flieﬂtiefendifferenz</gml:description>
 			<gml:name>Max Depth</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
@@ -274,13 +274,13 @@
 	<!-- TODO: do we really want to use node numbers?  maybe better use the geo-position instead? -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxDepthNode">
-			<gml:description>Knoten der maximalen Flieﬂtiefendifferenz [-]</gml:description>
+			<gml:description>Knoten der maximalen Flieﬂtiefendifferenz</gml:description>
 			<gml:name>Max Depth - Node</gml:name>
 			<swe:property xlink:href="#phenomenonOrdinalNumber" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="integer"/>
-					<gml:unitOfMeasure uom="dict_uom.xml#ordinal" />
+					<gml:unitOfMeasure uom="" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -288,7 +288,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="AverageVelocityX">
-			<gml:description>Mittlere Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
+			<gml:description>Mittlere Geschwindigkeitsdifferenz in X-Richtung</gml:description>
 			<gml:name>Average v-x</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
@@ -296,7 +296,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -304,7 +304,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="AverageVelocityY">
-			<gml:description>Mittlere Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
+			<gml:description>Mittlere Geschwindigkeitsdifferenz in X-Richtung</gml:description>
 			<gml:name>Average v-y</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
@@ -312,7 +312,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -320,7 +320,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="AverageDepth">
-			<gml:description>Mittlere Flieﬂtiefendifferenz [m]</gml:description>
+			<gml:description>Mittlere Flieﬂtiefendifferenz</gml:description>
 			<gml:name>Average Depth</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
@@ -375,7 +375,7 @@
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonVelocity">
 			<gml:description>Geschwindigkeit [m/s]</gml:description>
-			<gml:name>Geschwindigkeit [m/s</gml:name>
+			<gml:name>Geschwindigkeit [m/s]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 

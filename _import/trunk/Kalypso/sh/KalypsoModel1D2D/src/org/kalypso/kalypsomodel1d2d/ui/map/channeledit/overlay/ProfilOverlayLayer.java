@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -290,7 +291,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     {
 
       return String.format( TOOLTIP_FORMAT, new Object[] { RW.getName(), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, point ), HW.getName(),
-          ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, point ), HW.getUnit() } );
+          ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, point ), ComponentUtilities.getComponentUnitLabel( HW ) } );
     }
     catch( final RuntimeException e )
     {
@@ -476,7 +477,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
       currentSegment.setNewIntersectedProfile( profil, prof );
 
       // TODO: we should also update the neighbor segment of the current profile
-// currentSegment.updateProfileIntersection();
+      // currentSegment.updateProfileIntersection();
 
       /* update the neighbour segment */
       updateNeighbourSegment( prof, currentSegment, neighbourSegments, widthorder1, width1, point1, widthorder2, width2, point2 );
@@ -496,7 +497,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( profil, prof );
-// currentSegment.updateProfileIntersection();
+      // currentSegment.updateProfileIntersection();
 
       /* update the neighbour segment */
       updateNeighbourSegment( point, prof, currentSegment, neighbourSegments, widthorder, width );
@@ -573,7 +574,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
               e.printStackTrace();
             }
           segment.setNewIntersectedProfile( profil, profNeighbour );
-// segment.updateProfileIntersection();
+          // segment.updateProfileIntersection();
         }
   }
 

@@ -45,8 +45,8 @@
 					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:Version" enabled="false">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
-					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
-						<gft:param name="dir" value="bin" />
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+						<gft:param name="label" value="RMA·Kalypso" />
 						<gft:param name="exePattern" value="rma-kalypso_(.*).exe" />
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:Version" visible="true" style="SWT.NONE">

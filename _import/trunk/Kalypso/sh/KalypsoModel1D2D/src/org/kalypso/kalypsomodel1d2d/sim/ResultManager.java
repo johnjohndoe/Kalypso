@@ -86,6 +86,8 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
+import com.bce.ext.jts.CoordOrientation.TYPE;
+
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
@@ -249,6 +251,9 @@ public class ResultManager implements ISimulation1D2DConstants
 
       // TODO: set this status as step result status?
 
+      // only process terrain once for all steps 
+      m_parameters.remove( ResultType.TYPE.TERRAIN );
+      
       return result;
     }
     finally
