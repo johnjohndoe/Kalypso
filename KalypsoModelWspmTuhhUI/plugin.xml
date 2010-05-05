@@ -379,7 +379,7 @@
        </toolbar>
     </menuContribution>
     <menuContribution
-          locationURI="popup:org.kalypso.model.wspm.ui.profileImport?after=additions">
+          locationURI="popup:org.kalypso.gml.ui.imports?after=additions">
        <command
              commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
              style="push">
@@ -389,7 +389,7 @@
        </command>
     </menuContribution>
     <menuContribution
-          locationURI="popup:org.kalypso.model.wspm.ui.profileExport?after=additions">
+          locationURI="popup:org.kalypso.gml.ui.exports?after=additions">
        <command
              commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
              style="push">

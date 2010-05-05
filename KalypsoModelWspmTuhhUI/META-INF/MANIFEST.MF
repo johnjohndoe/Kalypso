@@ -22,6 +22,7 @@ Require-Bundle: org.kalypso.model.wspm.core,
  de.openali.odysseus.chart.ext.base,
  org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
  org.kalypso.afgui;bundle-version="0.0.0",
- org.kalypso.project.database.client;bundle-version="1.0.0"
+ org.kalypso.project.database.client;bundle-version="1.0.0",
+ org.kalypso.gml.ui;bundle-version="2.2.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
