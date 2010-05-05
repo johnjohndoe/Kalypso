@@ -67,7 +67,7 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
    * Actions - important to allocate these only in makeActions, and then use them in the fill methods. This ensures that
    * the actions aren't recreated when fillActionBars is called with FILL_PROXY.
    */
-  private IContributionItem m_newWizardShortlistContribution;
+// private IContributionItem m_newWizardShortlistContribution;
 
   private IWorkbenchAction m_closeAction;
 
@@ -123,10 +123,12 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
 
   private IWorkbenchAction m_introAction;
 
+  private IWorkbenchAction m_newWizardAction;
+
   /**
    * The constructor.
    */
-  public UnrestrictedActionBarAdvisor( IActionBarConfigurer configurer )
+  public UnrestrictedActionBarAdvisor( final IActionBarConfigurer configurer )
   {
     super( configurer );
   }
@@ -135,7 +137,7 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
    * @see org.eclipse.ui.application.ActionBarAdvisor#makeActions(org.eclipse.ui.IWorkbenchWindow)
    */
   @Override
-  protected void makeActions( IWorkbenchWindow window )
+  protected void makeActions( final IWorkbenchWindow window )
   {
     /*
      * Creates the actions and registers them. Registering is needed to ensure that key bindings work. The corresponding
@@ -144,67 +146,88 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
      */
 
     /* Actions and ContributionItems for the file menu. */
-    m_newWizardShortlistContribution = ContributionItemFactory.NEW_WIZARD_SHORTLIST.create( window );
-    m_closeAction = ActionFactory.CLOSE.create( window );
-    m_closeAllAction = ActionFactory.CLOSE_ALL.create( window );
-    m_saveAction = ActionFactory.SAVE.create( window );
-    m_saveAsAction = ActionFactory.SAVE_AS.create( window );
-    m_saveAllAction = ActionFactory.SAVE_ALL.create( window );
-    m_printAction = ActionFactory.PRINT.create( window );
-    m_propertiesAction = ActionFactory.PROPERTIES.create( window );
-    m_reopenEditorsContribution = ContributionItemFactory.REOPEN_EDITORS.create( window );
-    m_exitAction = ActionFactory.QUIT.create( window );
+    // FIXME: calling this here causes dead-locks in workbench-startup...
+    // The eclipse code however is the same, so it is probably an eclipse bug...
+    m_newWizardAction = ActionFactory.NEW.create( window );
+    register( m_newWizardAction );
 
+    m_closeAction = ActionFactory.CLOSE.create( window );
     register( m_closeAction );
+
+    m_closeAllAction = ActionFactory.CLOSE_ALL.create( window );
     register( m_closeAllAction );
+
+    m_saveAction = ActionFactory.SAVE.create( window );
     register( m_saveAction );
+
+    m_saveAsAction = ActionFactory.SAVE_AS.create( window );
     register( m_saveAsAction );
+
+    m_saveAllAction = ActionFactory.SAVE_ALL.create( window );
     register( m_saveAllAction );
+
+    m_printAction = ActionFactory.PRINT.create( window );
     register( m_printAction );
-    register( m_propertiesAction );
+
+    m_propertiesAction = ActionFactory.PROPERTIES.create( window );
+
+    m_reopenEditorsContribution = ContributionItemFactory.REOPEN_EDITORS.create( window );
+
+    m_exitAction = ActionFactory.QUIT.create( window );
     register( m_exitAction );
 
     /* Actions and ContributionItems for the edit menu. */
     m_undoAction = ActionFactory.UNDO.create( window );
-    m_redoAction = ActionFactory.REDO.create( window );
-    m_cutAction = ActionFactory.CUT.create( window );
-    m_copyAction = ActionFactory.COPY.create( window );
-    m_pasteAction = ActionFactory.PASTE.create( window );
-    m_deleteAction = ActionFactory.DELETE.create( window );
-    m_selectAllAction = ActionFactory.SELECT_ALL.create( window );
-    m_findAction = ActionFactory.FIND.create( window );
-
     register( m_undoAction );
+
+    m_redoAction = ActionFactory.REDO.create( window );
     register( m_redoAction );
+
+    m_cutAction = ActionFactory.CUT.create( window );
     register( m_cutAction );
+
+    m_copyAction = ActionFactory.COPY.create( window );
     register( m_copyAction );
+
+    m_pasteAction = ActionFactory.PASTE.create( window );
     register( m_pasteAction );
+
+    m_deleteAction = ActionFactory.DELETE.create( window );
     register( m_deleteAction );
+
+    m_selectAllAction = ActionFactory.SELECT_ALL.create( window );
     register( m_selectAllAction );
+
+    m_findAction = ActionFactory.FIND.create( window );
     register( m_findAction );
 
     /* Actions and ContributionItems for the window menu. */
     m_perspectivesShortlistContribution = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create( window );
     m_viewShortListContribution = ContributionItemFactory.VIEWS_SHORTLIST.create( window );
-    m_savePerspectiveAction = ActionFactory.SAVE_PERSPECTIVE.create( window );
-    m_resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create( window );
-    m_closePerspectiveAction = ActionFactory.CLOSE_PERSPECTIVE.create( window );
-    m_closeAllPerspectivesAction = ActionFactory.CLOSE_ALL_PERSPECTIVES.create( window );
-    m_preferencesAction = ActionFactory.PREFERENCES.create( window );
 
+    m_savePerspectiveAction = ActionFactory.SAVE_PERSPECTIVE.create( window );
     register( m_savePerspectiveAction );
+
+    m_resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create( window );
     register( m_resetPerspectiveAction );
+
+    m_closePerspectiveAction = ActionFactory.CLOSE_PERSPECTIVE.create( window );
     register( m_closePerspectiveAction );
+
+    m_closeAllPerspectivesAction = ActionFactory.CLOSE_ALL_PERSPECTIVES.create( window );
     register( m_closeAllPerspectivesAction );
+
+    m_preferencesAction = ActionFactory.PREFERENCES.create( window );
     register( m_preferencesAction );
 
     /* Actions and ContributionItems for the help menu. */
     m_introAction = ActionFactory.INTRO.create( window );
-    m_helpContentsAction = ActionFactory.HELP_CONTENTS.create( window );
-    m_aboutAction = ActionFactory.ABOUT.create( window );
-
     register( m_introAction );
+
+    m_helpContentsAction = ActionFactory.HELP_CONTENTS.create( window );
     register( m_helpContentsAction );
+
+    m_aboutAction = ActionFactory.ABOUT.create( window );
     register( m_aboutAction );
   }
 
@@ -212,21 +235,21 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
    * @see org.eclipse.ui.application.ActionBarAdvisor#fillMenuBar(org.eclipse.jface.action.IMenuManager)
    */
   @Override
-  protected void fillMenuBar( IMenuManager menuBar )
+  protected void fillMenuBar( final IMenuManager menuBar )
   {
-    MenuManager fileMenu = new MenuManager( IDEWorkbenchMessages.Workbench_file, IWorkbenchActionConstants.M_FILE );
-    MenuManager newMenu = new MenuManager( IDEWorkbenchMessages.Workbench_new, ActionFactory.NEW.getId() );
-    MenuManager editMenu = new MenuManager( IDEWorkbenchMessages.Workbench_edit, IWorkbenchActionConstants.M_EDIT );
-    MenuManager windowMenu = new MenuManager( IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW );
-    MenuManager openPerspectiveMenu = new MenuManager( IDEWorkbenchMessages.Workbench_openPerspective, "openPerspective" );
-    MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" );
-    MenuManager helpMenu = new MenuManager( IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP );
+    final MenuManager fileMenu = new MenuManager( IDEWorkbenchMessages.Workbench_file, IWorkbenchActionConstants.M_FILE );
+    final MenuManager newMenu = new MenuManager( IDEWorkbenchMessages.Workbench_new, ActionFactory.NEW.getId() );
+    final MenuManager editMenu = new MenuManager( IDEWorkbenchMessages.Workbench_edit, IWorkbenchActionConstants.M_EDIT );
+    final MenuManager windowMenu = new MenuManager( IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW );
+    final MenuManager openPerspectiveMenu = new MenuManager( IDEWorkbenchMessages.Workbench_openPerspective, "openPerspective" );
+    final MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" );
+    final MenuManager helpMenu = new MenuManager( IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP );
 
     /* The file menu. */
     menuBar.add( fileMenu );
     fileMenu.add( new GroupMarker( IWorkbenchActionConstants.FILE_START ) );
     fileMenu.add( newMenu );
-    newMenu.add( m_newWizardShortlistContribution );
+    newMenu.add( m_newWizardAction );
     fileMenu.add( new GroupMarker( IWorkbenchActionConstants.NEW_EXT ) );
     fileMenu.add( new Separator() );
     fileMenu.add( m_closeAction );
