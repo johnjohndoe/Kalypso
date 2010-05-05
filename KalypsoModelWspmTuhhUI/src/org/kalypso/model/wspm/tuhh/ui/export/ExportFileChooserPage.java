@@ -83,6 +83,11 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
     m_fileGroupText = fileGroupText;
   }
 
+  protected IFileChooserDelegate getFileChooserDelegate( )
+  {
+    return m_fileChooser;
+  }
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -154,7 +159,7 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
     updateMessage();
   }
 
-  protected void updateMessage( )
+  public void updateMessage( )
   {
     final IMessageProvider validate = validatePage();
     setMessage( validate );

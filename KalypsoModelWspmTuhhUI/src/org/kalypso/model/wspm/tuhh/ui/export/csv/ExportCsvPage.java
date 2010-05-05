@@ -43,13 +43,15 @@ package org.kalypso.model.wspm.tuhh.ui.export.csv;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
+import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
@@ -62,14 +64,29 @@ import org.kalypso.observation.result.IComponent;
  */
 public class ExportCsvPage extends ExportFileChooserPage
 {
+  private static final String FILTER_LABEL = "Comma Separated File";
+
+  private static final String EXTENSION = "csv";
+
   private final CsvExportResultChooser m_resultChooser;
 
   private CsvExportComponentChooser m_componentChooser;
 
-  public ExportCsvPage( final IFileChooserDelegate fileChooser, final String extension, final IWspmResultNode results )
+  public ExportCsvPage( final IWspmResultNode results )
   {
-    super( fileChooser, extension );
+    super( new FileChooserDelegateSave(), EXTENSION );
+
+    ((FileChooserDelegateSave) getFileChooserDelegate()).addFilter( FILTER_LABEL, "*." + EXTENSION );
+
     m_resultChooser = new CsvExportResultChooser( results );
+    m_resultChooser.addCheckStateListener( new ICheckStateListener()
+    {
+      @Override
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        updateMessage();
+      }
+    } );
   }
 
   /**
@@ -87,6 +104,14 @@ public class ExportCsvPage extends ExportFileChooserPage
   private Composite createResultGroup( final Composite parent )
   {
     m_componentChooser = new CsvExportComponentChooser( getDialogSettings() );
+    m_componentChooser.addCheckStateListener( new ICheckStateListener()
+    {
+      @Override
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        updateMessage();
+      }
+    } );
 
     final Group group = new Group( parent, SWT.NONE );
     final GridLayout layout = new GridLayout( 1, false );

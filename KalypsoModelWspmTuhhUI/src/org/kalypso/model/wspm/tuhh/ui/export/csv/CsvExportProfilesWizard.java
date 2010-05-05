@@ -45,7 +45,6 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.CsvSink;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
@@ -60,10 +59,6 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public class CsvExportProfilesWizard extends ExportProfilesWizard
 {
-  private static final String FILTER_LABEL = "Comma Separated File";
-
-  private static final String EXTENSION = "csv";
-
   private final ExportCsvPage m_profileFileChooserPage;
 
   public CsvExportProfilesWizard( final ProfileSelection selection )
@@ -72,15 +67,13 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
-    final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
-    saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION );
-
     final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
 
-    m_profileFileChooserPage = new ExportCsvPage( saveDelegate, EXTENSION, results );
+    m_profileFileChooserPage = new ExportCsvPage( results );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
     m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );
     m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );
+    addPage( m_profileFileChooserPage );
   }
 
   /**
@@ -91,7 +84,6 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   {
     super.addPages();
 
-    addPage( m_profileFileChooserPage );
   }
 
   @Override

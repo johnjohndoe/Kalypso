@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -62,6 +65,8 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
  */
 public class CsvExportResultChooser
 {
+  private final Collection<ICheckStateListener> m_listeners = new HashSet<ICheckStateListener>();
+
   private final Set<IWspmResultNode> m_results = new HashSet<IWspmResultNode>();
 
   private final IWspmResultNode m_rootNode;
@@ -139,4 +144,29 @@ public class CsvExportResultChooser
     return m_results.toArray( new IWspmResultNode[m_results.size()] );
   }
 
+  public void addCheckStateListener( final ICheckStateListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  public void removeCheckStateListener( final ICheckStateListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  private void fireCheckStateChanged( final CheckStateChangedEvent event )
+  {
+    final ICheckStateListener[] listeners = m_listeners.toArray( new ICheckStateListener[m_listeners.size()] );
+    for( final ICheckStateListener listener : listeners )
+    {
+      SafeRunner.run( new SafeRunnable()
+      {
+        @Override
+        public void run( ) throws Exception
+        {
+          listener.checkStateChanged( event );
+        }
+      } );
+    }
+  }
 }

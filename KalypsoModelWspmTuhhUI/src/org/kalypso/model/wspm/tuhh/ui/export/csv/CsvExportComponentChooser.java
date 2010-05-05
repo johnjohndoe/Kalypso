@@ -45,7 +45,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -73,6 +75,8 @@ public class CsvExportComponentChooser
   private static final String SETTINGS_COLUMNS = "selectedColumns"; //$NON-NLS-1$
 
   private final Collection<IComponent> m_components = new HashSet<IComponent>();
+
+  private final Collection<ICheckStateListener> m_listeners = new HashSet<ICheckStateListener>();
 
   private IComponent[] m_selectedColumns = new IComponent[0];
 
@@ -135,7 +139,7 @@ public class CsvExportComponentChooser
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final Object[] checkedElements = listSelectionComposite.getCheckedElements();
-        handleColumnChecked( checkedElements );
+        handleColumnChecked( event, checkedElements );
       }
     } );
 
@@ -146,7 +150,7 @@ public class CsvExportComponentChooser
     return control;
   }
 
-  protected void handleColumnChecked( final Object[] checkedElements )
+  protected void handleColumnChecked( final CheckStateChangedEvent event, final Object[] checkedElements )
   {
     m_selectedColumns = Arrays.castArray( checkedElements, new IComponent[checkedElements.length] );
     final String[] ids = new String[m_selectedColumns.length];
@@ -155,6 +159,34 @@ public class CsvExportComponentChooser
 
     if( m_settings != null )
       m_settings.put( SETTINGS_COLUMNS, ids );
+
+    fireCheckStateChanged( event );
+  }
+
+  public void addCheckStateListener( final ICheckStateListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  public void removeCheckStateListener( final ICheckStateListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  private void fireCheckStateChanged( final CheckStateChangedEvent event )
+  {
+    final ICheckStateListener[] listeners = m_listeners.toArray( new ICheckStateListener[m_listeners.size()] );
+    for( final ICheckStateListener listener : listeners )
+    {
+      SafeRunner.run( new SafeRunnable()
+      {
+        @Override
+        public void run( ) throws Exception
+        {
+          listener.checkStateChanged( event );
+        }
+      } );
+    }
   }
 
   public IComponent[] getSelectedComponents( )
