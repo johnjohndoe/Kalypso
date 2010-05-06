@@ -1665,3 +1665,12 @@ version information
       (affects: front_mkl.f90)
 
 --- Nico Schrage, 15.04.2010 (released RMA·Kalypso Version 1.2.0 Release Candiate 1 build 15.04.2010 with filename: rma-kalypso_1.2.0_RC1_<sys>_build20100415.exe)
+
+
+001.) Catch format descriptor errors during convergence progress output. Problems can occur in first iteration in the relative change column, as these values can vary hardly at the beginning
+      (affects: update.f90)
+002.) Change output of values from interpolated nodes that are originally midside nodes in elements with interpolated profiles. Problem is, that Kalypso can't deal with the VAI-line that would
+      be the correct output line marker.
+      (affects: Modell_schreiben.f90)
+      
+--- Nico Schrage, 06.05.2010
