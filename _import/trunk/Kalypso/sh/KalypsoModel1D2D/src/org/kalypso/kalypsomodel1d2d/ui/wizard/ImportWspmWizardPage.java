@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.util.swt.ListSelectionWizardPage;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -88,11 +87,7 @@ public class ImportWspmWizardPage extends ListSelectionWizardPage
   public TuhhReachProfileSegment[] getReachProfileSegments( )
   {
     final Object[] selection = getSelection();
-    final TuhhReachProfileSegment[] segments = new TuhhReachProfileSegment[selection.length];
-    for( int i = 0; i < selection.length; i++ )
-      segments[i] = new TuhhReachProfileSegment( (Feature) selection[i] );
-
-    return segments;
+    return Arrays.castArray( selection, new TuhhReachProfileSegment[selection.length] );
   }
 
 }
