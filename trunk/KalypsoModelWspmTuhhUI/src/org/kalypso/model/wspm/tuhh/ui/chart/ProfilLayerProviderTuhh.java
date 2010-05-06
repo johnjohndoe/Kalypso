@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -302,19 +303,33 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       }
     }
 
-    /* We always have a trenner layer, even if no trenner is defined. */
-    {
-      final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
-
-      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_lsp, 5, true ),
-          new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false ), new RiverChannelLayer( profil, m_lsp, 15, false ) };
-      final DeviderTheme deviderTheme = new DeviderTheme( profil, subLayers, cmLeft );
-      layerToAdd.add( deviderTheme );
-    }
+    layerToAdd.add( createTrennerLayer( profil ) );
+    layerToAdd.add( createWspLayer( profil ) );
 
     setAxisLabel( profil );
 
+    /* Prune 'null's returned from createLayer-subroutines */
+    layerToAdd.removeAll( Collections.singleton( null ) );
+
     return layerToAdd.toArray( new IProfilChartLayer[layerToAdd.size()] );
+  }
+
+  /* We always have a trenner layer, even if no trenner is defined. */
+  private IProfilChartLayer createTrennerLayer( final IProfil profil )
+  {
+    final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
+
+    final PointMarkerLayer dbLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_lsp, 5, true );
+    final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false );
+    final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, m_lsp, 15, false );
+    final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, bvLayer, tfLayer };
+    return new DeviderTheme( profil, subLayers, cmLeft );
+  }
+
+  private IProfilChartLayer createWspLayer( final IProfil profil )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   final void setAxisLabel( final IProfil profil )

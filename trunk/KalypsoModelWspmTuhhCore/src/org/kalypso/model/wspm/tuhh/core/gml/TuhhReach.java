@@ -98,7 +98,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     try
     {
       final Feature feature = FeatureHelper.addFeature( this, QNAME_PROP_REACHSEGMENTMEMBER, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ); //$NON-NLS-1$
-      final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
+      final TuhhReachProfileSegment tuhhProfilesegment = (TuhhReachProfileSegment) feature;
 
       // set default values
       tuhhProfilesegment.setProfileMember( profileReference );
@@ -125,7 +125,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
       final Feature segmentFeature = (Feature) object;
       if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) ) //$NON-NLS-1$
       {
-        final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( segmentFeature );
+        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentFeature;
         final IProfileFeature profileMember = segment.getProfileMember();
         if( profileMember != null )
           profilesegments.add( segment );
@@ -224,7 +224,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
       final Feature segmentFeature = (Feature) object;
       if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) ) //$NON-NLS-1$
       {
-        final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( segmentFeature );
+        final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentFeature;
         final IProfileFeature profileMember = segment.getProfileMember();
         if( profileMember != null )
           profile.add( profileMember );

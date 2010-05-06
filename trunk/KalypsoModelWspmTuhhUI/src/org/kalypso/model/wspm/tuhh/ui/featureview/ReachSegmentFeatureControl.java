@@ -251,7 +251,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
     // CAUTION: this is a linear search through a list, and so a potential performance problem
     for( final Object segmentFeature : segmentList )
     {
-      final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( (Feature) segmentFeature );
+      final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentFeature;
       final IProfileFeature profileMember = segment.getProfileMember();
       if( profileMember != null && profileMember.equals( profileFeature ) )
         return segment;
