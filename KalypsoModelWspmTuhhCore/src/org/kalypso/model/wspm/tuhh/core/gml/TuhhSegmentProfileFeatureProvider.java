@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.gml;
 
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
 import org.kalypsodeegree.model.feature.Feature;
@@ -64,9 +63,9 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
         return reachProfileSegments[0].getProfileMember();
     }
 
-    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT ) )
+    if( feature instanceof TuhhReachProfileSegment )
     {
-      final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( feature );
+      final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) feature;
       return segment.getProfileMember();
     }
 

@@ -80,7 +80,7 @@ final class AddReachSegementCommand implements ICommand
     {
       final IProfileFeature profileToAdd = m_profilesToAdd[i];
       final TuhhReachProfileSegment segment = m_reach.createProfileSegment( profileToAdd, profileToAdd.getStation() );
-      addedFeatures[i] = segment.getFeature();
+      addedFeatures[i] = segment;
     }
 
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_reach, addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );

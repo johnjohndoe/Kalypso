@@ -92,7 +92,7 @@ public class RemoveReachSegmentCommand implements ICommand
     final Feature[] removedFeatures = new Feature[m_segments.length];
     for( int i = 0; i < m_segments.length; i++ )
     {
-      final Feature segmentFeature = m_segments[i].getFeature();
+      final Feature segmentFeature = m_segments[i];
       segmentList.remove( segmentFeature );
       removedFeatures[i] = segmentFeature;
     }

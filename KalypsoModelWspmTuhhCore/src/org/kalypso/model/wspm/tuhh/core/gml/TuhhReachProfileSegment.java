@@ -44,32 +44,39 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IWspmTuhhConstants
+public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhConstants
 {
   public static final QName QNAME_PROFILEREACHSEGMENT = new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ); //$NON-NLS-1$
 
-  public TuhhReachProfileSegment( final Feature reachSegment )
+  private static final QName PROPERTY_STATION = new QName( NS_WSPM_TUHH, "station" );//$NON-NLS-1$
+
+  private static final QName PROPERTY_PROFILE_MEMBER = new QName( NS_WSPM_TUHH, "profileMember" ); //$NON-NLS-1$
+
+  private static final QName PROPERTY_PROFILE_LOCATION = new QName( NS_WSPM_TUHH, "profileLocation" ); //$NON-NLS-1$
+
+  public TuhhReachProfileSegment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( reachSegment, QNAME_PROFILEREACHSEGMENT );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   public void setProfileMember( final IProfileFeature profileReference )
   {
-    getFeature().setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getId() ); //$NON-NLS-1$
+    setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getId() ); //$NON-NLS-1$
 
-    getFeature().invalidEnvelope();
+    invalidEnvelope();
   }
 
   // Commented out, because not used by the tuhh-model
@@ -90,13 +97,13 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
 
   public BigDecimal getStation( )
   {
-    return (BigDecimal) getFeature().getProperty( new QName( NS_WSPM_TUHH, "station" ) ); //$NON-NLS-1$
+    return getProperty( PROPERTY_STATION, BigDecimal.class );
   }
 
   public IProfileFeature getProfileMember( )
   {
-    final String href = (String) getFeature().getProperty( new QName( NS_WSPM_TUHH, "profileMember" ) ); //$NON-NLS-1$
-    final GMLWorkspace workspace = getFeature().getWorkspace();
+    final String href = (String) getProperty( PROPERTY_PROFILE_MEMBER );
+    final GMLWorkspace workspace = getWorkspace();
     final Feature feature = workspace == null ? null : workspace.getFeature( href );
 
     if( feature instanceof IProfileFeature )
@@ -109,24 +116,23 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
   public void setStation( final double station )
   {
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
-    getFeature().setProperty( new QName( NS_WSPM_TUHH, "station" ), bigStation ); //$NON-NLS-1$
+    setProperty( PROPERTY_STATION, bigStation );
   }
 
   public GM_Curve getGeometry( )
   {
-    final Object geomProp = getFeature().getProperty( new QName( NS_WSPM_TUHH, "profileLocation" ) ); //$NON-NLS-1$
-    if( geomProp instanceof GM_Curve )
-    {
-      return (GM_Curve) geomProp;
-    }
-    else
-    {
-      return null;
-    }
+    return getProperty( PROPERTY_PROFILE_LOCATION, GM_Curve.class );
   }
 
-  public GM_Object getDefaultGeometry( )
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( final Class adapter )
   {
-    return getFeature().getDefaultGeometryProperty();
+    if( IProfileFeature.class == adapter )
+      return getProfileMember();
+
+    return super.getAdapter( adapter );
   }
 }

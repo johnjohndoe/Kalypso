@@ -92,5 +92,9 @@
             class="org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState"
             qname="{org.kalypso.model.wspm.tuhh}CalculationReibConstWspmTuhhSteadyState">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"
+            qname="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState">
+      </feature>
    </extension>
 </plugin>
