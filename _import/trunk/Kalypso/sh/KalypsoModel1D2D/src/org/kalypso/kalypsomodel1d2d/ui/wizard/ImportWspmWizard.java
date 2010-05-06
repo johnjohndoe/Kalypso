@@ -548,8 +548,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       /* delete elements (and associated edges) */
       final Feature feature0 = elements[0].getFeature();
       final Feature feature1 = elements[1].getFeature();
-      final EasyFeatureWrapper[] toDelete = new EasyFeatureWrapper[] { new EasyFeatureWrapper( null, feature0, feature0.getParent(), feature0.getParentRelation() ),
-          new EasyFeatureWrapper( null, feature1, feature1.getParent(), feature1.getParentRelation() ) };
+      final EasyFeatureWrapper[] toDelete = new EasyFeatureWrapper[] { new EasyFeatureWrapper( null, feature0 ), new EasyFeatureWrapper( null, feature1 ) };
 
       final ChangeDiscretiationModelCommand elementDeleteCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
       DeleteCmdFactory.createDeleteCmd( model1d2d, toDelete, elementDeleteCmd );
