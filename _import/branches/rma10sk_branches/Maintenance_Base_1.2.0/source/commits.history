@@ -1672,5 +1672,7 @@ version information
 002.) Change output of values from interpolated nodes that are originally midside nodes in elements with interpolated profiles. Problem is, that Kalypso can't deal with the VAI-line that would
       be the correct output line marker.
       (affects: Modell_schreiben.f90)
+003.) Change order of arc output and node result output blocks in 2D result file
+      (affects: Modell_schreiben.f90)
       
 --- Nico Schrage, 06.05.2010
