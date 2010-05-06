@@ -295,6 +295,20 @@ end if
 TETT=(DAYOFY-1)*24.+TET
 WRITE (IKALYPSOFM, 7012) iyrr, tett
 
+! Arcs:
+write_arcs: DO i = 1, arccnt
+  WRITE (IKALYPSOFM, 7001) i, (arc_tmp (i, j), j = 1, 5)
+  !Write out original position of midside node of an element with interpolated data
+  if (intPolProf (arc_tmp(i,5))) then
+    cord_tmp(1) = 0.5 * (cord (arc_tmp(i,1),1) + cord (arc_tmp(i,2),1))
+    cord_tmp(2) = 0.5 * (cord (arc_tmp(i,1),2) + cord (arc_tmp(i,2),2))
+    ao_tmp = 0.5 * (ao(arc_tmp(i,1)) + ao(arc_tmp(i,2)))
+    kmx_tmp = 0.5 * (kmx(arc_tmp(i,1)) + kmx(arc_tmp(i,2)))
+    write (IKALYPSOFM, 6999) arc_tmp(i,5), cord_tmp(1), cord_tmp(2), ao_tmp, kmx_tmp  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+  endif
+end do write_arcs
+
+
 ! Node: Coordinates + Degrees of freedoms + Gradients + others:
 write_nodes: DO i = 1, np
 
@@ -386,19 +400,6 @@ write_nodes: DO i = 1, np
 
 
 END DO write_nodes
-                                                                        
-! Arcs:
-write_arcs: DO i = 1, arccnt
-  WRITE (IKALYPSOFM, 7001) i, (arc_tmp (i, j), j = 1, 5)
-  !Write out original position of midside node of an element with interpolated data
-  if (intPolProf (arc_tmp(i,5))) then
-    cord_tmp(1) = 0.5 * (cord (arc_tmp(i,1),1) + cord (arc_tmp(i,2),1))
-    cord_tmp(2) = 0.5 * (cord (arc_tmp(i,1),2) + cord (arc_tmp(i,2),2))
-    ao_tmp = 0.5 * (ao(arc_tmp(i,1)) + ao(arc_tmp(i,2)))
-    kmx_tmp = 0.5 * (kmx(arc_tmp(i,1)) + kmx(arc_tmp(i,2)))
-    write (IKALYPSOFM, 6999) arc_tmp(i,5), cord_tmp(1), cord_tmp(2), ao_tmp, kmx_tmp  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
-  endif
-end do write_arcs
 
 !NiS,apr06: the array-value of fehler(2,i) is not so important for the displaying of results at first; later it might be interesting to insert the option
 !           of displaying the error in results file. At the moment this option is not used. In addition to that the format descriptor at the end is replaced.
