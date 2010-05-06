@@ -314,8 +314,14 @@ write_nodes: DO i = 1, np
       !NiS,may06: All degrees of freedom have to be written and read for restart
       WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
     else
-      !IR-Zeile
-      WRITE (IKALYPSOFM, 7051) i, (vel (j, i), j = 1, 3) , wsll(i)
+      if (nop (isnodeOfelement (i,1), 1) == neighProf (i, 1) .and. nop(isNodeOfElement(i,1),2) == i) then
+        !Nachbarn prüfen
+        WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , wsll(i)
+      !hier kommen alle anderen interpolierten Mittseitenknoten raus
+      else
+        !VAI-Zeile
+        WRITE (IKALYPSOFM, 7051) i, (vel (j, i), j = 1, 3) , wsll(i)
+      endif
     end if
   ELSEIF ( resultType == 'mini') THEN
     WRITE (IKALYPSOFM, 7003) i, (minvel (j, i), j = 1, 3) , minrausv (i)
