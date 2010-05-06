@@ -29,7 +29,7 @@ REAL (KIND=8) :: NodalArea
 !nis,sep07: Remember problematic node
 character (len = 96) :: outputfilename, inputfilename
 
-INTEGER :: problematicNode
+INTEGER :: problematicNode, ioerr
 !IPK apr05
 common /epor/ efpor
 !-
@@ -502,13 +502,15 @@ WriteDOFOutputs: DO J = 1, 7
     endif
   ENDIF   
 
+  ioerr = 0
   IF (nmx (j) == 0 .or. nRel (j) == 0) THEN
-    WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
+    WRITE (*, 6010, iostat = ioerr) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
   ELSEIF (kmx (nmx (j)) /= -1.0) THEN
-    WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j), kmx (nmx (J)), EPercMax (J), NRel (J), kmx (nRel (J)), IVAR (J, 1), IVAR (J, 2)
+    WRITE (*, 6010, iostat = ioerr) J, EAVG (J), EMAX (J), NMX(j), kmx (nmx (J)), EPercMax (J), NRel (J), kmx (nRel (J)), IVAR (J, 1), IVAR (J, 2)
   ELSE
-    WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
+    WRITE (*, 6010, iostat = ioerr) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
   ENDIF
+  
 ENDDO WriteDOFOutputs
 
 !TODO: Format descriptor does not work
