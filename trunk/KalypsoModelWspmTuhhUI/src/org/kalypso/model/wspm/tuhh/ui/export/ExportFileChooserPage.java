@@ -128,7 +128,7 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
     } );
 
     m_fileChooserGroup.setShowLabel( false );
-    final Group group = m_fileChooserGroup.createControl( comp, SWT.NONE );
+    final Group group = m_fileChooserGroup.createGroup( comp, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     group.setText( m_fileGroupText );
 

@@ -46,8 +46,6 @@ import java.nio.charset.Charset;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -69,8 +67,8 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.gml.ui.jface.ShapeCharsetUI;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextPatternReplacer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
@@ -80,8 +78,6 @@ import org.kalypso.transformation.ui.CRSSelectionPanel;
 public class WProfImportFilePage extends WizardPage
 {
   static final String SETTINGS_CRS = "wprofShapeCrs";
-
-  private static final String SETTINGS_CHARSET = "wprofShapeCharset";
 
   private FileChooserGroup m_shapeChooser;
 
@@ -140,56 +136,11 @@ public class WProfImportFilePage extends WizardPage
     group.setText( "Character Encoding" );
     group.setLayout( new GridLayout() );
 
-    m_charsetViewer = new CharsetViewer( group );
-    final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
-    final String shapeLabel = String.format( "%s (default for ESRI Shape)", shapeDefaultCharset.displayName() );
-    m_charsetViewer.addLabelMapping( shapeDefaultCharset, shapeLabel );
-
+    final IDialogSettings dialogSettings = getDialogSettings();
+    m_charsetViewer = ShapeCharsetUI.createCharsetViewer( group, dialogSettings );
     m_charsetViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Charset charset = getInitialCharset( shapeDefaultCharset );
-    m_charsetViewer.setCharset( charset );
-
-    m_charsetViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      @Override
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        handleCharsetChanged();
-      }
-    } );
-
     return group;
-  }
-
-  private Charset getInitialCharset( final Charset defaultCharset )
-  {
-    final IDialogSettings dialogSettings = getDialogSettings();
-
-    if( dialogSettings == null )
-      return defaultCharset;
-
-    final String charsetName = dialogSettings.get( SETTINGS_CHARSET );
-    if( charsetName == null )
-      return defaultCharset;
-
-    return Charset.forName( charsetName );
-  }
-
-  protected void handleCharsetChanged( )
-  {
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings == null )
-      return;
-
-    final Charset charset = m_charsetViewer.getCharset();
-    if( charset == null )
-      dialogSettings.put( SETTINGS_CHARSET, (String) null );
-    else
-    {
-      final String charsetName = charset.name();
-      dialogSettings.put( SETTINGS_CHARSET, charsetName );
-    }
   }
 
   private Control createSrsControl( final Composite parent )
@@ -246,7 +197,7 @@ public class WProfImportFilePage extends WizardPage
 
   private void createChooserControl( final Composite parent, final FileChooserGroup chooser, final String text, final GridData gridData )
   {
-    final Group chooserGroup = chooser.createControl( parent, SWT.NONE );
+    final Group chooserGroup = chooser.createGroup( parent, SWT.NONE );
     chooserGroup.setText( text );
     chooserGroup.setLayoutData( gridData );
 
@@ -309,7 +260,7 @@ public class WProfImportFilePage extends WizardPage
       }
     } );
 
-    final Group chooserGroup = m_shapeChooser.createControl( panel, SWT.NONE );
+    final Group chooserGroup = m_shapeChooser.createGroup( panel, SWT.NONE );
     chooserGroup.setText( "WProf Import File" );
     return chooserGroup;
   }
