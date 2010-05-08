@@ -126,7 +126,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     final Label label = new Label( panel, SWT.NONE );
     label.setText( Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.9") ); //$NON-NLS-1$
 
-    final Group fileControl = m_fileChooserGroup.createControl( panel, SWT.NONE );
+    final Group fileControl = m_fileChooserGroup.createGroup( panel, SWT.NONE );
     fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fileControl.setText( Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.10") ); //$NON-NLS-1$
 
