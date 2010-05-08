@@ -57,7 +57,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -92,14 +91,13 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author Thomas Jung * *
  */
-public class ConfigureLengthSectionWizardPage extends WizardPage implements IWizardPage
+public class ConfigureLengthSectionWizardPage extends WizardPage
 {
+  private static final String RIVER_NAME_FIELD = Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.0" ); //$NON-NLS-1$
 
-  private static final String RIVER_NAME_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.0"); //$NON-NLS-1$
+  private static final String FROM_STATION_FIELD = Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.1" ); //$NON-NLS-1$
 
-  private static final String FROM_STATION_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.1"); //$NON-NLS-1$
-
-  private static final String TO_STATION_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.2"); //$NON-NLS-1$
+  private static final String TO_STATION_FIELD = Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.2" ); //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_riverLineTheme;
 
@@ -135,7 +133,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     m_mapPanel = mapPanel;
     m_stationWidth = 100;
 
-    setDescription( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.3") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.3" ) ); //$NON-NLS-1$
 
     m_lineThemes = KalypsoFeatureThemeHelper.getLineThemes( m_mapPanel );
   }
@@ -155,11 +153,11 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     final Group riverLineGroup = new Group( composite, SWT.NONE );
     riverLineGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     riverLineGroup.setLayout( new GridLayout( 2, false ) );
-    riverLineGroup.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.4") ); //$NON-NLS-1$
+    riverLineGroup.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.4" ) ); //$NON-NLS-1$
 
     final Label riverLineText = new Label( riverLineGroup, SWT.NONE );
     riverLineText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    riverLineText.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.5") ); //$NON-NLS-1$
+    riverLineText.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.5" ) ); //$NON-NLS-1$
 
     final ComboViewer comboRiverLine = new ComboViewer( riverLineGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboRiverLine = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -193,11 +191,11 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     final Group propertyGroup = new Group( composite, SWT.NONE );
     propertyGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     propertyGroup.setLayout( new GridLayout( 2, false ) );
-    propertyGroup.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.6") ); //$NON-NLS-1$
+    propertyGroup.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.6" ) ); //$NON-NLS-1$
 
     final Label riverLineNameFieldText = new Label( propertyGroup, SWT.NONE );
     riverLineNameFieldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    riverLineNameFieldText.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.7") ); //$NON-NLS-1$
+    riverLineNameFieldText.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.7" ) ); //$NON-NLS-1$
 
     m_comboRiverLineNameField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboRiverLineNameField = new GridData( SWT.FILL, SWT.END, true, false );
@@ -236,7 +234,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final Label riverLineNameText = new Label( propertyGroup, SWT.NONE );
     riverLineNameText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    riverLineNameText.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.8") ); //$NON-NLS-1$
+    riverLineNameText.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.8" ) ); //$NON-NLS-1$
 
     m_comboRiverLineName = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboRiverLineName = new GridData( SWT.FILL, SWT.END, true, false );
@@ -246,7 +244,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final Label stationFromFieldText = new Label( propertyGroup, SWT.NONE );
     stationFromFieldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    stationFromFieldText.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.9") ); //$NON-NLS-1$
+    stationFromFieldText.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.9" ) ); //$NON-NLS-1$
 
     m_comboStationFromField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboStationFromField = new GridData( SWT.FILL, SWT.END, true, false );
@@ -268,7 +266,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final Label stationToFieldText = new Label( propertyGroup, SWT.NONE );
     stationToFieldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    stationToFieldText.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.10") ); //$NON-NLS-1$
+    stationToFieldText.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.10" ) ); //$NON-NLS-1$
 
     m_comboStationToField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboStationToField = new GridData( SWT.FILL, SWT.END, true, false );
@@ -293,7 +291,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final Button buttonKmValues = new Button( propertyGroup, SWT.CHECK );
     buttonKmValues.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    buttonKmValues.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.11") ); //$NON-NLS-1$
+    buttonKmValues.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.11" ) ); //$NON-NLS-1$
     buttonKmValues.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -305,7 +303,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     final Label stationSpinnerText = new Label( propertyGroup, SWT.NONE );
     stationSpinnerText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    stationSpinnerText.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.12") ); //$NON-NLS-1$
+    stationSpinnerText.setText( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.12" ) ); //$NON-NLS-1$
 
     final Spinner stationSpinner = new Spinner( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData gridDatastationSpinner = new GridData( SWT.FILL, SWT.END, true, false );
@@ -332,7 +330,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
       m_comboStationFromField.getControl().setEnabled( false );
       m_comboStationToField.getControl().setEnabled( false );
 
-      final String msg = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.13"); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.13" ); //$NON-NLS-1$
       comboRiverLine.setInput( new String[] { msg } );
       comboRiverLine.setSelection( new StructuredSelection( msg ) );
       m_riverLineTheme = null;
@@ -399,7 +397,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     if( m_riverNameField == null )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.14"), Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.15") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.14" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.15" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
