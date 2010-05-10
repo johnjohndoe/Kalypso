@@ -335,8 +335,7 @@
         <Label>Abfluss [m³/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="5" range="90"
-          after="5" />
+        <PreferredAdjustment before="40" range="50" after="10"/>
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="M1S_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -345,8 +344,7 @@
         <Label>Geschwindigkeit [m/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="5" range="90"
-          after="5" />
+        <PreferredAdjustment before="40" range="50" after="10"/>
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="Station_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -357,13 +355,13 @@
         <Position>BOTTOM</Position>
         <PreferredAdjustment before="1" range="98"
           after="1" />
-        <RendererRef ref="NumberAxisRenderer" />
+                <RendererRef ref="NumberAxisRenderer" />
       </Axis>
     </Mappers>
     <Renderers>
       <AxisRenderer id="NumberAxisRenderer">
         <Provider
-          epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />

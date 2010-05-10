@@ -394,11 +394,14 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   {
     if( mapperRegistry == null )
       return new IAxisRenderer[] {};
-    final IAxisRenderer aRendDom = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final AxisRendererConfig configLR = new AxisRendererConfig();
-    configLR.gap = 5;
-    final IAxisRenderer aRendLR = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
+    final AxisRendererConfig axisRendererConfigLR = new AxisRendererConfig();
+    axisRendererConfigLR.gap = 5;
+    final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
+    axisRendererConfigD.gap = 1;
+
+    final IAxisRenderer aRendDom = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigD ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendLR = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
     mapperRegistry.setRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN", aRendDom );//$NON-NLS-1$
     mapperRegistry.setRenderer( "ProfilLayerProviderTuhh_AXIS_LEFT", aRendLR );//$NON-NLS-1$
