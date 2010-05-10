@@ -222,7 +222,7 @@
     </Mappers>
     <Renderers>
       <AxisRenderer id="NumberAxisRenderer">
-        <Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="2"/>
             <Parameter name="inset_label" value="2"/>
