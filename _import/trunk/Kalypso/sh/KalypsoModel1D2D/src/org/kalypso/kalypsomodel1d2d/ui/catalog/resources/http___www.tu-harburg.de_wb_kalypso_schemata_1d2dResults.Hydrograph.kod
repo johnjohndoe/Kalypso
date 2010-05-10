@@ -196,7 +196,7 @@
 		</Mappers>
 		<Renderers>
 			<AxisRenderer id="NumberWspAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="color" value="#0000aa" />
 						<Parameter name="inset_tick" value="1" />
@@ -204,7 +204,7 @@
 				</Provider>
 			</AxisRenderer>
 			<AxisRenderer id="NumberDisAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="color" value="#00aa00" />
 						<Parameter name="inset_tick" value="1" />
@@ -212,7 +212,7 @@
 				</Provider>
 			</AxisRenderer>
 			<AxisRenderer id="NumberVelAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="color" value="#aa0000" />
 						<Parameter name="inset_tick" value="1" />
@@ -220,7 +220,7 @@
 				</Provider>
 			</AxisRenderer>
 			<AxisRenderer id="CalendarAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericCalendarAxisRendererProvider">
+				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
 					<Parameters>
 						<Parameter name="color" value="#000000" />
 						<Parameter name="date-format" value="dd.MM.\nHH:mm"/>

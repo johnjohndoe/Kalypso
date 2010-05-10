@@ -224,7 +224,7 @@
 		
 		
 		<AxisRenderer id="NumberAxisRenderer">
-			<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+			<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 				<Parameters>
 					<Parameter name="inset_tick" value="1" />
 				</Parameters>
@@ -249,7 +249,7 @@
 			</Styles>
 		</AxisRenderer>
 		<AxisRenderer id="NumberWspAxisRenderer">
-			<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+			<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 				<Parameters>
 					<Parameter name="color" value="#0000aa" />
 					<Parameter name="inset_tick" value="1" />
@@ -275,7 +275,7 @@
 			</Styles>
 		</AxisRenderer>
 		<AxisRenderer id="NumberDisAxisRenderer">
-			<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+			<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 				<Parameters>
 					<Parameter name="inset_tick" value="1" />
 				</Parameters>
@@ -300,7 +300,7 @@
 			</Styles>
 		</AxisRenderer>
 		<AxisRenderer id="NumberVelAxisRenderer">
-			<Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+			<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 				<Parameters>
 					<Parameter name="color" value="#aa0000" />
 					<Parameter name="inset_tick" value="1" />
