@@ -1,6 +1,4 @@
 
-
-
 !---------------------------------------------------------------------------------------------
 function cole (vecq, rhy, ks, minRe) result (lambda_s)
 !                                                                       
@@ -8,7 +6,10 @@ function cole (vecq, rhy, ks, minRe) result (lambda_s)
 ! COLEBROOK-WHITE formular with the equivelent sand roughness ks.
 ! This is an iterative process considering the REYNOLDS number.
 !---------------------------------------------------------------------------------------------
-use globalconstants
+use mod_globalconstants
+use mod_Error
+use mod_warning
+
 implicit none
 !DEC$ ATTRIBUTES DLLEXPORT::cole
 !definition block
@@ -38,9 +39,11 @@ REAL (kind = 8) :: re, lalt, dhy
 
 !REAL, PARAMETER  :: f_g = 3.05
 !REAL, PARAMETER  :: f_r = 3.05
-real, parameter  :: f_g = 2.51
-real, parameter  :: f_r = 3.71
-integer          :: i
+real, parameter   :: f_g = 2.51
+real, parameter   :: f_r = 3.71
+integer           :: i
+type (Error)      :: errorSign
+type (Warning) :: warningSign
 
 !initializations block
 !--------------------------------------
@@ -51,8 +54,13 @@ dhy  = 4.0 * rhy  ! hydraulic diameter
 
 !execution block
 !--------------------------------------
-!prevent division by zero
-if (ks == 0.0d0) return 
+
+!missing entry
+if (vecq * rhy * ks == 0.0) then
+  errorSign = newError (e_ParametersMissing)
+  call printErrorMessage (errorSign)
+  stop
+endif
 
 !formula by COLEBROOK/WHITE under consideration of the hydraulic smooth term wrt to Reynolds-number
 lambda_s = ( -2.03 * log10 (ks / (dhy * f_r))) ** (-2.0)
@@ -67,19 +75,29 @@ if (vecq > 0.0d0) then
   if (present (minre)) then
     IF (re < minre) re = minre
   endif
+
   iteration_lambda: do i = 1, 30
-    if ( ABS((lambda_s/lalt)-1.0) <= 0.0001 ) exit iteration_lambda
-    IF (i == 30) then
+    if ( ABS((lambda_s/lalt)-1.0) <= 0.0001 ) then 
+      exit iteration_lambda
+    endif
+    if (i == 30) then
       !no convergence after 30 iterations
       lambda_s = 0.05
+      warningSign = newWarning (w_IterationLambda)
+      call printWarningMessage (warningSign)
       exit iteration_lambda
     endif
     lalt = lambda_s
     !formula by COLEBROOK/WHITE under consideratio of the hydraulic smooth term wrt to Reynolds-number
     lambda_s = ( -2.03 * log10 (f_g / (re * lalt**0.5) + ks / (dhy * f_r) ) ) ** (-2.0)
-    !Restrict lambda to be maximum 1000.0
-    if (lambda_s > 0.0) lambda_s = min (lambda_s, 1000.0)
-  end do iteration_lambda
+  enddo iteration_lambda
+
+! Restrict lambda to be maximum 1000.0
+  if (lambda_s > 0.0) then
+    lambda_s = min (lambda_s, 1000.0)
+    warningSign = newWarning (w_LambdaRestriction)
+    call printWarningMessage (warningSign)
+  endif
 endif
 
 return

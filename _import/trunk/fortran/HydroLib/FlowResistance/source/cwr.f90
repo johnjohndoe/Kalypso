@@ -8,7 +8,7 @@ function GET_CW_UN(v_vor, d_p) result (CW_UN)
 ! Calculation of drag coefficient for a single
 ! cylindrical object, depending on Reynolds number.
 !---------------------------------------------------------------------------------------------
-use globalconstants
+use mod_globalconstants
 implicit none
 
 !definition block
@@ -47,7 +47,8 @@ end function GET_CW_UN
 function GET_A_NL(c_wr_un, d_p, I_R, v_vor, a_NL_anf) result (A_NL)
 ! Calculation of wake length
 !---------------------------------------------------------------------------------------------
-use globalconstants
+use mod_globalconstants
+use mod_Warning
 implicit none
 
 !definition block
@@ -65,6 +66,8 @@ REAL (KIND = 8), INTENT(IN) :: a_NL_anf   ! Anfangswert für Iteration ( = 2 * ax
 ! Local parameters
 INTEGER          :: i
 REAL (KIND = 8)  :: a_NL2
+type (warning)   :: warningSign
+type (error)     :: errorSign
 
 !initializations block
 !--------------------------------------
@@ -75,25 +78,27 @@ i = 0                              ! Zähler der Iteration von a_NL
 
 !execution block
 !--------------------------------------
-iteration_a_NL: do                 ! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
+iteration_a_NL: do i = 1, 50                 ! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
 
-  if ( ABS(1-(a_NL/a_NL2)) < 0.001 ) exit iteration_a_NL
-  i = i + 1                        ! Inkrementieren des Schleifenzählers
+  if ( ABS(1-(a_NL/a_NL2)) < 0.001 ) then 
+    exit iteration_a_NL
+  endif
+
+  if (i == 50) then
+  ! no convergence after 30 iterations
+    a_NL2 = 0
+    warningSign = newWarning (w_IterationANL)
+    call printWarningMessage (warningSign)
+    exit iteration_lambda
+  END if
+
   a_NL  = a_NL2
   a_NL2 = (a_NL + 128.9 * c_wr_un * d_p * (1 + (g * a_NL * I_R)/((v_vor**2)/2))**(-2.14)) / 2
-
-  if (i > 50) then                 ! Keine Konvergenz nach 100 Iterationen
-    WRITE(*,*) 'Fehlerhaftes Element ist: '
-    WRITE(*,*) 'a_nl = ', a_nl
-    A_NL = 0.0                 ! Der Wert 0.0 zeigt dem aufrufenden Programm
-    GOTO 100                       ! an, dass die Iteration NICHT erfolgreich war!
-  END if
 
 end do iteration_a_NL              ! Iteration von a_NL erfolgreich!
 
 A_NL = a_NL2                    ! Zuweisung des endgültigen Wertes
 
-100 continue
 
 END function GET_A_NL
 
@@ -104,7 +109,7 @@ END function GET_A_NL
 function GET_A_NB(c_wr_un, d_p, a_NL) result (A_NB)
 ! Calculation of wake width
 !---------------------------------------------------------------------------------------------
-use globalconstants
+use mod_globalconstants
 implicit none
 
 !definition block
@@ -147,8 +152,10 @@ function GET_CWR(I_R, h_m, a_x, d_p, lambda_s) result (cw_r)
 ! the water depth. Therefor some limitations have been implemented to
 ! always get realistic results.
 !---------------------------------------------------------------------------------------------
-use globalconstants
+use mod_globalconstants
 use mod_get_cwr
+use mod_Error
+use mod_Warning
 
 implicit none
 !DEC$ ATTRIBUTES DLLEXPORT::GET_CWR
@@ -181,6 +188,9 @@ REAL (KIND = 8)  :: Fr1     = 0.0          ! Froudenumber 1
 REAL (KIND = 8)  :: Fr2     = 0.0          ! Froudenumber 2
 REAL (KIND = 8)  :: delta_cw= 0.0          ! Delta C_W
 
+type (Error)     :: errorSign
+type (Warning)   :: warningSign
+
 INTEGER :: i, j
 
 
@@ -197,6 +207,13 @@ j = 0                                   ! Zähler der äußeren Iteration von C_WR
 
 !execution block
 !--------------------------------------
+
+if (I_R * h_m * a_x * d_p * lambda_s == 0) then
+  errorSign = newError (e_ParametersMissing)
+  call printErrorMessage (errorSign)
+  stop
+endif
+
 iteration_cwr: do                       !Iteration bis Konvergenzkriterium für C_WR erfüllt ist
     Fr1 = 0.0                           ! Bei jeder neuen Iteration müssen die beiden Froudezahlen
     Fr2 = 0.0                           ! neu bestimmt werden -> Y_STERN
@@ -206,7 +223,7 @@ iteration_cwr: do                       !Iteration bis Konvergenzkriterium für C
                                         ! (Komprimiss Geschwindigkeit <-> Genauigkeit)
 
     if ( ABS(1-(cw_r/c_wr2)) < 0.002 ) exit iteration_cwr
-        if (c_wr2 > 2.5) then
+        if (c_wr2 > 2.5) then           !zu prüfen! erscheint unlogisch
           cw_r = 1.30
           EXIT iteration_cwr
         end if
@@ -225,11 +242,6 @@ iteration_cwr: do                       !Iteration bis Konvergenzkriterium für C
     c_wr_un = GET_CW_UN(v_vor, d_p)                         ! Bestimmung von C_WR_UN
     a_NL = GET_A_NL(c_wr_un, d_p, I_R, v_vor, a_NL_anf)     ! Bestimmung von a_NL, gibt 0.0 zurueck,
                                                             ! falls Fehler aufgetreten ist.
-
-        if (a_NL == 0.0) then
-          write (14,*) 'Fehler bei GET_A_NL! -> ABBRUCH'
-          stop
-        end if
 
     a_NB = GET_A_NB(c_wr_un, d_p, a_NL)                     ! Bestimmung derNachlaufbreite
     vn_vvor2 = 1.15 * (a_NL/a_x) ** (-0.48) + 0.5 * (a_NB/a_y) ** 1.1
@@ -302,6 +314,8 @@ iteration_cwr: do                       !Iteration bis Konvergenzkriterium für C
 
     if (j > 50) then               ! Keine Konvergenz nach 100 Iterationen
           cw_r = 1.30
+          warningSign = newWarning (w_IterationCWR)
+          call printWarningMessage (warningSign)
           EXIT iteration_cwr
     END if
 
