@@ -61,7 +61,7 @@ select case (codeID)
 case (e_ParametersMissing)
   tmpMessage = newMessage ('One or more parameters are missing or don´t have a valid value. Please enter a valid value for all non-optional Parameters.')
 case (e_DiaPlantsToBig)
-  tmpMessage = newMessage ('The Diameter of trees is larger than the distance between trees. Please enter a valid value for both diameter of trees (dp) and distance between trees (a).')
+  tmpMessage = newMessage ('The Diameter of trees is bigger than the distance between trees. Please enter a valid value for both diameter of trees (dp) and distance between trees (a).')
 case (e_InvalidVegType)
   tmpMessage = newMessage ('The vegetaiontype has not been set correctly. You can wether choose living grass (vegType = 1) or dead grass (vegType = 2).')
 end select
