@@ -89,7 +89,7 @@ transitionloop: do i = 1, MaxLT
   DXtot = cord (line (TransLi, lmt (TransLi)), 1) - cord (line (TransLi, 1), 1)
 !hole lagewinkel der kopplung (arctan gk/AK = delta)  
   Delta = ATAN (DYtot / DXtot)
-!hole richtungswinkel der strömungsrichtung  
+!hole richtungswinkel der strï¿½mungsrichtung  
   gamma = Delta + 3.14159 / 2.0
 
 !vnomx and vnomy are the components of the flow direction, Q crosses transition.  
@@ -150,7 +150,7 @@ transitionloop: do i = 1, MaxLT
     if (j < 4) then
 
 !Getting the specific discharges at the transition      
-      WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
+      WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm^3/s'
       WRITE(*,*) 'It will be applied as Q-BC at 2D-line'
       call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
@@ -219,7 +219,7 @@ transitionloop: do i = 1, MaxLT
     vel (1, nod) = vel (1, nod) + Dv * COS (alfa(nod))
     vel (2, nod) = vel (2, nod) + Dv * SIN (alfa(nod))
 
-!WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'    
+!WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'mï¿½/s'    
     call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
 !Restore velocities    
