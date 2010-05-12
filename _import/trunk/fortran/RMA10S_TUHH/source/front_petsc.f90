@@ -1,19 +1,18 @@
 SUBROUTINE FRONT_PETSC(nrx)
 
 !ipk AUG07
-      USE BLK10, only: r1, nlstel, rkeep, ekeep, rkeepeq, lq, mfw
-      USE BLK10MOD, only: maxn, iteqv, idifsw, mr1, ireallct, nszf, ndf, nesav, nfixh, ne, imat, &
-      & icollape, ncn, nops, nop, netyp, nbc, nreord, ncorn, np, nbckp, nd1, nscr, maxe, tvol, iedsw, iedsw1, &
-      & tbfact, tbfact1, tbmin, tbmin1, inotr, iutub, igtp, iactv, icpu
-      USE BLK11MOD, only: ort
-      USE BLKECOM, only: ncon, estifm, f
-      use PardisoParams, only: mfwsiz
-      USE petsc
-        USE petscvec
-        USE petscmat
+USE BLK10, only: r1, nlstel, rkeep, ekeep, rkeepeq, lq, mfw
+USE BLK10MOD, only: maxn, iteqv, idifsw, mr1, ireallct, nszf, ndf, nesav, nfixh, ne, imat, &
+  & icollape, ncn, nops, nop, netyp, nbc, nreord, ncorn, np, nbckp, nd1, nscr, maxe, tvol, iedsw, iedsw1, &
+  & tbfact, tbfact1, tbmin, tbmin1, inotr, iutub, igtp, iactv, icpu
+USE BLK11MOD, only: ort
+USE BLKECOM, only: ncon, estifm, f
+USE PardisoParams, only: mfwsiz
+USE petsc
+USE petscvec
+USE petscmat
 
-      implicit none
-      SAVE
+implicit none
 
 #include "finclude/petscdef.h"
 #include "finclude/petscvecdef.h"
@@ -21,41 +20,43 @@ SUBROUTINE FRONT_PETSC(nrx)
 #include "finclude/petsckspdef.h"
 #include "finclude/petscpcdef.h"
 #include "finclude/petscsnesdef.h"
-    PetscErrorCode  ierr
-    PetscMPIInt     rank,size
-    PetscInt         noOfEqLocal, eqStart, eqEnd
-    Vec             bpetsc
-    Mat, save ::    Apetsc
-    KSP, save ::    ksp
-    integer (kind = 4), allocatable :: nnz(:)
-    PetscInt :: estifmrow(80)
 
-      integer (kind = 8) :: mxl, mfrw
-      PARAMETER (MXL=680)
+PetscErrorCode  :: ierr
+PetscMPIInt     :: rank,size
+PetscInt        :: noOfEqLocal, eqStart, eqEnd
+Vec, save       :: bpetsc
+Mat, save       :: Apetsc
+integer (kind = 4), save :: nszfold
+integer (kind = 4), allocatable :: nnz(:)
+PetscInt :: estifmrow(80)
+
+integer (kind = 8) :: mxl, mfrw
+PARAMETER (MXL=680)
       
-      integer :: NK(120), LLDONE(80)
+integer :: NK(120), LLDONE(80)
 
 !local variables      
-      integer (kind = 2), save :: itime
-      real (kind = 8) :: sec, islp, sinc
-      integer (kind = 4) :: nszfo, maxl, i, k, m, nn, n, local, global, innerk, innerl, node, estifmsize
-      integer (kind = 4) :: l, j, icteq, kc
-      integer (kind = 4) :: ll, jj, icur
-      integer (kind = 4) :: nell, startel, endel, rangeel
-      integer (kind = 4) :: nm
-      integer (kind = 4) :: nmatyp, nrx, ntip, nelm, nod, irwz, ii, ia
-      integer (kind = 4) :: ja, leltm
-      real (kind = 8) :: sutim1, sutim2
+integer (kind = 2), save :: itime
+real (kind = 8) :: sec, islp, sinc
+integer (kind = 4) :: nszfo, maxl, i, k, m, nn, n, local, global, innerk, innerl, node, estifmsize
+integer (kind = 4) :: l, j, icteq, kc
+integer (kind = 4) :: ll, jj, icur
+integer (kind = 4) :: nell, startel, endel, rangeel
+integer (kind = 4) :: nm
+integer (kind = 4) :: nmatyp, nrx, ntip, nelm, nod, irwz, ii, ia
+integer (kind = 4) :: ja, leltm
+real (kind = 8) :: sutim1, sutim2
 
 ! superLU
-      REAL(kind = 8), allocatable ::  R1T(:)
-      INTEGER (kind = 8), allocatable :: ichgl(:)
+REAL(kind = 8), allocatable ::  R1T(:)
+INTEGER (kind = 8), allocatable :: ichgl(:)
 
 
-      data itime/0/
-      
-      MFRW = mfwsiz
-      
+data itime/0/
+data nszfold/0/
+
+MFRW = mfwsiz
+
 !some comments
 !NLSTEL(J)  :: NLSTEL (J) is last element, that is necessary to fill the global equation
 !              of degree of freedom J
@@ -66,138 +67,133 @@ SUBROUTINE FRONT_PETSC(nrx)
       
 !
 !allocate locals      
-      allocate (r1t(mr1), ichgl(mr1))
-      R1T = 0.
-      ICHGL = 0
+allocate (r1t(mr1), ichgl(mr1))
+R1T = 0.d0
+ICHGL = 0
 
-      CALL SECOND(SEC)
-      
+CALL SECOND(SEC)
+
 !ENe Was missing compared to front.for
       
-      IF(ITEQV(MAXN) == 2 .OR. ITEQV(MAXN) == 8 .OR. ITEQV(MAXN) == 9) THEN
-        IF(IDIFSW == 0) THEN
-          ISLP=0
-        ELSE
-          ISLP=1
-        ENDIF
-      ELSE
-        ISLP=0
-      ENDIF
+IF(ITEQV(MAXN) == 2 .OR. ITEQV(MAXN) == 8 .OR. ITEQV(MAXN) == 9) THEN
+  IF(IDIFSW == 0) THEN
+    ISLP=0
+  ELSE
+    ISLP=1
+  ENDIF
+ELSE
+  ISLP=0
+ENDIF
 
-           IF(IREALLCT > 0) THEN 
-             IF(IREALLCT == 2) THEN
-          DEALLOCATE (R1,NLSTEL,rkeep,ekeep,rkeepeq)
-        ENDIF
-        ALLOCATE (R1(MR1),NLSTEL(0:MR1),rkeep(0:MR1),ekeep(MR1), rkeepeq(MR1))
-      ENDIF
+     IF(IREALLCT > 0) THEN
+       IF(IREALLCT == 2) THEN
+    DEALLOCATE (R1,NLSTEL,rkeep,ekeep,rkeepeq)
+  ENDIF
+  ALLOCATE (R1(MR1),NLSTEL(0:MR1),rkeep(0:MR1),ekeep(MR1), rkeepeq(MR1))
+ENDIF
 
-      IF( .NOT. ALLOCATED(NLSTEL)) ALLOCATE(NLSTEL(0:MR1))
-      if(maxn == 1 .AND. nrx == 1) nszfo=nszf
-      maxl = 0
-      if(nrx == 1) then
-        NDF=4
-      else
-        ndf=1
-      endif
+IF( .NOT. ALLOCATED(NLSTEL)) ALLOCATE(NLSTEL(0:MR1))
+if(maxn == 1 .AND. nrx == 1) nszfo=nszf
+maxl = 0
+if(nrx == 1) then
+  NDF=4
+else
+  ndf=1
+endif
 !-
 !...... Find last appearance of each node
 !-
 
-      NLSTEL=0
-      K=NESAV+1
+NLSTEL=0
+K=NESAV+1
 
-      DO NN=1,NESAV
-
-
-        K=K-1
-        N=NFIXH(K)
-        IF(N > 0 .AND. n <= NE) THEN
-          IF(IMAT(N) > 0) THEN
-!ipk NOV99
-            IF(ICOLLAPE(N) /= 1 .OR. IMAT(N)/1000 == 1) THEN
-
-!ipk jan06
-              IF(imat (n) > 0) THEN
-                ncn=20
-                IF(ITEQV(MAXN) == 5) THEN
-                  DO I=1,8
-                    NCON(I)=NOPS(N,I)
-                    IF(NCON(I) > 0) NCN=I
-                  ENDDO
-                ELSE
-                  DO I=1,NCN
-                    NCON(I)=NOP(N,I)
-                  ENDDO
-                ENDIF
-
-                DO M=1,NCN
-                  L=NCON(M)
-!ipk JAN99 SKIP OUT FOR 2DV
-                  if(l > 0) THEN
-                    DO I=1,NDF
-                      J=NBC(L,I)
-                      IF(J > 0) THEN
-                        IF(NLSTEL(J) == 0) THEN
-                          NLSTEL(J)=N
-                        ENDIF
-                      ENDIF
-                    ENDDO
-                  ENDIF
-                ENDDO
-              ENDIF
-            ENDIF
-          ENDIF
-        ENDIF
-      ENDDO
+DO NN=1,NESAV
+  K=K-1
+  N=NFIXH(K)
+  IF(N > 0 .AND. n <= NE) THEN
+	  IF(IMAT(N) > 0) THEN
+		  !ipk NOV99
+		  IF(ICOLLAPE(N) /= 1 .OR. IMAT(N)/1000 == 1) THEN
+			  !ipk jan06
+			  IF(imat (n) > 0) THEN
+			    ncn=20
+			    IF(ITEQV(MAXN) == 5) THEN
+			      DO I=1,8
+			        NCON(I)=NOPS(N,I)
+			        IF(NCON(I) > 0) NCN=I
+			      ENDDO
+			    ELSE
+			      DO I=1,NCN
+			        NCON(I)=NOP(N,I)
+			      ENDDO
+			    ENDIF
+			    DO M=1,NCN
+			      L=NCON(M)
+			      !ipk JAN99 SKIP OUT FOR 2DV
+			      if(l > 0) THEN
+			        DO I=1,NDF
+			          J=NBC(L,I)
+			          IF(J > 0) THEN
+			            IF(NLSTEL(J) == 0) THEN
+			              NLSTEL(J)=N
+			            ENDIF
+			          ENDIF
+			        ENDDO
+			      ENDIF
+			    ENDDO
+			  ENDIF
+		  ENDIF
+	  ENDIF
+  ENDIF
+ENDDO
    
-      icteq = 0
-      do nn = 1, nesav
-!run through elements due to classical reordering order          
-          n = nfixh (nn)
-          ncn = ncorn (n)
-        IF (NOP (N, 3) == 0) NCN = 2
-        do kc = 1, 80
-          nk (kc) = 0
-!ipk feb07 add initialization of LLDONE 
-          LLDONE (KC) = 0
-        enddo
+icteq = 0
+do nn = 1, nesav
+  !run through elements due to classical reordering order
+    n = nfixh (nn)
+    ncn = ncorn (n)
+  IF (NOP (N, 3) == 0) NCN = 2
+  do kc = 1, 80
+    nk (kc) = 0
+  !ipk feb07 add initialization of LLDONE
+    LLDONE (KC) = 0
+  enddo
 
-        kc = 0
-!ipk jun07        DO J=1,NCN
-        DO J = 1, 20
-          I = NOP (N, J)
-          IF (I == 0) THEN
-            KC = KC + NDF
-          ELSE
-            oldDOFs: DO L = 1, NDF
-!old global number of DOF              
-              LL = NBC (I, L)
-!count global ordinal number              
-              KC = KC + 1
-!ipk feb07 add LLDONE 
-!lldone shows, whether old number of DOF is already processed              
-              LLDONE (KC) = LL
-              NK (KC) = LL
+  kc = 0
+  !ipk jun07        DO J=1,NCN
+  DO J = 1, 20
+    I = NOP (N, J)
+    IF (I == 0) THEN
+      KC = KC + NDF
+    ELSE
+      oldDOFs: DO L = 1, NDF
+  !old global number of DOF
+        LL = NBC (I, L)
+  !count global ordinal number
+        KC = KC + 1
+  !ipk feb07 add LLDONE
+  !lldone shows, whether old number of DOF is already processed
+        LLDONE (KC) = LL
+        NK (KC) = LL
 
-              IF (LL /= 0) THEN
-!Check, whether this element is the last occurance of the degree of freedom                
-                IF (NLSTEL (LL) == N) NK (KC) = -LL
-                
-                if(nk(kc) < 0) then
-                  DO JJ=1,KC-1
-!ipk feb07 add LLDONE test
-                    IF(LLDONE(JJ) == ABS(LL)) GO TO 250
-                  ENDDO
-                    icteq=icteq+1
-                    ichgl(ll)=icteq
+        IF (LL /= 0) THEN
+  !Check, whether this element is the last occurance of the degree of freedom
+          IF (NLSTEL (LL) == N) NK (KC) = -LL
+
+          if(nk(kc) < 0) then
+            DO JJ=1,KC-1
+  !ipk feb07 add LLDONE test
+              IF(LLDONE(JJ) == ABS(LL)) GO TO 250
+            ENDDO
+              icteq=icteq+1
+              ichgl(ll)=icteq
   250             CONTINUE                  
-                  endif
-              ENDIF
-
-            ENDDO oldDOFs
-          ENDIF
-        enddo
-      ENDDO
+            endif
+        ENDIF
+      ENDDO oldDOFs
+    ENDIF
+  enddo
+ENDDO
       
 !Reset the number of the global equation; reordering is done in solver      
 !---------------------------------------------------------------------      
@@ -277,7 +273,18 @@ SUBROUTINE FRONT_PETSC(nrx)
 
     CALL SECOND(SINC)
 
-    call PetscInitialize(PETSC_NULL_CHARACTER,ierr)
+!check for the change of the matrix; if the size of the matrix did not change pardiso can be
+!solved with the same 'Analysis symbolic factorization' settings from the previous execution
+if (nszfold /= nszf) then
+    write(*,*) 'Matrix structure has changed'
+
+    if(nszfold /= 0) then
+	    call VecDestroy(bpetsc,ierr)
+	    call MatDestroy(Apetsc,ierr)
+	    if(allocated(nnz)) deallocate(nnz)
+    endif
+
+    ! create new matrices
     call VecCreateMPI(PETSC_COMM_WORLD,PETSC_DECIDE,nszf,bpetsc,ierr)
     call VecSetOption(bpetsc,VEC_IGNORE_NEGATIVE_INDICES,PETSC_TRUE,ierr)
     call VecGetOwnershipRange(bpetsc,eqStart,eqEnd,ierr)
@@ -287,8 +294,11 @@ SUBROUTINE FRONT_PETSC(nrx)
         nnz(i) = 80
     enddo
     call MatCreateMPIAIJ(PETSC_COMM_WORLD,noOfEqLocal,noOfEqLocal,nszf,nszf,0,nnz,0,nnz,Apetsc,ierr)
-    deallocate(nnz)
-
+    call MatSetOption(Apetsc,MAT_ROW_ORIENTED,PETSC_FALSE,ierr)
+else
+    call MatZeroEntries(Apetsc, ierr)
+    call VecZeroEntries(bpetsc, ierr)
+endif
 
     call MPI_Comm_Rank(PETSC_COMM_WORLD,rank,ierr)
     call MPI_Comm_Size(PETSC_COMM_WORLD,size,ierr)
@@ -301,10 +311,13 @@ SUBROUTINE FRONT_PETSC(nrx)
     if(rank == size - 1) then
         endel = ne
     else
-        endel = startel+rangeel
+        endel = startel+rangeel-1
     end if
 
+   write(*,*) 'Process ', rank, ' is assembling matrix for elements ', startel, ' to ', endel
+
    nellLoop: DO NELL=startel,endel
+   !nellLoop: DO NELL=rank+1,NE,size
       N=NFIXH(NELL)
       
       IF(IMAT(N) <= 0) cycle nellLoop
@@ -480,27 +493,7 @@ SUBROUTINE FRONT_PETSC(nrx)
          IF(NETYP(N) == 15 .OR. NETYP(N) == 16) THEN
                IF(NOP(N,14) /= 0) NCN=14
                IF(NOP(N,18) /= 0) NCN=18
-          ENDIF
-
-!for equation drop out; should not be used, if PARDISO is invoked
-!----------------------------------------------------------------
-!ipk jan01
-        do i=1,ncn
-            nod=nop(n,i)
-            if(nod /= 0) then
-              do j=1,ndf
-                if(iactv(nod,j) == 0 .AND. nbc(nod,j) /= 0) then
-                  irwz=(i-1)*ndf+j
-                  do ii=1,80
-                    estifm(ii,irwz)=0.
-                    estifm(irwz,ii)=0.
-                  enddo
-                  estifm(irwz,irwz)=1.0
-                  f(irwz)=0.0
-                endif
-              enddo
-            endif
-          enddo
+         ENDIF
 
 !-----------------------------------------------------------      
 !Bring the element residuals into the distributed global residual vector
@@ -529,7 +522,7 @@ SUBROUTINE FRONT_PETSC(nrx)
           ENDIF
         ENDDO
         call VecSetValues(bpetsc,80,estifmrow,F,ADD_VALUES,ierr)
-        call MatSetValues(Apetsc,80,estifmrow,80,estifmrow,transpose(estifm),ADD_VALUES,ierr)
+        call MatSetValues(Apetsc,80,estifmrow,80,estifmrow,estifm,ADD_VALUES,ierr)
     ENDDO nellLoop
 
     call MatAssemblyBegin(Apetsc,MAT_FINAL_ASSEMBLY,ierr)
@@ -542,12 +535,14 @@ SUBROUTINE FRONT_PETSC(nrx)
 !C
       call second(sutim1)
       
+      write(*,*) 'Time to assemble matrix: ', sutim1-sinc
+
       !NSZF   :: number of equations
       CALL petsc_solver(NSZF, Apetsc, bpetsc, R1T)
-      call VecDestroy(bpetsc,ierr)
-      call MatDestroy(Apetsc,ierr)
 
       call second(sutim2)
+
+      write(*,*) 'Time to solve matrix: ', sutim2-sutim1
 
       DO I=1,NSZF
         R1(I)=R1T(I)
@@ -555,6 +550,8 @@ SUBROUTINE FRONT_PETSC(nrx)
       ENDDO
 
       IF(NRX == 1) NDF=6
+
+      nszfold = nszf
 
     !deallocate local arrays
     deallocate (r1t, ichgl)
