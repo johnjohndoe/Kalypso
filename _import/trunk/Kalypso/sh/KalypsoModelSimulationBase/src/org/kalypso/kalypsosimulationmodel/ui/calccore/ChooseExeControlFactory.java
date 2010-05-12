@@ -44,15 +44,15 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class ChooseExeControlFactory implements IFeatureviewControlFactory
+public class ChooseExeControlFactory implements IExtensionsFeatureControlFactory
 {
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
