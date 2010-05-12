@@ -60,13 +60,13 @@ USE Para1DPoly
 USE ParaKalyps
 
 !sk, PETSC
-USE petsc
+!USE petsc
 
 !NiS,mar06: Find undeclared variables
 implicit none
 
 !sk, PETSC
-INTEGER :: ierr, rank
+!INTEGER :: ierr, rank
 
 !NiS,apr06: Comments added and array declarations changed, ARC changed to ARC_TMP because of global declaration conflicts in RMA10S.
 !INTEGER :: arc (mnd, 5), arcmid (mnd, 4), arccnt, elcnt, nnum, i, j, k, nbot, ntop, nelem
@@ -115,8 +115,8 @@ real :: aat, d1
 
 !sk, PETSC
 !only zeroth processor writes files
-call MPI_Comm_Rank(PETSC_COMM_WORLD,rank,ierr)
-if(rank /= 0) return
+!call MPI_Comm_Rank(PETSC_COMM_WORLD,rank,ierr)
+!if(rank /= 0) return
 
 !nis,may07
 !Add midside node for polynom approach
