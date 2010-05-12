@@ -55,13 +55,18 @@ USE BLK10mod
 USE BLK11mod
 USE PARAKalyps
 USE BlkDRmod
-!EFa Dec06, neues Modul für 1d-Teschke-Elemente
+!EFa Dec06, neues Modul fï¿½r 1d-Teschke-Elemente
 USE Para1DPoly
 USE ParaKalyps
-!-
+
+!sk, PETSC
+USE petsc
 
 !NiS,mar06: Find undeclared variables
 implicit none
+
+!sk, PETSC
+INTEGER :: ierr, rank
 
 !NiS,apr06: Comments added and array declarations changed, ARC changed to ARC_TMP because of global declaration conflicts in RMA10S.
 !INTEGER :: arc (mnd, 5), arcmid (mnd, 4), arccnt, elcnt, nnum, i, j, k, nbot, ntop, nelem
@@ -107,10 +112,16 @@ real (kind = 8) :: cord_tmp(1:2), ao_tmp, kmx_tmp
 
 real (kind = 8) :: h
 real :: aat, d1
+
+!sk, PETSC
+!only zeroth processor writes files
+call MPI_Comm_Rank(PETSC_COMM_WORLD,rank,ierr)
+if(rank /= 0) return
+
 !nis,may07
 !Add midside node for polynom approach
 !!NiS,apr06: allocating the two local arrays for arc-handling with the size of MaxP
-!!ALLOCATE (arc_tmp (maxp,5), arcmid(LPPoly:maxp,5))            !EFa Dec06, Spaltenanzahl von arcmid für 1d-Teschke-Elemente auf 5 erhöht
+!!ALLOCATE (arc_tmp (maxp,5), arcmid(LPPoly:maxp,5))            !EFa Dec06, Spaltenanzahl von arcmid fï¿½r 1d-Teschke-Elemente auf 5 erhï¿½ht
 ALLOCATE (arc_tmp (maxp,5), arcmid(1:maxp,4))
 !Add midside node for polynom approach
 !-
@@ -485,7 +496,7 @@ CLOSE (IKALYPSOFM, STATUS='keep')
      &        1X, 'Stopping Program...')
 
 
-!EFa Dec06, neues Format für Ausgabe der Knotendaten, wenn Kilometrierung vorhanden 
+!EFa Dec06, neues Format fï¿½r Ausgabe der Knotendaten, wenn Kilometrierung vorhanden 
  6999 FORMAT ('FP', i10,4f20.7)
 !Knoten; Nummer und raeumliche Lage (x,y,z 
  7000 FORMAT ('FP', i10,3f20.7)
@@ -680,9 +691,9 @@ DO NN=1,NPM
 !MD: Neue Ausgaben:
 !MD:    UST(NN),   DEPRAT(NN),  VS(NN)   = sinken
 !MD:    SL & BL = Anzhal der Suspended und Bed Layer
-!MD     DEPRAT(NN)  = (Newbed) in [m/s] mit C [g/m³] ohne DELT
-!MD     EDOT(NN)  = (MEROSN) Sus.Layer in [kg/m³ x m/s] mit DELT
-!MD     SERAT(NN) = (SEROSN) Bed.Layer in [g/m³ x m/s] ohne DELT
+!MD     DEPRAT(NN)  = (Newbed) in [m/s] mit C [g/mï¿½] ohne DELT
+!MD     EDOT(NN)  = (MEROSN) Sus.Layer in [kg/mï¿½ x m/s] mit DELT
+!MD     SERAT(NN) = (SEROSN) Bed.Layer in [g/mï¿½ x m/s] ohne DELT
 
 Enddo
 
