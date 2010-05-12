@@ -1,20 +1,20 @@
 !*********************************************           
-!   RMA·Kalypso
+!   RMAï¿½Kalypso
 !   COPYRIGHT
 !
 !   Hamburg University of Technology
-!   Denickestraße 22
+!   Denickestraï¿½e 22
 !   21075 Hamburg
 !   Germany
 !
-!   Technische Universität Hamburg-Harburg
-!   Denickestraße 22
+!   Technische Universitï¿½t Hamburg-Harburg
+!   Denickestraï¿½e 22
 !   21075 Hamburg
 !   Deutschland
 !*********************************************           
-!......... Main program unit for the 1D/2D coupled hydrodynamics model RMA·Kalypso
+!......... Main program unit for the 1D/2D coupled hydrodynamics model RMAï¿½Kalypso
 !
-!          The splitting of RMA·Kalypso from its origin RMA-10S 8.0 took place in the
+!          The splitting of RMAï¿½Kalypso from its origin RMA-10S 8.0 took place in the
 !          end of 2008. The capabilities of the software were adapted for the usage
 !          of 1D/2D modelling in the modelling environment Kalypso, available under
 !          sourceforge.com
@@ -41,16 +41,19 @@
 !
 !          --- Nico Schrage
 !
-!......... Main program unit for the 1D/2D coupled hydrodynamics model RMA·Kalypso
+!......... Main program unit for the 1D/2D coupled hydrodynamics model RMAï¿½Kalypso
 
 PROGRAM RMAKalypso
 
   use mainRoutines
   use getGeo1_mod
-
+!  USE petsc
   
   implicit none
   
+!#include "finclude/petscdef.h"
+!PetscErrorCode  ierr
+
   integer :: i
   character (len = 11) :: fnam0
   character (len = 12) :: version
@@ -69,12 +72,12 @@ PROGRAM RMAKalypso
   write(*,*) '     *                  **********                  *'
   write(*,*)
   WRITE(*,*) '        You are executing version ', trim(version)
-  WRITE(*,*) '                       of RMA·Kalypso'
+  WRITE(*,*) '                       of RMA-Kalypso'
   write(*,*) '                    build date: ', builddate
   write(*,*)
   write(*,*) '     *                  **********                  *'
   write(*,*)
-  WRITE(*,*) '                        © copyright '
+  WRITE(*,*) '                         copyright '
   write(*,*) '              Hamburg University of Technology'
   write(*,*) '         Institute of River and Coastal Engineering'
   WRITE(*,*) '                      Denickestrasse 22'
@@ -89,13 +92,15 @@ PROGRAM RMAKalypso
 
 
 
-!control file name is fixed for RMA·KALYPSO  
+!control file name is fixed for RMAï¿½KALYPSO  
   fnam0 = 'control.r10'
 
   do i = 1, 8
     write(*,*)
   enddo
   WRITE (*,'(A)') 'The name of the control file is: ', FNAM0
+
+!call PetscInitialize(PETSC_NULL_CHARACTER,ierr)
 
 !open the input files  
   call filehandling (1, fnam0)
@@ -104,5 +109,7 @@ PROGRAM RMAKalypso
 !start main execution of the simulation model  
   call rma_kalypso (defaultModelName)
 
-!end execution of RMA·Kalypso
+!call PetscFinalize(PETSC_NULL_CHARACTER,ierr)
+
+!end execution of RMAï¿½Kalypso
 END
