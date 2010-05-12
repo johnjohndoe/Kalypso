@@ -531,13 +531,13 @@ steadyCalculation: if (niti /= 0) then
         sidff (n) = 0.
       enddo
 !-------------------------------------------------------------------------------------------  
-!only operative in 3D applications; i.e. at the moment not in RMA·Kalypso, but only in RMA10  
+!only operative in 3D applications; i.e. at the moment not in RMAï¿½Kalypso, but only in RMA10  
 !-------------------------------------------------------------------------------------------  
 !!3D to 2D collapse; experimental  
 !!-------------------------------  
 !if (itransit == 1 .AND. maxn < 4) call twodsw  
 !-------------------------------------------------------------------------------------------  
-!only operative in 3D applications; i.e. at the moment not in RMA·Kalypso, but only in RMA10  
+!only operative in 3D applications; i.e. at the moment not in RMAï¿½Kalypso, but only in RMA10  
 !-------------------------------------------------------------------------------------------  
 
 !load the DOFs, i.e. set up the equations system  
@@ -574,12 +574,14 @@ steadyCalculation: if (niti /= 0) then
 !frontal solution scheme    
 !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for    
 !numerical Methods in Engineering. Vol. 2, p. 5-32. 1970.    
-    call front (1)
+    call front_pardiso (1)
+    !call front (1)
   else
 !Pardiso solver from the Intel MKL library    
-!by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In:    
+!by Schenk, O., Gï¿½rtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In:    
 ! Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.    
-    call front_pardiso (1)
+    !call front_pardiso (1)
+    call front_petsc(1)
   endif
   
 
@@ -1341,12 +1343,14 @@ DynamicTimestepCycle: do n = 1, ncyc
 !frontal solution scheme      
 !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for numerical      
 ! Methods in Engineering. Vol. 2, p. 5-32. 1970.      
-      call front (1)
+      call front_pardiso (1)
+      !call front (1)
     else
 !Pardiso solver from the Intel MKL library      
-!by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In: Jorunal of      
+!by Schenk, O., Gï¿½rtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In: Jorunal of      
 ! Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.      
-      call front_pardiso (1)
+      !call front_pardiso (1)
+      call front_petsc(1)
     endif
   
 
