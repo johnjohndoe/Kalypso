@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.csv;
+package org.kalypso.model.wspm.tuhh.ui.export;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -63,7 +63,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
  * 
  * @author Gernot Belger
  */
-public class CsvExportResultChooser
+public class ProfileExportResultChooser
 {
   private final Collection<ICheckStateListener> m_listeners = new HashSet<ICheckStateListener>();
 
@@ -71,7 +71,7 @@ public class CsvExportResultChooser
 
   private final IWspmResultNode m_rootNode;
 
-  public CsvExportResultChooser( final IWspmResultNode rootNode )
+  public ProfileExportResultChooser( final IWspmResultNode rootNode )
   {
     m_rootNode = rootNode;
   }
@@ -118,6 +118,8 @@ public class CsvExportResultChooser
         }
         else
           treeViewer.setChecked( element, true );
+
+        fireCheckStateChanged( event );
       }
     } );
 
@@ -154,7 +156,7 @@ public class CsvExportResultChooser
     m_listeners.remove( l );
   }
 
-  private void fireCheckStateChanged( final CheckStateChangedEvent event )
+  protected void fireCheckStateChanged( final CheckStateChangedEvent event )
   {
     final ICheckStateListener[] listeners = m_listeners.toArray( new ICheckStateListener[m_listeners.size()] );
     for( final ICheckStateListener listener : listeners )

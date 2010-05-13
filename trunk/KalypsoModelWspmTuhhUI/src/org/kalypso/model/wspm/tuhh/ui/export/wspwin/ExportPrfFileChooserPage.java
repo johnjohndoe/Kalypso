@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.IContributionItem;
@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 
 /**
  * @author kimwerner

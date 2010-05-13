@@ -38,19 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import java.io.File;
+import java.io.IOException;
 
-/**
- * @author Gernot Belger
- */
-public class SobekExportProfilesHandler extends AbstractExportProfilesHandler
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.wspwin.core.Plotter;
+
+public final class PlotterExportWizardCallback extends PrfExportWizardCallback
 {
-  @Override
-  protected IWizard createWizard( final ProfileSelection selection )
+  private final boolean m_doPrint;
+
+  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final boolean doPrint )
   {
-    return new SobekExportProfilesWizard( selection );
+    super( exportDir, filenamePattern );
+    m_doPrint = doPrint;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.PrfExportWizardCallback#profileWritten(java.io.File)
+   */
+  @Override
+  public void profileWritten( final File file ) throws CoreException
+  {
+    try
+    {
+      Plotter.openPrf( file, m_doPrint );
+
+      Thread.sleep( 500 );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
+      throw new CoreException( status );
+    }
+    catch( final InterruptedException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
+      throw new CoreException( status );
+    }
   }
 }

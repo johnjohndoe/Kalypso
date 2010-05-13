@@ -38,22 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.io.File;
-
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.jface.wizard.IWizard;
+import org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
- * Callback interface that allows the prf-exporter to be more flexible.
- * 
  * @author Gernot Belger
  */
-public interface IPrfExporterCallback
+public class SobekExportProfilesHandler extends AbstractExportProfilesHandler
 {
-  File getExportFile( IProfil profil );
-
-  /** Called, after the profile has been written */
-  void profileWritten( File file ) throws CoreException;
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler#createWizard(org.eclipse.core.commands.ExecutionEvent,
+   *      org.kalypso.model.wspm.ui.action.ProfileSelection)
+   */
+  @Override
+  protected IWizard createWizard( final ExecutionEvent event, final ProfileSelection selection )
+  {
+    return new SobekExportProfilesWizard( selection );
+  }
 }

@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.csv;
+package org.kalypso.model.wspm.tuhh.ui.export;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
@@ -51,34 +52,26 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
-import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Gernot Belger
  */
-public class ExportCsvPage extends ExportFileChooserPage
+public class ProfileResultExportPage extends ValidatingWizardPage
 {
-  private static final String FILTER_LABEL = "Comma Separated File";
+  private final ProfileExportResultChooser m_resultChooser;
 
-  private static final String EXTENSION = "csv";
+  private ProfileExportComponentChooser m_componentChooser;
 
-  private final CsvExportResultChooser m_resultChooser;
-
-  private CsvExportComponentChooser m_componentChooser;
-
-  public ExportCsvPage( final IWspmResultNode results )
+  public ProfileResultExportPage( final String pageName, final IWspmResultNode results )
   {
-    super( new FileChooserDelegateSave(), EXTENSION );
+    super( pageName );
 
-    ((FileChooserDelegateSave) getFileChooserDelegate()).addFilter( FILTER_LABEL, "*." + EXTENSION );
-
-    m_resultChooser = new CsvExportResultChooser( results );
+    m_resultChooser = new ProfileExportResultChooser( results );
     m_resultChooser.addCheckStateListener( new ICheckStateListener()
     {
       @Override
@@ -90,20 +83,20 @@ public class ExportCsvPage extends ExportFileChooserPage
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage#createPageContent(org.eclipse.swt.widgets.Composite)
+   * @see org.kalypso.model.wspm.tuhh.ui.export.ValidatingWizardPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected void createPageContent( final Composite parent )
+  public void createControl( final Composite parent )
   {
-    super.createPageContent( parent );
-
     final Composite resultGroup = createResultGroup( parent );
-    resultGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    setControl( resultGroup );
+
+    super.createControl( parent );
   }
 
   private Composite createResultGroup( final Composite parent )
   {
-    m_componentChooser = new CsvExportComponentChooser( getDialogSettings() );
+    m_componentChooser = new ProfileExportComponentChooser( getDialogSettings() );
     m_componentChooser.addCheckStateListener( new ICheckStateListener()
     {
       @Override
@@ -155,4 +148,12 @@ public class ExportCsvPage extends ExportFileChooserPage
     return columns.toArray( new WspmResultLengthSectionColumn[columns.size()] );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.ValidatingWizardPage#validatePage()
+   */
+  @Override
+  protected IMessageProvider validatePage( )
+  {
+    return null;
+  }
 }

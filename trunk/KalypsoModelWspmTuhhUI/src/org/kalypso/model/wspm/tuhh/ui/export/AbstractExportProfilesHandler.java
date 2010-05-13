@@ -77,7 +77,7 @@ public abstract class AbstractExportProfilesHandler extends AbstractHandler
       return null;
     }
 
-    final IWizard exportProfileWizard = createWizard( profileSelection );
+    final IWizard exportProfileWizard = createWizard( event, profileSelection );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
@@ -87,5 +87,5 @@ public abstract class AbstractExportProfilesHandler extends AbstractHandler
     return null;
   }
 
-  protected abstract IWizard createWizard( final ProfileSelection selection );
+  protected abstract IWizard createWizard( ExecutionEvent event, final ProfileSelection selection ) throws ExecutionException;
 }
