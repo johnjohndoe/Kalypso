@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.conv.results.test;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,19 +57,21 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
-import org.kalypso.ogc.gml.serialize.Gml2ShapeConverter;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.shape.IShapeData;
+import org.kalypso.shape.ShapeWriter;
+import org.kalypso.shape.deegree.GM_Object2Shape;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Thomas Jung
@@ -111,6 +114,7 @@ public class NodeResultsHandler2DTest
     finally
     {
       FileUtils.forceDelete( tempDir );
+
       manager.close();
       System.gc();
       System.gc();
@@ -127,18 +131,17 @@ public class NodeResultsHandler2DTest
 
     final GMLWorkspace tinWorkspace = GmlSerializer.createGMLWorkspace( tinFile, null );
     final Feature rootFeature = tinWorkspace.getRootFeature();
-    final Object property = rootFeature.getProperty( "triangulatedSurfaceMember" );
 
-    final SplitSort featureList = new SplitSort( null, null );
-    featureList.add( rootFeature );
+    final Feature[] featureArray = new Feature[] { rootFeature };
 
     final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
-    final IShapeDataProvider shapeDataProvider = new TriangulatedSurfaceSinglePartShapeDataProvider( (Feature[]) featureList.toArray( new Feature[featureList.size()] ), shapeType );
+    final GMLXPath geometry = new GMLXPath( "triangulatedSurfaceMember", null );
+    final Charset charset = ShapeSerializer.getShapeDefaultCharset();
+    final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, coordinateSystem );
+    final IShapeData dataProvider = new TriangulatedSurfaceSinglePartShapeDataProvider( featureArray, geometry, charset, shapeConverter );
 
-    final IFeatureType type = rootFeature.getFeatureType();
-
-    final Gml2ShapeConverter converter = Gml2ShapeConverter.createDefault( type );
-    converter.writeShape( featureList, shapeFile.getAbsolutePath(), shapeDataProvider, new NullProgressMonitor() );
-
+    final ShapeWriter shapeWriter = new ShapeWriter( dataProvider );
+    shapeWriter.write( shapeFile.getAbsolutePath(), new NullProgressMonitor() );
   }
 }
