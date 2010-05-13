@@ -44,8 +44,6 @@ import java.io.File;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -53,12 +51,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
-import org.kalypso.contribs.eclipse.ui.forms.IMessageReceiver;
 
 /**
  * @author kimwerner
  */
-public class ExportFileChooserPage extends WizardPage implements IWizardPage, IMessageReceiver
+public class ExportFileChooserPage extends ValidatingWizardPage
 {
   private FileChooserGroup m_fileChooserGroup;
 
@@ -91,6 +88,7 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite comp = new Composite( parent, SWT.NONE );
@@ -100,8 +98,7 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
 
     setControl( comp );
 
-    final IMessageProvider message = validatePage();
-    setPageComplete( message == null || message.getMessageType() != IMessageProvider.ERROR );
+    super.createControl( parent );
   }
 
   /**
@@ -159,36 +156,14 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage, IM
     updateMessage();
   }
 
-  public void updateMessage( )
-  {
-    final IMessageProvider validate = validatePage();
-    setMessage( validate );
-  }
-
-  /**
-   * Validates this page. Intended to be overwritten by clients.
-   */
-  protected IMessageProvider validatePage( )
-  {
-    return m_fileChooser.validate( m_file );
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.forms.IMessageReceiver#setMessage(org.eclipse.jface.dialogs.IMessageProvider)
-   */
-  @Override
-  public void setMessage( final IMessageProvider message )
-  {
-    if( message == null )
-      setMessage( (String) null );
-    else
-      setMessage( message.getMessage(), message.getMessageType() );
-
-    setPageComplete( message == null || message.getMessageType() != IMessageProvider.ERROR );
-  }
-
   public File getFile( )
   {
     return m_file;
+  }
+
+  @Override
+  protected IMessageProvider validatePage( )
+  {
+    return m_fileChooser.validate( m_file );
   }
 }

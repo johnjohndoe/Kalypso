@@ -40,46 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export;
 
-import java.io.File;
-import java.io.IOException;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.wspwin.core.Plotter;
-
-public final class PlotterExportWizardCallback extends PrfExportWizardCallback
+public abstract class ValidatingWizardPage extends WizardPage
 {
-  private final boolean m_doPrint;
-
-  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final boolean doPrint )
+  public ValidatingWizardPage( final String pageName )
   {
-    super( exportDir, filenamePattern );
-    m_doPrint = doPrint;
+    super( pageName );
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.PrfExportWizardCallback#profileWritten(java.io.File)
+   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
-  public void profileWritten( final File file ) throws CoreException
+  public void createControl( final Composite parent )
   {
-    try
-    {
-      Plotter.openPrf( file, m_doPrint );
+    final IMessageProvider message = validatePage();
+    setPageComplete( message == null || message.getMessageType() != IMessageProvider.ERROR );
+  }
 
-      Thread.sleep( 500 );
-    }
-    catch( final IOException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
-      throw new CoreException( status );
-    }
-    catch( final InterruptedException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
-      throw new CoreException( status );
-    }
+  public void updateMessage( )
+  {
+    final IMessageProvider validate = validatePage();
+    setMessage( validate );
+  }
+
+  /**
+   * Validates this page. Intended to be overwritten by clients.
+   */
+  protected abstract IMessageProvider validatePage( );
+
+  protected void setMessage( final IMessageProvider message )
+  {
+    if( message == null )
+      setMessage( (String) null );
+    else
+      setMessage( message.getMessage(), message.getMessageType() );
+
+    setPageComplete( message == null || message.getMessageType() != IMessageProvider.ERROR );
   }
 }

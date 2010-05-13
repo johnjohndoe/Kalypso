@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.csv;
+package org.kalypso.model.wspm.tuhh.ui.export;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,7 +70,7 @@ import org.kalypso.ogc.gml.om.FeatureComponent;
  * 
  * @author Gernot Belger
  */
-public class CsvExportComponentChooser
+public class ProfileExportComponentChooser
 {
   private static final String SETTINGS_COLUMNS = "selectedColumns"; //$NON-NLS-1$
 
@@ -82,7 +82,7 @@ public class CsvExportComponentChooser
 
   private final IDialogSettings m_settings;
 
-  public CsvExportComponentChooser( final IDialogSettings settings )
+  public ProfileExportComponentChooser( final IDialogSettings settings )
   {
     m_settings = settings;
     initComponents( IWspmTuhhConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS );

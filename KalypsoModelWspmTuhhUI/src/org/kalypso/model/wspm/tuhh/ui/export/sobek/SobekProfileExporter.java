@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.io.File;
 import java.io.FileNotFoundException;

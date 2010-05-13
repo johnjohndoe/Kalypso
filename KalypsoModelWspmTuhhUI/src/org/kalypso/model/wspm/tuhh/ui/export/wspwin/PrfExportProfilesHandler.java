@@ -38,19 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.wizard.IWizard;
+import org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger
  */
-public class LngExportProfilesHandler extends AbstractExportProfilesHandler
+public class PrfExportProfilesHandler extends AbstractExportProfilesHandler
 {
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler#createWizard(org.eclipse.core.commands.ExecutionEvent,
+   *      org.kalypso.model.wspm.ui.action.ProfileSelection)
+   */
   @Override
-  protected IWizard createWizard( final ProfileSelection selection )
+  protected IWizard createWizard( final ExecutionEvent event, final ProfileSelection selection )
   {
-    return new LngExportProfilesWizard( selection );
+    return new PrfExportProfilesWizard( selection );
   }
 }
