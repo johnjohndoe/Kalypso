@@ -71,7 +71,7 @@
              </enabledWhen>
           </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.SobekExportProfilesHandler"
+                class="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesHandler"
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek">
              <enabledWhen>
                 <reference
@@ -80,7 +80,7 @@
              </enabledWhen>
           </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.LngExportProfilesHandler"
+                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesHandler"
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng">
              <enabledWhen>
                 <reference
@@ -89,7 +89,7 @@
              </enabledWhen>
           </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.PrfExportProfilesHandler"
+                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesHandler"
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf">
              <enabledWhen>
                 <reference
@@ -126,7 +126,7 @@
              </enabledWhen>
           </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.PlotterExportHandler"
+                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportHandler"
                 commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter">
              <enabledWhen>
                 <reference
@@ -135,11 +135,20 @@
              </enabledWhen>
           </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.LengthSectionExportHandler"
+                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler"
                 commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
              <enabledWhen>
                 <reference
                       definitionId="org.kalypso.chart.ui.chartEditorActive">
+                </reference>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineHandler"
+                commandId="org.kalypso.model.wspm.ui.command.profile.LineShapeExport">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
              </enabledWhen>
           </handler>
@@ -427,6 +436,16 @@
        </command>
     </menuContribution>
     <menuContribution
+          locationURI="popup:org.kalypso.gml.ui.exports.shape?after=additions">
+       <command
+             commandId="org.kalypso.model.wspm.ui.command.profile.LineShapeExport"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+    </menuContribution>
+    <menuContribution
           locationURI="popup:org.kalypso.model.wspm.ui.profileChange?after=additions">
        <command
              commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
@@ -510,7 +529,7 @@
 	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
 	       name="%command.name.7">
 	</command>
-
+    <command id="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" name="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.name" description="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description"/>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -549,6 +568,7 @@
            commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
            icon="icons/elcl16/export_plotter.gif">
      </image>
+     <image commandId="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" icon="icons/elcl16/exportProfilLine.gif"/>
   </extension>
   <extension
         point="org.eclipse.core.runtime.preferences">
