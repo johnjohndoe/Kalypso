@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
@@ -78,7 +78,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 
   public TriangulatedSurfaceTriangleEater( final String crs, final QNameAndString[] properties ) throws GM_Exception
   {
-    this( null, null, new GM_TriangulatedSurface_Impl( crs ), null, properties );
+    this( null, null, GeometryFactory.createGM_TriangulatedSurface( crs ), null, properties );
   }
 
   public TriangulatedSurfaceTriangleEater( final File tinResultFile, final GMLWorkspace workspace, final GM_TriangulatedSurface surface, final ResultType.TYPE parameter, final QNameAndString[] properties )

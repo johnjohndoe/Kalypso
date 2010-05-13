@@ -66,7 +66,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
 /**
  * This class processes the differences of the velocity vectors between two rma2 result files (.2d). At first the
@@ -103,7 +102,7 @@ public class VeloDiff2D
       /* check files */
       if( !resultFile1.exists() || !resultFile2.exists() || !templateFile.exists() )
       {
-        System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.2") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.2" ) ); //$NON-NLS-1$
         return;
       }
 
@@ -117,17 +116,17 @@ public class VeloDiff2D
       }
       else
       {
-        System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.4") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.4" ) ); //$NON-NLS-1$
         return;
       }
 
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.0") ); //$NON-NLS-1$
-      
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.0" ) ); //$NON-NLS-1$
+
       final FileSystemManagerWrapper manager = VFSUtilities.getNewManager();
       processResults( manager.toFileObject( resultFile1 ), manager.toFileObject( resultFile2 ), parameters, outputDir1, outputDir2 );
       manager.close();
 
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.6") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.6" ) ); //$NON-NLS-1$
 
       if( args.length > 5 )
       {
@@ -139,12 +138,12 @@ public class VeloDiff2D
           final File outputFileOrthogonal = new File( subSequence + "_orthogonal.2d" ); //$NON-NLS-1$
 
           generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFile, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE );
-          System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.10") ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.10" ) ); //$NON-NLS-1$
 
-          System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.11") ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.11" ) ); //$NON-NLS-1$
           generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileParallel, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_PARALLEL );
 
-          System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.12") ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.12" ) ); //$NON-NLS-1$
           generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileOrthogonal, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_ORTHOGONAL );
 
         }
@@ -174,8 +173,8 @@ public class VeloDiff2D
       /* generate differences */
       final TYPE[] types = parameters.toArray( new TYPE[parameters.size()] );
 
-      final GM_TriangulatedSurface[] minuendSurfaces = new GM_TriangulatedSurface_Impl[types.length];
-      final GM_TriangulatedSurface[] subtrahentSurfaces = new GM_TriangulatedSurface_Impl[types.length];
+      final GM_TriangulatedSurface[] minuendSurfaces = new GM_TriangulatedSurface[types.length];
+      final GM_TriangulatedSurface[] subtrahentSurfaces = new GM_TriangulatedSurface[types.length];
 
       for( int i = 0; i < types.length; i++ )
       {
@@ -203,11 +202,11 @@ public class VeloDiff2D
 
   private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
   {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.14") ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
     job1.run( new NullProgressMonitor() );
 
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.16") ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final ProcessResultsJob job2 = new ProcessResultsJob( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
     job2.run( new NullProgressMonitor() );
   }

@@ -74,7 +74,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
 /**
  * This class processes the differences of the velocity vectors between two rma2 result files (.2d). At first the
@@ -99,8 +98,8 @@ public class VeloDiff2DTest extends TestCase
       /* generate differences */
       final TYPE[] resultTypes = parameters.toArray( new TYPE[parameters.size()] );
 
-      final GM_TriangulatedSurface[] minuendSurfaces = new GM_TriangulatedSurface_Impl[resultTypes.length];
-      final GM_TriangulatedSurface[] subtrahentSurfaces = new GM_TriangulatedSurface_Impl[resultTypes.length];
+      final GM_TriangulatedSurface[] minuendSurfaces = new GM_TriangulatedSurface[resultTypes.length];
+      final GM_TriangulatedSurface[] subtrahentSurfaces = new GM_TriangulatedSurface[resultTypes.length];
 
       for( int i = 0; i < resultTypes.length; i++ )
       {

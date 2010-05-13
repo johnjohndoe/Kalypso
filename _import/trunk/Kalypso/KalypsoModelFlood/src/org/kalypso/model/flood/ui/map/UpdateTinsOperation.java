@@ -65,8 +65,8 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
@@ -89,7 +89,6 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.io.hmo.HMOReader;
@@ -98,11 +97,11 @@ import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * TODO: remove the TriangulatedSurfaceTriangleEater from here: we do not want to have a dependency on 1d2d!<br>
- *
+ * 
  * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.
- *
+ * 
  * @author Gernot Belger
- *
+ * 
  */
 public class UpdateTinsOperation implements ICoreRunnableWithProgress
 {
@@ -121,7 +120,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.0"), m_tinReferences.length ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.0" ), m_tinReferences.length ); //$NON-NLS-1$
     try
     {
       for( final ITinReference ref : m_tinReferences )
@@ -148,7 +147,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     monitor.beginTask( ref.getName(), 100 );
 
     /* read source data */
-    monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.1" ) ); //$NON-NLS-1$
 
     final URL sourceLocation = ref.getSourceLocation();
     final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -176,24 +175,24 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         final GM_TriangulatedSurface surface = findSurface( sourceObject );
         if( surface == null )
         {
-          final String msg = Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.4", sourcePath, sourceObject ); //$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.4", sourcePath, sourceObject ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
         }
 
         ProgressUtilities.worked( monitor, 33 );
 
         /* update target data */
-        monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.5") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.5" ) ); //$NON-NLS-1$
         ref.setTin( null ); // reset tin to null before cloning the source in order to free some memory
 
         // REMARK 2: cloning the complete tin will result in performance problems...
         final GM_TriangulatedSurface clonedSurface = (GM_TriangulatedSurface) surface.clone();
         ProgressUtilities.worked( monitor, 33 );
 
-        monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.6") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.6" ) ); //$NON-NLS-1$
         clonedSurface.acceptSurfacePatches( clonedSurface.getEnvelope(), minmaxVisitor, subMon );
 
-        desc =  Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.7", sourceLocation.toExternalForm(), sourcePath, sourceDate ); //$NON-NLS-1$
+        desc = Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.7", sourceLocation.toExternalForm(), sourcePath, sourceDate ); //$NON-NLS-1$
 
         ref.setDescription( desc );
         ref.setMin( minmaxVisitor.getMin() );
@@ -220,7 +219,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         {
           count++;
           final List<GM_Point> pointList = new LinkedList<GM_Point>();
-          monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.10") + count + " / " + rings.length + "... " ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.10" ) + count + " / " + rings.length + "... " ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           for( int i = 0; i < ring.getNumPoints() - 1; i++ )
           {
             final GM_Object object = JTSAdapter.wrap( ring.getPointN( i ) );
@@ -235,12 +234,12 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
         gmSurface = eater.getSurface();
         ProgressUtilities.worked( monitor, 33 );
-        monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.13") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.13" ) ); //$NON-NLS-1$
 
         gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor, subMon );
 
         // TODO: check for right time zone?
-        desc =  Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.14", sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
+        desc = Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.14", sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
 
         ref.setDescription( desc );
         ref.setMin( minmaxVisitor.getMin() );
@@ -275,7 +274,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
           final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryProperty();
-          gmSurface = new GM_TriangulatedSurface_Impl( crs );
+          gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
 
           if( geom instanceof GM_MultiSurface )
           {
@@ -298,18 +297,18 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
                     GM_Triangle triangle;
                     triangle = element;
                     gmSurface.add( triangle );
-                    monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.17") + gmSurface.size() ); //$NON-NLS-1$
+                    monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.17" ) + gmSurface.size() ); //$NON-NLS-1$
                   }
                 }
               }
             }
           }
 
-          monitor.subTask( Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.18") ); //$NON-NLS-1$
+          monitor.subTask( Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.18" ) ); //$NON-NLS-1$
 
           gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor, subMon );
           // TODO: check for right time zone?
-          desc = Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.19", sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
+          desc = Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.19", sourceLocation.toExternalForm(), sourceDate ); //$NON-NLS-1$
 
           ref.setDescription( desc );
           ref.setMin( minmaxVisitor.getMin() );
@@ -321,7 +320,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         catch( final GmlSerializeException e )
         {
           e.printStackTrace();
-          StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.flood.ui.map.UpdateTinsOperation.20") ); //$NON-NLS-1$
+          StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.flood.ui.map.UpdateTinsOperation.20" ) ); //$NON-NLS-1$
         }
 
         break;
