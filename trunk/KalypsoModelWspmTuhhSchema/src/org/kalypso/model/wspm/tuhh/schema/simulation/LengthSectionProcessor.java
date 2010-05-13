@@ -185,9 +185,6 @@ public class LengthSectionProcessor
   {
     final String runoffName = runoff.toString();
 
-    if( !gmlFile.exists() )
-      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionProcessor.5" ) ); //$NON-NLS-1$
-
     final String diagFilename = "Längsschnitt" + runoffName + ".kod"; //$NON-NLS-1$ //$NON-NLS-2$
     final String tableFilename = "Tabelle" + runoffName + ".gft"; //$NON-NLS-1$ //$NON-NLS-2$
     final String breaklineFilename = "Bruchkanten" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -324,8 +321,8 @@ public class LengthSectionProcessor
     final BigDecimal minValue = new BigDecimal( wspRange.getMinimumDouble() );
     final BigDecimal maxValue = new BigDecimal( wspRange.getMaximumDouble() );
 
-    final Color minFill = new Color( 255, 0, 0, 128 );
-    final Color maxFill = new Color( 0, 255, 0, 128 );
+    final Color minFill = new Color( 0, 255, 0, 128 );
+    final Color maxFill = new Color( 255, 0, 0, 128 );
     final Color minStroke = ColorUtilities.createTransparent( minFill, 255 );
     final Color maxStroke = ColorUtilities.createTransparent( maxFill, 255 );
     final PolygonColorMapEntry fromEntry = StyleFactory.createPolygonColorMapEntry( minFill, minStroke, minValue, minValue.add( stepWidth ) );

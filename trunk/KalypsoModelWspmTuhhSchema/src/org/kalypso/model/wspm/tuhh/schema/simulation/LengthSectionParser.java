@@ -44,11 +44,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -57,6 +59,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
+import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.util.LogHelper;
@@ -112,13 +115,12 @@ public class LengthSectionParser
     final String strHeader = FileUtilities.toString( getClass().getResource( "resources/headerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE ); //$NON-NLS-1$
     final String strFooter = FileUtilities.toString( getClass().getResource( "resources/footerLenghSection.txt" ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE ); //$NON-NLS-1$
 
-    processLSFile( strHeader, strFooter, log );
-// TODO: use status of lsProcessors instead
-    return Status.OK_STATUS;
+    return processLSFile( strHeader, strFooter, log );
   }
 
-  private void processLSFile( final String header, final String footer, final LogHelper log ) throws Exception
+  private IStatus processLSFile( final String header, final String footer, final LogHelper log ) throws Exception
   {
+    final Collection<IStatus> result = new ArrayList<IStatus>();
     final WspmWaterBody waterBody = m_calculation.getReach().getWaterBody();
     final TuhhStationComparator stationComparator = new TuhhStationComparator( waterBody.isDirectionUpstreams() );
 
@@ -134,7 +136,7 @@ public class LengthSectionParser
       while( lineIterator.hasNext() )
       {
         if( log.checkCanceled() )
-          return;
+          return Status.CANCEL_STATUS;
 
         final String nextLine = lineIterator.nextLine();
 
@@ -160,7 +162,13 @@ public class LengthSectionParser
 
         if( sectionEnd )
         {
-          closeProcessor( lsProc, previousRunoff );
+          if( lsProc != null )
+          {
+            final IStatus processorResult = closeProcessor( lsProc, previousRunoff );
+            if( !processorResult.isOK() )
+              result.add( processorResult );
+          }
+
           log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.2" ), runoff ); //$NON-NLS-1$
           lsProc = new LengthSectionProcessor( m_outputDir, m_calculation, header, footer, m_epsThinning );
           lsProc.setTitlePattern( m_titlePattern );
@@ -175,22 +183,33 @@ public class LengthSectionParser
         previousRunoff = runoff;
       }
 
-      closeProcessor( lsProc, previousRunoff );
+      if( lsProc != null )
+      {
+        final IStatus processorResult = closeProcessor( lsProc, previousRunoff );
+        if( !processorResult.isOK() )
+          result.add( processorResult );
+      }
     }
     finally
     {
       LineIterator.closeQuietly( lineIterator );
     }
+
+    if( result.isEmpty() )
+      return Status.OK_STATUS;
+
+    final IStatus[] children = result.toArray( new IStatus[result.size()] );
+    final String msg = String.format( "Some problems occured during length section processing" );
+    return new MultiStatus( KalypsoModelWspmTuhhSchemaPlugin.getID(), 0, children, msg, null );
   }
 
-  private void closeProcessor( final LengthSectionProcessor lsProc, final BigDecimal runoff ) throws Exception
+  private IStatus closeProcessor( final LengthSectionProcessor lsProc, final BigDecimal runoff ) throws Exception
   {
-    if( lsProc == null )
-      return;
-
     lsProc.close( runoff );
 
     m_lengthSections.add( lsProc );
+
+    return lsProc.getResult();
   }
 
   public LengthSectionProcessor[] getProcessedLengthSections( )

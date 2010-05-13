@@ -278,6 +278,9 @@ public class WspmTuhhCalcJob implements ISimulation
         {
           final LengthSectionParser lsProcessor = new LengthSectionParser( calculation, new File( dathDir, "laengsschnitt.txt" ), resultEater, tmpDir, epsThinning, TITLE_PATTERN_WATERLEVEL, LSFILE_PATTERN_WATERLEVEL ); //$NON-NLS-1$
           final IStatus lsResult = lsProcessor.process( log );
+          if( !lsResult.isOK() )
+            log.log( false, lsResult.toString() );
+          // TODO: check this error handling
           if( lsResult.getSeverity() == IStatus.ERROR )
           {
             log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.21" ) ); //$NON-NLS-1$
@@ -312,14 +315,14 @@ public class WspmTuhhCalcJob implements ISimulation
           }
 
           final File diagFile = processedLS.getDiagFile();
-          if( diagFile.exists() )
+          if( diagFile != null && diagFile.exists() )
           {
             resultEater.addResult( "LengthSectionDiag", diagFile ); //$NON-NLS-1$
             log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.26" ) ); //$NON-NLS-1$
           }
 
           final File tableFile = processedLS.getTableFile();
-          if( tableFile.exists() )
+          if( tableFile != null && tableFile.exists() )
           {
             resultEater.addResult( "LengthSectionTab", tableFile ); //$NON-NLS-1$
             log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.27" ) ); //$NON-NLS-1$
@@ -452,6 +455,9 @@ public class WspmTuhhCalcJob implements ISimulation
 
           final LengthSectionParser lsProcessor = new LengthSectionParser( calculation, new File( dathDir, "Q_LangSchnitt.txt" ), resultEater, lsOutDir, epsThinning, TITLE_PATTERN_REIB_CONST, LSFILE_PATTERN_REIB_CONST ); //$NON-NLS-1$
           final IStatus lsResult = lsProcessor.process( log );
+          if( !lsResult.isOK() )
+            log.log( false, lsResult.toString() );
+          // TODO: check this error handling
           if( lsResult.getSeverity() == IStatus.ERROR )
           {
             log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.4" ) ); //$NON-NLS-1$
