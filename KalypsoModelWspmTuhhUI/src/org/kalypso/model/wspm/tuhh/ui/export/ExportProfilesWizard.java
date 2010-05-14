@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -55,6 +54,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
+import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -130,7 +130,8 @@ public abstract class ExportProfilesWizard extends Wizard
     };
 
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, m_exportJob );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to export profiles", result );
+    if( !result.isOK() )
+      new StatusDialog( getShell(), result, getWindowTitle() ).open();
     return !result.matches( IStatus.ERROR );
   }
 

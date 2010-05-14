@@ -52,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeOperation;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
-import org.kalypso.gml.ui.commands.exportshape.StandardShapeDataFactory;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
@@ -97,19 +96,17 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
     final boolean doWritePrj = m_exportShapePage.isWritePrj();
 
-    // FIXME: replace with specialised shape data
-    final IShapeDataFactory shapeDataFactory = new StandardShapeDataFactory( profiles, shapeCharset, coordinateSystem );
+    final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( profiles, shapeCharset, coordinateSystem );
 
-    ICoreRunnableWithProgress operation;
     try
     {
-      operation = new ExportShapeOperation( shapeFileBase, shapeDataFactory, doWritePrj );
+      final ICoreRunnableWithProgress operation = new ExportShapeOperation( shapeFileBase, shapeDataFactory, doWritePrj );
       operation.execute( monitor );
     }
     catch( final InvocationTargetException e )
     {
       final String msg = "Failed to export profiles";
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), msg, e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), msg, e.getTargetException() );
       throw new CoreException( status );
     }
     catch( final InterruptedException e )
