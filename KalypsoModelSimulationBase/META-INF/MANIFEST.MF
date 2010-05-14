@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.kalypso.ModelSimulationBase;singleton:=true
 Bundle-Version: 0.0.0
 Require-Bundle: 
  org.eclipse.core.expressions;visibility:=reexport,
- org.kalypso.optimize,
  org.junit;resolution:=optional,
  org.kalypso.gml.processes,
  org.kalypso.ui.addlayer,
