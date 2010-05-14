@@ -55,6 +55,7 @@ import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
@@ -96,7 +97,9 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
     final boolean doWritePrj = m_exportShapePage.isWritePrj();
 
-    final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( profiles, shapeCharset, coordinateSystem );
+    final WspmResultLengthSectionColumn[] lsColumns = m_resultsPage.getSelectedColumns();
+
+    final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( profiles, shapeCharset, coordinateSystem, lsColumns );
 
     try
     {

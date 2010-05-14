@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.export.shape;
 import java.nio.charset.Charset;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.deegree.GM_Object2Shape;
@@ -56,11 +57,14 @@ public class ProfileLineDataFactory implements IShapeDataFactory
 
   private final String m_coordinateSystem;
 
-  public ProfileLineDataFactory( final IProfileFeature[] profiles, final Charset charset, final String coordinateSystem )
+  private final WspmResultLengthSectionColumn[] m_lsColumns;
+
+  public ProfileLineDataFactory( final IProfileFeature[] profiles, final Charset charset, final String coordinateSystem, final WspmResultLengthSectionColumn[] lsColumns )
   {
     m_profiles = profiles;
     m_charset = charset;
     m_coordinateSystem = coordinateSystem;
+    m_lsColumns = lsColumns;
   }
 
   @Override
@@ -69,7 +73,7 @@ public class ProfileLineDataFactory implements IShapeDataFactory
     // TODO: let user choose type; one of POLYLINE(Z) or MULTIPOINT(Z) makes sense.
     final int shapeType = ShapeConst.SHAPE_TYPE_POLYLINEZ;
     final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
-    return new ProfileLineDataProvider( m_profiles, m_charset, shapeConverter );
+    return new ProfileLineDataProvider( m_profiles, m_charset, shapeConverter, m_lsColumns );
   }
 
 }

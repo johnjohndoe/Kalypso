@@ -41,6 +41,10 @@
 package org.kalypso.model.wspm.tuhh.core.results;
 
 import java.math.BigDecimal;
+import java.util.Formattable;
+import java.util.Formatter;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -51,7 +55,7 @@ import org.kalypso.observation.util.TupleResultIndex;
 /**
  * @author Gernot Belger
  */
-public class WspmResultLengthSectionColumn
+public class WspmResultLengthSectionColumn implements Formattable
 {
   private final IObservation<TupleResult> m_observation;
 
@@ -61,6 +65,12 @@ public class WspmResultLengthSectionColumn
 
   private final String m_label;
 
+  private final QName m_valueTypeName;
+
+  private final String m_componentLabel;
+
+  private final String m_observationName;
+
   public WspmResultLengthSectionColumn( final IObservation<TupleResult> observation, final TupleResultIndex stationHash, final IComponent component )
   {
     m_observation = observation;
@@ -68,9 +78,26 @@ public class WspmResultLengthSectionColumn
     final TupleResult result = m_observation.getResult();
     m_component = result.indexOfComponent( component );
 
-    // FIXME: replace with component.getLabel
-    final String componentLabel = component.getName();
-    m_label = String.format( "%s - %s", m_observation.getName(), componentLabel );
+    m_valueTypeName = component.getValueTypeName();
+
+    m_componentLabel = component.getName();
+    m_observationName = m_observation.getName();
+    m_label = String.format( "%s - %s", m_observationName, m_componentLabel );
+  }
+
+  public String getResultName( )
+  {
+    return m_observationName;
+  }
+
+  public String getComponentLabel( )
+  {
+    return m_componentLabel;
+  }
+
+  public QName getValueTypeName( )
+  {
+    return m_valueTypeName;
   }
 
   /** The result value for the given station */
@@ -88,4 +115,21 @@ public class WspmResultLengthSectionColumn
     return m_label;
   }
 
+  /**
+   * @see java.util.Formattable#formatTo(java.util.Formatter, int, int, int)
+   */
+  @Override
+  public void formatTo( final Formatter formatter, final int flags, final int width, final int precision )
+  {
+    if( m_observationName.length() < width )
+      formatter.format( m_observationName );
+    else
+      formatter.format( m_observationName.substring( 0, width ) );
+
+    if( m_componentLabel.length() < precision )
+      formatter.format( m_componentLabel );
+    else
+      formatter.format( m_componentLabel.substring( 0, precision ) );
+
+  }
 }

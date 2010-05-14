@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBFField;
@@ -74,16 +75,16 @@ public class ProfileLineDataProvider implements IShapeData
 
   private final IDBFValue[] m_fields;
 
-  public ProfileLineDataProvider( final IProfileFeature[] profiles, final Charset charset, final GM_Object2Shape shapeConverter )
+  public ProfileLineDataProvider( final IProfileFeature[] profiles, final Charset charset, final GM_Object2Shape shapeConverter, final WspmResultLengthSectionColumn[] lsColumns )
   {
     m_profiles = profiles;
     m_charset = charset;
     m_shapeConverter = shapeConverter;
 
-    m_fields = fillMapping();
+    m_fields = fillMapping( lsColumns );
   }
 
-  private IDBFValue[] fillMapping( )
+  private IDBFValue[] fillMapping( final WspmResultLengthSectionColumn[] lsColumns )
   {
     final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
     try
@@ -100,9 +101,8 @@ public class ProfileLineDataProvider implements IShapeData
       final DBFField waterField = new DBFField( "WATERBODY", FieldType.C, (short) 30, (short) 0 );
       fields.add( new ProfileWaterValue( waterField ) );
 
-      // TODO other stuff...
-
-      // TODO: results
+      for( final WspmResultLengthSectionColumn column : lsColumns )
+        fields.add( new WspmResultValue( column ) );
     }
     catch( final DBaseException e )
     {
