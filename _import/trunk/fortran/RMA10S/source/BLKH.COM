@@ -1,3 +1,0 @@
-C
-      COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2),
-     1      AX(3,3),DNAL(3,4),XNAL(3,4)

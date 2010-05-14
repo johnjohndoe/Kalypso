@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model.wasy.schwarzeelster">
-	<input id="CONTROL_GML"/>
-	<input id="GML"/>
-	<input id="ZML"/>
-	<output id="ERGEBNISSE"/>
-	<output id="NATIVE_IN_DIR"/>
-	<output id="NATIVE_OUT_DIR"/>
-</modelspec>

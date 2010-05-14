@@ -1,8 +1,0 @@
-3 3
-Rickert   0.1000   00        0   Planung    Ri000014.prf                                          
-Rickert   0.2000   00        0   Planung    Ri000015.prf                                          
-Rickert   0.3000   00        0   Planung    Ri000016.prf                                          
-
-Ri000014.prf Ri000006.str
-Ri000015.prf Ri000006.str
-Ri000016.prf Ri000006.str

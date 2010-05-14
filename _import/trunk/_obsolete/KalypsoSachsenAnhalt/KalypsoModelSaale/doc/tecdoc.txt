@@ -1,4 +1,0 @@
-Serverseitige Einstellungen
-===========================
-
-Das Datumsformat der Ländereinstellung MUSS 'TT.MM.JJJJ' sein ('.' als Trennzeichen), sonst rechnet der Rechenkern nicht.

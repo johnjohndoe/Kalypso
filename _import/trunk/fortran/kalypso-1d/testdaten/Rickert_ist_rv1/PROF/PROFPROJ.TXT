@@ -1,8 +1,0 @@
-3 3
-Rickert     0.1000       00    0 Ist        5RICK001.PRF
-Rickert     0.2000       00    0 Ist        5RICK002.PRF
-Rickert     0.3000       00    0 Ist        5RICK003.PRF
-
-5RICK001.PRF Ri000005.str
-5RICK002.PRF Ri000005.str
-5RICK003.PRF Ri000005.str

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<tableview xmlns="tableview.xml.kalypso.org">
-	<layer id="1" source="SERVICE=RESOURCE#XSD=test/test.xsd#PATH=test/test.gml#LAYER=Pulsnitz-KB-HQ100_wlevelHQ100-Kopie-tincut-1" type="gml">
-	</layer>
-</tableview>
-

@@ -1,8 +1,0 @@
-Skript zum importieren der Ombrometerstationen:
-
-Liest:
-- Niederschlagsstationen_WE-Modell.csv
-- ombrometer_leer.gml
-
-Schreibt:
-- ombrometer.gml

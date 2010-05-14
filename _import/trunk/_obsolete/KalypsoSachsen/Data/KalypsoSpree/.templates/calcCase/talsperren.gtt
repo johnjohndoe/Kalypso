@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-	<layer id="1" linktype="gml" ns1:actuate="onRequest" featurePath="TalsperreCollectionAssociation/TalsperreMember"
-		ns1:href="./calcCase.gml" 
-		ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-		<column editable="false" name="Name" width="100"/>
-		<column editable="true" name="Anfangsstauvolumen" width="116"/>
-	</layer>
-</gistableview>

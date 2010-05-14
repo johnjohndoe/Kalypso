@@ -1,9 +1,0 @@
-#Tue Jun 13 22:39:16 CEST 2006
-eclipse.preferences.version=1
-encoding//src/org/kalypso/gmlschema/resources=UTF-8
-encoding//src/org/kalypso/test/gml/serializer/resources/calcCase.gml=UTF-8
-encoding//src/org/kalypso/tools/ktest/resources/EmptyMapping.gml=UTF-8
-encoding//src/org/kalypso/tools/ktest/resources/weisseElster/ObsTGebMapping.gml=UTF-8
-encoding//src/org/kalypso/tools/ktest/resources/weisseElster/ObsTMapping.gml=UTF-8
-encoding//src/org/kalypso/tools/ktest/resources/weisseElster/ZuflussMessungMapping.gml=UTF-8
-encoding//tmp/we1/Abfluss_Node1800.zml=UTF-8
