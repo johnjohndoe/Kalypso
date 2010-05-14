@@ -41,11 +41,10 @@
 package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.shape.IShapeData;
@@ -53,6 +52,9 @@ import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFValue;
+import org.kalypso.shape.deegree.FeatureNameValue;
+import org.kalypso.shape.deegree.FeatureValue;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,7 +72,7 @@ public class ProfileLineDataProvider implements IShapeData
 
   private final GM_Object2Shape m_shapeConverter;
 
-  private final Map<DBFField, IDBFValue> m_mapping = new LinkedHashMap<DBFField, IDBFValue>();
+  private final IDBFValue[] m_fields;
 
   public ProfileLineDataProvider( final IProfileFeature[] profiles, final Charset charset, final GM_Object2Shape shapeConverter )
   {
@@ -78,35 +80,36 @@ public class ProfileLineDataProvider implements IShapeData
     m_charset = charset;
     m_shapeConverter = shapeConverter;
 
-    fillMapping();
-
+    m_fields = fillMapping();
   }
 
-  private void fillMapping( )
+  private IDBFValue[] fillMapping( )
   {
+    final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
     try
     {
       final DBFField nameField = new DBFField( "NAME", FieldType.C, (short) 50, (short) 0 );
-      m_mapping.put( nameField, new FeatureNameValue( nameField ) );
+      fields.add( new FeatureNameValue( nameField ) );
 
       final DBFField descriptionField = new DBFField( "DESCRIPTION", FieldType.C, (short) 128, (short) 0 );
-      m_mapping.put( descriptionField, new FeatureValue( descriptionField, new GMLXPath( Feature.QN_DESCRIPTION ) ) );
+      fields.add( new FeatureValue( descriptionField, new GMLXPath( Feature.QN_DESCRIPTION ) ) );
 
       final DBFField stationField = new DBFField( "STATION", FieldType.N, (short) 10, (short) 4 );
-      m_mapping.put( stationField, new ProfileStationValue( stationField ) );
+      fields.add( new ProfileStationValue( stationField ) );
 
       final DBFField waterField = new DBFField( "WATERBODY", FieldType.C, (short) 30, (short) 0 );
-      m_mapping.put( waterField, new ProfileWaterValue( waterField ) );
+      fields.add( new ProfileWaterValue( waterField ) );
 
       // TODO other stuff...
 
       // TODO: results
-
     }
     catch( final DBaseException e )
     {
       e.printStackTrace();
     }
+
+    return fields.toArray( new IDBFValue[fields.size()] );
   }
 
   /**
@@ -128,24 +131,12 @@ public class ProfileLineDataProvider implements IShapeData
   }
 
   /**
-   * @see org.kalypso.shape.IShapeData#getData(java.lang.Object, int)
-   */
-  @Override
-  public Object getData( final Object element, final int field ) throws ShapeDataException
-  {
-    final DBFField[] fields = getFields();
-    final IDBFValue dbfValue = m_mapping.get( fields[field] );
-    return dbfValue.getValue( element );
-  }
-
-  /**
    * @see org.kalypso.shape.IShapeData#getFields()
    */
   @Override
-  public DBFField[] getFields( )
+  public IDBFValue[] getFields( )
   {
-    final Set<DBFField> keySet = m_mapping.keySet();
-    return keySet.toArray( new DBFField[keySet.size()] );
+    return m_fields;
   }
 
   /**
@@ -185,5 +176,4 @@ public class ProfileLineDataProvider implements IShapeData
   {
     return m_profiles.length;
   }
-
 }
