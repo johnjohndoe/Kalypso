@@ -42,27 +42,17 @@ package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.AbstractDBFValue;
 import org.kalypso.shape.dbf.DBFField;
 
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractProfileValue implements IDBFValue
+public abstract class AbstractProfileValue extends AbstractDBFValue
 {
-  private final DBFField m_field;
-
   public AbstractProfileValue( final DBFField field )
   {
-    m_field = field;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.shape.IDBFValue#getField()
-   */
-  @Override
-  public DBFField getField( )
-  {
-    return m_field;
+    super( field );
   }
 
   /**
