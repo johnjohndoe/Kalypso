@@ -230,4 +230,22 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="org.kalypso.model.1d2d.project.1d2d_demo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.model.1d2d.project.2d_demo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.model.1d2d.project.template"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>

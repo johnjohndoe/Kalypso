@@ -25,7 +25,10 @@ Require-Bundle: org.junit4,
  de.openali.odysseus.chart.factory,
  de.openali.odysseus.chart.ui,
  org.kalypso.project.database;bundle-version="1.0.0",
- org.kalypso.project.database.client;bundle-version="1.0.0"
+ org.kalypso.project.database.client;bundle-version="1.0.0",
+ org.kalypso.model.1d2d.project.1d2d_demo;resolution:=optional,
+ org.kalypso.model.1d2d.project.2d_demo;resolution:=optional,
+ org.kalypso.model.1d2d.project.template
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.elevationmodel,
