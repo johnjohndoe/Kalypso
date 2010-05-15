@@ -55,6 +55,7 @@ import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
@@ -97,9 +98,12 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
     final boolean doWritePrj = m_exportShapePage.isWritePrj();
 
+    final WspmResultLengthSection[] lengthSections = m_resultsPage.getSelectedLengthSections();
+    final IProfileFeature[] interpolatedProfiles = interpolateProfiles( profiles, lengthSections );
+
     final WspmResultLengthSectionColumn[] lsColumns = m_resultsPage.getSelectedColumns();
 
-    final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( profiles, shapeCharset, coordinateSystem, lsColumns );
+    final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( interpolatedProfiles, shapeCharset, coordinateSystem, lsColumns );
 
     try
     {
@@ -116,5 +120,12 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     {
       throw new CoreException( Status.CANCEL_STATUS );
     }
+  }
+
+  private IProfileFeature[] interpolateProfiles( final IProfileFeature[] profiles, final WspmResultLengthSection[] lengthSections )
+  {
+
+    // TODO Auto-generated method stub
+    return profiles;
   }
 }
