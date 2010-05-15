@@ -46,9 +46,8 @@
 package org.kalypso.ui.rrm.wizards;
 
 import java.io.FileWriter;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -56,31 +55,21 @@ import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
-import org.kalypso.afgui.wizards.INewProjectWizard;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.i18n.I18nUtils;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.annotation.DefaultAnnotation;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -91,8 +80,10 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -110,9 +101,10 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author kuepfer
  */
-public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
+public class KalypsoNAProjectWizard extends NewProjectWizard
 {
-  // Constants
+  public static final String CATEGORY_TEMPLATE = "org.kalypso.model.rrm.templateProjects";//$NON-NLS-1$
+
   public static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
 
   static final String CATCHMENT_PAGE = "page_type:catchment"; //$NON-NLS-1$
@@ -127,9 +119,71 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
 
   static final String PREFERENCE_PAGE = "page_type:preferences"; //$NON-NLS-1$
 
-  private final String m_resourceBase = "resources/.projecttemplate"; //$NON-NLS-1$
-
   final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
+
+  private KalypsoNAProjectWizardPage m_createMappingCatchmentPage;
+
+  private KalypsoNAProjectWizardPage m_createMappingHydrotopPage;
+
+  private KalypsoNAProjectWizardPage m_createMappingNodePage;
+
+  private KalypsoNAProjectWizardPage m_createMappingRiverPage;
+
+  private KalypsoNAProjectPreferences m_createPreferencePage;
+
+  private final GMLSchema m_modelSchema;
+
+  private GMLWorkspace m_modelWS;
+
+  private GMLSchema m_hydrotopSchema;
+
+  private GMLWorkspace m_hydWS;
+
+  public KalypsoNAProjectWizard( )
+  {
+    super( CATEGORY_TEMPLATE, true );
+
+    GMLSchema schema = null;
+    try
+    {
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      schema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
+      m_hydrotopSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAHYDROTOP, (String) null );
+    }
+    catch( final Exception e1 )
+    {
+      e1.printStackTrace();
+    }
+    m_modelSchema = schema;
+
+    setNeedsProgressMonitor( true );
+    setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
+  }
+
+  @Override
+  public void addPages( )
+  {
+    super.addPages();
+
+    m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE, m_modelSchema );
+    addPage( m_createPreferencePage );
+
+    m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
+    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
+
+    addPage( m_createMappingCatchmentPage );
+    final IFeatureType gewaesserFT = createGewaesserFT();
+    m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
+    ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
+    addPage( m_createMappingRiverPage );
+
+    m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
+    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
+    addPage( m_createMappingNodePage );
+    m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
+    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
+    addPage( m_createMappingHydrotopPage );
+  }
 
   private IFeatureType createGewaesserFT( )
   {
@@ -156,89 +210,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     return GMLSchemaFactory.createFeatureType( featureQName, pts );
   }
 
-  private KalypsoNAProjectWizardPage m_createMappingCatchmentPage;
-
-  private KalypsoNAProjectWizardPage m_createMappingHydrotopPage;
-
-  private KalypsoNAProjectWizardPage m_createMappingNodePage;
-
-  private KalypsoNAProjectWizardPage m_createMappingRiverPage;
-
-  private KalypsoNAProjectPreferences m_createPreferencePage;
-
-  private WizardNewProjectCreationPage m_createProjectPage;
-
-  private final GMLSchema m_modelSchema;
-
-  private GMLWorkspace m_modelWS;
-
-  private IPath m_workspacePath;
-
-  private IProject m_projectHandel;
-
-  private IPath m_modelPath;
-
-  private GMLSchema m_hydrotopSchema;
-
-  private Path m_hydPath;
-
-  private GMLWorkspace m_hydWS;
-
-  public KalypsoNAProjectWizard( )
-  {
-    GMLSchema schema = null;
-    try
-    {
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      schema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
-      m_hydrotopSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAHYDROTOP, (String) null );
-    }
-    catch( final Exception e1 )
-    {
-      e1.printStackTrace();
-    }
-    m_modelSchema = schema;
-
-    setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
-  }
-
-  @Override
-  public void addPages( )
-  {
-    try
-    {
-      m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      m_createProjectPage.setTitle( ResourceMessages.NewProject_title );
-      m_createProjectPage.setDescription( ResourceMessages.NewProject_description );
-      m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-      addPage( m_createProjectPage );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE, m_modelSchema );
-    addPage( m_createPreferencePage );
-
-    m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
-
-    addPage( m_createMappingCatchmentPage );
-    final IFeatureType gewaesserFT = createGewaesserFT();
-    m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
-    addPage( m_createMappingRiverPage );
-
-    m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
-    addPage( m_createMappingNodePage );
-    m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
-    addPage( m_createMappingHydrotopPage );
-  }
-
   private IFeatureType getFeatureType( final String featureName )
   {
     IFeatureType ft = null;
@@ -246,77 +217,30 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     if( ft == null )
       ft = m_hydrotopSchema.getFeatureType( new QName( NaModelConstants.NS_NAHYDROTOP, featureName ) );
     return ft;
-
   }
 
   /**
-   * We will accept the selection in the workbench to see if we can initialize from it.
-   *
-   * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-  }
-
-  /**
-   * This method creates the new Project and all the necessary , performs the mapping and writes the new modell.gml file
-   * .
-   *
-   * @see org.eclipse.jface.wizard.IWizard#performFinish()
+   * @see org.kalypso.afgui.wizards.NewProjectWizard#postCreateProject(org.eclipse.core.resources.IProject,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public boolean performFinish( )
+  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    // TODO:
-    // - put all code into a WorkspaceModifyOperation
-    // - run it with RunnableContextHelper on getContainer()
-    // - remove cathes and show resulting status in errod dialog
-    // - use operation's monitor to show progress (dont give null to Project.create and so on)
-
-    m_workspacePath = m_createProjectPage.getLocationPath();
-    m_projectHandel = m_createProjectPage.getProjectHandle();
+    final IPath modelPath = project.getLocation().append( "/modell.gml" ); //$NON-NLS-1$
+    final IPath hydPath = project.getLocation().append( "/hydrotop.gml" ); //$NON-NLS-1$
 
     try
     {
-      m_projectHandel.create( new NullProgressMonitor() );
-      m_projectHandel.open( new NullProgressMonitor() );
-      final IProjectDescription description = m_projectHandel.getDescription();
-      final String[] nanature = { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
-      description.setNatureIds( nanature );
-      m_projectHandel.setDescription( description, new NullProgressMonitor() );
-      // set charSet for the new project to the UTF-8 standard
-      // TODO: do not do such a thing (at least without comment why).
-      // The workspace has its own preference settings
-//      m_projectHandel.setDefaultCharset( "UTF-8", new NullProgressMonitor()  ); //$NON-NLS-1$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      ErrorDialog.openError( getShell(), Messages.getString( "KalypsoNAProjectWizard.10" ), Messages.getString( "KalypsoNAProjectWizard.11" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-      return false;
-    }
-
-    // copy all the resources to the workspace into the new created project
-    copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
-
-    // TODO: refactor: until here, iti is exactly the same code as in the NewNAAsciiProjectwizard, should be combined
-
-    try
-    {
-      m_projectHandel.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor()  );
       // open modell.gml and hydrotop.gml file to write imported feature
-      m_modelPath = new Path( m_projectHandel.getFullPath().append( "/modell.gml" ).toString() ); //$NON-NLS-1$
-      final URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
-      m_modelWS = GmlSerializer.createGMLWorkspace( modelURL, null );
-      m_hydPath = new Path( m_projectHandel.getFullPath().append( "/hydrotop.gml" ).toString() ); //$NON-NLS-1$
-      final URL hydURL = new URL( ResourceUtilities.createURLSpec( m_hydPath ) );
-      m_hydWS = GmlSerializer.createGMLWorkspace( hydURL, null );
+      m_modelWS = GmlSerializer.createGMLWorkspace( modelPath.toFile(), null );
+      m_hydWS = GmlSerializer.createGMLWorkspace( hydPath.toFile(), null );
     }
     catch( final Exception e1 )
     {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to create model files", e1 );
+      throw new CoreException( status );
     }
+
     // map catchment shape file
     final HashMap<Object, Object> catchmentMapping = m_createMappingCatchmentPage.getMapping();
     if( catchmentMapping != null && catchmentMapping.size() != 0 )
@@ -348,40 +272,36 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
 
     // write all new imported features to the modell.gml and hydrotop.gml file
-    // in the
-    // workspace
+    // in the workspace model.gml
     try
     {
-      // model.gml
-      final IPath modelPath2 = m_workspacePath.append( m_modelPath );
-      final OutputStreamWriter modelWriter = new FileWriter( modelPath2.toFile() );
+      final OutputStreamWriter modelWriter = new FileWriter( modelPath.toFile() );
       GmlSerializer.serializeWorkspace( modelWriter, m_modelWS );
       modelWriter.close();
       // hydrotop.gml
-      final IPath hydPath = m_workspacePath.append( m_hydPath );
       final OutputStreamWriter hydrotopWriter = new FileWriter( hydPath.toFile() );
       GmlSerializer.serializeWorkspace( hydrotopWriter, m_hydWS );
       hydrotopWriter.close();
+
+      project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
     }
-    catch( final Exception e3 )
+    catch( final IOException e )
     {
-      e3.printStackTrace();
-      return false;
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to write model files", e );
+      throw new CoreException( status );
     }
-    try
+    catch( final GmlSerializeException e )
     {
-      m_projectHandel.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to write model files", e );
+      throw new CoreException( status );
     }
-    catch( final CoreException e2 )
+    finally
     {
-      e2.printStackTrace();
-      return false;
+      m_createMappingCatchmentPage.dispose();
+      m_createMappingRiverPage.dispose();
+      m_createMappingNodePage.dispose();
+      m_createMappingHydrotopPage.dispose();
     }
-    m_createMappingCatchmentPage.dispose();
-    m_createMappingRiverPage.dispose();
-    m_createMappingNodePage.dispose();
-    m_createMappingHydrotopPage.dispose();
-    return true;
   }
 
   private void mapHyd( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
@@ -450,31 +370,11 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
   }
 
-  private void copyResourcesToProject( final IPath path )
-  {
-    InputStream is = null;
-    try
-    {
-      is = I18nUtils.getLocaleResourceAsStream( getClass(), m_resourceBase, ".zip" );//$NON-NLS-1$
-      ZipUtilities.unzip( is, path.toFile() );
-      is.close();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-
-    }
-  }
-
   /**
    * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
    * and check if the ID doesn´t exist in the idMap. if the id ColKey is not set, use the ID of the sourceFeature (shape
    * file).
-   *
+   * 
    * @param idColKey
    * @param sourceFeature
    * @param IDText
@@ -512,7 +412,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     return fid;
   }
 
-  public void mapCatchment( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
+  private void mapCatchment( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
   {
     final Feature rootFeature = m_modelWS.getRootFeature();
     final IFeatureType modelFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
@@ -595,9 +495,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
   }
 
-  public void mapNode( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
+  private void mapNode( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
   {
-
     final Feature rootFeature = m_modelWS.getRootFeature();
     final IFeatureType modelFT = getFeatureType( "Node" ); //$NON-NLS-1$
     final Feature nodeCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
@@ -654,7 +553,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }
   }
 
-  public void mapRiver( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
+  private void mapRiver( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
   {
     final Feature rootFeature = m_modelWS.getRootFeature();
 
@@ -783,41 +682,4 @@ public class KalypsoNAProjectWizard extends Wizard implements INewProjectWizard
     }// for i
 
   }// mapRiver
-
-  public IGMLSchema getModelSchema( )
-  {
-    return m_modelSchema;
-  }
-
-  public boolean performCancle( )
-  {
-    try
-    {
-      m_projectHandel.delete( true, false, null );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * @see org.kalypso.afgui.wizards.INewProjectWizard#getNewProject()
-   */
-  @Override
-  public IProject getNewProject( )
-  {
-    return m_projectHandel;
-  }
-
-  /**
-   * @see org.kalypso.afgui.wizards.INewProjectWizard#setActivateScenarioOnPerformFinish(boolean)
-   */
-  @Override
-  public void setActivateScenarioOnPerformFinish( final boolean b )
-  {
-    // ignore, makes no sense here
-  }
 }

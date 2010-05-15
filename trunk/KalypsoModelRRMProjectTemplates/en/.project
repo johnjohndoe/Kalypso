@@ -3,15 +3,10 @@
 	<name>KalypsoModelRRMProjectTemplates</name>
 	<comment></comment>
 	<projects>
-        <buildCommand>
-            <name>org.eclipse.pde.ManifestBuilder</name>
-            <arguments>
-            </arguments>
-        </buildCommand>
 	</projects>
 	<buildSpec>
 	</buildSpec>
 	<natures>
-        <nature>org.eclipse.pde.PluginNature</nature>
+        <nature>org.kalypso.simulation.ui.ModelNature</nature>
 	</natures>
 </projectDescription>

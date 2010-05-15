@@ -395,25 +395,40 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * This method returns a HashMap with the user defined mapping of the source to the target. key = (String) target
    * property value = (String) source property
-   *
+   * 
    * @return map HashMap with the custom mapping
    */
   public HashMap<Object, Object> getMapping( )
   {
-    final HashMap<Object, Object> map = new HashMap<Object, Object>();
-    final Control[] cArray = m_sourceGroup.getChildren();
-    for( final Control element : cArray )
+    // TODO: bad design! The selection listener on the combo should update the internal state of this class
+    // Do not access access components from outside
+
+    final HashMap<Object, Object>[] result = new HashMap[1];
+
+    getShell().getDisplay().syncExec( new Runnable()
     {
-      if( element instanceof Combo )
+      @Override
+      public void run( )
       {
-        final Combo c = (Combo) element;
-        final IPropertyType target = (IPropertyType) c.getData( TARGET_KEY );
-        final Object source = c.getData( SOURCE_KEY );
-        if( source != null )
-          map.put( target.getQName().getLocalPart(), source );
+        final HashMap<Object, Object> map = new HashMap<Object, Object>();
+        final Control[] cArray = m_sourceGroup.getChildren();
+        for( final Control element : cArray )
+        {
+          if( element instanceof Combo )
+          {
+            final Combo c = (Combo) element;
+            final IPropertyType target = (IPropertyType) c.getData( TARGET_KEY );
+            final Object source = c.getData( SOURCE_KEY );
+            if( source != null )
+              map.put( target.getQName().getLocalPart(), source );
+          }
+        }// for i
+
+        result[0] = map;
       }
-    }// for i
-    return map;
+    } );
+
+    return result[0];
   }
 
   private boolean readShapeFile( final File shapeFile )
@@ -472,7 +487,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
           if( element instanceof IValuePropertyType )
           {
             final IValuePropertyType fromPT = (IValuePropertyType) element;
-            final IValuePropertyType toPT = (IValuePropertyType) combo.getData(TARGET_KEY);
+            final IValuePropertyType toPT = (IValuePropertyType) combo.getData( TARGET_KEY );
             if( SpecialPropertyMapper.isValidMapping( fromPT.getValueClass(), toPT.getValueClass() ) )
               combo.add( element.getQName().getLocalPart() );
           }
@@ -539,14 +554,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final Feature rootFeature = m_shapeWorkspace.getRootFeature();
     final List< ? > featureList = (List< ? >) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     return featureList;
-  }
-
-  @Override
-  public void dispose( )
-  {
-    resetButton.removeSelectionListener( this );
-    browseButton.removeSelectionListener( this );
-    skipRadioButton.removeSelectionListener( this );
   }
 
   protected void storeSelectionData( final Widget w )
