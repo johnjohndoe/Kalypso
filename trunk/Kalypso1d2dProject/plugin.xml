@@ -376,16 +376,6 @@
       </decorator>
    </extension>
    <extension
-         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
-      <project
-            category="org.kalypso.kalypso1d2d.pjt.projectTemplate"
-            data="etc/emptyProject.zip"
-            description="%org.kalypso.kalypso1d2d.pjt.projectTemplate.description"
-            label="%org.kalypso.kalypso1d2d.pjt.projectTemplate.label"
-            projectName=" ">
-      </project>
-   </extension>
-   <extension
          point="org.kalypso.project.database.client.kalypsoModule"> 
       <module
             module="org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule">
