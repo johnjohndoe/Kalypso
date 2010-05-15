@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -52,6 +53,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
@@ -70,6 +72,9 @@ public class ProfileResultExportPage extends ValidatingWizardPage
   public ProfileResultExportPage( final String pageName, final IWspmResultNode results )
   {
     super( pageName );
+
+    setTitle( "Available Results" );
+    setDescription( "Please choose the result data that will be joined to the profiles." );
 
     m_resultChooser = new ProfileExportResultChooser( results );
     m_resultChooser.addCheckStateListener( new ICheckStateListener()
@@ -109,7 +114,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     final Group group = new Group( parent, SWT.NONE );
     final GridLayout layout = new GridLayout( 1, false );
     group.setLayout( layout );
-    group.setText( "Weitere Daten" );
+    group.setText( "Available Results" );
 
     final SashForm sashForm = new SashForm( group, SWT.HORIZONTAL );
     sashForm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -126,26 +131,44 @@ public class ProfileResultExportPage extends ValidatingWizardPage
   {
     final Collection<WspmResultLengthSectionColumn> columns = new ArrayList<WspmResultLengthSectionColumn>();
 
-    final IWspmResultNode[] results = m_resultChooser.getSelectedResults();
     final IComponent[] components = m_componentChooser.getSelectedComponents();
 
-    for( final IWspmResultNode result : results )
+    final WspmResultLengthSection[] lengthSections = getSelectedLengthSections();
+    for( final WspmResultLengthSection section : lengthSections )
     {
-      if( result instanceof IWspmResult )
+      for( final IComponent component : components )
       {
-        final WspmResultLengthSection section = ((IWspmResult) result).getLengthSection();
-        for( final IComponent component : components )
+        if( section.hasColumn( component ) )
         {
-          if( section.hasColumn( component ) )
-          {
-            final WspmResultLengthSectionColumn column = section.getColumn( component );
-            columns.add( column );
-          }
+          final WspmResultLengthSectionColumn column = section.getColumn( component );
+          columns.add( column );
         }
       }
     }
 
     return columns.toArray( new WspmResultLengthSectionColumn[columns.size()] );
+  }
+
+  public WspmResultLengthSection[] getSelectedLengthSections( )
+  {
+    final Collection<WspmResultLengthSection> lengthSections = new ArrayList<WspmResultLengthSection>();
+
+    final IWspmResultNode[] results = getResults();
+    for( final IWspmResultNode result : results )
+    {
+      if( result instanceof IWspmResult )
+      {
+        final WspmResultLengthSection section = ((IWspmResult) result).getLengthSection();
+        lengthSections.add( section );
+      }
+    }
+
+    return lengthSections.toArray( new WspmResultLengthSection[lengthSections.size()] );
+  }
+
+  private IWspmResultNode[] getResults( )
+  {
+    return m_resultChooser.getSelectedResults();
   }
 
   /**
@@ -154,6 +177,9 @@ public class ProfileResultExportPage extends ValidatingWizardPage
   @Override
   protected IMessageProvider validatePage( )
   {
+    if( ArrayUtils.isEmpty( getResults() ) )
+      return new MessageProvider( "No results have been selected.", INFORMATION );
+
     return null;
   }
 }

@@ -92,16 +92,6 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     addPage( m_profileFileChooserPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
-    super.addPages();
-
-  }
-
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
