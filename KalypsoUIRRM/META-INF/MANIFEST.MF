@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.NACalcJob,
  org.kalypso.afgui;bundle-version="0.0.0",
  org.kalypso.project.database.client;bundle-version="1.0.0",
- org.kalypso.simulation.ui;bundle-version="0.0.1"
+ org.kalypso.simulation.ui;bundle-version="0.0.1",
+ org.kalypso.model.rrm.project.template;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.ui.rrm.extension
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

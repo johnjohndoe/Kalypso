@@ -39,35 +39,20 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-/*
- * Created on 31.01.2005
- *
- */
 package org.kalypso.ui.rrm.wizards;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.util.HashMap;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.kalypso.afgui.wizards.INewProjectWizard;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
@@ -84,22 +69,11 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 /**
  * @author huebsch
  */
-public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewProjectWizard
+public class NewNAAsciiProjectWizard extends NewProjectWizard
 {
-  // Constants
   static final String PROJECT_PAGE = "page_type:createNewProject"; //$NON-NLS-1$
 
-  private final String m_resourceBase = "resources/.projecttemplate.zip"; //$NON-NLS-1$
-
   final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
-
-  private WizardNewProjectCreationPage m_createProjectPage;
-
-  private IPath m_workspacePath;
-
-  private IProject m_projectHandel;
-
-  private IPath m_parameterPath;
 
   private GMLSchema m_parameterSchema;
 
@@ -107,6 +81,8 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
 
   public NewNAAsciiProjectWizard( )
   {
+    super( KalypsoNAProjectWizard.CATEGORY_TEMPLATE, true );
+
     try
     {
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
@@ -119,110 +95,27 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     }
   }
 
-  @Override
-  public void addPages( )
-  {
-    try
-    {
-      m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      m_createProjectPage.setDescription( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.2") ); //$NON-NLS-1$
-      m_createProjectPage.setTitle( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.3") ); //$NON-NLS-1$
-      // m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-      addPage( m_createProjectPage );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
   /**
-   * We will accept the selection in the workbench to see if we can initialize from it.
-   *
-   * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-  }
-
-  /**
-   * This method creates the new Project and all the necessary , performs the mapping and writes the new modell.gml file
-   * .
-   *
-   * @see org.eclipse.jface.wizard.IWizard#performFinish()
+   * @see org.kalypso.afgui.wizards.NewProjectWizard#postCreateProject(org.eclipse.core.resources.IProject,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public boolean performFinish( )
+  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    m_workspacePath = m_createProjectPage.getLocationPath();
-    m_projectHandel = m_createProjectPage.getProjectHandle();
-
     try
     {
-      m_projectHandel.create( new NullProgressMonitor() );
-      m_projectHandel.open( new NullProgressMonitor() );
-      final IProjectDescription description = m_projectHandel.getDescription();
-      final String[] nanature = { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
-      description.setNatureIds( nanature );
-      m_projectHandel.setDescription( description, new NullProgressMonitor() );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.0"), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.1"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-      return false;
-    }
-
-    // copy all the resources to the workspace into the new created project
-    copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
-
-    // TODO: refactor: until here, iti is exactly the same code as in the KalypsoNAProjectWizard, should be combined
-
-    try
-    {
-      ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
       // open modell.gml and hydrotop.gml file to write imported feature
-      m_parameterPath = new Path( m_projectHandel.getFullPath().append( "/parameter.gml" ).toString() ); //$NON-NLS-1$
-      importParameter( m_parameterPath, m_asciiBaseDir );
+      final IPath parameterPath = project.getLocation().append( "/parameter.gml" ); //$NON-NLS-1$
+      importParameter( parameterPath, m_asciiBaseDir );
     }
     catch( final Exception e1 )
     {
-      e1.printStackTrace();
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e1.getLocalizedMessage(), e1 );
-      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.8"), Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.9"), status ); //$NON-NLS-1$ //$NON-NLS-2$
-      return false;
+      throw new CoreException( status );
     }
 
-    try
-    {
-      ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
-    }
-    catch( final CoreException e2 )
-    {
-      e2.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
-  private void copyResourcesToProject( final IPath path )
-  {
-    final String resource = m_resourceBase;
-    System.out.print( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.4") + resource + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
-    try
-    {
-      ZipUtilities.unzip( resourceAsStream, path.toFile() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( resourceAsStream );
-
-    }
+    // TODO: only refresh changed file!
+    ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
   }
 
   public IGMLSchema getParameterSchema( )
@@ -230,47 +123,13 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     return m_parameterSchema;
   }
 
-  public boolean performCancle( )
+  private void importParameter( final IPath paraPath, final File asciiBaseDir ) throws Exception
   {
-    try
-    {
-      m_projectHandel.delete( true, false, null );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
-  public void importParameter( final IPath path, final File asciiBaseDir ) throws Exception
-  {
-    final IPath paraPath = m_workspacePath.append( path );
     final File parameterGmlFile = paraPath.toFile();
     final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, parameterGmlFile );
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, null, "http://www.tuhh.de/parameter", null ); //$NON-NLS-1$
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
-    System.out.println( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7") + parameterGmlFile.getPath() ); //$NON-NLS-1$
+    System.out.println( Messages.getString( "org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7" ) + parameterGmlFile.getPath() ); //$NON-NLS-1$
   }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard#getNewProject()
-   */
-  @Override
-  public IProject getNewProject( )
-  {
-    return m_projectHandel;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard#setActivateScenarioOnPerformFinish(boolean)
-   */
-  @Override
-  public void setActivateScenarioOnPerformFinish( final boolean b )
-  {
-    // nothing to do
-  }
-
 }
