@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
@@ -154,7 +155,7 @@ public class ProfileLineDataProvider implements IShapeData
    * @see org.kalypso.shape.IShapeData#getShapeType()
    */
   @Override
-  public int getShapeType( )
+  public ShapeType getShapeType( )
   {
     return m_shapeConverter.getShapeType();
   }

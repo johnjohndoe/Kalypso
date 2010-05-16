@@ -45,7 +45,7 @@ import java.nio.charset.Charset;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeConst;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 
@@ -71,7 +71,7 @@ public class ProfileLineDataFactory implements IShapeDataFactory
   public IShapeData createData( )
   {
     // TODO: let user choose type; one of POLYLINE(Z) or MULTIPOINT(Z) makes sense.
-    final int shapeType = ShapeConst.SHAPE_TYPE_POLYLINEZ;
+    final ShapeType shapeType = ShapeType.POLYLINEZ;
     final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
     return new ProfileLineDataProvider( m_profiles, m_charset, shapeConverter, m_lsColumns );
   }
