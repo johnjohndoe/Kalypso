@@ -64,12 +64,12 @@ import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.IShapeData;
+import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.ShapeWriter;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -134,7 +134,7 @@ public class NodeResultsHandler2DTest
 
     final Feature[] featureArray = new Feature[] { rootFeature };
 
-    final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
+    final ShapeType shapeType = ShapeType.POLYGONZ;
     final GMLXPath geometry = new GMLXPath( "triangulatedSurfaceMember", null );
     final Charset charset = ShapeSerializer.getShapeDefaultCharset();
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
