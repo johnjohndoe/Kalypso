@@ -101,6 +101,7 @@ import org.kalypso.convert.namodel.optimize.CalibarationConfig;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
@@ -148,6 +149,8 @@ import org.xml.sax.SAXParseException;
  */
 public class NaModelInnerCalcJob implements ISimulation
 {
+  private static final String STRING_SIMULATION_FAILED = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.36" ); //$NON-NLS-1$
+
   public static final String EXECUTABLES_FILE_TEMPLATE = "Kalypso-NA_%s.exe";
 
   public static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe";
@@ -200,7 +203,7 @@ public class NaModelInnerCalcJob implements ISimulation
     catch( final Exception e1 )
     {
       e1.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.36" ), e1.getCause() ); //$NON-NLS-1$
+      throw new SimulationException( STRING_SIMULATION_FAILED, e1.getCause() ); //$NON-NLS-1$
     }
     conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
     final Logger logger = conf.getLogger();
@@ -311,7 +314,8 @@ public class NaModelInnerCalcJob implements ISimulation
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.36" ), e.getCause() ); //$NON-NLS-1$
+      logger.log( Level.SEVERE, STRING_SIMULATION_FAILED, e );
+      throw new SimulationException( STRING_SIMULATION_FAILED, e.getCause() );
     }
     finally
     {
@@ -734,6 +738,14 @@ public class NaModelInnerCalcJob implements ISimulation
         if( branchFT == kontEntnahmeFT || branchFT == ueberlaufFT || branchFT == verzweigungFT )
         {
           final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
+          if( targetNodeFE == null )
+          {
+            final String relationLabel = branchingNodeMemberRT.getAnnotation().getLabel();
+            final String branchingFElabel = FeatureHelper.getAnnotationValue( branchingFE, IAnnotation.ANNO_LABEL );
+            final String message = String.format( "'%s' not set for '%s' in Node '%s'", relationLabel, branchingFElabel, nodeFE.getName() );
+            throw new SimulationException( message );
+          }
+
           final Feature newNodeFE = buildVChannelNet( workspace, targetNodeFE );
           workspace.setFeatureAsComposition( branchingFE, branchingNodeMemberRT, newNodeFE, true );
         }
