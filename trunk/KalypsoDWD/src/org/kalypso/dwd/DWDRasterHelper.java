@@ -332,7 +332,7 @@ public class DWDRasterHelper
     return unit;
   }
 
-  public static DWDObservationRaster loadObservationRaster( final URL url, final int dwdKey, final int maxCells ) throws Exception
+  public static DWDObservationRaster loadObservationRaster( final URL url, final int dwdKey ) throws Exception
   {
     final double factor = getFactorForDwdKey( dwdKey );
     final double offset = getOffsetForDwdKey( dwdKey );
@@ -375,7 +375,7 @@ public class DWDRasterHelper
           {
             rightBlock = true;
             if( raster == null ) // if not already loading
-              raster = new DWDObservationRaster( key, maxCells, unit );
+              raster = new DWDObservationRaster( key, unit );
           }
           else
             rightBlock = false; // wrong key, but reading the file must be continued, the key can appear again
@@ -394,7 +394,7 @@ public class DWDRasterHelper
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
 
           if( key == dwdKey )
-            raster = new DWDObservationRaster( key, maxCells, unit );
+            raster = new DWDObservationRaster( key, unit );
           else if( raster != null )
             return raster;
 
@@ -422,7 +422,7 @@ public class DWDRasterHelper
               cellpos++;
             }
           }
-          break;
+            break;
 
           case 2:
           {
@@ -440,7 +440,7 @@ public class DWDRasterHelper
             cellpos++;
           }
 
-          break;
+            break;
         }
       }
 
