@@ -49,9 +49,9 @@ import org.kalypso.shape.dbf.DBFField;
  */
 public class ProfileWaterValue extends AbstractProfileValue
 {
-  public ProfileWaterValue( final DBFField field )
+  public ProfileWaterValue( final String label, final DBFField field )
   {
-    super( field );
+    super( label, field );
   }
 
   /**
