@@ -50,9 +50,9 @@ import org.kalypso.shape.dbf.DBFField;
  */
 public abstract class AbstractProfileValue extends AbstractDBFValue
 {
-  public AbstractProfileValue( final DBFField field )
+  public AbstractProfileValue( final String label, final DBFField field )
   {
-    super( field );
+    super( label, field );
   }
 
   /**

@@ -48,9 +48,9 @@ import org.kalypso.shape.dbf.DBFField;
  */
 public class ProfileStationValue extends AbstractProfileValue
 {
-  public ProfileStationValue( final DBFField field )
+  public ProfileStationValue( final String label, final DBFField field )
   {
-    super( field );
+    super( label, field );
   }
 
   /**

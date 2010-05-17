@@ -65,7 +65,6 @@ public class WspmResultValue implements IDBFValue
     m_column = column;
 
     final QName valueTypeName = column.getValueTypeName();
-
     final String label = String.format( "%5.5s", column );
 
     m_field = createField( label, valueTypeName );
@@ -138,6 +137,18 @@ public class WspmResultValue implements IDBFValue
   {
     final IProfileFeature profile = (IProfileFeature) element;
     return m_column.getValue( profile.getBigStation() );
+  }
+
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    final String componentLabel = m_column.getComponentLabel();
+    final String label = m_column.getLabel();
+
+    return String.format( "%s - %s", label, componentLabel );
   }
 
 }

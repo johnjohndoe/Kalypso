@@ -40,12 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.shape.IShapeData;
@@ -87,25 +93,34 @@ public class ProfileLineDataProvider implements IShapeData
 
   private IDBFValue[] fillMapping( final WspmResultLengthSectionColumn[] lsColumns )
   {
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+
     final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
     try
     {
+      final GMLSchema wspmSchema = schemaCatalog.getSchema( IWspmConstants.NS_WSPMPROF, (String) null );
+      final IFeatureType profileType = wspmSchema.getFeatureType( IProfileFeature.QNAME_PROFILE );
+
       final DBFField nameField = new DBFField( "NAME", FieldType.C, (short) 50, (short) 0 );
-      fields.add( new FeatureNameValue( nameField ) );
+      fields.add( new FeatureNameValue( profileType, nameField ) );
 
       final DBFField descriptionField = new DBFField( "DESCRIPTION", FieldType.C, (short) 128, (short) 0 );
-      fields.add( new FeatureValue( descriptionField, new GMLXPath( Feature.QN_DESCRIPTION ) ) );
+      fields.add( new FeatureValue( profileType, descriptionField, new GMLXPath( Feature.QN_DESCRIPTION ) ) );
 
       final DBFField stationField = new DBFField( "STATION", FieldType.N, (short) 10, (short) 4 );
-      fields.add( new ProfileStationValue( stationField ) );
+      fields.add( new ProfileStationValue( "Station", stationField ) );
 
       final DBFField waterField = new DBFField( "WATERBODY", FieldType.C, (short) 30, (short) 0 );
-      fields.add( new ProfileWaterValue( waterField ) );
+      fields.add( new ProfileWaterValue( "Name of owning Waterbody", waterField ) );
 
       for( final WspmResultLengthSectionColumn column : lsColumns )
         fields.add( new WspmResultValue( column ) );
     }
     catch( final DBaseException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final InvocationTargetException e )
     {
       e.printStackTrace();
     }
