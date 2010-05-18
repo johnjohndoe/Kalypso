@@ -48,26 +48,19 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.convert.namodel.NaModelConstants;
 
 /**
- * class UrlCatalogNA
- *
- * provides the schemas for kalypso rainfall runoff simulation
- *
- * created by
- *
+ * class UrlCatalogNA provides the schemas for kalypso rainfall runoff simulation created by
+ * 
  * @author doemming (08.05.2005)
  */
 public class UrlCatalogNA extends AbstractUrlCatalog
 {
-  public UrlCatalogNA( )
-  {
+  public static final String PREFIX_RRM = "rrm";//$NON-NLS-1$
 
-  }
-  
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
+  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
     catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "schemata/control.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "schemata/namodell.xsd" ) ); //$NON-NLS-1$
@@ -87,7 +80,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     // REMARK: these prefix definition are crucial for the optimisation, as the
     // sce xpathes rely on this special prefix.
     prefixes.put( NaModelConstants.NS_NAMETA, "rrmMeta" ); //$NON-NLS-1$
-    prefixes.put( NaModelConstants.NS_NAMODELL, "rrm" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAMODELL, PREFIX_RRM );
     prefixes.put( NaModelConstants.NS_NACONTROL, "rrmControl" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAHYDROTOP, "rrmHydrotop" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAPARAMETER, "rrmParam" ); //$NON-NLS-1$

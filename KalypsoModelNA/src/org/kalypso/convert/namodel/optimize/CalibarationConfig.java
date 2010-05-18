@@ -43,6 +43,7 @@ package org.kalypso.convert.namodel.optimize;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -52,55 +53,42 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class CalibarationConfig
 {
-
   private final List<ParameterOptimizeContext> m_contexts;
 
-  public CalibarationConfig()
+  public CalibarationConfig( )
   {
     m_contexts = new ArrayList<ParameterOptimizeContext>();
   }
 
-  public void addFromNAControl( Feature rootFeatureControl )
+  public void addFromNAControl( final Feature rootFeatureControl )
   {
+    // REMARK: this code relies heavily on the fixed prefix of the rrm-namespace.
+    final String prefix = "/" + UrlCatalogNA.PREFIX_RRM + ":";
+
     // Catchments
-    final String queryBaseCatchment = FeatureHelper.getAsString( rootFeatureControl, "Catchments" ); //$NON-NLS-1$
-    String[] xpathControl = new String[]
-    {
-        "CatchmentsBianf", //$NON-NLS-1$
+    final String queryBaseCatchment = FeatureHelper.getAsString( rootFeatureControl, "Catchments" ) + prefix; //$NON-NLS-1$
+    final String[] xpathControl = new String[] { "CatchmentsBianf", //$NON-NLS-1$
         "CatchmentsFaktorRetobTetint", //$NON-NLS-1$
         "CatchmentsFaktn", //$NON-NLS-1$
         "CatchmentsFaktorAigw" }; //$NON-NLS-1$
 
-    String[][] xpathModel = new String[][]
-    {
-        new String[]
-//        { queryBaseCatchment + "/:bodenkorrekturmember/:bodenschichtkorrektur/:banf" },
-        { queryBaseCatchment + "/:faktorBianf" }, //$NON-NLS-1$
-        new String[]
-        { queryBaseCatchment + "/:faktorRetobRetint" }, //$NON-NLS-1$
-        new String[]
-        { queryBaseCatchment + "/:faktn" }, //$NON-NLS-1$
-        new String[]
-        { queryBaseCatchment + "/:faktorAigw" } }; //$NON-NLS-1$
+    final String[][] xpathModel = new String[][] { new String[] { queryBaseCatchment + "faktorBianf" }, //$NON-NLS-1$
+        new String[] { queryBaseCatchment + "faktorRetobRetint" }, //$NON-NLS-1$
+        new String[] { queryBaseCatchment + "faktn" }, //$NON-NLS-1$
+        new String[] { queryBaseCatchment + "faktorAigw" } }; //$NON-NLS-1$
 
     generateAndAddContexts( rootFeatureControl, xpathModel, xpathControl );
     // KMChannels
-    final String queryBaseKMChannel = FeatureHelper.getAsString( rootFeatureControl, "KMChannels" ); //$NON-NLS-1$
-    final String[] propNamesII = new String[]
-    {
-        "KMChannelsFaktorRkf", //$NON-NLS-1$
+    final String queryBaseKMChannel = FeatureHelper.getAsString( rootFeatureControl, "KMChannels" ) + prefix; //$NON-NLS-1$
+    final String[] propNamesII = new String[] { "KMChannelsFaktorRkf", //$NON-NLS-1$
         "KMChannelsFaktorRnf" }; //$NON-NLS-1$
 
-    final String[][] queryKMChannels = new String[][]
-    {
-        new String[]
-        { queryBaseKMChannel + "/:faktorRkf" }, //$NON-NLS-1$
-        new String[]
-        { queryBaseKMChannel + "/:faktorRnf" } }; //$NON-NLS-1$
+    final String[][] queryKMChannels = new String[][] { new String[] { queryBaseKMChannel + "faktorRkf" }, //$NON-NLS-1$
+        new String[] { queryBaseKMChannel + "faktorRnf" } }; //$NON-NLS-1$
     generateAndAddContexts( rootFeatureControl, queryKMChannels, propNamesII );
   }
 
-  private void generateAndAddContexts( Feature rootFeatureControl, String[][] xpathModel, String[] xpathControl )
+  private void generateAndAddContexts( final Feature rootFeatureControl, final String[][] xpathModel, final String[] xpathControl )
   {
     final int n = xpathControl.length;
     for( int i = 0; i < n; i++ )
@@ -114,12 +102,12 @@ public class CalibarationConfig
     }
   }
 
-  public ParameterOptimizeContext[] getCalContexts()
+  public ParameterOptimizeContext[] getCalContexts( )
   {
     return m_contexts.toArray( new ParameterOptimizeContext[m_contexts.size()] );
   }
 
-  public void addContext( ParameterOptimizeContext context )
+  public void addContext( final ParameterOptimizeContext context )
   {
     m_contexts.add( context );
   }

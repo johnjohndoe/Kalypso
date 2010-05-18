@@ -75,19 +75,19 @@ public abstract class AbstractManager
     return m_asciiFormat;
   }
 
-  public AbstractManager( URL parseDefinition ) throws IOException
+  public AbstractManager( final URL parseDefinition ) throws IOException
   {
     if( parseDefinition != null )
       readParseDefinition( parseDefinition );
 
   }
 
-  public Feature getFeature( String asciiStringId, IFeatureType ft )
+  public Feature getFeature( final String asciiStringId, final IFeatureType ft )
   {
-    String fId = mapID( asciiStringId, ft );
+    final String fId = mapID( asciiStringId, ft );
     if( !m_allFeatures.containsKey( fId ) )
     {
-      Feature feature = FeatureFactory.createFeature( null, null, fId, ft, false );
+      final Feature feature = FeatureFactory.createFeature( null, null, fId, ft, false );
       m_allFeatures.put( fId, feature );
     }
     return m_allFeatures.get( fId );
@@ -96,58 +96,58 @@ public abstract class AbstractManager
   /**
    * maps the asciiStringId to the FeatureId
    */
-  private String mapID( String asciiStringId, IFeatureType ft )
+  private String mapID( final String asciiStringId, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + "_" + asciiStringId; //$NON-NLS-1$
   }
 
-  public Feature getFeature( int asciiID, IFeatureType ft )
+  public Feature getFeature( final int asciiID, final IFeatureType ft )
   {
-    IntID intID = new IntID( asciiID, ft );
+    final IntID intID = new IntID( asciiID, ft );
     if( !m_map.containsKey( intID ) )
       createFeature( intID );
-    String stringID = m_map.get( intID );
+    final String stringID = m_map.get( intID );
     return m_allFeatures.get( stringID );
   }
 
-  public Feature getExistingFeature( int id, IFeatureType[] ft )
+  public Feature getExistingFeature( final int id, final IFeatureType[] ft )
   {
-    for( int i = 0; i < ft.length; i++ )
+    for( final IFeatureType element : ft )
     {
-      Feature fe = getExistingFeature( id, ft[i] );
+      final Feature fe = getExistingFeature( id, element );
       if( fe != null )
         return fe;
     }
     return null;
   }
 
-  public Feature getExistingFeature( int id, IFeatureType ft )
+  public Feature getExistingFeature( final int id, final IFeatureType ft )
   {
-    IntID intID = new IntID( id, ft );
-    String stringID = m_map.get( intID );
+    final IntID intID = new IntID( id, ft );
+    final String stringID = m_map.get( intID );
     return m_allFeatures.get( stringID );
 
   }
 
   private static int count = 0;
 
-  public Feature createFeature( IFeatureType ft )
+  public Feature createFeature( final IFeatureType ft )
   {
-    String stringID = mapID( count++, ft );
+    final String stringID = mapID( count++, ft );
     return FeatureFactory.createFeature( null, null, stringID, ft, false );
 
   }
 
-  private void createFeature( IntID intID )
+  private void createFeature( final IntID intID )
   {
     createMapping( intID );
-    String stringID = m_map.get( intID );
+    final String stringID = m_map.get( intID );
     Feature feature = null;
     try
     {
       feature = FeatureFactory.createFeature( null, null, stringID, intID.getFeatureType(), false );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -158,14 +158,14 @@ public abstract class AbstractManager
 
   public abstract String mapID( int id, IFeatureType ft );
 
-  private void createMapping( IntID intID )
+  private void createMapping( final IntID intID )
   {
-    String stringID = mapID( intID.getID(), intID.getFeatureType() );
+    final String stringID = mapID( intID.getID(), intID.getFeatureType() );
     // m_map.put( stringID, intID );
     m_map.put( intID, stringID );
   }
 
-  private void readParseDefinition( URL formatURL ) throws IOException
+  private void readParseDefinition( final URL formatURL ) throws IOException
   {
     final List<String> result = new ArrayList<String>();
     final LineNumberReader reader = new LineNumberReader( new InputStreamReader( formatURL.openStream() ) );
@@ -178,12 +178,12 @@ public abstract class AbstractManager
 
   public abstract Feature[] parseFile( URL url ) throws Exception;
 
-  public void createProperties( HashMap<String, String> propCollector, String line, int formatLine ) throws Exception
+  public void createProperties( final HashMap<String, String> propCollector, final String line, final int formatLine ) throws Exception
   {
     createProperties( propCollector, line, m_asciiFormat[formatLine] );
   }
 
-  protected void createProperties( HashMap<String, String> propCollector, String line, String formatLine ) throws Exception
+  protected void createProperties( final HashMap<String, String> propCollector, final String line, final String formatLine ) throws Exception
   {
     final HashMap<String, String> propertyMap = FortranFormatHelper.scanf( formatLine, line );
     final Iterator it = propertyMap.keySet().iterator();
@@ -194,7 +194,7 @@ public abstract class AbstractManager
     }
   }
 
-  public String toAscci( Feature feature, int formatLineIndex )
+  public String toAscci( final Feature feature, final int formatLineIndex )
   {
     return ASCIIHelper.toAsciiLine( feature, m_asciiFormat[formatLineIndex] );
   }
@@ -208,11 +208,11 @@ public abstract class AbstractManager
   {
     final IFeatureType ft = feature.getFeatureType();
     final IPropertyType[] props = ft.getProperties();
-    for( int i = 0; i < props.length; i++ )
+    for( final IPropertyType prop : props )
     {
-      if( props[i] instanceof IValuePropertyType )
+      if( prop instanceof IValuePropertyType )
       {
-        final IValuePropertyType vpt = (IValuePropertyType) props[i];
+        final IValuePropertyType vpt = (IValuePropertyType) prop;
         final Class clazz = vpt.getValueClass();
         final String value = col.get( vpt.getQName().getLocalPart() );
         if( clazz == String.class )
@@ -250,7 +250,7 @@ public abstract class AbstractManager
       if( ft.getProperty( qname ) != null )
         feature.setProperty( propertyType, value );
       else
-        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 
@@ -260,7 +260,7 @@ public abstract class AbstractManager
 
     private final IFeatureType m_ft;
 
-    public IntID( int intID, IFeatureType ft )
+    public IntID( final int intID, final IFeatureType ft )
     {
       m_intID = intID;
       m_ft = ft;
@@ -277,11 +277,11 @@ public abstract class AbstractManager
     }
 
     @Override
-    public boolean equals( Object object )
+    public boolean equals( final Object object )
     {
       if( !(object instanceof IntID) )
         return false;
-      IntID other = (IntID) object;
+      final IntID other = (IntID) object;
       if( !(other.getID() == getID()) )
         return false;
       if( !other.getFeatureType().getQName().equals( getFeatureType().getQName() ) )
@@ -297,6 +297,8 @@ public abstract class AbstractManager
     @Override
     public int hashCode( )
     {
+      // TODO: check was used like this in ModelWeißeElstter
+// return new HashCodeBuilder().append( m_intID ).append( m_ft.getQName() ).toHashCode();
       return (Integer.toString( m_intID ) + m_ft.getQName().getLocalPart() + m_ft.getQName()).hashCode();
     }
 
