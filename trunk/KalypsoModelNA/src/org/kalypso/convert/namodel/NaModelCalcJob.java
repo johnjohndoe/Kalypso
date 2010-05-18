@@ -49,6 +49,7 @@ import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
+import org.kalypso.optimize.OptimizeMonitor;
 import org.kalypso.optimize.OptimizerCalJob;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -64,7 +65,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class NaModelCalcJob implements ISimulation
 {
-
   private ISimulation m_calcJob = null;
 
   /**
@@ -93,9 +93,7 @@ public class NaModelCalcJob implements ISimulation
         m_calcJob = new NaModelParameterAnalyseSimulation( logger );
       else if( optimize )
       {
-        final IOptimizingJob optimizeJob;
-        // optimizeJob = new NAOptimizingJob( tmpdir, innerDataProvider, monitor );
-        optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, monitor );
+        final IOptimizingJob optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, new OptimizeMonitor( monitor ) );
         m_calcJob = new OptimizerCalJob( logger, optimizeJob );
       }
       else
@@ -105,9 +103,9 @@ public class NaModelCalcJob implements ISimulation
         // m_calcJob.run( tmpdir, innerDataProvider, resultEater, monitor );
         m_calcJob.run( tmpdir, dataProvider, resultEater, monitor );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.convert.namodel.NaModelCalcJob.0"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelCalcJob.0" ), e ); //$NON-NLS-1$
     }
   }
 
