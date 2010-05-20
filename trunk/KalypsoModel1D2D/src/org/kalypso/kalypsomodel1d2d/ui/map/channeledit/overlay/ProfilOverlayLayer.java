@@ -222,7 +222,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     GM_Point geoPoint = null;
     try
     {
-      heigth = WspmProfileHelper.getHeigthPositionByWidth( width, origProfil );
+      heigth = WspmProfileHelper.getHeightByWidth( width, origProfil );
       gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
       final String srsName = (String) profil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
       geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );

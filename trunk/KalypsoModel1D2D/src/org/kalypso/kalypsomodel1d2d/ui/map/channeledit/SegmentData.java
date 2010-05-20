@@ -405,7 +405,7 @@ public class SegmentData
       double heigth = 0;
       try
       {
-        heigth = WspmProfileHelper.getHeigthPositionByWidth( width, tmpProfile2 ) - dZ;
+        heigth = WspmProfileHelper.getHeightByWidth( width, tmpProfile2 ) - dZ;
       }
       catch( final Exception e )
       {
@@ -525,7 +525,7 @@ public class SegmentData
       {
         /* get values */
         width = startWidth + i * dWidth;
-        heigth = WspmProfileHelper.getHeigthPositionByWidth( width, profile );
+        heigth = WspmProfileHelper.getHeightByWidth( width, profile );
         final GM_Point geoPoint = WspmProfileHelper.getGeoPosition( width, profile );
 
         /* set values */
@@ -694,8 +694,8 @@ public class SegmentData
     final IProfil orgIProfil = wspmprofile.getProfil();
 
     // calculate elevations
-    final double heigth1 = WspmProfileHelper.getHeigthPositionByWidth( startWidth, orgIProfil );
-    final double heigth2 = WspmProfileHelper.getHeigthPositionByWidth( endWidth, orgIProfil );
+    final double heigth1 = WspmProfileHelper.getHeightByWidth( startWidth, orgIProfil );
+    final double heigth2 = WspmProfileHelper.getHeightByWidth( endWidth, orgIProfil );
 
     final IRecord[] profilPointList = wspmprofile.getProfil().getPoints();
 
@@ -866,7 +866,7 @@ public class SegmentData
           {
             final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionUpProfile );
             width = WspmProfileHelper.getWidthPosition( gmpoint, m_upProfile.getProfil(), m_upProfile.getSrsName() );
-            z = WspmProfileHelper.getHeigthPositionByWidth( width, m_upProfile.getProfil() );
+            z = WspmProfileHelper.getHeightByWidth( width, m_upProfile.getProfil() );
           }
           catch( final Exception e )
           {
@@ -907,7 +907,7 @@ public class SegmentData
           {
             final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionDownProfile );
             width = WspmProfileHelper.getWidthPosition( gmpoint, m_DownProfile.getProfil(), m_DownProfile.getSrsName() );
-            z = WspmProfileHelper.getHeigthPositionByWidth( width, m_DownProfile.getProfil() );
+            z = WspmProfileHelper.getHeightByWidth( width, m_DownProfile.getProfil() );
           }
           catch( final Exception e )
           {
@@ -1339,7 +1339,7 @@ public class SegmentData
       try
       {
         final int hoeheIndex = owner.indexOfComponent( hoeheComponent );
-        pt.setValue( hoeheIndex, WspmProfileHelper.getHeigthPositionByWidth( currentWidth, croppedProfile ) );
+        pt.setValue( hoeheIndex, WspmProfileHelper.getHeightByWidth( currentWidth, croppedProfile ) );
       }
       catch( final Exception e )
       {
