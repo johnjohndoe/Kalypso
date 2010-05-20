@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.gml;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -259,5 +260,17 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     }
 
     return result.toArray( new TuhhCalculation[result.size()] );
+  }
+
+  public IProfileFeature findProfile( final BigDecimal station )
+  {
+    final TuhhReachProfileSegment[] segments = getReachProfileSegments();
+    for( final TuhhReachProfileSegment segment : segments )
+    {
+      if( station.equals( segment.getStation() ) )
+        return segment.getProfileMember();
+    }
+
+    return null;
   }
 }

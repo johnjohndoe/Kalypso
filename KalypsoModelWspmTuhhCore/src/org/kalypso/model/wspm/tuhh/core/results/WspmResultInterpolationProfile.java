@@ -41,11 +41,29 @@
 package org.kalypso.model.wspm.tuhh.core.results;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.math.LinearEquation;
+import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -76,6 +94,17 @@ public class WspmResultInterpolationProfile
 
       profileFeature.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
       profileFeature.setBigStation( m_interpolatedStation );
+
+      final String name = String.format( "Interpolation %s - %s", m_previousStation, m_nextStation );
+      profileFeature.setName( name );
+
+      final IProfileFeature nextProfile = reach.findProfile( m_nextStation );
+      final IProfileFeature previousProfile = reach.findProfile( m_previousStation );
+
+      profileFeature.setSrsName( previousProfile.getSrsName() );
+
+      interpolateProfile( previousProfile, nextProfile, profileFeature );
+
       return profileFeature;
     }
     catch( final GMLSchemaException e )
@@ -85,4 +114,165 @@ public class WspmResultInterpolationProfile
 
     return null;
   }
+
+  private void interpolateProfile( final IProfileFeature previousProfile, final IProfileFeature nextProfile, final IProfileFeature profileFeature )
+  {
+    try
+    {
+      if( previousProfile == null )
+      {
+        profileFeature.setDescription( String.format( "Interpolation not possible: downstream profile %s not found.", m_previousStation ) );
+        return;
+      }
+
+      if( nextProfile == null )
+      {
+        profileFeature.setDescription( String.format( "Interpolation not possible: upstream profile %s not found.", m_nextStation ) );
+        return;
+      }
+
+      doInterpolation( previousProfile, nextProfile, profileFeature );
+    }
+    catch( final SameXValuesException e )
+    {
+      e.printStackTrace();
+      profileFeature.setDescription( String.format( "Interpolation failed: %s", e.toString() ) );
+      return;
+    }
+  }
+
+  private void doInterpolation( final IProfileFeature previousProfile, final IProfileFeature nextProfile, final IProfileFeature profileFeature ) throws SameXValuesException
+  {
+    final IProfil prevProfil = previousProfile.getProfil();
+    final IProfil nxtProfil = nextProfile.getProfil();
+    final IProfil profil = profileFeature.getProfil();
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+    final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    profil.addPointProperty( breiteComponent );
+
+    createInterpolationPoints( prevProfil, nxtProfil, profil );
+
+    final IComponent[] prevComponents = prevProfil.getPointProperties();
+    for( final IComponent prevComponent : prevComponents )
+      interpolateComponent( prevProfil, nxtProfil, profil, prevComponent );
+
+    /* Write changes back into profile feature */
+    ProfileFeatureFactory.toFeature( profil, profileFeature );
+  }
+
+  private void createInterpolationPoints( final IProfil prevProfil, final IProfil nextProfil, final IProfil profil ) throws SameXValuesException
+  {
+    final Double[] prevWidths = getPoints( prevProfil );
+    final Double[] nextWidths = getPoints( nextProfil );
+    if( prevWidths.length < 2 )
+    {
+      profil.setComment( "Interpolation not possible: downstream profile doesn not contain enough points." );
+      return;
+    }
+    if( nextWidths.length < 2 )
+    {
+      profil.setComment( "Interpolation not possible: upstream profile does not contain enough points." );
+      return;
+    }
+
+    final double prevStation = prevProfil.getStation();
+    final double nextStation = nextProfil.getStation();
+    final double station = profil.getStation();
+
+    final Double startPrevWidth = prevWidths[0];
+    final Double startNextWidth = nextWidths[0];
+    final Double endPrevWidth = prevWidths[prevWidths.length - 1];
+    final Double endNextWidth = nextWidths[nextWidths.length - 1];
+
+    /* Start and end x of new profile */
+    final double startWidth = new LinearEquation( prevStation, startPrevWidth, nextStation, startNextWidth ).computeY( station );
+    final double endWidth = new LinearEquation( prevStation, endPrevWidth, nextStation, endNextWidth ).computeY( station );
+
+    final IComponent widthComponent = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int widthComponentIndex = profil.indexOfProperty( widthComponent );
+    final int xScale = ComponentUtilities.getScale( widthComponent );
+    final Set<BigDecimal> newXValues = new TreeSet<BigDecimal>();
+    for( final Double prevWidth : prevWidths )
+    {
+      final double newx = new LinearEquation( startPrevWidth, startWidth, endPrevWidth, endWidth ).computeY( prevWidth );
+      newXValues.add( new BigDecimal( newx ).setScale( xScale, BigDecimal.ROUND_HALF_UP ) );
+    }
+
+    for( final Double nextWidth : nextWidths )
+    {
+      final double newx = new LinearEquation( startNextWidth, startWidth, endNextWidth, endWidth ).computeY( nextWidth );
+      newXValues.add( new BigDecimal( newx ).setScale( xScale, BigDecimal.ROUND_HALF_UP ) );
+    }
+
+    for( final BigDecimal newXValue : newXValues )
+    {
+      final IRecord newPoint = profil.createProfilPoint();
+      newPoint.setValue( widthComponentIndex, newXValue.doubleValue() );
+      profil.addPoint( newPoint );
+    }
+  }
+
+  private Double[] getPoints( final IProfil profil )
+  {
+    // TODO: do we always want to have trennflaechen here?
+    final IComponent marker = profil.getPointPropertyFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final List<IRecord> innerPoints = ProfilUtil.getInnerPoints( profil, marker );
+    if( innerPoints == null )
+      return new Double[0];
+
+    final IRecord[] points = innerPoints.toArray( new IRecord[innerPoints.size()] );
+    return ProfilUtil.getValuesFor( points, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
+  }
+
+  private void interpolateComponent( final IProfil prevProfil, final IProfil nextProfil, final IProfil profil, final IComponent component ) throws SameXValuesException
+  {
+    final QName valueTypeName = component.getValueTypeName();
+    if( !XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
+      return;
+
+    final int prevComponentIndex = prevProfil.indexOfProperty( component.getId() );
+    final int nextComponentIndex = nextProfil.indexOfProperty( component.getId() );
+    // we only interpolate components that exist in both profiles
+    if( prevComponentIndex == -1 || nextComponentIndex == -1 )
+      return;
+
+    final Double[] prevWidths = getPoints( prevProfil );
+    final Double[] nextWidths = getPoints( nextProfil );
+
+    final IRecord[] points = profil.getPoints();
+    final int widthComponentIndex = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+
+    final Double startPrevWidth = prevWidths[0];
+    final Double startNextWidth = nextWidths[0];
+    final Double endPrevWidth = prevWidths[prevWidths.length - 1];
+    final Double endNextWidth = nextWidths[nextWidths.length - 1];
+    final Double startWidth = (Double) points[0].getValue( widthComponentIndex );
+    final Double endWidth = (Double) points[points.length - 1].getValue( widthComponentIndex );
+
+    final double prevStation = prevProfil.getStation();
+    final double nextStation = nextProfil.getStation();
+    final double station = profil.getStation();
+
+    final LinearEquation prevEquation = new LinearEquation( startPrevWidth, startWidth, endPrevWidth, endWidth );
+    final LinearEquation nextEquation = new LinearEquation( startNextWidth, startWidth, endNextWidth, endWidth );
+
+    profil.addPointProperty( component );
+    final int componentIndex = profil.indexOfProperty( component );
+
+    for( final IRecord record : points )
+    {
+      final Double width = (Double) record.getValue( widthComponentIndex );
+      final Double prevWidth = prevEquation.computeX( width );
+      final Double nextWidth = nextEquation.computeX( width );
+
+      final Double prevValue = WspmProfileHelper.interpolateValue( prevProfil, prevWidth, prevComponentIndex );
+      final Double nextValue = WspmProfileHelper.interpolateValue( nextProfil, nextWidth, nextComponentIndex );
+
+      final double interpolatedValue = new LinearEquation( prevStation, prevValue, nextStation, nextValue ).computeY( station );
+      record.setValue( componentIndex, interpolatedValue );
+    }
+
+  }
+
 }
