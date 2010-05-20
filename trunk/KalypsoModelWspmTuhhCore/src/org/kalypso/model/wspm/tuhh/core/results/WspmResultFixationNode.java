@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class WspmResultFixationNode implements IWspmResult
 {
@@ -110,6 +112,15 @@ public class WspmResultFixationNode implements IWspmResult
   public Object getObject( )
   {
     return m_fixation;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getCalculation()
+   */
+  @Override
+  public TuhhCalculation getCalculation( )
+  {
+    throw new NotImplementedException();
   }
 
 }

@@ -40,14 +40,49 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import java.math.BigDecimal;
+
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
  */
-public interface IWspmResult extends IWspmResultNode
+public class WspmResultInterpolationProfile
 {
-  WspmResultLengthSection getLengthSection( );
+  private final BigDecimal m_previousStation;
 
-  TuhhCalculation getCalculation( );
+  private final BigDecimal m_nextStation;
+
+  private final BigDecimal m_interpolatedStation;
+
+  public WspmResultInterpolationProfile( final BigDecimal previousStation, final BigDecimal nextStation, final BigDecimal interpolatedStation )
+  {
+    m_previousStation = previousStation;
+    m_nextStation = nextStation;
+    m_interpolatedStation = interpolatedStation;
+  }
+
+  public IProfileFeature createInterpolatedProfile( final TuhhReach reach )
+  {
+    try
+    {
+      final String id = reach.getId() + m_interpolatedStation;
+
+      final IProfileFeature profileFeature = (IProfileFeature) FeatureFactory.createFeature( id, IProfileFeature.QNAME_PROFILE );
+
+      profileFeature.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+      profileFeature.setBigStation( m_interpolatedStation );
+      return profileFeature;
+    }
+    catch( final GMLSchemaException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
 }

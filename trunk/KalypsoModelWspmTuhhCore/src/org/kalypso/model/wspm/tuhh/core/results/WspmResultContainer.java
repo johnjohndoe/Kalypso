@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.observation.IObservation;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -52,11 +53,11 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class WspmResultContainer implements IWspmResult
 {
-  private final IWspmResultNode m_parent;
+  private final WspmResultCalculationNode m_parent;
 
   private final IContainer m_resultFolder;
 
-  public WspmResultContainer( final IWspmResultNode parent, final IContainer resultFolder )
+  public WspmResultContainer( final WspmResultCalculationNode parent, final IContainer resultFolder )
   {
     m_parent = parent;
     m_resultFolder = resultFolder;
@@ -115,5 +116,17 @@ public class WspmResultContainer implements IWspmResult
   public Object getObject( )
   {
     return m_resultFolder;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getCalculation()
+   */
+  @Override
+  public TuhhCalculation getCalculation( )
+  {
+    if( m_parent == null )
+      return null;
+
+    return m_parent.getCalculation();
   }
 }
