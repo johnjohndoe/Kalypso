@@ -42,7 +42,6 @@ package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,6 +62,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -120,7 +120,7 @@ public class HydrographUtils
     return null;
   }
 
-  public static IHydrographCollection createHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws Exception
+  public static IHydrographCollection createHydrograph( final ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws Exception
   {
     /* create new hydrograph.gml */
     final Feature hydrographFeature = createNewHydrograph( calcUnitResult, scenarioFolder );
@@ -134,27 +134,27 @@ public class HydrographUtils
 
     /* create a resultMeta entry */
     // delete the prior entry
-    IDocumentResultMeta resultMeta = calcUnitResult.getDocument( DOCUMENTTYPE.hydrograph );
+    final IDocumentResultMeta resultMeta = calcUnitResult.getDocument( DOCUMENTTYPE.hydrograph );
     if( resultMeta != null )
       calcUnitResult.removeChild( resultMeta );
 
-    ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.1") + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.1" ) + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return newHydrograph;
   }
 
-  private static void setResultPaths( IHydrographCollection newHydrograph, ICalcUnitResultMeta calcUnitResult, DOCUMENTTYPE documenttype ) throws Exception
+  private static void setResultPaths( final IHydrographCollection newHydrograph, final ICalcUnitResultMeta calcUnitResult, final DOCUMENTTYPE documenttype ) throws Exception
   {
-    IDocumentResultMeta[] documents = calcUnitResult.getDocuments( documenttype );
+    final IDocumentResultMeta[] documents = calcUnitResult.getDocuments( documenttype );
 
-    Map<IPath, Date> resultMap = new HashMap<IPath, Date>();
+    final Map<IPath, Date> resultMap = new HashMap<IPath, Date>();
 
-    for( IDocumentResultMeta documentResultMeta : documents )
+    for( final IDocumentResultMeta documentResultMeta : documents )
     {
-      IResultMeta parent = documentResultMeta.getParent();
+      final IResultMeta parent = documentResultMeta.getParent();
       if( parent instanceof IStepResultMeta )
       {
-        IStepResultMeta stepResult = (IStepResultMeta) parent;
+        final IStepResultMeta stepResult = (IStepResultMeta) parent;
 
         /* ignore steady and min / max results */
         if( stepResult.getStepType() == IStepResultMeta.STEPTYPE.unsteady )
@@ -198,7 +198,7 @@ public class HydrographUtils
     return null;
   }
 
-  public static Feature createNewHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
+  public static Feature createNewHydrograph( final ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, GmlSerializeException, IOException, GMLSchemaException
   {
     /* get a path */
     final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" ); //$NON-NLS-1$
@@ -206,17 +206,17 @@ public class HydrographUtils
     if( !calcUnitFolder.exists() )
       FolderUtilities.mkdirs( calcUnitFolder );
 
-    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml") ; //$NON-NLS-1$
+    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" ); //$NON-NLS-1$
     final URL url = ResourceUtilities.createURL( gmlResultFile );
 
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IHydrographCollection.QNAME, url, null );
     final Feature hydrographFeature = workspace.getRootFeature();
 
-    OutputStreamWriter writer = null;
+    final OutputStreamWriter writer = null;
     try
     {
       final String charset = gmlResultFile.getCharset();
-      GmlSerializer.serializeWorkspace( gmlResultFile.getLocation().toFile(), workspace, charset);
+      GmlSerializer.serializeWorkspace( gmlResultFile.getLocation().toFile(), workspace, charset );
       // refresh workspace
       /* update resource folder */
       gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
@@ -240,7 +240,7 @@ public class HydrographUtils
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
 
-    String[] componentUrns = componentUrnList.toArray( new String[componentUrnList.size()] );
+    final String[] componentUrns = componentUrnList.toArray( new String[componentUrnList.size()] );
 
     /* create the components */
     final IComponent[] components = new IComponent[componentUrns.length];
@@ -257,13 +257,13 @@ public class HydrographUtils
 
   }
 
-  public static void addHydrographTheme( IKalypsoLayerModell modell, final IHydrographCollection hydroCollection, ICalcUnitResultMeta calcResult ) throws Exception
+  public static void addHydrographTheme( final IKalypsoLayerModell modell, final IHydrographCollection hydroCollection, final ICalcUnitResultMeta calcResult ) throws Exception
   {
     { // Hydrograph
       final StyledLayerType hydroLayer = new StyledLayerType();
-      String path = "../" + calcResult.getFullPath().toPortableString() + "/hydrograph/hydrograph.gml"; //$NON-NLS-1$ //$NON-NLS-2$
+      final String path = "../" + calcResult.getFullPath().toPortableString() + "/hydrograph/hydrograph.gml"; //$NON-NLS-1$ //$NON-NLS-2$
 
-      hydroLayer.setName(Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.7", hydroCollection.getName())); //$NON-NLS-1$
+      hydroLayer.setName( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.7", hydroCollection.getName() ) ); //$NON-NLS-1$
       hydroLayer.setFeaturePath( "hydrographMember" ); //$NON-NLS-1$
       hydroLayer.setLinktype( "gml" ); //$NON-NLS-1$
       hydroLayer.setType( "simple" ); //$NON-NLS-1$
@@ -277,7 +277,7 @@ public class HydrographUtils
 
       final Property layerPropertyThemeInfoId = new Property();
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.HydrographThemeInfo?format=Ganglinienpunkt (" + hydroCollection.getName() + Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.15") ); //$NON-NLS-1$ //$NON-NLS-2$
+      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.HydrographThemeInfo?format=Ganglinienpunkt (" + hydroCollection.getName() + Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.15" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final List<Property> layerPropertyList = hydroLayer.getProperty();
       layerPropertyList.add( layerPropertyDeletable );

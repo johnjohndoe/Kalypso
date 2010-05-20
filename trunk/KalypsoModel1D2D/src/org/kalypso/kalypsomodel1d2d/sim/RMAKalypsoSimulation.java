@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -71,6 +70,7 @@ import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
@@ -138,7 +138,7 @@ public class RMAKalypsoSimulation implements ISimulation
     {
       m_log = new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }

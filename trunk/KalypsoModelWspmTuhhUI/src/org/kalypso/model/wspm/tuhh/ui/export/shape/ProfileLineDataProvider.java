@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +48,7 @@ import java.util.Iterator;
 
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -120,7 +120,7 @@ public class ProfileLineDataProvider implements IShapeData
     {
       e.printStackTrace();
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
       e.printStackTrace();
     }

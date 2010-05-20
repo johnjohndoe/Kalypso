@@ -48,7 +48,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -71,6 +70,7 @@ import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -317,7 +317,7 @@ public class PolynomeHelper
     }
   }
 
-  private static void readResults( final File resultDir, final File targetGmlFile, final TuhhCalculation calculation, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
+  private static void readResults( final File resultDir, final File targetGmlFile, final TuhhCalculation calculation, final LogHelper log, final ISimulationResultEater resultEater ) throws IOException, GmlSerializeException, SimulationException, GMLSchemaException
   {
     /* Read results */
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( QIntervallResultCollection.QNAME_F_QIntervallResultCollection, targetGmlFile.toURI().toURL(), GmlSerializer.DEFAULT_FACTORY );

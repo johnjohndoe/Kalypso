@@ -44,7 +44,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -69,6 +68,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
@@ -448,7 +448,7 @@ public class ProcessResultsJob extends Job
     }
   }
 
-  private ITriangleEater createTinEater( final File tinResultFile, final TYPE parameter, final String crs ) throws CoreException, MalformedURLException, InvocationTargetException, GM_Exception
+  private ITriangleEater createTinEater( final File tinResultFile, final TYPE parameter, final String crs ) throws CoreException, MalformedURLException, GM_Exception, GMLSchemaException
   {
     // TODO: for debug purpose only...
     final boolean fast = true;
