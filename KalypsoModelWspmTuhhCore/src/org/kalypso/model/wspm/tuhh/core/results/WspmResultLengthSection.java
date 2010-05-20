@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
@@ -59,6 +65,8 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class WspmResultLengthSection
 {
+  private static final String LS_TYPE_INTERPOLATED = "i";
+
   public static WspmResultLengthSection create( final IFile observationFile, final GMLXPath gmlxPath )
   {
     try
@@ -112,5 +120,56 @@ public class WspmResultLengthSection
   {
     final TupleResult result = m_observation.getResult();
     return result.hasComponent( component );
+  }
+
+  public BigDecimal[] getStations( )
+  {
+    final Object[] keys = m_stationIndex.getKeys();
+    return Arrays.castArray( keys, new BigDecimal[keys.length] );
+  }
+
+  public Object getValue( final BigDecimal station, final String componentIdentifier )
+  {
+    final int component = m_observation.getResult().indexOfComponent( componentIdentifier );
+    final IRecord record = m_stationIndex.getRecord( station );
+    return record.getValue( component );
+  }
+
+  public WspmResultInterpolationProfile[] findInterpolationStations( )
+  {
+    final Collection<WspmResultInterpolationProfile> interpolatedProfiles = new ArrayList<WspmResultInterpolationProfile>();
+
+    final BigDecimal[] stations = getStations();
+    // Find interpolated stations
+    BigDecimal lastNormalStation = null;
+    for( int i = 0; i < stations.length; i++ )
+    {
+      final BigDecimal station = stations[i];
+
+      final String type = (String) getValue( station, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TYPE );
+      if( LS_TYPE_INTERPOLATED.equals( type ) )
+      {
+        final BigDecimal nextNormalStation = findNextNormalStation( stations, i );
+        if( lastNormalStation != null && nextNormalStation != null )
+          interpolatedProfiles.add( new WspmResultInterpolationProfile( lastNormalStation, nextNormalStation, station ) );
+      }
+      else
+        lastNormalStation = station;
+    }
+
+    return interpolatedProfiles.toArray( new WspmResultInterpolationProfile[interpolatedProfiles.size()] );
+  }
+
+  private BigDecimal findNextNormalStation( final BigDecimal[] stations, final int startIndex )
+  {
+    for( int i = startIndex; i < stations.length; i++ )
+    {
+      final BigDecimal station = stations[i];
+      final String type = (String) getValue( station, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TYPE );
+      if( !LS_TYPE_INTERPOLATED.equals( type ) )
+        return station;
+    }
+
+    return null;
   }
 }

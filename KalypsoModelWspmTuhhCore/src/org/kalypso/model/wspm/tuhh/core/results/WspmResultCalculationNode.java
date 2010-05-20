@@ -156,4 +156,9 @@ public class WspmResultCalculationNode implements IWspmResultNode
     return m_calculation;
   }
 
+  public TuhhCalculation getCalculation( )
+  {
+    return m_calculation;
+  }
+
 }
