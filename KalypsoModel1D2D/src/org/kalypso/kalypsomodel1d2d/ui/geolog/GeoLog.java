@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.geolog;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -74,10 +74,10 @@ public class GeoLog implements IGeoLog
 
   /**
    * @param log
-   *            If non <code>null</code>, all logged stati are additionally logged into this log. Also, newly created
-   *            stati get the logs plug-in-id.
+   *          If non <code>null</code>, all logged stati are additionally logged into this log. Also, newly created
+   *          stati get the logs plug-in-id.
    */
-  public GeoLog( final ILog log ) throws InvocationTargetException
+  public GeoLog( final ILog log ) throws GMLSchemaException
   {
     m_log = log;
     if( log != null )

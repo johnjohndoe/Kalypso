@@ -3,7 +3,6 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -16,6 +15,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
@@ -94,13 +94,13 @@ public class PreRMAKalypso implements ISimulation
     {
       m_log = new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
 
-    OutputStream logOS = null;
-    OutputStream errorOS = null;
+    final OutputStream logOS = null;
+    final OutputStream errorOS = null;
     FileSystemManagerWrapper manager = null;
     try
     {
@@ -177,12 +177,12 @@ public class PreRMAKalypso implements ISimulation
 
       if( manager != null )
         manager.close();
-      
+
       progressMonitor.done();
     }
   }
 
-  private void writeRma10Files( final FileObject workingDir, final IProgressMonitor monitor, IFEDiscretisationModel1d2d discretisationModel, IFlowRelationshipModel flowRelationshipModel, IRoughnessClsCollection roughnessModel, RestartNodes restartNodes, IControlModel1D2D controlModel, ICalculationUnit calculationUnit ) throws CoreException
+  private void writeRma10Files( final FileObject workingDir, final IProgressMonitor monitor, final IFEDiscretisationModel1d2d discretisationModel, final IFlowRelationshipModel flowRelationshipModel, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 

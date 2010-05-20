@@ -151,24 +151,26 @@ public class ProfileResultExportPage extends ValidatingWizardPage
 
   public WspmResultLengthSection[] getSelectedLengthSections( )
   {
-    final Collection<WspmResultLengthSection> lengthSections = new ArrayList<WspmResultLengthSection>();
+    final IWspmResult[] results = getSelectedResults();
+    final WspmResultLengthSection[] sections = new WspmResultLengthSection[results.length];
+    for( int i = 0; i < results.length; i++ )
+      sections[i] = results[i].getLengthSection();
 
-    final IWspmResultNode[] results = getResults();
+    return sections;
+  }
+
+  public IWspmResult[] getSelectedResults( )
+  {
+    final Collection<IWspmResult> lengthSections = new ArrayList<IWspmResult>();
+
+    final IWspmResultNode[] results = m_resultChooser.getSelectedResults();
     for( final IWspmResultNode result : results )
     {
       if( result instanceof IWspmResult )
-      {
-        final WspmResultLengthSection section = ((IWspmResult) result).getLengthSection();
-        lengthSections.add( section );
-      }
+        lengthSections.add( (IWspmResult) result );
     }
 
-    return lengthSections.toArray( new WspmResultLengthSection[lengthSections.size()] );
-  }
-
-  private IWspmResultNode[] getResults( )
-  {
-    return m_resultChooser.getSelectedResults();
+    return lengthSections.toArray( new IWspmResult[lengthSections.size()] );
   }
 
   /**
@@ -177,7 +179,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
   @Override
   protected IMessageProvider validatePage( )
   {
-    if( ArrayUtils.isEmpty( getResults() ) )
+    if( ArrayUtils.isEmpty( getSelectedResults() ) )
       return new MessageProvider( "No results have been selected.", INFORMATION );
 
     return null;

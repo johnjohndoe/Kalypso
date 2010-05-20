@@ -45,7 +45,6 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,6 +58,7 @@ import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -161,7 +161,7 @@ public class NAConfiguration
 
   private URL m_zmlContext;
 
-  private Boolean m_iniWrite;
+  private final Boolean m_iniWrite;
 
   private Date[] m_initialDates;
 
@@ -191,7 +191,7 @@ public class NAConfiguration
 
   private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
 
-  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws InvocationTargetException
+  private NAConfiguration( final File asciiBaseDir, final File gmlBaseDir, final URL modelURL ) throws GMLSchemaException
   {
     m_asciiBaseDir = asciiBaseDir;
     m_gmlBaseDir = gmlBaseDir;
@@ -250,12 +250,12 @@ public class NAConfiguration
     return getCalculationLogger().getLogger();
   }
 
-  public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
+  public static NAConfiguration getAscii2GmlConfiguration( final File asciiBaseDir, final File gmlBaseDir ) throws Exception
   {
     return new NAConfiguration( asciiBaseDir, gmlBaseDir, null );
   }
 
-  public static NAConfiguration getGml2AsciiConfiguration( URL modelURL, File asciiBaseDir ) throws Exception
+  public static NAConfiguration getGml2AsciiConfiguration( final URL modelURL, final File asciiBaseDir ) throws Exception
   {
     return new NAConfiguration( asciiBaseDir, null, modelURL );
   }
@@ -381,17 +381,17 @@ public class NAConfiguration
     return m_stChannelFT;
   }
 
-  public void setSimulationForecasetStart( Date simulationForecast )
+  public void setSimulationForecasetStart( final Date simulationForecast )
   {
     m_simulationForecast = simulationForecast;
   }
 
-  public void setSimulationStart( Date simulationStart )
+  public void setSimulationStart( final Date simulationStart )
   {
     m_simulationStart = simulationStart;
   }
 
-  public void setSimulationEnd( Date simulationEnd )
+  public void setSimulationEnd( final Date simulationEnd )
   {
     m_simulationEnd = simulationEnd;
   }
@@ -416,7 +416,7 @@ public class NAConfiguration
     return m_rootNodeId;
   }
 
-  public void setRootNodeID( String rootNodeID )
+  public void setRootNodeID( final String rootNodeID )
   {
     m_rootNodeId = rootNodeID;
   }
@@ -484,12 +484,12 @@ public class NAConfiguration
   /**
    * @param minutesTimeStep
    */
-  public void setMinutesOfTimeStep( int minutesTimeStep )
+  public void setMinutesOfTimeStep( final int minutesTimeStep )
   {
     m_minutesTimeStep = minutesTimeStep;
   }
 
-  public void setUsePrecipitationForm( Boolean pns )
+  public void setUsePrecipitationForm( final Boolean pns )
   {
     m_pns = pns;
   }
@@ -527,7 +527,7 @@ public class NAConfiguration
   /**
    * @param nodeResultProvider
    */
-  public void setNodeResultProvider( NaNodeResultProvider nodeResultProvider )
+  public void setNodeResultProvider( final NaNodeResultProvider nodeResultProvider )
   {
     m_nodeResultProvider = nodeResultProvider;
   }
@@ -537,19 +537,19 @@ public class NAConfiguration
     return m_nodeResultProvider;
   }
 
-  public void setAnnuality( Double annuality )
+  public void setAnnuality( final Double annuality )
   {
     m_annuality = annuality;
 
   }
 
-  public void setDuration( Double duration )
+  public void setDuration( final Double duration )
   {
     m_duration = duration;
 
   }
 
-  public void setForm( String precipitationForm )
+  public void setForm( final String precipitationForm )
   {
     m_precipitationForm = precipitationForm;
 
@@ -570,7 +570,7 @@ public class NAConfiguration
     return m_duration;
   }
 
-  public void setZMLContext( URL zmlContext )
+  public void setZMLContext( final URL zmlContext )
   {
     m_zmlContext = zmlContext;
   }
@@ -586,7 +586,7 @@ public class NAConfiguration
     return m_swaleAndTrenchFormatURL;
   }
 
-  public void setInitalValues( Date[] initialDates )
+  public void setInitalValues( final Date[] initialDates )
   {
     m_initialDates = initialDates;
   }
@@ -596,7 +596,7 @@ public class NAConfiguration
     return m_initialDates;
   }
 
-  public void setModelWorkspace( GMLWorkspace modelWorkspace )
+  public void setModelWorkspace( final GMLWorkspace modelWorkspace )
   {
     m_modelWorkspace = modelWorkspace;
   }
@@ -606,7 +606,7 @@ public class NAConfiguration
     return m_modelWorkspace;
   }
 
-  public void setParameterWorkspace( GMLWorkspace parameterWorkspace )
+  public void setParameterWorkspace( final GMLWorkspace parameterWorkspace )
   {
     m_parameterWorkspace = parameterWorkspace;
   }
@@ -616,7 +616,7 @@ public class NAConfiguration
     return m_parameterWorkspace;
   }
 
-  public void setHydrotopeWorkspace( GMLWorkspace hydrotopeWorkspace )
+  public void setHydrotopeWorkspace( final GMLWorkspace hydrotopeWorkspace )
   {
     m_hydrotopeWorkspace = hydrotopeWorkspace;
   }
@@ -626,7 +626,7 @@ public class NAConfiguration
     return m_hydrotopeWorkspace;
   }
 
-  public void setSynthNWorkspace( GMLWorkspace synthNWorkspace )
+  public void setSynthNWorkspace( final GMLWorkspace synthNWorkspace )
   {
     m_synthNWorkspace = synthNWorkspace;
   }
@@ -636,7 +636,7 @@ public class NAConfiguration
     return m_synthNWorkspace;
   }
 
-  public void setLanduseWorkspace( GMLWorkspace landuseWorkspace )
+  public void setLanduseWorkspace( final GMLWorkspace landuseWorkspace )
   {
     m_landuseWorkspace = landuseWorkspace;
   }
@@ -646,7 +646,7 @@ public class NAConfiguration
     return m_landuseWorkspace;
   }
 
-  public void setSudsWorkspace( GMLWorkspace sudsWorkspace )
+  public void setSudsWorkspace( final GMLWorkspace sudsWorkspace )
   {
     m_sudsWorkspace = sudsWorkspace;
   }
@@ -690,7 +690,7 @@ public class NAConfiguration
     if( list == null || list.size() == 0 )
       return Double.NaN;
     double average = 0.0;
-    for( double value : list )
+    for( final double value : list )
       average += value;
     return average / list.size();
   }

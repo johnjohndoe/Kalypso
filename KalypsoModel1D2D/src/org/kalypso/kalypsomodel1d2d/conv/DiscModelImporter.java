@@ -42,8 +42,8 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -71,7 +71,7 @@ public class DiscModelImporter implements IDiscModelImporter
       m_workspace = new CommandableWorkspace( FeatureFactory.createGMLWorkspace( IFEDiscretisationModel1d2d.QNAME, null, null ) );
       // TODO: dispose the commandableworkspace
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
       e.printStackTrace();
     }

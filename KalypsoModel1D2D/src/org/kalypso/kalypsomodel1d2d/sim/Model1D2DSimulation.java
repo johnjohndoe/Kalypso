@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
@@ -54,6 +53,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
@@ -72,7 +72,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Starting point for running 1d2d simulations.
- *
+ * 
  * @author Gernot Belger
  */
 public class Model1D2DSimulation implements ISimulation1D2DConstants
@@ -133,7 +133,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     {
       // REMARK: this should only happen if the data cannot be retrieved from the caseDataProvider and so should never
       // happen...
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.5")); //$NON-NLS-1$
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.5" ) ); //$NON-NLS-1$
     }
   }
 
@@ -156,8 +156,8 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
     // Add geo log to calcMeta as document
     final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
-    logMeta.setName( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.7") ); //$NON-NLS-1$
-    logMeta.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.8") ); //$NON-NLS-1$
+    logMeta.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.7" ) ); //$NON-NLS-1$
+    logMeta.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.8" ) ); //$NON-NLS-1$
     logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
     logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
   }
@@ -173,16 +173,16 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
       // Additionally, everything is logged into the log of the KalypsoModel1D2D-Plug-In
       geoLog = new GeoLog( model1d2dlog );
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.0") + e.getTargetException().toString() ); //$NON-NLS-1$
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.0" ) + e.toString() ); //$NON-NLS-1$
     }
     return geoLog;
   }
 
   /**
    * Sets the unit to calculate into the Control-Model as active unit.<br>
-   *
+   * 
    * TODO: this is a bit fishy... Better would be to couple calc-units and its corresponding control-models more
    * closely. Then no search for and/or setting of active unit should be necessary any more.
    */
@@ -200,7 +200,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
     catch( final Throwable e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.11") + calcUnitId ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.11" ) + calcUnitId ) ); //$NON-NLS-1$
     }
   }
 

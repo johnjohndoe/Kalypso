@@ -42,6 +42,9 @@ package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,8 +56,12 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeOperation;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultInterpolationProfile;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -98,8 +105,8 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
     final boolean doWritePrj = m_exportShapePage.isWritePrj();
 
-    final WspmResultLengthSection[] lengthSections = m_resultsPage.getSelectedLengthSections();
-    final IProfileFeature[] interpolatedProfiles = interpolateProfiles( profiles, lengthSections );
+    final IWspmResult[] results = m_resultsPage.getSelectedResults();
+    final IProfileFeature[] interpolatedProfiles = interpolateProfiles( profiles, results );
 
     final WspmResultLengthSectionColumn[] lsColumns = m_resultsPage.getSelectedColumns();
 
@@ -122,10 +129,36 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     }
   }
 
-  private IProfileFeature[] interpolateProfiles( final IProfileFeature[] profiles, final WspmResultLengthSection[] lengthSections )
+  private IProfileFeature[] interpolateProfiles( final IProfileFeature[] profiles, final IWspmResult[] results )
   {
+    final Collection<IProfileFeature> allProfiles = new ArrayList<IProfileFeature>( (int) (profiles.length * 1.1) );
 
-    // TODO Auto-generated method stub
-    return profiles;
+    allProfiles.addAll( Arrays.asList( profiles ) );
+
+    for( final IWspmResult result : results )
+    {
+      final IProfileFeature[] interpolatedProfiles = createInterpolatedProfiles( result );
+      allProfiles.addAll( Arrays.asList( interpolatedProfiles ) );
+    }
+
+    return allProfiles.toArray( new IProfileFeature[allProfiles.size()] );
+  }
+
+  private IProfileFeature[] createInterpolatedProfiles( final IWspmResult result )
+  {
+    final Collection<IProfileFeature> interpolatedProfiles = new ArrayList<IProfileFeature>();
+
+    final TuhhCalculation calculation = result.getCalculation();
+    final TuhhReach reach = calculation.getReach();
+    final WspmResultLengthSection lengthSection = result.getLengthSection();
+
+    final WspmResultInterpolationProfile[] interpolationProfiles = lengthSection.findInterpolationStations();
+    for( final WspmResultInterpolationProfile interpolationProfile : interpolationProfiles )
+    {
+      final IProfileFeature interpolatedProfile = interpolationProfile.createInterpolatedProfile( reach );
+      interpolatedProfiles.add( interpolatedProfile );
+    }
+
+    return interpolatedProfiles.toArray( new IProfileFeature[interpolatedProfiles.size()] );
   }
 }

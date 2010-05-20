@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.gml;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +149,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
   /**
    * Creates a project from scratch. A gml workspace is created internally with the project as root feature.
    */
-  public static TuhhWspmProject create( final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
+  public static TuhhWspmProject create( final URL context, final IFeatureProviderFactory factory ) throws GMLSchemaException
   {
     final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QNAME, context, factory );
     final Feature rootFeature = projectWorkspace.getRootFeature();
