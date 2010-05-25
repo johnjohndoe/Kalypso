@@ -10,7 +10,7 @@ Require-Bundle:
  org.kalypso.ui.addlayer,
  de.renew.workflow.model,
  de.renew.workflow.connector,
- org.kalypso.model.wspm.schema;bundle-version="0.0.1";visibility:=reexport,
+ org.kalypso.model.wspm.schema;visibility:=reexport,
  org.kalypso.afgui;bundle-version="0.0.0";visibility:=reexport
 Export-Package: org.kalypso.kalypsosimulationmodel,
  org.kalypso.kalypsosimulationmodel.core,
