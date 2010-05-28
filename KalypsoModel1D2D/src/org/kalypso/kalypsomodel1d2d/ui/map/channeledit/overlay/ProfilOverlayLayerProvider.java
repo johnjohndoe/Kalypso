@@ -46,7 +46,7 @@ import java.util.List;
 
 import org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
 
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 
@@ -59,7 +59,7 @@ public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
    * @see org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh#createLayers(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
   @Override
-  public IProfilChartLayer[] createLayers( final ProfilChartView chartView )
+  public IProfilChartLayer[] createLayers( final IProfilChartView chartView )
   {
     final List<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
 
