@@ -63,10 +63,10 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.LayerDescriptor;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -120,7 +120,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayer()
    */
-  public void addLayerToChart( final ProfilChartView view, final String layerId )
+  @Override
+  public void addLayerToChart( final IProfilChartView view, final String layerId )
   {
     final IProfil profil = view.getProfil();
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
@@ -209,7 +210,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayers(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public IProfilChartLayer[] createLayers( final ProfilChartView chartView )
+  public IProfilChartLayer[] createLayers( final IProfilChartView chartView )
   {
     final IProfil profil = chartView.getProfil();
 
@@ -349,7 +350,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getAddableLayers(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public LayerDescriptor[] getAddableLayers( final ProfilChartView view )
+  @Override
+  public LayerDescriptor[] getAddableLayers( final IProfilChartView view )
   {
     final List<LayerDescriptor> addableLayer = new ArrayList<LayerDescriptor>();
 
@@ -438,6 +440,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getComponentUiHandlerProvider()
    */
+  @Override
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile )
   {
     return new GenericComponentUiHandlerProvider( profile );

@@ -48,9 +48,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.SegmentData;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -60,8 +60,8 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -95,7 +95,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
    * manages the displaying of the intersected profile layer in the profile chart view and handles the user
    * interactivity.
    */
-  public ProfilOverlayLayer( final ProfilChartView chartView, final ILayerStyleProvider styleProvider )
+  public ProfilOverlayLayer( final IProfilChartView chartView, final ILayerStyleProvider styleProvider )
   {
     super( chartView.getProfil(), IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
 
@@ -165,6 +165,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
       snapped.setPoints( new Point[] { new Point( spScreen.x, 10 ), new Point( spScreen.x, top ) } );
       hoverFigure = new IPaintable()
       {
+        @Override
         public void paint( final GC gc )
         {
           lineFigure_move.paint( gc );
