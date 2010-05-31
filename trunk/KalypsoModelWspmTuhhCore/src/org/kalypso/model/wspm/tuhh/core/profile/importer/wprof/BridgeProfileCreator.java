@@ -52,11 +52,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
@@ -142,7 +142,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   {
     final GM_Point location = widthPoint.getLocation();
 
-    final GM_Curve profileLine = ProfileFeatureBinding.createProfileSegment( profile, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
+    final GM_Curve profileLine = WspmGeometryUtilities.createProfileSegment( profile, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
     if( profileLine != null )
     {
       final double width = location.distance( profileLine );
