@@ -82,7 +82,6 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
           sohlpunkt = h;
           sohlpunktRecord = record;
         }
-
       }
     }
 
