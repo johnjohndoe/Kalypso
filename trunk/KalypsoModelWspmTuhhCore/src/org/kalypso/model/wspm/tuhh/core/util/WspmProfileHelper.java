@@ -40,51 +40,67 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.util;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Dirk Kuch
  */
 public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProfileHelper
 {
+
   /**
-   * @return sohlpunkt of the given profile
+   * @return breite of sohlpunkt
    */
-  public static IRecord findSohlpunkt( final IProfil profile )
+  public static double findSohlpunkt( final IProfil profile )
   {
-    final IComponent db = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final IComponent height = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final ProfileWrapper wrapper = new ProfileWrapper( profile );
+    final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    if( dbs.length != 2 )
+      throw new IllegalStateException();
 
-    boolean bereich = false;
     double sohlpunkt = Double.MAX_VALUE;
-    IRecord sohlpunktRecord = null;
+    final List<ProfilePointWrapper> sohle = new ArrayList<ProfilePointWrapper>();
+    boolean lastIterationAdd = false;
 
-    final IRecord[] points = profile.getPoints();
-
-    for( final IRecord record : points )
+    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite() );
+    for( final ProfilePointWrapper point : points )
     {
-      // find lowest points between "durchströmter bereich"
-      final Boolean marker = (Boolean) record.getValue( db );
-      if( Boolean.TRUE.equals( marker ) )
-      {
-        bereich = !bereich;
-      }
+      final Double h = point.getHoehe();
 
-      if( bereich == true )
+      if( h < sohlpunkt )
       {
-        final Double h = (Double) record.getValue( height );
-        if( h < sohlpunkt )
-        {
-          sohlpunkt = h;
-          sohlpunktRecord = record;
-        }
+        sohle.clear();
+
+        sohlpunkt = h;
+        sohle.add( point );
+
+        lastIterationAdd = true;
+      }
+      else if( h == sohlpunkt && lastIterationAdd == true )
+      {
+        sohle.add( point );
+      }
+      else
+      {
+        lastIterationAdd = false;
       }
     }
 
-    return sohlpunktRecord;
+    if( sohle.size() == 1 )
+      return sohle.get( 0 ).getBreite();
+
+    final ProfilePointWrapper p1 = sohle.get( 0 );
+    final ProfilePointWrapper p2 = sohle.get( sohle.size() - 1 );
+
+    final double distance = Math.abs( p1.getBreite() - p2.getBreite() );
+
+    return p1.getBreite() + distance / 2.0;
   }
 }
