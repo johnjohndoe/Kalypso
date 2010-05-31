@@ -51,13 +51,10 @@ import org.kalypso.observation.result.IRecord;
  */
 public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProfileHelper
 {
-
-  public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
-
   /**
-   * @return sohlpunkt of profile
+   * @return sohlpunkt of the given profile
    */
-  public static IRecord getSohlpunkt( final IProfil profile )
+  public static IRecord findSohlpunkt( final IProfil profile )
   {
     final IComponent db = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     final IComponent height = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
