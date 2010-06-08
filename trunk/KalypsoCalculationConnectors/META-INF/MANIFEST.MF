@@ -17,7 +17,6 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.NACalcJob,
  org.kalypso.model.wspm.core,
  org.kalypso.afgui,
- org.junit4;bundle-version="4.3.1",
  org.kalypso.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
