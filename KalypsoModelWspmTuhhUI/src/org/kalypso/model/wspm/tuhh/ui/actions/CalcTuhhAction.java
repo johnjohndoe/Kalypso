@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.actions;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -73,9 +72,6 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
-import org.kalypso.simulation.core.simspec.Modeldata.Input;
-import org.kalypso.simulation.core.simspec.Modeldata.Output;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -89,6 +85,7 @@ public class CalcTuhhAction implements IActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     final Feature[] features = FeatureSelectionHelper.getFeatures( m_selection );
@@ -222,36 +219,11 @@ public class CalcTuhhAction implements IActionDelegate
     return Status.CANCEL_STATUS;
   }
 
-  protected void addInput( final List<Input> list, final String id, final String path, final boolean relative )
-  {
-    final Input input = ModelNature.OF_SPEC.createModeldataInput();
-    input.setId( id );
-    input.setPath( path );
-    input.setRelativeToCalcCase( relative );
-    list.add( input );
-  }
-
-  protected void addOutput( final List<Output> list, final String id, final String path, final boolean relative )
-  {
-    final Output output = ModelNature.OF_SPEC.createModeldataOutput();
-    output.setId( id );
-    output.setPath( path );
-    output.setRelativeToCalcCase( relative );
-    list.add( output );
-  }
-
-  protected void addClearAfterCalc( final List<ClearAfterCalc> list, final String path, final boolean relative )
-  {
-    final ClearAfterCalc clear = ModelNature.OF_SPEC.createModeldataClearAfterCalc();
-    clear.setPath( path );
-    clear.setRelativeToCalcCase( relative );
-    list.add( clear );
-  }
-
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
