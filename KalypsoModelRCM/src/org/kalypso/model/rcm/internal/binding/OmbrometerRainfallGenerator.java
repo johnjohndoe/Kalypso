@@ -148,6 +148,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
    * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
    *      java.util.Date, java.util.Date, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
   {
     /* Update the log. */
