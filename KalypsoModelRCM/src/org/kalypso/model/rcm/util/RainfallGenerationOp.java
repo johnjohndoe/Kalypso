@@ -359,18 +359,10 @@ public class RainfallGenerationOp
     }
 
     /* Get the rainfall generator. */
-    final Feature feature = rcmWorkspace.getFeature( generatorId );
-    if( feature == null )
-    {
-      final String msg = String.format( "Generator mit ID '%s' konnte in rcm-gml (%s) nicht gefunden werden. Eintrag wird ignoriert.", generatorId, rcmWorkspace.getContext() );
-      logger.log( Level.SEVERE, -1, msg );
-      return null;
-    }
-
-    final IRainfallGenerator rainGen = (IRainfallGenerator) feature;
+    final IRainfallGenerator rainGen = (IRainfallGenerator) rcmWorkspace.getFeature( generatorId );
     if( rainGen == null )
     {
-      final String msg = String.format( "Generator mit ID '%s' konnte nicht instanziiert werden. Eintrag wird ignoriert.", generatorId );
+      final String msg = String.format( "Generator mit ID '%s' konnte in rcm-gml (%s) nicht gefunden werden. Eintrag wird ignoriert.", generatorId, rcmWorkspace.getContext() );
       logger.log( Level.SEVERE, -1, msg );
       return null;
     }
