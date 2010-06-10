@@ -69,7 +69,7 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
     final List<ProfilePointWrapper> sohle = new ArrayList<ProfilePointWrapper>();
     boolean lastIterationAdd = false;
 
-    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite() );
+    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
     for( final ProfilePointWrapper point : points )
     {
       final Double h = point.getHoehe();
