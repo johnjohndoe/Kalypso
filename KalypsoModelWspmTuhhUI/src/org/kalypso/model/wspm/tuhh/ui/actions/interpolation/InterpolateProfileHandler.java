@@ -70,10 +70,12 @@ public class InterpolateProfileHandler extends AbstractHandler
       final IProfileFeature newProfile = waterBody.createNewProfile();
       interpolation.interpolate( newStation, newProfile );
 
+      final GMLWorkspace workspace = waterBody.getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterBody, new Feature[] { newProfile }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
       if( reach != null )
       {
         final TuhhReachProfileSegment segment = reach.createProfileSegment( newProfile, newStation.doubleValue() );
-        final GMLWorkspace workspace = reach.getWorkspace();
         workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach, new Feature[] { segment }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
     }
