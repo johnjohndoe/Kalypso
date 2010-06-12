@@ -12,7 +12,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -176,23 +175,15 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
           if( dialog.open() == Status.OK )
           {
             // final step, profile to the feature
-            IProfileFeature profileFeature;
-            try
-            {
-              profileFeature = waterBody.createNewProfile();
-              ProfileFeatureFactory.toFeature( profile, profileFeature );
+            final IProfileFeature profileFeature = waterBody.createNewProfile();
+            ProfileFeatureFactory.toFeature( profile, profileFeature );
 
-              final GMLWorkspace workspace = profileFeature.getWorkspace();
+            final GMLWorkspace workspace = profileFeature.getWorkspace();
 
-              final Feature[] changed_features = new Feature[1];
-              changed_features[0] = profileFeature;
-              final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, waterBody, changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
-              workspace.fireModellEvent( event );
-            }
-            catch( final GMLSchemaException e )
-            {
-              e.printStackTrace();
-            }
+            final Feature[] changed_features = new Feature[1];
+            changed_features[0] = profileFeature;
+            final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, waterBody, changed_features, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+            workspace.fireModellEvent( event );
           }
 
           return Status.OK_STATUS;

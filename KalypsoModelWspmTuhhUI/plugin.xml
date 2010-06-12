@@ -152,6 +152,15 @@
                 </reference>
              </enabledWhen>
           </handler>
+          <handler
+                class="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolateProfileHandler"
+                commandId="org.kalypso.model.wspm.ui.command.profile.interpolation">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+             </enabledWhen>
+          </handler>
 	</extension>
 
    <extension
@@ -454,6 +463,13 @@
                 checkEnabled="true">
           </visibleWhen>
        </command>
+       <command
+             commandId="org.kalypso.model.wspm.ui.command.profile.interpolation"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
     </menuContribution>
     <menuContribution
           locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
@@ -530,6 +546,11 @@
 	       name="%command.name.7">
 	</command>
     <command id="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" name="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.name" description="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description"/>
+    <command
+          description="Create a new profile by interpolating between two existing profiles."
+          id="org.kalypso.model.wspm.ui.command.profile.interpolation"
+          name="Interpolation">
+    </command>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -569,6 +590,10 @@
            icon="icons/elcl16/export_plotter.gif">
      </image>
      <image commandId="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" icon="icons/elcl16/exportProfilLine.gif"/>
+     <image
+           commandId="org.kalypso.model.wspm.ui.command.profile.interpolation"
+           icon="icons/elcl16/interpolateProfile.gif">
+     </image>
   </extension>
   <extension
         point="org.eclipse.core.runtime.preferences">

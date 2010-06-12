@@ -38,43 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.actions.interpolation;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import java.math.BigDecimal;
+
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 
 /**
- * Abstract handler that should be used for exporting profiles.
- * 
  * @author Gernot Belger
  */
-public abstract class AbstractExportProfilesHandler extends AbstractHandler
+public class InterpolationWizard extends Wizard
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public final Object execute( final ExecutionEvent event ) throws ExecutionException
+  private final InterpolationStationPage m_stationPage;
+
+  public InterpolationWizard( final IProfileFeature[] profiles )
   {
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getProfileSelectionOrShowMessage( event );
+    m_stationPage = new InterpolationStationPage( "stationPage", profiles );
+    addPage( m_stationPage );
 
-    final IWizard exportProfileWizard = createWizard( event, profileSelection );
-
-    /* show wizard */
-    final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
-    dialog.setRememberSize( true );
-    dialog.open();
-
-    return null;
+    setNeedsProgressMonitor( false );
+    setHelpAvailable( false );
+    setWindowTitle( "Profile Interpolation" );
   }
 
-  protected abstract IWizard createWizard( ExecutionEvent event, final ProfileSelection selection ) throws ExecutionException;
+  public IProfileFeature getPreviousProfile( )
+  {
+    return m_stationPage.getPreviousProfile();
+  }
+
+  public IProfileFeature getNextProfile( )
+  {
+    return m_stationPage.getNextProfile();
+  }
+
+  public BigDecimal getNewStation( )
+  {
+    return m_stationPage.getNewStation();
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
+  @Override
+  public boolean performFinish( )
+  {
+    return true;
+  }
+
 }

@@ -38,43 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.actions;
 
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
- * Abstract handler that should be used for exporting profiles.
+ * Common helper code for profile {@link org.eclipse.core.commands.IHandler}'s.
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractExportProfilesHandler extends AbstractHandler
+public final class ProfileHandlerUtils
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public final Object execute( final ExecutionEvent event ) throws ExecutionException
+  private ProfileHandlerUtils( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
+  }
+
+  public static ProfileSelection getProfileSelectionChecked( final ExecutionEvent event ) throws ExecutionException
+  {
+    final ProfileSelection profileSelection = getProfileSelection( event );
+    if( profileSelection.hasProfiles() )
+      return profileSelection;
+
+    final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler.0" ); //$NON-NLS-1$
+    throw new ExecutionException( message );
+  }
+
+  public static ProfileSelection getProfileSelectionOrShowMessage( final ExecutionEvent event ) throws ExecutionException
   {
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getProfileSelectionOrShowMessage( event );
+    final ProfileSelection profileSelection = getProfileSelection( event );
 
-    final IWizard exportProfileWizard = createWizard( event, profileSelection );
+    if( profileSelection.hasProfiles() )
+      return profileSelection;
 
-    /* show wizard */
-    final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
-    dialog.setRememberSize( true );
-    dialog.open();
-
+    final String title = "Export";
+    final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler.0" ); //$NON-NLS-1$
+    MessageDialog.openWarning( shell, title, message );
     return null;
   }
 
-  protected abstract IWizard createWizard( ExecutionEvent event, final ProfileSelection selection ) throws ExecutionException;
+  public static ProfileSelection getProfileSelection( final ExecutionEvent event ) throws ExecutionException
+  {
+    final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
+    return new ProfileSelection( selection );
+  }
+
 }

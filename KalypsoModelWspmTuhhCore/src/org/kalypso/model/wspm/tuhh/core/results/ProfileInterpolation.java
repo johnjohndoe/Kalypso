@@ -88,7 +88,15 @@ public class ProfileInterpolation
   public IProfileFeature createProfileAt( final String id, final BigDecimal station )
   {
     final IProfileFeature profileFeature = createProfileFeature( id );
+    return interpolate( station, profileFeature );
+  }
 
+  /**
+   * Interpolates between the two existing profiles and fills the result into the given feature, which should be empty
+   * by preference.
+   */
+  public IProfileFeature interpolate( final BigDecimal station, final IProfileFeature profileFeature )
+  {
     profileFeature.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     profileFeature.setBigStation( station );
 
