@@ -137,6 +137,9 @@ public class ProfileInterpolation
         return;
       }
 
+      final String description = String.format( "Interpolated profile %s - %s", m_previousProfile.getBigStation(), m_nextProfile.getBigStation() );
+      profileFeature.setName( description );
+
       doInterpolation( profileFeature );
     }
     catch( final SameXValuesException e )
