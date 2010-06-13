@@ -53,6 +53,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TableViewLabelProvider extends LabelProvider implements ITableLabelProvider
 {
+  @Override
   public String getColumnText( Object obj, int index )
   {
     if( obj instanceof LogFileRow )
@@ -73,6 +74,7 @@ public class TableViewLabelProvider extends LabelProvider implements ITableLabel
     return ""; //$NON-NLS-1$
   }
 
+  @Override
   public Image getColumnImage( Object obj, int index )
   {
     if( obj instanceof LogFileRow )

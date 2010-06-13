@@ -38,8 +38,10 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   public static final QName PROP_DAMAGE_STATISTIC_LIST = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statisticClassMember" ); //$NON-NLS-1$
 
+  @Override
   public void setName( final String name );
 
+  @Override
   public void setDescription( final String description );
 
   public void setOrdinalNumber( final int value );
@@ -68,8 +70,10 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   public void setDamageFunction( final IDamageFunction damageFunction );
 
+  @Override
   public String getDescription( );
 
+  @Override
   public String getName( );
 
   public void updateStatistic( final int returnPeriod );

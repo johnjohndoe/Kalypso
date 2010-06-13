@@ -50,6 +50,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
     return NamedFeatureHelper.getName( getFeature() );
   }
 
+  @Override
   public List<IRoughnessCls> selectRoughnessByName( final String nameRegExp )
   {
     final Pattern p = Pattern.compile( nameRegExp );
@@ -83,6 +84,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.modeling.IModel#getVersion()
    */
+  @Override
   public String getVersion( )
   {
     return IModel.NO_VERSION;

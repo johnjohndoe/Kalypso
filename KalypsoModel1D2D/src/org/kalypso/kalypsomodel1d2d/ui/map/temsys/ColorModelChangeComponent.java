@@ -44,7 +44,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
@@ -80,6 +79,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -287,6 +287,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
   {
     return new IPropertyChangeListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void propertyChange( final PropertyChangeEvent event )
       {
@@ -383,6 +384,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     /* color range */
     final PaintListener paintLis = new PaintListener()
     {
+      @Override
       public void paintControl( PaintEvent e )
       {
         gc = new GC( windowCanvas );
@@ -579,11 +581,13 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     maxText.addFocusListener( new FocusListener()
     {
 
+      @Override
       public void focusGained( final FocusEvent e )
       {
 
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
@@ -618,11 +622,13 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     minText.addFocusListener( new FocusListener()
     {
 
+      @Override
       public void focusGained( final FocusEvent e )
       {
 
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {

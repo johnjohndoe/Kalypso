@@ -100,6 +100,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem#recalculateElementGeometry()
    */
+  @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     try

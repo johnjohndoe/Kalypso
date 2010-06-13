@@ -64,7 +64,7 @@ public class TubeLayer extends AbstractProfilLayer
   public TubeLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
   {
     super( profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
-    getLineStyle().setColor( new RGB (255,255,100) );
+    getLineStyle().setColor( new RGB( 255, 255, 100 ) );
   }
 
   /**
@@ -73,7 +73,7 @@ public class TubeLayer extends AbstractProfilLayer
   @Override
   public String getId( )
   {
-    return getTube() == null ? Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0") : getTube().getObservation().getName(); //$NON-NLS-1$
+    return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getObservation().getName(); //$NON-NLS-1$
   }
 
   private IProfileObject getTube( )
@@ -96,15 +96,12 @@ public class TubeLayer extends AbstractProfilLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
-
     final IProfileObject tube = getTube();
     if( tube == null )
       return;
-    IFigure tubeFigure = null;
 
     final Double x = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, tube );
     final Double y = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, tube );
@@ -116,6 +113,8 @@ public class TubeLayer extends AbstractProfilLayer
     final IAxis domAx = getDomainAxis();
     final String tubeId = getTube().getId();
 
+    IFigure<IPointStyle> tubeFigure = null;
+
     if( getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
     {
       if( x.isNaN() || y.isNaN() || b.isNaN() || m.isNaN() || h.isNaN() )
@@ -123,7 +122,7 @@ public class TubeLayer extends AbstractProfilLayer
       tubeFigure = new AbstractFigure<IPointStyle>()
       {
         @Override
-        protected void paintFigure( GC grc )
+        protected void paintFigure( final GC grc )
         {
           final int leftX = domAx.numericToScreen( x - b / 2 );
           final int upperY = targetAx.numericToScreen( y + h );
@@ -142,7 +141,7 @@ public class TubeLayer extends AbstractProfilLayer
       tubeFigure = new AbstractFigure<IPointStyle>()
       {
         @Override
-        protected void paintFigure( GC grc )
+        protected void paintFigure( final GC grc )
         {
           final int leftX = domAx.numericToScreen( x - b / 2 );
           final int upperY = targetAx.numericToScreen( y + (h.isNaN() ? b : h) );

@@ -95,6 +95,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
+  @Override
   public boolean resolve( final IProfil profil )
   {
     if( m_initialized )

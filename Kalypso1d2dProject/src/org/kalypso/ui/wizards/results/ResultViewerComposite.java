@@ -104,6 +104,7 @@ public class ResultViewerComposite
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection(), resultViewer );
@@ -112,6 +113,7 @@ public class ResultViewerComposite
 
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final IResultMeta resultMeta = (IResultMeta) event.getElement();

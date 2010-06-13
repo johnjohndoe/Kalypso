@@ -169,6 +169,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getTimeSteps()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IObservation<TupleResult> getTimeSteps( )
   {
@@ -185,6 +186,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     }
   }
 
+  @Override
   public Integer getIDNOPT( )
   {
     return (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDNOPT );
@@ -193,16 +195,19 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getVersion()
    */
+  @Override
   public String getVersion( )
   {
     return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION );
   }
 
+  @Override
   public int getStartYear( )
   {
     return getStartCalendar().getYear();
   }
 
+  @Override
   public int getIaccyc( )
   {
     // REMARK: do not change the value here, this is DANGEROUS!
@@ -217,122 +222,143 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return 0;
   }
 
+  @Override
   public Integer getIcpu( )
   {
     final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_ICPU );
     return propertyValue != null ? propertyValue : 0;
   }
 
+  @Override
   public Integer getMFW( )
   {
     final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_MFW );
     return propertyValue != null ? propertyValue : 0;
   }
 
+  @Override
   public Integer getBUFFSIZ( )
   {
     final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_BUFFSIZ );
     return propertyValue != null ? propertyValue : 0;
   }
 
+  @Override
   public boolean getPercentCheck( )
   {
     final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_PERCENT_CHECK );
     return propertyValue != null ? propertyValue : false;
   }
 
+  @Override
   public boolean getRestart( )
   {
     return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
   }
 
+  @Override
   public List<IRestartInfo> getRestartInfos( )
   {
     return m_restartInfos;
   }
 
+  @Override
   public XMLGregorianCalendar getStartCalendar( )
   {
     return (XMLGregorianCalendar) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STARTSIM );
   }
 
+  @Override
   public Integer getStartJulianDay( )
   {
     final GregorianCalendar calendar = getStartCalendar().toGregorianCalendar();
     return calendar.get( Calendar.DAY_OF_YEAR );
   }
 
+  @Override
   public Double getStartHour( )
   {
     return new Double( getStartCalendar().getHour() );
   }
 
+  @Override
   public Integer getIEDSW( )
   {
     final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IEDSW );
     return property != null ? property : 0;
   }
 
+  @Override
   public Double getTBFACT( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getTBFACT_ESCUDIER( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT_ESCUDIER );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getTBMIN( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBMIN );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getOMEGA( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_OMEGA );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getELEV( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_ELEV );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getUDIR( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UDIR );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getUNOM( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNOM );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getHMIN( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HMIN );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getDSET( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSET );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getDSETD( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSETD );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Integer getNITI( )
   {
     if( !isSteadySelected() )
@@ -343,6 +369,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return property;
   }
 
+  @Override
   public Integer getNITN( )
   {
     if( !isUnsteadySelected() )
@@ -353,6 +380,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return property;
   }
 
+  @Override
   public Integer getNCYC( )
   {
     if( !isUnsteadySelected() )
@@ -361,36 +389,42 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return getNITN() != null ? property : 0; // Not needed, while no definition of unsteady timesteps
   }
 
+  @Override
   public Double getCONV_1( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_1 );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getCONV_2( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_2 );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getCONV_3( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_3 );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Integer getIDRPT( )
   {
     final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDRPT );
     return property != null ? property : 0;
   }
 
+  @Override
   public Double getDRFACT( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DRFACT );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public boolean getVegeta( )
   {
     return (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
@@ -399,24 +433,28 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getBeient()
    */
+  @Override
   public boolean getBeient( )
   {
     final Object property = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_BEIENT );
     return property != null ? (Boolean) property : false;
   }
 
+  @Override
   public Double getAC1( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC1 );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getAC2( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC2 );
     return property != null ? property : 0.0;
   }
 
+  @Override
   public Double getAC3( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC3 );
@@ -426,6 +464,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#setCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
+  @Override
   public void setCalculationUnit( final ICalculationUnit calUnit )
   {
     try
@@ -451,6 +490,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getCalculationUnit()
    */
+  @Override
   public ICalculationUnit getCalculationUnit( )
   {
     try
@@ -489,6 +529,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_p_bottom()
    */
+  @Override
   public Double get_P_BOTTOM( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_P_BOTTOM );
@@ -499,6 +540,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor() changed to string
    *      to allow more flexible expansion of "Relaxation Factor"
    */
+  @Override
   public String get_RelaxationsFactor( )
   {
     return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
@@ -512,12 +554,14 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   // return (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   // }
 
+  @Override
   public boolean isSteadySelected( )
   {
     final Boolean property = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
   }
 
+  @Override
   public boolean isUnsteadySelected( )
   {
     final Boolean property = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
@@ -527,6 +571,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#addRestartInfo()
    */
+  @Override
   public IRestartInfo addRestartInfo( )
   {
     return m_restartInfos.addNew( IRestartInfo.QNAME, IRestartInfo.class );

@@ -176,6 +176,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
   {
     final ActionListener al = new ActionListener()
     {
+      @Override
       public void actionPerformed( final ActionEvent e )
       {
         final Object source = e.getSource();

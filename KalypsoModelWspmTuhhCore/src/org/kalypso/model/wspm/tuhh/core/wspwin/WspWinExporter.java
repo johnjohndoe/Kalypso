@@ -75,12 +75,12 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
@@ -222,6 +222,7 @@ public class WspWinExporter
 
     final Comparator<BigDecimal> comp = new Comparator<BigDecimal>()
     {
+      @Override
       public int compare( final BigDecimal o1, final BigDecimal o2 )
       {
         if( isDirectionUpstreams )

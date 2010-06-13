@@ -97,6 +97,7 @@ public class AssignNodeElevationFaceComponent
    */
   private final class ICellModifierImplementation implements ICellModifier
   {
+    @Override
     public boolean canModify( final Object element, final String property )
     {
       // Find the index of the column
@@ -104,6 +105,7 @@ public class AssignNodeElevationFaceComponent
       return property.equals( properties[0] ) || property.equals( properties[1] );
     }
 
+    @Override
     public Object getValue( final Object element, final String property )
     {
       if( property.equals( m_nodeElevationViewer.getColumnProperties()[1] ) )
@@ -114,6 +116,7 @@ public class AssignNodeElevationFaceComponent
         return null;
     }
 
+    @Override
     public void modify( final Object element, final String property, final Object value )
     {
       final IFE1D2DNode node;
@@ -157,6 +160,7 @@ public class AssignNodeElevationFaceComponent
 
         final Runnable updateTable = new Runnable()
         {
+          @Override
           public void run( )
           {
             try
@@ -208,6 +212,7 @@ public class AssignNodeElevationFaceComponent
 
         final Runnable updateTable = new Runnable()
         {
+          @Override
           public void run( )
           {
             try
@@ -267,6 +272,7 @@ public class AssignNodeElevationFaceComponent
    */
   private final ISelectionChangedListener nodeSelectionListener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -284,6 +290,7 @@ public class AssignNodeElevationFaceComponent
 
   final KeyBasedDataModelChangeListener modelChangeListener = new KeyBasedDataModelChangeListener()
   {
+    @Override
     public void dataChanged( final String key, final Object newValue )
     {
       if( ITerrainElevationModel.class.toString().equals( key ) )
@@ -304,6 +311,7 @@ public class AssignNodeElevationFaceComponent
           return;
         final Runnable todo = new Runnable()
         {
+          @Override
           public void run( )
           {
             m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
@@ -320,6 +328,7 @@ public class AssignNodeElevationFaceComponent
   private final ICellEditorValidator doubleValidator = new ICellEditorValidator()
   {
 
+    @Override
     public String isValid( final Object value )
     {
       try

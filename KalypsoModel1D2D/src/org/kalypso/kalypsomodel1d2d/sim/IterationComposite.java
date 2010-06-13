@@ -163,6 +163,7 @@ public class IterationComposite extends Composite
 
     m_comboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleComboSelectionChanged( (IStructuredSelection) event.getSelection() );
@@ -208,6 +209,7 @@ public class IterationComposite extends Composite
 
     addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         refreshJob.cancel();

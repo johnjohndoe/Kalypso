@@ -20,7 +20,8 @@ public class ImportAction implements IObjectActionDelegate
 	/**
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
-	public void setActivePart(IAction action, IWorkbenchPart wbPart) {
+	@Override
+  public void setActivePart(IAction action, IWorkbenchPart wbPart) {
 			this.part = wbPart;
 	}
 
@@ -28,7 +29,8 @@ public class ImportAction implements IObjectActionDelegate
 	 * @see IActionDelegate#run(IAction)
 	 * Instantiates the wizard and opens it in the wizard container
 	 */
-	public void run(IAction action) {
+	@Override
+  public void run(IAction action) {
         ImportWizard wizard = new ImportWizard();
 		if ((selection instanceof IStructuredSelection) || (selection == null))
 		wizard.init(part.getSite().getWorkbenchWindow().getWorkbench(), 
@@ -43,7 +45,8 @@ public class ImportAction implements IObjectActionDelegate
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
-	public void selectionChanged(IAction action, ISelection iSelection) {
+	@Override
+  public void selectionChanged(IAction action, ISelection iSelection) {
 		this.selection = iSelection;
 	}
 

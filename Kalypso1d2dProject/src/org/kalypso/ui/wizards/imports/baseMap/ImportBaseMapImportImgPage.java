@@ -67,6 +67,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
    * @param parent
    *          the parent composite
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -83,6 +84,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
     m_sourceFileField = new Text( container, SWT.BORDER );
     m_sourceFileField.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();

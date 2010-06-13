@@ -57,6 +57,7 @@ public class MultiTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
+  @Override
   public void add( final INodeResult... nodes )
   {
     for( final ITriangleEater eater : m_eaters )
@@ -66,6 +67,7 @@ public class MultiTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
    */
+  @Override
   public void finished( ) throws CoreException
   {
     for( final ITriangleEater eater : m_eaters )
@@ -90,6 +92,7 @@ public class MultiTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
    */
+  @Override
   public void setTime( final Date time )
   {
     for( final ITriangleEater eater : m_eaters )

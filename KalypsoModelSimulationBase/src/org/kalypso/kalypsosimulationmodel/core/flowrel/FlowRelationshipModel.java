@@ -66,6 +66,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth )
   {
     final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
@@ -92,6 +93,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationships(org.kalypsodeegree.model.geometry.GM_Position,
    *      double)
    */
+  @Override
   public IFlowRelationship[] findFlowrelationships( final GM_Position position, final double searchRectWidth )
   {
     final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
@@ -121,6 +123,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Position,
    *      double, javax.xml.namespace.QName[])
    */
+  @Override
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchDistance, final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes )
   {
     final List<Feature> foundFeatures = findFeatures( position, searchDistance );
@@ -178,6 +181,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.modeling.IModel#getVersion()
    */
+  @Override
   public String getVersion( )
   {
     return IModel.NO_VERSION;

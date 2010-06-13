@@ -34,8 +34,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final String m_landuseProperty;
 
-  @SuppressWarnings("unchecked")
-  private final List m_shapeFeatureList;
+  private final List< ? > m_shapeFeatureList;
 
   private final IRasterizationControlModel m_controlModel;
 
@@ -43,8 +42,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  @SuppressWarnings("unchecked")
-  public RiskImportNewLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final List<Feature> predefinedLanduseColorsCollection )
+  public RiskImportNewLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List< ? > shapeFeatureList, final String landuseProperty, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -53,6 +51,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$

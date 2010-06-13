@@ -98,11 +98,13 @@ public class SimpleNodeResult implements INodeResult
 
   private boolean m_nodeAssigned;
 
+  @Override
   public List<ArcResult> getArcs( )
   {
     return m_arcs;
   }
 
+  @Override
   public void setArc( final ArcResult arc )
   {
     m_arcs.add( arc );
@@ -111,6 +113,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getPoint()
    */
+  @Override
   public GM_Point getPoint( )
   {
     return m_point;
@@ -119,6 +122,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWaterlevel()
    */
+  @Override
   public double getWaterlevel( )
   {
     return m_waterlevel;
@@ -127,6 +131,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setCalcId(int)
    */
+  @Override
   public void setCalcId( final int id )
   {
     // TODO Auto-generated method stub
@@ -137,6 +142,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setLocation(double, double, double,
    *      java.lang.String)
    */
+  @Override
   public void setLocation( final double x, final double y, final double z, final String crs )
   {
     final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
@@ -146,6 +152,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setMidSide(boolean)
    */
+  @Override
   public void setMidSide( final boolean isMidSide )
   {
     // TODO Auto-generated method stub
@@ -156,6 +163,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setResultValues(double, double, double,
    *      double)
    */
+  @Override
   public void setResultValues( final double vx, final double vy, final double depth, final double waterlevel )
   {
     m_vx = vx;
@@ -168,6 +176,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setResultPrevStepValues(double, double,
    *      double)
    */
+  @Override
   public void setResultPrevStepValues( double vxPrevStep, double vyPrevStep, double virtDepPrevStep )
   {
     m_vxPrevStep = vxPrevStep;
@@ -180,6 +189,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setTimeDerivativeValues(double, double,
    *      double)
    */
+  @Override
   public void setTimeDerivativeValues( double vxWRTt, double vyWRTt, double virtDepWRTt )
   {
     m_dvxdt = vxWRTt;
@@ -192,6 +202,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setTimeDerivativeValuesPrevStep(double,
    *      double, double)
    */
+  @Override
   public void setTimeDerivativeValuesPrevStep( double vxWRTtPrevStep, double vyWRTtPrevStep, double virtDepWRTtPrevStep )
   {
     m_dvxdtPrevStep = vxWRTtPrevStep;
@@ -203,6 +214,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDepth(double)
    */
+  @Override
   public void setDepth( final double depth )
   {
     m_depth = depth;
@@ -211,6 +223,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaterlevel(double)
    */
+  @Override
   public void setWaterlevel( final double waterlevel )
   {
     m_waterlevel = waterlevel;
@@ -219,6 +232,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDepth()
    */
+  @Override
   public double getDepth( )
   {
     return getWaterlevel() - getPoint().getZ();
@@ -227,6 +241,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelocity(java.util.List)
    */
+  @Override
   public void setVelocity( final List<Double> velocity )
   {
     m_velocity = velocity;
@@ -237,6 +252,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelocity()
    */
+  @Override
   public List<Double> getVelocity( )
   {
     final double depth = getDepth();
@@ -255,6 +271,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#isWet()
    */
+  @Override
   public boolean isWet( )
   {
     if( m_depth <= 0 )
@@ -266,6 +283,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getAbsoluteVelocity()
    */
+  @Override
   public double getAbsoluteVelocity( )
   {
     return Math.sqrt( m_vx * m_vx + m_vy * m_vy );
@@ -274,6 +292,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     throw new UnsupportedOperationException();
@@ -282,6 +301,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getGmlID()
    */
+  @Override
   public String getGmlID( )
   {
     throw new UnsupportedOperationException();
@@ -290,6 +310,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
    */
+  @Override
   public String getName( )
   {
     throw new UnsupportedOperationException();
@@ -298,6 +319,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getFeature()
    */
+  @Override
   public Feature getFeature( )
   {
     throw new UnsupportedOperationException();
@@ -306,6 +328,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
+  @Override
   public void setDescription( final String desc )
   {
     throw new UnsupportedOperationException();
@@ -314,6 +337,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
+  @Override
   public void setName( final String name )
   {
     throw new UnsupportedOperationException();
@@ -322,6 +346,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#addLambda(double)
    */
+  @Override
   public void addLambda( final double lambda )
   {
     m_lambdas.add( lambda );
@@ -330,6 +355,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getAveragedLambda()
    */
+  @Override
   public double getAveragedLambda( )
   {
     if( m_lambdas.size() > 0 )
@@ -348,6 +374,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtualDepth()
    */
+  @Override
   public double getVirtualDepth( )
   {
     return m_depth;
@@ -356,6 +383,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtualDepth(double)
    */
+  @Override
   public void setVirtualDepth( final double virtualDepth )
   {
     m_depth = virtualDepth;
@@ -364,6 +392,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDry()
    */
+  @Override
   public int getDry( )
   {
     return 0;
@@ -372,6 +401,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDry(int)
    */
+  @Override
   public void setDry( final int dry )
   {
   }
@@ -379,6 +409,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDischarge()
    */
+  @Override
   public Double getDischarge( )
   {
     // TODO Auto-generated method stub
@@ -388,6 +419,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDischarge(double)
    */
+  @Override
   public void setDischarge( final double discharge )
   {
     // TODO Auto-generated method stub
@@ -396,6 +428,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
    */
+  @Override
   public GM_Object getLocation( )
   {
     throw new UnsupportedOperationException();
@@ -404,6 +437,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
    */
+  @Override
   public void setLocation( final GM_Object location )
   {
     throw new UnsupportedOperationException();
@@ -412,11 +446,13 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getNodeID()
    */
+  @Override
   public int getNodeID( )
   {
     return -1;
   }
 
+  @Override
   public boolean isAssigned( )
   {
     if( m_nodeAssigned == true )
@@ -425,6 +461,7 @@ public class SimpleNodeResult implements INodeResult
       return false;
   }
 
+  @Override
   public void setAssigned( final boolean assign )
   {
     m_nodeAssigned = assign;
@@ -433,6 +470,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtualVelocity()
    */
+  @Override
   public List<Double> getVirtualVelocity( )
   {
     return m_velocity;
@@ -443,6 +481,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTime(java.util.List)
    */
+  @Override
   public void setVelOverTime( List<Double> velOverTime )
   {
     m_dVelDt = velOverTime;
@@ -454,6 +493,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTimePrevStep(java.util.List)
    */
+  @Override
   public void setVelOverTimePrevStep( List<Double> velOverTimePrevStep )
   {
     m_dVelDtPrevStep = velOverTimePrevStep;
@@ -465,6 +505,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelPrevStep(java.util.List)
    */
+  @Override
   public void setVelPrevStep( List<Double> velPrevStep )
   {
     m_velocityPrevStep = velPrevStep;
@@ -476,6 +517,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTime(double)
    */
+  @Override
   public void setVirtDepOverTime( double virtDepOverTime )
   {
     m_dDepthDt = virtDepOverTime;
@@ -484,6 +526,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTimePrevStep(double)
    */
+  @Override
   public void setVirtDepOverTimePrevStep( double virtDepOverTimePrevStep )
   {
     m_dDepthDtPrevStep = virtDepOverTimePrevStep;
@@ -492,6 +535,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepPrevStep(double)
    */
+  @Override
   public void setVirtDepPrevStep( double virtDepthPrevStep )
   {
     m_depthPrevStep = virtDepthPrevStep;
@@ -500,6 +544,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTime()
    */
+  @Override
   public List<Double> getVelOverTime( )
   {
     return m_dVelDt;
@@ -508,6 +553,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTimePrevStep()
    */
+  @Override
   public List<Double> getVelOverTimePrevStep( )
   {
     return m_dVelDtPrevStep;
@@ -516,6 +562,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelPrevStep()
    */
+  @Override
   public List<Double> getVelPrevStep( )
   {
     return m_velocityPrevStep;
@@ -524,6 +571,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTime()
    */
+  @Override
   public double getVirtDepOverTime( )
   {
     return m_dDepthDt;
@@ -532,6 +580,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTimePrevStep()
    */
+  @Override
   public double getVirtDepOverTimePrevStep( )
   {
     return m_dDepthDtPrevStep;
@@ -540,6 +589,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepPrevStep()
    */
+  @Override
   public double getVirtDepPrevStep( )
   {
     return m_depthPrevStep;

@@ -60,7 +60,6 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -257,6 +256,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
           final Display display = PlatformUI.getWorkbench().getDisplay();
           display.asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               final Shell shell = display.getActiveShell();
@@ -293,6 +293,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           final Shell shell = display.getActiveShell();
@@ -354,6 +355,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           final Shell shell = display.getActiveShell();

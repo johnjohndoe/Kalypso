@@ -321,6 +321,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     display.asyncExec( new Runnable()
     {
       
+      @Override
       public void run( )
       {
         final Feature parentFeature = m_flowRelCollection.getFeature();
@@ -349,6 +350,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
           final IStatus status = StatusUtilities.statusFromThrowable( e );
           display.asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               final Shell shell = display.getActiveShell();

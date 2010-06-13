@@ -84,6 +84,7 @@ public class KalypsoModel1D2DUIImages
     /**
      * @see org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey#getImagePath()
      */
+    @Override
     public String getImagePath( )
     {
       return m_imagePath;

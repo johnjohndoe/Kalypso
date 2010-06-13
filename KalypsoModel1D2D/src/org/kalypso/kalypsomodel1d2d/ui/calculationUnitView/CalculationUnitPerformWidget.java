@@ -107,6 +107,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     try
@@ -126,6 +127,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     m_dataModel.removeAllListeners();
@@ -135,6 +137,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.IMapPanel)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -161,6 +164,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       final CalculationUnitDataModel dataModel = m_dataModel;
       dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
       {
+        @Override
         public void dataChanged( final String key, final Object newValue )
         {
           if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
@@ -196,6 +200,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
+  @Override
   public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
@@ -204,6 +209,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
+  @Override
   public void clickPopup( final Point p )
   {
     if( m_strategy != null )
@@ -215,6 +221,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
+  @Override
   public void doubleClickedLeft( final Point p )
   {
     if( m_strategy != null )
@@ -226,6 +233,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
+  @Override
   public void doubleClickedRight( final Point p )
   {
     if( m_strategy != null )
@@ -237,6 +245,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
+  @Override
   public void dragged( final Point p )
   {
     if( m_strategy != null )
@@ -248,6 +257,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
    */
+  @Override
   public void finish( )
   {
     try
@@ -285,6 +295,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#getName()
    */
+  @Override
   public String getName( )
   {
     return m_name;
@@ -293,6 +304,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#getToolTip()
    */
+  @Override
   public String getToolTip( )
   {
     return m_toolTip;
@@ -301,6 +313,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyPressed( final KeyEvent e )
   {
     if( m_strategy != null )
@@ -312,6 +325,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyReleased( final KeyEvent e )
   {
     if( m_strategy != null )
@@ -323,6 +337,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyTyped( final KeyEvent e )
   {
     if( m_strategy != null )
@@ -334,6 +349,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
+  @Override
   public void leftClicked( final Point p )
   {
     if( m_strategy != null )
@@ -345,6 +361,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
+  @Override
   public void leftPressed( final Point p )
   {
     if( m_strategy != null )
@@ -357,6 +374,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
+  @Override
   public void leftReleased( final Point p )
   {
     if( m_strategy != null )
@@ -369,6 +387,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
+  @Override
   public void moved( final Point p )
   {
     if( m_strategy != null )
@@ -380,6 +399,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
+  @Override
   public void paint( final Graphics g )
   {
     if( m_strategy != null )
@@ -391,6 +411,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
+  @Override
   public void rightClicked( final Point p )
   {
     if( m_strategy != null )
@@ -402,6 +423,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
+  @Override
   public void rightPressed( final Point p )
   {
     if( m_strategy != null )
@@ -414,6 +436,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
+  @Override
   public void rightReleased( final Point p )
   {
     if( m_strategy != null )
@@ -426,6 +449,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( final ISelection selection )
   {
     if( m_strategy != null )
@@ -437,6 +461,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy#setStrategy(org.kalypso.ogc.gml.widgets.IWidget)
    */
+  @Override
   public void setStrategy( final IWidget strategy )
   {
     if( m_strategy != null )

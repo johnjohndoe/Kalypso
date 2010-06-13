@@ -107,6 +107,7 @@ public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabase
   }
   
 
+  @Override
   public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
   {
     return new SzenarioProjectOpenAction();

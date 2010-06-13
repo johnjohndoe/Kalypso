@@ -78,6 +78,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand.0"); //$NON-NLS-1$
@@ -86,6 +87,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -94,6 +96,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     // TODO check if such a line already exists (with same nodes etc...)
@@ -118,6 +121,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     if( !m_processed )
@@ -129,6 +133,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     if( m_processed )
@@ -140,6 +145,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     return new IFeatureWrapper2[] { m_line };
@@ -148,6 +154,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
+  @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return m_model;

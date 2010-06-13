@@ -58,6 +58,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getWidth()
    */
+  @Override
   public BigDecimal getWidth( )
   {
     return (BigDecimal) getFeature().getProperty( QNAME_PROP_WIDTH );
@@ -66,6 +67,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getBankSlopeLeft()
    */
+  @Override
   public BigDecimal getBankSlopeLeft( )
   {
     final BigDecimal slopeLeft = (BigDecimal) (getFeature().getProperty( QNAME_PROP_SS1 ));
@@ -78,6 +80,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getBankSlopeRight()
    */
+  @Override
   public BigDecimal getBankSlopeRight( )
   {
     final BigDecimal slopeRight = (BigDecimal) (getFeature().getProperty( QNAME_PROP_SS2 ));
@@ -91,6 +94,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getHeightStorage()
    */
+  @Override
   public BigDecimal getHeightStorage( )
   {
     return (BigDecimal) getFeature().getProperty( QNAME_PROP_WSS );
@@ -99,6 +103,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getSlopeStorage()
    */
+  @Override
   public BigDecimal getSlopeStorage( )
   {
     final BigDecimal slopeStorage = (BigDecimal) (getFeature().getProperty( QNAME_PROP_WIDBS ));
@@ -113,6 +118,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getWidthStorage()
    */
+  @Override
   public BigDecimal getWidthStorage( )
   {
     return (BigDecimal) getFeature().getProperty( QNAME_PROP_WIDS );
@@ -121,6 +127,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#getProfile()
    */
+  @Override
   public IProfileFeature getProfile( )
   {
     throw new UnsupportedOperationException();
@@ -129,6 +136,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#getStation()
    */
+  @Override
   public BigDecimal getStation( )
   {
     throw new UnsupportedOperationException();
@@ -137,6 +145,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#setProfileLink(java.lang.String)
    */
+  @Override
   public void setProfileLink( final String profileRef )
   {
     throw new UnsupportedOperationException();
@@ -145,6 +154,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#setStation(java.math.BigDecimal)
    */
+  @Override
   public void setStation( final BigDecimal station )
   {
     throw new UnsupportedOperationException();

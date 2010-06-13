@@ -76,6 +76,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getAverageDamage()
    */
+  @Override
   public BigDecimal getAverageDamage( )
   {
     return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_AVERAGE_DAMAGE );
@@ -84,6 +85,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getDamageSum()
    */
+  @Override
   public BigDecimal getDamageSum( )
   {
     return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_DAMAGE_SUM );
@@ -92,6 +94,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getMaxDamage()
    */
+  @Override
   public BigDecimal getMaxDamage( )
   {
     return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_MAX_DAMAGE );
@@ -100,6 +103,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getMinDamage()
    */
+  @Override
   public BigDecimal getMinDamage( )
   {
     return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_MIN_DAMAGE );
@@ -108,6 +112,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getReturnPeriod()
    */
+  @Override
   public int getReturnPeriod( )
   {
     final Integer value = (Integer) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_RETURN_PERIOD );
@@ -117,6 +122,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#updateStatistic(java.math.BigDecimal)
    */
+  @Override
   public void updateStatistic( final BigDecimal value )
   {
     m_numberOfEntries++;
@@ -139,6 +145,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
     getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_DAMAGE_SUM, m_sum );
   }
 
+  @Override
   public void finish( )
   {
     /* calculate the landuse area [m²] */
@@ -151,6 +158,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
     getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_TOTAL_DAMAGE, totalDamage );
   }
 
+  @Override
   public void setCellSize( final BigDecimal cellSize )
   {
     m_cellSize = cellSize;
@@ -159,6 +167,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#setReturnPeriod(int)
    */
+  @Override
   public void setReturnPeriod( final int returnPeriod )
   {
     getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_RETURN_PERIOD, returnPeriod );
@@ -167,6 +176,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getTotalDamage()
    */
+  @Override
   public BigDecimal getTotalDamage( )
   {
     return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_TOTAL_DAMAGE );
@@ -175,6 +185,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getAverageAnnualDamage()
    */
+  @Override
   public BigDecimal getAverageAnnualDamage( )
   {
     // TODO Auto-generated method stub
@@ -184,6 +195,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#setTotalDamage(java.math.BigDecimal)
    */
+  @Override
   public void setTotalDamage( final BigDecimal averageAnnualDamage )
   {
     // TODO Auto-generated method stub
@@ -193,6 +205,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
+  @Override
   public int compareTo( final IRiskLanduseStatistic o )
   {
     return Integer.valueOf( getReturnPeriod() ).compareTo( Integer.valueOf( o.getReturnPeriod() ) );
@@ -201,6 +214,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getFloodedArea()
    */
+  @Override
   public BigDecimal getFloodedArea( )
   {
     return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA );

@@ -200,6 +200,7 @@ public class VectorEditorComposite extends Composite
     strokeEditor.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     strokeEditor.addModifyListener( new IStrokeModifyListener()
     {
+      @Override
       public void onStrokeChanged( Object source, Stroke stroke )
       {
         contentChanged();
@@ -210,6 +211,7 @@ public class VectorEditorComposite extends Composite
     m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
+      @Override
       public void onFillChanged( Object source, Fill fill )
       {
         contentChanged();
@@ -258,6 +260,7 @@ public class VectorEditorComposite extends Composite
     uomTypeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -365,6 +368,7 @@ public class VectorEditorComposite extends Composite
 
     scaleValueText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
@@ -376,6 +380,7 @@ public class VectorEditorComposite extends Composite
         }
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
@@ -390,6 +395,7 @@ public class VectorEditorComposite extends Composite
 
     scaleValueText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {

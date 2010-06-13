@@ -1,6 +1,5 @@
 package org.kalypso.convert.namodel.net.visitors;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.net.NetElement;
@@ -54,7 +53,7 @@ public class DownStreamVisitor extends NetElementVisitor
   /*
    * @author doemming
    */
-  public DownStreamVisitor( NetElementVisitor innerVisitor )
+  public DownStreamVisitor( final NetElementVisitor innerVisitor )
   {
     m_innerVisitor = innerVisitor;
   }
@@ -64,14 +63,14 @@ public class DownStreamVisitor extends NetElementVisitor
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
   @Override
-  public boolean visit( NetElement netElement ) throws Exception
+  public boolean visit( final NetElement netElement ) throws Exception
   {
     if( m_innerVisitor.visit( netElement ) )
     {
-      final List downStreamNetElements = netElement.getDownStreamNetElements();
-      for( Iterator iter = downStreamNetElements.iterator(); iter.hasNext(); )
+      final List<NetElement> downStreamNetElements = netElement.getDownStreamNetElements();
+      for( final NetElement netElement2 : downStreamNetElements )
       {
-        NetElement element = (NetElement) iter.next();
+        final NetElement element = netElement2;
         visit( element );
       }
     }

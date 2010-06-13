@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
@@ -88,6 +87,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 class GridWidgetFace
 {
@@ -99,11 +99,13 @@ class GridWidgetFace
   {
     private final List<Color> m_colorList = new ArrayList<Color>();
 
+    @Override
     public Image getColumnImage( Object element, int columnIndex )
     {
       return null;
     }
 
+    @Override
     public String getColumnText( Object element, int columnIndex )
     {
       if( element instanceof LinePointCollectorConfig )
@@ -150,11 +152,13 @@ class GridWidgetFace
 
     }
 
+    @Override
     public void addListener( ILabelProviderListener listener )
     {
 
     }
 
+    @Override
     public void dispose( )
     {
       if( m_colorList == null )
@@ -165,11 +169,13 @@ class GridWidgetFace
 
     }
 
+    @Override
     public boolean isLabelProperty( Object element, String property )
     {
       return false;
     }
 
+    @Override
     public void removeListener( ILabelProviderListener listener )
     {
 
@@ -178,6 +184,7 @@ class GridWidgetFace
     /**
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
+    @Override
     public Color getBackground( Object element )
     {
       return null;
@@ -186,6 +193,7 @@ class GridWidgetFace
     /**
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
+    @Override
     @SuppressWarnings("synthetic-access")
     public Color getForeground( Object element )
     {
@@ -210,11 +218,13 @@ class GridWidgetFace
   private final IGridPointCollectorStateListener tableUpdater = new IGridPointCollectorStateListener()
   {
 
+    @Override
     public void stateChanged( GridPointColectorChangeEvent changeEvent )
     {
       Display display = m_rootPanel.getDisplay();
       display.syncExec( new Runnable()
       {
+        @Override
         @SuppressWarnings("synthetic-access")
         public void run( )
         {
@@ -537,6 +547,7 @@ class GridWidgetFace
     return new IStructuredContentProvider()
     {
 
+      @Override
       public Object[] getElements( Object inputElement )
       {
         if( inputElement instanceof GridPointCollector )
@@ -549,11 +560,13 @@ class GridWidgetFace
         }
       }
 
+      @Override
       public void dispose( )
       {
 
       }
 
+      @Override
       public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
       {
 
@@ -572,6 +585,7 @@ class GridWidgetFace
     return new IPropertyChangeListener()
     {
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void propertyChange( PropertyChangeEvent event )
       {

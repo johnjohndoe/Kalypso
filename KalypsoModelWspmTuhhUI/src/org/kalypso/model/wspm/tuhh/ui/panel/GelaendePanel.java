@@ -230,6 +230,7 @@ public class GelaendePanel extends AbstractProfilView
       if( control != null && !control.isDisposed() )
         control.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             m_comment.setText( getProfil().getComment() );

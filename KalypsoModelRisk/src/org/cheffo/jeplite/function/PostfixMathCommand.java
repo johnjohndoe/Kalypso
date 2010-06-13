@@ -28,9 +28,10 @@ JEPLite Copyright (C) 2002 Stefan  Kolarov
 
 *****************************************************************************/
 package org.cheffo.jeplite.function;
-import org.cheffo.jeplite.util.*;
-import org.cheffo.jeplite.*;
 import java.util.HashMap;
+
+import org.cheffo.jeplite.ParseException;
+import org.cheffo.jeplite.util.DoubleStack;
 
 public abstract class PostfixMathCommand
 {
@@ -88,6 +89,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final void run(DoubleStack stack) {
       stack.push(Math.abs(stack.pop()));
     }
@@ -100,6 +102,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 2;
     }
 
+    @Override
     public final void run(DoubleStack stack) {
       stack.push(stack.pop()+stack.pop());
     }
@@ -112,6 +115,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 2;
     }
 
+    @Override
     public final void run(DoubleStack inStack)
       throws ParseException
     {
@@ -127,6 +131,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final void run(DoubleStack stack)
       throws ParseException
     {
@@ -141,6 +146,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final double operation(double[] params)
       throws ParseException
     {
@@ -154,6 +160,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final double operation(double[] params)
       throws ParseException
     {
@@ -168,6 +175,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final double operation(double[] params)
       throws ParseException
     {
@@ -183,6 +191,7 @@ public abstract class PostfixMathCommand
     }
     private static final double LOG_10 = Math.log(10);
 
+    @Override
     public final double operation(double[] params)
       throws ParseException
     {
@@ -197,6 +206,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final double operation(double[] params)
       throws ParseException
     {
@@ -211,6 +221,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final double operation(double[] params)
       throws ParseException
     {
@@ -225,6 +236,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final double operation(double[] params)
       throws ParseException
     {
@@ -239,6 +251,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final void run(DoubleStack stack)
       throws ParseException
     {
@@ -253,6 +266,7 @@ public abstract class PostfixMathCommand
       numberOfParameters = 1;
     }
 
+    @Override
     public final void run(DoubleStack stack)
       throws ParseException
     {
@@ -267,12 +281,14 @@ public abstract class PostfixMathCommand
 		  numberOfParameters = 2;
 	  }
 
-	  public final void run(DoubleStack stack) {
+	  @Override
+    public final void run(DoubleStack stack) {
 	    double p2 = stack.pop();
 	    stack.push(stack.pop()/p2);
 	  }
 
-	  public final double operation(double[] params)
+	  @Override
+    public final double operation(double[] params)
 		  throws ParseException
 	  {
 	    return params[0]/params[1];
@@ -286,6 +302,7 @@ public abstract class PostfixMathCommand
 		  numberOfParameters = 2;
 	  }
 
+    @Override
     public final double operation(double[] params){return params[0]-params[1];}
   }
 
@@ -294,6 +311,7 @@ public abstract class PostfixMathCommand
 	  int id;
 	  double tolerance;
 
+    @Override
     public double operation(double[] params) {return 0;}
 	  public Comparative(int id_in)
 	  {
@@ -302,7 +320,8 @@ public abstract class PostfixMathCommand
 		  tolerance = 1e-6;
 	  }
 
-	  public final void run(DoubleStack inStack)
+	  @Override
+    public final void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  double y = inStack.pop();
@@ -342,8 +361,10 @@ public abstract class PostfixMathCommand
 		  numberOfParameters = 2;
 	  }
 
+    @Override
     public final double operation(double[] params) {return 0;}
-	  public final void run(DoubleStack inStack)
+	  @Override
+    public final void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  double param2 = inStack.pop();
@@ -361,9 +382,11 @@ public abstract class PostfixMathCommand
 
 	  }
 
+    @Override
     public double operation(double[] params){return 0;}
 
-	  public final void run(DoubleStack inStack)
+	  @Override
+    public final void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  inStack.push(Math.random());
@@ -380,8 +403,10 @@ public abstract class PostfixMathCommand
 		  numberOfParameters = 2;
 	  }
 
+    @Override
     public final double operation(double[] params) {return 0;}
-	  public final void run(DoubleStack inStack)
+	  @Override
+    public final void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  double y = inStack.pop();
@@ -414,8 +439,10 @@ public abstract class PostfixMathCommand
 		  numberOfParameters = 2;
 	  }
 
+    @Override
     public final double operation(double[] params) {return 0;}
-	  public final void run(DoubleStack inStack)
+	  @Override
+    public final void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  inStack.push(inStack.pop()*inStack.pop());
@@ -431,8 +458,10 @@ public abstract class PostfixMathCommand
 
 	  }
 
+    @Override
     public double operation(double[] params) {return 0;}
-	  public void run(DoubleStack inStack)
+	  @Override
+    public void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  double param = inStack.pop();
@@ -450,8 +479,10 @@ public abstract class PostfixMathCommand
 		  numberOfParameters = 2;
 	  }
 
+    @Override
     public double operation(double[] params){return 0;}
-	  public final void run(DoubleStack inStack)
+	  @Override
+    public final void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  double param2 = inStack.pop();
@@ -469,8 +500,10 @@ public abstract class PostfixMathCommand
 		  numberOfParameters = -1;
 	  }
 
+    @Override
     public final double operation(double[] params){return 0;}
-	  public void run(DoubleStack inStack)
+	  @Override
+    public void run(DoubleStack inStack)
 		  throws ParseException
 	  {
 		  if (null == inStack)

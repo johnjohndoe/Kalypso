@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -54,7 +55,6 @@ import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 /**
  * @author Patrice Congo
@@ -192,6 +192,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorModel#getColor(double)
    */
+  @Override
   public Color getColor( final double elevation )
   {
     return interpolateColor( elevation );
@@ -284,6 +285,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * 
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#setElevationMinMax(double, double)
    */
+  @Override
   public void setElevationMinMax( final double minElevation, final double maxElevation )
   {
     m_minElevation = minElevation;
@@ -331,6 +333,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getElevationMinMax(double, double)
    */
+  @Override
   public double[] getElevationMinMax( )
   {
     final double[] values = new double[2];
@@ -339,6 +342,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     return values;
   }
 
+  @Override
   public int getNumOfClasses( )
   {
     return m_numOfClasses;
@@ -347,6 +351,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getDiscretisationInterval()
    */
+  @Override
   public double getDiscretisationInterval( )
   {
     return Math.abs( (m_maxElevation - m_minElevation) ) / m_numOfClasses;
@@ -355,6 +360,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFrom(int)
    */
+  @Override
   public double getFrom( int currentClass )
   {
     return m_minElevation + currentClass * getDiscretisationInterval();
@@ -363,6 +369,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getTo(int)
    */
+  @Override
   public double getTo( int currentClass )
   {
     return m_minElevation + (currentClass + 1) * getDiscretisationInterval();
@@ -371,6 +378,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFillPolygonPainter(int)
    */
+  @Override
   public FillPainter getFillPolygonPainter( int currentClass )
   {
     return m_lister.get( currentClass ).getPolygonPainter();
@@ -379,6 +387,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getLinePainter(int)
    */
+  @Override
   public StrokePainter getLinePainter( int currentClass )
   {
     return m_lister.get( currentClass ).getLinePainter();
@@ -387,6 +396,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#setProjection(org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
+  @Override
   public void setProjection( GeoTransform projection )
   {
     m_projection = projection;

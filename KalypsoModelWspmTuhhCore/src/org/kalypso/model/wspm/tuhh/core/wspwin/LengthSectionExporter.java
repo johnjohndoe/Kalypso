@@ -130,7 +130,7 @@ public class LengthSectionExporter
           continue;
         final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
         final Object object = table[obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION )];
-        block.setCoords( ((ArrayList< ? >) object).toArray( new Double[] {} ), ((ArrayList) table[i]).toArray() );
+        block.setCoords( ((ArrayList< ? >) object).toArray( new Double[] {} ), ((ArrayList< ? >) table[i]).toArray() );
         if( i == posGround )
           prfwriter.addDataBlock( 0, block );// due restrictions of wspwin-plotter
         else if( block.getCoordCount() > 0 )

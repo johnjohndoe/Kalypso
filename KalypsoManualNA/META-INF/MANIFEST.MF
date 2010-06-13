@@ -7,3 +7,4 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.help
 Export-Package: org.kalypso.KalypsoManualNA.help
 Bundle-ClassPath: library.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

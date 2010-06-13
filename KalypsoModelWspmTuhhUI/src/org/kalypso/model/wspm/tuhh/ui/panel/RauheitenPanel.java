@@ -160,6 +160,7 @@ public class RauheitenPanel extends AbstractProfilView
     m_rauheitCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IComponent old = getRoughness();
@@ -393,6 +394,7 @@ public class RauheitenPanel extends AbstractProfilView
     {
       control.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           updateControls();

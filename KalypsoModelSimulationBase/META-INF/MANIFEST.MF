@@ -24,6 +24,7 @@ Export-Package: org.kalypso.kalypsosimulationmodel,
  org.kalypso.kalypsosimulationmodel.ui.calccore,
  org.kalypso.kalypsosimulationmodel.utils,
  test.org.kalypso.kalypsosimulationmodel
-Eclipse-LazyStart: true 
+Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Activator: org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

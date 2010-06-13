@@ -80,6 +80,7 @@ public class ObservationImportSelection implements ISelection
   /**
    * @see org.eclipse.jface.viewers.ISelection#isEmpty()
    */
+  @Override
   public boolean isEmpty()
   {
     return m_fileSource == null || m_fileTarget == null || m_selectedAdapter == null;

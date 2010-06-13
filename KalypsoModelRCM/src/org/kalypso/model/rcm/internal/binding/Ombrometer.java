@@ -83,7 +83,7 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
    * @see org.kalypso.model.rcm.binding.IOmbrometer#getAffectedArea(org.kalypsodeegree.model.geometry.GM_Surface)
    */
   @Override
-  public void setAffectedArea( final GM_Surface<GM_SurfacePatch> area )
+  public void setAffectedArea( final GM_Surface< ? > area )
   {
     setProperty( QNAME_PROP_AFFECTEDAREA, area );
   }
@@ -134,6 +134,7 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
     setProperty( QNAME_PROP_ISUSED, used );
   }
 
+  @Override
   public FeatureChange changeIsUsed( final Boolean isUsed )
   {
     /* If geometry is not set, never activate this ombro. */

@@ -244,6 +244,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     // TRICKY: Scrolling behaviour:
@@ -315,6 +316,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     featureComposite.setFormToolkit( toolkit );
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
@@ -329,6 +331,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         }
       }
 
+      @Override
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
       {
       }
@@ -369,6 +372,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     /* Hook Events */
     m_eventViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -801,6 +805,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     button.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         image.dispose();
@@ -922,6 +927,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final IInputValidator inputValidator = new IInputValidator()
     {
+      @Override
       public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
@@ -1066,6 +1072,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
   }
@@ -1301,6 +1308,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
    */
+  @Override
   public String getPartName( )
   {
     return null;

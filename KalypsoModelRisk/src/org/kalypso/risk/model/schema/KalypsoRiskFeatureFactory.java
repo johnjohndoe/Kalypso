@@ -41,10 +41,10 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 {
   interface AdapterConstructor
   {
-    public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException;
+    public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException;
   }
 
-  private final Map<Class, AdapterConstructor> m_constructors = createConstructorMap();
+  private final Map<Class< ? >, AdapterConstructor> m_constructors = createConstructorMap();
 
   public KalypsoRiskFeatureFactory( )
   {
@@ -53,7 +53,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  @Override
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     final AdapterConstructor ctor = m_constructors.get( adapterType );
     if( ctor != null )
@@ -66,20 +67,22 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  public Class[] getAdapterList( )
+  @Override
+  public Class< ? >[] getAdapterList( )
   {
     return m_constructors.keySet().toArray( new Class[m_constructors.size()] );
   }
 
-  private final Map<Class, AdapterConstructor> createConstructorMap( )
+  private final Map<Class< ? >, AdapterConstructor> createConstructorMap( )
   {
-    final Map<Class, AdapterConstructor> cMap = new Hashtable<Class, AdapterConstructor>();
+    final Map<Class< ? >, AdapterConstructor> cMap = new Hashtable<Class< ? >, AdapterConstructor>();
 
     AdapterConstructor cTor;
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IRasterizationControlModel.QNAME ) )
@@ -99,7 +102,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( ILanduseClass.QNAME ) )
@@ -112,7 +116,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IAssetValueClass.QNAME ) )
@@ -125,7 +130,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IDamageFunction.QNAME ) )
@@ -138,7 +144,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IAdministrationUnit.QNAME ) )
@@ -151,7 +158,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IRiskZoneDefinition.QNAME ) )
@@ -164,7 +172,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( ILandusePolygonCollection.QNAME ) )
@@ -177,7 +186,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( ILandusePolygon.QNAME ) )
@@ -190,7 +200,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IAnnualCoverageCollection.QNAME ) )
@@ -203,8 +214,8 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      @SuppressWarnings("unchecked")
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IRiskLanduseStatistic.QNAME ) )

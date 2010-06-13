@@ -64,6 +64,7 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
+  @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();

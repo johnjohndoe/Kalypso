@@ -65,6 +65,7 @@ public class KingDataContainer implements IDataContainer<Number, Number>
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#close()
    */
+  @Override
   public void close( )
   {
     // TODO Auto-generated method stub
@@ -74,6 +75,7 @@ public class KingDataContainer implements IDataContainer<Number, Number>
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     final BigDecimal width = m_kingRelation.getWidth();
@@ -105,6 +107,7 @@ public class KingDataContainer implements IDataContainer<Number, Number>
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     final double height = 10 * 1.10;
@@ -126,6 +129,7 @@ public class KingDataContainer implements IDataContainer<Number, Number>
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#isOpen()
    */
+  @Override
   public boolean isOpen( )
   {
     // TODO Auto-generated method stub
@@ -135,6 +139,7 @@ public class KingDataContainer implements IDataContainer<Number, Number>
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#open()
    */
+  @Override
   public void open( )
   {
     // TODO Auto-generated method stub

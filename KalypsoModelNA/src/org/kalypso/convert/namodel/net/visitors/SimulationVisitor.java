@@ -1,7 +1,6 @@
 package org.kalypso.convert.namodel.net.visitors;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.i18n.Messages;
@@ -60,7 +59,7 @@ public class SimulationVisitor extends NetElementVisitor
   /*
    * @author doemming
    */
-  public SimulationVisitor( NetElementVisitor innerVisitor )
+  public SimulationVisitor( final NetElementVisitor innerVisitor )
   {
     m_innerVisitor = innerVisitor;
     m_simulated = new ArrayList<NetElement>();
@@ -72,25 +71,25 @@ public class SimulationVisitor extends NetElementVisitor
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
   @Override
-  public boolean visit( NetElement netElement ) throws Exception
+  public boolean visit( final NetElement netElement ) throws Exception
   {
     if( m_simulated.contains( netElement ) )
       return false;
     // check cycle
     if( m_cycleTest.contains( netElement ) )
     {
-      StringBuffer b = new StringBuffer( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.0") ); //$NON-NLS-1$
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.1") + netElement ); //$NON-NLS-1$
+      final StringBuffer b = new StringBuffer( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.0" ) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.1" ) + netElement ); //$NON-NLS-1$
 
       // check circle (shortest connection)
       // TODO: Better output handling, in this way it is not easy to find the circle
       final NetElementCircleFinder circlefinder = new NetElementCircleFinder( netElement );
-      List[] circleList = circlefinder.findCircle();
-      b.append( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.2", netElement )+ ":\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final List<NetElement>[] circleList = circlefinder.findCircle();
+      b.append( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.2", netElement ) + ":\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      for( int i = 0; i < circleList.length; i++ )
+      for( final List<NetElement> element : circleList )
       {
-        b.append( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.4", circleList[i]) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        b.append( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.4", element ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       log( b.toString() );
       throw new Exception( b.toString() );
@@ -100,10 +99,10 @@ public class SimulationVisitor extends NetElementVisitor
 
     // first calculate upstream
 
-    final List upStreamNetElements = netElement.getUpStreamNetElements();
-    for( Iterator iter = upStreamNetElements.iterator(); iter.hasNext(); )
+    final List<NetElement> upStreamNetElements = netElement.getUpStreamNetElements();
+    for( final NetElement netElement2 : upStreamNetElements )
     {
-      NetElement element = (NetElement) iter.next();
+      final NetElement element = netElement2;
       visit( element );
     }
     // then calculate current

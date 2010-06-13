@@ -157,6 +157,7 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
     m_cmbFormat.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         checkPage();
@@ -179,6 +180,7 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
+  @Override
   public void init( final IWorkbench workbench )
   {
   }

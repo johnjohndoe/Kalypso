@@ -8,11 +8,19 @@ package org.cheffo.jeplite.optimizer;
  * @author
  * @version 1.0
  */
-import org.cheffo.jeplite.*;
-import org.cheffo.jeplite.util.*;
-import org.cheffo.jeplite.function.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import java.util.*;
+import org.cheffo.jeplite.ASTConstant;
+import org.cheffo.jeplite.ASTFunNode;
+import org.cheffo.jeplite.ASTVarNode;
+import org.cheffo.jeplite.ParseException;
+import org.cheffo.jeplite.ParserTreeConstants;
+import org.cheffo.jeplite.ParserVisitor;
+import org.cheffo.jeplite.SimpleNode;
+import org.cheffo.jeplite.function.PostfixMathCommand;
+import org.cheffo.jeplite.util.DoubleStack;
 public class ExpressionOptimizer implements ParserVisitor {
 
   SimpleNode node;
@@ -43,6 +51,7 @@ public class ExpressionOptimizer implements ParserVisitor {
     return (SimpleNode)node.jjtAccept(this, null);
   }
 
+  @Override
   public Object visit(ASTFunNode node, Object data) {
     SimpleNode res = node;
     try{
@@ -108,6 +117,7 @@ public class ExpressionOptimizer implements ParserVisitor {
   /**
    * If a var node is defined in the const table, make it to be a real constant.
    */
+  @Override
   public Object visit(ASTVarNode node, Object data) {
     boolean isConst = (constTab.get(node.getName())!=null);
     SimpleNode res = node;
@@ -122,10 +132,12 @@ public class ExpressionOptimizer implements ParserVisitor {
     return res;
   }
 
+  @Override
   public Object visit(ASTConstant node, Object data) {
     return node;
   }
 
+  @Override
   public Object visit(SimpleNode node, Object data) {
     return node;
   }
@@ -135,8 +147,10 @@ public class ExpressionOptimizer implements ParserVisitor {
       this.numberOfParameters = numberOfParameters;
     }
 
+    @Override
     public double operation(double[] params) {return 0;};
 
+    @Override
     public void run(DoubleStack stack) {
       double res = 0;
       for(int i=0; i<numberOfParameters; i++)
@@ -150,8 +164,10 @@ public class ExpressionOptimizer implements ParserVisitor {
       this.numberOfParameters = numberOfParameters;
     }
 
+    @Override
     public double operation(double[] params) {return 0;};
 
+    @Override
     public void run(DoubleStack stack) {
       double res = 1;
       for(int i=0; i<numberOfParameters; i++)

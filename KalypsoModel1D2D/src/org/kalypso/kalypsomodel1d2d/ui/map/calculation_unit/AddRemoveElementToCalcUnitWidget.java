@@ -233,6 +233,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     final ActionListener al = new ActionListener()
     {
 
+      @Override
       public void actionPerformed( final ActionEvent e )
       {
         addElements();
@@ -267,6 +268,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
   {
     final ActionListener al = new ActionListener()
     {
+      @Override
       public void actionPerformed( final ActionEvent e )
       {
         removeElements();

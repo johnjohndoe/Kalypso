@@ -57,6 +57,7 @@ public class CalculationUnit1D2DLabelProvider extends LabelProvider
   {   
   }
 
+  @Override
   public String getText( Object element )
   {
     if( element instanceof ICalculationUnit1D || element instanceof ICalculationUnit2D)

@@ -27,17 +27,17 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
 {
   public static final QName SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" ); //$NON-NLS-1$
 
-  public RoughnessPolygonCollection( Feature featureToBind )
+  public RoughnessPolygonCollection( final Feature featureToBind )
   {
     this( featureToBind, IRoughnessPolygon.class, SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
   }
 
-  public RoughnessPolygonCollection( Feature featureCol, Class<IRoughnessPolygon> fwClass, QName featureMemberProp )
+  public RoughnessPolygonCollection( final Feature featureCol, final Class<IRoughnessPolygon> fwClass, final QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
   }
 
-  public RoughnessPolygonCollection( Feature parentFeature, QName childQName, QName featureMemberProp, Class<IRoughnessPolygon> fwClass ) throws IllegalArgumentException
+  public RoughnessPolygonCollection( final Feature parentFeature, final QName childQName, final QName featureMemberProp, final Class<IRoughnessPolygon> fwClass ) throws IllegalArgumentException
   {
     super( parentFeature, childQName, featureMemberProp, fwClass );
   }
@@ -45,10 +45,11 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#checkOverlapping()
    */
+  @Override
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public boolean checkOverlapping( )
   {
-    List<Feature> srcPolygonsList = getWrappedList();
+    final List<Feature> srcPolygonsList = getWrappedList();
     Feature feature1, feature2;
     Polygon polygon1, polygon2;
     try
@@ -69,19 +70,20 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
         }
       }
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
     return false;
   }
 
+  @Override
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public List<IRoughnessPolygon> getOverlappedPolygons( )
   {
-    List<Feature> srcPolygonsList = getWrappedList();
-    List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
-    int[] containsList = getEmptyList( srcPolygonsList.size() );
+    final List<Feature> srcPolygonsList = getWrappedList();
+    final List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
+    final int[] containsList = getEmptyList( srcPolygonsList.size() );
     IRoughnessPolygon roughnessPolygon1, roughnessPolygon2;
     Feature feature1, feature2;
     MultiPolygon polygon1, polygon2;
@@ -114,14 +116,14 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
         }
       }
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
     return dstPolygonsList;
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @Override
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
     // List<Feature> srcPolygonsList = getWrappedList();
@@ -136,8 +138,8 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return dstPolygonsList;
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position location )
+  @Override
+  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Position location )
   {
     return query( location );
 
@@ -180,28 +182,29 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#selectRoughnessPolygons(org.kalypsodeegree.model.geometry.GM_Polygon)
    */
-  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Surface selectionZone )
+  @Override
+  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Surface< ? > selectionZone )
   {
     return query( selectionZone, false );
   }
 
-  private int[] getEmptyList( int size )
+  private int[] getEmptyList( final int size )
   {
-    int[] list = new int[size];
+    final int[] list = new int[size];
     for( int i = 0; i < size; i++ )
       list[i] = -1;
     return list;
   }
 
-  private boolean isInside( int[] list, int member )
+  private boolean isInside( final int[] list, final int member )
   {
-    for( int i = 0; i < list.length; i++ )
-      if( list[i] == member )
+    for( final int element : list )
+      if( element == member )
         return true;
     return false;
   }
 
-  private int[] addToList( int[] list, int member )
+  private int[] addToList( final int[] list, final int member )
   {
     for( int i = 0; i < list.length; i++ )
       if( list[i] == -1 )

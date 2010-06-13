@@ -1,7 +1,7 @@
 package org.kalypso.risk.model.operation;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -35,8 +35,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final String m_landuseProperty;
 
-  @SuppressWarnings("unchecked")
-  private final List m_shapeFeatureList;
+  private final List< ? > m_shapeFeatureList;
 
   private final String m_externalProjectName;
 
@@ -48,8 +47,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final IFolder m_scenarioFolder;
 
-  @SuppressWarnings("unchecked")
-  public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection )
+  public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List< ? > shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -60,6 +58,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -70,7 +69,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
       final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection();
 
       /* create entries for landuse database */
-      final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
+      final Set<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
       monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 

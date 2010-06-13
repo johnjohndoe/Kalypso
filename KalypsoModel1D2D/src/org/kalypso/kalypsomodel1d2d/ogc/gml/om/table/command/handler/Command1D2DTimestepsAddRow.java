@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;

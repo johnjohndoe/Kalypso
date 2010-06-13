@@ -67,6 +67,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     m_sldContent = sldContent;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
     try

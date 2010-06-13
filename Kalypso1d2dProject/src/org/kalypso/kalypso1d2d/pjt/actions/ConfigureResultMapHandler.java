@@ -67,6 +67,7 @@ public class ConfigureResultMapHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -74,14 +75,15 @@ public class ConfigureResultMapHandler extends AbstractHandler
 
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
-    final JobExclusiveCommandTarget commandTarget = mapView.getCommandTarget();
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
+
+    final JobExclusiveCommandTarget commandTarget = mapView.getCommandTarget();
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     // wait until map has loaded
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     // Open wizard on that map!

@@ -18,6 +18,7 @@ public class ProfileDataSet
 {
   private final SortedSet<ProfileData> m_profileSort = new TreeSet<ProfileData>( new Comparator<ProfileData>()
   {
+    @Override
     public int compare( ProfileData p1, ProfileData p2 )
     {
       return Double.compare( p1.getPosition(), p2.getPosition() );
@@ -104,7 +105,7 @@ public class ProfileDataSet
     final List<AbstractKMValue> kmMergedForIndexOverProfiles = new ArrayList<AbstractKMValue>();
     for( int index = 0; index < maxValues; index++ )
     {
-      final ProfileData[] profiles = (ProfileData[]) m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
+      final ProfileData[] profiles = m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
       // collect KMValues for one index (row) over all profiles
       final List<AbstractKMValue> kmForIndexOverProfiles = new ArrayList<AbstractKMValue>();
       for( int counterProfile = 0; counterProfile < profiles.length; counterProfile++ )
@@ -113,15 +114,16 @@ public class ProfileDataSet
         kmForIndexOverProfiles.add( profile.getKMValue( index ) );
       }
       // merge collection to one kmvalue
-      final AbstractKMValue[] kmForIndexOverProfileArray = (AbstractKMValue[]) kmForIndexOverProfiles.toArray( new AbstractKMValue[kmForIndexOverProfiles.size()] );
+      final AbstractKMValue[] kmForIndexOverProfileArray = kmForIndexOverProfiles.toArray( new AbstractKMValue[kmForIndexOverProfiles.size()] );
       kmMergedForIndexOverProfiles.add( new MulitKMValue( kmForIndexOverProfileArray ) );
     }
 
-    final AbstractKMValue[] kmMerged = (AbstractKMValue[]) kmMergedForIndexOverProfiles.toArray( new AbstractKMValue[kmMergedForIndexOverProfiles.size()] );
+    final AbstractKMValue[] kmMerged = kmMergedForIndexOverProfiles.toArray( new AbstractKMValue[kmMergedForIndexOverProfiles.size()] );
 
     final SortedSet<AbstractKMValue> sort = new TreeSet<AbstractKMValue>( new Comparator<AbstractKMValue>()
     {
 
+      @Override
       public int compare( AbstractKMValue km1, AbstractKMValue km2 )
       {
         return Double.compare( km1.getQSum(), km2.getQSum() );
@@ -149,7 +151,7 @@ public class ProfileDataSet
     }
     result.add( getKM( sort, qLast ) );
 
-    return (AbstractKMValue[]) result.toArray( new AbstractKMValue[result.size()] );
+    return result.toArray( new AbstractKMValue[result.size()] );
   }
 
   private AbstractKMValue getKM( SortedSet<AbstractKMValue> sort, double q ) throws SameXValuesException
@@ -189,54 +191,63 @@ public class ProfileDataSet
       m_q = q;
     }
 
+    @Override
     public double getLength( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getAlpha( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getK( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getN( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getKForeland( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getNForeland( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getQ( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getQForeland( )
     {
       // TODO Auto-generated method stub
       return 0;
     }
 
+    @Override
     public double getQSum( )
     {
       return m_q;

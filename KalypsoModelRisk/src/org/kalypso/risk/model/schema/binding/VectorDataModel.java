@@ -10,6 +10,7 @@ public class VectorDataModel extends UnversionedModel implements IVectorDataMode
     super( featureToBind, IVectorDataModel.QNAME );
   }
 
+  @Override
   public ILandusePolygonCollection getLandusePolygonCollection( )
   {
     final Feature feature = (Feature) getFeature().getProperty( IVectorDataModel.PROPERTY_LANDUSE_COLLECTION );

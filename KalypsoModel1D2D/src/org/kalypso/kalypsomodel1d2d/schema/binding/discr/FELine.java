@@ -81,6 +81,7 @@ public abstract class FELine extends AbstractFeatureBinder implements IFELine
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine#setNodes(java.util.List)
    */
+  @Override
   public abstract List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException;
 
   protected void setGeometry( GM_Object value )
@@ -88,6 +89,7 @@ public abstract class FELine extends AbstractFeatureBinder implements IFELine
     getFeature().setProperty( IFELine.PROP_GEOMETRY, value );
   }
 
+  @Override
   public List<IFE1D2DNode> getNodes( )
   {
     return m_nodes;
@@ -96,6 +98,7 @@ public abstract class FELine extends AbstractFeatureBinder implements IFELine
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine#getContainers()
    */
+  @Override
   public IFeatureWrapperCollection getContainers( )
   {
     return m_containers;
@@ -104,6 +107,7 @@ public abstract class FELine extends AbstractFeatureBinder implements IFELine
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine#getGeometry()
    */
+  @Override
   public GM_Curve getGeometry( )
   {
     return (GM_Curve) getFeature().getProperty( IFELine.PROP_GEOMETRY );

@@ -137,6 +137,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( !(adaptableObject instanceof Feature) )
@@ -155,6 +156,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
+  @Override
   public Class[] getAdapterList( )
   {
     return constructors.keySet().toArray( new Class[constructors.size()] );
@@ -171,6 +173,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // TODO: adapt other models than discretisation modell and terrain modell when needed
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final IFeatureType featureType = feature.getFeatureType();
@@ -197,6 +200,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final IFeatureType featureType = feature.getFeatureType();
@@ -211,6 +215,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // IFE1D2DNode
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final IFeatureType featureType = feature.getFeatureType();
@@ -225,6 +230,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // IFE1D2DEdge
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -242,6 +248,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // registered for IFE1D2DElement.class but generates the most specific type
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -271,6 +278,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -295,6 +303,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // 1d2d complex element
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -336,6 +345,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // DiscretisationModel
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -354,6 +364,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -373,6 +384,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // DiscretisationModel
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -392,6 +404,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // StaticModel1D2D
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -411,6 +424,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // Flow relationship model
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -430,6 +444,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // ControlModel
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -446,6 +461,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // IDisplayElement
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName name = feature.getFeatureType().getQName();
@@ -466,6 +482,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // IFlowRelation
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         // If a generel flow relation is to be adapted, return the konkrete type instead
@@ -506,6 +523,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // IBuildingFlowRelation
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         // If a generel flow relation is to be adapted, return the konkrete type instead
@@ -530,6 +548,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // IBuildingFlowRelation2D
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         // If a generel flow relation is to be adapted, return the konkrete type instead
@@ -551,6 +570,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // KingFlowRelation
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -570,6 +590,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // TeschkeFlowRelation
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -589,6 +610,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // WeirFlowRelation
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -608,6 +630,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // WeirFlowRelation2D
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -627,6 +650,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // BridgeFlowRelation
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -646,6 +670,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // IResultMeta
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         // If a general result meta is to be adapted, return the concrete type instead
@@ -678,6 +703,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // ScenarioResultMeta
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -697,6 +723,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // CalcUnitResultMeta
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -716,6 +743,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // StepResultMeta
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -735,6 +763,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // DocumentResultMeta
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -754,6 +783,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // RestartInfo
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -773,6 +803,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // BoundaryCondition
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -792,6 +823,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // hydrograph collection
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -811,6 +843,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // hydrograph
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -830,6 +863,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // Node Results
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -848,6 +882,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();

@@ -138,6 +138,7 @@ public class CsvSource implements IProfilSource
    * @see org.kalypso.model.wspm.core.profil.serializer.IProfilSource#read(org.kalypso.model.wspm.core.profil.IProfil)
    */
 
+  @Override
   public IProfil[] read( final String profileTyp, final Reader reader ) throws IOException
   {
     m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileTyp );

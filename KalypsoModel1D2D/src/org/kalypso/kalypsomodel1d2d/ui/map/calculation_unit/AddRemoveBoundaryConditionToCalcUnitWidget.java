@@ -199,6 +199,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
   {
     final ActionListener al = new ActionListener()
     {
+      @Override
       public void actionPerformed( final ActionEvent e )
       {
         removeBoundaryConditionLines();
@@ -211,6 +212,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
   {
     final ActionListener al = new ActionListener()
     {
+      @Override
       public void actionPerformed( final ActionEvent e )
       {
         addBoundaryConditionLines();

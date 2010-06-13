@@ -20,7 +20,7 @@ public class Channel extends DataObject
   private String m_identifier;
 
   /** timeseries belonging to this channel */
-  private List m_timeseries = null;
+  private List<Timeserie> m_timeseries = null;
 
   private int m_typeRef;
 
@@ -39,7 +39,7 @@ public class Channel extends DataObject
    * @param id
    *          internal object id
    */
-  public Channel( final Connection con, int id )
+  public Channel( final Connection con, final int id )
   {
     super( con, id );
   }
@@ -47,8 +47,7 @@ public class Channel extends DataObject
   /**
    * Consructor with parameters
    */
-  public Channel( final Connection con, int id, String name, String desc,
-      String identifier, int ownerRef, int typeRef, int unitRef )
+  public Channel( final Connection con, final int id, final String name, final String desc, final String identifier, final int ownerRef, final int typeRef, final int unitRef )
   {
     super( con, id, name, desc );
 
@@ -58,17 +57,16 @@ public class Channel extends DataObject
     m_unitRef = unitRef;
   }
 
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_identifier;
   }
-  
+
   public String getUnit( ) throws SQLException
   {
     if( m_strUnit == null )
     {
-      final String sql = "SELECT UNITSTR FROM G_UNITS WHERE UNITID = "
-          + m_unitRef;
+      final String sql = "SELECT UNITSTR FROM G_UNITS WHERE UNITID = " + m_unitRef;
       final ResultSet rs = m_con.createStatement().executeQuery( sql );
       rs.next();
 
@@ -85,8 +83,7 @@ public class Channel extends DataObject
   {
     if( m_strType == null )
     {
-      final String sql = "SELECT NAME FROM TS_CHANNELTYPE WHERE ID = "
-          + m_typeRef;
+      final String sql = "SELECT NAME FROM TS_CHANNELTYPE WHERE ID = " + m_typeRef;
       final ResultSet rs = m_con.createStatement().executeQuery( sql );
       rs.next();
 
@@ -105,13 +102,12 @@ public class Channel extends DataObject
    * @return the list of tables that should receive external data from sensors.
    * @throws SQLException
    */
-  public List getTableNames( ) throws SQLException
+  public List<String> getTableNames( ) throws SQLException
   {
     if( m_tables == null )
     {
-      String sql = "SELECT dataTableName FROM TS_TIMESERIES WHERE is_Recipient = 1 and channel_ref = "
-          + m_ID;
-      ResultSet rs = m_con.createStatement().executeQuery( sql );
+      final String sql = "SELECT dataTableName FROM TS_TIMESERIES WHERE is_Recipient = 1 and channel_ref = " + m_ID;
+      final ResultSet rs = m_con.createStatement().executeQuery( sql );
 
       m_tables = new Vector<String>();
 
@@ -129,7 +125,7 @@ public class Channel extends DataObject
   /**
    * Returns the timeseries of that channel
    */
-  public List getTimeseries( )
+  public List<Timeserie> getTimeseries( )
   {
     if( m_timeseries != null )
     {
@@ -144,16 +140,15 @@ public class Channel extends DataObject
   /**
    * Looks up the database for a channel according to the given identifier
    */
-  public static Channel findChannel( final Connection con,
-      final String identifier ) throws SQLException
+  public static Channel findChannel( final Connection con, final String identifier ) throws SQLException
   {
-    String sql = "SELECT ID FROM TS_CHANNEL WHERE IDENTIFIER = ?";
+    final String sql = "SELECT ID FROM TS_CHANNEL WHERE IDENTIFIER = ?";
 
-    PreparedStatement stmt = con.prepareStatement( sql );
+    final PreparedStatement stmt = con.prepareStatement( sql );
 
     stmt.setString( 1, identifier );
 
-    ResultSet rs = stmt.executeQuery();
+    final ResultSet rs = stmt.executeQuery();
 
     rs.next();
 
@@ -179,12 +174,11 @@ public class Channel extends DataObject
   {
     try
     {
-      PreparedStatement stmt = m_con
-          .prepareStatement( "SELECT NAME, DESCRIPTION, IDENTIFIER, OWNER_REF, TYPE_REF, UNIT_REF FROM TS_CHANNEL WHERE ID = ?" );
+      final PreparedStatement stmt = m_con.prepareStatement( "SELECT NAME, DESCRIPTION, IDENTIFIER, OWNER_REF, TYPE_REF, UNIT_REF FROM TS_CHANNEL WHERE ID = ?" );
 
       stmt.setInt( 1, m_ID );
 
-      ResultSet rs = stmt.executeQuery();
+      final ResultSet rs = stmt.executeQuery();
 
       rs.next();
 
@@ -200,7 +194,7 @@ public class Channel extends DataObject
 
       m_con.commit();
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace( System.out );
 
@@ -208,7 +202,7 @@ public class Channel extends DataObject
       {
         m_con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }

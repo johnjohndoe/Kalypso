@@ -118,6 +118,7 @@ public class SelectLengthSectionWizard extends Wizard
     /* Start */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor )
       {

@@ -75,11 +75,13 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph#setLocation(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public void setLocation( final GM_Point point )
   {
     getFeature().setProperty( QNAME_PROP_LOCATION, point );
   }
 
+  @Override
   public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn )
   {
     final Feature obsFeature = getFeature();
@@ -105,11 +107,13 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
     return obs;
   }
 
+  @Override
   public void setObservation( final IObservation<TupleResult> obs )
   {
     ObservationFeatureFactory.toFeature( obs, getFeature() );
   }
 
+  @Override
   public IObservation<TupleResult> getObservation( )
   {
     return ObservationFeatureFactory.toObservation( getFeature() );

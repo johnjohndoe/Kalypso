@@ -83,7 +83,7 @@ public class ParseManager
 
   private final IdleLanduseManager m_idleLanduseManager;
 
-  public ParseManager( GMLSchema schema, GMLSchema paraSchema, NAConfiguration conf, CatchmentManager catchmentManager, ChannelManager channelManager, NetFileManager nodeManager, RHBManager rhbManager, BodenartManager bodartManager, BodentypManager bodtypManager, NutzungManager nutzManager, SchneeManager schneeManager, IdleLanduseManager idleLanduseManager )
+  public ParseManager( final GMLSchema schema, final GMLSchema paraSchema, final NAConfiguration conf, final CatchmentManager catchmentManager, final ChannelManager channelManager, final NetFileManager nodeManager, final BodenartManager bodartManager, final BodentypManager bodtypManager, final NutzungManager nutzManager, final SchneeManager schneeManager, final IdleLanduseManager idleLanduseManager )
   {
     m_conf = conf;
     m_catchmentManager = catchmentManager;
@@ -101,18 +101,18 @@ public class ParseManager
 
   public Feature modelAsciiToFeature( ) throws Exception, Exception
   {
-    ModelManager modelManager = new ModelManager();
+    final ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
-    IFeatureType naModellFT = m_schema.getFeatureType( NaModelConstants.NA_MODEL_ROOT_FT );
-    IFeatureType catchmentCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CATCHMENT_COLLECTION_FT );
-    IFeatureType channelCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
-    IFeatureType nodeCollectionFT = m_schema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
+    final IFeatureType naModellFT = m_schema.getFeatureType( NaModelConstants.NA_MODEL_ROOT_FT );
+    final IFeatureType catchmentCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CATCHMENT_COLLECTION_FT );
+    final IFeatureType channelCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
+    final IFeatureType nodeCollectionFT = m_schema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
 
     // create all Features (and FeatureCollections)
-    Feature naModellFe = modelManager.createFeature( naModellFT );
-    Feature catchmentCollectionFe = modelManager.createFeature( catchmentCollectionFT );
-    Feature channelCollectionFe = modelManager.createFeature( channelCollectionFT );
-    Feature nodeCollectionFe = modelManager.createFeature( nodeCollectionFT );
+    final Feature naModellFe = modelManager.createFeature( naModellFT );
+    final Feature catchmentCollectionFe = modelManager.createFeature( catchmentCollectionFT );
+    final Feature channelCollectionFe = modelManager.createFeature( channelCollectionFT );
+    final Feature nodeCollectionFe = modelManager.createFeature( nodeCollectionFT );
 
     // complete Feature NaModell
 
@@ -125,20 +125,20 @@ public class ParseManager
     // complete Feature CatchmentCollection
     final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
     Feature[] features = m_catchmentManager.parseFile( m_conf.getCatchmentFile().toURL() );
-    for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( catchmentCollectionFe, catchmentMemberPT, features[i] );
+    for( final Feature feature : features )
+      FeatureHelper.addProperty( catchmentCollectionFe, catchmentMemberPT, feature );
 
     // complete Features of ChannelCollections
     final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
     features = m_channelManager.parseFile( m_conf.getChannelFile().toURL() );
-    for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( channelCollectionFe, channelMemberPT, features[i] );
+    for( final Feature feature : features )
+      FeatureHelper.addProperty( channelCollectionFe, channelMemberPT, feature );
 
     // complete Feature NodeCollection
     final IPropertyType nodeMemberPT = nodeCollectionFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
     features = m_nodeManager.parseFile( m_conf.getNetFile().toURL() );
-    for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( nodeCollectionFe, nodeMemberPT, features[i] );
+    for( final Feature feature : features )
+      FeatureHelper.addProperty( nodeCollectionFe, nodeMemberPT, feature );
 
     // complete Features of StorageChannel
     // features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
@@ -149,80 +149,80 @@ public class ParseManager
 
   public Feature parameterAsciiToFeature( ) throws Exception, Exception
   {
-    ModelManager modelManager = new ModelManager();
+    final ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
-    IFeatureType naParaFT = m_paraSchema.getFeatureType( NaModelConstants.PARA_ROOT_FT );
+    final IFeatureType naParaFT = m_paraSchema.getFeatureType( NaModelConstants.PARA_ROOT_FT );
 
     // create all Features (and FeatureCollections)
-    Feature naParaFe = modelManager.createFeature( naParaFT );
+    final Feature naParaFe = modelManager.createFeature( naParaFT );
     Feature[] features;
-    IPropertyType soilLayerMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
-    IPropertyType soiltypeMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
+    final IPropertyType soilLayerMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
+    final IPropertyType soiltypeMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
 
     // complete Feature soilLayerMember
     try
     {
       features = m_bodartManager.parseFile( m_conf.getBodenartFile().toURL() );
-      for( int i = 0; i < features.length; i++ )
-        FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
+      for( final Feature feature : features )
+        FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, feature );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.1") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.ParseManager.1" ) ); //$NON-NLS-1$
     }
 
     // complete Feature soiltypeMember
     features = m_bodtypManager.parseFile( m_conf.getBodentypFile().toURL() );
-    for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( naParaFe, soiltypeMemberPT, features[i] );
+    for( final Feature feature : features )
+      FeatureHelper.addProperty( naParaFe, soiltypeMemberPT, feature );
 
     // complete Feature idealLandUseMember
-    File nutzungDir = m_conf.getNutzungDir();
-    FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" ); //$NON-NLS-1$
-    File nutzFiles[] = nutzungDir.listFiles( filter );
+    final File nutzungDir = m_conf.getNutzungDir();
+    final FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" ); //$NON-NLS-1$
+    final File nutzFiles[] = nutzungDir.listFiles( filter );
     final IPropertyType idealLandUseMemberRT = naParaFT.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_MEMBER );
-    for( int i = 0; i < nutzFiles.length; i++ )
+    for( final File nutzFile : nutzFiles )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.3", nutzFiles[i].toURL().toString() )); //$NON-NLS-1$
-      features = m_idleLanduseManager.parseFile( nutzFiles[i].toURL() );
-      for( int f = 0; f < features.length; f++ )
-        FeatureHelper.addProperty( naParaFe, idealLandUseMemberRT, features[f] );
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.ParseManager.3", nutzFile.toURL().toString() ) ); //$NON-NLS-1$
+      features = m_idleLanduseManager.parseFile( nutzFile.toURL() );
+      for( final Feature feature : features )
+        FeatureHelper.addProperty( naParaFe, idealLandUseMemberRT, feature );
     }
     final IPropertyType landuseMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     // complete Feature landuseMember
-    for( int i = 0; i < nutzFiles.length; i++ )
+    for( final File nutzFile : nutzFiles )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.4",nutzFiles[i].toURL().toString()) ); //$NON-NLS-1$
-      features = m_nutzManager.parseFile( nutzFiles[i].toURL() );
-      for( int f = 0; f < features.length; f++ )
-        FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.ParseManager.4", nutzFile.toURL().toString() ) ); //$NON-NLS-1$
+      features = m_nutzManager.parseFile( nutzFile.toURL() );
+      for( final Feature feature : features )
+        FeatureHelper.addProperty( naParaFe, landuseMemberRT, feature );
     }
-    System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.5",nutzFiles.length ) ); //$NON-NLS-1$
+    System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.ParseManager.5", nutzFiles.length ) ); //$NON-NLS-1$
 
     final IPropertyType sealingMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SEALING_MEMBER );
-    URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL(); //$NON-NLS-1$
+    final URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL(); //$NON-NLS-1$
     features = m_idleLanduseManager.parseSealingFilecsv( csvsealingURL );
-    for( int f = 0; f < features.length; f++ )
-      FeatureHelper.addProperty( naParaFe, sealingMemberRT, features[f] );
+    for( final Feature feature : features )
+      FeatureHelper.addProperty( naParaFe, sealingMemberRT, feature );
 
-    URL csvURL = new File( nutzungDir, "Klassen_KRUECK2007.csv" ).toURL(); //$NON-NLS-1$
+    final URL csvURL = new File( nutzungDir, "Klassen_KRUECK2007.csv" ).toURL(); //$NON-NLS-1$
     features = m_idleLanduseManager.parseFilecsv( csvURL );
-    for( int f = 0; f < features.length; f++ )
-      FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
+    for( final Feature feature : features )
+      FeatureHelper.addProperty( naParaFe, landuseMemberRT, feature );
 
     final IPropertyType snowMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
     // complete Feature snowMember
     try
     {
       features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
-      for( int i = 0; i < features.length; i++ )
-        FeatureHelper.addProperty( naParaFe, snowMemberRT, features[i] );
+      for( final Feature feature : features )
+        FeatureHelper.addProperty( naParaFe, snowMemberRT, feature );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.9") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.ParseManager.9" ) ); //$NON-NLS-1$
     }
 
     System.out.println( "\n\n-----------------" ); //$NON-NLS-1$

@@ -62,6 +62,7 @@ public abstract class FlowRelationship extends AbstractFeatureBinder implements 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship#getPosition()
    */
+  @Override
   public GM_Point getPosition( )
   {
     return (GM_Point) getFeature().getProperty( QNAME_PROP_POSITION );
@@ -70,6 +71,7 @@ public abstract class FlowRelationship extends AbstractFeatureBinder implements 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship#setPosition(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public void setPosition( final GM_Point point )
   {
     getFeature().setProperty( QNAME_PROP_POSITION, point );

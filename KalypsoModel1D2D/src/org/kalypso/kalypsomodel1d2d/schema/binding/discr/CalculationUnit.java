@@ -89,6 +89,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
    */
+  @Override
   public IFeatureWrapperCollection<IFENetItem> getElements( )
   {
     return elements;
@@ -97,6 +98,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
+  @Override
   public boolean addElementAsRef( final IFENetItem element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
@@ -106,6 +108,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
+  @Override
   public void removeElementAsRef( final IFENetItem element )
   {
     elements.removeAllRefs( element );
@@ -114,6 +117,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getType()
    */
+  @Override
   public TYPE getType( )
   {
     if( this instanceof ICalculationUnit1D )
@@ -125,6 +129,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
     return TYPE.TYPE_NON_DEFINED;
   }
 
+  @Override
   public List<IFELine> getContinuityLines( )
   {
     final IFeatureWrapperCollection<IFENetItem> elements = getElements();
@@ -138,6 +143,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#contains(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
+  @Override
   public boolean contains( final IFENetItem member )
   {
     if( member == null )
@@ -150,6 +156,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getElements1D()
    */
+  @Override
   public List<IElement1D> getElements1D( )
   {
     final List<IElement1D> list = new ArrayList<IElement1D>();
@@ -163,6 +170,7 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getElements2D()
    */
+  @Override
   public List<IPolyElement> getElements2D( )
   {
     final List<IPolyElement> list = new ArrayList<IPolyElement>();

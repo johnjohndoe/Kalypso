@@ -58,8 +58,8 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.convert.namodel.hydrotope.DefaultLanduseClassDelegate;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation;
-import org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor;
+import org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor;
 import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -84,6 +84,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     m_featureList = featureList;
   }
 
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;

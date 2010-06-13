@@ -44,8 +44,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -82,6 +82,7 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
     super( featureCol, fwClass, featureMemberProp );
   }
 
+  @Override
   public IHydrograph findHydrograph( final GM_Position position, final double searchRectWidth )
   {
     final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
@@ -125,6 +126,7 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
     return foundFeatures;
   }
 
+  @Override
   public Map<IPath, Date> getResults( )
   {
     final Feature feature = getFeature();
@@ -149,6 +151,7 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
     return resultList;
   }
 
+  @Override
   public void setResults( final Map<IPath, Date> resultMap ) throws Exception
   {
     final GMLWorkspace workspace = getFeature().getWorkspace();

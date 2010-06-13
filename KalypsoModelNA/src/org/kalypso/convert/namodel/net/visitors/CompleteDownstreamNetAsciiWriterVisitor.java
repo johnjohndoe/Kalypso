@@ -1,7 +1,6 @@
 package org.kalypso.convert.namodel.net.visitors;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
@@ -56,12 +55,12 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 
   private int m_virtualChannelId = 10001;
 
-  private List<Feature> m_completedNodes = new ArrayList<Feature>();
+  private final List<Feature> m_completedNodes = new ArrayList<Feature>();
 
   /*
    * @author doemming
    */
-  public CompleteDownstreamNetAsciiWriterVisitor( AsciiBuffer asciiBuffer )
+  public CompleteDownstreamNetAsciiWriterVisitor( final AsciiBuffer asciiBuffer )
   {
     m_asciiBuffer = asciiBuffer;
   }
@@ -70,7 +69,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
   @Override
-  public boolean visit( NetElement netElement )
+  public boolean visit( final NetElement netElement )
   {
     if( !netElement.isCalculated() )
       return false;
@@ -85,14 +84,13 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
     // check donwstream
 
     final Feature downStreamChannel = netElement.getChannelsBelowDownStreamNode();
-    final List downStreamNetElements = netElement.getDownStreamNetElements();
+    final List<NetElement> downStreamNetElements = netElement.getDownStreamNetElements();
     boolean needToComplete = true;
-    for( Iterator iter = downStreamNetElements.iterator(); iter.hasNext(); )
+    for( final NetElement name : downStreamNetElements )
     {
-      final NetElement childElement = (NetElement) iter.next();
-      if( childElement.getChannel() == downStreamChannel && childElement.isCalculated() )
+      if( name.getChannel() == downStreamChannel && name.isCalculated() )
       {
-        visit( childElement );
+        visit( name );
         needToComplete = false;
       }
     }

@@ -78,12 +78,12 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class RiskLanduseHelper
 {
 
-  public static void createNewLanduseClasses( final HashSet<String> landuseTypeSet, final IRasterizationControlModel controlModel, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
+  public static void createNewLanduseClasses( final Set<String> landuseTypeSet, final IRasterizationControlModel controlModel, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final String landuseType : landuseTypeSet )
     {
@@ -109,7 +109,7 @@ public class RiskLanduseHelper
     if( !landuseClass.containsStatisticEntry( returnPeriod ) )
     {
       final IRiskLanduseStatistic entry = landuseClass.createNewStatisticEntry();
-      final String entryName = Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.1" , returnPeriod ); //$NON-NLS-1$
+      final String entryName = Messages.getString( "org.kalypso.risk.model.utils.RiskLanduseHelper.1", returnPeriod ); //$NON-NLS-1$
 
       entry.setName( entryName );
       entry.setReturnPeriod( returnPeriod );
@@ -223,15 +223,15 @@ public class RiskLanduseHelper
     }
   }
 
-  public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
+  public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
   {
     createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
 
-    createAssetValues( assetValuesCollectionName, controlModel, predefinedAssetValueClassesCollection, propName, propDataMember, propValue, predefinedLanduseColorsCollection );
+    createAssetValues( assetValuesCollectionName, controlModel, predefinedAssetValueClassesCollection, propName, propDataMember, propValue );
   }
 
   @SuppressWarnings("unchecked")
-  private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
+  private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     // delete already existing asset values
     controlModel.getAssetValueClassesList().clear();
@@ -322,8 +322,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
+  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List< ? > shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "org.kalypso.risk.model.utils.ImportLanduseWizard.9" ) ); //$NON-NLS-1$
     final List<Feature> createdFeatures = new ArrayList<Feature>();

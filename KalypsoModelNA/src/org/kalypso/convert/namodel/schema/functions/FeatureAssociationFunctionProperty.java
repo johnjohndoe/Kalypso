@@ -89,6 +89,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final GMLWorkspace workspace = feature.getWorkspace();
@@ -138,6 +139,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     // Not supported, ignore

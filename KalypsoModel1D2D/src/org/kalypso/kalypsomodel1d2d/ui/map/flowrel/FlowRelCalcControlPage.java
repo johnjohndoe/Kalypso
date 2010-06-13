@@ -93,6 +93,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_scrolledForm = new ScrolledForm( parent );
@@ -111,6 +112,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     m_featureComposite = new FeatureComposite( null, null, featureviewFactory );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
@@ -128,6 +130,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
         }
       }
 
+      @Override
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
       {
       }

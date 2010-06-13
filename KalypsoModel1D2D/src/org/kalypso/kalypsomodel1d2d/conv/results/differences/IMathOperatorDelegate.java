@@ -64,6 +64,7 @@ public interface IMathOperatorDelegate
           return new IMathOperatorDelegate()
           {
 
+            @Override
             public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
             {
               return o1.subtract( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
@@ -73,6 +74,7 @@ public interface IMathOperatorDelegate
         case ePlus:
           return new IMathOperatorDelegate()
           {
+            @Override
             public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
             {
               return o1.add( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );

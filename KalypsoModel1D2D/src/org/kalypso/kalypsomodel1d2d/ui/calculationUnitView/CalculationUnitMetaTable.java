@@ -116,6 +116,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
   final private ISelectionChangedListener m_selectListener = new ISelectionChangedListener()
   {
+    @Override
     @SuppressWarnings("synthetic-access")
     public void selectionChanged( final SelectionChangedEvent event )
     {
@@ -183,6 +184,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     final Display display = parent.getDisplay();
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
+      @Override
       public void dataChanged( final String key, final Object newValue )
       {
         if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
@@ -204,10 +206,12 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     final GMLWorkspace workspace = discModel.getFeature().getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
     {
+      @Override
       public void onModellChange( final ModellEvent modellEvent )
       {
         final Runnable runnable = new Runnable()
         {
+          @Override
           public void run( )
           {
             final Object newValue = m_dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
@@ -221,6 +225,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     composite.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         workspace.removeModellListener( modelListener );
@@ -530,6 +535,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       /**
        * @see java.lang.Runnable#run()
        */
+      @Override
       public void run( )
       {
         if( input == null )
@@ -551,6 +557,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final Runnable runnable = new Runnable()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void run( )
       {

@@ -217,6 +217,7 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
 
         display.asyncExec( new Runnable()
         {
+          @Override
           @SuppressWarnings("synthetic-access")
           public void run( )
           {

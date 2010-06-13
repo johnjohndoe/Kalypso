@@ -59,8 +59,9 @@ public class ElevationMainPage extends WizardPage
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
    * 
    * @param parent
-   *            the parent composite
+   *          the parent composite
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -76,6 +77,7 @@ public class ElevationMainPage extends WizardPage
     m_filename = new Text( container, SWT.BORDER );
     m_filename.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
@@ -107,7 +109,7 @@ public class ElevationMainPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.elevationmodel.ElevationMainPage.5") ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationmodel.ElevationMainPage.5" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -128,6 +130,7 @@ public class ElevationMainPage extends WizardPage
     m_tileTitle = new Text( container, SWT.BORDER );
     m_tileTitle.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
@@ -154,9 +157,8 @@ public class ElevationMainPage extends WizardPage
    * Called by the wizard to initialize the receiver's cached selection.
    * 
    * @param selection
-   *            the selection or <code>null</code> if none
+   *          the selection or <code>null</code> if none
    */
-  @SuppressWarnings("unchecked")
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -166,7 +168,7 @@ public class ElevationMainPage extends WizardPage
     m_fileExtensions.add( "asc" ); //$NON-NLS-1$
     m_fileExtensions.add( "asg" ); //$NON-NLS-1$
     // Find the first plugin.xml file.
-    final Iterator iter = ((IStructuredSelection) selection).iterator();
+    final Iterator< ? > iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
       Object item = iter.next();
@@ -185,8 +187,8 @@ public class ElevationMainPage extends WizardPage
   }
 
   /**
-   * Called by <code>createControl</code> to initialize the receiver's content based upon the cached selection
-   * provided by the wizard.
+   * Called by <code>createControl</code> to initialize the receiver's content based upon the cached selection provided
+   * by the wizard.
    */
   private void initContents( )
   {
@@ -245,8 +247,8 @@ public class ElevationMainPage extends WizardPage
 
     // Multiple Elevation Model Select.. Still under development
     /*
-     * IPath[] ar = null; IPath[] path = browse( getSourceLocation(), false ); if( path == null ) return; IPath rootLoc =
-     * ResourcesPlugin.getWorkspace().getRoot().getLocation(); for (int i = 0; i<path.length;i++){ if(
+     * IPath[] ar = null; IPath[] path = browse( getSourceLocation(), false ); if( path == null ) return; IPath rootLoc
+     * = ResourcesPlugin.getWorkspace().getRoot().getLocation(); for (int i = 0; i<path.length;i++){ if(
      * rootLoc.isPrefixOf( path[i] ) ) ar[i] = path[i].setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
      * sourceFileField.setText(ar.toString()); }
      */
@@ -257,9 +259,9 @@ public class ElevationMainPage extends WizardPage
    * Multiple Elevation Model Select.. Still under development Open a file dialog for selecting a file
    * 
    * @param path
-   *            the initially selected file
+   *          the initially selected file
    * @param mustExist
-   *            <code>true</code> if the selected file must already exist, else <code>false</code>
+   *          <code>true</code> if the selected file must already exist, else <code>false</code>
    * @return the newly selected file or <code>null</code>
    */
 

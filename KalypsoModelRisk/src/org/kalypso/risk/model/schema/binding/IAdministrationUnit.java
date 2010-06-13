@@ -9,7 +9,9 @@ public interface IAdministrationUnit extends IFeatureWrapper2
 {
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "AdministrationUnit" ); //$NON-NLS-1$
 
+  @Override
   public void setName( final String name );
 
+  @Override
   public void setDescription( final String description );
 }

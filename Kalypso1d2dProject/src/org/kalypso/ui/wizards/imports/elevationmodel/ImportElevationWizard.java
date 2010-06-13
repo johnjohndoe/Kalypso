@@ -60,13 +60,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
@@ -77,31 +75,23 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author Madanagopal
  * @author Patrice Congo
  */
-public class ImportElevationWizard extends Wizard implements INewWizard/* INewWizardKalypsoImport */
+public class ImportElevationWizard extends Wizard implements INewWizard
 {
-  private IStructuredSelection initialSelection;
+  private IStructuredSelection m_initialSelection;
 
-  private ElevationMainPage mPage;
+  private ElevationMainPage m_mPage;
 
   /**
    * Folder containing the terrain model
    */
-  private IFolder modelFolder;
+  private IFolder m_modelFolder;
 
-  private ITerrainModel terrainModel;
+  private ITerrainModel m_terrainModel;
 
-  // private String m_scenarioFolder;
   /**
    * destination folders for the native terrain elevation model
    */
-  private IFolder temFolder;
-
-  /**
-   * Construct a new instance and initialize the dialog settings for this instance.
-   */
-  public ImportElevationWizard( )
-  {
-  }
+  private IFolder m_tempFolder;
 
   /**
    * The required selection structure is:
@@ -117,22 +107,23 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    * @param selection
    *          the current object selection
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    initialSelection = selection;
-    final Iterator selIterator = selection.iterator();
-    terrainModel = (ITerrainModel) selIterator.next();
-    modelFolder = (IFolder) selIterator.next();
-    temFolder = (IFolder) selIterator.next();
+    m_initialSelection = selection;
+    final Iterator< ? > selIterator = selection.iterator();
+    m_terrainModel = (ITerrainModel) selIterator.next();
+    m_modelFolder = (IFolder) selIterator.next();
+    m_tempFolder = (IFolder) selIterator.next();
   }
 
   @Override
   public void addPages( )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) ); //$NON-NLS-1$
-    mPage = new ElevationMainPage();
-    addPage( mPage );
-    mPage.init( initialSelection );
+    m_mPage = new ElevationMainPage();
+    addPage( m_mPage );
+    m_mPage.init( m_initialSelection );
   }
 
   @Override
@@ -140,30 +131,35 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   {
     try
     {
-      final IPath sourcePath = mPage.getSourceLocation();// .toOSString();
-      final String setFileName = mPage.getNameForFile();
-      final String setFileDescription = mPage.getDescriptionForFileArea();
+      final IPath sourcePath = m_mPage.getSourceLocation();// .toOSString();
+      final String setFileName = m_mPage.getNameForFile();
+      final String setFileDescription = m_mPage.getDescriptionForFileArea();
       final String defaultText = ""; //$NON-NLS-1$
       final String replaceText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.10" ); //$NON-NLS-1$
-      final String selectedCoordinateSystem = mPage.getCoordinateSystem();
+      final String selectedCoordinateSystem = m_mPage.getCoordinateSystem();
+
+      final ITerrainModel terrainModel = m_terrainModel;
+      final IFolder tempFolder = m_tempFolder;
+      final IFolder modelFolder = m_modelFolder;
 
       getContainer().run( true, true, new IRunnableWithProgress()
       {
+        @Override
         public void run( final IProgressMonitor monitor ) throws InvocationTargetException, IllegalArgumentException
         {
           try
           {
-            ITerrainElevationModelSystem temSys = ImportElevationWizard.this.terrainModel.getTerrainElevationModelSystem();
+            ITerrainElevationModelSystem temSys = terrainModel.getTerrainElevationModelSystem();
             if( temSys == null )
             {
-              temSys = new TerrainElevationModelSystem( ImportElevationWizard.this.terrainModel );
+              temSys = new TerrainElevationModelSystem( terrainModel );
             }
 
             final GMLWorkspace workspace = temSys.getFeature().getWorkspace();
 
             // Decoding the White Spaces present in the File Paths.
             final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
-            final File temFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( temFolder.getLocationURI().toURL() ).getFile() ) );
+            final File temFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( tempFolder.getLocationURI().toURL() ).getFile() ) );
             final File srcFileTif = getUTF_DecodedFile( sourcePath.toFile() );
 
             File dstFileTif = null;
@@ -177,14 +173,13 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               dstFileTif = new File( temFolderFile, srcFileTif.getName() ); // mPage.getSourceLocation().lastSegment()
             }
 
-            copy( srcFileTif, dstFileTif, monitor );
+            copy( srcFileTif, dstFileTif );
             modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null/* new NullProgressMonitor() */);
             String nativeTEMRelPath = modelFolderFile.toURI().relativize( new File( URLDecoder.decode( dstFileTif.toString(), "UTF-8" ) ).toURI() ).toString(); //$NON-NLS-1$
             if( nativeTEMRelPath == null )
             {
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
-            final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
             final ITerrainElevationModel tem = new NativeTerrainElevationModelWrapper( temSys, nativeTEMRelPath );
 
             // TODO introduce in the first page a name imput field and gets the
@@ -289,7 +284,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     return ext;
   }
 
-  boolean copy( final File src, final File dst, final IProgressMonitor monitor2 )
+  boolean copy( final File src, final File dst )
   {
     try
     {
@@ -308,17 +303,17 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    */
   public IPath getSourceLocationsss( )
   {
-    return mPage.getSourceLocation();
+    return m_mPage.getSourceLocation();
   }
 
   public String getFileDescription( )
   {
-    return mPage.getDescriptionForFileArea();
+    return m_mPage.getDescriptionForFileArea();
   }
 
   public String getFileUserName( )
   {
-    return mPage.getNameForFile();
+    return m_mPage.getNameForFile();
   }
 
   public File getUTF_DecodedFile( final File file )

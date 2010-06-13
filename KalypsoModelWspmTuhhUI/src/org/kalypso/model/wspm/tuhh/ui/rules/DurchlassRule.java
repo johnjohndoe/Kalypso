@@ -60,6 +60,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class DurchlassRule extends AbstractValidatorRule
 {
+  @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
 

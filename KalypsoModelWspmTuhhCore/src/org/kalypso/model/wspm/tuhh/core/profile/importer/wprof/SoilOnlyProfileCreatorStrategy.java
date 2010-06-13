@@ -67,6 +67,7 @@ public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
     return String.format( "Nur Gelände (%s)", commentString );
   }
 
+  @Override
   public IProfileCreator createProfileCreator( final ProfileData data )
   {
     final IProfileCreator creator = doCreateProfileCreator( data );
@@ -99,6 +100,7 @@ public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
     return new EmptyProfileCreator( data );
   }
 
+  @Override
   public IProfileSecondaryCreator[] createSecondaryCreators( final ProfileData[] data )
   {
     final Collection<IProfileSecondaryCreator> result = new ArrayList<IProfileSecondaryCreator>();

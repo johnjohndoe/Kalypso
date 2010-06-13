@@ -113,6 +113,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     /* Find all 1d or 2d sub units which are not already a sub unit of the parent. */
@@ -150,6 +151,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
     nameText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     nameText.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_name = nameText.getText();
@@ -170,6 +172,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
       interpolText.addModifyListener( new DoubleModifyListener( goodColor, badColor ) );
       interpolText.addModifyListener( new ModifyListener()
       {
+        @Override
         public void modifyText( final ModifyEvent e )
         {
           final String interpol = interpolText.getText();

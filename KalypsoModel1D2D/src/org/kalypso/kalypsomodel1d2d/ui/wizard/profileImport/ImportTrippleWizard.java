@@ -128,6 +128,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
     /* Do import */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.13" ), 2 ); //$NON-NLS-1$

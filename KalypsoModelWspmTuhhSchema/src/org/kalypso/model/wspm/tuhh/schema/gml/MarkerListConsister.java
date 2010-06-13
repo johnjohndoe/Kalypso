@@ -55,6 +55,7 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#init(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
+  @Override
   public void init( final GMLWorkspace workspace )
   {
 // recreateLists( workspace );
@@ -63,6 +64,7 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     // TODO: this takes much too long time at the moment

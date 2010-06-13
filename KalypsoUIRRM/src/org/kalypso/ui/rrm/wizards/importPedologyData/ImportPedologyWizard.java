@@ -63,10 +63,10 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.hydrotope.PedologyImportOperation;
-import org.kalypso.convert.namodel.hydrotope.PedologyShapeInputDescriptor;
 import org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.InputDescriptor;
-import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
+import org.kalypso.convert.namodel.hydrotope.PedologyShapeInputDescriptor;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -89,6 +89,7 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
     m_featureList = featureList;
   }
 
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;

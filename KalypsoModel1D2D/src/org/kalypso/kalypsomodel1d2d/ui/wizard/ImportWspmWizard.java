@@ -160,6 +160,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
+    @Override
     public void pageChanged( final PageChangedEvent event )
     {
       handlePageChanged( event );
@@ -258,6 +259,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* Do import */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.4" ), 3 ); //$NON-NLS-1$

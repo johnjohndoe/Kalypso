@@ -105,6 +105,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.0"); //$NON-NLS-1$
@@ -113,6 +114,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -121,6 +123,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     process( m_newPosition );
@@ -162,6 +165,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process( m_newPosition );
@@ -170,6 +174,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     process( m_oldPosition );
@@ -178,6 +183,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     return new IFeatureWrapper2[] { m_node };
@@ -186,6 +192,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )

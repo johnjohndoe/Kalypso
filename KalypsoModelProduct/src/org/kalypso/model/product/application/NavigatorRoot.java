@@ -55,14 +55,14 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  * 
  * @author Andreas Goetz
  */
-@SuppressWarnings("unchecked")
 public class NavigatorRoot implements IAdaptable, IPersistableElement, IElementFactory
 {
   public NavigatorRoot( )
   {
   }
 
-  public Object getAdapter( Class adapter )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IPersistableElement.class )
       return this;
@@ -73,17 +73,20 @@ public class NavigatorRoot implements IAdaptable, IPersistableElement, IElementF
     return null;
   }
 
+  @Override
   public String getFactoryId( )
   {
     return this.getClass().getCanonicalName();
   }
 
-  public void saveState( IMemento memento )
+  @Override
+  public void saveState( final IMemento memento )
   {
     return;
   }
 
-  public IAdaptable createElement( IMemento memento )
+  @Override
+  public IAdaptable createElement( final IMemento memento )
   {
     return ResourcesPlugin.getWorkspace().getRoot();
   }

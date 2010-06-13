@@ -53,6 +53,7 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
   /**
    * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getProfile(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public IProfileFeature getProfile( final Feature feature )
   {
     if( feature instanceof TuhhReach )

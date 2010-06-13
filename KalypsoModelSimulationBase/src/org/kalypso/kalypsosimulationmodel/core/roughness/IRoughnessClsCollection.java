@@ -17,6 +17,7 @@ public interface IRoughnessClsCollection extends IFeatureWrapperCollection<IRoug
    * 
    * @return the name of the roughness collection
    */
+  @Override
   public String getName( );
 
   /**
@@ -27,6 +28,7 @@ public interface IRoughnessClsCollection extends IFeatureWrapperCollection<IRoug
    * @throws IllegalArgumentException
    *           if name is null or an empty string
    */
+  @Override
   public void setName( String name ) throws IllegalArgumentException;
 
   /**

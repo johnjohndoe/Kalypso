@@ -79,6 +79,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd.0"); //$NON-NLS-1$
@@ -87,6 +88,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -95,6 +97,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void process( ) throws Exception
   {
@@ -150,6 +153,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
 
@@ -158,6 +162,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
 
@@ -166,6 +171,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     return null;
@@ -180,6 +186,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
    */
+  @Override
   @Deprecated
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {

@@ -174,6 +174,7 @@ public class ModelDtmWizard extends Wizard
       final URL sldURL = ResourceUtilities.createURL( m_styleFile );
       final IUrlResolver2 resolver = new IUrlResolver2()
       {
+        @Override
         public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
         {
           return new URL( sldURL, relativeOrAbsolute );

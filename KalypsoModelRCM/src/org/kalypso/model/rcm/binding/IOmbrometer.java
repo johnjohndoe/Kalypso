@@ -94,7 +94,7 @@ public interface IOmbrometer extends Feature
 
   GM_Surface<GM_SurfacePatch> getAffectedArea( );
 
-  void setAffectedArea( GM_Surface<GM_SurfacePatch> area );
+  void setAffectedArea( GM_Surface< ? > area );
 
   IObservation getTimeserie( ) throws MalformedURLException, SensorException;
 }

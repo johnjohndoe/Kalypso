@@ -61,6 +61,7 @@ public class KingLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {

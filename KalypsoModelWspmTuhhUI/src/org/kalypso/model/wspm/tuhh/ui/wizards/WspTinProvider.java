@@ -53,6 +53,7 @@ public class WspTinProvider implements IGmlSourceProvider
     /**
      * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
      */
+    @Override
     public boolean visit( final IResource resource ) throws CoreException
     {
       if( resource instanceof IContainer )
@@ -87,6 +88,7 @@ public class WspTinProvider implements IGmlSourceProvider
   {
     private final Map<IProject, IGmlSource[]> m_sources = new HashMap<IProject, IGmlSource[]>();
 
+    @Override
     public Object[] getChildren( final Object parentElement )
     {
       // Project: load workspace
@@ -127,6 +129,7 @@ public class WspTinProvider implements IGmlSourceProvider
       }
     }
 
+    @Override
     public Object getParent( final Object element )
     {
       if( element instanceof IFile )
@@ -135,6 +138,7 @@ public class WspTinProvider implements IGmlSourceProvider
       return null;
     }
 
+    @Override
     public boolean hasChildren( final Object element )
     {
       if( element instanceof IProject )
@@ -143,6 +147,7 @@ public class WspTinProvider implements IGmlSourceProvider
       return false;
     }
 
+    @Override
     public Object[] getElements( final Object inputElement )
     {
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -164,11 +169,13 @@ public class WspTinProvider implements IGmlSourceProvider
       return result.toArray( new IProject[result.size()] );
     }
 
+    @Override
     public void dispose( )
     {
       m_sources.clear();
     }
 
+    @Override
     public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
     {
     }
@@ -209,16 +216,19 @@ public class WspTinProvider implements IGmlSourceProvider
     }
   };
 
+  @Override
   public ITreeContentProvider createContentProvider( )
   {
     return m_contentProvider;
   }
 
+  @Override
   public ILabelProvider createLabelProvider( )
   {
     return m_labelProvider;
   }
 
+  @Override
   public void createInfoControl( final Composite parent, final Object element )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -229,6 +239,7 @@ public class WspTinProvider implements IGmlSourceProvider
     label.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider.5" ) ); //$NON-NLS-1$
   }
 
+  @Override
   public IGmlSource createSource( final Object element )
   {
     if( element instanceof IGmlSource )

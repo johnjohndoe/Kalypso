@@ -52,6 +52,7 @@ public class NullTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
+  @Override
   public void add( final INodeResult... nodes )
   {
   }
@@ -59,6 +60,7 @@ public class NullTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
    */
+  @Override
   public void finished( )
   {
   }
@@ -66,6 +68,7 @@ public class NullTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
    */
+  @Override
   public void setTime( final Date time )
   {
   }

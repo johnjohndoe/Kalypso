@@ -106,26 +106,31 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     super( featureToBind, QNAME );
   }
 
+  @Override
   public List<ArcResult> getArcs( )
   {
     return m_arcs;
   }
 
+  @Override
   public void setArc( final ArcResult arc )
   {
     m_arcs.add( arc );
   }
 
+  @Override
   public void setCalcId( final int id )
   {
     getFeature().setProperty( QNAME_PROP_CALCID, new Integer( id ) );
   }
 
+  @Override
   public void setDry( final int dry )
   {
     getFeature().setProperty( QNAME_PROP_DRY, new Integer( dry ) );
   }
 
+  @Override
   public void setDepth( final double depth )
   {
     // depth is a function property, it will not be set anyway
@@ -133,11 +138,13 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     // getFeature().setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
   }
 
+  @Override
   public void setWaterlevel( final double waterlevel )
   {
     getFeature().setProperty( QNAME_PROP_WATERLEVEL, new Double( waterlevel ) );
   }
 
+  @Override
   public void setLocation( final double x, final double y, final double z, final String crs )
   {
     final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
@@ -146,6 +153,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_LOCATION, point );
   }
 
+  @Override
   public void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel )
   {
     setVirtualDepth( virtualDepth );
@@ -158,6 +166,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     setVelocity( veloList );
   }
 
+  @Override
   public void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt )
   // WRT means with respect to
   {
@@ -171,6 +180,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   }
 
+  @Override
   public void setResultPrevStepValues( final double vxPrevStep, final double vyPrevStep, final double virtDepPrevStep )
   {
     getFeature().setProperty( QNAME_PROP_VIRTDEPPREVSTEP, virtDepPrevStep );
@@ -182,6 +192,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_VELPREVSTEP, velPrevStepList );
   }
 
+  @Override
   public void setTimeDerivativeValuesPrevStep( final double vxWRTtPrevStep, final double vyWRTtPrevStep, final double virtDepWRTtPrevStep )
   // WRT means with respect to
   {
@@ -198,16 +209,19 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     // getFeature().setProperty( QNAME_PROP_DEPTH, depth );
   }
 
+  @Override
   public void setMidSide( final boolean isMidSide )
   {
     getFeature().setProperty( QNAME_PROP_MIDSIDE, isMidSide );
   }
 
+  @Override
   public GM_Point getPoint( )
   {
     return (GM_Point) getFeature().getProperty( GMLNodeResult.QNAME_PROP_LOCATION );
   }
 
+  @Override
   public List<Double> getVelocity( )
   {
     // return velocity only for wet nodes
@@ -222,33 +236,39 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     }
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public List<Double> getVirtualVelocity( )
   {
     return (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
   }
 
+  @Override
   public double getVirtualDepth( )
   {
     return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTUALDEPTH );
   }
 
+  @Override
   public double getDepth( )
   {
     // this is a function property that returns the water level minus the elevation
     return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DEPTH );
   }
 
+  @Override
   public double getWaterlevel( )
   {
     return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
   }
 
+  @Override
   public int getDry( )
   {
     return (Integer) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DRY );
   }
 
+  @Override
   public int getNodeID( )
   {
     return (Integer) getFeature().getProperty( GMLNodeResult.QNAME_PROP_CALCID );
@@ -257,21 +277,25 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelocity(java.util.List)
    */
+  @Override
   public void setVelocity( final List<Double> velocity )
   {
     getFeature().setProperty( QNAME_PROP_VELOCITY, velocity );
   }
 
+  @Override
   public void setVelPrevStep( final List<Double> velPrevStep )
   {
     getFeature().setProperty( QNAME_PROP_VELPREVSTEP, velPrevStep );
   }
 
+  @Override
   public void setVelOverTime( final List<Double> velOverTime )
   {
     getFeature().setProperty( QNAME_PROP_VELOVERTIME, velOverTime );
   }
 
+  @Override
   public void setVelOverTimePrevStep( final List<Double> velOverTimePrevStep )
   {
     getFeature().setProperty( QNAME_PROP_VELOVERTIMEPREVSTEP, velOverTimePrevStep );
@@ -280,16 +304,19 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#isWet()
    */
+  @Override
   public boolean isWet( )
   {
     return getDepth() > 0;
   }
 
+  @Override
   public boolean isAssigned( )
   {
     return m_nodeAssigned;
   }
 
+  @Override
   public void setAssigned( final boolean assign )
   {
     m_nodeAssigned = assign;
@@ -298,6 +325,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getAbsoluteVelocity()
    */
+  @Override
   public double getAbsoluteVelocity( )
   {
     final List<Double> velocity = getVelocity();
@@ -310,6 +338,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#addLambda()
    */
+  @Override
   public void addLambda( final double lambda )
   {
     m_lambdas.add( lambda );
@@ -319,6 +348,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getAveragedLambda()
    */
+  @Override
   public double getAveragedLambda( )
   {
     if( m_lambdas.size() > 0 )
@@ -337,21 +367,25 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtualDepth(double)
    */
+  @Override
   public void setVirtualDepth( final double virtualDepth )
   {
     getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
   }
 
+  @Override
   public void setVirtDepPrevStep( final double virtDepthPrevStep )
   {
     getFeature().setProperty( QNAME_PROP_VIRTDEPPREVSTEP, new Double( virtDepthPrevStep ) );
   }
 
+  @Override
   public void setVirtDepOverTime( final double virtDepOverTime )
   {
     getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIME, new Double( virtDepOverTime ) );
   }
 
+  @Override
   public void setVirtDepOverTimePrevStep( final double virtDepOverTimePrevStep )
   {
     getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, new Double( virtDepOverTimePrevStep ) );
@@ -360,6 +394,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDischarge()
    */
+  @Override
   public Double getDischarge( )
   {
     return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DISCHARGE );
@@ -368,6 +403,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDischarge(double)
    */
+  @Override
   public void setDischarge( double discharge )
   {
     getFeature().setProperty( GMLNodeResult.QNAME_PROP_DISCHARGE, new Double( discharge ) );
@@ -376,6 +412,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTime()
    */
+  @Override
   public List<Double> getVelOverTime( )
   {
     // Try to get the velocity over time derivative
@@ -394,6 +431,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTimePrevStep()
    */
+  @Override
   public List<Double> getVelOverTimePrevStep( )
   {
     // Try to get the velocity over time derivative
@@ -412,6 +450,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelPrevStep()
    */
+  @Override
   public List<Double> getVelPrevStep( )
   {
     // Try to get the velocity over time derivative
@@ -430,6 +469,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTime()
    */
+  @Override
   public double getVirtDepOverTime( )
   {
     Double VirtualDepth = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIME );
@@ -442,6 +482,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTimePrevStep()
    */
+  @Override
   public double getVirtDepOverTimePrevStep( )
   {
     Double VirtDepOverTimePrevStep = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP );
@@ -453,6 +494,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepPrevStep()
    */
+  @Override
   public double getVirtDepPrevStep( )
   {
     Double VirtDepPrevStep = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPPREVSTEP );

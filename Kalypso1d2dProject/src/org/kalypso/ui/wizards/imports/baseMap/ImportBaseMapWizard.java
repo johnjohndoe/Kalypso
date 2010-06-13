@@ -48,9 +48,9 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
@@ -158,6 +158,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
    * @param selection
    *          the current object selection
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
@@ -225,6 +226,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       return getContainer().getCurrentPage().isPageComplete();
   }
 
+  @Override
   public ArrayList<String> getCatalog( )
   {
     return m_catalog;
@@ -383,6 +385,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
+        @Override
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
         {
           try

@@ -131,6 +131,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
+  @Override
   public GM_Envelope getFullExtent( )
   {
     if( m_calcUnit == null )
@@ -143,6 +144,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )

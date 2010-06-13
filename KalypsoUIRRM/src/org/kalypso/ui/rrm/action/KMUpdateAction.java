@@ -22,6 +22,7 @@ public class KMUpdateAction implements IActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( final IAction action )
   {
     if( m_selection != null )
@@ -39,6 +40,7 @@ public class KMUpdateAction implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     action.setEnabled( false );

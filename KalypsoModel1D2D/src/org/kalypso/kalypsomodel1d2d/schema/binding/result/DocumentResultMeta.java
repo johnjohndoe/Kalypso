@@ -60,6 +60,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getStepType()
    */
+  @Override
   public DOCUMENTTYPE getDocumentType( )
   {
     final String value = (String) getFeature().getProperty( QNAME_PROP_DOCUMENT_TYPE );
@@ -69,6 +70,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setStepType(org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE)
    */
+  @Override
   public void setDocumentType( DOCUMENTTYPE documentType )
   {
     getFeature().setProperty( QNAME_PROP_DOCUMENT_TYPE, documentType.name() );
@@ -77,6 +79,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValue()
    */
+  @Override
   public BigDecimal getMaxValue( )
   {
     return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE );
@@ -85,6 +88,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValue()
    */
+  @Override
   public BigDecimal getMinValue( )
   {
     return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE );
@@ -94,6 +98,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setMaxValue(double)
    */
+  @Override
   public void setMaxValue( BigDecimal maxValue )
   {
     final BigDecimal maxValueDec = maxValue.setScale( 3, BigDecimal.ROUND_HALF_UP );
@@ -103,6 +108,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setMinValue(double)
    */
+  @Override
   public void setMinValue( BigDecimal minValue )
   {
     final BigDecimal minValueDec = minValue.setScale( 3, BigDecimal.ROUND_HALF_UP );

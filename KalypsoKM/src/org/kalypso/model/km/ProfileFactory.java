@@ -38,6 +38,7 @@ public class ProfileFactory
   {
     final FileFilter filter = new FileFilter()
     {
+      @Override
       public boolean accept( final File file )
       {
         return file.getName().endsWith( "km" ); //$NON-NLS-1$
@@ -51,6 +52,7 @@ public class ProfileFactory
   {
     final FileFilter filter = new FileFilter()
     {
+      @Override
       public boolean accept( final File file )
       {
         return file.getName().endsWith( "km" ); //$NON-NLS-1$
@@ -101,7 +103,7 @@ public class ProfileFactory
         rows.add( new Row( hNN, q, qf, a, af, w, wf, i ) );
       }
     }
-    final Row[] row = (Row[]) rows.toArray( new Row[rows.size()] );
+    final Row[] row = rows.toArray( new Row[rows.size()] );
     wqProfile.set( row );
     lineReader.close();
     return wqProfile;

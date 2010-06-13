@@ -25,6 +25,7 @@ public abstract class AbstractKMValue
     return getQ() + getQForeland();
   }
 
+  @Override
   public String toString( )
   {
     return "\n Qges:        " + new Formatter().format( "%8.3f", getQSum() ) + "\t Laenge:       " + new Formatter().format( "%7.2f", getLength() ) + "\n Q(Fluss):    " + new Formatter().format( "%8.3f", getQ() ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$

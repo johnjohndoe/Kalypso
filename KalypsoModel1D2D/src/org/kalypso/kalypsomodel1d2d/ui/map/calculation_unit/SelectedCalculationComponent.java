@@ -109,10 +109,12 @@ public class SelectedCalculationComponent
     final Display display = parent.getDisplay();
     dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
+      @Override
       public void dataChanged( final String key, final Object newValue )
       {
         final Runnable runnable = new Runnable()
         {
+          @Override
           public void run( )
           {
             if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
@@ -129,10 +131,12 @@ public class SelectedCalculationComponent
     final GMLWorkspace workspace = discModel.getFeature().getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
     {
+      @Override
       public void onModellChange( final ModellEvent modellEvent )
       {
         final Runnable runnable = new Runnable()
         {
+          @Override
           public void run( )
           {
             final ICalculationUnit selectedCalculationUnit = dataModel.getSelectedCalculationUnit();
@@ -151,6 +155,7 @@ public class SelectedCalculationComponent
 
     rootComposite.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         workspace.removeModellListener( modelListener );

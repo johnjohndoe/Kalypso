@@ -43,7 +43,6 @@ package org.kalypso.convert.namodel.manager;
 import java.util.regex.Matcher;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

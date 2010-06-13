@@ -69,6 +69,7 @@ public class AnalysisFeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
+  @Override
   public boolean visit( Feature f )
   {
     if( f.getFeatureType().getQName().equals( m_prop.getFeatureType().getQName() ) )

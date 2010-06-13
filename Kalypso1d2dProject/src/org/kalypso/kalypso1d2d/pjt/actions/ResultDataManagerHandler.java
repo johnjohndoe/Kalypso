@@ -75,14 +75,14 @@ public class ResultDataManagerHandler extends AbstractHandler
 
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
-    final JobExclusiveCommandTarget commandTarget = mapView.getCommandTarget();
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.2" ) ); //$NON-NLS-1$
+    final JobExclusiveCommandTarget commandTarget = mapView.getCommandTarget();
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     // wait until map has loaded
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     // Open wizard on that map!

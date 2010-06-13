@@ -46,6 +46,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     try
@@ -95,7 +96,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       for( int i = 0; i < eventsToProcess.length; i++ )
       {
         eventNames[i] = eventsToProcess[i].getName();
-        final String importText = Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.3", floodModelScenarioFolder.getProject().getName() );  //$NON-NLS-1$
+        final String importText = Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.3", floodModelScenarioFolder.getProject().getName() ); //$NON-NLS-1$
         eventDescriptions[i] = String.format( "%s (%s)", eventsToProcess[i].getDescription(), importText ); //$NON-NLS-1$
         eventPeriods[i] = eventsToProcess[i].getReturnPeriod();
         eventGrids[i] = eventsToProcess[i].getResultCoverages();
@@ -107,7 +108,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
 
       /* Check if project creation succeeded */
       final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
-      final CaseHandlingProjectNature nature = activeWorkContext.getCurrentProject();
+      final CaseHandlingProjectNature<IScenario> nature = activeWorkContext.getCurrentProject();
       if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) ) //$NON-NLS-1$
       {
         // we simply return, because that means no new project was created (maybe user cancelled the dialog)

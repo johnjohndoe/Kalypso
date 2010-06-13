@@ -81,6 +81,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NULL );
@@ -95,6 +96,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     m_calcUnitName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_calcUnitName.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) );  //$NON-NLS-1$

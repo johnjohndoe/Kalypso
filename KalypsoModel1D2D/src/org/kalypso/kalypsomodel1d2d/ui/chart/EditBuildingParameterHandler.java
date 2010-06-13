@@ -59,6 +59,7 @@ public class EditBuildingParameterHandler extends AbstractHandler implements IEl
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -78,6 +79,7 @@ public class EditBuildingParameterHandler extends AbstractHandler implements IEl
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void updateElement( final UIElement element, final Map parameters )
   {

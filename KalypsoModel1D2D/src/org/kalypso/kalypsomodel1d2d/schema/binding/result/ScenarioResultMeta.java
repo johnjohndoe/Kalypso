@@ -71,6 +71,7 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#findCalcUnitMetaResult(java.lang.String)
    */
+  @Override
   public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID )
   {
     final IFeatureWrapperCollection<IResultMeta> children = getChildren();

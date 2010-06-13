@@ -1,5 +1,5 @@
 package org.cheffo.jeplite;
-import org.cheffo.jeplite.util.*;
+import org.cheffo.jeplite.util.DoubleStack;
 public class SimpleNode {
   protected SimpleNode parent;
   protected SimpleNode[] children;
@@ -65,6 +65,7 @@ public class SimpleNode {
     return data;
   }
 
+  @Override
   public String toString() { return ParserTreeConstants.jjtNodeName[id]; }
 
   public double getValue() throws ParseException

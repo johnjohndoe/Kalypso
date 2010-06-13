@@ -86,6 +86,7 @@ public class ControlModelGroup extends VersionedModel implements IControlModelGr
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup#getModel1D2DCollection()
    */
+  @Override
   public IControlModel1D2DCollection getModel1D2DCollection( )
   {
     return cModelCollection;

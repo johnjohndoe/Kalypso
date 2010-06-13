@@ -58,6 +58,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getLinestring()
    */
+  @Override
   public GM_Surface< ? > getSurface( )
   {
     final GM_Object defaultGeometryProperty = getFeature().getDefaultGeometryPropertyValue();
@@ -71,6 +72,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessID()
    */
+  @Override
   public String getRoughnessStyle( )
   {
     final Feature feature = getFeature();
@@ -89,6 +91,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
   }
 
+  @Override
   public void setSurface( final GM_Surface< ? > surface ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNull( surface, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
@@ -102,6 +105,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessCls()
    */
+  @Override
   public IRoughnessCls getRoughnessCls( )
   {
     try
@@ -120,6 +124,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRoughnessClassMember(org.kalypso.gmlschema.property.relation.RelationType)
    */
+  @Override
   public void setRoughnessClassMember( final Feature linkedFeature ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
@@ -204,6 +209,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterAxAy()
    */
+  @Override
   public Double getCorrectionParameterAxAy( )
   {
     return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY );
@@ -212,6 +218,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterDP()
    */
+  @Override
   public Double getCorrectionParameterDP( )
   {
     return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_DP );
@@ -220,6 +227,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterKS()
    */
+  @Override
   public Double getCorrectionParameterKS( )
   {
     return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_KS );
@@ -228,6 +236,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterAxAy(double)
    */
+  @Override
   public void setCorrectionParameterAxAy( double value )
   {
     getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY, value );
@@ -236,6 +245,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterDP(double)
    */
+  @Override
   public void setCorrectionParameterDP( double value )
   {
     getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_DP, value );
@@ -244,6 +254,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterKS(double)
    */
+  @Override
   public void setCorrectionParameterKS( double value )
   {
     getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_KS, value );
@@ -252,6 +263,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#resetRoughnessClassMemberXLink()
    */
+  @Override
   public FeatureChange[] resetRoughnessClassMemberXLink( )
   {
     final Feature feature = getFeature();

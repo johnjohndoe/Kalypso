@@ -58,6 +58,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public class RuecksprungRule extends AbstractValidatorRule
 {
+  @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
@@ -83,7 +84,7 @@ public class RuecksprungRule extends AbstractValidatorRule
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.0", cB.getName()), String.format("km %.4f" , profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
       else if(  x1 - x2  > deltaX )
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.2",  x2 ), String.format("km %.4f" , profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-      else if( Math.abs( x2 - x1 ) < deltaX && Math.abs( (Double) y2 - (Double) y1 ) > deltaY )
+      else if( Math.abs( x2 - x1 ) < deltaX && Math.abs( y2 - y1 ) > deltaY )
         collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.4",  x2 ), String.format("km %.4f" , profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }

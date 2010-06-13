@@ -190,6 +190,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractWidget
     /* Edit flow relation at position */
     display.asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
@@ -315,6 +316,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractWidget
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         try

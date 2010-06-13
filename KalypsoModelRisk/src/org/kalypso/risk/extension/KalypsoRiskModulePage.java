@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.extension;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -55,7 +54,7 @@ import org.kalypso.risk.project.KalypsoRiskProjectWizard;
  * @author kuch
  */
 public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
-{ 
+{
   public KalypsoRiskModulePage( final IKalypsoModule module )
   {
     super( module );
@@ -68,7 +67,7 @@ public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public URL getInfoURL( ) throws MalformedURLException
+  public URL getInfoURL( )
   {
     return getInfoURL( getClass(), KalypsoRiskPlugin.getDefault() );
   }

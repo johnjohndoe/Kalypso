@@ -224,6 +224,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void selectionChanged( final IFeatureSelection selection )
   {

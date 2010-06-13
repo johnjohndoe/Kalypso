@@ -19,7 +19,7 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * polygons as a result.
    * 
    * @param point
-   *            the location where to find the roughness polygon
+   *          the location where to find the roughness polygon
    * @return a list of roughness polygons that contain the given point
    */
   public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position point );
@@ -29,10 +29,10 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * 
    * 
    * @param selectionZone
-   *            the area where to select the roughness polygon
+   *          the area where to select the roughness polygon
    * @return a set of rougness polygons overlaping the given zone.
    */
-  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface selectionZone );
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface< ? > selectionZone );
 
   /**
    * Gets all roughness polygons in this collection

@@ -36,6 +36,7 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
     m_wspThemes = wspThemes;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     try

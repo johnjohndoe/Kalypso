@@ -18,6 +18,7 @@ public class RiverProfileNetworkCollection extends FeatureWrapperCollection<IRiv
     super( feature, IRiverProfileNetwork.class, IRiverProfileNetworkCollection.QNAME_PROP_PROFILE_NETWORK );
   }
 
+  @Override
   public List<IRiverProfileNetwork> selectRiverProfileNetwork( final String regExp )
   {
     // TODO implement it

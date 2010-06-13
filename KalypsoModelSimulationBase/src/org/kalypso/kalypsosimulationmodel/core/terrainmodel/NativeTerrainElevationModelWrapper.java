@@ -149,6 +149,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getElevation( final GM_Point location )
   {
     return m_elevationProvider.getElevation( location );
@@ -162,6 +163,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return m_elevationProvider.getBoundingBox();
@@ -170,6 +172,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return m_elevationProvider.getCoordinateSystem();
@@ -178,6 +181,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
    */
+  @Override
   public double getMaxElevation( )
   {
     return m_elevationProvider.getMaxElevation();
@@ -186,6 +190,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
    */
+  @Override
   public double getMinElevation( )
   {
     return m_elevationProvider.getMinElevation();
@@ -194,6 +199,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper#getSourceFile()
    */
+  @Override
   public IFile getSourceFile( )
   {
     return m_file;
@@ -202,6 +208,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
    */
+  @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
     // TODO

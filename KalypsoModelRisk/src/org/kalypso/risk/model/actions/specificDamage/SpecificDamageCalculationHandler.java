@@ -19,8 +19,8 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
-import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
+import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -30,6 +30,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class SpecificDamageCalculationHandler extends AbstractHandler
 {
+  @Override
   public Object execute( final ExecutionEvent arg0 )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();

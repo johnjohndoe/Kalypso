@@ -74,6 +74,7 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
 
+  @Override
   public boolean resolve( final IProfil profil )
   {
     if( m_deviderType == "" || profil.getPoints().length < 1 ) //$NON-NLS-1$

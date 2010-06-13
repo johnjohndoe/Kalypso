@@ -54,24 +54,23 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
  */
 public class BlockTimeSeriesDiffObject implements IDiffObject
 {
-
   private static final String SEPERATOR = "#"; //$NON-NLS-1$
 
   private final BlockTimeSeries m_blockTimeSeries;
 
   private final List<String> m_pathes;
 
-  public BlockTimeSeriesDiffObject( File file )
+  public BlockTimeSeriesDiffObject( final File file )
   {
-    BlockTimeSeries series = new BlockTimeSeries();
+    final BlockTimeSeries series = new BlockTimeSeries();
     series.importBlockFile( file );
     m_blockTimeSeries = series;
-    String name = file.getName();
-    Enumeration keys = m_blockTimeSeries.getKeys();
-    List<String> list = new ArrayList<String>();
+    final String name = file.getName();
+    final Enumeration<String> keys = m_blockTimeSeries.getKeys();
+    final List<String> list = new ArrayList<String>();
     while( keys.hasMoreElements() )
     {
-      String element = (String) keys.nextElement();
+      final String element = keys.nextElement();
       list.add( name + SEPERATOR + element );
     }
     m_pathes = list;
@@ -80,7 +79,8 @@ public class BlockTimeSeriesDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#exists(java.lang.String)
    */
-  public boolean exists( String path )
+  @Override
+  public boolean exists( final String path )
   {
     return m_pathes.contains( path );
   }
@@ -88,7 +88,8 @@ public class BlockTimeSeriesDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
-  public IDiffComparator getDiffComparator( String path )
+  @Override
+  public IDiffComparator getDiffComparator( final String path )
   {
     return new BlockTimeSeriesDiffComperator();
   }
@@ -96,7 +97,8 @@ public class BlockTimeSeriesDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getContent(java.lang.String)
    */
-  public Object getContent( String path )
+  @Override
+  public Object getContent( final String path )
   {
     // returns TreeMap
     final String key = path.substring( path.indexOf( SEPERATOR ) + SEPERATOR.length() );
@@ -106,6 +108,7 @@ public class BlockTimeSeriesDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getPathes()
    */
+  @Override
   public String[] getPathes( )
   {
     return m_pathes.toArray( new String[m_pathes.size()] );

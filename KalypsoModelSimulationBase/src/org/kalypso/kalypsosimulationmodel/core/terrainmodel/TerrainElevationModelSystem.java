@@ -110,6 +110,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem#getTerrainElevationModels()
    */
+  @Override
   public IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
     return terrainElevationModels;
@@ -118,6 +119,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getElevation( final GM_Point location )
   {
     for( final ITerrainElevationModel terrainElevationModel : terrainElevationModels )
@@ -134,6 +136,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     GM_Envelope env = null;
@@ -168,6 +171,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     // TODO Patrice check whether the elevation do have the same system and return it
@@ -177,6 +181,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
    */
+  @Override
   public double getMaxElevation( )
   {
     if( terrainElevationModels.isEmpty() )
@@ -201,6 +206,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
    */
+  @Override
   public double getMinElevation( )
   {
     if( terrainElevationModels.isEmpty() )
@@ -225,6 +231,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
    */
+  @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
     // TODO

@@ -91,6 +91,7 @@ public class BrueckeRule extends AbstractValidatorRule
     return true;
   }
 
+  @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )

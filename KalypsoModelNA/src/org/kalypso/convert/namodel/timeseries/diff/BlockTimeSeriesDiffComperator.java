@@ -42,9 +42,9 @@ package org.kalypso.convert.namodel.timeseries.diff;
 
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
 
 import org.kalypso.commons.diff.IDiffComparator;
 import org.kalypso.commons.diff.IDiffLogger;
@@ -56,7 +56,7 @@ import org.kalypso.convert.namodel.i18n.Messages;
 public class BlockTimeSeriesDiffComperator implements IDiffComparator
 {
 
-  private double m_tollerance = 1e-3d;
+  private final double m_tollerance = 1e-3d;
 
   public BlockTimeSeriesDiffComperator( )
   {
@@ -66,31 +66,32 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
    * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
    *      java.lang.Object)
    */
-  public boolean diff( IDiffLogger logger, Object content1, Object content2 ) throws Exception
+  @Override
+  public boolean diff( final IDiffLogger logger, final Object content1, final Object content2 ) throws Exception
   {
     boolean result = false;
-    TreeMap timeSeries1 = ((TreeMap) content1);
-    TreeMap timeSeries2 = ((TreeMap) content2);
+    final SortedMap<Date, String> timeSeries1 = ((SortedMap<Date, String>) content1);
+    final SortedMap<Date, String> timeSeries2 = ((SortedMap<Date, String>) content2);
 
-    logger.log( DIFF_INFO, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.0") ); //$NON-NLS-1$
-    boolean valuesResult = diffValues( logger, timeSeries1, timeSeries2 );
+    logger.log( DIFF_INFO, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.0" ) ); //$NON-NLS-1$
+    final boolean valuesResult = diffValues( logger, timeSeries1, timeSeries2 );
 
     result |= valuesResult;
 
     return result;
   }
 
-  private boolean diffValues( IDiffLogger logger, TreeMap timeSeries1, TreeMap timeSeries2 )
+  private boolean diffValues( final IDiffLogger logger, final SortedMap<Date, String> timeSeries1, final SortedMap<Date, String> timeSeries2 )
   {
     boolean result = false;
     double differenceAll = 0;
     double sum1 = 0d;
     double sum2 = 0d;
-    int max1 = timeSeries1.size();
-    int max2 = timeSeries2.size();
+    final int max1 = timeSeries1.size();
+    final int max2 = timeSeries2.size();
     if( max1 != max2 )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.1", max1, max2) ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.1", max1, max2 ) ); //$NON-NLS-1$
       return true;
     }
     double maxValue1 = 0;
@@ -99,28 +100,28 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     double minValue2 = 0;
     double maxDelta = 0;
     int diffCount = 0;
-    final Set set1 = timeSeries1.keySet();
-    final Iterator it1 = set1.iterator();
-    final Set set2 = timeSeries2.keySet();
-    final Iterator it2 = set2.iterator();
+    final Set<Date> set1 = timeSeries1.keySet();
+    final Iterator<Date> it1 = set1.iterator();
+    final Set<Date> set2 = timeSeries2.keySet();
+    final Iterator<Date> it2 = set2.iterator();
     while( it1.hasNext() && it2.hasNext() )
     {
-      Object o1 = it1.next();
-      Object o2 = it2.next();
+      final Object o1 = it1.next();
+      final Object o2 = it2.next();
       if( o1.getClass().equals( Date.class ) && o2.getClass().equals( Date.class ) )
       {
         final Date date1 = ((Date) o1);
         final Date date2 = ((Date) o2);
         if( !date1.equals( date2 ) )
         {
-          logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.3") + date1 + " : " + date2 ); //$NON-NLS-1$ //$NON-NLS-2$
+          logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.3" ) + date1 + " : " + date2 ); //$NON-NLS-1$ //$NON-NLS-2$
           return true;
         }
 
-        String str1 = (String) timeSeries1.get( date1 );
-        String str2 = (String) timeSeries2.get( date2 );
-        double value1 = Double.parseDouble( str1 );
-        double value2 = Double.parseDouble( str2 );
+        final String str1 = timeSeries1.get( date1 );
+        final String str2 = timeSeries2.get( date2 );
+        final double value1 = Double.parseDouble( str1 );
+        final double value2 = Double.parseDouble( str2 );
         sum1 = sum1 + value1;
         sum2 = sum2 + value2;
         maxValue1 = value1;
@@ -135,7 +136,7 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
           minValue1 = value1;
         if( value2 < minValue2 )
           minValue2 = value2;
-        double delta = Math.abs( value1 - value2 );
+        final double delta = Math.abs( value1 - value2 );
         if( delta > m_tollerance )
         {
           differenceAll += delta;
@@ -148,23 +149,23 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     }
     if( result )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.5",diffCount) ); //$NON-NLS-1$
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.6", maxDelta) ); //$NON-NLS-1$
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.7",differenceAll, m_tollerance) ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.5", diffCount ) ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.6", maxDelta ) ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.7", differenceAll, m_tollerance ) ); //$NON-NLS-1$
     }
     if( minValue1 != minValue2 )
       logger.log( IDiffComparator.DIFF_CONTENT, "min " + minValue1 + " : " + minValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
     if( maxValue1 != maxValue2 )
       logger.log( IDiffComparator.DIFF_CONTENT, "max " + maxValue1 + " : " + maxValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
-    double mean1 = sum1 / max1;
-    double mean2 = sum2 / max2;
+    final double mean1 = sum1 / max1;
+    final double mean2 = sum2 / max2;
     if( mean1 != mean2 )
       logger.log( IDiffComparator.DIFF_CONTENT, "mean1-mean2 = " + (mean1 - mean2) ); //$NON-NLS-1$
     else
       logger.log( IDiffComparator.DIFF_CONTENT, "mean " + mean1 ); //$NON-NLS-1$
 
-    double sigma1 = getSigma( mean1, timeSeries1 );
-    double sigma2 = getSigma( mean2, timeSeries2 );
+    final double sigma1 = getSigma( mean1, timeSeries1 );
+    final double sigma2 = getSigma( mean2, timeSeries2 );
     if( sigma1 != sigma2 )
       logger.log( IDiffComparator.DIFF_CONTENT, "sigma1-sigma2 = " + (sigma1 - sigma2) ); //$NON-NLS-1$
     else
@@ -172,18 +173,18 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     return result;
   }
 
-  private double getSigma( double mean, TreeMap timeSeries )
+  private double getSigma( final double mean, final SortedMap<Date, String> timeSeries )
   {
     double sum = 0d;
-    final Set values = timeSeries.entrySet();
-    final Iterator iterator = values.iterator();
+    final Set<Entry<Date, String>> values = timeSeries.entrySet();
+    final Iterator<Entry<Date, String>> iterator = values.iterator();
     while( iterator.hasNext() )
     {
-      Entry e = (Entry) iterator.next();
-      Object value = e.getValue();
+      final Entry<Date, String> e = iterator.next();
+      final Object value = e.getValue();
       if( value instanceof String )
       {
-        double d = Double.parseDouble( (String) value );
+        final double d = Double.parseDouble( (String) value );
         sum = sum + Math.pow( d - mean, 2 );
       }
     }

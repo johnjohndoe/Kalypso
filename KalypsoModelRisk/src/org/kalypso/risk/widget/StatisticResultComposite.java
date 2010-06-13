@@ -87,6 +87,7 @@ public class StatisticResultComposite extends Composite
 
     final IComponentUiHandlerProvider provider = new IComponentUiHandlerProvider()
     {
+      @Override
       public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
       {
         final Map<Integer, IComponentUiHandler> myMap = new LinkedHashMap<Integer, IComponentUiHandler>();

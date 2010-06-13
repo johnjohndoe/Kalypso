@@ -58,12 +58,9 @@ import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
-import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -94,8 +91,6 @@ public class ParallelDamageCalculationManager
 
   protected class CalculationWriterThread extends Thread
   {
-    private ParallelDamageCalculationManager m_manager;
-
     private int m_nextBlockToBeWritten = 0;
 
     private int m_lastBlockToBeWritten = 0;
@@ -104,11 +99,6 @@ public class ParallelDamageCalculationManager
     public void incBlocksToProcessCount( )
     {
       m_lastBlockToBeWritten++;
-    }
-
-    public CalculationWriterThread( final ParallelDamageCalculationManager pManager )
-    {
-      m_manager = pManager;
     }
 
     @Override
@@ -133,9 +123,9 @@ public class ParallelDamageCalculationManager
                   break;
 
                 // System.out.println( "[Writer thread] writing block " + m_nextBlockToBeWritten );
-                CalculationBean lBean = m_beans.get( m_nextBlockToBeWritten );
+                final CalculationBean lBean = m_beans.get( m_nextBlockToBeWritten );
                 m_writer.write( lBean.m_blockData, lBean.m_bytesInBlock );
-                
+
                 m_writer.setMax( lBean.m_max );
                 m_writer.setMin( lBean.m_min );
 
@@ -147,11 +137,11 @@ public class ParallelDamageCalculationManager
 
           }
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           e.printStackTrace();
         }
-        catch( InterruptedException e )
+        catch( final InterruptedException e )
         {
           e.printStackTrace();
         }
@@ -162,20 +152,20 @@ public class ParallelDamageCalculationManager
 
   protected class CalculationJob extends Thread
   {
-    private ParallelDamageCalculationManager m_manager;
+    private final ParallelDamageCalculationManager m_manager;
 
     private CalculationBean m_bean;
 
-    private Coordinate m_origin;
+    private final Coordinate m_origin;
 
-    private Coordinate m_offsetX;
+    private final Coordinate m_offsetX;
 
-    private Coordinate m_offsetY;
+    private final Coordinate m_offsetY;
 
-    private int m_inputScale;
+    private final int m_inputScale;
 
-    private int m_outputScale;
-    
+    private final int m_outputScale;
+
     public CalculationJob( final ParallelDamageCalculationManager pManager ) throws GeoGridException
     {
       m_manager = pManager;
@@ -191,7 +181,7 @@ public class ParallelDamageCalculationManager
     {
       while( true )
       {
-        m_bean = m_manager.getNextDataset( this );
+        m_bean = m_manager.getNextDataset();
         if( m_bean == null )
           break;
         operate();
@@ -227,7 +217,7 @@ public class ParallelDamageCalculationManager
 
       final GM_Position positionAt = getPosition( x, y );
       final GM_Position position = TransformUtilities.transform( positionAt, m_transformation );
-      
+
       /* This list has some unknown cs. */
 
       final List<ILandusePolygon> list = m_polygonCollection.query( position );
@@ -249,7 +239,7 @@ public class ParallelDamageCalculationManager
               return Double.NaN;
 
             /* set statistic for landuse class */
-            ILanduseClass landuseClass = m_landuseClasses.get( landuseClassOrdinalNumber );
+            final ILanduseClass landuseClass = m_landuseClasses.get( landuseClassOrdinalNumber );
             if( landuseClass == null )
               System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
             else
@@ -268,7 +258,7 @@ public class ParallelDamageCalculationManager
       int y = m_bean.m_linePos;
 
       final int maxX = (int) (m_lineLen / 4);
-      
+
       // System.out.println( "Working on block: " + m_bean.m_linePos / m_linesInBlock);
 
       for( int k = 3; k <= m_bean.m_bytesInBlock; k = k + 4 )
@@ -283,13 +273,14 @@ public class ParallelDamageCalculationManager
           intVal = scaled.unscaledValue().intValue();
 
           final BigDecimal minmax = new BigDecimal( value ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-          
+
           m_bean.m_min = m_bean.m_min.min( minmax );
           m_bean.m_max = m_bean.m_max.max( minmax );
-        } else {
+        }
+        else
+        {
           intVal = BinaryGeoGrid.NO_DATA;
         }
-
 
         // write the result back into the buffer
         ByteUtils.writeBEInt( m_bean.m_blockData, k - 3, intVal );
@@ -338,7 +329,7 @@ public class ParallelDamageCalculationManager
 
   CRSTransformation m_transformation;
 
-  public ParallelDamageCalculationManager( SequentialBinaryGeoGridReader inputGridReader, SequentialBinaryGeoGridWriter outputGridWriter, IFeatureWrapperCollection<ILandusePolygon> polygonCollection, List<ILanduseClass> landuseClasses, int returnPeriod, double cellSize )
+  public ParallelDamageCalculationManager( final SequentialBinaryGeoGridReader inputGridReader, final SequentialBinaryGeoGridWriter outputGridWriter, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final int returnPeriod, final double cellSize )
   {
     m_linesRead = 0;
     m_reader = inputGridReader;
@@ -347,12 +338,11 @@ public class ParallelDamageCalculationManager
     m_landuseClasses = landuseClasses;
     m_cellSize = cellSize;
     m_returnPeriod = returnPeriod;
-    m_writer_thread = new CalculationWriterThread( this );
+    m_writer_thread = new CalculationWriterThread();
 
     final ILandusePolygon landusePolygon = m_polygonCollection.get( 0 );
     final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
 
-    
     // calculate fitting block size
     try
     {
@@ -360,7 +350,7 @@ public class ParallelDamageCalculationManager
       m_transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( m_reader.getDelegate().getSourceCRS(), coordinateSystem );
 
       m_linesTotal = inputGridReader.getSizeY();
-      long linesPerThread = m_linesTotal / THREADS_AMOUNT;
+      final long linesPerThread = m_linesTotal / THREADS_AMOUNT;
       m_lineLen = inputGridReader.getSizeX() * 4;
 
       // block_size is set to "optimal" size of the buffer from start on
@@ -375,7 +365,7 @@ public class ParallelDamageCalculationManager
       BLOCK_SIZE = m_linesInBlock * (int) m_lineLen * 4;
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -417,17 +407,17 @@ public class ParallelDamageCalculationManager
 
       m_writer.close();
     }
-    catch( InterruptedException e )
+    catch( final InterruptedException e )
     {
       e.printStackTrace();
     }
-    catch( GeoGridException e )
+    catch( final GeoGridException e )
     {
       e.printStackTrace();
     }
   }
 
-  public synchronized CalculationBean getNextDataset( final CalculationJob job )
+  public synchronized CalculationBean getNextDataset( )
   {
     // write down the results that might be ready for it
     try
@@ -438,7 +428,7 @@ public class ParallelDamageCalculationManager
         return null;
       }
 
-      CalculationBean lBean = new CalculationBean();
+      final CalculationBean lBean = new CalculationBean();
       if( (m_linesRead + m_linesInBlock) <= m_linesTotal )
       {
         lBean.m_bytesInBlock = (int) (m_linesInBlock * m_lineLen);
@@ -461,7 +451,7 @@ public class ParallelDamageCalculationManager
       m_beans.add( lBean );
       return lBean;
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       return null;

@@ -139,6 +139,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     // System.out.println("PROP="+m_parentFeature.getProperty( m_parentRelation ));
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {

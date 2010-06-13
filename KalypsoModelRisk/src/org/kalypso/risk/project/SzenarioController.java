@@ -74,6 +74,7 @@ public class SzenarioController implements IScenarioDataListener
   {
   }
 
+  @Override
   public synchronized void modelLoaded( final IModel model, final IStatus status )
   {
     if( m_scenario == null )
@@ -98,6 +99,7 @@ public class SzenarioController implements IScenarioDataListener
     // maybe get status info from status-model
   }
 
+  @Override
   public synchronized void scenarioChanged( final IScenario scenario )
   {
     // unregister any listeners

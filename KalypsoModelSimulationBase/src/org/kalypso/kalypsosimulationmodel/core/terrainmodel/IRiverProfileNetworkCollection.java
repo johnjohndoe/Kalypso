@@ -17,7 +17,7 @@ public interface IRiverProfileNetworkCollection extends IFeatureWrapperCollectio
 {
   public static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetworkCollection" ); //$NON-NLS-1$
 
-  public static QName QNAME_PROP_PROFILE_NETWORK = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetwork" );; //$NON-NLS-1$
+  public static QName QNAME_PROP_PROFILE_NETWORK = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetwork" ); //$NON-NLS-1$
 
   /**
    * Select river profile network base which names matches the given regular expression

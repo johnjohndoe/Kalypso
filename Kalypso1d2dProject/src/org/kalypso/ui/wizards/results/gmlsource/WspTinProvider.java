@@ -101,6 +101,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_scenarioContentProvider.dispose();
@@ -115,6 +116,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createContentProvider()
    */
+  @Override
   public ITreeContentProvider createContentProvider( )
   {
     return this;
@@ -123,6 +125,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createLabelProvider()
    */
+  @Override
   public ILabelProvider createLabelProvider( )
   {
     return WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider();
@@ -133,6 +136,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createInfoControl(org.eclipse.swt.widgets.Composite,
    *      java.lang.Object)
    */
+  @Override
   public void createInfoControl( final Composite parent, final Object element )
   {
     if( element instanceof IResultMeta )
@@ -161,6 +165,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_resultParents.clear();
@@ -169,6 +174,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
+  @Override
   public Object[] getElements( final Object inputElement )
   {
     return ProjectUtilities.allOfNature( Kalypso1D2DProjectNature.ID );
@@ -177,6 +183,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createSource(java.lang.Object)
    */
+  @Override
   public IGmlSource createSource( final Object element )
   {
     // create source if it is a tin-wsp
@@ -225,6 +232,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @Override
   public Object[] getChildren( final Object parentElement )
   {
     try
@@ -354,6 +362,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
+  @Override
   public Object getParent( final Object element )
   {
     if( element instanceof IProject )
@@ -394,6 +403,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
+  @Override
   public boolean hasChildren( final Object element )
   {
     if( element instanceof IProject || element instanceof Scenario )

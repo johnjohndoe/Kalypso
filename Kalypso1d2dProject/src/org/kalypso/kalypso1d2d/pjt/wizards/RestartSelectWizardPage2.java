@@ -53,6 +53,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     /* set a fixed size to the Wizard */
@@ -78,16 +79,19 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
     m_listViewer = new ListViewer( panelLeft, SWT.BORDER );
     m_listViewer.setContentProvider( new IStructuredContentProvider()
     {
+      @Override
       public Object[] getElements( final Object inputElement )
       {
         final Vector<IStepResultMeta> list = (Vector<IStepResultMeta>) inputElement;
         return list.toArray();
       }
 
+      @Override
       public void dispose( )
       {
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
@@ -112,6 +116,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
     } );
     m_listViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -138,10 +143,12 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
     m_btnUp.setEnabled( false );
     m_btnUp.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void widgetSelected( final SelectionEvent e )
       {
@@ -160,10 +167,12 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
     m_btnDown.setEnabled( false );
     m_btnDown.addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void widgetSelected( final SelectionEvent e )
       {

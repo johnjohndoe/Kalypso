@@ -42,8 +42,6 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Date;
-import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -64,13 +62,12 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultsAcessor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -85,6 +82,7 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -102,7 +100,6 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
     if( msgDialog.getReturnCode() == Window.CANCEL )
       return Status.CANCEL_STATUS;
 
-    final boolean overwriteExistingHydrographs = msgDialog.getToggleState();
     final ResultsAcessor resultsAcessor = new ResultsAcessor( scenarioFolder );
     final IFolder resultsFolder = resultsAcessor.getResultsFolder();
     final IFile hydrographFile = resultsAcessor.getHydrographFile();
@@ -120,14 +117,9 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
           /* Load hydrograph gml via pool, maybe its already loaded. */
           final URL hydrographUrl = ResourceUtilities.createURL( hydrographFile );
           final PoolableObjectType hydrographKey = new PoolableObjectType( "gml", hydrographUrl.toExternalForm(), hydrographUrl ); //$NON-NLS-1$
-          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
           final GMLWorkspace hydrographWorkspace = (GMLWorkspace) pool.getObject( hydrographKey );
           monitor.worked( 1 );
-
-          final Map<Date, IFile> wspTimestepResults = resultsAcessor.getTimestepsFiles();
-
-          final IHydrographCollection graphs = (IHydrographCollection) hydrographWorkspace.getRootFeature().getAdapter( IHydrographCollection.class );
-          processHydrographs( graphs, wspTimestepResults, overwriteExistingHydrographs );
 
           // save hydrograph.gml
           GmlSerializer.serializeWorkspace( hydrographFile.getLocation().toFile(), hydrographWorkspace, "UTF-8" ); //$NON-NLS-1$
@@ -150,8 +142,4 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
     return status;
   }
 
-  protected void processHydrographs( final IHydrographCollection graphs, final Map<Date, IFile> wspTimestepResults, final boolean overwriteExistingHydrographs )
-  {
-    // TODO Auto-generated method stub
-  }
 }

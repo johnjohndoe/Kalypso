@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -65,13 +64,11 @@ import com.vividsolutions.jts.geom.Polygon;
 
 class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 {
-  private final LinearRing ring;
+  private final LinearRing m_ring;
 
-  private final Polygon polygon;
+  private final Polygon m_polygon;
 
-  //  private final double[] planeEquation;
   private final double[] relativePlaneEquation;
-
 
   private final double centerElevation;
 
@@ -84,10 +81,10 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
     // TODO: give the paint method the right border.
 
-    this.ring = ring;
-    polygon = new Polygon( ring, null, ring.getFactory() );
+    this.m_ring = ring;
+    m_polygon = new Polygon( ring, null, ring.getFactory() );
     final Coordinate[] coords = ring.getCoordinates();
-    //    planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
+    // planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
     relativePlaneEquation = JTSUtilities.calculateRelativeTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
 
@@ -124,7 +121,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
       return false;
     }
     else
-      return polygon.intersects( point );
+      return m_polygon.intersects( point );
   }
 
   public double getCenterElevation( )
@@ -136,7 +133,8 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception, CoreException
+  @Override
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor )
   {
     surfacePatchVisitor.visit( m_trianglePath, centerElevation );
     monitor.done();
@@ -144,7 +142,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public double getMinElevation( )
   {
-    final Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = m_ring.getCoordinates();
     double min = coordinates[0].z;
     if( min > coordinates[1].z )
     {
@@ -160,7 +158,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public double getMaxElevation( )
   {
-    final Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = m_ring.getCoordinates();
     double max = coordinates[0].z;
     if( max < coordinates[1].z )
     {
@@ -176,7 +174,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public final double getMinX( )
   {
-    final Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = m_ring.getCoordinates();
 
     double min = coordinates[0].x;
     if( min > coordinates[1].x )
@@ -193,7 +191,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public final double getMinY( )
   {
-    final Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = m_ring.getCoordinates();
 
     double min = coordinates[0].y;
     if( min > coordinates[1].y )
@@ -211,15 +209,15 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public double computeZOfTrianglePlanePoint( final double x, final double y )
   {
-    final Coordinate[] coords = ring.getCoordinates();
+    final Coordinate[] coords = m_ring.getCoordinates();
 
-    // use relative plane equation and relative coords 
-    return JTSUtilities.calculateTriangleZ( relativePlaneEquation, x - coords[0].x , y - coords[0].y );
+    // use relative plane equation and relative coords
+    return JTSUtilities.calculateTriangleZ( relativePlaneEquation, x - coords[0].x, y - coords[0].y );
   }
 
   public LinearRing getRing( )
   {
-    return ring;
+    return m_ring;
   }
 
 }

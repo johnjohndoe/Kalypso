@@ -76,6 +76,7 @@ public class HMOTriangleEater implements ITriangleEater
     m_parameter = parameter;
   }
 
+  @Override
   public void add( final INodeResult... nodes )
   {
     final Integer[] triangle = new Integer[3];
@@ -161,6 +162,7 @@ public class HMOTriangleEater implements ITriangleEater
     }
   }
 
+  @Override
   public void finished( )
   {
     final String name = m_output.getPath();
@@ -193,6 +195,7 @@ public class HMOTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
    */
+  @Override
   public void setTime( final Date time )
   {
   }

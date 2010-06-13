@@ -96,8 +96,8 @@ import org.kalypsodeegree.model.feature.Feature;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
-import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.ObjectFactory;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
+import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.ObjectFactory;
 
 /**
  * @author doemming
@@ -141,6 +141,7 @@ public class KMUpdateWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_top = new Composite( parent, SWT.NONE );
@@ -304,6 +305,7 @@ public class KMUpdateWizardPage extends WizardPage
       m_channelListViewer.refresh();
       m_channelListViewer.setSelection( new ISelection()
       {
+        @Override
         public boolean isEmpty( )
         {
           return true;
@@ -331,6 +333,7 @@ public class KMUpdateWizardPage extends WizardPage
     m_channelListViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -362,8 +365,8 @@ public class KMUpdateWizardPage extends WizardPage
       final Object object = unmarshaller.unmarshal( file );
       if( object instanceof JAXBElement )
       {
-        final JAXBElement<KalininMiljukovGroupType> object2 = (JAXBElement<KalininMiljukovGroupType>) object;
-        setKMGroup( object2.getValue() );
+        final JAXBElement< ? > object2 = (JAXBElement< ? >) object;
+        setKMGroup( (KalininMiljukovGroupType) object2.getValue() );
       }
     }
     catch( final Exception ex )
@@ -413,6 +416,7 @@ public class KMUpdateWizardPage extends WizardPage
       /**
        * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
        */
+      @Override
       public void log( final Level level, final int code, final String message )
       {
         detailBuffer.append( message );
@@ -424,6 +428,7 @@ public class KMUpdateWizardPage extends WizardPage
       /**
        * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
        */
+      @Override
       public void log( final Level level, final int code, final String message )
       {
         errorBuffer.append( message );
@@ -434,6 +439,7 @@ public class KMUpdateWizardPage extends WizardPage
       /**
        * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
        */
+      @Override
       public void log( final Level level, final int code, final String message )
       {
         monitorBuffer.append( message );
@@ -465,7 +471,7 @@ public class KMUpdateWizardPage extends WizardPage
         final Feature feature = (Feature) object;
         try
         {
-          updateFeature( errorLogger, detailedLogger, monitorLogger, feature, changes );
+          updateFeature( errorLogger, detailedLogger, feature, changes );
           monitorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.20" ) + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch( final Exception e )
@@ -494,11 +500,11 @@ public class KMUpdateWizardPage extends WizardPage
       e.printStackTrace();
     }
     final String separator = "\n-------------------------------------\n"; //$NON-NLS-1$
-    final String message = // 
+    final String message = //
     Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.26" ) + monitorBuffer.toString()//  //$NON-NLS-1$
         + separator//
         + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.27" ) + errorBuffer.toString() //  //$NON-NLS-1$
-        + separator //  
+        + separator //
         + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.28" ) + detailBuffer.toString() // //$NON-NLS-1$
         + separator //
         + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.29" ) + selectionBuffer.toString(); //$NON-NLS-1$
@@ -523,7 +529,7 @@ public class KMUpdateWizardPage extends WizardPage
     return null;
   }
 
-  private List<FeatureChange> updateFeature( final ILogger errorLogger, final ILogger detailedLogger, final ILogger monitorLogger, final Feature feature, final List<FeatureChange> changeList ) throws Exception
+  private List<FeatureChange> updateFeature( final ILogger errorLogger, final ILogger detailedLogger, final Feature feature, final List<FeatureChange> changeList ) throws Exception
   {
     final String log = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.32" ) + m_KMUpdateLabelProvider.getText( feature ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
     final List<FeatureChange> result;

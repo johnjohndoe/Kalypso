@@ -61,6 +61,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public class RauheitRule extends AbstractValidatorRule
 {
+  @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null || istDurchlass( profil.getProfileObjects() ) )

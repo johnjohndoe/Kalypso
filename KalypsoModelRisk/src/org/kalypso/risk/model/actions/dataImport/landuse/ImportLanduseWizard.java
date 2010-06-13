@@ -131,6 +131,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {

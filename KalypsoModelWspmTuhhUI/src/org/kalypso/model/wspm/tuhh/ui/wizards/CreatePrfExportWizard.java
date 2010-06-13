@@ -65,7 +65,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -74,18 +73,14 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CreatePrfExportWizard extends Wizard
 {
-
   final private ArrayChooserPage m_profileChooserPage;
 
   final private List<Feature> m_profiles;
 
   final private List<Feature> m_selectedProfiles;
 
-  final private CommandableWorkspace m_workspace;
-
-  public CreatePrfExportWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
+  public CreatePrfExportWizard( final List<Feature> profiles, final List<Feature> selection )
   {
-    m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
     setWindowTitle( "Export als .prf Datei(en)" );
@@ -117,14 +112,15 @@ public class CreatePrfExportWizard extends Wizard
     }
     return choosenProfiles;
   }
+
   private File askForDir( final Shell shell )
   {
     final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() );
     final String initialFilterPath = dialogSettings.get( "SETTINGS_FILTER_PATH" );
 
     final DirectoryDialog dialog = new DirectoryDialog( shell );
-    dialog.setText( "DialogTitle");
-    dialog.setMessage( "DialogMessage" ); 
+    dialog.setText( "DialogTitle" );
+    dialog.setMessage( "DialogMessage" );
     dialog.setFilterPath( initialFilterPath );
 
     final String result = dialog.open();
@@ -136,6 +132,7 @@ public class CreatePrfExportWizard extends Wizard
 
     return new File( result );
   }
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
@@ -144,17 +141,17 @@ public class CreatePrfExportWizard extends Wizard
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
     final IProfil[] choosenProfiles = toProfiles( profilFeatures );
-//    final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
+// final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
 // for( int i = 0; i < choosenProfiles.length; i++ )
 // {
 // ProfilUtil.flipProfile( choosenProfiles[i],true );
 // featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature)
-    // profilFeatures[i] ) ) );
+// profilFeatures[i] ) ) );
 // }
     final Shell shell = getShell();
 
     /* open file dialog and choose profile files */
-    final File dir = askForDir(shell );
+    final File dir = askForDir( shell );
     if( dir == null )
       return false;
 
@@ -165,6 +162,7 @@ public class CreatePrfExportWizard extends Wizard
 
       final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
       {
+        @Override
         public IStatus execute( final IProgressMonitor monitor )
         {
           final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
@@ -200,13 +198,13 @@ public class CreatePrfExportWizard extends Wizard
           return resultStatus;
         }
       };
-      final IStatus status = ProgressUtilities.busyCursorWhile( op,"org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.3"  ); 
-      ErrorDialog.openError( shell, "STR_DIALOG_TITLE", "org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.4" , status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL ); //$NON-NLS-1$
+      final IStatus status = ProgressUtilities.busyCursorWhile( op, "org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.3" );
+      ErrorDialog.openError( shell, "STR_DIALOG_TITLE", "org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.4", status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, "STR_DIALOG_TITLE","org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.5", status ); 
+      ErrorDialog.openError( shell, "STR_DIALOG_TITLE", "org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.5", status );
     }
     return true;
   }

@@ -47,10 +47,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;

@@ -48,6 +48,7 @@ package org.kalypso.ui.rrm.wizards;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FilenameUtils;
@@ -199,6 +200,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    * (non-Javadoc)
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_topComposite = new Composite( parent, SWT.NULL );
@@ -243,6 +245,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     m_fileField.setLayoutData( dataCatchment );
     m_fileField.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         validateFileField();
@@ -398,20 +401,21 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    * 
    * @return map HashMap with the custom mapping
    */
-  public HashMap<Object, Object> getMapping( )
+  public Map<Object, Object> getMapping( )
   {
     // TODO: bad design! The selection listener on the combo should update the internal state of this class
     // Do not access access components from outside
 
-    final HashMap<Object, Object>[] result = new HashMap[1];
+    final Map<Object, Object>[] result = new HashMap[1];
 
+    final Composite sourceGroup = m_sourceGroup;
     getShell().getDisplay().syncExec( new Runnable()
     {
       @Override
       public void run( )
       {
         final HashMap<Object, Object> map = new HashMap<Object, Object>();
-        final Control[] cArray = m_sourceGroup.getChildren();
+        final Control[] cArray = sourceGroup.getChildren();
         for( final Control element : cArray )
         {
           if( element instanceof Combo )
@@ -587,6 +591,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetSelected( final SelectionEvent e )
   {
     Combo c;
@@ -632,6 +637,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
+  @Override
   public void widgetDefaultSelected( final SelectionEvent e )
   {
     // do nothing
@@ -640,6 +646,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
    */
+  @Override
   public void keyPressed( final KeyEvent e )
   {
     final Widget w = e.widget;
@@ -653,6 +660,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
    */
+  @Override
   public void keyReleased( final KeyEvent e )
   {
     // do nothing

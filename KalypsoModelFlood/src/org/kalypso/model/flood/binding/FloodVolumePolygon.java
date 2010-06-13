@@ -57,6 +57,7 @@ public class FloodVolumePolygon extends AbstractFloodPolygon implements IFloodVo
   /**
    * @see org.kalypso.model.flood.binding.IFloodVolumePolygon#getWaterlevel()
    */
+  @Override
   public BigDecimal getWaterlevel( )
   {
     return getProperty( QNAME_PROP_WATERLEVEL, BigDecimal.class );
@@ -65,6 +66,7 @@ public class FloodVolumePolygon extends AbstractFloodPolygon implements IFloodVo
   /**
    * @see org.kalypso.model.flood.binding.IFloodVolumePolygon#getVolume()
    */
+  @Override
   public BigDecimal getVolume( )
   {
     return getProperty( QNAME_PROP_VOLUME, BigDecimal.class );
@@ -73,6 +75,7 @@ public class FloodVolumePolygon extends AbstractFloodPolygon implements IFloodVo
   /**
    * @see org.kalypso.model.flood.binding.IFloodVolumePolygon#setWaterlevel(java.math.BigDecimal)
    */
+  @Override
   public void setWaterlevel( final BigDecimal bigDecimal )
   {
     setProperty( QNAME_PROP_WATERLEVEL, bigDecimal );

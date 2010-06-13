@@ -2,8 +2,8 @@
 
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
     MultiOutputStream
@@ -77,6 +77,7 @@ public class MultiOutputStream extends OutputStream
 
     //--- OutputStream --------------------------------------------------------
 
+    @Override
     public void write (int b) throws IOException
     {
         for (int i = 0; i < this.count; i++) {
@@ -84,6 +85,7 @@ public class MultiOutputStream extends OutputStream
         }
     }
 
+    @Override
     public void write (byte[] b) throws IOException
     {
         for (int i = 0; i < this.count; i++) {
@@ -91,6 +93,7 @@ public class MultiOutputStream extends OutputStream
         }
     }
 
+    @Override
     public void write (byte[] b, int offset, int length) throws IOException
     {
         for (int i = 0; i < this.count; i++) {
@@ -98,6 +101,7 @@ public class MultiOutputStream extends OutputStream
         }
     }
 
+    @Override
     public void flush () throws IOException
     {
         for (int i = 0; i < this.count; i++) {
@@ -115,6 +119,7 @@ public class MultiOutputStream extends OutputStream
         return count == 0;
     }
 
+    @Override
     public void close () throws IOException
     {
         for (int i = 0; i < this.count; i++) {

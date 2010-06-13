@@ -67,9 +67,9 @@ import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHand
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -158,6 +158,7 @@ public class ConfigureLengthSectionWizard extends Wizard
     /* Start */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {

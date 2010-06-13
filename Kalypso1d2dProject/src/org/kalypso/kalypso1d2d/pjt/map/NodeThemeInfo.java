@@ -15,18 +15,21 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     // TODO Auto-generated constructor stub
   }
 
+  @Override
   public void appendInfo( Formatter formatter, GM_Position pos )
   {
     // TODO Auto-generated method stub
 
   }
 
+  @Override
   public void appendQuickInfo( Formatter formatter, GM_Position pos )
   {
     // TODO Auto-generated method stub
 
   }
 
+  @Override
   public void init( IKalypsoTheme theme, Properties props )
   {
     // TODO Auto-generated method stub

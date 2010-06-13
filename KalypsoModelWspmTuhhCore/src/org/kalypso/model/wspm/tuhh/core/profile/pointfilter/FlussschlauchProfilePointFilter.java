@@ -55,6 +55,7 @@ public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
+  @Override
   public boolean accept( final IProfil profil, final IRecord point )
   {
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );

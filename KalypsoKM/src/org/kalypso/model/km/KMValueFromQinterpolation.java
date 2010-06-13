@@ -67,30 +67,35 @@ public class KMValueFromQinterpolation extends AbstractKMValue
     return m_k;
   }
 
+  @Override
   public double getN( )
   {
 
     return m_n;
   }
 
+  @Override
   public double getKForeland( )
   {
 
     return m_kf;
   }
 
+  @Override
   public double getNForeland( )
   {
 
     return m_nf;
   }
 
+  @Override
   public double getQ( )
   {
 
     return m_q;
   }
 
+  @Override
   public double getQForeland( )
   {
     return m_qf;

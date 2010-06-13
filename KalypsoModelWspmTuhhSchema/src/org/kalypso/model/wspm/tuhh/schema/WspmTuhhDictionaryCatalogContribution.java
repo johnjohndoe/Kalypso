@@ -55,6 +55,7 @@ public class WspmTuhhDictionaryCatalogContribution implements ICatalogContributi
   /**
    * @see org.kalypso.core.catalog.ICatalogContribution#contributeTo(org.kalypso.core.catalog.CatalogManager)
    */
+  @Override
   public void contributeTo( final CatalogManager catalogManager )
   {
     final URL catalogURL = getClass().getResource( "dict/catalog.xml" ); //$NON-NLS-1$

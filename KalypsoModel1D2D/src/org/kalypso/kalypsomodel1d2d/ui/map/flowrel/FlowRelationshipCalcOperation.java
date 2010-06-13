@@ -504,8 +504,8 @@ public class FlowRelationshipCalcOperation implements IAdaptable
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Class adapter )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IStatus.class )
       return m_status;

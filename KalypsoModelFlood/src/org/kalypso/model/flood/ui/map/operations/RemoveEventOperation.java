@@ -47,6 +47,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
     m_wspThemes = wspThemes;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     try
@@ -68,6 +69,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
           final Display display = PlatformUI.getWorkbench().getDisplay();
           display.asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               FloodModelHelper.removeResultCoverages( m_provider, resultCoverages );

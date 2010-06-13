@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.extension;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -67,7 +66,7 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public URL getInfoURL( ) throws MalformedURLException
+  public URL getInfoURL( )
   {
     return getInfoURL( getClass(), KalypsoUIRRMPlugin.getDefault() );
   }

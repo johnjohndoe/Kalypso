@@ -8,3 +8,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.KalypsoManual1d2d.help
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-ClassPath: library.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

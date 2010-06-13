@@ -130,6 +130,7 @@ public class CalculationUnitLogComponent
     logTableViewer.setContentProvider( new ArrayContentProvider() );
     logTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( event );
@@ -138,6 +139,7 @@ public class CalculationUnitLogComponent
 
     logTableViewer.addDoubleClickListener( new IDoubleClickListener()
     {
+      @Override
       public void doubleClick( final DoubleClickEvent event )
       {
         final IStructuredSelection sel = (IStructuredSelection) event.getSelection();
@@ -159,6 +161,7 @@ public class CalculationUnitLogComponent
     final CalculationUnitDataModel dataModel = m_dataModel;
     dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
+      @Override
       public void dataChanged( final String key, final Object newValue )
       {
         if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.extension;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -61,16 +60,19 @@ public class Kalypso1d2dModulePage extends AbstractKalypsoModulePage
     super( module );
   }
 
+  @Override
   public String getHeader( )
   {
     return "Kalypso1D2D"; //$NON-NLS-1$
   }
 
-  public URL getInfoURL( ) throws MalformedURLException
+  @Override
+  public URL getInfoURL( )
   {
     return getInfoURL( getClass(), Kalypso1d2dProjectPlugin.getDefault() );
   }
 
+  @Override
   public INewProjectWizard getDemoProjectWizard( )
   {
     return new Kalypso1D2DDemoProjectWizard();
@@ -79,16 +81,19 @@ public class Kalypso1d2dModulePage extends AbstractKalypsoModulePage
   /**
    * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasDemoProjectWizard()
    */
+  @Override
   public boolean hasDemoProjectWizard( )
   {
     return true;
   }
 
+  @Override
   public INewProjectWizard getProjectWizard( )
   {
     return new Kalypso1D2DNewProjectWizard();
   }
 
+  @Override
   public IWizard getImportWizard( )
   {
     return null;
@@ -97,16 +102,19 @@ public class Kalypso1d2dModulePage extends AbstractKalypsoModulePage
   /**
    * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasImportWizard()
    */
+  @Override
   public boolean hasImportWizard( )
   {
     return false;
   }
 
+  @Override
   public String getImportWizardLabel( )
   {
     return null;
   }
 
+  @Override
   public Integer getPriority( )
   {
     return 3;

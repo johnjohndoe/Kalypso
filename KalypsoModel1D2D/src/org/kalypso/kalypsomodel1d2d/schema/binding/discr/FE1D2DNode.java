@@ -54,11 +54,13 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     m_containers.addSecondaryWrapper( IElement1D.class );
   }
 
+  @Override
   public GM_Point getPoint( )
   {
     return (GM_Point) getFeature().getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
   }
 
+  @Override
   public void setPoint( final GM_Point point )
   {
     if( point.getCoordinateSystem() == null )
@@ -80,6 +82,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode#getContainers()
    */
+  @Override
   public IFeatureWrapperCollection getContainers( )
   {
     return m_containers;
@@ -88,6 +91,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   /**
    * Returns all elements, this node is part of.
    */
+  @Override
   public IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( )
   {
     // REMARK: method reworked to use references instead of geometry (by Dejan)
@@ -118,6 +122,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getNeighbours()
    */
+  @Override
   public List<IFE1D2DNode> getNeighbours( )
   {
     final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
@@ -138,6 +143,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#addContainer(java.lang.String)
    */
+  @Override
   public void addContainer( String linkRef )
   {
     linkRef = Assert.throwIAEOnNullOrEmpty( linkRef );

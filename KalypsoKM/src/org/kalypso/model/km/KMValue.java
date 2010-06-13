@@ -78,41 +78,49 @@ public class KMValue extends AbstractKMValue
     m_n = n;
   }
 
+  @Override
   public double getAlpha( )
   {
     return m_alpha;
   }
 
+  @Override
   public double getKForeland( )
   {
     return m_kForeland;
   }
 
+  @Override
   public double getNForeland( )
   {
     return m_nForeland;
   }
 
+  @Override
   public double getK( )
   {
     return m_k;
   }
 
+  @Override
   public double getN( )
   {
     return m_n;
   }
 
+  @Override
   public double getLength( )
   {
     return m_length;
   }
 
+  @Override
   public double getQ( )
   {
     return m_q;
   }
 
+  @Override
   public double getQForeland( )
   {
     return m_qf;

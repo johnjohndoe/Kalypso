@@ -58,6 +58,7 @@ public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfile
   /**
    * @see java.util.Comparator#compare(T, T)
    */
+  @Override
   public int compare( final TuhhReachProfileSegment o1, final TuhhReachProfileSegment o2 )
   {
     final BigDecimal s1 = o1.getStation();

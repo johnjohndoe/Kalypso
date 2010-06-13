@@ -233,6 +233,7 @@ public class BridgePanel extends AbstractProfilView
       if( control != null && !control.isDisposed() )
         control.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             // createPropertyPanel();

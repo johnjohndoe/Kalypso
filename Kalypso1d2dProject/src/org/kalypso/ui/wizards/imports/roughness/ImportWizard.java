@@ -62,6 +62,7 @@ public class ImportWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.Title" ) );//$NON-NLS-1$
@@ -74,7 +75,7 @@ public class ImportWizard extends Wizard implements INewWizard
     // if( mapView == null )
     // throw new ExecutionException( "No map available, somethings wrong." );
 
-    m_operation = new Transformer( m_data, mapView ); //$NON-NLS-1$
+    m_operation = new Transformer( m_data ); //$NON-NLS-1$
 
     ITerrainModel model;
     try
@@ -82,7 +83,7 @@ public class ImportWizard extends Wizard implements INewWizard
       model = szenarioDataProvider.getModel( ITerrainModel.class );
       m_data.setModel( model );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }
@@ -94,7 +95,7 @@ public class ImportWizard extends Wizard implements INewWizard
     {
       m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml", szenarioDataProvider.getModel( IRoughnessClsCollection.class ) ); //$NON-NLS-1$
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -110,7 +111,7 @@ public class ImportWizard extends Wizard implements INewWizard
       m_pageSecond = new PageSecond( m_data );
       addPage( m_pageSecond );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -132,7 +133,7 @@ public class ImportWizard extends Wizard implements INewWizard
     {
       m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -154,7 +155,7 @@ public class ImportWizard extends Wizard implements INewWizard
       m_data.saveUserSelection();
       m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

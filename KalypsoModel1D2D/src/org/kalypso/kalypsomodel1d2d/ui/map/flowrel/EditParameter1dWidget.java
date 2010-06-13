@@ -128,6 +128,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         try
@@ -168,6 +169,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
       final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
       shell.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           startCalculation( shell, flowRels.toArray( new IFlowRelationship[flowRels.size()] ) );

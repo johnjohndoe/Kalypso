@@ -103,6 +103,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.0" ) ); //$NON-NLS-1$

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.bce.datacenter.AbstractTest;
 
-
 /**
  * @author ingres
  */
@@ -14,21 +13,21 @@ public class ChannelTest extends AbstractTest
 {
   public void testGetTableNames( ) throws SQLException
   {
-    Channel c = new Channel( ingres.getConnection(), 164 );
+    final Channel c = new Channel( ingres.getConnection(), 164 );
 
-    List names = c.getTableNames();
+    final List<String> names = c.getTableNames();
 
     assertEquals( names.size(), 3 );
 
-    Iterator it = names.iterator();
+    final Iterator<String> it = names.iterator();
 
-    String firstName = it.next().toString();
+    final String firstName = it.next().toString();
 
     assertNotSame( firstName, "" );
 
     System.out.println( "TableName: " + firstName );
 
-    String secondName = it.next().toString();
+    final String secondName = it.next().toString();
 
     assertNotSame( secondName, "" );
 
@@ -37,7 +36,7 @@ public class ChannelTest extends AbstractTest
 
   public void testFindChannel( ) throws SQLException
   {
-    Channel c = Channel.findChannel( ingres.getConnection(), "777" );
+    final Channel c = Channel.findChannel( ingres.getConnection(), "777" );
 
     assertNotNull( c );
 

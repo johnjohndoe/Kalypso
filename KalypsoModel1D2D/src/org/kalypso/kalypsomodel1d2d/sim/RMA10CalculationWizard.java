@@ -82,6 +82,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
+    @Override
     public void pageChanged( PageChangedEvent event )
     {
       handlePageChanged( event );

@@ -43,8 +43,8 @@ package org.kalypso.convert.namodel.test;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
@@ -95,19 +95,19 @@ public class Test_NAModellConverter
     // File asciiBaseDir = new File(
     // "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
 
-    NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
-    Feature modelRootFeature = NAModellConverter.modelAsciiToFeature( conf );
+    final NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
+    final Feature modelRootFeature = NAModellConverter.modelAsciiToFeature( conf );
 
-    String shapeDir = "D:\\Kalypso_NA\\9-Modelle\\7-Rantzau\\05_GIS\\NA-Modell"; //$NON-NLS-1$
+    final String shapeDir = "D:\\Kalypso_NA\\9-Modelle\\7-Rantzau\\05_GIS\\NA-Modell"; //$NON-NLS-1$
     insertSHPGeometries( modelRootFeature, shapeDir );
 
-    File modelGmlFile = new File( gmlBaseDir, "modell.gml" ); //$NON-NLS-1$
+    final File modelGmlFile = new File( gmlBaseDir, "modell.gml" ); //$NON-NLS-1$
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema modelGmlSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
     // final Document modelSchema = modelGmlSchema.getSchema();
 
     // IFeatureType[] featureTypes = GMLSchemaUtil.getAllFeatureTypesFromSchema( modelGmlSchema );
-    IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
+    final IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
 
     final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, modelRootFeature, modelGmlFile.toURL(), null, " project:/.model/schema/namodell.xsd", null ); //$NON-NLS-1$
     GmlSerializer.serializeWorkspace( new FileWriter( modelGmlFile ), modelWorkspace );
@@ -116,56 +116,55 @@ public class Test_NAModellConverter
     System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAModellConverter.4" ) + gmlBaseDir ); //$NON-NLS-1$
   }
 
-  private static void insertSHPGeometries( Feature modelFeature, String shapeDir ) throws GmlSerializeException
+  private static void insertSHPGeometries( final Feature modelFeature, final String shapeDir ) throws GmlSerializeException
   {
     // load ShapeFile
-    String cSystem = "EPSG:31467"; //$NON-NLS-1$
+    final String cSystem = "EPSG:31467"; //$NON-NLS-1$
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\rantzau_gebiete", cSystem ); //$NON-NLS-1$
-    final List catchmentFeatures = (List) catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List< ? > catchmentFeatures = (List< ? >) catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\straenge", cSystem ); //$NON-NLS-1$
-    final List channelFeatures = (List) channelWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List< ? > channelFeatures = (List< ? >) channelWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\knoten", cSystem ); //$NON-NLS-1$
-    final List nodeFeatures = (List) nodeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List< ? > nodeFeatures = (List< ? >) nodeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     // insertGeometries
 
     System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAModellConverter.9" ) ); //$NON-NLS-1$
-    Feature catchmentCollection = (Feature) modelFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    List catchmentList = (List) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
-    copyProperties( catchmentFeatures, "GEOM", "TGNR", (Feature[]) catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "name" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Feature catchmentCollection = (Feature) modelFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+    final List< ? > catchmentList = (List< ? >) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    copyProperties( catchmentFeatures, "GEOM", "TGNR", catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "name" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAModellConverter.14" ) ); //$NON-NLS-1$
-    Feature channelCollection = (Feature) modelFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
-    List channelList = (List) channelCollection.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
-    copyProperties( channelFeatures, "GEOM", "STRNR", (Feature[]) channelList.toArray( new Feature[channelList.size()] ), "Ort", "name" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Feature channelCollection = (Feature) modelFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
+    final List< ? > channelList = (List< ? >) channelCollection.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
+    copyProperties( channelFeatures, "GEOM", "STRNR", channelList.toArray( new Feature[channelList.size()] ), "Ort", "name" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAModellConverter.19" ) ); //$NON-NLS-1$
-    Feature nodeCollection = (Feature) modelFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
-    List nodeList = (List) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
-    copyProperties( nodeFeatures, "GEOM", "KTNR", (Feature[]) nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "name" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Feature nodeCollection = (Feature) modelFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+    final List< ? > nodeList = (List< ? >) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
+    copyProperties( nodeFeatures, "GEOM", "KTNR", nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "name" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
-  private static void copyProperties( final List catchmentFeatures, String orgGeomPropName, String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
+  private static void copyProperties( final List< ? > catchmentFeatures, final String orgGeomPropName, final String orgIdPropName, final Feature[] destFE, final String destGeomPropName, final String destIdPropName )
   {
-    HashMap<String, Feature> orgHash = new HashMap<String, Feature>();
-    for( Iterator iter = catchmentFeatures.iterator(); iter.hasNext(); )
+    final Map<String, Feature> orgHash = new HashMap<String, Feature>();
+    for( final Object name : catchmentFeatures )
     {
-      final Feature f = (Feature) iter.next();
-      String id = f.getProperty( orgIdPropName ).toString();
+      final Feature f = (Feature) name;
+      final String id = f.getProperty( orgIdPropName ).toString();
       orgHash.put( id, f );
     }
-    for( int i = 0; i < destFE.length; i++ )
+    for( final Feature destFeature : destFE )
     {
-      Feature destFeature = destFE[i];
-      String id = destFeature.getProperty( destIdPropName ).toString();
+      final String id = destFeature.getProperty( destIdPropName ).toString();
       // System.out.println("processing id=" + id);
-      Feature orgFeaure = orgHash.get( id );
+      final Feature orgFeaure = orgHash.get( id );
       if( orgFeaure != null )
       {
-        Object value = orgFeaure.getProperty( orgGeomPropName );
+        final Object value = orgFeaure.getProperty( orgGeomPropName );
         if( value == null )
           System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAModellConverter.24" ) + id ); //$NON-NLS-1$
         // FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
@@ -177,8 +176,8 @@ public class Test_NAModellConverter
   }
 
 // public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace, GMLWorkspace
-  // parameterWorkspace, GMLWorkspace hydrotopWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider
-  // nodeResultProvider ) throws Exception
+// parameterWorkspace, GMLWorkspace hydrotopWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider
+// nodeResultProvider ) throws Exception
 // {
 // NAModellConverter main = new NAModellConverter( conf );
 // main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );

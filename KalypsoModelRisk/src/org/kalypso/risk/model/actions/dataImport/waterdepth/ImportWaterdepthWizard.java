@@ -85,6 +85,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     super();
   }
 
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     setNeedsProgressMonitor( true );

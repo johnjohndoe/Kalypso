@@ -241,6 +241,7 @@ public class TubePanel extends AbstractProfilView
     m_cmb.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -318,6 +319,7 @@ public class TubePanel extends AbstractProfilView
       if( control != null && !control.isDisposed() )
         control.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             // createPropertyPanel();

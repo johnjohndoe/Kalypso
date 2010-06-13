@@ -87,6 +87,7 @@ public class UtilMap
   /* predicate for kalypso feature themes */
   private static final IKalypsoThemePredicate PREDICATE = new IKalypsoThemePredicate()
   {
+    @Override
     public boolean decide( final IKalypsoTheme theme )
     {
       if( !(theme instanceof IKalypsoFeatureTheme) )

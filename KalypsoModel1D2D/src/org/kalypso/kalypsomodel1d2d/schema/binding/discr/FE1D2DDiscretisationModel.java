@@ -86,6 +86,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findEdge(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode,
    *      org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode)
    */
+  @Override
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
     final IFeatureWrapperCollection containers = node0.getContainers();
@@ -108,21 +109,25 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#getComplexElements()
    */
+  @Override
   public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements( )
   {
     return complexElements;
   }
 
+  @Override
   public final IFeatureWrapperCollection<IFE1D2DElement> getElements( )
   {
     return m_elements;
   }
 
+  @Override
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( )
   {
     return m_nodes;
   }
 
+  @Override
   public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
   {
     return m_edges;
@@ -131,6 +136,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#createNode(GM_Point, double, boolean[])
    */
+  @Override
   public IFE1D2DNode createNode( final GM_Point nodeLocation, final double searchRectWidth, final boolean[] alreadyExists )
   {
     Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" ); //$NON-NLS-1$
@@ -171,6 +177,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
    */
+  @Override
   public IFE1D2DNode findNode( final GM_Point nodeLocation, final double searchRectWidth )
   {
     final FeatureList nodeList = m_nodes.getWrappedList();
@@ -212,11 +219,13 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#find2DElement(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
    */
+  @Override
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance )
   {
     return findElement( position, grabDistance, IPolyElement.class );
   }
 
+  @Override
   public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, final Class<T> elementClass )
   {
     final FeatureList modelList = m_elements.getWrappedList();
@@ -247,6 +256,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     return nearest;
   }
 
+  @Override
   public IFE1D2DEdge findEdge( final GM_Point position, final double grabDistance )
   {
     final FeatureList modelList = m_edges.getWrappedList();
@@ -291,6 +301,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findContinuityLine(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
    */
+  @Override
   public IFELine findContinuityLine( final GM_Point position, final double grabDistance )
   {
     // if we just search for the first line within the line envelope, and line is z.B. under 45 deg angle,
@@ -329,6 +340,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#find1DElement(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
    */
+  @Override
   public IElement1D find1DElement( final GM_Point position, final double grabDistance )
   {
     return findElement( position, grabDistance, IElement1D.class );
@@ -337,6 +349,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#getContinuityLines()
    */
+  @Override
   public IFeatureWrapperCollection<IFELine> getContinuityLines( )
   {
     return m_continuityLines;

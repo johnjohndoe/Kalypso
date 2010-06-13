@@ -21,6 +21,7 @@ public class RasterDataModel extends UnversionedModel implements IRasterDataMode
     m_specificDamageCoverageCollection = new FeatureWrapperCollection<IAnnualCoverageCollection>( f2, IAnnualCoverageCollection.class, IRasterDataModel.PROPERTY_ANNUAL_COVERAGE_MEMBER );
   }
 
+  @Override
   public ICoverageCollection getLanduseCoverage( )
   {
     final Feature feature = (Feature) getFeature().getProperty( IRasterDataModel.PROPERTY_LANDUSE_COVERAGE );
@@ -29,6 +30,7 @@ public class RasterDataModel extends UnversionedModel implements IRasterDataMode
     return null;
   }
 
+  @Override
   public ICoverageCollection getRiskZonesCoverage( )
   {
     final Feature feature = (Feature) getFeature().getProperty( IRasterDataModel.PROPERTY_RISK_ZONES_COVERAGE );
@@ -37,12 +39,14 @@ public class RasterDataModel extends UnversionedModel implements IRasterDataMode
     return null;
   }
 
+  @Override
   public IFeatureWrapperCollection<IAnnualCoverageCollection> getSpecificDamageCoverageCollection( )
   {
     return m_specificDamageCoverageCollection;
   }
 
   // TODO: change name to Water-Depth! (everywhere...!)
+  @Override
   public IFeatureWrapperCollection<IAnnualCoverageCollection> getWaterlevelCoverageCollection( )
   {
     return m_waterlevelCoverageCollection;

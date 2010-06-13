@@ -60,10 +60,10 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
      *           <li/>feature cannot be converted
      *           </ul>
      */
-    public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException;
+    public Object constructAdapter( Feature feature, Class< ? > cls ) throws IllegalArgumentException;
   }
 
-  private Map<Class, AdapterConstructor> constructors = createConstructorMap();
+  private final Map<Class< ? >, AdapterConstructor> constructors = createConstructorMap();
 
   public KalypsoSimBaseFeatureFactory( )
   {
@@ -73,14 +73,15 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  public Object getAdapter( Object adaptableObject, Class adapterType )
+  @Override
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( !(adaptableObject instanceof Feature) )
     {
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.3" ) + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.4" ) + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    AdapterConstructor ctor = constructors.get( adapterType );
+    final AdapterConstructor ctor = constructors.get( adapterType );
     if( ctor != null )
     {
       return ctor.constructAdapter( (Feature) adaptableObject, adapterType );
@@ -91,19 +92,21 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  public Class[] getAdapterList( )
+  @Override
+  public Class< ? >[] getAdapterList( )
   {
     return constructors.keySet().toArray( new Class[constructors.size()] );
   }
 
-  private final Map<Class, AdapterConstructor> createConstructorMap( )
+  private final Map<Class< ? >, AdapterConstructor> createConstructorMap( )
   {
-    Map<Class, AdapterConstructor> cMap = new Hashtable<Class, AdapterConstructor>();
+    final Map<Class< ? >, AdapterConstructor> cMap = new Hashtable<Class< ? >, AdapterConstructor>();
 
     // terrain model
     AdapterConstructor cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
 
         return new TerrainModel( feature );
@@ -114,9 +117,9 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IRoughnessCls
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
-
         return new RoughnessCls( feature );
       }
     };
@@ -125,13 +128,14 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IRoughnessCls
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         try
         {
           return new RoughnessClsCollection( feature );
         }
-        catch( Throwable th )
+        catch( final Throwable th )
         {
           th.printStackTrace();
           return null;
@@ -143,7 +147,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IRoughnessClsCorrection
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new RoughnessClsCorrection( feature );
       }
@@ -153,7 +158,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IRoughnessPolygon
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new RoughnessPolygon( feature );
       }
@@ -163,7 +169,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IRoughnessLayer
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new RoughnessLayer( feature );
       }
@@ -172,7 +179,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new RoughnessPolygonCollection( feature );
       }
@@ -182,7 +190,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IRiverProfileNetworkCollection
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new RiverProfileNetworkCollection( feature );
       }
@@ -192,7 +201,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IRiverProfileNetwork
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new RiverProfileNetwork( feature );
       }
@@ -202,7 +212,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // ITerrainElevationModel
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         // TODO provide adapaterfac method for the elevation model
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER ) )
@@ -211,7 +222,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
           {
             return new NativeTerrainElevationModelWrapper( feature );
           }
-          catch( Throwable th )
+          catch( final Throwable th )
           {
             throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.6" ) + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.7" ) + feature + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.10" ) + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           }
@@ -223,7 +234,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
           {
             return new TerrainElevationModelSystem( feature );
           }
-          catch( Throwable th )
+          catch( final Throwable th )
           {
             throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.11" ) + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.12" ) + feature + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.13" ) + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           }
@@ -242,7 +253,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // ITerrainModel
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new TerrainModel( feature );
       }
@@ -252,7 +264,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     // IFlowRelationshipModel
     cTor = new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      @Override
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new FlowRelationshipModel( feature );
       }

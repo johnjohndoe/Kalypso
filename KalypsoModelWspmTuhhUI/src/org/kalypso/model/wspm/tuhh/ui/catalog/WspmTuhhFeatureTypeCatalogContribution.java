@@ -48,6 +48,7 @@ import org.kalypso.core.catalog.ICatalogContribution;
 
 public class WspmTuhhFeatureTypeCatalogContribution implements ICatalogContribution
 {
+  @Override
   public void contributeTo( final CatalogManager catalogManager )
   {
     final URL catalogURL = getClass().getResource( "resources/catalog.xml" ); //$NON-NLS-1$

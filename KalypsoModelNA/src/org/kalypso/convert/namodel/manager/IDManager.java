@@ -176,6 +176,7 @@ public class IDManager
         return false;
       }
 
+      @Override
       public int compare( Object o1, Object o2 )
       {
         IDMap m1 = (IDMap) o1;

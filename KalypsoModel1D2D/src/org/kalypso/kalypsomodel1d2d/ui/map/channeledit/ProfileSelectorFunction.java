@@ -88,6 +88,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
    * @see org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {

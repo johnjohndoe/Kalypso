@@ -24,7 +24,7 @@ JEPLite Copyright (C) 2002 Stefan  Kolarov
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *****************************************************************************/
 package org.cheffo.jeplite;
-import org.cheffo.jeplite.util.*;
+import org.cheffo.jeplite.util.DoubleStack;
 public final class ASTConstant extends SimpleNode {
   private double value;
   public ASTConstant(int id) {
@@ -39,16 +39,19 @@ public final class ASTConstant extends SimpleNode {
     value = val;
   }
 
+  @Override
   public String toString() {
     return "Constant: " + value;
   }
 
   /*Return the Value of the node*/
+  @Override
   public final double getValue()
   {
     return value;
   }
 
+  @Override
   public final void getValue(DoubleStack stack) {
     stack.push(value);
   }

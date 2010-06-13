@@ -14,16 +14,19 @@ public class Kalypso1D2DSchemaConstants
   /**
    * @deprecated
    */
+  @Deprecated
   public final static QName WB1D2D_F_EDGE_INV = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeInv" ); //$NON-NLS-1$
 
   /**
    * @deprecated
    */
+  @Deprecated
   public final static QName WB1D2D_PROP_EDGE_IN_INV = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge" ); //$NON-NLS-1$
 
   /**
    * @deprecated
    */
+  @Deprecated
   public final static QName WB1D2D_PROP_EDGEINV = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeInv" ); //$NON-NLS-1$
 
   public static final QName WB1D2D_PROP_EDGE_GEOM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$

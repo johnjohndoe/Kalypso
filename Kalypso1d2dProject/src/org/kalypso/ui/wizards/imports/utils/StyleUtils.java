@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
@@ -73,7 +74,7 @@ public class StyleUtils
 
   private String m_FilterProperty;
 
-  private HashMap<String, Color> m_CustomPropertyColorMap;
+  private Map<String, Color> m_customPropertyColorMap;
 
   private final String m_StyleLayerName;
 
@@ -84,7 +85,7 @@ public class StyleUtils
     m_OutputSLD = outputSLD;
     m_GeometryProperty = geometryProperty;
     setFilterProperty( filterProperty );
-    m_CustomPropertyColorMap = customPropertyColorMap;
+    m_customPropertyColorMap = customPropertyColorMap;
     m_StyleLayerName = styleLayerName;
   }
 
@@ -96,25 +97,25 @@ public class StyleUtils
 
   public void importCustomFilterpropertyColorMap( final HashMap<String, Color> customPropertyColorMap, final boolean deleteExistingData )
   {
-    if( m_CustomPropertyColorMap == null )
-      m_CustomPropertyColorMap = new HashMap<String, Color>();
+    if( m_customPropertyColorMap == null )
+      m_customPropertyColorMap = new HashMap<String, Color>();
     if( deleteExistingData )
-      m_CustomPropertyColorMap.clear();
-    m_CustomPropertyColorMap.putAll( customPropertyColorMap );
+      m_customPropertyColorMap.clear();
+    m_customPropertyColorMap.putAll( customPropertyColorMap );
   }
 
-  public HashMap<String, Color> getFilterpropertyColorMap( ) throws Exception
+  public Map<String, Color> getFilterpropertyColorMap( ) throws Exception
   {
     prepareData();
-    return m_CustomPropertyColorMap;
+    return m_customPropertyColorMap;
   }
 
   public void prepareData( ) throws Exception
   {
     if( m_DataPrepared )
       return;
-    if( m_CustomPropertyColorMap == null )
-      m_CustomPropertyColorMap = new HashMap<String, Color>();
+    if( m_customPropertyColorMap == null )
+      m_customPropertyColorMap = new HashMap<String, Color>();
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + m_InputGML ), null ); //$NON-NLS-1$
     final String ns = workspace.getGMLSchema().getTargetNamespace();
     boolean b_geometryPropertyExists = (m_GeometryProperty != null && m_GeometryProperty.trim().length() > 0);
@@ -141,12 +142,12 @@ public class StyleUtils
               String styledOne = ""; //$NON-NLS-1$
               if( m_CreateFilter )
                 styledOne = feature.getProperty( new QName( ns, m_FilterProperty ) ).toString();
-              if( !m_CustomPropertyColorMap.containsKey( styledOne ) )
+              if( !m_customPropertyColorMap.containsKey( styledOne ) )
               {
                 Color color = getRandomColor();
-                while( m_CustomPropertyColorMap.containsValue( color ) )
+                while( m_customPropertyColorMap.containsValue( color ) )
                   color = getRandomColor();
-                m_CustomPropertyColorMap.put( styledOne, color );
+                m_customPropertyColorMap.put( styledOne, color );
               }
             }
             catch( final Exception e )
@@ -171,7 +172,6 @@ public class StyleUtils
     createStyle( m_OutputSLD );
   }
 
-  @SuppressWarnings("unchecked")
   public void createStyle( final String resultSLDFileName ) throws Exception
   {
     if( resultSLDFileName == null || resultSLDFileName.trim().length() == 0 )
@@ -182,10 +182,10 @@ public class StyleUtils
     final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" ); //$NON-NLS-1$ //$NON-NLS-2$
     final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle();
     Fill fill = null;
-    final Iterator iterator = m_CustomPropertyColorMap.entrySet().iterator();
+    final Iterator<Entry<String, Color>> iterator = m_customPropertyColorMap.entrySet().iterator();
     while( iterator.hasNext() )
     {
-      final Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
+      final Map.Entry<String, Color> mapEntry = iterator.next();
       final Geometry geometry = new Geometry_Impl( new PropertyName( m_GeometryProperty, null ) );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
       final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
@@ -344,19 +344,18 @@ public class StyleUtils
    * @throws TransformerException
    *           - by Transformer
    */
-  @SuppressWarnings("unchecked")
-  private static final void internal_createStyle( final String styleLayerName, final String geometryProperty, final String filterProperty, final HashMap<String, Color> filterPropertyColorMap, final String resultSLDFile ) throws IOException, SAXException, TransformerFactoryConfigurationError, TransformerException
+  private static final void internal_createStyle( final String styleLayerName, final String geometryProperty, final String filterProperty, final Map<String, Color> filterPropertyColorMap, final String resultSLDFile ) throws IOException, SAXException, TransformerFactoryConfigurationError, TransformerException
   {
     final double minScaleDenominator = 0;
     final double maxScaleDenominator = 1000000000000000.0;
     final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" ); //$NON-NLS-1$ //$NON-NLS-2$
     final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle();
     Fill fill = null;
-    final Iterator iterator = filterPropertyColorMap.entrySet().iterator();
+    final Iterator<Entry<String, Color>> iterator = filterPropertyColorMap.entrySet().iterator();
     final boolean b_filterPropertySet = (filterProperty != null && filterProperty.trim().length() > 0);
     while( iterator.hasNext() )
     {
-      final Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
+      final Map.Entry<String, Color> mapEntry = iterator.next();
       final Geometry geometry = new Geometry_Impl( new PropertyName( geometryProperty, null ) );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
       final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );

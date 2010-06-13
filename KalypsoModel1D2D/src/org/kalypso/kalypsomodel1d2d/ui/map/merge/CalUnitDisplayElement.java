@@ -106,6 +106,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#getDecorated()
    */
+  @Override
   public DisplayElement getDecorated( )
   {
     return m_decoratedElement;
@@ -114,6 +115,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
    */
+  @Override
   public void setDecorated( final DisplayElement decorated )
   {
     this.m_decoratedElement = decorated;
@@ -122,6 +124,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
    */
+  @Override
   public boolean doesScaleConstraintApply( final double scale )
   {
     if( m_decoratedElement != null )
@@ -137,6 +140,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
    */
+  @Override
   public Feature getFeature( )
   {
     if( m_calculationUnit != null )
@@ -152,6 +156,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isHighlighted()
    */
+  @Override
   public boolean isHighlighted( )
   {
     if( m_decoratedElement != null )
@@ -167,6 +172,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isSelected()
    */
+  @Override
   public boolean isSelected( )
   {
     if( m_decoratedElement != null )
@@ -183,6 +189,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
@@ -296,6 +303,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
    */
+  @Override
   public void setHighlighted( final boolean highlighted )
   {
     this.m_isHighlighted = highlighted;
@@ -304,6 +312,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
    */
+  @Override
   public void setSelected( final boolean selected )
   {
     this.m_isSelected = selected;

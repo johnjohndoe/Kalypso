@@ -41,6 +41,7 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
     m_provider = provider;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
     try

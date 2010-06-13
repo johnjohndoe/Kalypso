@@ -138,6 +138,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final int comboWidth1 = 75;
@@ -175,6 +176,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     comboRiverLine.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -224,6 +226,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     m_comboRiverLineNameField.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();

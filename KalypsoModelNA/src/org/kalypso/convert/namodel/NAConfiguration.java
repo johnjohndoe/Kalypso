@@ -161,8 +161,6 @@ public class NAConfiguration
 
   private URL m_zmlContext;
 
-  private final Boolean m_iniWrite;
-
   private Date[] m_initialDates;
 
   private GMLWorkspace m_modelWorkspace = null;
@@ -237,7 +235,6 @@ public class NAConfiguration
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
     m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
     m_calculationLogger = new NACalculationLogger( asciiBaseDir.getPath() );
-    m_iniWrite = false;
   }
 
   public NACalculationLogger getCalculationLogger( )

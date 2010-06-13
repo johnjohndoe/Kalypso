@@ -119,7 +119,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget.0") ); //$NON-NLS-1$
+    mapPanel.setMessage( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget.0" ) ); //$NON-NLS-1$
     if( m_hydroTheme == null )
       m_hydroTheme = UtilMap.findEditableTheme( mapPanel, m_qnameToCreate );
 
@@ -175,7 +175,6 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void paint( final Graphics g )
   {
@@ -188,7 +187,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
       /* Node: return its position */
       if( m_modelElement instanceof IFE1D2DNode )
       {
-        final GM_Point point = ((IFE1D2DNode) m_modelElement).getPoint();
+        final GM_Point point = ((IFE1D2DNode< ? >) m_modelElement).getPoint();
         final Point nodePoint = MapUtilities.retransform( getMapPanel(), point );
         g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
         if( m_existingHydrograph != null )
@@ -222,6 +221,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
     /* Create hydrograph at position */
     display.asyncExec( new Runnable()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
@@ -250,10 +250,11 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
           final IStatus status = StatusUtilities.statusFromThrowable( e );
           display.asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget.1"), status ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget.1" ), status ); //$NON-NLS-1$
             }
           } );
         }
@@ -276,14 +277,14 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
   /**
    * Really create the new object.
-   *
+   * 
    * @return The new object, if null, nothing happens..
    */
   protected abstract IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement );
 
   /**
    * @param grabDistance
-   *            The grab distance in world (=geo) coordinates.
+   *          The grab distance in world (=geo) coordinates.
    */
   protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
 }

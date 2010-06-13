@@ -44,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -70,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollect
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -150,6 +149,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     if( m_calcUnitDeleted )
@@ -161,6 +161,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
    */
+  @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return m_model1d2d;
@@ -169,6 +170,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return "Command for deleting calculation unit"; //$NON-NLS-1$
@@ -177,6 +179,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -201,6 +204,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     try
@@ -358,6 +362,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     if( !m_calcUnitDeleted )
@@ -367,6 +372,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     // create row c-unit

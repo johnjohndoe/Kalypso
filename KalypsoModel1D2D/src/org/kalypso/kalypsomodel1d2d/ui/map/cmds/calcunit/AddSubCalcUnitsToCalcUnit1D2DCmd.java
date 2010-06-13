@@ -65,6 +65,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return ""; //$NON-NLS-1$
@@ -73,6 +74,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return false;
@@ -81,6 +83,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     for( final ICalculationUnit subCalcUnit : m_subUnitsToAdd )
@@ -103,6 +106,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     throw new UnsupportedOperationException();
@@ -111,6 +115,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     throw new UnsupportedOperationException();

@@ -70,6 +70,7 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
    * @param parent
    *          the parent composite
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -138,7 +139,6 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
    * @param assetValueClassesList
    * @param damageFunctionNamesList
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -146,7 +146,7 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
 
     m_fileExtensions.add( new String( "shp" ) ); //$NON-NLS-1$
 
-    final Iterator iter = ((IStructuredSelection) selection).iterator();
+    final Iterator< ? > iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
       Object item = iter.next();
@@ -281,12 +281,14 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
     return cmbMaxPerculationsRateProperty.isEnabled();
   }
 
+  @Override
   public void widgetDefaultSelected( final SelectionEvent event )
   {
     // TODO Auto-generated method stub
 
   }
 
+  @Override
   public void widgetSelected( final SelectionEvent event )
   {
     if( event.widget == btn_inputShpFileBrowse )
@@ -298,6 +300,7 @@ public class ImportGeologyWizardPage extends WizardPage implements SelectionList
     getWizard().getContainer().updateButtons();
   }
 
+  @Override
   public void modifyText( final ModifyEvent event )
   {
     // Initialize a variable with the no error status

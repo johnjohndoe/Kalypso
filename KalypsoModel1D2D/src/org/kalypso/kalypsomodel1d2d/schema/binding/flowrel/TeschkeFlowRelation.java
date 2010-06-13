@@ -68,6 +68,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getStation()
    */
+  @Override
   public BigDecimal getStation( )
   {
     return (BigDecimal) getFeature().getProperty( QNAME_PROP_STATION );
@@ -76,6 +77,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setStation(java.math.BigDecimal)
    */
+  @Override
   public void setStation( final BigDecimal station )
   {
     getFeature().setProperty( QNAME_PROP_STATION, station );
@@ -84,6 +86,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getPolynomials()
    */
+  @Override
   public List<IPolynomial1D> getPolynomials( )
   {
     return m_polynomes;
@@ -92,6 +95,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getSlope()
    */
+  @Override
   public double getSlope( )
   {
     final BigDecimal slope = (BigDecimal) getFeature().getProperty( QNAME_PROP_SLOPE );
@@ -101,6 +105,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setSlope(double)
    */
+  @Override
   public void setSlope( final double slope )
   {
     final BigDecimal slopeDec = new BigDecimal( slope ).setScale( 5, BigDecimal.ROUND_HALF_UP );
@@ -110,6 +115,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
    */
+  @Override
   public IProfileFeature getProfile( )
   {
     final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
@@ -120,6 +126,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
    */
+  @Override
   public void setProfileLink( final String profileRef )
   {
     final Feature feature = getFeature();

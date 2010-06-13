@@ -118,6 +118,7 @@ public class ExportFileChooserPage extends ValidatingWizardPage
     m_fileChooserGroup = new FileChooserGroup( m_fileChooser );
     m_fileChooserGroup.addFileChangedListener( new FileChooserGroup.FileChangedListener()
     {
+      @Override
       public void fileChanged( final File file )
       {
         setFile( file );

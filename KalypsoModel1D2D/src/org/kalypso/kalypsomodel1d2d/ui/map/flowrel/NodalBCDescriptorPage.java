@@ -65,6 +65,7 @@ public class NodalBCDescriptorPage extends WizardPage implements IWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     m_composite = new Composite( parent, SWT.NONE );

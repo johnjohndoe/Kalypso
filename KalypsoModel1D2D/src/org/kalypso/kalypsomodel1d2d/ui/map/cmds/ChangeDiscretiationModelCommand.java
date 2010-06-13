@@ -95,6 +95,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -103,6 +104,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return m_isUndoable;
@@ -111,6 +113,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void process( ) throws Exception
   {
@@ -196,6 +199,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     for( final IDiscrModel1d2dChangeCommand command : m_commands )
@@ -214,6 +218,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
 

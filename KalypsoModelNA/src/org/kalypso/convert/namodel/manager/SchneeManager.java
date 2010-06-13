@@ -65,7 +65,7 @@ public class SchneeManager extends AbstractManager
   /*
    * @author huebsch
    */
-  public SchneeManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
+  public SchneeManager( final GMLSchema parameterSchema, final NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     m_snowFT = parameterSchema.getFeatureType( NaModelConstants.PARA_SNOW_NAME );
@@ -75,7 +75,7 @@ public class SchneeManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
-  public String mapID( int id, IFeatureType ft )
+  public String mapID( final int id, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + id;
   }
@@ -84,10 +84,10 @@ public class SchneeManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   @Override
-  public Feature[] parseFile( URL url ) throws Exception
+  public Feature[] parseFile( final URL url ) throws Exception
   {
-    List<Feature> result = new ArrayList<Feature>();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+    final List<Feature> result = new ArrayList<Feature>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     // FileReader(
     // file
     // ) );
@@ -106,7 +106,7 @@ public class SchneeManager extends AbstractManager
     return result.toArray( new Feature[result.size()] );
   }
 
-  private Feature readNextFeature( LineNumberReader reader ) throws Exception
+  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
   {
     final HashMap<String, String> propCollector = new HashMap<String, String>();
     String line;
@@ -119,7 +119,7 @@ public class SchneeManager extends AbstractManager
 
     // generate id:
     // final FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
-    String asciiStringId = propCollector.get( "name" ); //$NON-NLS-1$
+    final String asciiStringId = propCollector.get( "name" ); //$NON-NLS-1$
     final Feature feature = getFeature( asciiStringId, m_snowFT );
 
     // continue reading
@@ -129,17 +129,16 @@ public class SchneeManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
+  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace paraWorkspace ) throws Exception
   {
-    Feature rootFeature = paraWorkspace.getRootFeature();
-    List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
-    asciiBuffer.getSnowBuffer().append( Messages.getString("org.kalypso.convert.namodel.manager.SchneeManager.0") ); //$NON-NLS-1$
+    final Feature rootFeature = paraWorkspace.getRootFeature();
+    final List< ? > list = (List< ? >) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
+    asciiBuffer.getSnowBuffer().append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
     asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
     asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
-    Iterator iter = list.iterator();
+    final Iterator< ? > iter = list.iterator();
     while( iter.hasNext() )
     {
-
       final Feature snowFE = (Feature) iter.next();
       // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
       writeFeature( asciiBuffer, snowFE );
@@ -147,7 +146,7 @@ public class SchneeManager extends AbstractManager
 
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception
+  private void writeFeature( final AsciiBuffer asciiBuffer, final Feature feature ) throws Exception
   {
     asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" ); //$NON-NLS-1$
   }

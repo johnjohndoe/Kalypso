@@ -98,6 +98,7 @@ public class CalculationUnitProblemsComponent
 
   private final ISelectionChangedListener selectionChangedListener = new ISelectionChangedListener()
   {
+    @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
       handleSelectionChanged( event );
@@ -118,11 +119,13 @@ public class CalculationUnitProblemsComponent
     final CalculationUnitDataModel dataModel = m_dataModel;
     dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
+      @Override
       public void dataChanged( final String key, final Object newValue )
       {
         final Display display = parent.getDisplay();
         final Runnable runnable = new Runnable()
         {
+          @Override
           public void run( )
           {
             if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )
@@ -206,6 +209,7 @@ public class CalculationUnitProblemsComponent
     final CalculationUnitDataModel dataModel = m_dataModel;
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.0"), 10 ); //$NON-NLS-1$

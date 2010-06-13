@@ -46,8 +46,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
+import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IPath;

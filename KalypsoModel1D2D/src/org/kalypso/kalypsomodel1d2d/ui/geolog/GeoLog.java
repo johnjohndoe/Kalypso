@@ -94,6 +94,7 @@ public class GeoLog implements IGeoLog
   /**
    * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#getStatusCollection()
    */
+  @Override
   public IStatusCollection getStatusCollection( )
   {
     return m_statusCollection;
@@ -102,6 +103,7 @@ public class GeoLog implements IGeoLog
   /**
    * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#close()
    */
+  @Override
   public void close( )
   {
     m_statusCollection.getFeature().getWorkspace().dispose();
@@ -110,6 +112,7 @@ public class GeoLog implements IGeoLog
   /**
    * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#formatLog(int, int, java.lang.String, java.lang.Object[])
    */
+  @Override
   public IGeoStatus formatLog( final int severity, final int code, final String message, final Object... args )
   {
     final String msg = String.format( message, args );
@@ -120,6 +123,7 @@ public class GeoLog implements IGeoLog
    * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#log(int, int, java.lang.String,
    *      org.kalypsodeegree.model.geometry.GM_Object, java.lang.Throwable)
    */
+  @Override
   public IGeoStatus log( final int severity, final int code, final String message, final GM_Object location, final Throwable t )
   {
     final Date now = new Date();
@@ -153,6 +157,7 @@ public class GeoLog implements IGeoLog
   /**
    * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#log(org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void log( final IStatus status )
   {
     final Date now = new Date();
@@ -193,6 +198,7 @@ public class GeoLog implements IGeoLog
   /**
    * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#getStartTime()
    */
+  @Override
   public Date getStartTime( )
   {
     return m_startTime;
