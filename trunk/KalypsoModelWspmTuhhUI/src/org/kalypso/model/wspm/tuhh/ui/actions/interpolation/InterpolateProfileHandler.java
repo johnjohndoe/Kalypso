@@ -15,16 +15,15 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.results.ProfileInterpolation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
+import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 public class InterpolateProfileHandler extends AbstractHandler
 {
@@ -36,8 +35,11 @@ public class InterpolateProfileHandler extends AbstractHandler
 
     final Feature container = profileSelection.getContainer();
 
-    final WspmWaterBody waterBody = findWaterbody( container );
-    final TuhhReach reach = findReach( container );
+    final WspmWaterBody waterBody = ProfileUiUtils.findWaterbody( container );
+    if( waterBody == null )
+      throw new ExecutionException( "Unable to insert profile into selection. Please select either a water body or a reach." );
+
+    final TuhhReach reach = ProfileUiUtils.findReach( container );
 
     final IProfileFeature[] profiles = profileSelection.getProfiles();
     final InterpolationWizard wizard = new InterpolationWizard( profiles );
@@ -62,46 +64,19 @@ public class InterpolateProfileHandler extends AbstractHandler
   {
     try
     {
-      final IProfileFeature previousProfile = wizard.getPreviousProfile();
-      final IProfileFeature nextProfile = wizard.getNextProfile();
+      final IProfil previousProfile = wizard.getPreviousProfile().getProfil();
+      final IProfil nextProfile = wizard.getNextProfile().getProfil();
       final BigDecimal newStation = wizard.getNewStation();
 
       final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile );
-      final IProfileFeature newProfile = waterBody.createNewProfile();
-      interpolation.interpolate( newStation, newProfile );
+      final IProfil newProfile = interpolation.interpolate( newStation, previousProfile.getType() );
 
-      final GMLWorkspace workspace = waterBody.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterBody, new Feature[] { newProfile }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-      if( reach != null )
-      {
-        final TuhhReachProfileSegment segment = reach.createProfileSegment( newProfile, newStation.doubleValue() );
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach, new Feature[] { segment }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-      }
+      ProfileUiUtils.addNewProfileAndFireEvents( newProfile, waterBody, reach );
     }
     catch( final Exception e )
     {
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Profile interpolation failed.", e );
       throw new CoreException( status );
     }
-  }
-
-  private TuhhReach findReach( final Feature container )
-  {
-    if( container instanceof TuhhReach )
-      return (TuhhReach) container;
-
-    return null;
-  }
-
-  private WspmWaterBody findWaterbody( final Feature container ) throws ExecutionException
-  {
-    if( container instanceof WspmWaterBody )
-      return (WspmWaterBody) container;
-
-    if( container instanceof TuhhReach )
-      return ((TuhhReach) container).getWaterBody();
-
-    throw new ExecutionException( "Unable to insert profile into selection. Please select either a water body or a reach." );
   }
 }

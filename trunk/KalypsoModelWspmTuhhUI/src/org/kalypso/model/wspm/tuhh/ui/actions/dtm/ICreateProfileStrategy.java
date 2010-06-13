@@ -38,42 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.wizards;
+package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author barbarins
+ * @author Gernot Belger
  */
-public class WizardAddProfileFromDEM extends Wizard
+public interface ICreateProfileStrategy
 {
-  private final ProfileFromDEMWizardPage m_page;
+  void run( );
 
-  private final IProfil m_profile;
+  String getLabel( );
 
-  public WizardAddProfileFromDEM( final IProfil profile )
-  {
-    m_profile = profile;
-
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) ); //$NON-NLS-1$
-
-    m_page = new ProfileFromDEMWizardPage();
-    addPage( m_page );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#performFinish()
-   */
-  @Override
-  public boolean performFinish( )
-  {
-    m_profile.setName( m_page.getProfileName() );
-    final double profileStation = m_page.getProfileStation();
-    if( !Double.isNaN( profileStation ) )
-      m_profile.setStation( profileStation );
-
-    return true;
-  }
+  GM_Point adjustPoint( GM_Point pos, int pointCount );
 }
