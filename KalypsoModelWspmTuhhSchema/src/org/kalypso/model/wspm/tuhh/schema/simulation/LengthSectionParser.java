@@ -142,7 +142,7 @@ public class LengthSectionParser
 
         /* Introduce space around 'NaN' and '***' values to make it parseable */
 
-        if( nextLine.contains( "NaN" ) )
+        if( nextLine.contains( "NaN" ) ) //$NON-NLS-1$
           log.log( false, "WARNING: Results contain NaN values, calculation result is probably not correct." );
 
         // TODO: handle NaN-values to keep information alive (unfortunally BigDecimal throws a NumberFormatException)

@@ -77,7 +77,7 @@ import org.kalypso.transformation.ui.CRSSelectionPanel;
  */
 public class WProfImportFilePage extends WizardPage
 {
-  static final String SETTINGS_CRS = "wprofShapeCrs";
+  static final String SETTINGS_CRS = "wprofShapeCrs"; //$NON-NLS-1$
 
   private FileChooserGroup m_shapeChooser;
 
@@ -120,10 +120,10 @@ public class WProfImportFilePage extends WizardPage
     final Control charsetControl = createCharsetControl( panel );
     charsetControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    m_imageChooser = createContextControl( "imageContext" );
+    m_imageChooser = createContextControl( "imageContext" ); //$NON-NLS-1$
     createChooserControl( panel, m_imageChooser, "Image Folder (Optional)", new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    m_pdfChooser = createContextControl( "pdfContext" );
+    m_pdfChooser = createContextControl( "pdfContext" ); //$NON-NLS-1$
     createChooserControl( panel, m_pdfChooser, "PDF Folder (Optional)", new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     setControl( panel );
@@ -242,14 +242,14 @@ public class WProfImportFilePage extends WizardPage
   private Control createFileControl( final Composite panel )
   {
     final FileChooserDelegateOpen openDelegate = new FileChooserDelegateOpen();
-    openDelegate.addFilter( "All Files (*.*)", "*.*" );
-    openDelegate.addFilter( "ESRI Shape File (*.shp)", "*.shp" );
+    openDelegate.addFilter( "All Files (*.*)", "*.*" ); //$NON-NLS-2$
+    openDelegate.addFilter( "ESRI Shape File (*.shp)", "*.shp" ); //$NON-NLS-2$
 
     m_shapeChooser = new FileChooserGroup( openDelegate );
     m_shapeChooser.setShowLabel( false );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, "shapeFile" );
+    final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, "shapeFile" ); //$NON-NLS-1$
     m_shapeChooser.setDialogSettings( shapeSection );
     m_shapeChooser.addFileChangedListener( new FileChangedListener()
     {
@@ -284,7 +284,7 @@ public class WProfImportFilePage extends WizardPage
 
     final String selectedCRS = m_crsPanel == null ? null : m_crsPanel.getSelectedCRS();
     if( selectedCRS == null )
-      return new MessageProvider( "Pleae choose the coordinate system of the WProf file", IMessageProvider.ERROR );
+      return new MessageProvider( "Please choose the coordinate system of the WProf file", IMessageProvider.ERROR );
 
     return new MessageProvider( null, IMessageProvider.NONE );
   }

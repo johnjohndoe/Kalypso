@@ -67,33 +67,33 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
     final String[] allIDs = polygones.getAllIDs();
     for( final String id : allIDs )
     {
-      if( id.startsWith( "K" ) )
+      if( id.startsWith( "K" ) ) //$NON-NLS-1$
       {
-        if( polygones.hasPoints( "V01" ) )
-          return new KreisProfileCreator( "Kreis", data, "V01", "V03", "V99" );
+        if( polygones.hasPoints( "V01" ) ) //$NON-NLS-1$
+          return new KreisProfileCreator( "Kreis", data, "V01", "V03", "V99" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-        if( polygones.hasPoints( "D01" ) )
-          return new KreisProfileCreator( "Verdohlung Einlauf - Kreis", data, "D01", "D03", "V99" );
+        if( polygones.hasPoints( "D01" ) ) //$NON-NLS-1$
+          return new KreisProfileCreator( "Verdohlung Einlauf - Kreis", data, "D01", "D03", "V99" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-        if( polygones.hasPoints( "D91" ) )
-          return new KreisProfileCreator( "Verdohlung Auslauf - Kreis", data, "D91", "D93", "V99" );
+        if( polygones.hasPoints( "D91" ) ) //$NON-NLS-1$
+          return new KreisProfileCreator( "Verdohlung Auslauf - Kreis", data, "D91", "D93", "V99" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       }
     }
 
-    if( polygones.hasPoints( "V01", "V02", "V03" ) )
-      return new BridgeProfileCreator( data, "V01", "V02", "V03", "V99", "Brücke" );
+    if( polygones.hasPoints( "V01", "V02", "V03" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new BridgeProfileCreator( data, "V01", "V02", "V03", "V99", "Brücke" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    if( polygones.hasPoints( "D01", "D02", "D03" ) )
-      return new BridgeProfileCreator( data, "D01", "D02", "D03", "V99", "Verdohlung Einlauf" );
+    if( polygones.hasPoints( "D01", "D02", "D03" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new BridgeProfileCreator( data, "D01", "D02", "D03", "V99", "Verdohlung Einlauf" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    if( polygones.hasPoints( "D01", "D02", "D05" ) )
-      return new BridgeProfileCreator( data, "D01", "D02", "D05", "V99", "Verdohlung Einlauf - Geländer als Oberkante" );
+    if( polygones.hasPoints( "D01", "D02", "D05" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new BridgeProfileCreator( data, "D01", "D02", "D05", "V99", "Verdohlung Einlauf - Geländer als Oberkante" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    if( polygones.hasPoints( "D91", "D92", "D93" ) )
-      return new BridgeProfileCreator( data, "D91", "D92", "D93", "V99", "Verdohlung Auslauf" );
+    if( polygones.hasPoints( "D91", "D92", "D93" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new BridgeProfileCreator( data, "D91", "D92", "D93", "V99", "Verdohlung Auslauf" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    if( polygones.hasPoints( "D91", "D92", "D95" ) )
-      return new BridgeProfileCreator( data, "D91", "D92", "D95", "V99", "Verdohlung Auslauf - Geländer als Oberkante" );
+    if( polygones.hasPoints( "D91", "D92", "D95" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new BridgeProfileCreator( data, "D91", "D92", "D95", "V99", "Verdohlung Auslauf - Geländer als Oberkante" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     /* Wehre */
     final IWProfPoint anyPoint = polygones.getAnyPoint();
@@ -108,32 +108,32 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
     // FIXME wir sollten eigentlich den Profiltyp erst mal auswerten: z.B. 4 = Absurzprofil...
 
     // dieser Fall ist von den Attributen her gar kein Wehr...
-    if( polygones.hasPoints( "V01", "V03" ) )
-      return new WeirProfileCreator( "Absturz", data, "V01", "V03" );
+    if( polygones.hasPoints( "V01", "V03" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      return new WeirProfileCreator( "Absturz", data, "V01", "V03" ); //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( polygones.hasPoints( "21", "2314" ) )
-      return new WeirProfileCreator( "Absturz", data, "21", "2314" );
+    if( polygones.hasPoints( "21", "2314" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      return new WeirProfileCreator( "Absturz", data, "21", "2314" ); //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( polygones.hasPoints( "2314" ) )
-      return new WeirProfileCreator( "Absturz", data, "2314", "2314" );
+    if( polygones.hasPoints( "2314" ) ) //$NON-NLS-1$
+      return new WeirProfileCreator( "Absturz", data, "2314", "2314" ); //$NON-NLS-2$ //$NON-NLS-3$
 
     // Im Zweifelsfall auch noch mal alles nur als Gelände versuchen
 
-    if( polygones.hasPoints( "D01" ) )
-      return new GelaendeProfileCreator( "Verdohlung Einlauf (nur Gelände)", data, "D01" );
+    if( polygones.hasPoints( "D01" ) ) //$NON-NLS-1$
+      return new GelaendeProfileCreator( "Verdohlung Einlauf (nur Gelände)", data, "D01" ); //$NON-NLS-2$
 
-    if( polygones.hasPoints( "D91" ) )
-      return new GelaendeProfileCreator( "Verdohlung Einlauf (nur Gelände)", data, "D91" );
+    if( polygones.hasPoints( "D91" ) ) //$NON-NLS-1$
+      return new GelaendeProfileCreator( "Verdohlung Einlauf (nur Gelände)", data, "D91" ); //$NON-NLS-2$
 
     // Rarer Fall, nur V01er (z.B. mit V08)
-    if( polygones.hasPoints( "V01" ) )
-      return new GelaendeProfileCreator( "Gelände (V01)", data, "V01" );
+    if( polygones.hasPoints( "V01" ) ) //$NON-NLS-1$
+      return new GelaendeProfileCreator( "Gelände (V01)", data, "V01" ); //$NON-NLS-2$
 
-    if( polygones.hasPoints( "2314" ) )
-      return new GelaendeProfileCreator( "Absturz", data, "2314" );
+    if( polygones.hasPoints( "2314" ) ) //$NON-NLS-1$
+      return new GelaendeProfileCreator( "Absturz", data, "2314" ); //$NON-NLS-2$
 
-    if( polygones.hasPoints( "21" ) )
-      return new GelaendeProfileCreator( data, "21" );
+    if( polygones.hasPoints( "21" ) ) //$NON-NLS-1$
+      return new GelaendeProfileCreator( data, "21" ); //$NON-NLS-1$
 
     return new EmptyProfileCreator( data );
   }

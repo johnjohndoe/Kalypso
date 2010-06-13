@@ -243,7 +243,7 @@ public class PolynomeHelper
     {
       readResults( resultDir, targetGmlFile, calculation, log, resultEater );
       final File gmvResultFile = new File( tmpDir, ERGEBNISSE_GMV );
-      final URL ergebnisseGmbLocation = PolynomeHelper.class.getResource( "resources/" + ERGEBNISSE_GMV );
+      final URL ergebnisseGmbLocation = PolynomeHelper.class.getResource( "resources/" + ERGEBNISSE_GMV ); //$NON-NLS-1$
       FileUtils.copyURLToFile( ergebnisseGmbLocation, gmvResultFile );
       resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT_GMV, gmvResultFile );
     }

@@ -65,7 +65,7 @@ public class WspmResultValue implements IDBFValue
     m_column = column;
 
     final QName valueTypeName = column.getValueTypeName();
-    final String label = String.format( "%5.5s", column );
+    final String label = String.format( "%5.5s", column ); //$NON-NLS-1$
 
     m_field = createField( label, valueTypeName );
   }
@@ -148,7 +148,7 @@ public class WspmResultValue implements IDBFValue
     final String componentLabel = m_column.getComponentLabel();
     final String label = m_column.getLabel();
 
-    return String.format( "%s - %s", label, componentLabel );
+    return String.format( "%s - %s", label, componentLabel ); //$NON-NLS-1$
   }
 
 }

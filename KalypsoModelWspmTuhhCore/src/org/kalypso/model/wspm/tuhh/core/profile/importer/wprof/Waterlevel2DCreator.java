@@ -166,12 +166,12 @@ public class Waterlevel2DCreator
 
   private IComponent createWaterlevelComponent( final String name )
   {
-    final String id = "steiermark.waterlevel." + name;
+    final String id = "steiermark.waterlevel." + name; //$NON-NLS-1$
     final String description = "Waterlevel";
-    final String unit = "m";
+    final String unit = "m"; //$NON-NLS-1$
 
     final IPhenomenon phenomenon = new DictionaryPhenomenon( IWspmConstants.PHENOMENON_WATERLEVEL_2D );
-    final QName valueTypeName = new QName( NS.XSD_SCHEMA, "decimal" );
+    final QName valueTypeName = new QName( NS.XSD_SCHEMA, "decimal" ); //$NON-NLS-1$
     final String frame = null;
     final Object defaultValue = null;
 

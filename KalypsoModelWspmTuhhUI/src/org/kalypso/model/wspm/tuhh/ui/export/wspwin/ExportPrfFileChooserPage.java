@@ -70,9 +70,9 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
  */
 public class ExportPrfFileChooserPage extends ExportFileChooserPage
 {
-  private static final String SETTINGS_FILENAME_PATTERN = "filenamePattern";
+  private static final String SETTINGS_FILENAME_PATTERN = "filenamePattern"; //$NON-NLS-1$
 
-  private String m_filenamePattern = "<Name>_<Station>";
+  private String m_filenamePattern = "<Name>_<Station>"; //$NON-NLS-1$
 
   public ExportPrfFileChooserPage( final IFileChooserDelegate fileChooser, final String extension )
   {

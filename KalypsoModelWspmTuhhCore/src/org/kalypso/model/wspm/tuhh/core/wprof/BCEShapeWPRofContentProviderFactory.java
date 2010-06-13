@@ -84,7 +84,7 @@ public class BCEShapeWPRofContentProviderFactory implements IWProfPointFactory
   {
     final Properties defaultSpecification = new Properties();
 
-    final URL resource = getClass().getResource( "BCEShapeWProfSpecification.ini" );
+    final URL resource = getClass().getResource( "BCEShapeWProfSpecification.ini" ); //$NON-NLS-1$
     InputStream is = null;
     try
     {

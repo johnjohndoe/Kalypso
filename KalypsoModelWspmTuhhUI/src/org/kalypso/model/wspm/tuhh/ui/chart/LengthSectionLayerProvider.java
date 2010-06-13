@@ -64,26 +64,26 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
+    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null ); //$NON-NLS-1$
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK.equals( targetComponentName ) )
     {
-      final LengthSectionBridgeLayer layer = new LengthSectionBridgeLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+      final LengthSectionBridgeLayer layer = new LengthSectionBridgeLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
       layer.setVisible( true );
       return layer;
     }
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
     {
-      final LengthSectionWeirLayer layer = new LengthSectionWeirLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+      final LengthSectionWeirLayer layer = new LengthSectionWeirLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
       layer.setVisible( true );
       return layer;
     }
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF.equals( targetComponentName ) )
     {
-      final LengthSectionRunOffLayer layer = new LengthSectionRunOffLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+      final LengthSectionRunOffLayer layer = new LengthSectionRunOffLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
       layer.setVisible( true );
       return layer;
     }
-    return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( Messages.LengthSectionLayerProvider_8, IPointStyle.class ) ); //$NON-NLS-1$
   }
 
   /**
@@ -93,11 +93,11 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   {
     final IParameterContainer pc = getParameterContainer();
 
-    final String href = pc.getParameterValue( "href", null );
+    final String href = pc.getParameterValue( "href", null ); //$NON-NLS-1$
 
-    final String observationId = pc.getParameterValue( "observationId", null );
-    final String domainComponentName = pc.getParameterValue( "domainComponentId", null );
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
+    final String observationId = pc.getParameterValue( "observationId", null ); //$NON-NLS-1$
+    final String domainComponentName = pc.getParameterValue( "domainComponentId", null ); //$NON-NLS-1$
+    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null ); //$NON-NLS-1$
 
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
       return new TupleResultDomainValueData( getContext(), href, observationId, domainComponentName, targetComponentName );

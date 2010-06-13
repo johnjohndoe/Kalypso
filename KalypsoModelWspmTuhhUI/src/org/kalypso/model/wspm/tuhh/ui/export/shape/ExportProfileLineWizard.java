@@ -84,10 +84,10 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     setDialogSettings( wizardSettings );
 
     final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
-    m_resultsPage = new ProfileResultExportPage( "profileResults", results );
+    m_resultsPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     addPage( m_resultsPage );
 
-    m_exportShapePage = new ExportShapePage( "exportShapePage", fileName );
+    m_exportShapePage = new ExportShapePage( "exportShapePage", fileName ); //$NON-NLS-1$
     addPage( m_exportShapePage );
 
     setNeedsProgressMonitor( true );

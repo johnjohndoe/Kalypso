@@ -124,7 +124,7 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
     
     final double offset = Math.max( 0.0, kreisOwSoil - kreisSoil );
 
-    final GelaendeProfileCreator kreisOWCreator = new GelaendeProfileCreator( "Kreis OW", kreisData, "V01" );
+    final GelaendeProfileCreator kreisOWCreator = new GelaendeProfileCreator( "Kreis OW", kreisData, "V01" ); //$NON-NLS-2$
 
     kreisOWCreator.setSoilOffset( offset );
     kreisOWCreator.setOverwriteStation( new BigDecimal( kreisOwStation ).setScale( STATION_SCALE, BigDecimal.ROUND_HALF_UP ) );

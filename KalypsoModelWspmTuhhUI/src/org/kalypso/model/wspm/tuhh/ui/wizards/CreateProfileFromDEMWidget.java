@@ -66,7 +66,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   public CreateProfileFromDEMWidget( )
   {
-    super( "", "" );
+    super( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {
@@ -74,7 +74,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     }
     catch( final Exception e )
     {
-      System.out.println( "Failed to acquire GisMapEditor." );
+      System.out.println( "Failed to acquire GisMapEditor." ); //$NON-NLS-1$
       e.printStackTrace();
     }
 
@@ -92,7 +92,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       {
         final String name = theme.getName().getValue();
 
-        if( "GridCoverage".equals( name ) == false || (theme instanceof IKalypsoFeatureTheme) == false )
+        if( "GridCoverage".equals( name ) == false || (theme instanceof IKalypsoFeatureTheme) == false ) //$NON-NLS-1$
           continue;
 
         final FeatureList featureList = ((IKalypsoFeatureTheme) theme).getFeatureList();
@@ -105,7 +105,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     }
     catch( final Exception e )
     {
-      System.out.println( "Failed to gather required data." );
+      System.out.println( Messages.getString("CreateProfileFromDEMWidget.4") ); //$NON-NLS-1$
       e.printStackTrace();
     }
 
@@ -164,7 +164,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
       final WspmWaterBody waterBody = m_water;
 
-      new UIJob( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) )
+      new UIJob( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor arg0 )

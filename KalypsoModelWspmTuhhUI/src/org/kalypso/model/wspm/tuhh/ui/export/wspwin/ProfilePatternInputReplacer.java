@@ -58,7 +58,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
 
   private ProfilePatternInputReplacer( )
   {
-    addReplacer( new AbstractPatternInput<IProfil>( "<Name>", "Name" )
+    addReplacer( new AbstractPatternInput<IProfil>( "<Name>", "Name" ) //$NON-NLS-1$
     {
       @Override
       public String replace( final String text, final IProfil profile )
@@ -67,7 +67,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       }
     } );
 
-    addReplacer( new AbstractPatternInput<IProfil>( "<Description>", "Beschreibung" )
+    addReplacer( new AbstractPatternInput<IProfil>( "<Description>", "Beschreibung" ) //$NON-NLS-1$
     {
       @Override
       public String replace( final String text, final IProfil profile )
@@ -76,23 +76,23 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       }
     } );
 
-    addReplacer( new AbstractPatternInput<IProfil>( "<Station>", "Station" )
+    addReplacer( new AbstractPatternInput<IProfil>( "<Station>", "Station" ) //$NON-NLS-1$
     {
       @Override
       public String replace( final String text, final IProfil profile )
       {
-        final String station = String.format( "%.4f", profile.getStation() );
+        final String station = String.format( "%.4f", profile.getStation() ); //$NON-NLS-1$
         return text.replaceAll( getToken(), station );
       }
     } );
 
-    addReplacer( new AbstractPatternInput<IProfil>( "<WspWin>", "WspWin conform filename" )
+    addReplacer( new AbstractPatternInput<IProfil>( "<WspWin>", "WspWin conform filename" ) //$NON-NLS-1$
     {
       @Override
       public String replace( final String text, final IProfil profile )
       {
         final double station = profile.getStation();
-        final String stationString = String.format( "%.4f", station ).replace( '.', '+' ).replace( ' ', '0' );
+        final String stationString = String.format( "%.4f", station ).replace( '.', '+' ).replace( ' ', '0' ); //$NON-NLS-1$
         return text.replaceAll( getToken(), stationString );
       }
     } );

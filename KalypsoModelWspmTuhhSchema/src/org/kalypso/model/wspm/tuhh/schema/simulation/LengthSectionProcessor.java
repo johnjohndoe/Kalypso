@@ -92,11 +92,11 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
 
 public class LengthSectionProcessor
 {
-  private static final String TOKEN_GMLFILENAME = "%GMLFILENAME%";
+  private static final String TOKEN_GMLFILENAME = "%GMLFILENAME%"; //$NON-NLS-1$
 
-  private static final String PATTERN_RUNOFF = "<runoff>";
+  private static final String PATTERN_RUNOFF = "<runoff>"; //$NON-NLS-1$
 
-  private static final String PATTERN_CALCNAME = "<calcname>";
+  private static final String PATTERN_CALCNAME = "<calcname>"; //$NON-NLS-1$
 
   private final StringBuffer m_buffer = new StringBuffer();
 
@@ -128,7 +128,7 @@ public class LengthSectionProcessor
 
   private String m_titlePattern = "Längsschnitt - <runoff> (<calcname>)";
 
-  private String m_gmlFilePattern = "lengthSection_<runoff>.gml";
+  private String m_gmlFilePattern = "lengthSection_<runoff>.gml"; //$NON-NLS-1$
 
   private final TuhhCalculation m_calculation;
 
@@ -296,14 +296,14 @@ public class LengthSectionProcessor
   private IObservation<TupleResult> createLengthSection( final String title, final String description ) throws Exception
   {
     // Read Length-Section GML
-    final InputStream obsIs = IOUtils.toInputStream( m_buffer.toString(), "UTF-8" );
+    final InputStream obsIs = IOUtils.toInputStream( m_buffer.toString(), "UTF-8" ); //$NON-NLS-1$
     m_buffer.delete( 0, m_buffer.length() - 1 );
     final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( obsIs, null, null );
     final Feature rootFeature = obsWks.getRootFeature();
     rootFeature.setName( title );
     rootFeature.setDescription( description );
 
-    GmlSerializer.serializeWorkspace( m_gmlFile, obsWks, "UTF-8" );
+    GmlSerializer.serializeWorkspace( m_gmlFile, obsWks, "UTF-8" ); //$NON-NLS-1$
 
     return ObservationFeatureFactory.toObservation( rootFeature );
   }
@@ -311,13 +311,13 @@ public class LengthSectionProcessor
   private void createWspTinSld( final NumberRange wspRange ) throws IOException, XMLParsingException, SAXException
   {
     /* Fetch template polygon symbolizer */
-    final URL wspSldLocation = getClass().getResource( "resources/WspTin.sld" );
+    final URL wspSldLocation = getClass().getResource( "resources/WspTin.sld" ); //$NON-NLS-1$
     final FeatureTypeStyle wspStyle = SLDFactory.createFeatureTypeStyle( null, wspSldLocation );
     final Rule[] rules = wspStyle.getRules();
     final SurfacePolygonSymbolizer polySymb = (SurfacePolygonSymbolizer) rules[0].getSymbolizers()[0];
     final PolygonColorMap colorMap = polySymb.getColorMap();
 
-    final BigDecimal stepWidth = new BigDecimal( "0.01" );
+    final BigDecimal stepWidth = new BigDecimal( "0.01" ); //$NON-NLS-1$
     final BigDecimal minValue = new BigDecimal( wspRange.getMinimumDouble() );
     final BigDecimal maxValue = new BigDecimal( wspRange.getMaximumDouble() );
 
@@ -334,7 +334,7 @@ public class LengthSectionProcessor
 
     /* Save as tin-sld */
     final String styleAsString = wspStyle.exportAsXML();
-    FileUtils.writeStringToFile( m_tinSldFile, styleAsString, "UTF-8" );
+    FileUtils.writeStringToFile( m_tinSldFile, styleAsString, "UTF-8" ); //$NON-NLS-1$
   }
 
   public File getGmlFile( )
@@ -395,9 +395,9 @@ public class LengthSectionProcessor
 
     /* We just load the template and tweak the direction of the station-axis */
     final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
-    final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" );
+    final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" ); //$NON-NLS-1$
     final String kodContentReplaced = kodContent.replaceAll( TOKEN_GMLFILENAME, m_gmlFile.getName() );
-    final ChartConfigurationLoader ccl = new ChartConfigurationLoader( IOUtils.toInputStream( kodContentReplaced, "UTF-8" ) );
+    final ChartConfigurationLoader ccl = new ChartConfigurationLoader( IOUtils.toInputStream( kodContentReplaced, "UTF-8" ) ); //$NON-NLS-1$
 
     final ChartType[] charts = ccl.getCharts();
 

@@ -134,7 +134,7 @@ public class WspmTuhhProfileHelper
 
       final IRecord station = lsResult.createRecord();
       final String desc = profil.getDescription();
-      station.setValue( 10, "".equals( desc ) ? null : desc );
+      station.setValue( 10, "".equals( desc ) ? null : desc ); //$NON-NLS-1$
       station.setValue( 0, valueToBigDecimal( profil.getStation() ), true );// Station
       // Kennung
       // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE

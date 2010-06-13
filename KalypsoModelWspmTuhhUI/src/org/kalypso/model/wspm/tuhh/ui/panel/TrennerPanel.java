@@ -338,7 +338,7 @@ public class TrennerPanel extends AbstractProfilView
       m_fzl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, tf_devs[0].getPoint() ) ) ); //$NON-NLS-1$
       final Object intepretedValue = tf_devs[0].getIntepretedValue();
       if( intepretedValue == null )
-        System.out.println( "null" );
+        System.out.println( "null" ); //$NON-NLS-1$
       else
         m_fzl_combo.setSelection( new StructuredSelection( intepretedValue ) );
     }
@@ -353,7 +353,7 @@ public class TrennerPanel extends AbstractProfilView
       m_fzr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, tf_devs[1].getPoint() ) ) ); //$NON-NLS-1$
       final Object intepretedValue = tf_devs[1].getIntepretedValue();
       if( intepretedValue == null )
-        System.out.println( "null" );
+        System.out.println( "null" ); //$NON-NLS-1$
       else
         m_fzr_combo.setSelection( new StructuredSelection( intepretedValue ) );
     }

@@ -152,8 +152,8 @@ public class CreateLengthSectionWizard extends Wizard
 
       final String gmlVersion = null;
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion );
-      final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) );
+      final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final Feature rootFeature = FeatureFactory.createFeature( null, null, "LengthSectionResult", rootFeatureType, true );
       final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null, new GmlSerializerFeatureProviderFactory(), null );
       final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( extractProfiles( profilFeatures ) );
@@ -164,7 +164,7 @@ public class CreateLengthSectionWizard extends Wizard
       if( !kodFile.exists() )
       {
         final URL resource = getClass().getResource( "resources/LS_no_result.kod" ); //$NON-NLS-1$
-        String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$  //$NON-NLS-3$
+        String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
         kod = kod.replaceAll( "%TITLE%", fName ); //$NON-NLS-1$
         kod = kod.replaceAll( "%DESCRIPTION%", fName ); //$NON-NLS-1$
         final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" ); //$NON-NLS-1$

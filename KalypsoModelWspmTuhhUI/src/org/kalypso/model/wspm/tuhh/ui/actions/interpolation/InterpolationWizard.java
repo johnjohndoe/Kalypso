@@ -54,7 +54,7 @@ public class InterpolationWizard extends Wizard
 
   public InterpolationWizard( final IProfileFeature[] profiles )
   {
-    m_stationPage = new InterpolationStationPage( "stationPage", profiles );
+    m_stationPage = new InterpolationStationPage( "stationPage", profiles ); //$NON-NLS-1$
     addPage( m_stationPage );
 
     setNeedsProgressMonitor( false );

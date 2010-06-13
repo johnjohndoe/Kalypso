@@ -78,7 +78,7 @@ public class WizardAddProfileFromDEM extends Wizard implements IWorkbenchWizard
   public boolean performFinish( )
   {
     
-    if (m_page.getProfileName() != "" && m_page.getProfileStation() != 0.0) {
+    if (m_page.getProfileName() != "" && m_page.getProfileStation() != 0.0) { //$NON-NLS-1$
       m_profile.setName( m_page.getProfileName() );
       m_profile.setStation( m_page.getProfileStation() );
       return true;
@@ -93,7 +93,7 @@ public class WizardAddProfileFromDEM extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3") );
+    setWindowTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3") ); //$NON-NLS-1$
 
     m_page = new ProfileFromDEMWizardPage();
     addPage( m_page );

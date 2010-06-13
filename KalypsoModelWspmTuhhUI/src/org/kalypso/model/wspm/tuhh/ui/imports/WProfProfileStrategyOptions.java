@@ -62,7 +62,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileCreatorSt
  */
 public class WProfProfileStrategyOptions
 {
-  private static final String SETTINGS_INDEX = "strategyIndex";
+  private static final String SETTINGS_INDEX = "strategyIndex"; //$NON-NLS-1$
 
   private final WProfOptionsPage m_page;
 

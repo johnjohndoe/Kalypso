@@ -370,11 +370,11 @@ public class WspmTuhhCalcJob implements ISimulation
           // TODO: maybe move into LengthSectionProcessor?
           if( ovwMapURL != null )
           {
-            final String mapContent = FileUtilities.toString( ovwMapURL, "UTF-8" );
+            final String mapContent = FileUtilities.toString( ovwMapURL, "UTF-8" ); //$NON-NLS-1$
             final FeaturePath ftPath = reach.getWorkspace().getFeaturepathForFeature( reach );
             final String newMapContent = mapContent.replaceAll( "%FID%", ftPath.toString() ); //$NON-NLS-1$
             final File mapFile = new File( tmpDir, "map.gmt" ); //$NON-NLS-1$
-            FileUtils.writeStringToFile( mapFile, newMapContent, "UTF-8" );
+            FileUtils.writeStringToFile( mapFile, newMapContent, "UTF-8" ); //$NON-NLS-1$
             resultEater.addResult( "OvwMap", mapFile ); //$NON-NLS-1$
             log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.32" ) ); //$NON-NLS-1$
           }

@@ -62,9 +62,9 @@ import org.kalypso.wspwin.core.Plotter;
  */
 public class LngExportProfilesWizard extends ExportProfilesWizard
 {
-  private static final String FILTER_LABEL = "WspWin Plotter Length Section";
+  private static final String FILTER_LABEL = "WspWin Plotter Length Section"; //$NON-NLS-1$
 
-  private static final String EXTENSION = "lng";
+  private static final String EXTENSION = "lng"; //$NON-NLS-1$
 
   final private LngExportFileChooserPage m_profileFileChooserPage;
 
@@ -75,7 +75,7 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
-    saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION );
+    saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
     m_profileFileChooserPage = new LngExportFileChooserPage( saveDelegate, EXTENSION );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
     m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );

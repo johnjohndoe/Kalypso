@@ -183,7 +183,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   {
     addBasicData( profile );
 
-    final String newName = String.format( "%s (%s)", profile.getName(), m_description );
+    final String newName = String.format( "%s (%s)", profile.getName(), m_description ); //$NON-NLS-1$
     // FIXME: Andrea
 // final String newName = String.format( "%s", profile.getName() );
     profile.setName( newName );
@@ -206,7 +206,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final ProfilePolygones profilePolygones = m_data.getProfilePolygones();
     final int numPoints = profilePolygones.getNumPoints();
     final String[] objTypes = profilePolygones.getAllIDs();
-    final String objTypesString = Arrays.toString( objTypes, ", " );
+    final String objTypesString = Arrays.toString( objTypes, ", " ); //$NON-NLS-1$
     final String profileComment = comment + "\nVorhandene Datenarten: " + objTypesString + "\nPunkte insgesammt: " + numPoints;
     if( m_createProfileComment )
       profile.setComment( profileComment );

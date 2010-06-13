@@ -295,7 +295,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     return swapBackJumps( ukPoints );
   }
 
-  private static final BigDecimal MIN_DISTTANCE = new BigDecimal( "0.0001" );
+  private static final BigDecimal MIN_DISTTANCE = new BigDecimal( "0.0001" ); //$NON-NLS-1$
 
   private static final double dMAX_BACKJUMP_DISTANCE = 0.30;
 

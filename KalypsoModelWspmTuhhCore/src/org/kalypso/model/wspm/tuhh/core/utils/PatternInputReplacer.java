@@ -66,7 +66,7 @@ public class PatternInputReplacer<T>
     final Formatter formatter = new Formatter();
 
     for( final IPatternInput< ? extends T> token : m_replacers )
-      formatter.format( "%s: %s%n", token.getToken(), token.getLabel() );
+      formatter.format( "%s: %s%n", token.getToken(), token.getLabel() ); //$NON-NLS-1$
 
     return formatter.toString();
   }

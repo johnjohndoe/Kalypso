@@ -117,7 +117,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project, waterBodies, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     try
     {
-      m_workspace.postCommand( new EmptyCommand( "", false ) );
+      m_workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

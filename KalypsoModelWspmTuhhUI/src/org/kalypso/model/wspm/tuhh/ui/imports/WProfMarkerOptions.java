@@ -170,12 +170,12 @@ public class WProfMarkerOptions
 
   private int[] parseIntList( final String currentText ) throws NumberFormatException
   {
-    String[] split = currentText.split( ",", -1 );
+    String[] split = currentText.split( ",", -1 ); //$NON-NLS-1$
 
     while( true )
     {
       final int splitLenght = split.length;
-      split = (String[]) ArrayUtils.removeElement( split, "" );
+      split = (String[]) ArrayUtils.removeElement( split, "" ); //$NON-NLS-1$
       if( splitLenght == split.length )
         break;
     }

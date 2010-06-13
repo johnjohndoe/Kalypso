@@ -158,7 +158,7 @@ public class WProfPropertyPage extends WizardPage
     }
 
     for( final Text valueText : m_valueTexts )
-      valueText.setText( "" );
+      valueText.setText( "" ); //$NON-NLS-1$
   }
 
   private void createRow( final Composite parent, final String key )

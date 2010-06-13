@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class WspmResultLengthSection
 {
-  private static final String LS_TYPE_INTERPOLATED = "i";
+  private static final String LS_TYPE_INTERPOLATED = "i"; //$NON-NLS-1$
 
   public static WspmResultLengthSection create( final IFile observationFile, final GMLXPath gmlxPath )
   {

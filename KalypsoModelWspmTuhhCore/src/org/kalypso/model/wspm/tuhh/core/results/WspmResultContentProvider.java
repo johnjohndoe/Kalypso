@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TreeColumn;
  */
 public class WspmResultContentProvider implements ITreeContentProvider
 {
-  private static final String DATA_PROPERTY = "wspmResultTreeProperty";
+  private static final String DATA_PROPERTY = "wspmResultTreeProperty"; //$NON-NLS-1$
 
   enum Property
   {

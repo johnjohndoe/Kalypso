@@ -69,11 +69,11 @@ import org.kalypso.observation.result.IRecord;
  */
 public class CsvSink
 {
-  private final static String DOUBLE_FORMAT = "%.4f";
+  private final static String DOUBLE_FORMAT = "%.4f"; //$NON-NLS-1$
 
-  private final static String TAB_DOUBLE_FORMAT = "\t%.4f";
+  private final static String TAB_DOUBLE_FORMAT = "\t%.4f"; //$NON-NLS-1$
 
-  private final String lineSeparator = System.getProperty( "line.separator" );
+  private final String lineSeparator = System.getProperty( "line.separator" ); //$NON-NLS-1$
 
   private final WspmResultLengthSectionColumn[] m_columns;
 
@@ -88,7 +88,7 @@ public class CsvSink
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
 
     // get metadata from profile
-    final String metaString = String.format( DOUBLE_FORMAT + "\t'%s'\t'%s'\t'%s'", bigStation, profil.getName(), profil.getDescription(), profil.getComment() );
+    final String metaString = String.format( DOUBLE_FORMAT + "\t'%s'\t'%s'\t'%s'", bigStation, profil.getName(), profil.getDescription(), profil.getComment() ); //$NON-NLS-1$
 
     final int[] componentIndices = new int[comps.length];
     for( int i = 0; i < componentIndices.length; i++ )
@@ -103,7 +103,7 @@ public class CsvSink
       {
         final int index = profil.indexOfProperty( component );
         if( index < 0 )
-          formatter.format( "\tnull" );
+          formatter.format( "\tnull" ); //$NON-NLS-1$
         else
         {
           final Object value = point.getValue( index );
@@ -127,7 +127,7 @@ public class CsvSink
     if( value instanceof Number )
       formatter.format( TAB_DOUBLE_FORMAT, value );
     else
-      formatter.format( "\t%s", value );
+      formatter.format( "\t%s", value ); //$NON-NLS-1$
   }
 
   private void writeResults( final BigDecimal station, final Formatter formatter )
@@ -144,10 +144,10 @@ public class CsvSink
     formatter.format( "Station\tName\tBeschreibung\tKommentar" );
 
     for( final IComponent comp : comps )
-      formatter.format( "\t'%s'", comp.getName() );
+      formatter.format( "\t'%s'", comp.getName() ); //$NON-NLS-1$
 
     for( final WspmResultLengthSectionColumn ls : m_columns )
-      formatter.format( "\t'%s'", ls.getLabel() );
+      formatter.format( "\t'%s'", ls.getLabel() ); //$NON-NLS-1$
 
     formatter.format( lineSeparator );
   }

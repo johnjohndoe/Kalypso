@@ -76,8 +76,8 @@ public class LengthSectionExporter
     m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, new String[] { "DECKENUNTERK" } ); //$NON-NLS-1$
     // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
     // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
-    m_PropertyMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
-    m_PropertyMap.put( "TEXT", new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$
+    m_PropertyMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    m_PropertyMap.put( "TEXT", new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, new String[] { "Wasserspiegel NN+m" } );//$NON-NLS-1$
 
     final char[] space = new char[200];
@@ -93,7 +93,7 @@ public class LengthSectionExporter
       return null;
 
     dbh.setFirstLine( fl.length > 0 ? fl[0] : id );
-    dbh.setSecondLine( fl.length > 1 ? blanc200 + fl[1] + "@" : "" );//$NON-NLS-1$
+    dbh.setSecondLine( fl.length > 1 ? blanc200 + fl[1] + "@" : "" );//$NON-NLS-1$ //$NON-NLS-2$
     dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );//$NON-NLS-1$
     return dbh;
   }

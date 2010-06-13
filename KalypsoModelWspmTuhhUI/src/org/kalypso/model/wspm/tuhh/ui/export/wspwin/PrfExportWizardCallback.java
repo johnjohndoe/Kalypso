@@ -70,7 +70,7 @@ public class PrfExportWizardCallback implements IPrfExporterCallback
     final String fileName = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_filenamePattern, profil );
     final String uniqueFileName = createUniqueFilename( fileName );
     final String cleanFileName = cleanupFilename( uniqueFileName );
-    return new File( m_exportDirectory, cleanFileName + ".prf" );
+    return new File( m_exportDirectory, cleanFileName + ".prf" ); //$NON-NLS-1$
   }
 
   private String createUniqueFilename( final String fileName )

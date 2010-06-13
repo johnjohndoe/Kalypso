@@ -70,7 +70,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   public GelaendeProfileCreator( final ProfileData data, final String soilPolygon )
   {
-    this( "Gelände", data, soilPolygon );
+    this( "Gelände", data, soilPolygon ); //$NON-NLS-1$
   }
 
   public GelaendeProfileCreator( final String description, final ProfileData data, final String soilPolygon )
@@ -82,14 +82,14 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   protected IWProfPoint[] getSoilPoints( )
   {
-    final ProfilePolygon profilePolygon = new ProfilePolygon( "-" );
+    final ProfilePolygon profilePolygon = new ProfilePolygon( "-" ); //$NON-NLS-1$
 
     final IWProfPoint[] soilPoints = getPoints( m_soilPointsID );
     for( final IWProfPoint point : soilPoints )
       profilePolygon.add( point );
 
     /* We also add points that have no object-type: theses are probably points from the prolongation tool */
-    final IWProfPoint[] unknownPoints = getPoints( "" );
+    final IWProfPoint[] unknownPoints = getPoints( "" ); //$NON-NLS-1$
     if( unknownPoints != null )
     {
       for( final IWProfPoint point : unknownPoints )
@@ -235,7 +235,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
         return;
 
       default:
-        throw new IllegalArgumentException( "numberOfMarkersToAdd must be less than 2" );
+        throw new IllegalArgumentException( "numberOfMarkersToAdd must be less than 2" ); //$NON-NLS-1$
     }
   }
 

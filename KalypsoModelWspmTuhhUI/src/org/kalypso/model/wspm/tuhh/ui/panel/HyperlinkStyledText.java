@@ -165,11 +165,11 @@ public class HyperlinkStyledText
   {
     final Collection<StyleRange> ranges = new ArrayList<StyleRange>();
 
-    final Pattern pattern = Pattern.compile( " (http|ftp|https|file):/.*?( |$)" );
+    final Pattern pattern = Pattern.compile( " (http|ftp|https|file):/.*?( |$)" ); //$NON-NLS-1$
     final Matcher matcher = pattern.matcher( text );
     while( matcher.find() )
     {
-      final boolean spaceEnd = " ".equals( matcher.group( 2 ) );
+      final boolean spaceEnd = " ".equals( matcher.group( 2 ) ); //$NON-NLS-1$
 
       final int start = matcher.start() + 1;
       final int end = matcher.end() - (spaceEnd ? 1 : 0);

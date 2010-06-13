@@ -76,20 +76,20 @@ public class SobekProfileExporter
   {
     final String profileName = profil.getName();
     final String pnam = getPNam( profileName );
-    final String userPrefix = "";
+    final String userPrefix = ""; //$NON-NLS-1$
 
     // TODO: get id-pattern from user: see .prf export how to do it
     // final Object id = String.format( "%s%s%.4f", userPrefix, profil.getStation() );
 
-    final Object id = String.format( "%s%s", userPrefix, pnam );
+    final Object id = String.format( "%s%s", userPrefix, pnam ); //$NON-NLS-1$
 
     final IRecord[] points = getPointsToExport( profil );
 
     if( points == null )
       return;
 
-    m_formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName );
-    m_formatter.format( "TBLE%n" );
+    m_formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName ); //$NON-NLS-1$
+    m_formatter.format( "TBLE%n" ); //$NON-NLS-1$
 
     final int widhtIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int heightIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
@@ -98,17 +98,17 @@ public class SobekProfileExporter
     {
       final Number y = (Number) point.getValue( widhtIndex );
       final Number z = (Number) point.getValue( heightIndex );
-      m_formatter.format( Locale.US, "%.4f %.4f <%n", y, z );
+      m_formatter.format( Locale.US, "%.4f %.4f <%n", y, z ); //$NON-NLS-1$
     }
-    m_formatter.format( "tble%n" );
-    m_formatter.format( "crds%n" );
+    m_formatter.format( "tble%n" ); //$NON-NLS-1$
+    m_formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
   private String getPNam( final String profileName )
   {
-    final String[] split = profileName.split( " " );
+    final String[] split = profileName.split( " " ); //$NON-NLS-1$
     if( split.length == 0 )
-      return "-";
+      return "-"; //$NON-NLS-1$
 
     return split[0];
   }

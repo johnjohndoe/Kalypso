@@ -82,7 +82,7 @@ public class WspmResultLengthSectionColumn implements Formattable
 
     m_componentLabel = component.getName();
     m_observationName = m_observation.getName();
-    m_label = String.format( "%s - %s", m_observationName, m_componentLabel );
+    m_label = String.format( "%s - %s", m_observationName, m_componentLabel ); //$NON-NLS-1$
   }
 
   public String getResultName( )

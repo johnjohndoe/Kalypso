@@ -67,7 +67,7 @@ class KreisProfileCreator extends BridgeProfileCreator
     final String[] allIDs = polygones.getAllIDs();
     for( final String id : allIDs )
     {
-      if( id.startsWith( "K" ) )
+      if( id.startsWith( "K" ) ) //$NON-NLS-1$
       {
         final IWProfPoint[] kreisPoints = polygones.getPolygon( id ).getPoints();
         soilPoints = applyKreis( soilPoints, kreisPoints );
@@ -115,7 +115,7 @@ class KreisProfileCreator extends BridgeProfileCreator
     final String[] allIDs = polygones.getAllIDs();
     for( final String id : allIDs )
     {
-      if( id.startsWith( "K" ) )
+      if( id.startsWith( "K" ) ) //$NON-NLS-1$
       {
         final IWProfPoint[] kreisPoints = polygones.getPolygon( id ).getPoints();
         final Envelope envelope = calculateEnvelope( kreisPoints );
