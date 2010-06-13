@@ -154,6 +154,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     return (FeatureList) getProperty( QNAME_PROP_REACHSEGMENTMEMBER );
   }
 
+  @SuppressWarnings("unchecked")
   public void recreateMarkerList( )
   {
     final IFeatureType featureType = getFeatureType();

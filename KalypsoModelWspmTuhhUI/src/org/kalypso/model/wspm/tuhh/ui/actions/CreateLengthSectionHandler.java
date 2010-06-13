@@ -60,15 +60,6 @@ public class CreateLengthSectionHandler extends AbstractProfilesHandler
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.action.AbstractProfilesHandler#getErrorMessage()
-   */
-  @Override
-  protected String getErrorMessage( )
-  {
-    return null;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.ui.action.AbstractProfilesHandler#getTitle()
    */
   @Override
