@@ -70,8 +70,7 @@ public class PointSnapper
 
   private boolean m_snappingActive = true;
 
-  @SuppressWarnings("unchecked")
-  private IFE1D2DNode m_snapNode = null;
+  private IFE1D2DNode< ? > m_snapNode = null;
 
   private final IMapPanel m_mapPanel;
 
@@ -89,8 +88,7 @@ public class PointSnapper
    * 
    * @return The snapped node, or <code>null</code> if none was found.
    */
-  @SuppressWarnings("unchecked")
-  public IFE1D2DNode moved( final GM_Point p )
+  public IFE1D2DNode< ? > moved( final GM_Point p )
   {
     m_snapNode = null;
 
@@ -122,7 +120,7 @@ public class PointSnapper
 
       final Color color = g.getColor();
 
-      Color preViewColor = new Color( 50, 50, 255 );
+      final Color preViewColor = new Color( 50, 50, 255 );
       g.setColor( preViewColor );
 
       g.drawRect( lowX, lowY, SNAPPING_RADIUS, SNAPPING_RADIUS );

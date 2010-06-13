@@ -147,17 +147,17 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
     final CommandableWorkspace commandableWorkspace = ((IKalypsoFeatureTheme) activeTheme).getWorkspace();
 
-    final FeatureList themeFeatureList = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
-    if( themeFeatureList == null )
+    final FeatureList profileFeatures = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
+    if( profileFeatures == null )
       return null;
 
-    final Feature parentFeature = themeFeatureList.getParentFeature();
+    final Feature parentFeature = profileFeatures.getParentFeature();
 
     final WspmWaterBody water = ProfileUiUtils.findWaterbody( parentFeature );
     final TuhhReach reach = ProfileUiUtils.findReach( parentFeature );
 
     if( m_strategyExtendProfile )
-      return new ExtendProfileJob( this, commandableWorkspace, mapPanel, water, reach, coverages );
+      return new ExtendProfileJob( this, mapPanel, coverages, profileFeatures );
     else
       return new CreateNewProfileJob( this, commandableWorkspace, mapPanel, water, reach, coverages );
   }
@@ -224,7 +224,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       final GM_Point adjustedPos = (m_strategy).adjustPoint( pos, m_geoBuilder.getPointCount() );
       if( adjustedPos != null )
       {
-        m_geoBuilder.addPoint( pos );
+        m_geoBuilder.addPoint( adjustedPos );
         repaintMap();
       }
     }
@@ -240,7 +240,9 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    m_currentPoint = p;
+    final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
+    final GM_Point adjustedPos = (m_strategy).adjustPoint( pos, m_geoBuilder.getPointCount() );
+    m_currentPoint = adjustedPos == null ? null : p;
 
     repaintMap();
   }
@@ -255,6 +257,15 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     if( mapPanel == null )
       return;
 
+    if( m_strategy != null )
+    {
+      final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
+      m_strategy.paint( g, mapPanel.getProjection(), currentPos );
+    }
+
+    if( m_geoBuilder != null )
+      m_geoBuilder.paint( g, mapPanel.getProjection(), m_currentPoint );
+
     if( m_tooltip != null )
     {
       final Rectangle bounds = mapPanel.getScreenBounds();
@@ -263,9 +274,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
       m_tooltip.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
-
-    if( m_geoBuilder != null )
-      m_geoBuilder.paint( g, mapPanel.getProjection(), m_currentPoint );
   }
 
   @Override

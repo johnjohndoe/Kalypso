@@ -94,7 +94,6 @@ public class CreateFE2DElementWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void paint( final Graphics g )
   {
@@ -124,7 +123,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
     if( m_pointSnapper != null )
     {
-      final IFE1D2DNode snapNode = m_pointSnapper.getSnapNode();
+      final IFE1D2DNode< ? > snapNode = m_pointSnapper.getSnapNode();
       if( snapNode == null )
         return;
 
@@ -258,7 +257,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     try
     {
       final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      IFeatureWrapper2 lNewParentFeature = m_builder.finish( command );
+      final IFeatureWrapper2 lNewParentFeature = m_builder.finish( command );
       if( command != null && lNewParentFeature != null )
         m_nodeTheme.getWorkspace().postCommand( command );
     }

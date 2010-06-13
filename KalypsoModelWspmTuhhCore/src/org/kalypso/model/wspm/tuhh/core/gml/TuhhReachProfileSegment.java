@@ -65,7 +65,7 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
 
   private static final QName PROPERTY_PROFILE_MEMBER = new QName( NS_WSPM_TUHH, "profileMember" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_PROFILE_LOCATION = new QName( NS_WSPM_TUHH, "profileLocation" ); //$NON-NLS-1$
+  public static final QName PROPERTY_PROFILE_LOCATION = new QName( NS_WSPM_TUHH, "profileLocation" ); //$NON-NLS-1$
 
   public TuhhReachProfileSegment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
