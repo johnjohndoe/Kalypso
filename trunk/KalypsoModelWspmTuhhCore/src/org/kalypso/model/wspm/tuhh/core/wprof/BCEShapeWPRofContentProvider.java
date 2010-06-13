@@ -143,7 +143,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   public String getRiverId( )
   {
     final Object riverId = getProperty( "GEWAESSER_ID", Object.class, "Unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return String.format( "%5s", riverId ).replaceAll( " ", "0" );
+    return String.format( "%5s", riverId ).replaceAll( " ", "0" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /**
@@ -264,7 +264,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   private String[] searchImages( final File photoDir )
   {
     final String pNam = getPNam();
-    final FilenameFilter photoFilter = new PrefixSuffixFilter( pNam, "" );
+    final FilenameFilter photoFilter = new PrefixSuffixFilter( pNam, "" ); //$NON-NLS-1$
     return photoDir.list( photoFilter );
   }
 
@@ -286,7 +286,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
   public Date getDate( )
   {
-    return getProperty( "P_AUFNDATUM", Date.class, null );
+    return getProperty( "P_AUFNDATUM", Date.class, null ); //$NON-NLS-1$
   }
 
   @Override
@@ -294,7 +294,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   {
     // FIXME
     final Date date = getDate();
-    final String dateText = date == null ? "-" : DateFormat.getDateInstance( DateFormat.MEDIUM ).format( date );
+    final String dateText = date == null ? "-" : DateFormat.getDateInstance( DateFormat.MEDIUM ).format( date ); //$NON-NLS-1$
 // final String dateText = (String) m_feature.getProperty( "DATUM" );
 
     final String pnam = getPNam();
@@ -308,7 +308,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   {
     final File contextDir = getContextDir( m_pdfContext );
     final String pNam = getPNam();
-    final File pdfFile = new File( contextDir, pNam + ".pdf" );
+    final File pdfFile = new File( contextDir, pNam + ".pdf" ); //$NON-NLS-1$
 
     try
     {
@@ -318,7 +318,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return "";
+      return ""; //$NON-NLS-1$
     }
   }
 
@@ -326,7 +326,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   public String getPNam( )
   {
     final String pnam = getProperty( SPEC_P_NAM, String.class, "Profilename unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return pnam.replaceAll( "\"", "" );
+    return pnam.replaceAll( "\"", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

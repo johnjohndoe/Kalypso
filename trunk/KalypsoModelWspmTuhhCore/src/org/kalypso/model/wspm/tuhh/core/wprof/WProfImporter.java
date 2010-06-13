@@ -93,7 +93,7 @@ public class WProfImporter
     monitor.beginTask( String.format( "Importing %s", m_shapePath ), 1000 );
 
     /* Load Shape */
-    final File prjFile = new File( m_shapePath + ".prj" );
+    final File prjFile = new File( m_shapePath + ".prj" ); //$NON-NLS-1$
     final String shapeSrs = ShapeSerializer.loadCrs( prjFile.toURI().toURL(), m_shapeDefaultSrs );
 
     monitor.subTask( "reading shape file..." );

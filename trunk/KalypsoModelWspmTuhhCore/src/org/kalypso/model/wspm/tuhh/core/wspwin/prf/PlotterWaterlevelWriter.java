@@ -97,7 +97,7 @@ public class PlotterWaterlevelWriter
 
     final String componentName = property.getName();
     final String strandName = "unknown";
-    final String secondLine = String.format( "%100s%s@%s", " ", componentName, strandName );
+    final String secondLine = String.format( "%100s%s@%s", " ", componentName, strandName ); //$NON-NLS-1$ //$NON-NLS-2$
     dbh.setSecondLine( secondLine );
 
     return writeCoords( m_profile, property, dbh );

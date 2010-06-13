@@ -547,9 +547,9 @@
 	</command>
     <command id="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" name="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.name" description="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description"/>
     <command
-          description="Create a new profile by interpolating between two existing profiles."
+          description="%command.description.6"
           id="org.kalypso.model.wspm.ui.command.profile.interpolation"
-          name="Interpolation">
+          name="%command.name.9">
     </command>
   </extension>
   <extension

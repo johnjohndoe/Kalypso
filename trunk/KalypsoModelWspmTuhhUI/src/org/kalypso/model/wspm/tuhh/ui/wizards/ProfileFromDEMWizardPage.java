@@ -75,28 +75,28 @@ public class ProfileFromDEMWizardPage extends WizardPage
   {
     super( "profilefromdemwizardpage" ); //$NON-NLS-1$
 
-    m_name = "";
+    m_name = ""; //$NON-NLS-1$
     m_station = 0.0;
     
-    setTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") );
-    setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") );
+    setTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") ); //$NON-NLS-1$
     
   }
   
   protected void checkPageCompleted( )
   {
 
-    if (m_name == "")
+    if (m_name == "") //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6") );
+      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6") ); //$NON-NLS-1$
 
       setPageComplete( false );
       return;
     }
     if ( m_station == 0.0) {
       setMessage( null );
-      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.7") );
+      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.7") ); //$NON-NLS-1$
 
       setPageComplete( false );
       return;

@@ -65,11 +65,11 @@ public class ExportFileChooserPage extends ValidatingWizardPage
 
   private final String m_extension;
 
-  private String m_fileGroupText = "";
+  private String m_fileGroupText = ""; //$NON-NLS-1$
 
   public ExportFileChooserPage( final IFileChooserDelegate fileChooser, final String extension )
   {
-    super( "exportProfileFileChooserPage" );
+    super( "exportProfileFileChooserPage" ); //$NON-NLS-1$
 
     m_fileChooser = fileChooser;
     m_extension = extension;

@@ -64,7 +64,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
 {
   private static final String FILTER_LABEL = "SOBEK Profile.def File";
 
-  private static final String EXTENSION = "def";
+  private static final String EXTENSION = "def"; //$NON-NLS-1$
 
   private final ExportFileChooserPage m_profileFileChooserPage;
 
@@ -75,7 +75,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
-    saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION );
+    saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
     m_profileFileChooserPage = new ExportFileChooserPage( saveDelegate, EXTENSION );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
     m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );

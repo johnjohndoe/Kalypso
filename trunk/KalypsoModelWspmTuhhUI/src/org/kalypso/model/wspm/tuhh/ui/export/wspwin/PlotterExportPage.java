@@ -56,7 +56,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
  */
 public class PlotterExportPage extends ExportPrfFileChooserPage
 {
-  private static final String SETTINGS_DO_PRINT = "directPrint";
+  private static final String SETTINGS_DO_PRINT = "directPrint"; //$NON-NLS-1$
 
   private boolean m_doPrint;
 

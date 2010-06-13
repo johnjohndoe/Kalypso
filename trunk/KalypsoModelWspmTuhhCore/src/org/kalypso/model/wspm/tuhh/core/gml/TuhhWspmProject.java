@@ -71,8 +71,6 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  */
 public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 {
-  public static final QName QName = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "" );
-
   public static final QName QNAME_PROP_CALC_MEMBER = new QName( NS_WSPM, "calculationMember" ); //$NON-NLS-1$
 
   public TuhhWspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )

@@ -141,14 +141,14 @@ public class InterpolationStationPage extends WizardPage
     // // 2nd line
 
     final Label prevStation = new Label( group, SWT.NONE );
-    prevStation.setText( "" );
+    prevStation.setText( "" ); //$NON-NLS-1$
     prevStation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Text stationEditor = new Text( group, SWT.BORDER | SWT.TRAIL );
     stationEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Label nextStation = new Label( group, SWT.NONE );
-    nextStation.setText( "" );
+    nextStation.setText( "" ); //$NON-NLS-1$
     nextStation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     // / Rules

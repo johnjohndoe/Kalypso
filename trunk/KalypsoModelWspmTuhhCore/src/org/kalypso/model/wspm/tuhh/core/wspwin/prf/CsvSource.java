@@ -79,9 +79,9 @@ public class CsvSource implements IProfilSource
 
   private IComponent getComponent( final String key )
   {
-    if( "BREITE".equalsIgnoreCase( key ) )
+    if( "BREITE".equalsIgnoreCase( key ) ) //$NON-NLS-1$
       return m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    if( "HOEHE".equalsIgnoreCase( key ) )
+    if( "HOEHE".equalsIgnoreCase( key ) ) //$NON-NLS-1$
       return m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     else
       return null;
@@ -107,13 +107,13 @@ public class CsvSource implements IProfilSource
 
     m_columns = tableReader.readNext();
 
-    final int m_station = getColumnIndex( "STATION" );
+    final int m_station = getColumnIndex( "STATION" ); //$NON-NLS-1$
     String[] values = tableReader.readNext();
     while( values != null )
     {
       if( values.length == m_columns.length )
       {
-        final String key = m_station < 0 ? "-" : values[m_station];
+        final String key = m_station < 0 ? "-" : values[m_station]; //$NON-NLS-1$
         final TupleResult result = getResult( key );
         final IRecord record = result.createRecord();
 

@@ -64,7 +64,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 {
   private static final String FILTER_LABEL = "Comma Separated File";
 
-  private static final String EXTENSION = "csv";
+  private static final String EXTENSION = "csv"; //$NON-NLS-1$
 
   private final ExportFileChooserPage m_profileFileChooserPage;
 
@@ -78,11 +78,11 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
 
-    m_resultPage = new ProfileResultExportPage( "profileResults", results );
+    m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     addPage( m_resultPage );
 
     final FileChooserDelegateSave delegateSave = new FileChooserDelegateSave();
-    delegateSave.addFilter( FILTER_LABEL, "*." + EXTENSION );
+    delegateSave.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
 
     m_profileFileChooserPage = new ExportFileChooserPage( delegateSave, EXTENSION );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );

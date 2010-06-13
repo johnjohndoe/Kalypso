@@ -52,7 +52,7 @@ public final class WspmResultFactory
 {
   private WspmResultFactory( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   public static final IWspmResultNode createResultNode( final IWspmResultNode parent, final Feature feature )

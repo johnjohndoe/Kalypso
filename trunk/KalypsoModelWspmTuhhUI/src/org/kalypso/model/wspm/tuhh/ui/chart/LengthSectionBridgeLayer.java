@@ -70,7 +70,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Object ok = tr.get( index ).getValue( targetOKComponentIndex );
     if( commentIndex < 0 )
       return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
-    return String.format( TOOLTIP_FORMAT + "%n%s", new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit,
+    return String.format( TOOLTIP_FORMAT + "%n%s", new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit, //$NON-NLS-1$
         tr.get( index ).getValue( commentIndex ) } );
 
   }
