@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -49,64 +50,55 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-
 
 /**
  * @author barbarins
- *
  */
 public class ProfileFromDEMWizardPage extends WizardPage
 {
-  protected String m_name;
-  protected Double m_station;
-  
-  public String getProfileName()
-  {
-    return m_name;
-  }
+  private String m_name;
 
-  public double getProfileStation()
-  {
-    return m_station;
-  }
-  
-  public ProfileFromDEMWizardPage() 
+  private double m_station;
+
+  public ProfileFromDEMWizardPage( )
   {
     super( "profilefromdemwizardpage" ); //$NON-NLS-1$
 
     m_name = ""; //$NON-NLS-1$
-    m_station = 0.0;
-    
-    setTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") ); //$NON-NLS-1$
-    setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4") ); //$NON-NLS-1$
-    
+    m_station = Double.NaN;
+
+    setTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4" ) ); //$NON-NLS-1$
   }
-  
+
+  public String getProfileName( )
+  {
+    return m_name;
+  }
+
+  public double getProfileStation( )
+  {
+    return m_station;
+  }
+
   protected void checkPageCompleted( )
   {
-
-    if (m_name == "") //$NON-NLS-1$
-    {
-      setMessage( null );
-      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6") ); //$NON-NLS-1$
-
-      setPageComplete( false );
-      return;
-    }
-    if ( m_station == 0.0) {
-      setMessage( null );
-      setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.7") ); //$NON-NLS-1$
-
-      setPageComplete( false );
-      return;
-      
-    }
-    
     setMessage( null );
-    setErrorMessage( null );
-
     setPageComplete( true );
+
+    if( Double.isNaN( m_station ) )
+    {
+      setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.7" ), ERROR ); //$NON-NLS-1$
+      setPageComplete( false );
+    }
+
+    if( StringUtils.isEmpty( m_name ) )
+    {
+      setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6" ), ERROR ); //$NON-NLS-1$
+      setPageComplete( false );
+    }
   }
 
   /**
@@ -123,7 +115,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     /* name */
     final Label lName = new Label( container, SWT.NONE );
-    lName.setText( "Name");
+    lName.setText( "Name" );
 
     final Text tName = new Text( container, SWT.BORDER );
     tName.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -133,16 +125,14 @@ public class ProfileFromDEMWizardPage extends WizardPage
       @Override
       public void modifyText( final ModifyEvent e )
       {
-        m_name = tName.getText();
-        checkPageCompleted();
+        setName( tName.getText() );
       }
     } );
-
 
     /* station */
     final Label lStation = new Label( container, SWT.NONE );
     lStation.setText( "Station" );
-    
+
     final Text tStation = new Text( container, SWT.BORDER );
     tStation.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -151,17 +141,20 @@ public class ProfileFromDEMWizardPage extends WizardPage
       @Override
       public void modifyText( final ModifyEvent e )
       {
-        
-        try {
-          m_station = Double.parseDouble( tStation.getText() );
-        }
-        catch( Exception ex) {
-          m_station = 0.0;
-        }
-        checkPageCompleted();
+        setStation( tStation.getText() );
       }
     } );
+  }
 
+  protected void setStation( final String text )
+  {
+    m_station = NumberUtils.parseQuietDouble( text );
+    checkPageCompleted();
+  }
+
+  protected void setName( final String text )
+  {
+    m_name = text;
     checkPageCompleted();
   }
 

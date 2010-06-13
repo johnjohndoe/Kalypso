@@ -494,7 +494,7 @@
     <handler
           commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM">
           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-        	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.tuhh.ui.wizards.CreateProfileFromDEMWidget" />
+        	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.tuhh.ui.actions.dtm.CreateProfileFromDEMWidget" />
       	  </class>
   	  	<enabledWhen>
 			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>

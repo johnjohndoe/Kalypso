@@ -50,20 +50,17 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * TODO: move into separate package
@@ -72,11 +69,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class ProfileInterpolation
 {
-  private final IProfileFeature m_previousProfile;
+  private final IProfil m_previousProfile;
 
-  private final IProfileFeature m_nextProfile;
+  private final IProfil m_nextProfile;
 
-  public ProfileInterpolation( final IProfileFeature previousProfile, final IProfileFeature nextProfile )
+  public ProfileInterpolation( final IProfil previousProfile, final IProfil nextProfile )
   {
     m_previousProfile = previousProfile;
     m_nextProfile = nextProfile;
@@ -85,95 +82,86 @@ public class ProfileInterpolation
   /**
    * Interpolates a new profile between two existing ones at the given station.
    */
-  public IProfileFeature createProfileAt( final String id, final BigDecimal station )
+  public IProfil createProfileAt( final BigDecimal station, final String profileType )
   {
-    final IProfileFeature profileFeature = createProfileFeature( id );
-    return interpolate( station, profileFeature );
+    return interpolate( station, profileType );
   }
 
   /**
    * Interpolates between the two existing profiles and fills the result into the given feature, which should be empty
    * by preference.
    */
-  public IProfileFeature interpolate( final BigDecimal station, final IProfileFeature profileFeature )
+  public IProfil interpolate( final BigDecimal station, final String profileType )
   {
-    profileFeature.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    profileFeature.setBigStation( station );
+    final IProfil profile = ProfilFactory.createProfil( profileType );
 
-    profileFeature.setSrsName( m_previousProfile.getSrsName() );
+    profile.setStation( station.doubleValue() );
 
-    interpolateProfile( profileFeature );
+    final Object prevCrs = m_previousProfile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, prevCrs );
 
-    return profileFeature;
+    interpolateProfile( profile );
+    /* update profile: add durchstroemte bereiche, trennflaechen */
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IRecord[] points = profile.getPoints();
+    if( points.length > 1 )
+    {
+      final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[0] ).setValue( defaultValue );
+      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[points.length - 1] ).setValue( defaultValue );
+    }
+
+    return profile;
   }
 
-  private IProfileFeature createProfileFeature( final String id )
-  {
-    try
-    {
-      return (IProfileFeature) FeatureFactory.createFeature( id, IProfileFeature.QNAME_PROFILE );
-    }
-    catch( final GMLSchemaException e )
-    {
-      // will not happen
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  private void interpolateProfile( final IProfileFeature profileFeature )
+  private IProfil interpolateProfile( final IProfil profile )
   {
     try
     {
       if( m_previousProfile == null )
       {
-        profileFeature.setDescription( String.format( "Interpolation not possible: downstream profile %s not found.", m_previousProfile.getBigStation() ) );
-        return;
+        profile.setDescription( String.format( "Interpolation not possible: downstream profile %s not found.", m_previousProfile.getStation() ) );
+        return null;
       }
 
       if( m_nextProfile == null )
       {
-        profileFeature.setDescription( String.format( "Interpolation not possible: upstream profile %s not found.", m_nextProfile.getBigStation() ) );
-        return;
+        profile.setDescription( String.format( "Interpolation not possible: upstream profile %s not found.", m_nextProfile.getStation() ) );
+        return null;
       }
 
-      final String description = String.format( "Interpolated profile %s - %s", m_previousProfile.getBigStation(), m_nextProfile.getBigStation() );
-      profileFeature.setName( description );
+      final String description = String.format( "Interpolated profile %s - %s", m_previousProfile.getStation(), m_nextProfile.getStation() );
+      profile.setName( description );
 
-      doInterpolation( profileFeature );
+      return doInterpolation( profile );
     }
     catch( final SameXValuesException e )
     {
       e.printStackTrace();
-      profileFeature.setDescription( String.format( "Interpolation failed: %s", e.toString() ) );
-      return;
+      profile.setDescription( String.format( "Interpolation failed: %s", e.toString() ) );
+      return null;
     }
   }
 
-  private void doInterpolation( final IProfileFeature profileFeature ) throws SameXValuesException
+  private IProfil doInterpolation( final IProfil profil ) throws SameXValuesException
   {
-    final IProfil previousProfil = m_previousProfile.getProfil();
-    final IProfil nextProfil = m_nextProfile.getProfil();
-    final IProfil profil = profileFeature.getProfil();
-
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
     final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     profil.addPointProperty( breiteComponent );
 
-    createInterpolationPoints( previousProfil, nextProfil, profil );
+    createInterpolationPoints( profil );
 
-    final IComponent[] prevComponents = previousProfil.getPointProperties();
+    final IComponent[] prevComponents = m_previousProfile.getPointProperties();
     for( final IComponent prevComponent : prevComponents )
-      interpolateComponent( previousProfil, nextProfil, profil, prevComponent );
+      interpolateComponent( m_previousProfile, m_nextProfile, profil, prevComponent );
 
-    /* Write changes back into profile feature */
-    ProfileFeatureFactory.toFeature( profil, profileFeature );
+    return profil;
   }
 
-  private void createInterpolationPoints( final IProfil prevProfil, final IProfil nextProfil, final IProfil profil ) throws SameXValuesException
+  private void createInterpolationPoints( final IProfil profil ) throws SameXValuesException
   {
-    final Double[] prevWidths = getPoints( prevProfil );
-    final Double[] nextWidths = getPoints( nextProfil );
+    final Double[] prevWidths = getPoints( m_previousProfile );
+    final Double[] nextWidths = getPoints( m_nextProfile );
     if( prevWidths.length < 2 )
     {
       profil.setComment( "Interpolation not possible: downstream profile doesn not contain enough points." );
@@ -187,7 +175,7 @@ public class ProfileInterpolation
 
     final IComponent widthComponent = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    final Set<BigDecimal> newXValues = collectNewXValues( prevProfil, nextProfil, profil, prevWidths, nextWidths, widthComponent );
+    final Set<BigDecimal> newXValues = collectNewXValues( profil, prevWidths, nextWidths, widthComponent );
 
     final int widthComponentIndex = profil.indexOfProperty( widthComponent );
     for( final BigDecimal newXValue : newXValues )
@@ -198,10 +186,10 @@ public class ProfileInterpolation
     }
   }
 
-  private Set<BigDecimal> collectNewXValues( final IProfil prevProfil, final IProfil nextProfil, final IProfil profil, final Double[] prevWidths, final Double[] nextWidths, final IComponent widthComponent ) throws SameXValuesException
+  private Set<BigDecimal> collectNewXValues( final IProfil profil, final Double[] prevWidths, final Double[] nextWidths, final IComponent widthComponent ) throws SameXValuesException
   {
-    final double prevStation = prevProfil.getStation();
-    final double nextStation = nextProfil.getStation();
+    final double prevStation = m_previousProfile.getStation();
+    final double nextStation = m_nextProfile.getStation();
     final double station = profil.getStation();
 
     final Double startPrevWidth = prevWidths[0];

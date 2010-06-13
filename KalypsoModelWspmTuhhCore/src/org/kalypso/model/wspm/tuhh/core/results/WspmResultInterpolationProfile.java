@@ -42,8 +42,13 @@ package org.kalypso.model.wspm.tuhh.core.results;
 
 import java.math.BigDecimal;
 
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
@@ -70,12 +75,29 @@ public class WspmResultInterpolationProfile
 
     final String id = reach.getId() + m_interpolatedStation;
 
-    ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile );
-    IProfileFeature newProfile = interpolation.createProfileAt( id, m_interpolatedStation );
-
+    final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil() );
+    final IProfil newProfile = interpolation.createProfileAt( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     final String name = String.format( "Interpolation %s - %s", m_previousStation, m_nextStation );
     newProfile.setName( name );
 
-    return newProfile;
+    final IProfileFeature profileFeature = createProfileFeature( id );
+    ProfileFeatureFactory.toFeature( newProfile, profileFeature );
+
+    return profileFeature;
   }
+
+  private IProfileFeature createProfileFeature( final String id )
+  {
+    try
+    {
+      return (IProfileFeature) FeatureFactory.createFeature( id, IProfileFeature.QNAME_PROFILE );
+    }
+    catch( final GMLSchemaException e )
+    {
+      // will not happen
+      e.printStackTrace();
+      return null;
+    }
+  }
+
 }
