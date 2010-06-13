@@ -366,37 +366,44 @@
 				</and>
 			</with>
 		</definition>
+		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive">
+			<with variable="activeMapPanel">
+				<or>
+					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState" />
+				</or>
+			</with>
+		</definition>
 	</extension>
-	
-	
 
 <!-- Profile From DEM  -->
 
   <extension point="org.eclipse.ui.menus">
-    <menuContribution
-          locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-       <toolbar
-             id="org.kalypso.model.wspm.ui.toolbars.ProfileToolbar">
-	     <command
-	           commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
-	           icon="icons/profil_from_dem.gif"
-	           style="radio"
-	           tooltip="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM">
-           	<visibleWhen checkEnabled="false">
-				<and>
-					<with variable="activeEditorId">
-						<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
-					</with>
-					<!--reference definitionId="mapContext" /-->
-					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
-					</with>
-				</and>
-			</visibleWhen>
-	     </command>
-       </toolbar>
+    <menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
+     <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
+       	<visibleWhen checkEnabled="false">
+			<and>
+				<with variable="activeEditorId">
+					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+				</with>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+			</and>
+		</visibleWhen>
+     </command>
     </menuContribution>
-    <menuContribution
+    <menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
+     <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
+       	<visibleWhen checkEnabled="false">
+			<and>
+				<with variable="activeEditorId">
+					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+				</with>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+			</and>
+		</visibleWhen>
+     </command>
+    </menuContribution>
+        <menuContribution
           locationURI="popup:org.kalypso.gml.ui.imports?after=additions">
        <command
              commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
@@ -483,7 +490,6 @@
     </menuContribution>
   </extension>
 
-
   <extension point="org.eclipse.ui.handlers">
     <handler
           commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM">
@@ -491,12 +497,7 @@
         	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.tuhh.ui.wizards.CreateProfileFromDEMWidget" />
       	  </class>
   	  	<enabledWhen>
-			<and>
-				<!--reference definitionId="mapContext" /-->
-				<with variable="activeMapPanel">
-					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
-				</with>
-			</and>
+			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
 		</enabledWhen>
    </handler>
   </extension>
@@ -505,7 +506,8 @@
     <command
           categoryId="org.kalypso.ogc.gml.map.category"
           id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
-          name="%command.name">
+          name="%command.name"
+          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM">
     </command>
     <command
           description="%command.description"
@@ -594,6 +596,7 @@
            commandId="org.kalypso.model.wspm.ui.command.profile.interpolation"
            icon="icons/elcl16/interpolateProfile.gif">
      </image>
+     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
   </extension>
   <extension
         point="org.eclipse.core.runtime.preferences">
