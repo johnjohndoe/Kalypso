@@ -60,6 +60,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObjectProperty(java.lang.String)
    */
+  @Override
   public IComponent getObjectProperty( final String componentId )
   {
     final IComponent[] components = getObjectProperties();
@@ -97,6 +98,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValue(org.kalypso.observation.result.IComponent)
    */
+  @Override
   public Object getValue( final IComponent component )
   {
     final TupleResult result = m_observation.getResult();
@@ -114,6 +116,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValueFor(String)
    */
+  @Override
   public Object getValueFor( final String componentID )
   {
     return getValue( getObjectProperty( componentID ) );
@@ -123,6 +126,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValue(org.kalypso.observation.result.IComponent,
    *      java.lang.Object)
    */
+  @Override
   public void setValue( final IComponent component, final Object value )
   {
     final TupleResult result = m_observation.getResult();
@@ -139,6 +143,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValueFor(String, java.lang.Object)
    */
+  @Override
   public void setValueFor( final String componentID, final Object value )
   {
     setValue( getObjectProperty( componentID ), value );
@@ -147,6 +152,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObservation()
    */
+  @Override
   public IObservation<TupleResult> getObservation( )
   {
     return m_observation;
@@ -155,6 +161,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObjectProperties()
    */
+  @Override
   public IComponent[] getObjectProperties( )
   {
     return getObservation().getResult().getComponents();
@@ -163,6 +170,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getPointProperties()
    */
+  @Override
   public IComponent[] getPointProperties( )
   {
     final List<IComponent> myProperties = new ArrayList<IComponent>();

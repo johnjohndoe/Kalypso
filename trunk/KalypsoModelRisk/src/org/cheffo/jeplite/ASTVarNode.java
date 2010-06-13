@@ -25,8 +25,9 @@ JEPLite Copyright (C) 2002 Stefan  Kolarov
 *****************************************************************************/
 package org.cheffo.jeplite;
 
-import java.util.*;
-import org.cheffo.jeplite.util.*;
+import java.util.HashMap;
+
+import org.cheffo.jeplite.util.DoubleStack;
 
 public class ASTVarNode extends SimpleNode {
   private HashMap symTab;
@@ -44,19 +45,23 @@ public class ASTVarNode extends SimpleNode {
     this.value = value;
   }
 
-	public double getValue() {
+	@Override
+  public double getValue() {
     return value;
 	}
 
+  @Override
   public void getValue(DoubleStack stack) {
     stack.push(value);
   }
 
-	public String toString()
+	@Override
+  public String toString()
 	{
 		return "Variable: \"" + getName() + "\"" + " = " + getValue();
 	}
 
+  @Override
   public Object jjtAccept(ParserVisitor visitor, Object data) {
     return visitor.visit(this, data);
   }

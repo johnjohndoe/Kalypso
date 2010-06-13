@@ -66,33 +66,39 @@ public class MulitKMValue extends AbstractKMValue
     System.out.println( Messages.getString("org.kalypso.model.km.MulitKMValue.5") + this ); //$NON-NLS-1$
   }
 
+  @Override
   public double getAlpha( )
   {
     return m_alpha;
   }
 
+  @Override
   public double getKForeland( )
   {
 
     return m_kForeland;
   }
 
+  @Override
   public double getNForeland( )
   {
     return m_nForeland;
   }
 
+  @Override
   public double getK( )
   {
 
     return m_k;
   }
 
+  @Override
   public double getN( )
   {
     return m_n;
   }
 
+  @Override
   public double getLength( )
   {
     return m_length;

@@ -63,6 +63,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#getStepTime()
    */
+  @Override
   public Date getStepTime( )
   {
     // may be null for 'steady' or 'max' steps.
@@ -72,6 +73,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#getStepType()
    */
+  @Override
   public STEPTYPE getStepType( )
   {
     try
@@ -90,6 +92,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#isRestart()
    */
+  @Override
   public boolean isRestart( )
   {
     return (Boolean) getFeature().getProperty( QNAME_PROP_STEP_IS_RESTART );
@@ -98,6 +101,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setRestart(boolean)
    */
+  @Override
   public void setRestart( final boolean setRestart )
   {
     getFeature().setProperty( QNAME_PROP_STEP_IS_RESTART, setRestart );
@@ -106,6 +110,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepTime(java.util.Date)
    */
+  @Override
   public void setStepTime( final Date stepTime )
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( stepTime );
@@ -115,6 +120,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepType(org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE)
    */
+  @Override
   public void setStepType( final STEPTYPE stepType )
   {
     getFeature().setProperty( QNAME_PROP_STEP_TYPE, stepType.name() );

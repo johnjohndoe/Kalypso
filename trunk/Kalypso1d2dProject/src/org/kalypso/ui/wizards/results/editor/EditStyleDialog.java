@@ -203,12 +203,14 @@ public class EditStyleDialog extends TitleAreaDialog
 
     fileNameText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
         checkFileNameText( commonComposite, fileNameText );
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
@@ -219,6 +221,7 @@ public class EditStyleDialog extends TitleAreaDialog
     fileNameText.addModifyListener( new ModifyListener()
     {
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
@@ -346,6 +349,7 @@ public class EditStyleDialog extends TitleAreaDialog
       inputStream = m_sldFile.getContents();
       final IUrlResolver2 resolver = new IUrlResolver2()
       {
+        @Override
         @SuppressWarnings("synthetic-access")
         public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
         {

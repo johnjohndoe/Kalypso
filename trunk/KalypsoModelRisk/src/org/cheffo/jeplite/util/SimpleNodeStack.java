@@ -1,5 +1,5 @@
 package org.cheffo.jeplite.util;
-import org.cheffo.jeplite.*;
+import org.cheffo.jeplite.SimpleNode;
 
 public class SimpleNodeStack {
   private static final int DEFAULT_STACK_DEPTH = 10;

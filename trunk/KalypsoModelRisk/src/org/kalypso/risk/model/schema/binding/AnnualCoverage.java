@@ -18,6 +18,7 @@ public class AnnualCoverage extends CoverageCollection implements IAnnualCoverag
    * 
    * @see org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection#getReturnPeriod()
    */
+  @Override
   public Integer getReturnPeriod( )
   {
     final Integer integer = (Integer) getFeature().getProperty( IAnnualCoverageCollection.PROP_ANNUALITY );
@@ -31,6 +32,7 @@ public class AnnualCoverage extends CoverageCollection implements IAnnualCoverag
    * 
    * @see org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection#setReturnPeriod(java.lang.Integer)
    */
+  @Override
   public void setReturnPeriod( final Integer value )
   {
     getFeature().setProperty( IAnnualCoverageCollection.PROP_ANNUALITY, (value == null || value.intValue() < 1) ? 1 : value.intValue() ); //$NON-NLS-1$

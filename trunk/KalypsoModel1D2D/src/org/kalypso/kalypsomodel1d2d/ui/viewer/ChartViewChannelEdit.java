@@ -40,13 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.viewer;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.kalypso.model.wspm.ui.view.chart.ChartView;
-import org.kalypso.model.wspm.ui.view.chart.action.ChartAction;
-import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
-import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContributor;
 
 /**
  * @author jung

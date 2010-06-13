@@ -63,6 +63,7 @@ public class DictI18nGmlListener extends GmlWorkspaceListener
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#init(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
+  @Override
   public void init( final GMLWorkspace workspace )
   {
     final URL context = workspace.getContext();
@@ -90,6 +91,7 @@ public class DictI18nGmlListener extends GmlWorkspaceListener
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
 // nothing to do

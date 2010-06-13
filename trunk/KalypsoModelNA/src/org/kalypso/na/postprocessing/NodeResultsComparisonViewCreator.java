@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeDirection;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.TypePosition;
-import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
 import org.kalypso.template.obstableview.Obstableview;
+import org.kalypso.template.obstableview.Obstableview.Rules;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeRenderingRule;
-import org.kalypso.template.obstableview.Obstableview.Rules;
 
 public final class NodeResultsComparisonViewCreator
 {

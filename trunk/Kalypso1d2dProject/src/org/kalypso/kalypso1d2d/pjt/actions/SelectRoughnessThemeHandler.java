@@ -32,6 +32,7 @@ import org.kalypso.ui.views.map.MapView;
 
 public class SelectRoughnessThemeHandler extends AbstractHandler implements IHandler
 {
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -125,6 +126,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
   {
     final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
     {
+      @Override
       public boolean decide( final IKalypsoTheme theme )
       {
         if( theme == null )

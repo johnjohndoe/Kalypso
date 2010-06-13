@@ -110,6 +110,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return crs;
@@ -118,6 +119,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getGMPoint(double, double, double)
    */
+  @Override
   public GM_Point getGMPoint( double nativeX, double nativeY, double nativeZ )
   {
 
@@ -127,6 +129,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeX(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getNativeX( GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
@@ -136,6 +139,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeY(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getNativeY( GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
@@ -145,6 +149,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeZ(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getNativeZ( GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$

@@ -90,9 +90,9 @@ public class ResultSldHelper
    * returns the interpolated color of a colormap defined by start and end color.
    * 
    * @param currentClass
-   *            current class
+   *          current class
    * @param numOfClasses
-   *            number of all classes in which the colormap is divided.
+   *          number of all classes in which the colormap is divided.
    */
   public static Color interpolateColor( final Color minColor, final Color maxColor, final int currentClass, final int numOfClasses )
   {
@@ -147,14 +147,14 @@ public class ResultSldHelper
       }
       else if( type == "Node" ) //$NON-NLS-1$
       {
-        String sldXMLwithHeader = processVectorStyle( maxValue, resource );
+        final String sldXMLwithHeader = processVectorStyle( maxValue, resource );
         styleFile.create( new StringInputStream( sldXMLwithHeader ), false, new NullProgressMonitor() );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.wizards.results.ResultSldHelper.0") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.wizards.results.ResultSldHelper.0" ) ); //$NON-NLS-1$
     }
     return Status.OK_STATUS;
 
@@ -175,7 +175,7 @@ public class ResultSldHelper
     {
       final UserStyle userStyle = (UserStyle) style;
       final FeatureTypeStyle featureTypeStyle = userStyle.getFeatureTypeStyle( featureTypeStyleName );
-      if( featureTypeStyleName == null )
+      if( featureTypeStyle == null )
         return;
       final Rule rule = featureTypeStyle.getRule( ruleName );
       if( rule == null )
@@ -339,7 +339,7 @@ public class ResultSldHelper
     try
     {
       is = new BufferedInputStream( url.openStream() );
-      String fileString = IOUtils.toString( is, "UTF-8" ); //$NON-NLS-1$
+      final String fileString = IOUtils.toString( is, "UTF-8" ); //$NON-NLS-1$
       is.close();
 
       // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
@@ -355,7 +355,7 @@ public class ResultSldHelper
       return fileString.replaceAll( "VECTORFACTOR", factor ); //$NON-NLS-1$
 
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

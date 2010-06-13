@@ -140,11 +140,13 @@ public class CalculationUnitAdministerComponent
 
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
+      @Override
       public void dataChanged( final String key, final Object newValue )
       {
         final Display display = parent.getDisplay();
         final Runnable runnable = new Runnable()
         {
+          @Override
           public void run( )
           {
             if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )

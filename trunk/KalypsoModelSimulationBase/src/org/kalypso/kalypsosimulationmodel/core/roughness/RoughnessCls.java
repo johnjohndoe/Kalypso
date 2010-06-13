@@ -50,6 +50,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getAxAy()
    */
+  @Override
   public double getAxAy( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY, Double.class );
@@ -63,6 +64,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getDp()
    */
+  @Override
   public double getDp( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.class );
@@ -76,6 +78,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getEddy()
    */
+  @Override
   public double getEddyXX( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, Double.class );
@@ -85,6 +88,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     return property;
   }
 
+  @Override
   public double getEddyYX( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, Double.class );
@@ -94,6 +98,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     return property;
   }
 
+  @Override
   public double getEddyXY( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, Double.class );
@@ -103,6 +108,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     return property;
   }
 
+  @Override
   public double getEddyYY( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, Double.class );
@@ -116,6 +122,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getKs()
    */
+  @Override
   public double getKs( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, Double.class );
@@ -125,6 +132,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     return property;
   }
 
+  @Override
   public double getMarsh( )
   {
     final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.class );
@@ -138,6 +146,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setAxAy(double)
    */
+  @Override
   public void setAxAy( final double axay ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
@@ -148,6 +157,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setDp(double)
    */
+  @Override
   public void setDp( final double dp ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
@@ -158,24 +168,28 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setEddy(double)
    */
+  @Override
   public void setEddyXX( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, eddy );
   }
 
+  @Override
   public void setEddyYX( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, eddy );
   }
 
+  @Override
   public void setEddyXY( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, eddy );
   }
 
+  @Override
   public void setEddyYY( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
@@ -186,6 +200,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setKs(double)
    */
+  @Override
   public void setKs( final double ks ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
@@ -196,6 +211,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setMarsh(double)
    */
+  @Override
   public void setMarsh( final double marsh ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
@@ -208,6 +224,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * (non-Javadoc)
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#validate()
    */
+  @Override
   public RoughnessConfigConsistency validate( )
   {
     return null;
@@ -218,6 +235,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#configure(java.lang.String, double, double,
    * double, double)
    */
+  @Override
   public RoughnessConfigConsistency configure( final String name, final double ks, final double axay, final double dp, final double eddy_xx, final double eddy_yx, final double eddy_xy, final double eddy_yy, final double marsh )
   {
     final RoughnessConfigConsistency check = validate( name, ks, axay, dp, eddy_xx, eddy_yx, eddy_xy, eddy_yy, marsh );
@@ -289,6 +307,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls#getColorStyle()
    */
+  @Override
   public RGB getColorStyle( )
   {
     return (RGB) getFeature().getProperty( KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
@@ -297,6 +316,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper#getOrdinalNumber()
    */
+  @Override
   public int getOrdinalNumber( )
   {
     // TODO Auto-generated method stub
@@ -306,6 +326,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper#setColorStyle(org.eclipse.swt.graphics.RGB)
    */
+  @Override
   public void setColorStyle( final RGB rgb )
   {
     // TODO Auto-generated method stub
@@ -315,6 +336,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls#getViscosities()
    */
+  @Override
   public Double[] getViscosities( final int iedsw )
   {
     final Double[] result = new Double[4];

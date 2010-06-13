@@ -153,6 +153,7 @@ public class ElevationModelSystemEditorComponent
     final Table elevationListTable = m_elevationListViewer.getTable();
     m_elevationListViewer.setContentProvider( new IStructuredContentProvider()
     {
+      @Override
       public Object[] getElements( final Object inputElement )
       {
         if( !(inputElement instanceof ITerrainElevationModelSystem) )
@@ -166,10 +167,12 @@ public class ElevationModelSystemEditorComponent
         return terrainElevationModels.toArray();
       }
 
+      @Override
       public void dispose( )
       {
       }
 
+      @Override
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
       }
@@ -186,6 +189,7 @@ public class ElevationModelSystemEditorComponent
 
     m_elevationListViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection() );
@@ -379,6 +383,7 @@ public class ElevationModelSystemEditorComponent
     /* Also refresh table AFTER models have been deleted */
     elevationTheme.postCommand( compositeCommand, new Runnable()
     {
+      @Override
       public void run( )
       {
         ViewerUtilities.refresh( elevationListTableViewer, true );

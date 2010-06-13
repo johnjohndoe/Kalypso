@@ -72,6 +72,7 @@ public class NaModelCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
+  @Override
   public void run( final File tmpdir, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
@@ -333,6 +334,7 @@ public class NaModelCalcJob implements ISimulation
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
+  @Override
   public URL getSpezifikation( )
   {
     return getClass().getResource( "/resources/nacalcjob_spec.xml" ); //$NON-NLS-1$

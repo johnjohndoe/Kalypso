@@ -100,6 +100,7 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   /*
    * (non-Javadoc) Method declared on IWorkbenchWizard.
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;

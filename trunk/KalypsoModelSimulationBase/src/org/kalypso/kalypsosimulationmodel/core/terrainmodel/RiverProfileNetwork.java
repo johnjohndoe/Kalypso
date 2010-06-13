@@ -57,6 +57,7 @@ public class RiverProfileNetwork extends FeatureWrapperCollection<IProfileFeatur
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork#getNext(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile)
    */
+  @Override
   public IProfileFeature getNext( final IProfileFeature riverProfile )
   {
     // TODO Auto-generated method stub
@@ -66,6 +67,7 @@ public class RiverProfileNetwork extends FeatureWrapperCollection<IProfileFeatur
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork#getPrevious(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile)
    */
+  @Override
   public IProfileFeature getPrevious( final IProfileFeature riverProfile )
   {
     // TODO Auto-generated method stub

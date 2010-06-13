@@ -104,6 +104,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
    * 
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
+  @Override
   public void add( final INodeResult... nodes )
   {
     if( m_writer == null )
@@ -204,6 +205,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
    */
+  @Override
   public void finished( ) throws CoreException
   {
     try
@@ -228,6 +230,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
    */
+  @Override
   public void setTime( final Date date )
   {
     final Calendar calendar = Calendar.getInstance();

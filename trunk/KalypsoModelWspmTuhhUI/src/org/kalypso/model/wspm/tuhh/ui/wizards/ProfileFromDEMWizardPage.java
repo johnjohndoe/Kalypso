@@ -112,6 +112,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     setPageComplete( false );
@@ -129,6 +130,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     tName.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_name = tName.getText();
@@ -146,6 +148,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     tStation.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         

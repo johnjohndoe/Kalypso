@@ -82,6 +82,7 @@ public class ControlModel1D2DCollection extends FeatureWrapperCollection<IContro
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection#setActiveControlModel(org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D)
    */
+  @Override
   public void setActiveControlModel( final IControlModel1D2D newControlModel )
   {
     getFeature().setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
@@ -102,6 +103,7 @@ public class ControlModel1D2DCollection extends FeatureWrapperCollection<IContro
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection#getActiveControlModelID()
    */
+  @Override
   public IControlModel1D2D getActiveControlModel( )
   {
     final Object activeModelID = getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, Object.class );

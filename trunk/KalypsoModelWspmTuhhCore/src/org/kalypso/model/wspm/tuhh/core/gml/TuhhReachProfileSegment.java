@@ -128,7 +128,7 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
    * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( IProfileFeature.class == adapter )
       return getProfileMember();

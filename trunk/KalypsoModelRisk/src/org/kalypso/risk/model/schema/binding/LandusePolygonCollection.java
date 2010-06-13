@@ -20,6 +20,7 @@ public class LandusePolygonCollection extends FeatureWrapperCollection<ILanduseP
     super( featureCol, fwClass, featureMemberProp );
   }
 
+  @Override
   public IFeatureWrapperCollection<ILandusePolygon> getLandusePolygonCollection( )
   {
     return m_landusePolygons;

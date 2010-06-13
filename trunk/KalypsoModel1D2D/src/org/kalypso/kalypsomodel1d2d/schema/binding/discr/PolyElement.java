@@ -95,6 +95,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D#getGeometry()
    */
+  @Override
   public GM_Surface<GM_SurfacePatch> getGeometry( )
   {
     return getProperty( QNAME_PROP_GEOMETRY, GM_Surface.class );
@@ -123,6 +124,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
    */
+  @Override
   public void addEdge( final String edgeID )
   {
     if( edgeID == null )
@@ -138,6 +140,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * Recalculates the geometry of this element. Used by the corresponding property function.
    */
+  @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     return ModelGeometryBuilder.createSurfaceFromNode( getNodes() );
@@ -252,6 +255,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessClsID()
    */
+  @Override
   public String getRoughnessClsID( )
   {
     final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
@@ -263,6 +267,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionAxAy()
    */
+  @Override
   public Double getRoughnessCorrectionAxAy( )
   {
     return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
@@ -271,6 +276,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionDP()
    */
+  @Override
   public Double getRoughnessCorrectionDP( )
   {
     return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
@@ -279,6 +285,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionKS()
    */
+  @Override
   public Double getRoughnessCorrectionKS( )
   {
     return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
@@ -287,6 +294,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessStyle()
    */
+  @Override
   public String getRoughnessStyle( )
   {
     final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE );
@@ -298,6 +306,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessClsID(java.lang.String)
    */
+  @Override
   public void setRoughnessClsID( final String value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
@@ -306,6 +315,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionAxAy(java.lang.String)
    */
+  @Override
   public void setRoughnessCorrectionAxAy( final Double value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, value );
@@ -314,6 +324,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionDP(java.lang.String)
    */
+  @Override
   public void setRoughnessCorrectionDP( final Double value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, value );
@@ -322,6 +333,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionKS(java.lang.String)
    */
+  @Override
   public void setRoughnessCorrectionKS( final Double value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, value );
@@ -330,6 +342,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessStyle(java.lang.String)
    */
+  @Override
   public void setRoughnessStyle( final String value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );

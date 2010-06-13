@@ -69,6 +69,7 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
   /**
    * @see org.kalypso.model.flood.binding.IFloodPolygon#appliesToEvent(java.lang.String)
    */
+  @Override
   public boolean appliesToEvent( final String eventId )
   {
     for( final IRunoffEvent event : m_runoffEvents )
@@ -80,6 +81,7 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
     return false;
   }
 
+  @Override
   public boolean contains( final GM_Position crd )
   {
     return getArea().contains( crd );
@@ -88,6 +90,7 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
   /**
    * @see org.kalypso.model.flood.binding.IFloodPolygon#getArea()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public GM_Surface<GM_SurfacePatch> getArea( )
   {
@@ -97,6 +100,7 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
   /**
    * @see org.kalypso.model.flood.binding.IFloodPolygon#getEvents()
    */
+  @Override
   public IFeatureWrapperCollection<IRunoffEvent> getEvents( )
   {
     return m_runoffEvents;

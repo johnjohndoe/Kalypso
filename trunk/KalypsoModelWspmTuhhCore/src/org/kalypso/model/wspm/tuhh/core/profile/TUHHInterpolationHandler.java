@@ -64,6 +64,7 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
    * @see org.kalypso.observation.result.IInterpolationHandler#doInterpolation(java.lang.String, java.lang.Double,
    *      java.lang.Double)
    */
+  @Override
   public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final double distance )
   {
     if( result == null || record == null || index < 0 || index > result.size() - 2 )

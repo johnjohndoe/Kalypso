@@ -94,6 +94,7 @@ public class CoordDataBlock extends AbstractDataBlock
   /**
    * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.ICoordDataBlock#getX()
    */
+  @Override
   public Double[] getX( )
   {
     return m_xs;
@@ -102,6 +103,7 @@ public class CoordDataBlock extends AbstractDataBlock
   /**
    * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.ICoordDataBlock#getY()
    */
+  @Override
   public Double[] getY( )
   {
     return m_ys;
@@ -202,6 +204,7 @@ public class CoordDataBlock extends AbstractDataBlock
   /**
    * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.IDataBlock#getCoordCount()
    */
+  @Override
   public int getCoordCount( )
   {
     return m_xs.length;
@@ -219,6 +222,7 @@ public class CoordDataBlock extends AbstractDataBlock
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getText()
    */
+  @Override
   public String[] getText( )
   {
     return new String[] { m_xs.toString(), m_ys.toString() };

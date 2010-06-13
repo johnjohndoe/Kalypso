@@ -67,9 +67,8 @@ public class ToggleKeepChannelRoughnessHandler extends AbstractHandler implement
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public void updateElement( final UIElement element, final Map parameters )
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     final boolean isOn = Preferences.isKeepChannelRoughness();
     element.setChecked( isOn );

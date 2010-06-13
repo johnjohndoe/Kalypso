@@ -61,6 +61,7 @@ public class BridgePoint implements IWProfPoint
     m_wprofPoint = wprofPoint;
   }
 
+  @Override
   public BigDecimal getDistance( )
   {
     if( m_distance != null )
@@ -78,6 +79,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getComment()
    */
+  @Override
   public String getComment( )
   {
     return m_wprofPoint.getComment();
@@ -87,6 +89,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getFeature()
    */
+  @Override
   public Feature getFeature( )
   {
     return m_wprofPoint.getFeature();
@@ -96,6 +99,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getLocation()
    */
+  @Override
   public GM_Point getLocation( )
   {
     return m_wprofPoint.getLocation();
@@ -105,6 +109,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getNumber()
    */
+  @Override
   public int getNumber( )
   {
     return m_wprofPoint.getNumber();
@@ -114,6 +119,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getObjectType()
    */
+  @Override
   public String getObjectType( )
   {
     return m_wprofPoint.getObjectType();
@@ -123,6 +129,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getPartNumber()
    */
+  @Override
   public int getPartNumber( )
   {
     return m_wprofPoint.getPartNumber();
@@ -132,6 +139,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getPhotos()
    */
+  @Override
   public URL[] getPhotos( )
   {
     return m_wprofPoint.getPhotos();
@@ -141,6 +149,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getPNam()
    */
+  @Override
   public String getPNam( )
   {
     return m_wprofPoint.getPNam();
@@ -150,6 +159,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getProfileComment()
    */
+  @Override
   public String getProfileComment( )
   {
     return m_wprofPoint.getProfileComment();
@@ -159,6 +169,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getProfileName()
    */
+  @Override
   public String getProfileName( )
   {
     return m_wprofPoint.getProfileName();
@@ -168,6 +179,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getProfileType()
    */
+  @Override
   public int getProfileType( )
   {
     return m_wprofPoint.getProfileType();
@@ -177,6 +189,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getPunktattribut()
    */
+  @Override
   public int getPunktattribut( )
   {
     return m_wprofPoint.getPunktattribut();
@@ -186,6 +199,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getRiverId()
    */
+  @Override
   public String getRiverId( )
   {
     return m_wprofPoint.getRiverId();
@@ -195,6 +209,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getRiverName()
    */
+  @Override
   public String getRiverName( )
   {
     return m_wprofPoint.getRiverName();
@@ -204,6 +219,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getStation()
    */
+  @Override
   public BigDecimal getStation( )
   {
     return m_wprofPoint.getStation();
@@ -213,6 +229,7 @@ public class BridgePoint implements IWProfPoint
    * @return
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getValue()
    */
+  @Override
   public double getValue( )
   {
     return m_wprofPoint.getValue();

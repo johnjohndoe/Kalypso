@@ -51,7 +51,6 @@ import java.util.List;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,31 +66,27 @@ public class SwaleAndTrenchManager extends AbstractManager
 {
   private final NAConfiguration m_conf;
 
-  // private final GMLSchema m_schema;
-
-  public SwaleAndTrenchManager( GMLSchema schema, NAConfiguration conf ) throws IOException
+  public SwaleAndTrenchManager( final NAConfiguration conf ) throws IOException
   {
     super( conf.getSwaleAndTrenchFormatURL() );
     m_conf = conf;
-    // m_schema = schema;
-
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   @Override
-  public Feature[] parseFile( URL url ) throws Exception
+  public Feature[] parseFile( final URL url ) throws Exception
   {
-    List<Feature> result = new ArrayList<Feature>();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+    final List<Feature> result = new ArrayList<Feature>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
     return result.toArray( new Feature[result.size()] );
   }
 
-  private Feature readNextFeature( LineNumberReader reader ) throws Exception
+  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
   {
     // added to remove yellow things
     reader.getLineNumber();
@@ -99,14 +94,14 @@ public class SwaleAndTrenchManager extends AbstractManager
     return null;
   }
 
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
+  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
   {
-    Feature rootFeature = workspace.getRootFeature();
-    Feature col = (Feature) rootFeature.getProperty( NaModelConstants.MRS_COLLECTION_MEMBER_PROP );
+    final Feature rootFeature = workspace.getRootFeature();
+    final Feature col = (Feature) rootFeature.getProperty( NaModelConstants.MRS_COLLECTION_MEMBER_PROP );
     if( col == null )
       return;
-    List list = (List) col.getProperty( NaModelConstants.MRS_MEMBER_PROP );
-    Iterator iter = list.iterator();
+    final List< ? > list = (List< ? >) col.getProperty( NaModelConstants.MRS_MEMBER_PROP );
+    final Iterator< ? > iter = list.iterator();
     while( iter.hasNext() )
     {
       final Feature swaleTrenchFE = (Feature) iter.next();
@@ -114,15 +109,15 @@ public class SwaleAndTrenchManager extends AbstractManager
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace workSpace, final Feature feature ) throws Exception
+  private void writeFeature( final AsciiBuffer asciiBuffer, final GMLWorkspace workSpace, final Feature feature ) throws Exception
   {
     final IDManager idManager = m_conf.getIdManager();
     // Line 5
     final GM_Curve sTGeomProp = (GM_Curve) feature.getProperty( NaModelConstants.MRS_GEOM_PROP );
     final Feature modelRootFeature = workSpace.getRootFeature();
     final Feature modelCol = (Feature) modelRootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    final List catchmentList = (List) modelCol.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
-    final Iterator catchmentIter = catchmentList.iterator();
+    final List< ? > catchmentList = (List< ? >) modelCol.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    final Iterator< ? > catchmentIter = catchmentList.iterator();
     int catchmentAsciiID = 0;
     while( catchmentIter.hasNext() & catchmentAsciiID == 0 )
     {
@@ -148,7 +143,7 @@ public class SwaleAndTrenchManager extends AbstractManager
 
     // Line 7
     // (diameterPipe,*)_(kfPipe,*)_(drainPipeSlope,*)_(roughnessPipe,*)_(widthTrench,*)_(dischargeNode,*)
-    asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "diameterPipe" ), "*" ) );  //$NON-NLS-1$//$NON-NLS-2$
+    asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "diameterPipe" ), "*" ) ); //$NON-NLS-1$//$NON-NLS-2$
     asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "kfPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "drainPipeSlope" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "roughnessPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -170,7 +165,7 @@ public class SwaleAndTrenchManager extends AbstractManager
    * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
-  public String mapID( int id, IFeatureType ft )
+  public String mapID( final int id, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + id;
   }

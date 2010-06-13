@@ -90,6 +90,7 @@ public class WspWinImportSourcePage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite group = new Composite( parent, SWT.NONE );
@@ -116,6 +117,7 @@ public class WspWinImportSourcePage extends WizardPage
 
     m_text.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( ModifyEvent e )
       {
         final File kwert_file = new File( text.getText() );
@@ -175,6 +177,7 @@ public class WspWinImportSourcePage extends WizardPage
     button.addSelectionListener( new SelectionListener()
     {
       /* Öffnen des FileDialogs und setzen des Pfades in das Textfeld. */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         final DirectoryDialog dialog = new DirectoryDialog( group.getShell() );
@@ -196,6 +199,7 @@ public class WspWinImportSourcePage extends WizardPage
         text.setText( loadPath );
       }
 
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
       }

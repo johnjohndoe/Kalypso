@@ -78,6 +78,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     return null;
@@ -86,6 +87,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
    */
+  @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
 
@@ -95,6 +97,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return "remove boundary condition from calculation unit"; //$NON-NLS-1$
@@ -103,11 +106,13 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return false;
   }
 
+  @Override
   public void process( ) throws Exception
   {
     try
@@ -146,6 +151,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
 
@@ -154,6 +160,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
 

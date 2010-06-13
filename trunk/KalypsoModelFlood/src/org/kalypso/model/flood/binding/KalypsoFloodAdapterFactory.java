@@ -24,8 +24,8 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  @Override
+  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     final AdapterConstructor ctor = m_constructors.get( adapterType );
     if( ctor != null )
@@ -38,6 +38,7 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
+  @Override
   public Class< ? >[] getAdapterList( )
   {
     return m_constructors.keySet().toArray( new Class[m_constructors.size()] );
@@ -51,6 +52,7 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -64,6 +66,7 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -83,6 +86,7 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -96,6 +100,7 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
+      @Override
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();

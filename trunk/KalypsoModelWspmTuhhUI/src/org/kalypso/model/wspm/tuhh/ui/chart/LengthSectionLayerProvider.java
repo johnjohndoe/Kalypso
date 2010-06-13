@@ -61,6 +61,7 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
+  @Override
   public IChartLayer getLayer( final URL context )
   {
     final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
@@ -88,7 +89,6 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  @SuppressWarnings("unchecked")
   public TupleResultDomainValueData< ? , ? > getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();

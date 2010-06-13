@@ -165,6 +165,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   /* predicate for hydrograph themes */
   private static final IKalypsoThemePredicate HYDROGRAPH_PREDICATE = new IKalypsoThemePredicate()
   {
+    @Override
     public boolean decide( final IKalypsoTheme theme )
     {
       if( !(theme instanceof IKalypsoFeatureTheme) )
@@ -187,6 +188,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   private final ModellEventListener m_modellistener = new ModellEventListener()
   {
+    @Override
     public void onModellChange( final ModellEvent modellEvent )
     {
       refreshControl();
@@ -195,6 +197,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   private final Runnable m_refreshHydrographViewerRunnable = new Runnable()
   {
+    @Override
     @SuppressWarnings("synthetic-access")
     public void run( )
     {
@@ -279,6 +282,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
@@ -359,6 +363,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
@@ -366,6 +371,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         updateHydrographProperties();
       }
 
+      @Override
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
       {
       }
@@ -378,6 +384,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     /* Hook Events */
     m_hydrographViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleListSelectionChanged( parent, hydrographInfoGroup, featureComposite, event );
@@ -386,6 +393,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     m_themeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleThemeComboSelected( event );
@@ -497,6 +505,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final Runnable refreshRunnable = m_refreshHydrographViewerRunnable;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
@@ -609,6 +618,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     {
       hydrgraphViewer.getControl().getDisplay().syncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( !hydrgraphViewer.getControl().isDisposed() )
@@ -627,6 +637,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final Runnable refreshRunnable = m_refreshHydrographViewerRunnable;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
@@ -842,6 +853,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     button.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         image.dispose();
@@ -871,6 +883,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_theme != null && m_modellistener != null )
@@ -917,6 +930,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       final ComboViewer themeCombo = m_themeCombo;
       control.getDisplay().asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           if( control.isDisposed() )
@@ -1030,6 +1044,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final Display display = m_hydrographViewer.getControl().getDisplay();
     display.asyncExec( new Runnable()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void run( )
       {

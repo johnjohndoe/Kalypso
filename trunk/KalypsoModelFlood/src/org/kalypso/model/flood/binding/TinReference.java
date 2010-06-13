@@ -72,6 +72,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getValue(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public double getValue( final GM_Position pos )
   {
     final GM_TriangulatedSurface tin = getTin();
@@ -82,6 +83,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getTin()
    */
+  @Override
   public GM_TriangulatedSurface getTin( )
   {
     return (GM_TriangulatedSurface) getFeature().getProperty( QNAME_PROP_TIN );
@@ -90,6 +92,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getMax()
    */
+  @Override
   public BigDecimal getMax( )
   {
     return getProperty( QNAME_PROP_MAX, BigDecimal.class );
@@ -98,11 +101,13 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getMin()
    */
+  @Override
   public BigDecimal getMin( )
   {
     return getProperty( QNAME_PROP_MIN, BigDecimal.class );
   }
 
+  @Override
   public void setSourceFeaturePath( final GMLXPath path )
   {
     setProperty( QNAME_PROP_SOURCE_PATH, path == null ? null : path.toString() );
@@ -111,6 +116,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getSourceFeaturePath()
    */
+  @Override
   public GMLXPath getSourceFeaturePath( )
   {
     final String path = getProperty( QNAME_PROP_SOURCE_PATH, String.class );
@@ -126,6 +132,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getSourceLocation()
    */
+  @Override
   public URL getSourceLocation( )
   {
     final String uri = getProperty( QNAME_PROP_SOURCE_LOCATION, String.class );
@@ -151,6 +158,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getUpdateDate()
    */
+  @Override
   public Date getUpdateDate( )
   {
     final XMLGregorianCalendar date = getProperty( QNAME_PROP_SOURCE_DATE, XMLGregorianCalendar.class );
@@ -160,6 +168,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#setMax(java.math.BigDecimal)
    */
+  @Override
   public void setMax( final BigDecimal max )
   {
     setProperty( QNAME_PROP_MAX, max );
@@ -168,6 +177,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#setMin(java.math.BigDecimal)
    */
+  @Override
   public void setMin( final BigDecimal min )
   {
     setProperty( QNAME_PROP_MIN, min );
@@ -176,6 +186,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#setSourceLocation(java.net.URL)
    */
+  @Override
   public void setSourceLocation( final URL location )
   {
     setProperty( QNAME_PROP_SOURCE_LOCATION, location.toExternalForm() );
@@ -184,6 +195,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#setTin(org.kalypsodeegree.model.geometry.GM_TriangulatedSurface)
    */
+  @Override
   public void setTin( final GM_TriangulatedSurface surface )
   {
     setProperty( QNAME_PROP_TIN, surface );
@@ -192,6 +204,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#setUpdateDate(java.util.Date)
    */
+  @Override
   public void setUpdateDate( final Date date )
   {
     setProperty( QNAME_PROP_SOURCE_DATE, DateUtilities.toXMLGregorianCalendar( date ) );
@@ -200,6 +213,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getRunoffEvent()
    */
+  @Override
   public IRunoffEvent getRunoffEvent( )
   {
     final Feature parent = getFeature().getParent();
@@ -212,6 +226,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getSourceType()
    */
+  @Override
   public SOURCETYPE getSourceType( )
   {
     final String value = (String) getFeature().getProperty( QNAME_PROP_SOURCE_TYPE );
@@ -221,6 +236,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#setSourceType(org.kalypso.model.flood.binding.ITinReference.SOURCETYPE)
    */
+  @Override
   public void setSourceType( final SOURCETYPE type )
   {
     getFeature().setProperty( QNAME_PROP_SOURCE_TYPE, type.name() );
@@ -229,6 +245,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getTraingle(org.kalypsodeegree.model.geometry.GM_Position)
    */
+  @Override
   public GM_Triangle getTraingle( final GM_Position pos )
   {
     final GM_TriangulatedSurface tin = getTin();

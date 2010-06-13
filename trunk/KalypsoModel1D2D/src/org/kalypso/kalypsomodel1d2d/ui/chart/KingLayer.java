@@ -79,6 +79,7 @@ public class KingLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
+  @Override
   public void paint( final GC gc )
   {
     final IAxis domainAxis = getDomainAxis();
@@ -115,6 +116,7 @@ public class KingLayer extends AbstractChartLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     final BigDecimal width = m_data.getKingRelation().getWidth();
@@ -148,6 +150,7 @@ public class KingLayer extends AbstractChartLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing to do
@@ -157,6 +160,7 @@ public class KingLayer extends AbstractChartLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     // TODO Auto-generated method stub

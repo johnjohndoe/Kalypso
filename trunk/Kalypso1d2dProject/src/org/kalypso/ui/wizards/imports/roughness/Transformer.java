@@ -11,14 +11,12 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
@@ -44,14 +42,12 @@ public class Transformer implements ICoreRunnableWithProgress
 
   private int m_NumberOfEntriesAdded = -1;
 
-  private final MapView m_mapView;
-
-  public Transformer( final DataContainer data, final MapView mapView )
+  public Transformer( final DataContainer data )
   {
     m_data = data;
-    m_mapView = mapView;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     final boolean hasMonitor = monitor != null;
@@ -65,8 +61,7 @@ public class Transformer implements ICoreRunnableWithProgress
       }
       try
       {
-        final IRoughnessLayer gmlLayer = m_data.createNewGMLLayer();
-        createMapLayer( gmlLayer );
+        m_data.createNewGMLLayer();
         if( !m_isDataPrepared )
           prepare( true );
         setSelectedRoughnessChoice();
@@ -90,27 +85,6 @@ public class Transformer implements ICoreRunnableWithProgress
       return new Status( Status.ERROR, KalypsoCorePlugin.getID(), Status.CANCEL, e.getMessage(), e );
     }
     return Status.OK_STATUS;
-  }
-
-  private void createMapLayer( final IRoughnessLayer layer )
-  {
-
-    // for the moment, we are working with two fixed layers...
-
-    return;
-    // final String source = m_data.getModel().getWrappedFeature().getWorkspace().getContext().toString();
-    // if( m_mapView != null )
-    // {
-    // final GisTemplateMapModell mapModell = (GisTemplateMapModell) m_mapView.getMapPanel().getMapModell();
-    // final StringBuffer featurePath = new StringBuffer( "#fid#" );
-    // featurePath.append( layer.getGmlID() ).append( "/roughnessLayerMember[RoughnessPolygon]" );
-    //      
-    // final AddThemeCommand command = new AddThemeCommand( mapModell, layer.getName(), "gml", featurePath.toString(),
-    // source, "sld", "Roughness style", "project:/.metadata/roughness.sld","simple" );
-    // m_mapView.postCommand( command, null );
-    // }
-    // else
-    // throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
   }
 
   public void prepare( final boolean resetMap ) throws Exception
@@ -216,7 +190,7 @@ public class Transformer implements ICoreRunnableWithProgress
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature.getParent(), parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // TODO: also post the adds as commands to the dataProvider
 
-    //    
+    //
     // GisTemplateMapModell model = GisTemplateHelper.loadGisMapView( new File(absPath) );
     // new AddThemeCommand();
     // m_data.getProjectBaseFolder();

@@ -54,7 +54,6 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -137,6 +136,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     try
@@ -158,6 +158,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return crs;
@@ -166,6 +167,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getElevation( final GM_Point location )
   {
     try
@@ -174,7 +176,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
       final double y = location.getY();
       final Point jtsPoint = (Point) JTSAdapter.export( location );
       final Envelope searchEnv = jtsPoint.getEnvelopeInternal();
-        
+
       final List<TriangleData> list = triangles.query( searchEnv );
 
       if( list.isEmpty() )
@@ -197,7 +199,8 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception, CoreException
+  @Override
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException
   {
     Assert.throwIAEOnNullParam( envToVisit, "envToVisit" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" ); //$NON-NLS-1$
@@ -205,7 +208,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     final Coordinate max = JTSAdapter.export( envToVisit.getMax() );
     final Coordinate min = JTSAdapter.export( envToVisit.getMin() );
     final Envelope jtsEnv = new Envelope( min, max );
-    final List triToVisit = triangles.query( jtsEnv );
+    final List< ? > triToVisit = triangles.query( jtsEnv );
 
     monitor.beginTask( "", triToVisit.size() ); //$NON-NLS-1$
 
@@ -223,6 +226,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
    * @returns a valid Maximum Elevation value or Double.NaN and not the default -Double.MAX_VALUE
    */
+  @Override
   public double getMaxElevation( )
   {
     return maxElevation == -Double.MAX_VALUE ? Double.NaN : maxElevation;
@@ -232,6 +236,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
    * @returns either a valid Minimum Elevation value or Double.NaN and not the default Double.MAX_VALUE
    */
+  @Override
   public double getMinElevation( )
   {
     return minElevation == Double.MAX_VALUE ? Double.NaN : minElevation;
@@ -240,6 +245,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
    */
+  @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
     // TODO

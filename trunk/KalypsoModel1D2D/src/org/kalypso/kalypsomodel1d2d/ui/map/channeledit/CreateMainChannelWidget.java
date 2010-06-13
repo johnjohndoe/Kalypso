@@ -88,6 +88,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data, this );
@@ -97,6 +98,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_composite != null )
@@ -411,6 +413,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
     m_composite.getDisplay().syncExec( new Runnable()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void run( )
       {

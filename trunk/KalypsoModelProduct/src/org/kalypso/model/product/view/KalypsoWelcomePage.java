@@ -298,6 +298,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
   /**
    * @see org.eclipse.ui.intro.IIntroPart#standbyStateChanged(boolean)
    */
+  @Override
   public void standbyStateChanged( final boolean standby )
   {
   }

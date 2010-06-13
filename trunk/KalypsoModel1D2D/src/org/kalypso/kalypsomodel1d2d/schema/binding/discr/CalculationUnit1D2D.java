@@ -92,6 +92,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D#getSubUnits()
    */
+  @Override
   public IFeatureWrapperCollection<ICalculationUnit> getChangedSubUnits( )
   {
     return m_subCalculationUnits;
@@ -165,6 +166,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D#query(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
+  @Override
   public List<IFENetItem> query( final GM_Envelope envelope )
   {
     final List<IFENetItem> selectedElements = new ArrayList<IFENetItem>();

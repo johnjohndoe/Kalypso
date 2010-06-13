@@ -60,16 +60,19 @@ final class AddReachSegementCommand implements ICommand
     m_profilesToAdd = profileFeatures;
   }
 
+  @Override
   public String getDescription( )
   {
     return null;
   }
 
+  @Override
   public boolean isUndoable( )
   {
     return false;
   }
 
+  @Override
   public void process( ) throws Exception
   {
     final GMLWorkspace workspace = m_reach.getWorkspace();
@@ -86,10 +89,12 @@ final class AddReachSegementCommand implements ICommand
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_reach, addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
+  @Override
   public void redo( ) throws Exception
   {
   }
 
+  @Override
   public void undo( ) throws Exception
   {
   }

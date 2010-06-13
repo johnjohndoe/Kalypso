@@ -82,6 +82,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     if( m_commandProcessed )
@@ -93,6 +94,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
    */
+  @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return m_model1d2d;
@@ -101,6 +103,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return "Command for adding continuity line to the calculation unit"; //$NON-NLS-1$
@@ -109,6 +112,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return false;
@@ -117,6 +121,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     try
@@ -148,6 +153,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
   }
@@ -155,6 +161,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
   }

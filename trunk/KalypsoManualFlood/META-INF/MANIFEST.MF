@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.help.appserver,
  org.eclipse.help.base,
  org.eclipse.help.webapp
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.KalypsoManualFlood.help
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-ClassPath: library.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

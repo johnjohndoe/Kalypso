@@ -25,9 +25,8 @@ JEPLite Copyright (C) 2002 Stefan  Kolarov
 *****************************************************************************/
 package org.cheffo.jeplite;
 
-import org.cheffo.jeplite.function.*;
-import org.cheffo.jeplite.util.*;
-import java.util.*;
+import org.cheffo.jeplite.function.PostfixMathCommand;
+import org.cheffo.jeplite.util.DoubleStack;
 
 public class ASTFunNode extends SimpleNode {
   private PostfixMathCommand pfmc;
@@ -40,6 +39,7 @@ public class ASTFunNode extends SimpleNode {
     super(p, id);
   }
 
+  @Override
   public Object jjtAccept(ParserVisitor visitor, Object data) {
     return visitor.visit(this, data);
   }
@@ -50,6 +50,7 @@ public class ASTFunNode extends SimpleNode {
     pfmc = pfmc_in;
   }
 
+  @Override
   public String toString()
   {
     if (name!=null)
@@ -66,7 +67,8 @@ public class ASTFunNode extends SimpleNode {
     }
   }
 
-	public double getValue() throws ParseException
+	@Override
+  public double getValue() throws ParseException
 	{
 		double value = 0;
 		DoubleStack tempStack = new DoubleStack();
@@ -74,7 +76,8 @@ public class ASTFunNode extends SimpleNode {
 		return tempStack.pop();
 	}
 
-	public final void getValue(DoubleStack tempStack) throws ParseException {
+	@Override
+  public final void getValue(DoubleStack tempStack) throws ParseException {
 	  double value = 0;
 	  for (int i=0; i < jjtGetNumChildren(); i++)
 	  {

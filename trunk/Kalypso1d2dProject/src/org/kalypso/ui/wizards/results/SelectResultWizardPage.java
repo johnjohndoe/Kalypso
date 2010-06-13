@@ -112,6 +112,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     /* set a fixed size to the Wizard */
@@ -143,6 +144,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection(), resultViewer );
@@ -151,6 +153,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final IResultMeta resultMeta = (IResultMeta) event.getElement();

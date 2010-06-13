@@ -34,7 +34,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -92,16 +91,16 @@ public class DWDRasterGeoLayer
    * 
    * @throws Exception
    */
-  public DWDRasterGeoLayer( String epsgTarget, DWDRaster xRaster, DWDRaster yRaster ) throws Exception
+  public DWDRasterGeoLayer( final String epsgTarget, final DWDRaster xRaster, final DWDRaster yRaster ) throws Exception
   {
     m_srcCS = "EPSG:4326";
-    String targetCS = epsgTarget;
+    final String targetCS = epsgTarget;
     m_xRaster = xRaster;
     m_yRaster = yRaster;
     init( targetCS );
   }
 
-  public void saveAsGML( File file ) throws IOException, GmlSerializeException
+  public void saveAsGML( final File file ) throws IOException, GmlSerializeException
   {
     FileWriter writer = null;
     try
@@ -110,11 +109,11 @@ public class DWDRasterGeoLayer
       GmlSerializer.serializeWorkspace( writer, m_workspace );
       System.out.println( "wrote DWDRaster to File:" + file.toString() );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw (e);
     }
-    catch( GmlSerializeException e )
+    catch( final GmlSerializeException e )
     {
       throw (e);
     }
@@ -124,7 +123,7 @@ public class DWDRasterGeoLayer
     }
   }
 
-  private void init( String targetCS ) throws Exception
+  private void init( final String targetCS ) throws Exception
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema schema = schemaCatalog.getSchema( "org.kalypso.dwd.geolayer", (String) null );
@@ -133,11 +132,11 @@ public class DWDRasterGeoLayer
     final Feature rootFE = FeatureFactory.createFeature( null, null, "main", layerFT, true );
     m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null, null, null, null );
 
-    IRelationType cellMemeberPT = (IRelationType) layerFT.getProperty( PROP_CELLMEMBER );
+    final IRelationType cellMemeberPT = (IRelationType) layerFT.getProperty( PROP_CELLMEMBER );
     // create all feature with point geom property
     for( int pos = 0, size = m_xRaster.size(); pos < size; pos++ )
     {
-      Feature feature = createFeature( rootFE, cellMemeberPT, pos );
+      final Feature feature = createFeature( rootFE, cellMemeberPT, pos );
       m_workspace.addFeatureAsComposition( rootFE, cellMemeberPT, 0, feature );
     }
 // m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
@@ -145,7 +144,7 @@ public class DWDRasterGeoLayer
 // m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
 // // now update the surface geometry
 // m_workspace.accept( new UpdateFeatureSurfaceGeometry(), m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE
-    // );
+// );
 // // resort again before using the query
 // m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
   }
@@ -153,29 +152,30 @@ public class DWDRasterGeoLayer
   private Feature createFeature( final Feature parent, final IRelationType parentRelation, final int pos ) throws Exception
   {
     final Feature feature = FeatureFactory.createFeature( parent, parentRelation, Integer.toString( pos ), m_positionFeature, true );
-    GM_Object point = createGeometryPoint( pos );
+    final GM_Object point = createGeometryPoint( pos );
     feature.setProperty( GEO_PROP_POINT, point );
     feature.setProperty( POS_PROP, new BigInteger( String.valueOf( pos ) ) );
     return feature;
   }
 
-  private GM_Object createGeometryPoint( int pos ) throws Exception
+  private GM_Object createGeometryPoint( final int pos ) throws Exception
   {
-    double mx = m_xRaster.getValueAt( pos );
-    double my = m_yRaster.getValueAt( pos );
+    final double mx = m_xRaster.getValueAt( pos );
+    final double my = m_yRaster.getValueAt( pos );
     return GeometryFactory.createGM_Point( mx, my, m_srcCS );
   }
 
   class UpdateFeatureSurfaceGeometry implements FeatureVisitor
   {
-    public boolean visit( Feature f )
+    @Override
+    public boolean visit( final Feature f )
     {
       if( !f.getFeatureType().getName().equals( "DWDCell" ) )
         return true;
-      GM_Point point = (GM_Point) f.getProperty( GEO_PROP_POINT );
-      GM_Position centerPos = point.getPosition();
+      final GM_Point point = (GM_Point) f.getProperty( GEO_PROP_POINT );
+      final GM_Position centerPos = point.getPosition();
       // GM_Envelope cellEnv = GeometryFactory.createGM_Envelope( centerPos, centerPos );
-      FeatureList listFE = (FeatureList) m_workspace.getRootFeature().getProperty( PROP_CELLMEMBER );
+      final FeatureList listFE = (FeatureList) m_workspace.getRootFeature().getProperty( PROP_CELLMEMBER );
       final int numPoints = 9;
       final FindSomeNearestVisitor visitor = new FindSomeNearestVisitor( centerPos, Double.MAX_VALUE, numPoints, GEO_PROP_POINT );
       listFE.accept( visitor );
@@ -184,23 +184,23 @@ public class DWDRasterGeoLayer
       // get the next 5 points and make a boundingbox out of this
       final Feature[] result = visitor.getResult();
       final List<GM_Point> points = new ArrayList<GM_Point>();
-      for( int i = 0; i < result.length; i++ )
+      for( final Feature element : result )
       {
-        final GM_Point p = (GM_Point) result[i].getProperty( GEO_PROP_POINT );
+        final GM_Point p = (GM_Point) element.getProperty( GEO_PROP_POINT );
         final GM_Position p2 = p.getPosition();
         final GM_Position newPos = GeometryUtilities.createGM_PositionAverage( new GM_Position[] { centerPos, p2 } );
 
         points.add( GeometryFactory.createGM_Point( newPos, p.getCoordinateSystem() ) );
       }
 
-      GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( points.toArray( new GM_Point[points.size()] ), point.getCoordinateSystem() );
+      final GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( points.toArray( new GM_Point[points.size()] ), point.getCoordinateSystem() );
       GM_Object convexHull;
       try
       {
         convexHull = multiPoint.getConvexHull();
         f.setProperty( GEO_PROP_SURFACE, convexHull );
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         e.printStackTrace();
       }
@@ -208,20 +208,20 @@ public class DWDRasterGeoLayer
     }
   }
 
-  public RasterPart[] getPositions( GM_Surface geometry )
+  public RasterPart[] getPositions( final GM_Surface< ? > geometry )
   {
     final List<RasterPart> result = new ArrayList<RasterPart>();
     final FeatureList fList = (FeatureList) m_workspace.getRootFeature().getProperty( "cellMember" );
-    final List list = fList.query( geometry.getEnvelope(), null );
-    for( Iterator iter = list.iterator(); iter.hasNext(); )
+    final List< ? > list = fList.query( geometry.getEnvelope(), null );
+    for( final Object name : list )
     {
-      final Feature rasterFE = (Feature) iter.next();
-      final GM_Surface rasterGeom = (GM_Surface) rasterFE.getProperty( GEO_PROP_SURFACE );
+      final Feature rasterFE = (Feature) name;
+      final GM_Surface< ? > rasterGeom = (GM_Surface< ? >) rasterFE.getProperty( GEO_PROP_SURFACE );
       if( geometry.intersects( rasterGeom ) )
       {
         final GM_Object intersection = geometry.intersection( rasterGeom );
         // double fullArea = GeometryUtilities.calcArea( rasterGeom );
-        double partArea = GeometryUtilities.calcArea( intersection );
+        final double partArea = GeometryUtilities.calcArea( intersection );
         // double portion = partArea / fullArea;
         final Integer pos = (Integer) rasterFE.getProperty( POS_PROP );
         result.add( new RasterPart( pos.intValue(), partArea ) );

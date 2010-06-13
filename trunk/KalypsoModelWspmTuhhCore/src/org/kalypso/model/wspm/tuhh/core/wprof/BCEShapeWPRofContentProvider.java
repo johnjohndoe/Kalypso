@@ -322,6 +322,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     }
   }
 
+  @Override
   public String getPNam( )
   {
     final String pnam = getProperty( SPEC_P_NAM, String.class, "Profilename unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$

@@ -56,8 +56,8 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.convert.namodel.hydrotope.GeologyImportOperation;
-import org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor;
 import org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.InputDescriptor;
+import org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor;
 import org.kalypso.convert.namodel.schema.binding.GeologyCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -82,6 +82,7 @@ public class ImportGeologyWizard extends Wizard implements INewWizard
     m_featureList = featureList;
   }
 
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;

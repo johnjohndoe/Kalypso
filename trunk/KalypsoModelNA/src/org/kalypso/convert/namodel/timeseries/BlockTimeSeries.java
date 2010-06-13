@@ -83,14 +83,14 @@ public class BlockTimeSeries
 
   // private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
 
-  private final Hashtable<String, SortedMap> m_blocks;
+  private final Hashtable<String, SortedMap<Date, String>> m_blocks;
 
   public BlockTimeSeries( final TimeZone timeZone )
   {
-    SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
+    final SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
     format.setTimeZone( timeZone );
     m_dateFormat = format;
-    m_blocks = new Hashtable<String, SortedMap>();
+    m_blocks = new Hashtable<String, SortedMap<Date, String>>();
   }
 
   /**
@@ -98,13 +98,13 @@ public class BlockTimeSeries
    */
   public BlockTimeSeries( )
   {
-    this(  NATimeSettings.getInstance().getTimeZone() );
+    this( NATimeSettings.getInstance().getTimeZone() );
   }
 
   /**
    * imports all ts from given blockfile
    */
-  public void importBlockFile( File blockFile )
+  public void importBlockFile( final File blockFile )
   {
     importBlockFile( blockFile, null );
   }
@@ -112,7 +112,7 @@ public class BlockTimeSeries
   /**
    * imports all ts with allowed keys from blockfile
    */
-  public void importBlockFile( File blockFile, Vector allowedKeys )
+  public void importBlockFile( final File blockFile, final Vector<String> allowedKeys )
   {
     long startDate = 0;
     long timeStep = 0;
@@ -123,7 +123,7 @@ public class BlockTimeSeries
     SortedMap<Date, String> timeSeries = null;
     try
     {
-      LineNumberReader reader = new LineNumberReader( new FileReader( blockFile ) );
+      final LineNumberReader reader = new LineNumberReader( new FileReader( blockFile ) );
       String line;
       Matcher m = null;
       Matcher synthM = null;
@@ -139,12 +139,12 @@ public class BlockTimeSeries
               synthM = pSynthTime.matcher( line );
               if( m.matches() )
               {
-                String sDate = m.group( 1 );
+                final String sDate = m.group( 1 );
                 String sTime = m.group( 2 );
-                String sStep = m.group( 3 );
+                final String sStep = m.group( 3 );
                 final Date parseDate = m_dateFormat.parse( sDate );
                 startDate = (parseDate).getTime();
-                int sTime_int = Integer.parseInt( sTime );
+                final int sTime_int = Integer.parseInt( sTime );
                 // 24 means 0 same day ! (RRM/fortran-logic)
                 if( sTime_int == 24 )
                 {
@@ -171,12 +171,12 @@ public class BlockTimeSeries
               if( synthM.matches() )
               {
                 // synthetisches Ereignis hat kein Anfangsdatum, daher wird 01.01.2000 angenommen!
-                String sDate = "000101"; //$NON-NLS-1$
+                final String sDate = "000101"; //$NON-NLS-1$
                 String sTime = "0"; //$NON-NLS-1$
-                String sStep = synthM.group( 3 );
+                final String sStep = synthM.group( 3 );
                 final Date parseDate = m_dateFormat.parse( sDate );
                 startDate = (parseDate).getTime();
-                int sTime_int = Integer.parseInt( sTime );
+                final int sTime_int = Integer.parseInt( sTime );
                 // 24 means 0 same day ! (RRM/fortran-logic)
                 if( sTime_int == 24 )
                 {
@@ -205,7 +205,7 @@ public class BlockTimeSeries
               m = pBlock.matcher( line );
               if( m.matches() )
               {
-                String key = m.group( 1 );
+                final String key = m.group( 1 );
                 valuesToGo = Integer.parseInt( m.group( 3 ) );
 
                 if( allowedKeys == null || allowedKeys.contains( key ) )
@@ -224,14 +224,14 @@ public class BlockTimeSeries
               }
               break;
             case SEARCH_VALUES:
-              String values[] = line.split( "\\s+" ); //$NON-NLS-1$
-              for( int i = 0; i < values.length; i++ )
+              final String values[] = line.split( "\\s+" ); //$NON-NLS-1$
+              for( final String value2 : values )
               {
-                m = pHeader.matcher( values[i] );
+                m = pHeader.matcher( value2 );
                 if( m.matches() )
                 {
-                  String value = m.group( 1 );
-                  Date valueDate = new Date( startDate + (1 + valueIndex + valueOffset) * timeStep );
+                  final String value = m.group( 1 );
+                  final Date valueDate = new Date( startDate + (1 + valueIndex + valueOffset) * timeStep );
                   timeSeries.put( valueDate, value );
                   valueIndex += 1;
                   if( valueIndex >= valuesToGo )
@@ -245,10 +245,10 @@ public class BlockTimeSeries
       }
       reader.close();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
-      System.out.println( "could not read blockfile " );  //$NON-NLS-1$
+      System.out.println( "could not read blockfile " ); //$NON-NLS-1$
     }
   }
 
@@ -257,20 +257,20 @@ public class BlockTimeSeries
     return m_blocks.keys();
   }
 
-  public void exportToFile( final String key, final File exportFile, DateFormat dateFormat ) throws IOException
+  public void exportToFile( final String key, final File exportFile, final DateFormat dateFormat ) throws IOException
   {
     if( m_blocks.containsKey( key ) )
     {
-      SortedMap map = m_blocks.get( key );
+      final SortedMap<Date, String> map = m_blocks.get( key );
 
-      FileWriter writer = new FileWriter( exportFile );
+      final FileWriter writer = new FileWriter( exportFile );
       String line;
 
-      Iterator it = map.keySet().iterator();
+      final Iterator<Date> it = map.keySet().iterator();
       while( it.hasNext() )
       {
-        Object dateKey = it.next();
-        Object value = map.get( dateKey );
+        final Object dateKey = it.next();
+        final Object value = map.get( dateKey );
         line = dateFormat.format( (Date) dateKey ) + " " + value; //$NON-NLS-1$
         writeln( writer, line );
       }
@@ -278,19 +278,18 @@ public class BlockTimeSeries
     }
   }
 
-  public TreeMap getTimeSerie( String key )
+  public SortedMap<Date, String> getTimeSerie( final String key )
   {
-    TreeMap resultData = (TreeMap) m_blocks.get( key );
-    return resultData;
+    return m_blocks.get( key );
   }
 
-  public void writeln( FileWriter writer, String line ) throws IOException
+  public void writeln( final FileWriter writer, String line ) throws IOException
   {
     line = line + System.getProperty( "line.separator" ); //$NON-NLS-1$
     writer.write( line, 0, line.length() );
   }
 
-  public boolean dataExistsForKey( String key )
+  public boolean dataExistsForKey( final String key )
   {
     return m_blocks.containsKey( key );
   }

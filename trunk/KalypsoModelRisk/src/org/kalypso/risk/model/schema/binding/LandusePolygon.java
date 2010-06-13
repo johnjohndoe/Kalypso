@@ -20,32 +20,38 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     super( featureToBind, QNAME );
   }
 
+  @Override
   public void setGeometry( final GM_Surface< ? > surface )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
   }
 
+  @Override
   public void setStyleType( final String styleType )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_SLDSTYLE, styleType );
   }
 
+  @Override
   public String getStyleType( )
   {
     final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
     return (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
+  @Override
   public void setLanduseClass( final Feature landuseClassFeature )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS, landuseClassFeature );
   }
 
+  @Override
   public Integer getLanduseClassOrdinalNumber( )
   {
     return (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
   }
 
+  @Override
   public Boolean isUrbanLanduseType( )
   {
     final Object isUrbanTypeProperty = getFeature().getProperty( ILandusePolygon.PROPERTY_ISURBANTYPE );
@@ -55,11 +61,13 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
       return null;
   }
 
+  @Override
   public boolean contains( final GM_Position position )
   {
     return getFeature().getDefaultGeometryPropertyValue().contains( position );
   }
 
+  @Override
   public double getDamageValue( final double depth )
   {
     final String damageFunctionProp = getDamageFunctionProp();
@@ -98,6 +106,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   /**
    * adds a average annual damage value to the polygon
    */
+  @Override
   public void updateStatisticsAverageAnnualDamage( final double value )
   {
     /* get the current overall average annual damage value (€/a) */
@@ -113,6 +122,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     m_statisticsAverageAnnualDamage = updatedValue / m_statisticsNumberOfRasterCells;
   }
 
+  @Override
   public double getStatisticsAverageAnnualDamage( )
   {
     return m_statisticsAverageAnnualDamage;
@@ -141,6 +151,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   /**
    * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getGeometry()
    */
+  @Override
   public GM_Surface< ? > getGeometry( )
   {
     return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Surface.class );
@@ -149,6 +160,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   /**
    * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getLanduseClass()
    */
+  @Override
   public ILanduseClass getLanduseClass( final IRasterizationControlModel model )
   {
     final Object property = getFeature().getProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS );

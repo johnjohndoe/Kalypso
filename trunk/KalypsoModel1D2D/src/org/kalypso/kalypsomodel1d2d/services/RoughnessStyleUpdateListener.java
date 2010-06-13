@@ -63,6 +63,7 @@ public class RoughnessStyleUpdateListener implements IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
+  @Override
   public void resourceChanged( IResourceChangeEvent event )
   {
     final IResourceDelta rootDelta = event.getDelta();

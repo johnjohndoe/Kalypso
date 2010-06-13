@@ -108,6 +108,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setCommandTarget(org.kalypso.commons.command.ICommandTarget)
    */
+  @Override
   public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
@@ -116,6 +117,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
+  @Override
   public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_modell = modell;
@@ -125,6 +127,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {

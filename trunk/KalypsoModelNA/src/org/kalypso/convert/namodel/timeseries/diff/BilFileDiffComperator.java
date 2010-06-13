@@ -45,23 +45,16 @@ import org.kalypso.commons.diff.IDiffLogger;
 
 /**
  * @author kuepfer
- *
  */
 public class BilFileDiffComperator implements IDiffComparator
 {
-
   /**
-   * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object, java.lang.Object)
+   * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
+   *      java.lang.Object)
    */
-  public boolean diff( IDiffLogger logger, Object content1, Object content2 ) throws Exception
+  @Override
+  public boolean diff( final IDiffLogger logger, final Object content1, final Object content2 ) throws Exception
   {
-    
-    return diffValue(logger, content1, content2);
-  }
-
-  private boolean diffValue( IDiffLogger logger, Object content1, Object content2 )
-  {
-    // TODO Auto-generated method stub
     return false;
   }
 

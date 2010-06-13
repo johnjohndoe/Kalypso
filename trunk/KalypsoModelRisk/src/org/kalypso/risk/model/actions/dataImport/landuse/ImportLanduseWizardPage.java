@@ -99,8 +99,9 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
    * 
    * @param parent
-   *            the parent composite
+   *          the parent composite
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -226,11 +227,10 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * Called by the wizard to initialize the receiver's cached selection.
    * 
    * @param selection
-   *            the selection or <code>null</code> if none
+   *          the selection or <code>null</code> if none
    * @param assetValueClassesList
    * @param damageFunctionNamesList
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void init( final ISelection selection, final List<String> damageFunctionNamesList, final List<String> assetValueClassesList )
   {
     m_damageFunctionNamesList = damageFunctionNamesList;
@@ -240,7 +240,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
 
     m_fileExtensions.add( new String( "shp" ) ); //$NON-NLS-1$
 
-    final Iterator iter = ((IStructuredSelection) selection).iterator();
+    final Iterator< ? > iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
       Object item = iter.next();
@@ -258,8 +258,8 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
   }
 
   /**
-   * Called by <code>createControl</code> to initialize the receiver's content based upon the cached selection
-   * provided by the wizard.
+   * Called by <code>createControl</code> to initialize the receiver's content based upon the cached selection provided
+   * by the wizard.
    */
   private void initContents( )
   {
@@ -397,12 +397,14 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
       return cmb_ShapeProperty.isEnabled();
   }
 
+  @Override
   public void widgetDefaultSelected( final SelectionEvent event )
   {
     // TODO Auto-generated method stub
 
   }
 
+  @Override
   public void widgetSelected( final SelectionEvent event )
   {
     if( event.widget == btn_inputLanduseFileBrowse )
@@ -428,6 +430,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     getWizard().getContainer().updateButtons();
   }
 
+  @Override
   public void modifyText( final ModifyEvent event )
   {
     // Initialize a variable with the no error status

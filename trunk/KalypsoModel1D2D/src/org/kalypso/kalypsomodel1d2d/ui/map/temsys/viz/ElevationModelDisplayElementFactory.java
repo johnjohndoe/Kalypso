@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Graphics;
 
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
@@ -56,7 +57,6 @@ import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePaintPlainTriangleVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement.IVisitorFactory;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 /**
  * @author Gernot Belger
  */
@@ -80,6 +80,7 @@ public class ElevationModelDisplayElementFactory
 
         final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
         {
+          @Override
           public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
           {
             return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( g, projection, colorModel );

@@ -40,6 +40,7 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
 
   private IStatus m_result = Status.OK_STATUS;
 
+  @Override
   public GMLWorkspace adapt( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
     final Object property = workspace.getRootFeature().getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
@@ -54,6 +55,7 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
     return workspace;
   }
 
+  @Override
   public IStatus getResult( )
   {
     return m_result;

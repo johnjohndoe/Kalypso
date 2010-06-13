@@ -69,6 +69,7 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -77,12 +78,12 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
-    final IMapPanel mapPanel = mapView.getMapPanel();
     if( mapView == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.model.flood.handlers.PolygonEditingHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.model.flood.handlers.PolygonEditingHandler.0" ) ); //$NON-NLS-1$
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.model.flood.handlers.PolygonEditingHandler.1"), Messages.getString("org.kalypso.model.flood.handlers.PolygonEditingHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.model.flood.handlers.PolygonEditingHandler.1" ), Messages.getString( "org.kalypso.model.flood.handlers.PolygonEditingHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     /* Activate theme */
@@ -99,6 +100,7 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
 
     final IKalypsoThemeVisitor kalypsoThemeVisitor = new IKalypsoThemeVisitor()
     {
+      @Override
       public boolean visit( final IKalypsoTheme theme )
       {
         if( theme instanceof IKalypsoFeatureTheme )

@@ -103,19 +103,19 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   protected Button deselectAllButton;
 
   // messages and labels
-  private static final String SELECT_ALL_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.0"); //$NON-NLS-1$
+  private static final String SELECT_ALL_TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.0" ); //$NON-NLS-1$
 
-  private static final String DESELECT_ALL_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.1"); //$NON-NLS-1$
+  private static final String DESELECT_ALL_TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.1" ); //$NON-NLS-1$
 
-  private static final String SELECT_DESTINATION_MESSAGE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.2"); //$NON-NLS-1$
+  private static final String SELECT_DESTINATION_MESSAGE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.2" ); //$NON-NLS-1$
 
-  private static final String SELECT_DESTINATION_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.3"); //$NON-NLS-1$
+  private static final String SELECT_DESTINATION_TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.3" ); //$NON-NLS-1$
 
-  private static final String DESTINATION_BROWSE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.4"); //$NON-NLS-1$
+  private static final String DESTINATION_BROWSE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.4" ); //$NON-NLS-1$
 
-  private static final String DESTINATION_LABEL = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.5"); //$NON-NLS-1$
+  private static final String DESTINATION_LABEL = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.5" ); //$NON-NLS-1$
 
-  private static final String OVERWRITE_EXISTING_CHECK_LABEL = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.6"); //$NON-NLS-1$
+  private static final String OVERWRITE_EXISTING_CHECK_LABEL = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.6" ); //$NON-NLS-1$
 
   // dialog store id constants
   private final static String STORE_DESTINATION_NAMES_ID = "WspWinExportPage.STORE_DESTINATION_NAMES_ID";//$NON-NLS-1$
@@ -124,11 +124,11 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Creates an instance of this class
-   *
+   * 
    * @param aWorkbench
-   *            IWorkbench
+   *          IWorkbench
    * @param selection
-   *            IStructuredSelection
+   *          IStructuredSelection
    */
   protected WspWinExportPage( final String pageName, final IStructuredSelection selection )
   {
@@ -161,6 +161,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
    */
+  @Override
   public void handleEvent( final Event event )
   {
     final Widget source = event.widget;
@@ -199,6 +200,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
 
@@ -232,9 +234,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * // * Creates the buttons for selecting specific types or selecting all or none of the // * elements. // * // *
-   *
+   * 
    * @param parent
-   *            the parent control //
+   *          the parent control //
    */
   protected final void createButtonsGroup( final Composite parent )
   {
@@ -292,9 +294,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Create the export destination specification widgets
-   *
+   * 
    * @param parent
-   *            org.eclipse.swt.widgets.Composite
+   *          org.eclipse.swt.widgets.Composite
    */
   protected void createDestinationGroup( final Composite parent )
   {
@@ -333,9 +335,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Creates the checkbox tree and list for selecting resources.
-   *
+   * 
    * @param parent
-   *            the parent control
+   *          the parent control
    */
   protected final void createResourcesGroup( final Composite parent )
   {
@@ -369,7 +371,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Create the button for checking if we should ask if we are going to overwrite existing files.
-   *
+   * 
    * @param optionsGroup
    * @param font
    */
@@ -470,14 +472,13 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Returns this page's collection of currently-specified resources to be exported. This is the primary resource
    * selection facility accessor for subclasses.
-   *
+   * 
    * @return a collection of resources currently selected for export (element type: <code>IResource</code>)
    */
-  @SuppressWarnings("unchecked")
-  protected List getSelectedResources( )
+  protected List<IResource> getSelectedResources( )
   {
-    final Iterator resourcesToExportIterator = this.getSelectedResourcesIterator();
-    final List resourcesToExport = new ArrayList();
+    final Iterator<IResource> resourcesToExportIterator = getSelectedResourcesIterator();
+    final List<IResource> resourcesToExport = new ArrayList<IResource>();
     while( resourcesToExportIterator.hasNext() )
       resourcesToExport.add( resourcesToExportIterator.next() );
     return resourcesToExport;
@@ -486,7 +487,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Returns this page's collection of currently-specified resources to be exported. This is the primary resource
    * selection facility accessor for subclasses.
-   *
+   * 
    * @return an iterator over the collection of resources currently selected for export (element type:
    *         <code>IResource</code>). This will include white checked folders and individually checked files.
    */
@@ -496,12 +497,10 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     return this.resourceGroup.getAllCheckedListItems().iterator();
   }
 
-
-
   /**
-   * Returns this page's collection of currently-specified resources to be exported. This returns both folders and files -
-   * for just the files use getSelectedResources.
-   *
+   * Returns this page's collection of currently-specified resources to be exported. This returns both folders and files
+   * - for just the files use getSelectedResources.
+   * 
    * @return a collection of resources currently selected for export (element type: <code>IResource</code>)
    */
   protected List< ? > getWhiteCheckedResources( )
@@ -642,9 +641,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Returns a File object representing the currently-named destination directory iff it exists as a valid directory, or
    * <code>null</code> otherwise.
-   *
+   * 
    * @param path
-   *            a String not yet formatted for java.io.File compatability
+   *          a String not yet formatted for java.io.File compatability
    */
   private File getDestinationDirectory( final String path )
   {
@@ -685,9 +684,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Sets the destination name of the export to be the supplied path. Adds the name of the path to the list of items in
    * the destination combo and selects it.
-   *
+   * 
    * @param path
-   *            the path to be added
+   *          the path to be added
    */
   protected void setDestinationName( final String path )
   {
@@ -724,15 +723,15 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * the buttons client data. Note that the parent's layout is assumed to be a GridLayout and the number of columns in
    * this layout is incremented. Subclasses may override.
    * </p>
-   *
+   * 
    * @param parent
-   *            the parent composite
+   *          the parent composite
    * @param id
-   *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+   *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
    * @param label
-   *            the label from the button
+   *          the label from the button
    * @param defaultButton
-   *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+   *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    */
   protected Button createButton( final Composite parent, final int id, final String label, final boolean defaultButton )
   {

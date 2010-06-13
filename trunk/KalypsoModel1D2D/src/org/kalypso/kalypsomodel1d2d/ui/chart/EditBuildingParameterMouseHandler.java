@@ -72,6 +72,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDoubleClick( final MouseEvent e )
   {
     final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
@@ -84,6 +85,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseDown( final MouseEvent e )
   {
     final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
@@ -95,6 +97,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseUp( final MouseEvent e )
   {
     final EditInfo info = m_info;
@@ -126,6 +129,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
+  @Override
   public void mouseMove( final MouseEvent e )
   {
     final Point point = new Point( e.x, e.y );
@@ -168,6 +172,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   /**
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
+  @Override
   public Cursor getCursor( )
   {
     // TODO: do not use default display; may be null or whatever

@@ -48,6 +48,7 @@ import org.kalypso.core.catalog.ICatalogContribution;
 
 public class KalypsoModel1D2DCatalogContribution implements ICatalogContribution
 {
+  @Override
   public void contributeTo( final CatalogManager catalogManager )
   {
     final URL catalogURL = getClass().getResource( "dict/catalog.xml" ); //$NON-NLS-1$

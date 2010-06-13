@@ -99,6 +99,7 @@ public class FENodeViewerSorter extends ViewerSorter
   
   
   
+  @Override
   public int compare(Viewer viewer, Object obj1, Object obj2) {
       int rc = -1;
       // get the data

@@ -96,6 +96,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   /**
    * @see org.eclipse.ui.IMarkerResolution2#getDescription()
    */
+  @Override
   public String getDescription( )
   {
 
@@ -109,6 +110,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   /**
    * @see org.eclipse.ui.IMarkerResolution2#getImage()
    */
+  @Override
   public Image getImage( )
   {
     return m_image;
@@ -117,6 +119,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   /**
    * @uml.property name="label"
    */
+  @Override
   public String getLabel( )
   {
     return m_label;
@@ -125,6 +128,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   /**
    * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#getSerializedParameter()
    */
+  @Override
   public String getSerializedParameter( )
   {
     return getClass().getName();
@@ -161,6 +165,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   /**
    * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
    */
+  @Override
   public void run( IMarker marker )
   {
     final CommandableWorkspace ws = getWorkspace( marker );
@@ -209,6 +214,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   /**
    * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#setData(java.lang.String)
    */
+  @Override
   public void setData( String parameterStream )
   {
     getParameter( parameterStream );

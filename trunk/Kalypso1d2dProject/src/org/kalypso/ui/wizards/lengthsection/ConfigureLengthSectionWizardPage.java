@@ -141,6 +141,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final int comboWidth1 = 75;
@@ -168,6 +169,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage
 
     comboRiverLine.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -217,6 +219,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage
 
     m_comboRiverLineNameField.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {

@@ -67,6 +67,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   /**
    * @see org.kalypso.model.flood.binding.IRunoffEvent#getResultCoverages()
    */
+  @Override
   public ICoverageCollection getResultCoverages( )
   {
     final Feature coveragesFeature = (Feature) getFeature().getProperty( QNAME_PROP_RESULT_COVERAGES );
@@ -103,6 +104,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   /**
    * @see org.kalypso.model.flood.binding.IRunoffEvent#getTins()
    */
+  @Override
   public IFeatureWrapperCollection<ITinReference> getTins( )
   {
     return m_tinReferences;
@@ -111,6 +113,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   /**
    * @see org.kalypso.model.flood.binding.IRunoffEvent#getDataPath()
    */
+  @Override
   public IPath getDataPath( )
   {
     final String path = (String) getFeature().getProperty( QNAME_PROP_DATAPATH );
@@ -120,6 +123,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
     return Path.fromPortableString( path );
   }
 
+  @Override
   public void setDataPath( final IPath path )
   {
     getFeature().setProperty( QNAME_PROP_DATAPATH, path.toPortableString() );
@@ -128,6 +132,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   /**
    * @see org.kalypso.model.flood.binding.IRunoffEvent#setResultCoverages(org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection)
    */
+  @Override
   public void setResultCoverages( final ICoverageCollection collection )
   {
     getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection.getFeature() );

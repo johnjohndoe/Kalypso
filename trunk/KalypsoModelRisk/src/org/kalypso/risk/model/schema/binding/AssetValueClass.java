@@ -17,6 +17,7 @@ public class AssetValueClass extends AbstractFeatureBinder implements IAssetValu
     super( featureToBind, qnameToBind );
   }
 
+  @Override
   public Double getAssetValue( )
   {
     final Object property = getFeature().getProperty( IAssetValueClass.PROP_ASSET_VALUE );
@@ -37,6 +38,7 @@ public class AssetValueClass extends AbstractFeatureBinder implements IAssetValu
     return (String) getFeature().getProperty( IAssetValueClass.PROP_DESCRIPTION );
   }
 
+  @Override
   public void setAssetValue( final Double assetValue )
   {
     getFeature().setProperty( IAssetValueClass.PROP_ASSET_VALUE, assetValue );

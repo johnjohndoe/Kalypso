@@ -145,6 +145,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -245,6 +246,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     m_resultProcessViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection(), infoViewer );
@@ -253,6 +255,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     m_resultProcessViewer.addCheckStateListener( new ICheckStateListener()
     {
+      @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         updateSelection();

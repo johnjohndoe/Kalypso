@@ -170,6 +170,7 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
     final ICaseDataProvider<IModel> modelProvider = m_modelProvider;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         try

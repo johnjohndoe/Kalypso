@@ -65,6 +65,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   /**
    * @see org.eclipse.ui.intro.config.IIntroContentProvider#init(org.eclipse.ui.intro.config.IIntroContentProviderSite)
    */
+  @Override
   public void init( final IIntroContentProviderSite site )
   {
   }
@@ -72,6 +73,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   /**
    * @see org.eclipse.ui.intro.config.IIntroXHTMLContentProvider#createContent(java.lang.String, org.w3c.dom.Element)
    */
+  @Override
   public void createContent( final String id, final Element parent )
   {
     final Document dom = parent.getOwnerDocument();
@@ -129,6 +131,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   /**
    * @see org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.lang.String, java.io.PrintWriter)
    */
+  @Override
   public void createContent( final String id, final PrintWriter out )
   {
   }
@@ -137,6 +140,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
    * @see org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.lang.String,
    *      org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
    */
+  @Override
   public void createContent( final String id, final Composite parent, final FormToolkit toolkit )
   {
   }
@@ -144,6 +148,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   /**
    * @see org.eclipse.ui.intro.config.IIntroContentProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
   }

@@ -32,11 +32,15 @@ import com.bce.datacenter.db.timeseries.TimeserieTupple;
 public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
 {
   private final DataCenterRepository m_rep;
+
   private final DataCenterChannelItem m_parent;
+
   private final Timeserie m_ts;
-  
+
   private MetadataList m_metadataList = null;
+
   private IAxis[] m_axes = null;
+
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
   public DataCenterTimeserieItem( final DataCenterRepository rep, final DataCenterChannelItem parent, final Timeserie ts )
@@ -49,6 +53,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
+  @Override
   public String getName( )
   {
     return m_ts.getName();
@@ -62,10 +67,11 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   {
     return getName();
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
+  @Override
   public String getIdentifier( )
   {
     return m_parent.getIdentifier() + "." + String.valueOf( m_ts.getID() ); //$NON-NLS-1$
@@ -74,7 +80,8 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  @Override
+  public IRepositoryItem getParent( )
   {
     return m_parent;
   }
@@ -82,6 +89,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
+  @Override
   public boolean hasChildren( )
   {
     return false;
@@ -90,6 +98,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
+  @Override
   public IRepositoryItem[] getChildren( )
   {
     return IRepositoryItem.EMPTY_ARRAY;
@@ -98,12 +107,14 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
+  @Override
   public IRepository getRepository( )
   {
     return m_rep;
   }
 
-  public Object getAdapter( final Class anotherClass )
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
   {
     if( anotherClass == IObservation.class )
       return this;
@@ -114,6 +125,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#isEditable()
    */
+  @Override
   public boolean isEditable( )
   {
     return false;
@@ -130,17 +142,17 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
+  @Override
   public MetadataList getMetadataList( )
   {
     if( m_metadataList == null )
     {
       m_metadataList = new MetadataList();
-      
+
       m_metadataList.put( ObservationConstants.MD_NAME, getName() );
-      m_metadataList.put( ObservationConstants.MD_DESCRIPTION, 
-          Messages.getString("org.kalypso.dcadapter.DataCenterTimeserieItem.0") + m_ts.getDataTableName() ); //$NON-NLS-1$
-      m_metadataList.put( ObservationConstants.MD_ORIGIN, Messages.getString("org.kalypso.dcadapter.DataCenterTimeserieItem.1") ); //$NON-NLS-1$
-      
+      m_metadataList.put( ObservationConstants.MD_DESCRIPTION, Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.0" ) + m_ts.getDataTableName() ); //$NON-NLS-1$
+      m_metadataList.put( ObservationConstants.MD_ORIGIN, Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.1" ) ); //$NON-NLS-1$
+
       final java.sql.Date begin = m_ts.getRealBegin();
       if( begin != null )
       {
@@ -150,25 +162,26 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
         m_metadataList.put( TimeserieConstants.MD_DATE_END, strRealEnd );
       }
     }
-    
+
     return m_metadataList;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
+  @Override
   public IAxis[] getAxisList( )
   {
     if( m_axes == null )
     {
       // TODO status axis...
       m_axes = new IAxis[2];
-      
-      m_axes[0] = new DefaultAxis( Messages.getString("org.kalypso.dcadapter.DataCenterTimeserieItem.2"), TimeserieConstants.TYPE_DATE, "", Date.class, true, true ); //$NON-NLS-1$ //$NON-NLS-2$
-      
+
+      m_axes[0] = new DefaultAxis( Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.2" ), TimeserieConstants.TYPE_DATE, "", Date.class, true, true ); //$NON-NLS-1$ //$NON-NLS-2$
+
       String type = "?"; //$NON-NLS-1$
       String unit = "?"; //$NON-NLS-1$
-      
+
       try
       {
         type = DataCenterUtils.toKalypsoType( m_parent.getChannel().getType() );
@@ -189,17 +202,18 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
 
       m_axes[1] = new DefaultAxis( m_ts.getName(), type, unit, Double.class, false, true );
     }
-    
+
     return m_axes;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
+  @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     final TimeserieTupple[] tupples;
-    
+
     try
     {
       if( request.getDateRange() != null )
@@ -214,23 +228,25 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     }
     catch( final SQLException e )
     {
-      throw new SensorException(e);
+      throw new SensorException( e );
     }
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
+  @Override
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     m_ts.setValues( DataCenterTuppleModel.toTupples( values ) );
-    
+
     m_evtPrv.fireChangedEvent( null );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getHref()
    */
+  @Override
   public String getHref( )
   {
     return ""; //$NON-NLS-1$
@@ -239,6 +255,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
    */
+  @Override
   public void addListener( final IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
@@ -247,6 +264,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
    */
+  @Override
   public void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
@@ -255,14 +273,16 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */
+  @Override
   public void clearListeners( )
   {
     m_evtPrv.clearListeners();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
    */
+  @Override
   public void fireChangedEvent( final Object source )
   {
     m_evtPrv.fireChangedEvent( source );

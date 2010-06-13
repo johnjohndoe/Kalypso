@@ -50,71 +50,84 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     return (String) getFeature().getProperty( ILanduseClass.PROP_DESCRIPTION );
   }
 
+  @Override
   public RGB getColorStyle( )
   {
     return (RGB) getFeature().getProperty( ILanduseClass.PROP_COLOR_STYLE );
   }
 
+  @Override
   public void setColorStyle( final RGB rgb )
   {
     getFeature().setProperty( ILanduseClass.PROP_COLOR_STYLE, rgb );
   }
 
+  @Override
   public void setOrdinalNumber( int value )
   {
     getFeature().setProperty( ILanduseClass.PROP_ORDINAL_NUMBER, value );
   }
 
+  @Override
   public int getOrdinalNumber( )
   {
     final Integer value = (Integer) getFeature().getProperty( ILanduseClass.PROP_ORDINAL_NUMBER );
     return value == null ? 0 : value.intValue();
   }
 
+  @Override
   public double getMaxAnnualDamage( )
   {
     final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_MAX_DAMAGE );
     return value == null ? 0 : value.intValue();
   }
 
+  @Override
   public double getMinAnnualDamage( )
   {
     final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_MIN_DAMAGE );
     return value == null ? Double.MAX_VALUE : value.intValue();
   }
 
+  @Override
   public double getTotalDamage( )
   {
     final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_TOTAL_DAMAGE );
     return value == null ? 0 : value.intValue();
   }
 
+  @Override
   public double getAverageAnnualDamage( )
   {
     final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE );
     return value == null ? 0 : value.doubleValue();
   }
 
+  @Override
   public void setMaxAnnualDamage( double value )
   {
     getFeature().setProperty( ILanduseClass.PROP_MAX_DAMAGE, value );
   }
 
+  @Override
   public void setMinAnnualDamage( double value )
   {
     getFeature().setProperty( ILanduseClass.PROP_MIN_DAMAGE, value );
   }
 
+  @Override
   public void setTotalDamage( double value )
   {
     getFeature().setProperty( ILanduseClass.PROP_TOTAL_DAMAGE, value );
   }
 
+  @Override
   public void setAverageAnnualDamage( double value )
   {
     getFeature().setProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE, value );
   }
 
+  @Override
   public String getDamageFunctionGmlID( )
   {
     final Object property = getFeature().getProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK );
@@ -123,6 +136,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     return ""; //$NON-NLS-1$
   }
 
+  @Override
   public void setDamageFunction( final IDamageFunction damageFunction )
   {
     final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + damageFunction.getGmlID(); //$NON-NLS-1$
@@ -130,6 +144,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     getFeature().setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
   }
 
+  @Override
   public IAssetValueClass getAssetValue( )
   {
     final Object property = getFeature().getProperty( ILanduseClass.PROP_ASSET_VALUE_LINK );
@@ -144,6 +159,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#setAssetValue(org.kalypso.risk.model.schema.binding.IAssetValueClass)
    */
+  @Override
   public void setAssetValue( IAssetValueClass assetValueClass )
   {
     final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + assetValueClass.getGmlID(); //$NON-NLS-1$
@@ -154,6 +170,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#updateStatistic(double, double)
    */
+  @Override
   public void updateStatistic( final int returnPeriod )
   {
     for( IRiskLanduseStatistic entry : m_statList )
@@ -175,6 +192,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     return null;
   }
 
+  @Override
   public List<IRiskLanduseStatistic> getLanduseStatisticList( )
   {
     final List<IRiskLanduseStatistic> statList = new ArrayList<IRiskLanduseStatistic>();
@@ -192,6 +210,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     return statList;
   }
 
+  @Override
   public boolean containsStatisticEntry( final int returnPeriod )
   {
     for( final IRiskLanduseStatistic entry : m_statList )
@@ -203,6 +222,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#createNewLanduseClass()
    */
+  @Override
   public IRiskLanduseStatistic createNewStatisticEntry( )
   {
     final FeatureList list = (FeatureList) getFeature().getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
@@ -225,6 +245,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#getStatistic(int, double)
    */
+  @Override
   public IRiskLanduseStatistic getStatistic( int returnPeriod )
   {
     for( final IRiskLanduseStatistic entry : m_statList )
@@ -237,6 +258,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * adds a average annual damage value to the polygon
    */
+  @Override
   public void updateStatisticsAverageAnnualDamage( final double value )
   {
     /* check for min / max */
@@ -272,6 +294,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#setCellSize(int)
    */
+  @Override
   public void setCellSize( double cellSize )
   {
     m_cellSize = cellSize;
@@ -280,6 +303,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#getCellSize()
    */
+  @Override
   public double getCellSize( )
   {
     return m_cellSize;
@@ -288,6 +312,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   /**
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#clearStatisticEntries()
    */
+  @Override
   public void clearStatisticEntries( )
   {
     m_statList.clear();

@@ -39,6 +39,7 @@ public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFuncti
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final QName featureQName = feature.getFeatureType().getQName();
@@ -84,6 +85,7 @@ public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFuncti
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
 
+  @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     return null;

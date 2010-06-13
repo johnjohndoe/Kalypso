@@ -120,6 +120,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * @return <code>0</code>, if feature is <code>null</code> or of unknown type.
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
+  @Override
   public int getConversionID( final IFeatureWrapper2 feature )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
@@ -147,6 +148,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
+  @Override
   public int getConversionID( final String featureGmlID )
   {
     if( m_nodesIDProvider.contains( featureGmlID ) )
@@ -167,6 +169,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     return 0;
   }
 
+  @Override
   public void writeMesh( final File outputFile ) throws CoreException, IOException
   {
     Formatter formatter = null;
@@ -325,6 +328,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 
     final Comparator comparator = new Comparator()
     {
+      @Override
       public int compare( Object o1, Object o2 )
       {
         Integer id1 = getConversionID( (IFE1D2DNode) o1 );

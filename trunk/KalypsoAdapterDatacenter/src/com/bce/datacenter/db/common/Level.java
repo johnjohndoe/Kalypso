@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.tree.TreeNode;
 
 import com.bce.datacenter.db.persistent.Persistent;
+import com.bce.datacenter.db.timeseries.Channel;
 
 /**
  * A Level is an abstract element of the tree hierarchy of the datacenter. A Level belongs to exactly one parent, except
@@ -29,7 +30,7 @@ public class Level extends Persistent implements TreeNode
   private List<Level> m_children = null;
 
   /** array of containers, used as simple caching solution */
-  private List m_objects = null;
+  private List<Channel> m_objects = null;
 
   /** some arbitrary description */
   private String m_description;
@@ -47,7 +48,7 @@ public class Level extends Persistent implements TreeNode
    * @param id
    *          level identifier as existing in the database
    */
-  public Level( final Connection con, int id )
+  public Level( final Connection con, final int id )
   {
     super( con, id, true );
   }
@@ -61,7 +62,7 @@ public class Level extends Persistent implements TreeNode
    * @param desc
    * @param parentRef
    */
-  public Level( final Connection con, int id, String name, String desc, int parentRef )
+  public Level( final Connection con, final int id, final String name, final String desc, final int parentRef )
   {
     super( con, id, false );
 
@@ -74,19 +75,18 @@ public class Level extends Persistent implements TreeNode
    * Returns the root level of the hierarchy
    * 
    * @param con
-   * 
    * @return the very root level
    */
   public static Level getRoot( final Connection con )
   {
     try
     {
-      Statement st = con.createStatement();
+      final Statement st = con.createStatement();
 
       // the root has no parent
-      ResultSet rs = st.executeQuery( "SELECT LVLID FROM DC_TREELEVEL WHERE PARENTLEVEL = 0" );
+      final ResultSet rs = st.executeQuery( "SELECT LVLID FROM DC_TREELEVEL WHERE PARENTLEVEL = 0" );
 
-      boolean b = rs.next();
+      final boolean b = rs.next();
 
       if( !b )
         return new Level( null, 0, "Keine Elemente", "Keine Elemente", -1 );
@@ -100,7 +100,7 @@ public class Level extends Persistent implements TreeNode
 
       return level;
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace( System.out );
 
@@ -108,7 +108,7 @@ public class Level extends Persistent implements TreeNode
       {
         con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
@@ -120,7 +120,8 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#getAllowsChildren()
    */
-  public boolean getAllowsChildren()
+  @Override
+  public boolean getAllowsChildren( )
   {
     return false;
   }
@@ -128,7 +129,8 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#getChildAt(int)
    */
-  public TreeNode getChildAt( int childIndex )
+  @Override
+  public TreeNode getChildAt( final int childIndex )
   {
     return getChildLevels().get( childIndex );
   }
@@ -136,12 +138,13 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#getChildCount()
    */
-  public int getChildCount()
+  @Override
+  public int getChildCount( )
   {
     return getChildLevels().size();
   }
 
-  public List<Level> getChildLevels()
+  public List<Level> getChildLevels( )
   {
     if( m_children != null )
       return m_children;
@@ -150,15 +153,14 @@ public class Level extends Persistent implements TreeNode
     {
       m_children = new Vector<Level>();
 
-      PreparedStatement stmt = m_con
-          .prepareStatement( "SELECT * FROM DC_TREELEVEL WHERE PARENTLEVEL = ? ORDER BY LEVELNAME ASC" );
+      final PreparedStatement stmt = m_con.prepareStatement( "SELECT * FROM DC_TREELEVEL WHERE PARENTLEVEL = ? ORDER BY LEVELNAME ASC" );
       stmt.setInt( 1, m_ID );
 
-      ResultSet rs = stmt.executeQuery();
+      final ResultSet rs = stmt.executeQuery();
 
       while( rs.next() )
       {
-        Level l = new Level( m_con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getInt( 4 ) );
+        final Level l = new Level( m_con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getInt( 4 ) );
 
         m_children.add( l );
       }
@@ -166,7 +168,7 @@ public class Level extends Persistent implements TreeNode
       rs.close();
       m_con.commit();
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -174,7 +176,7 @@ public class Level extends Persistent implements TreeNode
       {
         m_con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
@@ -183,7 +185,7 @@ public class Level extends Persistent implements TreeNode
     return m_children;
   }
 
-  public String getDescription()
+  public String getDescription( )
   {
     return m_description;
   }
@@ -191,7 +193,8 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#getIndex(javax.swing.tree.TreeNode)
    */
-  public int getIndex( TreeNode node )
+  @Override
+  public int getIndex( final TreeNode node )
   {
     return getChildLevels().indexOf( node );
   }
@@ -199,17 +202,18 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#isLeaf()
    */
-  public boolean isLeaf()
+  @Override
+  public boolean isLeaf( )
   {
     return getChildLevels().size() == 0;
   }
 
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
 
-  public List getObjects()
+  public List<Channel> getObjects( )
   {
     if( m_objects != null )
       return m_objects;
@@ -222,12 +226,13 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#getParent()
    */
-  public TreeNode getParent()
+  @Override
+  public TreeNode getParent( )
   {
     return getParentLevel();
   }
 
-  public Level getParentLevel()
+  public Level getParentLevel( )
   {
     if( m_parentRef == 0 )
       return null;
@@ -242,9 +247,9 @@ public class Level extends Persistent implements TreeNode
    * 
    * @return path of this level,
    */
-  public String getPathName()
+  public String getPathName( )
   {
-    Level parent = getParentLevel();
+    final Level parent = getParentLevel();
 
     if( parent != null )
       return parent.getPathName() + '/' + m_name;
@@ -255,7 +260,8 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#children()
    */
-  public Enumeration children()
+  @Override
+  public Enumeration<Level> children( )
   {
     return Collections.enumeration( getChildLevels() );
   }
@@ -264,7 +270,7 @@ public class Level extends Persistent implements TreeNode
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_name;
   }
@@ -273,16 +279,15 @@ public class Level extends Persistent implements TreeNode
    * read from db and init members
    */
   @Override
-  protected void dbRead()
+  protected void dbRead( )
   {
     try
     {
-      PreparedStatement stmt = m_con
-          .prepareStatement( "SELECT LEVELNAME, PARENTLEVEL, LEVELDESCRIPTION FROM DC_TREELEVEL WHERE LVLID = ?" );
+      final PreparedStatement stmt = m_con.prepareStatement( "SELECT LEVELNAME, PARENTLEVEL, LEVELDESCRIPTION FROM DC_TREELEVEL WHERE LVLID = ?" );
 
       stmt.setInt( 1, m_ID );
 
-      ResultSet set = stmt.executeQuery();
+      final ResultSet set = stmt.executeQuery();
 
       set.next();
 
@@ -298,7 +303,7 @@ public class Level extends Persistent implements TreeNode
       System.out.println( "parent ref on dbread: " + m_parentRef );
 
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -306,14 +311,14 @@ public class Level extends Persistent implements TreeNode
       {
         m_con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
     }
   }
 
-  public int getParentRef()
+  public int getParentRef( )
   {
     return m_parentRef;
   }

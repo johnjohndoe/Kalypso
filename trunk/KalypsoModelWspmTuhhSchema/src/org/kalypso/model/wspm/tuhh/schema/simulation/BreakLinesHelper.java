@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,7 +105,7 @@ public class BreakLinesHelper implements IWspmConstants
    * 
    * @return The min/max range of the waterlevel. <code>null</code>, if no triangulation has been created.
    */
-  public static NumberRange createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final Double epsThinning, final File breaklineFile, final File tinFile ) throws GM_Exception, InvocationTargetException, GMLSchemaException, GmlSerializeException, IOException
+  public static NumberRange createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final Double epsThinning, final File breaklineFile, final File tinFile ) throws GM_Exception, GMLSchemaException, GmlSerializeException, IOException
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 
@@ -234,7 +233,7 @@ public class BreakLinesHelper implements IWspmConstants
   }
 
   /** Creates a boundary from the given profiles. The profiles must be sorted. */
-  public static void createModelBoundary( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final File file, final boolean useWsp ) throws GMLSchemaException, GM_Exception, InvocationTargetException, IOException, GmlSerializeException
+  public static void createModelBoundary( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final File file, final boolean useWsp ) throws GMLSchemaException, GM_Exception, IOException, GmlSerializeException
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 

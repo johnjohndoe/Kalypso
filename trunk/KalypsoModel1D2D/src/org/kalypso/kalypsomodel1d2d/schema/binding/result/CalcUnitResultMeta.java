@@ -64,33 +64,39 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
     super( featureToBind, ICalcUnitResultMeta.QNAME );
   }
 
+  @Override
   public void setCalcStartTime( final Date startTime )
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( startTime );
     getFeature().setProperty( QNAME_PROP_CALC_START_TIME, gregorianCalendar );
   }
 
+  @Override
   public Date getCalcStartTime( )
   {
     return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( QNAME_PROP_CALC_START_TIME ) );
   }
 
+  @Override
   public void setCalcEndTime( final Date endTime )
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( endTime );
     getFeature().setProperty( QNAME_PROP_CALC_END_TIME, gregorianCalendar );
   }
 
+  @Override
   public Date getCalcEndTime( )
   {
     return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( QNAME_PROP_CALC_END_TIME ) );
   }
 
+  @Override
   public String getCalcUnit( )
   {
     return (String) getFeature().getProperty( QNAME_PROP_CALC_UNIT_ID );
   }
 
+  @Override
   public void setCalcUnit( final String calcUnitID )
   {
     getFeature().setProperty( QNAME_PROP_CALC_UNIT_ID, calcUnitID );
@@ -99,11 +105,13 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta#addStepResult()
    */
+  @Override
   public IStepResultMeta addStepResult( )
   {
     return getChildren().addNew( IStepResultMeta.QNAME, IStepResultMeta.class );
   }
 
+  @Override
   public boolean containsChildType( final DOCUMENTTYPE type )
   {
     final IFeatureWrapperCollection<IResultMeta> children = getChildren();
@@ -124,6 +132,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta#getChild(org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE)
    */
+  @Override
   public IDocumentResultMeta getDocument( DOCUMENTTYPE type )
   {
     final IFeatureWrapperCollection<IResultMeta> children = getChildren();
@@ -145,6 +154,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   /**
    * returns all document children of the calc unit with specified type
    */
+  @Override
   public IDocumentResultMeta[] getDocuments( DOCUMENTTYPE documenttype )
   {
     List<IResultMeta> documentList = new LinkedList<IResultMeta>();

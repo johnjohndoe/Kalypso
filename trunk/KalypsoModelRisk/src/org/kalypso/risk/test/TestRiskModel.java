@@ -87,18 +87,17 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * This test extracts demo input data (landuse shape and waterdepth grids) from resources and converts them into risk
  * data format. <br>
  * This test only checks, if the input raster will be converted, but will not save the altered gml files.<br>
- *
- * As a next step, the test uses a pre-defined set of risk-gmls in order to create the output raster data for:
- * <li>specific damage
- * <li>risk zones <br>
+ * 
+ * As a next step, the test uses a pre-defined set of risk-gmls in order to create the output raster data for: <li>
+ * specific damage <li>risk zones <br>
  * by using the converted input data (see above).
- *
+ * 
  * <br>
  * <br>
  * Run this test as plug-in test.
- *
+ * 
  * @author Thomas Jung
- *
+ * 
  */
 public class TestRiskModel extends TestCase
 {
@@ -108,7 +107,7 @@ public class TestRiskModel extends TestCase
 
   private static final QName PROP_ASSET_VALUES_CLASSES_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "assetValueClassesCollection" ); //$NON-NLS-1$
 
-  @SuppressWarnings( { "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   public void testRiskModel( ) throws MalformedURLException, Exception
   {
     // unzip test project into workspace
@@ -154,7 +153,7 @@ public class TestRiskModel extends TestCase
 
     final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, crs );
     final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
-    final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     // name of the shape file field that represents the landuse classes
     final String landUseProperty = "LANDUSE"; //$NON-NLS-1$
@@ -220,14 +219,16 @@ public class TestRiskModel extends TestCase
     /* RASTER LANDUSE CLASSES */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Landnutzungsraster...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-//    final IFolder outputFolder = folder;
-//    final ICoreRunnableWithProgress landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel, vectorDataModel, outputFolder );
-//    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, landuseRasterRunnable );
+    // final IFolder outputFolder = folder;
+    // final ICoreRunnableWithProgress landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel,
+    // vectorDataModel, outputFolder );
+    // RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, landuseRasterRunnable );
 
     /* CREATE SPECIFIC DAMAGE */
-//    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge spezifischen Schaden je Fliesstiefe...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-//    final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterControlDataModel, rasterDataModel, vectorDataModel, folder );
-//    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
+    //    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge spezifischen Schaden je Fliesstiefe...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    // final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable(
+    // rasterControlDataModel, rasterDataModel, vectorDataModel, folder );
+    // RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
 
     /* CREATE RSIK ZONES */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Risikozonen...\n" ); //$NON-NLS-1$ //$NON-NLS-2$

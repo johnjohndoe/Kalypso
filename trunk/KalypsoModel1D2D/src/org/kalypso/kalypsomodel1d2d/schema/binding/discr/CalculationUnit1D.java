@@ -68,6 +68,7 @@ public class CalculationUnit1D extends CalculationUnit implements ICalculationUn
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D#getInterpolationCount()
    */
+  @Override
   public int getInterpolationCount( )
   {
     final BigInteger integer = getProperty( QNAME_PROP_INTERP_COUNT, BigInteger.class );

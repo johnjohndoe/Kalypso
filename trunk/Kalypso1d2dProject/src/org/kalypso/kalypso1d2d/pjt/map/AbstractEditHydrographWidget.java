@@ -146,7 +146,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
 
           final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition(), minPoint.getCoordinateSystem() );
           final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
-          final List result = m_featureList.query( envelope, null );
+          final List< ? > result = m_featureList.query( envelope, null );
           final Feature[] selectedFeatures = new Feature[result.size()];
           for( int i = 0; i < selectedFeatures.length; i++ )
             selectedFeatures[i] = FeatureHelper.getFeature( workspace, result.get( i ) );
@@ -159,10 +159,11 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
           final Display display = PlatformUI.getWorkbench().getDisplay();
           display.asyncExec( new Runnable()
           {
+            @Override
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.0"), status ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.0" ), status ); //$NON-NLS-1$
             }
           } );
         }
@@ -219,7 +220,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
   {
     final String problemMessage;
     if( m_foundFeature == null )
-      problemMessage = Messages.getString("org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.1"); //$NON-NLS-1$
+      problemMessage = Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.1" ); //$NON-NLS-1$
     else
       problemMessage = null;
 
@@ -228,6 +229,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           final Shell shell = display.getActiveShell();
@@ -253,10 +255,11 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.2"), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.2" ), status ); //$NON-NLS-1$
         }
       } );
     }

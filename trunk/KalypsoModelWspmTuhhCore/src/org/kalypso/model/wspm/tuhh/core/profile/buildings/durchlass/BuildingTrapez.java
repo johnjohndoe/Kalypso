@@ -89,6 +89,7 @@ public final class BuildingTrapez extends AbstractObservationBuilding
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
    */
+  @Override
   public String getId( )
   {
     return ID;

@@ -71,6 +71,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getImageFor(java.lang.String)
    */
+  @Override
   public void drawMarker( final String[] markers, GC gc )
   {
 
@@ -98,6 +99,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getColorFor(java.lang.String)
    */
+  @Override
   public RGB getColorFor( String marker )
   {
     return m_markerTypes.get( marker );

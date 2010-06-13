@@ -1,7 +1,5 @@
 package org.cheffo.jeplite;
-import java.util.Vector;
-import org.cheffo.jeplite.function.*;
-import java.io.*;
+import java.io.IOException;
 
 public class ParserTokenManager implements ParserConstants
 {

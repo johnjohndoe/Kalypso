@@ -88,6 +88,7 @@ public class TableContentProvider implements IStructuredContentProvider
     this.m_logFile = file;
   }
 
+  @Override
   public void dispose( )
   {
   }
@@ -125,6 +126,7 @@ public class TableContentProvider implements IStructuredContentProvider
     return m_logFileReader.getRowCount();
   }
 
+  @Override
   public Object[] getElements( final Object parent )
   {
     if( m_logFileReader == null && m_logIFile != null )
@@ -135,6 +137,7 @@ public class TableContentProvider implements IStructuredContentProvider
     return new Object[0];
   }
 
+  @Override
   public void inputChanged( final Viewer v, final Object oldInput, final Object newInput )
   {
     // nothing?

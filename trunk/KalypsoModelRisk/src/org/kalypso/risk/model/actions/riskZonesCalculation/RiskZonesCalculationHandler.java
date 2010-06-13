@@ -17,8 +17,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.risk.i18n.Messages;
-import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
+import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
 
@@ -26,6 +26,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class RiskZonesCalculationHandler extends AbstractHandler
 {
+  @Override
   public Object execute( final ExecutionEvent arg0 )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();

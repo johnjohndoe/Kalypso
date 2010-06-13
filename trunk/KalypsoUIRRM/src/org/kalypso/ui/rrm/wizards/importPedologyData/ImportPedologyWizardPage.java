@@ -41,7 +41,7 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
 
   private Combo cmbSoilTypeProperty;
 
-//  private Combo cmbInputType;
+// private Combo cmbInputType;
 
   private IPath initialSourcePath;
 
@@ -70,6 +70,7 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
    * @param parent
    *          the parent composite
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -94,17 +95,17 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
     cmbSoilTypeProperty.setEnabled( false );
     cmbSoilTypeProperty.setLayoutData( gd0 );
 
-//    // Input type combo box
-//    new Label( container, SWT.NONE ).setText( "Input method" );
-//    cmbInputType = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-//    final GridData gdInputMethod = new GridData();
-//    gdInputMethod.horizontalAlignment = GridData.FILL;
-//    gdInputMethod.widthHint = 75;
-//    gdInputMethod.horizontalSpan = 2;
-//    final String[] inputTypes = shape.getProperties();
-//    cmbSoilTypeProperty.setItems( propertyNames );
-//    cmbInputType.setEnabled( true );
-//    cmbInputType.setLayoutData( gdInputMethod );
+// // Input type combo box
+// new Label( container, SWT.NONE ).setText( "Input method" );
+// cmbInputType = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
+// final GridData gdInputMethod = new GridData();
+// gdInputMethod.horizontalAlignment = GridData.FILL;
+// gdInputMethod.widthHint = 75;
+// gdInputMethod.horizontalSpan = 2;
+// final String[] inputTypes = shape.getProperties();
+// cmbSoilTypeProperty.setItems( propertyNames );
+// cmbInputType.setEnabled( true );
+// cmbInputType.setLayoutData( gdInputMethod );
 
     new Label( container, SWT.NONE ).setText( " " ); //$NON-NLS-1$
 
@@ -139,7 +140,6 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
    * @param assetValueClassesList
    * @param damageFunctionNamesList
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -147,7 +147,7 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
 
     m_fileExtensions.add( new String( "shp" ) ); //$NON-NLS-1$
 
-    final Iterator iter = ((IStructuredSelection) selection).iterator();
+    final Iterator< ? > iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
       Object item = iter.next();
@@ -282,12 +282,14 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
     return cmbSoilTypeProperty.isEnabled();
   }
 
+  @Override
   public void widgetDefaultSelected( final SelectionEvent event )
   {
     // TODO Auto-generated method stub
 
   }
 
+  @Override
   public void widgetSelected( final SelectionEvent event )
   {
     if( event.widget == btn_inputLanduseFileBrowse )
@@ -299,6 +301,7 @@ public class ImportPedologyWizardPage extends WizardPage implements SelectionLis
     getWizard().getContainer().updateButtons();
   }
 
+  @Override
   public void modifyText( final ModifyEvent event )
   {
     // Initialize a variable with the no error status

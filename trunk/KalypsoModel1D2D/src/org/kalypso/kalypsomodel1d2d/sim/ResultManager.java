@@ -86,8 +86,6 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
-import com.bce.ext.jts.CoordOrientation.TYPE;
-
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**

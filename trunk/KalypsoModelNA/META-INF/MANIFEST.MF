@@ -31,3 +31,4 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.ModelSimulationBase;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

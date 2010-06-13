@@ -80,6 +80,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getElevation( final GM_Point location )
   {
     try
@@ -108,6 +109,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return null;
@@ -116,6 +118,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     // TODO Patrice get crs from grid coverate
@@ -125,6 +128,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
    */
+  @Override
   public double getMaxElevation( )
   {
     throw new UnsupportedOperationException();
@@ -133,6 +137,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
    */
+  @Override
   public double getMinElevation( )
   {
     throw new UnsupportedOperationException();
@@ -141,6 +146,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
    */
+  @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
     throw new UnsupportedOperationException();

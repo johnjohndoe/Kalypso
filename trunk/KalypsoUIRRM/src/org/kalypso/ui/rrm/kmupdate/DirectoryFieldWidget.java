@@ -41,7 +41,6 @@
 package org.kalypso.ui.rrm.kmupdate;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -76,33 +75,33 @@ public class DirectoryFieldWidget implements ISelectionProvider
 
   private final List<ISelectionChangedListener> m_listeners = new ArrayList<ISelectionChangedListener>();
 
-  public DirectoryFieldWidget( final String label, final String toolTip, final boolean dirOnly, final Composite parent, int sp1, int sp2, int sp3 )
+  public DirectoryFieldWidget( final String label, final String toolTip, final boolean dirOnly, final Composite parent, final int sp1, final int sp2, final int sp3 )
   {
     m_dirOnly = dirOnly;
     final Label label1 = new Label( parent, SWT.NONE );
     label1.setText( label );
     label1.setToolTipText( toolTip );
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.horizontalSpan = sp1;
     label1.setLayoutData( data );
     m_text = new Text( parent, SWT.NONE );
-    m_text.setToolTipText( Messages.getString("org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.0") ); // TODO always show complete path as tooltip //$NON-NLS-1$
-    GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
+    m_text.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.0" ) ); // TODO always show complete path as tooltip //$NON-NLS-1$
+    final GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
     data2.horizontalSpan = sp2;
     data2.grabExcessHorizontalSpace = true;
     m_text.setLayoutData( data2 );
     m_text.addFocusListener( new FocusAdapter()
     {
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         fireSelectionChangeEvent();
       }
     } );
 
     final Button button = new Button( parent, SWT.NONE );
-    button.setText( Messages.getString("org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.1") ); //$NON-NLS-1$
-    GridData data3 = new GridData();
+    button.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.1" ) ); //$NON-NLS-1$
+    final GridData data3 = new GridData();
     data3.horizontalSpan = sp3;
     button.setLayoutData( data3 );
     button.addSelectionListener( new SelectionAdapter()
@@ -110,7 +109,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
       private String m_lastPath = null;
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( m_dirOnly )
         {
@@ -118,18 +117,18 @@ public class DirectoryFieldWidget implements ISelectionProvider
           if( m_lastPath != null )
             dialog.setFilterPath( m_lastPath );
           // dialog.setText( );
-          String filePath = dialog.open();
+          final String filePath = dialog.open();
           m_text.setText( filePath );
           m_lastPath = filePath;
           fireSelectionChangeEvent();
         }
         else
         {
-          FileDialog dialog = new FileDialog( parent.getShell() );
+          final FileDialog dialog = new FileDialog( parent.getShell() );
           if( m_lastPath != null )
             dialog.setFilterPath( m_lastPath );
           // dialog.setText( "text" );
-          String filePath = dialog.open();
+          final String filePath = dialog.open();
           m_text.setText( filePath );
           m_lastPath = filePath;
           fireSelectionChangeEvent();
@@ -141,16 +140,16 @@ public class DirectoryFieldWidget implements ISelectionProvider
   void fireSelectionChangeEvent( )
   {
     final SelectionChangedEvent event = new SelectionChangedEvent( this, getSelection() );
-    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
+    for( final ISelectionChangedListener iSelectionChangedListener : m_listeners )
     {
-      final ISelectionChangedListener element = (ISelectionChangedListener) iter.next();
-      element.selectionChanged( event );
+      iSelectionChangedListener.selectionChanged( event );
     }
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     final String value = m_text.getText();
@@ -160,7 +159,8 @@ public class DirectoryFieldWidget implements ISelectionProvider
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  @Override
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listeners.add( listener );
   }
@@ -168,7 +168,8 @@ public class DirectoryFieldWidget implements ISelectionProvider
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  @Override
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listeners.remove( listener );
   }
@@ -176,7 +177,8 @@ public class DirectoryFieldWidget implements ISelectionProvider
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  @Override
+  public void setSelection( final ISelection selection )
   {
     if( selection.isEmpty() )
       m_text.setText( "" ); //$NON-NLS-1$

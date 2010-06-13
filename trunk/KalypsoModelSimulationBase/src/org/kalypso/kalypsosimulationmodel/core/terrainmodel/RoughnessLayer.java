@@ -64,6 +64,7 @@ public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessL
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#isEditable()
    */
+  @Override
   public boolean isEditable( )
   {
     final Boolean isEditable = (Boolean) getFeature().getProperty( IRoughnessLayer.PROP_EDITABLE );
@@ -75,6 +76,7 @@ public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessL
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#setEditable(boolean)
    */
+  @Override
   public void setEditable( boolean status )
   {
     getFeature().setProperty( IRoughnessLayer.PROP_EDITABLE, status );
@@ -83,6 +85,7 @@ public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessL
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#isBasicLayer()
    */
+  @Override
   public boolean isBasicLayer( )
   {
     final Boolean isBasicLayer = (Boolean) getFeature().getProperty( IRoughnessLayer.PROP_LAYER_TYPE );
@@ -94,6 +97,7 @@ public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessL
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#isCorrectionLayer()
    */
+  @Override
   public boolean isCorrectionLayer( )
   {
     return !isBasicLayer();

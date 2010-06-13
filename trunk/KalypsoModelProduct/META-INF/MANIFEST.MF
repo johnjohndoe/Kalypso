@@ -30,3 +30,4 @@ Require-Bundle: org.eclipse.help.ui,
  org.eclipse.ui.navigator
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.ui.internal.ide.application
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

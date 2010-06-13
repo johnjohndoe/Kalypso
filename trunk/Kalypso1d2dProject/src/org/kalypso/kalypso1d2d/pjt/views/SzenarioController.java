@@ -78,6 +78,7 @@ public class SzenarioController implements IScenarioDataListener
     ResourcesPlugin.getWorkspace().addResourceChangeListener( m_roughnessStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
   }
 
+  @Override
   public synchronized void modelLoaded( final IModel model, final IStatus status )
   {
     if( m_discModel != null && m_terrainModel != null )
@@ -117,6 +118,7 @@ public class SzenarioController implements IScenarioDataListener
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioDataListener#scenarioChanged(org.eclipse.core.resources.IFolder)
    */
+  @Override
   public synchronized void scenarioChanged( final IScenario scenario )
   {
     m_scenario = scenario;

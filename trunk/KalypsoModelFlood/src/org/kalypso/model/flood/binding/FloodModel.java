@@ -71,6 +71,7 @@ public class FloodModel extends UnversionedModel implements IFloodModel
   /**
    * @see org.kalypso.model.flood.binding.IFloodModel#getPolygons()
    */
+  @Override
   public IFeatureWrapperCollection<IFloodPolygon> getPolygons( )
   {
     return m_polygones;
@@ -79,6 +80,7 @@ public class FloodModel extends UnversionedModel implements IFloodModel
   /**
    * @see org.kalypso.model.flood.binding.IFloodModel#getTerrainModel()
    */
+  @Override
   public ICoverageCollection getTerrainModel( )
   {
     return m_coverages;
@@ -87,6 +89,7 @@ public class FloodModel extends UnversionedModel implements IFloodModel
   /**
    * @see org.kalypso.model.flood.binding.IFloodModel#getEvents()
    */
+  @Override
   public IFeatureWrapperCollection<IRunoffEvent> getEvents( )
   {
     return m_events;

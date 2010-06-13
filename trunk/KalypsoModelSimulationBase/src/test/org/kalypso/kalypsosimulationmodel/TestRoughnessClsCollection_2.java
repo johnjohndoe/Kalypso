@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author madanago
- *
+ * 
  */
 public class TestRoughnessClsCollection_2 extends TestCase
 {
@@ -66,27 +66,27 @@ public class TestRoughnessClsCollection_2 extends TestCase
     {
       workspace = GmlSerializer.createGMLWorkspace( new URL( "data/roughness.gml" ), null ); //$NON-NLS-1$
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       fail( TestUtils.getStackTraceAsString( th ) );
     }
-    
 
-    Feature root = workspace.getRootFeature();
-    RoughnessClsCollection roughnessClsList = new RoughnessClsCollection( root );
-    Iterator itr = roughnessClsList.iterator();
-    
-    while (itr.hasNext()) {
-     IRoughnessCls ir = (IRoughnessCls) itr.next();
-     System.out.println(ir.getGmlID());
+    final Feature root = workspace.getRootFeature();
+    final RoughnessClsCollection roughnessClsList = new RoughnessClsCollection( root );
+    final Iterator<IRoughnessCls> itr = roughnessClsList.iterator();
+
+    while( itr.hasNext() )
+    {
+      final IRoughnessCls ir = itr.next();
+      System.out.println( ir.getGmlID() );
     }
-    
-    
-    //assertEquals( "ColName1", rcc.getName() );
+
+    // assertEquals( "ColName1", rcc.getName() );
     // assertEquals("r2", rcc.getRoughnessByURI("uri_r2").getName());
     // assertEquals("uri_r2", rcc.getRoughnessByURI("uri_r2").getURI());
-    /*List<IRoughnessCls> rList = rcc.selectRoughnessByName( "Klass 2" );
-    assertEquals( 1, rList.size() );*/
+    /*
+     * List<IRoughnessCls> rList = rcc.selectRoughnessByName( "Klass 2" ); assertEquals( 1, rList.size() );
+     */
     // System.out.println("LIST="+rList);
     // assertEquals("uri_r2", rList.get(0).getURI());
 

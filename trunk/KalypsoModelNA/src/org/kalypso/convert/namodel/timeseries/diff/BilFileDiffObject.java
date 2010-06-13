@@ -52,6 +52,7 @@ public class BilFileDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#exists(java.lang.String)
    */
+  @Override
   public boolean exists( String path )
   {
     // TODO Auto-generated method stub
@@ -61,6 +62,7 @@ public class BilFileDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
+  @Override
   public IDiffComparator getDiffComparator( String path )
   {
     return new BilFileDiffComperator();
@@ -69,6 +71,7 @@ public class BilFileDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getContent(java.lang.String)
    */
+  @Override
   public Object getContent( String path ) 
   {
     // TODO Auto-generated method stub
@@ -78,6 +81,7 @@ public class BilFileDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getPathes()
    */
+  @Override
   public String[] getPathes( )
   {
     // TODO Auto-generated method stub

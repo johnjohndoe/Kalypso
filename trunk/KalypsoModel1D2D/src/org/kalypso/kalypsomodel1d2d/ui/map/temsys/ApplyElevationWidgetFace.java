@@ -106,6 +106,7 @@ class ApplyElevationWidgetFace
 
   private final IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
   {
+    @Override
     @SuppressWarnings( { "synthetic-access", "unchecked" })//$NON-NLS-1$
     public void selectionChanged( final IFeatureSelection selection )
     {
@@ -141,6 +142,7 @@ class ApplyElevationWidgetFace
 
         m_nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             final IContentProvider cp = m_nodeElevationViewer.getContentProvider();
@@ -344,6 +346,7 @@ class ApplyElevationWidgetFace
     return new IPropertyChangeListener()
     {
 
+      @Override
       public void propertyChange( final PropertyChangeEvent event )
       {
         final Object source = event.getSource();

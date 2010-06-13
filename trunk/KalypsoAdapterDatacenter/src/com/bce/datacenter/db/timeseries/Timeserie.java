@@ -49,9 +49,9 @@ public class Timeserie extends Persistent
    * Constructor
    * 
    * @param id
-   *            internal db identifier
+   *          internal db identifier
    */
-  public Timeserie( final Connection con, int id )
+  public Timeserie( final Connection con, final int id )
   {
     super( con, id, true );
   }
@@ -59,7 +59,7 @@ public class Timeserie extends Persistent
   /**
    * Constructor with parameters
    */
-  public Timeserie( final Connection con, int id, String name, String desc, String type, String tableName, int channelRef )
+  public Timeserie( final Connection con, final int id, final String name, final String desc, final String type, final String tableName, final int channelRef )
   {
     super( con, id, false );
 
@@ -99,13 +99,13 @@ public class Timeserie extends Persistent
   {
     try
     {
-      Statement st = m_con.createStatement();
+      final Statement st = m_con.createStatement();
 
-      ResultSet set = st.executeQuery( "SELECT MIN(TSTIME) FROM " + m_dataTableName );
+      final ResultSet set = st.executeQuery( "SELECT MIN(TSTIME) FROM " + m_dataTableName );
 
       set.next();
 
-      Date d = set.getDate( 1 );
+      final Date d = set.getDate( 1 );
 
       set.close();
       st.close();
@@ -114,7 +114,7 @@ public class Timeserie extends Persistent
 
       return d;
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -122,7 +122,7 @@ public class Timeserie extends Persistent
       {
         m_con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
@@ -140,13 +140,13 @@ public class Timeserie extends Persistent
   {
     try
     {
-      Statement st = m_con.createStatement();
+      final Statement st = m_con.createStatement();
 
-      ResultSet set = st.executeQuery( "SELECT MAX(TSTIME) FROM " + m_dataTableName );
+      final ResultSet set = st.executeQuery( "SELECT MAX(TSTIME) FROM " + m_dataTableName );
 
       set.next();
 
-      Date d = set.getDate( 1 );
+      final Date d = set.getDate( 1 );
 
       set.close();
       st.close();
@@ -155,7 +155,7 @@ public class Timeserie extends Persistent
 
       return d;
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -163,7 +163,7 @@ public class Timeserie extends Persistent
       {
         m_con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
@@ -213,25 +213,24 @@ public class Timeserie extends Persistent
    * exports the timeserie owned by this wrapper to a file
    * 
    * @param filename
-   *            pathname of the file to create
+   *          pathname of the file to create
    * @param from
-   *            date from which to export (if null export from beginning)
+   *          date from which to export (if null export from beginning)
    * @param to
-   *            date up to export (if null export until end)
+   *          date up to export (if null export until end)
    * @param separator
-   *            string representing the separator between the tokens: date, value, and flag. (if null default is comma)
+   *          string representing the separator between the tokens: date, value, and flag. (if null default is comma)
    * @param dateFormatPattern
-   *            string such as in SimpleDateFormat representing the format of the date. (if null uses the locale
-   *            default)
+   *          string such as in SimpleDateFormat representing the format of the date. (if null uses the locale default)
    * @return amount of lines written if successfull, otherwise -1
    */
-  public int ExportToFile( String filename, Date from, Date to, String separator, String dateFormatPattern )
+  public int ExportToFile( final String filename, final Date from, final Date to, String separator, final String dateFormatPattern )
   {
     try
     {
       int line = 0;
-      Statement st = m_con.createStatement();
-      ResultSet set = st.executeQuery( createQuery( from, to ) );
+      final Statement st = m_con.createStatement();
+      final ResultSet set = st.executeQuery( createQuery( from, to ) );
       try
       {
         if( separator == null )
@@ -239,7 +238,7 @@ public class Timeserie extends Persistent
           separator = ",";
         }
 
-        FileWriter fw = new FileWriter( filename );
+        final FileWriter fw = new FileWriter( filename );
 
         SimpleDateFormat sdf = null;
 
@@ -255,7 +254,7 @@ public class Timeserie extends Persistent
         while( set.next() )
         {
 
-          Date datum = new Date( set.getTime( 1 ).getTime() + set.getDate( 1 ).getTime() );
+          final Date datum = new Date( set.getTime( 1 ).getTime() + set.getDate( 1 ).getTime() );
           fw.write( sdf.format( datum ) );
           fw.write( separator );
           fw.write( set.getString( 2 ) );
@@ -267,7 +266,7 @@ public class Timeserie extends Persistent
 
         fw.close();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
@@ -279,7 +278,7 @@ public class Timeserie extends Persistent
 
       return line;
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -287,7 +286,7 @@ public class Timeserie extends Persistent
       {
         m_con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
@@ -302,7 +301,7 @@ public class Timeserie extends Persistent
    * @param from
    * @param to
    */
-  private String createQuery( java.util.Date from, java.util.Date to )
+  private String createQuery( final java.util.Date from, final java.util.Date to )
   {
     // get the name of the timeseries table
     final String tabname = m_dataTableName;
@@ -380,7 +379,7 @@ public class Timeserie extends Persistent
 
       return list.toArray( new TimeserieTupple[list.size()] );
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -413,11 +412,11 @@ public class Timeserie extends Persistent
   {
     try
     {
-      PreparedStatement stmt = m_con.prepareStatement( "SELECT NAME, DESCRIPTION, TYPE, CHANNEL_REF, DATATABLENAME FROM TS_TIMESERIES WHERE TSID = ?" );
+      final PreparedStatement stmt = m_con.prepareStatement( "SELECT NAME, DESCRIPTION, TYPE, CHANNEL_REF, DATATABLENAME FROM TS_TIMESERIES WHERE TSID = ?" );
 
       stmt.setInt( 1, m_ID );
 
-      ResultSet rs = stmt.executeQuery();
+      final ResultSet rs = stmt.executeQuery();
 
       rs.next();
 
@@ -432,7 +431,7 @@ public class Timeserie extends Persistent
 
       m_con.commit();
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -440,7 +439,7 @@ public class Timeserie extends Persistent
       {
         m_con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
@@ -452,21 +451,21 @@ public class Timeserie extends Persistent
    * 
    * @return list of all timeseries for a channel
    */
-  protected static List< ? > dbReadAll( final Connection con, int channelRef )
+  protected static List<Timeserie> dbReadAll( final Connection con, final int channelRef )
   {
-    Vector<Timeserie> v = new Vector<Timeserie>();
+    final Vector<Timeserie> v = new Vector<Timeserie>();
 
     try
     {
-      PreparedStatement stmt = con.prepareStatement( "SELECT TSID, NAME, DESCRIPTION, TYPE, DATATABLENAME FROM TS_TIMESERIES WHERE CHANNEL_REF = ? ORDER BY NAME" );
+      final PreparedStatement stmt = con.prepareStatement( "SELECT TSID, NAME, DESCRIPTION, TYPE, DATATABLENAME FROM TS_TIMESERIES WHERE CHANNEL_REF = ? ORDER BY NAME" );
 
       stmt.setInt( 1, channelRef );
 
-      ResultSet rs = stmt.executeQuery();
+      final ResultSet rs = stmt.executeQuery();
 
       while( rs.next() )
       {
-        Timeserie c = new Timeserie( con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs.getString( 5 ), channelRef );
+        final Timeserie c = new Timeserie( con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs.getString( 5 ), channelRef );
 
         v.add( c );
       }
@@ -476,7 +475,7 @@ public class Timeserie extends Persistent
 
       con.commit();
     }
-    catch( SQLException e )
+    catch( final SQLException e )
     {
       e.printStackTrace();
 
@@ -484,7 +483,7 @@ public class Timeserie extends Persistent
       {
         con.rollback();
       }
-      catch( SQLException e1 )
+      catch( final SQLException e1 )
       {
         e1.printStackTrace();
       }
@@ -494,7 +493,7 @@ public class Timeserie extends Persistent
   }
 
   @Override
-  public boolean equals( Object object )
+  public boolean equals( final Object object )
   {
     if( object == null )
       return false;

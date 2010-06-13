@@ -200,6 +200,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
+  @Override
   public double getElevation( final GM_Point location )
   {
     final int col = (int) Math.floor( (location.getX() - xllcorner) / cellSize );
@@ -217,6 +218,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    * Extended for better performance. according to the zoom factor only each (n) cell of the grid will be visited, 
    * after getting close enough will refine the representation of model. 
    */
+  @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException, GM_Exception
   {
     int iProportional = (int) (Math.min( envToVisit.getHeight(), envToVisit.getWidth()) /( cellSize * PROPORTIONAL_FACTOR ));
@@ -312,6 +314,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return maxEnvelope;
@@ -325,6 +328,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return this.crs;
@@ -334,6 +338,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
    * @returns a valid Maximum Elevation value or Double.NaN and not the default -Double.MAX_VALUE
    */
+  @Override
   public double getMaxElevation( )
   {
     return (maxElevation == -Double.MAX_VALUE) ? Double.NaN : maxElevation;
@@ -343,6 +348,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
    * @returns a valid Minimum Elevation value or Double.NaN and not the default Double.MAX_VALUE
    */
+  @Override
   public double getMinElevation( )
   {
     return (minElevation == Double.MAX_VALUE) ? Double.NaN : minElevation;
@@ -351,6 +357,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
    */
+  @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
 

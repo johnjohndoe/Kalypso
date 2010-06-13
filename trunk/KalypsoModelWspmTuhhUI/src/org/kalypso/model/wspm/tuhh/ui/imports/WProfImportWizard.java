@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.tuhh.ui.imports;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;

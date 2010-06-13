@@ -62,6 +62,7 @@ public class LogViewer extends ViewPart
   }
   public ISelectionListener listener = new ISelectionListener()
   {
+    @Override
     public void selectionChanged( final IWorkbenchPart sourcepart, final ISelection selection )
     {
       if( sourcepart != LogViewer.this )

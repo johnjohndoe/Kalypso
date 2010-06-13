@@ -56,6 +56,7 @@ public class KalypsoRiskCatalogContribution implements ICatalogContribution
   /**
    * @see org.kalypso.core.catalog.ICatalogContribution#contributeTo(org.kalypso.core.catalog.CatalogManager)
    */
+  @Override
   public void contributeTo( final CatalogManager catalogManager )
   {
     final URL catalogURL = getClass().getResource( "catalog.xml" ); //$NON-NLS-1$

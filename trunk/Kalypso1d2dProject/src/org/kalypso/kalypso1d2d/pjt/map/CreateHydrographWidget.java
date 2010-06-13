@@ -45,7 +45,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -61,13 +60,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class CreateHydrographWidget extends AbstractCreateHydrographWidget
 {
 
-  public CreateHydrographWidget( String name, String tooltip, QName qnameToCreate, IKalypsoFeatureTheme hydroTheme )
+  public CreateHydrographWidget( final String name, final String tooltip, final QName qnameToCreate, final IKalypsoFeatureTheme hydroTheme )
   {
     super( name, tooltip, qnameToCreate, hydroTheme );
   }
 
   @Override
-  protected IHydrograph createNewFeature( CommandableWorkspace workspace, Feature parentFeature, IRelationType parentRelation, IFeatureWrapper2 modelElement )
+  protected IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
@@ -76,8 +75,8 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
     HydrographUtils.setHydrographComponents( newFeature );
 
     final IHydrograph hydrograph = (IHydrograph) newFeature.getAdapter( IHydrograph.class );
-    hydrograph.setName( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0") ); //$NON-NLS-1$
-    hydrograph.setDescription( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1") ); //$NON-NLS-1$
+    hydrograph.setName( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0" ) ); //$NON-NLS-1$
+    hydrograph.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1" ) ); //$NON-NLS-1$
 
     return hydrograph;
   }
@@ -87,19 +86,14 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
    *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
-  protected IFeatureWrapper2 findModelElementFromCurrentPosition( IFEDiscretisationModel1d2d discModel, GM_Point currentPos, double grabDistance )
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return findModelNodeFromPosition( discModel, currentPos, grabDistance );
   }
 
-  @SuppressWarnings("unchecked")
-  private static IFeatureWrapper2 findModelNodeFromPosition( IFEDiscretisationModel1d2d discModel, GM_Point currentPos, double grabDistance )
+  private static IFeatureWrapper2 findModelNodeFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
-    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
-    if( node != null )
-      return node;
-
-    return null;
+    return discModel.findNode( currentPos, grabDistance );
   }
 
 }

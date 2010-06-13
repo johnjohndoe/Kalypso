@@ -185,11 +185,11 @@ public abstract class AbstractManager
 
   protected void createProperties( final HashMap<String, String> propCollector, final String line, final String formatLine ) throws Exception
   {
-    final HashMap<String, String> propertyMap = FortranFormatHelper.scanf( formatLine, line );
-    final Iterator it = propertyMap.keySet().iterator();
+    final Map<String, String> propertyMap = FortranFormatHelper.scanf( formatLine, line );
+    final Iterator<String> it = propertyMap.keySet().iterator();
     while( it.hasNext() )
     {
-      final String key = (String) it.next();
+      final String key = it.next();
       propCollector.put( key, propertyMap.get( key ) );
     }
   }
@@ -213,7 +213,7 @@ public abstract class AbstractManager
       if( prop instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = (IValuePropertyType) prop;
-        final Class clazz = vpt.getValueClass();
+        final Class< ? > clazz = vpt.getValueClass();
         final String value = col.get( vpt.getQName().getLocalPart() );
         if( clazz == String.class )
           feature.setProperty( vpt, value );

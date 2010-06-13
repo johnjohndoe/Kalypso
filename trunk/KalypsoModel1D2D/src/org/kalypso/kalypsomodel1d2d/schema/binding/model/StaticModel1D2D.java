@@ -76,6 +76,7 @@ public class StaticModel1D2D extends VersionedModel implements IStaticModel1D2D
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getDiscretisationModel()
    */
+  @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel( )
   {
     return getSubModel( SIM_BASE_P_DICRRETISATION_MODEL, IFEDiscretisationModel1d2d.class );

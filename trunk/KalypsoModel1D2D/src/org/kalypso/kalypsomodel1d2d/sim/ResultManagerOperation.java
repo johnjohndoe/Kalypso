@@ -43,10 +43,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
@@ -109,6 +106,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.0" ) ); //$NON-NLS-1$

@@ -40,11 +40,13 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
 
   }
 
+  @Override
   public List<ILanduseClass> getLanduseClassesList( )
   {
     return m_landuseClasses;
   }
 
+  @Override
   public ILanduseClass createNewLanduseClass( )
   {
     try
@@ -62,11 +64,13 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     }
   }
 
+  @Override
   public IDamageFunction createNewDamageFunction( )
   {
     return m_damageFunctions.addNew( IDamageFunction.QNAME );
   }
 
+  @Override
   public IAssetValueClass getAssetValueClass( final Double value, final String name, final String description )
   {
     for( final IAssetValueClass assetClass : m_assetValueClasses )
@@ -85,26 +89,31 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
 
   }
 
+  @Override
   public IAssetValueClass createNewAssetValueClass( )
   {
     return m_assetValueClasses.addNew( IAssetValueClass.QNAME );
   }
 
+  @Override
   public List<IAssetValueClass> getAssetValueClassesList( )
   {
     return m_assetValueClasses;
   }
 
+  @Override
   public List<IDamageFunction> getDamageFunctionsList( )
   {
     return m_damageFunctions;
   }
 
+  @Override
   public List<IRiskZoneDefinition> getRiskZoneDefinitionsList( )
   {
     return m_riskZoneDefinitions;
   }
 
+  @Override
   public boolean containsLanduseClass( final String landuseClassName )
   {
     for( final ILanduseClass landuseClass : m_landuseClasses )
@@ -113,6 +122,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     return false;
   }
 
+  @Override
   public int getNextAvailableLanduseClassOrdinalNumber( )
   {
     int maxOrdinal = 0;
@@ -126,6 +136,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   }
 
   // TODO: check if needed
+  @Override
   public List<String> getLanduseClassID( final String landuseClassName )
   {
     final List<String> list = new ArrayList<String>();
@@ -135,6 +146,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     return list;
   }
 
+  @Override
   public void resetStatistics( )
   {
     for( final ILanduseClass landuseClass : m_landuseClasses )
@@ -148,6 +160,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
 
   // TODO: what is that good for? when gets the damage value negative? this should never happen! Maybe it is better to
   // check the values while processing / creating them!
+  @Override
   public void fixStatisticsForShowingToUser( )
   {
     for( final ILanduseClass landuseClass : m_landuseClasses )
@@ -163,6 +176,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
    * checks if a damageFunction with the same name, description and value (function) is already existing and returns the
    * existing one. Otherwise null is returned
    */
+  @Override
   public IDamageFunction getDamageFunction( final String name, final String value, final String description )
   {
     for( final IDamageFunction damageFunction : m_damageFunctions )
@@ -176,6 +190,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   /**
    * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getStatisticObs()
    */
+  @Override
   public IObservation<TupleResult> getStatisticObs( )
   {
     // final Feature feature = getStatisticObsFeature();
@@ -186,6 +201,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   /**
    * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getStatisticObsFeature()
    */
+  @Override
   public Feature getStatisticObsFeature( )
   {
     return (Feature) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
@@ -194,6 +210,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   /**
    * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getSuggestedAssetValueClass(java.lang.String)
    */
+  @Override
   public IAssetValueClass getSuggestedAssetValueClass( final String name )
   {
     int minLevenshteinDistance = Integer.MAX_VALUE;
@@ -223,6 +240,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   /**
    * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getSuggestedDamageFunction(java.lang.String)
    */
+  @Override
   public IDamageFunction getSuggestedDamageFunction( final String name )
   {
     int minLevenshteinDistance = Integer.MAX_VALUE;

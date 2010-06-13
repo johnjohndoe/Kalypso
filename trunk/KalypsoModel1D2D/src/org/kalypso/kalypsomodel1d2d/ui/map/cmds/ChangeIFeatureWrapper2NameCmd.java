@@ -97,6 +97,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     if( changed )
@@ -112,6 +113,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
    */
+  @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return null;
@@ -120,6 +122,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd.2"); //$NON-NLS-1$
@@ -128,6 +131,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return true;
@@ -138,6 +142,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     try
@@ -179,6 +184,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     if( !changed )
@@ -190,6 +196,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     featureToRename.setDescription( oldName );

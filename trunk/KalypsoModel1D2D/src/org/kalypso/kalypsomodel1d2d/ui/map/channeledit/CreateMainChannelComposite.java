@@ -517,6 +517,7 @@ public class CreateMainChannelComposite extends Composite
 
     combviewerBank1.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -613,6 +614,7 @@ public class CreateMainChannelComposite extends Composite
 
     combviewerBank2.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -772,6 +774,7 @@ public class CreateMainChannelComposite extends Composite
 
     combviewerProfiles.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -1073,6 +1076,7 @@ public class CreateMainChannelComposite extends Composite
   {
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         m_widget.setDelegate( null );

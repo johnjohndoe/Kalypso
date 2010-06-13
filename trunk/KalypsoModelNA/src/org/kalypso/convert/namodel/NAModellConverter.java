@@ -56,7 +56,6 @@ import org.kalypso.convert.namodel.manager.IdleLanduseManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.manager.NutzungManager;
 import org.kalypso.convert.namodel.manager.ParseManager;
-import org.kalypso.convert.namodel.manager.RHBManager;
 import org.kalypso.convert.namodel.manager.SchneeManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -84,8 +83,6 @@ public class NAModellConverter
 
   private final NetFileManager m_nodeManager;
 
-  private final RHBManager m_rhbManager;
-
   private final HydrotopManager m_hydrotopManager;
 
   private final BodenartManager m_bodartManager;
@@ -111,7 +108,7 @@ public class NAModellConverter
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
     m_nodeManager = new NetFileManager( m_conf );
-    m_rhbManager = new RHBManager( m_modelSchema, m_conf );
+// m_rhbManager = new RHBManager( m_modelSchema, m_conf );
     m_hydrotopManager = new HydrotopManager( m_conf );
 // m_swaleAndTrenchManager = new SwaleAndTrenchManager( m_modelSchema, m_conf );
     m_bodartManager = new BodenartManager( m_parameterSchema, m_conf );
@@ -119,7 +116,7 @@ public class NAModellConverter
     m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
     m_schneeManager = new SchneeManager( m_parameterSchema, m_conf );
     m_idleLanduseManager = new IdleLanduseManager( m_parameterSchema, m_conf );
-    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager, m_nodeManager, m_rhbManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager, m_idleLanduseManager );
+    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager, m_nodeManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager, m_idleLanduseManager );
   }
 
   public ParseManager getParseManager( )
@@ -191,8 +188,8 @@ public class NAModellConverter
   }
 
 // public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace, GMLWorkspace
-  // parameterWorkspace, GMLWorkspace hydrotopWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider
-  // nodeResultProvider ) throws Exception
+// parameterWorkspace, GMLWorkspace hydrotopWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider
+// nodeResultProvider ) throws Exception
 // {
 // NAModellConverter main = new NAModellConverter( conf );
 // main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );

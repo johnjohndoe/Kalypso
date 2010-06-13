@@ -429,6 +429,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     final Control control = m_gridWidgetFace.createControl( parent, toolkit, this );
@@ -439,6 +440,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     m_gridWidgetFace.disposeControl();

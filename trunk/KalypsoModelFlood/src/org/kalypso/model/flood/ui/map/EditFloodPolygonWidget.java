@@ -67,6 +67,7 @@ public class EditFloodPolygonWidget extends AbstractDelegateWidget
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
     {
+      @Override
       public void run( )
       {
         try

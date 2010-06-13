@@ -43,17 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -125,6 +116,7 @@ public class TimeStepFillerWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final DateFormat DATETIMEFORMAT = KalypsoGisPlugin.getDefault().getDisplayDateTimeFormat();
@@ -145,6 +137,7 @@ public class TimeStepFillerWizardPage extends WizardPage
     final Text dateTimeFrom = new Text( container, SWT.BORDER );
     dateTimeFrom.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         try
@@ -201,6 +194,7 @@ public class TimeStepFillerWizardPage extends WizardPage
     final Text dateTimeTo = new Text( container, SWT.BORDER );
     dateTimeTo.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         try
@@ -256,6 +250,7 @@ public class TimeStepFillerWizardPage extends WizardPage
     final Text dateTimeStep = new Text( container, SWT.BORDER );
     dateTimeStep.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String numberPattern = "\\d+"; //$NON-NLS-1$
@@ -292,6 +287,7 @@ public class TimeStepFillerWizardPage extends WizardPage
     uRelFactorCombo.setLayoutData( gridFillHorizontal );
     uRelFactorCombo.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         m_uRelFactor = uRelFactorCombo.getText();

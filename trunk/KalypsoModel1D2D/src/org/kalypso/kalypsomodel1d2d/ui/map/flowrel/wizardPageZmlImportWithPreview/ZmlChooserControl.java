@@ -182,6 +182,7 @@ public abstract class ZmlChooserControl
     m_dateFromTxt.setEnabled( false );
     m_dateFromTxt.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
@@ -239,6 +240,7 @@ public abstract class ZmlChooserControl
     m_dateToTxt.setEnabled( false );
     m_dateToTxt.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
@@ -306,6 +308,7 @@ public abstract class ZmlChooserControl
 
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {

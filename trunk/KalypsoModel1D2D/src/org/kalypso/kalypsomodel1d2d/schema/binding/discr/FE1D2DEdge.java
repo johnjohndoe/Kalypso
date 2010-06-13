@@ -91,6 +91,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getNodes()
    */
+  @Override
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( )
   {
     return m_nodes;
@@ -99,6 +100,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getMiddleNode()
    */
+  @Override
   public IFE1D2DNode getMiddleNode( )
   {
     if( getFeature().getProperty( IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE ) != null )
@@ -115,6 +117,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setMiddleNode(org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode)
    */
+  @Override
   public void setMiddleNode( final IFE1D2DNode middleNode )
   {
     String newMiddleNodeID = null;
@@ -157,6 +160,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getContainers()
    */
+  @Override
   public IFeatureWrapperCollection<IFE1D2DElement> getContainers( )
   {
     return m_containers;
@@ -174,6 +178,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addContainer(java.lang.String)
    */
+  @Override
   public void addContainer( final String containerID )
   {
     Assert.throwIAEOnNullParam( containerID, "containerID" ); //$NON-NLS-1$
@@ -191,6 +196,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
    */
+  @Override
   public IFE1D2DNode getNode( final int index ) throws IndexOutOfBoundsException
   {
     return m_nodes.get( index );
@@ -199,6 +205,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addNode(java.lang.String)
    */
+  @Override
   public void addNode( final String nodeID )
   {
     final FeatureList wrappedList = m_nodes.getWrappedList();
@@ -230,6 +237,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getMiddleNodePoint()
    */
+  @Override
   public GM_Point getMiddleNodePoint( )
   {
     final GM_Point point1 = m_nodes.get( 0 ).getPoint();
@@ -248,6 +256,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getLeftElement()
    */
+  @Override
   public IFeatureWrapperCollection<IFE1D2DElement> getAdjacentElements( )
   {
     return getContainers();
@@ -256,6 +265,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#isBorder()
    */
+  @Override
   public boolean isBorder( )
   {
     final IFeatureWrapperCollection<IFE1D2DElement> containers = getContainers();

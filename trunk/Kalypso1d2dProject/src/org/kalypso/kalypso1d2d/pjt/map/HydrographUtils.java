@@ -68,8 +68,8 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -97,7 +97,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class HydrographUtils
 {
-  @SuppressWarnings("unchecked")
   public static GM_Position getHydroPositionFromElement( final IFeatureWrapper2 modelElement )
   {
     try
@@ -105,7 +104,7 @@ public class HydrographUtils
       /* Node: return its position */
       final GM_Object geom;
       if( modelElement instanceof IFE1D2DNode )
-        geom = ((IFE1D2DNode) modelElement).getPoint();
+        geom = ((IFE1D2DNode< ? >) modelElement).getPoint();
       else
         geom = null;
 

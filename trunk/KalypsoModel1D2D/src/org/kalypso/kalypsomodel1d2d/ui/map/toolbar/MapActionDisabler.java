@@ -179,6 +179,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
   /**
    * @see org.eclipse.jface.action.IContributionManagerOverrides#getAccelerator(org.eclipse.jface.action.IContributionItem)
    */
+  @Override
   public Integer getAccelerator( IContributionItem item )
   {
     return decorated.getAccelerator( item );
@@ -187,6 +188,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
   /**
    * @see org.eclipse.jface.action.IContributionManagerOverrides#getAcceleratorText(org.eclipse.jface.action.IContributionItem)
    */
+  @Override
   public String getAcceleratorText( IContributionItem item )
   {
     return decorated.getAcceleratorText( item );
@@ -195,6 +197,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
   /**
    * @see org.eclipse.jface.action.IContributionManagerOverrides#getEnabled(org.eclipse.jface.action.IContributionItem)
    */
+  @Override
   public Boolean getEnabled( IContributionItem item )
   {
     final String itemID = item.getId();
@@ -211,6 +214,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
   /**
    * @see org.eclipse.jface.action.IContributionManagerOverrides#getText(org.eclipse.jface.action.IContributionItem)
    */
+  @Override
   public String getText( IContributionItem item )
   {
     return decorated.getText( item );

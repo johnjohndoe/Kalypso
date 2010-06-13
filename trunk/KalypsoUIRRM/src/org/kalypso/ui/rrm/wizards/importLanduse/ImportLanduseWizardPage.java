@@ -72,6 +72,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * @param parent
    *          the parent composite
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -95,7 +96,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     gd0.horizontalSpan = 2;
     cmbLanduseProperty.setEnabled( false );
     cmbLanduseProperty.setLayoutData( gd0 );
-    
+
     // Sealing factor property combo box
     new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.14" ) ); //$NON-NLS-1$
     cmbSealingFactorProperty = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
@@ -151,7 +152,6 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * @param assetValueClassesList
    * @param damageFunctionNamesList
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -159,7 +159,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
 
     m_fileExtensions.add( new String( "shp" ) ); //$NON-NLS-1$
 
-    final Iterator iter = ((IStructuredSelection) selection).iterator();
+    final Iterator< ? > iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
       Object item = iter.next();
@@ -294,12 +294,14 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     return cmbLanduseProperty.isEnabled();
   }
 
+  @Override
   public void widgetDefaultSelected( final SelectionEvent event )
   {
     // TODO Auto-generated method stub
 
   }
 
+  @Override
   public void widgetSelected( final SelectionEvent event )
   {
     if( event.widget == btn_inputLanduseFileBrowse )
@@ -311,6 +313,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     getWizard().getContainer().updateButtons();
   }
 
+  @Override
   public void modifyText( final ModifyEvent event )
   {
     // Initialize a variable with the no error status

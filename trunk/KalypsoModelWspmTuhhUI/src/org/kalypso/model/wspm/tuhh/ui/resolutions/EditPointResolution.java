@@ -86,7 +86,8 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
- public boolean resolve( final IProfil profil )
+ @Override
+public boolean resolve( final IProfil profil )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )

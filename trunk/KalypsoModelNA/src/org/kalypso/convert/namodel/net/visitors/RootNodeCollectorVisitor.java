@@ -62,7 +62,7 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
    * 
    * @author doemming
    */
-  public RootNodeCollectorVisitor( Feature singleResultNode )
+  public RootNodeCollectorVisitor( final Feature singleResultNode )
   {
     m_singleResultNode = singleResultNode;
   }
@@ -100,7 +100,7 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
     return true;
   }
 
-  public List getRootNodeElements( )
+  public List<NetElement> getRootNodeElements( )
   {
     return m_rootNetElements;
   }

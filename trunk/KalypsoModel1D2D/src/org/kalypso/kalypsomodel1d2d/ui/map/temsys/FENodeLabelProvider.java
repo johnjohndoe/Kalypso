@@ -8,11 +8,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 public class FENodeLabelProvider implements ITableLabelProvider {
 
-	public Image getColumnImage(Object element, int columnIndex) {
+	@Override
+  public Image getColumnImage(Object element, int columnIndex) {
 		return null;
 	}
 
-	public String getColumnText(Object element, int index) {
+	@Override
+  public String getColumnText(Object element, int index) {
 		if(element instanceof IFE1D2DNode)
         {
 		  return getNodeColumnText((IFE1D2DNode)element, index);
@@ -44,19 +46,23 @@ public class FENodeLabelProvider implements ITableLabelProvider {
     
   }
 
+  @Override
   public void addListener(ILabelProviderListener listener) {
 		
 	}
 
-	public void dispose() {
+	@Override
+  public void dispose() {
 		
 	}
 
-	public boolean isLabelProperty(Object element, String property) {
+	@Override
+  public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
 
-	public void removeListener(ILabelProviderListener listener) {
+	@Override
+  public void removeListener(ILabelProviderListener listener) {
 		
 	}
     

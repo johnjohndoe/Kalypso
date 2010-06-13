@@ -66,6 +66,7 @@ public class CalcDataProviderDecorater implements ISimulationDataProvider
     m_map.put( id, url );
   }
 
+  @Override
   public Object getInputForID( String id ) throws SimulationException
   {
     if( m_map.containsKey( id ) )
@@ -75,6 +76,7 @@ public class CalcDataProviderDecorater implements ISimulationDataProvider
     return m_calcDataProvider.getInputForID( id );
   }
 
+  @Override
   public boolean hasID( String id )
   {
     if( m_map.containsKey( id ) )
@@ -85,6 +87,7 @@ public class CalcDataProviderDecorater implements ISimulationDataProvider
   /**
    * @see org.kalypso.simulation.core.ISimulationDataProvider#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_calcDataProvider.dispose();

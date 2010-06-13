@@ -70,6 +70,7 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerainModel#getRiverProfileNetworkCollection()
    */
+  @Override
   public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( )
   {
     final Feature feature = (Feature) getFeature().getProperty( QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER );
@@ -82,6 +83,7 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessPolygonCollection()
    */
+  @Override
   public List<IRoughnessPolygonCollection> getRoughnessPolygonCollections( )
   {
     final List<IRoughnessPolygonCollection> list = new ArrayList<IRoughnessPolygonCollection>();
@@ -93,11 +95,13 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessLayerCollection(org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessLayer)
    */
+  @Override
   public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer )
   {
     return new RoughnessPolygonCollection( roughnessLayer.getFeature(), IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
   }
 
+  @Override
   public ITerrainElevationModelSystem getTerrainElevationModelSystem( )
   {
     final Feature feature = (Feature) getFeature().getProperty( SIM_BASE_PROP_TERRAIN_ELE_SYS );
@@ -115,6 +119,7 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessLayerCollection()
    */
+  @Override
   public IFeatureWrapperCollection<IRoughnessLayer> getRoughnessLayerCollection( )
   {
     return m_roughnessLayers;

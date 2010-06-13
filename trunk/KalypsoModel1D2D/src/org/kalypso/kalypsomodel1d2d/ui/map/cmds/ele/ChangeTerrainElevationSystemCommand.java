@@ -113,6 +113,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -121,6 +122,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return isUndoable;
@@ -129,6 +131,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
@@ -193,6 +196,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     for( final IFeatureChangeCommand command : m_commands )
@@ -211,6 +215,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
 

@@ -17,14 +17,18 @@ public interface IDamageFunction extends IFeatureWrapper2
 
   public String getFunction( );
 
+  @Override
   public void setName( final String name );
 
+  @Override
   public String getName( );
 
   public void setFunction( final String function );
 
+  @Override
   public void setDescription( final String description );
 
+  @Override
   public String getDescription( );
 
 }

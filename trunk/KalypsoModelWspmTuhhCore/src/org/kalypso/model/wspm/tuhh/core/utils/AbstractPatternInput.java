@@ -52,11 +52,13 @@ public abstract class AbstractPatternInput<T> implements IPatternInput<T>
     m_label = label;
   }
 
+  @Override
   public final String getLabel( )
   {
     return m_label;
   }
 
+  @Override
   public final String getToken( )
   {
     return m_token;

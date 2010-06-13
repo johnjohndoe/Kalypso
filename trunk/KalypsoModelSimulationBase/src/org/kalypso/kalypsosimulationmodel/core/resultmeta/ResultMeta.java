@@ -66,6 +66,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getChildren()
    */
+  @Override
   public IFeatureWrapperCollection<IResultMeta> getChildren( )
   {
     return m_children;
@@ -74,6 +75,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getParent()
    */
+  @Override
   public IResultMeta getParent( )
   {
     final Feature parentFeature = getFeature().getParent();
@@ -86,6 +88,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getPath()
    */
+  @Override
   public IPath getPath( )
   {
     final String path = (String) getFeature().getProperty( QNAME_PROP_PATH );
@@ -98,6 +101,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getStatus()
    */
+  @Override
   public IStatus getStatus( )
   {
     final Feature statusFeature = (Feature) getFeature().getProperty( QNAME_PROP_STATUS );
@@ -110,6 +114,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#setPath(java.lang.String)
    */
+  @Override
   public void setPath( final IPath path )
   {
     getFeature().setProperty( QNAME_PROP_PATH, path.toPortableString() );
@@ -118,6 +123,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#setStatus(org.eclipse.core.runtime.IStatus)
    */
+  @Override
   public void setStatus( final IStatus status )
   {
     if( status instanceof org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus )
@@ -131,6 +137,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta#getFullPath()
    */
+  @Override
   public IPath getFullPath( )
   {
     final IPath path = getPath();
@@ -148,6 +155,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#deleteChild(org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta)
    */
+  @Override
   public void removeChild( final IResultMeta result )
   {
     final IFeatureWrapperCollection<IResultMeta> children = getChildren();

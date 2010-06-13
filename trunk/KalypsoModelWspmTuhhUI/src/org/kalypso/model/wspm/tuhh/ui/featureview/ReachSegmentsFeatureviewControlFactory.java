@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.tuhh.ui.featureview;
 import java.util.Properties;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -56,6 +56,7 @@ public class ReachSegmentsFeatureviewControlFactory implements IExtensionsFeatur
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
    */
+  @Override
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
     return new ReachSegmentFeatureControl( feature, pt );

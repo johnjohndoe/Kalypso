@@ -88,6 +88,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     m_punktattribute.addAttributeMapping( markerID, pointAttribute );
   }
 
+  @Override
   public void finished( ) throws CoreException
   {
     addProfiles( m_strategy );

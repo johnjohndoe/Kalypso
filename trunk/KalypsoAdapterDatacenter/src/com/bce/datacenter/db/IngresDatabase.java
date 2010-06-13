@@ -1,6 +1,10 @@
 package com.bce.datacenter.db;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Convenience database connection class for the ingres database

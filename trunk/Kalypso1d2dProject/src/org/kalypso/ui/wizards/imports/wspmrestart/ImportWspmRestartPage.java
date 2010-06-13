@@ -81,6 +81,7 @@ public class ImportWspmRestartPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     /* Filters every none-WSPM project */
@@ -138,6 +139,7 @@ public class ImportWspmRestartPage extends WizardPage
 
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection() );

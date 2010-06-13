@@ -10,6 +10,7 @@ public class DamageFunction extends AbstractFeatureBinder implements IDamageFunc
     super( featureToBind, IDamageFunction.QNAME );
   }
 
+  @Override
   public String getFunction( )
   {
     return (String) getFeature().getProperty( IDamageFunction.PROP_FUNCTION );
@@ -27,6 +28,7 @@ public class DamageFunction extends AbstractFeatureBinder implements IDamageFunc
     return (String) getFeature().getProperty( IDamageFunction.PROP_DESCRIPTION );
   }
 
+  @Override
   public void setFunction( final String function )
   {
     getFeature().setProperty( IDamageFunction.PROP_FUNCTION, function );

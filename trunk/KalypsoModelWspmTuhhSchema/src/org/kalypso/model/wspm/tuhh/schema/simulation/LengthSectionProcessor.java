@@ -87,8 +87,8 @@ import org.xml.sax.SAXException;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chartconfig.x020.AxisType;
-import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.AxisType.Direction;
+import de.openali.odysseus.chartconfig.x020.ChartType;
 
 public class LengthSectionProcessor
 {

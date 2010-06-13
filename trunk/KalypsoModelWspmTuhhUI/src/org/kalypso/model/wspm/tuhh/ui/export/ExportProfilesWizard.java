@@ -112,6 +112,7 @@ public abstract class ExportProfilesWizard extends Wizard
 
     final ICoreRunnableWithProgress m_exportJob = new ICoreRunnableWithProgress()
     {
+      @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
         try

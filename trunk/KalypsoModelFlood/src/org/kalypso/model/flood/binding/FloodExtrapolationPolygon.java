@@ -56,6 +56,7 @@ public class FloodExtrapolationPolygon extends AbstractFloodPolygon implements I
   /**
    * @see org.kalypso.model.flood.binding.IFloodExtrapolationPolygon#getRefPoint()
    */
+  @Override
   public GM_Point getRefPoint( )
   {
     return getProperty( QNAME_PROP_REFPOINT, GM_Point.class );

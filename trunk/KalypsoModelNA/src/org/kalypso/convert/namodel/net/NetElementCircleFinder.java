@@ -31,14 +31,11 @@ package org.kalypso.convert.namodel.net;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.i18n.Messages;
 
 /**
- * 
- * 
  * @author doemming
  */
 public class NetElementCircleFinder
@@ -54,26 +51,24 @@ public class NetElementCircleFinder
     m_testNetElement = testNetElement;
   }
 
-  public List[] findCircle()
+  public List<NetElement>[] findCircle( )
   {
     return findCircle( m_testNetElement, new ArrayList<NetElement>() );
   }
 
-  private List[] findCircle( NetElement netElement, final List<NetElement> listToHere )
+  private List<NetElement>[] findCircle( final NetElement netElement, final List<NetElement> listToHere )
   {
-    final List<Object> result = new ArrayList<Object>();
+    final List<List<NetElement>> result = new ArrayList<List<NetElement>>();
     listToHere.add( netElement );
-    final List downStreamNetElements = netElement.getDownStreamNetElements();
-    final NetElement[] downStreamElements = (NetElement[])downStreamNetElements
-        .toArray( new NetElement[downStreamNetElements.size()] );
-    for( int i = 0; i < downStreamElements.length; i++ )
+    final List<NetElement> downStreamNetElements = netElement.getDownStreamNetElements();
+    final NetElement[] downStreamElements = downStreamNetElements.toArray( new NetElement[downStreamNetElements.size()] );
+    for( final NetElement linkNetElement : downStreamElements )
     {
       final List<NetElement> copyOfListToHere = new ArrayList<NetElement>();
       // make copy
-      for( Iterator<NetElement> iter = listToHere.iterator(); iter.hasNext(); )
-        copyOfListToHere.add( iter.next() );
+      for( final NetElement netElement2 : listToHere )
+        copyOfListToHere.add( netElement2 );
 
-      final NetElement linkNetElement = downStreamElements[i];
       if( linkNetElement == m_testNetElement )
       {
         copyOfListToHere.add( linkNetElement );
@@ -82,11 +77,11 @@ public class NetElementCircleFinder
       else if( listToHere.contains( linkNetElement ) )
       {
         // an other circle
-        System.out.println( Messages.getString("org.kalypso.convert.namodel.net.NetElementCircleFinder.0") + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
+        System.out.println( Messages.getString( "org.kalypso.convert.namodel.net.NetElementCircleFinder.0" ) + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {
-        final List[] lists = findCircle( linkNetElement, copyOfListToHere );
+        final List<NetElement>[] lists = findCircle( linkNetElement, copyOfListToHere );
         if( lists.length > 0 )
           result.addAll( Arrays.asList( lists ) );
       }

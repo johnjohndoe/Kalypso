@@ -63,6 +63,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
   }
 
+  @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -75,10 +76,9 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
-
       landusePolygonCollection.clear();
 
-      RiskLanduseHelper.handleUsePreDefinedData( m_damageFunctionsCollectionName, m_assetValuesCollectionName, m_controlModel, m_predefinedDamageFunctionsCollection, m_predefinedAssetValueClassesCollection, Feature.QN_NAME, PROP_DATA_MEMBER, Feature.QN_DESCRIPTION, PROP_VALUE, m_predefinedLanduseColorsCollection );
+      RiskLanduseHelper.handleUsePreDefinedData( m_damageFunctionsCollectionName, m_assetValuesCollectionName, m_controlModel, m_predefinedDamageFunctionsCollection, m_predefinedAssetValueClassesCollection, Feature.QN_NAME, PROP_DATA_MEMBER, Feature.QN_DESCRIPTION, PROP_VALUE );
 
       /* create new landuse classes */
       RiskLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, m_predefinedLanduseColorsCollection, Feature.QN_NAME, PROP_DATA_MEMBER, PROP_VALUE );

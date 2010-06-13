@@ -57,6 +57,7 @@ public class ProfileData
     return resultMax - resultMin;
   }
 
+  @Override
   public String toString( )
   {
     final StringBuffer result = new StringBuffer( Messages.getString("org.kalypso.model.km.ProfileData.0") + m_meter + Messages.getString("org.kalypso.model.km.ProfileData.1") ); //$NON-NLS-1$ //$NON-NLS-2$

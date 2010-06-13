@@ -18,29 +18,27 @@ public class DataObjectFactory
 {
   /**
    * Loads all channels belonging to the given owner
+   * 
    * @param con
    * @param ownerRef
    *          owner id
    * @return all channels belonging to the given owner
    */
-  public static List loadChannels( final Connection con, final int ownerRef )
+  public static List<Channel> loadChannels( final Connection con, final int ownerRef )
   {
     final Vector<Channel> v = new Vector<Channel>();
 
     try
     {
-      PreparedStatement stmt = con.prepareStatement(
-              "SELECT ID, NAME, DESCRIPTION, IDENTIFIER, TYPE_REF, UNIT_REF FROM TS_CHANNEL WHERE OWNER_REF = ? ORDER BY NAME ASC" );
+      final PreparedStatement stmt = con.prepareStatement( "SELECT ID, NAME, DESCRIPTION, IDENTIFIER, TYPE_REF, UNIT_REF FROM TS_CHANNEL WHERE OWNER_REF = ? ORDER BY NAME ASC" );
 
       stmt.setInt( 1, ownerRef );
 
-      ResultSet set = stmt.executeQuery();
+      final ResultSet set = stmt.executeQuery();
 
       while( set.next() == true )
       {
-        Channel c = new Channel( con, set.getInt( 1 ), set.getString( 2 ), set
-            .getString( 3 ), set.getString( 4 ), ownerRef, set.getInt( 5 ), set
-            .getInt( 6 ) );
+        final Channel c = new Channel( con, set.getInt( 1 ), set.getString( 2 ), set.getString( 3 ), set.getString( 4 ), ownerRef, set.getInt( 5 ), set.getInt( 6 ) );
 
         v.add( c );
       }
@@ -50,9 +48,9 @@ public class DataObjectFactory
 
       con.commit();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      e.printStackTrace( );
+      e.printStackTrace();
     }
 
     return v;
@@ -60,11 +58,12 @@ public class DataObjectFactory
 
   /**
    * Returns an owner Object from the database according to its identifier
+   * 
    * @param con
    * @param id
    * @return an owner Object from the database according to its identifier
    */
-  public static Persistent getOwner( final Connection con, int id )
+  public static Persistent getOwner( final Connection con, final int id )
   {
     return new Level( con, id );
   }

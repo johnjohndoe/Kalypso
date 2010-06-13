@@ -59,6 +59,7 @@ public class EventFilterExpression extends AbstractFunctionExpression
    * @see org.kalypsodeegree.filterencoding.IFunctionExpression#evaluate(org.kalypsodeegree.model.feature.Feature,
    *      java.util.List)
    */
+  @Override
   public Object evaluate( final Feature feature, final List<Expression> args ) throws FilterEvaluationException
   {
     if( args.size() != 1 )

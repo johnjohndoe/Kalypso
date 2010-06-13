@@ -64,8 +64,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages.DESCRIPTORS;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.editor.EditStyleDialog;
@@ -164,6 +164,7 @@ public class ResultStyleComposite
           EditStyleDialog styleEditor = new EditStyleDialog( m_editStyleButton.getShell(), m_resultAddLayerCommandData.getSldFile(), m_minValue, m_maxValue );
           styleEditor.addModifyListener( new IEditStyleDialogModifyListener()
           {
+            @Override
             public void onStyleChanged( Object source, IFile sldFile )
             {
               m_resultAddLayerCommandData.setSldFile( sldFile );
@@ -207,6 +208,7 @@ public class ResultStyleComposite
     m_combStyleTemplates.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {

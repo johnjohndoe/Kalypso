@@ -86,8 +86,6 @@ public class FeatureListGeometryIntersector
 
   private boolean m_initialized = false;
 
-  private long m_numberOfFeatures = 0;
-
   public FeatureListGeometryIntersector( )
   {
     m_initialized = false;

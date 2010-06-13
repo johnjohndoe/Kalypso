@@ -182,6 +182,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     // TRICKY: Scrolling behaviour:
@@ -244,6 +245,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     /* Hook Events */
     m_eventViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -437,6 +439,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
     button.addDisposeListener( new DisposeListener()
     {
+      @Override
       public void widgetDisposed( final DisposeEvent e )
       {
         image.dispose();
@@ -449,6 +452,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final IRasterDataModel model = m_model;
     final IInputValidator inputValidator = new IInputValidator()
     {
+      @Override
       public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
@@ -502,6 +506,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final IRasterDataModel model = m_model;
     final IInputValidator inputValidator = new IInputValidator()
     {
+      @Override
       public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
@@ -567,6 +572,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
 

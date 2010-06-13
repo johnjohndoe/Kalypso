@@ -52,96 +52,70 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class TestHMOTerrainElevationModelWrapper extends TestCase
 {
 
-    public void testWorkspaceLoad()
+  public void testWorkspaceLoad( )
+  {
+    GMLWorkspace workspace = null;
+
+    try
     {
-            
-        GMLWorkspace workspace=null;
-        GM_Point curPoint = 
-          GeometryFactory.createGM_Point( 
-            0.0, 
-            0.0,
-            TestWorkspaces.getGaussKrueger() );
-        
-        try
-        {
-            workspace=
-                GmlSerializer.createGMLWorkspace( 
-                                TestWorkspaces.URL_TEST_HMO_3_TRI, 
-                                null );
-            Feature rcFeature=workspace.getRootFeature();
-            NativeTerrainElevationModelWrapper hmo=
-              new NativeTerrainElevationModelWrapper(rcFeature);
-            
-            //point 0 0
-            double elevation = hmo.getElevation( makePoint( 0, 0 ) );
-            assertEquals(
-                Messages.getString("TestHMOTerrainElevationModelWrapper.0"), //$NON-NLS-1$
-                0.0, elevation);            
-            
-            //point 0 1
-            elevation = hmo.getElevation( makePoint( 0, 1 ) );
-            assertEquals( 
-                Messages.getString("TestHMOTerrainElevationModelWrapper.1"), //$NON-NLS-1$
-                1.0, elevation);
-            
-            //point 1 0
-            
-            elevation = hmo.getElevation( makePoint( 1, 0 ) );
-            assertEquals(
-                Messages.getString("TestHMOTerrainElevationModelWrapper.2"), //$NON-NLS-1$
-                1.0, elevation);
-            
-            //point 1 1
-            elevation = hmo.getElevation( makePoint( 1, 1 ) );
-            assertEquals( 
-                Messages.getString("TestHMOTerrainElevationModelWrapper.3"), 0.0, elevation); //$NON-NLS-1$
-            
-            //-1 -1
-            elevation = hmo.getElevation( makePoint( -1, -1 ) );
-            assertEquals( 
-                Messages.getString("TestHMOTerrainElevationModelWrapper.4"), //$NON-NLS-1$
-                0.0, 
-                elevation);
-            
-//          -1 -1
-            elevation = hmo.getElevation( makePoint( -0.1, -0.1 ) );
-            assertEquals( 
-                Messages.getString("TestHMOTerrainElevationModelWrapper.5"), //$NON-NLS-1$
-                0.0, 
-                elevation);
-            
-            //center of triangle ((0,0,0)(1,0,1)(0,1,1))
-            elevation = hmo.getElevation( makePoint( 1.0/3, 1.0/3 ) );
-            assertEquals( 
-                Messages.getString("TestHMOTerrainElevationModelWrapper.6"), //$NON-NLS-1$
-                2.0/3, 
-                elevation);
-            
-            ///
-            elevation = hmo.getElevation( makePoint( 1.0/3, 1.0/3 ) );
-            assertEquals( 
-                Messages.getString("TestHMOTerrainElevationModelWrapper.7"), //$NON-NLS-1$
-                2.0/3, 
-                elevation);
-            
-            
-        }
-        catch(Throwable th)
-        {
-            fail(TestUtils.getStackTraceAsString(th));
-        }
+      workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_TEST_HMO_3_TRI, null );
+      final Feature rcFeature = workspace.getRootFeature();
+      final NativeTerrainElevationModelWrapper hmo = new NativeTerrainElevationModelWrapper( rcFeature );
+
+      // point 0 0
+      double elevation = hmo.getElevation( makePoint( 0, 0 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.0" ), //$NON-NLS-1$
+      0.0, elevation );
+
+      // point 0 1
+      elevation = hmo.getElevation( makePoint( 0, 1 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.1" ), //$NON-NLS-1$
+      1.0, elevation );
+
+      // point 1 0
+
+      elevation = hmo.getElevation( makePoint( 1, 0 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.2" ), //$NON-NLS-1$
+      1.0, elevation );
+
+      // point 1 1
+      elevation = hmo.getElevation( makePoint( 1, 1 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.3" ), 0.0, elevation ); //$NON-NLS-1$
+
+      // -1 -1
+      elevation = hmo.getElevation( makePoint( -1, -1 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.4" ), //$NON-NLS-1$
+      0.0, elevation );
+
+      // -1 -1
+      elevation = hmo.getElevation( makePoint( -0.1, -0.1 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.5" ), //$NON-NLS-1$
+      0.0, elevation );
+
+      // center of triangle ((0,0,0)(1,0,1)(0,1,1))
+      elevation = hmo.getElevation( makePoint( 1.0 / 3, 1.0 / 3 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.6" ), //$NON-NLS-1$
+      2.0 / 3, elevation );
+
+      // /
+      elevation = hmo.getElevation( makePoint( 1.0 / 3, 1.0 / 3 ) );
+      assertEquals( Messages.getString( "TestHMOTerrainElevationModelWrapper.7" ), //$NON-NLS-1$
+      2.0 / 3, elevation );
+
     }
-    
-    private static final  GM_Point makePoint(double x, double y)
+    catch( final Throwable th )
     {
-      return GeometryFactory.createGM_Point( 
-                        x, 
-                        y,
-                        TestWorkspaces.getGaussKrueger() );
+      fail( TestUtils.getStackTraceAsString( th ) );
     }
+  }
+
+  private static final GM_Point makePoint( final double x, final double y )
+  {
+    return GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
+  }
 }

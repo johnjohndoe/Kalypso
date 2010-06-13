@@ -164,6 +164,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     return m_widgetFace.createControl( parent );
@@ -172,6 +173,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_widgetFace != null )

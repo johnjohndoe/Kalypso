@@ -203,7 +203,7 @@ public class OmbrometerUtils
     return changeMap;
   }
 
-  private static IOmbrometer findOmbrometerFor( final GM_Surface<GM_SurfacePatch> surface, final FeatureList geoIndex )
+  private static IOmbrometer findOmbrometerFor( final GM_Surface< ? > surface, final FeatureList geoIndex )
   {
     final List< ? > query = geoIndex.query( surface.getEnvelope(), null );
     for( final Object object : query )

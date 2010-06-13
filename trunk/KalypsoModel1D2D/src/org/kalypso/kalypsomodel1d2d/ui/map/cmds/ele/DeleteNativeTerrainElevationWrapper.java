@@ -72,6 +72,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
+  @Override
   public IFeatureWrapper2[] getChangedFeature( )
   {
     if( m_done )
@@ -84,6 +85,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.DeleteNativeTerrainElevationWrapper.0") + m_elevationModel.getName(); //$NON-NLS-1$
@@ -92,6 +94,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return !m_deleteFile;
@@ -100,6 +103,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     if( m_done )
@@ -112,6 +116,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -120,6 +125,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     if( !m_done || m_deleteFile )

@@ -124,6 +124,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // we do not have an legend item (yet?)
   }
 
+  @Override
   public void paint( final GC gc )
   {
 
@@ -224,6 +225,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
+  @Override
   public IDataRange<Number> getDomainRange( )
   {
     return rangeForComponent( m_domainComponent );
@@ -232,6 +234,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
+  @Override
   public IDataRange<Number> getTargetRange( )
   {
     return rangeForComponent( m_valueComponent );
@@ -411,8 +414,8 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     final IAxis xAxis = getDomainAxis();
     final IAxis yAxis = getTargetAxis();
 
-    final BigDecimal xValue = new BigDecimal( ((Number) xAxis.screenToNumeric( point.x )).doubleValue() );
-    final BigDecimal yValue = new BigDecimal( ((Number) yAxis.screenToNumeric( point.y )).doubleValue() );
+    final BigDecimal xValue = new BigDecimal( (xAxis.screenToNumeric( point.x )).doubleValue() );
+    final BigDecimal yValue = new BigDecimal( (yAxis.screenToNumeric( point.y )).doubleValue() );
 
     final IRecord record = (IRecord) info.m_data;
 
@@ -446,6 +449,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
+  @Override
   public void dispose( )
   {
     // nothing to do
@@ -455,6 +459,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
+  @Override
   public EditInfo commitDrag( Point point, EditInfo dragStartData )
   {
     // TODO Auto-generated method stub
@@ -465,6 +470,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
+  @Override
   public EditInfo drag( Point newPos, EditInfo dragStartData )
   {
     // TODO Auto-generated method stub
@@ -474,6 +480,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
+  @Override
   public EditInfo getHover( Point pos )
   {
     // TODO Auto-generated method stub
@@ -482,6 +489,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
    */
+  @Override
   public boolean isLocked( )
   {
     // TODO Auto-generated method stub
@@ -491,6 +499,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
    */
+  @Override
   public void lockLayer( boolean isLocked )
   {
     // TODO Auto-generated method stub

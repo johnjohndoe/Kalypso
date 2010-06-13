@@ -55,6 +55,7 @@ public class PageMain extends WizardPage implements Listener
     m_data = data;
   }
 
+  @Override
   public void createControl( final Composite parent )
   {
     // create the composite to hold the widgets
@@ -129,6 +130,7 @@ public class PageMain extends WizardPage implements Listener
   /**
    * @see Listener#handleEvent(Event)
    */
+  @Override
   public void handleEvent( final Event event )
   {
     // Initialize a variable with the no error status

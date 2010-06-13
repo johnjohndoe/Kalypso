@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -93,6 +94,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -242,21 +244,21 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
 
     // map catchment shape file
-    final HashMap<Object, Object> catchmentMapping = m_createMappingCatchmentPage.getMapping();
+    final Map<Object, Object> catchmentMapping = m_createMappingCatchmentPage.getMapping();
     if( catchmentMapping != null && catchmentMapping.size() != 0 )
     {
       final List< ? > catchmentFeatureList = m_createMappingCatchmentPage.getFeatureList();
       mapCatchment( catchmentFeatureList, catchmentMapping );
     }
     // map river shape file
-    final HashMap<Object, Object> riverMapping = m_createMappingRiverPage.getMapping();
+    final Map<Object, Object> riverMapping = m_createMappingRiverPage.getMapping();
     if( riverMapping != null && riverMapping.size() != 0 )
     {
       final List< ? > riverFeatureList = m_createMappingRiverPage.getFeatureList();
       mapRiver( riverFeatureList, riverMapping );
     }
     // map node shape file
-    final HashMap<Object, Object> nodeMapping = m_createMappingNodePage.getMapping();
+    final Map<Object, Object> nodeMapping = m_createMappingNodePage.getMapping();
     if( nodeMapping != null && nodeMapping.size() != 0 )
     {
       final List< ? > nodeFeatureList = m_createMappingNodePage.getFeatureList();
@@ -264,7 +266,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
 
     // map hydrotop shape file
-    final HashMap<Object, Object> hydMapping = m_createMappingHydrotopPage.getMapping();
+    final Map<Object, Object> hydMapping = m_createMappingHydrotopPage.getMapping();
     if( hydMapping != null && hydMapping.size() != 0 )
     {
       final List< ? > hydFeatureList = m_createMappingHydrotopPage.getFeatureList();
@@ -304,7 +306,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
   }
 
-  private void mapHyd( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
+  private void mapHyd( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
     final Feature rootFeature = m_hydWS.getRootFeature();
     final IFeatureType hydFT = getFeatureType( "Hydrotop" ); //$NON-NLS-1$
@@ -337,8 +339,8 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           }
           else if( so instanceof GM_Surface )
           {
-            final GM_Surface surface = (GM_Surface) so;
-            final GM_Surface[] surfaces = new GM_Surface[] { surface };
+            final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) so;
+            final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[] { surface };
             final GM_MultiSurface MultiSurface = GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
             so = MultiSurface;
             targetFeature.setProperty( targetPT, so );
@@ -412,7 +414,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     return fid;
   }
 
-  private void mapCatchment( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
+  private void mapCatchment( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
     final Feature rootFeature = m_modelWS.getRootFeature();
     final IFeatureType modelFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
@@ -447,7 +449,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
           if( so instanceof GM_MultiSurface )
           {
-            final GM_Surface[] surfaces = new GM_Surface[] { ((GM_MultiSurface) so).getSurfaceAt( 0 ) };
+            final GM_Surface< ? >[] surfaces = new GM_Surface[] { ((GM_MultiSurface) so).getSurfaceAt( 0 ) };
             final Long area = new Long( (long) (surfaces[0]).getArea() );
             targetFeature.setProperty( flaechPT, area );
             targetFeature.setProperty( targetkey, surfaces[0] );
@@ -495,7 +497,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
   }
 
-  private void mapNode( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
+  private void mapNode( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
     final Feature rootFeature = m_modelWS.getRootFeature();
     final IFeatureType modelFT = getFeatureType( "Node" ); //$NON-NLS-1$
@@ -553,7 +555,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
   }
 
-  private void mapRiver( final List< ? > sourceFeatureList, final HashMap<Object, Object> mapping )
+  private void mapRiver( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
     final Feature rootFeature = m_modelWS.getRootFeature();
 

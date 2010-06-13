@@ -123,6 +123,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     // TODO: this is not good, because now this wizard really does not work from the 'new' menu. So be consequent and
@@ -140,7 +141,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     m_selection = currentSelection;
 
     // TODO: why not use context.getVariable( ISource.ACTIVE_CURRENT_SELECTION_NAME ) ? Please comment at least
-    final List selectedResources = IDE.computeSelectedResources( currentSelection );
+    final List< ? > selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
       // TODO: at least dont set a selection here! What the wizard really wants is the base-folder

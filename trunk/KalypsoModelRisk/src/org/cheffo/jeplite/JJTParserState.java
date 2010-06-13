@@ -24,7 +24,8 @@ JEPLite Copyright (C) 2002 Stefan  Kolarov
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *****************************************************************************/
 package org.cheffo.jeplite;
-import org.cheffo.jeplite.util.*;
+import org.cheffo.jeplite.util.IntegerStack;
+import org.cheffo.jeplite.util.SimpleNodeStack;
 class JJTParserState {
   private SimpleNodeStack nodes;
   private IntegerStack marks;

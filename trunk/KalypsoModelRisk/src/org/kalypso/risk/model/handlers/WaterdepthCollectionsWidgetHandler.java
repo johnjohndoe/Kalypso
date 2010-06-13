@@ -22,6 +22,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     /* Get context */

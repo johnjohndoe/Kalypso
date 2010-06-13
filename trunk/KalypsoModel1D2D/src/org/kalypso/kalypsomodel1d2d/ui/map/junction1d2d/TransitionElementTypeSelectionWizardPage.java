@@ -74,6 +74,7 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -102,10 +103,12 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
     m_radioBtnGroup[0].setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizardPage.3") ); //$NON-NLS-1$
     m_radioBtnGroup[0].addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void widgetSelected( SelectionEvent e )
       {
@@ -115,10 +118,12 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
     m_radioBtnGroup[1].setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizardPage.4") ); //$NON-NLS-1$
     m_radioBtnGroup[1].addSelectionListener( new SelectionListener()
     {
+      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")
       public void widgetSelected( SelectionEvent e )
       {

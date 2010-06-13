@@ -1,11 +1,17 @@
 package org.cheffo.jeplite.test;
 
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Date;
+import java.util.HashMap;
 
-import org.cheffo.jeplite.*;
-import org.cheffo.jeplite.util.*;
-import org.cheffo.jeplite.optimizer.*;
+import org.cheffo.jeplite.JEP;
+import org.cheffo.jeplite.SimpleNode;
+import org.cheffo.jeplite.optimizer.ExpressionOptimizer;
+import org.cheffo.jeplite.util.DoubleStack;
 
 /**
  * Title:

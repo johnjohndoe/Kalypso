@@ -24,11 +24,13 @@ JEPLite Copyright (C) 2002 Stefan  Kolarov
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *****************************************************************************/
 package org.cheffo.jeplite;
-import java.io.*;
-import java.util.*;
-import org.cheffo.jeplite.*;
-import org.cheffo.jeplite.function.*;
-import org.cheffo.jeplite.util.*;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Vector;
+
+import org.cheffo.jeplite.function.PostfixMathCommand;
+import org.cheffo.jeplite.util.DoubleStack;
 
 public class JEP {
 	private HashMap symTab;

@@ -15,6 +15,7 @@ import org.kalypsodeegree_impl.filterencoding.AbstractFunctionExpression;
  */
 public class BorderEdgeFunctionExpression extends AbstractFunctionExpression
 {
+  @Override
   public Object evaluate( final Feature feature, final List<Expression> args ) throws FilterEvaluationException
   {
     final IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );

@@ -91,6 +91,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#getContinuityLine()
    */
+  @Override
   public List<IFELine> getContinuityLines( )
   {
     return m_continuityLines;
@@ -99,6 +100,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#recalculateElementGeometry()
    */
+  @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     if( m_continuityLines.size() < 2 )
@@ -129,6 +131,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
+  @Override
   public boolean addElementAsRef( final IFENetItem element )
   {
     return m_continuityLines.addRef( (IFELine) element );
@@ -137,6 +140,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#getElements()
    */
+  @Override
   public IFeatureWrapperCollection<IFENetItem> getElements( )
   {
     // TODO Auto-generated method stub
@@ -146,6 +150,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
+  @Override
   public void removeElementAsRef( final IFENetItem elment )
   {
     // TODO Auto-generated method stub
@@ -154,6 +159,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement#isMemberOfCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
+  @Override
   public boolean isMemberOfCalculationUnit( final ICalculationUnit calculationUnit )
   {
     if( calculationUnit instanceof ICalculationUnit1D2D )
@@ -182,11 +188,13 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
     return false;
   }
 
+  @Override
   public ITransitionElement.TRANSITION_TYPE getTransitionType( )
   {
     return m_transition_type;
   }
 
+  @Override
   public void setTransitionType( final ITransitionElement.TRANSITION_TYPE transition_type )
   {
     m_transition_type = transition_type;

@@ -87,6 +87,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil(org.kalypso.observation.result.TupleResult)
    */
+  @Override
   public IProfil createProfil( final TupleResult result )
   {
     if( result.getComponents().length == 0 )
@@ -126,6 +127,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
 
   }
 
+  @Override
   public IComponent getPointProperty( final String propertyId )
   {
     return ProfilUtil.getFeatureComponent( propertyId );

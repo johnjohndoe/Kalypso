@@ -167,6 +167,7 @@ public class TrennerPanel extends AbstractProfilView
 
     m_fzl_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -207,6 +208,7 @@ public class TrennerPanel extends AbstractProfilView
 
     m_fzr_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -406,6 +408,7 @@ public class TrennerPanel extends AbstractProfilView
       {
         control.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             updateControls();
@@ -430,6 +433,7 @@ public class TrennerPanel extends AbstractProfilView
     /**
      * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
      */
+    @Override
     public void focusGained( final FocusEvent e )
     {
       if( e.widget instanceof Text )
@@ -439,6 +443,7 @@ public class TrennerPanel extends AbstractProfilView
     /**
      * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
      */
+    @Override
     public void focusLost( final FocusEvent e )
     {
       if( e.widget instanceof Text )

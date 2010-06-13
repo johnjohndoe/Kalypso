@@ -11,27 +11,32 @@ public class RiskZoneDefinition extends AbstractFeatureBinder implements IRiskZo
     super( featureToBind, IRiskZoneDefinition.QNAME );
   }
 
+  @Override
   public RGB getColorStyle( )
   {
     return (RGB) getFeature().getProperty( IRiskZoneDefinition.PROP_COLOR_STYLE );
   }
 
+  @Override
   public double getLowerBoundary( )
   {
     final Double property = (Double) getFeature().getProperty( IRiskZoneDefinition.PROP_LOWER_BOUNDARY );
     return property == null ? 0.0 : property.doubleValue();
   }
 
+  @Override
   public void setLowerBoundary( final double value )
   {
     getFeature().setProperty( IRiskZoneDefinition.PROP_LOWER_BOUNDARY, value );
   }
 
+  @Override
   public void setColorStyle( final RGB rgb )
   {
     getFeature().setProperty( IRiskZoneDefinition.PROP_COLOR_STYLE, rgb );
   }
 
+  @Override
   public int getOrdinalNumber( )
   {
     final Integer property = (Integer) getFeature().getProperty( IRiskZoneDefinition.PROP_ORDINAL_NUMBER );
@@ -50,6 +55,7 @@ public class RiskZoneDefinition extends AbstractFeatureBinder implements IRiskZo
     return (String) getFeature().getProperty( IRiskZoneDefinition.PROP_NAME );
   }
 
+  @Override
   public Boolean isUrbanLanduseType( )
   {
     return (Boolean) getFeature().getProperty( IRiskZoneDefinition.PROP_ISURBANTYPE );

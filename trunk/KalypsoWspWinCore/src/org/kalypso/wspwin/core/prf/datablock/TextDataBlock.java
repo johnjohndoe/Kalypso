@@ -86,6 +86,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getCoordCount()
    */
+  @Override
   public int getCoordCount( )
   {
     return m_lines.size();
@@ -94,6 +95,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getX()
    */
+  @Override
   public Double[] getX( )
   {
     // TODO Auto-generated method stub
@@ -103,6 +105,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getY()
    */
+  @Override
   public Double[] getY( )
   {
     // TODO Auto-generated method stub
@@ -112,6 +115,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getText()
    */
+  @Override
   public String[] getText( )
   {
     return m_lines.toArray(new String[0]);

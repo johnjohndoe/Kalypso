@@ -71,6 +71,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void addModifyListener( ModifyListener l )
   {
   }
@@ -78,6 +79,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
     m_button = new Button( parent, style );
@@ -131,6 +133,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     return true;
@@ -139,6 +142,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
+  @Override
   public void removeModifyListener( ModifyListener l )
   {
   }
@@ -146,6 +150,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
   }

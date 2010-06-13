@@ -60,6 +60,7 @@ public interface IHydrograph extends IFeatureWrapper2
 
   public static final QName QNAME_PROP_LOCATION = new QName( NS.OM, "location" ); //$NON-NLS-1$
 
+  @Override
   public GM_Object getLocation( );
 
   public void setLocation( GM_Point point );

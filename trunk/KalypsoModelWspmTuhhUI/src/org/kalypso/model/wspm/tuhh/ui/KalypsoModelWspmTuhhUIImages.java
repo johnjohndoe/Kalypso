@@ -62,6 +62,7 @@ public enum KalypsoModelWspmTuhhUIImages implements ImageKey
   /**
    * @see org.kalypso.informdss.KalypsoInformDSSImages.ImageKey#getImagePath()
    */
+  @Override
   public String getImagePath( )
   {
     return m_imagePath;

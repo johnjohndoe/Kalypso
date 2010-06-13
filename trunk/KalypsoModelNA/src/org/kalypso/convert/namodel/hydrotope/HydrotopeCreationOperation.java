@@ -56,9 +56,9 @@ import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.Geology;
 import org.kalypso.convert.namodel.schema.binding.Hydrotop;
+import org.kalypso.convert.namodel.schema.binding.Hydrotop.HYDROTOP_TYPE;
 import org.kalypso.convert.namodel.schema.binding.Landuse;
 import org.kalypso.convert.namodel.schema.binding.SoilType;
-import org.kalypso.convert.namodel.schema.binding.Hydrotop.HYDROTOP_TYPE;
 import org.kalypso.convert.namodel.schema.binding.suds.Greenroof;
 import org.kalypso.convert.namodel.schema.binding.suds.Swale;
 import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
@@ -452,8 +452,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         return (GM_MultiSurface) newGeometry;
       else if( newGeometry instanceof GM_Surface )
       {
-        final ArrayList<GM_Surface> arrayList = new ArrayList<GM_Surface>();
-        arrayList.add( (GM_Surface) newGeometry );
+        final List<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
+        arrayList.add( (GM_Surface< ? >) newGeometry );
         final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), newGeometry.getCoordinateSystem() );
         return multiSurface;
       }

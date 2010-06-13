@@ -63,6 +63,7 @@ public abstract class AbstractFlowRelation2D extends FlowRelationship implements
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#getCalculation()
    */
+  @Override
   public TuhhCalculation getCalculation( )
   {
     final Feature calcFeature = getProperty( QNAME_PROP_TUHH_CALCULATION, Feature.class );
@@ -75,6 +76,7 @@ public abstract class AbstractFlowRelation2D extends FlowRelationship implements
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#setCalculation(org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation)
    */
+  @Override
   public void setCalculation( final TuhhCalculation calculation )
   {
     final Feature flowRelFeature = getFeature();

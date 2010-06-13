@@ -65,6 +65,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.logging.Handler;
@@ -171,6 +172,7 @@ public class NaModelInnerCalcJob implements ISimulation
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
+  @Override
   public URL getSpezifikation( )
   {
     // this is just an inner job, so need not return this
@@ -183,6 +185,7 @@ public class NaModelInnerCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
+  @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
@@ -699,9 +702,9 @@ public class NaModelInnerCalcJob implements ISimulation
   /**
    * before: <br>
    * <code>
-   *
+   * 
    * Node1 O <---  O Node2
-   *
+   * 
    * </code> after: <br>
    * <code>
    * 
@@ -709,7 +712,7 @@ public class NaModelInnerCalcJob implements ISimulation
    *                                      A
    *                                      |
    *                                      O-- Node2
-   *
+   * 
    * </code>
    * 
    * @param workspace
@@ -835,9 +838,9 @@ public class NaModelInnerCalcJob implements ISimulation
 
   /**
    * before: <code>
-   *
+   * 
    *     o(existing)
-   *
+   * 
    * </code> after: <code>
    * 
    *  |new Channel3|
@@ -850,7 +853,7 @@ public class NaModelInnerCalcJob implements ISimulation
    *     |
    *     V
    *     o(existing)
-   *
+   * 
    * </code>
    */
   private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
@@ -1009,8 +1012,8 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       final double rkfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RKF_PROP, 1.0 );
       final double rnfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RNF_PROP, 1.0 );
-      final List kmParameter = (List) feature.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
-      final Iterator iterator = kmParameter.iterator();
+      final List< ? > kmParameter = (List< ? >) feature.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
+      final Iterator< ? > iterator = kmParameter.iterator();
       while( iterator.hasNext() )
       {
         final Feature kmParameterFE = (Feature) iterator.next();
@@ -1165,14 +1168,14 @@ public class NaModelInnerCalcJob implements ISimulation
         logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         // transform data to tuppelmodel
-        final SortedMap data = ts.getTimeSerie( key );
+        final SortedMap<Date, String> data = ts.getTimeSerie( key );
         final Object[][] tupelData = new Object[data.size()][3];
-        final Set dataSet = data.entrySet();
-        final Iterator iter = dataSet.iterator();
+        final Set<Entry<Date, String>> dataSet = data.entrySet();
+        final Iterator<Entry<Date, String>> iter = dataSet.iterator();
         int pos = 0;
         while( iter.hasNext() )
         {
-          final Map.Entry entry = (Map.Entry) iter.next();
+          final Map.Entry<Date, String> entry = iter.next();
           tupelData[pos][0] = entry.getKey();
           tupelData[pos][1] = new Double( Double.parseDouble( entry.getValue().toString() ) * resultFactor );
           tupelData[pos][2] = new Integer( KalypsoStati.BIT_OK );

@@ -104,7 +104,7 @@ public class RainfallGeneratorUtilities
       final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
       if( object instanceof GM_Surface )
       {
-        final GM_Surface surface = (GM_Surface) object;
+        final GM_Surface< ? > surface = (GM_Surface< ? >) object;
         final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
         areas[i] = multiSurface;
       }

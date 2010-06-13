@@ -59,7 +59,7 @@ public class WriteAsciiVisitor extends NetElementVisitor
   /*
    * @author doemming
    */
-  public WriteAsciiVisitor( AsciiBuffer asciiBuffer )
+  public WriteAsciiVisitor( final AsciiBuffer asciiBuffer )
   {
     m_asciiBuffer = asciiBuffer;
     m_nodeCollector = new ArrayList<Feature>();
@@ -69,14 +69,14 @@ public class WriteAsciiVisitor extends NetElementVisitor
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
   @Override
-  public boolean visit( NetElement netElement )
+  public boolean visit( final NetElement netElement )
   {
     netElement.write( m_asciiBuffer, m_nodeCollector );
     try
     {
       netElement.generateTimeSeries();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       log( e.getLocalizedMessage() );
@@ -85,12 +85,12 @@ public class WriteAsciiVisitor extends NetElementVisitor
     return true;
   }
 
-  public List getVisitedElements( )
+  public List<NetElement> getVisitedElements( )
   {
     return m_visitedElements;
   }
 
-  public List getNodeCollector( )
+  public List<Feature> getNodeCollector( )
   {
     return m_nodeCollector;
   }

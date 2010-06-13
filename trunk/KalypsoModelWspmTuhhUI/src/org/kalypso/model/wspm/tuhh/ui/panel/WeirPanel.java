@@ -431,6 +431,7 @@ public class WeirPanel extends AbstractProfilView
     m_Wehrart.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IProfileObject[] profileObjects = getProfil().getProfileObjects();
@@ -534,6 +535,7 @@ public class WeirPanel extends AbstractProfilView
       if( control != null && !control.isDisposed() )
         control.getDisplay().asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             updateControls();

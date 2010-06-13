@@ -58,6 +58,7 @@ public class TuhhStationComparator implements Comparator<BigDecimal>
   /**
    * @see java.util.Comparator#compare(T, T)
    */
+  @Override
   public int compare( final BigDecimal s1, final BigDecimal s2 )
   {
     if( s1 == null || s2 == null )
