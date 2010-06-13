@@ -115,4 +115,13 @@ public final class ProfileUiUtils
 
     return newProfileFeature;
   }
+
+  public static void changeProfileAndFireEvent( final IProfil profil, final IProfileFeature targetFeature )
+  {
+    ProfileFeatureFactory.toFeature( profil, targetFeature );
+
+    final Feature parent = targetFeature.getOwner();
+    final GMLWorkspace workspace = targetFeature.getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parent, new Feature[] { targetFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+  }
 }

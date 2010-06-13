@@ -1,5 +1,7 @@
 package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
+import java.awt.Graphics;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -25,6 +27,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -139,4 +142,13 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
     schedule();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Point)
+   */
+  @Override
+  public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPos )
+  {
+    // nothing to paint
+  }
 }

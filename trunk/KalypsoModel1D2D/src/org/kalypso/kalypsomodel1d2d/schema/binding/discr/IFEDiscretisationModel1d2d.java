@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Interface for classes representing a feature of the type wb1d2d:FEDiscretisationModel1d2d
- *
+ * 
  * @author Patrice Congo
  */
 public interface IFEDiscretisationModel1d2d extends IModel
@@ -76,18 +76,19 @@ public interface IFEDiscretisationModel1d2d extends IModel
   public final static QName WB1D2D_PROP_CONTINUITY_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
 
   public final static QName WB1D2D_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
-  
+
   public final static QName WB1D2D_PROP_MESH = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "mesh" ); //$NON-NLS-1$
+
   public final static QName WB1D2D_PROP_MESH_SURFACE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "polyhedralSurfaceMember" ); //$NON-NLS-1$
 
   /**
    * Finds an edge given two bounding nodes. If a the found edge does not have the direction from node0 to node1 a
    * {@link IEdgeInv} is created and return
-   *
+   * 
    * @param node0
-   *            the alledged first node of the edge
+   *          the alledged first node of the edge
    * @param node1
-   *            the alleged second node of the edge
+   *          the alleged second node of the edge
    * @return an edge bounded by the given node. An {@link IEdgeInv} in case that a edge starting from node1 to node0
    *         exists
    */
@@ -95,28 +96,28 @@ public interface IFEDiscretisationModel1d2d extends IModel
 
   /**
    * To get the complex element that this discretisation model contains
-   *
+   * 
    * @return the complex elements this discretisation model contains as {@link IFeatureWrapperCollection}
    */
   public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements( );
 
   /**
    * Gets the element this discretisation model contains
-   *
+   * 
    * @return the elements of this discretisation model as {@link IFeatureWrapperCollection}
    */
   public IFeatureWrapperCollection<IFE1D2DElement> getElements( );
 
   /**
    * To get the edges this feature wrapper contains s
-   *
+   * 
    * @return the edges that this discetisation model contains as {@link IFeatureWrapperCollection}
    */
   public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( );
 
   /**
    * gets the nodes this discretisation model contains.
-   *
+   * 
    * @return the nodes that this discretisation model contains as {@link IFeatureWrapperCollection}
    */
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
@@ -125,32 +126,32 @@ public interface IFEDiscretisationModel1d2d extends IModel
 
   /**
    * Finds the node nearest to the given position, within the search rectangle
-   *
+   * 
    * @param nodeLocation
-   *            the reference location (center of the search rectangle)
+   *          the reference location (center of the search rectangle)
    * @param searchRectWidth
-   *            the width/height of the search rectangle
-   *
+   *          the width/height of the search rectangle
+   * 
    * @return node nearest to the nodeLocation, or <code>null</code> if no node is found within the search rectangle
    */
-  public IFE1D2DNode findNode( GM_Point nodeLocation, double searchRectWidth );
+  public IFE1D2DNode< ? > findNode( GM_Point nodeLocation, double searchRectWidth );
 
   /**
    * Creates a node at the specifies position. The is realy created only if there is no node within the a square which
    * center is given by nodeLocation and which width is given by searchRectWidth Search is not done if searchSquareWidth
    * is negativ.
-   *
+   * 
    * @param nodeLocation
-   *            the location for the new node
+   *          the location for the new node
    * @param searchSquareWidth
-   *            the width of the search re
+   *          the width of the search re
    * @param alreadyExists
-   *            if not null and not empty a boolean is set at position 0 which indicates with true that a node already
-   *            exists and fals otherwise
+   *          if not null and not empty a boolean is set at position 0 which indicates with true that a node already
+   *          exists and fals otherwise
    * @return the created or found node
-   *
+   * 
    */
-  public IFE1D2DNode createNode( GM_Point nodeLocation, double searchSquareWidth, boolean[] alreadyExists );
+  public IFE1D2DNode< ? > createNode( GM_Point nodeLocation, double searchSquareWidth, boolean[] alreadyExists );
 
   public IFELine findContinuityLine( final GM_Point position, double grabDistance );
 
@@ -160,16 +161,16 @@ public interface IFEDiscretisationModel1d2d extends IModel
 
   /**
    * Finds the nearest element to the given position
-   *
+   * 
    * @param position
-   *            the search position
+   *          the search position
    * @param grabDistance
-   *            the maximal grab distance
+   *          the maximal grab distance
    * @param elementType
-   *            the element type
+   *          the element type
    */
   public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, Class<T> elementType );
-  
+
   /**
    * Finds the nearest edge to the given position
    * 
