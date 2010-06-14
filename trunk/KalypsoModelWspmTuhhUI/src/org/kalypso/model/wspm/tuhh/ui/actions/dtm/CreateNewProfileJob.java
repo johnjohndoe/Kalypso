@@ -1,6 +1,7 @@
 package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,6 +26,7 @@ import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.WizardAddProfileFromDEM;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -54,6 +56,8 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
 
   private final double m_simplifyDistance;
 
+  private LineGeometryBuilder m_geoBuilder;
+
   public CreateNewProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final WspmWaterBody waterBody, final TuhhReach reach, final ICoverageCollection coverages, final double simplifyDistance )
   {
     super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) );
@@ -65,6 +69,18 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
     m_reach = reach;
     m_coverages = coverages;
     m_simplifyDistance = simplifyDistance;
+
+    m_geoBuilder = new LineGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    if( m_geoBuilder != null )
+    {
+      m_geoBuilder.reset();
+      m_geoBuilder = null;
+    }
   }
 
   @Override
@@ -72,7 +88,9 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
   {
     try
     {
-      final GM_Curve curve = m_widget.createNewProfileCurve();
+      // remove last point: as we are using leftPressed, we always get two point on double clicks
+      m_geoBuilder.removeLastPoint();
+      final GM_Curve curve = (GM_Curve) m_geoBuilder.finish();
 
       final IProfil profile = createProfile( curve, TuhhProfil.PROFIL_TYPE );
 
@@ -128,16 +146,6 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#adjustPoint(org.kalypsodeegree.model.geometry.GM_Point,
-   *      int)
-   */
-  @Override
-  public GM_Point adjustPoint( final GM_Point pos, final int pointCount )
-  {
-    return pos;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#run()
    */
   @Override
@@ -166,11 +174,30 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Point)
+   *      org.kalypso.ogc.gml.map.IMapPanel, java.awt.Point)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPos )
+  public void paint( final Graphics g, final IMapPanel mapPanel, final Point currentPoint )
   {
-    // nothing to paint
+    final GeoTransform projection = mapPanel.getProjection();
+    m_geoBuilder.paint( g, projection, currentPoint );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#addPoint(org.kalypsodeegree.model.geometry.GM_Point)
+   */
+  @Override
+  public void addPoint( final GM_Point pos ) throws Exception
+  {
+    m_geoBuilder.addPoint( pos );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#removeLastPoint()
+   */
+  @Override
+  public void removeLastPoint( )
+  {
+    m_geoBuilder.removeLastPoint();
   }
 }
