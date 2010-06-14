@@ -50,15 +50,21 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -86,13 +92,19 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
 
   private int m_insertSign = 0;
 
-  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures )
+  private final double m_simplifyDistance;
+
+  private final TuhhReach m_reach;
+
+  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures, final TuhhReach reach, final double simplifyDistance )
   {
     super( "Extend Profile" );
     m_widget = widget;
     m_mapPanel = mapPanel;
     m_coverages = coverages;
     m_profileFeatures = profileFeatures;
+    m_reach = reach;
+    m_simplifyDistance = simplifyDistance;
   }
 
   /**
@@ -101,25 +113,46 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    if( m_profile == null )
-      return Status.OK_STATUS;
-
-    // fetch points from DTM
-    final CoverageProfile coverageProfile = new CoverageProfile( m_coverages, null );
-    final Coordinate[] newPoints = coverageProfile.extractPoints( m_profile.getLine() );
-    if( newPoints == null )
+    try
     {
-      // TODO: better message
+      if( m_profile == null )
+        return Status.OK_STATUS;
+
+      final GM_Curve curve = m_widget.createNewProfileCurve();
+
+      // fetch points from DTM
+      final RichCoverageCollection richCoverages = new RichCoverageCollection( m_coverages );
+      final Coordinate[] newPoints = richCoverages.extractPoints( curve );
+      richCoverages.dispose();
+      if( newPoints == null )
+      {
+        // TODO: better message
+        return Status.OK_STATUS;
+      }
+
+      // add line into profile
+      final IProfil profil = m_profile.getProfil();
+      CoverageProfile.extendPoints( profil, m_insertSign, newPoints, m_simplifyDistance );
+
+      ProfileUiUtils.changeProfileAndFireEvent( profil, m_profile );
+      if( m_reach != null )
+      {
+        /*
+         * If the reach is not null, we have a reach theme that does not get updated by the event on the profile itself.
+         * We need to fire an event on the reach itself.
+         */
+        final GMLWorkspace workspace = m_reach.getWorkspace();
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_reach, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      }
+
       return Status.OK_STATUS;
     }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
 
-    // add line into profile
-    final IProfil profil = m_profile.getProfil();
-    coverageProfile.insertPoints( profil, m_insertSign, newPoints );
-
-    ProfileUiUtils.changeProfileAndFireEvent( profil, m_profile );
-
-    return Status.OK_STATUS;
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to extend profile from terrain model." );
+    }
   }
 
   /**

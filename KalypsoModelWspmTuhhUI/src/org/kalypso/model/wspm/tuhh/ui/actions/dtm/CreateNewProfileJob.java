@@ -12,6 +12,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
@@ -32,6 +33,8 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
  * @author Gernot Belger
  */
@@ -49,7 +52,9 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
 
   private final ICoverageCollection m_coverages;
 
-  public CreateNewProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final WspmWaterBody waterBody, final TuhhReach reach, final ICoverageCollection coverages )
+  private final double m_simplifyDistance;
+
+  public CreateNewProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final WspmWaterBody waterBody, final TuhhReach reach, final ICoverageCollection coverages, final double simplifyDistance )
   {
     super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) );
     m_widget = widget;
@@ -59,6 +64,7 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
     m_waterBody = waterBody;
     m_reach = reach;
     m_coverages = coverages;
+    m_simplifyDistance = simplifyDistance;
   }
 
   @Override
@@ -68,10 +74,7 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
     {
       final GM_Curve curve = m_widget.createNewProfileCurve();
 
-      /* The builder for a profile from a DEM. */
-      final CoverageProfile cProfile = new CoverageProfile( m_coverages, TuhhProfil.PROFIL_TYPE );
-      final IProfil profile = cProfile.createProfile( curve );
-      cProfile.dispose();
+      final IProfil profile = createProfile( curve, TuhhProfil.PROFIL_TYPE );
 
       ProfileUiUtils.addDefaultMarkers( profile, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
       ProfileUiUtils.addDefaultMarkers( profile, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
@@ -94,6 +97,25 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
 
       return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to create profile from terrain model." );
     }
+  }
+
+  private IProfil createProfile( final GM_Curve curve, final String profileType ) throws Exception
+  {
+    /* The builder for a profile from a DEM. */
+    final RichCoverageCollection richCoverages = new RichCoverageCollection( m_coverages );
+    final Coordinate[] gridCrds = richCoverages.extractPoints( curve );
+    richCoverages.dispose();
+    if( gridCrds == null )
+      return CoverageProfile.convertLinestringToEmptyProfile( curve, profileType );
+
+    // TODO: would be nice to simplify the coords, but not the profile afterwards. We need Douglas-Peucker for
+    // coordinates (with distance by z!).
+
+    final IProfil profile = CoverageProfile.createProfile( profileType, gridCrds, curve.getCoordinateSystem(), m_simplifyDistance );
+    if( profile.getPoints().length == 0 )
+      return CoverageProfile.convertLinestringToEmptyProfile( curve, profileType );
+
+    return profile;
   }
 
   /**

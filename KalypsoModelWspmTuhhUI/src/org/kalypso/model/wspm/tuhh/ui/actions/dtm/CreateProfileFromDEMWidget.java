@@ -156,10 +156,13 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     final WspmWaterBody water = ProfileUiUtils.findWaterbody( parentFeature );
     final TuhhReach reach = ProfileUiUtils.findReach( parentFeature );
 
+    // FIXME: magic number.... get from user
+    final double simplifyDistance = 0.01;
+
     if( m_strategyExtendProfile )
-      return new ExtendProfileJob( this, mapPanel, coverages, profileFeatures );
+      return new ExtendProfileJob( this, mapPanel, coverages, profileFeatures, reach, simplifyDistance );
     else
-      return new CreateNewProfileJob( this, commandableWorkspace, mapPanel, water, reach, coverages );
+      return new CreateNewProfileJob( this, commandableWorkspace, mapPanel, water, reach, coverages, simplifyDistance );
   }
 
   private ICoverageCollection initCoverages( final IMapModell model )
@@ -191,7 +194,8 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   @Override
   public void doubleClickedLeft( final Point p )
   {
-    leftPressed( p );
+    // remove last point: as we are using leftPressed, we always get two point on double clicks
+    m_geoBuilder.removeLastPoint();
 
     if( m_strategy != null )
       m_strategy.run();
@@ -240,6 +244,9 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
+    if( m_geoBuilder == null )
+      return;
+
     final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
     final GM_Point adjustedPos = (m_strategy).adjustPoint( pos, m_geoBuilder.getPointCount() );
     m_currentPoint = adjustedPos == null ? null : p;

@@ -179,13 +179,12 @@ public class CreateFE2DElementWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
     final Object newNode = checkNewNode( p );
     if( newNode instanceof IFE1D2DNode )
-      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
+      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode< ? >) newNode).getPoint() );
     else
       m_currentMapPoint = p;
 
@@ -200,7 +199,6 @@ public class CreateFE2DElementWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void leftPressed( final Point p )
   {
@@ -219,7 +217,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
       }
       else
       {
-        lNewParentFeature = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint(), command );
+        lNewParentFeature = m_builder.addNode( ((IFE1D2DNode< ? >) newNode).getPoint(), command );
       }
 
       if( command != null && lNewParentFeature != null )
@@ -273,7 +271,6 @@ public class CreateFE2DElementWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -281,14 +278,14 @@ public class CreateFE2DElementWidget extends AbstractWidget
       return null;
 
     final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
-    final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
+    final IFE1D2DNode< ? > snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
     final Object newNode = snapNode == null ? currentPoint : snapNode;
 
     IStatus status;
     if( newNode instanceof GM_Point )
       status = m_builder.checkNewNode( (GM_Point) newNode );
     else
-      status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint() );
+      status = m_builder.checkNewNode( ((IFE1D2DNode< ? >) newNode).getPoint() );
 
     if( status.isOK() )
       m_warning = false;
