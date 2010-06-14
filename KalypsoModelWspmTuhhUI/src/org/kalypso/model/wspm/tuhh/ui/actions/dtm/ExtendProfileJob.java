@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
 import java.awt.Graphics;
+import java.awt.Point;
+import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -60,6 +62,8 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
+import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -96,6 +100,14 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
 
   private final TuhhReach m_reach;
 
+  private final SLDPainter2 m_profileLinePainter;
+
+  private final SLDPainter2 m_grabPointPainter;
+
+  private LineGeometryBuilder m_geoBuilder;
+
+  private GM_Point m_startPoint;
+
   public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures, final TuhhReach reach, final double simplifyDistance )
   {
     super( "Extend Profile" );
@@ -105,6 +117,20 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
     m_profileFeatures = profileFeatures;
     m_reach = reach;
     m_simplifyDistance = simplifyDistance;
+
+    m_profileLinePainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.profile.sld" ) } );
+    m_grabPointPainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.point.sld" ) } );
+    m_geoBuilder = new LineGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    if( m_geoBuilder != null )
+    {
+      m_geoBuilder.reset();
+      m_geoBuilder = null;
+    }
   }
 
   /**
@@ -118,7 +144,9 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
       if( m_profile == null )
         return Status.OK_STATUS;
 
-      final GM_Curve curve = m_widget.createNewProfileCurve();
+      // remove last point: as we are using leftPressed, we always get two point on double clicks
+      m_geoBuilder.removeLastPoint();
+      final GM_Curve curve = (GM_Curve) m_geoBuilder.finish();
 
       // fetch points from DTM
       final RichCoverageCollection richCoverages = new RichCoverageCollection( m_coverages );
@@ -162,20 +190,6 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
   public String getLabel( )
   {
     return "Extend profile";
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#adjustPoint(org.kalypsodeegree.model.geometry.GM_Point,
-   *      int)
-   */
-  @Override
-  public GM_Point adjustPoint( final GM_Point pos, final int pointCount )
-  {
-    if( pointCount != 0 )
-      return pos;
-
-    // search profile (and remember it) and snap to end-point
-    return grabProfileEnd( pos );
   }
 
   private GM_Point grabProfileEnd( final GM_Point pos )
@@ -254,27 +268,69 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Point)
+   *      org.kalypso.ogc.gml.map.IMapPanel, java.awt.Point)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPos )
+  public void paint( final Graphics g, final IMapPanel mapPanel, final Point currentPoint )
   {
-// final GM_Point grabPoint = grabProfileEnd( currentPos );
+    if( currentPoint == null )
+      return;
 
-    // TODO implement
+    final GM_Point currentPos = MapUtilities.transform( mapPanel, currentPoint );
+    final GeoTransform projection = mapPanel.getProjection();
 
-    // paint profile
+    m_geoBuilder.paint( g, projection, currentPoint );
+
     if( m_profile != null )
     {
       final GM_Curve line = m_profile.getLine();
-
+      m_profileLinePainter.paint( g, projection, line );
     }
+
+    final int pointCount = m_geoBuilder.getPointCount();
+    final GM_Point grabPoint;
+    if( pointCount == 0 )
+      grabPoint = grabProfileEnd( currentPos );
+    else
+      grabPoint = m_startPoint;
 
     // paint grabbed point: the first one we got....
-// if( grabPoint != null )
-    {
+    if( grabPoint != null )
+      m_grabPointPainter.paint( g, projection, grabPoint );
+  }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#addPoint(org.kalypsodeegree.model.geometry.GM_Point)
+   */
+  @Override
+  public void addPoint( final GM_Point pos ) throws Exception
+  {
+    final int pointCount = m_geoBuilder.getPointCount();
+    if( pointCount != 0 )
+    {
+      m_geoBuilder.addPoint( pos );
+      return;
     }
 
+    final GM_Point grabProfileEnd = grabProfileEnd( pos );
+    if( grabProfileEnd != null )
+    {
+      m_startPoint = grabProfileEnd;
+      m_geoBuilder.addPoint( grabProfileEnd );
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#removeLastPoint()
+   */
+  @Override
+  public void removeLastPoint( )
+  {
+    m_geoBuilder.removeLastPoint();
+    if( m_geoBuilder.getPointCount() == 0 )
+    {
+      m_profile = null;
+      m_startPoint = null;
+    }
   }
 }

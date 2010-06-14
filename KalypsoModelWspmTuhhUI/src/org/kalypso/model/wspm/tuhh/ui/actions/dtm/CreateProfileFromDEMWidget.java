@@ -16,7 +16,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -24,8 +23,6 @@ import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -43,11 +40,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   private final ToolTipRenderer m_errorTooltip = ToolTipRenderer.createErrorTooltip();
 
   private ToolTipRenderer m_tooltip = null;
-
-  /**
-   * The builder for creating a line.
-   */
-  private LineGeometryBuilder m_geoBuilder;
 
   /**
    * The current point on the map screen.
@@ -68,15 +60,13 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
    */
   private void reset( )
   {
-    m_strategy = null;
+    if( m_strategy != null )
+    {
+      m_strategy.dispose();
+      m_strategy = null;
+    }
     m_tooltip = null;
     m_currentPoint = null;
-
-    if( m_geoBuilder != null )
-    {
-      m_geoBuilder.reset();
-      m_geoBuilder = null;
-    }
 
     /* Reset the cursor to default. */
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
@@ -119,7 +109,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     }
 
     m_tooltip = m_standardTooltip;
-    m_geoBuilder = new LineGeometryBuilder( 0, model.getCoordinatesSystem() );
 
     /* Init the cursor. */
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
@@ -194,23 +183,10 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   @Override
   public void doubleClickedLeft( final Point p )
   {
-    // remove last point: as we are using leftPressed, we always get two point on double clicks
-    m_geoBuilder.removeLastPoint();
-
-    if( m_strategy != null )
+    if( m_strategy == null )
+      activate( getCommandTarget(), getMapPanel() );
+    else
       m_strategy.run();
-  }
-
-  protected GM_Curve createNewProfileCurve( ) throws Exception
-  {
-    /* Get the object. */
-    final GM_Object finish = m_geoBuilder.finish();
-
-    /* Really finished? */
-    if( finish == null )
-      return null;
-
-    return (GM_Curve) finish;
   }
 
   /**
@@ -219,18 +195,14 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   @Override
   public void leftPressed( final Point p )
   {
-    if( m_geoBuilder == null || m_strategy == null )
+    if( m_strategy == null )
       return;
 
     try
     {
       final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
-      final GM_Point adjustedPos = (m_strategy).adjustPoint( pos, m_geoBuilder.getPointCount() );
-      if( adjustedPos != null )
-      {
-        m_geoBuilder.addPoint( adjustedPos );
-        repaintMap();
-      }
+      m_strategy.addPoint( pos );
+      repaintMap();
     }
     catch( final Exception e )
     {
@@ -244,12 +216,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    if( m_geoBuilder == null )
-      return;
-
-    final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
-    final GM_Point adjustedPos = (m_strategy).adjustPoint( pos, m_geoBuilder.getPointCount() );
-    m_currentPoint = adjustedPos == null ? null : p;
+    m_currentPoint = p;
 
     repaintMap();
   }
@@ -265,13 +232,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       return;
 
     if( m_strategy != null )
-    {
-      final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
-      m_strategy.paint( g, mapPanel.getProjection(), currentPos );
-    }
-
-    if( m_geoBuilder != null )
-      m_geoBuilder.paint( g, mapPanel.getProjection(), m_currentPoint );
+      m_strategy.paint( g, mapPanel, m_currentPoint );
 
     if( m_tooltip != null )
     {
@@ -295,9 +256,9 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
         return;
 
       case KeyEvent.VK_BACK_SPACE:
-        if( m_geoBuilder != null )
+        if( m_strategy != null )
         {
-          m_geoBuilder.removeLastPoint();
+          m_strategy.removeLastPoint();
           repaintMap();
         }
         break;

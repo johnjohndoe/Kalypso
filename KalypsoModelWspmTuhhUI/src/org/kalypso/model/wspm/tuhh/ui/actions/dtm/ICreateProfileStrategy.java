@@ -41,8 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -54,7 +55,11 @@ public interface ICreateProfileStrategy
 
   String getLabel( );
 
-  GM_Point adjustPoint( GM_Point pos, int pointCount );
+  void paint( Graphics g, IMapPanel mapPanel, Point currentPoint );
 
-  void paint( Graphics g, GeoTransform projection, GM_Point currentPos );
+  void dispose( );
+
+  void addPoint( GM_Point pos ) throws Exception;
+
+  void removeLastPoint( );
 }
