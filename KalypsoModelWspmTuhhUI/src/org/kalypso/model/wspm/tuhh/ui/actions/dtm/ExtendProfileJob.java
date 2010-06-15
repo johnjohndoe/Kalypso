@@ -273,7 +273,7 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
   @Override
   public void paint( final Graphics g, final IMapPanel mapPanel, final Point currentPoint )
   {
-    if( currentPoint == null )
+    if( currentPoint == null || m_geoBuilder == null )
       return;
 
     final GM_Point currentPos = MapUtilities.transform( mapPanel, currentPoint );
