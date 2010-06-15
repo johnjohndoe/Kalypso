@@ -74,7 +74,7 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
     {
       final Double h = point.getHoehe();
 
-      if( h < sohlpunkt )
+      if( h < (sohlpunkt - FUZZINESS) )
       {
         sohle.clear();
 
@@ -83,7 +83,7 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
 
         lastIterationAdd = true;
       }
-      else if( h == sohlpunkt && lastIterationAdd == true )
+      else if( (h - sohlpunkt) < FUZZINESS && lastIterationAdd == true )
       {
         sohle.add( point );
       }
