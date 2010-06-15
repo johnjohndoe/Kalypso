@@ -61,6 +61,15 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
   public static double findSohlpunkt( final IProfil profile )
   {
     final ProfileWrapper wrapper = new ProfileWrapper( profile );
+
+    return findSohlpunkt( wrapper );
+  }
+
+  /**
+   * @return breite of sohlpunkt
+   */
+  public static double findSohlpunkt( final ProfileWrapper wrapper )
+  {
     final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
       throw new IllegalStateException();
