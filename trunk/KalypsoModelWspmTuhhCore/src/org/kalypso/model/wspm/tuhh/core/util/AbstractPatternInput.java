@@ -38,20 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.utils;
+package org.kalypso.model.wspm.tuhh.core.util;
 
-/**
- * A single token for token replacements in user input. Useable for example in user entered filenames containing some
- * patterns that get replaced on the fly.<br>
- * The replacement always takes place against some kind of context, the class variable.
- * 
- * @author Gernot Belger
- */
-public interface IPatternInput<T>
+public abstract class AbstractPatternInput<T> implements IPatternInput<T>
 {
-  String getLabel( );
+  private final String m_token;
 
-  String getToken( );
+  private final String m_label;
 
-  String replace( String text, final T context );
+  public AbstractPatternInput( final String token, final String label )
+  {
+    m_token = token;
+    m_label = label;
+  }
+
+  @Override
+  public final String getLabel( )
+  {
+    return m_label;
+  }
+
+  @Override
+  public final String getToken( )
+  {
+    return m_token;
+  }
 }

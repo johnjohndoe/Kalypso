@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.utils;
+package org.kalypso.model.wspm.tuhh.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

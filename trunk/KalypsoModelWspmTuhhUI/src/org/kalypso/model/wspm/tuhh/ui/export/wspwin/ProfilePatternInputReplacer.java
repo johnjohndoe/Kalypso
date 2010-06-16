@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.utils.AbstractPatternInput;
-import org.kalypso.model.wspm.tuhh.core.utils.PatternInputReplacer;
+import org.kalypso.model.wspm.tuhh.core.util.AbstractPatternInput;
+import org.kalypso.model.wspm.tuhh.core.util.PatternInputReplacer;
 
 /**
  * @author Gernot Belger

@@ -38,29 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.utils;
+package org.kalypso.model.wspm.tuhh.core.util;
 
-public abstract class AbstractPatternInput<T> implements IPatternInput<T>
+import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Text;
+
+/**
+ * @author Gernot Belger
+ */
+public class PatternAction extends Action
 {
-  private final String m_token;
+  private final IPatternInput< ? > m_pattern;
 
-  private final String m_label;
+  private final Text m_text;
 
-  public AbstractPatternInput( final String token, final String label )
+  public PatternAction( final IPatternInput< ? > pattern, final Text text )
   {
-    m_token = token;
-    m_label = label;
+    super( pattern.getLabel() );
+
+    m_pattern = pattern;
+    m_text = text;
   }
 
+  /**
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   */
   @Override
-  public final String getLabel( )
+  public void runWithEvent( final Event event )
   {
-    return m_label;
+    super.runWithEvent( event );
+
+    m_text.insert( m_pattern.getToken() );
   }
 
-  @Override
-  public final String getToken( )
-  {
-    return m_token;
-  }
 }

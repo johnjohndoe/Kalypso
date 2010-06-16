@@ -13,6 +13,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -103,6 +104,7 @@ final class CreateNewProfileJob extends UIJob implements ICreateProfileStrategy
         return Status.OK_STATUS;
 
       final IProfileFeature profileFeature = ProfileUiUtils.addNewProfileAndFireEvents( profile, m_waterBody, m_reach );
+      m_commandableWorkspace.postCommand( new EmptyCommand( "", false ) );
 
       final IFeatureSelectionManager selectionManager = m_mapPanel.getSelectionManager();
       selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_commandableWorkspace, profileFeature ) } );

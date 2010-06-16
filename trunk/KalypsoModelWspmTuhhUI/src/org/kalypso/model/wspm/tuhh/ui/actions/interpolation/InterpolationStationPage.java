@@ -46,9 +46,12 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -79,6 +82,8 @@ public class InterpolationStationPage extends WizardPage
   private IProfileFeature m_prevProfile;
 
   private IProfileFeature m_nextProfile;
+
+  private boolean m_onlyRiverChannel = true;
 
   public InterpolationStationPage( final String pageName, final IProfileFeature[] profiles )
   {
@@ -151,6 +156,13 @@ public class InterpolationStationPage extends WizardPage
     nextStation.setText( "" ); //$NON-NLS-1$
     nextStation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+    // / 3rd line
+
+    final Button onlyChannelCheck = new Button( group, SWT.CHECK );
+    onlyChannelCheck.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
+    onlyChannelCheck.setText( "Restrict interpolation to river channel (recommanded)" );
+    onlyChannelCheck.setSelection( m_onlyRiverChannel );
+
     // / Rules
 
     final RuleValidator validator = new RuleValidator();
@@ -170,9 +182,26 @@ public class InterpolationStationPage extends WizardPage
       }
     };
 
+    onlyChannelCheck.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleOnlyChannelRadioSelected( onlyChannelCheck.getSelection() );
+      }
+    } );
+
     final ValidatingModifyListener stationValidator = new ValidatingModifyListener( stationEditor, parser, messageManager );
     stationValidator.setValidator( validator );
     stationValidator.setValueReceiver( receiver );
+  }
+
+  protected void handleOnlyChannelRadioSelected( final boolean selection )
+  {
+    m_onlyRiverChannel = selection;
   }
 
   protected void setStation( final BigDecimal station, final Label prevLabel, final Label nextLabel )
@@ -208,5 +237,10 @@ public class InterpolationStationPage extends WizardPage
   public BigDecimal getNewStation( )
   {
     return m_station;
+  }
+
+  public boolean getOnlyRiverChannel( )
+  {
+    return m_onlyRiverChannel;
   }
 }

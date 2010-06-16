@@ -38,38 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.utils;
-
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Text;
+package org.kalypso.model.wspm.tuhh.core.util;
 
 /**
+ * A single token for token replacements in user input. Useable for example in user entered filenames containing some
+ * patterns that get replaced on the fly.<br>
+ * The replacement always takes place against some kind of context, the class variable.
+ * 
  * @author Gernot Belger
  */
-public class PatternAction extends Action
+public interface IPatternInput<T>
 {
-  private final IPatternInput< ? > m_pattern;
+  String getLabel( );
 
-  private final Text m_text;
+  String getToken( );
 
-  public PatternAction( final IPatternInput< ? > pattern, final Text text )
-  {
-    super( pattern.getLabel() );
-
-    m_pattern = pattern;
-    m_text = text;
-  }
-
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    super.runWithEvent( event );
-
-    m_text.insert( m_pattern.getToken() );
-  }
-
+  String replace( String text, final T context );
 }
