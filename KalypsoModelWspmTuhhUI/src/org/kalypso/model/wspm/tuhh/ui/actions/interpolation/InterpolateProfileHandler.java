@@ -12,16 +12,18 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.results.ProfileInterpolation;
+import org.kalypso.model.wspm.tuhh.core.util.ProfileInterpolation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -50,11 +52,18 @@ public class InterpolateProfileHandler extends AbstractHandler
     try
     {
       doInterpolation( waterBody, reach, wizard );
+      final CommandableWorkspace workspace = profileSelection.getWorkspace();
+      workspace.postCommand( new EmptyCommand( "", false ) );
     }
     catch( final CoreException e )
     {
       final String commandName = HandlerUtils.getCommandName( event );
       new StatusDialog( shell, e.getStatus(), commandName ).open();
+    }
+    catch( final Exception e )
+    {
+      // will never happen
+      e.printStackTrace();
     }
 
     return null;
@@ -67,11 +76,13 @@ public class InterpolateProfileHandler extends AbstractHandler
       final IProfil previousProfile = wizard.getPreviousProfile().getProfil();
       final IProfil nextProfile = wizard.getNextProfile().getProfil();
       final BigDecimal newStation = wizard.getNewStation();
+      final boolean onlyRiverChannel = wizard.getOnlyRiverChannel();
 
-      final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile );
+      final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile, onlyRiverChannel );
       final IProfil newProfile = interpolation.interpolate( newStation, previousProfile.getType() );
 
       ProfileUiUtils.addNewProfileAndFireEvents( newProfile, waterBody, reach );
+
     }
     catch( final Exception e )
     {

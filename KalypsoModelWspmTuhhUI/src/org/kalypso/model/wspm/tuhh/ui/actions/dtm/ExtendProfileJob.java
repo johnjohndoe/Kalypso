@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.grid.RichCoverageCollection;
@@ -64,6 +65,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -108,10 +110,13 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
 
   private GM_Point m_startPoint;
 
-  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures, final TuhhReach reach, final double simplifyDistance )
+  private final CommandableWorkspace m_commandableWorkspace;
+
+  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures, final TuhhReach reach, final double simplifyDistance )
   {
     super( "Extend Profile" );
     m_widget = widget;
+    m_commandableWorkspace = commandableWorkspace;
     m_mapPanel = mapPanel;
     m_coverages = coverages;
     m_profileFeatures = profileFeatures;
@@ -172,6 +177,8 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
         final GMLWorkspace workspace = m_reach.getWorkspace();
         workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_reach, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
+
+      m_commandableWorkspace.postCommand( new EmptyCommand( "", false ) );
 
       return Status.OK_STATUS;
     }

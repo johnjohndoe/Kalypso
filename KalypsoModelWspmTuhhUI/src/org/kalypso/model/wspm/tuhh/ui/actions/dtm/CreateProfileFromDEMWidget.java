@@ -149,7 +149,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     final double simplifyDistance = 0.01;
 
     if( m_strategyExtendProfile )
-      return new ExtendProfileJob( this, mapPanel, coverages, profileFeatures, reach, simplifyDistance );
+      return new ExtendProfileJob( this, commandableWorkspace, mapPanel, coverages, profileFeatures, reach, simplifyDistance );
     else
       return new CreateNewProfileJob( this, commandableWorkspace, mapPanel, water, reach, coverages, simplifyDistance );
   }

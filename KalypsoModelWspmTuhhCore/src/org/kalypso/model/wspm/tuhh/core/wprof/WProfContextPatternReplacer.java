@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
-import org.kalypso.model.wspm.tuhh.core.utils.AbstractPatternInput;
-import org.kalypso.model.wspm.tuhh.core.utils.PatternInputReplacer;
+import org.kalypso.model.wspm.tuhh.core.util.AbstractPatternInput;
+import org.kalypso.model.wspm.tuhh.core.util.PatternInputReplacer;
 
 /**
  * @author Gernot Belger

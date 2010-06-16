@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.results;
+package org.kalypso.model.wspm.tuhh.core.util;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -63,28 +64,25 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * TODO: move into separate package
+ * Interpolates a new profile between two existing ones.
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class ProfileInterpolation
 {
+  private final static double SIMPLIFIKATION_DISTANCE = 0.01;
+
   private final IProfil m_previousProfile;
 
   private final IProfil m_nextProfile;
 
-  public ProfileInterpolation( final IProfil previousProfile, final IProfil nextProfile )
+  private final boolean m_onlyRiverChannel;
+
+  public ProfileInterpolation( final IProfil previousProfile, final IProfil nextProfile, final boolean onlyRiverChannel )
   {
     m_previousProfile = previousProfile;
     m_nextProfile = nextProfile;
-  }
-
-  /**
-   * Interpolates a new profile between two existing ones at the given station.
-   */
-  public IProfil createProfileAt( final BigDecimal station, final String profileType )
-  {
-    return interpolate( station, profileType );
+    m_onlyRiverChannel = onlyRiverChannel;
   }
 
   /**
@@ -101,14 +99,30 @@ public class ProfileInterpolation
     profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, prevCrs );
 
     interpolateProfile( profile );
+
+    try
+    {
+      ProfilUtil.simplifyProfile( profile, SIMPLIFIKATION_DISTANCE );
+    }
+    catch( final IllegalProfileOperationException e )
+    {
+      e.printStackTrace();
+      profile.setDescription( "Simplifikation failed: " + e.getMessage() );
+    }
+
     /* update profile: add durchstroemte bereiche, trennflaechen */
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IRecord[] points = profile.getPoints();
     if( points.length > 1 )
     {
-      final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[0] ).setValue( defaultValue );
-      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[points.length - 1] ).setValue( defaultValue );
+      final Object defaultDB = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[0] ).setValue( defaultDB );
+      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, points[points.length - 1] ).setValue( defaultDB );
+
+      // TODO: also interpolate TF, if onlyChannel is false
+      final Object defaultTF = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, points[0] ).setValue( defaultTF );
+      profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, points[points.length - 1] ).setValue( defaultTF );
     }
 
     return profile;
@@ -160,8 +174,8 @@ public class ProfileInterpolation
 
   private void createInterpolationPoints( final IProfil profil ) throws SameXValuesException
   {
-    final Double[] prevWidths = getPoints( m_previousProfile );
-    final Double[] nextWidths = getPoints( m_nextProfile );
+    final Double[] prevWidths = getWidths( m_previousProfile );
+    final Double[] nextWidths = getWidths( m_nextProfile );
     if( prevWidths.length < 2 )
     {
       profil.setComment( "Interpolation not possible: downstream profile doesn not contain enough points." );
@@ -218,16 +232,26 @@ public class ProfileInterpolation
     return newXValues;
   }
 
-  private Double[] getPoints( final IProfil profil )
+  private Double[] getWidths( final IProfil profil )
   {
-    // TODO: do we always want to have trennflaechen here?
-    final IComponent marker = profil.getPointPropertyFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final List<IRecord> innerPoints = ProfilUtil.getInnerPoints( profil, marker );
-    if( innerPoints == null )
-      return new Double[0];
-
-    final IRecord[] points = innerPoints.toArray( new IRecord[innerPoints.size()] );
+    final IRecord[] points = getInterpolationPoints( profil );
     return ProfilUtil.getValuesFor( points, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
+  }
+
+  protected IRecord[] getInterpolationPoints( final IProfil profil )
+  {
+    if( m_onlyRiverChannel )
+    {
+      // TODO: do we always want to have trennflaechen here?
+      final IComponent marker = profil.getPointPropertyFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+      final List<IRecord> innerPoints = ProfilUtil.getInnerPoints( profil, marker );
+      if( innerPoints == null )
+        return new IRecord[0];
+
+      return innerPoints.toArray( new IRecord[innerPoints.size()] );
+    }
+    else
+      return profil.getPoints();
   }
 
   private void interpolateComponent( final IProfil prevProfil, final IProfil nextProfil, final IProfil profil, final IComponent component ) throws SameXValuesException
@@ -242,8 +266,8 @@ public class ProfileInterpolation
     if( prevComponentIndex == -1 || nextComponentIndex == -1 )
       return;
 
-    final Double[] prevWidths = getPoints( prevProfil );
-    final Double[] nextWidths = getPoints( nextProfil );
+    final Double[] prevWidths = getWidths( prevProfil );
+    final Double[] nextWidths = getWidths( nextProfil );
 
     final IRecord[] points = profil.getPoints();
     final int widthComponentIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );

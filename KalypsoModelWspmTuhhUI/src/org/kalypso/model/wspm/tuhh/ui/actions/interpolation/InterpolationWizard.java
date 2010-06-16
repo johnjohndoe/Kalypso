@@ -77,6 +77,11 @@ public class InterpolationWizard extends Wizard
     return m_stationPage.getNewStation();
   }
 
+  public boolean getOnlyRiverChannel( )
+  {
+    return m_stationPage.getOnlyRiverChannel();
+  }
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
