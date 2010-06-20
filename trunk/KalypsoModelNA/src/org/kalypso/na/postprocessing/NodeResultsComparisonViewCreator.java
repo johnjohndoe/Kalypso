@@ -8,8 +8,8 @@ import java.util.Map;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
 import org.kalypso.template.obsdiagview.TypeAxis;
-import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
+import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 import org.kalypso.template.obsdiagview.TypeDirection;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.TypePosition;
@@ -103,7 +103,7 @@ public final class NodeResultsComparisonViewCreator
     curve.setStroke( new TypeCurve.Stroke() );
     curve.getStroke().setWidth( 1.25f );
     curve.setShown( true );
-    final List<TypeAxisMapping> mappings = curve.getMapping();
+    final List<Mapping> mappings = curve.getMapping();
     for( final String key : mappingsMap.keySet() )
       mappings.add( createAxisMapping( key, mappingsMap.get( key ) ) );
     return observation;
@@ -125,9 +125,9 @@ public final class NodeResultsComparisonViewCreator
     return observation;
   }
 
-  private final static TypeAxisMapping createAxisMapping( final String diagramAxis, final String observationAxis )
+  private final static Mapping createAxisMapping( final String diagramAxis, final String observationAxis )
   {
-    final TypeAxisMapping mapping = new TypeAxisMapping();
+    final Mapping mapping = new Mapping();
     mapping.setDiagramAxis( diagramAxis );
     mapping.setObservationAxis( observationAxis );
     return mapping;
