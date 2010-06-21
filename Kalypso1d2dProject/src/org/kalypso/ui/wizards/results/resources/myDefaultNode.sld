@@ -9,7 +9,7 @@
 	<NamedLayer>
 		<Name>deegree style definition</Name>
 		<UserStyle>
-			<Name>Vector Style</Name>
+			<Name>Node Results Style</Name>
 			<Title>- generierter Standard-Stil -</Title>
 			<Abstract>empty Abstract</Abstract>
 			<FeatureTypeStyle>
@@ -60,7 +60,7 @@
 							<Size>
 								<ogc:Mul>
 									<ogc:Literal>VECTORFACTOR</ogc:Literal>
-									<ogc:PropertyName>velocityNorm</ogc:PropertyName>
+									<ogc:PropertyName>SIZE_NORM</ogc:PropertyName>
 								</ogc:Mul>
 							</Size>
 							<Rotation>
