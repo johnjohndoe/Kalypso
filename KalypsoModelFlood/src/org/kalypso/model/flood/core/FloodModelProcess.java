@@ -63,6 +63,8 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.CountGeoGridWalker;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
+import org.kalypso.grid.SequentialBinaryGeoGridReader;
 import org.kalypso.grid.VolumeGeoGridWalker;
 import org.kalypso.grid.areas.PolygonGeoGridArea;
 import org.kalypso.model.flood.binding.IFloodModel;
@@ -267,10 +269,12 @@ public class FloodModelProcess
     {
       progress.subTask( terrainCoverage.getName() );
 
-      final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
+      // final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
+      final RectifiedGridCoverageGeoGrid inputGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( terrainCoverage );
       final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
 
-      final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons, event );
+      // final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons, event );
+      final SequentialBinaryGeoGridReader inputGridReader = new FloodDiffGrid( inputGrid, inputGrid.getGridURL(), tins, polygons, event );
 
       /* set destination: => event folder/results */
       // generate unique name for grid file
@@ -289,13 +293,17 @@ public class FloodModelProcess
       final File file = destFile.getLocation().toFile();
 
       final String fileName = "../events/" + event.getDataPath() + "/results/" + file.getName(); //$NON-NLS-1$ //$NON-NLS-2$
-      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) ); //$NON-NLS-1$
-      coverage.setName(  Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.10" , terrainCoverage.getName() ) ); //$NON-NLS-1$
+      //      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) ); //$NON-NLS-1$
+      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, inputGridReader, 2, file, fileName, "image/bin", progress.newChild( 95 ) ); //$NON-NLS-1$
 
-      final String desc =  Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.11" , new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
+      coverage.setName( Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.10", terrainCoverage.getName() ) ); //$NON-NLS-1$
+
+      final String desc = Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.11", new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
       coverage.setDescription( desc );
 
-      terrainGrid.dispose();
+      // terrainGrid.dispose();
+      inputGridReader.close();
+      inputGridReader.dispose();
     }
 
     /* update resource folder */

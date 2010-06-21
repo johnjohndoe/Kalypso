@@ -119,6 +119,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       outputRasterTmpDir.mkdirs();
 
       doRiskZonesCalculation( outputRasterTmpDir, model_output, model_1, model_2, simulationMonitorAdaptor );
+
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, ws_model_output, "UTF-8" ); //$NON-NLS-1$
 

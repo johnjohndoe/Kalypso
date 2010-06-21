@@ -41,6 +41,7 @@
 package org.kalypso.model.flood.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
@@ -57,10 +58,15 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.grid.BinaryGeoGridReader;
 import org.kalypso.grid.CountGeoGridWalker;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.IGeoWalkingStrategy;
+import org.kalypso.grid.OptimizedGeoGridWalkingStrategy;
+import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
+import org.kalypso.grid.SequentialBinaryGeoGridReader;
 import org.kalypso.grid.VolumeGeoGridWalker;
 import org.kalypso.grid.areas.PolygonGeoGridArea;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
@@ -185,15 +191,18 @@ public class SimulationKalypsoFlood implements ISimulation
         throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.17" ), null ) ); //$NON-NLS-1$
 
       progress.setWorkRemaining( events.size() * 2 );
+      Date lStart1 = new Date();
       for( final IRunoffEvent event : markedEvents )
       {
         progress.subTask( String.format( STR_EREIGNIS_xS, event.getName() ) );
         /* final IStatus processVolumes = */processVolumes( model, event, progress.newChild( 1 ) );
-        // TODO: collect stati and log to file and/or present ot user
+        // TODO: collect stats and log to file and/or present to user
         final File eventFolder = new File( eventsTmpDir, event.getDataPath().toPortableString() );
         eventFolder.mkdirs();
+
         processEvent( model, eventFolder, event, progress.newChild( 1 ) );
       }
+      System.out.println( "Risk simulation: " + ((new Date()).getTime() - lStart1.getTime()) );
 
       return modelWorkspace;
     }
@@ -242,7 +251,7 @@ public class SimulationKalypsoFlood implements ISimulation
       return Status.OK_STATUS;
 
     final IStatus[] children = stati.toArray( new IStatus[stati.size()] );
-    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, -1, children, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.1"), null ); //$NON-NLS-1$
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, -1, children, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.1" ), null ); //$NON-NLS-1$
   }
 
   private IStatus processVolume( final IRunoffEvent event, final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainCoverages, final IProgressMonitor monitor ) throws SimulationException, GeoGridException, GM_Exception
@@ -252,7 +261,7 @@ public class SimulationKalypsoFlood implements ISimulation
     final BigDecimal volumeValue = volumePolygon.getVolume();
     String volumeName = volumePolygon.getName();
 
-    final String noValueMsg = String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.2"), volumeName ); //$NON-NLS-1$
+    final String noValueMsg = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.2" ), volumeName ); //$NON-NLS-1$
     final IStatus noValueStatus = StatusUtilities.createStatus( IStatus.WARNING, noValueMsg, null );
 
     if( volumeValue == null )
@@ -273,7 +282,20 @@ public class SimulationKalypsoFlood implements ISimulation
     {
       progress.subTask( String.format( STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS, event.getName(), volumeName, coverage.getName() ) );
 
-      final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
+      IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
+
+      // try optimized binary grid reader
+      if( geoGrid instanceof RectifiedGridCoverageGeoGrid )
+      {
+        try
+        {
+          geoGrid = new BinaryGeoGridReader( geoGrid, ((RectifiedGridCoverageGeoGrid) geoGrid).getGridURL() );
+        }
+        catch( IOException e )
+        {
+          e.printStackTrace();
+        }
+      }
 
       final String sourceCRS = geoGrid.getSourceCRS();
       final Geometry volumeGeometry = JTSAdapter.export( GeoTransformUtils.transformQuiet( volumeGmObject, sourceCRS ) );
@@ -286,7 +308,8 @@ public class SimulationKalypsoFlood implements ISimulation
       minWsp = Math.min( minWsp, geoGrid.getMin().doubleValue() );
 
       /* The maximum waterlevel per grid, is calculated by assuming that all cells have the maxmimum terrain value */
-      geoGrid.getWalkingStrategy().walk( geoGrid, countWalker, new PolygonGeoGridArea( geoGrid, volumeGeometry ), progress.newChild( 1, SubMonitor.SUPPRESS_ALL_LABELS ) );
+      final IGeoWalkingStrategy strategy = new OptimizedGeoGridWalkingStrategy();
+      strategy.walk( geoGrid, countWalker, new PolygonGeoGridArea( geoGrid, volumeGeometry ), progress.newChild( 1, SubMonitor.SUPPRESS_ALL_LABELS ) );
       final int numberOfCellsCoveringThePolgon = countWalker.getCount();
       if( numberOfCellsCoveringThePolgon > 0 )
       {
@@ -351,14 +374,14 @@ public class SimulationKalypsoFlood implements ISimulation
     if( Math.abs( currentWsp - minWsp ) < WSP_EPS )
     {
       final double volumeDif = Math.abs( minVol - targetVolume );
-      final String msg = String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.3"), volumeDif ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.3" ), volumeDif ); //$NON-NLS-1$
       return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), minWsp );
     }
 
     if( Math.abs( currentWsp - maxWsp ) < WSP_EPS )
     {
       final double volumeDif = Math.abs( maxVol - targetVolume );
-      final String msg = String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.4"), volumeDif ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.4" ), volumeDif ); //$NON-NLS-1$
       return new VolumeResult( StatusUtilities.createStatus( IStatus.WARNING, msg, null ), maxWsp );
     }
 
@@ -399,11 +422,25 @@ public class SimulationKalypsoFlood implements ISimulation
       double volume = 0.0;
       for( final ICoverage coverage : terrainCollection )
       {
-        final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+        IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
 
-        final String sourceCRS = grid.getSourceCRS();
+        // try optimized binary grid reader
+        if( geoGrid instanceof RectifiedGridCoverageGeoGrid )
+        {
+          try
+          {
+            geoGrid = new BinaryGeoGridReader( geoGrid, ((RectifiedGridCoverageGeoGrid) geoGrid).getGridURL() );
+          }
+          catch( IOException e )
+          {
+            e.printStackTrace();
+          }
+        }
+
+        final String sourceCRS = geoGrid.getSourceCRS();
         final Geometry volumeGeometry = JTSAdapter.export( GeoTransformUtils.transformQuiet( volumeGmObject, sourceCRS ) );
-        grid.getWalkingStrategy().walk( grid, volumeWalker, new PolygonGeoGridArea( grid, volumeGeometry ), progress.newChild( 1, SubMonitor.SUPPRESS_ALL_LABELS ) );
+        final IGeoWalkingStrategy strategy = new OptimizedGeoGridWalkingStrategy();
+        strategy.walk( geoGrid, volumeWalker, new PolygonGeoGridArea( geoGrid, volumeGeometry ), progress.newChild( 1, SubMonitor.SUPPRESS_ALL_LABELS ) );
 
         volume += volumeWalker.getVolume();
       }
@@ -451,10 +488,17 @@ public class SimulationKalypsoFlood implements ISimulation
     {
       progress.subTask( String.format( STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS, event.getName(), terrainCoverage.getName() ) );
 
-      final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
+      // final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
+      // final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
+      //
+      // final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons, event );
+
+      final RectifiedGridCoverageGeoGrid inputGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( terrainCoverage );
       final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
 
-      final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons, event );
+      // create sequential grid reader
+      // final SequentialBinaryGeoGridReader inputGridReader = new FloodDiffGrid( terrainGrid, tins, polygons, event );
+      final SequentialBinaryGeoGridReader inputGridReader = new FloodDiffGrid( inputGrid, inputGrid.getGridURL(), tins, polygons, event );
 
       /* set destination: => event folder/results */
       // generate unique name for grid file
@@ -466,13 +510,17 @@ public class SimulationKalypsoFlood implements ISimulation
 
       final String fileName = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + event.getDataPath() + "/results/" + outputCoverageFile.getName();//$NON-NLS-1$
 
-      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, outputCoverageFile, fileName, "image/bin", progress.newChild( 1 ) );//$NON-NLS-1$
+      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, inputGridReader, 2, outputCoverageFile, fileName, "image/bin", progress.newChild( 1 ) ); //$NON-NLS-1$
+
+      //      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, outputCoverageFile, fileName, "image/bin", progress.newChild( 1 ) );//$NON-NLS-1$
+
       coverage.setName( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.10", terrainCoverage.getName() ) ); //$NON-NLS-1$
 
       final String desc = Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.11", new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
       coverage.setDescription( desc );
 
-      terrainGrid.dispose();
+      inputGridReader.close();
+      inputGridReader.dispose();
     }
   }
 
