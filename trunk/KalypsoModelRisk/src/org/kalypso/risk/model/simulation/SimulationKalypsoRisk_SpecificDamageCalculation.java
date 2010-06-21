@@ -53,12 +53,9 @@ import javax.xml.bind.JAXBElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
-import org.kalypso.grid.BinaryGeoGrid;
 import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.SequentialBinaryGeoGridReader;
-import org.kalypso.grid.SequentialBinaryGeoGridWriter;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
@@ -78,8 +75,8 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -110,8 +107,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
     try
     {
-      final Date lStart1 = new Date();
-
       final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
       simulationMonitorAdaptor.beginTask( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.1" ), 100 ); //$NON-NLS-1$
       final GMLWorkspace controlModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.CONTROL_MODEL.toString() ), null );
@@ -161,8 +156,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
         resultEater.addResult( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString(), outMap );
 
       }
-
-      System.out.println( "Big: " + ((new Date()).getTime() - lStart1.getTime()) );
     }
     catch( final Exception e )
     {
@@ -204,11 +197,11 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
       // Put classes into list by, with index ordinal-number for faster access later
       final List<ILanduseClass> landuseClasses = new ArrayList<ILanduseClass>();
-      for( final ILanduseClass landuseClass : landuseClassesList )
+      for( ILanduseClass landuseClass : landuseClassesList )
       {
         landuseClass.clearStatisticEntries();
 
-        final int ordinalNumber = landuseClass.getOrdinalNumber();
+        int ordinalNumber = landuseClass.getOrdinalNumber();
         if( landuseClasses.size() > ordinalNumber && landuseClasses.get( ordinalNumber ) != null )
           Logger.getAnonymousLogger().log( Level.WARNING, String.format( "WARNING: two landuse classes with same ordinal number: %s", ordinalNumber ) ); //$NON-NLS-1$
 
@@ -221,9 +214,9 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
       {
-        final int srcAnnualCoverageSize = srcAnnualCoverages.size();
+        int srcAnnualCoverageSize = srcAnnualCoverages.size();
         final int perCoverageTicks = 100 / srcAnnualCoverageSize;
-        final String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10", srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
+        String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10", srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
         final SubMonitor subMonitor = SubMonitor.convert( monitor, taskName, 100 );
 
         /* create annual damage coverage collection */
@@ -240,7 +233,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
 
           // create sequential grid reader
-          final SequentialBinaryGeoGridReader inputGridReader = new SequentialBinaryGeoGridReader( inputGrid, inputGrid.getGridURL() );
+          final SequentialBinaryGeoGridReader inputGridReader = new RiskSpecificDamageGrid(inputGrid, inputGrid.getGridURL(), polygonCollection, landuseClasses, cellSize, returnPeriod);
 
           // prepare the name, path and file for the output grid
           final String outputCoverageFileName = String.format( "specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i ); //$NON-NLS-1$
@@ -252,25 +245,12 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           // inputGrid.getSizeX(), inputGrid.getSizeY(), importantDigits, inputGrid.getOrigin(), inputGrid.getOffsetX(),
           // inputGrid.getOffsetY(), inputGrid.getSourceCRS(), false );
 
-          // create the sequential grid writer
-          final SequentialBinaryGeoGridWriter outputGridWriter = new SequentialBinaryGeoGridWriter( outputCoverageFile.toString(), inputGrid.getSizeX(), inputGrid.getSizeY(), importantDigits );
-
-          // create the parallelizer manager
-          final ParallelDamageCalculationManager manager = new ParallelDamageCalculationManager( inputGridReader, outputGridWriter, polygonCollection, landuseClasses, returnPeriod, cellSize );
-
-          final Date lStart1 = new Date();
-
-          manager.calculate();
-
-          System.out.println( "Little: " + ((new Date()).getTime() - lStart1.getTime()) );
+          /* add the new coverage to the collection */
+//          final ICoverage newCoverage = GeoGridUtilities.addSequentialBinaryGridAsCoverage( destCoverageCollection, outputGrid, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
+          
+          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, inputGridReader, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           inputGridReader.close();
-          outputGridWriter.close();
-
-          final IGeoGrid outputGrid = BinaryGeoGrid.openGrid( outputCoverageFile.toURI().toURL(), inputGrid.getOrigin(), inputGrid.getOffsetX(), inputGrid.getOffsetY(), inputGrid.getSourceCRS(), false );
-
-          /* add the new coverage to the collection */
-          final ICoverage newCoverage = GeoGridUtilities.addSequentialBinaryGridAsCoverage( destCoverageCollection, outputGrid, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           for( final ILanduseClass landuseClass : landuseClassesList )
           {
@@ -279,7 +259,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           newCoverage.setName( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2", srcAnnualCoverages.getReturnPeriod(), i ) ); //$NON-NLS-1$
           newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3", new Date().toString() ) ); //$NON-NLS-1$
           inputGrid.dispose();
-          outputGrid.dispose();
         }
         /* set the return period of the specific damage grid */
         destCoverageCollection.setReturnPeriod( srcAnnualCoverages.getReturnPeriod() );
@@ -292,363 +271,5 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     }
   }
 
-  // /**
-  // * Creates the specific damage coverage collection. <br>
-  // * The damage value for each grid cell is taken from the underlying polygon.
-  // */
-  // private void doDamagePotentialCalculationHybrid( final File tmpdir, final IRasterizationControlModel controlModel,
-  // final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final int importantDigits, final
-  // IProgressMonitor monitor ) throws SimulationException
-  // {
-  // final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection =
-  // rasterModel.getSpecificDamageCoverageCollection();
-  // final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
-  // final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
-  //
-  // if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
-  //      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.0" ) ); //$NON-NLS-1$
-  //
-  // /*
-  // * As the default value is 1, this is cannot happen any more
-  // *
-  // * for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() ) { final Integer
-  // * returnPeriod = collection.getReturnPeriod(); if( returnPeriod == null || returnPeriod <= 0 ) throw new
-  //     * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
-  // */
-  // try
-  // {
-  // /* clear existing data */
-  // for( int i = 0; i < specificDamageCoverageCollection.size(); i++ )
-  // {
-  // final IAnnualCoverageCollection annualCoverageCollection = specificDamageCoverageCollection.get( i );
-  // for( int k = 0; k < annualCoverageCollection.size(); k++ )
-  // CoverageManagementHelper.deleteGridFile( annualCoverageCollection.get( k ) );
-  // }
-  // specificDamageCoverageCollection.clear();
-  //
-  // // Put classes into list by, with index ordinal-number for faster access later
-  // final List<ILanduseClass> landuseClasses = new ArrayList<ILanduseClass>();
-  // for( final ILanduseClass landuseClass : landuseClassesList )
-  // {
-  // landuseClass.clearStatisticEntries();
-  //
-  // final int ordinalNumber = landuseClass.getOrdinalNumber();
-  // if( landuseClasses.size() > ordinalNumber && landuseClasses.get( ordinalNumber ) != null )
-  //          Logger.getAnonymousLogger().log( Level.WARNING, String.format( "WARNING: two landuse classes with same ordinal number: %s", ordinalNumber ) ); //$NON-NLS-1$
-  //
-  // while( landuseClasses.size() < ordinalNumber + 1 )
-  // landuseClasses.add( null );
-  //
-  // landuseClasses.set( ordinalNumber, landuseClass );
-  // }
-  //
-  // /* loop over all waterdepths */
-  // for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
-  // {
-  // final int srcAnnualCoverageSize = srcAnnualCoverages.size();
-  // final int perCoverageTicks = 100 / srcAnnualCoverageSize;
-  //        final String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10", srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
-  // final SubMonitor subMonitor = SubMonitor.convert( monitor, taskName, 100 );
-  //
-  // /* create annual damage coverage collection */
-  // final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew(
-  // IAnnualCoverageCollection.QNAME );
-  //
-  // final int returnPeriod = srcAnnualCoverages.getReturnPeriod();
-  //
-  // for( int i = 0; i < srcAnnualCoverageSize; i++ )
-  // {
-  // final ICoverage inputCoverage = srcAnnualCoverages.get( i );
-  // if( srcAnnualCoverageSize > 1 )
-  //            subMonitor.subTask( String.format( "%s (%s)", taskName, inputCoverage.getName() ) ); //$NON-NLS-1$
-  // final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
-  // final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs(
-  // inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
-  //
-  // final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
-  // {
-  // /**
-  // * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int) gets the damage value for each grid
-  // * cell from the underlying polygon.
-  // */
-  // @Override
-  // public double getValue( final int x, final int y ) throws GeoGridException
-  // {
-  // try
-  // {
-  // final Double value = super.getValue( x, y );
-  // if( value.equals( Double.NaN ) )
-  // return Double.NaN;
-  //
-  // // possible that waterdepth input grid contains water depth less than zero!
-  // else if( value.doubleValue() <= 0.0 )
-  // return Double.NaN;
-  //
-  // else
-  // {
-  //
-  // /* This coordinate has the cs of the input grid! */
-  // final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
-  //
-  // if( polygonCollection.size() == 0 )
-  // return Double.NaN;
-  //
-  // final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
-  // final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
-  // final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-  //
-  // /* Transform query position into the cs of the polygons. */
-  // final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems(
-  // inputGrid.getSourceCRS(), coordinateSystem );
-  // final GM_Position position = TransformUtilities.transform( positionAt, transformation );
-  //
-  // /* This list has some unknown cs. */
-  //
-  // final List<ILandusePolygon> list = polygonCollection.query( position );
-  // if( list == null || list.size() == 0 )
-  // return Double.NaN;
-  // else
-  // {
-  // for( final ILandusePolygon polygon : list )
-  // {
-  // if( polygon.contains( position ) )
-  // {
-  // final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
-  // final double damageValue = polygon.getDamageValue( value );
-  //
-  // if( Double.isNaN( damageValue ) )
-  // return Double.NaN;
-  //
-  // if( damageValue <= 0.0 )
-  // return Double.NaN;
-  //
-  // /* set statistic for landuse class */
-  // final ILanduseClass landuseClass = landuseClasses.get( landuseClassOrdinalNumber );
-  // if( landuseClass == null )
-  //                          System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
-  // else
-  // RiskModelHelper.fillStatistics( returnPeriod, landuseClass, damageValue, cellSize );
-  // return damageValue;
-  // }
-  // }
-  // }
-  // return Double.NaN;
-  // }
-  // }
-  // catch( final Exception ex )
-  // {
-  //                throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskModelHelper.0" ), ex ); //$NON-NLS-1$
-  // }
-  // }
-  // };
-  //
-  // /* add the new coverage to the collection */
-  //          final String outputCoverageFileName = String.format( "specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i ); //$NON-NLS-1$
-  // final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
-  // final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-  //
-  // final Date lStart1 = new Date();
-  //
-  //          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
-  //
-  // System.out.println( "Little: " + ((new Date()).getTime() - lStart1.getTime()) );
-  //
-  // for( final ILanduseClass landuseClass : landuseClassesList )
-  // {
-  // landuseClass.updateStatistic( returnPeriod );
-  // }
-  //          newCoverage.setName( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2", srcAnnualCoverages.getReturnPeriod(), i ) ); //$NON-NLS-1$
-  //          newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3", new Date().toString() ) ); //$NON-NLS-1$
-  // inputGrid.dispose();
-  // }
-  // /* set the return period of the specific damage grid */
-  // destCoverageCollection.setReturnPeriod( srcAnnualCoverages.getReturnPeriod() );
-  // }
-  // }
-  // catch( final Exception e )
-  // {
-  // e.printStackTrace();
-  //      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
-  // }
-  // }
-
-  // /**
-  // * Creates the specific damage coverage collection. <br>
-  // * The damage value for each grid cell is taken from the underlying polygon.
-  // */
-  // private void doDamagePotentialCalculationOriginal( final File tmpdir, final IRasterizationControlModel
-  // controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final int importantDigits,
-  // final IProgressMonitor monitor ) throws SimulationException
-  // {
-  // final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection =
-  // rasterModel.getSpecificDamageCoverageCollection();
-  // final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
-  // final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
-  //
-  // if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
-  //      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.0" ) ); //$NON-NLS-1$
-  //
-  // /*
-  // * As the default value is 1, this is cannot happen any more
-  // *
-  // * for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() ) { final Integer
-  // * returnPeriod = collection.getReturnPeriod(); if( returnPeriod == null || returnPeriod <= 0 ) throw new
-  //     * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
-  // */
-  // try
-  // {
-  // /* clear existing data */
-  // for( int i = 0; i < specificDamageCoverageCollection.size(); i++ )
-  // {
-  // final IAnnualCoverageCollection annualCoverageCollection = specificDamageCoverageCollection.get( i );
-  // for( int k = 0; k < annualCoverageCollection.size(); k++ )
-  // CoverageManagementHelper.deleteGridFile( annualCoverageCollection.get( k ) );
-  // }
-  // specificDamageCoverageCollection.clear();
-  //
-  // // Put classes into list by, with index ordinal-number for faster access later
-  // final List<ILanduseClass> landuseClasses = new ArrayList<ILanduseClass>();
-  // for( final ILanduseClass landuseClass : landuseClassesList )
-  // {
-  // landuseClass.clearStatisticEntries();
-  //
-  // final int ordinalNumber = landuseClass.getOrdinalNumber();
-  // if( landuseClasses.size() > ordinalNumber && landuseClasses.get( ordinalNumber ) != null )
-  //          Logger.getAnonymousLogger().log( Level.WARNING, String.format( "WARNING: two landuse classes with same ordinal number: %s", ordinalNumber ) ); //$NON-NLS-1$
-  //
-  // while( landuseClasses.size() < ordinalNumber + 1 )
-  // landuseClasses.add( null );
-  //
-  // landuseClasses.set( ordinalNumber, landuseClass );
-  // }
-  //
-  // /* loop over all waterdepths */
-  // for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
-  // {
-  // final int srcAnnualCoverageSize = srcAnnualCoverages.size();
-  // final int perCoverageTicks = 100 / srcAnnualCoverageSize;
-  //        final String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10", srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
-  // final SubMonitor subMonitor = SubMonitor.convert( monitor, taskName, 100 );
-  //
-  // /* create annual damage coverage collection */
-  // final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew(
-  // IAnnualCoverageCollection.QNAME );
-  //
-  // final int returnPeriod = srcAnnualCoverages.getReturnPeriod();
-  //
-  // for( int i = 0; i < srcAnnualCoverageSize; i++ )
-  // {
-  // final ICoverage inputCoverage = srcAnnualCoverages.get( i );
-  // if( srcAnnualCoverageSize > 1 )
-  //            subMonitor.subTask( String.format( "%s (%s)", taskName, inputCoverage.getName() ) ); //$NON-NLS-1$
-  // final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
-  // final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs(
-  // inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
-  //
-  // final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
-  // {
-  // /**
-  // * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int) gets the damage value for each grid
-  // * cell from the underlying polygon.
-  // */
-  // @Override
-  // public double getValue( final int x, final int y ) throws GeoGridException
-  // {
-  // try
-  // {
-  // final Double value = super.getValue( x, y );
-  // if( value.equals( Double.NaN ) )
-  // return Double.NaN;
-  //
-  // // possible that waterdepth input grid contains water depth less than zero!
-  // else if( value.doubleValue() <= 0.0 )
-  // return Double.NaN;
-  //
-  // else
-  // {
-  //
-  // /* This coordinate has the cs of the input grid! */
-  // final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
-  //
-  // if( polygonCollection.size() == 0 )
-  // return Double.NaN;
-  //
-  // final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
-  // final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
-  // final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-  //
-  // /* Transform query position into the cs of the polygons. */
-  // final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems(
-  // inputGrid.getSourceCRS(), coordinateSystem );
-  // final GM_Position position = TransformUtilities.transform( positionAt, transformation );
-  //
-  // /* This list has some unknown cs. */
-  //
-  // final List<ILandusePolygon> list = polygonCollection.query( position );
-  // if( list == null || list.size() == 0 )
-  // return Double.NaN;
-  // else
-  // {
-  // for( final ILandusePolygon polygon : list )
-  // {
-  // if( polygon.contains( position ) )
-  // {
-  // final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
-  // final double damageValue = polygon.getDamageValue( value );
-  //
-  // if( Double.isNaN( damageValue ) )
-  // return Double.NaN;
-  //
-  // if( damageValue <= 0.0 )
-  // return Double.NaN;
-  //
-  // /* set statistic for landuse class */
-  // final ILanduseClass landuseClass = landuseClasses.get( landuseClassOrdinalNumber );
-  // if( landuseClass == null )
-  //                          System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
-  // else
-  // RiskModelHelper.fillStatistics( returnPeriod, landuseClass, damageValue, cellSize );
-  // return damageValue;
-  // }
-  // }
-  // }
-  // return Double.NaN;
-  // }
-  // }
-  // catch( final Exception ex )
-  // {
-  //                throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskModelHelper.0" ), ex ); //$NON-NLS-1$
-  // }
-  // }
-  // };
-  //
-  // /* add the new coverage to the collection */
-  //          final String outputCoverageFileName = String.format( "specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i ); //$NON-NLS-1$
-  // final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
-  // final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-  //
-  // final Date lStart1 = new Date();
-  //
-  //          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
-  // System.out.println( "Little: " + ((new Date()).getTime() - lStart1.getTime()) );
-  //
-  // for( final ILanduseClass landuseClass : landuseClassesList )
-  // {
-  // landuseClass.updateStatistic( returnPeriod );
-  // }
-  //          newCoverage.setName( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2", srcAnnualCoverages.getReturnPeriod(), i ) ); //$NON-NLS-1$
-  //          newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3", new Date().toString() ) ); //$NON-NLS-1$
-  // inputGrid.dispose();
-  // }
-  // /* set the return period of the specific damage grid */
-  // destCoverageCollection.setReturnPeriod( srcAnnualCoverages.getReturnPeriod() );
-  // }
-  // }
-  // catch( final Exception e )
-  // {
-  // e.printStackTrace();
-  //      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
-  // }
-  // }
 
 }

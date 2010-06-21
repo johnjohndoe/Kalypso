@@ -46,16 +46,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
+import org.kalypso.grid.BinaryGeoGridReader;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -75,7 +77,7 @@ import com.vividsolutions.jts.util.Assert;
 
 public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
-  private final Map<String, List<IGeoGrid>> m_gridMap;
+  private final Map<String, List<BinaryGeoGridReader>> m_gridMap;
 
   private final IFeatureWrapperCollection<IAnnualCoverageCollection> m_annualCoverageCollection;
 
@@ -99,6 +101,14 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final SortedMap<Double, IRiskZoneDefinition> m_nonUrbanZonesDefinitions = new TreeMap<Double, IRiskZoneDefinition>();
 
+  private CRSTransformation m_transformation;
+
+  private Coordinate m_origin;
+
+  private Coordinate m_offsetX;
+
+  private Coordinate m_offsetY;
+
   public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
@@ -110,15 +120,34 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     m_annualCoverageCollection = annualCoverageCollection;
     m_landusePolygonCollection = landusePolygonCollection;
     m_landuseClassesList = landuseClassesList;
-    m_gridMap = new HashMap<String, List<IGeoGrid>>();
+    m_gridMap = new HashMap<String, List<BinaryGeoGridReader>>();
 
+    
+    final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
+    String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+    if( coordinateSystem == null )
+    {
+      coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    }
+
+
+    m_transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( m_resultGrid.getSourceCRS(), coordinateSystem );
+
+    m_origin = m_resultGrid.getOrigin();
+    m_offsetX = m_resultGrid.getOffsetX();
+    m_offsetY = m_resultGrid.getOffsetY();
+
+    
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
     {
-      final List<IGeoGrid> gridList = new ArrayList<IGeoGrid>();
+      final List<BinaryGeoGridReader> gridList = new ArrayList<BinaryGeoGridReader>();
 
       for( final ICoverage coverage : collection )
       {
-        gridList.add( GeoGridUtilities.toGrid( coverage ) );
+        RectifiedGridCoverageGeoGrid grid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
+        
+        BinaryGeoGridReader lReader = new BinaryGeoGridReader( grid, grid.getGridURL() );
+        gridList.add( lReader );
       }
 
       m_gridMap.put( collection.getGmlID(), gridList );
@@ -141,11 +170,11 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   @Override
   public void dispose( )
   {
-    final Set<Entry<String, List<IGeoGrid>>> entrySet = m_gridMap.entrySet();
-    for( final Entry<String, List<IGeoGrid>> entry : entrySet )
+    final Set<Entry<String, List<BinaryGeoGridReader>>> entrySet = m_gridMap.entrySet();
+    for( final Entry<String, List<BinaryGeoGridReader>> entry : entrySet )
     {
-      final List<IGeoGrid> myList = entry.getValue();
-      for( final IGeoGrid geoGrid : myList )
+      final List<BinaryGeoGridReader> myList = entry.getValue();
+      for( final BinaryGeoGridReader geoGrid : myList )
       {
         geoGrid.dispose();
       }
@@ -174,8 +203,12 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       final Collection<IAnnualCoverageCollection> collections = covMap.values();
       final IAnnualCoverageCollection[] covArray = collections.toArray( new IAnnualCoverageCollection[collections.size()] );
 
-      /* This coordinate has the cs of the input grid! */
-      final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_resultGrid, x, y, null );
+      
+      
+
+      final double cx = m_origin.x + x * m_offsetX.x + y * m_offsetY.x;
+      final double cy = m_origin.y + x * m_offsetX.y + y * m_offsetY.y;
+      final Coordinate coordinate = new Coordinate( cx, cy );
 
       Assert.isTrue( m_annualCoverageCollection.size() == covArray.length );
 
@@ -198,19 +231,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       if( averageAnnualDamageValue <= 0.0 || Double.isNaN( averageAnnualDamageValue ) )
         return Double.NaN;
 
-      final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
-      String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
-      if( coordinateSystem == null )
-      {
-        coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      }
-
       final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-
-      /* Transform query position into the cs of the polygons. */
-      final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( m_resultGrid.getSourceCRS(), coordinateSystem );
-      final GM_Position position = TransformUtilities.transform( positionAt, transformation );
-
+      final GM_Position position = TransformUtilities.transform( positionAt, m_transformation );
+      
       /* This list has some unknown cs. */
       final List<ILandusePolygon> list = m_landusePolygonCollection.query( position );
 
@@ -290,8 +313,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
    */
   private double getValue( final IAnnualCoverageCollection collection, final Coordinate coordinate ) throws GeoGridException
   {
-    final List<IGeoGrid> list = m_gridMap.get( collection.getGmlID() );
-    for( final IGeoGrid geoGrid : list )
+    final List<BinaryGeoGridReader> list = m_gridMap.get( collection.getGmlID() );
+    for( final BinaryGeoGridReader geoGrid : list )
     {
       if( geoGrid.getEnvelope().contains( coordinate ) )
       {

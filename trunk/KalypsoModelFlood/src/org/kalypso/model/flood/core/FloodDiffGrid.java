@@ -40,16 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.core;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.grid.AbstractDelegatingGeoGrid;
+import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.ParallelBinaryGridProcessorBean;
+import org.kalypso.grid.SequentialBinaryGeoGridReader;
 import org.kalypso.model.flood.binding.IFloodClipPolygon;
 import org.kalypso.model.flood.binding.IFloodExtrapolationPolygon;
 import org.kalypso.model.flood.binding.IFloodPolygon;
@@ -70,8 +75,19 @@ import com.vividsolutions.jts.geom.Coordinate;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
+public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 {
+  class FloodBean extends ParallelBinaryGridProcessorBean
+  {
+
+    public FloodBean( int BLOCK_SIZE )
+    {
+      super( BLOCK_SIZE );
+    }
+
+    public GM_Triangle m_triangle = null;
+  };
+
   private final IFeatureWrapperCollection<ITinReference> m_tins;
 
   private final IFeatureWrapperCollection<IFloodPolygon> m_polygons;
@@ -82,42 +98,45 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private BigDecimal m_max;
 
-  private GM_Triangle m_triangle;
+  // private GM_Triangle m_triangle;
 
   private final IRunoffEvent m_event;
 
-  public FloodDiffGrid( final IGeoGrid terrainGrid, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons, final IRunoffEvent event )
+  private int m_sizeX;
+
+  @Override
+  protected ParallelBinaryGridProcessorBean createNewBean( )
   {
-    super( terrainGrid );
+    return new FloodBean( BLOCK_SIZE );
+  }
+
+  public FloodDiffGrid( IGeoGrid inputGrid, URL pUrl, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
+  {
+    super( inputGrid, pUrl );
 
     m_tins = tins;
     m_polygons = polygons;
     m_event = event;
 
+    try
+    {
+      m_sizeX = getDelegate().getSizeX();
+    }
+    catch( GeoGridException e )
+    {
+      e.printStackTrace();
+    }
+
     m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
-  /**
-   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
-   */
-  @Override
-  public double getValue( final int x, final int y ) throws GeoGridException
+  private double getValueInternal( final int x, final int y, final int z, ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
-    final double value = getValueInternal( x, y );
-    if( Double.isNaN( value ) )
-      return Double.NaN;
+    final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( z ), m_scale );
+    final double terrainValue = decimal.doubleValue();
 
-    /* check min/max */
-    m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-    m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-
-    return value;
-  }
-
-  private double getValueInternal( final int x, final int y ) throws GeoGridException
-  {
-    final double terrainValue = super.getValue( x, y );
+    // final double terrainValue = super.getValue( x, y );
 
     if( Double.isNaN( terrainValue ) )
       return Double.NaN;
@@ -126,7 +145,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     final Coordinate crd = GeoGridUtilities.calcCoordinateWithoutZ( this, x, y, terrainValue, null );
 
     /* get the wsp value */
-    final double wspValue = getWspValue( crd );
+    final double wspValue = getWspValue( crd, (FloodBean) bean );
 
     /* check polygon stuff */
     // get the polygons
@@ -145,7 +164,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
     if( extrapolPolygon != null )
     {
-      final double extrapolValue = getExtrapolValue( extrapolPolygon );
+      final double extrapolValue = getExtrapolValue( extrapolPolygon, bean );
       return extrapolValue - terrainValue;
     }
 
@@ -165,7 +184,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     return wspValue - terrainValue;
   }
 
-  private double getWspValue( final Coordinate crd ) throws GeoGridException
+  private double getWspValue( final Coordinate crd, FloodBean bean ) throws GeoGridException
   {
     final GM_Position pos = JTSAdapter.wrap( crd );
 
@@ -181,18 +200,19 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         final GM_Position transPos = transformedPoint.getPosition();
 
         // we remember the last found triangle...
-        if( m_triangle != null && m_triangle.contains( transPos ) == true )
+
+        if( bean.m_triangle != null && bean.m_triangle.contains( transPos ) == true )
         {
-          final double wspValue = m_triangle.getValue( transPos );
+          final double wspValue = bean.m_triangle.getValue( transPos );
           if( !Double.isNaN( wspValue ) )
             return wspValue;
         }
         else
         {
-          m_triangle = tinReference.getTraingle( transPos );
-          if( m_triangle != null )
+          bean.m_triangle = tinReference.getTraingle( transPos );
+          if( bean.m_triangle != null )
           {
-            final double wspValue = m_triangle.getValue( transPos );
+            final double wspValue = bean.m_triangle.getValue( transPos );
             if( !Double.isNaN( wspValue ) )
               return wspValue;
           }
@@ -202,13 +222,12 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return Double.NaN;
     }
   }
 
-  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon ) throws GeoGridException
+  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon, ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
     // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
     if( m_polygonWsps.containsKey( polygon ) )
@@ -222,7 +241,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     final Coordinate crd = JTSAdapter.export( position );
 
     // get wsp value
-    final double wspValue = getWspValue( crd );
+    final double wspValue = getWspValue( crd, (FloodBean) bean );
 
     m_polygonWsps.put( polygon, wspValue );
 
@@ -311,5 +330,39 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     if( minValue != null )
       m_min = minValue;
   }
-  
+
+  /**
+   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
+   */
+  @Override
+  public double getValue( final int k, final ParallelBinaryGridProcessorBean bean )
+  {
+    final int x = k % m_sizeX;
+    final int y = k / m_sizeX + bean.m_startPosY;
+
+    double value;
+    try
+    {
+      // convert 4 bytes to integer
+      final int z = ByteUtils.readBEInt( bean.m_blockData, k * 4 );
+
+      if( z == Integer.MIN_VALUE /* NO_DATA */)
+        return Double.NaN;
+      value = getValueInternal( x, y, z, bean );
+    }
+    catch( GeoGridException e )
+    {
+      e.printStackTrace();
+      return Double.NaN;
+    }
+    if( Double.isNaN( value ) )
+      return Double.NaN;
+
+    /* check min/max */
+    m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+    m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+
+    return value;
+  }
+
 }
