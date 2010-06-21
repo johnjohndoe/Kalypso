@@ -85,6 +85,12 @@ public class ExecutePreRMAKalypso
 
   private String m_bcwqFileUrl;
 
+  private final WPSRequest m_wpsRequest;
+
+  private String m_windFileUrl;
+
+  private String m_windCoordFileUrl;
+
   /**
    * Create execute request to PreRMAKalypso WPS with no restart infos and default calcUnit defined in control model
    */
@@ -109,6 +115,8 @@ public class ExecutePreRMAKalypso
     m_serviceEndpoint = serviceEndpoint;
     m_modelInput = createInputs( restartInfos );
     m_calcUnitID = calcUnitID;
+    // currently 60 minutes timeout
+    m_wpsRequest = new WPSRequest( PreRMAKalypso.ID, m_serviceEndpoint, 60 * 60 * 1000 );
   }
 
   @SuppressWarnings("deprecation")
@@ -130,9 +138,7 @@ public class ExecutePreRMAKalypso
       final SimulationDelegate delegate = new SimulationDelegate( RMAKalypsoSimulation.ID, scenarioFolder, m_modelInput );
       delegate.init();
 
-      // currently 60 minutes timeout
-      final WPSRequest wpsRequest = new WPSRequest( PreRMAKalypso.ID, m_serviceEndpoint, 60 * 60 * 1000 );
-      final ProcessDescriptionType processDescription = wpsRequest.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
+      final ProcessDescriptionType processDescription = m_wpsRequest.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
       final Map<String, Object> inputs = delegate.createInputs( processDescription, progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
 
       // add calc unit input if desired
@@ -147,15 +153,17 @@ public class ExecutePreRMAKalypso
       outputs.add( PreRMAKalypso.OUTPUT_CONTROL );
       outputs.add( PreRMAKalypso.OUTPUT_BUILDINGS );
       outputs.add( PreRMAKalypso.OUTPUT_BC_WQ );
+      outputs.add( PreRMAKalypso.OUTPUT_WIND );
+      outputs.add( PreRMAKalypso.OUTPUT_WIND_COORD );
 
       // run the preprocessing, this will create references to ascii files from gml files
-      final IStatus preRMAstatus = wpsRequest.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
+      final IStatus preRMAstatus = m_wpsRequest.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
 
       // abort on error
       if( !preRMAstatus.isOK() )
         return preRMAstatus;
 
-      final Map<String, ComplexValueReference> references = wpsRequest.getReferences();
+      final Map<String, ComplexValueReference> references = m_wpsRequest.getReferences();
       final IStatus resultStatus = checkResults( references );
 
       // abort if results are missing
@@ -181,6 +189,7 @@ public class ExecutePreRMAKalypso
     inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
     inputs.put( PreRMAKalypso.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
     inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
+    inputs.put( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS, "models/wind.gml" ); //$NON-NLS-1$
     inputs.put( PreRMAKalypso.INPUT_ROUGHNESS, "../.metadata/roughness.gml" ); //$NON-NLS-1$
 
     if( restartInfos != null )
@@ -216,6 +225,12 @@ public class ExecutePreRMAKalypso
       final ComplexValueReference bcwqFileReference = references.get( PreRMAKalypso.OUTPUT_BC_WQ );
       m_bcwqFileUrl = bcwqFileReference.getReference();
 
+      final ComplexValueReference windFileReference = references.get( PreRMAKalypso.OUTPUT_WIND );
+      m_windFileUrl = windFileReference.getReference();
+
+      final ComplexValueReference windCoordFileReference = references.get( PreRMAKalypso.OUTPUT_WIND_COORD );
+      m_windCoordFileUrl = windCoordFileReference.getReference();
+
       return Status.OK_STATUS;
     }
     catch( final Throwable e )
@@ -243,4 +258,20 @@ public class ExecutePreRMAKalypso
   {
     return m_bcwqFileUrl;
   }
+
+  public String getWindUrl( )
+  {
+    return m_windFileUrl;
+  }
+
+  public String getWindCoordUrl( )
+  {
+    return m_windCoordFileUrl;
+  }
+
+  public final WPSRequest getWpsRequest( )
+  {
+    return m_wpsRequest;
+  }
+
 }

@@ -84,6 +84,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.NodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.WindModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -95,7 +96,10 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
+import org.kalypso.kalypsosimulationmodel.core.wind.WindModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -170,7 +174,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
     // IModel
     // Adapt all models to IModel
-    // TODO: adapt other models than discretisation modell and terrain modell when needed
+    // TODO: adapt other models than discretisation model and terrain model when needed
     cTor = new AdapterConstructor()
     {
       @Override
@@ -197,6 +201,24 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( ITerrainModel.class, cTor );
     cMap.put( IModel.class, cTor );
+    
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final IFeatureType featureType = feature.getFeatureType();
+       
+        if( IWindModel.QNAME_WIND_MODEL.equals( featureType.getQName() ) )
+        {
+          return new WindModel( feature );
+        }
+        else
+        {
+          return null;
+        }
+      }
+    };
+    cMap.put( IWindModel.class, cTor );
 
     cTor = new AdapterConstructor()
     {
@@ -273,7 +295,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // does not fit (this is according to the adapter-contract)
     cMap.put( IFE1D2DElement.class, cTor );
     cMap.put( IPolyElement.class, cTor );
-//    cMap.put( IPolyElementWithWeir.class, cTor );
     cMap.put( IElement1D.class, cTor );
 
     cTor = new AdapterConstructor()
@@ -465,11 +486,17 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName name = feature.getFeatureType().getQName();
-        // if(GMLSchemaUtilities.substitutes( feature.getFeatureType(),
-        // KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER ))
         if( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
         {
           return ElevationModelDisplayElementFactory.createDisplayElement( feature );
+        }
+        else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER.equals( name ) )
+        {
+          return WindModelDisplayElementFactory.createDisplayElement( feature );
+        }
+        else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS.equals( name ) )
+        {
+          return WindModelDisplayElementFactory.createDisplayElement( feature );
         }
         else
         {

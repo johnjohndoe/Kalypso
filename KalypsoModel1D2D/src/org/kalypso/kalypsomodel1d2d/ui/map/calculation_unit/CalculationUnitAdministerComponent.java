@@ -133,10 +133,25 @@ public class CalculationUnitAdministerComponent
         widgetWithStrategy.setStrategy( new AddRemoveBoundaryConditionToCalcUnitWidget( dataModel ) );
       }
     } );
+    
+//    final Button btnAddRemoveWindSystems = new Button( rootComposite, SWT.PUSH );
+//    btnAddRemoveWindSystems.setImage( IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS.createImage() );
+//    DisposeButtonImageListener.hookToButton( btnAddRemoveWindSystems );
+//    btnAddRemoveWindSystems.setToolTipText(Messages.getString("Add remove wind systems to calculation unit")) ;
+//    btnAddRemoveWindSystems.addSelectionListener( new SelectionAdapter()
+//    {
+//      @Override
+//      public void widgetSelected( final SelectionEvent e )
+//      {
+//        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+//        widgetWithStrategy.setStrategy( new AddRemoveWindSystemsToCalcUnitWidget( dataModel ) );
+//      }
+//    } );
 
     btnAddRemoveElements.setEnabled( false );
     btnAddRemoveContinuityLines.setEnabled( false );
     btnAddRemoveBoundaryConditions.setEnabled( false );
+//    btnAddRemoveWindSystems.setEnabled( false );
 
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
@@ -156,6 +171,7 @@ public class CalculationUnitAdministerComponent
                 btnAddRemoveElements.setEnabled( false );
                 btnAddRemoveContinuityLines.setEnabled( false );
                 btnAddRemoveBoundaryConditions.setEnabled( false );
+//                btnAddRemoveWindSystems.setEnabled( false );
               }
               else
               {
@@ -166,6 +182,7 @@ public class CalculationUnitAdministerComponent
                   btnAddRemoveElements.setEnabled( true );
                   btnAddRemoveContinuityLines.setEnabled( true );
                   btnAddRemoveBoundaryConditions.setEnabled( true );
+//                  btnAddRemoveWindSystems.setEnabled( false );
                 }
                 else if( newValue instanceof ICalculationUnit2D )
                 {
@@ -174,18 +191,21 @@ public class CalculationUnitAdministerComponent
                   btnAddRemoveElements.setEnabled( true );
                   btnAddRemoveContinuityLines.setEnabled( true );
                   btnAddRemoveBoundaryConditions.setEnabled( true );
+//                  btnAddRemoveWindSystems.setEnabled( true );
                 }
                 else if( newValue instanceof ICalculationUnit1D2D )
                 {
                   btnAddRemoveElements.setEnabled( false );
                   btnAddRemoveContinuityLines.setEnabled( false );
                   btnAddRemoveBoundaryConditions.setEnabled( true );
+//                  btnAddRemoveWindSystems.setEnabled( true );
                 }
                 else
                 {
                   btnAddRemoveElements.setEnabled( false );
                   btnAddRemoveContinuityLines.setEnabled( false );
                   btnAddRemoveBoundaryConditions.setEnabled( false );
+//                  btnAddRemoveWindSystems.setEnabled( false );
                 }
               }
             }

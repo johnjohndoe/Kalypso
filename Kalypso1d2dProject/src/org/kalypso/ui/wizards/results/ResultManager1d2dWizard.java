@@ -54,6 +54,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -66,6 +67,8 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * Wizard to manage result data for Kalypso 1D/2D.
+ * 
+ * allows to delete or reinterpret the existing results
  *
  * @author Thomas Jung
  */
@@ -83,6 +86,8 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
 
   private ResultManager1d2dWizardPage m_selectResultWizardPage;
 
+  private IGeoLog m_geoLog;
+
   public ResultManager1d2dWizard( )
   {
     setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.1") ); //$NON-NLS-1$
@@ -97,10 +102,11 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
-    m_selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2"), null, resultFilter, resultComparator, null ); //$NON-NLS-1$
+    m_selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2"), null, resultFilter, resultComparator, null, m_geoLog ); //$NON-NLS-1$
     m_selectResultWizardPage.setResultMeta( m_resultModel );
     m_selectResultWizardPage.setCommandTarget( m_commandTarget );
     m_selectResultWizardPage.setMapModel( m_modell );
+    m_selectResultWizardPage.setCaseDataProvidet( m_modelProvider );
 
     addPage( m_selectResultWizardPage );
   }
@@ -138,7 +144,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class );
+      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
     }
     catch( final CoreException e )
     {
@@ -158,7 +164,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
       final EmptyCommand command = new EmptyCommand( "You are dirty now, pool!", false ); //$NON-NLS-1$
       final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IScenarioResultMeta.class );
       commandableWorkspace.postCommand( command );
-      m_modelProvider.saveModel( IScenarioResultMeta.class, null );
+      m_modelProvider.saveModel( IScenarioResultMeta.class.getName(), null );
     }
     catch( final Exception e )
     {

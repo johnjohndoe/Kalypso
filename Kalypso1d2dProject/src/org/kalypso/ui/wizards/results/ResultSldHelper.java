@@ -46,14 +46,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -85,9 +90,9 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  */
 public class ResultSldHelper
 {
-
+  
   /**
-   * returns the interpolated color of a colormap defined by start and end color.
+   * returns the interpolated color of a color map defined by start and end color.
    * 
    * @param currentClass
    *          current class
@@ -124,7 +129,7 @@ public class ResultSldHelper
     return min + (currentClass * (max - min) / (numOfClasses - 1));
   }
 
-  public static IStatus processStyle( final IFile styleFile, final String type, final BigDecimal minValue, final BigDecimal maxValue )
+  public static IStatus processStyle( final IFile styleFile, final IFolder sldFolder, final String type, final BigDecimal minValue, final BigDecimal maxValue )
   {
     /* Read sld from template */
 
@@ -134,7 +139,7 @@ public class ResultSldHelper
     {
       final StyledLayerDescriptor sld = SLDFactory.createSLD( resource );
 
-      if( type == "Line" || type == "Polygon" ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( NodeResultHelper.LINE_TYPE.equals( type ) || NodeResultHelper.POLYGON_TYPE.equals( type ) )
       {
         processTinStyle( type, minValue, maxValue, sld );
         /* Write SLD back to file */
@@ -145,10 +150,13 @@ public class ResultSldHelper
           styleFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() ); //$NON-NLS-1$
         }
       }
-      else if( type == "Node" ) //$NON-NLS-1$
+      else if( NodeResultHelper.NODE_TYPE.equals( type ) )
       {
-        final String sldXMLwithHeader = processVectorStyle( maxValue, resource );
-        styleFile.create( new StringInputStream( sldXMLwithHeader ), false, new NullProgressMonitor() );
+        // we creating more styles for nodes to give the possibility for representation of different types of node
+        // results
+        createDefaultNodeStyles( sldFolder, maxValue, resource, type );
+        // String sldXMLwithHeader = processVectorStyle( maxValue, resource, type ); styleFile,
+        // styleFile.create( new StringInputStream( sldXMLwithHeader ), false, new NullProgressMonitor() );
       }
     }
     catch( final Exception e )
@@ -158,6 +166,22 @@ public class ResultSldHelper
     }
     return Status.OK_STATUS;
 
+  }
+
+  private static void createDefaultNodeStyles( final IFolder sldFolder, final BigDecimal maxValue, final URL resource, final String type )
+  {
+    for( int i = 0; i < NodeResultHelper.NodeStyleTypes.length; i++ )
+    {
+      final String sldFileName = ResultMeta1d2dHelper.getDefaultStyleFileName( type, NodeResultHelper.NodeStyleTypes[i] );
+      final IFile styleFile = sldFolder.getFile( sldFileName );
+      String sldXMLwithHeader = processVectorStyle( maxValue, resource, NodeResultHelper.NodeStyleTypes[i] );
+      try{
+        styleFile.create( new StringInputStream( sldXMLwithHeader ), false, new NullProgressMonitor() );
+      }
+      catch (Exception e) {
+        //do not replace existing style files
+      }
+    }
   }
 
   private static void processTinStyle( final String type, final BigDecimal minValue, final BigDecimal maxValue, final StyledLayerDescriptor sld )
@@ -198,7 +222,6 @@ public class ResultSldHelper
       }
       catch( final FilterEvaluationException e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
 
@@ -333,31 +356,49 @@ public class ResultSldHelper
     symbolizer.setColorMap( newColorMap );
   }
 
-  private static String processVectorStyle( final BigDecimal maxValue, final URL url )
+  private static String processVectorStyle( final BigDecimal maxValue, final URL url, final String type )
   {
     InputStream is = null;
     try
     {
-      is = new BufferedInputStream( url.openStream() );
-      final String fileString = IOUtils.toString( is, "UTF-8" ); //$NON-NLS-1$
+      if( NodeResultHelper.VELO_TYPE.equals( type ) || NodeResultHelper.WAVE_DIRECTION_TYPE.equals( type ) )
+      {
+        is = new BufferedInputStream( url.openStream() );
+      }
+      else
+      {
+        final URL extUrl = ResultSldHelper.class.getResource( "resources/myDefaultNodeExt.sld" ); //$NON-NLS-1$
+        is = new BufferedInputStream( extUrl.openStream() );
+      }
+      String fileString = IOUtils.toString( is, "UTF-8" ); //$NON-NLS-1$
       is.close();
 
       // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
       // which delivers vector lengths of 30 m as maximum.
-      final BigDecimal factorValue;
+      BigDecimal factorValue;
       if( maxValue.doubleValue() > 0 )
         factorValue = new BigDecimal( 30 / maxValue.doubleValue() ).setScale( 0, BigDecimal.ROUND_CEILING );
       else
         factorValue = new BigDecimal( 100 ).setScale( 0, BigDecimal.ROUND_CEILING );
 
-      final String factor = factorValue.toString();
-
-      return fileString.replaceAll( "VECTORFACTOR", factor ); //$NON-NLS-1$
+      String factor = factorValue.toString();
+      if( NodeResultHelper.VELO_TYPE.equals( type ) ) { 
+        return fileString.replaceAll( NodeResultHelper.VECTORFACTOR, factor ).replaceAll( NodeResultHelper.SIZE_NORM_NODE_FUNC, "velocityNorm" ); //$NON-NLS-1$
+      }
+      else if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( type ) ){
+        return fileString.replaceAll( NodeResultHelper.VECTORFACTOR, factor ).replaceAll( NodeResultHelper.SIZE_NORM_NODE_FUNC, "wavehsig" ).replaceAll( "velocityRotation", type.toLowerCase() ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      }
+      else
+      {
+        if( factorValue.doubleValue() > 30 ){
+          factor = "10"; //$NON-NLS-1$ 
+        }
+        return fileString.replaceAll( NodeResultHelper.VECTORFACTOR, factor ).replaceAll( NodeResultHelper.NODESTYLE_TEMPLATE, type.toLowerCase() );
+      }
 
     }
     catch( final IOException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
 
     }
@@ -367,6 +408,19 @@ public class ResultSldHelper
     }
     return null;
 
+  }
+
+  public static boolean allDefaultNodeStylesExist( final IFolder sldFolder )
+  {
+    for( int i = 0; i < NodeResultHelper.NodeStyleTypes.length; i++ )
+    {
+      final String sldFileName = ResultMeta1d2dHelper.getDefaultStyleFileName( NodeResultHelper.NODE_TYPE, NodeResultHelper.NodeStyleTypes[i] );
+      final IFile styleFile = sldFolder.getFile( sldFileName );
+      if( !styleFile.exists() )
+        return false;
+      
+    }
+    return true;
   }
 
 }

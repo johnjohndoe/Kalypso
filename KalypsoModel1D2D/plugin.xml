@@ -19,6 +19,10 @@
       name="ControlModelNamePropertyFunction" />
     <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
       name="NodeResultVelocityFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+      name="NodeResultExtFunction" />
+      <!--
+      --> 
     <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
       name="NodeResultDepthFunction" />
     <function class="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc" id="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
@@ -807,6 +811,13 @@
     <simulation
           simulationClass="org.kalypso.kalypsomodel1d2d.sim.PreRMAKalypso"
           typeID="org.kalypso.simulation.rma.preRMAKalypso">
+    </simulation>
+  </extension>
+  <extension point="org.kalypso.simulation.core.simulation">
+    <simulation simulationClass="org.kalypso.kalypsomodel1d2d.sim.SWANKalypsoSimulation" typeID="org.kalypso.model1d2d.swan" />
+    <simulation
+          simulationClass="org.kalypso.kalypsomodel1d2d.sim.PreSWANKalypso"
+          typeID="org.kalypso.simulation.swan.preSWANKalypso">
     </simulation>
   </extension>
   <extension

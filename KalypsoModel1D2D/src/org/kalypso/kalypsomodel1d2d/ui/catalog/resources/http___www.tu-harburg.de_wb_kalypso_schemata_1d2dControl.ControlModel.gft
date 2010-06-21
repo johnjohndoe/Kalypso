@@ -45,8 +45,8 @@
 					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:Version" enabled="false">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
-					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
-						<gft:param name="label" value="RMA·Kalypso" />
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
+						<gft:param name="dir" value="bin" />
 						<gft:param name="exePattern" value="rma-kalypso_(.*).exe" />
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:Version" visible="true" style="SWT.NONE">
@@ -89,8 +89,37 @@
 					<gft:validatorlabel property="c1d2d:BUFFSIZ" visible="true" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
 					</gft:validatorlabel>
+					
 				</gft:group>
-
+				<gft:group text="SWAN Calculation" style="SWT.NONE">
+					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="3" />
+				<!--
+					<gft:label property="c1d2d:SWANCalculation" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					-->
+					<gft:checkbox editable="true" property="c1d2d:SWANCalculation" style="SWT.NONE">
+						<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.BEGINNING" />
+						<gft:text>activate</gft:text><!--SWAN-Calculation SWANCalculation -->
+					</gft:checkbox>
+					<!--
+						zu verwendender Rechenkern
+					-->
+					<gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANVersion">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:SWANVersion" enabled="false">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANVersion" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
+						<gft:param name="dir" value="bin" />
+						<gft:param name="exePattern" value="swan(.*).exe" />
+					</gft:extensioncontrol>
+					<gft:validatorlabel property="c1d2d:SWANVersion" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
 			</gft:composite>
 		</gft:tabItem>
 
@@ -884,9 +913,216 @@
 
 			</gft:composite>
 		</gft:tabItem>
+		<!-- 
+			-->
+					<!-- SWAN-Parameter -->
+		<gft:tabItem>
+			<!--
+			-->
+			<gft:tabLabel>Calculation Unit Settings for SWAN</gft:tabLabel>
+				
+			<gft:composite style="SWT.NONE">
+				<gft:enabledOperation>
+					<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+						<ogc:Literal>true</ogc:Literal>
+					</ogc:PropertyIsLike>
+				</gft:enabledOperation>
+				<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+				<gft:gridLayout numColumns="2" />
+				<!-- SWAN common params  horizontalAlignment="GridData.FILL"-->
+				<gft:group style="SWT.NONE" text="Common SWAN Settings">
+					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"  />
+					<gft:gridLayout numColumns="3" />
+					<gft:checkbox editable="true" property="c1d2d:SWANCoordCart" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<!-- set to false(null) in all cases, theoretically may be other -->
+								<ogc:Literal>dontuse</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.BEGINNING" />
+					</gft:checkbox>
+					<gft:label property="c1d2d:SWANINITialValues" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:combo property="c1d2d:SWANINITialValues" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+					</gft:combo>
+					<gft:validatorlabel property="c1d2d:SWANINITialValues" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+					</gft:validatorlabel>
+					<gft:label property="c1d2d:SWANINITialValuesPar" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:SWANINITialValuesPar" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<and>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:SWANINITialValues</ogc:PropertyName>
+									<ogc:Literal>2</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</and>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:SWANINITialValuesPar" visible="true" style="SWT.NONE">
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:INITialValues</ogc:PropertyName>
+							<ogc:Literal>2</ogc:Literal>
+						</ogc:PropertyIsLike>
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+				<!-- SWAN Boundary Conditions Settings  horizontalAlignment="GridData.FILL"-->
+				<gft:group text="Boundary Conditions Settings" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.BEGINNING" />
+					<gft:gridLayout numColumns="3" />
+					<!--
+					<gft:checkbox editable="true" property="c1d2d:SWANConstantBoundary" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.BEGINNING" />
+					</gft:checkbox>
+					-->
+					<gft:label property="c1d2d:SWANBoundaryAlg" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:combo property="c1d2d:SWANBoundaryAlg" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+					</gft:combo>
+					<gft:validatorlabel property="c1d2d:SWANBoundaryAlg" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+					</gft:validatorlabel>
+				</gft:group>
+				<!-- SWAN Physics Settings horizontalAlignment="GridData.FILL" -->
+				<gft:group text="Physics Settings" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.BEGINNING" />
+					<gft:gridLayout numColumns="3" />
+
+					<gft:checkbox editable="true" property="c1d2d:SWANConstantWind" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.BEGINNING" />
+					</gft:checkbox>
+					
+					<gft:label property="c1d2d:SWANConstantWindPar" visible="true" style="SWT.NONE">
+					<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:SWANConstantWindPar" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<and>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANConstantWind</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							</and>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:SWANConstantWindPar" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+						<gft:enabledOperation>
+							<and>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANConstantWind</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							</and>
+						</gft:enabledOperation>
+					</gft:validatorlabel>
+				</gft:group>
+				<!-- SWAN Result Settings  horizontalAlignment="GridData.FILL"-->
+				<gft:group text="Result Settings" style="SWT.NONE">
+					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"  />
+					<gft:gridLayout numColumns="3"  />
+					<gft:label property="c1d2d:SWANAdditionalResultsPar" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:SWANAdditionalResultsPar" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:SWANAdditionalResultsPar" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+					</gft:validatorlabel>
+					
+					<gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANInputCoordFile">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:SWANInputCoordFile" enabled="false">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANInputCoordFile" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
+						<gft:param name="dir" value="." />
+						<gft:param name="exePattern" value="extCoord(.*).txt" />
+					</gft:extensioncontrol>
+					<gft:validatorlabel property="c1d2d:SWANInputCoordFile" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+			</gft:composite>
+		</gft:tabItem>
 	</gft:tabFolder>
-
-
-
 </gft:featureview>
 

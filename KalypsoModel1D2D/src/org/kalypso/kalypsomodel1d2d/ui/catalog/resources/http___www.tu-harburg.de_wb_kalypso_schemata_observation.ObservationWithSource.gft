@@ -38,6 +38,14 @@
 		<!-- Time have to be optional because of W/Q BCs -->
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"
 			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirectionalSpreading"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"
 			alignment="SWT.RIGHT" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D"

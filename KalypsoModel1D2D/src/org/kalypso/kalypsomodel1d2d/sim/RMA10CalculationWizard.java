@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -211,22 +212,15 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     /* Jump to next page and set simulation status to result page */
     try
     {
-      m_resultPage = new RMA10ResultPage( "resultPage", m_calcPage.getResultDir(), m_geoLog, m_unitFolder, m_caseDataProvider, this ); //$NON-NLS-1$
+      FileObject resultDirSWAN = m_calcPage.getResultDirSWAN();
+      FileObject resultDirRMA = m_calcPage.getResultDirRMA();
+      m_resultPage = new RMA10ResultPage( "resultPage", resultDirRMA, resultDirSWAN, m_geoLog, m_unitFolder, m_caseDataProvider, this ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       return e.getStatus();
     }
     final IStatus simulationStatus = m_calcPage.getSimulationStatus();
-
-    /**
-     * needed for fix of the bug #242, if the calculation was canceled the container is not shown any more, so the
-     * following operations shouldn't be done
-     */
-    if( simulationStatus.matches( IStatus.CANCEL ) )
-    {
-      return simulationStatus;
-    }
 
     addPage( m_resultPage );
     getContainer().updateButtons();
@@ -354,7 +348,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   @Override
   public boolean performCancel( )
   {
-    if( m_calcPage.getResultDir() != null && m_calcPage.getSimulationStatus() == null )
+    if( m_calcPage.getResultDirRMA() != null && m_calcPage.getSimulationStatus() == null )
     {
       // do not dispose of dialog if we are currently running a simulation
       return false;
@@ -368,24 +362,6 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
       m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.4" ), null, null ); //$NON-NLS-1$
       saveLogAndCleanup();
-    }
-
-    if( m_resultPage.isProcessing() )
-    {
-      if( this.getContainer() instanceof WizardDialog2 )
-      {
-        // hide the cancel button
-        final WizardDialog2 wd2 = (WizardDialog2) this.getContainer();
-        wd2.getButton( IDialogConstants.CANCEL_ID ).setEnabled( false );
-        // IDialogBlockedHandler handler = wd2.getBlockedHandler();
-        // handler.clearBlocked();
-      }
-
-      // show the "cancelling" message
-      m_resultPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.7" ) ); /* *///$NON-NLS-1$
-
-      // and wait ...
-      return false;
     }
     return true;
   }

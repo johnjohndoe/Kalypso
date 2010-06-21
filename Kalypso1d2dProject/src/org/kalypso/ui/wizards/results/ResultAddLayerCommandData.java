@@ -48,6 +48,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 
 /**
  *
@@ -83,6 +86,8 @@ public class ResultAddLayerCommandData
   private final IFolder m_scenarioFolder;
 
   private String m_type;
+  
+  private IDocumentResultMeta m_documentResult = null;
 
   public ResultAddLayerCommandData( final String themeName, final String resultType, final String featurePath, final String source, final String style, final String styleLocation, final IFolder scenarioFolder, final String type )
   {
@@ -114,8 +119,13 @@ public class ResultAddLayerCommandData
 
     if( m_sldFile == null )
       m_styleLocation = ""; //$NON-NLS-1$
-    else
-      m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else{
+      String sldFileName = m_sldFile.getName();
+      if( sldFileName.toLowerCase().contains( NodeResultHelper.NODE_TYPE.toLowerCase() ) ){ 
+        m_themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_themeName, sldFileName, NodeResultHelper.NODE_TYPE.toLowerCase() ); 
+      }
+      m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + sldFileName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
   }
 
   public String getThemeName( )
@@ -204,6 +214,16 @@ public class ResultAddLayerCommandData
   public Map<String, String> getProperties( )
   {
     return Collections.unmodifiableMap( m_properties );
+  }
+
+  public void setDocumentResult( IDocumentResultMeta documentResult )
+  {
+    m_documentResult = documentResult;
+  }
+
+  public IDocumentResultMeta getDocumentResult( )
+  {
+    return m_documentResult;
   }
 
 }

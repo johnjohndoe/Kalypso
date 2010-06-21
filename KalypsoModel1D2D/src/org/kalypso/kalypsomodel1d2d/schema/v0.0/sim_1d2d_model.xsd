@@ -10,6 +10,7 @@
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_base.xsd" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_terrain.xsd" />
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_wind.xsd" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_finite_elements_discretisation.xsd" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_flow_resistance.xsd" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_flow_relationship.xsd" />
@@ -64,6 +65,7 @@
 			<xs:extension base="simBase:AbstractModelType">
 				<xs:sequence>
 					<xs:element ref="simBase:terrainModel" />
+					<xs:element ref="simBase:windModel" />
 					<xs:element ref="simBase:feDiscretisationModel" />
 					<xs:element ref="simBase:flowRelationshipModel" />
 				</xs:sequence>

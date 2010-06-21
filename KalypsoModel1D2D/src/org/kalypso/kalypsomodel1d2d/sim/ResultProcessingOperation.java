@@ -138,7 +138,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
       m_originalStepsToDelete = findStepsToDelete( m_calcUnitMeta, m_bean );
 
-      final IStatus processResultsStatus = m_resultManager.processResults( m_calcUnitMeta, progress.newChild( 90 ) );
+      final IStatus processResultsStatus = m_resultManager.processResults( m_calcUnitMeta, m_bean.evaluateFullResults, progress.newChild( 90 ) );
 
       m_outputDir = m_resultManager.getOutputDir();
       m_geoLog.log( processResultsStatus );
@@ -166,21 +166,21 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     if( processBean.deleteAll )
       return existingSteps.keySet().toArray( new String[existingSteps.size()] );
 
-    final SortedSet<Date> allDates = new TreeSet<Date>();
+    final SortedSet<Date> allCalculatedDates = new TreeSet<Date>();
 
     /* Always delete all calculated steps */
-    allDates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
+    allCalculatedDates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
 
     List<String> ids = new ArrayList<String>();
 
-    if( processBean.deleteFollowers && !allDates.isEmpty() )
+    if( processBean.deleteFollowers && !allCalculatedDates.isEmpty() )
     {
-      allDates.remove( MAXI_DATE );
-      allDates.remove( STEADY_DATE );
+      allCalculatedDates.remove( MAXI_DATE );
+      allCalculatedDates.remove( STEADY_DATE );
 
-      if( allDates.size() > 0 )
+      if( allCalculatedDates.size() > 0 )
       {
-        final Date firstCalculated = allDates.first();
+        final Date firstCalculated = allCalculatedDates.first();
         for( final String id : existingSteps.keySet() )
         {
           Date date = existingSteps.get( id );
@@ -202,6 +202,25 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
       // allDates.add( MAXI_DATE );
       // if( steady == true )
       // allDates.add( STEADY_DATE );
+    }
+    else if( !allCalculatedDates.isEmpty() ){
+//      final Date firstCalculated = allCalculatedDates.first();
+      for( final String id : existingSteps.keySet() )
+      {
+        Date date = existingSteps.get( id );
+        if( date == null )
+        {
+          ids.add( id );
+        }
+//        else if( date.equals( firstCalculated ) )
+//        {
+//          ids.add( id );
+//        }
+        else if( allCalculatedDates.contains( date ) )
+        {
+          ids.add( id );
+        }
+      }
     }
 
     return ids.toArray( new String[ids.size()] );

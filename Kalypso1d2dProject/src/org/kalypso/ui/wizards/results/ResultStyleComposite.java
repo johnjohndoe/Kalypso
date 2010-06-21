@@ -96,7 +96,7 @@ public class ResultStyleComposite
 
   private final ResultAddLayerCommandData m_resultAddLayerCommandData;
 
-  public ResultStyleComposite( final Composite parent, IFolder scenarioFolder, String stylePath, BigDecimal minValue, BigDecimal maxValue, ResultAddLayerCommandData resultAddLayerCommandData )
+  public ResultStyleComposite( final Composite parent, final IFolder scenarioFolder, final String stylePath, final BigDecimal minValue, final BigDecimal maxValue, final ResultAddLayerCommandData resultAddLayerCommandData )
   {
     m_scenarioFolder = scenarioFolder;
     m_stylePath = stylePath;
@@ -111,6 +111,8 @@ public class ResultStyleComposite
     createEditButtonControl( parent );
 
     createRemoveButtonControl( parent );
+    
+//    m_resultAddLayerCommandData.getDocumentResult().ge
   }
 
   private void createRemoveButtonControl( final Composite parent )
@@ -161,7 +163,7 @@ public class ResultStyleComposite
       {
         if( m_resultAddLayerCommandData.getSldFile() != null )
         {
-          EditStyleDialog styleEditor = new EditStyleDialog( m_editStyleButton.getShell(), m_resultAddLayerCommandData.getSldFile(), m_minValue, m_maxValue );
+          EditStyleDialog styleEditor = new EditStyleDialog( m_editStyleButton.getShell(), m_resultAddLayerCommandData, m_minValue, m_maxValue );
           styleEditor.addModifyListener( new IEditStyleDialogModifyListener()
           {
             @Override

@@ -73,6 +73,12 @@ public class SimpleNodeResult implements INodeResult
   private double m_dvxdtPrevStep;
 
   private double m_dvydtPrevStep;
+  
+  private double m_waveHsig;
+  
+  private double m_waveDir;
+  
+  private double m_wavePer;
 
   private double m_depth;
 
@@ -594,4 +600,120 @@ public class SimpleNodeResult implements INodeResult
   {
     return m_depthPrevStep;
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWaveDirection()
+   */
+  @Override
+  public double getWaveDirection( )
+  {
+    return m_waveDir;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWaveHsig()
+   */
+  @Override
+  public double getWaveHsig( )
+  {
+    return m_waveHsig;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWavePeriod()
+   */
+  @Override
+  public double getWavePeriod( )
+  {
+    return m_wavePer;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveDirection(double)
+   */
+  @Override
+  public void setWaveDirection( double direction )
+  {
+    m_waveDir = direction;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveHsig(double)
+   */
+  @Override
+  public void setWaveHsig( double hsig )
+  {
+    m_waveHsig = hsig;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWavePeriod(double)
+   */
+  @Override
+  public void setWavePeriod( double period )
+  {
+    m_wavePer = period;
+  }
+
+  public final double getVxPrevStep( )
+  {
+    return m_vxPrevStep;
+  }
+
+  public final void setVxPrevStep( double vxPrevStep )
+  {
+    m_vxPrevStep = vxPrevStep;
+  }
+
+  public final double getVyPrevStep( )
+  {
+    return m_vyPrevStep;
+  }
+
+  public final void setVyPrevStep( double vyPrevStep )
+  {
+    m_vyPrevStep = vyPrevStep;
+  }
+
+  public final double getDvxdt( )
+  {
+    return m_dvxdt;
+  }
+
+  public final void setDvxdt( double dvxdt )
+  {
+    m_dvxdt = dvxdt;
+  }
+
+  public final double getDvydt( )
+  {
+    return m_dvydt;
+  }
+
+  public final void setDvydt( double dvydt )
+  {
+    m_dvydt = dvydt;
+  }
+
+  public final double getDvxdtPrevStep( )
+  {
+    return m_dvxdtPrevStep;
+  }
+
+  public final void setDvxdtPrevStep( double dvxdtPrevStep )
+  {
+    m_dvxdtPrevStep = dvxdtPrevStep;
+  }
+
+  public final double getDvydtPrevStep( )
+  {
+    return m_dvydtPrevStep;
+  }
+
+  public final void setDvydtPrevStep( double dvydtPrevStep )
+  {
+    m_dvydtPrevStep = dvydtPrevStep;
+  }
+  
+  
 }

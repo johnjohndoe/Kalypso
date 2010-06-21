@@ -12,17 +12,22 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
+import org.kalypso.kalypsomodel1d2d.conv.SWANResults2RmaConverter;
 import org.kalypso.kalypsomodel1d2d.conv.WQboundaryConditions1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
+import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter;
+import org.kalypso.kalypsomodel1d2d.conv.wind.RMA10WindDataWriter;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -33,6 +38,7 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -42,6 +48,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Convert from GML to RMAKalypso format
@@ -57,6 +64,8 @@ public class PreRMAKalypso implements ISimulation
 
   public static final String INPUT_FLOW_RELATIONSHIPS = "flowRelationships"; //$NON-NLS-1$
 
+  public static final String INPUT_WIND_RELATIONSHIPS = "wind";
+
   public static final String INPUT_CALCULATION_UNIT_ID = "calculationUnitID"; //$NON-NLS-1$
 
   public static final String INPUT_MESH = "mesh"; //$NON-NLS-1$
@@ -68,6 +77,10 @@ public class PreRMAKalypso implements ISimulation
   public static final String OUTPUT_BC_WQ = ISimulation1D2DConstants.BC_WQ_File;
 
   public static final String OUTPUT_BUILDINGS = ISimulation1D2DConstants.BUILDING_File;
+
+  public static final String OUTPUT_WIND = ISimulation1D2DConstants.WIND_RMA10_File;
+
+  public static final String OUTPUT_WIND_COORD = ISimulation1D2DConstants.WIND_RMA10_COORDS_File;
 
   public static final String OUTPUT_CONTROL = ISimulation1D2DConstants.R10_File;
 
@@ -94,13 +107,13 @@ public class PreRMAKalypso implements ISimulation
     {
       m_log = new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
     }
-    catch( final GMLSchemaException e )
+    catch( final Exception e )
     {
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
 
-    final OutputStream logOS = null;
-    final OutputStream errorOS = null;
+    OutputStream logOS = null;
+    OutputStream errorOS = null;
     FileSystemManagerWrapper manager = null;
     try
     {
@@ -111,9 +124,21 @@ public class PreRMAKalypso implements ISimulation
       final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
       final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
-      final URL meshUrl = (URL) inputProvider.getInputForID( INPUT_MESH );
-      final GMLWorkspace discWorkspace = GmlSerializer.createGMLWorkspace( meshUrl, null );
-      final IFEDiscretisationModel1d2d discretisationModel = (IFEDiscretisationModel1d2d) discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+      IFEDiscretisationModel1d2d discretisationModel = null;
+      try
+      {
+        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+      }
+      catch( Exception e )
+      {
+      }
+      if( discretisationModel == null )
+      {
+        final URL meshUrl = (URL) inputProvider.getInputForID( INPUT_MESH );
+        final GMLWorkspace discWorkspace = GmlSerializer.createGMLWorkspace( meshUrl, null );
+        discretisationModel = (IFEDiscretisationModel1d2d) discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+      }
 
       // specified calculation unit overrides control model calc unit
       ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
@@ -131,13 +156,29 @@ public class PreRMAKalypso implements ISimulation
         }
       }
 
-      final URL flowRelURL = (URL) inputProvider.getInputForID( INPUT_FLOW_RELATIONSHIPS );
-      final GMLWorkspace flowRelWorkspace = GmlSerializer.createGMLWorkspace( flowRelURL, null );
-      final IFlowRelationshipModel flowRelationshipModel = (IFlowRelationshipModel) flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+      IFlowRelationshipModel flowRelationshipModel = null;
+      try
+      {
+        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
+      }
+      catch( Exception e )
+      {
+      }
+      if( flowRelationshipModel == null )
+      {
+        final URL flowRelURL = (URL) inputProvider.getInputForID( INPUT_FLOW_RELATIONSHIPS );
+        final GMLWorkspace flowRelWorkspace = GmlSerializer.createGMLWorkspace( flowRelURL, null );
+        flowRelationshipModel = (IFlowRelationshipModel) flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+      }
 
       final URL roughnessURL = (URL) inputProvider.getInputForID( INPUT_ROUGHNESS );
       final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
       final IRoughnessClsCollection roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
+
+      final URL windURL = (URL) inputProvider.getInputForID( INPUT_WIND_RELATIONSHIPS );
+      final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
+      final IWindModel windModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
 
       final RestartNodes restartNodes;
       if( controlModel.getRestart() )
@@ -159,12 +200,14 @@ public class PreRMAKalypso implements ISimulation
       }
 
       final FileObject workingDir = manager.toFileObject( tmpdir );
-      writeRma10Files( workingDir, progressMonitor, discretisationModel, flowRelationshipModel, roughnessModel, restartNodes, controlModel, calculationUnit );
+      writeRma10Files( workingDir, progressMonitor, discretisationModel, flowRelationshipModel, windModel, roughnessModel, restartNodes, controlModel, calculationUnit );
 
       resultEater.addResult( OUTPUT_MESH, new File( tmpdir, OUTPUT_MESH ) );
       resultEater.addResult( OUTPUT_CONTROL, new File( tmpdir, OUTPUT_CONTROL ) );
       resultEater.addResult( OUTPUT_BUILDINGS, new File( tmpdir, OUTPUT_BUILDINGS ) );
       resultEater.addResult( OUTPUT_BC_WQ, new File( tmpdir, OUTPUT_BC_WQ ) );
+      resultEater.addResult( OUTPUT_WIND, new File( tmpdir, OUTPUT_WIND ) );
+      resultEater.addResult( OUTPUT_WIND_COORD, new File( tmpdir, OUTPUT_WIND_COORD ) );
     }
     catch( final Exception e )
     {
@@ -182,7 +225,7 @@ public class PreRMAKalypso implements ISimulation
     }
   }
 
-  private void writeRma10Files( final FileObject workingDir, final IProgressMonitor monitor, final IFEDiscretisationModel1d2d discretisationModel, final IFlowRelationshipModel flowRelationshipModel, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit ) throws CoreException
+  private void writeRma10Files( final FileObject workingDir, final IProgressMonitor monitor, final IFEDiscretisationModel1d2d discretisationModel, final IFlowRelationshipModel flowRelationshipModel, final IWindModel windRelationshipModel, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
@@ -223,6 +266,27 @@ public class PreRMAKalypso implements ISimulation
       final Building1D2DConverter buildingConverter = new Building1D2DConverter( buildingProvider );
       buildingConverter.writeBuildingFile( buildingFile.getContent().getOutputStream() );
       buildingFile.close();
+      ProgressUtilities.worked( progress, 10 );
+
+      /* Wind File */
+      m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.10" ) ); //$NON-NLS-1$
+      progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.11" ) ); //$NON-NLS-1$
+      GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( calculationUnit );
+      final IWindDataWriter lRMA10WindWriter = new RMA10WindDataWriter( workingDir, lGmEnvelope, controlConverter.getListDateSteps(), windRelationshipModel.getWindDataModelSystems() );
+      lRMA10WindWriter.setWindDataModel( windRelationshipModel );
+      lRMA10WindWriter.write( controlModel.isConstantWindSWAN() );
+      ProgressUtilities.worked( progress, 10 );
+
+      if( controlModel.isRestartAfterSWAN() )
+      {
+        /* Surface Traction File */
+        m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.10" ) ); //$NON-NLS-1$
+        progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.11" ) ); //$NON-NLS-1$
+        final FileObject lFileSurfaceTractiondFile = workingDir.resolveFile( ISimulation1D2DConstants.SURFACE_TRACTTION_RMA10_File );
+        final SWANResults2RmaConverter lRMA10SurfaceTractionWriter = new SWANResults2RmaConverter();
+        lRMA10SurfaceTractionWriter.writeRMAWaterSurfaceASCDataFile( lFileSurfaceTractiondFile.getContent().getOutputStream() );
+        lFileSurfaceTractiondFile.close();
+      }
       ProgressUtilities.worked( progress, 10 );
 
       /* W/Q BC File */

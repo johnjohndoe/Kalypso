@@ -267,16 +267,15 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     return m_selectedNodeList;
   }
   
-  public void saveModels(){
-    try
-    {
+  public void saveModels() throws CoreException{
+//    try
+//    {
       m_dataProvider.saveModel( new NullProgressMonitor() );
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+//    }
+//    catch( CoreException e )
+//    {
+//      e.printStackTrace();
+//    }
   }
 
 }

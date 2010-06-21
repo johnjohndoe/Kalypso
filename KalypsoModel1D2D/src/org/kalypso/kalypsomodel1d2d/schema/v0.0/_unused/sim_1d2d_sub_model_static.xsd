@@ -30,6 +30,7 @@
 	<!--xs:include schemaLocation="simulation_model_flow_resistance.xsd"/>
 	<xs:include schemaLocation="simulation_model_flow_relationship.xsd"/>
 	<xs:include schemaLocation="simulation_model_terrain.xsd"/-->
+	<xs:include schemaLocation="simulation_model_wind.xsd" />
 	<xs:include schemaLocation="simulation_model_discretisation_1d2d.xsd"/>
 	
 	<!-- Static model Model modelling -->
@@ -97,6 +98,9 @@
 					<xs:element 
 						name="terrainModel"
 						type="wb:TerrainModelPropertyType"/>
+					<xs:element 
+						name="windModel"
+						type="wb:WindModelPropertyType"/>
 					<xs:element 
 						ref="wb:discretisationModel"/>
 					<xs:element 

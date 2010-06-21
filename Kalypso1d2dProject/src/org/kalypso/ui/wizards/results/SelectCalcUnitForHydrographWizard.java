@@ -99,7 +99,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
   public SelectCalcUnitForHydrographWizard( )
   {
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.1") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -110,7 +110,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
   {
     final NonCalcUnitResultViewerFilter resultFilter = new NonCalcUnitResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2"), null, resultFilter, comparator, null ); //$NON-NLS-1$
+    SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$ 
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -160,7 +160,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
         catch( Exception e )
         {
           e.printStackTrace();
-          StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.3") ); //$NON-NLS-1$
+          StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.3" ) ); //$NON-NLS-1$
           return false;
         }
       }
@@ -184,7 +184,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
       final String charset = gmlResultFile.getCharset();
 
       writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
-      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), charset );
+      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), charset, false );
       writer.close();
 
       // refresh workspace
@@ -233,12 +233,12 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = m_dataProvider.getModel( IScenarioResultMeta.class );
+      m_resultModel = m_dataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
     }
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.6"), Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.7"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.6" ), Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.7" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

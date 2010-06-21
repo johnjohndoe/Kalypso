@@ -42,6 +42,10 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
 import java.math.BigDecimal;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -113,6 +117,157 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   {
     final BigDecimal minValueDec = minValue.setScale( 3, BigDecimal.ROUND_HALF_UP );
     getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE, minValueDec );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setMinValues(org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher)
+   */
+  @Override
+  public void setMinMaxValues( final NodeResultMinMaxCatcher minMaxCatcher )
+  {
+    BigDecimal maxVelo = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxWaterlevel = new BigDecimal( minMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxDepth = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxWavePer = new BigDecimal( minMaxCatcher.getMaxWavePer() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxWaveHsig = new BigDecimal( minMaxCatcher.getMaxWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal minWaveHsig = new BigDecimal( minMaxCatcher.getMinWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal minWavePer = new BigDecimal( minMaxCatcher.getMinWavePer() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal minDepth = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal minWaterlevel = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    BigDecimal minVelo = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH, minDepth );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO, minVelo );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL, minWaterlevel );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG, minWaveHsig );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER, minWavePer );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH, maxDepth );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_VELO, maxVelo );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL, maxWaterlevel );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG, maxWaveHsig );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER, maxWavePer );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueForType()
+   */
+  public BigDecimal getMinValueForType( final String type )
+  {
+    try
+    {
+      final QName qMinForType = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" + type ); //$NON-NLS-1$
+      return (BigDecimal) getFeature().getProperty( qMinForType );
+    }
+    catch( Exception e )
+    {
+      return null;
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValueForType()
+   */
+  @Override
+  public BigDecimal getMaxValueForType( final String type )
+  {
+    try
+    {
+      final QName qMaxForType = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" + type ); //$NON-NLS-1$
+      return (BigDecimal) getFeature().getProperty( qMaxForType );
+    }
+    catch( Exception e )
+    {
+      return null;
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueVelo()
+   */
+  public BigDecimal getMinValueVelo( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValueDepth()
+   */
+  @Override
+  public BigDecimal getMaxValueDepth( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValueVelo()
+   */
+  @Override
+  public BigDecimal getMaxValueVelo( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_VELO );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValueWaterlevel()
+   */
+  @Override
+  public BigDecimal getMaxValueWaterlevel( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValueWaveHsig()
+   */
+  @Override
+  public BigDecimal getMaxValueWaveHsig( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValueWavePer()
+   */
+  @Override
+  public BigDecimal getMaxValueWavePer( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueDepth()
+   */
+  @Override
+  public BigDecimal getMinValueDepth( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueWaterlevel()
+   */
+  @Override
+  public BigDecimal getMinValueWaterlevel( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueWaveHsig()
+   */
+  @Override
+  public BigDecimal getMinValueWaveHsig( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueWavePer()
+   */
+  @Override
+  public BigDecimal getMinValueWavePer( )
+  {
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER );
   }
 
 }

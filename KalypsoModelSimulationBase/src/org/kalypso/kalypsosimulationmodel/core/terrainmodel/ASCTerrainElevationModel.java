@@ -49,6 +49,7 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -237,9 +238,10 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
     if( row < 0 )
       row = 0;
 
+    int totalWork = ( int )( Math.floor( env.getWidth() / cellSize ) / dShiftMonitor );
     if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
     {
-      monitor.beginTask( "", ( int )( Math.floor( env.getWidth() / cellSize ) / dShiftMonitor ) ); //$NON-NLS-1$
+      monitor.beginTask( "", totalWork ); //$NON-NLS-1$
 
       final int N_COL_ENV = (int) Math.floor( env.getWidth() / cellSize );
       final int N_ROW_ENV = (int) Math.floor( env.getHeight() / cellSize );
@@ -269,7 +271,11 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
             e.printStackTrace();
           }
         }
-
+        if( monitor.isCanceled() ){
+          monitor.worked( totalWork );
+          monitor.done();
+          return;
+        }
         ProgressUtilities.worked( monitor, 1 );
       }
       // the refinement iteration, visits all the points of the given grid in actual envelope.
@@ -303,7 +309,11 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
               e.printStackTrace();
             }
           }
-
+          if( monitor.isCanceled() ){
+            monitor.worked( totalWork );
+            monitor.done();
+            return;
+          }
           ProgressUtilities.worked( monitor, 1 );
         }
       }

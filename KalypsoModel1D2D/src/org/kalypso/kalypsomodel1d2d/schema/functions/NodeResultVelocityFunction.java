@@ -74,6 +74,7 @@ public class NodeResultVelocityFunction extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {

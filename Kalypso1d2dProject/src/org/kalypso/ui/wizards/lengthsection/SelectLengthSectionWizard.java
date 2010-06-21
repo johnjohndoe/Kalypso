@@ -73,7 +73,7 @@ public class SelectLengthSectionWizard extends Wizard
   public SelectLengthSectionWizard( final IScenarioResultMeta resultModel )
   {
     m_resultModel = resultModel;
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -85,7 +85,7 @@ public class SelectLengthSectionWizard extends Wizard
     final LengthSectionViewerFilter resultFilter = new LengthSectionViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2"), null, resultFilter, comparator, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -102,7 +102,7 @@ public class SelectLengthSectionWizard extends Wizard
     final IResultMeta[] results = page.getSelectedResults();
     if( results.length == 0 )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.3"), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.4") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.3" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
 
@@ -110,7 +110,7 @@ public class SelectLengthSectionWizard extends Wizard
     {
       if( !(result instanceof IDocumentResultMeta) )
       {
-        MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.5"), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.6") ); //$NON-NLS-1$ //$NON-NLS-2$
+        MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.5" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return false;
       }
     }
@@ -123,7 +123,7 @@ public class SelectLengthSectionWizard extends Wizard
       public IStatus execute( final IProgressMonitor monitor )
       {
         IResultMeta result = null;
-        monitor.beginTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.7"), 2 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.7" ), 2 ); //$NON-NLS-1$
 
         // get the first length section element
         for( final IResultMeta resultMeta : results )
@@ -142,21 +142,21 @@ public class SelectLengthSectionWizard extends Wizard
         monitor.worked( 1 );
         if( result == null )
         {
-          MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.8"), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.9") ); //$NON-NLS-1$ //$NON-NLS-2$
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.10") ); //$NON-NLS-1$
+          MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.8" ), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.10" ) ); //$NON-NLS-1$
         }
 
         final IPath fullPath = result.getFullPath();
         m_selectedLGmlResultPath = fullPath.toPortableString();
 
-        return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.11") ); //$NON-NLS-1$
+        return StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.11" ) ); //$NON-NLS-1$
       }
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.12"), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.12" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }

@@ -92,7 +92,7 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
 
   public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final ICaseDataProvider<IModel> modelProvider )
   {
-    super( pageName, title, titleImage, filter, comparator, factory );
+    super( pageName, title, titleImage, filter, comparator, factory, null );
 
     m_scenarioFolder = scenarioFolder;
     m_modelProvider = modelProvider;
@@ -182,8 +182,8 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
           restart1DImporter.doImport( lengthSectionFile, IWspmDictionaryConstants.LS_COMPONENT_STATION, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY, IWspmDictionaryConstants.LS_COMPONENT_TYPE, progress.newChild( 80 ) );
 
           final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) modelProvider;
-          szenarioDataProvider.postCommand( IScenarioResultMeta.class, new EmptyCommand( "empty", false ) ); //$NON-NLS-1$
-          modelProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 20 ) );
+          szenarioDataProvider.postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "empty", false ) ); //$NON-NLS-1$
+          modelProvider.saveModel( IScenarioResultMeta.class.getName(), progress.newChild( 20 ) );
 
           ViewerUtilities.refresh( treeViewer, true );
 

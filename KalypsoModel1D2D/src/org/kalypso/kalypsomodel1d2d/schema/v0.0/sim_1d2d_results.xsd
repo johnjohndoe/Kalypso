@@ -83,12 +83,128 @@
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
 					kapp:property="res1d2d:depth" kapp:isVirtual="true" kapp:valueType="xs:double">
 					<kapp:parameter>
+						<kapp:name>waterlevel</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waterlevel]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
 						<kapp:name>location</kapp:name>
 						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
 					</kapp:parameter>
 					<kapp:parameter>
-						<kapp:name>waterlevel</kapp:name>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>value</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:waterlevelColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
 						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waterlevel]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:depthColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waterlevel]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:wavehsigColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waveHsig]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:waveperiodColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}wavePer]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:wavehsig" kapp:isVirtual="true" kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waveHsig]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name> 
+						<kapp:value>value</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:waveperiod" kapp:isVirtual="true" kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}wavePer]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>value</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:wavedirection" kapp:isVirtual="true" kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waveDir]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>value</kapp:value>
 					</kapp:parameter>
 				</kapp:functionProperty>
 			</xs:appinfo>
@@ -167,6 +283,30 @@
 
 							<xs:documentation>
 								Velocity
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="waveHsig" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>
+								Significant wave height
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="wavePer" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>
+								Wave Period
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<!-- 
+					<xs:element name="waveDir" type="gml:VectorType">
+					 -->						
+					<xs:element name="waveDir" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>
+								Wave Direction
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>

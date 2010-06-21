@@ -66,7 +66,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -88,8 +88,8 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
 
   public EditParameter1dWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1"), new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1"), new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME, IFlowRelation1D.QNAME, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+         }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
     m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );

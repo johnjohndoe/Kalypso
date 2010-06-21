@@ -66,6 +66,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -88,6 +89,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -101,11 +103,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.index.FeatureIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
@@ -119,6 +123,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private static final double NODE_SEARCH_DIST = 0.2;
 
   private static final int WSP_EXTRAPOLATION_RANGE = 1;
+
+  private static final double DEFAULT_SEARCH_DISTANCE = 0.5;
 
   private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<Integer, INodeResult>();
 
@@ -148,7 +154,20 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final IFEDiscretisationModel1d2d m_discModel;
 
+  final private Map<String, Map<GM_Position, Double>> m_mapSWANResults;
+
+  private Map<GM_Position, Double> m_mapWAVEHsig = null;
+
+  private Map<GM_Position, Double> m_mapWAVEDir = null;
+
+  private Map<GM_Position, Double> m_mapWAVEPeriod = null;
+
   public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final NodeResultMinMaxCatcher resultMinMaxCatcher, final LengthSectionHandler1d lsHandler )
+  {
+    this( resultWorkspace, triangleEater, flowModel, controlModel, discModel, resultMinMaxCatcher, lsHandler, null );
+  }
+
+  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final NodeResultMinMaxCatcher resultMinMaxCatcher, final LengthSectionHandler1d lsHandler, final Map<String, Map<GM_Position, Double>> mapSWANResults )
   {
     m_resultWorkspace = resultWorkspace;
     m_triangleEater = triangleEater;
@@ -160,6 +179,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    m_mapSWANResults = mapSWANResults;
   }
 
   /**
@@ -655,6 +675,24 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       feedTriangleEaterWith1dResults( nodes, curves, curveDistance, crs, element );
   }
 
+  @SuppressWarnings("unchecked")
+  private void createJunctionTriangles2( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws GM_Exception
+  {
+    final String crs = nodeCurve1d.getCoordinateSystem();
+    GM_Surface<GM_SurfacePatch> lSurface0 = GeometryFactory.createGM_Surface( nodeCurve1d.getAsLineString().getPositions(), null, crs );
+    GM_Surface<GM_SurfacePatch> lSurface1 = GeometryFactory.createGM_Surface( boundaryCurve.getAsLineString().getPositions(), null, crs );
+    GM_MultiSurface lMultiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { lSurface0, lSurface1 }, crs );
+    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lMultiSurface, crs, false );
+
+    for( final GM_Triangle element : elements2 )
+    {
+      final GM_Position[] ring = element.getExteriorRing();
+      feedTriangleEaterWithJunctionResults( nodeResult1d, resultList, nodeCurve1d, boundaryCurve, curveDistance, crs, ring );
+    }
+  }
+
+  //use createJunctionTriangles2 to remove the dependency to triangle.exe
+  @Deprecated
   private void createJunctionTriangles( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
   {
     BufferedReader nodeReader = null;
@@ -984,7 +1022,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     boolean dry = false;
     for( final INodeResult node : nodes )
     {
-
       if( node.isWet() )
         wet = true;
       else
@@ -1490,9 +1527,37 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
       // result.setDescription( "" + id );
 
-      result.setCalcId( id );
+      result.setCalcId( id ); 
       result.setLocation( easting, northing, elevation, m_crs );
-
+      // if swan results found.
+      if( m_mapSWANResults != null )
+      { 
+        GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+        try
+        { 
+          result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
+          result.setWaveHsig( m_mapWAVEHsig.get( lPositionKey ) );
+          result.setWavePeriod( m_mapWAVEPeriod.get( lPositionKey ) );
+          m_resultMinMaxCatcher.addNodeResult( result );
+        }
+        catch( Exception e )
+        {
+//          IFE1D2DNode< ? > lNode = getResultNodeFromPoint( result.getPoint() );
+//          try
+//          {
+//            lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lNode.getPoint().getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+//            result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
+//            result.setWaveHsig( m_mapWAVEHsig.get( lPositionKey ) );
+//            result.setWavePeriod( m_mapWAVEPeriod.get( lPositionKey ) );
+//          }
+//          catch( Exception e1 )
+//          {
+//            iCo++;
+//          //middle nodes that cannot be found in output of swan, will be ignored here  
+//          }
+//          e.printStackTrace();
+        }
+      }
       /* check min/max values */
       // TODO: velocity not yet set here?
       // m_resultMinMaxCatcher.addNodeResult( result );
@@ -1503,6 +1568,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       e.printStackTrace();
     }
 
+  }
+
+  private IFE1D2DNode< ? > getResultNodeFromPoint( GM_Point point )
+  {
+    final Feature feature = GeometryUtilities.findNearestFeature( point, DEFAULT_SEARCH_DISTANCE, m_discModel.getNodes().getWrappedList(), IFE1D2DNode.PROP_GEOMETRY );
+    if( feature == null )
+      return null;
+
+    return (IFE1D2DNode< ? >) feature.getAdapter( IFE1D2DNode.class );
   }
 
   /**
@@ -1532,6 +1606,27 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   @Override
   public void start( )
   {
+    if( m_mapSWANResults == null )
+    {
+      return;
+    }
+    Set<String> lKeysSet = m_mapSWANResults.keySet();
+    for( Object element : lKeysSet )
+    {
+      String strKey = (String) element;
+      if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_HSIG_OUT_PARAM.toLowerCase() ) )
+      {
+        m_mapWAVEHsig = m_mapSWANResults.get( strKey );
+      }
+      else if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_DIRECTION_OUT_PARAM.toLowerCase() ) )
+      {
+        m_mapWAVEDir = m_mapSWANResults.get( strKey );
+      }
+      else if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_PERIOD_OUT_PARAM.toLowerCase() ) )
+      {
+        m_mapWAVEPeriod = m_mapSWANResults.get( strKey );
+      }
+    }
   }
 
   /**
@@ -1550,6 +1645,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     // check if node is dry
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
+
     m_resultMinMaxCatcher.addNodeResult( result );
 
   }
@@ -1577,6 +1673,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       case LINE_GO:
         result.setTimeDerivativeValuesPrevStep( velXComponent, velYComponent, depthComponent );
 
+        break;
+      case LINE_VA:
+        System.out.println("normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'");
         break;
 
       // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
@@ -1671,7 +1770,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final double curveDistance = nodeCurve1d.distance( boundaryCurve );
 
       /* now we have two curves and use Triangle in order to get the triangles */
-      createJunctionTriangles( nodeResult1d, resultList, nodeCurve1d, boundaryCurve, curveDistance );
+      // createJunctionTriangles( nodeResult1d, resultList, nodeCurve1d, boundaryCurve, curveDistance );
+      createJunctionTriangles2( nodeResult1d, resultList, nodeCurve1d, boundaryCurve, curveDistance );
     }
     catch( final GM_Exception e )
     {

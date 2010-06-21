@@ -95,6 +95,12 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   private static final QName QNAME_PROP_DRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "dry" ); //$NON-NLS-1$
 
+  private static final QName QNAME_PROP_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waveHsig" ); //$NON-NLS-1$
+  
+  private static final QName QNAME_PROP_WAVE_DIR = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waveDir" ); //$NON-NLS-1$
+  
+  private static final QName QNAME_PROP_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "wavePer" ); //$NON-NLS-1$
+
   public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
 
   public final List<Double> m_lambdas = new LinkedList<Double>();
@@ -412,12 +418,18 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTime()
    */
+  @SuppressWarnings("unchecked")
   @Override
   public List<Double> getVelOverTime( )
   {
     // Try to get the velocity over time derivative
-    List<Double> veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
-
+    List<Double> veloList = null;
+    try{
+      veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
+    }
+    catch (Exception e) {
+    }
+    
     if( veloList == null )
     {
       veloList = new ArrayList<Double>();
@@ -431,12 +443,17 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTimePrevStep()
    */
-  @Override
+  @SuppressWarnings("unchecked")
   public List<Double> getVelOverTimePrevStep( )
   {
     // Try to get the velocity over time derivative
-    List<Double> veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
-
+    List<Double> veloList = null;
+    try{
+      veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
+    }
+    catch (Exception e) {
+    }
+    
     if( veloList == null )
     {
       veloList = new ArrayList<Double>();
@@ -450,19 +467,25 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelPrevStep()
    */
+  @SuppressWarnings("unchecked")
   @Override
   public List<Double> getVelPrevStep( )
   {
     // Try to get the velocity over time derivative
-    List<Double> veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
-
+    List<Double> veloList = null;
+    try{
+      veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
+    }
+    catch (Exception e) {
+    }
+    
     if( veloList == null )
     {
       veloList = new ArrayList<Double>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
-
+    
     return veloList;
   }
 
@@ -501,5 +524,59 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     if( VirtDepPrevStep == null )
       VirtDepPrevStep = 0.0;
     return VirtDepPrevStep;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWaveDirection()
+   */
+  @Override
+  public double getWaveDirection( )
+  {
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_DIR );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWaveHsig()
+   */
+  @Override
+  public double getWaveHsig( )
+  {
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_HSIG );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWavePeriod()
+   */
+  @Override
+  public double getWavePeriod( )
+  {
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_PER );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveDirection(double)
+   */
+  @Override
+  public void setWaveDirection( double direction )
+  {
+    getFeature().setProperty( QNAME_PROP_WAVE_DIR, direction ); 
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveHsig(double)
+   */
+  @Override
+  public void setWaveHsig( double hsig )
+  {
+    getFeature().setProperty( QNAME_PROP_WAVE_HSIG, hsig );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWavePeriod(double)
+   */
+  @Override
+  public void setWavePeriod( double period )
+  {
+    getFeature().setProperty( QNAME_PROP_WAVE_PER, period );
   }
 }

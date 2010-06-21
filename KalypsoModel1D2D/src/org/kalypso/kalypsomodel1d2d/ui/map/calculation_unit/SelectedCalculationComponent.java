@@ -64,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition.BOUNDARY_TYPE;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -93,6 +94,8 @@ public class SelectedCalculationComponent
   private Text m_txtNumberOfElements1D;
 
   private Text m_numberOfBoundaryConditions;
+
+  private Text m_numberOfBoundaryConditionsWaves;
 
   private Text m_numberOfContinuityLines;
 
@@ -173,6 +176,7 @@ public class SelectedCalculationComponent
     m_txtNumberOfElements2D.setText( "0" ); //$NON-NLS-1$
     m_numberOfContinuityLines.setText( "0" ); //$NON-NLS-1$
     m_numberOfBoundaryConditions.setText( "0" ); //$NON-NLS-1$
+    m_numberOfBoundaryConditionsWaves.setText( "0" ); //$NON-NLS-1$
     m_subCalcUnitsTableViewer.setInput( new ICalculationUnit1D2D[] {} );
 
     final ICalculationUnit calcUnit = (ICalculationUnit) newValue;
@@ -180,7 +184,8 @@ public class SelectedCalculationComponent
     {
       m_txtCalcUnitName.setText( calcUnit.getName() );
       m_numberOfContinuityLines.setText( String.valueOf( calcUnit.getContinuityLines().size() ) );
-      m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), calcUnit ) ) );
+      m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), calcUnit, BOUNDARY_TYPE.HydroBoundary ) ) );
+      m_numberOfBoundaryConditionsWaves.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), calcUnit, BOUNDARY_TYPE.WavesBoundary ) ) );
     }
 
     if( newValue instanceof ICalculationUnit1D )
@@ -250,6 +255,11 @@ public class SelectedCalculationComponent
     m_numberOfBoundaryConditions = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_numberOfBoundaryConditions.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     m_numberOfBoundaryConditions.setEditable( false );
+    
+    toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.20" ) ); //$NON-NLS-1$
+    m_numberOfBoundaryConditionsWaves = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+    m_numberOfBoundaryConditionsWaves.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+    m_numberOfBoundaryConditionsWaves.setEditable( false );
 
     final Label subUnitLabel = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.21" ), SWT.BEGINNING ); //$NON-NLS-1$
     subUnitLabel.setLayoutData( new GridData( SWT.LEFT, SWT.BEGINNING, false, false ) );

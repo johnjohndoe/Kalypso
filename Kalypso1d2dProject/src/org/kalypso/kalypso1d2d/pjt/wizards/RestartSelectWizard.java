@@ -105,7 +105,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class );
+      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
     }
     catch( final CoreException e )
     {
@@ -218,7 +218,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
       // the user
 
       /* post empty command in order to make pool dirty. */
-      ((ICommandPoster) m_modelProvider).postCommand( IControlModelGroup.class, new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
+      ((ICommandPoster) m_modelProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

@@ -5,7 +5,7 @@
 		grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="1" />
 	<gft:subcomposite property="c1d2d:controlModelCollection" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="FILL"
+		<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 	</gft:subcomposite>
 </gft:featureview>

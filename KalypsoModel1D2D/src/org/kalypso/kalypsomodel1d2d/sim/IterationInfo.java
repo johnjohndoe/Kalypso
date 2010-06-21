@@ -64,6 +64,7 @@ import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -80,7 +81,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Gernot Belger
  */
-public class IterationInfo
+public class IterationInfo implements IIterationInfo
 {
   public class IterationBean
   {
@@ -345,7 +346,7 @@ public class IterationInfo
       else
       {
         // REMARK: convert to calendar with correct time zone, so formatting works correct
-        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+        final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
         calendar.setTime( stepDate );
         obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar ); //$NON-NLS-1$
         obsDesc = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", calendar ); //$NON-NLS-1$

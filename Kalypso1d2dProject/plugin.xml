@@ -85,6 +85,11 @@
             id="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard"
             name="ElevationWizard"
             project="false"/>
+        <wizard
+            class="org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel.ImportWindDataWizard"
+            id="org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel.ImportWindDataWizard"
+            name="WindDataWizard"
+            project="false"/>
       	<wizard
             class="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
@@ -128,6 +133,9 @@
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
 	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWindDataHandler"
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WindDataLoad"/>
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler"
 	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport"/>
@@ -177,6 +185,18 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
+	     
+	     <handler
+	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_showWinds">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>	     
 
 		<!-- // Handler for "Berechnungseinheiten Modellieren"-->
 	     <handler
@@ -374,6 +394,13 @@
             </and>
          </enablement>
       </decorator>
+   </extension>
+   <extension
+	       point="org.kalypso.core.themeInfo">
+	    <themeInfo
+	          class="org.kalypso.kalypso1d2d.pjt.map.NodeThemeInfo"
+	          id="org.kalypso.kalypso1d2d.pjt.map.NodeThemeInfo">
+	    </themeInfo>
    </extension>
    <extension
          point="org.kalypso.project.database.client.kalypsoModule"> 
