@@ -41,13 +41,16 @@
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent;
@@ -72,39 +75,70 @@ public class CalculationUnitPerformWidgetFace
     // form.setExpandHorizontal( false );
     // form.setExpandVertical( true );
     // form.setDelayedReflow( true );
-    final Composite body = form.getBody();
-    body.setLayout( new GridLayout() );
+    final Composite bodyParent = form.getBody();
+//    body.setLayout( new GridLayout() );
+    bodyParent.setLayout( new FillLayout() );
+
+    final ScrolledForm scrolledForm = toolkit.createScrolledForm( bodyParent );
+    scrolledForm.getBody().setLayout( new TableWrapLayout() );
+    
+    TableWrapData tableWrapData;
+    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData.maxWidth = 300;
+    tableWrapData.grabHorizontal = true;
+    tableWrapData.grabVertical = true;
 
     // Calculation Unit Section
-    final Section selectCalcUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
+//    final Section selectCalcUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
+    final Section selectCalcUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     selectCalcUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.1" ) ); //$NON-NLS-1$
-    final GridData selectCalcUnitGridData = new GridData( SWT.FILL, SWT.BEGINNING | SWT.SCROLL_PAGE, true, true );
-    selectCalcUnitSection.setLayoutData( selectCalcUnitGridData );
+    final GridData selectCalcUnitGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, true );
+//    selectCalcUnitSection.setLayoutData( selectCalcUnitGridData );
+    selectCalcUnitSection.setLayoutData( tableWrapData );
     selectCalcUnitGridData.minimumHeight = 140;
 
     selectCalcUnitSection.setExpanded( true );
-
+    
+    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData.grabHorizontal = true;
+    tableWrapData.grabVertical = true;
+    tableWrapData.maxWidth = 270;
+    tableWrapData.align = TableWrapData.FILL_GRAB;
+    
     // Creates Section for "Calculation Elements Unit"
-    final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
+//    final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
+    final Section calculationElementUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     calculationElementUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.2" ) ); //$NON-NLS-1$
-    final GridData lCalcElementUnitGridData = new GridData( SWT.FILL, SWT.BEGINNING | SWT.SCROLL_PAGE, true, true );
+    final GridData lCalcElementUnitGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     lCalcElementUnitGridData.minimumHeight = 250;
-    calculationElementUnitSection.setLayoutData( lCalcElementUnitGridData );
-    calculationElementUnitSection.setExpanded( true );
+    
+//    calculationElementUnitSection.setLayoutData( lCalcElementUnitGridData );
+    calculationElementUnitSection.setLayoutData( tableWrapData );
+    calculationElementUnitSection.setExpanded( false );
 
+
+    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData.grabHorizontal = true;
+    tableWrapData.grabVertical = true;
+    tableWrapData.maxWidth = 270;
+    tableWrapData.align = TableWrapData.FILL_GRAB;
+    
     // Creates Section for "Calculation Settings Unit"
-    final Section logSection = toolkit.createSection( body, Section.TITLE_BAR );
+//    final Section logSection = toolkit.createSection( body, Section.TITLE_BAR );
+    final Section logSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     logSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.5" ) ); //$NON-NLS-1$
 
     final GridData logGridData = new GridData( SWT.FILL, SWT.END | SWT.SCROLL_PAGE, true, false );
-    logSection.setLayoutData( logGridData );
-    logSection.setExpanded( true );
+//    logSection.setLayoutData( logGridData );
+    logSection.setLayoutData( tableWrapData );
+    logSection.setExpanded( false );
 
     createCalculationUnitSection( selectCalcUnitSection, toolkit );
     createCalculationElementsSection( calculationElementUnitSection, toolkit );
     createProblemsInCalculationSection( logSection, toolkit );
 
-    body.layout();
+//    body.layout();
+    scrolledForm.layout();
 
     return parent;
   }
